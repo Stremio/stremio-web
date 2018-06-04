@@ -19,6 +19,11 @@ module.exports = {
             }
         ]
     },
+    resolve: {
+        alias: {
+            'stremio-common': path.resolve(__dirname, 'src/common')
+        }
+    },
     plugins: [
         new HtmlWebPackPlugin({
             template: './src/index.html'
