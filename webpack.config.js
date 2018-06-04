@@ -16,10 +16,27 @@ module.exports = {
                 use: {
                     loader: 'babel-loader'
                 }
+            },
+            {
+                test: /\.css$/,
+                exclude: /node_modules/,
+                use: [
+                    {
+                        loader: 'style-loader'
+                    },
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            modules: true,
+                            localIdentName: '[hash:base64:5]'
+                        }
+                    }
+                ]
             }
         ]
     },
     resolve: {
+        extensions: ['.js', '.json', '.css'],
         alias: {
             'stremio-common': path.resolve(__dirname, 'src/common')
         }
