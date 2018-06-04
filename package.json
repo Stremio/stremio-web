@@ -10,6 +10,7 @@
         "build": "webpack --mode production"
     },
     "dependencies": {
+        "prop-types": "15.6.1",
         "react": "16.4.0",
         "react-dom": "16.4.0"
     },
