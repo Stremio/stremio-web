@@ -12,7 +12,8 @@
     "dependencies": {
         "prop-types": "15.6.1",
         "react": "16.4.0",
-        "react-dom": "16.4.0"
+        "react-dom": "16.4.0",
+        "stremio-colors": "git+ssh://git@bitbucket.org/stremio/stremio-colors.git#v0.9.6"
     },
     "devDependencies": {
         "babel-core": "6.26.3",
