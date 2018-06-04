@@ -4,18 +4,19 @@ import styles from './styles';
 
 class Checkbox extends Component {
     shouldComponentUpdate(nextProps, nextState) {
-        return nextProps.checked !== this.props.checked;
+        return nextProps.checked !== this.props.checked ||
+            nextProps.enabled !== this.props.enabled;
     }
 
     onPress = () => {
-        if (typeof this.props.onPress === 'function') {
+        if (this.props.enabled && typeof this.props.onPress === 'function') {
             this.props.onPress();
         }
     }
 
     render() {
         return (
-            <div style={styles.root} onClick={this.onPress} />
+            <div className={styles.root} onClick={this.onPress} />
         );
     }
 }
