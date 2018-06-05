@@ -35,7 +35,11 @@ module.exports = {
                         loader: 'less-loader',
                         options: {
                             strictMath: true,
-                            noIeCompat: true
+                            noIeCompat: true,
+                            compress: true,
+                            paths: [
+                                path.resolve(__dirname, 'node_modules/stremio-colors')
+                            ]
                         }
                     }
                 ]
