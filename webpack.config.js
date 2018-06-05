@@ -18,7 +18,7 @@ module.exports = {
                 }
             },
             {
-                test: /\.css$/,
+                test: /\.less$/,
                 exclude: /node_modules/,
                 use: [
                     {
@@ -30,13 +30,20 @@ module.exports = {
                             modules: true,
                             localIdentName: '[hash:base64:5]'
                         }
+                    },
+                    {
+                        loader: 'less-loader',
+                        options: {
+                            strictMath: true,
+                            noIeCompat: true
+                        }
                     }
                 ]
             }
         ]
     },
     resolve: {
-        extensions: ['.js', '.json', '.css'],
+        extensions: ['.js', '.json', '.css', '.less'],
         alias: {
             'stremio-common': path.resolve(__dirname, 'src/common')
         }

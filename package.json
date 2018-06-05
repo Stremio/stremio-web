@@ -13,7 +13,7 @@
         "prop-types": "15.6.1",
         "react": "16.4.0",
         "react-dom": "16.4.0",
-        "stremio-colors": "git+ssh://git@bitbucket.org/stremio/stremio-colors.git#v0.9.6"
+        "stremio-colors": "git+ssh://git@github.com/Stremio/stremio-colors.git#v0.9.7"
     },
     "devDependencies": {
         "babel-core": "6.26.3",
@@ -23,6 +23,8 @@
         "babel-preset-react": "6.24.1",
         "css-loader": "0.28.11",
         "html-webpack-plugin": "3.2.0",
+        "less": "3.0.4",
+        "less-loader": "4.1.0",
         "style-loader": "0.21.0",
         "uglifyjs-webpack-plugin": "1.2.5",
         "webpack": "4.10.2",
