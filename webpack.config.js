@@ -6,7 +6,8 @@ module.exports = {
     entry: './src/index.js',
     output: {
         path: path.join(__dirname, 'dist'),
-        filename: 'bundle.js'
+        filename: 'bundle.js',
+        publicPath: '/'
     },
     module: {
         rules: [
@@ -51,6 +52,9 @@ module.exports = {
         alias: {
             'stremio-common': path.resolve(__dirname, 'src/common')
         }
+    },
+    devServer: {
+        historyApiFallback: true
     },
     plugins: [
         new HtmlWebPackPlugin({
