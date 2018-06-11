@@ -15,7 +15,8 @@
         "react-dom": "16.4.0",
         "react-router": "4.3.1",
         "react-router-dom": "4.3.1",
-        "stremio-colors": "git+ssh://git@github.com/Stremio/stremio-colors.git#v0.9.7"
+        "stremio-colors": "git+ssh://git@github.com/Stremio/stremio-colors.git#v0.9.7",
+        "stremio-icons": "git+ssh://git@github.com/Stremio/stremio-icons.git#v1.0.0"
     },
     "devDependencies": {
         "babel-core": "6.26.3",

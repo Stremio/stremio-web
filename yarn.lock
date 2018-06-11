@@ -4854,6 +4854,10 @@ stream-shift@^1.0.0:
   version "0.9.7"
   resolved "git+ssh://git@github.com/Stremio/stremio-colors.git#89842648a4c09bba669f4135a84aa35011cdd6ea"
 
+"stremio-icons@git+ssh://git@github.com/Stremio/stremio-icons.git#v1.0.0":
+  version "1.0.0"
+  resolved "git+ssh://git@github.com/Stremio/stremio-icons.git#7369ad4a74a6a1b3d10fe6a95ec5adfdd3e3ab2a"
+
 strict-uri-encode@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/strict-uri-encode/-/strict-uri-encode-1.1.0.tgz#279b225df1d582b1f54e65addd4352e18faa0713"
