@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
+import { BrowserRouter, Route } from 'react-router-dom';
 import { Checkbox } from 'stremio-common';
 
 class App extends Component {
     render() {
         return (
-            <div>
-                <span>Stremio</span>
-                <Checkbox checked={true} />
-            </div>
+            <BrowserRouter>
+                <div>
+                    <Checkbox checked={true} />
+                    <Route path={'/home/:message'} component={({ match }) => <span>{match.params.message}</span>} />
+                </div>
+            </BrowserRouter>
         );
     }
 }
