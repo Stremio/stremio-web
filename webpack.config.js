@@ -52,7 +52,7 @@ module.exports = {
         ]
     },
     resolve: {
-        extensions: ['.js', '.json', '.css', '.less'],
+        extensions: ['.js', '.json', '.less'],
         alias: {
             'stremio-common': path.resolve(__dirname, 'src/common')
         }
