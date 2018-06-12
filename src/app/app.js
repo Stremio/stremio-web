@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Route } from 'react-router-dom';
 import { Checkbox } from 'stremio-common';
-import Icon from 'stremio-icons/dom'
+import Icon from 'stremio-icons/dom';
+import styles from './styles';
 
 class App extends Component {
     render() {
