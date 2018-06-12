@@ -33,7 +33,17 @@ module.exports = {
                         loader: 'css-loader',
                         options: {
                             modules: true,
-                            localIdentName: '[hash:base64:5]'
+                            localIdentName: '[hash:base64:5]',
+                            importLoaders: 2
+                        }
+                    },
+                    {
+                        loader: 'postcss-loader',
+                        options: {
+                            ident: 'postcss-id',
+                            plugins: () => [
+                                require('autoprefixer')()
+                            ]
                         }
                     },
                     {
