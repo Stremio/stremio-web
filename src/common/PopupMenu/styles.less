@@ -1,0 +1,42 @@
+@import "stremio-colors";
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.menu-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    animation: fadeIn 200ms;
+}
+
+.button-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 38px;
+    width: 230px;
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color: @colorglass;
+    cursor: pointer;
+}
+
+.button-label {
+    font-size: 18px;
+    color: @colorwhite80;
+}
+
+.button-icon {
+    width: 16px;
+    height: 16px;
+}
