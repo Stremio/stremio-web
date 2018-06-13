@@ -1,4 +1,4 @@
-import Checkbox from './checkbox';
+import Checkbox from './Checkbox';
 import PopupMenu from './PopupMenu';
 
 export {
