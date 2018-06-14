@@ -64,7 +64,8 @@ module.exports = {
     resolve: {
         extensions: ['.js', '.json', '.less'],
         alias: {
-            'stremio-common': path.resolve(__dirname, 'src/common')
+            'stremio-common': path.resolve(__dirname, 'src/common'),
+            'stremio-routes': path.resolve(__dirname, 'src/routes')
         }
     },
     devServer: {
