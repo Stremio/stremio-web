@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Switch, Route, NavLink } from 'react-router-dom';
+import { BrowserRouter, Switch, Route, NavLink, Redirect } from 'react-router-dom';
 import Icon from 'stremio-icons/dom';
 import styles from './styles';
 
@@ -39,6 +39,7 @@ class App extends Component {
                         <Route path={'/'} exact={true} component={Board} />
                         <Route path={'/discover'} component={Discover} />
                         <Route path={'/library'} component={Library} />
+                        <Redirect to={'/'} />
                     </Switch>
                 </div>
             </BrowserRouter>
