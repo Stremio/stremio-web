@@ -1,9 +1,14 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import Icon from 'stremio-icons/dom';
 import styles from './styles';
 
-class NavBar extends PureComponent {
+class NavBar extends Component {
+    shouldComponentUpdate(nextProps, nextState, nextContext) {
+        return nextContext.router !== this.context.router;
+    }
+
     render() {
         return (
             <nav className={styles['nav-bar']}>
@@ -32,5 +37,9 @@ class NavBar extends PureComponent {
         );
     }
 }
+
+NavBar.contextTypes = {
+    router: PropTypes.object.isRequired
+};
 
 export default NavBar;
