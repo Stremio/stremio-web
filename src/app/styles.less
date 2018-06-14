@@ -1,19 +1,90 @@
 @import "stremio-colors";
+@font-face {
+    font-family: 'Open Sans';
+    src: url('/fonts/OpenSans-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Open Sans';
+    src: url('/fonts/OpenSans-LightItalic.ttf') format('truetype');
+    font-weight: 300;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Open Sans';
+    src: url('/fonts/OpenSans-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Open Sans';
+    src: url('/fonts/OpenSans-Italic.ttf') format('truetype');
+    font-weight: 400;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Open Sans';
+    src: url('/fonts/OpenSans-SemiBold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Open Sans';
+    src: url('/fonts/OpenSans-SemiBoldItalic.ttf') format('truetype');
+    font-weight: 600;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Open Sans';
+    src: url('/fonts/OpenSans-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Open Sans';
+    src: url('/fonts/OpenSans-BoldItalic.ttf') format('truetype');
+    font-weight: 700;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Open Sans';
+    src: url('/fonts/OpenSans-ExtraBold.ttf') format('truetype');
+    font-weight: 800;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Open Sans';
+    src: url('/fonts/OpenSans-ExtraBoldItalic.ttf') format('truetype');
+    font-weight: 800;
+    font-style: italic;
+}
 
 * {
-	margin: 0px;
-	padding: 0px;
-	border: none;
-	list-style: none;
-	user-select: none;
-	box-sizing: border-box;
+    margin: 0px;
+    padding: 0px;
+    border: none;
+    list-style: none;
+    user-select: none;
+    box-sizing: border-box;
+    text-decoration: none;
 }
 
 html, body, .app {
-	height: 100vh;
-	min-width: 1024px;
-	position: relative;
-	cursor: default;
-	overflow: hidden;
-	background-color: @colorbgmain;
+    height: 100vh;
+    min-width: 1024px;
+    position: relative;
+    cursor: default;
+    overflow: hidden;
+    background-color: @colorbgmain;
+    font: 13px / 18px 'Open Sans', LatoLight, Arial, Helvetica, sans-serif;
 }
