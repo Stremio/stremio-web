@@ -1,12 +1,8 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
+import { Board, Discover, Library, Calendar } from 'stremio-routes';
 import NavBar from './NavBar';
 import styles from './styles';
-
-const Board = () => <div style={{ color: 'pink', paddingTop: 40 }}>You're on the Board Tab</div>;
-const Discover = () => <div style={{ color: 'pink', paddingTop: 40 }}>You're on the Discover Tab</div>;
-const Library = () => <div style={{ color: 'pink', paddingTop: 40 }}>You're on the Library Tab</div>;
-const Calendar = () => <div style={{ color: 'pink', paddingTop: 40 }}>You're on the Calendar Tab</div>;
 
 class App extends Component {
     render() {
