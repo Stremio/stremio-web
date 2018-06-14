@@ -17,21 +17,28 @@ class NavBar extends Component {
                         className={styles['nav-tab-icon']}
                         icon={'ic_board'}
                     />
-                    Board
+                    <span className={styles['nav-tab-label']}>Board</span>
                 </NavLink>
                 <NavLink className={styles['nav-tab']} activeClassName={styles['active']} to={'/discover'} replace={false}>
                     <Icon
                         className={styles['nav-tab-icon']}
                         icon={'ic_discover'}
                     />
-                    Discover
+                    <span className={styles['nav-tab-label']}>Discover</span>
                 </NavLink>
                 <NavLink className={styles['nav-tab']} activeClassName={styles['active']} to={'/library'} replace={false}>
                     <Icon
                         className={styles['nav-tab-icon']}
                         icon={'ic_library'}
                     />
-                    Library
+                    <span className={styles['nav-tab-label']}>My Library</span>
+                </NavLink>
+                <NavLink className={styles['nav-tab']} activeClassName={styles['active']} to={'/calendar'} replace={false}>
+                    <Icon
+                        className={styles['nav-tab-icon']}
+                        icon={'ic_calendar'}
+                    />
+                    <span className={styles['nav-tab-label']}>Calendar</span>
                 </NavLink>
             </nav>
         );
