@@ -89,7 +89,8 @@ module.exports = {
             }
         }),
         new CopyWebpackPlugin([
-            { from: 'images' }
+            { from: 'images', to: 'images' },
+            { from: 'fonts', to: 'fonts' }
         ])
     ]
 };
