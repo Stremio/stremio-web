@@ -14,10 +14,10 @@ class Main extends Component {
             <div className={styles['root-container']}>
                 <NavBar
                     tabs={[
-                        { icon: 'ic_board', label: 'Board', to: '/', exact: true },
-                        { icon: 'ic_discover', label: 'Discover', to: '/discover' },
-                        { icon: 'ic_library', label: 'Library', to: '/library' },
-                        { icon: 'ic_calendar', label: 'Calendar', to: '/calendar' }
+                        { icon: 'ic_board', label: 'Board', to: '/', exact: true, replace: true },
+                        { icon: 'ic_discover', label: 'Discover', to: '/discover', replace: true },
+                        { icon: 'ic_library', label: 'Library', to: '/library', replace: true },
+                        { icon: 'ic_calendar', label: 'Calendar', to: '/calendar', replace: true }
                     ]}
                     searchInput={true}
                 />
