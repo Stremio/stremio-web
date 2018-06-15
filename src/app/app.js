@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import { Main, Addons } from 'stremio-routes';
 import styles from './styles';
 
-class App extends Component {
+class App extends PureComponent {
     render() {
         return (
             <BrowserRouter>
