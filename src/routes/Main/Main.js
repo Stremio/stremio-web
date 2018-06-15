@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import { NavBar } from 'stremio-common';
-import { Board, Discover, Library, Calendar } from 'stremio-routes';
+import Board from '../Board';
+import Discover from '../Discover';
+import Library from '../Library';
+import Calendar from '../Calendar';
 import styles from './styles';
 
 class Main extends Component {
