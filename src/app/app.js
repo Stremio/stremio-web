@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import { Board, Discover, Library, Calendar, Addons } from 'stremio-routes';
-import NavBar from './NavBar';
+import { NavBar } from 'stremio-common';
 import styles from './styles';
 
 class App extends Component {
