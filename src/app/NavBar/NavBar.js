@@ -11,17 +11,28 @@ class NavBar extends Component {
     render() {
         return (
             <nav className={styles['nav-bar']}>
-                <NavTab to={'/'} exact={true} icon={'ic_board'} label={'Board'} />
-                <NavTab to={'/discover'} icon={'ic_discover'} label={'Discover'} />
-                <NavTab to={'/library'} icon={'ic_library'} label={'My Library'} />
-                <NavTab to={'/calendar'} icon={'ic_calendar'} label={'Calendar'} />
+                {this.props.tabs.map(tab => <NavTab key={tab.to} {...tab} />)}
             </nav>
         );
     }
 }
 
+NavBar.propTypes = {
+    tabs: PropTypes.arrayOf(PropTypes.shape({
+        icon: PropTypes.string.isRequired,
+        label: PropTypes.string.isRequired,
+        to: PropTypes.string.isRequired,
+        exact: PropTypes.bool,
+        replace: PropTypes.bool
+    })).isRequired
+};
+
 NavBar.contextTypes = {
     router: PropTypes.object.isRequired
+};
+
+NavBar.defaultProps = {
+    tabs: []
 };
 
 export default NavBar;
