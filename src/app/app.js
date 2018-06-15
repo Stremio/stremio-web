@@ -6,15 +6,15 @@ import styles from './styles';
 class App extends PureComponent {
     render() {
         return (
-            <BrowserRouter>
-                <div className={styles['app']}>
+            <div className={styles['app']}>
+                <BrowserRouter>
                     <Switch>
                         <Route path={'/(discover|library|calendar)?'} exact={true} component={Main} />
                         <Route path={'/addons'} component={Addons} />
                         <Redirect to={'/'} />
                     </Switch>
-                </div>
-            </BrowserRouter>
+                </BrowserRouter>
+            </div>
         );
     }
 }
