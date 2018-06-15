@@ -9,7 +9,7 @@ class App extends PureComponent {
             <div className={styles['app']}>
                 <BrowserRouter>
                     <Switch>
-                        <Route path={'/(discover|library|calendar)?'} exact={true} component={Main} />
+                        <Route path={'/(discover|library|calendar|search)?'} exact={true} component={Main} />
                         <Route path={'/addons'} component={Addons} />
                         <Redirect to={'/'} />
                     </Switch>

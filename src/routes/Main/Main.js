@@ -5,6 +5,7 @@ import Board from '../Board';
 import Discover from '../Discover';
 import Library from '../Library';
 import Calendar from '../Calendar';
+import Search from '../Search';
 import styles from './styles';
 
 class Main extends Component {
@@ -24,6 +25,7 @@ class Main extends Component {
                     <Route path={'/discover'} component={Discover} />
                     <Route path={'/library'} component={Library} />
                     <Route path={'/calendar'} component={Calendar} />
+                    <Route path={'/search'} component={Search} />
                 </Switch>
             </div>
         );
