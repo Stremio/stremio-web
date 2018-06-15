@@ -19,6 +19,7 @@ class Main extends Component {
                         { icon: 'ic_library', label: 'Library', to: '/library' },
                         { icon: 'ic_calendar', label: 'Calendar', to: '/calendar' }
                     ]}
+                    searchInput={true}
                 />
                 <Switch>
                     <Route path={'/'} exact={true} component={Board} />

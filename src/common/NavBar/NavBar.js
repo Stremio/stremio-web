@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import NavTab from './NavTab';
+import SearchInput from './SearchInput';
 import styles from './styles';
 
 class NavBar extends Component {
@@ -12,10 +13,15 @@ class NavBar extends Component {
         return (
             <nav className={styles['nav-bar']}>
                 {this.props.tabs.map(tab => <NavTab key={tab.to} {...tab} />)}
+                {this.props.searchInput ? <SearchInput /> : null}
             </nav>
         );
     }
 }
+
+NavBar.contextTypes = {
+    router: PropTypes.object.isRequired
+};
 
 NavBar.propTypes = {
     tabs: PropTypes.arrayOf(PropTypes.shape({
@@ -24,15 +30,13 @@ NavBar.propTypes = {
         to: PropTypes.string.isRequired,
         exact: PropTypes.bool,
         replace: PropTypes.bool
-    })).isRequired
-};
-
-NavBar.contextTypes = {
-    router: PropTypes.object.isRequired
+    })).isRequired,
+    searchInput: PropTypes.bool.isRequired
 };
 
 NavBar.defaultProps = {
-    tabs: []
+    tabs: [],
+    searchInput: false
 };
 
 export default NavBar;
