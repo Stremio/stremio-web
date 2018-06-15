@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { NavLink } from 'react-router-dom';
-import Icon from 'stremio-icons/dom';
+import NavTab from './NavTab';
 import styles from './styles';
 
 class NavBar extends Component {
@@ -12,34 +11,10 @@ class NavBar extends Component {
     render() {
         return (
             <nav className={styles['nav-bar']}>
-                <NavLink className={styles['nav-tab']} activeClassName={styles['active']} to={'/'} exact={true} replace={false}>
-                    <Icon
-                        className={styles['nav-tab-icon']}
-                        icon={'ic_board'}
-                    />
-                    <span className={styles['nav-tab-label']}>Board</span>
-                </NavLink>
-                <NavLink className={styles['nav-tab']} activeClassName={styles['active']} to={'/discover'} replace={false}>
-                    <Icon
-                        className={styles['nav-tab-icon']}
-                        icon={'ic_discover'}
-                    />
-                    <span className={styles['nav-tab-label']}>Discover</span>
-                </NavLink>
-                <NavLink className={styles['nav-tab']} activeClassName={styles['active']} to={'/library'} replace={false}>
-                    <Icon
-                        className={styles['nav-tab-icon']}
-                        icon={'ic_library'}
-                    />
-                    <span className={styles['nav-tab-label']}>My Library</span>
-                </NavLink>
-                <NavLink className={styles['nav-tab']} activeClassName={styles['active']} to={'/calendar'} replace={false}>
-                    <Icon
-                        className={styles['nav-tab-icon']}
-                        icon={'ic_calendar'}
-                    />
-                    <span className={styles['nav-tab-label']}>Calendar</span>
-                </NavLink>
+                <NavTab to={'/'} exact={true} icon={'ic_board'} label={'Board'} />
+                <NavTab to={'/discover'} icon={'ic_discover'} label={'Discover'} />
+                <NavTab to={'/library'} icon={'ic_library'} label={'My Library'} />
+                <NavTab to={'/calendar'} icon={'ic_calendar'} label={'Calendar'} />
             </nav>
         );
     }
