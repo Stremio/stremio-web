@@ -1,0 +1,41 @@
+@import 'stremio-colors';
+.search-form {
+    height: 100%;
+    &.active {
+        .search-label {
+            input[type="text"] {
+                color: @colorwhite;
+                &::placeholder {
+                    color: @colorwhite;
+                }
+            }
+        }
+    }
+    .search-label {
+        height: 100%;
+        padding: 8px 0;
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+        justify-content: center;
+        input[type="text"] {
+            padding: 0 6px;
+            height: 100%;
+            width: 240px;
+            user-select: text;
+            background-color: @colorsecondarylight;
+            color: @colorwhite80;
+            font-size: 14px;
+            &::placeholder {
+                color: @colorwhite80;
+            }
+        }
+        input[type="submit"] {
+            background-color: @colorsecondarylight;
+        }
+        .search-icon {
+            height: 100%;
+            width: 30px;
+        }
+    }
+}
