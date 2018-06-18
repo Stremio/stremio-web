@@ -13,6 +13,7 @@ class NavBar extends Component {
         return (
             <nav className={styles['nav-bar']}>
                 {this.props.tabs.map(tab => <NavTab key={tab.to} {...tab} />)}
+                {this.props.title.length > 0 ? <h2 className={styles['nav-title']}>{this.props.title}</h2> : null}
                 {this.props.searchInput ? <SearchInput /> : null}
             </nav>
         );
@@ -31,11 +32,13 @@ NavBar.propTypes = {
         exact: PropTypes.bool,
         replace: PropTypes.bool
     })).isRequired,
+    title: PropTypes.string.isRequired,
     searchInput: PropTypes.bool.isRequired
 };
 
 NavBar.defaultProps = {
     tabs: [],
+    title: '',
     searchInput: false
 };
 
