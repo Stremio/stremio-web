@@ -7,35 +7,35 @@ class SearchInput extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {
+        this.state = Object.assign({
+            isActive: false,
             query: ''
-        };
-    }
-
-    componentDidMount() {
-        if (this.isActive(this.props.location)) {
-            this.onQueryParamsChange(this.props.location.search);
-        }
+        }, this.getStateFromProps(props));
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.location !== this.props.location && this.isActive(nextProps.location)) {
-            this.onQueryParamsChange(nextProps.location.search);
+        if (nextProps.location !== this.props.location) {
+            const nextState = this.getStateFromProps(nextProps);
+            this.setState(nextState);
         }
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return nextState.query !== this.state.query;
+        return nextState.query !== this.state.query ||
+            nextState.isActive !== this.state.isActive;
     }
 
-    onQueryParamsChange = (params) => {
-        const queryParams = new URLSearchParams(params);
-        const query = queryParams.get('query') || '';
-        this.setState({ query });
-    }
+    getStateFromProps = (props) => {
+        const nextState = {
+            isActive: !!matchPath(props.location.pathname, { path: '/search' })
+        };
 
-    isActive = (location) => {
-        return !!matchPath(location.pathname, { path: '/search' });
+        if (nextState.isActive) {
+            const queryParams = new URLSearchParams(props.location.search);
+            nextState.query = queryParams.get('query') || '';
+        }
+
+        return nextState;
     }
 
     search = () => {
@@ -56,14 +56,14 @@ class SearchInput extends Component {
     }
 
     onQueryInputFocus = (event) => {
-        if (!this.isActive(this.props.location)) {
+        if (!this.state.isActive) {
             this.search();
         }
     }
 
     render() {
         return (
-            <form className={classnames(styles['search-form'], { [styles['active']]: this.isActive(this.props.location) })} onSubmit={this.onFormSubmit}>
+            <form className={classnames(styles['search-form'], { [styles['active']]: this.state.isActive })} onSubmit={this.onFormSubmit}>
                 <label className={styles['search-label']}>
                     <input
                         type={'text'}
@@ -71,6 +71,9 @@ class SearchInput extends Component {
                         value={this.state.query}
                         onChange={this.onQueryInputChange}
                         onFocus={this.onQueryInputFocus}
+                        autoCorrect={'off'}
+                        autoCapitalize={'off'}
+                        spellCheck={false}
                     />
                     <input type={'submit'} />
                 </label>
