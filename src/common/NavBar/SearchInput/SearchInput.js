@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { matchPath, withRouter } from 'react-router-dom';
+import Icon from 'stremio-icons/dom';
 import classnames from 'classnames';
 import styles from './styles';
 
@@ -66,6 +67,7 @@ class SearchInput extends Component {
             <form className={classnames(styles['search-form'], { [styles['active']]: this.state.isActive })} onSubmit={this.onFormSubmit}>
                 <label className={styles['search-label']}>
                     <input
+                        className={styles['query-input']}
                         type={'text'}
                         placeholder={'Search'}
                         value={this.state.query}
@@ -75,7 +77,9 @@ class SearchInput extends Component {
                         autoCapitalize={'off'}
                         spellCheck={false}
                     />
-                    <input type={'submit'} />
+                    <button className={styles['submit-button']} type={'submit'}>
+                        <Icon className={styles['submit-icon']} icon={'ic_search'} />
+                    </button>
                 </label>
             </form>
         );

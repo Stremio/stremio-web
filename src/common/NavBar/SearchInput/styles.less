@@ -1,16 +1,6 @@
 @import 'stremio-colors';
 .search-form {
-    height: 100%;
-    &.active {
-        .search-label {
-            input[type="text"] {
-                color: @colorwhite;
-                &::placeholder {
-                    color: @colorwhite;
-                }
-            }
-        }
-    }
+    height: 44px;
     .search-label {
         height: 100%;
         padding: 8px 0;
@@ -18,24 +8,59 @@
         flex-direction: row;
         align-items: stretch;
         justify-content: center;
-        input[type="text"] {
+        .query-input {
             padding: 0 6px;
             height: 100%;
             width: 240px;
+            outline: none;
+            appearance: none;
             user-select: text;
-            background-color: @colorsecondarylight;
+            background-color: @colorsecondarylight80;
             color: @colorwhite80;
             font-size: 14px;
             &::placeholder {
                 color: @colorwhite80;
             }
         }
-        input[type="submit"] {
-            background-color: @colorsecondarylight;
+        .submit-button {
+            width: 28px;
+            height: 28px;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background-color: @coloraccent80;
+            .submit-icon {
+                width: 14px;
+                height: 100%;
+                fill: @colorwhite80;
+            }
         }
-        .search-icon {
-            height: 100%;
-            width: 30px;
+    }
+    &.active {
+        @transition-time: 0.200s;
+        .search-label {
+            padding: 0;
+            transition: padding @transition-time;
+            .query-input {
+                background-color: @colorbgmain;
+                color: @colorwhite;
+                font-size: 16px;
+                transition: background-color @transition-time;
+                &::placeholder {
+                    color: @colorwhite;
+                }
+            }
+            .submit-button {
+                height: 44px;
+                width: 44px;
+                background-color: @coloraccent;
+                transition: height @transition-time;
+                .submit-icon {
+                    width: 16px;
+                    fill: @colorwhite;
+                }
+            }
         }
     }
 }
