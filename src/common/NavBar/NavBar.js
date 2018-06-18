@@ -12,7 +12,9 @@ class NavBar extends Component {
     render() {
         return (
             <nav className={styles['nav-bar']}>
-                {this.props.tabs.map(tab => <NavTab key={tab.to} {...tab} />)}
+                <div className={styles['nav-tabs']}>
+                    {this.props.tabs.map(tab => <NavTab key={tab.to} {...tab} />)}
+                </div>
                 {this.props.title.length > 0 ? <h2 className={styles['nav-title']}>{this.props.title}</h2> : null}
                 {this.props.searchInput ? <SearchInput /> : null}
             </nav>
