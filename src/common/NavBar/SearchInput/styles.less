@@ -1,4 +1,5 @@
 @import 'stremio-colors';
+@transition-time: 0.200s;
 .search-form {
     height: 44px;
     display: flex;
@@ -11,6 +12,7 @@
         flex-direction: row;
         align-items: stretch;
         justify-content: center;
+        transition: padding @transition-time;
         .query-input {
             padding: 0 6px;
             height: 100%;
@@ -21,6 +23,7 @@
             background-color: @colorsecondarylight80;
             color: @colorwhite80;
             font-size: 14px;
+            transition: background-color @transition-time;
             &::placeholder {
                 color: @colorwhite80;
             }
@@ -34,6 +37,7 @@
             cursor: pointer;
             outline: none;
             background-color: @coloraccent80;
+            transition: height @transition-time;
             .submit-icon {
                 width: 14px;
                 height: 100%;
@@ -42,15 +46,12 @@
         }
     }
     &.active {
-        @transition-time: 0.200s;
         .search-label {
             padding: 0;
-            transition: padding @transition-time;
             .query-input {
                 background-color: @colorbgmain;
                 color: @colorwhite;
                 font-size: 16px;
-                transition: background-color @transition-time;
                 &::placeholder {
                     color: @colorwhite;
                 }
@@ -59,7 +60,6 @@
                 height: 44px;
                 width: 44px;
                 background-color: @coloraccent;
-                transition: height @transition-time;
                 .submit-icon {
                     width: 16px;
                     fill: @colorwhite;
