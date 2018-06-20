@@ -1,11 +1,11 @@
 import Checkbox from './Checkbox';
-import PopupMenu from './PopupMenu';
+import Popup from './Popup';
 import NavBar from './NavBar';
 import Modal from './Modal';
 
 export {
     Checkbox,
-    PopupMenu,
+    Popup,
     NavBar,
     Modal
 };
