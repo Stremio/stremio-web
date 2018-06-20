@@ -1,9 +1,9 @@
-import React, { Component, Fragment } from 'react';
+import React, { PureComponent, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { Modal } from 'stremio-common';
 import styles from './styles';
 
-class Popup extends Component {
+class Popup extends PureComponent {
     constructor(props) {
         super(props);
 
@@ -12,10 +12,6 @@ class Popup extends Component {
         this.state = {
             isOpen: false
         };
-    }
-
-    shouldComponentUpdate(nextProps, nextState) {
-        return nextState.isOpen !== this.state.isOpen;
     }
 
     componentDidMount() {
