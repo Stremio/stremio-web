@@ -45,12 +45,18 @@ class Popup extends PureComponent {
     }
 
     open = (event) => {
-        event.stopPropagation();
+        if (event) {
+            event.stopPropagation();
+        }
+
         this.setState({ isOpen: true });
     }
 
     close = (event) => {
-        event.stopPropagation();
+        if (event && event.type === 'keyup') {
+            event.stopPropagation();
+        }
+
         this.setState({ isOpen: false });
     }
 
