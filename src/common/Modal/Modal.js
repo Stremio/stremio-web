@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import classnames from 'classnames';
 import styles from './styles';
@@ -27,5 +28,10 @@ class Modal extends PureComponent {
         );
     }
 }
+
+Modal.propTypes = {
+    onRequestClose: PropTypes.func,
+    className: PropTypes.string
+};
 
 export default Modal;
