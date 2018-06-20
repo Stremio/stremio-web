@@ -1,6 +1,8 @@
 import React, { PureComponent, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { Modal } from 'stremio-common';
+import Label from './Label';
+import Menu from './Menu';
 import styles from './styles';
 
 class Popup extends PureComponent {
@@ -64,7 +66,7 @@ class Popup extends PureComponent {
         return (
             <Modal className={styles['menu-layer']} onRequestClose={this.close}>
                 {React.Children.map(this.props.children, (child) => {
-                    if (child.type === Popup.Menu) {
+                    if (child.type === Menu) {
                         const labelRect = this.labelRef.current.getBoundingClientRect();
                         const menuContainerStyle = {};
 
@@ -111,7 +113,7 @@ class Popup extends PureComponent {
 
     render() {
         React.Children.forEach(this.props.children, (child) => {
-            if (child.type !== Popup.Menu && child.type !== Popup.Label) {
+            if (child.type !== Menu && child.type !== Label) {
                 console.warn(new Error('Popup children should be of type Popup.Menu or Popup.Label'));
             }
         });
@@ -119,7 +121,7 @@ class Popup extends PureComponent {
         return (
             <Fragment>
                 {React.Children.map(this.props.children, (child) => {
-                    return child.type === Popup.Label ? React.cloneElement(child, { forwardedRef: this.labelRef, onClick: this.open }) : null;
+                    return child.type === Label ? React.cloneElement(child, { forwardedRef: this.labelRef, onClick: this.open }) : null;
                 })}
                 {this.renderMenu()}
             </Fragment>
@@ -127,21 +129,12 @@ class Popup extends PureComponent {
     }
 }
 
-Popup.Label = ({ children, forwardedRef, onClick }) => {
-    return React.cloneElement(React.Children.only(children), { ref: forwardedRef, onClick });
-};
-
-Popup.Menu = ({ children }) => {
-    return <Fragment>{children}</Fragment>;
-};
-Popup.Menu.propTypes = {
-    height: PropTypes.number,
-    width: PropTypes.number
-};
-
 Popup.propTypes = {
     onAfterOpen: PropTypes.func,
     onAfterClose: PropTypes.func
 };
+
+Popup.Label = Label;
+Popup.Menu = Menu;
 
 export default Popup;
