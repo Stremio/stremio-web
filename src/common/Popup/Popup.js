@@ -26,6 +26,16 @@ class Popup extends PureComponent {
         window.removeEventListener('keyup', this.onKeyUp);
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.isOpen !== this.state.isOpen) {
+            if (this.state.isOpen && typeof this.props.onAfterOpen === 'function') {
+                this.props.onAfterOpen();
+            } else if (!this.state.isOpen && typeof this.props.onAfterClose === 'function') {
+                this.props.onAfterClose();
+            }
+        }
+    }
+
     onKeyUp = (event) => {
         if (event.keyCode === 27) {
             this.close(event);
@@ -127,6 +137,11 @@ Popup.Menu = ({ children }) => {
 Popup.Menu.propTypes = {
     height: PropTypes.number,
     width: PropTypes.number
+};
+
+Popup.propTypes = {
+    onAfterOpen: PropTypes.func,
+    onAfterClose: PropTypes.func
 };
 
 export default Popup;
