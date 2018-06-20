@@ -1,4 +1,4 @@
-import { PureComponent } from 'react';
+import React, { PureComponent } from 'react';
 import ReactDOM from 'react-dom';
 import classnames from 'classnames';
 import styles from './styles';
@@ -19,8 +19,12 @@ class Modal extends PureComponent {
     }
 
     render() {
-        this.root.className = classnames(styles['modal-container'], this.props.className);
-        return ReactDOM.createPortal(this.props.children, this.root);
+        return ReactDOM.createPortal(
+            <div className={classnames(styles['modal-container'], this.props.className)} onClick={this.props.onRequestClose}>
+                {this.props.children}
+            </div>,
+            this.root
+        );
     }
 }
 
