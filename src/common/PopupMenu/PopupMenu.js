@@ -22,11 +22,19 @@ class PopupMenu extends Component {
     componentDidMount() {
         window.addEventListener('blur', this._close);
         window.addEventListener('resize', this._close);
+        window.addEventListener('keyup', this._onKeyUp);
     }
 
     componentWillUnmount() {
         window.removeEventListener('blur', this._close);
         window.removeEventListener('resize', this._close);
+        window.removeEventListener('keyup', this._onKeyUp);
+    }
+
+    _onKeyUp = (event) => {
+        if (event.keyCode === 27) {
+            this._close(event);
+        }
     }
 
     _open = (event) => {
