@@ -1,11 +1,20 @@
 @import 'stremio-colors';
+@import 'constants';
 .nav-tab {
-    height: 100%;
+    height: @nav-bar-height;
     padding: 0 20px;
     display: flex;
-    flex-direction: row;
     align-items: center;
-    justify-content: center;
+    .nav-tab-icon {
+        height: @nav-bar-height;
+        fill: @colorwhite80;
+        width: 18px;
+    }
+    .nav-tab-label {
+        color: @colorwhite80;
+        font-size: 15px;
+        margin-left: 10px;
+    }
     &.active {
         background-color: @colorbgmain;
     }
@@ -18,24 +27,6 @@
         }
         .nav-tab-label {
             color: @colorwhite;
-        }
-    }
-    .nav-tab-icon {
-        fill: @colorwhite80;
-        height: 100%;
-        width: 18px;
-    }
-    .nav-tab-label {
-        color: @colorwhite80;
-        font-size: 15px;
-        margin-left: 10px;
-    }
-}
-
-@media only screen and (max-width: 1100px) {
-    .nav-tab {
-        .nav-tab-label {
-            display: none;
         }
     }
 }

@@ -1,12 +1,23 @@
+@import 'stremio-colors';
+@import 'constants';
 .popup-label-container {
-    height: 44px;
-    width: 44px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    cursor: pointer;
+    outline: none;
     background-color: transparent;
+    .icon {
+        height: @nav-bar-height;
+        fill: @colorwhite80
+    }
     .user-icon {
         width: 40%;
-        height: 40%;
+    }
+    .arrow-icon {
+        width: 16%;
+    }
+    &:hover, &.active {
+        background-color: @colordarkest20;
+        .icon {
+            fill: @colorwhite;
+        }
     }
 }

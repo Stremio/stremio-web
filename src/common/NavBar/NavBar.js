@@ -1,32 +1,22 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import NavTab from './NavTab';
 import SearchInput from './SearchInput';
 import UserMenu from './UserMenu';
 import styles from './styles';
 
-class NavBar extends Component {
-    shouldComponentUpdate(nextProps, nextState, nextContext) {
-        return nextContext.router !== this.context.router;
-    }
-
+class NavBar extends PureComponent {
     render() {
         return (
             <nav className={styles['nav-bar']}>
-                <div className={styles['nav-tabs']}>
-                    {this.props.tabs.map(tab => <NavTab key={tab.to} {...tab} />)}
-                </div>
+                {this.props.tabs.map(tab => <NavTab key={tab.to} {...tab} />)}
                 {this.props.title.length > 0 ? <h2 className={styles['nav-title']}>{this.props.title}</h2> : null}
-                {this.props.searchInput ? <SearchInput /> : null}
-                {this.props.userMenu ? <UserMenu /> : null}
+                {this.props.searchInput ? <SearchInput className={styles['search-input']} /> : null}
+                {this.props.userMenu ? <UserMenu className={styles['user-menu']} /> : null}
             </nav>
         );
     }
 }
-
-NavBar.contextTypes = {
-    router: PropTypes.object.isRequired
-};
 
 NavBar.propTypes = {
     tabs: PropTypes.arrayOf(PropTypes.shape({

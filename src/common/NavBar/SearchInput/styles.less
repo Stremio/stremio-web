@@ -1,43 +1,34 @@
 @import 'stremio-colors';
-@transition-time: 0.200s;
+@import 'constants';
+@label-vertical-padding: 8px;
 .search-form {
-    height: 44px;
     display: flex;
-    flex: 1;
     justify-content: center;
     .search-label {
-        height: 100%;
-        padding: 8px 0;
+        padding: @label-vertical-padding 0;
+        height: @nav-bar-height;
         display: flex;
-        flex-direction: row;
-        align-items: stretch;
-        justify-content: center;
-        transition: padding @transition-time;
+        transition: padding 0.200s;
         .query-input {
             padding: 0 6px;
-            height: 100%;
             width: 280px;
+            height: 100%;
             outline: none;
             appearance: none;
             user-select: text;
             background-color: @colorsecondarylight80;
             color: @colorwhite80;
             font-size: 14px;
-            transition: background-color @transition-time;
             &::placeholder {
                 color: @colorwhite80;
             }
         }
         .submit-button {
-            width: 28px;
-            height: 28px;
-            flex-direction: row;
-            align-items: center;
-            justify-content: center;
+            width: calc(@nav-bar-height - 2 * @label-vertical-padding);
+            height: 100%;
             cursor: pointer;
             outline: none;
             background-color: @coloraccent80;
-            transition: height @transition-time;
             .submit-icon {
                 width: 14px;
                 height: 100%;
@@ -57,8 +48,7 @@
                 }
             }
             .submit-button {
-                height: 44px;
-                width: 44px;
+                width: @nav-bar-height;
                 background-color: @coloraccent;
                 .submit-icon {
                     width: 16px;

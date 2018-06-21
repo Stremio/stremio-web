@@ -23,7 +23,8 @@ class SearchInput extends Component {
 
     shouldComponentUpdate(nextProps, nextState) {
         return nextState.query !== this.state.query ||
-            nextState.isActive !== this.state.isActive;
+            nextState.isActive !== this.state.isActive ||
+            nextProps.className !== this.props.className;
     }
 
     getStateFromProps = (props) => {
@@ -47,7 +48,6 @@ class SearchInput extends Component {
 
     onFormSubmit = (event) => {
         event.preventDefault();
-        event.target.elements[0].blur();
         this.search();
     }
 
@@ -56,7 +56,7 @@ class SearchInput extends Component {
         this.setState({ query });
     }
 
-    onQueryInputFocus = (event) => {
+    onQueryInputFocus = () => {
         if (!this.state.isActive) {
             this.search();
         }
@@ -64,7 +64,7 @@ class SearchInput extends Component {
 
     render() {
         return (
-            <form className={classnames(styles['search-form'], { [styles['active']]: this.state.isActive })} onSubmit={this.onFormSubmit}>
+            <form className={classnames(this.props.className, styles['search-form'], { [styles['active']]: this.state.isActive })} onSubmit={this.onFormSubmit}>
                 <label className={styles['search-label']}>
                     <input
                         className={styles['query-input']}
