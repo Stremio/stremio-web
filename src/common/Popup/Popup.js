@@ -127,7 +127,7 @@ class Popup extends PureComponent {
         return (
             <Fragment>
                 {React.Children.map(this.props.children, (child) => {
-                    return child.type === Label ? React.cloneElement(child, { forwardedRef: this.labelRef, onClick: this.open }) : null;
+                    return child.type === Label ? React.cloneElement(child, { ref: this.labelRef, onClick: this.open }) : null;
                 })}
                 {this.renderMenu()}
             </Fragment>
