@@ -1,11 +1,7 @@
 import React, { Component } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import { NavBar } from 'stremio-common';
-import Board from '../Board';
-import Discover from '../Discover';
-import Library from '../Library';
-import Calendar from '../Calendar';
-import Search from '../Search';
+import { Board, Discover, Library, Calendar, Search } from 'stremio-routes';
 import styles from './styles';
 
 class Main extends Component {
