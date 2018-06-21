@@ -53,7 +53,8 @@ module.exports = {
                             noIeCompat: true,
                             compress: true,
                             paths: [
-                                path.resolve(__dirname, 'node_modules/stremio-colors')
+                                path.resolve(__dirname, 'node_modules/stremio-colors'),
+                                path.resolve(__dirname, 'src/common')
                             ]
                         }
                     }
