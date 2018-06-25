@@ -318,7 +318,7 @@ async-each@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/async-each/-/async-each-1.0.1.tgz#19d386a1d9edc6e7c1c85d388aedbcc56d33602d"
 
-async@^1.5.2:
+async@1.x.x, async@^1.5.2:
   version "1.5.2"
   resolved "https://registry.yarnpkg.com/async/-/async-1.5.2.tgz#ec6a61ae56480c0c3cb241c95618e20892f9672a"
 
@@ -1868,6 +1868,10 @@ ee-first@1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/ee-first/-/ee-first-1.1.1.tgz#590c61156b0ae2f4f0255732a158b266bc56b21d"
 
+ejs@^2.5.7:
+  version "2.6.1"
+  resolved "https://registry.yarnpkg.com/ejs/-/ejs-2.6.1.tgz#498ec0d495655abc6f23cd61868d926464071aa0"
+
 electron-to-chromium@^1.2.7, electron-to-chromium@^1.3.47:
   version "1.3.48"
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.48.tgz#d3b0d8593814044e092ece2108fc3ac9aea4b900"
@@ -2014,7 +2018,7 @@ eventemitter3@^3.0.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-3.1.0.tgz#090b4d6cdbd645ed10bf750d4b5407942d7ba163"
 
-events@^1.0.0:
+events@1.1.x, events@^1.0.0, events@^1.1.0, events@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/events/-/events-1.1.1.tgz#9ebdb7635ad099c70dcc4c2a1f5004288e8bd924"
 
@@ -2103,7 +2107,7 @@ extend-shallow@^3.0.0, extend-shallow@^3.0.2:
     assign-symbols "^1.0.0"
     is-extendable "^1.0.1"
 
-extend@~3.0.1:
+extend@^3.0.0, extend@~3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/extend/-/extend-3.0.1.tgz#a755ea7bc1adfcc5a31ce7e762dbaadc5e636444"
 
@@ -3111,6 +3115,17 @@ less@3.0.4:
     request "^2.83.0"
     source-map "~0.6.0"
 
+linvo-api4-client@12.8.0:
+  version "12.8.0"
+  resolved "https://registry.yarnpkg.com/linvo-api4-client/-/linvo-api4-client-12.8.0.tgz#384382e320a2369bafc37e6c27e40592fa961c2e"
+  dependencies:
+    events "^1.1.1"
+    extend "^3.0.0"
+
+linvo-p2p-sync@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/linvo-p2p-sync/-/linvo-p2p-sync-2.1.0.tgz#437463d94b90e429aa5ea1f083e3498c13c373ef"
+
 load-json-file@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/load-json-file/-/load-json-file-1.1.0.tgz#956905708d58b4bab4c2261b04f59f31c99374c0"
@@ -3491,6 +3506,10 @@ node-fetch@^1.0.1:
     encoding "^0.1.11"
     is-stream "^1.0.1"
 
+node-fetch@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.1.2.tgz#ab884e8e7e57e38a944753cec706f788d1768bb5"
+
 node-forge@0.7.5:
   version "0.7.5"
   resolved "https://registry.yarnpkg.com/node-forge/-/node-forge-0.7.5.tgz#6c152c345ce11c52f465c2abd957e8639cd674df"
@@ -3846,6 +3865,13 @@ path-type@^3.0.0:
   dependencies:
     pify "^3.0.0"
 
+path@^0.12.7:
+  version "0.12.7"
+  resolved "https://registry.yarnpkg.com/path/-/path-0.12.7.tgz#d4dc2a506c4ce2197eb481ebfcd5b36c0140b10f"
+  dependencies:
+    process "^0.11.1"
+    util "^0.10.3"
+
 pbkdf2@^3.0.3:
   version "3.0.16"
   resolved "https://registry.yarnpkg.com/pbkdf2/-/pbkdf2-3.0.16.tgz#7404208ec6b01b62d85bf83853a8064f8d9c2a5c"
@@ -4192,7 +4218,7 @@ process-nextick-args@~2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/process-nextick-args/-/process-nextick-args-2.0.0.tgz#a37d732f4271b4ab1ad070d35508e8290788ffaa"
 
-process@^0.11.10:
+process@^0.11.1, process@^0.11.10:
   version "0.11.10"
   resolved "https://registry.yarnpkg.com/process/-/process-0.11.10.tgz#7332300e840161bda3e69a1d1d91a7d4bc16f182"
 
@@ -4289,7 +4315,7 @@ querystring-es3@^0.2.0:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/querystring-es3/-/querystring-es3-0.2.1.tgz#9ec61f79049875707d69414596fd907a4d711e73"
 
-querystring@0.2.0:
+querystring@0.2.0, querystring@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/querystring/-/querystring-0.2.0.tgz#b209849203bb25df820da756e747005878521620"
 
@@ -4972,6 +4998,34 @@ stream-shift@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/stream-shift/-/stream-shift-1.0.0.tgz#d5c752825e5367e786f78e18e445ea223a155952"
 
+"stremio-addon-client@git+ssh://git@github.com/Stremio/stremio-addon-client.git#v1.5.1":
+  version "1.5.1"
+  resolved "git+ssh://git@github.com/Stremio/stremio-addon-client.git#71b2e1807d74d9b718b677586d08e8737944c894"
+  dependencies:
+    node-fetch "^2.1.2"
+    stremio-addon-linter "^1.2.1"
+    thunky "^1.0.2"
+
+stremio-addon-linter@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/stremio-addon-linter/-/stremio-addon-linter-1.2.1.tgz#7f23fe69613240fa488e76f7dab2db788b9e8497"
+  dependencies:
+    semver "^5.5.0"
+
+"stremio-addons@git+ssh://git@github.com/Stremio/stremio-addons.git#v2.8.14":
+  version "2.8.14"
+  resolved "git+ssh://git@github.com/Stremio/stremio-addons.git#4fbe9696080e1ca10814be2a0339378f7aafd971"
+  dependencies:
+    async "1.x.x"
+    ejs "^2.5.7"
+    events "^1.1.0"
+    extend "^3.0.0"
+    once "^1.4.0"
+
+"stremio-aggregators@git+ssh://git@github.com/Stremio/stremio-aggregators.git#v1.4.1":
+  version "1.4.1"
+  resolved "git+ssh://git@github.com/Stremio/stremio-aggregators.git#8b3d7980d20b5a8a1ecb16ed4535c942da62f344"
+
 "stremio-colors@git+ssh://git@github.com/Stremio/stremio-colors.git#v1.0.0":
   version "1.0.0"
   resolved "git+ssh://git@github.com/Stremio/stremio-colors.git#4d14e104ada8b9278cc0feed7c71c86fcc876231"
@@ -4979,6 +5033,34 @@ stream-shift@^1.0.0:
 "stremio-icons@git+ssh://git@github.com/Stremio/stremio-icons.git#v1.0.0":
   version "1.0.0"
   resolved "git+ssh://git@github.com/Stremio/stremio-icons.git#7369ad4a74a6a1b3d10fe6a95ec5adfdd3e3ab2a"
+
+stremio-json-data@1.2.x:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/stremio-json-data/-/stremio-json-data-1.2.0.tgz#d454fd4a59c560beda3fea91439d013d17f617ad"
+
+"stremio-json-data@git+ssh://git@github.com/stremio/stremio-json-data.git#v1.2.3":
+  version "1.2.3"
+  resolved "git+ssh://git@github.com/stremio/stremio-json-data.git#cdf6c4a4caca8c66c7420bbf253bb7897e0ebc51"
+
+"stremio-models@git+ssh://git@github.com/stremio/stremio-models.git#v1.51.5":
+  version "1.51.5"
+  resolved "git+ssh://git@github.com/stremio/stremio-models.git#03b6a25c17fc9f9bcfd86994b03109dd2b9ade58"
+  dependencies:
+    events "1.1.x"
+    extend "^3.0.0"
+    inherits "^2.0.1"
+    linvo-p2p-sync "^2.1.0"
+    path "^0.12.7"
+    querystring "^0.2.0"
+    stremio-json-data "1.2.x"
+    typed-schema "2.x.x"
+    underscore "1.8.x"
+    uniq "^1.0.1"
+    video-name-parser "^1.4.3"
+
+"stremio-official-addons@git+ssh://git@github.com/Stremio/stremio-official-addons.git#v1.1.1":
+  version "1.1.1"
+  resolved "git+ssh://git@github.com/Stremio/stremio-official-addons.git#652ec4544d76714525bb905ea669f36328efb1f2"
 
 "stremio-translations@git+ssh://git@github.com/Stremio/stremio-translations.git#v1.41.0":
   version "1.41.0"
@@ -5196,6 +5278,10 @@ type-is@~1.6.15, type-is@~1.6.16:
     media-typer "0.3.0"
     mime-types "~2.1.18"
 
+typed-schema@2.x.x:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/typed-schema/-/typed-schema-2.1.1.tgz#4549b2d3e74d6a90444e1438aad3a22ad01b35a3"
+
 typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
@@ -5230,6 +5316,10 @@ uglifyjs-webpack-plugin@1.2.5, uglifyjs-webpack-plugin@^1.2.4:
     uglify-es "^3.3.4"
     webpack-sources "^1.1.0"
     worker-farm "^1.5.2"
+
+underscore@1.8.x:
+  version "1.8.3"
+  resolved "https://registry.yarnpkg.com/underscore/-/underscore-1.8.3.tgz#4f3fb53b106e6097fcf9cb4109f2a5e9bdfa5022"
 
 union-value@^1.0.0:
   version "1.0.0"
@@ -5382,6 +5472,10 @@ verror@1.10.0:
     assert-plus "^1.0.0"
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
+
+video-name-parser@^1.4.3:
+  version "1.4.6"
+  resolved "https://registry.yarnpkg.com/video-name-parser/-/video-name-parser-1.4.6.tgz#8e7926ab2ba9253fed290b399e453d3b0702c687"
 
 vm-browserify@0.0.4:
   version "0.0.4"
