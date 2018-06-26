@@ -5041,9 +5041,9 @@ stremio-addon-linter@^1.2.1:
   version "1.0.0"
   resolved "git+ssh://git@github.com/Stremio/stremio-colors.git#4d14e104ada8b9278cc0feed7c71c86fcc876231"
 
-"stremio-icons@git+ssh://git@github.com/Stremio/stremio-icons.git#v1.0.0":
-  version "1.0.0"
-  resolved "git+ssh://git@github.com/Stremio/stremio-icons.git#7369ad4a74a6a1b3d10fe6a95ec5adfdd3e3ab2a"
+"stremio-icons@git+ssh://git@github.com/Stremio/stremio-icons.git#v1.0.2":
+  version "1.0.2"
+  resolved "git+ssh://git@github.com/Stremio/stremio-icons.git#21e5f7dd36cb857456b5f2fa53cb55dad980f57b"
 
 stremio-json-data@1.2.x:
   version "1.2.0"

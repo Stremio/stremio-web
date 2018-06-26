@@ -21,7 +21,7 @@
         "stremio-addons": "git+ssh://git@github.com/Stremio/stremio-addons.git#v2.8.14",
         "stremio-aggregators": "git+ssh://git@github.com/Stremio/stremio-aggregators.git#v1.4.1",
         "stremio-colors": "git+ssh://git@github.com/Stremio/stremio-colors.git#v1.0.0",
-        "stremio-icons": "git+ssh://git@github.com/Stremio/stremio-icons.git#v1.0.0",
+        "stremio-icons": "git+ssh://git@github.com/Stremio/stremio-icons.git#v1.0.2",
         "stremio-json-data": "git+ssh://git@github.com/stremio/stremio-json-data.git#v1.2.3",
         "stremio-models": "git+ssh://git@github.com/stremio/stremio-models.git#v1.51.5",
         "stremio-official-addons": "git+ssh://git@github.com/Stremio/stremio-official-addons.git#v1.1.1",
