@@ -7,10 +7,10 @@ class Router extends Component {
         super(props);
 
         this.state = {
-            views: Array.apply(null, { length: props.config.views.length }).map(() => ({
+            views: Array(props.config.views.length).fill({
                 path: null,
                 element: null
-            }))
+            })
         };
     }
 
