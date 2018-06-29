@@ -31,8 +31,9 @@ class Router extends Component {
         const hashIndex = window.location.href.indexOf('#');
         const hashPath = hashIndex === -1 ? '' : window.location.href.substring(hashIndex + 1);
         const path = joinPaths('/', hashPath);
-        this.props.config.views.forEach((viewConfig, viewConfigIndex) => {
-            viewConfig.routes.forEach((routeConfig) => {
+        for (let viewConfigIndex = 0; viewConfigIndex < this.props.config.views.length; viewConfigIndex++) {
+            const viewConfig = this.props.config.views[viewConfigIndex];
+            for (const routeConfig of viewConfig.routes) {
                 if (matchPath(path, routeConfig)) {
                     this.setState(({ views }) => ({
                         views: views.map((view, viewIndex) => {
@@ -51,9 +52,10 @@ class Router extends Component {
                             }
                         })
                     }));
+                    return;
                 }
-            });
-        });
+            }
+        }
     }
 
     render() {
