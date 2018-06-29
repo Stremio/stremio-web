@@ -3,11 +3,13 @@ import Popup from './Popup';
 import NavBar from './NavBar';
 import Modal from './Modal';
 import MetadataItem from './MetadataItem';
+import Router from './router';
 
 export {
     Checkbox,
     Popup,
     NavBar,
     Modal,
-    MetadataItem
+    MetadataItem,
+    Router
 };
