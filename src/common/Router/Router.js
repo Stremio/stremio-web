@@ -32,7 +32,7 @@ class Router extends Component {
         const hashIndex = window.location.href.indexOf('#');
         const hashPath = hashIndex === -1 ? '' : window.location.href.substring(hashIndex + 1);
         const path = joinPaths('/', hashPath);
-        const isBackAction = this.historyLength === history.length;
+        const isPushAction = this.historyLength < history.length;
         this.historyLength = history.length;
         this.props.config.views.forEach((viewConfig, viewConfigIndex) => {
             viewConfig.routes.forEach((routeConfig) => {
@@ -45,7 +45,7 @@ class Router extends Component {
                                     element: null
                                 };
                             } else if (viewIndex === viewConfigIndex) {
-                                if (isBackAction && React.isValidElement(view.element) && view.element.type === routeConfig.component) {
+                                if (!isPushAction && React.isValidElement(view.element) && view.element.type === routeConfig.component) {
                                     return view;
                                 } else {
                                     return {
