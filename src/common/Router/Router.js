@@ -1,13 +1,33 @@
 import React, { Component } from 'react';
 import pathToRegexp from 'path-to-regexp';
 import PathUtils from 'path';
+import UrlUtils from 'url';
 
 class Router extends Component {
     constructor(props) {
         super(props);
 
+        this.viewsConfig = props.config.views
+            .map((viewConfig) => ({
+                ...viewConfig,
+                routes: viewConfig.routes.map((routeConfig) => {
+                    const keys = [];
+                    const regexp = pathToRegexp(routeConfig.path, keys, {
+                        strict: false,
+                        sensitive: false,
+                        end: true,
+                        ...routeConfig.options
+                    });
+                    return {
+                        ...routeConfig,
+                        keys,
+                        regexp
+                    };
+                })
+            }));
+
         this.state = {
-            views: Array(props.config.views.length).fill({
+            views: Array(this.viewsConfig.length).fill({
                 path: null,
                 element: null
             })
@@ -36,18 +56,18 @@ class Router extends Component {
             return;
         }
 
-        for (let viewConfigIndex = 0; viewConfigIndex < this.props.config.views.length; viewConfigIndex++) {
-            const viewConfig = this.props.config.views[viewConfigIndex];
+        const { pathname, query } = UrlUtils.parse(path);
+        const queryParams = new URLSearchParams(query);
+        for (let viewConfigIndex = 0; viewConfigIndex < this.viewsConfig.length; viewConfigIndex++) {
+            const viewConfig = this.viewsConfig[viewConfigIndex];
             for (const routeConfig of viewConfig.routes) {
-                const keys = [];
-                const regexp = pathToRegexp(routeConfig.path, keys, {
-                    strict: false,
-                    sensitive: false,
-                    end: true,
-                    ...routeConfig.options
-                });
-                const match = regexp.exec(path);
+                const { keys, regexp } = routeConfig;
+                const match = regexp.exec(pathname);
                 if (match) {
+                    const urlParams = keys.reduce((urlParams, key, index) => {
+                        urlParams[key.name] = match[index + 1];
+                        return urlParams;
+                    }, {});
                     this.setState(({ views }) => ({
                         views: views.map((view, viewIndex) => {
                             if (viewIndex > viewConfigIndex) {
@@ -58,7 +78,7 @@ class Router extends Component {
                             } else if (viewIndex === viewConfigIndex) {
                                 return {
                                     path,
-                                    element: React.createElement(routeConfig.component)
+                                    element: React.createElement(routeConfig.component, { queryParams, urlParams })
                                 };
                             } else {
                                 return view;
