@@ -71,8 +71,7 @@ module.exports = {
         }
     },
     devServer: {
-        host: '0.0.0.0',
-        historyApiFallback: true
+        host: '0.0.0.0'
     },
     plugins: [
         new HtmlWebPackPlugin({
