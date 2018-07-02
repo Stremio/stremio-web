@@ -77,7 +77,7 @@ class Router extends Component {
                                 };
                             } else if (viewIndex === viewConfigIndex) {
                                 return {
-                                    path,
+                                    path: routeConfig.path,
                                     element: React.createElement(routeConfig.component, { queryParams, urlParams })
                                 };
                             } else {
