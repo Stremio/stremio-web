@@ -5,12 +5,12 @@ const config = {
         {
             routes: [
                 {
-                    path: '/calendar',
-                    component: Calendar
+                    path: '/',
+                    component: Board
                 },
                 {
-                    path: '/board',
-                    component: Board
+                    path: '/calendar',
+                    component: Calendar
                 }
             ]
         },

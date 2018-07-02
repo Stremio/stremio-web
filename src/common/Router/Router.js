@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { matchPath } from 'react-router-dom';
-import { join as joinPaths } from 'path';
+import pathToRegexp from 'path-to-regexp';
+import PathUtils from 'path';
 
 class Router extends Component {
     constructor(props) {
@@ -30,18 +30,24 @@ class Router extends Component {
     onLocationChanged = () => {
         const hashIndex = window.location.href.indexOf('#');
         const hashPath = hashIndex === -1 ? '' : window.location.href.substring(hashIndex + 1);
-        const path = joinPaths('/', hashPath);
+        const path = PathUtils.join('/', hashPath);
         if (hashPath !== path) {
             window.location.replace(`#${path}`);
             return;
         }
 
-        let pathMatched = false;
         for (let viewConfigIndex = 0; viewConfigIndex < this.props.config.views.length; viewConfigIndex++) {
             const viewConfig = this.props.config.views[viewConfigIndex];
             for (const routeConfig of viewConfig.routes) {
-                if (matchPath(path, routeConfig)) {
-                    pathMatched = true;
+                const keys = [];
+                const regexp = pathToRegexp(routeConfig.path, keys, {
+                    strict: false,
+                    sensitive: false,
+                    end: true,
+                    ...routeConfig.options
+                });
+                const match = regexp.exec(path);
+                if (match) {
                     this.setState(({ views }) => ({
                         views: views.map((view, viewIndex) => {
                             if (viewIndex > viewConfigIndex) {
@@ -64,9 +70,7 @@ class Router extends Component {
             }
         }
 
-        if (!pathMatched) {
-            window.location.replace('#/');
-        }
+        window.location.replace('#/');
     }
 
     render() {
