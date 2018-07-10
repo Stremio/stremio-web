@@ -11,7 +11,6 @@
     },
     "dependencies": {
         "classnames": "2.2.6",
-        "linvo-api4-client": "12.8.0",
         "prop-types": "15.6.1",
         "react": "16.4.1",
         "react-dom": "16.4.1",
@@ -20,6 +19,7 @@
         "stremio-addon-client": "git+ssh://git@github.com/Stremio/stremio-addon-client.git#v1.5.1",
         "stremio-addons": "git+ssh://git@github.com/Stremio/stremio-addons.git#v2.8.14",
         "stremio-aggregators": "git+ssh://git@github.com/Stremio/stremio-aggregators.git#v1.4.1",
+        "stremio-api-client": "git+ssh://git@github.com/Stremio/stremio-api-client.git#e8459d01fdd3507113b13b02aab628d24e20515e",
         "stremio-colors": "git+ssh://git@github.com/Stremio/stremio-colors.git#v1.0.0",
         "stremio-icons": "git+ssh://git@github.com/Stremio/stremio-icons.git#v1.0.2",
         "stremio-json-data": "git+ssh://git@github.com/stremio/stremio-json-data.git#v1.2.3",

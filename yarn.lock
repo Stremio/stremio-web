@@ -2034,7 +2034,11 @@ eventemitter3@^3.0.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-3.1.0.tgz#090b4d6cdbd645ed10bf750d4b5407942d7ba163"
 
-events@1.1.x, events@^1.0.0, events@^1.1.0, events@^1.1.1:
+events@1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/events/-/events-1.1.0.tgz#4b389fc200f910742ebff3abb2efe33690f45429"
+
+events@1.1.x, events@^1.0.0, events@^1.1.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/events/-/events-1.1.1.tgz#9ebdb7635ad099c70dcc4c2a1f5004288e8bd924"
 
@@ -3124,13 +3128,6 @@ less@3.0.4:
     promise "^7.1.1"
     request "^2.83.0"
     source-map "~0.6.0"
-
-linvo-api4-client@12.8.0:
-  version "12.8.0"
-  resolved "https://registry.yarnpkg.com/linvo-api4-client/-/linvo-api4-client-12.8.0.tgz#384382e320a2369bafc37e6c27e40592fa961c2e"
-  dependencies:
-    events "^1.1.1"
-    extend "^3.0.0"
 
 linvo-p2p-sync@^2.1.0:
   version "2.1.0"
@@ -5045,6 +5042,12 @@ stremio-addon-linter@^1.2.1:
 "stremio-aggregators@git+ssh://git@github.com/Stremio/stremio-aggregators.git#v1.4.1":
   version "1.4.1"
   resolved "git+ssh://git@github.com/Stremio/stremio-aggregators.git#8b3d7980d20b5a8a1ecb16ed4535c942da62f344"
+
+"stremio-api-client@git+ssh://git@github.com/Stremio/stremio-api-client.git#e8459d01fdd3507113b13b02aab628d24e20515e":
+  version "0.0.1"
+  resolved "git+ssh://git@github.com/Stremio/stremio-api-client.git#e8459d01fdd3507113b13b02aab628d24e20515e"
+  dependencies:
+    events "1.1.0"
 
 "stremio-colors@git+ssh://git@github.com/Stremio/stremio-colors.git#v1.0.0":
   version "1.0.0"
