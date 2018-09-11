@@ -1,0 +1,97 @@
+@import 'stremio-colors';
+.stream {
+    width: 340px;
+    background-color: @colorblack20;
+    .stream-item {
+        display: inline-flex;
+    }
+    .stream-container {
+        color: @colorwhite;
+        margin-left: 16px;
+        margin-top: 10px;
+        .stream-holder {
+            display: inline-flex;
+            .logo-container {
+                width: 80px;
+                height: 40px;
+                font-size: 14px;
+                padding-top: 6px;
+                margin-right: 40px;
+                .logo {
+                    fill: @colorwhite;
+                }
+                .source-name {
+                    top: 4px;
+                    position: relative;
+                }
+            }
+            .title-container {
+                height: 40px;
+                width: 120px;
+                font-size: 11px;
+                overflow: hidden;
+                white-space: pre;
+                .title, .subtitle {
+                    overflow: hidden;
+                    padding-top: 4px;
+                    line-height: 16px;
+                    color: @colorwhite60;
+                    text-overflow: ellipsis;
+                    &:hover {
+                        width: auto;
+                        transition: margin-left 3s linear;
+                        margin-left: -180%;
+                        text-overflow: initial;
+                    }
+                }
+            }
+            .free-label, .subscription-label {
+                font-weight: 600;
+                font-size: 11px;
+                border-radius: 2px;
+            }
+            .free-label {
+                padding: 1px 6px;
+                background-color: @colorprimlight;
+            }
+            .subscription-label {
+                color: @colorsignal1;
+            }
+        }
+        .progress-container {
+            .progress {
+                height: 3px;
+                width: 240px;
+                border-radius: 1px;
+                background-color: @colorprimlight;
+            }
+        }
+    }
+    .play-container {
+        width: 46px;
+        height: 46px;
+        padding: 14px 17px;
+        margin: 7px 20px;
+        .play {
+            width: 18px;
+            height: 18px;
+            fill: @colorwhite60;
+        }
+    }
+    &:hover, &:focus {
+        cursor: pointer;
+        background-color: @colorwhite20;
+    }
+    .last-watched {
+        background-color: @colorblack40;
+        width: 340px;
+        display: inline-flex;
+        .play-container {
+            background-color: @colorwhite; 
+            border-radius: 50%;
+            .play { 
+                fill: @colormedium;
+            }
+        } 
+    }
+}

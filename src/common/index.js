@@ -4,6 +4,7 @@ import NavBar from './NavBar';
 import Modal from './Modal';
 import MetadataItem from './MetadataItem';
 import Router from './Router';
+import Stream from './Stream';
 
 export {
     Checkbox,
@@ -11,5 +12,6 @@ export {
     NavBar,
     Modal,
     MetadataItem,
-    Router
+    Router,
+    Stream 
 };
