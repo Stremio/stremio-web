@@ -7,6 +7,7 @@ import Router from './Router';
 import Stream from './Stream';
 import Episode from './Episode';
 import LibraryItemList from './LibraryItemList';
+import LibraryItemGrid from './LibraryItemGrid';
 
 export {
     Checkbox,
@@ -17,5 +18,6 @@ export {
     Router,
     Stream,
     Episode,
-    LibraryItemList
+    LibraryItemList,
+    LibraryItemGrid
 };
