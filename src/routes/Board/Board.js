@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import { Catalogs } from 'stremio-aggregators';
 import { addons } from 'stremio-services';
 import { Stream } from 'stremio-common';
+import { Episode } from 'stremio-common';
 
 class Board extends PureComponent {
     constructor(props) {
@@ -30,11 +31,10 @@ class Board extends PureComponent {
     render() {
         return (
             <div style={{ paddingTop: 40, color: 'yellow' }}>
-                <Stream sourceName={'Amazon'} title={'Vikings S01E09 HDTV XviD-AFG[ettv], 👤 1'} lastWatched={true}/>
-                <Stream sourceName={'iTunes'} subtitle={'Aasdasd dsasa sad.'}/>
-                <Stream logo={'ic_itunes'} title={'$1.99 purchase SD,$2.99 purchase HD'} lastWatched={true}/>
-                <Stream logo={'ic_amazon'} title={'HDTV'} isFree={true}/>
-                <Stream sourceName={'Amazon'} title={'SD'} isSubscription={true}/>
+                <Episode number={2} name={'The Bing Bran Hypothesis'} duration={23} isWatched={true}></Episode>
+                <Episode number={4} name={'The Luminous Fish Effect'} duration={22} lastWatched={true}></Episode>
+                <Episode number={5} name={'The Dumpling Paradox'} duration={22}></Episode>
+                <Episode number={8} name={'The Loobendfeld Decay'} date={'23 April'} isUpcoming={true}></Episode>
             </div>
         );
     }

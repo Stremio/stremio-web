@@ -5,6 +5,7 @@ import Modal from './Modal';
 import MetadataItem from './MetadataItem';
 import Router from './Router';
 import Stream from './Stream';
+import Episode from './Episode';
 
 export {
     Checkbox,
@@ -13,5 +14,6 @@ export {
     Modal,
     MetadataItem,
     Router,
-    Stream 
+    Stream,
+    Episode
 };
