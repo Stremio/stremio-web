@@ -1,0 +1,83 @@
+@import 'stremio-colors';
+.library-item {
+    width: 90%;
+    display: flex;
+    padding: 8px;
+    align-items: center;
+    color: @colorwhite60;
+    border-top: 1px solid @colorwhite20;
+    .poster-container {
+        display: flex; 
+        height: 110px; 
+        margin-right: 20px;
+        .poster {
+            width: 75px;
+        }
+    }
+    .play-container {
+        width: 52px;
+        height: 52px;
+        position: absolute;
+        padding: 16px 19px;
+        margin: 0px 11.5px;
+        .play {
+            width: 20px;
+            height: 20px;
+            fill: @colortransparent;
+        }
+    }
+    .title {
+        width: 170px;
+        color: @colorwhite;
+    }
+    .type, .year, .views, .hours {
+        width: 100px;
+    }
+    .date-added, .last-viewed {
+        width: 130px;
+    }
+    .icon-container {
+        width: 100px;
+        height: 100px;
+        padding-top: 24px;
+        text-align: center;
+        visibility: hidden;
+        .trailer-icon {
+            width: 22px;
+            fill: @colorwhite;
+        }
+        .addlib-icon {
+            width: 34px;
+            fill: @colorwhite;
+        }
+    }
+    &:hover, &:focus {
+        cursor: pointer;
+        color: @colorblack;
+        background-color: @colorwhite;
+        .play-container {
+            border-radius: 50%;
+            background-color: @colorwhite; 
+            .play { 
+                fill: @colormedium;
+            }
+        } 
+        .title {
+            color: @colorblack;
+        }
+        .icon-container {
+            visibility: visible;
+            .trailer-icon, .addlib-icon, .trailer, .addlib {
+                fill: @colorprim;
+                color: @colorprim;
+            }
+            &:hover, &:focus {
+                background-color: @colorblack20;
+                .trailer-icon, .addlib-icon, .trailer, .addlib {
+                    fill: @colorprimdark;
+                    color: @colorprimdark;
+                }
+            }
+        }
+    }
+}

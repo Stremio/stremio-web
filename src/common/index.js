@@ -6,6 +6,7 @@ import MetadataItem from './MetadataItem';
 import Router from './Router';
 import Stream from './Stream';
 import Episode from './Episode';
+import LibraryItemList from './LibraryItemList';
 
 export {
     Checkbox,
@@ -15,5 +16,6 @@ export {
     MetadataItem,
     Router,
     Stream,
-    Episode
+    Episode,
+    LibraryItemList
 };
