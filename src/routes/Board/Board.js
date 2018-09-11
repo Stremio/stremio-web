@@ -4,6 +4,7 @@ import { addons } from 'stremio-services';
 import { Stream } from 'stremio-common';
 import { Episode } from 'stremio-common';
 import { LibraryItemList } from 'stremio-common';
+import { LibraryItemGrid } from 'stremio-common';
 
 class Board extends PureComponent {
     constructor(props) {
@@ -32,10 +33,16 @@ class Board extends PureComponent {
     render() {
         return (
             <div style={{ paddingTop: 40, color: 'yellow' }}>
-                <LibraryItemList poster={'http://t3.gstatic.com/images?q=tbn:ANd9GcST1uigGrukMvSAVUefFNuQ0NMZAR-FjfFIwSZFCR5ZkyMSgCyj'} title={'Thor Ragnarok'} type={'Movies'} year={'2017'} dateAdded={'14.12.2017'} views={12} hours={1245} lastViewed={'14.12.2017'}></LibraryItemList>
-                <LibraryItemList poster={'https://m.media-amazon.com/images/M/MV5BMTU5NDI1MjkwMF5BMl5BanBnXkFtZTgwNjIxNTY2MzI@._V1_UX182_CR0,0,182,268_AL_.jpg'} title={'Pitch Perfect 3'} type={'Series'} year={'2015'} dateAdded={'12.12.2012'} views={1} hours={1245} lastViewed={'14.12.2017'}></LibraryItemList>
-                <LibraryItemList poster={'https://m.media-amazon.com/images/M/MV5BODAxNDFhNGItMzdiMC00NDM1LWExYWUtZjNiMGIzYTc0MTM5XkEyXkFqcGdeQXVyMjYzMjA3NzI@._V1_UY268_CR3,0,182,268_AL_.jpg'} title={'Deadpool'} type={'Channel'} year={'2013'} dateAdded={'12.12.2012'} views={3} hours={1245} lastViewed={'14.12.2017'}></LibraryItemList>
-                <LibraryItemList poster={'https://m.media-amazon.com/images/M/MV5BNGNiNWQ5M2MtNGI0OC00MDA2LWI5NzEtMmZiYjVjMDEyOWYzXkEyXkFqcGdeQXVyMjM4NTM5NDY@._V1_.jpg'} title={'The Shape of Water'} type={'Movies'} year={'2017'} dateAdded={'12.12.2012'} views={8} hours={1245} lastViewed={'14.12.2017'}></LibraryItemList>
+                <LibraryItemGrid poster={'https://m.media-amazon.com/images/M/MV5BODQ0NDhjYWItYTMxZi00NTk2LWIzNDEtOWZiYWYxZjc2MTgxXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_.jpg'}></LibraryItemGrid>
+                <LibraryItemGrid poster={'https://m.media-amazon.com/images/M/MV5BMTk2Mjc2NzYxNl5BMl5BanBnXkFtZTgwMTA2OTA1NDM@._V1_.jpg'}></LibraryItemGrid>
+                <LibraryItemGrid poster={'https://m.media-amazon.com/images/M/MV5BMTA3MDkxOTc4NDdeQTJeQWpwZ15BbWU4MDAxNzgyNTQz._V1_.jpg'}></LibraryItemGrid>
+                <LibraryItemGrid poster={'https://m.media-amazon.com/images/M/MV5BYWVhZjZkYTItOGIwYS00NmRkLWJlYjctMWM0ZjFmMDU4ZjEzXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_UX182_CR0,0,182,268_AL_.jpg'}></LibraryItemGrid>
+                <LibraryItemGrid poster={'https://m.media-amazon.com/images/M/MV5BYjQ5NjM0Y2YtNjZkNC00ZDhkLWJjMWItN2QyNzFkMDE3ZjAxXkEyXkFqcGdeQXVyODIxMzk5NjA@._V1_UY268_CR3,0,182,268_AL_.jpg'}></LibraryItemGrid>
+                <LibraryItemGrid poster={'https://m.media-amazon.com/images/M/MV5BMjMyNDkzMzI1OF5BMl5BanBnXkFtZTgwODcxODg5MjI@._V1_.jpg'}></LibraryItemGrid>
+                <LibraryItemGrid poster={'https://m.media-amazon.com/images/M/MV5BMTU5NDI1MjkwMF5BMl5BanBnXkFtZTgwNjIxNTY2MzI@._V1_UX182_CR0,0,182,268_AL_.jpg'}></LibraryItemGrid>
+                <LibraryItemGrid poster={'https://m.media-amazon.com/images/M/MV5BODAxNDFhNGItMzdiMC00NDM1LWExYWUtZjNiMGIzYTc0MTM5XkEyXkFqcGdeQXVyMjYzMjA3NzI@._V1_UY268_CR3,0,182,268_AL_.jpg'}></LibraryItemGrid>
+                <LibraryItemGrid poster={'https://m.media-amazon.com/images/M/MV5BNGNiNWQ5M2MtNGI0OC00MDA2LWI5NzEtMmZiYjVjMDEyOWYzXkEyXkFqcGdeQXVyMjM4NTM5NDY@._V1_.jpg'}></LibraryItemGrid>
+                <LibraryItemGrid poster={'https://m.media-amazon.com/images/M/MV5BNjFhZjM4ZDYtMGRjYi00Yzc2LWExYmEtMDQ3NzA4ODU4YTljXkEyXkFqcGdeQXVyNjkwMzU3NDI@._V1_UX182_CR0,0,182,268_AL_.jpg'}></LibraryItemGrid>
             </div>
         );
     }

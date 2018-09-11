@@ -1,0 +1,36 @@
+@import 'stremio-colors';
+.library-item {
+    width: 150px;
+    height: 222px;
+    float: left;
+    margin: 8px;
+    display: flex;
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.4s ease-in-out;
+    .play-container {
+        width: 70px;
+        height: 70px;
+        margin: auto;
+        display: flex;
+        .play {
+            width: 26px;
+            height: 26px;
+            margin: auto;
+            margin-left: 26px;
+            fill: @colortransparent;
+        }
+    }
+    &:hover, &:focus {
+        cursor: pointer;
+        transform: scale(1.11);
+        border: 1px solid @colorwhite;
+        .play-container {
+            border-radius: 50%;
+            background-color: @colorwhite; 
+            .play { 
+                fill: @colormedium;
+            }
+        } 
+    }
+}
