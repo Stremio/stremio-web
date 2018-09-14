@@ -7,7 +7,6 @@
     display: flex;
     background-size: cover;
     background-position: center;
-    transition: transform 0.4s ease-in-out;
     .play-container {
         width: 70px;
         height: 70px;
@@ -23,8 +22,7 @@
     }
     &:hover, &:focus {
         cursor: pointer;
-        transform: scale(1.11);
-        border: 1px solid @colorwhite;
+        outline: 2px solid @colorwhite;
         .play-container {
             border-radius: 50%;
             background-color: @colorwhite; 
