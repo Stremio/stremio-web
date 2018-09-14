@@ -5,6 +5,7 @@ import { Stream } from 'stremio-common';
 import { Episode } from 'stremio-common';
 import { LibraryItemList } from 'stremio-common';
 import { LibraryItemGrid } from 'stremio-common';
+import { Addon } from 'stremio-common';
 
 class Board extends PureComponent {
     constructor(props) {
@@ -33,16 +34,10 @@ class Board extends PureComponent {
     render() {
         return (
             <div style={{ paddingTop: 40, color: 'yellow' }}>
-                <LibraryItemGrid poster={'https://m.media-amazon.com/images/M/MV5BODQ0NDhjYWItYTMxZi00NTk2LWIzNDEtOWZiYWYxZjc2MTgxXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_.jpg'}></LibraryItemGrid>
-                <LibraryItemGrid poster={'https://m.media-amazon.com/images/M/MV5BMTk2Mjc2NzYxNl5BMl5BanBnXkFtZTgwMTA2OTA1NDM@._V1_.jpg'}></LibraryItemGrid>
-                <LibraryItemGrid poster={'https://m.media-amazon.com/images/M/MV5BMTA3MDkxOTc4NDdeQTJeQWpwZ15BbWU4MDAxNzgyNTQz._V1_.jpg'}></LibraryItemGrid>
-                <LibraryItemGrid poster={'https://m.media-amazon.com/images/M/MV5BYWVhZjZkYTItOGIwYS00NmRkLWJlYjctMWM0ZjFmMDU4ZjEzXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_UX182_CR0,0,182,268_AL_.jpg'}></LibraryItemGrid>
-                <LibraryItemGrid poster={'https://m.media-amazon.com/images/M/MV5BYjQ5NjM0Y2YtNjZkNC00ZDhkLWJjMWItN2QyNzFkMDE3ZjAxXkEyXkFqcGdeQXVyODIxMzk5NjA@._V1_UY268_CR3,0,182,268_AL_.jpg'}></LibraryItemGrid>
-                <LibraryItemGrid poster={'https://m.media-amazon.com/images/M/MV5BMjMyNDkzMzI1OF5BMl5BanBnXkFtZTgwODcxODg5MjI@._V1_.jpg'}></LibraryItemGrid>
-                <LibraryItemGrid poster={'https://m.media-amazon.com/images/M/MV5BMTU5NDI1MjkwMF5BMl5BanBnXkFtZTgwNjIxNTY2MzI@._V1_UX182_CR0,0,182,268_AL_.jpg'}></LibraryItemGrid>
-                <LibraryItemGrid poster={'https://m.media-amazon.com/images/M/MV5BODAxNDFhNGItMzdiMC00NDM1LWExYWUtZjNiMGIzYTc0MTM5XkEyXkFqcGdeQXVyMjYzMjA3NzI@._V1_UY268_CR3,0,182,268_AL_.jpg'}></LibraryItemGrid>
-                <LibraryItemGrid poster={'https://m.media-amazon.com/images/M/MV5BNGNiNWQ5M2MtNGI0OC00MDA2LWI5NzEtMmZiYjVjMDEyOWYzXkEyXkFqcGdeQXVyMjM4NTM5NDY@._V1_.jpg'}></LibraryItemGrid>
-                <LibraryItemGrid poster={'https://m.media-amazon.com/images/M/MV5BNjFhZjM4ZDYtMGRjYi00Yzc2LWExYmEtMDQ3NzA4ODU4YTljXkEyXkFqcGdeQXVyNjkwMzU3NDI@._V1_UX182_CR0,0,182,268_AL_.jpg'}></LibraryItemGrid>
+                <Addon logo={'ic_series'} name={'Watch Hub'} version={'1.3.0'} isInstalled={false} types={['Movies', 'Series']} description={'Find where to stream your favourite movies and shows amongst iTunes, Hulu, Amazon and other UK/US services.'} urls={['http://nfxaddon.strem.io/stremioget', 'http://127.0.0.1:11470/addons/com.stremio.subtitles/stremioget', 'http://127.0.0.1:11470/addons/com.stremio.localfiles/stremioget']}></Addon>
+                <Addon name={'Cinemeta'} version={'2.4.0'} isInstalled={true} types={['Movies', 'Series']} description={'Watch your favourite YouTube channels ad-free and get notified when they upload new videos.'} urls={['https://channels.strem.io/stremioget/stremio/v1', 'https://channels.strem.io/stremioget/stremio/v1']}></Addon>
+                <Addon logo={'ic_youtube_small'} name={'YouTube'} version={'1.3.0'} isInstalled={true} types={['Channels', 'Videos']} description={'Watch your favourite YouTube channels ad-free and get notified when they upload new videos.'} urls={['https://channels.strem.io/stremioget/stremio/v1', 'https://channels.strem.io/stremioget/stremio/v1']}></Addon>
+                <Addon name={'OpenSubtitles'} version={'1.3.0'} isInstalled={false} types={['Movies', 'Series']} description={'Watch your favourite YouTube channels ad-free and get notified when they upload new videos.'} urls={['https://channels.strem.io/stremioget/stremio/v1', 'https://channels.strem.io/stremioget/stremio/v1', 'http://127.0.0.1:11470/addons/com.stremio.subtitles/stremioget', 'https://channels.strem.io/stremioget/stremio/v1']}></Addon>
             </div>
         );
     }

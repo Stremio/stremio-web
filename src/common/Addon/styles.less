@@ -1,0 +1,109 @@
+@import 'stremio-colors';
+.addon {
+    float: left;
+    width: 550px;
+    margin: 10px;
+    padding: 18px;
+    display: grid;
+    font-size: 12px;
+    color: @colorwhite;
+    font-family: LatoLight;
+    background-color: @colorglass;
+    .logo-container {
+        width: 80px;
+        height: 80px;
+        float: left;
+        display: flex;
+        margin-right: 14px;
+        background-color: @colordarkest;
+        .logo {
+            width: 40px;
+            margin: auto;
+            fill: @colorwhite;
+        }
+    }
+    .name {
+        font-size: 20px;
+    }
+    .version {
+        margin: 10px;
+        color: @colorwhite60;
+    }
+    .check-container {
+        color: @colorwhite60;
+        .check-icon {
+            width: 10px;
+            fill: @colorsignal5;
+        }
+    }
+    .type {
+        color: @coloraccent;
+    }
+    .urls {
+        margin: 20px 0px;
+        .url-container {
+            display: flex;
+            align-items: center;
+            .default-checkbox {
+                display: none;
+            }
+            .checkbox {
+                width: 14px;
+                height: 14px;
+                cursor: pointer;
+                margin-right: 6px;
+                border: 2px solid @colorwhite60;
+                .checkmark {
+                    width: 10px;
+                    height: 10px;
+                    display: none;
+                    fill: @colorwhite;
+                }
+            }
+            input:checked ~ .checkbox {
+                background-color: @colorprimlight;
+                border: 2px solid @colorprimlight;
+                .checkmark {
+                    display: block;
+                }
+            }
+            input:not(:checked) ~ .url {
+                color: @colorwhite60;
+            }
+        }
+    }
+    .buttons {
+        display: flex;
+        margin-top: 10px;
+        text-align: center;
+        align-items: center;
+        .share-container {
+            width: 50%;
+            margin-right: 50px;
+            .share-icon {
+                width: 20px;
+                margin-right: 6px;
+                fill: @coloraccent;
+            }
+            .share-label {
+                font-size: larger;
+                color:@coloraccent;
+                vertical-align: super;
+            }
+        }
+        .install-label, .uninstall-label {
+            width: 50%;
+            font-weight: 600;
+            font-size: larger;
+            padding: 10px 80px;
+            border-radius: 2px;
+        }
+        .install-label {
+            border: 2px solid @colorsignal5;
+            background-color: @colorsignal5;
+        }
+        .uninstall-label {
+            border: 2px solid @colorwhite20;
+        }
+    }
+}

@@ -8,6 +8,7 @@ import Stream from './Stream';
 import Episode from './Episode';
 import LibraryItemList from './LibraryItemList';
 import LibraryItemGrid from './LibraryItemGrid';
+import Addon from './Addon';
 
 export {
     Checkbox,
@@ -19,5 +20,6 @@ export {
     Stream,
     Episode,
     LibraryItemList,
-    LibraryItemGrid
+    LibraryItemGrid,
+    Addon
 };
