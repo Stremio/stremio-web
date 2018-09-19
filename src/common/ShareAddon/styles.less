@@ -1,0 +1,80 @@
+@import 'stremio-colors';
+.share-addon {
+    width: 380px;
+    height: 200px;
+    padding: 10px;
+    color: @colorwhite;
+    background-color: @colorwhite;
+    .x-container {
+        display: flex;
+        justify-content: flex-end;
+        .x-icon {
+            height: 10px;
+            fill: @colorneutrallight;
+        }
+    }
+    .info-container {
+        padding: 6px 20px 0px 20px;
+        .share-label {
+            color: @colorblack;
+            font-weight: 600;
+        }
+        .buttons {
+            display: flex;
+            font-size: 11px;
+            margin: 22px 0px;
+            font-family: LatoLight;
+            justify-content: space-between;
+            .facebook-icon, .twitter-icon, .gplus-icon {
+                width: 14px;
+                height: 14px;
+                margin-right: 6px;
+                fill: @colorwhite;
+            }
+            .facebook-button {
+                background-color: @colorfb;
+            }
+            .twitter-button {
+                background-color: @coloraccent;
+            }
+            .gplus-button {
+                background-color: #dd4b39;
+            }
+            .facebook-button, .twitter-button, .gplus-button {
+                display: flex;
+                cursor: pointer;
+                width: 100px;
+                height: 32px;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+        .url-container {
+            display: flex;
+            border-radius: 4px;
+            text-align: center;
+            border: 1px solid @colorneutrallight;
+            .url, .copy-label {
+                padding: 10px;
+                font-weight: 600;
+                color: @colorblack40;
+            }
+            .url {
+                width: 90%;
+                outline: none;
+                font-size: 12px;
+                text-align: center;
+                border-radius: 4px;
+                padding-right: 30px;
+                text-overflow: ellipsis;
+            }
+            .copy-label {
+                width: 30%;
+                cursor: pointer;
+                border-top-right-radius: 3px;
+                border-bottom-right-radius: 3px;
+                background-color: @colorblack20;
+            }
+        }
+    }
+}

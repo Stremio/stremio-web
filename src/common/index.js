@@ -9,6 +9,7 @@ import Episode from './Episode';
 import LibraryItemList from './LibraryItemList';
 import LibraryItemGrid from './LibraryItemGrid';
 import Addon from './Addon';
+import ShareAddon from './ShareAddon';
 
 export {
     Checkbox,
@@ -21,5 +22,6 @@ export {
     Episode,
     LibraryItemList,
     LibraryItemGrid,
-    Addon
+    Addon,
+    ShareAddon
 };
