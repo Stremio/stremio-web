@@ -10,6 +10,7 @@ import LibraryItemList from './LibraryItemList';
 import LibraryItemGrid from './LibraryItemGrid';
 import Addon from './Addon';
 import ShareAddon from './ShareAddon';
+import UserPanel from './UserPanel';
 
 export {
     Checkbox,
@@ -23,5 +24,6 @@ export {
     LibraryItemList,
     LibraryItemGrid,
     Addon,
-    ShareAddon
+    ShareAddon,
+    UserPanel,
 };

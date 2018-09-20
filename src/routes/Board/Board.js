@@ -7,6 +7,7 @@ import { LibraryItemList } from 'stremio-common';
 import { LibraryItemGrid } from 'stremio-common';
 import { Addon } from 'stremio-common';
 import { ShareAddon } from 'stremio-common';
+import { UserPanel } from 'stremio-common';
 
 class Board extends PureComponent {
     constructor(props) {
@@ -35,7 +36,7 @@ class Board extends PureComponent {
     render() {
         return (
             <div style={{ paddingTop: 40, color: 'yellow' }}>
-                <ShareAddon url={'http://nfxaddon.strem.io/stremioget'}></ShareAddon>
+                <UserPanel photo={'https://image.freepik.com/free-vector/wild-animals-cartoon_1196-361.jpg'} email={'animals@mail.com'}></UserPanel>
             </div>
         );
     }
