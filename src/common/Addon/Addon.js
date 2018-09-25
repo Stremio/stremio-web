@@ -92,9 +92,9 @@ class Addon extends Component {
                     return (
                         <label className={styles['url-container']}>
                             <input type='checkbox' className={styles['default-checkbox']}/>
-                            <p className={styles['checkbox']}>
+                            <span className={styles['checkbox']}>
                                 <Icon className={styles['checkmark']} icon={'ic_check'}/>
-                            </p>
+                            </span>
                             <span key={key} className={styles['url']}>{item}</span>
                         </label>
                     );

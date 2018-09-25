@@ -4,7 +4,6 @@
     width: 550px;
     margin: 10px;
     padding: 18px;
-    display: grid;
     font-size: 12px;
     color: @colorwhite;
     font-family: LatoLight;
@@ -40,7 +39,7 @@
         color: @coloraccent;
     }
     .urls {
-        margin: 20px 0px;
+        margin: 26px 0px;
         .url-container {
             display: flex;
             align-items: center;
@@ -86,13 +85,15 @@
                 fill: @coloraccent;
             }
             .share-label {
+                cursor: pointer;
                 font-size: larger;
-                color:@coloraccent;
+                color: @coloraccent;
                 vertical-align: super;
             }
         }
         .install-label, .uninstall-label {
             width: 50%;
+            cursor: pointer;
             font-weight: 600;
             font-size: larger;
             padding: 10px 80px;

@@ -90,7 +90,7 @@ class LibraryItemList extends Component {
         return (
             <div className={styles['icon-container']}>
                 <Icon className={styles['trailer-icon']} icon={'ic_movies'}/>
-                <p className={styles['trailer']}>Trailer</p>
+                <div className={styles['trailer']}>Trailer</div>
             </div>
         );
     }
@@ -99,7 +99,7 @@ class LibraryItemList extends Component {
         return (
             <div className={styles['icon-container']}>
                 <Icon className={styles['addlib-icon']} icon={'ic_addlib'}/>
-                <p className={styles['addlib']}>Add to Library</p>
+                <div className={styles['addlib']}>Add to Library</div>
             </div>
         );
     }
