@@ -7,7 +7,7 @@ import Router from './Router';
 import Stream from './Stream';
 import Video from './Video';
 import LibraryItemList from './LibraryItemList';
-import LibraryItemGrid from './LibraryItemGrid';
+import MetaItem from './MetaItem';
 import Addon from './Addon';
 import ShareAddon from './ShareAddon';
 import UserPanel from './UserPanel';
@@ -22,7 +22,7 @@ export {
     Stream,
     Video,
     LibraryItemList,
-    LibraryItemGrid,
+    MetaItem,
     Addon,
     ShareAddon,
     UserPanel,
