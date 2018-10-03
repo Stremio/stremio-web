@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { Catalogs } from 'stremio-aggregators';
 import { addons } from 'stremio-services';
 import { Stream } from 'stremio-common';
-import { Episode } from 'stremio-common';
+import { Video } from 'stremio-common';
 import { LibraryItemList } from 'stremio-common';
 import { LibraryItemGrid } from 'stremio-common';
 import { Addon } from 'stremio-common';

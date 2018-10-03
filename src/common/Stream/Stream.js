@@ -1,14 +1,11 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import Icon from 'stremio-icons/dom';
+import colors from 'stremio-colors';
 import styles from './styles';
 
-class Stream extends Component {
+class Stream extends PureComponent {
     renderLogo() {
-        if(this.props.logo.length === 0 && this.props.sourceName.length === 0){
-            return null;
-        }
-
         if(this.props.logo) {
             return (
                 <Icon className={styles['logo']} icon={this.props.logo}/>
@@ -16,7 +13,7 @@ class Stream extends Component {
         }
 
         return (
-            <span className={styles['source-name']}>{this.props.sourceName}</span>
+            <div className={styles['source-name']}>{this.props.sourceName}</div>
         );
     }
 
@@ -26,15 +23,11 @@ class Stream extends Component {
         }
 
         return (
-            <div className={styles['title']}>{this.props.title.split(',').join("\n")}</div>
+            <div className={this.props.title.length > 22 ? styles['long-title'] : styles['title']}>{this.props.title}</div>
         );
     }
 
     renderSubtitle() {
-        if(!this.props.isFree && !this.props.isSubscription && !this.props.subtitle){
-            return null;
-        }
-
         if(this.props.isFree) {
             return (
                 <span className={styles['free-label']}>FREE</span>
@@ -47,47 +40,48 @@ class Stream extends Component {
             );
         }
 
-        return (
-            <div className={styles['subtitle']}>{this.props.subtitle}</div>
-        );
+        if(this.props.subtitle) {
+            return (
+                <div className={styles['subtitle']}>{this.props.subtitle}</div>
+            );
+        }
+        return null;
     }
 
     renderPlay() {
         return (
-            <div className={styles['play-container']}>
-                <Icon className={styles['play']} icon={'ic_play'}/>
+            <div style={{backgroundColor: this.props.progress ? colors.white : null}} className={styles['play-container']}>
+                <Icon style={{fill: this.props.progress ? colors.medium : null}} className={styles['play']} icon={'ic_play'}/>
             </div>
         );
     }
 
     renderProgress() {
-        if(this.props.lastWatched) {
-            return (
-                <div className={styles['progress-container']}>
-                    <div className={styles['progress']}></div>
-                </div>
-            );
+        if(this.props.progress <= 0) {
+            return null;
         }
+
+        return (
+            <div className={styles['progress-container']}>
+                <div style={{width: this.props.progress + '%'}} className={styles['progress']}></div>
+            </div>
+        );
     }
     
     render() {
         return (
-            <div className={styles['stream']}>
-                <div className={styles[this.props.lastWatched ? 'last-watched' : 'stream-item']}>
-                    <div className={styles['stream-container']}>
-                        <div className={styles['stream-holder']}>
-                            <div className={styles['logo-container']}>
-                                {this.renderLogo()}
-                            </div>
-                            <div className={styles['title-container']}>
-                                {this.renderTitle()}
-                                {this.renderSubtitle()}
-                            </div>
+            <div style={{backgroundColor: this.props.progress ? colors.black40 : null}} className={styles['stream']}>
+                <div className={styles['stream-info-container']}>
+                    <div className={styles['stream-info']}>
+                        {this.renderLogo()}
+                        <div className={styles['text-container']}>
+                            {this.renderTitle()}
+                            {this.renderSubtitle()}
                         </div>
-                        {this.renderProgress()}
                     </div>
-                    {this.renderPlay()}
+                    {this.renderProgress()}
                 </div>
+                {this.renderPlay()}
             </div>
         );
     }
@@ -100,8 +94,7 @@ Stream.propTypes = {
     subtitle: PropTypes.string.isRequired,
     isFree: PropTypes.bool.isRequired,
     isSubscription: PropTypes.bool.isRequired,
-    progress: PropTypes.number.isRequired,
-    lastWatched: PropTypes.bool.isRequired
+    progress: PropTypes.number.isRequired
 };
 
 Stream.defaultProps = {
@@ -111,8 +104,7 @@ Stream.defaultProps = {
     subtitle: '',
     isFree: false,
     isSubscription: false,
-    progress: 0,
-    lastWatched: false
+    progress: 0
 };
 
 export default Stream;

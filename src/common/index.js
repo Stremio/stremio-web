@@ -5,7 +5,7 @@ import Modal from './Modal';
 import MetadataItem from './MetadataItem';
 import Router from './Router';
 import Stream from './Stream';
-import Episode from './Episode';
+import Video from './Video';
 import LibraryItemList from './LibraryItemList';
 import LibraryItemGrid from './LibraryItemGrid';
 import Addon from './Addon';
@@ -20,7 +20,7 @@ export {
     MetadataItem,
     Router,
     Stream,
-    Episode,
+    Video,
     LibraryItemList,
     LibraryItemGrid,
     Addon,

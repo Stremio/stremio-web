@@ -1,67 +1,58 @@
 @import 'stremio-colors';
 .stream {
     width: 340px;
+    display: flex;
+    font-size: 11px;
+    padding: 7px 20px;
+    color: @colorwhite;
+    justify-content: space-between;
     background-color: @colorblack20;
-    .stream-item {
-        display: inline-flex;
-    }
-    .stream-container {
-        color: @colorwhite;
-        margin-left: 16px;
-        margin-top: 10px;
-        .stream-holder {
-            display: inline-flex;
-            .logo-container {
-                width: 80px;
-                height: 40px;
-                font-size: 14px;
-                padding-top: 6px;
-                margin-right: 40px;
-                .logo {
-                    fill: @colorwhite;
-                }
-                .source-name {
-                    top: 4px;
-                    position: relative;
-                }
+    .stream-info-container {
+        width: 230px;
+        .stream-info {
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            .logo {
+                width: 74px;
+                fill: @colorwhite;
             }
-            .title-container {
-                height: 40px;
-                width: 120px;
-                font-size: 11px;
+            .source-name {
+                width: 80px;
+                font-size: 13px;
                 overflow: hidden;
-                white-space: pre;
-                .title, .subtitle {
+            }
+            .text-container {
+                width: 120px;
+                overflow: hidden;
+                .long-title {
                     overflow: hidden;
-                    padding-top: 4px;
-                    line-height: 16px;
-                    color: @colorwhite60;
+                    white-space: pre;
                     text-overflow: ellipsis;
                     &:hover {
-                        width: auto;
-                        transition: margin-left 3s linear;
                         margin-left: -180%;
                         text-overflow: initial;
+                        transition: margin-left 3s linear;
                     }
                 }
-            }
-            .free-label, .subscription-label {
-                font-weight: 600;
-                font-size: 11px;
-                border-radius: 2px;
-            }
-            .free-label {
-                padding: 1px 6px;
-                background-color: @colorprimlight;
-            }
-            .subscription-label {
-                color: @colorsignal1;
+                .free-label, .subscription-label {
+                    font-weight: 600;
+                }
+                .free-label {
+                    padding: 1px 6px;
+                    border-radius: 2px;
+                    background-color: @colorprimlight;
+                }
+                .subscription-label {
+                    color: @colorsignal1;
+                }
             }
         }
         .progress-container {
+            background-color: @colorneutral;
             .progress {
                 height: 3px;
-                width: 240px;
                 border-radius: 1px;
                 background-color: @colorprimlight;
             }
@@ -70,28 +61,18 @@
     .play-container {
         width: 46px;
         height: 46px;
-        padding: 14px 17px;
-        margin: 7px 20px;
+        display: flex;
+        border-radius: 50%;
         .play {
             width: 18px;
             height: 18px;
+            margin: auto;
+            margin-left: 16px;
             fill: @colorwhite60;
         }
     }
-    &:hover, &:focus {
+    &:hover {
         cursor: pointer;
         background-color: @colorwhite20;
-    }
-    .last-watched {
-        background-color: @colorblack40;
-        width: 340px;
-        display: inline-flex;
-        .play-container {
-            background-color: @colorwhite; 
-            border-radius: 50%;
-            .play { 
-                fill: @colormedium;
-            }
-        } 
     }
 }

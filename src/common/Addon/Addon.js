@@ -76,8 +76,14 @@ class Addon extends Component {
             return null;
         }
 
+        if(this.props.description.length > 150) {
+            return (
+                <div style={{overflowY: 'scroll', height: '36px'}} className={styles['description']}>{this.props.description}</div>
+            );
+        }
+
         return (
-            <span className={styles['description']}>{this.props.description}</span>
+            <div className={styles['description']}>{this.props.description}</div>
         );
     }
 
@@ -90,12 +96,12 @@ class Addon extends Component {
             <div className={styles['urls']}>
                 {this.props.urls.map((item, key) => {
                     return (
-                        <label className={styles['url-container']}>
+                        <label key={key} className={styles['url-container']}>
                             <input type='checkbox' className={styles['default-checkbox']}/>
                             <span className={styles['checkbox']}>
                                 <Icon className={styles['checkmark']} icon={'ic_check'}/>
                             </span>
-                            <span key={key} className={styles['url']}>{item}</span>
+                            <span className={styles['url']}>{item}</span>
                         </label>
                     );
                 })}
@@ -127,14 +133,12 @@ class Addon extends Component {
     render() {
         return (
             <div className={styles['addon']}>
-                <div className={styles['info-container']}>
-                    {this.renderLogo()}
-                    {this.renderName()}
-                    {this.renderVersion()}
-                    {this.renderInstalled()}
-                    {this.renderType()}
-                    {this.renderDescription()}
-                </div>
+                {this.renderLogo()}
+                {this.renderName()}
+                {this.renderVersion()}
+                {this.renderInstalled()}
+                {this.renderType()}
+                {this.renderDescription()}
                 {this.renderUrls()}
                 <div className={styles['buttons']}>
                     {this.renderShareButton()}
