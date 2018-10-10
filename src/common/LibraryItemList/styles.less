@@ -5,26 +5,27 @@
     padding: 8px;
     align-items: center;
     color: @colorwhite60;
+    font-family: LatoLight;
     border-top: 1px solid @colorwhite20;
-    .poster-container {
+    .poster {
+        width: 75px;
         display: flex; 
-        height: 110px; 
+        height: 110px;
         margin-right: 20px;
-        .poster {
-            width: 75px;
-        }
-    }
-    .play-container {
-        width: 52px;
-        height: 52px;
-        cursor: pointer;
-        position: absolute;
-        padding: 16px 19px;
-        margin: 0px 11.5px;
-        .play {
-            width: 20px;
-            height: 20px;
-            fill: @colortransparent;
+        background-size: cover;
+        background-position: center;
+        .play-container {
+            width: 52px;
+            height: 52px;
+            margin: auto;
+            cursor: pointer;
+            border-radius: 50%;
+            padding: 16px 19px;
+            .play {
+                width: 20px;
+                height: 20px;
+                fill: @colortransparent;
+            }
         }
     }
     .title {
@@ -40,24 +41,23 @@
     .icon-container {
         width: 100px;
         height: 100px;
+        fill: @colorprim;
+        color: @colorprim;
         padding-top: 24px;
         text-align: center;
         visibility: hidden;
         .trailer-icon {
             width: 22px;
-            fill: @colorwhite;
         }
         .addlib-icon {
             width: 34px;
-            fill: @colorwhite;
         }
     }
     &:hover, &:focus {
         color: @colorblack;
         background-color: @colorwhite;
         .play-container {
-            border-radius: 50%;
-            background-color: @colorwhite; 
+            background-color: @colorwhite;
             .play { 
                 fill: @colormedium;
             }
@@ -68,10 +68,6 @@
         .icon-container {
             cursor: pointer;
             visibility: visible;
-            .trailer-icon, .addlib-icon, .trailer, .addlib {
-                fill: @colorprim;
-                color: @colorprim;
-            }
             &:hover, &:focus {
                 background-color: @colorblack20;
                 .trailer-icon, .addlib-icon, .trailer, .addlib {

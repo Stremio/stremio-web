@@ -1,171 +1,120 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import Icon from 'stremio-icons/dom';
 import styles from './styles';
 
-class Addon extends Component {
-    renderLogo() {
-        if(this.props.logo.length === 0) {
-            return (
-                <div className={styles['logo-container']}>
-                    <Icon className={styles['logo']} icon={'ic_addons'}/>
-                </div>
-            );
-        }
+const renderLogo = (logo) => {
+    return (
+        <div className={styles['logo-container']}>
+            <Icon className={styles['logo']} icon={logo.length === 0 ? 'ic_addons' : logo} />
+        </div>
+    );
+}
 
-        return (
-            <div className={styles['logo-container']}>
-                <Icon className={styles['logo']} icon={this.props.logo}/>
+const renderName = (name) => {
+    if (name.length === 0) {
+        return null;
+    }
+
+    return (
+        <span className={styles['name']}>{name}</span>
+    );
+}
+
+const renderVersion = (version) => {
+    if (version.length === 0) {
+        return null;
+    }
+
+    return (
+        <span className={styles['version']}>{'v. ' + version}</span>
+    );
+}
+
+const renderType = (types) => {
+    return (
+        <div className={styles['type']}>
+            {types.length <= 1 ? types.join('') : types.slice(0, -1).join(', ') + ' & ' + types[types.length - 1]}
+        </div>
+    );
+}
+
+const renderDescription = (description) => {
+    if (description.length === 0) {
+        return null;
+    }
+
+    return (
+        <div style={description.length > 150 ? { overflowY: 'scroll', height: 36 } : null} className={styles['description']}>{description}</div>
+    );
+}
+
+const renderUrls = (urls) => {
+    if (urls.length === 0) {
+        return null;
+    }
+
+    return (
+        <div className={styles['urls']}>
+            {urls.map((url) => {
+                return (
+                    <span key={url} className={styles['url']}>{url}</span>
+                );
+            })}
+        </div>
+    );
+}
+
+const renderShareButton = (props) => {
+    return (
+        <div onClick={props.shareAddon} className={styles['share-container']}>
+            <Icon className={styles['share-icon']} icon={'ic_share'} />
+            <span className={styles['share-label']}>SHARE ADD-ON</span>
+        </div>
+    );
+}
+
+const renderState = (props, isInstalled) => {
+    return (
+        <div onClick={props.onToggleClicked} className={styles[isInstalled ? 'install-label' : 'uninstall-label']}>{isInstalled ? 'Install' : 'Uninstall'}</div>
+    );
+}
+
+const Addon = (props) => {
+    return (
+        <div className={styles['addon']}>
+            {renderLogo(props.logo)}
+            {renderName(props.name)}
+            {renderVersion(props.version)}
+            {renderType(props.types)}
+            {renderDescription(props.description)}
+            {renderUrls(props.urls)}
+            <div className={styles['buttons']}>
+                {renderShareButton(props)}
+                {renderState(props, props.isInstalled)}
             </div>
-        );
-
-    }
-
-    renderName() {
-        if(this.props.name.length === 0) {
-            return null;
-        }
-
-        return (
-            <span className={styles['name']}>{this.props.name}</span>
-        );
-    }
-
-    renderVersion() {
-        if(this.props.version.length === 0) {
-            return null;
-        }
-
-        return (
-            <span className={styles['version']}>{'v. ' + this.props.version}</span>
-        );
-    }
-
-    renderInstalled() {
-        if(!this.props.isInstalled) {
-            return null;
-        }
-
-        return (
-            <span className={styles['check-container']}>
-                <Icon className={styles['check-icon']} icon={'ic_check'}/> Installed
-            </span>
-        );
-    }
-
-    renderType() {
-        var allTypes = this.props.types;
-
-        if(this.props.types.length <= 1) {
-            return (
-                <div className={styles['type']}>
-                    {allTypes.join('')}
-                </div>
-            );
-        }
-
-        return (
-            <div className={styles['type']}>
-                {allTypes.slice(0, -1).join(', ') + ' & ' + allTypes[allTypes.length - 1]}
-            </div>
-        );
-    }
-
-    renderDescription() {
-        if(this.props.description.length === 0) {
-            return null;
-        }
-
-        if(this.props.description.length > 150) {
-            return (
-                <div style={{overflowY: 'scroll', height: '36px'}} className={styles['description']}>{this.props.description}</div>
-            );
-        }
-
-        return (
-            <div className={styles['description']}>{this.props.description}</div>
-        );
-    }
-
-    renderUrls() {
-        if(this.props.urls.length === 0) {
-            return null;
-        }
-
-        return (
-            <div className={styles['urls']}>
-                {this.props.urls.map((item, key) => {
-                    return (
-                        <label key={key} className={styles['url-container']}>
-                            <input type='checkbox' className={styles['default-checkbox']}/>
-                            <span className={styles['checkbox']}>
-                                <Icon className={styles['checkmark']} icon={'ic_check'}/>
-                            </span>
-                            <span className={styles['url']}>{item}</span>
-                        </label>
-                    );
-                })}
-            </div>
-        );
-    }
-
-    renderShareButton() {
-        return (
-            <div className={styles['share-container']}>
-                <Icon className={styles['share-icon']} icon={'ic_share'}/>
-                <span className={styles['share-label']}>SHARE ADD-ON</span>
-            </div>
-        );
-    }
-
-    renderState() {
-        if(this.props.isInstalled) {
-            return (
-                <div className={styles['uninstall-label']}>Uninstall</div>
-            );
-        }
-
-        return (
-            <div className={styles['install-label']}>Install</div>
-        );
-    }
-
-    render() {
-        return (
-            <div className={styles['addon']}>
-                {this.renderLogo()}
-                {this.renderName()}
-                {this.renderVersion()}
-                {this.renderInstalled()}
-                {this.renderType()}
-                {this.renderDescription()}
-                {this.renderUrls()}
-                <div className={styles['buttons']}>
-                    {this.renderShareButton()}
-                    {this.renderState()}
-                </div>
-            </div>
-        );
-    }
+        </div>
+    );
 }
 
 Addon.propTypes = {
     logo: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     version: PropTypes.string.isRequired,
-    isInstalled: PropTypes.bool.isRequired,
     types: PropTypes.array.isRequired,
     description: PropTypes.string.isRequired,
-    urls: PropTypes.array.isRequired
+    urls: PropTypes.arrayOf(PropTypes.string).isRequired,
+    isInstalled: PropTypes.bool.isRequired,
+    shareAddon: PropTypes.func,
+    onToggleClicked: PropTypes.func
 };
 Addon.defaultProps = {
     logo: '',
     name: '',
     version: '',
-    isInstalled: false,
     types: [],
     description: '',
-    urls: []
+    isInstalled: false
 };
 
 export default Addon;

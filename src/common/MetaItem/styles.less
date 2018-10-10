@@ -1,7 +1,5 @@
 @import 'stremio-colors';
 .meta-item {
-    margin: 4px;
-    float: left;
     color: @colorwhite;
     font-family: LatoLight;
     .poster {
@@ -48,18 +46,20 @@
             }
         }
     }
-    .more-icon {
-        width: 10px;
-        height: 10px;
+    .more-icon-container {
         cursor: pointer;
         fill: @colorwhite;
+        .more-icon {
+            width: 10px;
+            height: 10px;
+        }
     }
     &:hover {
-        cursor: pointer;
         color: @colorblack;
         background-color: @colorwhite;
         outline: 2px solid @colorwhite;
         .play-container {
+            cursor: pointer;
             visibility: visible;
         } 
         .info {

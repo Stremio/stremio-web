@@ -1,126 +1,105 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import Icon from 'stremio-icons/dom';
 import styles from './styles';
 
-class LibraryItemList extends Component {
-    renderPoster() {
-        if(this.props.poster.length === 0) {
-            return null;
-        }
-        // src?
-        return (
-            <div className={styles['poster-container']}>
-                <img className={styles['poster']} src={this.props.poster}/>
+const renderPoster = (props, poster) => {
+    if (poster.length === 0) {
+        return null;
+    }
+
+    return (
+        <div className={styles['poster']} style={{ backgroundImage: 'url(' + poster + ')' }}>
+            <div onClick={props.playButtonClicked} className={styles['play-container']}>
+                <Icon className={styles['play']} icon={'ic_play'} />
             </div>
-        );
+        </div>
+    );
+}
+
+const renderTitle = (title) => {
+    if (title.length === 0) {
+        return null;
     }
 
-    renderPlay() {
-        return (
-            <div className={styles['play-container']}>
-                <Icon className={styles['play']} icon={'ic_play'}/>
-            </div>
-        );
+    return (
+        <span className={styles['title']}>{title}</span>
+    );
+}
+
+const renderType = (type) => {
+    if (type.length === 0) {
+        return null;
     }
 
-    renderTitle() {
-        if(this.props.title.length === 0) {
-            return null;
-        }
+    return (
+        <span className={styles['type']}>{type}</span>
+    );
+}
 
-        return (
-            <span className={styles['title']}>{this.props.title}</span>
-        );
+const renderYear = (year) => {
+    if (year.length === 0) {
+        return null;
     }
 
-    renderType() {
-        if(this.props.type.length === 0) {
-            return null;
-        }
+    return (
+        <span className={styles['year']}>{year}</span>
+    );
+}
 
-        return (
-            <span className={styles['type']}>{this.props.type}</span>
-        );
+const renderDateAdded = (dateAdded) => {
+    if (isNaN(dateAdded.getTime())) {
+        return null;
     }
 
-    renderYear() {
-        if(this.props.year.length === 0) {
-            return null;
-        }
+    return (
+        <span className={styles['date-added']}>{dateAdded.getDate() + '.' + (dateAdded.getMonth() === 0 ? dateAdded.getMonth() + 12 : dateAdded.getMonth()) + '.' + dateAdded.getFullYear()}</span>
+    );
+}
 
-        return (
-            <span className={styles['year']}>{this.props.year}</span>
-        );
+const renderLastViewed = (lastViewed) => {
+    if (isNaN(lastViewed.getTime())) {
+        return null;
     }
 
-    renderDateAdded() {
-        if(this.props.dateAdded.length === 0) {
-            return null;
-        }
+    return (
+        <span className={styles['last-viewed']}>{lastViewed.getDate() + '.' + (lastViewed.getMonth() === 0 ? lastViewed.getMonth() + 12 : lastViewed.getMonth()) + '.' + lastViewed.getFullYear()}</span>
+    );
+}
 
-        return (
-            <span className={styles['date-added']}>{this.props.dateAdded}</span>
-        );  
-    }
+const renderTrailerIcon = (props) => {
+    return (
+        <div onClick={props.viewTrailer} className={styles['icon-container']}>
+            <Icon className={styles['trailer-icon']} icon={'ic_movies'} />
+            <div className={styles['trailer']}>Trailer</div>
+        </div>
+    );
+}
 
-    renderViews() {
-        return (
-            <span className={styles['views']}>{this.props.views}</span>
-        );
-    }
+const renderAddlibIcon = (props) => {
+    return (
+        <div onClick={props.addTolib} className={styles['icon-container']}>
+            <Icon className={styles['addlib-icon']} icon={'ic_addlib'} />
+            <div className={styles['addlib']}>Add to Library</div>
+        </div>
+    );
+}
 
-    renderHours() {
-        return (
-            <span className={styles['hours']}>{this.props.hours}</span>
-        );
-    }
-
-    renderLastViewed() {
-        if(this.props.lastViewed.length === 0) {
-            return null;
-        }
-
-        return (
-            <span className={styles['last-viewed']}>{this.props.lastViewed}</span>
-        );
-    }
-
-    renderTrailerIcon() {
-        return (
-            <div className={styles['icon-container']}>
-                <Icon className={styles['trailer-icon']} icon={'ic_movies'}/>
-                <div className={styles['trailer']}>Trailer</div>
-            </div>
-        );
-    }
-
-    renderAddlibIcon() {
-        return (
-            <div className={styles['icon-container']}>
-                <Icon className={styles['addlib-icon']} icon={'ic_addlib'}/>
-                <div className={styles['addlib']}>Add to Library</div>
-            </div>
-        );
-    }
-
-    render() {
-        return (
-            <div className={styles['library-item']}>
-                {this.renderPoster()}
-                {this.renderPlay()}
-                {this.renderTitle()}
-                {this.renderType()}
-                {this.renderYear()}
-                {this.renderDateAdded()}
-                {this.renderViews()}
-                {this.renderHours()}
-                {this.renderLastViewed()}
-                {this.renderTrailerIcon()}
-                {this.renderAddlibIcon()}
-            </div>
-        );
-    }
+const LibraryItemList = (props) => {
+    return (
+        <div className={styles['library-item']}>
+            {renderPoster(props, props.poster)}
+            {renderTitle(props.title)}
+            {renderType(props.type)}
+            {renderYear(props.year)}
+            {renderDateAdded(props.dateAdded)}
+            <span className={styles['views']}>{props.views}</span>
+            <span className={styles['hours']}>{props.hours}</span>
+            {renderLastViewed(props.lastViewed)}
+            {renderTrailerIcon(props)}
+            {renderAddlibIcon(props)}
+        </div>
+    );
 }
 
 LibraryItemList.propTypes = {
@@ -128,20 +107,23 @@ LibraryItemList.propTypes = {
     title: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
     year: PropTypes.string.isRequired,
-    dateAdded: PropTypes.string.isRequired,
+    dateAdded: PropTypes.instanceOf(Date).isRequired,
     views: PropTypes.number.isRequired,
     hours: PropTypes.number.isRequired,
-    lastViewed: PropTypes.string.isRequired
+    lastViewed: PropTypes.instanceOf(Date).isRequired,
+    playButtonClicked: PropTypes.func,
+    viewTrailer: PropTypes.func,
+    addTolib: PropTypes.func
 };
 LibraryItemList.defaultProps = {
     poster: '',
     title: '',
     type: '',
     year: '',
-    dateAdded: '',
+    dateAdded: new Date(''), //Invalid Date
     views: 0,
     hours: 0,
-    lastViewed: ''
+    lastViewed: new Date('')
 };
 
 export default LibraryItemList;
