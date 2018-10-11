@@ -65,18 +65,18 @@ const renderUrls = (urls) => {
     );
 }
 
-const renderShareButton = (props) => {
+const renderShareButton = (shareAddon) => {
     return (
-        <div onClick={props.shareAddon} className={styles['share-container']}>
+        <div onClick={shareAddon} className={styles['share-container']}>
             <Icon className={styles['share-icon']} icon={'ic_share'} />
             <span className={styles['share-label']}>SHARE ADD-ON</span>
         </div>
     );
 }
 
-const renderState = (props, isInstalled) => {
+const renderState = (onToggleClicked, isInstalled) => {
     return (
-        <div onClick={props.onToggleClicked} className={styles[isInstalled ? 'install-label' : 'uninstall-label']}>{isInstalled ? 'Install' : 'Uninstall'}</div>
+        <div onClick={onToggleClicked} className={styles[isInstalled ? 'install-label' : 'uninstall-label']}>{isInstalled ? 'Install' : 'Uninstall'}</div>
     );
 }
 
@@ -90,8 +90,8 @@ const Addon = (props) => {
             {renderDescription(props.description)}
             {renderUrls(props.urls)}
             <div className={styles['buttons']}>
-                {renderShareButton(props)}
-                {renderState(props, props.isInstalled)}
+                {renderShareButton(props.shareAddon)}
+                {renderState(props.onToggleClicked, props.isInstalled)}
             </div>
         </div>
     );

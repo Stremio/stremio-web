@@ -3,14 +3,14 @@ import PropTypes from 'prop-types';
 import Icon from 'stremio-icons/dom';
 import styles from './styles';
 
-const renderPoster = (props, poster) => {
+const renderPoster = (play, poster) => {
     if (poster.length === 0) {
         return null;
     }
 
     return (
         <div className={styles['poster']} style={{ backgroundImage: 'url(' + poster + ')' }}>
-            <div onClick={props.playButtonClicked} className={styles['play-container']}>
+            <div onClick={play} className={styles['play-container']}>
                 <Icon className={styles['play']} icon={'ic_play'} />
             </div>
         </div>
@@ -37,23 +37,23 @@ const renderType = (type) => {
     );
 }
 
-const renderYear = (year) => {
-    if (year.length === 0) {
+const renderReleasedInfo = (releaseInfo) => {
+    if (isNaN(releaseInfo.getTime())) {
         return null;
     }
 
     return (
-        <span className={styles['year']}>{year}</span>
+        <span className={styles['year']}>{releaseInfo.getFullYear()}</span>
     );
 }
 
-const renderDateAdded = (dateAdded) => {
-    if (isNaN(dateAdded.getTime())) {
+const renderReleasedDate = (released) => {
+    if (isNaN(released.getTime())) {
         return null;
     }
 
     return (
-        <span className={styles['date-added']}>{dateAdded.getDate() + '.' + (dateAdded.getMonth() === 0 ? dateAdded.getMonth() + 12 : dateAdded.getMonth()) + '.' + dateAdded.getFullYear()}</span>
+        <span className={styles['date-added']}>{released.getDate() + '.' + released.getMonth() + '.' + released.getFullYear()}</span>
     );
 }
 
@@ -63,22 +63,22 @@ const renderLastViewed = (lastViewed) => {
     }
 
     return (
-        <span className={styles['last-viewed']}>{lastViewed.getDate() + '.' + (lastViewed.getMonth() === 0 ? lastViewed.getMonth() + 12 : lastViewed.getMonth()) + '.' + lastViewed.getFullYear()}</span>
+        <span className={styles['last-viewed']}>{lastViewed.getDate() + '.' + lastViewed.getMonth() + '.' + lastViewed.getFullYear()}</span>
     );
 }
 
-const renderTrailerIcon = (props) => {
+const renderTrailerButton = (watchTrailer) => {
     return (
-        <div onClick={props.viewTrailer} className={styles['icon-container']}>
+        <div onClick={watchTrailer} className={styles['icon-container']}>
             <Icon className={styles['trailer-icon']} icon={'ic_movies'} />
             <div className={styles['trailer']}>Trailer</div>
         </div>
     );
 }
 
-const renderAddlibIcon = (props) => {
+const renderAddToLibraryButton = (addToLibrary) => {
     return (
-        <div onClick={props.addTolib} className={styles['icon-container']}>
+        <div onClick={addToLibrary} className={styles['icon-container']}>
             <Icon className={styles['addlib-icon']} icon={'ic_addlib'} />
             <div className={styles['addlib']}>Add to Library</div>
         </div>
@@ -88,16 +88,16 @@ const renderAddlibIcon = (props) => {
 const LibraryItemList = (props) => {
     return (
         <div className={styles['library-item']}>
-            {renderPoster(props, props.poster)}
+            {renderPoster(props.play, props.poster)}
             {renderTitle(props.title)}
             {renderType(props.type)}
-            {renderYear(props.year)}
-            {renderDateAdded(props.dateAdded)}
+            {renderReleasedInfo(props.releaseInfo)}
+            {renderReleasedDate(props.released)}
             <span className={styles['views']}>{props.views}</span>
             <span className={styles['hours']}>{props.hours}</span>
             {renderLastViewed(props.lastViewed)}
-            {renderTrailerIcon(props)}
-            {renderAddlibIcon(props)}
+            {renderTrailerButton(props.watchTrailer)}
+            {renderAddToLibraryButton(props.addToLibrary)}
         </div>
     );
 }
@@ -106,21 +106,21 @@ LibraryItemList.propTypes = {
     poster: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
-    year: PropTypes.string.isRequired,
-    dateAdded: PropTypes.instanceOf(Date).isRequired,
+    releaseInfo: PropTypes.instanceOf(Date).isRequired,
+    released: PropTypes.instanceOf(Date).isRequired,
     views: PropTypes.number.isRequired,
     hours: PropTypes.number.isRequired,
     lastViewed: PropTypes.instanceOf(Date).isRequired,
-    playButtonClicked: PropTypes.func,
-    viewTrailer: PropTypes.func,
-    addTolib: PropTypes.func
+    play: PropTypes.func,
+    watchTrailer: PropTypes.func,
+    addToLibrary: PropTypes.func
 };
 LibraryItemList.defaultProps = {
     poster: '',
     title: '',
     type: '',
-    year: '',
-    dateAdded: new Date(''), //Invalid Date
+    releaseInfo: new Date(''), 
+    released: new Date(''), //Invalid Date
     views: 0,
     hours: 0,
     lastViewed: new Date('')

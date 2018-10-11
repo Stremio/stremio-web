@@ -58,7 +58,7 @@ const renderReleasedDate = (released) => {
     }
 
     return (
-        <span className={styles['released-date']}>{released.getDate() + ' ' + months[released.getMonth() - 1]}</span>
+        <span className={styles['released-date']}>{released.getDate() + ' ' + months[released.getMonth()]}</span>
     );
 }
 

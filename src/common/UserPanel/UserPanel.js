@@ -25,41 +25,41 @@ const renderEmail = (email) => {
     );
 }
 
-const renderFullscreen = (props) => {
+const renderFullscreen = (onFullscreenMode) => {
     return (
-        <div onClick={props.onFullscreenMode} className={styles['fullscreen-option']}>
+        <div onClick={onFullscreenMode} className={styles['fullscreen-option']}>
             <Icon className={styles['fullscreen-icon']} icon={'ic_fullscreen'} />Fullscreen mode
         </div>
     );
 }
 
-const renderOptions = (props) => {
+const renderOptions = (showSettings, showAddons, playMagnetLink, importFromFB, showHelpCenter) => {
     return (
         <ul className={styles['options']}>
-            <li onClick={props.showSettings} className={styles['settings-option']}>
+            <li onClick={showSettings} className={styles['settings-option']}>
                 <Icon className={styles['settings-icon']} icon={'ic_settings'} />Settings
             </li>
-            <li onClick={props.showAddons} className={styles['addons-option']}>
+            <li onClick={showAddons} className={styles['addons-option']}>
                 <Icon className={styles['addons-icon']} icon={'ic_addons'} />Add-ons
             </li>
-            <li onClick={props.playMagnetLink} className={styles['magnet-option']}>
+            <li onClick={playMagnetLink} className={styles['magnet-option']}>
                 <Icon className={styles['magnet-icon']} icon={'ic_magnet'} />Play Magnet Link
             </li>
-            <li onClick={props.importFromFB} className={styles['facebook-option']}>
+            <li onClick={importFromFB} className={styles['facebook-option']}>
                 <Icon className={styles['facebook-icon']} icon={'ic_facebook'} />Import from Facebook
             </li>
-            <li onClick={props.showHelpCenter} className={styles['help-option']}>
+            <li onClick={showHelpCenter} className={styles['help-option']}>
                 <Icon className={styles['help-icon']} icon={'ic_help'} />Help & Feedback
             </li>
         </ul>
     );
 }
 
-const renderInfo = (props) => {
+const renderFooter = (showTermsOfService, showInfo) => {
     return (
-        <ul className={styles['info']}>
-            <li onClick={props.showTermsOfService} className={styles['terms-label']}>Terms of Service</li>
-            <li onClick={props.showInfo} className={styles['about-label']}>About Stremio</li>
+        <ul className={styles['footer']}>
+            <li onClick={showTermsOfService} className={styles['terms-label']}>Terms of Service</li>
+            <li onClick={showInfo} className={styles['about-label']}>About Stremio</li>
         </ul>
     );
 }
@@ -74,9 +74,9 @@ const UserPanel = (props) => {
                     <span onClick={props.logout} className={styles['log-out']}>Log out</span>
                 </div>
             </div>
-            {renderFullscreen(props)}
-            {renderOptions(props)}
-            {renderInfo(props)}
+            {renderFullscreen(props.onFullscreenMode)}
+            {renderOptions(props.showSettings, props.showAddons, props.playMagnetLink, props.importFromFB, props.showHelpCenter)}
+            {renderFooter(props.showTermsOfService, props.showInfo)}
         </div>
     );
 }

@@ -55,9 +55,9 @@ const getPlaceholderIcon = (type) => {
     }
 }
 
-const renderPlay = (props, progress) => {
+const renderPlay = (play, progress) => {
     return (
-        <div onClick={props.playButtonClicked} style={progress ? { visibility: 'visible' } : null} className={styles['play-container']}>
+        <div onClick={play} style={progress ? { visibility: 'visible' } : null} className={styles['play-container']}>
             <Icon className={styles['play']} icon={'ic_play'} />
         </div>
     );
@@ -95,20 +95,20 @@ const renderTitle = (title) => {
     );
 }
 
-const renderYear = (year) => {
-    if (year.length === 0) {
+const renderReleaseInfo = (releaseInfo) => {
+    if (releaseInfo.length === 0) {
         return null;
     }
 
     return (
-        <div className={styles['year']}>{year}</div>
+        <div className={styles['year']}>{releaseInfo}</div>
     );
 }
 
-const renderIcon = (props, progress) => {
+const renderIcon = (showInfo, progress) => {
     if (progress > 0) {
         return (
-            <div onClick={props.showMore} className={styles['more-icon-container']}>
+            <div onClick={showInfo} className={styles['more-icon-container']}>
                 <Icon className={styles['more-icon']} icon={'ic_more'} />
             </div>
         );
@@ -120,7 +120,7 @@ const MetaItem = (props) => {
     const posterSize = getShapeSize(props.posterShape, props.progress);
     const contentContainerStyle = {
         width: posterSize.width,
-        height: props.episode.length === 0 && props.title.length === 0 && props.year.length === 0 && props.progress == 0? posterSize.height : posterSize.containerHeight
+        height: props.episode.length === 0 && props.title.length === 0 && props.releaseInfo.length === 0 && props.progress == 0? posterSize.height : posterSize.containerHeight
     };
     const placeholderIcon = getPlaceholderIcon(props.type);
     const placeholderIconUrl = iconDataUrl({ icon: placeholderIcon, fill: colors.accent, width: Math.round(RELATIVE_POSTER_SIZE / 2.2), height: Math.round(RELATIVE_POSTER_SIZE / 2.2) });
@@ -132,16 +132,16 @@ const MetaItem = (props) => {
     return (
         <div style={contentContainerStyle} className={styles['meta-item']}>
             <div style={imageStyle} className={styles['poster']}>
-                {renderPlay(props, props.progress)}
+                {renderPlay(props.play, props.progress)}
             </div>
             {renderProgress(props.progress)}
             <div className={styles['info-container']}>
                 <div className={styles['info']}>
                     {renderEpisode(props.episode)}
                     {renderTitle(props.title)}
-                    {renderYear(props.year)}
+                    {renderReleaseInfo(props.releaseInfo)}
                 </div>
-                {renderIcon(props, props.progress)}
+                {renderIcon(props.showInfo, props.progress)}
             </div>
         </div>
     );
@@ -154,9 +154,9 @@ MetaItem.propTypes = {
     progress: PropTypes.number.isRequired,
     episode: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
-    year: PropTypes.string.isRequired,
-    playButtonClicked: PropTypes.func,
-    showMore: PropTypes.func
+    releaseInfo: PropTypes.string.isRequired,
+    play: PropTypes.func,
+    showInfo: PropTypes.func
 };
 MetaItem.defaultProps = {
     type: 'other',
@@ -165,7 +165,7 @@ MetaItem.defaultProps = {
     progress: 0,
     episode: '',
     title: '',
-    year: ''
+    releaseInfo: ''
 };
 
 export default MetaItem;

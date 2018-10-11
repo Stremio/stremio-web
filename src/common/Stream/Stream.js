@@ -47,9 +47,9 @@ const renderSubtitle = (isFree, isSubscription, subtitle) => {
     return null;
 }
 
-const renderPlay = (props, progress) => {
+const renderPlay = (progress) => {
     return (
-        <div onClick={props.playButtonClicked} style={{ backgroundColor: progress ? colors.white : null }} className={styles['play-container']}>
+        <div style={{ backgroundColor: progress ? colors.white : null }} className={styles['play-container']}>
             <Icon style={{ fill: progress ? colors.medium : null }} className={styles['play']} icon={'ic_play'} />
         </div>
     );
@@ -69,7 +69,7 @@ const renderProgress = (progress) => {
 
 const Stream = (props) => {
     return (
-        <div style={{ backgroundColor: props.progress ? colors.black40 : null }} className={styles['stream']}>
+        <div onClick={props.play} style={{ backgroundColor: props.progress ? colors.black40 : null }} className={styles['stream']}>
             <div className={styles['stream-info-container']}>
                 <div className={styles['stream-info']}>
                     {renderLogo(props.logo, props.sourceName)}
@@ -80,7 +80,7 @@ const Stream = (props) => {
                 </div>
                 {renderProgress(props.progress)}
             </div>
-            {renderPlay(props, props.progress)}
+            {renderPlay(props.progress)}
         </div>
     );
 }
@@ -93,7 +93,7 @@ Stream.propTypes = {
     isFree: PropTypes.bool.isRequired,
     isSubscription: PropTypes.bool.isRequired,
     progress: PropTypes.number.isRequired,
-    playButtonClicked: PropTypes.func
+    play: PropTypes.func
 };
 
 Stream.defaultProps = {
