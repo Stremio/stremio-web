@@ -67,24 +67,6 @@ const renderLastViewed = (lastViewed) => {
     );
 }
 
-const renderTrailerButton = (watchTrailer) => {
-    return (
-        <div onClick={watchTrailer} className={styles['icon-container']}>
-            <Icon className={styles['trailer-icon']} icon={'ic_movies'} />
-            <div className={styles['trailer']}>Trailer</div>
-        </div>
-    );
-}
-
-const renderAddToLibraryButton = (addToLibrary) => {
-    return (
-        <div onClick={addToLibrary} className={styles['icon-container']}>
-            <Icon className={styles['addlib-icon']} icon={'ic_addlib'} />
-            <div className={styles['addlib']}>Add to Library</div>
-        </div>
-    );
-}
-
 const LibraryItemList = (props) => {
     return (
         <div className={styles['library-item']}>
@@ -96,8 +78,14 @@ const LibraryItemList = (props) => {
             <span className={styles['views']}>{props.views}</span>
             <span className={styles['hours']}>{props.hours}</span>
             {renderLastViewed(props.lastViewed)}
-            {renderTrailerButton(props.watchTrailer)}
-            {renderAddToLibraryButton(props.addToLibrary)}
+            <div onClick={props.watchTrailer} className={styles['icon-container']}>
+                <Icon className={styles['trailer-icon']} icon={'ic_movies'} />
+                <div className={styles['trailer']}>Trailer</div>
+            </div>
+            <div onClick={props.addToLibrary} className={styles['icon-container']}>
+                <Icon className={styles['addlib-icon']} icon={'ic_addlib'} />
+                <div className={styles['addlib']}>Add to Library</div>
+            </div>
         </div>
     );
 }

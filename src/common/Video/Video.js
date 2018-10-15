@@ -8,7 +8,7 @@ const renderPoster = (poster) => {
     const placeholderIconUrl = iconDataUrl({ icon: 'ic_channels', fill: colors.accent, width: 40, height: 36 });
     const imageStyle = {
         width: 70,
-        height: 40,
+        height: 42,
         backgroundImage: `url('${poster}'), url('${placeholderIconUrl}')`
     };
 

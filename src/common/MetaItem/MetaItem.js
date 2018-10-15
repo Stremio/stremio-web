@@ -55,14 +55,6 @@ const getPlaceholderIcon = (type) => {
     }
 }
 
-const renderPlay = (play, progress) => {
-    return (
-        <div onClick={play} style={progress ? { visibility: 'visible' } : null} className={styles['play-container']}>
-            <Icon className={styles['play']} icon={'ic_play'} />
-        </div>
-    );
-}
-
 const renderProgress = (progress) => {
     if (progress <= 0) {
         return null;
@@ -132,7 +124,9 @@ const MetaItem = (props) => {
     return (
         <div style={contentContainerStyle} className={styles['meta-item']}>
             <div style={imageStyle} className={styles['poster']}>
-                {renderPlay(props.play, props.progress)}
+            <div onClick={props.play} style={props.progress ? { visibility: 'visible' } : null} className={styles['play-container']}>
+                <Icon className={styles['play']} icon={'ic_play'} />
+            </div>
             </div>
             {renderProgress(props.progress)}
             <div className={styles['info-container']}>

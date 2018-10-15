@@ -3,14 +3,6 @@ import PropTypes from 'prop-types';
 import Icon from 'stremio-icons/dom';
 import styles from './styles';
 
-const renderLogo = (logo) => {
-    return (
-        <div className={styles['logo-container']}>
-            <Icon className={styles['logo']} icon={logo.length === 0 ? 'ic_addons' : logo} />
-        </div>
-    );
-}
-
 const renderName = (name) => {
     if (name.length === 0) {
         return null;
@@ -32,6 +24,10 @@ const renderVersion = (version) => {
 }
 
 const renderType = (types) => {
+    if (types.length === 0) {
+        return null;
+    }
+
     return (
         <div className={styles['type']}>
             {types.length <= 1 ? types.join('') : types.slice(0, -1).join(', ') + ' & ' + types[types.length - 1]}
@@ -50,7 +46,7 @@ const renderDescription = (description) => {
 }
 
 const renderUrls = (urls) => {
-    if (urls.length === 0) {
+    if(!urls) {
         return null;
     }
 
@@ -65,33 +61,25 @@ const renderUrls = (urls) => {
     );
 }
 
-const renderShareButton = (shareAddon) => {
-    return (
-        <div onClick={shareAddon} className={styles['share-container']}>
-            <Icon className={styles['share-icon']} icon={'ic_share'} />
-            <span className={styles['share-label']}>SHARE ADD-ON</span>
-        </div>
-    );
-}
-
-const renderState = (onToggleClicked, isInstalled) => {
-    return (
-        <div onClick={onToggleClicked} className={styles[isInstalled ? 'install-label' : 'uninstall-label']}>{isInstalled ? 'Install' : 'Uninstall'}</div>
-    );
-}
-
 const Addon = (props) => {
     return (
         <div className={styles['addon']}>
-            {renderLogo(props.logo)}
-            {renderName(props.name)}
-            {renderVersion(props.version)}
-            {renderType(props.types)}
-            {renderDescription(props.description)}
+            <div className={styles['info-container']}>
+                <div className={styles['logo-container']}>
+                    <Icon className={styles['logo']} icon={props.logo.length === 0 ? 'ic_addons' : props.logo} />
+                </div>
+                {renderName(props.name)}
+                {renderVersion(props.version)}
+                {renderType(props.types)}
+                {renderDescription(props.description)}
+            </div>
             {renderUrls(props.urls)}
             <div className={styles['buttons']}>
-                {renderShareButton(props.shareAddon)}
-                {renderState(props.onToggleClicked, props.isInstalled)}
+                <div onClick={props.shareAddon} className={styles['share-container']}>
+                    <Icon className={styles['share-icon']} icon={'ic_share'} />
+                    <span className={styles['share-label']}>SHARE ADD-ON</span>
+                </div>
+                <div onClick={props.onToggleClicked} className={styles[props.isInstalled ? 'install-label' : 'uninstall-label']}>{props.isInstalled ? 'Install' : 'Uninstall'}</div>
             </div>
         </div>
     );
@@ -103,7 +91,7 @@ Addon.propTypes = {
     version: PropTypes.string.isRequired,
     types: PropTypes.array.isRequired,
     description: PropTypes.string.isRequired,
-    urls: PropTypes.arrayOf(PropTypes.string).isRequired,
+    urls: PropTypes.arrayOf(PropTypes.string),
     isInstalled: PropTypes.bool.isRequired,
     shareAddon: PropTypes.func,
     onToggleClicked: PropTypes.func

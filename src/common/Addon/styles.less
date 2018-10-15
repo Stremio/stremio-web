@@ -6,33 +6,39 @@
     color: @colorwhite;
     font-family: LatoLight;
     background-color: @colorglass;
-    .logo-container {
-        width: 80px;
+    .info-container {
         height: 80px;
-        float: left;
-        display: flex;
-        margin-right: 14px;
-        background-color: @colordarkest;
-        .logo {
-            width: 40px;
-            margin: auto;
-            fill: @colorwhite;
+        margin-bottom: 26px;
+        .logo-container {
+            width: 80px;
+            height: 80px;
+            float: left;
+            display: flex;
+            margin-right: 14px;
+            background-color: @colordarkest;
+            .logo {
+                width: 40px;
+                margin: auto;
+                fill: @colorwhite;
+            }
         }
-    }
-    .name {
-        font-size: 20px;
-        margin-right: 10px;
-    }
-    .version {
-        margin-right: 10px;
-        color: @colorwhite60;
-    }
-    .type {
-        color: @coloraccent;
+        .name {
+            font-size: 20px;
+            margin-right: 10px;
+        }
+        .version {
+            margin-right: 10px;
+            color: @colorwhite60;
+        }
+        .type {
+            color: @coloraccent;
+        }
+        .type, .description {
+            margin-top: 2px;
+        }
     }
     .urls {
         display: flex;
-        margin: 26px 0px;
         flex-direction: column;
         .url {
             color: @colorwhite60;
@@ -40,30 +46,28 @@
     }
     .buttons {
         display: flex;
-        text-align: center;
-        align-items: center;
+        margin-top: 26px;
+        justify-content: space-between;
         .share-container {
-            width: 50%;
-            margin-right: 50px;
+            border: 2px solid @coloraccent;
             .share-icon {
-                width: 20px;
+                width: 18px;
                 margin-right: 6px;
                 fill: @coloraccent;
             }
             .share-label {
-                cursor: pointer;
-                font-size: larger;
                 color: @coloraccent;
-                vertical-align: super;
             }
         }
-        .install-label, .uninstall-label {
-            width: 50%;
+        .share-container, .install-label, .uninstall-label {
+            width: 230px;
+            display: flex;
             cursor: pointer;
             font-weight: 600;
             font-size: larger;
-            padding: 10px 80px;
-            border-radius: 2px;
+            padding: 10px 0px;
+            align-items: center;
+            justify-content: center;
         }
         .install-label {
             border: 2px solid @colorsignal5;

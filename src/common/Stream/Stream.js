@@ -47,14 +47,6 @@ const renderSubtitle = (isFree, isSubscription, subtitle) => {
     return null;
 }
 
-const renderPlay = (progress) => {
-    return (
-        <div style={{ backgroundColor: progress ? colors.white : null }} className={styles['play-container']}>
-            <Icon style={{ fill: progress ? colors.medium : null }} className={styles['play']} icon={'ic_play'} />
-        </div>
-    );
-}
-
 const renderProgress = (progress) => {
     if (progress <= 0) {
         return null;
@@ -80,7 +72,9 @@ const Stream = (props) => {
                 </div>
                 {renderProgress(props.progress)}
             </div>
-            {renderPlay(props.progress)}
+            <div style={{ backgroundColor: props.progress ? colors.white : null }} className={styles['play-container']}>
+                <Icon style={{ fill: props.progress ? colors.medium : null }} className={styles['play']} icon={'ic_play'} />
+            </div>
         </div>
     );
 }
