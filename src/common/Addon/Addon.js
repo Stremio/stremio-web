@@ -41,17 +41,17 @@ const renderDescription = (description) => {
     }
 
     return (
-        <div style={description.length > 150 ? { overflowY: 'scroll', height: 36 } : null} className={styles['description']}>{description}</div>
+        <div style={description.length > 150 ? { overflow: 'auto', height: 36 } : null} className={styles['description']}>{description}</div>
     );
 }
 
 const renderUrls = (urls) => {
-    if(!urls) {
+    if(urls.length === 0) {
         return null;
     }
 
     return (
-        <div className={styles['urls']}>
+        <div className={styles['urls-container']}>
             {urls.map((url) => {
                 return (
                     <span key={url} className={styles['url']}>{url}</span>
@@ -68,10 +68,12 @@ const Addon = (props) => {
                 <div className={styles['logo-container']}>
                     <Icon className={styles['logo']} icon={props.logo.length === 0 ? 'ic_addons' : props.logo} />
                 </div>
-                {renderName(props.name)}
-                {renderVersion(props.version)}
-                {renderType(props.types)}
-                {renderDescription(props.description)}
+                <div className={styles['info']}>
+                    {renderName(props.name)}
+                    {renderVersion(props.version)}
+                    {renderType(props.types)}
+                    {renderDescription(props.description)}
+                </div>
             </div>
             {renderUrls(props.urls)}
             <div className={styles['buttons']}>
@@ -91,7 +93,7 @@ Addon.propTypes = {
     version: PropTypes.string.isRequired,
     types: PropTypes.array.isRequired,
     description: PropTypes.string.isRequired,
-    urls: PropTypes.arrayOf(PropTypes.string),
+    urls: PropTypes.arrayOf(PropTypes.string).isRequired,
     isInstalled: PropTypes.bool.isRequired,
     shareAddon: PropTypes.func,
     onToggleClicked: PropTypes.func
@@ -102,6 +104,7 @@ Addon.defaultProps = {
     version: '',
     types: [],
     description: '',
+    urls: [],
     isInstalled: false
 };
 

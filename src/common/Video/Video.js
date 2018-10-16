@@ -5,6 +5,10 @@ import colors from 'stremio-colors';
 import styles from './styles';
 
 const renderPoster = (poster) => {
+    if (poster.length === 0) {
+        return null;
+    }
+
     const placeholderIconUrl = iconDataUrl({ icon: 'ic_channels', fill: colors.accent, width: 40, height: 36 });
     const imageStyle = {
         width: 70,
@@ -12,22 +16,18 @@ const renderPoster = (poster) => {
         backgroundImage: `url('${poster}'), url('${placeholderIconUrl}')`
     };
 
-    if (poster.length === 0) {
-        return null;
-    }
-
     return (
         <div style={imageStyle} className={styles['poster']}></div>
     );
 }
 
-const renderEpisode = (episode) => {
-    if (episode <= 0) {
+const renderNumber = (number) => {
+    if (number <= 0) {
         return null;
     }
 
     return (
-        <span className={styles['episode']}>{episode + '.'}</span>
+        <span className={styles['number']}>{number + '.'}</span>
     );
 }
 
@@ -37,7 +37,7 @@ const renderName = (name) => {
     }
 
     return (
-        <div className={styles['name']}>{name}</div>
+        <span className={styles['name']}>{name}</span>
     );
 }
 
@@ -52,10 +52,11 @@ const renderDuration = (duration) => {
 }
 
 const renderReleasedDate = (released) => {
-    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     if (isNaN(released.getTime())) {
         return null;
     }
+    
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
     return (
         <span className={styles['released-date']}>{released.getDate() + ' ' + months[released.getMonth()]}</span>
@@ -96,11 +97,13 @@ const renderProgress = (poster, progress) => {
 
 const Video = (props) => {
     return (
-        <div onClick={props.showEpisodeInfo} style={{ backgroundColor: props.progress ? colors.black40 : null, display: props.poster.length > 0 && props.progress ? 'flex' : null }} className={styles['video']}>
+        <div onClick={props.onVideoClicked} style={{ backgroundColor: props.progress ? colors.black40 : null, display: props.poster.length > 0 && props.progress ? 'flex' : null }} className={styles['video']}>
             {renderPoster(props.poster)}
             <div className={styles['video-container']}>
-                {renderEpisode(props.episode)}
-                {renderName(props.name)}
+                <div className={styles['main-info']}>
+                    {renderNumber(props.number)}
+                    {renderName(props.name)}
+                </div>
                 {renderDuration(props.duration)}
                 {renderReleasedDate(props.released)}
                 {renderWatched(props.isWatched)}
@@ -113,18 +116,18 @@ const Video = (props) => {
 
 Video.propTypes = {
     poster: PropTypes.string.isRequired,
-    episode: PropTypes.number.isRequired,
+    number: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
     duration: PropTypes.number.isRequired,
     released: PropTypes.instanceOf(Date).isRequired,
     isWatched: PropTypes.bool.isRequired,
     isUpcoming: PropTypes.bool.isRequired,
     progress: PropTypes.number.isRequired,
-    showEpisodeInfo: PropTypes.func
+    onVideoClicked: PropTypes.func
 };
 Video.defaultProps = {
     poster: '',
-    episode: 0,
+    number: 0,
     name: '',
     duration: 0,
     released: new Date(''), //Invalid Date

@@ -8,11 +8,11 @@
     background-color: @colorglass;
     .info-container {
         height: 80px;
+        display: flex;
         margin-bottom: 26px;
         .logo-container {
             width: 80px;
             height: 80px;
-            float: left;
             display: flex;
             margin-right: 14px;
             background-color: @colordarkest;
@@ -22,22 +22,25 @@
                 fill: @colorwhite;
             }
         }
-        .name {
-            font-size: 20px;
-            margin-right: 10px;
-        }
-        .version {
-            margin-right: 10px;
-            color: @colorwhite60;
-        }
-        .type {
-            color: @coloraccent;
-        }
-        .type, .description {
-            margin-top: 2px;
+        .info {
+            width: 420px;
+            .name {
+                font-size: 20px;
+                margin-right: 10px;
+            }
+            .version {
+                margin-right: 10px;
+                color: @colorwhite60;
+            }
+            .type {
+                color: @coloraccent;
+            }
+            .type, .description {
+                margin-top: 2px;
+            }
         }
     }
-    .urls {
+    .urls-container {
         display: flex;
         flex-direction: column;
         .url {

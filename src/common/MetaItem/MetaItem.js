@@ -97,10 +97,10 @@ const renderReleaseInfo = (releaseInfo) => {
     );
 }
 
-const renderIcon = (showInfo, progress) => {
+const renderIcon = (onItemClicked, progress) => {
     if (progress > 0) {
         return (
-            <div onClick={showInfo} className={styles['more-icon-container']}>
+            <div onClick={onItemClicked} className={styles['more-icon-container']}>
                 <Icon className={styles['more-icon']} icon={'ic_more'} />
             </div>
         );
@@ -135,7 +135,7 @@ const MetaItem = (props) => {
                     {renderTitle(props.title)}
                     {renderReleaseInfo(props.releaseInfo)}
                 </div>
-                {renderIcon(props.showInfo, props.progress)}
+                {renderIcon(props.onItemClicked, props.progress)}
             </div>
         </div>
     );
@@ -150,7 +150,7 @@ MetaItem.propTypes = {
     title: PropTypes.string.isRequired,
     releaseInfo: PropTypes.string.isRequired,
     play: PropTypes.func,
-    showInfo: PropTypes.func
+    onItemClicked: PropTypes.func
 };
 MetaItem.defaultProps = {
     type: 'other',

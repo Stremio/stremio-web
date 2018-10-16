@@ -2,26 +2,28 @@
 .video {
     height: 62px;
     width: 340px;
+    display: flex;
     padding: 10px 10px;
     background-color: @colorblack20;
     .poster {
-        float: left;
         margin-right: 10px;
         background-position: center;
         background-size: cover, auto;
         background-repeat: no-repeat;
     }
     .video-container {
-        font-size: 12px;
+        width: 240px;
         color: @colorwhite;
-        .episode { 
-            float: left;
-            margin-right: 6px;
-        }
-        .name {          
-            overflow: hidden;
-            white-space: pre;
-            text-overflow: ellipsis;
+        .main-info {
+            font-size: 12px;
+            .number { 
+                margin-right: 6px;
+            }
+            .name {
+                overflow: hidden;
+                white-space: pre;
+                text-overflow: ellipsis;
+            }
         }
         .duration, .released-date {
             font-size: 11px;

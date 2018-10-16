@@ -16,14 +16,14 @@ const renderEmail = (email) => {
 
 const UserPanel = (props) => {
     const placeholderIconUrl = iconDataUrl({ icon: 'ic_user', fill: colors.accent, width: 34, height: 34 });
-    const photoStyle = {
-        backgroundImage: `url('${props.photo}'), url('${placeholderIconUrl}')`
+    const avatarStyle = {
+        backgroundImage: `url('${props.avatar}'), url('${placeholderIconUrl}')`
     };
 
     return (
         <div className={styles['user-panel']}>
             <div className={styles['user-info']}>
-                <div style={photoStyle} className={styles['profile-picture']}></div>
+                <div style={avatarStyle} className={styles['profile-picture']}></div>
                 <div className={styles['profile-info']}>
                     {renderEmail(props.email)}
                     <span onClick={props.logout} className={styles['log-out']}>Log out</span>
@@ -33,36 +33,36 @@ const UserPanel = (props) => {
                 <Icon className={styles['fullscreen-icon']} icon={'ic_fullscreen'} />Fullscreen mode
             </div>
             <div className={styles['options']}>
-                <a href="#settings" className={styles['settings-option']}>
+                <a href={'#settings'} target="_blank" className={styles['settings-option']}>
                     <Icon className={styles['settings-icon']} icon={'ic_settings'} />Settings
                 </a>
-                <a href="#addons" className={styles['addons-option']}>
+                <a href={'#addons'} target="_blank" className={styles['addons-option']}>
                     <Icon className={styles['addons-icon']} icon={'ic_addons'} />Add-ons
                 </a>
                 <div onClick={props.playMagnetLink} className={styles['magnet-option']}>
                     <Icon className={styles['magnet-icon']} icon={'ic_magnet'} />Play Magnet Link
                 </div>
-                <a href="https://stremio.zendesk.com" className={styles['help-option']}>
+                <a href={'https://stremio.zendesk.com'} target="_blank" className={styles['help-option']}>
                     <Icon className={styles['help-icon']} icon={'ic_help'} />Help & Feedback
                 </a>
             </div>
             <div className={styles['footer']}>
-                <a href="https://www.stremio.com/tos" className={styles['terms-label']}>Terms of Service</a>
-                <a href="https://www.stremio.com" className={styles['about-label']}>About Stremio</a>
+                <a href={'https://www.stremio.com/tos'} target="_blank" className={styles['terms-label']}>Terms of Service</a>
+                <a href={'https://www.stremio.com'} target="_blank" className={styles['about-label']}>About Stremio</a>
             </div>
         </div>
     );
 }
 
 UserPanel.propTypes = {
-    photo: PropTypes.string.isRequired,
+    avatar: PropTypes.string.isRequired,
     email: PropTypes.string.isRequired,
     logout: PropTypes.func,
     resizeWindow: PropTypes.func,
     playMagnetLink: PropTypes.func,
 };
 UserPanel.defaultProps = {
-    photo: '',
+    avatar: '',
     email: ''
 };
 
