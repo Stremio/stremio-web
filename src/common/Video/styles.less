@@ -1,46 +1,36 @@
 @import 'stremio-colors';
-.video {
+.with-poster, .with-progress, .with-poster-progress, .default {
     height: 62px;
     width: 340px;
-    display: flex;
-    padding: 10px 10px;
+    display: grid;
+    font-size: 12px;
+    color: @colorwhite;
     background-color: @colorblack20;
     .poster {
-        margin-right: 10px;
+        grid-area: poster;
         background-position: center;
         background-size: cover, auto;
         background-repeat: no-repeat;
     }
-    .video-container {
-        width: 240px;
-        color: @colorwhite;
-        .main-info {
-            font-size: 12px;
-            .number { 
-                margin-right: 6px;
-            }
-            .name {
-                overflow: hidden;
-                white-space: pre;
-                text-overflow: ellipsis;
-            }
-        }
-        .duration, .released-date {
-            font-size: 11px;
-            padding-left: 1px;
-            margin-right: 10px;
-            color: @colorwhite60;
-        }
-        .progress-container {
-            background-color: @colorwhite20;
-            .progress {
-                height: 3px;
-                margin-top: 2px;
-                border-radius: 1px;
-                background-color: @colorprimlight;
-            }
-        }
+    .number {
+        grid-area: number;
+    }
+    .name {
+        grid-area: name;
+        overflow: hidden;
+        white-space: pre;
+        text-overflow: ellipsis;
+    }
+    .duration, .released-date {
+        grid-area: time;
+        font-size: 11px;
+        padding-left: 1px;
+        color: @colorwhite60;
+    }
+    .label-container {
+        grid-area: label;
         .watched-label, .upcoming-label {
+            grid-area: label;
             font-weight: 600;
             font-size: 10px;
             padding: 1px 6px;
@@ -53,8 +43,49 @@
             background-color: @colorsignal5;
         }
     }
+    .progress-container {
+        grid-area: progress;
+        background-color: @colorwhite20;
+        .progress {
+            height: 3px;
+            border-radius: 1px;
+            background-color: @colorprimlight;
+        }
+    }
     &:hover, &:focus {
         cursor: pointer;
         background-color: @colorwhite20;
     }
+}
+.with-poster {
+    grid-template-columns: 80px 16px 28px 196px;
+    grid-template-rows: 18px 24px;
+    grid-template-areas: 
+      "poster number name name"
+      "poster time time label";
+}
+.with-progress {
+    background-color: @colorblack40;
+    grid-template-columns: 16px 292px;
+    grid-template-rows: 18px 19px 3px;
+    grid-template-areas: 
+      "number name"
+      "time time"
+      "progress progress";
+}
+.with-poster-progress {
+    background-color: @colorblack40;
+    grid-template-columns: 80px 16px 224px;
+    grid-template-rows: 18px 19px 3px;
+    grid-template-areas: 
+      "poster number name"
+      "poster time time"
+      "poster progress progress";
+}
+.default {
+    grid-template-columns: 16px 28px 264px;
+    grid-template-rows: 18px 24px;
+    grid-template-areas: 
+      "number name name"
+      "time time label";
 }

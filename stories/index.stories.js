@@ -84,9 +84,9 @@ storiesOf('UserPanel', module)
 storiesOf('Video', module)
   .add('video', () => (
     <div style={{padding: '10px'}} className={styles['app']}>
-      <Video poster={'https://www.nationalgeographic.com/content/dam/photography/rights-exempt/pod-archive-grid-wide.adapt.945.1.jpg'} episode={2} name={'The Bing Bran Hypothesis'} duration={23} isWatched={true} onVideoClicked={function() {alert(8)}}></Video>
-      <Video poster={'5'} episode={4} name={'The Luminous Fish Effect'} duration={22}></Video>
-      <Video poster={'https://www.nationalgeographic.com/content/dam/photography/rights-exempt/pod-archive-grid-wide.adapt.945.1.jpg'} episode={5} name={'The Dumpling Paradox'} progress={50} duration={22}></Video>
-      <Video episode={8} name={'The Loobendfeld Decay'} released={new Date(2018, 4, 23)} isUpcoming={true}></Video>
+      <Video poster={'https://www.nationalgeographic.com/content/dam/photography/rights-exempt/pod-archive-grid-wide.adapt.945.1.jpg'} number={2} name={'The Bing Bran Hypothesis'} duration={23} isWatched={true} onVideoClicked={function() {alert(8)}}></Video>
+      <Video progress={50} number={4} name={'The Luminous Fish Effect'} duration={22}></Video>
+      <Video poster={'5'} number={5} name={'The Dumpling Paradox'} progress={50} duration={22}></Video>
+      <Video number={8} name={'The Loobendfeld Decay'} released={new Date(2018, 4, 23)} isUpcoming={true}></Video>
     </div>
   ));
