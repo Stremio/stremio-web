@@ -1,6 +1,5 @@
 @import 'stremio-colors';
-.with-poster, .with-progress, .with-poster-progress, .default {
-    height: 62px;
+.with-poster, .with-progress, .with-poster-progress, .video {
     width: 340px;
     display: grid;
     font-size: 12px;
@@ -24,7 +23,6 @@
     .duration, .released-date {
         grid-area: time;
         font-size: 11px;
-        padding-left: 1px;
         color: @colorwhite60;
     }
     .label-container {
@@ -58,34 +56,34 @@
     }
 }
 .with-poster {
-    grid-template-columns: 80px 16px 28px 196px;
+    grid-template-columns: 70px 10px 1px 15px 28px 196px;
     grid-template-rows: 18px 24px;
     grid-template-areas: 
-      "poster number name name"
-      "poster time time label";
+      "poster . number number name name"
+      "poster . . time time label";
 }
 .with-progress {
     background-color: @colorblack40;
-    grid-template-columns: 16px 292px;
-    grid-template-rows: 18px 19px 3px;
+    grid-template-columns: 1px 15px 278px 14px;
+    grid-template-rows: 18px 19px 3px 2px;
     grid-template-areas: 
-      "number name"
-      "time time"
-      "progress progress";
+      "number number name"
+      ". time time"
+      "progress progress progress";
 }
 .with-poster-progress {
     background-color: @colorblack40;
-    grid-template-columns: 80px 16px 224px;
-    grid-template-rows: 18px 19px 3px;
+    grid-template-columns: 70px 10px 1px 15px 204px 20px;
+    grid-template-rows: 18px 19px 3px 2px;
     grid-template-areas: 
-      "poster number name"
-      "poster time time"
-      "poster progress progress";
+      "poster . number number name"
+      "poster . . time time"
+      "poster . progress progress progress";
 }
-.default {
-    grid-template-columns: 16px 28px 264px;
+.video {
+    grid-template-columns: 1px 15px 28px 264px;
     grid-template-rows: 18px 24px;
     grid-template-areas: 
-      "number name name"
-      "time time label";
+      "number number name name"
+      ". time time label";
 }

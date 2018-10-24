@@ -22,13 +22,9 @@ const UserPanel = (props) => {
 
     return (
         <div className={styles['user-panel']}>
-            <div className={styles['user-info']}>
-                <div style={avatarStyle} className={styles['profile-picture']}></div>
-                <div className={styles['profile-info']}>
-                    {renderEmail(props.email)}
-                    <span onClick={props.logout} className={styles['log-out']}>Log out</span>
-                </div>
-            </div>
+            <div style={avatarStyle} className={styles['profile-picture']}></div>
+            {renderEmail(props.email)}
+            <span onClick={props.logout} className={styles['log-out']}>Log out</span>
             <div onClick={props.resizeWindow} className={styles['fullscreen-option']}>
                 <Icon className={styles['fullscreen-icon']} icon={'ic_fullscreen'} />Fullscreen mode
             </div>

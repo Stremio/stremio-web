@@ -1,83 +1,93 @@
 @import 'stremio-colors';
 .addon {
     width: 550px;
+    display: grid;
     padding: 18px;
     font-size: 12px;
     color: @colorwhite;
     font-family: LatoLight;
     background-color: @colorglass;
-    .info-container {
-        height: 80px;
+    grid-template-columns: 80px 14px 110px 10px 16px 54px 230px;
+    grid-template-rows: 4px 20px 20px 36px 26px 54px 26px 42px;
+    grid-template-areas: 
+      "logo . name . . . ."
+      "logo . name . version version version"
+      "logo . type type type type type"
+      "logo . description description description description description"
+      ". . . . . . ."
+      "urls urls urls urls urls urls urls"
+      ". . . . . . ."
+      "shareContainer shareContainer shareContainer shareContainer shareContainer . label";
+    .logo-container {
+        grid-area: logo;
         display: flex;
-        margin-bottom: 26px;
-        .logo-container {
-            width: 80px;
-            height: 80px;
-            display: flex;
-            margin-right: 14px;
-            background-color: @colordarkest;
-            .logo {
-                width: 40px;
-                margin: auto;
-                fill: @colorwhite;
-            }
-        }
-        .info {
-            width: 420px;
-            .name {
-                font-size: 20px;
-                margin-right: 10px;
-            }
-            .version {
-                margin-right: 10px;
-                color: @colorwhite60;
-            }
-            .type {
-                color: @coloraccent;
-            }
-            .type, .description {
-                margin-top: 2px;
-            }
+        background-color: @colordarkest;
+        .logo {
+            width: 40px;
+            margin: auto;
+            fill: @colorwhite;
         }
     }
+    .name {
+        grid-area: name;
+        font-size: 20px;
+        overflow: hidden;
+    }
+    .version {
+        grid-area: version;
+        color: @colorwhite60;
+    }
+    .type {
+        grid-area: type;
+        color: @coloraccent;
+    }
+    .description {
+        grid-area: description;
+    }
     .urls-container {
-        display: flex;
-        flex-direction: column;
+        grid-area: urls;
+        display: grid;
+        overflow: auto;
         .url {
             color: @colorwhite60;
         }
     }
-    .buttons {
+    .share-container {
+        display: grid;
+        grid-area: shareContainer;
+        border: 2px solid @coloraccent;
+        grid-template-columns: 24px 108px;
+        grid-template-rows: 18px;
+        grid-template-areas: 
+          "shareIcon shareLabel";
+        .share-icon {
+            grid-area: shareIcon;
+            width: 18px;
+            fill: @coloraccent;
+        }
+        .share-label {
+            grid-area: shareLabel;
+            color: @coloraccent;
+        }
+    }
+    .share-container, .install-label, .uninstall-label {
+        cursor: pointer;
+        font-weight: 600;
+        font-size: larger;
+        padding: 10px 0px;
+        justify-content: center;
+    }
+    .install-label, .uninstall-label {
         display: flex;
-        margin-top: 26px;
-        justify-content: space-between;
-        .share-container {
-            border: 2px solid @coloraccent;
-            .share-icon {
-                width: 18px;
-                margin-right: 6px;
-                fill: @coloraccent;
-            }
-            .share-label {
-                color: @coloraccent;
-            }
-        }
-        .share-container, .install-label, .uninstall-label {
-            width: 230px;
-            display: flex;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: larger;
-            padding: 10px 0px;
-            align-items: center;
-            justify-content: center;
-        }
-        .install-label {
-            border: 2px solid @colorsignal5;
-            background-color: @colorsignal5;
-        }
-        .uninstall-label {
-            border: 2px solid @colorwhite20;
-        }
+        align-self: center;
+    }
+    .install-label {
+        grid-area: label;
+        border: 2px solid @colorsignal5;
+        background-color: @colorsignal5;
+    }
+    .uninstall-label {
+        grid-area: label;
+        border: 2px solid @colorwhite20;
     }
 }

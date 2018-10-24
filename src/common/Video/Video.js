@@ -11,8 +11,6 @@ const renderPoster = (poster) => {
 
     const placeholderIconUrl = iconDataUrl({ icon: 'ic_channels', fill: colors.accent, width: 40, height: 36 });
     const imageStyle = {
-        width: 70,
-        height: 42,
         backgroundImage: `url('${poster}'), url('${placeholderIconUrl}')`
     };
 
@@ -75,13 +73,13 @@ const renderLabel = (isWatched, isUpcoming) => {
     );
 }
 
-const renderProgress = (poster, progress) => {
+const renderProgress = (progress) => {
     if (progress <= 0) {
         return null;
     }
 
     return (
-        <div style={{ width: poster.length > 0 ? 220 : 294 }} className={styles['progress-container']}>
+        <div className={styles['progress-container']}>
             <div style={{ width: progress + '%' }} className={styles['progress']}></div>
         </div>
     );
@@ -91,7 +89,7 @@ const getClassName = (poster, progress) => {
     if (poster.length > 0 && !progress) return 'with-poster';
     if (progress && poster.length === 0) return 'with-progress';
     if (poster.length > 0 && progress) return 'with-poster-progress';
-    return 'default';
+    return 'video';
 }
 
 const Video = (props) => {
@@ -103,7 +101,7 @@ const Video = (props) => {
             {renderDuration(props.duration)}
             {renderReleasedDate(props.released)}
             {renderLabel(props.isWatched, props.isUpcoming)}
-            {renderProgress(props.poster, props.progress)}
+            {renderProgress(props.progress)}
         </div>
     );
 }

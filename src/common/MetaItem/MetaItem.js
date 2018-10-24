@@ -108,11 +108,27 @@ const renderIcon = (onItemClicked, progress) => {
     return null;
 }
 
+const getClassName = (progress, posterShape, title, releaseInfo, episode) => {
+    if (title.length > 0 || releaseInfo.length > 0 || episode.length > 0) {
+        if (progress > 0) {
+            if (posterShape === 'poster') return 'progress-poster-shape';
+            if (posterShape === 'landscape') return 'progress-landscape-shape';
+            if (posterShape === 'square') return 'progress-square-shape';
+        }
+        if (!progress) {
+            if (posterShape === 'poster') return 'poster-shape';
+            if (posterShape === 'landscape') return 'landscape-shape';
+            if (posterShape === 'square') return 'square-shape';
+        }
+    }
+    return 'meta-item';
+}
+
 const MetaItem = (props) => {
     const posterSize = getShapeSize(props.posterShape, props.progress);
     const contentContainerStyle = {
         width: posterSize.width,
-        height: props.episode.length === 0 && props.title.length === 0 && props.releaseInfo.length === 0 && props.progress == 0? posterSize.height : posterSize.containerHeight
+        height: props.episode.length === 0 && props.title.length === 0 && props.releaseInfo.length === 0 && props.progress == 0 ? posterSize.height : posterSize.containerHeight
     };
     const placeholderIcon = getPlaceholderIcon(props.type);
     const placeholderIconUrl = iconDataUrl({ icon: placeholderIcon, fill: colors.accent, width: Math.round(RELATIVE_POSTER_SIZE / 2.2), height: Math.round(RELATIVE_POSTER_SIZE / 2.2) });
@@ -122,21 +138,19 @@ const MetaItem = (props) => {
     };
 
     return (
-        <div style={contentContainerStyle} className={styles['meta-item']}>
+        <div style={contentContainerStyle} className={styles[getClassName(props.progress, props.posterShape, props.title, props.releaseInfo, props.episode)]}>
             <div style={imageStyle} className={styles['poster']}>
-            <div onClick={props.play} style={props.progress ? { visibility: 'visible' } : null} className={styles['play-container']}>
-                <Icon className={styles['play']} icon={'ic_play'} />
-            </div>
+                <div onClick={props.play} style={props.progress ? { visibility: 'visible' } : null} className={styles['play-container']}>
+                    <Icon className={styles['play']} icon={'ic_play'} />
+                </div>
             </div>
             {renderProgress(props.progress)}
-            <div className={styles['info-container']}>
-                <div className={styles['info']}>
-                    {renderEpisode(props.episode)}
-                    {renderTitle(props.title)}
-                    {renderReleaseInfo(props.releaseInfo)}
-                </div>
-                {renderIcon(props.onItemClicked, props.progress)}
+            <div className={styles['info']}>
+                {renderEpisode(props.episode)}
+                {renderTitle(props.title)}
+                {renderReleaseInfo(props.releaseInfo)}
             </div>
+            {renderIcon(props.onItemClicked, props.progress)}
         </div>
     );
 }

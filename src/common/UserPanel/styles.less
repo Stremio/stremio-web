@@ -1,45 +1,61 @@
 @import 'stremio-colors';
 .user-panel {
+    display: grid;
     width: 260px;
     font-family: LatoLight;
     background-color: @colordarkest;
-    .user-info {
-        display: flex;
-        padding: 15px;
-        align-items: center;
-        .profile-picture {
-            height: 50px;
-            width: 50px;
-            margin-right: 14px;
-            border-radius: 50%;
-            background-size: cover, auto;
-            background-position: center;
-            background-repeat: no-repeat;
-        }
-        .email {
+    grid-template-columns: 15px 50px 14px 166px 15px;
+    grid-template-rows: 15px 8px 18px 16px 8px 15px 52px 15px 216px 15px 76px 15px;
+    grid-template-areas:
+      ". . . . ."
+      ". avatar . . ."
+      ". avatar . email ."
+      ". avatar . logout ."
+      ". avatar . . ."
+      ". . . . ."
+      "fullscreen fullscreen fullscreen fullscreen fullscreen"
+      ". . . . ."
+      "options options options options options"
+      ". . . . ."
+      "footer footer footer footer footer"
+      ". . . . .";
+    .profile-picture {
+        grid-area: avatar;
+        border-radius: 50%;
+        background-size: cover, auto;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+    .email {
+        grid-area: email;
+        color: @colorwhite;
+    }
+    .log-out {
+        grid-area: logout;
+        color: @colorwhite40;
+        &:hover {
+            cursor: pointer;
             color: @colorwhite;
-        }
-        .log-out {
-            color: @colorwhite40;
-            &:hover {
-                cursor: pointer;
-                color: @colorwhite;
-            }
         }
     }
     .fullscreen-option {
+        grid-area: fullscreen;
         border-top: 1px solid @colorwhite20;
         border-bottom: 1px solid @colorwhite20;
     }
     .fullscreen-option, .settings-option, .addons-option, .magnet-option, .help-option {
-        display: flex;
+        display: grid;
         padding: 15px;
         align-items: center;
         color: @colorwhite80;
+        grid-template-columns: 32px 198px;
+        grid-template-rows: 20px;
+        grid-template-areas:
+          "icon .";
         .fullscreen-icon, .settings-icon, .addons-icon, .magnet-icon, .help-icon {
+            grid-area: icon;
             height: 20px;
             width: 20px;
-            margin-right: 12px;
             fill: @coloraccent;
         }
         &:hover {
@@ -48,13 +64,15 @@
             background-color: @coloraccent20;
         }
     }
-    .options, .footer {
-        padding: 15px 0px;
+    .options {
+        grid-area: options;
+        border-bottom: 1px solid @colorwhite20
     }
     .footer {
-        display: flex;
-        flex-direction: column;
-        border-top: 1px solid @colorwhite20;
+        grid-area: footer;
+    }
+    .footer {
+        display: grid;
         .terms-label, .about-label {
             padding: 10px 20px;
             color: @colorwhite80;

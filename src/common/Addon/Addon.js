@@ -64,25 +64,19 @@ const renderUrls = (urls) => {
 const Addon = (props) => {
     return (
         <div className={styles['addon']}>
-            <div className={styles['info-container']}>
-                <div className={styles['logo-container']}>
-                    <Icon className={styles['logo']} icon={props.logo.length === 0 ? 'ic_addons' : props.logo} />
-                </div>
-                <div className={styles['info']}>
-                    {renderName(props.name)}
-                    {renderVersion(props.version)}
-                    {renderType(props.types)}
-                    {renderDescription(props.description)}
-                </div>
+            <div className={styles['logo-container']}>
+                <Icon className={styles['logo']} icon={props.logo.length === 0 ? 'ic_addons' : props.logo} />
             </div>
+            {renderName(props.name)}
+            {renderVersion(props.version)}
+            {renderType(props.types)}
+            {renderDescription(props.description)}
             {renderUrls(props.urls)}
-            <div className={styles['buttons']}>
-                <div onClick={props.shareAddon} className={styles['share-container']}>
-                    <Icon className={styles['share-icon']} icon={'ic_share'} />
-                    <span className={styles['share-label']}>SHARE ADD-ON</span>
-                </div>
-                <div onClick={props.onToggleClicked} className={styles[props.isInstalled ? 'install-label' : 'uninstall-label']}>{props.isInstalled ? 'Install' : 'Uninstall'}</div>
+            <div onClick={props.shareAddon} className={styles['share-container']}>
+                <Icon className={styles['share-icon']} icon={'ic_share'} />
+                <span className={styles['share-label']}>SHARE ADD-ON</span>
             </div>
+            <div onClick={props.onToggleClicked} className={styles[props.isInstalled ? 'install-label' : 'uninstall-label']}>{props.isInstalled ? 'Install' : 'Uninstall'}</div>
         </div>
     );
 }
