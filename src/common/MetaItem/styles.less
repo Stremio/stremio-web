@@ -1,5 +1,5 @@
 @import 'stremio-colors';
-.meta-item, .progress-poster-shape, .progress-landscape-shape, .progress-square-shape, .poster-shape, .landscape-shape, .square-shape {
+.meta-item, .progress-poster-shape, .progress-landscape-shape, .progress-square-shape, .progress-info-poster-shape, .progress-info-landscape-shape, .progress-info-square-shape, .poster-shape, .landscape-shape, .square-shape, .info-poster-shape, .info-landscape-shape, .info-square-shape {
     display: grid;
     color: @colorwhite;
     font-family: LatoLight;
@@ -45,11 +45,11 @@
             color: @colorwhite;
         }
     }
-    .more-icon-container {
-        grid-area: moreIcon;
+    .popup-icon-container {
+        grid-area: popupIcon;
         cursor: pointer;
         fill: @colorwhite;
-        .more-icon {
+        .popup-icon {
             width: 10px;
             height: 10px;
         }
@@ -70,7 +70,7 @@
                 color: @colorblack;
             }
         }
-        .more-icon {
+        .popup-icon {
             fill: @colorblack40;
         }
     }
@@ -79,37 +79,72 @@
     grid-template-areas: 
       "poster poster"
       "progress progress"
-      ". ."
-      "info moreIcon";
+      ". popupIcon";
 }
 .progress-poster-shape {
     grid-template-columns: 128px 10px;
-    grid-template-rows: 202.03px 4px 6px 77.97px;
+    grid-template-rows: 202.03px 4px;
 }
 .progress-landscape-shape {
     grid-template-columns: 235.33px 10px;
-    grid-template-rows: 202.03px 4px 6px 77.97px;
+    grid-template-rows: 202.03px 4px;
 }
 .progress-square-shape {
+    grid-template-columns: 192.33px 10px;
+    grid-template-rows: 202.03px 4px;
+}
+.progress-info-poster-shape, .progress-info-landscape-shape, .progress-info-square-shape {
+    grid-template-areas: 
+      "poster poster"
+      "progress progress"
+      ". ."
+      "info popupIcon";
+}
+.progress-info-poster-shape {
+    grid-template-columns: 128px 10px;
+    grid-template-rows: 202.03px 4px 6px 77.97px;
+}
+.progress-info-landscape-shape {
+    grid-template-columns: 235.33px 10px;
+    grid-template-rows: 202.03px 4px 6px 77.97px;
+}
+.progress-info-square-shape {
     grid-template-columns: 192.33px 10px;
     grid-template-rows: 202.03px 4px 6px 77.97px;
 }
 .poster-shape, .landscape-shape, .square-shape {
     grid-template-areas: 
-      "poster"
-      "."
-      "info";
+      "poster poster"
+      ". popupIcon";
 }
 .poster-shape {
-    grid-template-columns: 138px;
-    grid-template-rows: 202.03px 6px 81.97px;
+    grid-template-columns: 128px 10px;
+    grid-template-rows: 202.03px;
 }
 .landscape-shape {
-    grid-template-columns: 245.33px;
-    grid-template-rows: 138px 6px 64.97px;
+    grid-template-columns: 235.33px 10px;
+    grid-template-rows: 138px;
 }
 .square-shape {
-    grid-template-columns: 138px;
+    grid-template-columns: 128px 10px;
+    grid-template-rows: 138px;
+}
+.info-poster-shape, .info-landscape-shape, .info-square-shape {
+    grid-template-areas: 
+      "poster poster"
+      ". ."
+      "info popupIcon";
+}
+.info-poster-shape {
+    grid-template-columns: 128px 10px;
+    grid-template-rows: 202.03px 6px 81.97px;
+}
+.info-landscape-shape {
+    grid-template-columns: 235.33px 10px;
+    grid-template-rows: 138px 6px 64.97px;
+}
+.info-square-shape {
+    grid-template-columns: 128px 10px;
     grid-template-rows: 138px 6px 64.97px;
 }
 .meta-item {
