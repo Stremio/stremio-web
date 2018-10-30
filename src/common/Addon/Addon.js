@@ -19,7 +19,9 @@ const renderVersion = (version) => {
     }
 
     return (
-        <span className={styles['version']}>{'v. ' + version}</span>
+        <div className={styles['version-container']}>
+            <div className={styles['version']}>{'v. ' + version}</div>
+        </div>
     );
 }
 
