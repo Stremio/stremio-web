@@ -1,7 +1,7 @@
 const path = require('path');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
     entry: './src/index.js',
@@ -19,7 +19,11 @@ module.exports = {
                     path.resolve(__dirname, 'node_modules/stremio-icons/dom')
                 ],
                 use: {
-                    loader: 'babel-loader'
+                    loader: 'babel-loader',
+                    options: {
+                        presets: ['@babel/preset-env', '@babel/preset-react'],
+                        plugins: ['@babel/plugin-proposal-class-properties', '@babel/plugin-proposal-object-rest-spread']
+                    }
                 }
             },
             {
@@ -33,7 +37,7 @@ module.exports = {
                         loader: 'css-loader',
                         options: {
                             modules: true,
-                            localIdentName: '[hash:base64:5]',
+                            localIdentName: '[local]_[hash:base64:5]',
                             importLoaders: 2
                         }
                     },
@@ -73,21 +77,26 @@ module.exports = {
     devServer: {
         host: '0.0.0.0'
     },
+    optimization: {
+        minimizer: [
+            new TerserPlugin({
+                test: /\.js$/,
+                terserOptions: {
+                    ecma: 5,
+                    mangle: true,
+                    warnings: true,
+                    output: {
+                        comments: false,
+                        beautify: false,
+                        wrap_iife: true
+                    }
+                }
+            })
+        ]
+    },
     plugins: [
         new HtmlWebPackPlugin({
             template: './src/index.html'
-        }),
-        new UglifyJsPlugin({
-            test: /\.js$/,
-            uglifyOptions: {
-                mangle: true,
-                output: {
-                    ecma: 5,
-                    comments: false,
-                    beautify: false,
-                    wrap_iife: true
-                }
-            }
         }),
         new CopyWebpackPlugin([
             { from: 'images', to: 'images' },

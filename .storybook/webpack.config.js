@@ -13,7 +13,11 @@ module.exports = {
                     path.resolve(__dirname, '../node_modules/stremio-icons/dom')
                 ],
                 use: {
-                    loader: 'babel-loader'
+                    loader: 'babel-loader',
+                    options: {
+                        presets: ['@babel/preset-env', '@babel/preset-react'],
+                        plugins: ['@babel/plugin-proposal-class-properties', '@babel/plugin-proposal-object-rest-spread']
+                    }
                 }
             },
             {
@@ -27,7 +31,7 @@ module.exports = {
                         loader: 'css-loader',
                         options: {
                             modules: true,
-                            localIdentName: '[path][name]_[local]_[hash:base64:5]',
+                            localIdentName: '[local]_[hash:base64:5]',
                             importLoaders: 2
                         }
                     },
