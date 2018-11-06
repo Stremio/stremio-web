@@ -20,13 +20,20 @@
                 background: @colorglass;
             }
         }
+        .selected-menu {
+            padding: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            color: @colorwhite;
+            background: @colorglass;
+        }
         .selected {
             cursor: pointer;
             color: @colorwhite;
             background: @colorglass;
         }
     }
-    .player-preferences {
+    .player-preferences-menu {
         height: 150px;
         margin: 60px 50px;
         border-bottom: 1px solid @colormedium;
@@ -34,7 +41,6 @@
             display: flex;
             cursor: pointer;
             margin: 30px 0px;
-            justify-content: space-between;
             align-items: center;
             .preference {
                 width: 280px;
@@ -65,47 +71,8 @@
                 color: @colorwhite;
             }
         }
-        .preference-container1 {
-            display: flex;
-            cursor: pointer;
-            margin: 30px 0px;
-            align-items: center;
-            flex-direction: row-reverse;
-            .preference {
-                width: 280px;
-            }
-            input { 
-                visibility: hidden;
-            }
-            .slider {
-                cursor: pointer;
-                position: absolute;
-                border-radius: 50px;
-                width: 22px;
-                height: 10px;
-                background-color: @colorneutral;
-            }
-            .slider:before {
-                position: absolute;
-                border-radius: 50%;
-                content: "";
-                height: 14px;
-                width: 14px;
-                bottom: -2px;
-                transition: .4s;
-                -webkit-transition: .4s;
-                background-color: @colorwhite;
-            }
-            input:checked + .slider:before {
-                transform: translateX(8px);
-                background-color: @colorsignal5;
-            }
-            input:checked ~ .preference {
-                color: @colorwhite;
-            }
-        }
     }
-    .language {
+    .language-menu {
         margin: 40px 50px;
         .interface-language {
             margin-bottom: 30px;
