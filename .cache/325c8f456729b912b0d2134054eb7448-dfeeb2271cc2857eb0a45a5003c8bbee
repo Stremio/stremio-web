@@ -1,1 +1,0 @@
-{"value":{"success":true,"data":{"latest":{"version":"4.0.0","info":{"plain":"- upgrade webpack & babel to latest\n- new addParameters and third argument to .add to pass data to addons\n- added the ability to theme storybook\n- improved ui for mobile devices\n- improved performance of addon-knobs"}}},"time":1541422002878},"type":"Object"}
