@@ -6,7 +6,7 @@
     "website": "http://www.strem.io",
     "private": true,
     "scripts": {
-        "start": "webpack-dev-server --mode development --hot",
+        "start": "webpack-dev-server --mode development",
         "build": "webpack --mode production",
         "storybook": "start-storybook -s ./ -p 6006",
         "build-storybook": "build-storybook"
