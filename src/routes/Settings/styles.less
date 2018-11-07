@@ -4,14 +4,14 @@
     display: flex;
     color: @colorwhite60;
     font-family: LatoLight;
-    .options {
+    .side-menu {
         width: 240px;
         padding: 20px;
         display: flex;
         font-size: 14px;
         flex-direction: column;
         background: @colordarkest;
-        .option {
+        .menu-option {
             padding: 14px;
             font-weight: 600;
             &:hover {
@@ -19,28 +19,21 @@
                 color: @colorwhite;
                 background: @colorglass;
             }
-        }
-        .selected-menu {
-            padding: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            color: @colorwhite;
-            background: @colorglass;
-        }
-        .selected {
-            cursor: pointer;
-            color: @colorwhite;
-            background: @colorglass;
+            &.menu-option-selected {
+                cursor: pointer;
+                color: @colorwhite;
+                background: @colorglass;
+            }
         }
     }
     .player-preferences-menu {
-        height: 150px;
-        margin: 60px 50px;
+        height: 145px;
+        margin: 40px 50px;
         border-bottom: 1px solid @colormedium;
-        .preference-container {
+        .preferences-section {
             display: flex;
             cursor: pointer;
-            margin: 30px 0px;
+            margin-bottom: 30px;
             align-items: center;
             .preference {
                 width: 280px;
@@ -74,18 +67,15 @@
     }
     .language-menu {
         margin: 40px 50px;
-        .interface-language {
-            margin-bottom: 30px;
-        }
-        .interface-language, .default-subtitles-language {
+        .language-section {
             border-bottom: 1px solid @colormedium;
             .headline {
                 font-weight: 600;
                 color: @colorwhite40;
             }
-            .name {
+            .selected-language {
                 height: 40px;
-                width: 250px;
+                width: 280px;
                 padding: 20px;
                 display: flex;
                 margin: 30px 0px;
@@ -104,6 +94,10 @@
                     cursor: pointer;
                     border: 1px solid @colormedium;
                 }
+            }
+            &:not(:last-child) {
+                margin-bottom: 30px;
+
             }
         }
     }
