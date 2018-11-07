@@ -6,6 +6,7 @@ import Library from './Library';
 import Calendar from './Calendar';
 import Search from './Search';
 import Settings from './Settings';
+import Player from './Player';
 
 export {
     Addons,
@@ -15,5 +16,6 @@ export {
     Library,
     Calendar,
     Search,
-    Settings
+    Settings,
+    Player
 };

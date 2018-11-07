@@ -1,4 +1,4 @@
-import { Calendar, Discover, Addons, Settings, Board } from 'stremio-routes';
+import { Calendar, Discover, Addons, Settings, Board, Player } from 'stremio-routes';
 
 const config = {
     views: [
@@ -27,6 +27,14 @@ const config = {
                 {
                     path: '/settings',
                     component: Settings
+                }
+            ]
+        },
+        {
+            routes: [
+                {
+                    path: '/player',
+                    component: Player
                 }
             ]
         }
