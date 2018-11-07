@@ -11,15 +11,14 @@ class Player extends Component {
             volume: null,
             duration: null,
             paused: null,
-            prepared: false
+            videoComponent: null
         };
     }
 
     componentDidMount() {
         this.prepareStream()
-            .then(({ source, component }) => {
-                this.VideoComponent = component;
-                this.setState({ prepared: true }, () => {
+            .then(({ source, videoComponent }) => {
+                this.setState({ videoComponent }, () => {
                     this.video.dispatch('command', 'load', {
                         source: source
                     });
@@ -35,7 +34,7 @@ class Player extends Component {
             nextState.volume !== this.state.volume ||
             nextState.duration !== this.state.duration ||
             nextState.paused !== this.state.paused ||
-            nextState.prepared !== this.state.prepared;
+            nextState.videoComponent !== this.state.videoComponent;
     }
 
     assignVideo = (video) => {
@@ -45,7 +44,7 @@ class Player extends Component {
     prepareStream = () => {
         return Promise.resolve({
             source: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-            component: ReactHTMLVideo
+            videoComponent: ReactHTMLVideo
         });
     }
 
@@ -66,14 +65,14 @@ class Player extends Component {
     }
 
     renderVideo() {
-        if (!this.state.prepared) {
+        if (this.state.videoComponent === null) {
             return null;
         }
 
         return (
-            <this.VideoComponent
+            <this.state.videoComponent
                 ref={this.assignVideo}
-                className={styles['video-layer']}
+                className={styles['layer']}
                 onPropChanged={this.onPropChanged}
                 onPropValue={this.onPropValue}
                 onEnded={this.onEnded}
