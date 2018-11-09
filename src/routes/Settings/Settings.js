@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import Icon from 'stremio-icons/dom';
 import classnames from 'classnames';
+import Icon from 'stremio-icons/dom';
 import styles from './styles';
 
 const SETTINGS_MENUS = {
@@ -26,42 +25,42 @@ class Settings extends Component {
     }
 
     shouldComponentUpdate(nextState) {
-        return nextState.selectedMenu != this.state.selectedMenu;
+        return nextState.selectedMenu !== this.state.selectedMenu;
     }
 
     renderPlayerSettings = () => {
         const preferences = ['Hardware-accelerated decoding', 'Auto-play next episode', 'Data saver'];
 
         return (
-            <div className={styles['player-preferences-menu']}>
-                {preferences.map((item, key) =>
-                    <label key={key} className={styles['preferences-section']}>
-                        <input type='checkbox' className={styles['default-checkbox']} />
-                        <span className={styles['preference']}>{item}</span>
-                        <p className={styles['checkbox']}>
-                            <Icon className={styles['checkmark']} icon={'ic_check'} />
-                        </p>
-                    </label>
-                )}
+            <div className={styles['settings-list']}>
+                <div className={styles['settings-section']}>
+                    {preferences.map((preference) =>
+                        <label key={preference} className={styles['toggle-option']}>
+                            <input type={'checkbox'} className={styles['default-checkbox']} />
+                            <span className={styles['preference']}>{preference}</span>
+                            <p className={styles['checkbox']}>
+                                <Icon className={styles['checkmark']} icon={'ic_check'} />
+                            </p>
+                        </label>
+                    )}
+                </div>
             </div>
         );
     }
 
     renderLanguageSettings = () => {
         return (
-            <div className={styles['language-menu']}>
-                <div className={styles['language-section']}>
-                    <span className={styles['headline']}>INTERFACE LANGUAGE</span>
-                    <div className={styles['selected-language']}>English
-                        <Icon className={styles['arrow-down']} icon={'ic_arrow_down'} />
-                    </div>
-                </div>
-                <div className={styles['language-section']}>
-                    <span className={styles['headline']}>DEFAULT SUBTITLES LANGUAGE</span>
-                    <div className={styles['selected-language']}>Portugese - BR
-                        <Icon className={styles['arrow-down']} icon={'ic_arrow_down'} />
-                    </div>
-                </div>
+            <div className={styles['settings-list']}>
+                <select className={styles['settings-section']}>
+                    <option value={'English'}>English</option>
+                    <option value={'Portugese'}>Portugese</option>
+                    <option value={'Deutch'}>Deutch</option>
+                </select>
+                <select className={styles['settings-section']}>
+                    <option value={'English'}>English</option>
+                    <option value={'Portugese'}>Portugese</option>
+                    <option value={'Deutch'}>Deutch</option>
+                </select>
             </div>
         );
     }
@@ -79,15 +78,15 @@ class Settings extends Component {
 
     render() {
         return (
-            <div className={styles['settings']}>
+            <div className={styles['settings-container']}>
                 <div className={styles['side-menu']}>
                     {Object.keys(SETTINGS_MENUS).map((menu) =>
-                        <div key={menu} className={classnames(styles['menu-option'], this.state.selectedMenu === SETTINGS_MENUS[menu] ? styles['menu-option-selected'] : null)} onClick={() => this.changeSelectedMenu(SETTINGS_MENUS[menu])}>{menu}</div>
+                        <div key={menu} className={classnames(styles['menu-option'], this.state.selectedMenu === SETTINGS_MENUS[menu] ? styles['selected'] : null)} onClick={() => this.changeSelectedMenu(SETTINGS_MENUS[menu])}>{menu}</div>
                     )}
                 </div>
                 {this.renderSelectedMenu()}
             </div>
-        )
+        );
     }
 }
 

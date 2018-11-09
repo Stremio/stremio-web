@@ -5,7 +5,7 @@ import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { linkTo } from '@storybook/addon-links';
 
-import { Addon, LibraryItemList, MetaItem, ShareAddon, Stream, UserPanel, Video } from 'stremio-common';
+import { Addon, Checkbox, LibraryItemList, MetaItem, ShareAddon, Stream, UserPanel, Video } from 'stremio-common';
 
 storiesOf('Addon', module)
   .add('addon', () => (
@@ -16,6 +16,16 @@ storiesOf('Addon', module)
       <Addon name={'OpenSubtitles'} version={'1.3.0'} isInstalled={false} types={['Movies', 'Series']} description={'Watch your favourite YouTube channels ad-free and get notified when they upload new videos.'} urls={['https://channels.strem.io/stremioget/stremio/v1', 'https://channels.strem.io/stremioget/stremio/v1', 'http://127.0.0.1:11470/addons/com.stremio.subtitles/stremioget', 'https://channels.strem.io/stremioget/stremio/v1']}></Addon>
     </div>
   ));
+
+storiesOf('Checkbox', module)
+  .add('checkbox', () => (
+    <div style={{padding: '10px'}} className={styles['app']}>
+      <Checkbox iconHeight={20} iconWidth={20} checked={true} enabled={false}></Checkbox>
+      <Checkbox iconHeight={30} iconWidth={30} checked={false} enabled={false}></Checkbox>
+      <Checkbox iconHeight={10} iconWidth={10} checked={false} enabled={true}></Checkbox>
+      <Checkbox iconHeight={40} iconWidth={40} checked={true} enabled={true}></Checkbox>
+    </div>
+  ))
 
 storiesOf('LibraryItemList', module)
   .add('library item list', () => (

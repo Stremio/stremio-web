@@ -1,103 +1,98 @@
 @import 'stremio-colors';
-.settings {
+
+.settings-container {
     height: 100%;
+    width: 100%;
     display: flex;
     color: @colorwhite60;
     font-family: LatoLight;
+
     .side-menu {
         width: 240px;
         padding: 20px;
         display: flex;
-        font-size: 14px;
         flex-direction: column;
+        font-size: 14px;
         background: @colordarkest;
+
         .menu-option {
             padding: 14px;
             font-weight: 600;
-            &:hover {
-                cursor: pointer;
-                color: @colorwhite;
-                background: @colorglass;
-            }
-            &.menu-option-selected {
+
+            &:hover, &.selected {
                 cursor: pointer;
                 color: @colorwhite;
                 background: @colorglass;
             }
         }
     }
-    .player-preferences-menu {
-        height: 145px;
+
+    .settings-list {
+        width: 280px;
         margin: 40px 50px;
-        border-bottom: 1px solid @colormedium;
-        .preferences-section {
+
+        .settings-section {
             display: flex;
-            cursor: pointer;
-            margin-bottom: 30px;
-            align-items: center;
-            .preference {
-                width: 280px;
-            }
-            .default-checkbox {
-                display: none;
-            }
-            .checkbox {
-                width: 14px;
-                height: 14px;
-                cursor: pointer;
-                border: 2px solid @colorwhite60;
-                .checkmark {
-                    width: 10px;
-                    height: 10px;
-                    display: none;
-                    fill: @colorwhite;
-                }
-            }
-            input:checked ~ .checkbox {
-                background-color: @colorprimlight;
-                border: 2px solid @colorprimlight;
-                .checkmark {
-                    display: block;
-                }
-            }
-            input:checked ~ .preference {
-                color: @colorwhite;
-            }
-        }
-    }
-    .language-menu {
-        margin: 40px 50px;
-        .language-section {
-            border-bottom: 1px solid @colormedium;
-            .headline {
-                font-weight: 600;
-                color: @colorwhite40;
-            }
-            .selected-language {
-                height: 40px;
-                width: 280px;
-                padding: 20px;
+            flex-direction: column;
+
+            .toggle-option {
                 display: flex;
-                margin: 30px 0px;
+                cursor: pointer;
+                margin-bottom: 30px;
                 align-items: center;
-                justify-content: space-between;
-                font-weight: 600;
-                color: @colorwhite;
-                background-color: @colordarkest;
-                border: 1px solid @colortransparent;
-                .arrow-down {
-                    width: 8px;
-                    height: 10px;
-                    fill: @colorwhite40;
+
+                .preference {
+                    flex: 1;
+                    white-space: pre;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
                 }
-                &:hover {
+
+                .default-checkbox {
+                    display: none;
+                }
+
+                .checkbox {
+                    width: 14px;
+                    height: 14px;
                     cursor: pointer;
-                    border: 1px solid @colormedium;
+                    border: 2px solid @colorwhite60;
+
+                    .checkmark {
+                        width: 10px;
+                        height: 10px;
+                        display: none;
+                        fill: @colorwhite;
+                    }
+                }
+
+                input:checked~.checkbox {
+                    background-color: @colorprimlight;
+                    border: 2px solid @colorprimlight;
+
+                    .checkmark {
+                        display: block;
+                    }
+                }
+
+                input:checked~.preference {
+                    color: @colorwhite;
+                }
+
+                &:hover {
+                    .preference {
+                        color: @colorwhite;
+                    }
+
+                    input:not(:checked)~.checkbox {
+                        border: 2px solid @colorwhite;
+                    }
                 }
             }
+
             &:not(:last-child) {
                 margin-bottom: 30px;
-
+                border-bottom: 1px solid @colormedium;
             }
         }
     }

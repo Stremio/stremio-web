@@ -1,6 +1,26 @@
 @import 'stremio-colors';
+
 .root {
-    width: 30px;
-    height: 30px;
-    background-color: @colorprimlight60;
+    margin: 30px;
+    display: flex;
+    cursor: pointer;
+
+    &.checkbox-checked {
+        border: 2px solid @colorprimlight;
+        background-color: @colorprimlight;
+    }
+
+    &.checkbox-disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .icon {
+        margin: auto;
+        fill: @colorwhite60;
+
+        &.checked {
+            fill: @colorwhite;
+        }
+    }
 }
