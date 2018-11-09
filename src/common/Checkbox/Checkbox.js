@@ -18,16 +18,14 @@ class Checkbox extends Component {
 
     render() {
         return (
-            <div style={{height: this.props.iconHeight, width: this.props.iconWidth}} className={classnames(styles.root, this.props.checked ? styles['checkbox-checked'] : null, !this.props.enabled ? styles['checkbox-disabled'] : null)} onClick={this.onClick}>
-                <Icon style={{width: this.props.iconWidth}} className={classnames(styles['icon'], this.props.checked ? styles['checked'] : null)} icon={this.props.checked ? 'ic_check' : 'ic_box_empty'}></Icon>
+            <div className={classnames(styles['root'], styles[this.props.className], this.props.checked ? styles['checkbox-checked'] : null, this.props.enabled ? null : styles['checkbox-disabled'])} onClick={this.onClick}>
+                <Icon className={classnames(styles['icon'], this.props.checked ? styles['checked'] : null)} icon={this.props.checked ? 'ic_check' : 'ic_box_empty'}></Icon>
             </div>
         );
     }
 }
 
 Checkbox.propTypes = {
-    iconHeight: PropTypes.number,
-    iconWidth: PropTypes.number,
     className: PropTypes.string,
     enabled: PropTypes.bool.isRequired,
     checked: PropTypes.bool.isRequired,
