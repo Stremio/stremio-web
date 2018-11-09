@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
+import classnames from 'classnames';
 import ReactHTMLVideo from './stremio-video/ReactHTMLVideo';
+import ControlBar from './ControlBar';
 import styles from './styles';
 
 class Player extends Component {
@@ -64,6 +66,18 @@ class Player extends Component {
         alert(error.message);
     }
 
+    play = () => {
+        this.video.dispatch('setProp', 'paused', false);
+    }
+
+    pause = () => {
+        this.video.dispatch('setProp', 'paused', true);
+    }
+
+    seek = (time) => {
+        this.video.dispatch('setProp', 'time', time);
+    }
+
     renderVideo() {
         if (this.state.videoComponent === null) {
             return null;
@@ -72,7 +86,7 @@ class Player extends Component {
         return (
             <this.state.videoComponent
                 ref={this.assignVideo}
-                className={styles['layer']}
+                className={classnames(styles['layer'], styles['video'])}
                 onPropChanged={this.onPropChanged}
                 onPropValue={this.onPropValue}
                 onEnded={this.onEnded}
@@ -82,10 +96,30 @@ class Player extends Component {
         );
     }
 
+    renderControlBar() {
+        if (this.state.videoComponent === null) {
+            return null;
+        }
+
+        return (
+            <ControlBar
+                className={styles['layer']}
+                paused={this.state.paused}
+                time={this.state.time}
+                duration={this.state.duration}
+                volume={this.state.volume}
+                play={this.play}
+                pause={this.pause}
+                seek={this.seek}
+            />
+        );
+    }
+
     render() {
         return (
             <div className={styles['root-container']}>
                 {this.renderVideo()}
+                {this.renderControlBar()}
             </div>
         );
     }

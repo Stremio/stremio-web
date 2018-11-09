@@ -1,0 +1,34 @@
+@import 'stremio-colors';
+
+@control-bar-height: 56px;
+
+.root-container {
+    height: @control-bar-height;
+    top: initial !important;
+    display: flex;
+    flex-direction: row;
+    background-color: @colorprimlight60;
+
+    .button {
+        height: @control-bar-height;
+        width: @control-bar-height;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+
+        &:hover {
+            background-color: @colorprim;
+        }
+
+        .icon {
+            width: 66%;
+            height: 66%;
+        }
+    }
+
+    .seek-bar {
+        flex: 1
+    }
+
+}
