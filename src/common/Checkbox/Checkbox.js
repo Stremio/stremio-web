@@ -19,7 +19,7 @@ class Checkbox extends Component {
     render() {
         return (
             <div className={classnames(styles['root'], this.props.className, this.props.checked ? styles['checkbox-checked'] : null, this.props.enabled ? null : styles['checkbox-disabled'])} onClick={this.onClick}>
-                <Icon className={classnames(styles['icon'], this.props.className, this.props.checked ? styles['checked'] : null)} icon={this.props.checked ? 'ic_check' : 'ic_box_empty'}></Icon>
+                <Icon className={classnames(styles['icon'])} icon={this.props.checked ? 'ic_check' : 'ic_box_empty'}></Icon>
             </div>
         );
     }
