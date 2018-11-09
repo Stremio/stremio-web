@@ -1,11 +1,12 @@
 @import 'stremio-colors';
 
 .root {
-    display: flex;
+    margin: 10px;
+    width: 20px;
+    height: 20px;
     cursor: pointer;
 
     &.checkbox-checked {
-        border: 2px solid @colorprimlight;
         background-color: @colorprimlight;
     }
 
@@ -21,6 +22,7 @@
         fill: @colorwhite60;
 
         &.checked {
+            padding: 10%;
             fill: @colorwhite;
         }
     }

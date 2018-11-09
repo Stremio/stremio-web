@@ -20,10 +20,10 @@ storiesOf('Addon', module)
 storiesOf('Checkbox', module)
   .add('checkbox', () => (
     <div style={{padding: '10px'}} className={styles['app']}>
-      <Checkbox checked={true} enabled={false}></Checkbox>
-      <Checkbox checked={false} enabled={false}></Checkbox>
-      <Checkbox checked={false} enabled={true}></Checkbox>
-      <Checkbox checked={true} enabled={true}></Checkbox>
+      <Checkbox className={styles['checkbox-size']} checked={true} enabled={false}></Checkbox>
+      <Checkbox className={styles['checkbox-size']} checked={false} enabled={false}></Checkbox>
+      <Checkbox className={styles['checkbox-size']} checked={false} enabled={true}></Checkbox>
+      <Checkbox className={styles['checkbox-size']} checked={true} enabled={true}></Checkbox>
     </div>
   ))
 
