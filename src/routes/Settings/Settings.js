@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import classnames from 'classnames';
-import Icon from 'stremio-icons/dom';
 import styles from './styles';
+import { Checkbox } from 'stremio-common';
 
 const SETTINGS_MENUS = {
     PLAYER_MENU: 1,
@@ -16,7 +16,10 @@ class Settings extends Component {
         super(props);
 
         this.state = {
-            selectedMenu: SETTINGS_MENUS.PLAYER_MENU
+            selectedMenu: SETTINGS_MENUS.PLAYER_MENU,
+            decodingEnabled: false,
+            autoplayEnabled: false,
+            dataSaverEnabled: false
         };
     }
 
@@ -24,25 +27,44 @@ class Settings extends Component {
         this.setState({ selectedMenu });
     }
 
+    toggleDecoding = () => {
+        this.setState(({ decodingEnabled }) => {
+            return { decodingEnabled: !decodingEnabled }
+        });
+    }
+
+    toggleAutoPlay = () => {
+        this.setState(({ autoplayEnabled }) => {
+            return { autoplayEnabled: !autoplayEnabled }
+        });
+    }
+    
+    toggleDataSaver = () => {
+        this.setState(({ dataSaverEnabled }) => {
+            return { dataSaverEnabled: !dataSaverEnabled }
+        });
+    }
+
     shouldComponentUpdate(nextState) {
         return nextState.selectedMenu !== this.state.selectedMenu;
     }
 
     renderPlayerSettings = () => {
-        const preferences = ['Hardware-accelerated decoding', 'Auto-play next episode', 'Data saver'];
-
         return (
             <div className={styles['settings-list']}>
                 <div className={styles['settings-section']}>
-                    {preferences.map((preference) =>
-                        <label key={preference} className={styles['toggle-option']}>
-                            <input type={'checkbox'} className={styles['default-checkbox']} />
-                            <span className={styles['preference']}>{preference}</span>
-                            <p className={styles['checkbox']}>
-                                <Icon className={styles['checkmark']} icon={'ic_check'} />
-                            </p>
-                        </label>
-                    )}
+                    <label className={styles['toggle-option']}>
+                        <span className={styles['preference']}>Hardware-accelerated decoding</span>
+                        <Checkbox className={styles['checkbox-size']} checked={this.state.decodingEnabled} enabled={true} onClick={this.toggleDecoding}></Checkbox>
+                    </label>
+                    <label className={styles['toggle-option']}>
+                        <span className={styles['preference']}>Auto-play next episode</span>
+                        <Checkbox className={styles['checkbox-size']} checked={!this.state.autoplayEnabled} enabled={true} onClick={this.toggleAutoPlay}></Checkbox>
+                    </label>
+                    <label className={styles['toggle-option']}>
+                        <span className={styles['preference']}>Data saver</span>
+                        <Checkbox className={styles['checkbox-size']} checked={this.state.dataSaverEnabled} enabled={true} onClick={this.toggleDataSaver}></Checkbox>
+                    </label>
                 </div>
             </div>
         );

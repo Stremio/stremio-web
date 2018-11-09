@@ -48,44 +48,14 @@
                     text-overflow: ellipsis;
                 }
 
-                .default-checkbox {
-                    display: none;
-                }
-
-                .checkbox {
-                    width: 14px;
-                    height: 14px;
-                    cursor: pointer;
-                    border: 2px solid @colorwhite60;
-
-                    .checkmark {
-                        width: 10px;
-                        height: 10px;
-                        display: none;
-                        fill: @colorwhite;
-                    }
-                }
-
-                input:checked~.checkbox {
-                    background-color: @colorprimlight;
-                    border: 2px solid @colorprimlight;
-
-                    .checkmark {
-                        display: block;
-                    }
-                }
-
-                input:checked~.preference {
-                    color: @colorwhite;
+                .checkbox-size {
+                    height: 16px;
+                    width: 16px;
                 }
 
                 &:hover {
                     .preference {
                         color: @colorwhite;
-                    }
-
-                    input:not(:checked)~.checkbox {
-                        border: 2px solid @colorwhite;
                     }
                 }
             }
