@@ -1,10 +1,14 @@
 @import 'stremio-colors';
 
-@control-bar-height: 68px;
+@control-bar-height: 84px;
 @seek-bar-height: 26px;
+@buttons-bar-height: 42px;
 
 .root-container {
     height: @control-bar-height;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
     top: initial !important;
     padding-left: 2%;
     padding-right: 2%;
@@ -57,24 +61,45 @@
         }
     }
 
-    .button {
-        height: (@control-bar-height - @seek-bar-height);
-        width: (@control-bar-height - @seek-bar-height);
+    .buttons-bar {
+        width: 100%;
+        height: @buttons-bar-height;
         display: flex;
-        justify-content: center;
+        flex-direction: row;
         align-items: center;
-        cursor: pointer;
 
-        .icon {
-            width: 70%;
-            height: 70%;
-            fill: @colorwhite80;
+        .button {
+            height: @buttons-bar-height;
+            width: @buttons-bar-height;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+
+            .icon {
+                width: 70%;
+                height: 70%;
+                fill: @colorwhite80;
+            }
+
+            &:hover {
+                .icon {
+                    fill: @colorwhite;
+                }
+            }
         }
 
-        &:hover {
-            .icon {
-                fill: @colorwhite;
-            }
+        .separator {
+            margin-left: round((@buttons-bar-height * 0.25));
+            margin-right: round((@buttons-bar-height * 0.25));
+            width: 1px;
+            height: @buttons-bar-height;
+            background-color: @colorneutrallight80;
+        }
+
+        .time-label {
+            color: @colorwhite;
+            font-size: 16px;
         }
     }
 }

@@ -66,15 +66,11 @@ class ControlBar extends PureComponent {
         this.setState({ seekTime: this.calculateSeekTime(clientX, currentTarget) });
     }
 
-    renderPlayPauseButton() {
-        return (
-            <div className={styles['button']} onClick={this.props.paused ? this.props.play : this.props.pause}>
-                <Icon
-                    className={styles['icon']}
-                    icon={this.props.paused ? 'ic_play' : 'ic_pause'}
-                />
-            </div>
-        );
+    formatTime = (time) => {
+        const hours = Math.floor((time / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((time / (1000 * 60)) % 60);
+        const seconds = Math.floor((time / 1000) % 60);
+        return `${('0' + hours).slice(-2)}:${('0' + minutes).slice(-2)}:${('0' + seconds).slice(-2)}`;
     }
 
     renderSeekBar() {
@@ -97,6 +93,32 @@ class ControlBar extends PureComponent {
         );
     }
 
+    renderPlayPauseButton() {
+        return (
+            <div className={styles['button']} onClick={this.props.paused ? this.props.play : this.props.pause}>
+                <Icon
+                    className={styles['icon']}
+                    icon={this.props.paused ? 'ic_play' : 'ic_pause'}
+                />
+            </div>
+        );
+    }
+
+    renderTimeLabel() {
+        if (this.props.time === null || this.props.duration === null) {
+            return null;
+        }
+
+        const currentTime = this.state.seekTime !== -1 ?
+            this.formatTime(this.state.seekTime)
+            :
+            this.formatTime(this.props.time);
+
+        return (
+            <div className={styles['time-label']}>{currentTime} / {this.formatTime(this.props.duration)}</div>
+        );
+    }
+
     render() {
         return (
             <div className={classnames(this.props.className, styles['root-container'])}>
@@ -104,6 +126,7 @@ class ControlBar extends PureComponent {
                 <div className={styles['buttons-bar']}>
                     {this.renderPlayPauseButton()}
                     <div className={styles['separator']} />
+                    {this.renderTimeLabel()}
                 </div>
             </div>
         );
