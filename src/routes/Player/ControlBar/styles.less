@@ -1,13 +1,13 @@
 @import 'stremio-colors';
 
-@control-bar-height: 56px;
+@control-bar-height: 52px;
 
 .root-container {
     height: @control-bar-height;
     top: initial !important;
     display: flex;
     flex-direction: row;
-    background-color: @colorprimlight60;
+    align-items: center;
 
     .button {
         height: @control-bar-height;
@@ -24,11 +24,53 @@
         .icon {
             width: 66%;
             height: 66%;
+            fill: @colorwhite;
         }
     }
 
     .seek-bar {
-        flex: 1
+        height: round((@control-bar-height * 0.5));
+        flex: 1;
+        position: relative;
+
+        .seek-line {
+            position: absolute;
+            z-index: 0;
+            left: 0;
+            right: 0;
+            top: round((@control-bar-height * 0.2));
+            height: round((@control-bar-height * 0.1));
+            background-color: @colorprim80;
+        }
+
+        .thumb-container {
+            position: absolute;
+            z-index: 1;
+            width: round((@control-bar-height * 0.5));
+            height: round((@control-bar-height * 0.5));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transform: translateX(-50%);
+
+            .thumb {
+                width: round((@control-bar-height * 0.4));
+                height: round((@control-bar-height * 0.4));
+                border-radius: 50%;
+                background-color: @colorprimlight;
+            }
+
+            &:hover {
+                background-color: @colorprimlight60;
+            }
+        }
+
+        &.active {
+            .thumb-container {
+                background-color: @colorprimlight60;
+            }
+        }
     }
 
 }
