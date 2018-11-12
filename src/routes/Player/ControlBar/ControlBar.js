@@ -34,27 +34,36 @@ class ControlBar extends PureComponent {
             return;
         }
 
-        const mousemove = ({ clientX }) => {
-            this.setState({ seekTime: this.calculateSeekTime(clientX, currentTarget) });
-        };
-        const mouseup = ({ clientX }) => {
-            window.removeEventListener('mousemove', mousemove);
-            window.removeEventListener('mouseup', mouseup);
+        const releaseThumb = () => {
+            window.removeEventListener('mousemove', onMouseMove);
+            window.removeEventListener('mouseup', onMouseUp);
+            window.removeEventListener('blur', onBlur);
             document.body.style['pointer-events'] = 'initial';
             document.documentElement.style.cursor = 'initial';
             currentTarget.classList.remove(styles['active']);
-            const seekTime = this.calculateSeekTime(clientX, currentTarget);
-            this.props.seek(seekTime);
+        };
+        const onBlur = () => {
+            releaseThumb();
+            this.resetSeekTime.cancel();
+            this.setState({ seekTime: -1 });
+        };
+        const onMouseMove = ({ clientX }) => {
+            this.setState({ seekTime: this.calculateSeekTime(clientX, currentTarget) });
+        };
+        const onMouseUp = ({ clientX }) => {
+            releaseThumb();
             this.resetSeekTime();
+            this.props.seek(this.calculateSeekTime(clientX, currentTarget));
         };
 
-        window.addEventListener('mousemove', mousemove);
-        window.addEventListener('mouseup', mouseup);
+        window.addEventListener('mousemove', onMouseMove);
+        window.addEventListener('mouseup', onMouseUp);
+        window.addEventListener('blur', onBlur);
         document.body.style['pointer-events'] = 'none';
         document.documentElement.style.cursor = 'pointer';
         currentTarget.classList.add(styles['active']);
-        this.setState({ seekTime: this.calculateSeekTime(clientX, currentTarget) });
         this.resetSeekTime.cancel();
+        this.setState({ seekTime: this.calculateSeekTime(clientX, currentTarget) });
     }
 
     renderPlayPauseButton() {
@@ -92,7 +101,10 @@ class ControlBar extends PureComponent {
         return (
             <div className={classnames(this.props.className, styles['root-container'])}>
                 {this.renderSeekBar()}
-                {this.renderPlayPauseButton()}
+                <div className={styles['buttons-bar']}>
+                    {this.renderPlayPauseButton()}
+                    <div className={styles['separator']} />
+                </div>
             </div>
         );
     }
