@@ -38,15 +38,18 @@ class Settings extends Component {
             return { autoplayEnabled: !autoplayEnabled }
         });
     }
-    
+
     toggleDataSaver = () => {
         this.setState(({ dataSaverEnabled }) => {
             return { dataSaverEnabled: !dataSaverEnabled }
         });
     }
 
-    shouldComponentUpdate(nextState) {
-        return nextState.selectedMenu !== this.state.selectedMenu;
+    shouldComponentUpdate(nextProps, nextState) {
+        return nextState.decodingEnabled !== this.state.decodingEnabled ||
+            nextState.autoplayEnabled !== this.state.autoplayEnabled ||
+            nextState.dataSaverEnabled !== this.state.dataSaverEnabled ||
+            nextState.selectedMenu !== this.state.selectedMenu;
     }
 
     renderPlayerSettings = () => {
