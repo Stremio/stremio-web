@@ -1,53 +1,35 @@
 @import 'stremio-colors';
 
-@control-bar-height: 52px;
+@control-bar-height: 68px;
+@seek-bar-height: 26px;
 
 .root-container {
     height: @control-bar-height;
     top: initial !important;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-
-    .button {
-        height: @control-bar-height;
-        width: @control-bar-height;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-
-        &:hover {
-            background-color: @colorprim;
-        }
-
-        .icon {
-            width: 66%;
-            height: 66%;
-            fill: @colorwhite;
-        }
-    }
+    padding-left: 2%;
+    padding-right: 2%;
 
     .seek-bar {
-        height: round((@control-bar-height * 0.5));
-        flex: 1;
+        width: 100%;
+        height: @seek-bar-height;
         position: relative;
+        cursor: pointer;
 
         .seek-line {
             position: absolute;
-            z-index: 0;
             left: 0;
             right: 0;
-            top: round((@control-bar-height * 0.2));
-            height: round((@control-bar-height * 0.1));
-            background-color: @colorprim80;
+            top: round((@seek-bar-height * 0.4));
+            bottom: round((@seek-bar-height * 0.4));
+            z-index: 1;
+            background-color: @colorprim;
         }
 
         .thumb-container {
             position: absolute;
-            z-index: 1;
-            width: round((@control-bar-height * 0.5));
-            height: round((@control-bar-height * 0.5));
+            z-index: 2;
+            width: @seek-bar-height;
+            height: @seek-bar-height;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -57,8 +39,8 @@
             transition-duration: 0.06s;
 
             .thumb {
-                width: round((@control-bar-height * 0.4));
-                height: round((@control-bar-height * 0.4));
+                width: round((@seek-bar-height * 0.8));
+                height: round((@seek-bar-height * 0.8));
                 border-radius: 50%;
                 background-color: @colorprimlight;
             }
@@ -75,4 +57,24 @@
         }
     }
 
+    .button {
+        height: (@control-bar-height - @seek-bar-height);
+        width: (@control-bar-height - @seek-bar-height);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+
+        .icon {
+            width: 70%;
+            height: 70%;
+            fill: @colorwhite80;
+        }
+
+        &:hover {
+            .icon {
+                fill: @colorwhite;
+            }
+        }
+    }
 }

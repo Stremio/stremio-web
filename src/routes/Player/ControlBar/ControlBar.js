@@ -41,6 +41,7 @@ class ControlBar extends PureComponent {
             window.removeEventListener('mousemove', mousemove);
             window.removeEventListener('mouseup', mouseup);
             document.body.style['pointer-events'] = 'initial';
+            document.documentElement.style.cursor = 'initial';
             currentTarget.classList.remove(styles['active']);
             const seekTime = this.calculateSeekTime(clientX, currentTarget);
             this.props.seek(seekTime);
@@ -50,6 +51,7 @@ class ControlBar extends PureComponent {
         window.addEventListener('mousemove', mousemove);
         window.addEventListener('mouseup', mouseup);
         document.body.style['pointer-events'] = 'none';
+        document.documentElement.style.cursor = 'pointer';
         currentTarget.classList.add(styles['active']);
         this.setState({ seekTime: this.calculateSeekTime(clientX, currentTarget) });
         this.resetSeekTime.cancel();
@@ -89,7 +91,6 @@ class ControlBar extends PureComponent {
     render() {
         return (
             <div className={classnames(this.props.className, styles['root-container'])}>
-                {this.renderPlayPauseButton()}
                 {this.renderSeekBar()}
                 {this.renderPlayPauseButton()}
             </div>
