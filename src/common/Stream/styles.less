@@ -1,4 +1,5 @@
 @import 'stremio-colors';
+
 .stream {
     width: 340px;
     display: flex;
@@ -7,17 +8,21 @@
     color: @colorwhite;
     justify-content: space-between;
     background-color: @colorblack20;
+
     .stream-info-container {
         width: 230px;
+
         .stream-info {
             height: 40px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+
             .logo {
                 width: 74px;
                 fill: @colorwhite;
             }
+
             .source-name {
                 width: 80px;
                 font-size: 13px;
@@ -25,34 +30,42 @@
                 white-space: pre;
                 text-overflow: ellipsis;
             }
+
             .text-container {
                 width: 120px;
                 overflow: hidden;
+
                 .title {
                     overflow: hidden;
                     white-space: pre;
                     text-overflow: ellipsis;
+
                     &:hover {
                         margin-left: -180%;
                         text-overflow: initial;
                         transition: margin-left 3s linear;
                     }
                 }
+
                 .free-label, .subscription-label {
                     font-weight: 600;
                 }
+
                 .free-label {
                     padding: 1px 6px;
                     border-radius: 2px;
                     background-color: @colorprimlight;
                 }
+
                 .subscription-label {
                     color: @colorsignal1;
                 }
             }
         }
+
         .progress-container {
             background-color: @colorneutral;
+
             .progress {
                 height: 3px;
                 border-radius: 1px;
@@ -60,11 +73,13 @@
             }
         }
     }
+
     .play-container {
         width: 46px;
         height: 46px;
         display: flex;
         border-radius: 50%;
+
         .play {
             width: 18px;
             height: 18px;
@@ -73,6 +88,7 @@
             fill: @colorwhite60;
         }
     }
+
     &:hover {
         cursor: pointer;
         background-color: @colorwhite20;

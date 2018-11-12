@@ -1,38 +1,47 @@
 @import 'stremio-colors';
+
 .video {
     height: 62px;
     width: 340px;
     display: flex;
     padding: 10px 10px;
     background-color: @colorblack20;
+
     .poster {
         margin-right: 10px;
         background-position: center;
         background-size: cover, auto;
         background-repeat: no-repeat;
     }
+
     .video-container {
         width: 240px;
         color: @colorwhite;
+
         .main-info {
             font-size: 12px;
-            .number { 
+
+            .number {
                 margin-right: 6px;
             }
+
             .name {
                 overflow: hidden;
                 white-space: pre;
                 text-overflow: ellipsis;
             }
         }
+
         .duration, .released-date {
             font-size: 11px;
             padding-left: 1px;
             margin-right: 10px;
             color: @colorwhite60;
         }
+
         .progress-container {
             background-color: @colorwhite20;
+
             .progress {
                 height: 3px;
                 margin-top: 2px;
@@ -40,19 +49,23 @@
                 background-color: @colorprimlight;
             }
         }
+
         .watched-label, .upcoming-label {
             font-weight: 600;
             font-size: 10px;
             padding: 1px 6px;
             border-radius: 2px;
         }
+
         .watched-label {
             background-color: @colorprimlight;
         }
+
         .upcoming-label {
             background-color: @colorsignal5;
         }
     }
+
     &:hover, &:focus {
         cursor: pointer;
         background-color: @colorwhite20;

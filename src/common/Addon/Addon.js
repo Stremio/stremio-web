@@ -46,7 +46,7 @@ const renderDescription = (description) => {
 }
 
 const renderUrls = (urls) => {
-    if(urls.length === 0) {
+    if (urls.length === 0) {
         return null;
     }
 

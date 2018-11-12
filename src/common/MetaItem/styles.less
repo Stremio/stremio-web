@@ -1,13 +1,16 @@
 @import 'stremio-colors';
+
 .meta-item {
     color: @colorwhite;
     font-family: LatoLight;
+
     .poster {
         display: flex;
         background-position: center;
         background-size: cover, auto;
         background-repeat: no-repeat;
         background-color: @colordarkest;
+
         .play-container {
             width: 70px;
             height: 70px;
@@ -16,6 +19,7 @@
             visibility: hidden;
             border-radius: 50%;
             background-color: @colorwhite;
+
             .play {
                 width: 26px;
                 height: 26px;
@@ -25,51 +29,64 @@
             }
         }
     }
+
     .progress-container {
         background-color: @colorneutral;
+
         .progress {
             height: 4px;
             background-color: @colorprimlight;
         }
     }
+
     .info-container {
         display: flex;
         margin-top: 6px;
         align-items: baseline;
+
         .info {
             width: 100%;
-            .title, .year{
+
+            .title, .year {
                 color: @colorwhite60;
             }
+
             :first-child {
                 color: @colorwhite;
             }
         }
     }
+
     .more-icon-container {
         cursor: pointer;
         fill: @colorwhite;
+
         .more-icon {
             width: 10px;
             height: 10px;
         }
     }
+
     &:hover {
         color: @colorblack;
         background-color: @colorwhite;
         outline: 2px solid @colorwhite;
+
         .play-container {
             cursor: pointer;
             visibility: visible;
-        } 
+        }
+
         .info {
             .title, .year {
                 color: @colorblack60;
             }
+
             :first-child {
                 color: @colorblack;
             }
         }
+
         .more-icon {
             fill: @colorblack40;
         }

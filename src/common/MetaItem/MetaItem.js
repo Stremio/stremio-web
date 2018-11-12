@@ -112,7 +112,7 @@ const MetaItem = (props) => {
     const posterSize = getShapeSize(props.posterShape, props.progress);
     const contentContainerStyle = {
         width: posterSize.width,
-        height: props.episode.length === 0 && props.title.length === 0 && props.releaseInfo.length === 0 && props.progress == 0? posterSize.height : posterSize.containerHeight
+        height: props.episode.length === 0 && props.title.length === 0 && props.releaseInfo.length === 0 && props.progress == 0 ? posterSize.height : posterSize.containerHeight
     };
     const placeholderIcon = getPlaceholderIcon(props.type);
     const placeholderIconUrl = iconDataUrl({ icon: placeholderIcon, fill: colors.accent, width: Math.round(RELATIVE_POSTER_SIZE / 2.2), height: Math.round(RELATIVE_POSTER_SIZE / 2.2) });
@@ -124,9 +124,9 @@ const MetaItem = (props) => {
     return (
         <div style={contentContainerStyle} className={styles['meta-item']}>
             <div style={imageStyle} className={styles['poster']}>
-            <div onClick={props.play} style={props.progress ? { visibility: 'visible' } : null} className={styles['play-container']}>
-                <Icon className={styles['play']} icon={'ic_play'} />
-            </div>
+                <div onClick={props.play} style={props.progress ? { visibility: 'visible' } : null} className={styles['play-container']}>
+                    <Icon className={styles['play']} icon={'ic_play'} />
+                </div>
             </div>
             {renderProgress(props.progress)}
             <div className={styles['info-container']}>
