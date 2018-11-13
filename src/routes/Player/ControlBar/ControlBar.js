@@ -94,6 +94,10 @@ class ControlBar extends PureComponent {
     }
 
     renderPlayPauseButton() {
+        if (this.props.paused === null) {
+            return null;
+        }
+
         return (
             <div className={styles['button']} onClick={this.props.paused ? this.props.play : this.props.pause}>
                 <Icon

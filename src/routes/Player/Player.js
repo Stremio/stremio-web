@@ -8,12 +8,14 @@ class Player extends Component {
     constructor(props) {
         super(props);
 
+        this.videoRef = React.createRef();
+
         this.state = {
-            time: null,
-            volume: null,
-            duration: null,
+            videoComponent: null,
             paused: null,
-            videoComponent: null
+            time: null,
+            duration: null,
+            volume: null
         };
     }
 
@@ -21,7 +23,7 @@ class Player extends Component {
         this.prepareStream()
             .then(({ source, videoComponent }) => {
                 this.setState({ videoComponent }, () => {
-                    this.video.dispatch('command', 'load', {
+                    this.videoRef.current.dispatch('command', 'load', {
                         source: source
                     });
                 });
@@ -32,15 +34,11 @@ class Player extends Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return nextState.time !== this.state.time ||
-            nextState.volume !== this.state.volume ||
-            nextState.duration !== this.state.duration ||
+        return nextState.videoComponent !== this.state.videoComponent ||
             nextState.paused !== this.state.paused ||
-            nextState.videoComponent !== this.state.videoComponent;
-    }
-
-    assignVideo = (video) => {
-        this.video = video;
+            nextState.time !== this.state.time ||
+            nextState.duration !== this.state.duration ||
+            nextState.volume !== this.state.volume;
     }
 
     prepareStream = () => {
@@ -50,32 +48,42 @@ class Player extends Component {
         });
     }
 
-    onPropChanged = (propName, propValue) => {
-        this.setState({ [propName]: propValue });
+    onEnded = () => {
+        alert('ended');
+    }
+
+    onError = (error) => {
+        if (error.critical) {
+            this.videoRef.current && this.videoRef.current.dispatch('command', 'stop');
+            this.setState({
+                paused: null,
+                time: null,
+                duration: null,
+                volume: null
+            });
+        }
+
+        alert(error.message);
     }
 
     onPropValue = (propName, propValue) => {
         this.setState({ [propName]: propValue });
     }
 
-    onEnded = () => {
-        alert('ended');
-    }
-
-    onError = (error) => {
-        alert(error.message);
+    onPropChanged = (propName, propValue) => {
+        this.setState({ [propName]: propValue });
     }
 
     play = () => {
-        this.video.dispatch('setProp', 'paused', false);
+        this.videoRef.current && this.videoRef.current.dispatch('setProp', 'paused', false);
     }
 
     pause = () => {
-        this.video.dispatch('setProp', 'paused', true);
+        this.videoRef.current && this.videoRef.current.dispatch('setProp', 'paused', true);
     }
 
     seek = (time) => {
-        this.video.dispatch('setProp', 'time', time);
+        this.videoRef.current && this.videoRef.current.dispatch('setProp', 'time', time);
     }
 
     renderVideo() {
@@ -85,19 +93,19 @@ class Player extends Component {
 
         return (
             <this.state.videoComponent
-                ref={this.assignVideo}
+                ref={this.videoRef}
                 className={classnames(styles['layer'], styles['video'])}
-                onPropChanged={this.onPropChanged}
-                onPropValue={this.onPropValue}
                 onEnded={this.onEnded}
                 onError={this.onError}
-                observedProps={['time', 'volume', 'duration', 'paused']}
+                onPropValue={this.onPropValue}
+                onPropChanged={this.onPropChanged}
+                observedProps={['paused', 'time', 'duration', 'volume']}
             />
         );
     }
 
     renderControlBar() {
-        if (this.state.videoComponent === null) {
+        if (['paused', 'time', 'duration', 'volume'].every(propName => this.state[propName] === null)) {
             return null;
         }
 

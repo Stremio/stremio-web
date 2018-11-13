@@ -11,20 +11,17 @@ class ReactHTMLVideo extends Component {
 
     componentDidMount() {
         this.video = new HTMLVideo(this.videoRef.current);
-        this.video.addListener('propChanged', this.props.onPropChanged);
-        this.video.addListener('propValue', this.props.onPropValue);
-        this.video.addListener('error', this.props.onError);
-        this.video.addListener('ended', this.props.onEnded);
+        this.video.on('ended', this.props.onEnded);
+        this.video.on('error', this.props.onError);
+        this.video.on('propValue', this.props.onPropValue);
+        this.video.on('propChanged', this.props.onPropChanged);
         this.props.observedProps.forEach((propName) => {
-            this.video.dispatch('observeProp', propName);
+            this.dispatch('observeProp', propName);
         });
     }
 
     componentWillUnmount() {
-        this.video.removeListener('propChanged', this.props.onPropChanged);
-        this.video.removeListener('propValue', this.props.onPropValue);
-        this.video.removeListener('error', this.props.onError);
-        this.video.removeListener('ended', this.props.onEnded);
+        this.dispatch('stop');
     }
 
     shouldComponentUpdate() {
@@ -32,12 +29,16 @@ class ReactHTMLVideo extends Component {
     }
 
     dispatch = (...args) => {
-        this.video.dispatch(...args);
+        try {
+            this.video && this.video.dispatch(...args);
+        } catch (e) {
+            console.error('HTMLVideo', e);
+        }
     }
 
     render() {
         return (
-            <video ref={this.videoRef} className={this.props.className}></video>
+            <video ref={this.videoRef} className={this.props.className} />
         );
     }
 }
@@ -46,10 +47,10 @@ ReactHTMLVideo.manifest = HTMLVideo.manifest;
 
 ReactHTMLVideo.propTypes = {
     className: PropTypes.string,
-    onPropChanged: PropTypes.func.isRequired,
-    onPropValue: PropTypes.func.isRequired,
-    onError: PropTypes.func.isRequired,
     onEnded: PropTypes.func.isRequired,
+    onError: PropTypes.func.isRequired,
+    onPropValue: PropTypes.func.isRequired,
+    onPropChanged: PropTypes.func.isRequired,
     observedProps: PropTypes.arrayOf(PropTypes.string).isRequired
 };
 
