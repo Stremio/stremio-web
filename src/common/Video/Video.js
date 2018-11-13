@@ -56,7 +56,7 @@ const renderReleasedDate = (released) => {
         return null;
     }
 
-    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
     return (
         <span className={styles['released-date']}>{released.getDate() + ' ' + months[released.getMonth()]}</span>
