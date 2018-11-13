@@ -1,15 +1,12 @@
 @import 'stremio-colors';
-
 .user-panel {
     width: 260px;
     font-family: LatoLight;
     background-color: @colordarkest;
-
     .user-info {
         display: flex;
         padding: 15px;
         align-items: center;
-
         .profile-picture {
             height: 50px;
             width: 50px;
@@ -19,59 +16,52 @@
             background-position: center;
             background-repeat: no-repeat;
         }
-
         .email {
             color: @colorwhite;
+            width: 160px;
+            overflow: hidden;
+            white-space: pre;
+            text-overflow: ellipsis;
         }
-
         .log-out {
             color: @colorwhite40;
-
             &:hover {
                 cursor: pointer;
                 color: @colorwhite;
             }
         }
     }
-
     .fullscreen-option {
         border-top: 1px solid @colorwhite20;
         border-bottom: 1px solid @colorwhite20;
     }
-
     .fullscreen-option, .settings-option, .addons-option, .magnet-option, .help-option {
         display: flex;
         padding: 15px;
         align-items: center;
         color: @colorwhite80;
-
         .fullscreen-icon, .settings-icon, .addons-icon, .magnet-icon, .help-icon {
             height: 20px;
             width: 20px;
             margin-right: 12px;
             fill: @coloraccent;
         }
-
         &:hover {
             cursor: pointer;
             color: @colorwhite;
             background-color: @coloraccent20;
         }
     }
-
     .options, .footer {
         padding: 15px 0px;
     }
-
     .footer {
         display: flex;
         flex-direction: column;
         border-top: 1px solid @colorwhite20;
-
         .terms-label, .about-label {
             padding: 10px 20px;
             color: @colorwhite80;
-
             &:hover {
                 cursor: pointer;
                 color: @colorwhite;

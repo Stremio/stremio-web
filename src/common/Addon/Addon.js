@@ -19,7 +19,9 @@ const renderVersion = (version) => {
     }
 
     return (
-        <span className={styles['version']}>{'v. ' + version}</span>
+        <div className={styles['version-container']}>
+            <div className={styles['version']}>{'v. ' + version}</div>
+        </div>
     );
 }
 
@@ -68,12 +70,12 @@ const Addon = (props) => {
                 <div className={styles['logo-container']}>
                     <Icon className={styles['logo']} icon={props.logo.length === 0 ? 'ic_addons' : props.logo} />
                 </div>
-                <div className={styles['info']}>
+                <div className={styles['header']}>
                     {renderName(props.name)}
                     {renderVersion(props.version)}
-                    {renderType(props.types)}
-                    {renderDescription(props.description)}
                 </div>
+                {renderType(props.types)}
+                {renderDescription(props.description)}
             </div>
             {renderUrls(props.urls)}
             <div className={styles['buttons']}>

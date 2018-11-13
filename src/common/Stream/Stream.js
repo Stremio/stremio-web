@@ -26,6 +26,13 @@ const renderTitle = (title) => {
     );
 }
 
+const getClassName = (isFree, isSubscription, title, subtitle) => {
+    if (isFree) return 'free-subtitle';
+    if (title.length > 0 && subtitle.length === 0 && !isSubscription) return 'with-title';
+    if (title.length === 0 && subtitle.length > 0) return 'with-subtitle';
+    return 'text-container';
+}
+
 const renderSubtitle = (isFree, isSubscription, subtitle) => {
     if (isFree) {
         return (
@@ -62,16 +69,12 @@ const renderProgress = (progress) => {
 const Stream = (props) => {
     return (
         <div onClick={props.play} style={{ backgroundColor: props.progress ? colors.black40 : null }} className={styles['stream']}>
-            <div className={styles['stream-info-container']}>
-                <div className={styles['stream-info']}>
-                    {renderLogo(props.logo, props.sourceName)}
-                    <div className={styles['text-container']}>
-                        {renderTitle(props.title)}
-                        {renderSubtitle(props.isFree, props.isSubscription, props.subtitle)}
-                    </div>
-                </div>
-                {renderProgress(props.progress)}
+            {renderLogo(props.logo, props.sourceName)}
+            <div className={styles[getClassName(props.isFree, props.isSubscription, props.title, props.subtitle)]}>
+                {renderTitle(props.title)}
+                {renderSubtitle(props.isFree, props.isSubscription, props.subtitle)}
             </div>
+            {renderProgress(props.progress)}
             <div style={{ backgroundColor: props.progress ? colors.white : null }} className={styles['play-container']}>
                 <Icon style={{ fill: props.progress ? colors.medium : null }} className={styles['play']} icon={'ic_play'} />
             </div>

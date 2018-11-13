@@ -11,8 +11,6 @@ const renderPoster = (poster) => {
 
     const placeholderIconUrl = iconDataUrl({ icon: 'ic_channels', fill: colors.accent, width: 40, height: 36 });
     const imageStyle = {
-        width: 70,
-        height: 42,
         backgroundImage: `url('${poster}'), url('${placeholderIconUrl}')`
     };
 
@@ -63,53 +61,47 @@ const renderReleasedDate = (released) => {
     );
 }
 
-const renderWatched = (isWatched) => {
-    if (!isWatched) {
+const renderLabel = (isWatched, isUpcoming) => {
+    if (!isWatched && !isUpcoming) {
         return null;
     }
 
     return (
-        <span className={styles['watched-label']}>WATCHED</span>
+        <div className={styles['label-container']}>
+            <span className={styles[isWatched ? 'watched-label' : 'upcoming-label']}>{isWatched ? 'WATCHED' : 'UPCOMING'}</span>
+        </div>
     );
 }
 
-const renderUpcoming = (isUpcoming) => {
-    if (!isUpcoming) {
-        return null;
-    }
-
-    return (
-        <span className={styles['upcoming-label']}>UPCOMING</span>
-    );
-}
-
-const renderProgress = (poster, progress) => {
+const renderProgress = (progress) => {
     if (progress <= 0) {
         return null;
     }
 
     return (
-        <div style={{ width: poster.length > 0 ? 220 : 300 }} className={styles['progress-container']}>
+        <div className={styles['progress-container']}>
             <div style={{ width: progress + '%' }} className={styles['progress']}></div>
         </div>
     );
 }
 
+const getClassName = (poster, progress) => {
+    if (poster.length > 0 && !progress) return 'with-poster';
+    if (progress && poster.length === 0) return 'with-progress';
+    if (poster.length > 0 && progress) return 'with-poster-progress';
+    return 'video';
+}
+
 const Video = (props) => {
     return (
-        <div onClick={props.onVideoClicked} style={{ backgroundColor: props.progress ? colors.black40 : null, display: props.poster.length > 0 && props.progress ? 'flex' : null }} className={styles['video']}>
+        <div onClick={props.onVideoClicked} style={{ padding: props.poster.length > 0 ? '10px 10px' : '10px 16px' }} className={styles[getClassName(props.poster, props.progress)]}>
             {renderPoster(props.poster)}
-            <div className={styles['video-container']}>
-                <div className={styles['main-info']}>
-                    {renderNumber(props.number)}
-                    {renderName(props.name)}
-                </div>
-                {renderDuration(props.duration)}
-                {renderReleasedDate(props.released)}
-                {renderWatched(props.isWatched)}
-                {renderUpcoming(props.isUpcoming)}
-                {renderProgress(props.poster, props.progress)}
-            </div>
+            {renderNumber(props.number)}
+            {renderName(props.name)}
+            {renderDuration(props.duration)}
+            {renderReleasedDate(props.released)}
+            {renderLabel(props.isWatched, props.isUpcoming)}
+            {renderProgress(props.progress)}
         </div>
     );
 }

@@ -1,85 +1,102 @@
 @import 'stremio-colors';
-
 .stream {
     width: 340px;
-    display: flex;
+    display: grid;
     font-size: 11px;
     padding: 7px 20px;
     color: @colorwhite;
-    justify-content: space-between;
+    align-items: center;
     background-color: @colorblack20;
-
-    .stream-info-container {
-        width: 230px;
-
-        .stream-info {
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-
-            .logo {
-                width: 74px;
-                fill: @colorwhite;
-            }
-
-            .source-name {
-                width: 80px;
-                font-size: 13px;
-                overflow: hidden;
-                white-space: pre;
-                text-overflow: ellipsis;
-            }
-
-            .text-container {
-                width: 120px;
-                overflow: hidden;
-
-                .title {
-                    overflow: hidden;
-                    white-space: pre;
-                    text-overflow: ellipsis;
-
-                    &:hover {
-                        margin-left: -180%;
-                        text-overflow: initial;
-                        transition: margin-left 3s linear;
-                    }
-                }
-
-                .free-label, .subscription-label {
-                    font-weight: 600;
-                }
-
-                .free-label {
-                    padding: 1px 6px;
-                    border-radius: 2px;
-                    background-color: @colorprimlight;
-                }
-
-                .subscription-label {
-                    color: @colorsignal1;
-                }
+    grid-template-columns: 74px 36px 120px 24px 46px;
+    grid-template-rows: 40px 3px 3px;
+    grid-template-areas: 
+      "logo . text . play"
+      "progress progress progress . play"
+      ". . . . play";
+    .logo {
+        grid-area: logo;
+        width: 74px;
+        fill: @colorwhite;
+    }
+    .source-name {
+        grid-area: logo;
+        font-size: 13px;
+        overflow: hidden;
+        white-space: pre;
+        text-overflow: ellipsis;
+    }
+    .free-subtitle, .with-title, .with-subtitle, .text-container {
+        grid-area: text;
+        display: grid;
+        overflow: hidden;
+        .title {
+            grid-area: title;
+            overflow: hidden;
+            white-space: pre;
+            text-overflow: ellipsis;
+            &:hover {
+                margin-left: -180%;
+                text-overflow: initial;
+                transition: margin-left 3s linear;
             }
         }
-
-        .progress-container {
-            background-color: @colorneutral;
-
-            .progress {
-                height: 3px;
-                border-radius: 1px;
-                background-color: @colorprimlight;
-            }
+        .subtitle, .subscription-label {
+            grid-area: subtitle;
+        }
+        .free-label, .subscription-label {
+            font-weight: 600;
+        }
+        .free-label {
+            grid-area: free;
+            padding: 0px 6px;
+            border-radius: 2px;
+            background-color: @colorprimlight;
+        }
+        .subscription-label {
+            color: @colorsignal1;
         }
     }
-
+    .free-subtitle {
+        grid-template-columns: 38px 82px;
+        grid-template-rows: 18px 17px 1px;
+        grid-template-areas: 
+          "title title"
+          "free ."
+          ". .";
+    }
+    .with-title {
+        grid-template-columns: 120px;
+        grid-template-rows: 18px;
+        grid-template-areas: 
+          "title";
+    }
+    .with-subtitle {
+        grid-template-columns: 120px;
+        grid-template-rows: 18px;
+        grid-template-areas: 
+          "subtitle";
+    }
+    .text-container {
+        grid-template-columns: 120px;
+        grid-template-rows: 18px 18px;
+        grid-template-areas: 
+          "title"
+          "subtitle";
+    }
+    .progress-container {
+        grid-area: progress;
+        background-color: @colorneutral;
+        .progress {
+            height: 3px;
+            border-radius: 1px;
+            background-color: @colorprimlight;
+        }
+    }
     .play-container {
-        width: 46px;
+        grid-area: play;
         height: 46px;
         display: flex;
         border-radius: 50%;
-
         .play {
             width: 18px;
             height: 18px;
@@ -88,7 +105,6 @@
             fill: @colorwhite60;
         }
     }
-
     &:hover {
         cursor: pointer;
         background-color: @colorwhite20;

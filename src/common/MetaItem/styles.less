@@ -1,16 +1,15 @@
 @import 'stremio-colors';
-
-.meta-item {
+.meta-item, .progress-poster-shape, .progress-landscape-shape, .progress-square-shape, .progress-info-poster-shape, .progress-info-landscape-shape, .progress-info-square-shape, .poster-shape, .landscape-shape, .square-shape, .info-poster-shape, .info-landscape-shape, .info-square-shape {
+    display: grid;
     color: @colorwhite;
     font-family: LatoLight;
-
     .poster {
+        grid-area: poster;
         display: flex;
         background-position: center;
         background-size: cover, auto;
         background-repeat: no-repeat;
         background-color: @colordarkest;
-
         .play-container {
             width: 70px;
             height: 70px;
@@ -19,7 +18,6 @@
             visibility: hidden;
             border-radius: 50%;
             background-color: @colorwhite;
-
             .play {
                 width: 26px;
                 height: 26px;
@@ -29,66 +27,129 @@
             }
         }
     }
-
     .progress-container {
+        grid-area: progress;
         background-color: @colorneutral;
-
         .progress {
             height: 4px;
             background-color: @colorprimlight;
         }
     }
-
-    .info-container {
-        display: flex;
-        margin-top: 6px;
-        align-items: baseline;
-
-        .info {
-            width: 100%;
-
-            .title, .year {
-                color: @colorwhite60;
-            }
-
-            :first-child {
-                color: @colorwhite;
-            }
+    .info {
+        grid-area: info;
+        .title, .year, .episode {
+            grid-area: text;
+            color: @colorwhite60;
+        }
+        :first-child {
+            color: @colorwhite;
         }
     }
-
-    .more-icon-container {
+    .popup-icon-container {
+        grid-area: popupIcon;
         cursor: pointer;
         fill: @colorwhite;
-
-        .more-icon {
+        .popup-icon {
             width: 10px;
             height: 10px;
         }
     }
-
     &:hover {
         color: @colorblack;
         background-color: @colorwhite;
         outline: 2px solid @colorwhite;
-
         .play-container {
             cursor: pointer;
             visibility: visible;
         }
-
         .info {
             .title, .year {
                 color: @colorblack60;
             }
-
             :first-child {
                 color: @colorblack;
             }
         }
-
-        .more-icon {
+        .popup-icon {
             fill: @colorblack40;
         }
     }
+}
+.progress-poster-shape, .progress-landscape-shape, .progress-square-shape {
+    grid-template-areas: 
+      "poster poster"
+      "progress progress"
+      ". popupIcon";
+}
+.progress-poster-shape {
+    grid-template-columns: 128px 10px;
+    grid-template-rows: 202.03px 4px;
+}
+.progress-landscape-shape {
+    grid-template-columns: 235.33px 10px;
+    grid-template-rows: 202.03px 4px;
+}
+.progress-square-shape {
+    grid-template-columns: 192.33px 10px;
+    grid-template-rows: 202.03px 4px;
+}
+.progress-info-poster-shape, .progress-info-landscape-shape, .progress-info-square-shape {
+    grid-template-areas: 
+      "poster poster"
+      "progress progress"
+      ". ."
+      "info popupIcon";
+}
+.progress-info-poster-shape {
+    grid-template-columns: 128px 10px;
+    grid-template-rows: 202.03px 4px 6px 77.97px;
+}
+.progress-info-landscape-shape {
+    grid-template-columns: 235.33px 10px;
+    grid-template-rows: 202.03px 4px 6px 77.97px;
+}
+.progress-info-square-shape {
+    grid-template-columns: 192.33px 10px;
+    grid-template-rows: 202.03px 4px 6px 77.97px;
+}
+.poster-shape, .landscape-shape, .square-shape {
+    grid-template-areas: 
+      "poster poster"
+      ". popupIcon";
+}
+.poster-shape {
+    grid-template-columns: 128px 10px;
+    grid-template-rows: 202.03px;
+}
+.landscape-shape {
+    grid-template-columns: 235.33px 10px;
+    grid-template-rows: 138px;
+}
+.square-shape {
+    grid-template-columns: 128px 10px;
+    grid-template-rows: 138px;
+}
+.info-poster-shape, .info-landscape-shape, .info-square-shape {
+    grid-template-areas: 
+      "poster poster"
+      ". ."
+      "info popupIcon";
+}
+.info-poster-shape {
+    grid-template-columns: 128px 10px;
+    grid-template-rows: 202.03px 6px 81.97px;
+}
+.info-landscape-shape {
+    grid-template-columns: 235.33px 10px;
+    grid-template-rows: 138px 6px 64.97px;
+}
+.info-square-shape {
+    grid-template-columns: 128px 10px;
+    grid-template-rows: 138px 6px 64.97px;
+}
+.meta-item {
+    grid-template-columns: 138px;
+    grid-template-rows: 202.03px;
+    grid-template-areas: 
+      "poster";
 }
