@@ -47,7 +47,7 @@ const renderProgress = (progress) => {
 
     return (
         <div className={styles['progress-container']}>
-            <div style={{ width: progress + '%' }} className={styles['progress']}></div>
+            <div style={{ width: progress + '%' }} className={styles['progress']} />
         </div>
     );
 }
@@ -86,7 +86,8 @@ const renderPopupIcon = (onItemClicked, popup) => {
     if (!popup) {
         return null;
     }
-     return (
+    
+    return (
         <div onClick={onItemClicked} className={styles['popup-icon-container']}>
             <Icon className={styles['popup-icon']} icon={'ic_more'} />
         </div>

@@ -15,7 +15,7 @@ const renderPoster = (poster) => {
     };
 
     return (
-        <div style={imageStyle} className={styles['poster']}></div>
+        <div style={imageStyle} className={styles['poster']} />
     );
 }
 
@@ -80,7 +80,7 @@ const renderProgress = (progress) => {
 
     return (
         <div className={styles['progress-container']}>
-            <div style={{ width: progress + '%' }} className={styles['progress']}></div>
+            <div style={{ width: progress + '%' }} className={styles['progress']} />
         </div>
     );
 }

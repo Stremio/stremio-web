@@ -23,7 +23,7 @@ const UserPanel = (props) => {
     return (
         <div className={styles['user-panel']}>
             <div className={styles['user-info']}>
-                <div style={avatarStyle} className={styles['profile-picture']}></div>
+                <div style={avatarStyle} className={styles['profile-picture']} />
                 <div className={styles['profile-info']}>
                     {renderEmail(props.email)}
                     <span onClick={props.logout} className={styles['log-out']}>Log out</span>

@@ -58,15 +58,15 @@ class Settings extends Component {
                 <div className={styles['settings-section']}>
                     <label className={styles['toggle-option']}>
                         <span className={styles['preference']}>Hardware-accelerated decoding</span>
-                        <Checkbox className={styles['checkbox-size']} checked={this.state.decodingEnabled} enabled={true} onClick={this.toggleDecoding}></Checkbox>
+                        <Checkbox className={styles['checkbox-size']} checked={this.state.decodingEnabled} enabled={true} onClick={this.toggleDecoding} />
                     </label>
                     <label className={styles['toggle-option']}>
                         <span className={styles['preference']}>Auto-play next episode</span>
-                        <Checkbox className={styles['checkbox-size']} checked={!this.state.autoplayEnabled} enabled={true} onClick={this.toggleAutoPlay}></Checkbox>
+                        <Checkbox className={styles['checkbox-size']} checked={!this.state.autoplayEnabled} enabled={true} onClick={this.toggleAutoPlay} />
                     </label>
                     <label className={styles['toggle-option']}>
                         <span className={styles['preference']}>Data saver</span>
-                        <Checkbox className={styles['checkbox-size']} checked={this.state.dataSaverEnabled} enabled={true} onClick={this.toggleDataSaver}></Checkbox>
+                        <Checkbox className={styles['checkbox-size']} checked={this.state.dataSaverEnabled} enabled={true} onClick={this.toggleDataSaver} />
                     </label>
                 </div>
             </div>

@@ -61,7 +61,7 @@ const renderProgress = (progress) => {
 
     return (
         <div className={styles['progress-container']}>
-            <div style={{ width: progress + '%' }} className={styles['progress']}></div>
+            <div style={{ width: progress + '%' }} className={styles['progress']} />
         </div>
     );
 }
