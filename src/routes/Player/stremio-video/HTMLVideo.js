@@ -9,26 +9,26 @@ var HTMLVideo = function(videoElement) {
         var message;
         var critical;
         switch (videoElement.error.code) {
-            case 4:
-                message = 'video not supported';
+            case 1:
+                message = 'Fetching process aborted';
+                critical = false;
+                break;
+            case 2:
+                message = 'Error occurred when downloading';
                 critical = true;
                 break;
             case 3:
-                message = 'error occurred when decoding';
+                message = 'Error occurred when decoding';
                 critical = true;
                 break;
-            case 2:
-                message = 'error occurred when downloading';
+            case 4:
+                message = 'Video is not supported';
                 critical = true;
-                break;
-            case 1:
-                message = 'fetching process aborted by user';
-                critical = false;
                 break;
             default:
-                message = 'unknown error';
-                critical = false;
-        };
+                message = 'Unknown error';
+                critical = true;
+        }
 
         events.emit('error', {
             code: videoElement.error.code,
