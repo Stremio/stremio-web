@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import classnames from 'classnames';
 import ReactHTMLVideo from './stremio-video/ReactHTMLVideo';
 import ControlBar from './ControlBar';
@@ -92,15 +92,18 @@ class Player extends Component {
         }
 
         return (
-            <this.state.videoComponent
-                ref={this.videoRef}
-                className={classnames(styles['layer'], styles['video'])}
-                onEnded={this.onEnded}
-                onError={this.onError}
-                onPropValue={this.onPropValue}
-                onPropChanged={this.onPropChanged}
-                observedProps={['paused', 'time', 'duration', 'volume']}
-            />
+            <Fragment>
+                <this.state.videoComponent
+                    ref={this.videoRef}
+                    className={classnames(styles['layer'], styles['video'])}
+                    onEnded={this.onEnded}
+                    onError={this.onError}
+                    onPropValue={this.onPropValue}
+                    onPropChanged={this.onPropChanged}
+                    observedProps={['paused', 'time', 'duration', 'volume']}
+                />
+                <div className={styles['layer']} />
+            </Fragment>
         );
     }
 
