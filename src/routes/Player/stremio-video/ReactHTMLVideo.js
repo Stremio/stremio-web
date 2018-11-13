@@ -3,8 +3,14 @@ import PropTypes from 'prop-types';
 import HTMLVideo from './HTMLVideo';
 
 class ReactHTMLVideo extends Component {
+    constructor(props) {
+        super(props);
+
+        this.videoRef = React.createRef();
+    }
+
     componentDidMount() {
-        this.video = new HTMLVideo(this.videoElement);
+        this.video = new HTMLVideo(this.videoRef.current);
         this.video.addListener('propChanged', this.props.onPropChanged);
         this.video.addListener('propValue', this.props.onPropValue);
         this.video.addListener('error', this.props.onError);
@@ -25,17 +31,13 @@ class ReactHTMLVideo extends Component {
         return false;
     }
 
-    assignVideoElement = (videoElement) => {
-        this.videoElement = videoElement;
-    }
-
     dispatch = (...args) => {
         this.video.dispatch(...args);
     }
 
     render() {
         return (
-            <video ref={this.assignVideoElement} className={this.props.className}></video>
+            <video ref={this.videoRef} className={this.props.className}></video>
         );
     }
 }
