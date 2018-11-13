@@ -21,10 +21,13 @@ var HTMLVideo = function(videoElement) {
                 message = 'error occurred when downloading';
                 critical = true;
                 break;
-            default:
+            case 1:
                 message = 'fetching process aborted by user';
                 critical = false;
                 break;
+            default:
+                message = 'unknown error';
+                critical = false;
         };
 
         events.emit('error', {
