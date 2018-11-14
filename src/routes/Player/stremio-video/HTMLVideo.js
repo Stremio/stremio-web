@@ -46,7 +46,7 @@ var HTMLVideo = function(videoElement) {
         events.emit('propChanged', 'duration', isNaN(videoElement.duration) ? null : videoElement.duration * 1000);
     };
     var onVolumeChanged = function() {
-        events.emit('propChanged', 'volume', videoElement.volume);
+        events.emit('propChanged', 'volume', videoElement.volume * 100);
     };
 
     videoElement.addEventListener('ended', onEnded);
@@ -77,7 +77,7 @@ var HTMLVideo = function(videoElement) {
                     videoElement.addEventListener('durationchange', onDurationChanged);
                     break;
                 case 'volume':
-                    events.emit('propValue', 'volume', videoElement.volume);
+                    events.emit('propValue', 'volume', videoElement.volume * 100);
                     videoElement.removeEventListener('volumechange', onVolumeChanged);
                     videoElement.addEventListener('volumechange', onVolumeChanged);
                     break;
@@ -93,7 +93,7 @@ var HTMLVideo = function(videoElement) {
                     videoElement.currentTime = arguments[2] / 1000;
                     break;
                 case 'volume':
-                    videoElement.volume = arguments[2];
+                    videoElement.volume = arguments[2] / 100;
                     break;
                 default:
                     throw new Error('setProp not supported: ' + arguments[1]);
