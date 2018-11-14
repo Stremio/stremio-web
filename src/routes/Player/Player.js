@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import classnames from 'classnames';
 import ReactHTMLVideo from './stremio-video/ReactHTMLVideo';
+import ReactYouTubeVideo from './stremio-video/ReactYouTubeVideo';
 import ControlBar from './ControlBar';
 import styles from './styles';
 
@@ -42,9 +43,13 @@ class Player extends Component {
     }
 
     prepareStream = () => {
-        return Promise.resolve({
-            source: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-            videoComponent: ReactHTMLVideo
+        return new Promise((resolve, reject) => {
+            YT.ready(() => {
+                resolve({
+                    source: 'SEL97pn5aS0',
+                    videoComponent: ReactYouTubeVideo
+                });
+            });
         });
     }
 
