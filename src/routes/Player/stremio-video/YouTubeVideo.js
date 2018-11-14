@@ -51,6 +51,9 @@ var YouTubeVideo = function(containerElement) {
     var onDurationChanged = function() {
         events.emit('propChanged', 'duration', video.getDuration() !== 0 ? video.getDuration() * 1000 : null);
     };
+    var onVolumeChanged = function() {
+        events.emit('propChanged', 'volume', video.getVolume());
+    };
     var onReady = function() {
         ready = true;
         dispatchArgsQueue.forEach(function(args) {
@@ -132,6 +135,11 @@ var YouTubeVideo = function(containerElement) {
                         }
                     }
                     break;
+                case 'volume':
+                    if (ready) {
+                        events.emit('propValue', 'volume', video.getVolume());
+                    }
+                    break;
                 default:
                     throw new Error('observeProp not supported: ' + arguments[1]);
             }
@@ -147,6 +155,11 @@ var YouTubeVideo = function(containerElement) {
                         video.seekTo(arguments[2] / 1000);
                     }
                     break;
+                case 'volume':
+                    if (ready) {
+                        video.setVolume(arguments[2]);
+                        onVolumeChanged();
+                    }
                 default:
                     throw new Error('setProp not supported: ' + arguments[1]);
             }
