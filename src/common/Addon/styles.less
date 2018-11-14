@@ -1,4 +1,5 @@
 @import 'stremio-colors';
+
 .addon {
     width: 550px;
     padding: 18px;
@@ -6,33 +7,37 @@
     color: @colorwhite;
     font-family: LatoLight;
     background-color: @colorglass;
+
     .info-container {
-        height: 80px;
         display: grid;
         margin-bottom: 26px;
         grid-template-columns: 80px 14px 420px;
-        grid-template-rows: 22px 2px 18px 2px 36px;
-        grid-template-areas: 
-          "logo . header"
-          "logo . ."
-          "logo . type"
-          "logo . ."
-          "logo . description";
+        grid-template-rows: 22px 2px 18px 2px 36px auto;
+        grid-template-areas:
+            "logo . header"
+            "logo . ."
+            "logo . type"
+            "logo . ."
+            "logo . description"
+            "logo . description";
+
         .logo-container {
             grid-area: logo;
-            width: 80px;
-            height: 80px;
             display: flex;
-            background-color: @colordarkest;
+
             .logo {
-                width: 40px;
-                margin: auto;
+                width: 100%;
+                height: 80px;
+                padding: 20%;
+                background-color: @colordarkest;
                 fill: @colorwhite;
             }
         }
+
         .header {
             grid-area: header;
             display: flex;
+
             .name {
                 font-size: 20px;
                 max-width: 350px;
@@ -41,10 +46,12 @@
                 margin-right: 10px;
                 text-overflow: ellipsis;
             }
+
             .version-container {
                 flex: 1;
                 overflow: hidden;
                 color: @colorwhite60;
+
                 .version {
                     margin-top: 4px;
                     overflow: hidden;
@@ -53,70 +60,94 @@
                 }
             }
         }
+
         .type {
             grid-area: type;
             color: @coloraccent;
         }
+
         .description {
             grid-area: description;
         }
     }
+
     .urls-container {
         display: flex;
         overflow: auto;
         flex-direction: column;
+
         .url {
             color: @colorwhite60;
         }
     }
+
     .buttons {
         display: flex;
         margin-top: 26px;
         justify-content: space-between;
-        .share-container {
-            border: 2px solid @coloraccent;
-            .share-icon {
-                width: 18px;
-                margin-right: 6px;
-                fill: @coloraccent;
-            }
-            .share-label {
-                color: @coloraccent;
-            }
-            &:hover {
-                background-color: @coloraccent;
-                .share-icon {
-                    fill: @colorwhite;
-                }
-                .share-label {
-                    color: @colorwhite;
-                }
-            }
-        }
-        .share-container, .install-label, .uninstall-label {
+
+        .button-container {
             width: 230px;
             display: flex;
             cursor: pointer;
-            font-weight: 600;
-            font-size: larger;
             padding: 10px 0px;
             align-items: center;
             justify-content: center;
+            border: 2px solid;
+
+            .icon {
+                width: 18px;
+                margin-right: 6px;
+            }
+
+            .label {
+                font-weight: 600;
+                font-size: 14px;
+            }
+
+            &.share-button {
+                border-color: @coloraccent;
+
+                .icon {
+                    fill: @coloraccent;
+                }
+
+                .label {
+                    color: @coloraccent;
+                }
+
+                &:hover {
+                    background-color: @coloraccent;
+
+                    .icon {
+                        fill: @colorwhite;
+                    }
+
+                    .label {
+                        color: @colorwhite;
+                    }
+                }
+            }
+
+            &.install-button {
+                border-color: @colorsignal5;
+                background-color: @colorsignal5;
+
+                &:hover {
+                    background-color: @colorsignal580;
+                }
+            }
+
+            &.uninstall-button {
+                border-color: @colorneutral;
+
+                &:hover {
+                    background-color: @colorneutral;
+                }
+            }
+
             &:hover {
                 border: none;
-            }
-        }
-        .install-label {
-            border: 2px solid @colorsignal5;
-            background-color: @colorsignal5;
-            &:hover {
-                background-color: @colorsignal580;
-            }
-        }
-        .uninstall-label {
-            border: 2px solid @colorneutral;
-            &:hover {
-                background-color: @colorneutral;
             }
         }
     }

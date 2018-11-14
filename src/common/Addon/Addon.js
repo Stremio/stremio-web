@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import classnames from 'classnames';
 import Icon from 'stremio-icons/dom';
 import styles from './styles';
 
@@ -43,7 +44,7 @@ const renderDescription = (description) => {
     }
 
     return (
-        <div style={description.length > 150 ? { overflow: 'auto', height: 36 } : null} className={styles['description']}>{description}</div>
+        <div className={styles['description']}>{description}</div>
     );
 }
 
@@ -79,11 +80,13 @@ const Addon = (props) => {
             </div>
             {renderUrls(props.urls)}
             <div className={styles['buttons']}>
-                <div onClick={props.shareAddon} className={styles['share-container']}>
-                    <Icon className={styles['share-icon']} icon={'ic_share'} />
-                    <span className={styles['share-label']}>SHARE ADD-ON</span>
+                <div onClick={props.shareAddon} className={classnames(styles['button-container'], styles['share-button'])}>
+                    <Icon className={styles['icon']} icon={'ic_share'} />
+                    <span className={styles['label']}>SHARE ADD-ON</span>
                 </div>
-                <div onClick={props.onToggleClicked} className={styles[props.isInstalled ? 'install-label' : 'uninstall-label']}>{props.isInstalled ? 'Install' : 'Uninstall'}</div>
+                <div onClick={props.onToggleClicked} className={classnames(styles['button-container'], props.isInstalled ? styles['install-button'] : styles['uninstall-button'])}>
+                    <span className={styles['label']}>{props.isInstalled ? 'Install' : 'Uninstall'}</span>
+                </div>
             </div>
         </div>
     );
@@ -97,8 +100,8 @@ Addon.propTypes = {
     description: PropTypes.string.isRequired,
     urls: PropTypes.arrayOf(PropTypes.string).isRequired,
     isInstalled: PropTypes.bool.isRequired,
-    shareAddon: PropTypes.func,
-    onToggleClicked: PropTypes.func
+    shareAddon: PropTypes.func.isRequired,
+    onToggleClicked: PropTypes.func.isRequired
 };
 Addon.defaultProps = {
     logo: '',
