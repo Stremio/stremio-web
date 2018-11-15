@@ -96,7 +96,7 @@
             font-weight: normal;
         }
 
-        html, body, #app {
+        html, body, #app, .modal-container {
             position: relative;
             width: 100vw;
             height: 100vh;
@@ -105,6 +105,13 @@
             overflow: hidden;
             font: 13px / 18px 'Open Sans', 'LatoLight', 'Arial', 'Helvetica', 'sans-serif';
             z-index: 0;
+        }
+
+        .modal-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
         }
     </style>
 </head>
