@@ -1,17 +1,27 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import debounce from 'lodash.debounce';
 import Icon from 'stremio-icons/dom';
+import { Slider } from 'stremio-common';
 import styles from './styles';
 
-class ControlBar extends PureComponent {
+class ControlBar extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
             seekTime: -1
         };
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        return nextProps.className !== this.props.className ||
+            nextProps.paused !== this.props.paused ||
+            nextProps.time !== this.props.time ||
+            nextProps.duration !== this.props.duration ||
+            nextProps.volume !== this.props.volume ||
+            nextState.seekTime !== this.state.seekTime;
     }
 
     componentWillUnmount() {
@@ -22,48 +32,24 @@ class ControlBar extends PureComponent {
         this.setState({ seekTime: -1 });
     }, 3000)
 
-    calculateSeekTime = (mouseX, seekBarElement) => {
-        const { left, width } = seekBarElement.getBoundingClientRect();
-        const position = Math.min(Math.max(mouseX - left, 0), width);
-        const seekTime = Math.floor((position / width) * this.props.duration);
-        return seekTime;
+    onSliding = (seekTime) => {
+        this.resetSeekTime.cancel();
+        this.setState({ seekTime });
     }
 
-    onStartSliding = ({ currentTarget, clientX, button }) => {
-        if (button !== 0) {
-            return;
-        }
+    onSlidingCompleted = (seekTime) => {
+        this.setState({ seekTime });
+        this.props.seek(seekTime);
+        this.resetSeekTime();
+    }
 
-        const releaseThumb = () => {
-            window.removeEventListener('mousemove', onMouseMove);
-            window.removeEventListener('mouseup', onMouseUp);
-            window.removeEventListener('blur', onBlur);
-            document.body.style['pointer-events'] = 'initial';
-            document.documentElement.style.cursor = 'initial';
-            currentTarget.classList.remove(styles['active']);
-        };
-        const onBlur = () => {
-            releaseThumb();
-            this.resetSeekTime.cancel();
-            this.setState({ seekTime: -1 });
-        };
-        const onMouseMove = ({ clientX }) => {
-            this.setState({ seekTime: this.calculateSeekTime(clientX, currentTarget) });
-        };
-        const onMouseUp = ({ clientX }) => {
-            releaseThumb();
-            this.resetSeekTime();
-            this.props.seek(this.calculateSeekTime(clientX, currentTarget));
-        };
-
-        window.addEventListener('mousemove', onMouseMove);
-        window.addEventListener('mouseup', onMouseUp);
-        window.addEventListener('blur', onBlur);
-        document.body.style['pointer-events'] = 'none';
-        document.documentElement.style.cursor = 'pointer';
-        currentTarget.classList.add(styles['active']);
+    onSlidingAborted = () => {
         this.resetSeekTime.cancel();
-        this.setState({ seekTime: this.calculateSeekTime(clientX, currentTarget) });
+        this.setState({ seekTime: -1 });
+    }
+
+    onPlayPauseButtonClicked = () => {
+        this.props.paused ? this.props.play() : this.props.pause();
     }
 
     formatTime = (time) => {
@@ -78,18 +64,17 @@ class ControlBar extends PureComponent {
             return null;
         }
 
-        const thumbPosition = this.state.seekTime !== -1 ?
-            this.state.seekTime / this.props.duration
-            :
-            this.props.time / this.props.duration;
-
         return (
-            <div className={styles['seek-bar']} onMouseDown={this.onStartSliding}>
-                <div className={styles['seek-line']} />
-                <div className={styles['thumb-container']} style={{ left: `calc(100% * ${thumbPosition})` }}>
-                    <div className={styles['thumb']} />
-                </div>
-            </div>
+            <Slider
+                containerClassName={styles['seek-bar']}
+                thumbClassName={styles['thumb']}
+                value={this.state.seekTime !== -1 ? this.state.seekTime : this.props.time}
+                maxValue={this.props.duration}
+                minValue={0}
+                onSliding={this.onSliding}
+                onSlidingAborted={this.onSlidingAborted}
+                onSlidingCompleted={this.onSlidingCompleted}
+            />
         );
     }
 
@@ -99,7 +84,7 @@ class ControlBar extends PureComponent {
         }
 
         return (
-            <div className={styles['button']} onClick={this.props.paused ? this.props.play : this.props.pause}>
+            <div className={styles['button']} onClick={this.onPlayPauseButtonClicked}>
                 <Icon
                     className={styles['icon']}
                     icon={this.props.paused ? 'ic_play' : 'ic_pause'}
@@ -125,9 +110,9 @@ class ControlBar extends PureComponent {
 
     render() {
         return (
-            <div className={classnames(this.props.className, styles['root-container'])}>
+            <div className={classnames(styles['control-bar-container'], this.props.className)}>
                 {this.renderSeekBar()}
-                <div className={styles['buttons-bar']}>
+                <div className={styles['buttons-bar-container']}>
                     {this.renderPlayPauseButton()}
                     <div className={styles['separator']} />
                     {this.renderTimeLabel()}

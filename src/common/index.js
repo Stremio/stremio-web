@@ -11,6 +11,7 @@ import MetaItem from './MetaItem';
 import Addon from './Addon';
 import ShareAddon from './ShareAddon';
 import UserPanel from './UserPanel';
+import Slider from './Slider';
 
 export {
     Checkbox,
@@ -26,4 +27,5 @@ export {
     Addon,
     ShareAddon,
     UserPanel,
+    Slider
 };

@@ -1,0 +1,36 @@
+@import 'stremio-colors';
+
+.slider-container {
+    position: relative;
+    cursor: pointer;
+
+    .line {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 40%;
+        bottom: 40%;
+        z-index: 1;
+        background-color: @colorprim;
+    }
+
+    .thumb {
+        position: absolute;
+        z-index: 2;
+        border-radius: 50%;
+        background-color: @colormedium;
+        transform: translateX(-50%);
+        transition-property: left;
+        transition-duration: 0.06s;
+
+        &:hover {
+            background-color: @colorprimlight;
+        }
+    }
+
+    &.active {
+        .thumb {
+            background-color: @colorprimlight;
+        }
+    }
+}

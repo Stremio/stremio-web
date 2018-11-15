@@ -2,9 +2,9 @@
 
 @control-bar-height: 84px;
 @seek-bar-height: 26px;
-@buttons-bar-height: 42px;
+@buttons-bar-height: (@control-bar-height - @seek-bar-height);
 
-.root-container {
+.control-bar-container {
     height: @control-bar-height;
     display: flex;
     flex-direction: column;
@@ -16,52 +16,14 @@
     .seek-bar {
         width: 100%;
         height: @seek-bar-height;
-        position: relative;
-        cursor: pointer;
 
-        .seek-line {
-            position: absolute;
-            left: 0;
-            right: 0;
-            top: round((@seek-bar-height * 0.4));
-            bottom: round((@seek-bar-height * 0.4));
-            z-index: 1;
-            background-color: @colorprim;
-        }
-
-        .thumb-container {
-            position: absolute;
-            z-index: 2;
+        .thumb {
             width: @seek-bar-height;
             height: @seek-bar-height;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            transform: translateX(-50%);
-            transition-property: left;
-            transition-duration: 0.06s;
-
-            .thumb {
-                width: round((@seek-bar-height * 0.8));
-                height: round((@seek-bar-height * 0.8));
-                border-radius: 50%;
-                background-color: @colorprimlight;
-            }
-
-            &:hover {
-                background-color: @colorprimlight60;
-            }
-        }
-
-        &.active {
-            .thumb-container {
-                background-color: @colorprimlight60;
-            }
         }
     }
 
-    .buttons-bar {
+    .buttons-bar-container {
         width: 100%;
         height: @buttons-bar-height;
         display: flex;
@@ -77,8 +39,8 @@
             cursor: pointer;
 
             .icon {
-                width: 70%;
-                height: 70%;
+                width: 64%;
+                height: 64%;
                 fill: @colorwhite80;
             }
 
@@ -93,7 +55,7 @@
             margin-left: round((@buttons-bar-height * 0.25));
             margin-right: round((@buttons-bar-height * 0.25));
             width: 1px;
-            height: @buttons-bar-height;
+            height: 70%;
             background-color: @colorneutrallight80;
         }
 
