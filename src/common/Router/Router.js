@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import pathToRegexp from 'path-to-regexp';
 import PathUtils from 'path';
 import UrlUtils from 'url';
@@ -95,13 +95,13 @@ class Router extends Component {
 
     render() {
         return (
-            <div className={this.props.routerContainerClassName}>
+            <Fragment>
                 {
                     this.state.views
                         .filter(({ element }) => React.isValidElement(element))
                         .map(({ path, element }) => <div key={path} className={this.props.routeContainerClassName}>{element}</div>)
                 }
-            </div>
+            </Fragment>
         );
     }
 }
