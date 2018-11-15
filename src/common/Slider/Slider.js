@@ -4,6 +4,12 @@ import classnames from 'classnames';
 import styles from './styles';
 
 class Slider extends Component {
+    componentWillReceiveProps(nextProps) {
+        if (this.props.orientation !== nextProps.orientation) {
+            console.warn('changing orientation property at runtime is not supported');
+        }
+    }
+
     shouldComponentUpdate(nextProps, nextState) {
         return nextProps.value !== this.props.value ||
             nextProps.minValue !== this.props.minValue ||
@@ -30,14 +36,17 @@ class Slider extends Component {
         }
     }
 
-    calculateSlidingValue = (mouseX, sliderElement) => {
-        const { x: sliderX, width: sliderWidth } = sliderElement.getBoundingClientRect();
-        const thumbX = Math.min(Math.max(mouseX - sliderX, 0), sliderWidth);
-        const slidingValue = (thumbX / sliderWidth) * (this.props.maxValue - this.props.minValue) + this.props.minValue;
+    calculateSlidingValue = ({ mouseX, mouseY, sliderElement }) => {
+        const { x: sliderX, y: sliderY, width: sliderWidth, height: sliderHeight } = sliderElement.getBoundingClientRect();
+        const sliderStart = this.props.orientation === 'horizontal' ? sliderX : sliderY;
+        const sliderLength = this.props.orientation === 'horizontal' ? sliderWidth : sliderHeight;
+        const mouseStart = this.props.orientation === 'horizontal' ? mouseX : mouseY;
+        const thumbStart = Math.min(Math.max(mouseStart - sliderStart, 0), sliderLength);
+        const slidingValue = (thumbStart / sliderLength) * (this.props.maxValue - this.props.minValue) + this.props.minValue;
         return Math.floor(slidingValue);
     }
 
-    onStartSliding = ({ currentTarget: sliderElement, clientX: mouseX, button }) => {
+    onStartSliding = ({ currentTarget: sliderElement, clientX: mouseX, clientY: mouseY, button }) => {
         if (button !== 0) {
             return;
         }
@@ -54,12 +63,14 @@ class Slider extends Component {
             releaseThumb();
             this.onSlidingAborted();
         };
-        const onMouseUp = ({ clientX: mouseX }) => {
+        const onMouseUp = ({ clientX: mouseX, clientY: mouseY }) => {
             releaseThumb();
-            this.onSlidingCompleted(this.calculateSlidingValue(mouseX, sliderElement));
+            const slidingValue = this.calculateSlidingValue({ mouseX, mouseY, sliderElement });
+            this.onSlidingCompleted(slidingValue);
         };
-        const onMouseMove = ({ clientX: mouseX }) => {
-            this.onSliding(this.calculateSlidingValue(mouseX, sliderElement));
+        const onMouseMove = ({ clientX: mouseX, clientY: mouseY }) => {
+            const slidingValue = this.calculateSlidingValue({ mouseX, mouseY, sliderElement });
+            this.onSliding(slidingValue);
         };
 
         window.addEventListener('blur', onBlur);
@@ -68,17 +79,18 @@ class Slider extends Component {
         document.body.style['pointer-events'] = 'none';
         document.documentElement.style.cursor = 'pointer';
         sliderElement.classList.add(styles['active']);
-        onMouseMove({ clientX: mouseX });
+        onMouseMove({ clientX: mouseX, clientY: mouseY });
     }
 
     render() {
-        const thumbLeft = (this.props.value - this.props.minValue) / (this.props.maxValue - this.props.minValue);
+        const thumbStartProp = this.props.orientation === 'horizontal' ? 'left' : 'top';
+        const thumbStart = (this.props.value - this.props.minValue) / (this.props.maxValue - this.props.minValue);
         return (
-            <div className={classnames(styles['slider-container'], this.props.containerClassName)} onMouseDown={this.onStartSliding}>
+            <div className={classnames(styles['slider-container'], styles[this.props.orientation], this.props.containerClassName)} onMouseDown={this.onStartSliding}>
                 <div className={styles['line']} />
                 <div
                     className={classnames(styles['thumb'], this.props.thumbClassName)}
-                    style={{ left: `calc(100% * ${thumbLeft})` }}
+                    style={{ [thumbStartProp]: `calc(100% * ${thumbStart})` }}
                 />
             </div>
         );
@@ -91,6 +103,7 @@ Slider.propTypes = {
     value: PropTypes.number.isRequired,
     minValue: PropTypes.number.isRequired,
     maxValue: PropTypes.number.isRequired,
+    orientation: PropTypes.oneOf(['horizontal', 'vertical']).isRequired,
     onSliding: PropTypes.func,
     onSlidingCompleted: PropTypes.func,
     onSlidingAborted: PropTypes.func
@@ -98,7 +111,8 @@ Slider.propTypes = {
 Slider.defaultProps = {
     value: 0,
     minValue: 0,
-    maxValue: 100
+    maxValue: 100,
+    orientation: 'horizontal'
 };
 
 export default Slider;

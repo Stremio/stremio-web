@@ -6,10 +6,6 @@
 
     .line {
         position: absolute;
-        left: 0;
-        right: 0;
-        top: 40%;
-        bottom: 40%;
         z-index: 1;
         background-color: @colorprim;
     }
@@ -19,12 +15,38 @@
         z-index: 2;
         border-radius: 50%;
         background-color: @colormedium;
-        transform: translateX(-50%);
-        transition-property: left;
         transition-duration: 0.06s;
 
         &:hover {
             background-color: @colorprimlight;
+        }
+    }
+
+    &.horizontal {
+        .line {
+            left: 0;
+            right: 0;
+            top: 40%;
+            bottom: 40%;
+        }
+
+        .thumb {
+            transform: translateX(-50%);
+            transition-property: left;
+        }
+    }
+
+    &.vertical {
+        .line {
+            left: 40%;
+            right: 40%;
+            top: 0;
+            bottom: 0;
+        }
+
+        .thumb {
+            transform: translateY(-50%);
+            transition-property: top;
         }
     }
 

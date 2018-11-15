@@ -59,18 +59,19 @@ class ControlBar extends Component {
         return `${('0' + hours).slice(-2)}:${('0' + minutes).slice(-2)}:${('0' + seconds).slice(-2)}`;
     }
 
-    renderSeekBar() {
+    renderSeekSlider() {
         if (this.props.time === null || this.props.duration === null) {
             return null;
         }
 
         return (
             <Slider
-                containerClassName={styles['seek-bar']}
-                thumbClassName={styles['thumb']}
+                containerClassName={styles['seek-slider']}
+                thumbClassName={styles['seek-thumb']}
                 value={this.state.seekTime !== -1 ? this.state.seekTime : this.props.time}
                 maxValue={this.props.duration}
                 minValue={0}
+                orientation={'horizontal'}
                 onSliding={this.onSliding}
                 onSlidingAborted={this.onSlidingAborted}
                 onSlidingCompleted={this.onSlidingCompleted}
@@ -108,14 +109,49 @@ class ControlBar extends Component {
         );
     }
 
+    renderVolumeButton() {
+        if (this.props.volume === null) {
+            return null;
+        }
+
+        const volumeIcon = this.props.volume === 0 ? 'ic_volume0' :
+            this.props.volume < 50 ? 'ic_volume1' :
+                this.props.volume < 100 ? 'ic_volume2' :
+                    'ic_volume3';
+
+        return (
+            <div className={classnames(styles['button'], styles['volume-button'])}>
+                <Icon
+                    className={styles['icon']}
+                    icon={volumeIcon}
+                />
+                <div className={styles['volume-slider-container']}>
+                    <Slider
+                        containerClassName={styles['volume-slider']}
+                        thumbClassName={styles['volume-thumb']}
+                        value={50}
+                        maxValue={110}
+                        minValue={0}
+                        orientation={'vertical'}
+                    // onSliding={this.onSliding}
+                    // onSlidingAborted={this.onSlidingAborted}
+                    // onSlidingCompleted={this.onSlidingCompleted}
+                    />
+                </div>
+            </div>
+        );
+    }
+
     render() {
         return (
             <div className={classnames(styles['control-bar-container'], this.props.className)}>
-                {this.renderSeekBar()}
+                {this.renderSeekSlider()}
                 <div className={styles['buttons-bar-container']}>
                     {this.renderPlayPauseButton()}
                     <div className={styles['separator']} />
                     {this.renderTimeLabel()}
+                    <div className={styles['spacing']} />
+                    {this.renderVolumeButton()}
                 </div>
             </div>
         );
