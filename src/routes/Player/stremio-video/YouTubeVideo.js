@@ -51,8 +51,8 @@ var YouTubeVideo = function(containerElement) {
     var onDurationChanged = function() {
         events.emit('propChanged', 'duration', video.getDuration() !== 0 ? video.getDuration() * 1000 : null);
     };
-    var onVolumeChanged = function() {
-        events.emit('propChanged', 'volume', video.getVolume());
+    var onVolumeChanged = function(volume) {
+        events.emit('propChanged', 'volume', volume);
     };
     var onReady = function() {
         ready = true;
@@ -158,8 +158,9 @@ var YouTubeVideo = function(containerElement) {
                 case 'volume':
                     if (ready) {
                         video.setVolume(arguments[2]);
-                        onVolumeChanged();
+                        onVolumeChanged(arguments[2]);
                     }
+                    break;
                 default:
                     throw new Error('setProp not supported: ' + arguments[1]);
             }
