@@ -6,7 +6,7 @@ import styles from './styles';
 class Slider extends Component {
     componentWillReceiveProps(nextProps) {
         if (this.props.orientation !== nextProps.orientation) {
-            console.warn('changing orientation property at runtime is not supported');
+            console.warn(new Error('changing orientation property at runtime is not supported'));
         }
     }
 
