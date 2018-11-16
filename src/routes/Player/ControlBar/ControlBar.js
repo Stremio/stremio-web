@@ -12,7 +12,8 @@ class ControlBar extends Component {
 
         this.state = {
             time: -1,
-            volume: -1
+            volume: -1,
+            volumeSliderOpen: false
         };
     }
 
@@ -23,7 +24,8 @@ class ControlBar extends Component {
             nextProps.duration !== this.props.duration ||
             nextProps.volume !== this.props.volume ||
             nextState.time !== this.state.time ||
-            nextState.volume !== this.state.volume;
+            nextState.volume !== this.state.volume ||
+            nextState.volumeSliderOpen !== this.state.volumeSliderOpen;
     }
 
     componentWillUnmount() {
@@ -73,6 +75,14 @@ class ControlBar extends Component {
 
     onPlayPauseButtonClicked = () => {
         this.props.paused ? this.props.play() : this.props.pause();
+    }
+
+    onVloumeSliderOpen = () => {
+        this.setState({ volumeSliderOpen: true });
+    }
+
+    onVolumeSliderClose = () => {
+        this.setState({ volumeSliderOpen: false });
     }
 
     formatTime = (time) => {
@@ -144,9 +154,9 @@ class ControlBar extends Component {
                     'ic_volume3';
 
         return (
-            <Popup>
+            <Popup onOpen={this.onVloumeSliderOpen} onClose={this.onVolumeSliderClose}>
                 <Popup.Label>
-                    <div className={styles['button']}>
+                    <div className={classnames(styles['button'], { [styles['active']]: this.state.volumeSliderOpen })}>
                         <Icon
                             className={styles['icon']}
                             icon={volumeIcon}

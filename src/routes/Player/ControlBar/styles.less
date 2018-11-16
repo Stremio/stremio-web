@@ -46,6 +46,14 @@
                 fill: @colorwhite80;
             }
 
+            &.active {
+                background-color: @colorbgmain;
+
+                .icon {
+                    fill: @colorwhite;
+                }
+            }
+
             &:hover {
                 .icon {
                     fill: @colorwhite;
@@ -77,6 +85,7 @@
     width: @buttons-bar-height;
     display: flex;
     justify-content: center;
+    background-color: @colorbgmain;
 
     .volume-slider {
         width: floor((@buttons-bar-height * 0.4));
