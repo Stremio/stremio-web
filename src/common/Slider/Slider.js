@@ -42,7 +42,8 @@ class Slider extends Component {
         const sliderLength = this.props.orientation === 'horizontal' ? sliderWidth : sliderHeight;
         const mouseStart = this.props.orientation === 'horizontal' ? mouseX : mouseY;
         const thumbStart = Math.min(Math.max(mouseStart - sliderStart, 0), sliderLength);
-        const slidingValue = (thumbStart / sliderLength) * (this.props.maxValue - this.props.minValue) + this.props.minValue;
+        const slidingValueCoef = this.props.orientation === 'horizontal' ? thumbStart / sliderLength : (sliderLength - thumbStart) / sliderLength;
+        const slidingValue = slidingValueCoef * (this.props.maxValue - this.props.minValue) + this.props.minValue;
         return Math.floor(slidingValue);
     }
 
@@ -83,7 +84,7 @@ class Slider extends Component {
     }
 
     render() {
-        const thumbStartProp = this.props.orientation === 'horizontal' ? 'left' : 'top';
+        const thumbStartProp = this.props.orientation === 'horizontal' ? 'left' : 'bottom';
         const thumbStart = (this.props.value - this.props.minValue) / (this.props.maxValue - this.props.minValue);
         return (
             <div className={classnames(styles['slider-container'], styles[this.props.orientation], this.props.containerClassName)} onMouseDown={this.onStartSliding}>
