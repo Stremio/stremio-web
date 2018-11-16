@@ -106,7 +106,7 @@ class Settings extends Component {
             <div className={styles['settings-container']}>
                 <div className={styles['side-menu']}>
                     {Object.keys(SETTINGS_MENUS).map((menu) =>
-                        <div key={menu} className={classnames(styles['menu-option'], this.state.selectedMenu === SETTINGS_MENUS[menu] ? styles['selected'] : null)} onClick={() => this.changeSelectedMenu(SETTINGS_MENUS[menu])}>{menu}</div>
+                        <div key={menu} className={classnames(styles['menu-option'], { [styles['selected']]: this.state.selectedMenu === SETTINGS_MENUS[menu] })} onClick={() => this.changeSelectedMenu(SETTINGS_MENUS[menu])}>{menu}</div>
                     )}
                 </div>
                 {this.renderSelectedMenu()}
