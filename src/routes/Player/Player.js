@@ -87,8 +87,12 @@ class Player extends Component {
         this.videoRef.current && this.videoRef.current.dispatch('setProp', 'paused', true);
     }
 
-    seek = (time) => {
+    setTime = (time) => {
         this.videoRef.current && this.videoRef.current.dispatch('setProp', 'time', time);
+    }
+
+    setVolume = (volume) => {
+        this.videoRef.current && this.videoRef.current.dispatch('setProp', 'volume', volume);
     }
 
     renderVideo() {
@@ -126,7 +130,8 @@ class Player extends Component {
                 volume={this.state.volume}
                 play={this.play}
                 pause={this.pause}
-                seek={this.seek}
+                setTime={this.setTime}
+                setVolume={this.setVolume}
             />
         );
     }

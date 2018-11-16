@@ -13,12 +13,12 @@
     padding-left: 2%;
     padding-right: 2%;
 
-    .seek-slider {
+    .time-slider {
         width: 100%;
         height: @seek-slider-height;
         z-index: 1;
 
-        .seek-thumb {
+        .time-thumb {
             width: @seek-slider-height;
             height: @seek-slider-height;
         }
@@ -51,42 +51,11 @@
                     fill: @colorwhite;
                 }
             }
-
-            &.volume-button {
-                position: relative;
-
-                .volume-slider-container {
-                    display: none;
-                    justify-content: center;
-                    width: 100%;
-                    height: 300%;
-                    position: absolute;
-                    bottom: 100%;
-
-                    .volume-slider {
-                        width: round((@buttons-bar-height * 0.4));
-                        height: 100%;
-
-                        .volume-thumb {
-                            width: round((@buttons-bar-height * 0.4));
-                            height: round((@buttons-bar-height * 0.4));
-                        }
-                    }
-                }
-
-                &:hover {
-                    .volume-slider-container {
-                        display: flex;
-
-
-                    }
-                }
-            }
         }
 
         .separator {
-            margin-left: round((@buttons-bar-height * 0.25));
-            margin-right: round((@buttons-bar-height * 0.25));
+            margin-left: floor((@buttons-bar-height * 0.25));
+            margin-right: floor((@buttons-bar-height * 0.25));
             width: 1px;
             height: 70%;
             background-color: @colorneutrallight80;
@@ -99,6 +68,23 @@
 
         .spacing {
             flex: 1
+        }
+    }
+}
+
+.volume-slider-container {
+    padding: ceil((@buttons-bar-height * 0.2)) 0;
+    width: @buttons-bar-height;
+    display: flex;
+    justify-content: center;
+
+    .volume-slider {
+        width: floor((@buttons-bar-height * 0.4));
+        height: floor((@buttons-bar-height * 3));
+
+        .volume-thumb {
+            width: floor((@buttons-bar-height * 0.4));
+            height: floor((@buttons-bar-height * 0.4));
         }
     }
 }

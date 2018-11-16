@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import debounce from 'lodash.debounce';
 import Icon from 'stremio-icons/dom';
-import { Slider } from 'stremio-common';
+import { Slider, Popup } from 'stremio-common';
 import styles from './styles';
 
 class ControlBar extends Component {
@@ -11,7 +11,8 @@ class ControlBar extends Component {
         super(props);
 
         this.state = {
-            seekTime: -1
+            time: -1,
+            volume: -1
         };
     }
 
@@ -21,31 +22,53 @@ class ControlBar extends Component {
             nextProps.time !== this.props.time ||
             nextProps.duration !== this.props.duration ||
             nextProps.volume !== this.props.volume ||
-            nextState.seekTime !== this.state.seekTime;
+            nextState.time !== this.state.time ||
+            nextState.volume !== this.state.volume;
     }
 
     componentWillUnmount() {
-        this.resetSeekTime.cancel();
+        this.resetTime.cancel();
+        this.resetVolume.cancel();
     }
 
-    resetSeekTime = debounce(() => {
-        this.setState({ seekTime: -1 });
-    }, 3000)
+    resetTime = debounce(() => {
+        this.setState({ time: -1 });
+    }, 1500)
 
-    onSliding = (seekTime) => {
-        this.resetSeekTime.cancel();
-        this.setState({ seekTime });
+    resetVolume = debounce(() => {
+        this.setState({ volume: -1 });
+    }, 100)
+
+    onTimeSliding = (time) => {
+        this.resetTime.cancel();
+        this.setState({ time });
     }
 
-    onSlidingCompleted = (seekTime) => {
-        this.setState({ seekTime });
-        this.props.seek(seekTime);
-        this.resetSeekTime();
+    onTimeSlidingCompleted = (time) => {
+        this.setState({ time });
+        this.props.setTime(time);
+        this.resetTime();
     }
 
-    onSlidingAborted = () => {
-        this.resetSeekTime.cancel();
-        this.setState({ seekTime: -1 });
+    onTimeSlidingAborted = () => {
+        this.resetTime.cancel();
+        this.setState({ time: -1 });
+    }
+
+    onVolumeSliding = (volume) => {
+        this.resetVolume.cancel();
+        this.setState({ volume });
+    }
+
+    onVolumeSlidingCompleted = (volume) => {
+        this.setState({ volume });
+        this.props.setVolume(volume);
+        this.resetVolume();
+    }
+
+    onVolumeSlidingAborted = () => {
+        this.resetVolume.cancel();
+        this.setState({ volume: -1 });
     }
 
     onPlayPauseButtonClicked = () => {
@@ -59,22 +82,22 @@ class ControlBar extends Component {
         return `${('0' + hours).slice(-2)}:${('0' + minutes).slice(-2)}:${('0' + seconds).slice(-2)}`;
     }
 
-    renderSeekSlider() {
+    renderTimeSlider() {
         if (this.props.time === null || this.props.duration === null) {
             return null;
         }
 
         return (
             <Slider
-                containerClassName={styles['seek-slider']}
-                thumbClassName={styles['seek-thumb']}
-                value={this.state.seekTime !== -1 ? this.state.seekTime : this.props.time}
+                containerClassName={styles['time-slider']}
+                thumbClassName={styles['time-thumb']}
+                value={this.state.time !== -1 ? this.state.time : this.props.time}
                 maxValue={this.props.duration}
                 minValue={0}
                 orientation={'horizontal'}
-                onSliding={this.onSliding}
-                onSlidingAborted={this.onSlidingAborted}
-                onSlidingCompleted={this.onSlidingCompleted}
+                onSliding={this.onTimeSliding}
+                onSlidingAborted={this.onTimeSlidingAborted}
+                onSlidingCompleted={this.onTimeSlidingCompleted}
             />
         );
     }
@@ -99,8 +122,8 @@ class ControlBar extends Component {
             return null;
         }
 
-        const currentTime = this.state.seekTime !== -1 ?
-            this.formatTime(this.state.seekTime)
+        const currentTime = this.state.time !== -1 ?
+            this.formatTime(this.state.time)
             :
             this.formatTime(this.props.time);
 
@@ -114,38 +137,45 @@ class ControlBar extends Component {
             return null;
         }
 
-        const volumeIcon = this.props.volume === 0 ? 'ic_volume0' :
-            this.props.volume < 50 ? 'ic_volume1' :
-                this.props.volume < 100 ? 'ic_volume2' :
+        const volume = this.state.volume !== -1 ? this.state.volume : this.props.volume;
+        const volumeIcon = volume === 0 ? 'ic_volume0' :
+            volume < 50 ? 'ic_volume1' :
+                volume < 100 ? 'ic_volume2' :
                     'ic_volume3';
 
         return (
-            <div className={classnames(styles['button'], styles['volume-button'])}>
-                <Icon
-                    className={styles['icon']}
-                    icon={volumeIcon}
-                />
-                <div className={styles['volume-slider-container']}>
-                    <Slider
-                        containerClassName={styles['volume-slider']}
-                        thumbClassName={styles['volume-thumb']}
-                        value={50}
-                        maxValue={110}
-                        minValue={0}
-                        orientation={'vertical'}
-                    // onSliding={this.onSliding}
-                    // onSlidingAborted={this.onSlidingAborted}
-                    // onSlidingCompleted={this.onSlidingCompleted}
-                    />
-                </div>
-            </div>
+            <Popup>
+                <Popup.Label>
+                    <div className={styles['button']}>
+                        <Icon
+                            className={styles['icon']}
+                            icon={volumeIcon}
+                        />
+                    </div>
+                </Popup.Label>
+                <Popup.Menu>
+                    <div className={styles['volume-slider-container']}>
+                        <Slider
+                            containerClassName={styles['volume-slider']}
+                            thumbClassName={styles['volume-thumb']}
+                            value={volume}
+                            maxValue={100}
+                            minValue={0}
+                            orientation={'vertical'}
+                            onSliding={this.onVolumeSliding}
+                            onSlidingAborted={this.onVolumeSlidingAborted}
+                            onSlidingCompleted={this.onVolumeSlidingCompleted}
+                        />
+                    </div>
+                </Popup.Menu>
+            </Popup>
         );
     }
 
     render() {
         return (
             <div className={classnames(styles['control-bar-container'], this.props.className)}>
-                {this.renderSeekSlider()}
+                {this.renderTimeSlider()}
                 <div className={styles['buttons-bar-container']}>
                     {this.renderPlayPauseButton()}
                     <div className={styles['separator']} />
@@ -166,7 +196,8 @@ ControlBar.propTypes = {
     volume: PropTypes.number,
     play: PropTypes.func.isRequired,
     pause: PropTypes.func.isRequired,
-    seek: PropTypes.func.isRequired
+    setTime: PropTypes.func.isRequired,
+    setVolume: PropTypes.func.isRequired
 };
 
 export default ControlBar;
