@@ -1,18 +1,20 @@
-import React, { PureComponent, Fragment } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { Modal } from 'stremio-common';
 import Label from './Label';
 import Menu from './Menu';
 import styles from './styles';
 
-class Popup extends PureComponent {
+class Popup extends Component {
     constructor(props) {
         super(props);
 
         this.labelRef = React.createRef();
+        this.menuRef = React.createRef();
 
         this.state = {
-            isOpen: false
+            open: false,
+            menuStyle: null
         };
     }
 
@@ -28,119 +30,133 @@ class Popup extends PureComponent {
         window.removeEventListener('keyup', this.onKeyUp);
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        return nextProps.children !== this.props.children ||
+            nextState.open !== this.state.open ||
+            nextState.menuStyle !== this.state.menuStyle;
+    }
+
     componentDidUpdate(prevProps, prevState) {
-        if (prevState.isOpen !== this.state.isOpen) {
-            if (this.state.isOpen && typeof this.props.onAfterOpen === 'function') {
-                this.props.onAfterOpen();
-            } else if (!this.state.isOpen && typeof this.props.onAfterClose === 'function') {
-                this.props.onAfterClose();
+        if (this.state.open && !prevState.open) {
+            this.updateMenuStyle();
+            if (typeof this.props.onOpen === 'function') {
+                this.props.onOpen();
+            }
+        } else if (!this.state.open && prevState.open) {
+            if (typeof this.props.onClose === 'function') {
+                this.props.onClose();
             }
         }
     }
 
+    updateMenuStyle = () => {
+        if (this.menuRef.current === null || this.labelRef.current === null) {
+            return;
+        }
+
+        const labelRect = this.labelRef.current.getBoundingClientRect();
+        const labelPosition = {
+            left: labelRect.x,
+            top: labelRect.y,
+            right: document.body.offsetWidth - (labelRect.x + labelRect.width),
+            bottom: document.body.offsetHeight - (labelRect.y + labelRect.height)
+        };
+        const menuRect = this.menuRef.current.getBoundingClientRect();
+        const menuStyle = {
+            visibility: 'visible'
+        };
+
+        if (menuRect.height <= labelPosition.bottom) {
+            menuStyle.top = labelPosition.top + labelRect.height;
+        } else if (menuRect.height <= labelPosition.top) {
+            menuStyle.bottom = labelPosition.bottom + labelRect.height;
+        } else if (labelPosition.bottom >= labelPosition.top) {
+            menuStyle.top = labelPosition.top + labelRect.height;
+            menuStyle.height = labelPosition.bottom;
+        } else {
+            menuStyle.bottom = labelPosition.bottom + labelRect.height;
+            menuStyle.height = labelPosition.top;
+        }
+
+        if (menuRect.width <= (labelPosition.right + labelRect.width)) {
+            menuStyle.left = labelPosition.left;
+        } else if (menuRect.width <= (labelPosition.left + labelRect.width)) {
+            menuStyle.right = labelPosition.right;
+        } else if (labelPosition.right > labelPosition.left) {
+            menuStyle.left = labelPosition.left;
+            menuStyle.width = labelPosition.right + labelRect.width;
+        } else {
+            menuStyle.right = labelPosition.right;
+            menuStyle.width = labelPosition.left + labelRect.width;
+        }
+
+        this.setState({ menuStyle });
+    }
+
     onKeyUp = (event) => {
-        if (event.keyCode === 27) {
-            this.close(event);
+        if (event.keyCode === 27) { // escape
+            event.stopPropagation();
+            this.close();
         }
     }
 
-    open = (event) => {
-        if (event) {
-            event.stopPropagation();
-        }
-
-        this.setState({ isOpen: true });
+    open = () => {
+        this.setState({ open: true, menuStyle: null });
     }
 
-    close = (event) => {
-        if (event && event.type === 'keyup') {
-            event.stopPropagation();
-        }
-
-        this.setState({ isOpen: false });
+    close = () => {
+        this.setState({ open: false, menuStyle: null });
     }
 
     menuContainerOnClick = (event) => {
         event.stopPropagation();
     }
 
-    renderMenu() {
-        if (!this.state.isOpen || !this.labelRef.current) {
+    renderMenu(children) {
+        if (!this.state.open) {
             return null;
         }
 
         return (
-            <Modal className={styles['menu-layer']} onRequestClose={this.close}>
-                {React.Children.map(this.props.children, (child) => {
-                    if (child.type === Menu) {
-                        const labelRect = this.labelRef.current.getBoundingClientRect();
-                        const menuContainerStyle = {};
-
-                        if (isNaN(child.props.height)) {
-                            menuContainerStyle.top = labelRect.y + labelRect.height;
-                            menuContainerStyle.maxHeight = window.innerHeight - menuContainerStyle.top;
-                        } else if (labelRect.y + labelRect.height + child.props.height <= window.innerHeight) {
-                            menuContainerStyle.top = labelRect.y + labelRect.height;
-                            menuContainerStyle.height = child.props.height;
-                        } else if (child.props.height < labelRect.y) {
-                            menuContainerStyle.bottom = window.innerHeight - labelRect.y;
-                            menuContainerStyle.height = child.props.height;
-                        } else {
-                            menuContainerStyle.bottom = 0;
-                            menuContainerStyle.top = 0;
-                        }
-
-                        if (isNaN(child.props.width)) {
-                            menuContainerStyle.left = labelRect.x;
-                            menuContainerStyle.width = labelRect.width;
-                        } else if (labelRect.x + child.props.width <= window.innerWidth) {
-                            menuContainerStyle.left = labelRect.x;
-                            menuContainerStyle.width = child.props.width;
-                        } else if (labelRect.x + labelRect.width > child.props.width) {
-                            menuContainerStyle.left = labelRect.x + labelRect.width - child.props.width;
-                            menuContainerStyle.width = child.props.width;
-                        } else {
-                            menuContainerStyle.left = 0;
-                            menuContainerStyle.right = 0;
-                        }
-
-                        return (
-                            <div style={menuContainerStyle} className={styles['menu-container']} onClick={this.menuContainerOnClick}>
-                                {child}
-                            </div>
-                        );
-                    }
-
-                    return null;
-                })}
+            <Modal onRequestClose={this.close}>
+                <div ref={this.menuRef} style={this.state.menuStyle} className={styles['menu-container']} onClick={this.menuContainerOnClick}>
+                    {children}
+                </div>
             </Modal>
         );
     }
 
     render() {
-        React.Children.forEach(this.props.children, (child) => {
-            if (child.type !== Menu && child.type !== Label) {
-                console.warn(new Error('Popup children should be of type Popup.Menu or Popup.Label'));
-            }
-        });
+        if (React.Children.count(this.props.children) !== 2) {
+            console.warn(new Error('Popup children should be one Popup.Label and one Popup.Menu'));
+            return null;
+        }
+
+        if (!React.isValidElement(this.props.children[0]) || this.props.children[0].type !== Label) {
+            console.warn(new Error('First Popup child should be of type Popup.Label'));
+            return null;
+        }
+
+        if (!React.isValidElement(this.props.children[1]) || this.props.children[1].type !== Menu) {
+            console.warn(new Error('Second Popup child should be of type Popup.Menu'));
+            return null;
+        }
 
         return (
             <Fragment>
-                {React.Children.map(this.props.children, (child) => {
-                    return child.type === Label ? React.cloneElement(child, { ref: this.labelRef, onClick: this.open }) : null;
-                })}
-                {this.renderMenu()}
+                {React.cloneElement(this.props.children[0], { ref: this.labelRef, onClick: this.open })}
+                {this.renderMenu(this.props.children[1])}
             </Fragment>
         );
     }
 }
 
-Popup.propTypes = {
-    onAfterOpen: PropTypes.func,
-    onAfterClose: PropTypes.func
-};
-
 Popup.Label = Label;
 Popup.Menu = Menu;
+
+Popup.propTypes = {
+    onOpen: PropTypes.func,
+    onClose: PropTypes.func
+};
 
 export default Popup;
