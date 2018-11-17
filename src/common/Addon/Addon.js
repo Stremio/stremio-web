@@ -96,7 +96,7 @@ Addon.propTypes = {
     logo: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     version: PropTypes.string.isRequired,
-    types: PropTypes.array.isRequired,
+    types: PropTypes.arrayOf(PropTypes.string).isRequired,
     description: PropTypes.string.isRequired,
     urls: PropTypes.arrayOf(PropTypes.string).isRequired,
     isInstalled: PropTypes.bool.isRequired,
