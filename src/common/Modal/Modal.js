@@ -1,7 +1,6 @@
 import { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
-import classnames from 'classnames';
 
 class Modal extends PureComponent {
     constructor(props) {
@@ -19,7 +18,7 @@ class Modal extends PureComponent {
     }
 
     render() {
-        this.modalElement.className = classnames('modal-container', this.props.className);
+        this.modalElement.className = this.props.className;
         this.modalElement.onclick = this.props.onRequestClose;
         return ReactDOM.createPortal(this.props.children, this.modalElement);
     }
