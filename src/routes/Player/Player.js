@@ -104,7 +104,7 @@ class Player extends Component {
             <Fragment>
                 <this.state.videoComponent
                     ref={this.videoRef}
-                    className={classnames(styles['layer'], styles['video'])}
+                    className={styles['layer']}
                     onEnded={this.onEnded}
                     onError={this.onError}
                     onPropValue={this.onPropValue}
@@ -138,7 +138,7 @@ class Player extends Component {
 
     render() {
         return (
-            <div className={styles['root-container']}>
+            <div className={styles['player-container']}>
                 {this.renderVideo()}
                 {this.renderControlBar()}
             </div>

@@ -6,17 +6,9 @@
 
 .control-bar-container {
     height: @control-bar-height;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    top: initial !important;
-    padding-left: 2%;
-    padding-right: 2%;
 
     .time-slider {
-        width: 100%;
         height: @seek-slider-height;
-        z-index: 1;
 
         .time-thumb {
             width: @seek-slider-height;
@@ -25,16 +17,54 @@
     }
 
     .buttons-bar-container {
-        width: 100%;
         height: @buttons-bar-height;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        z-index: 2;
 
         .button {
             height: @buttons-bar-height;
             width: @buttons-bar-height;
+        }
+
+        .separator {
+            margin-left: floor((@buttons-bar-height * 0.25));
+            margin-right: floor((@buttons-bar-height * 0.25));
+        }
+    }
+}
+
+.volume-slider-container {
+    padding: ceil((@buttons-bar-height * 0.4)) 0;
+    width: @buttons-bar-height;
+
+    .volume-slider {
+        width: floor((@buttons-bar-height * 0.4));
+        height: floor((@buttons-bar-height * 3));
+
+        .volume-thumb {
+            width: floor((@buttons-bar-height * 0.4));
+            height: floor((@buttons-bar-height * 0.4));
+        }
+    }
+}
+
+.control-bar-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    top: initial !important;
+    padding-left: 2%;
+    padding-right: 2%;
+
+    .time-slider {
+        width: 100%;
+    }
+
+    .buttons-bar-container {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        .button {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -62,8 +92,6 @@
         }
 
         .separator {
-            margin-left: floor((@buttons-bar-height * 0.25));
-            margin-right: floor((@buttons-bar-height * 0.25));
             width: 1px;
             height: 70%;
             background-color: @colorneutrallight80;
@@ -81,19 +109,7 @@
 }
 
 .volume-slider-container {
-    padding: ceil((@buttons-bar-height * 0.4)) 0;
-    width: @buttons-bar-height;
     display: flex;
     justify-content: center;
     background-color: @colorbgmain;
-
-    .volume-slider {
-        width: floor((@buttons-bar-height * 0.4));
-        height: floor((@buttons-bar-height * 3));
-
-        .volume-thumb {
-            width: floor((@buttons-bar-height * 0.4));
-            height: floor((@buttons-bar-height * 0.4));
-        }
-    }
 }
