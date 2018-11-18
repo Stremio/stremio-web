@@ -118,7 +118,7 @@ class Popup extends Component {
         }
 
         return (
-            <Modal className={'modal-container'} onRequestClose={this.close}>
+            <Modal className={'modal-container'} onClick={this.close}>
                 <div ref={this.menuRef} style={this.state.menuStyle} className={styles['menu-container']} onClick={this.menuContainerOnClick}>
                     {children}
                 </div>
