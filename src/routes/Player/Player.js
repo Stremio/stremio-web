@@ -44,12 +44,12 @@ class Player extends Component {
 
     prepareStream = () => {
         return new Promise((resolve, reject) => {
-            YT.ready(() => {
+            // YT.ready(() => {
                 resolve({
-                    source: 'SEL97pn5aS0',
-                    videoComponent: ReactYouTubeVideo
+                    source: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+                    videoComponent: ReactHTMLVideo
                 });
-            });
+            // });
         });
     }
 
