@@ -22,6 +22,7 @@
         .button {
             height: @buttons-bar-height;
             width: @buttons-bar-height;
+            border-width: 0 1px 1px 1px;
         }
 
         .time-label {
@@ -39,6 +40,7 @@
 .volume-slider-container {
     padding: ceil((@buttons-bar-height * 0.4)) 0;
     width: @buttons-bar-height;
+    border-width: 1px 1px 0px 1px;
 
     .volume-slider {
         width: floor((@buttons-bar-height * 0.4));
@@ -74,6 +76,8 @@
             justify-content: center;
             align-items: center;
             cursor: pointer;
+            border-style: solid;
+            border-color: @colortransparent;
 
             .icon {
                 width: 60%;
@@ -83,6 +87,7 @@
 
             &.active {
                 background-color: @colorbgmain;
+                border-color: @colorprimlight;
 
                 .icon {
                     fill: @colorwhite;
@@ -114,5 +119,8 @@
 .volume-slider-container {
     display: flex;
     justify-content: center;
+    align-items: center;
     background-color: @colorbgmain;
+    border-style: solid;
+    border-color: @colorprimlight;
 }
