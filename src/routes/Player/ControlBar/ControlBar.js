@@ -86,10 +86,10 @@ class ControlBar extends Component {
     }
 
     formatTime = (time) => {
-        const hours = Math.floor((time / (1000 * 60 * 60)) % 24);
-        const minutes = Math.floor((time / (1000 * 60)) % 60);
-        const seconds = Math.floor((time / 1000) % 60);
-        return `${('0' + hours).slice(-2)}:${('0' + minutes).slice(-2)}:${('0' + seconds).slice(-2)}`;
+        const hours = ('0' + Math.floor((time / (1000 * 60 * 60)) % 24)).slice(-2);
+        const minutes = ('0' + Math.floor((time / (1000 * 60)) % 60)).slice(-2);
+        const seconds = ('0' + Math.floor((time / 1000) % 60)).slice(-2);
+        return `${hours}:${minutes}:${seconds}`;
     }
 
     renderTimeSlider() {
