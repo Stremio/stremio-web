@@ -13,7 +13,8 @@ class ControlBar extends Component {
         this.state = {
             time: -1,
             volume: -1,
-            volumeSliderOpen: false
+            volumePopupOpen: false,
+            sharePopupOpen: false
         };
     }
 
@@ -25,7 +26,8 @@ class ControlBar extends Component {
             nextProps.volume !== this.props.volume ||
             nextState.time !== this.state.time ||
             nextState.volume !== this.state.volume ||
-            nextState.volumeSliderOpen !== this.state.volumeSliderOpen;
+            nextState.volumePopupOpen !== this.state.volumePopupOpen ||
+            nextState.sharePopupOpen !== this.state.sharePopupOpen;
     }
 
     componentWillUnmount() {
@@ -77,12 +79,20 @@ class ControlBar extends Component {
         this.props.paused ? this.props.play() : this.props.pause();
     }
 
-    onVloumeSliderOpen = () => {
-        this.setState({ volumeSliderOpen: true });
+    onVolumePopupOpen = () => {
+        this.setState({ volumePopupOpen: true });
     }
 
-    onVolumeSliderClose = () => {
-        this.setState({ volumeSliderOpen: false });
+    onVolumePopupClose = () => {
+        this.setState({ volumePopupOpen: false });
+    }
+
+    onSharePopupOpen = () => {
+        this.setState({ sharePopupOpen: true });
+    }
+
+    onSharePopupClose = () => {
+        this.setState({ sharePopupOpen: false });
     }
 
     formatTime = (time) => {
@@ -119,10 +129,7 @@ class ControlBar extends Component {
 
         return (
             <div className={styles['button']} onClick={this.onPlayPauseButtonClicked}>
-                <Icon
-                    className={styles['icon']}
-                    icon={this.props.paused ? 'ic_play' : 'ic_pause'}
-                />
+                <Icon className={styles['icon']} icon={this.props.paused ? 'ic_play' : 'ic_pause'} />
             </div>
         );
     }
@@ -154,17 +161,14 @@ class ControlBar extends Component {
                     'ic_volume3';
 
         return (
-            <Popup onOpen={this.onVloumeSliderOpen} onClose={this.onVolumeSliderClose}>
+            <Popup onOpen={this.onVolumePopupOpen} onClose={this.onVolumePopupClose}>
                 <Popup.Label>
-                    <div className={classnames(styles['button'], { [styles['active']]: this.state.volumeSliderOpen })}>
-                        <Icon
-                            className={styles['icon']}
-                            icon={volumeIcon}
-                        />
+                    <div className={classnames(styles['button'], { [styles['active']]: this.state.volumePopupOpen })}>
+                        <Icon className={styles['icon']} icon={volumeIcon} />
                     </div>
                 </Popup.Label>
                 <Popup.Menu>
-                    <div className={styles['volume-slider-container']}>
+                    <div className={classnames(styles['popup-container'], styles['volume-popup-container'])}>
                         <Slider
                             containerClassName={styles['volume-slider']}
                             thumbClassName={styles['volume-thumb']}
@@ -182,6 +186,21 @@ class ControlBar extends Component {
         );
     }
 
+    renderShareButton() {
+        return (
+            <Popup onOpen={this.onSharePopupOpen} onClose={this.onSharePopupClose}>
+                <Popup.Label>
+                    <div className={classnames(styles['button'], { [styles['active']]: this.state.sharePopupOpen })}>
+                        <Icon className={styles['icon']} icon={'ic_share'} />
+                    </div>
+                </Popup.Label>
+                <Popup.Menu>
+                    <div className={classnames(styles['popup-container'], styles['share-popup-container'])} />
+                </Popup.Menu>
+            </Popup>
+        );
+    }
+
     render() {
         return (
             <div className={classnames(styles['control-bar-container'], this.props.className)}>
@@ -192,6 +211,7 @@ class ControlBar extends Component {
                     {this.renderTimeLabel()}
                     <div className={styles['spacing']} />
                     {this.renderVolumeButton()}
+                    {this.renderShareButton()}
                 </div>
             </div>
         );
