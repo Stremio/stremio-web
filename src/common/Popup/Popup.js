@@ -13,8 +13,7 @@ class Popup extends Component {
         this.menuRef = React.createRef();
 
         this.state = {
-            open: false,
-            menuStyle: null
+            open: false
         };
     }
 
@@ -32,8 +31,7 @@ class Popup extends Component {
 
     shouldComponentUpdate(nextProps, nextState) {
         return nextProps.children !== this.props.children ||
-            nextState.open !== this.state.open ||
-            nextState.menuStyle !== this.state.menuStyle;
+            nextState.open !== this.state.open;
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -63,35 +61,32 @@ class Popup extends Component {
             bottom: bodyRect.height - (labelRect.y + labelRect.height)
         };
         const menuRect = this.menuRef.current.getBoundingClientRect();
-        const menuStyle = {
-            visibility: 'visible'
-        };
 
         if (menuRect.height <= labelPosition.bottom) {
-            menuStyle.top = labelPosition.top + labelRect.height;
+            this.menuRef.current.style.top = `${labelPosition.top + labelRect.height}px`;
         } else if (menuRect.height <= labelPosition.top) {
-            menuStyle.bottom = labelPosition.bottom + labelRect.height;
+            this.menuRef.current.style.bottom = `${labelPosition.bottom + labelRect.height}px`;
         } else if (labelPosition.bottom >= labelPosition.top) {
-            menuStyle.top = labelPosition.top + labelRect.height;
-            menuStyle.height = labelPosition.bottom;
+            this.menuRef.current.style.top = `${labelPosition.top + labelRect.height}px`;
+            this.menuRef.current.style.height = `${labelPosition.bottom}px`;
         } else {
-            menuStyle.bottom = labelPosition.bottom + labelRect.height;
-            menuStyle.height = labelPosition.top;
+            this.menuRef.current.style.bottom = `${labelPosition.bottom + labelRect.height}px`;
+            this.menuRef.current.style.height = `${labelPosition.top}px`;
         }
 
         if (menuRect.width <= (labelPosition.right + labelRect.width)) {
-            menuStyle.left = labelPosition.left;
+            this.menuRef.current.style.left = `${labelPosition.left}px`;
         } else if (menuRect.width <= (labelPosition.left + labelRect.width)) {
-            menuStyle.right = labelPosition.right;
+            this.menuRef.current.style.right = `${labelPosition.right}px`;
         } else if (labelPosition.right > labelPosition.left) {
-            menuStyle.left = labelPosition.left;
-            menuStyle.width = labelPosition.right + labelRect.width;
+            this.menuRef.current.style.left = `${labelPosition.left}px`;
+            this.menuRef.current.style.width = `${labelPosition.right + labelRect.width}px`;
         } else {
-            menuStyle.right = labelPosition.right;
-            menuStyle.width = labelPosition.left + labelRect.width;
+            this.menuRef.current.style.right = `${labelPosition.right}px`;
+            this.menuRef.current.style.width = `${labelPosition.left + labelRect.width}px`;
         }
 
-        this.setState({ menuStyle });
+        this.menuRef.current.style.visibility = 'visible';
     }
 
     onKeyUp = (event) => {
@@ -102,11 +97,11 @@ class Popup extends Component {
     }
 
     open = () => {
-        this.setState({ open: true, menuStyle: null });
+        this.setState({ open: true });
     }
 
     close = () => {
-        this.setState({ open: false, menuStyle: null });
+        this.setState({ open: false });
     }
 
     menuContainerOnClick = (event) => {
@@ -120,7 +115,7 @@ class Popup extends Component {
 
         return (
             <Modal className={'modal-container'} onClick={this.close}>
-                <div ref={this.menuRef} style={this.state.menuStyle} className={styles['menu-container']} onClick={this.menuContainerOnClick}>
+                <div ref={this.menuRef} className={styles['menu-container']} onClick={this.menuContainerOnClick}>
                     {children}
                 </div>
             </Modal>
