@@ -54,12 +54,13 @@ class Popup extends Component {
             return;
         }
 
+        const bodyRect = document.body.getBoundingClientRect();
         const labelRect = this.labelRef.current.getBoundingClientRect();
         const labelPosition = {
             left: labelRect.x,
             top: labelRect.y,
-            right: document.body.offsetWidth - (labelRect.x + labelRect.width),
-            bottom: document.body.offsetHeight - (labelRect.y + labelRect.height)
+            right: bodyRect.width - (labelRect.x + labelRect.width),
+            bottom: bodyRect.height - (labelRect.y + labelRect.height)
         };
         const menuRect = this.menuRef.current.getBoundingClientRect();
         const menuStyle = {
