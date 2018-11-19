@@ -2,19 +2,53 @@
 
 @addon-width: 514px;
 @addon-padding: 18px;
-
 @logo-width: floor((@addon-width * 0.2));
 
 .addon-container {
     width: (@addon-width + (2 * @addon-padding));
     padding: @addon-padding;
-    background-color: @colorglass;
 
     .addon {
         width: @addon-width;
+        grid-template-rows: floor((@logo-width * 0.25)) floor((@logo-width * 0.20)) auto auto ceil((@addon-width * 0.08));
+
+        .logo {
+            width: @logo-width;
+            height: @logo-width;
+        }
+
+        .name {
+            font-size: 20px;
+        }
+
+        .type {
+            font-size: 12px;
+        }
+
+        .description {
+            font-size: 12px;
+        }
+
+        .urls-container {
+            font-size: 12px;
+        }
+
+        .button {
+            border-width: 2px;
+
+            .label {
+                font-size: 14px;
+            }
+        }
+    }
+}
+
+.addon-container {
+    background-color: @colorglass;
+
+    .addon {
         display: grid;
         grid-template-columns: 1fr 4fr;
-        grid-template-rows: floor((@logo-width * 0.25)) floor((@logo-width * 0.20)) auto auto ceil((@addon-width * 0.08));
         grid-template-areas:
             "logo header"
             "logo type"
@@ -26,8 +60,6 @@
             grid-area: logo;
 
             .logo {
-                width: @logo-width;
-                height: @logo-width;
                 padding: 20%;
                 fill: @colorwhite;
                 background-color: @colordarkest;
@@ -49,7 +81,6 @@
                 .name {
                     max-width: 80%;
                     margin-right: 3%;
-                    font-size: 20px;
                     color: @colorwhite;
                     overflow: hidden;
                     white-space: pre;
@@ -58,7 +89,6 @@
 
                 .version {
                     flex: 1;
-                    font-size: 12px;
                     color: @colorwhite60;
                     overflow: hidden;
                     white-space: pre;
@@ -72,21 +102,18 @@
             display: flex;
             align-items: center;
             padding-left: 4%;
-            font-size: 12px;
             color: @coloraccent;
         }
 
         .description {
             grid-area: description;
             padding-left: 4%;
-            font-size: 12px;
             color: @colorwhite;
         }
 
         .urls-container {
             grid-area: urls;
             padding: 4% 0%;
-            font-size: 12px;
             overflow: auto;
             word-break: break-all;
 
@@ -107,7 +134,7 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                border: 2px solid;
+                border-style: solid;
 
                 .icon {
                     width: 7%;
@@ -115,7 +142,6 @@
                 }
 
                 .label {
-                    font-size: 14px;
                     color: @colorwhite;
                 }
 
