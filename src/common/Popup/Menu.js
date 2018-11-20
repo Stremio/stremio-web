@@ -1,7 +1,7 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 
 const Menu = ({ children }) => {
-    return <Fragment>{children}</Fragment>;
+    return React.Children.only(children);
 };
 
 export default Menu;
