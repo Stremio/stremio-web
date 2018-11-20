@@ -22,7 +22,11 @@
         .button {
             height: @buttons-bar-height;
             width: @buttons-bar-height;
-            border-width: 0 1px 1px 1px;
+
+            .icon {
+                width: floor((@buttons-bar-height * 0.6));
+                height: floor((@buttons-bar-height * 0.6));
+            }
         }
 
         .time-label {
@@ -38,8 +42,6 @@
 }
 
 .popup-container {
-    border-width: 1px 1px 0px 1px;
-
     &.volume-popup-container {
         padding: ceil((@buttons-bar-height * 0.4)) 0;
         width: @buttons-bar-height;
@@ -84,18 +86,13 @@
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            border-style: solid;
-            border-color: @colortransparent;
 
             .icon {
-                width: 60%;
-                height: 60%;
                 fill: @colorwhite80;
             }
 
             &.active {
                 background-color: @colorbgmain;
-                border-color: @colorprimlight;
 
                 .icon {
                     fill: @colorwhite;
@@ -129,6 +126,4 @@
     justify-content: center;
     align-items: center;
     background-color: @colorbgmain;
-    border-style: solid;
-    border-color: @colorprimlight;
 }
