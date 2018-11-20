@@ -48,10 +48,6 @@ class Popup extends Component {
     }
 
     updateMenuStyle = () => {
-        if (this.menuRef.current === null || this.labelRef.current === null) {
-            return;
-        }
-
         const bodyRect = document.body.getBoundingClientRect();
         const labelRect = this.labelRef.current.getBoundingClientRect();
         const labelPosition = {
@@ -64,26 +60,30 @@ class Popup extends Component {
 
         if (menuRect.height <= labelPosition.bottom) {
             this.menuRef.current.style.top = `${labelPosition.top + labelRect.height}px`;
+            this.menuRef.current.style.maxHeight = `${labelPosition.bottom}px`;
         } else if (menuRect.height <= labelPosition.top) {
             this.menuRef.current.style.bottom = `${labelPosition.bottom + labelRect.height}px`;
+            this.menuRef.current.style.maxHeight = `${labelPosition.top}px`;
         } else if (labelPosition.bottom >= labelPosition.top) {
             this.menuRef.current.style.top = `${labelPosition.top + labelRect.height}px`;
-            this.menuRef.current.style.height = `${labelPosition.bottom}px`;
+            this.menuRef.current.style.maxHeight = `${labelPosition.bottom}px`;
         } else {
             this.menuRef.current.style.bottom = `${labelPosition.bottom + labelRect.height}px`;
-            this.menuRef.current.style.height = `${labelPosition.top}px`;
+            this.menuRef.current.style.maxHeight = `${labelPosition.top}px`;
         }
 
         if (menuRect.width <= (labelPosition.right + labelRect.width)) {
             this.menuRef.current.style.left = `${labelPosition.left}px`;
+            this.menuRef.current.style.maxWidth = `${labelPosition.right + labelRect.width}px`;
         } else if (menuRect.width <= (labelPosition.left + labelRect.width)) {
             this.menuRef.current.style.right = `${labelPosition.right}px`;
+            this.menuRef.current.style.maxWidth = `${labelPosition.left + labelRect.width}px`;
         } else if (labelPosition.right > labelPosition.left) {
             this.menuRef.current.style.left = `${labelPosition.left}px`;
-            this.menuRef.current.style.width = `${labelPosition.right + labelRect.width}px`;
+            this.menuRef.current.style.maxWidth = `${labelPosition.right + labelRect.width}px`;
         } else {
             this.menuRef.current.style.right = `${labelPosition.right}px`;
-            this.menuRef.current.style.width = `${labelPosition.left + labelRect.width}px`;
+            this.menuRef.current.style.maxWidth = `${labelPosition.left + labelRect.width}px`;
         }
 
         this.menuRef.current.style.visibility = 'visible';
