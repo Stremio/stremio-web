@@ -1,7 +1,7 @@
 import React from 'react';
 
-const Label = React.forwardRef(({ children, onClick }, ref) => {
-    return React.cloneElement(React.Children.only(children), { ref, onClick });
+const Label = React.forwardRef(({ children, ...props }, ref) => {
+    return React.cloneElement(React.Children.only(children), { ref, ...props });
 });
 
 export default Label;
