@@ -1,110 +1,102 @@
 @import 'stremio-colors';
-.stream {
-    width: 340px;
-    display: grid;
-    font-size: 11px;
-    padding: 7px 20px;
-    color: @colorwhite;
-    align-items: center;
+
+@stream-width: 340px;
+@play-width: ceil((@stream-width * 0.13));
+@progress-height: 3px;
+
+.stream-container {
+    width: @stream-width;
+
+    .stream {
+        min-height: round((@stream-width * 0.2));
+
+        .source-name {
+            font-size: 13px;
+        }
+
+        .text-container {
+            line-height: 15px;
+
+            .title {
+                font-size: 11px;
+            }
+
+            .subtitle {
+                font-size: 11px;
+            }
+        }
+
+        .play-container {
+            height: @play-width;
+            width: @play-width;
+        }
+    }
+
+    .progress {
+        height: @progress-height;
+    }
+}
+
+.stream-container {
+    margin: 10px; //remove
     background-color: @colorblack20;
-    grid-template-columns: 74px 36px 120px 24px 46px;
-    grid-template-rows: 40px 3px 3px;
-    grid-template-areas: 
-      "logo . text . play"
-      "progress progress progress . play"
-      ". . . . play";
-    .logo {
-        grid-area: logo;
-        width: 74px;
-        fill: @colorwhite;
-    }
-    .source-name {
-        grid-area: logo;
-        font-size: 13px;
-        overflow: hidden;
-        white-space: pre;
-        text-overflow: ellipsis;
-    }
-    .free-subtitle, .with-title, .with-subtitle, .text-container {
-        grid-area: text;
-        display: grid;
-        overflow: hidden;
-        .title {
-            grid-area: title;
+
+    .stream {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+
+        .logo {
+            width: 20%;
+            fill: @colorwhite;
+        }
+
+        .source-name {
+            display: flex;
+            justify-content: center;
+            width: 20%;
+            color: @colorwhite;
             overflow: hidden;
             white-space: pre;
             text-overflow: ellipsis;
-            &:hover {
-                margin-left: -180%;
-                text-overflow: initial;
-                transition: margin-left 3s linear;
+        }
+
+        .text-container {
+            width: 45%;
+            padding: 2% 0%;
+
+            .title {
+                color: @colorwhite;
+                word-break: break-word;
+            }
+
+            .subtitle {
+                color: @colorwhite;
+                word-break: break-word;
             }
         }
-        .subtitle, .subscription-label {
-            grid-area: subtitle;
-        }
-        .free-label, .subscription-label {
-            font-weight: 600;
-        }
-        .free-label {
-            grid-area: free;
-            padding: 0px 6px;
-            border-radius: 2px;
-            background-color: @colorprimlight;
-        }
-        .subscription-label {
-            color: @colorsignal1;
+
+        .play-container {
+            display: flex;
+
+            .play {
+                width: 38%;
+                height: 38%;
+                margin: auto;
+                fill: @colorwhite60;
+            }
         }
     }
-    .free-subtitle {
-        grid-template-columns: 38px 82px;
-        grid-template-rows: 18px 17px 1px;
-        grid-template-areas: 
-          "title title"
-          "free ."
-          ". .";
-    }
-    .with-title {
-        grid-template-columns: 120px;
-        grid-template-rows: 18px;
-        grid-template-areas: 
-          "title";
-    }
-    .with-subtitle {
-        grid-template-columns: 120px;
-        grid-template-rows: 18px;
-        grid-template-areas: 
-          "subtitle";
-    }
-    .text-container {
-        grid-template-columns: 120px;
-        grid-template-rows: 18px 18px;
-        grid-template-areas: 
-          "title"
-          "subtitle";
-    }
+
     .progress-container {
-        grid-area: progress;
         background-color: @colorneutral;
+
         .progress {
-            height: 3px;
-            border-radius: 1px;
+            height: @progress-height;
             background-color: @colorprimlight;
         }
     }
-    .play-container {
-        grid-area: play;
-        height: 46px;
-        display: flex;
-        border-radius: 50%;
-        .play {
-            width: 18px;
-            height: 18px;
-            margin: auto;
-            margin-left: 16px;
-            fill: @colorwhite60;
-        }
-    }
+
     &:hover {
         cursor: pointer;
         background-color: @colorwhite20;

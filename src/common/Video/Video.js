@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { dataUrl as iconDataUrl } from 'stremio-icons/dom';
+import Icon, { dataUrl as iconDataUrl } from 'stremio-icons/dom';
 import colors from 'stremio-colors';
 import styles from './styles';
 
@@ -9,7 +9,8 @@ const renderPoster = (poster) => {
         return null;
     }
 
-    const placeholderIconUrl = iconDataUrl({ icon: 'ic_channels', fill: colors.accent, width: 40, height: 36 });
+    const videoWidth = 340;
+    const placeholderIconUrl = iconDataUrl({ icon: 'ic_channels', fill: colors.accent, width: '20%', height: videoWidth * 0.13 });
     const imageStyle = {
         backgroundImage: `url('${poster}'), url('${placeholderIconUrl}')`
     };
@@ -19,33 +20,13 @@ const renderPoster = (poster) => {
     );
 }
 
-const renderNumber = (number) => {
-    if (number <= 0) {
+const renderTitle = (number, title) => {
+    if (title.length === 0) {
         return null;
     }
 
     return (
-        <span className={styles['number']}>{number + '.'}</span>
-    );
-}
-
-const renderName = (name) => {
-    if (name.length === 0) {
-        return null;
-    }
-
-    return (
-        <span className={styles['name']}>{name}</span>
-    );
-}
-
-const renderDuration = (duration) => {
-    if (duration <= 0) {
-        return null;
-    }
-
-    return (
-        <span className={styles['duration']}>{duration + ' min'}</span>
+        <div className={styles['title']}>{number + '.' + ' ' + title}</div>
     );
 }
 
@@ -57,19 +38,27 @@ const renderReleasedDate = (released) => {
     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
     return (
-        <span className={styles['released-date']}>{released.getDate() + ' ' + months[released.getMonth()]}</span>
+        <div className={styles['released-date']}>{released.getDate() + ' ' + months[released.getMonth()]}</div>
     );
 }
 
-const renderLabel = (isWatched, isUpcoming) => {
-    if (!isWatched && !isUpcoming) {
+const renderUpcomingLabel = (isUpcoming) => {
+    if(!isUpcoming) {
         return null;
     }
 
     return (
-        <div className={styles['label-container']}>
-            <span className={styles[isWatched ? 'watched-label' : 'upcoming-label']}>{isWatched ? 'WATCHED' : 'UPCOMING'}</span>
-        </div>
+        <div className={styles['upcoming-label']}>UPCOMING</div>
+    );
+}
+
+const renderWatchedLabel = (isWatched) => {
+    if(!isWatched) {
+        return null;
+    }
+
+    return (
+        <div className={styles['watched-label']}>WATCHED</div>
     );
 }
 
@@ -85,22 +74,23 @@ const renderProgress = (progress) => {
     );
 }
 
-const getClassName = (poster, progress) => {
-    if (poster.length > 0 && !progress) return 'with-poster';
-    if (progress && poster.length === 0) return 'with-progress';
-    if (poster.length > 0 && progress) return 'with-poster-progress';
-    return 'video';
-}
-
 const Video = (props) => {
     return (
-        <div onClick={props.onVideoClicked} style={{ padding: props.poster.length > 0 ? '10px 10px' : '10px 16px' }} className={styles[getClassName(props.poster, props.progress)]}>
-            {renderPoster(props.poster)}
-            {renderNumber(props.number)}
-            {renderName(props.name)}
-            {renderDuration(props.duration)}
-            {renderReleasedDate(props.released)}
-            {renderLabel(props.isWatched, props.isUpcoming)}
+        <div onClick={props.onVideoClicked} style={{ backgroundColor: props.progress ? colors.black40 : null }} className={styles['video-container']}>
+            <div className={styles['video']}>
+                {renderPoster(props.poster)}
+                <div style={{width: props.poster ? '50%' : '77%' }} className={styles['text-container']}>
+                    {renderTitle(props.number, props.title)}
+                    {renderReleasedDate(props.released)}
+                    <div className={styles['label-container']}>
+                        {renderUpcomingLabel(props.isUpcoming)}
+                        {renderWatchedLabel(props.isWatched)}
+                    </div>
+                </div>
+                <div className={styles['play-container']}>
+                    <Icon style={{ width: props.progress ? '65%' : null, height: props.progress ? '65%' : null,  fill: props.progress ? colors.white : null }} className={styles['play']} icon={'ic_arrow_left'} />
+                </div>
+            </div>
             {renderProgress(props.progress)}
         </div>
     );
@@ -109,8 +99,7 @@ const Video = (props) => {
 Video.propTypes = {
     poster: PropTypes.string.isRequired,
     number: PropTypes.number.isRequired,
-    name: PropTypes.string.isRequired,
-    duration: PropTypes.number.isRequired,
+    title: PropTypes.string.isRequired,
     released: PropTypes.instanceOf(Date).isRequired,
     isWatched: PropTypes.bool.isRequired,
     isUpcoming: PropTypes.bool.isRequired,
@@ -120,8 +109,7 @@ Video.propTypes = {
 Video.defaultProps = {
     poster: '',
     number: 0,
-    name: '',
-    duration: 0,
+    title: '',
     released: new Date(''), //Invalid Date
     isWatched: false,
     isUpcoming: false,

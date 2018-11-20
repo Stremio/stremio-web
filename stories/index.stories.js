@@ -223,7 +223,7 @@ storiesOf('Video', module)
             <Video
                 poster={'https://www.nationalgeographic.com/content/dam/photography/rights-exempt/pod-archive-grid-wide.adapt.945.1.jpg'}
                 number={2}
-                name={'The Bing Bran Hypothesis'}
+                title={'The Bing Bran Hypothesis'}
                 duration={23}
                 isWatched={true}
                 onVideoClicked={function() { alert(8) }}
@@ -234,7 +234,7 @@ storiesOf('Video', module)
         <div style={storyStyle} className={appStyles['app']}>
             <Video
                 number={4}
-                name={'The Luminous Fish Effect'}
+                title={'The Luminous Fish Effect'}
                 progress={50}
                 duration={22}
             />
@@ -245,7 +245,7 @@ storiesOf('Video', module)
             <Video
                 poster={'5'}
                 number={5}
-                name={'The Dumpling Paradox'}
+                title={'The Dumpling Paradox'}
                 progress={50}
                 duration={22}
             />
@@ -255,7 +255,7 @@ storiesOf('Video', module)
         <div style={storyStyle} className={appStyles['app']}>
             <Video
                 number={8}
-                name={'The Loobendfeld Decay'}
+                title={'The Loobendfeld Decay'}
                 released={new Date(2018, 4, 23)}
                 isUpcoming={true}
             />
