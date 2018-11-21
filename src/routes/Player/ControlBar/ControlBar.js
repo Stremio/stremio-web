@@ -4,6 +4,7 @@ import classnames from 'classnames';
 import debounce from 'lodash.debounce';
 import Icon from 'stremio-icons/dom';
 import { Slider, Popup } from 'stremio-common';
+import colors from 'stremio-colors';
 import styles from './styles';
 
 class ControlBar extends Component {
@@ -161,7 +162,7 @@ class ControlBar extends Component {
                     'ic_volume3';
 
         return (
-            <Popup onOpen={this.onVolumePopupOpen} onClose={this.onVolumePopupClose}>
+            <Popup borderColor={colors.primlight} onOpen={this.onVolumePopupOpen} onClose={this.onVolumePopupClose}>
                 <Popup.Label>
                     <div className={classnames(styles['button'], { [styles['active']]: this.state.volumePopupOpen })}>
                         <Icon className={styles['icon']} icon={volumeIcon} />
@@ -188,7 +189,7 @@ class ControlBar extends Component {
 
     renderShareButton() {
         return (
-            <Popup onOpen={this.onSharePopupOpen} onClose={this.onSharePopupClose}>
+            <Popup borderColor={colors.primlight} onOpen={this.onSharePopupOpen} onClose={this.onSharePopupClose}>
                 <Popup.Label>
                     <div className={classnames(styles['button'], { [styles['active']]: this.state.sharePopupOpen })}>
                         <Icon className={styles['icon']} icon={'ic_share'} />
