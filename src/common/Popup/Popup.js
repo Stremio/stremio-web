@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
+import classnames from 'classnames';
 import { Modal } from 'stremio-common';
 import Label from './Label';
 import Menu from './Menu';
@@ -11,6 +12,11 @@ class Popup extends Component {
 
         this.labelRef = React.createRef();
         this.menuRef = React.createRef();
+        this.scrollRef = React.createRef();
+        this.borderTopRef = React.createRef();
+        this.borderRightRef = React.createRef();
+        this.borderBottomRef = React.createRef();
+        this.borderLeftRef = React.createRef();
 
         this.state = {
             open: false
@@ -35,20 +41,25 @@ class Popup extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (this.state.open && !prevState.open) {
-            this.updateMenuStyle();
-            if (typeof this.props.onOpen === 'function') {
+        if (this.state.open !== prevState.open) {
+            this.updateStyles();
+            if (this.state.open && typeof this.props.onOpen === 'function') {
                 this.props.onOpen();
-            }
-        } else if (!this.state.open && prevState.open) {
-            if (typeof this.props.onClose === 'function') {
+            } else if (!this.state.open && typeof this.props.onClose === 'function') {
                 this.props.onClose();
             }
         }
     }
 
-    updateMenuStyle = () => {
+    updateStyles = () => {
+        if (!this.state.open) {
+            this.labelRef.current.style.border = null;
+            return;
+        }
+
+        const menuDirections = {};
         const bodyRect = document.body.getBoundingClientRect();
+        const menuRect = this.menuRef.current.getBoundingClientRect();
         const labelRect = this.labelRef.current.getBoundingClientRect();
         const labelPosition = {
             left: labelRect.x,
@@ -56,41 +67,72 @@ class Popup extends Component {
             right: bodyRect.width - (labelRect.x + labelRect.width),
             bottom: bodyRect.height - (labelRect.y + labelRect.height)
         };
-        const menuRect = this.menuRef.current.getBoundingClientRect();
 
         if (menuRect.height <= labelPosition.bottom) {
             this.menuRef.current.style.top = `${labelPosition.top + labelRect.height}px`;
-            this.menuRef.current.style.maxHeight = `${labelPosition.bottom}px`;
+            this.scrollRef.current.style.maxHeight = `${labelPosition.bottom}px`;
+            menuDirections.bottom = true;
         } else if (menuRect.height <= labelPosition.top) {
             this.menuRef.current.style.bottom = `${labelPosition.bottom + labelRect.height}px`;
-            this.menuRef.current.style.maxHeight = `${labelPosition.top}px`;
+            this.scrollRef.current.style.maxHeight = `${labelPosition.top}px`;
+            menuDirections.top = true;
         } else if (labelPosition.bottom >= labelPosition.top) {
             this.menuRef.current.style.top = `${labelPosition.top + labelRect.height}px`;
-            this.menuRef.current.style.maxHeight = `${labelPosition.bottom}px`;
+            this.scrollRef.current.style.maxHeight = `${labelPosition.bottom}px`;
+            menuDirections.bottom = true;
         } else {
             this.menuRef.current.style.bottom = `${labelPosition.bottom + labelRect.height}px`;
-            this.menuRef.current.style.maxHeight = `${labelPosition.top}px`;
+            this.scrollRef.current.style.maxHeight = `${labelPosition.top}px`;
+            menuDirections.top = true;
         }
 
         if (menuRect.width <= (labelPosition.right + labelRect.width)) {
             this.menuRef.current.style.left = `${labelPosition.left}px`;
-            this.menuRef.current.style.maxWidth = `${labelPosition.right + labelRect.width}px`;
+            this.scrollRef.current.style.maxWidth = `${labelPosition.right + labelRect.width}px`;
+            menuDirections.right = true;
         } else if (menuRect.width <= (labelPosition.left + labelRect.width)) {
             this.menuRef.current.style.right = `${labelPosition.right}px`;
-            this.menuRef.current.style.maxWidth = `${labelPosition.left + labelRect.width}px`;
+            this.scrollRef.current.style.maxWidth = `${labelPosition.left + labelRect.width}px`;
+            menuDirections.left = true;
         } else if (labelPosition.right > labelPosition.left) {
             this.menuRef.current.style.left = `${labelPosition.left}px`;
-            this.menuRef.current.style.maxWidth = `${labelPosition.right + labelRect.width}px`;
+            this.scrollRef.current.style.maxWidth = `${labelPosition.right + labelRect.width}px`;
+            menuDirections.right = true;
         } else {
             this.menuRef.current.style.right = `${labelPosition.right}px`;
-            this.menuRef.current.style.maxWidth = `${labelPosition.left + labelRect.width}px`;
+            this.scrollRef.current.style.maxWidth = `${labelPosition.left + labelRect.width}px`;
+            menuDirections.left = true;
+        }
+
+        if (!!this.props.borderColor) {
+            this.borderTopRef.current.style.backgroundColor = this.props.borderColor;
+            this.borderRightRef.current.style.backgroundColor = this.props.borderColor;
+            this.borderBottomRef.current.style.backgroundColor = this.props.borderColor;
+            this.borderLeftRef.current.style.backgroundColor = this.props.borderColor;
+            this.labelRef.current.style.borderColor = this.props.borderColor;
+            this.labelRef.current.style.borderStyle = 'solid';
+            if (menuDirections.top) {
+                this.labelRef.current.style.borderWidth = '0 1px 1px 1px';
+                if (menuDirections.left) {
+                    this.borderBottomRef.current.style.right = `${labelRect.width - 1}px`;
+                } else {
+                    this.borderBottomRef.current.style.left = `${labelRect.width - 1}px`;
+                }
+            } else {
+                this.labelRef.current.style.borderWidth = '1px 1px 0 1px';
+                if (menuDirections.left) {
+                    this.borderTopRef.current.style.right = `${labelRect.width - 1}px`;
+                } else {
+                    this.borderTopRef.current.style.left = `${labelRect.width - 1}px`;
+                }
+            }
         }
 
         this.menuRef.current.style.visibility = 'visible';
     }
 
     onKeyUp = (event) => {
-        if (event.keyCode === 27) { // escape
+        if (this.state.open && event.keyCode === 27) { // escape
             event.stopPropagation();
             this.close();
         }
@@ -108,6 +150,10 @@ class Popup extends Component {
         event.stopPropagation();
     }
 
+    renderLabel(children) {
+        return React.cloneElement(children, { ref: this.labelRef, onClick: this.open });
+    }
+
     renderMenu(children) {
         if (!this.state.open) {
             return null;
@@ -116,7 +162,13 @@ class Popup extends Component {
         return (
             <Modal className={'modal-container'} onClick={this.close}>
                 <div ref={this.menuRef} className={styles['menu-container']} onClick={this.menuContainerOnClick}>
-                    {children}
+                    <div ref={this.scrollRef} className={styles['scroll-container']}>
+                        {children}
+                    </div>
+                    <div ref={this.borderTopRef} className={classnames(styles['border'], styles['border-top'])} />
+                    <div ref={this.borderRightRef} className={classnames(styles['border'], styles['border-right'])} />
+                    <div ref={this.borderBottomRef} className={classnames(styles['border'], styles['border-bottom'])} />
+                    <div ref={this.borderLeftRef} className={classnames(styles['border'], styles['border-left'])} />
                 </div>
             </Modal>
         );
@@ -140,7 +192,7 @@ class Popup extends Component {
 
         return (
             <Fragment>
-                {React.cloneElement(this.props.children[0], { ref: this.labelRef, onClick: this.open })}
+                {this.renderLabel(this.props.children[0])}
                 {this.renderMenu(this.props.children[1])}
             </Fragment>
         );
@@ -152,7 +204,8 @@ Popup.Menu = Menu;
 
 Popup.propTypes = {
     onOpen: PropTypes.func,
-    onClose: PropTypes.func
+    onClose: PropTypes.func,
+    borderColor: PropTypes.string
 };
 
 export default Popup;

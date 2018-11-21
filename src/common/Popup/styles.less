@@ -1,5 +1,41 @@
 .menu-container {
     position: absolute;
-    overflow: auto;
     visibility: hidden;
+
+    .scroll-container {
+        overflow: auto;
+    }
+
+    .border {
+        position: absolute;
+        background-color: transparent;
+
+        &-top {
+            left: 0;
+            top: 0;
+            right: 0;
+            height: 1px;
+        }
+
+        &-bottom {
+            left: 0;
+            bottom: 0;
+            right: 0;
+            height: 1px;
+        }
+
+        &-left {
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 1px;
+        }
+
+        &-right {
+            top: 0;
+            bottom: 0;
+            right: 0;
+            width: 1px;
+        }
+    }
 }
