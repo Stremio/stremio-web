@@ -1,7 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import classnames from 'classnames';
-import ReactHTMLVideo from './stremio-video/ReactHTMLVideo';
-import ReactYouTubeVideo from './stremio-video/ReactYouTubeVideo';
+import Video from './Video';
 import ControlBar from './ControlBar';
 import styles from './styles';
 
@@ -12,7 +10,7 @@ class Player extends Component {
         this.videoRef = React.createRef();
 
         this.state = {
-            videoComponent: null,
+            videoImplementation: null,
             paused: null,
             time: null,
             duration: null,
@@ -22,8 +20,8 @@ class Player extends Component {
 
     componentDidMount() {
         this.prepareStream()
-            .then(({ source, videoComponent }) => {
-                this.setState({ videoComponent }, () => {
+            .then(({ source, videoImplementation }) => {
+                this.setState({ videoImplementation }, () => {
                     this.videoRef.current.dispatch('command', 'load', {
                         source: source
                     });
@@ -35,7 +33,7 @@ class Player extends Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return nextState.videoComponent !== this.state.videoComponent ||
+        return nextState.videoImplementation !== this.state.videoImplementation ||
             nextState.paused !== this.state.paused ||
             nextState.time !== this.state.time ||
             nextState.duration !== this.state.duration ||
@@ -45,11 +43,15 @@ class Player extends Component {
     prepareStream = () => {
         return new Promise((resolve, reject) => {
             // YT.ready(() => {
-                resolve({
-                    source: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-                    videoComponent: ReactHTMLVideo
-                });
+            //     resolve({
+            //         source: 'J2z5uzqxJNU',
+            //         videoImplementation: 'YouTube'
+            //     });
             // });
+            resolve({
+                source: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+                videoImplementation: 'HTML'
+            });
         });
     }
 
@@ -96,14 +98,15 @@ class Player extends Component {
     }
 
     renderVideo() {
-        if (this.state.videoComponent === null) {
+        if (this.state.videoImplementation === null) {
             return null;
         }
 
         return (
             <Fragment>
-                <this.state.videoComponent
+                <Video
                     ref={this.videoRef}
+                    implementation={this.state.videoImplementation}
                     className={styles['layer']}
                     onEnded={this.onEnded}
                     onError={this.onError}
