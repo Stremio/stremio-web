@@ -43,7 +43,7 @@ var YouTubeVideo = function(containerElement) {
         });
     };
     var onPausedChanged = function() {
-        events.emit('propChanged', 'paused', video.getPlayerState() === YT.PlayerState.PAUSED);
+        events.emit('propChanged', 'paused', video.getPlayerState() !== YT.PlayerState.PLAYING);
     };
     var onTimeChanged = function() {
         events.emit('propChanged', 'time', video.getCurrentTime() * 1000);
@@ -76,6 +76,11 @@ var YouTubeVideo = function(containerElement) {
                 }
                 break;
             case YT.PlayerState.PAUSED:
+                if (observedProps.paused) {
+                    onPausedChanged();
+                }
+                break;
+            case YT.PlayerState.UNSTARTED:
                 if (observedProps.paused) {
                     onPausedChanged();
                 }
@@ -114,7 +119,7 @@ var YouTubeVideo = function(containerElement) {
             switch (arguments[1]) {
                 case 'paused':
                     if (ready) {
-                        events.emit('propValue', 'paused', video.getPlayerState() === YT.PlayerState.PAUSED);
+                        events.emit('propValue', 'paused', video.getPlayerState() !== YT.PlayerState.PLAYING);
                         observedProps.paused = true;
                     }
                     break;
