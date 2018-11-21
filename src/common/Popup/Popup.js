@@ -24,9 +24,9 @@ class Popup extends Component {
     }
 
     componentDidMount() {
-        window.addEventListener('blur', this.close);
-        window.addEventListener('resize', this.close);
-        window.addEventListener('keyup', this.onKeyUp);
+        // window.addEventListener('blur', this.close);
+        // window.addEventListener('resize', this.close);
+        // window.addEventListener('keyup', this.onKeyUp);
     }
 
     componentWillUnmount() {
@@ -109,17 +109,16 @@ class Popup extends Component {
             this.borderRightRef.current.style.backgroundColor = this.props.borderColor;
             this.borderBottomRef.current.style.backgroundColor = this.props.borderColor;
             this.borderLeftRef.current.style.backgroundColor = this.props.borderColor;
-            this.labelRef.current.style.borderColor = this.props.borderColor;
-            this.labelRef.current.style.borderStyle = 'solid';
+            this.labelRef.current.style.border = `1px solid ${this.props.borderColor}`;
             if (menuDirections.top) {
-                this.labelRef.current.style.borderWidth = '0 1px 1px 1px';
+                this.labelRef.current.style.borderTop = 'none';
                 if (menuDirections.left) {
                     this.borderBottomRef.current.style.right = `${labelRect.width - 1}px`;
                 } else {
                     this.borderBottomRef.current.style.left = `${labelRect.width - 1}px`;
                 }
             } else {
-                this.labelRef.current.style.borderWidth = '1px 1px 0 1px';
+                this.labelRef.current.style.borderBottom = 'none';
                 if (menuDirections.left) {
                     this.borderTopRef.current.style.right = `${labelRect.width - 1}px`;
                 } else {
