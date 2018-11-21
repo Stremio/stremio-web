@@ -7,29 +7,25 @@
 .stream-container {
     width: @stream-width;
 
-    .stream {
+    .source-name {
+        font-size: 13px;
+    }
+
+    .text-container {
         min-height: round((@stream-width * 0.2));
+        line-height: 15px;
 
-        .source-name {
-            font-size: 13px;
+        .title {
+            font-size: 11px;
         }
 
-        .text-container {
-            line-height: 15px;
-
-            .title {
-                font-size: 11px;
-            }
-
-            .subtitle {
-                font-size: 11px;
-            }
+        .subtitle {
+            font-size: 11px;
         }
+    }
 
-        .play-container {
-            height: @play-width;
-            width: @play-width;
-        }
+    .play-container {
+        height: @play-width;
     }
 
     .progress {
@@ -41,20 +37,24 @@
     margin: 10px; //remove
     background-color: @colorblack20;
 
-    .stream {
+    &.active {
+        background-color: @colorblack40;
+    }
+
+    .flex-row-container {
         display: flex;
         align-items: center;
         justify-content: space-around;
 
         .logo {
-            width: 20%;
+            flex: 1;
+            margin: 0% 5%;
             fill: @colorwhite;
         }
 
         .source-name {
-            display: flex;
-            justify-content: center;
-            width: 20%;
+            flex: 1;
+            margin: 0% 5%;
             color: @colorwhite;
             overflow: hidden;
             white-space: pre;
@@ -62,7 +62,10 @@
         }
 
         .text-container {
-            width: 45%;
+            flex: 3;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
             padding: 2% 0%;
 
             .title {
@@ -77,6 +80,7 @@
         }
 
         .play-container {
+            flex: 1;
             display: flex;
 
             .play {

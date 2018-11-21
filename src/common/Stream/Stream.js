@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import classnames from 'classnames';
 import Icon from 'stremio-icons/dom';
-import colors from 'stremio-colors';
 import styles from './styles';
 
 const renderLogo = (logo, sourceName) => {
@@ -49,15 +49,15 @@ const renderProgress = (progress) => {
 
 const Stream = (props) => {
     return (
-        <div onClick={props.play} style={{ backgroundColor: props.progress ? colors.black40 : null }} className={styles['stream-container']}>
-            <div className={styles['stream']}>
+        <div onClick={props.play} className={classnames(styles['stream-container'], { [styles['active']]: props.progress })}>
+            <div className={styles['flex-row-container']}>
                 {renderLogo(props.logo, props.sourceName)}
                 <div className={styles['text-container']}>
                     {renderTitle(props.title)}
                     {renderSubtitle(props.subtitle)}
                 </div>
                 <div className={styles['play-container']}>
-                    <Icon style={{ width: props.progress ? '65%' : null, height: props.progress ? '65%' : null,  fill: props.progress ? colors.white : null }} className={styles['play']} icon={'ic_play'} />
+                    <Icon className={styles['play']} icon={'ic_play'} />
                 </div>
             </div>
             {renderProgress(props.progress)}

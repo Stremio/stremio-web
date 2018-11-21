@@ -1,18 +1,14 @@
 @import 'stremio-colors';
 
 @video-width: 340px;
-@play-width: ceil((@video-width * 0.13));
+@icon-width: round((@video-width * 0.14));
 @progress-height: 3px;
 
 .video-container {
     width: @video-width;
 
-    .video {
+    .text-container {
         min-height: round((@video-width * 0.2));
-
-        .poster {
-            height: round((@video-width * 0.14));
-        }
 
         .title {
             font-size: 12px;
@@ -26,11 +22,10 @@
             font-size: 10px;
             border-radius: 2px;
         }
+    }
 
-        .play-container {
-            height: @play-width;
-            width: @play-width;
-        }
+    .arrow-container {
+        width: @icon-width;
     }
 
     .progress {
@@ -40,59 +35,76 @@
 
 .video-container {
     margin: 10px; //remove
-    background-color: @colorblack20;
+    background-color: @colorglass;
 
-    .video {
+    .flex-row-container {
         display: flex;
+        flex-direction: row;
         align-items: center;
-        justify-content: space-around;
 
-        .poster {
-            width: 20%;
-            background-position: center;
-            background-size: cover, auto;
-            background-repeat: no-repeat;
+        .poster-container {
+            flex: 1;
+            display: flex;
+            align-self: stretch;
+            align-items: center;
+            justify-content: flex-end;
+
+            .poster {
+                height: 70%;
+                width: 90%;
+                background-position: center;
+                background-size: cover, auto;
+                background-repeat: no-repeat;
+            }
         }
 
         .text-container {
-            padding: 2% 0%;
+            flex: 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
 
-            .title {
-                color: @colorwhite;
-                word-break: break-word;
-            }
+            .text-content {
+                margin: 2% 4%;
 
-            .released-date {
-                color: @colorwhite60;
-            }
-
-            .label-container {
-                display: flex;
-                justify-content: space-between;
-
-                .watched-label, .upcoming-label {
-                    padding: 0% 3%;
-                    font-weight: 600;
+                .title {
                     color: @colorwhite;
+                    word-break: break-word;
                 }
 
-                .watched-label {
-                    background-color: @colorprimlight;
+                .released-date {
+                    color: @colorwhite60;
                 }
 
-                .upcoming-label {
-                    background-color: @colorsignal5;
+                .label-container {
+                    display: flex;
+
+                    .upcoming-label, .watched-label {
+                        padding: 0em 0.6em;
+                        font-weight: 600;
+                        color: @colorwhite;
+                    }
+
+                    .upcoming-label {
+                        margin-right: 8%;
+                        background-color: @colorsignal5;
+                    }
+
+                    .watched-label {
+                        background-color: @colorprimlight;
+                    }
                 }
             }
         }
 
-        .play-container {
+        .arrow-container {
             display: flex;
+            align-items: center;
+            justify-content: center;
             transform: rotate(180deg);
 
-            .play {
-                width: 38%;
-                height: 38%;
+            .arrow {
+                width: 30%;
                 margin: auto;
                 fill: @colorwhite60;
             }
@@ -100,7 +112,7 @@
     }
 
     .progress-container {
-        background-color: @colorwhite20;
+        background-color: @colorprim;
 
         .progress {
             background-color: @colorprimlight;
@@ -109,6 +121,9 @@
 
     &:hover {
         cursor: pointer;
-        background-color: @colorwhite20;
+
+        .flex-row-container {
+            background-color: @colorwhite20;
+        }
     }
 }
