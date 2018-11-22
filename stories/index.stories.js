@@ -164,6 +164,7 @@ storiesOf('Stream', module)
     .add('no-logo-title', () => (
         <div style={storyStyle} className={appStyles['app']}>
             <Stream
+                className={styles['stream']}
                 sourceName={'Amazon'}
                 title={'Vikings S01E09 HDTV XviD-AFG[ettv], 👤 1'}
             />
@@ -172,6 +173,7 @@ storiesOf('Stream', module)
     .add('no-logo-subtitle', () => (
         <div style={storyStyle} className={appStyles['app']}>
             <Stream
+                className={styles['stream']}
                 sourceName={'iTunes'}
                 subtitle={'Aasdasd dsasa sad.'}
             />
@@ -180,28 +182,30 @@ storiesOf('Stream', module)
     .add('logo-progress', () => (
         <div style={storyStyle} className={appStyles['app']}>
             <Stream
-                play={function() { alert(122) }}
+                className={styles['stream']}
+                onClick={function() { alert(122) }}
                 progress={40}
                 logo={'ic_itunes'}
                 title={'$1.99 purchase SD,$2.99 purchase HD'}
             />
         </div>
     ))
-    .add('logo-free', () => (
+    .add('long-source-name', () => (
         <div style={storyStyle} className={appStyles['app']}>
             <Stream
-                logo={'ic_amazon'}
-                title={'HDTV'}
-                isFree={true}
+                className={styles['stream']}
+                sourceName={'Amazon amazonamazon amazonamazonamazon amazonamazonamazonamazon amazonamazonamazon amazonamazon amazon'}
+                title={'SD'}
             />
         </div>
     ))
-    .add('no-logo-subscription', () => (
+    .add('long-title-subtitle', () => (
         <div style={storyStyle} className={appStyles['app']}>
             <Stream
-                sourceName={'Amazon'}
-                title={'SD'}
-                isSubscription={true}
+                className={styles['stream']}
+                sourceName={'iTunes'}
+                title={'This is title is title is title is title is title is title is title is title is title is title is title is title is title is title is title is title is title is title is title istitle is title is title is title is title is title is title is title is title is title is title is title is title is title is title is title is title is title is title is title is title is title is title is title is title is title is title is title is title is title is title is title is title is title is title is title is title is title'}
+                subtitle={'This is subtitle is subtitle is subtitle is subtitle is subtitle is subtitle is subtitle is subtitle is subtitle is subtitle issubtitle is subtitle is subtitle is subtitle is subtitle is subtitle is subtitle is subtitle is subtitle is subtitle is subtitle is subtitle is subtitle is subtitle is subtitle is subtitle is subtitle is subtitle is subtitle is subtitle is subtitle is subtitle is subtitle is subtitle is subtitle is subtitle is subtitle is subtitle is subtitle is subtitle is subtitle is subtitle'}
             />
         </div>
     ));

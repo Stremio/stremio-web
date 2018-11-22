@@ -1,19 +1,24 @@
 @import 'stremio-colors';
 
-@stream-width: 340px;
-@play-width: ceil((@stream-width * 0.13));
-@progress-height: 3px;
+@stream-width: 360px;
+@spacing: min(12px, ceil((@stream-width * 0.04)));
+@progress-height: 5px;
 
 .stream-container {
     width: @stream-width;
 
+    .logo-container {
+        margin: @spacing 0 @spacing @spacing;
+    }
+
     .source-name {
         font-size: 13px;
+        margin: @spacing 0 @spacing @spacing;
     }
 
     .text-container {
-        min-height: round((@stream-width * 0.2));
-        line-height: 15px;
+        min-height: ceil((@stream-width * 0.16));
+        padding: @spacing;
 
         .title {
             font-size: 11px;
@@ -22,10 +27,15 @@
         .subtitle {
             font-size: 11px;
         }
+
+        :not(:last-child) {
+            margin-bottom: (@spacing * 0.5);
+        }
     }
 
     .play-container {
-        height: @play-width;
+        width: floor((@stream-width * 0.08));
+        padding: @spacing @spacing @spacing 0;
     }
 
     .progress {
@@ -34,31 +44,31 @@
 }
 
 .stream-container {
-    margin: 10px; //remove
-    background-color: @colorblack20;
-
-    &.active {
-        background-color: @colorblack40;
-    }
+    background-color: @colorglass;
 
     .flex-row-container {
         display: flex;
-        align-items: center;
-        justify-content: space-around;
+        flex-direction: row;
+        align-items: stretch;
 
-        .logo {
+        .logo-container {
             flex: 1;
-            margin: 0% 5%;
-            fill: @colorwhite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            .logo {
+                width: 100%;
+                fill: @colorwhite;
+            }
         }
 
         .source-name {
             flex: 1;
-            margin: 0% 5%;
+            display: flex;
+            align-items: center;
             color: @colorwhite;
-            overflow: hidden;
-            white-space: pre;
-            text-overflow: ellipsis;
+            word-break: break-word;
         }
 
         .text-container {
@@ -66,7 +76,6 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            padding: 2% 0%;
 
             .title {
                 color: @colorwhite;
@@ -80,23 +89,20 @@
         }
 
         .play-container {
-            flex: 1;
             display: flex;
+            align-items: center;
 
             .play {
-                width: 38%;
-                height: 38%;
-                margin: auto;
-                fill: @colorwhite60;
+                width: 100%;
+                fill: @colorwhite;
             }
         }
     }
 
     .progress-container {
-        background-color: @colorneutral;
+        background-color: @colorprim;
 
         .progress {
-            height: @progress-height;
             background-color: @colorprimlight;
         }
     }
