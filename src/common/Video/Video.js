@@ -89,7 +89,7 @@ const renderProgress = (progress) => {
 
 const Video = (props) => {
     return (
-        <div onClick={props.onVideoClicked} className={classnames(styles['video-container'], { [styles['active']]: props.progress > 0 }, props.className)}>
+        <div onClick={props.onVideoClicked} className={classnames(styles['video-container'], props.className)}>
             <div className={styles['flex-row-container']}>
                 {renderPoster(props.poster)}
                 <div className={styles['info-container']}>
