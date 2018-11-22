@@ -8,34 +8,38 @@
 
     .border {
         position: absolute;
-        background-color: transparent;
+        border: 0 solid transparent;
 
         &-top {
             left: 0;
             top: 0;
             right: 0;
-            height: 1px;
+            height: 0;
+            border-top-width: 1px;
         }
 
         &-bottom {
             left: 0;
             bottom: 0;
             right: 0;
-            height: 1px;
+            height: 0;
+            border-bottom-width: 1px;
         }
 
         &-left {
             top: 0;
             bottom: 0;
             left: 0;
-            width: 1px;
+            width: 0;
+            border-left-width: 1px;
         }
 
         &-right {
             top: 0;
             bottom: 0;
             right: 0;
-            width: 1px;
+            width: 0;
+            border-right-width: 1px;
         }
     }
 }

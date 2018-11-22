@@ -24,9 +24,9 @@ class Popup extends Component {
     }
 
     componentDidMount() {
-        // window.addEventListener('blur', this.close);
-        // window.addEventListener('resize', this.close);
-        // window.addEventListener('keyup', this.onKeyUp);
+        window.addEventListener('blur', this.close);
+        window.addEventListener('resize', this.close);
+        window.addEventListener('keyup', this.onKeyUp);
     }
 
     componentWillUnmount() {
@@ -105,24 +105,25 @@ class Popup extends Component {
         }
 
         if (!!this.props.borderColor) {
-            this.borderTopRef.current.style.backgroundColor = this.props.borderColor;
-            this.borderRightRef.current.style.backgroundColor = this.props.borderColor;
-            this.borderBottomRef.current.style.backgroundColor = this.props.borderColor;
-            this.borderLeftRef.current.style.backgroundColor = this.props.borderColor;
+            this.borderTopRef.current.style.borderTopColor = this.props.borderColor;
+            this.borderRightRef.current.style.borderRightColor = this.props.borderColor;
+            this.borderBottomRef.current.style.borderBottomColor = this.props.borderColor;
+            this.borderLeftRef.current.style.borderLeftColor = this.props.borderColor;
             this.labelRef.current.style.border = `1px solid ${this.props.borderColor}`;
+            const borderWidth = 1 / window.devicePixelRatio;
             if (menuDirections.top) {
                 this.labelRef.current.style.borderTop = 'none';
                 if (menuDirections.left) {
-                    this.borderBottomRef.current.style.right = `${labelRect.width - 1}px`;
+                    this.borderBottomRef.current.style.right = `${labelRect.width - borderWidth}px`;
                 } else {
-                    this.borderBottomRef.current.style.left = `${labelRect.width - 1}px`;
+                    this.borderBottomRef.current.style.left = `${labelRect.width - borderWidth}px`;
                 }
             } else {
                 this.labelRef.current.style.borderBottom = 'none';
                 if (menuDirections.left) {
-                    this.borderTopRef.current.style.right = `${labelRect.width - 1}px`;
+                    this.borderTopRef.current.style.right = `${labelRect.width - borderWidth}px`;
                 } else {
-                    this.borderTopRef.current.style.left = `${labelRect.width - 1}px`;
+                    this.borderTopRef.current.style.left = `${labelRect.width - borderWidth}px`;
                 }
             }
         }
