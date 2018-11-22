@@ -9,32 +9,61 @@ class Video extends Component {
         super(props);
 
         this.videoRef = React.createRef();
+
+        this.state = {
+            implementation: null
+        };
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        return nextProps.className !== this.props.className ||
+            nextState.implementation !== this.state.implementation;
     }
 
     componentDidMount() {
-        this.video = new Video.implementations[this.props.implementation](this.videoRef.current);
-        this.video.on('ended', this.props.onEnded);
-        this.video.on('error', this.props.onError);
-        this.video.on('propValue', this.props.onPropValue);
-        this.video.on('propChanged', this.props.onPropChanged);
-        this.props.observedProps.forEach((propName) => {
-            this.dispatch('observeProp', propName);
-        });
+        this.prepareStream()
+            .then(({ source, implementation }) => {
+                this.setState({ implementation }, () => {
+                    this.video = new this.state.implementation(this.videoRef.current);
+                    this.video.on('ended', this.props.onEnded);
+                    this.video.on('error', this.props.onError);
+                    this.video.on('propValue', this.props.onPropValue);
+                    this.video.on('propChanged', this.props.onPropChanged);
+                    this.state.implementation.manifest.props.forEach((propName) => {
+                        this.dispatch('observeProp', propName);
+                    });
+                    this.dispatch('command', 'load', { source });
+                });
+            })
+            .catch((error) => {
+                this.props.onError(error);
+            });
     }
 
     componentWillUnmount() {
         this.dispatch('stop');
     }
 
-    shouldComponentUpdate() {
-        return false;
+    prepareStream = () => {
+        return new Promise((resolve, reject) => {
+            // YT.ready(() => {
+            //     resolve({
+            //         source: 'J2z5uzqxJNU',
+            //         implementation: YouTubeVideo
+            //     });
+            // });
+            resolve({
+                source: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+                implementation: HTMLVideo
+            });
+        });
     }
 
     dispatch = (...args) => {
         try {
-            this.video && this.video.dispatch(...args);
+            this.state.implementation && this.video && this.video.dispatch(...args);
         } catch (e) {
-            console.error(Video.implementations[this.props.implementation].manifest.name, e);
+            console.error(this.state.implementation.manifest.name, e);
         }
     }
 
@@ -55,28 +84,23 @@ class Video extends Component {
     }
 
     render() {
-        switch (this.props.implementation) {
-            case 'HTML':
+        switch (this.state.implementation) {
+            case HTMLVideo:
                 return this.renderHTMLVideo();
-            case 'YouTube':
+            case YouTubeVideo:
                 return this.renderYouTubeVideo();
+            default:
+                return null;
         }
     }
 }
 
-Video.implementations = {
-    'HTML': HTMLVideo,
-    'YouTube': YouTubeVideo
-};
-
 Video.propTypes = {
     className: PropTypes.string,
-    implementation: PropTypes.oneOf(Object.keys(Video.implementations)).isRequired,
     onEnded: PropTypes.func.isRequired,
     onError: PropTypes.func.isRequired,
     onPropValue: PropTypes.func.isRequired,
-    onPropChanged: PropTypes.func.isRequired,
-    observedProps: PropTypes.arrayOf(PropTypes.string).isRequired
+    onPropChanged: PropTypes.func.isRequired
 };
 
 export default Video;

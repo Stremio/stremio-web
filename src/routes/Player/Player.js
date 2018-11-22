@@ -10,7 +10,6 @@ class Player extends Component {
         this.videoRef = React.createRef();
 
         this.state = {
-            videoImplementation: null,
             paused: null,
             time: null,
             duration: null,
@@ -18,41 +17,11 @@ class Player extends Component {
         };
     }
 
-    componentDidMount() {
-        this.prepareStream()
-            .then(({ source, videoImplementation }) => {
-                this.setState({ videoImplementation }, () => {
-                    this.videoRef.current.dispatch('command', 'load', {
-                        source: source
-                    });
-                });
-            })
-            .catch((error) => {
-                this.onError(error);
-            });
-    }
-
     shouldComponentUpdate(nextProps, nextState) {
-        return nextState.videoImplementation !== this.state.videoImplementation ||
-            nextState.paused !== this.state.paused ||
+        return nextState.paused !== this.state.paused ||
             nextState.time !== this.state.time ||
             nextState.duration !== this.state.duration ||
             nextState.volume !== this.state.volume;
-    }
-
-    prepareStream = () => {
-        return new Promise((resolve, reject) => {
-            // YT.ready(() => {
-            //     resolve({
-            //         source: 'J2z5uzqxJNU',
-            //         videoImplementation: 'YouTube'
-            //     });
-            // });
-            resolve({
-                source: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-                videoImplementation: 'HTML'
-            });
-        });
     }
 
     onEnded = () => {
@@ -61,7 +30,7 @@ class Player extends Component {
 
     onError = (error) => {
         if (error.critical) {
-            this.videoRef.current && this.videoRef.current.dispatch('command', 'stop');
+            this.stop();
             this.setState({
                 paused: null,
                 time: null,
@@ -89,6 +58,10 @@ class Player extends Component {
         this.videoRef.current && this.videoRef.current.dispatch('setProp', 'paused', true);
     }
 
+    stop = () => {
+        this.videoRef.current && this.videoRef.current.dispatch('command', 'stop');
+    }
+
     setTime = (time) => {
         this.videoRef.current && this.videoRef.current.dispatch('setProp', 'time', time);
     }
@@ -98,21 +71,15 @@ class Player extends Component {
     }
 
     renderVideo() {
-        if (this.state.videoImplementation === null) {
-            return null;
-        }
-
         return (
             <Fragment>
                 <Video
                     ref={this.videoRef}
-                    implementation={this.state.videoImplementation}
                     className={styles['layer']}
                     onEnded={this.onEnded}
                     onError={this.onError}
                     onPropValue={this.onPropValue}
                     onPropChanged={this.onPropChanged}
-                    observedProps={['paused', 'time', 'duration', 'volume']}
                 />
                 <div className={styles['layer']} />
             </Fragment>
@@ -120,10 +87,6 @@ class Player extends Component {
     }
 
     renderControlBar() {
-        if (['paused', 'time', 'duration', 'volume'].every(propName => this.state[propName] === null)) {
-            return null;
-        }
-
         return (
             <ControlBar
                 className={styles['layer']}
