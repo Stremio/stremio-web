@@ -5,6 +5,8 @@ import Icon, { dataUrl as iconDataUrl } from 'stremio-icons/dom';
 import colors from 'stremio-colors';
 import styles from './styles';
 
+const MAX_TITLE_SYMBOLS = 100;
+
 const renderPoster = (poster) => {
     if (poster.length === 0) {
         return null;
@@ -26,7 +28,7 @@ const renderTitle = (number, title) => {
     }
 
     return (
-        <div className={styles['title']}>{number}. {title}</div>
+        <div className={styles['title']}>{number}. {title.length > MAX_TITLE_SYMBOLS ? title.slice(0, MAX_TITLE_SYMBOLS) + '...' : title}</div>
     );
 }
 
