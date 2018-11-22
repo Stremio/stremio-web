@@ -12,8 +12,8 @@ class ControlBar extends Component {
         super(props);
 
         this.state = {
-            time: -1,
-            volume: -1,
+            time: null,
+            volume: null,
             volumePopupOpen: false,
             sharePopupOpen: false
         };
@@ -37,46 +37,46 @@ class ControlBar extends Component {
     }
 
     resetTime = debounce(() => {
-        this.setState({ time: -1 });
+        this.setState({ time: null });
     }, 1500)
 
     resetVolume = debounce(() => {
-        this.setState({ volume: -1 });
+        this.setState({ volume: null });
     }, 100)
 
-    onTimeSliding = (time) => {
+    onTimeSliderSlide = (time) => {
         this.resetTime.cancel();
         this.setState({ time });
     }
 
-    onTimeSlidingCompleted = (time) => {
+    onTimeSliderComplete = (time) => {
         this.setState({ time });
         this.props.setTime(time);
         this.resetTime();
     }
 
-    onTimeSlidingAborted = () => {
+    onTimeSliderCancel = () => {
         this.resetTime.cancel();
-        this.setState({ time: -1 });
+        this.setState({ time: null });
     }
 
-    onVolumeSliding = (volume) => {
+    onVolumeSliderSlide = (volume) => {
         this.resetVolume.cancel();
         this.setState({ volume });
     }
 
-    onVolumeSlidingCompleted = (volume) => {
+    onVolumeSliderComplete = (volume) => {
         this.setState({ volume });
         this.props.setVolume(volume);
         this.resetVolume();
     }
 
-    onVolumeSlidingAborted = () => {
+    onVolumeSliderCancel = () => {
         this.resetVolume.cancel();
-        this.setState({ volume: -1 });
+        this.setState({ volume: null });
     }
 
-    onPlayPauseButtonClicked = () => {
+    onPlayPauseButtonClick = () => {
         this.props.paused ? this.props.play() : this.props.pause();
     }
 
@@ -108,17 +108,18 @@ class ControlBar extends Component {
             return null;
         }
 
+        const time = this.state.time !== null ? this.state.time : this.props.time;
         return (
             <Slider
                 containerClassName={styles['time-slider']}
                 thumbClassName={styles['time-thumb']}
-                value={this.state.time !== -1 ? this.state.time : this.props.time}
-                maxValue={this.props.duration}
-                minValue={0}
+                value={time}
+                minimumValue={0}
+                maximumValue={this.props.duration}
                 orientation={'horizontal'}
-                onSliding={this.onTimeSliding}
-                onSlidingAborted={this.onTimeSlidingAborted}
-                onSlidingCompleted={this.onTimeSlidingCompleted}
+                onSlide={this.onTimeSliderSlide}
+                onComplete={this.onTimeSliderComplete}
+                onCancel={this.onTimeSliderCancel}
             />
         );
     }
@@ -128,9 +129,10 @@ class ControlBar extends Component {
             return null;
         }
 
+        const icon = this.props.paused ? 'ic_play' : 'ic_pause';
         return (
-            <div className={styles['button']} onClick={this.onPlayPauseButtonClicked}>
-                <Icon className={styles['icon']} icon={this.props.paused ? 'ic_play' : 'ic_pause'} />
+            <div className={styles['button']} onClick={this.onPlayPauseButtonClick}>
+                <Icon className={styles['icon']} icon={icon} />
             </div>
         );
     }
@@ -140,13 +142,9 @@ class ControlBar extends Component {
             return null;
         }
 
-        const currentTime = this.state.time !== -1 ?
-            this.formatTime(this.state.time)
-            :
-            this.formatTime(this.props.time);
-
+        const time = this.state.time !== null ? this.state.time : this.props.time;
         return (
-            <div className={styles['time-label']}>{currentTime} / {this.formatTime(this.props.duration)}</div>
+            <div className={styles['time-label']}>{this.formatTime(time)} / {this.formatTime(this.props.duration)}</div>
         );
     }
 
@@ -155,8 +153,8 @@ class ControlBar extends Component {
             return null;
         }
 
-        const volume = this.state.volume !== -1 ? this.state.volume : this.props.volume;
-        const volumeIcon = volume === 0 ? 'ic_volume0' :
+        const volume = this.state.volume !== null ? this.state.volume : this.props.volume;
+        const icon = volume === 0 ? 'ic_volume0' :
             volume < 50 ? 'ic_volume1' :
                 volume < 100 ? 'ic_volume2' :
                     'ic_volume3';
@@ -165,7 +163,7 @@ class ControlBar extends Component {
             <Popup borderColor={colors.primlight} onOpen={this.onVolumePopupOpen} onClose={this.onVolumePopupClose}>
                 <Popup.Label>
                     <div className={classnames(styles['button'], { [styles['active']]: this.state.volumePopupOpen })}>
-                        <Icon className={styles['icon']} icon={volumeIcon} />
+                        <Icon className={styles['icon']} icon={icon} />
                     </div>
                 </Popup.Label>
                 <Popup.Menu>
@@ -174,12 +172,12 @@ class ControlBar extends Component {
                             containerClassName={styles['volume-slider']}
                             thumbClassName={styles['volume-thumb']}
                             value={volume}
-                            maxValue={100}
-                            minValue={0}
+                            minimumValue={0}
+                            maximumValue={100}
                             orientation={'vertical'}
-                            onSliding={this.onVolumeSliding}
-                            onSlidingAborted={this.onVolumeSlidingAborted}
-                            onSlidingCompleted={this.onVolumeSlidingCompleted}
+                            onSlide={this.onVolumeSliderSlide}
+                            onComplete={this.onVolumeSliderComplete}
+                            onCancel={this.onVolumeSliderCancel}
                         />
                     </div>
                 </Popup.Menu>
@@ -203,6 +201,10 @@ class ControlBar extends Component {
     }
 
     render() {
+        if (['paused', 'time', 'duration', 'volume'].every(propName => this.props[propName] === null)) {
+            return null;
+        }
+
         return (
             <div className={classnames(styles['control-bar-container'], this.props.className)}>
                 {this.renderTimeSlider()}
