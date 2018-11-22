@@ -1,18 +1,17 @@
 @import 'stremio-colors';
 
-@control-bar-height: 84px;
-@seek-slider-height: 26px;
-@buttons-bar-height: (@control-bar-height - @seek-slider-height);
+@time-slider-height: 26px;
+@buttons-bar-height: 58px;
 
 .control-bar-container {
-    height: @control-bar-height;
+    height: (@time-slider-height + @buttons-bar-height);
 
     .time-slider {
-        height: @seek-slider-height;
+        height: @time-slider-height;
 
         .time-thumb {
-            width: @seek-slider-height;
-            height: @seek-slider-height;
+            width: @time-slider-height;
+            height: @time-slider-height;
         }
     }
 
@@ -58,25 +57,20 @@
     }
 
     &.share-popup-container {
-        width: 300px;
-        height: 180px;
+        width: (@buttons-bar-height * 5);
+        height: (@buttons-bar-height * 3);
     }
 }
 
 .control-bar-container {
+    top: initial !important;
+    padding: 0 2%;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    top: initial !important;
-    padding-left: 2%;
-    padding-right: 2%;
-
-    .time-slider {
-        width: 100%;
-    }
+    align-items: stretch;
 
     .buttons-bar-container {
-        width: 100%;
         display: flex;
         flex-direction: row;
         align-items: center;
