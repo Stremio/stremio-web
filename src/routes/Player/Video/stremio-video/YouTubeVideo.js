@@ -92,7 +92,7 @@ var YouTubeVideo = function(containerElement) {
         width: '100%',
         playerVars: {
             autoplay: 1,
-            cc_load_policy: 0,
+            cc_load_policy: 3,
             controls: 0,
             disablekb: 1,
             enablejsapi: 1,
