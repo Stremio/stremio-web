@@ -1,14 +1,19 @@
 @import 'stremio-colors';
 
-@video-width: 340px;
-@icon-width: round((@video-width * 0.14));
+@video-width: 360px;
+@spacing: min(8px, ceil((@video-width * 0.02)));
 @progress-height: 3px;
 
 .video-container {
     width: @video-width;
 
-    .text-container {
-        min-height: round((@video-width * 0.2));
+    .poster {
+        margin: @spacing 0 @spacing @spacing;
+    }
+
+    .info-container {
+        min-height: ceil((@video-width * 0.2));
+        padding: @spacing;
 
         .title {
             font-size: 12px;
@@ -18,14 +23,23 @@
             font-size: 11px;
         }
 
-        .watched-label, .upcoming-label {
+        .upcoming-label, .watched-label {
             font-size: 10px;
             border-radius: 2px;
+        }
+
+        .upcoming-label {
+            margin-right: @spacing;
+        }
+
+        >:not(:last-child) {
+            margin-bottom: (@spacing * 0.5);
         }
     }
 
     .arrow-container {
-        width: @icon-width;
+        width: floor((@video-width * 0.07));
+        padding: @spacing @spacing @spacing 0;
     }
 
     .progress {
@@ -34,65 +48,53 @@
 }
 
 .video-container {
-    margin: 10px; //remove
     background-color: @colorglass;
 
     .flex-row-container {
         display: flex;
         flex-direction: row;
-        align-items: center;
 
-        .poster-container {
+        .poster {
             flex: 1;
             display: flex;
-            align-self: stretch;
             align-items: center;
-            justify-content: flex-end;
-
-            .poster {
-                height: 70%;
-                width: 90%;
-                background-position: center;
-                background-size: cover, auto;
-                background-repeat: no-repeat;
-            }
+            justify-content: center;
+            align-self: stretch;
+            background-position: center;
+            background-size: cover, auto;
+            background-repeat: no-repeat;
         }
 
-        .text-container {
-            flex: 2;
+        .info-container {
+            flex: 3;
             display: flex;
             flex-direction: column;
             justify-content: center;
 
-            .text-content {
-                margin: 2% 4%;
+            .title {
+                color: @colorwhite;
+                word-break: break-word;
+            }
 
-                .title {
+            .released-date {
+                color: @colorwhite60;
+            }
+
+            .label-container {
+                display: flex;
+
+                .upcoming-label, .watched-label {
+                    padding: 0 0.6em;
+                    font-weight: 600;
                     color: @colorwhite;
-                    word-break: break-word;
                 }
 
-                .released-date {
-                    color: @colorwhite60;
+                .upcoming-label {
+                    background-color: @colorsignal5;
                 }
 
-                .label-container {
-                    display: flex;
-
-                    .upcoming-label, .watched-label {
-                        padding: 0em 0.6em;
-                        font-weight: 600;
-                        color: @colorwhite;
-                    }
-
-                    .upcoming-label {
-                        margin-right: 8%;
-                        background-color: @colorsignal5;
-                    }
-
-                    .watched-label {
-                        background-color: @colorprimlight;
-                    }
+                .watched-label {
+                    background-color: @colorprimlight;
                 }
             }
         }
@@ -100,12 +102,9 @@
         .arrow-container {
             display: flex;
             align-items: center;
-            justify-content: center;
-            transform: rotate(180deg);
 
             .arrow {
-                width: 30%;
-                margin: auto;
+                width: 100%;
                 fill: @colorwhite60;
             }
         }
@@ -121,9 +120,6 @@
 
     &:hover {
         cursor: pointer;
-
-        .flex-row-container {
-            background-color: @colorwhite20;
-        }
+        background-color: @colorwhite20;
     }
 }

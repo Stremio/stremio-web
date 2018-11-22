@@ -16,9 +16,7 @@ const renderPoster = (poster) => {
     };
 
     return (
-        <div className={styles['poster-container']}>
-            <div style={imageStyle} className={styles['poster']} />
-        </div>
+        <div style={imageStyle} className={styles['poster']} />
     );
 }
 
@@ -64,6 +62,19 @@ const renderWatchedLabel = (isWatched) => {
     );
 }
 
+const renderLabels = (isUpcoming, isWatched) => {
+    if (!isWatched && !isUpcoming) {
+        return null;
+    }
+
+    return (
+        <div className={styles['label-container']}>
+            {renderUpcomingLabel(isUpcoming)}
+            {renderWatchedLabel(isWatched)}
+        </div>
+    );
+}
+
 const renderProgress = (progress) => {
     if (progress <= 0) {
         return null;
@@ -78,18 +89,13 @@ const renderProgress = (progress) => {
 
 const Video = (props) => {
     return (
-        <div onClick={props.onVideoClicked} className={classnames(styles['video-container'], { [styles['active']]: props.progress > 0 })}>
+        <div onClick={props.onVideoClicked} className={classnames(styles['video-container'], { [styles['active']]: props.progress > 0 }, props.className)}>
             <div className={styles['flex-row-container']}>
                 {renderPoster(props.poster)}
-                <div className={styles['text-container']}>
-                    <div className={styles['text-content']}>
-                        {renderTitle(props.number, props.title)}
-                        {renderReleasedDate(props.released)}
-                        <div className={styles['label-container']}>
-                            {renderUpcomingLabel(props.isUpcoming)}
-                            {renderWatchedLabel(props.isWatched)}
-                        </div>
-                    </div>
+                <div className={styles['info-container']}>
+                    {renderTitle(props.number, props.title)}
+                    {renderReleasedDate(props.released)}
+                    {renderLabels(props.isUpcoming, props.isWatched)}
                 </div>
                 <div className={styles['arrow-container']}>
                     <Icon className={styles['arrow']} icon={'ic_arrow_left'} />
@@ -101,6 +107,7 @@ const Video = (props) => {
 }
 
 Video.propTypes = {
+    className: PropTypes.string,
     poster: PropTypes.string.isRequired,
     number: PropTypes.number.isRequired,
     title: PropTypes.string.isRequired,

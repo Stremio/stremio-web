@@ -218,13 +218,27 @@ storiesOf('UserPanel', module)
     ));
 
 storiesOf('Video', module)
+    .add('poster-upcoming-watched-long-title', () => (
+        <div style={storyStyle} className={appStyles['app']}>
+            <Video
+                className={styles['video']}
+                poster={'https://www.nationalgeographic.com/content/dam/photography/rights-exempt/pod-archive-grid-wide.adapt.945.1.jpg'}
+                number={2}
+                title={'The Bing Bran Hypothesiing Bran Hypothesiing Bran Hypothesiing Bran Hypothesiing Bran Hypothesiing Bran Hypothesiing Bran Hypothesiing Bran Hypothesiing Bran Hypothesiing Bran Hypothesis'}
+                released={new Date(2018, 4, 23)}
+                isUpcoming={true}
+                isWatched={true}
+                onVideoClicked={function() { alert(8) }}
+            />
+        </div>
+    ))
     .add('poster-watched', () => (
         <div style={storyStyle} className={appStyles['app']}>
             <Video
+                className={styles['video']}
                 poster={'https://www.nationalgeographic.com/content/dam/photography/rights-exempt/pod-archive-grid-wide.adapt.945.1.jpg'}
                 number={2}
                 title={'The Bing Bran Hypothesis'}
-                duration={23}
                 isWatched={true}
                 onVideoClicked={function() { alert(8) }}
             />
@@ -233,27 +247,28 @@ storiesOf('Video', module)
     .add('no-poster-progress', () => (
         <div style={storyStyle} className={appStyles['app']}>
             <Video
+                className={styles['video']}
                 number={4}
                 title={'The Luminous Fish Effect'}
                 progress={50}
-                duration={22}
             />
         </div>
     ))
     .add('poster-progress', () => (
         <div style={storyStyle} className={appStyles['app']}>
             <Video
+                className={styles['video']}
                 poster={'5'}
                 number={5}
                 title={'The Dumpling Paradox'}
                 progress={50}
-                duration={22}
             />
         </div>
     ))
     .add('no-poster-upcoming', () => (
         <div style={storyStyle} className={appStyles['app']}>
             <Video
+                className={styles['video']}
                 number={8}
                 title={'The Loobendfeld Decay'}
                 released={new Date(2018, 4, 23)}
