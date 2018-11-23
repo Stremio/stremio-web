@@ -4,6 +4,8 @@ import classnames from 'classnames';
 import Icon from 'stremio-icons/dom';
 import styles from './styles';
 
+const MAX_DESCRIPTION_SYMBOLS = 500;
+
 const renderName = (name) => {
     if (name.length === 0) {
         return null;
@@ -42,7 +44,7 @@ const renderDescription = (description) => {
     }
 
     return (
-        <div className={styles['description']}>{description}</div>
+        <div className={styles['description']}>{description.length > MAX_DESCRIPTION_SYMBOLS ? description.slice(0, MAX_DESCRIPTION_SYMBOLS) + '...' : description}</div>
     );
 }
 
@@ -64,28 +66,26 @@ const renderUrls = (urls) => {
 
 const Addon = (props) => {
     return (
-        <div className={styles['addon-container']}>
-            <div className={styles['addon']}>
-                <div className={styles['logo-container']}>
-                    <Icon className={styles['logo']} icon={props.logo.length === 0 ? 'ic_addons' : props.logo} />
+        <div className={styles['addon']}>
+            <div className={styles['logo-container']}>
+                <Icon className={styles['logo']} icon={props.logo.length === 0 ? 'ic_addons' : props.logo} />
+            </div>
+            <div className={styles['header-container']}>
+                <div className={styles['header']}>
+                    {renderName(props.name)}
+                    {renderVersion(props.version)}
                 </div>
-                <div className={styles['header-container']}>
-                    <div className={styles['header']}>
-                        {renderName(props.name)}
-                        {renderVersion(props.version)}
-                    </div>
+            </div>
+            {renderType(props.types)}
+            {renderDescription(props.description)}
+            {renderUrls(props.urls)}
+            <div className={styles['buttons']}>
+                <div onClick={props.shareAddon} className={classnames(styles['button'], styles['share-button'])}>
+                    <Icon className={styles['icon']} icon={'ic_share'} />
+                    <span className={styles['label']}>SHARE ADD-ON</span>
                 </div>
-                {renderType(props.types)}
-                {renderDescription(props.description)}
-                {renderUrls(props.urls)}
-                <div className={styles['buttons']}>
-                    <div onClick={props.shareAddon} className={classnames(styles['button'], styles['share-button'])}>
-                        <Icon className={styles['icon']} icon={'ic_share'} />
-                        <span className={styles['label']}>SHARE ADD-ON</span>
-                    </div>
-                    <div onClick={props.onToggleClicked} className={classnames(styles['button'], props.isInstalled ? styles['install-button'] : styles['uninstall-button'])}>
-                        <span className={styles['label']}>{props.isInstalled ? 'Install' : 'Uninstall'}</span>
-                    </div>
+                <div onClick={props.onToggleClicked} className={classnames(styles['button'], props.isInstalled ? styles['install-button'] : styles['uninstall-button'])}>
+                    <span className={styles['label']}>{props.isInstalled ? 'Install' : 'Uninstall'}</span>
                 </div>
             </div>
         </div>

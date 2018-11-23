@@ -45,7 +45,7 @@ storiesOf('Addon', module)
                 version={'1.3.0'}
                 isInstalled={true}
                 types={['Channels', 'Videos']}
-                description={'Watch your favourite YouTube channels ad-free and get notiour favourite YouTube channels ad-free and get notiour favourite YouTube channels ad-free and get notiour favourite YouTube channels ad-free and get notiour favourite YouTube channels ad-free and get notified when they upload new videos.'}
+                description={'Watch your favourite YouTube channels ad-free and get notiour favourite YouTube channels ad-free and get notiour favourite YouTube channels ad-free and get notiour favourite YouTube channels ad-free and get notiour favourite YouTube channels ad-free and get notiourfavourite YouTube channels ad-free and get notiour favourite YouTube channels ad-free and get notiourfavourite YouTube channels ad-free and get notiour favourite YouTube channels ad-free and get notiour favourite YouTube channels ad-free and get notified when they upload new videos.'}
                 urls={['https://channels.strem.io/stremioget/stremio/v1', 'https://channels.strem.io/stremioget/stremio/v1']}
             />
         </div>
@@ -226,9 +226,9 @@ storiesOf('Video', module)
         <div style={storyStyle} className={appStyles['app']}>
             <Video
                 className={styles['video']}
-                poster={'https://www.nationalgeographic.com/content/dam/photography/rights-exempt/pod-archive-grid-wide.adapt.945.1.jpg'}
+                poster={'https://www.stremio.com/website/home-stremio.png'}
                 number={2}
-                title={'The Bing Bran Hypothesiing Bran Hypothesiing Bran Hypothesiing Bran Hypothesiing Bran Hypothesiing Bran Hypothesiing Bran Hypothesiing Bran Hypothesiing Bran Hypothesiing Bran Hypothesis'}
+                title={'The Bing BranHypothesiingBranHypothesiingBranHypothesiingBranHypothesiingBranHypothesiingBran Hypothesiing Bran Hypothesiing Bran Hypothesiing Bran Hypothesiing Bran Hypothesis'}
                 released={new Date(2018, 4, 23)}
                 isUpcoming={true}
                 isWatched={true}
@@ -240,7 +240,7 @@ storiesOf('Video', module)
         <div style={storyStyle} className={appStyles['app']}>
             <Video
                 className={styles['video']}
-                poster={'https://www.nationalgeographic.com/content/dam/photography/rights-exempt/pod-archive-grid-wide.adapt.945.1.jpg'}
+                poster={'https://www.stremio.com/website/home-stremio.png'}
                 number={2}
                 title={'The Bing Bran Hypothesis'}
                 isWatched={true}

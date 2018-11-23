@@ -1,7 +1,7 @@
 @import 'stremio-colors';
 
 @video-width: 360px;
-@spacing: min(8px, ceil((@video-width * 0.02)));
+@spacing: max(8px, ceil((@video-width * 0.02)));
 @progress-height: 5px;
 
 .video-container {
@@ -70,6 +70,7 @@
 
             .title {
                 color: @colorwhite;
+                word-break: break-all; //Firefox doesn't support { break-word }
                 word-break: break-word;
             }
 

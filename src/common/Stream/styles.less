@@ -1,7 +1,7 @@
 @import 'stremio-colors';
 
 @stream-width: 360px;
-@spacing: min(12px, ceil((@stream-width * 0.04)));
+@spacing: max(12px, ceil((@stream-width * 0.04)));
 @progress-height: 5px;
 
 .stream-container {
@@ -68,6 +68,7 @@
             display: flex;
             align-items: center;
             color: @colorwhite;
+            word-break: break-all; //Firefox doesn't support { break-word }
             word-break: break-word;
         }
 
