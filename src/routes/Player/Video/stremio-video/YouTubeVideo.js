@@ -1,6 +1,8 @@
 var EventEmitter = require('events');
 
 var YouTubeVideo = function(containerElement) {
+    var videoElement = document.createElement('div');
+    containerElement.appendChild(videoElement);
     var events = new EventEmitter();
     var ready = false;
     var observedProps = {};
@@ -87,7 +89,7 @@ var YouTubeVideo = function(containerElement) {
                 break;
         }
     };
-    var video = new YT.Player(containerElement, {
+    var video = new YT.Player(videoElement, {
         height: '100%',
         width: '100%',
         playerVars: {
@@ -174,8 +176,8 @@ var YouTubeVideo = function(containerElement) {
                 case 'load':
                     if (ready) {
                         video.loadVideoById({
-                            videoId: arguments[2].source,
-                            startSeconds: isNaN(arguments[2].time) ? 0 : arguments[2].time / 1000
+                            videoId: arguments[2].ytId,
+                            startSeconds: isNaN(arguments[3].time) ? 0 : arguments[3].time / 1000
                         });
                     }
                     break;

@@ -1,6 +1,10 @@
 var EventEmitter = require('events');
 
-var HTMLVideo = function(videoElement) {
+var HTMLVideo = function(containerElement) {
+    var videoElement = document.createElement('video');
+    videoElement.style.width = '100%';
+    videoElement.style.height = '100%';
+    containerElement.appendChild(videoElement);
     var events = new EventEmitter();
     var onEnded = function() {
         events.emit('ended');
@@ -101,10 +105,10 @@ var HTMLVideo = function(videoElement) {
         } else if (arguments[0] === 'command') {
             switch (arguments[1]) {
                 case 'load':
-                    videoElement.src = arguments[2].source;
+                    videoElement.src = arguments[2].url;
                     videoElement.autoplay = true;
-                    if (!isNaN(arguments[2].time)) {
-                        videoElement.currentTime = arguments[2].time / 1000;
+                    if (!isNaN(arguments[3].time)) {
+                        videoElement.currentTime = arguments[3].time / 1000;
                     }
 
                     videoElement.load();
