@@ -62,10 +62,10 @@ class Popup extends Component {
         const menuRect = this.menuRef.current.getBoundingClientRect();
         const labelRect = this.labelRef.current.getBoundingClientRect();
         const labelPosition = {
-            left: labelRect.x,
-            top: labelRect.y,
-            right: bodyRect.width - (labelRect.x + labelRect.width),
-            bottom: bodyRect.height - (labelRect.y + labelRect.height)
+            left: labelRect.x - bodyRect.x,
+            top: labelRect.y - bodyRect.y,
+            right: (bodyRect.width + bodyRect.x) - (labelRect.x + labelRect.width),
+            bottom: (bodyRect.height + bodyRect.y) - (labelRect.y + labelRect.height)
         };
 
         if (menuRect.height <= labelPosition.bottom) {
