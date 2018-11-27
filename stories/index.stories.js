@@ -215,7 +215,7 @@ storiesOf('UserPanel', module)
         <div style={storyStyle} className={appStyles['app']}>
             <UserPanel
                 resizeWindow={function() { alert('asdas') }}
-                photo={'https://image.freepik.com/free-vector/wild-animals-cartoon_1196-361.jpg'}
+                avatar={'https://www.stremio.com/website/home-stremio.png'}
                 email={'animals@mail.com'}
             />
         </div>

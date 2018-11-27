@@ -1,71 +1,117 @@
 @import 'stremio-colors';
+
+@user-panel-width: 260px;
+@spacing: max(16px, ceil((@user-panel-width * 0.06)));
+
 .user-panel {
-    width: 260px;
-    background-color: @colordarkest;
+    width: @user-panel-width;
+
     .user-info {
-        display: flex;
-        padding: 15px;
-        align-items: center;
-        .profile-picture {
-            height: 50px;
-            width: 50px;
-            margin-right: 14px;
+        grid-template-columns: round((@user-panel-width * 0.2)) auto;
+        grid-template-rows: round((@user-panel-width * 0.1)) round((@user-panel-width * 0.1));
+        padding: @spacing;
+    }
+
+    .option {
+        padding: @spacing;
+
+        .icon {
+            width: floor((@user-panel-width * 0.08));
+            height: floor((@user-panel-width * 0.08));
+            margin-right: @spacing;
+        }
+    }
+
+    .options {
+        padding: @spacing 0;
+    }
+
+    .footer {
+        padding: @spacing 0;
+
+        .label {
+            padding: round((@spacing * 0.6)) (2 * round((@spacing * 0.6)));
+        }
+    }
+
+    >:not(:last-child) {
+        border-bottom-width: 1px;
+    }
+}
+
+.user-panel {
+    background-color: @colordarkest;
+
+    .user-info {
+        display: grid;
+        grid-template-areas:
+            "avatar email"
+            "avatar logout";
+
+        .avatar {
+            grid-area: avatar;
             border-radius: 50%;
             background-size: cover, auto;
             background-position: center;
             background-repeat: no-repeat;
         }
+
         .email {
+            grid-area: email;
+            align-self: center;
             color: @colorwhite;
-            width: 160px;
+            margin-left: @spacing;
             overflow: hidden;
             white-space: pre;
             text-overflow: ellipsis;
         }
+
         .log-out {
-            color: @colorwhite40;
+            grid-area: logout;
+            align-self: center;
+            color: @colorneutral;
+            margin-left: @spacing;
+
             &:hover {
                 cursor: pointer;
                 color: @colorwhite;
             }
         }
     }
-    .fullscreen-option {
-        border-top: 1px solid @colorwhite20;
-        border-bottom: 1px solid @colorwhite20;
-    }
-    .fullscreen-option, .settings-option, .addons-option, .magnet-option, .help-option {
+
+    .option {
         display: flex;
-        padding: 15px;
         align-items: center;
         color: @colorwhite80;
-        .fullscreen-icon, .settings-icon, .addons-icon, .magnet-icon, .help-icon {
-            height: 20px;
-            width: 20px;
-            margin-right: 12px;
+
+        .icon {
             fill: @coloraccent;
         }
+
         &:hover {
             cursor: pointer;
             color: @colorwhite;
             background-color: @coloraccent20;
         }
     }
-    .options, .footer {
-        padding: 15px 0px;
-    }
+
     .footer {
         display: flex;
         flex-direction: column;
-        border-top: 1px solid @colorwhite20;
-        .terms-label, .about-label {
-            padding: 10px 20px;
+
+        .label {
             color: @colorwhite80;
+
             &:hover {
                 cursor: pointer;
                 color: @colorwhite;
                 background-color: @coloraccent20;
             }
         }
+    }
+
+    >:not(:last-child) {
+        border-bottom-style: solid;
+        border-bottom-color: @colorneutral;
     }
 }
