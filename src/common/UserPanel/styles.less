@@ -7,8 +7,8 @@
     width: @user-panel-width;
 
     .user-info {
-        grid-template-columns: round((@user-panel-width * 0.2)) auto;
-        grid-template-rows: round((@user-panel-width * 0.1)) round((@user-panel-width * 0.1));
+        grid-template-columns: ceil((@user-panel-width * 0.2)) auto;
+        grid-template-rows: ceil((@user-panel-width * 0.1)) ceil((@user-panel-width * 0.1));
         padding: @spacing;
     }
 
@@ -30,7 +30,7 @@
         padding: @spacing 0;
 
         .label {
-            padding: round((@spacing * 0.6)) (2 * round((@spacing * 0.6)));
+            padding: ceil((@spacing * 0.6)) (2 * ceil((@spacing * 0.6)));
         }
     }
 
