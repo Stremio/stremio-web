@@ -211,7 +211,22 @@ storiesOf('Stream', module)
     ));
 
 storiesOf('UserPanel', module)
-    .add('user panel', () => (
+    .add('anonymous', () => (
+        <div style={storyStyle} className={appStyles['app']}>
+            <UserPanel
+                resizeWindow={function() { alert('asdas') }}
+            />
+        </div>
+    ))
+    .add('without avatar', () => (
+        <div style={storyStyle} className={appStyles['app']}>
+            <UserPanel
+                resizeWindow={function() { alert('asdas') }}
+                email={'animals@mail.com'}
+            />
+        </div>
+    ))
+    .add('with avatar', () => (
         <div style={storyStyle} className={appStyles['app']}>
             <UserPanel
                 resizeWindow={function() { alert('asdas') }}

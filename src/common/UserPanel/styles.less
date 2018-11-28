@@ -22,20 +22,12 @@
         }
     }
 
-    .options {
-        padding: @spacing 0;
+    .label {
+        padding: ceil((@spacing * 0.6)) (2 * ceil((@spacing * 0.6)));
     }
 
-    .footer {
-        padding: @spacing 0;
-
-        .label {
-            padding: ceil((@spacing * 0.6)) (2 * ceil((@spacing * 0.6)));
-        }
-    }
-
-    >:not(:last-child) {
-        border-bottom-width: 1px;
+    .separator {
+        height: 1px;
     }
 }
 
@@ -51,16 +43,17 @@
         .avatar {
             grid-area: avatar;
             border-radius: 50%;
-            background-size: cover, auto;
+            background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
         }
 
         .email {
             grid-area: email;
-            align-self: center;
+            display: flex;
+            align-items: center;
             color: @colorwhite;
-            margin-left: @spacing;
+            padding-left: @spacing;
             overflow: hidden;
             white-space: pre;
             text-overflow: ellipsis;
@@ -68,9 +61,13 @@
 
         .log-out {
             grid-area: logout;
-            align-self: center;
+            display: flex;
+            align-items: center;
             color: @colorneutral;
-            margin-left: @spacing;
+            padding-left: @spacing;
+            overflow: hidden;
+            white-space: pre;
+            text-overflow: ellipsis;
 
             &:hover {
                 cursor: pointer;
@@ -95,23 +92,7 @@
         }
     }
 
-    .footer {
-        display: flex;
-        flex-direction: column;
-
-        .label {
-            color: @colorwhite80;
-
-            &:hover {
-                cursor: pointer;
-                color: @colorwhite;
-                background-color: @coloraccent20;
-            }
-        }
-    }
-
-    >:not(:last-child) {
-        border-bottom-style: solid;
-        border-bottom-color: @colorneutral;
+    .separator {
+        background-color: @colorneutral;
     }
 }
