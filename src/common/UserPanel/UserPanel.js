@@ -27,7 +27,7 @@ const UserPanel = (props) => {
             <div className={styles['user-info']}>
                 {renderAvatar(props.avatar, props.email)}
                 {renderEmail(props.email)}
-                <div onClick={props.email.length === 0 ? props.login : props.logout} className={styles['logging']}>{props.email.length === 0 ? 'Log in' : 'Log out'}</div>
+                <div onClick={props.email.length === 0 ? props.login : props.logout} className={styles['login-logout']}>{props.email.length === 0 ? 'Log in' : 'Log out'}</div>
             </div>
             <div className={styles['separator']}></div>
             <div onClick={props.resizeWindow} className={styles['option']}>
