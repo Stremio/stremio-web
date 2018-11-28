@@ -11,7 +11,7 @@ const renderUrl = (copyToClipboard, url) => {
 
     return (
         <div className={styles['url-container']}>
-            <input className={styles['url']} defaultValue={url} readOnly />
+            <input className={styles['url']} defaultValue={url} readOnly={true} />
             <span onClick={copyToClipboard} className={styles['copy-label']}>
                 <Icon className={styles['copy-icon']} icon={'ic_link'} />Copy
             </span>

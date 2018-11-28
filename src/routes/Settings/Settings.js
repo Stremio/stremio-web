@@ -1,91 +1,117 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import Icon from 'stremio-icons/dom';
+import classnames from 'classnames';
 import styles from './styles';
+import { Checkbox } from 'stremio-common';
+
+const SETTINGS_MENUS = {
+    PLAYER_MENU: 1,
+    LANGUAGE_MENU: 2,
+    ACCOUNT_MENU: 3,
+    NOTIFICATIONS_MENU: 4,
+    DATA_MENU: 5
+};
 
 class Settings extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            selectedMenu: 'player_preferences',
-            selectedMenuId: 0
-        }
+            selectedMenu: SETTINGS_MENUS.PLAYER_MENU,
+            decodingEnabled: false,
+            autoplayEnabled: false,
+            dataSaverEnabled: false
+        };
     }
 
-    changeSettings = (selectedMenu, id) => {
-        this.setState({ selectedMenu, selectedMenuId: id });
+    changeSelectedMenu = (selectedMenu) => {
+        this.setState({ selectedMenu });
     }
 
-    renderPlayerPreferences = () => {
-        const preferences = ["Hardware-accelerated decoding", "Auto-play next episode", "Data saver"];
+    toggleDecoding = () => {
+        this.setState(({ decodingEnabled }) => {
+            return { decodingEnabled: !decodingEnabled }
+        });
+    }
 
+    toggleAutoPlay = () => {
+        this.setState(({ autoplayEnabled }) => {
+            return { autoplayEnabled: !autoplayEnabled }
+        });
+    }
+
+    toggleDataSaver = () => {
+        this.setState(({ dataSaverEnabled }) => {
+            return { dataSaverEnabled: !dataSaverEnabled }
+        });
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        return nextState.decodingEnabled !== this.state.decodingEnabled ||
+            nextState.autoplayEnabled !== this.state.autoplayEnabled ||
+            nextState.dataSaverEnabled !== this.state.dataSaverEnabled ||
+            nextState.selectedMenu !== this.state.selectedMenu;
+    }
+
+    renderPlayerSettings = () => {
         return (
-            <div className={styles['player-preferences-menu']}>
-                {preferences.map((item, key) => {
-                    return (
-                        <label key={key} className={styles['preference-container']}>
-                            <input type='checkbox' className={styles['default-checkbox']} />
-                            <span className={styles['preference']}>{item}</span>
-                            <p className={styles['checkbox']}>
-                                <Icon className={styles['checkmark']} icon={'ic_check'} />
-                            </p>
-                        </label>
-                    );
-                })}
+            <div className={styles['settings-list']}>
+                <div className={styles['settings-section']}>
+                    <label className={styles['toggle-option']}>
+                        <span className={styles['preference']}>Hardware-accelerated decoding</span>
+                        <Checkbox className={styles['checkbox-size']} checked={this.state.decodingEnabled} enabled={true} onClick={this.toggleDecoding} />
+                    </label>
+                    <label className={styles['toggle-option']}>
+                        <span className={styles['preference']}>Auto-play next episode</span>
+                        <Checkbox className={styles['checkbox-size']} checked={!this.state.autoplayEnabled} enabled={true} onClick={this.toggleAutoPlay} />
+                    </label>
+                    <label className={styles['toggle-option']}>
+                        <span className={styles['preference']}>Data saver</span>
+                        <Checkbox className={styles['checkbox-size']} checked={this.state.dataSaverEnabled} enabled={true} onClick={this.toggleDataSaver} />
+                    </label>
+                </div>
             </div>
         );
     }
 
-    renderLanguage = () => {
+    renderLanguageSettings = () => {
         return (
-            <div className={styles['language-menu']}>
-                <div className={styles['interface-language']}>
-                    <span className={styles['headline']}>INTERFACE LANGUAGE</span>
-                    <div className={styles['name']}>English
-                        <Icon className={styles['arrow-down']} icon={'ic_arrow_down'} />
-                    </div>
-                </div>
-                <div className={styles['default-subtitles-language']}>
-                    <span className={styles['headline']}>DEFAULT SUBTITLES LANGUAGE</span>
-                    <div className={styles['name']}>Portugese - BR
-                        <Icon className={styles['arrow-down']} icon={'ic_arrow_down'} />
-                    </div>
-                </div>
+            <div className={styles['settings-list']}>
+                <select className={styles['settings-section']}>
+                    <option value={'English'}>English</option>
+                    <option value={'Portugese'}>Portugese</option>
+                    <option value={'Deutch'}>Deutch</option>
+                </select>
+                <select className={styles['settings-section']}>
+                    <option value={'English'}>English</option>
+                    <option value={'Portugese'}>Portugese</option>
+                    <option value={'Deutch'}>Deutch</option>
+                </select>
             </div>
         );
     }
 
     renderSelectedMenu = () => {
-        const { selectedMenuId } = this.state;
-
-        if (selectedMenuId == 0) {
-            this.selectedMenu = 'player-preferences';
-            return (
-                <div> {this.renderPlayerPreferences()} </div>
-            );
-        } else if (selectedMenuId == 1) {
-            this.selectedMenu = 'language';
-            return (
-                <div>{this.renderLanguage()} </div>
-            );
+        switch (this.state.selectedMenu) {
+            case SETTINGS_MENUS.PLAYER_MENU:
+                return this.renderPlayerSettings();
+            case SETTINGS_MENUS.LANGUAGE_MENU:
+                return this.renderLanguageSettings();
+            default:
+                return null;
         }
     }
 
     render() {
-        const { selectedMenu } = this.state;
-        const options = ["Player Preferences", "Language", "Account Settings", "Notifications", "Data Caching"];
-
         return (
-            <div className={styles['settings']}>
-                <div className={styles['options']}>
-                    {options.map((key, index) =>
-                        <div key={key} className={styles[index === this.state.selectedMenuId ? 'selected-menu' : 'option']} onClick={() => this.changeSettings(selectedMenu, index)}>{options[index]}</div>
+            <div className={styles['settings-container']}>
+                <div className={styles['side-menu']}>
+                    {Object.keys(SETTINGS_MENUS).map((menu) =>
+                        <div key={menu} className={classnames(styles['menu-option'], { [styles['selected']]: this.state.selectedMenu === SETTINGS_MENUS[menu] })} onClick={() => this.changeSelectedMenu(SETTINGS_MENUS[menu])}>{menu}</div>
                     )}
                 </div>
                 {this.renderSelectedMenu()}
             </div>
-        )
+        );
     }
 }
 

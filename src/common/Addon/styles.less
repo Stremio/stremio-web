@@ -1,83 +1,189 @@
 @import 'stremio-colors';
+
+@addon-width: 514px;
+@logo-width: floor((@addon-width * 0.2));
+
 .addon {
-    width: 550px;
-    padding: 18px;
-    font-size: 12px;
-    color: @colorwhite;
-    font-family: LatoLight;
-    background-color: @colorglass;
-    .info-container {
-        height: 80px;
-        display: flex;
-        margin-bottom: 26px;
-        .logo-container {
-            width: 80px;
-            height: 80px;
-            display: flex;
-            margin-right: 14px;
-            background-color: @colordarkest;
-            .logo {
-                width: 40px;
-                margin: auto;
-                fill: @colorwhite;
-            }
+    width: @addon-width;
+    grid-template-rows: floor((@logo-width * 0.25)) floor((@logo-width * 0.20)) auto auto ceil((@addon-width * 0.08));
+
+    .logo {
+        width: @logo-width;
+        height: @logo-width;
+    }
+
+    .name {
+        font-size: 20px;
+    }
+
+    .type {
+        font-size: 12px;
+    }
+
+    .description {
+        font-size: 12px;
+    }
+
+    .urls-container {
+        font-size: 12px;
+    }
+
+    .button {
+        border-width: 2px;
+
+        .label {
+            font-size: 14px;
         }
-        .info {
-            width: 420px;
+    }
+}
+
+.addon {
+    display: grid;
+    padding: 2%;
+    background-color: @colorglass;
+    grid-template-columns: 1fr 4fr;
+    grid-template-areas:
+        "logo header"
+        "logo type"
+        "logo description"
+        "urls urls"
+        "buttons buttons";
+
+    .logo-container {
+        grid-area: logo;
+
+        .logo {
+            padding: 20%;
+            fill: @colorwhite;
+            background-color: @colordarkest;
+        }
+    }
+
+    .header-container {
+        grid-area: header;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+        padding-left: 4%;
+
+        .header {
+            width: 100%;
+            display: flex;
+            align-items: baseline;
+
             .name {
-                font-size: 20px;
-                margin-right: 10px;
+                max-width: 80%;
+                margin-right: 3%;
+                color: @colorwhite;
+                overflow: hidden;
+                white-space: pre;
+                text-overflow: ellipsis;
             }
+
             .version {
-                margin-right: 10px;
+                flex: 1;
                 color: @colorwhite60;
-            }
-            .type {
-                color: @coloraccent;
-            }
-            .type, .description {
-                margin-top: 2px;
+                overflow: hidden;
+                white-space: pre;
+                text-overflow: ellipsis;
             }
         }
     }
-    .urls-container {
+
+    .type {
+        grid-area: type;
         display: flex;
-        flex-direction: column;
+        align-items: center;
+        padding-left: 4%;
+        color: @coloraccent;
+    }
+
+    .description {
+        grid-area: description;
+        padding-left: 4%;
+        color: @colorwhite;
+        word-break: break-all; //Firefox doesn't support { break-word }
+        word-break: break-word;
+    }
+
+    .urls-container {
+        grid-area: urls;
+        padding: 4% 0%;
+        overflow: auto;
+        word-break: break-all;
+
         .url {
             color: @colorwhite60;
         }
     }
+
     .buttons {
+        grid-area: buttons;
         display: flex;
-        margin-top: 26px;
+        align-items: stretch;
         justify-content: space-between;
-        .share-container {
-            border: 2px solid @coloraccent;
-            .share-icon {
-                width: 18px;
-                margin-right: 6px;
-                fill: @coloraccent;
-            }
-            .share-label {
-                color: @coloraccent;
-            }
-        }
-        .share-container, .install-label, .uninstall-label {
-            width: 230px;
-            display: flex;
+
+        .button {
+            width: 46%;
             cursor: pointer;
-            font-weight: 600;
-            font-size: larger;
-            padding: 10px 0px;
+            display: flex;
             align-items: center;
             justify-content: center;
-        }
-        .install-label {
-            border: 2px solid @colorsignal5;
-            background-color: @colorsignal5;
-        }
-        .uninstall-label {
-            border: 2px solid @colorwhite20;
+            border-style: solid;
+
+            .icon {
+                width: 7%;
+                margin-right: 2%;
+            }
+
+            .label {
+                color: @colorwhite;
+            }
+
+            &.share-button {
+                border-color: @coloraccent;
+
+                .icon {
+                    fill: @coloraccent;
+                }
+
+                .label {
+                    color: @coloraccent;
+                }
+
+                &:hover {
+                    background-color: @coloraccent;
+
+                    .icon {
+                        fill: @colorwhite;
+                    }
+
+                    .label {
+                        color: @colorwhite;
+                    }
+                }
+            }
+
+            &.install-button {
+                border-color: @colorsignal5;
+                background-color: @colorsignal5;
+
+                &:hover {
+                    background-color: @colorsignal580;
+                }
+            }
+
+            &.uninstall-button {
+                border-color: @colorneutral;
+
+                &:hover {
+                    background-color: @colorneutral;
+                }
+            }
+
+            &:hover {
+                border: none;
+            }
         }
     }
 }
