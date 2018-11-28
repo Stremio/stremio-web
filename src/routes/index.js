@@ -5,6 +5,7 @@ import Discover from './Discover';
 import Library from './Library';
 import Calendar from './Calendar';
 import Search from './Search';
+import Settings from './Settings';
 
 export {
     Addons,
@@ -13,5 +14,6 @@ export {
     Discover,
     Library,
     Calendar,
-    Search
+    Search,
+    Settings
 };

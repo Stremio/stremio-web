@@ -1,0 +1,189 @@
+@import 'stremio-colors';
+
+@addon-width: 514px;
+@logo-width: floor((@addon-width * 0.2));
+
+.addon {
+    width: @addon-width;
+    grid-template-rows: floor((@logo-width * 0.25)) floor((@logo-width * 0.20)) auto auto ceil((@addon-width * 0.08));
+
+    .logo {
+        width: @logo-width;
+        height: @logo-width;
+    }
+
+    .name {
+        font-size: 20px;
+    }
+
+    .type {
+        font-size: 12px;
+    }
+
+    .description {
+        font-size: 12px;
+    }
+
+    .urls-container {
+        font-size: 12px;
+    }
+
+    .button {
+        border-width: 2px;
+
+        .label {
+            font-size: 14px;
+        }
+    }
+}
+
+.addon {
+    display: grid;
+    padding: 2%;
+    background-color: @colorglass;
+    grid-template-columns: 1fr 4fr;
+    grid-template-areas:
+        "logo header"
+        "logo type"
+        "logo description"
+        "urls urls"
+        "buttons buttons";
+
+    .logo-container {
+        grid-area: logo;
+
+        .logo {
+            padding: 20%;
+            fill: @colorwhite;
+            background-color: @colordarkest;
+        }
+    }
+
+    .header-container {
+        grid-area: header;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+        padding-left: 4%;
+
+        .header {
+            width: 100%;
+            display: flex;
+            align-items: baseline;
+
+            .name {
+                max-width: 80%;
+                margin-right: 3%;
+                color: @colorwhite;
+                overflow: hidden;
+                white-space: pre;
+                text-overflow: ellipsis;
+            }
+
+            .version {
+                flex: 1;
+                color: @colorwhite60;
+                overflow: hidden;
+                white-space: pre;
+                text-overflow: ellipsis;
+            }
+        }
+    }
+
+    .type {
+        grid-area: type;
+        display: flex;
+        align-items: center;
+        padding-left: 4%;
+        color: @coloraccent;
+    }
+
+    .description {
+        grid-area: description;
+        padding-left: 4%;
+        color: @colorwhite;
+        word-break: break-all; //Firefox doesn't support { break-word }
+        word-break: break-word;
+    }
+
+    .urls-container {
+        grid-area: urls;
+        padding: 4% 0%;
+        overflow: auto;
+        word-break: break-all;
+
+        .url {
+            color: @colorwhite60;
+        }
+    }
+
+    .buttons {
+        grid-area: buttons;
+        display: flex;
+        align-items: stretch;
+        justify-content: space-between;
+
+        .button {
+            width: 46%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-style: solid;
+
+            .icon {
+                width: 7%;
+                margin-right: 2%;
+            }
+
+            .label {
+                color: @colorwhite;
+            }
+
+            &.share-button {
+                border-color: @coloraccent;
+
+                .icon {
+                    fill: @coloraccent;
+                }
+
+                .label {
+                    color: @coloraccent;
+                }
+
+                &:hover {
+                    background-color: @coloraccent;
+
+                    .icon {
+                        fill: @colorwhite;
+                    }
+
+                    .label {
+                        color: @colorwhite;
+                    }
+                }
+            }
+
+            &.install-button {
+                border-color: @colorsignal5;
+                background-color: @colorsignal5;
+
+                &:hover {
+                    background-color: @colorsignal580;
+                }
+            }
+
+            &.uninstall-button {
+                border-color: @colorneutral;
+
+                &:hover {
+                    background-color: @colorneutral;
+                }
+            }
+
+            &:hover {
+                border: none;
+            }
+        }
+    }
+}

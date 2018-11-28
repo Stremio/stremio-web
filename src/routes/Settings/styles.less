@@ -1,0 +1,68 @@
+@import 'stremio-colors';
+
+.settings-container {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    color: @colorwhite60;
+
+    .side-menu {
+        width: 240px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        font-size: 14px;
+        background: @colordarkest;
+
+        .menu-option {
+            padding: 14px;
+            font-weight: 600;
+
+            &:hover, &.selected {
+                cursor: pointer;
+                color: @colorwhite;
+                background: @colorglass;
+            }
+        }
+    }
+
+    .settings-list {
+        width: 280px;
+        margin: 40px 50px;
+
+        .settings-section {
+            display: flex;
+            flex-direction: column;
+
+            .toggle-option {
+                display: flex;
+                cursor: pointer;
+                margin-bottom: 30px;
+                align-items: center;
+
+                .preference {
+                    flex: 1;
+                    white-space: pre;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+
+                .checkbox-size {
+                    height: 16px;
+                    width: 16px;
+                }
+
+                &:hover {
+                    .preference {
+                        color: @colorwhite;
+                    }
+                }
+            }
+
+            &:not(:last-child) {
+                margin-bottom: 30px;
+                border-bottom: 1px solid @colormedium;
+            }
+        }
+    }
+}

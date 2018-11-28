@@ -4,6 +4,13 @@ import NavBar from './NavBar';
 import Modal from './Modal';
 import MetadataItem from './MetadataItem';
 import Router from './Router';
+import Stream from './Stream';
+import Video from './Video';
+import LibraryItemList from './LibraryItemList';
+import MetaItem from './MetaItem';
+import Addon from './Addon';
+import ShareAddon from './ShareAddon';
+import UserPanel from './UserPanel';
 
 export {
     Checkbox,
@@ -11,5 +18,12 @@ export {
     NavBar,
     Modal,
     MetadataItem,
-    Router
+    Router,
+    Stream,
+    Video,
+    LibraryItemList,
+    MetaItem,
+    Addon,
+    ShareAddon,
+    UserPanel,
 };

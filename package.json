@@ -7,13 +7,15 @@
     "private": true,
     "scripts": {
         "start": "webpack-dev-server --mode development --hot",
-        "build": "webpack --mode production"
+        "build": "webpack --mode production",
+        "storybook": "start-storybook -s ./ -p 6006",
+        "build-storybook": "build-storybook"
     },
     "dependencies": {
         "classnames": "2.2.6",
         "prop-types": "15.6.1",
-        "react": "16.4.1",
-        "react-dom": "16.4.1",
+        "react": "^16.4.1",
+        "react-dom": "^16.4.1",
         "react-router": "4.3.1",
         "react-router-dom": "4.3.1",
         "stremio-addon-client": "git+ssh://git@github.com/Stremio/stremio-addon-client.git#v1.5.1",
@@ -28,7 +30,8 @@
         "stremio-translations": "git+ssh://git@github.com/Stremio/stremio-translations.git#v1.41.0"
     },
     "devDependencies": {
-        "babel-core": "6.26.3",
+        "@storybook/react": "^3.4.11",
+        "babel-core": "^6.26.3",
         "babel-loader": "7.1.4",
         "babel-plugin-transform-class-properties": "6.24.1",
         "babel-plugin-transform-object-rest-spread": "6.26.0",
@@ -42,8 +45,12 @@
         "postcss-loader": "2.1.5",
         "style-loader": "0.21.0",
         "uglifyjs-webpack-plugin": "1.2.7",
-        "webpack": "4.14.0",
+        "webpack": "^4.20.2",
         "webpack-cli": "3.0.8",
-        "webpack-dev-server": "3.1.4"
+        "webpack-dev-server": "3.1.4",
+        "@storybook/addon-actions": "^3.4.11",
+        "@storybook/addon-links": "^3.4.11",
+        "@storybook/addons": "^3.4.11",
+        "babel-runtime": "^6.26.0"
     }
 }

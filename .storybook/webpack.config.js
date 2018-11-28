@@ -1,13 +1,7 @@
 const path = require('path');
-const HtmlWebPackPlugin = require('html-webpack-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-    entry: './src/index.js',
     output: {
-        path: path.join(__dirname, 'dist'),
-        filename: 'bundle.js',
         publicPath: '/'
     },
     module: {
@@ -15,8 +9,8 @@ module.exports = {
             {
                 test: /\.js$/,
                 include: [
-                    path.resolve(__dirname, 'src'),
-                    path.resolve(__dirname, 'node_modules/stremio-icons/dom')
+                    path.resolve(__dirname, '../src'),
+                    path.resolve(__dirname, '../node_modules/stremio-icons/dom')
                 ],
                 use: {
                     loader: 'babel-loader'
@@ -53,8 +47,8 @@ module.exports = {
                             noIeCompat: true,
                             compress: true,
                             paths: [
-                                path.resolve(__dirname, 'node_modules/stremio-colors'),
-                                path.resolve(__dirname, 'src/common')
+                                path.resolve(__dirname, '../node_modules/stremio-colors'),
+                                path.resolve(__dirname, '../src/common')
                             ]
                         }
                     }
@@ -65,33 +59,9 @@ module.exports = {
     resolve: {
         extensions: ['.js', '.json', '.less'],
         alias: {
-            'stremio-common': path.resolve(__dirname, 'src/common'),
-            'stremio-routes': path.resolve(__dirname, 'src/routes'),
-            'stremio-services': path.resolve(__dirname, 'src/services')
+            'stremio-common': path.resolve(__dirname, '../src/common'),
+            'stremio-routes': path.resolve(__dirname, '../src/routes'),
+            'stremio-services': path.resolve(__dirname, '../src/services')
         }
-    },
-    devServer: {
-        host: '0.0.0.0'
-    },
-    plugins: [
-        new HtmlWebPackPlugin({
-            template: './src/index.html'
-        }),
-        new UglifyJsPlugin({
-            test: /\.js$/,
-            uglifyOptions: {
-                mangle: true,
-                output: {
-                    ecma: 5,
-                    comments: false,
-                    beautify: false,
-                    wrap_iife: true
-                }
-            }
-        }),
-        new CopyWebpackPlugin([
-            { from: 'images', to: 'images' },
-            { from: 'fonts', to: 'fonts' }
-        ])
-    ]
+    }
 };
