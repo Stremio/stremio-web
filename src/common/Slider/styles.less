@@ -6,13 +6,10 @@
 
     .line {
         position: absolute;
-        z-index: 1;
         background-color: @colorprim;
     }
 
     .thumb {
-        position: absolute;
-        z-index: 2;
         border-radius: 50%;
         background-color: @colormedium;
         transition-duration: 0.06s;
@@ -32,7 +29,7 @@
 
         .thumb {
             transform: translateX(-50%);
-            transition-property: left;
+            transition-property: margin-left;
         }
     }
 
@@ -46,7 +43,7 @@
 
         .thumb {
             transform: translateY(50%);
-            transition-property: top;
+            transition-property: margin-top;
         }
     }
 

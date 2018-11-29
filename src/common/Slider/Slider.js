@@ -84,7 +84,7 @@ class Slider extends Component {
     }
 
     render() {
-        const thumbStartProp = this.props.orientation === 'horizontal' ? 'left' : 'bottom';
+        const thumbStartProp = this.props.orientation === 'horizontal' ? 'marginLeft' : 'marginBottom';
         const thumbStart = (this.props.value - this.props.minimumValue) / (this.props.maximumValue - this.props.minimumValue);
         return (
             <div className={classnames(styles['slider-container'], styles[this.props.orientation], this.props.containerClassName)} onMouseDown={this.onStartSliding}>
