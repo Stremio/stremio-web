@@ -14,8 +14,7 @@ class Slider extends Component {
         return nextProps.value !== this.props.value ||
             nextProps.minimumValue !== this.props.minimumValue ||
             nextProps.maximumValue !== this.props.maximumValue ||
-            nextProps.containerClassName !== this.props.containerClassName ||
-            nextProps.thumbClassName !== this.props.thumbClassName;
+            nextProps.className !== this.props.className;
     }
 
     onSlide = (...args) => {
@@ -84,23 +83,19 @@ class Slider extends Component {
     }
 
     render() {
-        const thumbStartProp = this.props.orientation === 'horizontal' ? 'marginLeft' : 'marginBottom';
+        const thumbStartProp = this.props.orientation === 'horizontal' ? 'left' : 'bottom';
         const thumbStart = (this.props.value - this.props.minimumValue) / (this.props.maximumValue - this.props.minimumValue);
         return (
-            <div className={classnames(styles['slider-container'], styles[this.props.orientation], this.props.containerClassName)} onMouseDown={this.onStartSliding}>
+            <div className={classnames(styles['slider-container'], styles[this.props.orientation], this.props.className)} onMouseDown={this.onStartSliding}>
                 <div className={styles['line']} />
-                <div
-                    className={classnames(styles['thumb'], this.props.thumbClassName)}
-                    style={{ [thumbStartProp]: `calc(100% * ${thumbStart})` }}
-                />
+                <div className={styles['thumb']} style={{ [thumbStartProp]: `calc(100% * ${thumbStart})` }} />
             </div>
         );
     }
 }
 
 Slider.propTypes = {
-    containerClassName: PropTypes.string,
-    thumbClassName: PropTypes.string,
+    className: PropTypes.string,
     value: PropTypes.number.isRequired,
     minimumValue: PropTypes.number.isRequired,
     maximumValue: PropTypes.number.isRequired,

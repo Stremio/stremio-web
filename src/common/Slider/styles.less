@@ -2,20 +2,31 @@
 
 .slider-container {
     position: relative;
+    z-index: 0;
+    min-width: var(--thumb-size);
+    min-height: var(--thumb-size);
     cursor: pointer;
 
     .line {
         position: absolute;
+        z-index: 1;
         background-color: @colorprim;
     }
 
     .thumb {
-        border-radius: 50%;
-        background-color: @colormedium;
+        position: absolute;
+        z-index: 2;
+        width: var(--thumb-size);
+        height: var(--thumb-size);
         transition-duration: 0.06s;
 
-        &:hover {
-            background-color: @colorprimlight;
+        &::after {
+            display: block;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-color: @colormedium;
+            content: "";
         }
     }
 
@@ -28,8 +39,11 @@
         }
 
         .thumb {
-            transform: translateX(-50%);
-            transition-property: margin-left;
+            transition-property: left;
+
+            &::after {
+                margin-left: calc(-0.5 * var(--thumb-size));
+            }
         }
     }
 
@@ -42,14 +56,19 @@
         }
 
         .thumb {
-            transform: translateY(50%);
-            transition-property: margin-top;
+            transition-property: bottom;
+
+            &::after {
+                margin-top: calc(0.5 * var(--thumb-size));
+            }
         }
     }
 
-    &.active {
+    &:hover, &.active {
         .thumb {
-            background-color: @colorprimlight;
+            &::after {
+                background-color: @colorprimlight;
+            }
         }
     }
 }
