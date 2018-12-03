@@ -5,46 +5,33 @@
     .scroll-container {
         overflow: auto;
     }
+}
 
-    .border {
-        position: absolute;
-        border: 0 solid transparent;
-        pointer-events: none;
+.border {
+    position: absolute;
+    pointer-events: none;
 
-        &-top {
-            left: 0;
-            top: 0;
-            right: 0;
-            height: 0;
-            border-top-width: 1px;
-            height: 100%;
-        }
+    &-top {
+        top: 0;
+        right: 0;
+        left: 0;
+    }
 
-        &-bottom {
-            left: 0;
-            bottom: 0;
-            right: 0;
-            height: 0;
-            border-bottom-width: 1px;
-            height: 100%;
-        }
+    &-bottom {
+        right: 0;
+        bottom: 0;
+        left: 0;
+    }
 
-        &-left {
-            top: 0;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            border-left-width: 1px;
-            width: 100%;
-        }
+    &-left {
+        top: 0;
+        bottom: 0;
+        left: 0;
+    }
 
-        &-right {
-            top: 0;
-            bottom: 0;
-            right: 0;
-            width: 0;
-            border-right-width: 1px;
-            width: 100%;
-        }
+    &-right {
+        top: 0;
+        right: 0;
+        bottom: 0;
     }
 }

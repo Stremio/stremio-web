@@ -11,12 +11,16 @@ class Popup extends Component {
         super(props);
 
         this.labelRef = React.createRef();
+        this.labelBorderTopRef = React.createRef();
+        this.labelBorderRightRef = React.createRef();
+        this.labelBorderBottomRef = React.createRef();
+        this.labelBorderLeftRef = React.createRef();
         this.menuRef = React.createRef();
-        this.scrollRef = React.createRef();
-        this.borderTopRef = React.createRef();
-        this.borderRightRef = React.createRef();
-        this.borderBottomRef = React.createRef();
-        this.borderLeftRef = React.createRef();
+        this.menuScrollRef = React.createRef();
+        this.menuBorderTopRef = React.createRef();
+        this.menuBorderRightRef = React.createRef();
+        this.menuBorderBottomRef = React.createRef();
+        this.menuBorderLeftRef = React.createRef();
 
         this.state = {
             open: false
@@ -41,26 +45,22 @@ class Popup extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (this.state.open !== prevState.open) {
+        if (this.state.open && !prevState.open) {
             this.updateStyles();
-            if (this.state.open && typeof this.props.onOpen === 'function') {
+            if (typeof this.props.onOpen === 'function') {
                 this.props.onOpen();
-            } else if (!this.state.open && typeof this.props.onClose === 'function') {
-                this.props.onClose();
             }
+        } else if (!this.state.open && prevState.open && typeof this.props.onClose === 'function') {
+            this.props.onClose();
         }
     }
 
     updateStyles = () => {
-        if (!this.state.open) {
-            this.labelRef.current.style.border = null;
-            return;
-        }
-
         const menuDirections = {};
         const bodyRect = document.body.getBoundingClientRect();
         const menuRect = this.menuRef.current.getBoundingClientRect();
         const labelRect = this.labelRef.current.getBoundingClientRect();
+        const borderWidth = 1 / window.devicePixelRatio;
         const labelPosition = {
             left: labelRect.x - bodyRect.x,
             top: labelRect.y - bodyRect.y,
@@ -70,60 +70,83 @@ class Popup extends Component {
 
         if (menuRect.height <= labelPosition.bottom) {
             this.menuRef.current.style.top = `${labelPosition.top + labelRect.height}px`;
-            this.scrollRef.current.style.maxHeight = `${labelPosition.bottom}px`;
+            this.menuScrollRef.current.style.maxHeight = `${labelPosition.bottom}px`;
             menuDirections.bottom = true;
         } else if (menuRect.height <= labelPosition.top) {
             this.menuRef.current.style.bottom = `${labelPosition.bottom + labelRect.height}px`;
-            this.scrollRef.current.style.maxHeight = `${labelPosition.top}px`;
+            this.menuScrollRef.current.style.maxHeight = `${labelPosition.top}px`;
             menuDirections.top = true;
         } else if (labelPosition.bottom >= labelPosition.top) {
             this.menuRef.current.style.top = `${labelPosition.top + labelRect.height}px`;
-            this.scrollRef.current.style.maxHeight = `${labelPosition.bottom}px`;
+            this.menuScrollRef.current.style.maxHeight = `${labelPosition.bottom}px`;
             menuDirections.bottom = true;
         } else {
             this.menuRef.current.style.bottom = `${labelPosition.bottom + labelRect.height}px`;
-            this.scrollRef.current.style.maxHeight = `${labelPosition.top}px`;
+            this.menuScrollRef.current.style.maxHeight = `${labelPosition.top}px`;
             menuDirections.top = true;
         }
 
         if (menuRect.width <= (labelPosition.right + labelRect.width)) {
             this.menuRef.current.style.left = `${labelPosition.left}px`;
-            this.scrollRef.current.style.maxWidth = `${labelPosition.right + labelRect.width}px`;
+            this.menuScrollRef.current.style.maxWidth = `${labelPosition.right + labelRect.width}px`;
             menuDirections.right = true;
         } else if (menuRect.width <= (labelPosition.left + labelRect.width)) {
             this.menuRef.current.style.right = `${labelPosition.right}px`;
-            this.scrollRef.current.style.maxWidth = `${labelPosition.left + labelRect.width}px`;
+            this.menuScrollRef.current.style.maxWidth = `${labelPosition.left + labelRect.width}px`;
             menuDirections.left = true;
         } else if (labelPosition.right > labelPosition.left) {
             this.menuRef.current.style.left = `${labelPosition.left}px`;
-            this.scrollRef.current.style.maxWidth = `${labelPosition.right + labelRect.width}px`;
+            this.menuScrollRef.current.style.maxWidth = `${labelPosition.right + labelRect.width}px`;
             menuDirections.right = true;
         } else {
             this.menuRef.current.style.right = `${labelPosition.right}px`;
-            this.scrollRef.current.style.maxWidth = `${labelPosition.left + labelRect.width}px`;
+            this.menuScrollRef.current.style.maxWidth = `${labelPosition.left + labelRect.width}px`;
             menuDirections.left = true;
         }
 
         if (!!this.props.borderColor) {
-            this.borderTopRef.current.style.borderTopColor = this.props.borderColor;
-            this.borderRightRef.current.style.borderRightColor = this.props.borderColor;
-            this.borderBottomRef.current.style.borderBottomColor = this.props.borderColor;
-            this.borderLeftRef.current.style.borderLeftColor = this.props.borderColor;
-            this.labelRef.current.style.border = `1px solid ${this.props.borderColor}`;
-            const borderWidth = 1 / window.devicePixelRatio;
+            this.menuBorderTopRef.current.style.backgroundColor = this.props.borderColor;
+            this.menuBorderTopRef.current.style.height = `${borderWidth}px`;
+            this.menuBorderRightRef.current.style.backgroundColor = this.props.borderColor;
+            this.menuBorderRightRef.current.style.width = `${borderWidth}px`;
+            this.menuBorderBottomRef.current.style.backgroundColor = this.props.borderColor;
+            this.menuBorderBottomRef.current.style.height = `${borderWidth}px`;
+            this.menuBorderLeftRef.current.style.backgroundColor = this.props.borderColor;
+            this.menuBorderLeftRef.current.style.width = `${borderWidth}px`;
+            this.labelBorderTopRef.current.style.backgroundColor = this.props.borderColor;
+            this.labelBorderTopRef.current.style.height = `${borderWidth}px`;
+            this.labelBorderTopRef.current.style.top = `${labelPosition.top}px`;
+            this.labelBorderTopRef.current.style.right = `${labelPosition.right}px`;
+            this.labelBorderTopRef.current.style.left = `${labelPosition.left}px`;
+            this.labelBorderRightRef.current.style.backgroundColor = this.props.borderColor;
+            this.labelBorderRightRef.current.style.width = `${borderWidth}px`;
+            this.labelBorderRightRef.current.style.top = `${labelPosition.top}px`;
+            this.labelBorderRightRef.current.style.right = `${labelPosition.right}px`;
+            this.labelBorderRightRef.current.style.bottom = `${labelPosition.bottom}px`;
+            this.labelBorderBottomRef.current.style.backgroundColor = this.props.borderColor;
+            this.labelBorderBottomRef.current.style.height = `${borderWidth}px`;
+            this.labelBorderBottomRef.current.style.right = `${labelPosition.right}px`;
+            this.labelBorderBottomRef.current.style.bottom = `${labelPosition.bottom}px`;
+            this.labelBorderBottomRef.current.style.left = `${labelPosition.left}px`;
+            this.labelBorderLeftRef.current.style.backgroundColor = this.props.borderColor;
+            this.labelBorderLeftRef.current.style.width = `${borderWidth}px`;
+            this.labelBorderLeftRef.current.style.top = `${labelPosition.top}px`;
+            this.labelBorderLeftRef.current.style.bottom = `${labelPosition.bottom}px`;
+            this.labelBorderLeftRef.current.style.left = `${labelPosition.left}px`;
+
             if (menuDirections.top) {
-                this.labelRef.current.style.borderTop = 'none';
+                this.labelBorderTopRef.current.style.display = 'none';
                 if (menuDirections.left) {
-                    this.borderBottomRef.current.style.right = `${labelRect.width - borderWidth}px`;
+                    this.menuBorderBottomRef.current.style.right = `${labelRect.width - borderWidth}px`;
                 } else {
-                    this.borderBottomRef.current.style.left = `${labelRect.width - borderWidth}px`;
+                    this.menuBorderBottomRef.current.style.left = `${labelRect.width - borderWidth}px`;
                 }
             } else {
-                this.labelRef.current.style.borderBottom = 'none';
+                this.labelBorderBottomRef.current.style.display = 'none';
                 if (menuDirections.left) {
-                    this.borderTopRef.current.style.right = `${labelRect.width - borderWidth}px`;
+                    this.menuBorderTopRef.current.style.right = `${labelRect.width - borderWidth}px`;
                 } else {
-                    this.borderTopRef.current.style.left = `${labelRect.width - borderWidth}px`;
+                    this.menuBorderTopRef.current.style.left = `${labelRect.width - borderWidth}px`;
                 }
             }
         }
@@ -162,14 +185,18 @@ class Popup extends Component {
         return (
             <Modal className={'modal-container'} onClick={this.close}>
                 <div ref={this.menuRef} className={styles['menu-container']} onClick={this.menuContainerOnClick}>
-                    <div ref={this.scrollRef} className={styles['scroll-container']}>
+                    <div ref={this.menuScrollRef} className={styles['scroll-container']}>
                         {children}
                     </div>
-                    <div ref={this.borderTopRef} className={classnames(styles['border'], styles['border-top'])} />
-                    <div ref={this.borderRightRef} className={classnames(styles['border'], styles['border-right'])} />
-                    <div ref={this.borderBottomRef} className={classnames(styles['border'], styles['border-bottom'])} />
-                    <div ref={this.borderLeftRef} className={classnames(styles['border'], styles['border-left'])} />
+                    <div ref={this.menuBorderTopRef} className={classnames(styles['border'], styles['border-top'])} />
+                    <div ref={this.menuBorderRightRef} className={classnames(styles['border'], styles['border-right'])} />
+                    <div ref={this.menuBorderBottomRef} className={classnames(styles['border'], styles['border-bottom'])} />
+                    <div ref={this.menuBorderLeftRef} className={classnames(styles['border'], styles['border-left'])} />
                 </div>
+                <div ref={this.labelBorderTopRef} className={classnames(styles['border'], styles['border-top'])} />
+                <div ref={this.labelBorderRightRef} className={classnames(styles['border'], styles['border-right'])} />
+                <div ref={this.labelBorderBottomRef} className={classnames(styles['border'], styles['border-bottom'])} />
+                <div ref={this.labelBorderLeftRef} className={classnames(styles['border'], styles['border-left'])} />
             </Modal>
         );
     }
