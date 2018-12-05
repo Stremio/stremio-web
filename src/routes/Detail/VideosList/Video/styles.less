@@ -25,6 +25,8 @@
 
         .upcoming-label, .watched-label {
             font-size: 10px;
+            line-height: 15px;
+            border-width: 2px;
             border-radius: 2px;
         }
 
@@ -84,15 +86,16 @@
                 .upcoming-label, .watched-label {
                     padding: 0 0.6em;
                     font-weight: 600;
+                    border-style: solid;
                     color: @colorwhite;
                 }
 
                 .upcoming-label {
-                    background-color: @colorsignal5;
+                    border-color: @colorsignal5;
                 }
 
                 .watched-label {
-                    background-color: @colorprimlight;
+                    border-color: @colorprimlight;
                 }
             }
         }
