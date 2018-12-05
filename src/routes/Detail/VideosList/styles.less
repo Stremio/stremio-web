@@ -1,0 +1,85 @@
+@import 'stremio-colors';
+
+@scroll-container-width: 392px;
+@seasons-bar-height: 50px;
+@spacing: 8px;
+
+.videos-list-container {
+    .seasons-bar {
+        height: @seasons-bar-height;
+        margin-bottom: @spacing;
+
+        .button-container {
+            width: (@seasons-bar-height * 1.5);
+        }
+    }
+
+    .scroll-container {
+        width: @scroll-container-width;
+        margin: 0 @spacing;
+
+        .videos-list {
+            padding: 0 (2 * @spacing);
+
+            >:not(:first-child) {
+                margin-top: @spacing;
+            }
+        }
+    }
+
+    .scroll-container::-webkit-scrollbar {
+        width: @spacing;
+    }
+}
+
+.videos-list-container {
+    height: 100%;
+    display: inline-flex;
+    flex-direction: column;
+    background: @colordarkest;
+
+    .seasons-bar {
+        display: flex;
+        justify-content: space-between;
+
+        .button-container {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            .button-icon {
+                width: 60%;
+                height: 60%;
+                fill: @colorwhite;
+            }
+
+            &:hover {
+                background-color: @colorwhite20;
+            }
+        }
+    }
+
+    .scroll-container {
+        flex: 1;
+        position: relative;
+        overflow-y: auto;
+        overflow-x: hidden;
+
+        .videos-list {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+    }
+
+    .scroll-container::-webkit-scrollbar-thumb {
+        background-color: @coloraccent80;
+    }
+
+    .scroll-container::-webkit-scrollbar-track {
+        background-color: @colorglass;
+    }
+}
