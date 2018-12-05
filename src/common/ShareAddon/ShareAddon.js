@@ -12,9 +12,9 @@ const renderUrl = (copyToClipboard, url) => {
     return (
         <div className={styles['url-container']}>
             <input className={styles['url']} defaultValue={url} readOnly={true} />
-            <span onClick={copyToClipboard} className={styles['copy-label']}>
+            <div onClick={copyToClipboard} className={styles['copy-label']}>
                 <Icon className={styles['copy-icon']} icon={'ic_link'} />Copy
-            </span>
+            </div>
         </div>
     );
 }
@@ -22,8 +22,6 @@ const renderUrl = (copyToClipboard, url) => {
 const ShareAddon = (props) => {
     const placeholderIconUrl = iconDataUrl({ icon: 'ic_x', fill: colors.neutrallight });
     const imageStyle = {
-        width: 10,
-        height: 10,
         backgroundImage: `url('${placeholderIconUrl}')`
     };
 
@@ -33,7 +31,7 @@ const ShareAddon = (props) => {
                 <div onClick={props.closeModalDialog} style={imageStyle} className={styles['x-icon']} />
             </div>
             <div className={styles['info-container']}>
-                <span className={styles['share-label']}>Share Add-on</span>
+                <div className={styles['share-label']}>Share Add-on</div>
                 <div className={styles['buttons']}>
                     <div onClick={props.shareInFacebook} className={styles['facebook-button']}>
                         <Icon className={styles['facebook-icon']} icon={'ic_facebook'} />FACEBOOK

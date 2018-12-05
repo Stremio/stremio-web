@@ -1,8 +1,62 @@
 @import 'stremio-colors';
 
+@share-addon-width: 380px;
+@spacing: floor((@share-addon-width * 0.06));
+
 .share-addon {
-    width: 380px;
-    padding: 10px;
+    width: @share-addon-width;
+    padding: ceil((@spacing * 0.5));
+
+    .x-icon {
+        width: ceil((@spacing * 0.5));
+        height: ceil((@spacing * 0.5));
+    }
+
+    .info-container {
+        padding: floor((@spacing * 0.3)) ceil((@spacing * 0.9)) @spacing ceil((@spacing * 0.9));
+
+        .buttons {
+            padding: @spacing 0;
+        }
+
+        .facebook-button, .twitter-button, .gplus-button {
+            width: ceil((@share-addon-width * 0.26));
+            height: floor((@share-addon-width * 0.09));
+
+            .facebook-icon, .twitter-icon, .gplus-icon {
+                width: ceil((@spacing * 0.6));
+                height: ceil((@spacing * 0.6));
+                margin-right: floor((@spacing * 0.3));
+            }
+        }
+
+        .url-container {
+            border-radius: 4px;
+            border-width: 1px;
+
+            .url {
+                font-size: 12px;
+                border-radius: 4px;
+                padding: ceil((@spacing * 0.5));
+            }
+
+            .copy-label {
+                font-size: 14px;
+                border-top-right-radius: 3px;
+                border-bottom-right-radius: 3px;
+                padding: ceil((@spacing * 0.5));
+
+                .copy-icon {
+                    width: ceil((@spacing * 0.7));
+                    height: ceil((@spacing * 0.7));
+                    margin-right: floor((@spacing * 0.3));
+                }
+            }
+        }
+    }
+}
+
+.share-addon {
     color: @colorwhite;
     background-color: @colorwhite;
 
@@ -17,87 +71,67 @@
         }
     }
 
-    .info-container {
-        padding: 6px 20px 30px 20px;
+    .share-label {
+        color: @colorblack;
+        font-weight: 500;
+    }
 
-        .share-label {
-            color: @colorblack;
-            font-weight: 600;
-        }
+    .buttons {
+        display: flex;
+        font-size: 11px;
+        justify-content: space-between;
 
-        .buttons {
+        .facebook-button, .twitter-button, .gplus-button {
             display: flex;
-            font-size: 11px;
-            margin: 22px 0px;
-            justify-content: space-between;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
 
             .facebook-icon, .twitter-icon, .gplus-icon {
-                width: 14px;
-                height: 14px;
-                margin-right: 6px;
                 fill: @colorwhite;
-            }
-
-            .facebook-button {
-                background-color: @colorfb;
-            }
-
-            .twitter-button {
-                background-color: @coloraccent;
-            }
-
-            .gplus-button {
-                background-color: #dd4b39;
-            }
-
-            .facebook-button, .twitter-button, .gplus-button {
-                display: flex;
-                cursor: pointer;
-                width: 100px;
-                height: 32px;
-                align-items: center;
-                justify-content: center;
             }
         }
 
-        .url-container {
-            display: flex;
-            border-radius: 4px;
+        .facebook-button {
+            background-color: @colorfb;
+        }
+
+        .twitter-button {
+            background-color: @coloraccent;
+        }
+
+        .gplus-button {
+            background-color: #dd4b39;
+        }
+    }
+
+    .url-container {
+        display: flex;
+        border-style: solid;
+        border-color: @colorneutrallight;
+
+        .url, .copy-label {
+            color: @colorblack40;
+        }
+
+        .url {
+            width: 75%;
+            outline: none;
+            font-weight: 600;
             text-align: center;
-            border: 1px solid @colorneutrallight;
+            text-overflow: ellipsis;
+        }
 
-            .url, .copy-label {
-                padding: 10px;
-                font-weight: 600;
-                color: @colorblack40;
-            }
+        .copy-label {
+            cursor: pointer;
+            width: 25%;
+            font-weight: 500;
+            display: flex;
+            justify-content: center;
+            background-color: @colorblack20;
 
-            .url {
-                width: 90%;
-                outline: none;
-                font-size: 12px;
-                text-align: center;
-                border-radius: 4px;
-                padding-right: 30px;
-                text-overflow: ellipsis;
-            }
-
-            .copy-label {
-                width: 30%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                cursor: pointer;
-                border-top-right-radius: 3px;
-                border-bottom-right-radius: 3px;
-                background-color: @colorblack20;
-
-                .copy-icon {
-                    width: 16px;
-                    height: 16px;
-                    margin-right: 4px;
-                    fill: @colorblack40;
-                }
+            .copy-icon {
+                fill: @colorblack40;
             }
         }
     }
