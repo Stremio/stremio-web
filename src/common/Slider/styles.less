@@ -1,5 +1,3 @@
-@import 'stremio-colors';
-
 .slider-container {
     position: relative;
     z-index: 0;
@@ -7,10 +5,10 @@
     min-height: var(--thumb-size);
     cursor: pointer;
 
-    .line {
+    .track {
         position: absolute;
         z-index: 1;
-        background-color: @colorprim;
+        background-color: var(--track-color);
     }
 
     .thumb {
@@ -18,57 +16,50 @@
         z-index: 2;
         width: var(--thumb-size);
         height: var(--thumb-size);
-        transition-duration: 0.06s;
 
         &::after {
             display: block;
-            width: 100%;
-            height: 100%;
+            width: var(--thumb-size);
+            height: var(--thumb-size);
             border-radius: 50%;
-            background-color: @colormedium;
+            background-color: var(--thumb-color);
             content: "";
         }
     }
 
     &.horizontal {
-        .line {
+        .track {
             left: 0;
             right: 0;
             top: 40%;
             bottom: 40%;
         }
 
-        .thumb {
-            transition-property: left;
-
-            &::after {
-                margin-left: calc(-0.5 * var(--thumb-size));
-            }
+        .thumb::after {
+            margin-left: calc(-0.5 * var(--thumb-size));
         }
     }
 
     &.vertical {
-        .line {
+        .track {
             left: 40%;
             right: 40%;
             top: 0;
             bottom: 0;
         }
 
-        .thumb {
-            transition-property: bottom;
-
-            &::after {
-                margin-top: calc(0.5 * var(--thumb-size));
-            }
+        .thumb::after {
+            margin-top: calc(0.5 * var(--thumb-size));
         }
     }
 
     &:hover, &.active {
-        .thumb {
-            &::after {
-                background-color: @colorprimlight;
-            }
+        .track {
+            background-color: var(--track-active-color, var(--track-color));
+        }
+
+        .thumb::after {
+            background-color: var(--thumb-active-color, var(--thumb-color));
         }
     }
 }

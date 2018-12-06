@@ -87,7 +87,7 @@ class Slider extends Component {
         const thumbStart = (this.props.value - this.props.minimumValue) / (this.props.maximumValue - this.props.minimumValue);
         return (
             <div className={classnames(styles['slider-container'], styles[this.props.orientation], this.props.className)} onMouseDown={this.onStartSliding}>
-                <div className={styles['line']} />
+                <div className={styles['track']} />
                 <div className={styles['thumb']} style={{ [thumbStartProp]: `calc(100% * ${thumbStart})` }} />
             </div>
         );
