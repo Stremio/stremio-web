@@ -1,55 +1,16 @@
 @import 'stremio-colors';
 
-@video-width: 360px;
-@spacing: max(8px, ceil((@video-width * 0.02)));
-@progress-height: 5px;
-
 .video-container {
-    width: @video-width;
-
-    .poster-container {
-        margin: @spacing 0 @spacing @spacing;
-    }
-
-    .info-container {
-        min-height: ceil((@video-width * 0.2));
-        padding: @spacing;
-
-        .title {
-            font-size: 12px;
-        }
-
-        .released-date {
-            font-size: 11px;
-        }
-
-        .upcoming-label, .watched-label {
-            font-size: 10px;
-            line-height: 15px;
-            border-width: 2px;
-            border-radius: 2px;
-        }
-
-        .upcoming-label {
-            margin-right: @spacing;
-        }
-
-        >:not(:last-child) {
-            margin-bottom: (@spacing * 0.5);
-        }
-    }
-
-    .arrow-container {
-        width: floor((@video-width * 0.07));
-        padding: @spacing @spacing @spacing 0;
-    }
-
-    .progress {
-        height: @progress-height;
-    }
+    --video-width: 360px;
+    --spacing: 8px;
+    --title-font-size: 12px;
+    --released-date-font-size: 11px;
+    --label-font-size: 10px;
+    --label-border-width: 2px;
 }
 
 .video-container {
+    width: var(--video-width);
     background-color: @colorglass;
 
     .flex-row-container {
@@ -59,6 +20,7 @@
 
         .poster-container {
             flex: 1;
+            margin: var(--spacing) 0 var(--spacing) var(--spacing);
 
             .poster {
                 display: block;
@@ -80,17 +42,22 @@
 
         .info-container {
             flex: 3;
+            min-height: calc(0.2 * var(--video-width));
+            padding: var(--spacing);
             display: flex;
             flex-direction: column;
             justify-content: center;
 
+
             .title {
+                font-size: var(--title-font-size);
                 color: @colorwhite;
                 word-break: break-all; //Firefox doesn't support { break-word }
                 word-break: break-word;
             }
 
             .released-date {
+                font-size: var(--released-date-font-size);
                 color: @colorwhite60;
             }
 
@@ -98,13 +65,17 @@
                 display: flex;
 
                 .upcoming-label, .watched-label {
-                    padding: 0 0.6em;
+                    font-size: var(--label-font-size);
                     font-weight: 600;
+                    line-height: 1.5;
+                    border-width: var(--label-border-width);
                     border-style: solid;
+                    padding: 0 0.6em;
                     color: @colorwhite;
                 }
 
                 .upcoming-label {
+                    margin-right: var(--spacing);
                     border-color: @colorsignal5;
                 }
 
@@ -112,11 +83,17 @@
                     border-color: @colorprimlight;
                 }
             }
+
+            >:not(:last-child) {
+                margin-bottom: calc(0.5 * var(--spacing));
+            }
         }
 
         .arrow-container {
+            width: calc(0.07 * var(--video-width));
             display: flex;
             align-items: center;
+            padding: var(--spacing) var(--spacing) var(--spacing) 0;
 
             .arrow {
                 width: 100%;
@@ -126,9 +103,11 @@
     }
 
     .progress-container {
+        height: calc(0.5 * var(--spacing));
         background-color: @colorprim;
 
         .progress {
+            height: 100%;
             background-color: @colorprimlight;
         }
     }
