@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import Icon, { dataUrl as iconDataUrl } from 'stremio-icons/dom';
-import colors from 'stremio-colors';
+import Icon from 'stremio-icons/dom';
 import styles from './styles';
 
 const MAX_TITLE_SYMBOLS = 100;
@@ -12,13 +11,10 @@ const renderPoster = (poster) => {
         return null;
     }
 
-    const placeholderIconUrl = iconDataUrl({ icon: 'ic_channels', fill: colors.accent });
-    const imageStyle = {
-        backgroundImage: `url('${poster}'), url('${placeholderIconUrl}')`
-    };
-
     return (
-        <div style={imageStyle} className={styles['poster']} />
+        <div className={styles['poster-container']}>
+            <img className={styles['poster']} src={poster} alt={''} />
+        </div>
     );
 }
 
