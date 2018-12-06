@@ -1,13 +1,13 @@
-@import 'stremio-colors';
+
 .meta-item {
-    color: @colorwhite;
+//    color: @colorwhite;
     font-family: LatoLight;
     .poster {
         display: flex;
         background-position: center;
         background-size: cover, auto;
         background-repeat: no-repeat;
-        background-color: @colordarkest;
+//        background-color: @colordarkest;
         .play-container {
             width: 70px;
             height: 70px;
@@ -15,21 +15,21 @@
             display: flex;
             visibility: hidden;
             border-radius: 50%;
-            background-color: @colorwhite;
+//            background-color: @colorwhite;
             .play {
                 width: 26px;
                 height: 26px;
                 margin: auto;
                 margin-left: 26px;
-                fill: @colormedium;
+//                fill: @colormedium;
             }
         }
     }
     .progress-container {
-        background-color: @colorneutral;
+//        background-color: @colorneutral;
         .progress {
             height: 4px;
-            background-color: @colorprimlight;
+//            background-color: @colorprimlight;
         }
     }
     .info-container {
@@ -39,39 +39,39 @@
         .info {
             width: 100%;
             .title, .year{
-                color: @colorwhite60;
+//                color: @colorwhite60;
             }
             :first-child {
-                color: @colorwhite;
+//                color: @colorwhite;
             }
         }
     }
     .more-icon-container {
         cursor: pointer;
-        fill: @colorwhite;
+//        fill: @colorwhite;
         .more-icon {
             width: 10px;
             height: 10px;
         }
     }
     &:hover {
-        color: @colorblack;
-        background-color: @colorwhite;
-        outline: 2px solid @colorwhite;
+//        color: @colorblack;
+//        background-color: @colorwhite;
+//        outline: 2px solid @colorwhite;
         .play-container {
             cursor: pointer;
             visibility: visible;
         } 
         .info {
             .title, .year {
-                color: @colorblack60;
+//                color: @colorblack60;
             }
             :first-child {
-                color: @colorblack;
+//                color: @colorblack;
             }
         }
         .more-icon {
-            fill: @colorblack40;
+//            fill: @colorblack40;
         }
     }
 }
