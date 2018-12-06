@@ -6857,9 +6857,9 @@ stremio-addon-linter@^1.2.1:
   dependencies:
     events "1.1.0"
 
-"stremio-colors@git+ssh://git@github.com/Stremio/stremio-colors.git#v2.0.1":
-  version "2.0.1"
-  resolved "git+ssh://git@github.com/Stremio/stremio-colors.git#9c39c7e7b9408c601cfa6deef1f32f825f6eb1e9"
+"stremio-colors@git+ssh://git@github.com/Stremio/stremio-colors.git#v2.0.2":
+  version "2.0.2"
+  resolved "git+ssh://git@github.com/Stremio/stremio-colors.git#d91ec32305eef62fbd5a1da6aba8ab52060f58a1"
 
 "stremio-icons@git+ssh://git@github.com/Stremio/stremio-icons.git#v1.0.2":
   version "1.0.2"
