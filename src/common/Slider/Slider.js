@@ -8,28 +8,35 @@ class Slider extends Component {
         super(props);
 
         this.orientation = props.orientation;
+        this.state = {
+            active: false
+        };
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return nextProps.value !== this.props.value ||
+        return nextState.active !== this.state.active ||
+            nextProps.value !== this.props.value ||
             nextProps.minimumValue !== this.props.minimumValue ||
             nextProps.maximumValue !== this.props.maximumValue ||
             nextProps.className !== this.props.className;
     }
 
     onSlide = (...args) => {
+        this.setState({ active: true });
         if (typeof this.props.onSlide === 'function') {
             this.props.onSlide(...args);
         }
     }
 
     onComplete = (...args) => {
+        this.setState({ active: false });
         if (typeof this.props.onComplete === 'function') {
             this.props.onComplete(...args);
         }
     }
 
     onCancel = (...args) => {
+        this.setState({ active: false });
         if (typeof this.props.onCancel === 'function') {
             this.props.onCancel(...args);
         }
@@ -55,9 +62,8 @@ class Slider extends Component {
             window.removeEventListener('blur', onBlur);
             window.removeEventListener('mouseup', onMouseUp);
             window.removeEventListener('mousemove', onMouseMove);
-            document.body.style['pointer-events'] = 'initial';
             document.documentElement.style.cursor = 'initial';
-            sliderElement.classList.remove(styles['active']);
+            document.body.style['pointer-events'] = 'initial';
         };
         const onBlur = () => {
             releaseThumb();
@@ -76,9 +82,8 @@ class Slider extends Component {
         window.addEventListener('blur', onBlur);
         window.addEventListener('mouseup', onMouseUp);
         window.addEventListener('mousemove', onMouseMove);
-        document.body.style['pointer-events'] = 'none';
         document.documentElement.style.cursor = 'pointer';
-        sliderElement.classList.add(styles['active']);
+        document.body.style['pointer-events'] = 'none';
         onMouseMove({ clientX: mouseX, clientY: mouseY });
     }
 
@@ -86,7 +91,7 @@ class Slider extends Component {
         const thumbStartProp = this.orientation === 'horizontal' ? 'left' : 'bottom';
         const thumbStart = (this.props.value - this.props.minimumValue) / (this.props.maximumValue - this.props.minimumValue);
         return (
-            <div className={classnames(styles['slider-container'], styles[this.orientation], this.props.className)} onMouseDown={this.onStartSliding}>
+            <div className={classnames(styles['slider-container'], styles[this.orientation], { [styles['active']]: this.state.active }, this.props.className)} onMouseDown={this.onStartSliding}>
                 <div className={styles['track']} />
                 <div className={styles['thumb']} style={{ [thumbStartProp]: `calc(100% * ${thumbStart})` }} />
             </div>
