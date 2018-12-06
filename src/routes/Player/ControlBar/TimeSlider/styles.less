@@ -1,0 +1,19 @@
+.time-slider-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    .label {
+        font-size: calc(var(--thumb-size) * 0.7);
+        line-height: 1;
+        color: var(--color-surfacelighter);
+    }
+
+    .slider {
+        --track-color: var(--color-primarydark);
+        --thumb-color: var(--color-primary);
+        --thumb-active-color: var(--color-primarylight);
+        flex: 1;
+        margin: 0 var(--thumb-size);
+    }
+}
