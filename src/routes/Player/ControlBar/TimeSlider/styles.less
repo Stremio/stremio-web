@@ -6,7 +6,7 @@
     .label {
         font-size: calc(var(--time-slider-thumb-size) * 0.7);
         line-height: 1;
-        color: var(--color-surfacelighter);
+        color: var(--color-surfacelight);
     }
 
     .slider {
@@ -16,5 +16,11 @@
         --thumb-active-color: var(--color-primarylight);
         flex: 1;
         margin: 0 var(--time-slider-thumb-size);
+    }
+
+    &:hover, &.active {
+        .label {
+            color: var(--color-surfacelighter);
+        }
     }
 }

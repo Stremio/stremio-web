@@ -99,7 +99,7 @@ class TimeSlider extends Component {
         }
 
         return (
-            <div className={classnames(styles['time-slider-container'], this.props.className)}>
+            <div className={classnames(styles['time-slider-container'], { [styles['active']]: this.state.time !== null }, this.props.className)}>
                 {this.renderTimeLabel()}
                 {this.renderSlider()}
                 {this.renderDurationLabel()}
