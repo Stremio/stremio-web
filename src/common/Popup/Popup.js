@@ -104,31 +104,23 @@ class Popup extends Component {
             menuDirections.left = true;
         }
 
-        if (!!this.props.borderColor) {
-            this.menuBorderTopRef.current.style.backgroundColor = this.props.borderColor;
+        if (this.props.border) {
             this.menuBorderTopRef.current.style.height = `${borderWidth}px`;
-            this.menuBorderRightRef.current.style.backgroundColor = this.props.borderColor;
             this.menuBorderRightRef.current.style.width = `${borderWidth}px`;
-            this.menuBorderBottomRef.current.style.backgroundColor = this.props.borderColor;
             this.menuBorderBottomRef.current.style.height = `${borderWidth}px`;
-            this.menuBorderLeftRef.current.style.backgroundColor = this.props.borderColor;
             this.menuBorderLeftRef.current.style.width = `${borderWidth}px`;
-            this.labelBorderTopRef.current.style.backgroundColor = this.props.borderColor;
             this.labelBorderTopRef.current.style.height = `${borderWidth}px`;
             this.labelBorderTopRef.current.style.top = `${labelPosition.top}px`;
             this.labelBorderTopRef.current.style.right = `${labelPosition.right}px`;
             this.labelBorderTopRef.current.style.left = `${labelPosition.left}px`;
-            this.labelBorderRightRef.current.style.backgroundColor = this.props.borderColor;
             this.labelBorderRightRef.current.style.width = `${borderWidth}px`;
             this.labelBorderRightRef.current.style.top = `${labelPosition.top}px`;
             this.labelBorderRightRef.current.style.right = `${labelPosition.right}px`;
             this.labelBorderRightRef.current.style.bottom = `${labelPosition.bottom}px`;
-            this.labelBorderBottomRef.current.style.backgroundColor = this.props.borderColor;
             this.labelBorderBottomRef.current.style.height = `${borderWidth}px`;
             this.labelBorderBottomRef.current.style.right = `${labelPosition.right}px`;
             this.labelBorderBottomRef.current.style.bottom = `${labelPosition.bottom}px`;
             this.labelBorderBottomRef.current.style.left = `${labelPosition.left}px`;
-            this.labelBorderLeftRef.current.style.backgroundColor = this.props.borderColor;
             this.labelBorderLeftRef.current.style.width = `${borderWidth}px`;
             this.labelBorderLeftRef.current.style.top = `${labelPosition.top}px`;
             this.labelBorderLeftRef.current.style.bottom = `${labelPosition.bottom}px`;
@@ -183,7 +175,7 @@ class Popup extends Component {
         }
 
         return (
-            <Modal className={'modal-container'} onClick={this.close}>
+            <Modal className={classnames('modal-container', this.props.className)} onClick={this.close}>
                 <div ref={this.menuRef} className={styles['menu-container']} onClick={this.menuContainerOnClick}>
                     <div ref={this.menuScrollRef} className={styles['scroll-container']}>
                         {children}
@@ -230,9 +222,13 @@ Popup.Label = Label;
 Popup.Menu = Menu;
 
 Popup.propTypes = {
+    className: PropTypes.string,
     onOpen: PropTypes.func,
     onClose: PropTypes.func,
-    borderColor: PropTypes.string
+    border: PropTypes.bool.isRequired
+};
+Popup.defaultProps = {
+    border: false
 };
 
 export default Popup;
