@@ -4,10 +4,10 @@ import classnames from 'classnames';
 import styles from './styles';
 
 class Slider extends Component {
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.orientation !== this.props.orientation) {
-            console.warn(new Error('changing orientation property at runtime is not supported'));
-        }
+    constructor(props) {
+        super(props);
+
+        this.orientation = props.orientation;
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -37,11 +37,11 @@ class Slider extends Component {
 
     calculateSlidingValue = ({ mouseX, mouseY, sliderElement }) => {
         const { x: sliderX, y: sliderY, width: sliderWidth, height: sliderHeight } = sliderElement.getBoundingClientRect();
-        const sliderStart = this.props.orientation === 'horizontal' ? sliderX : sliderY;
-        const sliderLength = this.props.orientation === 'horizontal' ? sliderWidth : sliderHeight;
-        const mouseStart = this.props.orientation === 'horizontal' ? mouseX : mouseY;
+        const sliderStart = this.orientation === 'horizontal' ? sliderX : sliderY;
+        const sliderLength = this.orientation === 'horizontal' ? sliderWidth : sliderHeight;
+        const mouseStart = this.orientation === 'horizontal' ? mouseX : mouseY;
         const thumbStart = Math.min(Math.max(mouseStart - sliderStart, 0), sliderLength);
-        const slidingValueCoef = this.props.orientation === 'horizontal' ? thumbStart / sliderLength : (sliderLength - thumbStart) / sliderLength;
+        const slidingValueCoef = this.orientation === 'horizontal' ? thumbStart / sliderLength : (sliderLength - thumbStart) / sliderLength;
         const slidingValue = slidingValueCoef * (this.props.maximumValue - this.props.minimumValue) + this.props.minimumValue;
         return Math.floor(slidingValue);
     }
@@ -83,10 +83,10 @@ class Slider extends Component {
     }
 
     render() {
-        const thumbStartProp = this.props.orientation === 'horizontal' ? 'left' : 'bottom';
+        const thumbStartProp = this.orientation === 'horizontal' ? 'left' : 'bottom';
         const thumbStart = (this.props.value - this.props.minimumValue) / (this.props.maximumValue - this.props.minimumValue);
         return (
-            <div className={classnames(styles['slider-container'], styles[this.props.orientation], this.props.className)} onMouseDown={this.onStartSliding}>
+            <div className={classnames(styles['slider-container'], styles[this.orientation], this.props.className)} onMouseDown={this.onStartSliding}>
                 <div className={styles['track']} />
                 <div className={styles['thumb']} style={{ [thumbStartProp]: `calc(100% * ${thumbStart})` }} />
             </div>
