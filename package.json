@@ -43,6 +43,7 @@
         "@storybook/addon-links": "4.0.4",
         "@storybook/addons": "4.0.4",
         "@storybook/react": "4.0.4",
+        "autoprefixer": "9.4.0",
         "babel-loader": "8.0.4",
         "copy-webpack-plugin": "4.6.0",
         "css-loader": "1.0.1",
