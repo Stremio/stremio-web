@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import PropTypes from 'prop-types';
 import Video from './Video';
 import ControlBar from './ControlBar';
 import styles from './styles';
@@ -13,7 +14,8 @@ class Player extends Component {
             paused: null,
             time: null,
             duration: null,
-            volume: null
+            volume: null,
+            subtitles: null
         };
     }
 
@@ -21,7 +23,19 @@ class Player extends Component {
         return nextState.paused !== this.state.paused ||
             nextState.time !== this.state.time ||
             nextState.duration !== this.state.duration ||
-            nextState.volume !== this.state.volume;
+            nextState.volume !== this.state.volume ||
+            nextState.subtitles !== this.state.subtitles;
+    }
+
+    componentDidMount() {
+        this.addExtraSubtitles([
+            {
+                id: 'id1',
+                url: 'https://raw.githubusercontent.com/amzn/web-app-starter-kit-for-fire-tv/master/out/mrss/assets/sample_video-en.vtt',
+                label: 'English (Github)',
+                language: 'en'
+            }
+        ]);
     }
 
     onEnded = () => {
@@ -58,10 +72,6 @@ class Player extends Component {
         this.videoRef.current && this.videoRef.current.dispatch('setProp', 'paused', true);
     }
 
-    stop = () => {
-        this.videoRef.current && this.videoRef.current.dispatch('command', 'stop');
-    }
-
     setTime = (time) => {
         this.videoRef.current && this.videoRef.current.dispatch('setProp', 'time', time);
     }
@@ -70,12 +80,21 @@ class Player extends Component {
         this.videoRef.current && this.videoRef.current.dispatch('setProp', 'volume', volume);
     }
 
+    addExtraSubtitles = (subtitles) => {
+        this.videoRef.current && this.videoRef.current.dispatch('command', 'addExtraSubtitles', subtitles);
+    }
+
+    stop = () => {
+        this.videoRef.current && this.videoRef.current.dispatch('command', 'stop');
+    }
+
     renderVideo() {
         return (
             <Fragment>
                 <Video
                     ref={this.videoRef}
                     className={styles['layer']}
+                    stream={this.props.stream}
                     onEnded={this.onEnded}
                     onError={this.onError}
                     onPropValue={this.onPropValue}
@@ -94,6 +113,7 @@ class Player extends Component {
                 time={this.state.time}
                 duration={this.state.duration}
                 volume={this.state.volume}
+                subtitles={this.state.subtitles}
                 play={this.play}
                 pause={this.pause}
                 setTime={this.setTime}
@@ -111,5 +131,15 @@ class Player extends Component {
         );
     }
 }
+
+Player.propTypes = {
+    stream: PropTypes.object.isRequired
+};
+Player.defaultProps = {
+    stream: {
+        // ytId: 'E4A0bcCQke0',
+        url: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+    }
+};
 
 export default Player;

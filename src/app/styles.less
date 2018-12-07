@@ -1,4 +1,4 @@
-@import 'stremio-colors';
+@import (inline, once, css) 'stremio-colors.css';
 
 @font-face {
     font-family: 'Roboto';
@@ -83,5 +83,6 @@
     right: 0;
     bottom: 0;
     left: 0;
-    background-color: @colorbgmain;
+    z-index: 0;
+    background-color: var(--color-background);
 }

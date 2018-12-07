@@ -1,14 +1,13 @@
-@import 'stremio-colors';
 .meta-item, .progress-poster-shape, .progress-landscape-shape, .progress-square-shape, .progress-info-poster-shape, .progress-info-landscape-shape, .progress-info-square-shape, .poster-shape, .landscape-shape, .square-shape, .info-poster-shape, .info-landscape-shape, .info-square-shape {
     display: grid;
-    color: @colorwhite;
+    // color: @colorwhite;
     .poster {
         grid-area: poster;
         display: flex;
         background-position: center;
         background-size: cover, auto;
         background-repeat: no-repeat;
-        background-color: @colordarkest;
+//        background-color: @colordarkest;
         .play-container {
             width: 70px;
             height: 70px;
@@ -16,61 +15,61 @@
             display: flex;
             visibility: hidden;
             border-radius: 50%;
-            background-color: @colorwhite;
+//            background-color: @colorwhite;
             .play {
                 width: 26px;
                 height: 26px;
                 margin: auto;
                 margin-left: 26px;
-                fill: @colormedium;
+//                fill: @colormedium;
             }
         }
     }
     .progress-container {
         grid-area: progress;
-        background-color: @colorneutral;
+        // background-color: @colorneutral;
         .progress {
             height: 4px;
-            background-color: @colorprimlight;
+//            background-color: @colorprimlight;
         }
     }
     .info {
         grid-area: info;
         .title, .year, .episode {
             grid-area: text;
-            color: @colorwhite60;
+            // color: @colorwhite60;
         }
         :first-child {
-            color: @colorwhite;
+            // color: @colorwhite;
         }
     }
     .popup-icon-container {
         grid-area: popupIcon;
         cursor: pointer;
-        fill: @colorwhite;
+        // fill: @colorwhite;
         .popup-icon {
             width: 10px;
             height: 10px;
         }
     }
     &:hover {
-        color: @colorblack;
-        background-color: @colorwhite;
-        outline: 2px solid @colorwhite;
+//        color: @colorblack;
+//        background-color: @colorwhite;
+//        outline: 2px solid @colorwhite;
         .play-container {
             cursor: pointer;
             visibility: visible;
         }
         .info {
             .title, .year {
-                color: @colorblack60;
+//                color: @colorblack60;
             }
             :first-child {
-                color: @colorblack;
+//                color: @colorblack;
             }
         }
         .popup-icon {
-            fill: @colorblack40;
+            // fill: @colorblack40;
         }
     }
 }

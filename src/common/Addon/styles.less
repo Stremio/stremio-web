@@ -1,5 +1,3 @@
-@import 'stremio-colors';
-
 .addon {
     --addon-width: 514px;
     --name-font-size: 20px;
@@ -15,7 +13,7 @@
     display: grid;
     width: var(--addon-width);
     padding: 2%;
-    background-color: @colorglass;
+    // background-color: @colorglass;
     grid-template-columns: 1fr 4fr;
     grid-template-rows: calc(0.04 * var(--addon-width)) calc(0.04 * var(--addon-width)) auto auto calc((0.08 * var(--addon-width)));
     grid-template-areas:
@@ -32,8 +30,8 @@
             width: calc(0.2 * var(--addon-width));
             height: calc(0.2 * var(--addon-width));
             padding: 20%;
-            fill: @colorwhite;
-            background-color: @colordarkest;
+            // fill: @colorwhite;
+            // background-color: @colordarkest;
         }
     }
 
@@ -53,7 +51,7 @@
                 max-width: 80%;
                 margin-right: 3%;
                 font-size: var(--name-font-size);
-                color: @colorwhite;
+                // color: @colorwhite;
                 overflow: hidden;
                 white-space: pre;
                 text-overflow: ellipsis;
@@ -62,7 +60,7 @@
             .version {
                 flex: 1;
                 font-size: var(--version-font-size);
-                color: @colorwhite60;
+                // color: @colorwhite60;
                 overflow: hidden;
                 white-space: pre;
                 text-overflow: ellipsis;
@@ -76,14 +74,14 @@
         align-items: center;
         padding-left: 4%;
         font-size: var(--type-font-size);
-        color: @coloraccent;
+        // color: @coloraccent;
     }
 
     .description {
         grid-area: description;
         padding-left: 4%;
         font-size: var(--description-font-size);
-        color: @colorwhite;
+        // color: @colorwhite;
         word-break: break-all; //Firefox doesn't support { break-word }
         word-break: break-word;
     }
@@ -96,7 +94,7 @@
 
         .url {
             font-size: var(--url-font-size);
-            color: @colorwhite60;
+            // color: @colorwhite60;
         }
     }
 
@@ -121,47 +119,47 @@
             }
 
             .label {
-                color: @colorwhite;
+                // color: @colorwhite;
             }
 
             &.share-button {
-                border-color: @coloraccent;
+                // border-color: @coloraccent;
 
                 .icon {
-                    fill: @coloraccent;
+                    // fill: @coloraccent;
                 }
 
                 .label {
-                    color: @coloraccent;
+                    // color: @coloraccent;
                 }
 
                 &:hover {
-                    background-color: @coloraccent;
+                    // background-color: @coloraccent;
 
                     .icon {
-                        fill: @colorwhite;
+                        // fill: @colorwhite;
                     }
 
                     .label {
-                        color: @colorwhite;
+                        // color: @colorwhite;
                     }
                 }
             }
 
             &.install-button {
-                border-color: @colorsignal5;
-                background-color: @colorsignal5;
+                // border-color: @colorsignal5;
+                // background-color: @colorsignal5;
 
                 &:hover {
-                    background-color: @colorsignal580;
+                    // background-color: @colorsignal580;
                 }
             }
 
             &.uninstall-button {
-                border-color: @colorneutral;
+                // border-color: @colorneutral;
 
                 &:hover {
-                    background-color: @colorneutral;
+                    // background-color: @colorneutral;
                 }
             }
 

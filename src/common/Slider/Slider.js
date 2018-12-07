@@ -4,33 +4,39 @@ import classnames from 'classnames';
 import styles from './styles';
 
 class Slider extends Component {
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.orientation !== this.props.orientation) {
-            console.warn(new Error('changing orientation property at runtime is not supported'));
-        }
+    constructor(props) {
+        super(props);
+
+        this.orientation = props.orientation;
+        this.state = {
+            active: false
+        };
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return nextProps.value !== this.props.value ||
+        return nextState.active !== this.state.active ||
+            nextProps.value !== this.props.value ||
             nextProps.minimumValue !== this.props.minimumValue ||
             nextProps.maximumValue !== this.props.maximumValue ||
-            nextProps.containerClassName !== this.props.containerClassName ||
-            nextProps.thumbClassName !== this.props.thumbClassName;
+            nextProps.className !== this.props.className;
     }
 
     onSlide = (...args) => {
+        this.setState({ active: true });
         if (typeof this.props.onSlide === 'function') {
             this.props.onSlide(...args);
         }
     }
 
     onComplete = (...args) => {
+        this.setState({ active: false });
         if (typeof this.props.onComplete === 'function') {
             this.props.onComplete(...args);
         }
     }
 
     onCancel = (...args) => {
+        this.setState({ active: false });
         if (typeof this.props.onCancel === 'function') {
             this.props.onCancel(...args);
         }
@@ -38,11 +44,11 @@ class Slider extends Component {
 
     calculateSlidingValue = ({ mouseX, mouseY, sliderElement }) => {
         const { x: sliderX, y: sliderY, width: sliderWidth, height: sliderHeight } = sliderElement.getBoundingClientRect();
-        const sliderStart = this.props.orientation === 'horizontal' ? sliderX : sliderY;
-        const sliderLength = this.props.orientation === 'horizontal' ? sliderWidth : sliderHeight;
-        const mouseStart = this.props.orientation === 'horizontal' ? mouseX : mouseY;
+        const sliderStart = this.orientation === 'horizontal' ? sliderX : sliderY;
+        const sliderLength = this.orientation === 'horizontal' ? sliderWidth : sliderHeight;
+        const mouseStart = this.orientation === 'horizontal' ? mouseX : mouseY;
         const thumbStart = Math.min(Math.max(mouseStart - sliderStart, 0), sliderLength);
-        const slidingValueCoef = this.props.orientation === 'horizontal' ? thumbStart / sliderLength : (sliderLength - thumbStart) / sliderLength;
+        const slidingValueCoef = this.orientation === 'horizontal' ? thumbStart / sliderLength : (sliderLength - thumbStart) / sliderLength;
         const slidingValue = slidingValueCoef * (this.props.maximumValue - this.props.minimumValue) + this.props.minimumValue;
         return Math.floor(slidingValue);
     }
@@ -56,9 +62,8 @@ class Slider extends Component {
             window.removeEventListener('blur', onBlur);
             window.removeEventListener('mouseup', onMouseUp);
             window.removeEventListener('mousemove', onMouseMove);
-            document.body.style['pointer-events'] = 'initial';
             document.documentElement.style.cursor = 'initial';
-            sliderElement.classList.remove(styles['active']);
+            document.body.style['pointer-events'] = 'initial';
         };
         const onBlur = () => {
             releaseThumb();
@@ -77,30 +82,25 @@ class Slider extends Component {
         window.addEventListener('blur', onBlur);
         window.addEventListener('mouseup', onMouseUp);
         window.addEventListener('mousemove', onMouseMove);
-        document.body.style['pointer-events'] = 'none';
         document.documentElement.style.cursor = 'pointer';
-        sliderElement.classList.add(styles['active']);
+        document.body.style['pointer-events'] = 'none';
         onMouseMove({ clientX: mouseX, clientY: mouseY });
     }
 
     render() {
-        const thumbStartProp = this.props.orientation === 'horizontal' ? 'left' : 'bottom';
+        const thumbStartProp = this.orientation === 'horizontal' ? 'left' : 'bottom';
         const thumbStart = (this.props.value - this.props.minimumValue) / (this.props.maximumValue - this.props.minimumValue);
         return (
-            <div className={classnames(styles['slider-container'], styles[this.props.orientation], this.props.containerClassName)} onMouseDown={this.onStartSliding}>
-                <div className={styles['line']} />
-                <div
-                    className={classnames(styles['thumb'], this.props.thumbClassName)}
-                    style={{ [thumbStartProp]: `calc(100% * ${thumbStart})` }}
-                />
+            <div className={classnames(styles['slider-container'], styles[this.orientation], { [styles['active']]: this.state.active }, this.props.className)} onMouseDown={this.onStartSliding}>
+                <div className={styles['track']} />
+                <div className={styles['thumb']} style={{ [thumbStartProp]: `calc(100% * ${thumbStart})` }} />
             </div>
         );
     }
 }
 
 Slider.propTypes = {
-    containerClassName: PropTypes.string,
-    thumbClassName: PropTypes.string,
+    className: PropTypes.string,
     value: PropTypes.number.isRequired,
     minimumValue: PropTypes.number.isRequired,
     maximumValue: PropTypes.number.isRequired,
