@@ -1,35 +1,9 @@
 @import 'stremio-colors';
 
-@scroll-container-width: 392px;
-@seasons-bar-height: 50px;
-@spacing: 8px;
-
 .videos-list-container {
-    .seasons-bar {
-        height: @seasons-bar-height;
-        margin-bottom: @spacing;
-
-        .button-container {
-            width: (@seasons-bar-height * 1.5);
-        }
-    }
-
-    .scroll-container {
-        width: @scroll-container-width;
-        margin: 0 @spacing;
-
-        .videos-list {
-            padding: 0 (2 * @spacing);
-
-            >:not(:first-child) {
-                margin-top: @spacing;
-            }
-        }
-    }
-
-    .scroll-container::-webkit-scrollbar {
-        width: @spacing;
-    }
+    --scroll-container-width: 392px;
+    --seasons-bar-height: 50px;
+    --spacing: 8px;
 }
 
 .videos-list-container {
@@ -39,10 +13,13 @@
     background: @colordarkest;
 
     .seasons-bar {
+        height: var(--seasons-bar-height);
         display: flex;
         justify-content: space-between;
+        margin-bottom: var(--spacing);
 
         .button-container {
+            width: calc(1.5 * var(--seasons-bar-height));
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -63,6 +40,8 @@
     .scroll-container {
         flex: 1;
         position: relative;
+        width: var(--scroll-container-width);
+        margin: 0 var(--spacing);
         overflow-y: auto;
         overflow-x: hidden;
 
@@ -72,7 +51,16 @@
             left: 0;
             right: 0;
             bottom: 0;
+            padding: 0 calc(2 * var(--spacing));
+
+            >:not(:first-child) {
+                margin-top: var(--spacing);
+            }
         }
+    }
+
+    .scroll-container::-webkit-scrollbar {
+        width: var(--spacing);
     }
 
     .scroll-container::-webkit-scrollbar-thumb {
