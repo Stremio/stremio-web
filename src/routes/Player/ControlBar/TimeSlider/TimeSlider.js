@@ -35,9 +35,9 @@ class TimeSlider extends Component {
     }
 
     onComplete = (time) => {
+        this.resetTimeDebounced();
         this.setState({ time });
         this.props.setTime(time);
-        this.resetTimeDebounced();
     }
 
     onCancel = () => {

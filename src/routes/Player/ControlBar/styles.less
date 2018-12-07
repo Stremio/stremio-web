@@ -1,127 +1,75 @@
-@import 'stremio-colors';
-
-@time-slider-height: 26px;
-@buttons-bar-height: 58px;
-
-.control-bar-container {
-    height: (@time-slider-height + @buttons-bar-height);
-
-    .time-slider {
-        height: @time-slider-height;
-
-        .time-thumb {
-            width: @time-slider-height;
-            height: @time-slider-height;
-        }
-    }
-
-    .buttons-bar-container {
-        height: @buttons-bar-height;
-
-        .button {
-            height: @buttons-bar-height;
-            width: @buttons-bar-height;
-
-            .icon {
-                width: floor((@buttons-bar-height * 0.6));
-                height: floor((@buttons-bar-height * 0.6));
-            }
-
-            &.active {
-                padding-top: 1px;
-            }
-        }
-
-        .time-label {
-            font-size: 16px;
-        }
-
-        .separator {
-            width: 1px;
-            margin-left: floor((@buttons-bar-height * 0.25));
-            margin-right: floor((@buttons-bar-height * 0.25));
-        }
-    }
-}
-
-.popup-container {
-    &.volume-popup-container {
-        padding: ceil((@buttons-bar-height * 0.4)) 0;
-        width: @buttons-bar-height;
-
-        .volume-slider {
-            width: floor((@buttons-bar-height * 0.4));
-            height: floor((@buttons-bar-height * 3));
-
-            .volume-thumb {
-                width: floor((@buttons-bar-height * 0.4));
-                height: floor((@buttons-bar-height * 0.4));
-            }
-        }
-    }
-
-    &.share-popup-container {
-        width: (@buttons-bar-height * 5);
-        height: (@buttons-bar-height * 3);
-    }
+.control-bar-container, .popup-container {
+    --control-bar-button-height: 60px;
 }
 
 .control-bar-container {
     top: initial !important;
     padding: 0 2%;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    align-items: stretch;
 
-    .buttons-bar-container {
+    .time-slider {
+        --time-slider-thumb-size: calc(var(--control-bar-button-height) * 0.4);
+        height: var(--time-slider-thumb-size);
+        width: 100%;
+    }
+
+    .control-bar-buttons-container {
+        height: var(--control-bar-button-height);
+        width: 100%;
         display: flex;
         flex-direction: row;
         align-items: center;
 
-        .button {
+        .control-bar-button {
+            width: var(--control-bar-button-height);
+            height: var(--control-bar-button-height);
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
 
             .icon {
-                fill: @colorwhite80;
+                width: 60%;
+                height: 60%;
+                fill: var(--color-surfacelight);
+                overflow: visible;
             }
 
             &.active {
-                background-color: @colorbgmain;
+                background-color: var(--color-backgrounddarker);
 
                 .icon {
-                    fill: @colorwhite;
+                    fill: var(--color-surfacelighter);
                 }
             }
 
             &:hover {
                 .icon {
-                    fill: @colorwhite;
+                    fill: var(--color-surfacelighter);
                 }
             }
         }
 
-        .separator {
-            height: 70%;
-            background-color: @colorneutrallight80;
+        .volume-slider {
+            --volume-slider-thumb-size: calc(var(--control-bar-button-height) * 0.3);
+            height: var(--volume-slider-thumb-size);
+            width: calc(var(--control-bar-button-height) * 3);
         }
 
-        .time-label {
-            color: @colorwhite;
-        }
-
-        .spacing {
+        .flex-spacing {
             flex: 1
         }
     }
 }
 
 .popup-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: @colorbgmain;
+    --border-color: var(--color-primarylight);
+
+    .popup-content {
+        background-color: var(--color-backgrounddark);
+
+        &.share-popup-content {
+            width: calc(var(--control-bar-button-height) * 5);
+            height: calc(var(--control-bar-button-height) * 3);
+        }
+    }
 }
