@@ -80,11 +80,11 @@ const Addon = (props) => {
             {renderDescription(props.description)}
             {renderUrls(props.urls)}
             <div className={styles['buttons']}>
-                <div onClick={props.shareAddon} className={classnames(styles['button'], styles['share-button'])}>
+                <div className={classnames(styles['button'], styles['share-button'])} onClick={props.shareAddon}>
                     <Icon className={styles['icon']} icon={'ic_share'} />
                     <span className={styles['label']}>SHARE ADD-ON</span>
                 </div>
-                <div onClick={props.onToggleClicked} className={classnames(styles['button'], props.isInstalled ? styles['install-button'] : styles['uninstall-button'])}>
+                <div className={classnames(styles['button'], props.isInstalled ? styles['install-button'] : styles['uninstall-button'])} onClick={props.onToggleClicked}>
                     <span className={styles['label']}>{props.isInstalled ? 'Install' : 'Uninstall'}</span>
                 </div>
             </div>

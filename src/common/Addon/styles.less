@@ -1,47 +1,23 @@
 @import 'stremio-colors';
 
-@addon-width: 514px;
-@logo-width: floor((@addon-width * 0.2));
-
 .addon {
-    width: @addon-width;
-    grid-template-rows: floor((@logo-width * 0.25)) floor((@logo-width * 0.20)) auto auto ceil((@addon-width * 0.08));
-
-    .logo {
-        width: @logo-width;
-        height: @logo-width;
-    }
-
-    .name {
-        font-size: 20px;
-    }
-
-    .type {
-        font-size: 12px;
-    }
-
-    .description {
-        font-size: 12px;
-    }
-
-    .urls-container {
-        font-size: 12px;
-    }
-
-    .button {
-        border-width: 2px;
-
-        .label {
-            font-size: 14px;
-        }
-    }
+    --addon-width: 514px;
+    --name-font-size: 20px;
+    --version-font-size: 12px;
+    --type-font-size: 12px;
+    --description-font-size: 12px;
+    --url-font-size: 12px;
+    --button-border-width: 2px;
+    --button-label-font-size: 14px;
 }
 
 .addon {
     display: grid;
+    width: var(--addon-width);
     padding: 2%;
     background-color: @colorglass;
     grid-template-columns: 1fr 4fr;
+    grid-template-rows: calc(0.04 * var(--addon-width)) calc(0.04 * var(--addon-width)) auto auto calc((0.08 * var(--addon-width)));
     grid-template-areas:
         "logo header"
         "logo type"
@@ -53,6 +29,8 @@
         grid-area: logo;
 
         .logo {
+            width: calc(0.2 * var(--addon-width));
+            height: calc(0.2 * var(--addon-width));
             padding: 20%;
             fill: @colorwhite;
             background-color: @colordarkest;
@@ -74,6 +52,7 @@
             .name {
                 max-width: 80%;
                 margin-right: 3%;
+                font-size: var(--name-font-size);
                 color: @colorwhite;
                 overflow: hidden;
                 white-space: pre;
@@ -82,6 +61,7 @@
 
             .version {
                 flex: 1;
+                font-size: var(--version-font-size);
                 color: @colorwhite60;
                 overflow: hidden;
                 white-space: pre;
@@ -95,12 +75,14 @@
         display: flex;
         align-items: center;
         padding-left: 4%;
+        font-size: var(--type-font-size);
         color: @coloraccent;
     }
 
     .description {
         grid-area: description;
         padding-left: 4%;
+        font-size: var(--description-font-size);
         color: @colorwhite;
         word-break: break-all; //Firefox doesn't support { break-word }
         word-break: break-word;
@@ -113,6 +95,7 @@
         word-break: break-all;
 
         .url {
+            font-size: var(--url-font-size);
             color: @colorwhite60;
         }
     }
@@ -129,6 +112,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            border-width: var(--button-border-width);
             border-style: solid;
 
             .icon {
