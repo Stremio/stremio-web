@@ -1,109 +1,65 @@
-
-.settings {
+.settings-container {
     height: 100%;
+    width: 100%;
     display: flex;
-//    color: @colorwhite60;
-    font-family: LatoLight;
-    .options {
+    // color: @colorwhite60;
+
+    .side-menu {
         width: 240px;
         padding: 20px;
         display: flex;
-        font-size: 14px;
         flex-direction: column;
-//        background: @colordarkest;
-        .option {
+        font-size: 14px;
+        // background: @colordarkest;
+
+        .menu-option {
             padding: 14px;
             font-weight: 600;
-            &:hover {
+
+            &:hover, &.selected {
                 cursor: pointer;
 //                color: @colorwhite;
 //                background: @colorglass;
             }
         }
-        .selected-menu {
-            padding: 14px;
-            font-weight: 600;
-            cursor: pointer;
-//            color: @colorwhite;
-//            background: @colorglass;
-        }
-        .selected {
-            cursor: pointer;
-//            color: @colorwhite;
-//            background: @colorglass;
-        }
     }
-    .player-preferences-menu {
-        height: 150px;
-        margin: 60px 50px;
-//        border-bottom: 1px solid @colormedium;
-        .preference-container {
-            display: flex;
-            cursor: pointer;
-            margin: 30px 0px;
-            align-items: center;
-            .preference {
-                width: 280px;
-            }
-            .default-checkbox {
-                display: none;
-            }
-            .checkbox {
-                width: 14px;
-                height: 14px;
-                cursor: pointer;
-//                border: 2px solid @colorwhite60;
-                .checkmark {
-                    width: 10px;
-                    height: 10px;
-                    display: none;
-//                    fill: @colorwhite;
-                }
-            }
-            input:checked ~ .checkbox {
-//                background-color: @colorprimlight;
-//                border: 2px solid @colorprimlight;
-                .checkmark {
-                    display: block;
-                }
-            }
-            input:checked ~ .preference {
-//                color: @colorwhite;
-            }
-        }
-    }
-    .language-menu {
+
+    .settings-list {
+        width: 280px;
         margin: 40px 50px;
-        .interface-language {
-            margin-bottom: 30px;
-        }
-        .interface-language, .default-subtitles-language {
-//            border-bottom: 1px solid @colormedium;
-            .headline {
-                font-weight: 600;
-//                color: @colorwhite40;
-            }
-            .name {
-                height: 40px;
-                width: 250px;
-                padding: 20px;
+
+        .settings-section {
+            display: flex;
+            flex-direction: column;
+
+            .toggle-option {
                 display: flex;
-                margin: 30px 0px;
+                cursor: pointer;
+                margin-bottom: 30px;
                 align-items: center;
-                justify-content: space-between;
-                font-weight: 600;
-//                color: @colorwhite;
-//                background-color: @colordarkest;
-//                border: 1px solid @colortransparent;
-                .arrow-down {
-                    width: 8px;
-                    height: 10px;
-//                    fill: @colorwhite40;
+
+                .preference {
+                    flex: 1;
+                    white-space: pre;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
                 }
+
+                .checkbox-size {
+                    height: 16px;
+                    width: 16px;
+                }
+
                 &:hover {
-                    cursor: pointer;
-//                    border: 1px solid @colormedium;
+                    .preference {
+                        // color: @colorwhite;
+                    }
                 }
+            }
+
+            &:not(:last-child) {
+                margin-bottom: 30px;
+                // border-bottom: 1px solid @colormedium;
             }
         }
     }

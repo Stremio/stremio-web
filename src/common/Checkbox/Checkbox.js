@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import classnames from 'classnames';
+import Icon from 'stremio-icons/dom';
 import styles from './styles';
 
 class Checkbox extends Component {
@@ -8,26 +10,32 @@ class Checkbox extends Component {
             nextProps.enabled !== this.props.enabled;
     }
 
-    onPress = () => {
-        if (this.props.enabled && typeof this.props.onPress === 'function') {
-            this.props.onPress();
+    onClick = () => {
+        if (this.props.enabled && typeof this.props.onClick === 'function') {
+            this.props.onClick();
         }
     }
 
     render() {
         return (
-            <div className={styles.root} onClick={this.onPress} />
+            <div className={classnames(styles['root'], this.props.className, { [styles['checkbox-checked']]: this.props.checked }, { [styles['checkbox-disabled']]: !this.props.enabled })}>
+                <Icon className={classnames(styles['icon'])} icon={this.props.checked ? 'ic_check' : 'ic_box_empty'} />
+                <input type={'checkbox'} className={styles['native-checkbox']} defaultChecked={this.props.checked} disabled={!this.props.enabled} onClick={this.onClick} />
+            </div>
         );
     }
 }
 
 Checkbox.propTypes = {
+    className: PropTypes.string,
     enabled: PropTypes.bool.isRequired,
     checked: PropTypes.bool.isRequired,
-    onPress: PropTypes.func
+    onClick: PropTypes.func
 };
+
 Checkbox.defaultProps = {
-    enabled: true
+    enabled: true,
+    checked: false
 };
 
 export default Checkbox;

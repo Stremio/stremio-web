@@ -1,78 +1,111 @@
+@stream-width: 360px;
+@spacing: max(12px, ceil((@stream-width * 0.04)));
+@progress-height: 5px;
 
-.stream {
-    width: 340px;
-    display: flex;
-    font-size: 11px;
-    padding: 7px 20px;
-//    color: @colorwhite;
-    justify-content: space-between;
-//    background-color: @colorblack20;
-    .stream-info-container {
-        width: 230px;
-        .stream-info {
-            height: 40px;
+.stream-container {
+    width: @stream-width;
+
+    .logo-container {
+        margin: @spacing 0 @spacing @spacing;
+    }
+
+    .source-name {
+        font-size: 13px;
+        margin: @spacing 0 @spacing @spacing;
+    }
+
+    .text-container {
+        min-height: ceil((@stream-width * 0.16));
+        padding: @spacing;
+
+        .title {
+            font-size: 11px;
+        }
+
+        .subtitle {
+            font-size: 11px;
+        }
+
+        :not(:last-child) {
+            margin-bottom: (@spacing * 0.5);
+        }
+    }
+
+    .play-container {
+        width: floor((@stream-width * 0.08));
+        padding: @spacing @spacing @spacing 0;
+    }
+
+    .progress {
+        height: @progress-height;
+    }
+}
+
+.stream-container {
+    // background-color: @colorglass;
+
+    .flex-row-container {
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+
+        .logo-container {
+            flex: 1;
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: center;
+
             .logo {
-                width: 74px;
-//                fill: @colorwhite;
-            }
-            .source-name {
-                width: 80px;
-                font-size: 13px;
-                overflow: hidden;
-                white-space: pre;
-                text-overflow: ellipsis;
-            }
-            .text-container {
-                width: 120px;
-                overflow: hidden;
-                .title {
-                    overflow: hidden;
-                    white-space: pre;
-                    text-overflow: ellipsis;
-                    &:hover {
-                        margin-left: -180%;
-                        text-overflow: initial;
-                        transition: margin-left 3s linear;
-                    }
-                }
-                .free-label, .subscription-label {
-                    font-weight: 600;
-                }
-                .free-label {
-                    padding: 1px 6px;
-                    border-radius: 2px;
-//                    background-color: @colorprimlight;
-                }
-                .subscription-label {
-//                    color: @colorsignal1;
-                }
+                width: 100%;
+                // fill: @colorwhite;
             }
         }
-        .progress-container {
-//            background-color: @colorneutral;
-            .progress {
-                height: 3px;
-                border-radius: 1px;
-//                background-color: @colorprimlight;
+
+        .source-name {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            // color: @colorwhite;
+            word-break: break-all; //Firefox doesn't support { break-word }
+            word-break: break-word;
+        }
+
+        .text-container {
+            flex: 3;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            .title {
+                // color: @colorwhite;
+                word-break: break-word;
+            }
+
+            .subtitle {
+                // color: @colorwhite;
+                word-break: break-word;
+            }
+        }
+
+        .play-container {
+            display: flex;
+            align-items: center;
+
+            .play {
+                width: 100%;
+                // fill: @colorwhite;
             }
         }
     }
-    .play-container {
-        width: 46px;
-        height: 46px;
-        display: flex;
-        border-radius: 50%;
-        .play {
-            width: 18px;
-            height: 18px;
-            margin: auto;
-            margin-left: 16px;
-//            fill: @colorwhite60;
+
+    .progress-container {
+        // background-color: @colorprim;
+
+        .progress {
+            // background-color: @colorprimlight;
         }
     }
+
     &:hover {
         cursor: pointer;
 //        background-color: @colorwhite20;

@@ -1,7 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import classnames from 'classnames';
 import Icon from 'stremio-icons/dom';
 import styles from './styles';
+
+const MAX_DESCRIPTION_SYMBOLS = 500;
 
 const renderName = (name) => {
     if (name.length === 0) {
@@ -9,7 +12,7 @@ const renderName = (name) => {
     }
 
     return (
-        <span className={styles['name']}>{name}</span>
+        <div className={styles['name']}>{name}</div>
     );
 }
 
@@ -19,7 +22,7 @@ const renderVersion = (version) => {
     }
 
     return (
-        <span className={styles['version']}>{'v. ' + version}</span>
+        <div className={styles['version']}>{'v. ' + version}</div>
     );
 }
 
@@ -41,12 +44,12 @@ const renderDescription = (description) => {
     }
 
     return (
-        <div style={description.length > 150 ? { overflow: 'auto', height: 36 } : null} className={styles['description']}>{description}</div>
+        <div className={styles['description']}>{description.length > MAX_DESCRIPTION_SYMBOLS ? description.slice(0, MAX_DESCRIPTION_SYMBOLS) + '...' : description}</div>
     );
 }
 
 const renderUrls = (urls) => {
-    if(urls.length === 0) {
+    if (urls.length === 0) {
         return null;
     }
 
@@ -54,7 +57,7 @@ const renderUrls = (urls) => {
         <div className={styles['urls-container']}>
             {urls.map((url) => {
                 return (
-                    <span key={url} className={styles['url']}>{url}</span>
+                    <div key={url} className={styles['url']}>{url}</div>
                 );
             })}
         </div>
@@ -64,24 +67,26 @@ const renderUrls = (urls) => {
 const Addon = (props) => {
     return (
         <div className={styles['addon']}>
-            <div className={styles['info-container']}>
-                <div className={styles['logo-container']}>
-                    <Icon className={styles['logo']} icon={props.logo.length === 0 ? 'ic_addons' : props.logo} />
-                </div>
-                <div className={styles['info']}>
+            <div className={styles['logo-container']}>
+                <Icon className={styles['logo']} icon={props.logo.length === 0 ? 'ic_addons' : props.logo} />
+            </div>
+            <div className={styles['header-container']}>
+                <div className={styles['header']}>
                     {renderName(props.name)}
                     {renderVersion(props.version)}
-                    {renderType(props.types)}
-                    {renderDescription(props.description)}
                 </div>
             </div>
+            {renderType(props.types)}
+            {renderDescription(props.description)}
             {renderUrls(props.urls)}
             <div className={styles['buttons']}>
-                <div onClick={props.shareAddon} className={styles['share-container']}>
-                    <Icon className={styles['share-icon']} icon={'ic_share'} />
-                    <span className={styles['share-label']}>SHARE ADD-ON</span>
+                <div onClick={props.shareAddon} className={classnames(styles['button'], styles['share-button'])}>
+                    <Icon className={styles['icon']} icon={'ic_share'} />
+                    <span className={styles['label']}>SHARE ADD-ON</span>
                 </div>
-                <div onClick={props.onToggleClicked} className={styles[props.isInstalled ? 'install-label' : 'uninstall-label']}>{props.isInstalled ? 'Install' : 'Uninstall'}</div>
+                <div onClick={props.onToggleClicked} className={classnames(styles['button'], props.isInstalled ? styles['install-button'] : styles['uninstall-button'])}>
+                    <span className={styles['label']}>{props.isInstalled ? 'Install' : 'Uninstall'}</span>
+                </div>
             </div>
         </div>
     );
@@ -91,12 +96,12 @@ Addon.propTypes = {
     logo: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     version: PropTypes.string.isRequired,
-    types: PropTypes.array.isRequired,
+    types: PropTypes.arrayOf(PropTypes.string).isRequired,
     description: PropTypes.string.isRequired,
     urls: PropTypes.arrayOf(PropTypes.string).isRequired,
     isInstalled: PropTypes.bool.isRequired,
-    shareAddon: PropTypes.func,
-    onToggleClicked: PropTypes.func
+    shareAddon: PropTypes.func.isRequired,
+    onToggleClicked: PropTypes.func.isRequired
 };
 Addon.defaultProps = {
     logo: '',

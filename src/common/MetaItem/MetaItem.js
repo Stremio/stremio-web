@@ -9,35 +9,20 @@ const getShapeSize = (posterShape, progress) => {
     switch (posterShape) {
         case 'poster':
             return {
-                containerHeight: 290,
-                width: RELATIVE_POSTER_SIZE,
-                height: RELATIVE_POSTER_SIZE * 1.464
+                width: RELATIVE_POSTER_SIZE
             };
         case 'landscape':
-            if (progress) {
-                return {
-                    containerHeight: 290,
-                    width: RELATIVE_POSTER_SIZE / 0.5625,
-                    height: RELATIVE_POSTER_SIZE * 1.464
-                };
-            }
             return {
-                containerHeight: 210,
-                width: RELATIVE_POSTER_SIZE / 0.5625,
-                height: RELATIVE_POSTER_SIZE
+                width: RELATIVE_POSTER_SIZE / 0.5625
             };
         default:
             if (progress) {
                 return {
-                    containerHeight: 290,
-                    width: RELATIVE_POSTER_SIZE * 1.464,
-                    height: RELATIVE_POSTER_SIZE * 1.464
+                    width: RELATIVE_POSTER_SIZE * 1.464
                 };
             }
             return {
-                containerHeight: 210,
-                width: RELATIVE_POSTER_SIZE,
-                height: RELATIVE_POSTER_SIZE
+                width: RELATIVE_POSTER_SIZE
             };
     }
 }
@@ -62,7 +47,7 @@ const renderProgress = (progress) => {
 
     return (
         <div className={styles['progress-container']}>
-            <div style={{ width: progress + '%' }} className={styles['progress']}></div>
+            <div style={{ width: progress + '%' }} className={styles['progress']} />
         </div>
     );
 }
@@ -97,46 +82,67 @@ const renderReleaseInfo = (releaseInfo) => {
     );
 }
 
-const renderIcon = (onItemClicked, progress) => {
-    if (progress > 0) {
-        return (
-            <div onClick={onItemClicked} className={styles['more-icon-container']}>
-                <Icon className={styles['more-icon']} icon={'ic_more'} />
-            </div>
-        );
+const renderPopupIcon = (onItemClicked, popup) => {
+    if (!popup) {
+        return null;
     }
-    return null;
+    
+    return (
+        <div onClick={onItemClicked} className={styles['popup-icon-container']}>
+            <Icon className={styles['popup-icon']} icon={'ic_more'} />
+        </div>
+    );
+}
+
+const getClassName = (progress, posterShape, title, releaseInfo, episode) => {
+    if ((progress > 0) && (title.length > 0 || releaseInfo.length > 0 || episode.length > 0)) {
+        if (posterShape === 'landscape') return 'progress-info-landscape-shape';
+        if (posterShape === 'square') return 'progress-info-square-shape';
+        return 'progress-info-poster-shape';
+    }
+    if ((progress > 0) && (title.length === 0 && releaseInfo.length === 0 && episode.length === 0)) {
+        if (posterShape === 'landscape') return 'progress-landscape-shape';
+        if (posterShape === 'square') return 'progress-square-shape';
+        return 'progress-poster-shape';
+    }
+    if (!progress && (title.length > 0 || releaseInfo.length > 0 || episode.length > 0)) {
+        if (posterShape === 'landscape') return 'info-landscape-shape';
+        if (posterShape === 'square') return 'info-square-shape';
+        return 'info-poster-shape';
+    }
+    if (!progress && (title.length === 0 && releaseInfo.length === 0 && episode.length === 0)) {
+        if (posterShape === 'landscape') return 'landscape-shape';
+        if (posterShape === 'square') return 'square-shape';
+        return 'poster-shape';
+    }
+    return 'meta-item';
 }
 
 const MetaItem = (props) => {
     const posterSize = getShapeSize(props.posterShape, props.progress);
     const contentContainerStyle = {
-        width: posterSize.width,
-        height: props.episode.length === 0 && props.title.length === 0 && props.releaseInfo.length === 0 && props.progress == 0? posterSize.height : posterSize.containerHeight
+        width: posterSize.width
     };
     const placeholderIcon = getPlaceholderIcon(props.type);
     const placeholderIconUrl = iconDataUrl({ icon: placeholderIcon, fill: colors.accent, width: Math.round(RELATIVE_POSTER_SIZE / 2.2), height: Math.round(RELATIVE_POSTER_SIZE / 2.2) });
     const imageStyle = {
-        height: posterSize.height,
         backgroundImage: `url(${props.poster}), url('${placeholderIconUrl}')`
     };
 
     return (
-        <div style={contentContainerStyle} className={styles['meta-item']}>
+        <div style={contentContainerStyle} className={styles[getClassName(props.progress, props.posterShape, props.title, props.releaseInfo, props.episode)]}>
             <div style={imageStyle} className={styles['poster']}>
-            <div onClick={props.play} style={props.progress ? { visibility: 'visible' } : null} className={styles['play-container']}>
-                <Icon className={styles['play']} icon={'ic_play'} />
-            </div>
+                <div onClick={props.play} style={props.progress ? { visibility: 'visible' } : null} className={styles['play-container']}>
+                    <Icon className={styles['play']} icon={'ic_play'} />
+                </div>
             </div>
             {renderProgress(props.progress)}
-            <div className={styles['info-container']}>
-                <div className={styles['info']}>
-                    {renderEpisode(props.episode)}
-                    {renderTitle(props.title)}
-                    {renderReleaseInfo(props.releaseInfo)}
-                </div>
-                {renderIcon(props.onItemClicked, props.progress)}
+            <div className={styles['info']}>
+                {renderEpisode(props.episode)}
+                {renderTitle(props.title)}
+                {renderReleaseInfo(props.releaseInfo)}
             </div>
+            {renderPopupIcon(props.onItemClicked, props.popup)}
         </div>
     );
 }
@@ -149,6 +155,7 @@ MetaItem.propTypes = {
     episode: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     releaseInfo: PropTypes.string.isRequired,
+    popup: PropTypes.bool.isRequired,
     play: PropTypes.func,
     onItemClicked: PropTypes.func
 };
@@ -159,7 +166,8 @@ MetaItem.defaultProps = {
     progress: 0,
     episode: '',
     title: '',
-    releaseInfo: ''
+    releaseInfo: '',
+    popup: false
 };
 
 export default MetaItem;

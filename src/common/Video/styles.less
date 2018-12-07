@@ -1,59 +1,120 @@
+@video-width: 360px;
+@spacing: max(8px, ceil((@video-width * 0.02)));
+@progress-height: 5px;
 
-.video {
-    height: 62px;
-    width: 340px;
-    display: flex;
-    padding: 10px 10px;
-//    background-color: @colorblack20;
+.video-container {
+    width: @video-width;
+
     .poster {
-        margin-right: 10px;
-        background-position: center;
-        background-size: cover, auto;
-        background-repeat: no-repeat;
+        margin: @spacing 0 @spacing @spacing;
     }
-    .video-container {
-        width: 240px;
-//        color: @colorwhite;
-        .main-info {
+
+    .info-container {
+        min-height: ceil((@video-width * 0.2));
+        padding: @spacing;
+
+        .title {
             font-size: 12px;
-            .number { 
-                margin-right: 6px;
-            }
-            .name {
-                overflow: hidden;
-                white-space: pre;
-                text-overflow: ellipsis;
-            }
         }
-        .duration, .released-date {
+
+        .released-date {
             font-size: 11px;
-            padding-left: 1px;
-            margin-right: 10px;
-//            color: @colorwhite60;
         }
-        .progress-container {
-//            background-color: @colorwhite20;
-            .progress {
-                height: 3px;
-                margin-top: 2px;
-                border-radius: 1px;
-//                background-color: @colorprimlight;
-            }
-        }
-        .watched-label, .upcoming-label {
-            font-weight: 600;
+
+        .upcoming-label, .watched-label {
             font-size: 10px;
-            padding: 1px 6px;
             border-radius: 2px;
         }
-        .watched-label {
-//            background-color: @colorprimlight;
-        }
+
         .upcoming-label {
-//            background-color: @colorsignal5;
+            margin-right: @spacing;
+        }
+
+        >:not(:last-child) {
+            margin-bottom: (@spacing * 0.5);
         }
     }
-    &:hover, &:focus {
+
+    .arrow-container {
+        width: floor((@video-width * 0.07));
+        padding: @spacing @spacing @spacing 0;
+    }
+
+    .progress {
+        height: @progress-height;
+    }
+}
+
+.video-container {
+    // background-color: @colorglass;
+
+    .flex-row-container {
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+
+        .poster {
+            flex: 1;
+            background-position: center;
+            background-size: cover, auto;
+            background-repeat: no-repeat;
+        }
+
+        .info-container {
+            flex: 3;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            .title {
+                // color: @colorwhite;
+                word-break: break-all; //Firefox doesn't support { break-word }
+                word-break: break-word;
+            }
+
+            .released-date {
+                // color: @colorwhite60;
+            }
+
+            .label-container {
+                display: flex;
+
+                .upcoming-label, .watched-label {
+                    padding: 0 0.6em;
+                    font-weight: 600;
+                    // color: @colorwhite;
+                }
+
+                .upcoming-label {
+                    // background-color: @colorsignal5;
+                }
+
+                .watched-label {
+                    // background-color: @colorprimlight;
+                }
+            }
+        }
+
+        .arrow-container {
+            display: flex;
+            align-items: center;
+
+            .arrow {
+                width: 100%;
+                // fill: @colorwhite;
+            }
+        }
+    }
+
+    .progress-container {
+        // background-color: @colorprim;
+
+        .progress {
+            // background-color: @colorprimlight;
+        }
+    }
+
+    &:hover {
         cursor: pointer;
 //        background-color: @colorwhite20;
     }
