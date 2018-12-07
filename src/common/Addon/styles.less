@@ -13,7 +13,7 @@
     display: grid;
     width: var(--addon-width);
     padding: 2%;
-    // background-color: @colorglass;
+    background-color: var(--color-background);
     grid-template-columns: 1fr 4fr;
     grid-template-rows: calc(0.04 * var(--addon-width)) calc(0.04 * var(--addon-width)) auto auto calc((0.08 * var(--addon-width)));
     grid-template-areas:
@@ -30,8 +30,8 @@
             width: calc(0.2 * var(--addon-width));
             height: calc(0.2 * var(--addon-width));
             padding: 20%;
-            // fill: @colorwhite;
-            // background-color: @colordarkest;
+            fill: var(--color-surfacelighter);
+            background-color: var(--color-backgrounddarker);
         }
     }
 
@@ -51,7 +51,7 @@
                 max-width: 80%;
                 margin-right: 3%;
                 font-size: var(--name-font-size);
-                // color: @colorwhite;
+                color: var(--color-surfacelighter);
                 overflow: hidden;
                 white-space: pre;
                 text-overflow: ellipsis;
@@ -60,7 +60,7 @@
             .version {
                 flex: 1;
                 font-size: var(--version-font-size);
-                // color: @colorwhite60;
+                color: var(--color-surface);
                 overflow: hidden;
                 white-space: pre;
                 text-overflow: ellipsis;
@@ -74,14 +74,14 @@
         align-items: center;
         padding-left: 4%;
         font-size: var(--type-font-size);
-        // color: @coloraccent;
+        color: var(--color-secondarylighter);
     }
 
     .description {
         grid-area: description;
         padding-left: 4%;
         font-size: var(--description-font-size);
-        // color: @colorwhite;
+        color: var(--color-surfacelighter);
         word-break: break-all; //Firefox doesn't support { break-word }
         word-break: break-word;
     }
@@ -94,7 +94,7 @@
 
         .url {
             font-size: var(--url-font-size);
-            // color: @colorwhite60;
+            color: var(--color-surface);
         }
     }
 
@@ -119,47 +119,47 @@
             }
 
             .label {
-                // color: @colorwhite;
+                color: var(--color-surfacelighter);
             }
 
             &.share-button {
-                // border-color: @coloraccent;
+                border-color: var(--color-secondarylighter);
 
                 .icon {
-                    // fill: @coloraccent;
+                    fill: var(--color-secondarylighter);
                 }
 
                 .label {
-                    // color: @coloraccent;
+                    color: var(--color-secondarylighter);
                 }
 
                 &:hover {
-                    // background-color: @coloraccent;
+                    background-color: var(--color-secondarylighter);
 
                     .icon {
-                        // fill: @colorwhite;
+                        fill: var(--color-surfacelighter);
                     }
 
                     .label {
-                        // color: @colorwhite;
+                        color: var(--color-surfacelighter);
                     }
                 }
             }
 
             &.install-button {
-                // border-color: @colorsignal5;
-                // background-color: @colorsignal5;
+                border-color: var(--color-signal5);
+                background-color: var(--color-signal5);
 
                 &:hover {
-                    // background-color: @colorsignal580;
+                    background-color: var(--color-signal580);
                 }
             }
 
             &.uninstall-button {
-                // border-color: @colorneutral;
+                border-color: var(--color-surfacedark);
 
                 &:hover {
-                    // background-color: @colorneutral;
+                    background-color: var(--color-surfacedark);
                 }
             }
 

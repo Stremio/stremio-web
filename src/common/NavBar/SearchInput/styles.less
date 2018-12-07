@@ -16,11 +16,11 @@
             outline: none;
             appearance: none;
             user-select: text;
-//            background-color: @colorsecondarylight80;
-//            color: @colorwhite80;
+            background-color: var(--color-secondary80);
+            color: var(--color-surfacelighter80);
             font-size: 14px;
             &::placeholder {
-//                color: @colorwhite80;
+               color: var(--color-surfacelighter80);
             }
         }
         .submit-button {
@@ -28,11 +28,11 @@
             height: 100%;
             cursor: pointer;
             outline: none;
-//            background-color: @coloraccent80;
+            background-color: var(--color-secondarylighter80);
             .submit-icon {
                 width: 14px;
                 height: 100%;
-//                fill: @colorwhite80;
+                fill: var(--color-surfacelighter80);
             }
         }
     }
@@ -40,19 +40,19 @@
         .search-label {
             padding: 0;
             .query-input {
-//                background-color: @colorbgmain;
-//                color: @colorwhite;
+                background-color: var(--color-backgrounddark);
+                color: var(--color-surfacelighter);
                 font-size: 16px;
                 &::placeholder {
-//                    color: @colorwhite;
+                   color: var(--color-surfacelighter);
                 }
             }
             .submit-button {
                 width: @nav-bar-height;
-//                background-color: @coloraccent;
+               background-color: var(--color-secondarylighter);
                 .submit-icon {
                     width: 16px;
-//                    fill: @colorwhite;
+                    fill: var(--color-surfacelighter);
                 }
             }
         }

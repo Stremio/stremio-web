@@ -3,8 +3,8 @@
     display: flex;
     padding: 8px;
     align-items: center;
-    // color: @colorwhite60;
-    // border-top: 1px solid @colorwhite20;
+    color: var(--color-surfacelighter60);
+    border-top: 1px solid var(--color-surfacelighter20);
     .poster {
         width: 75px;
         display: flex; 
@@ -22,13 +22,13 @@
             .play {
                 width: 20px;
                 height: 20px;
-//                fill: @colortransparent;
+                fill: transparent;
             }
         }
     }
     .title {
         width: 170px;
-//        color: @colorwhite;
+        color: var(--color-surfacelighter);
     }
     .type, .year, .views, .hours {
         width: 100px;
@@ -39,8 +39,8 @@
     .icon-container {
         width: 100px;
         height: 100px;
-//        fill: @colorprim;
-//        color: @colorprim;
+        fill: var(--color-primarydark);
+        color: var(--color-primarydark);
         padding-top: 24px;
         text-align: center;
         visibility: hidden;
@@ -52,25 +52,25 @@
         }
     }
     &:hover, &:focus {
-//        color: @colorblack;
-//        background-color: @colorwhite;
+       color: var(--color-backgrounddarker);
+       background-color: var(--color-surfacelighter);
         .play-container {
-//            background-color: @colorwhite;
+            background-color: var(--color-surfacelighter);
             .play { 
-//                fill: @colormedium;
+               fill: var(--color-primary);
             }
         } 
         .title {
-//            color: @colorblack;
+           color: var(--color-backgrounddarker);
         }
         .icon-container {
             cursor: pointer;
             visibility: visible;
             &:hover, &:focus {
-//                background-color: @colorblack20;
+               background-color: var(--color-backgrounddarker20);
                 .trailer-icon, .addlib-icon, .trailer, .addlib {
-//                    fill: @colorprimdark;
-//                    color: @colorprimdark;
+                   fill: var(--color-primarydarker);
+                   color: var(--color-primarydarker);
                 }
             }
         }

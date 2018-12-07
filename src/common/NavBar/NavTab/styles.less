@@ -7,26 +7,26 @@
     align-items: center;
     .nav-tab-icon {
         height: @nav-bar-height;
-//        fill: @colorwhite80;
+        fill: var(--color-surfacelighter80);
         width: 18px;
     }
     .nav-tab-label {
-//        color: @colorwhite80;
+        color: var(--color-surfacelighter80);
         font-size: 15px;
         margin-left: 10px;
     }
     &.active {
-//        background-color: @colorbgmain;
+       background-color: var(--color-backgrounddark);
     }
     &:hover:not(.active) {
-//        background-color: @colordarkest20;
+       background-color: var(--color-backgrounddark20);
     }
     &:hover, &.active {
         .nav-tab-icon {
-//            fill: @colorwhite;
+           fill: var(--color-surfacelighter);
         }
         .nav-tab-label {
-//            color: @colorwhite;
+           color: var(--color-surfacelighter);
         }
     }
 }

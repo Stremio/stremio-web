@@ -20,7 +20,7 @@ const renderUrl = (copyToClipboard, url) => {
 }
 
 const ShareAddon = (props) => {
-    const placeholderIconUrl = iconDataUrl({ icon: 'ic_x', fill: colors.neutrallight });
+    const placeholderIconUrl = iconDataUrl({ icon: 'ic_x', fill: colors.surface });
     const imageStyle = {
         backgroundImage: `url('${placeholderIconUrl}')`
     };

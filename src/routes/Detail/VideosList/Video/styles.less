@@ -11,7 +11,7 @@
 
 .video-container {
     width: var(--video-width);
-    background-color: @colorglass;
+    background-color: var(--color-backgroundlight);
 
     .flex-row-container {
         display: flex;
@@ -50,14 +50,14 @@
 
             .title {
                 font-size: var(--title-font-size);
-                color: @colorwhite;
+                color: var(--color-surfacelighter);
                 word-break: break-all; //Firefox doesn't support { break-word }
                 word-break: break-word;
             }
 
             .released-date {
                 font-size: var(--released-date-font-size);
-                color: @colorwhite60;
+                color: var(--color-surface);
             }
 
             .label-container {
@@ -70,16 +70,16 @@
                     border-width: var(--label-border-width);
                     border-style: solid;
                     padding: 0 0.6em;
-                    color: @colorwhite;
+                    color: var(--color-surfacelighter);
                 }
 
                 .upcoming-label {
                     margin-right: var(--spacing);
-                    border-color: @colorsignal5;
+                    border-color: var(--color-signal5);
                 }
 
                 .watched-label {
-                    border-color: @colorprimlight;
+                    border-color: var(--color-primarylight);
                 }
             }
 
@@ -96,23 +96,23 @@
 
             .arrow {
                 width: 100%;
-                fill: @colorwhite;
+                fill: var(--color-surfacelighter);
             }
         }
     }
 
     .progress-container {
         height: calc(0.5 * var(--spacing));
-        background-color: @colorprim;
+        background-color: var(--color-primarydark);
 
         .progress {
             height: 100%;
-            background-color: @colorprimlight;
+            background-color: var(--color-primarylight);
         }
     }
 
     &:hover {
         cursor: pointer;
-        background-color: @colorwhite20;
+        background-color: var(--color-surfacelighter20);
     }
 }

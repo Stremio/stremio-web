@@ -10,7 +10,7 @@
     height: 100%;
     display: inline-flex;
     flex-direction: column;
-    background: @colordarkest;
+    background: var(--color-background);
 
     .seasons-bar {
         height: var(--seasons-bar-height);
@@ -28,11 +28,11 @@
             .button-icon {
                 width: 60%;
                 height: 60%;
-                fill: @colorwhite;
+                fill: var(--color-surfacelighter);
             }
 
             &:hover {
-                background-color: @colorwhite20;
+                background-color: var(--color-surfacelighter20);
             }
         }
     }
@@ -64,10 +64,10 @@
     }
 
     .scroll-container::-webkit-scrollbar-thumb {
-        background-color: @coloraccent80;
+        background-color: var(--color-secondarylighter80);
     }
 
     .scroll-container::-webkit-scrollbar-track {
-        background-color: @colorglass;
+        background-color: var(--color-background);
     }
 }
