@@ -1,41 +1,20 @@
 @import 'stremio-colors';
 
-@user-panel-width: 260px;
-@spacing: max(16px, ceil((@user-panel-width * 0.06)));
-
 .user-panel {
-    width: @user-panel-width;
-
-    .user-info {
-        grid-template-columns: ceil((@user-panel-width * 0.2)) auto;
-        grid-template-rows: ceil((@user-panel-width * 0.1)) ceil((@user-panel-width * 0.1));
-        padding: @spacing;
-    }
-
-    .option {
-        padding: @spacing;
-
-        .icon {
-            width: floor((@user-panel-width * 0.08));
-            height: floor((@user-panel-width * 0.08));
-            margin-right: @spacing;
-        }
-    }
-
-    .label {
-        padding: ceil((@spacing * 0.6)) (2 * ceil((@spacing * 0.6)));
-    }
-
-    .separator {
-        height: 1px;
-    }
+    --user-panel-width: 260px;
+    --spacing: 16px;
+    --separator-height: 1px;
 }
 
 .user-panel {
+    width: var(--user-panel-width);
     background-color: @colordarkest;
 
     .user-info {
         display: grid;
+        padding: var(--spacing);
+        grid-template-columns: calc(0.2 * var(--user-panel-width)) auto;
+        grid-template-rows: calc(0.1 * var(--user-panel-width)) calc(0.1 * var(--user-panel-width));
         grid-template-areas:
             "avatar email"
             "avatar login-logout";
@@ -53,7 +32,7 @@
             display: flex;
             align-items: center;
             color: @colorwhite;
-            padding-left: @spacing;
+            padding-left: var(--spacing);
             overflow: hidden;
             white-space: pre;
             text-overflow: ellipsis;
@@ -64,7 +43,7 @@
             display: flex;
             align-items: center;
             color: @colorneutral;
-            padding-left: @spacing;
+            padding-left: var(--spacing);
             overflow: hidden;
             white-space: pre;
             text-overflow: ellipsis;
@@ -79,9 +58,13 @@
     .option {
         display: flex;
         align-items: center;
+        padding: var(--spacing);
         color: @colorwhite80;
 
         .icon {
+            width: calc(var(--user-panel-width) * 0.08);
+            height: calc(var(--user-panel-width) * 0.08);
+            margin-right: var(--spacing);
             fill: @coloraccent;
         }
 
@@ -93,6 +76,7 @@
     }
 
     .separator {
+        height: var(--separator-height);
         background-color: @colorneutral;
     }
 }
