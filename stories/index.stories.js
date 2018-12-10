@@ -372,7 +372,17 @@ storiesOf('VideosList', module)
     ));
 
 storiesOf('StreamsList', module)
-    .add('list of streams', () => (
+    .add('short list of streams', () => (
+        <div style={streamsListStyle} className={appStyles['app']}>
+            <StreamsList streams={[
+                { id: '1', logo: 'ic_itunes', sourceName: 'iTunes', title: 'Vikings S01E09 HDTV XviD-AFG[ettv], 👤 1', subtitle: 'HDTV', progress: 50 },
+                { id: '2', logo: '', sourceName: 'Amazon', title: '$1.99 purchase SD,$2.99 purchase HD', subtitle: '', progress: 50 },
+                { id: '3', logo: '', sourceName: 'Juan Carlos 2', title: 'Vikings S01E09 HDTV XviD-AFG[ettv], 👤 1', subtitle: 'HDTV', progress: 50 },
+                { id: '4', logo: 'ic_amazon', sourceName: 'Amazon', title: 'Vikings S01E09 HDTV XviD-AFG[ettv], 👤 1', subtitle: '', progress: 0 }
+            ]}></StreamsList>
+        </div>
+    ))
+    .add('long list of streams', () => (
         <div style={streamsListStyle} className={appStyles['app']}>
             <StreamsList streams={[
                 { id: '1', logo: 'ic_itunes', sourceName: 'iTunes', title: 'Vikings S01E09 HDTV XviD-AFG[ettv], 👤 1', subtitle: 'HDTV', progress: 50 },

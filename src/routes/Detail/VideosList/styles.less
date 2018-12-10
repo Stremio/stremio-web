@@ -37,23 +37,14 @@
 
     .scroll-container {
         flex: 1;
-        position: relative;
         width: var(--scroll-container-width);
+        padding: 0 calc(2 * var(--spacing));
         margin: 0 var(--spacing);
         overflow-y: auto;
         overflow-x: hidden;
 
-        .videos-list {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            padding: 0 calc(2 * var(--spacing));
-
-            >:not(:first-child) {
-                margin-top: var(--spacing);
-            }
+        >:not(:first-child) {
+            margin-top: var(--spacing);
         }
     }
 

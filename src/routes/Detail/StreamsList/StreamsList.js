@@ -8,21 +8,20 @@ const StreamsList = (props) => {
     return (
         <div className={styles['streams-list-container']}>
             <div className={styles['scroll-container']}>
-                <div className={styles['streams-list']}>
-                    {props.streams
-                        .map((stream) =>
-                            <Stream key={stream.id}
-                                className={styles['stream']}
-                                logo={stream.logo}
-                                sourceName={stream.sourceName}
-                                title={stream.title}
-                                subtitle={stream.subtitle}
-                                progress={stream.progress}
-                            />
-                        )}
-                </div>
+                {props.streams
+                    .map((stream) =>
+                        <Stream key={stream.id}
+                            className={styles['stream']}
+                            logo={stream.logo}
+                            sourceName={stream.sourceName}
+                            title={stream.title}
+                            subtitle={stream.subtitle}
+                            progress={stream.progress}
+                        />
+                    )}
                 <div className={styles['button']} onClick={props.onMoreAddonsClicked}>
-                    <Icon className={styles['button-icon']} icon={'ic_addons'} /> More Add-ons
+                    <Icon className={styles['button-icon']} icon={'ic_addons'} />
+                    <div className={styles['button-label']}>More Add-ons</div>
                 </div>
             </div>
         </div>

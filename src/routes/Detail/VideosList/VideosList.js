@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import classnames from 'classnames';
 import Icon from 'stremio-icons/dom';
 import Video from './Video';
 import styles from './styles';
@@ -54,22 +53,20 @@ class VideosList extends Component {
                     </div>
                 </div>
                 <div className={styles['scroll-container']}>
-                    <div className={classnames(styles['videos-list'])}>
-                        {this.props.videos
-                            .filter((video) => video.season === this.state.selectedSeason)
-                            .map((video) =>
-                                <Video key={video.id}
-                                    className={styles['video']}
-                                    poster={video.poster}
-                                    episode={video.episode}
-                                    title={video.name}
-                                    released={video.released}
-                                    isWatched={video.isWatched}
-                                    isUpcoming={video.isUpcoming}
-                                    progress={video.progress}
-                                />
-                            )}
-                    </div>
+                    {this.props.videos
+                        .filter((video) => video.season === this.state.selectedSeason)
+                        .map((video) =>
+                            <Video key={video.id}
+                                className={styles['video']}
+                                poster={video.poster}
+                                episode={video.episode}
+                                title={video.name}
+                                released={video.released}
+                                isWatched={video.isWatched}
+                                isUpcoming={video.isUpcoming}
+                                progress={video.progress}
+                            />
+                        )}
                 </div>
             </div>
         );

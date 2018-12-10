@@ -1,6 +1,8 @@
 .streams-list-container {
     --scroll-container-width: 392px;
+    --stream-width: 360px;
     --spacing: 8px;
+    --button-label-font-size: 18px;
 }
 
 .streams-list-container {
@@ -11,40 +13,35 @@
 
     .scroll-container {
         flex: 1;
-        position: relative;
         width: var(--scroll-container-width);
+        padding: 0 calc(2 * var(--spacing));
         margin: var(--spacing);
         overflow-y: auto;
         overflow-x: hidden;
 
-        .streams-list {
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            padding: 0 calc(2 * var(--spacing));
-
-            >:not(:first-child) {
-                margin-top: var(--spacing);
-            }
+        >:not(:first-child) {
+            margin-top: var(--spacing);
         }
-    }
 
-    .button {
-        width: calc(0.4 * var(--scroll-container-width));
-        height: calc(0.12 * var(--scroll-container-width));
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: calc(4 * var(--spacing)) auto;
-        color: var(--color-primary);
-        background-color: var(--color-surfacelighter);
+        .button {
+            width: var(--stream-width);
+            height: calc(0.2 * var(--stream-width));
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-primary);
+            background-color: var(--color-surfacelighter);
 
-        .button-icon {
-            width: 12%;
-            margin-right: var(--spacing);
-            fill: var(--color-primary);
+            .button-icon {
+                height: 44%;
+                margin-right: var(--spacing);
+                fill: var(--color-primary);
+            }
+
+            .button-label {
+                font-size: var(--button-label-font-size);
+            }
         }
     }
 
