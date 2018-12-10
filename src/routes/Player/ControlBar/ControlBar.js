@@ -33,6 +33,10 @@ class ControlBar extends Component {
         this.props.setVolume(volume);
     }
 
+    toogleVolumeMute = () => {
+        this.props.volume === 0 ? this.props.unmute() : this.props.mute();
+    }
+
     onPlayPauseButtonClick = () => {
         this.props.paused ? this.props.play() : this.props.pause();
     }
@@ -70,7 +74,7 @@ class ControlBar extends Component {
                 this.props.volume < 100 ? 'ic_volume2' :
                     'ic_volume3';
         return (
-            <div className={styles['control-bar-button']}>
+            <div className={styles['control-bar-button']} onClick={this.toogleVolumeMute}>
                 <Icon className={styles['icon']} icon={icon} />
             </div>
         );
@@ -132,7 +136,9 @@ ControlBar.propTypes = {
     play: PropTypes.func.isRequired,
     pause: PropTypes.func.isRequired,
     setTime: PropTypes.func.isRequired,
-    setVolume: PropTypes.func.isRequired
+    setVolume: PropTypes.func.isRequired,
+    mute: PropTypes.func.isRequired,
+    unmute: PropTypes.func.isRequired
 };
 
 export default ControlBar;

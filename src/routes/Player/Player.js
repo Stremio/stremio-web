@@ -80,6 +80,14 @@ class Player extends Component {
         this.videoRef.current && this.videoRef.current.dispatch('setProp', 'volume', volume);
     }
 
+    mute = () => {
+        this.videoRef.current && this.videoRef.current.dispatch('command', 'mute');
+    }
+
+    unmute = () => {
+        this.videoRef.current && this.videoRef.current.dispatch('command', 'unmute');
+    }
+
     addExtraSubtitles = (subtitles) => {
         this.videoRef.current && this.videoRef.current.dispatch('command', 'addExtraSubtitles', subtitles);
     }
@@ -118,6 +126,8 @@ class Player extends Component {
                 pause={this.pause}
                 setTime={this.setTime}
                 setVolume={this.setVolume}
+                mute={this.mute}
+                unmute={this.unmute}
             />
         );
     }

@@ -56,7 +56,7 @@ var HTMLVideo = function(containerElement) {
         events.emit('propChanged', 'duration', isNaN(videoElement.duration) ? null : videoElement.duration * 1000);
     };
     var onVolumeChanged = function() {
-        events.emit('propChanged', 'volume', videoElement.volume * 100);
+        events.emit('propChanged', 'volume', !videoElement.muted ? videoElement.volume * 100 : 0);
     };
     var onSubtitlesChanged = function() {
         var subtitles = [];
@@ -108,7 +108,7 @@ var HTMLVideo = function(containerElement) {
                     videoElement.addEventListener('durationchange', onDurationChanged);
                     return;
                 case 'volume':
-                    events.emit('propValue', 'volume', videoElement.volume * 100);
+                    events.emit('propValue', 'volume', !videoElement.muted ? videoElement.volume * 100 : 0);
                     videoElement.removeEventListener('volumechange', onVolumeChanged);
                     videoElement.addEventListener('volumechange', onVolumeChanged);
                     return;
@@ -142,6 +142,7 @@ var HTMLVideo = function(containerElement) {
                     videoElement.currentTime = arguments[2] / 1000;
                     return;
                 case 'volume':
+                    videoElement.muted = false;
                     videoElement.volume = arguments[2] / 100;
                     return;
                 default:
@@ -158,6 +159,16 @@ var HTMLVideo = function(containerElement) {
                     videoElement.load();
                     onReady();
                     return;
+                case 'mute':
+                    videoElement.muted = true;
+                    break;
+                case 'unmute':
+                    if (videoElement.volume === 0) {
+                        videoElement.volume = 0.5;
+                    }
+
+                    videoElement.muted = false;
+                    break;
                 case 'addExtraSubtitles':
                     if (ready) {
                         for (var i = 0; i < arguments[2].length; i++) {
