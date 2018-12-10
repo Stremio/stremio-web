@@ -1,6 +1,7 @@
 var EventEmitter = require('events');
 
 var HTMLVideo = function(containerElement) {
+    var self = this;
     var style = document.createElement('style');
     containerElement.appendChild(style);
     style.sheet.insertRule('#' + containerElement.id + ' video { width: 100%; height: 100%; }', style.sheet.cssRules.length);
@@ -8,10 +9,37 @@ var HTMLVideo = function(containerElement) {
     var videoElement = document.createElement('video');
     containerElement.appendChild(videoElement);
     videoElement.crossOrigin = 'anonymous';
-    videoElement.autoplay = true;
     var events = new EventEmitter();
-    var ready = false;
+    var loaded = false;
+    var destroyed = false;
     var dispatchArgsQueue = [];
+    var getPaused = function() {
+        if (!loaded) {
+            return null;
+        }
+
+        return !!videoElement.paused;
+    };
+    var getTime = function() {
+        if (!loaded) {
+            return null;
+        }
+
+        return Math.floor(videoElement.currentTime * 1000);
+    };
+    var getDuration = function() {
+        if (!loaded || isNaN(videoElement.duration)) {
+            return null;
+        }
+
+        return Math.floor(videoElement.duration * 1000);
+    };
+    var getVolume = function() {
+        return videoElement.muted ? 0 : Math.floor(videoElement.volume * 100);
+    };
+    var getSubtitles = function() {
+        return [];
+    };
     var onEnded = function() {
         events.emit('ended');
     };
@@ -46,89 +74,68 @@ var HTMLVideo = function(containerElement) {
             critical: critical
         });
     };
-    var onPausedChanged = function() {
-        events.emit('propChanged', 'paused', videoElement.paused);
-    };
-    var onTimeChanged = function() {
-        events.emit('propChanged', 'time', videoElement.currentTime * 1000);
-    };
-    var onDurationChanged = function() {
-        events.emit('propChanged', 'duration', isNaN(videoElement.duration) ? null : videoElement.duration * 1000);
-    };
-    var onVolumeChanged = function() {
-        events.emit('propChanged', 'volume', !videoElement.muted ? videoElement.volume * 100 : 0);
-    };
-    var onSubtitlesChanged = function() {
-        var subtitles = [];
-        for (var i = 0; i < videoElement.textTracks.length; i++) {
-            if (videoElement.textTracks[i].kind === 'subtitles') {
-                subtitles.push({
-                    id: videoElement.textTracks[i].id,
-                    language: videoElement.textTracks[i].language,
-                    label: videoElement.textTracks[i].label
-                });
-            }
-        }
-
-        events.emit('propChanged', 'subtitles', subtitles);
-    };
-    var onReady = function() {
-        ready = true;
+    var onLoaded = function() {
         for (var i = 0; i < dispatchArgsQueue.length; i++) {
-            this.dispatch.apply(this, dispatchArgsQueue[i]);
+            self.dispatch.apply(self, dispatchArgsQueue[i]);
         }
 
         dispatchArgsQueue = [];
-    }.bind(this);
-    videoElement.addEventListener('ended', onEnded);
-    videoElement.addEventListener('error', onError);
+    };
+    var onPausedChanged = function() {
+        events.emit('propChanged', 'paused', getPaused());
+    };
+    var onTimeChanged = function() {
+        events.emit('propChanged', 'time', getTime());
+    };
+    var onDurationChanged = function() {
+        events.emit('propChanged', 'duration', getDuration());
+    };
+    var onVolumeChanged = function() {
+        events.emit('propChanged', 'volume', getVolume());
+    };
+    var onSubtitlesChanged = function() {
+        events.emit('propChanged', 'subtitles', getSubtitles());
+    };
 
     this.on = function(eventName, listener) {
+        if (destroyed) {
+            throw new Error('Unable to add ' + eventName + ' listener to destroyed video');
+        }
+
         events.on(eventName, listener);
     };
 
     this.dispatch = function() {
+        if (destroyed) {
+            throw new Error('Unable to dispatch ' + arguments[0] + ' to destroyed video');
+        }
+
         if (arguments[0] === 'observeProp') {
             switch (arguments[1]) {
                 case 'paused':
-                    events.emit('propValue', 'paused', videoElement.paused);
+                    events.emit('propValue', 'paused', getPaused());
                     videoElement.removeEventListener('pause', onPausedChanged);
                     videoElement.removeEventListener('play', onPausedChanged);
                     videoElement.addEventListener('pause', onPausedChanged);
                     videoElement.addEventListener('play', onPausedChanged);
                     return;
                 case 'time':
-                    events.emit('propValue', 'time', videoElement.currentTime * 1000);
+                    events.emit('propValue', 'time', getTime());
                     videoElement.removeEventListener('timeupdate', onTimeChanged);
                     videoElement.addEventListener('timeupdate', onTimeChanged);
                     return;
                 case 'duration':
-                    events.emit('propValue', 'duration', isNaN(videoElement.duration) ? null : videoElement.duration * 1000);
+                    events.emit('propValue', 'duration', getDuration());
                     videoElement.removeEventListener('durationchange', onDurationChanged);
                     videoElement.addEventListener('durationchange', onDurationChanged);
                     return;
                 case 'volume':
-                    events.emit('propValue', 'volume', !videoElement.muted ? videoElement.volume * 100 : 0);
+                    events.emit('propValue', 'volume', getVolume());
                     videoElement.removeEventListener('volumechange', onVolumeChanged);
                     videoElement.addEventListener('volumechange', onVolumeChanged);
                     return;
                 case 'subtitles':
-                    var subtitles = [];
-                    for (var i = 0; i < videoElement.textTracks.length; i++) {
-                        if (videoElement.textTracks[i].kind === 'subtitles') {
-                            subtitles.push({
-                                id: videoElement.textTracks[i].id,
-                                language: videoElement.textTracks[i].language,
-                                label: videoElement.textTracks[i].label
-                            });
-                        }
-                    }
-
-                    events.emit('propValue', 'subtitles', subtitles);
-                    videoElement.textTracks.removeEventListener('addtrack', onSubtitlesChanged);
-                    videoElement.textTracks.removeEventListener('removetrack', onSubtitlesChanged);
-                    videoElement.textTracks.addEventListener('addtrack', onSubtitlesChanged);
-                    videoElement.textTracks.addEventListener('removetrack', onSubtitlesChanged);
+                    events.emit('propValue', 'subtitles', getSubtitles());
                     return;
                 default:
                     throw new Error('observeProp not supported: ' + arguments[1]);
@@ -136,11 +143,15 @@ var HTMLVideo = function(containerElement) {
         } else if (arguments[0] === 'setProp') {
             switch (arguments[1]) {
                 case 'paused':
-                    arguments[2] ? videoElement.pause() : videoElement.play();
-                    return;
+                    if (loaded) {
+                        arguments[2] ? videoElement.pause() : videoElement.play();
+                    }
+                    break;
                 case 'time':
-                    videoElement.currentTime = arguments[2] / 1000;
-                    return;
+                    if (loaded) {
+                        videoElement.currentTime = arguments[2] / 1000;
+                    }
+                    break;
                 case 'volume':
                     videoElement.muted = false;
                     videoElement.volume = arguments[2] / 100;
@@ -150,59 +161,55 @@ var HTMLVideo = function(containerElement) {
             }
         } else if (arguments[0] === 'command') {
             switch (arguments[1]) {
-                case 'load':
-                    if (!isNaN(arguments[3].time)) {
-                        videoElement.currentTime = arguments[3].time / 1000;
-                    }
-
-                    videoElement.src = arguments[2].url;
-                    videoElement.load();
-                    onReady();
-                    return;
                 case 'mute':
                     videoElement.muted = true;
-                    break;
+                    return;
                 case 'unmute':
-                    if (videoElement.volume === 0) {
-                        videoElement.volume = 0.5;
-                    }
-
+                    videoElement.volume = videoElement.volume !== 0 ? videoElement.volume : 0.5;
                     videoElement.muted = false;
-                    break;
+                    return;
                 case 'addExtraSubtitles':
-                    if (ready) {
-                        for (var i = 0; i < arguments[2].length; i++) {
-                            var track = document.createElement('track');
-                            track.kind = 'subtitles';
-                            track.id = arguments[2][i].id;
-                            track.src = arguments[2][i].url;
-                            track.label = arguments[2][i].label;
-                            track.srclang = arguments[2][i].language;
-                            videoElement.appendChild(track);
-                        }
+                    if (loaded) {
                     }
                     break;
                 case 'stop':
-                    events.removeAllListeners();
                     videoElement.removeEventListener('ended', onEnded);
                     videoElement.removeEventListener('error', onError);
+                    loaded = false;
+                    videoElement.removeAttribute('src');
+                    videoElement.load();
+                    videoElement.currentTime = 0;
+                    onPausedChanged();
+                    onTimeChanged();
+                    onDurationChanged();
+                    onSubtitlesChanged();
+                    return;
+                case 'load':
+                    self.dispatch('command', 'stop');
+                    videoElement.addEventListener('ended', onEnded);
+                    videoElement.addEventListener('error', onError);
+                    videoElement.autoplay = typeof arguments[3].autoplay === 'boolean' ? arguments[3].autoplay : true;
+                    videoElement.currentTime = !isNaN(arguments[3].time) ? arguments[3].time / 1000 : 0;
+                    videoElement.src = arguments[2].url;
+                    loaded = true;
+                    onLoaded();
+                    return;
+                case 'destroy':
+                    self.dispatch('command', 'stop');
+                    events.removeAllListeners();
                     videoElement.removeEventListener('pause', onPausedChanged);
                     videoElement.removeEventListener('play', onPausedChanged);
                     videoElement.removeEventListener('timeupdate', onTimeChanged);
                     videoElement.removeEventListener('durationchange', onDurationChanged);
                     videoElement.removeEventListener('volumechange', onVolumeChanged);
-                    videoElement.textTracks.removeEventListener('addtrack', onSubtitlesChanged);
-                    videoElement.textTracks.removeEventListener('removetrack', onSubtitlesChanged);
-                    videoElement.removeAttribute('src');
-                    videoElement.load();
-                    ready = false;
+                    destroyed = true;
                     return;
                 default:
                     throw new Error('command not supported: ' + arguments[1]);
             }
         }
 
-        if (!ready) {
+        if (!loaded) {
             dispatchArgsQueue.push(Array.from(arguments));
         }
     };
