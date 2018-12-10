@@ -45,12 +45,6 @@ class Player extends Component {
     onError = (error) => {
         if (error.critical) {
             this.stop();
-            this.setState({
-                paused: null,
-                time: null,
-                duration: null,
-                volume: null
-            });
         }
 
         alert(error.message);
