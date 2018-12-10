@@ -89,27 +89,30 @@ var YouTubeVideo = function(containerElement) {
                 break;
         }
     };
-    var video = new YT.Player(videoElement, {
-        height: '100%',
-        width: '100%',
-        playerVars: {
-            autoplay: 1,
-            cc_load_policy: 3,
-            controls: 0,
-            disablekb: 1,
-            enablejsapi: 1,
-            fs: 0,
-            iv_load_policy: 3,
-            loop: 0,
-            modestbranding: 1,
-            playsinline: 1,
-            rel: 0
-        },
-        events: {
-            onError: onError.bind(this),
-            onReady: onReady.bind(this),
-            onStateChange: onStateChange.bind(this)
-        }
+    var video;
+    YT.ready(() => {
+        video = new YT.Player(videoElement, {
+            height: '100%',
+            width: '100%',
+            playerVars: {
+                autoplay: 1,
+                cc_load_policy: 3,
+                controls: 0,
+                disablekb: 1,
+                enablejsapi: 1,
+                fs: 0,
+                iv_load_policy: 3,
+                loop: 0,
+                modestbranding: 1,
+                playsinline: 1,
+                rel: 0
+            },
+            events: {
+                onError: onError.bind(this),
+                onReady: onReady.bind(this),
+                onStateChange: onStateChange.bind(this)
+            }
+        });
     });
 
     this.on = function(eventName, listener) {
