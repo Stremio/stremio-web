@@ -74,7 +74,7 @@ var HTMLVideo = function(containerElement) {
             critical: critical
         });
     };
-    var onLoaded = function() {
+    var flushArgsQueue = function() {
         for (var i = 0; i < dispatchArgsQueue.length; i++) {
             self.dispatch.apply(self, dispatchArgsQueue[i]);
         }
@@ -192,7 +192,11 @@ var HTMLVideo = function(containerElement) {
                     videoElement.currentTime = !isNaN(arguments[3].time) ? arguments[3].time / 1000 : 0;
                     videoElement.src = arguments[2].url;
                     loaded = true;
-                    onLoaded();
+                    onPausedChanged();
+                    onTimeChanged();
+                    onDurationChanged();
+                    onSubtitlesChanged();
+                    flushArgsQueue();
                     return;
                 case 'destroy':
                     self.dispatch('command', 'stop');
