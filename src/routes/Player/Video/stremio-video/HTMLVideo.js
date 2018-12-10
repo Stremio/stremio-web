@@ -176,6 +176,7 @@ var HTMLVideo = function(containerElement) {
                     videoElement.removeEventListener('ended', onEnded);
                     videoElement.removeEventListener('error', onError);
                     loaded = false;
+                    dispatchArgsQueue = [];
                     videoElement.removeAttribute('src');
                     videoElement.load();
                     videoElement.currentTime = 0;
@@ -185,7 +186,9 @@ var HTMLVideo = function(containerElement) {
                     onSubtitlesChanged();
                     return;
                 case 'load':
+                    var dispatchArgsQueueCopy = dispatchArgsQueue.slice();
                     self.dispatch('command', 'stop');
+                    dispatchArgsQueue = dispatchArgsQueueCopy;
                     videoElement.addEventListener('ended', onEnded);
                     videoElement.addEventListener('error', onError);
                     videoElement.autoplay = typeof arguments[3].autoplay === 'boolean' ? arguments[3].autoplay : true;
