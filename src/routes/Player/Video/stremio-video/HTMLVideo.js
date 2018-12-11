@@ -246,6 +246,8 @@ var HTMLVideo = function(container) {
                         video.removeEventListener('timeupdate', onTimeChanged);
                         video.removeEventListener('durationchange', onDurationChanged);
                         video.removeEventListener('volumechange', onVolumeChanged);
+                        container.removeChild(video);
+                        container.removeChild(styles);
                         destroyed = true;
                         return;
                     default:
