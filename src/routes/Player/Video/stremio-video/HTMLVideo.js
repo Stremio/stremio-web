@@ -121,118 +121,124 @@ var HTMLVideo = function(container) {
             throw new Error('Unable to dispatch ' + arguments[0] + ' to destroyed video');
         }
 
-        if (arguments[0] === 'observeProp') {
-            switch (arguments[1]) {
-                case 'paused':
-                    events.emit('propValue', 'paused', getPaused());
-                    video.removeEventListener('pause', onPausedChanged);
-                    video.removeEventListener('play', onPausedChanged);
-                    video.addEventListener('pause', onPausedChanged);
-                    video.addEventListener('play', onPausedChanged);
-                    return;
-                case 'time':
-                    events.emit('propValue', 'time', getTime());
-                    video.removeEventListener('timeupdate', onTimeChanged);
-                    video.addEventListener('timeupdate', onTimeChanged);
-                    return;
-                case 'duration':
-                    events.emit('propValue', 'duration', getDuration());
-                    video.removeEventListener('durationchange', onDurationChanged);
-                    video.addEventListener('durationchange', onDurationChanged);
-                    return;
-                case 'volume':
-                    events.emit('propValue', 'volume', getVolume());
-                    video.removeEventListener('volumechange', onVolumeChanged);
-                    video.addEventListener('volumechange', onVolumeChanged);
-                    return;
-                case 'subtitleTracks':
-                    events.emit('propValue', 'subtitleTracks', getSubtitleTracks());
-                    return;
-                case 'selectedSubtitleTrack':
-                    events.emit('propValue', 'selectedSubtitleTrack', getSelectedSubtitleTrack());
-                    return;
-                default:
-                    throw new Error('observeProp not supported: ' + arguments[1]);
-            }
-        } else if (arguments[0] === 'setProp') {
-            switch (arguments[1]) {
-                case 'paused':
-                    if (loaded) {
-                        arguments[2] ? video.pause() : video.play();
-                    }
-                    break;
-                case 'time':
-                    if (loaded) {
-                        video.currentTime = arguments[2] / 1000;
-                    }
-                    break;
-                case 'volume':
-                    video.muted = false;
-                    video.volume = arguments[2] / 100;
-                    return;
-                default:
-                    throw new Error('setProp not supported: ' + arguments[1]);
-            }
-        } else if (arguments[0] === 'command') {
-            switch (arguments[1]) {
-                case 'mute':
-                    video.muted = true;
-                    return;
-                case 'unmute':
-                    video.volume = video.volume !== 0 ? video.volume : 0.5;
-                    video.muted = false;
-                    return;
-                case 'addExtraSubtitles':
-                    if (loaded) {
-                        //
-                    }
-                    break;
-                case 'stop':
-                    video.removeEventListener('ended', onEnded);
-                    video.removeEventListener('error', onError);
-                    loaded = false;
-                    dispatchArgsQueue = [];
-                    subtitleTracks = [];
-                    selectedSubtitleTrack = null;
-                    video.removeAttribute('src');
-                    video.load();
-                    video.currentTime = 0;
-                    onPausedChanged();
-                    onTimeChanged();
-                    onDurationChanged();
-                    onSubtitleTracksChanged();
-                    onSelectedSubtitleTrackChanged();
-                    return;
-                case 'load':
-                    var dispatchArgsQueueCopy = dispatchArgsQueue.slice();
-                    self.dispatch('command', 'stop');
-                    dispatchArgsQueue = dispatchArgsQueueCopy;
-                    video.addEventListener('ended', onEnded);
-                    video.addEventListener('error', onError);
-                    video.autoplay = typeof arguments[3].autoplay === 'boolean' ? arguments[3].autoplay : true;
-                    video.currentTime = !isNaN(arguments[3].time) ? arguments[3].time / 1000 : 0;
-                    video.src = arguments[2].url;
-                    loaded = true;
-                    onPausedChanged();
-                    onTimeChanged();
-                    onDurationChanged();
-                    onSubtitleTracksChanged();
-                    onSelectedSubtitleTrackChanged();
-                    flushArgsQueue();
-                    return;
-                case 'destroy':
-                    self.dispatch('command', 'stop');
-                    events.removeAllListeners();
-                    video.removeEventListener('pause', onPausedChanged);
-                    video.removeEventListener('play', onPausedChanged);
-                    video.removeEventListener('timeupdate', onTimeChanged);
-                    video.removeEventListener('durationchange', onDurationChanged);
-                    video.removeEventListener('volumechange', onVolumeChanged);
-                    destroyed = true;
-                    return;
-                default:
-                    throw new Error('command not supported: ' + arguments[1]);
-            }
+        switch (arguments[0]) {
+            case 'observeProp':
+                switch (arguments[1]) {
+                    case 'paused':
+                        events.emit('propValue', 'paused', getPaused());
+                        video.removeEventListener('pause', onPausedChanged);
+                        video.removeEventListener('play', onPausedChanged);
+                        video.addEventListener('pause', onPausedChanged);
+                        video.addEventListener('play', onPausedChanged);
+                        return;
+                    case 'time':
+                        events.emit('propValue', 'time', getTime());
+                        video.removeEventListener('timeupdate', onTimeChanged);
+                        video.addEventListener('timeupdate', onTimeChanged);
+                        return;
+                    case 'duration':
+                        events.emit('propValue', 'duration', getDuration());
+                        video.removeEventListener('durationchange', onDurationChanged);
+                        video.addEventListener('durationchange', onDurationChanged);
+                        return;
+                    case 'volume':
+                        events.emit('propValue', 'volume', getVolume());
+                        video.removeEventListener('volumechange', onVolumeChanged);
+                        video.addEventListener('volumechange', onVolumeChanged);
+                        return;
+                    case 'subtitleTracks':
+                        events.emit('propValue', 'subtitleTracks', getSubtitleTracks());
+                        return;
+                    case 'selectedSubtitleTrack':
+                        events.emit('propValue', 'selectedSubtitleTrack', getSelectedSubtitleTrack());
+                        return;
+                    default:
+                        throw new Error('observeProp not supported: ' + arguments[1]);
+                }
+                break;
+            case 'setProp':
+                switch (arguments[1]) {
+                    case 'paused':
+                        if (loaded) {
+                            arguments[2] ? video.pause() : video.play();
+                        }
+                        break;
+                    case 'time':
+                        if (loaded) {
+                            video.currentTime = arguments[2] / 1000;
+                        }
+                        break;
+                    case 'volume':
+                        video.muted = false;
+                        video.volume = arguments[2] / 100;
+                        return;
+                    default:
+                        throw new Error('setProp not supported: ' + arguments[1]);
+                }
+                break;
+            case 'command':
+                switch (arguments[1]) {
+                    case 'mute':
+                        video.muted = true;
+                        return;
+                    case 'unmute':
+                        video.volume = video.volume !== 0 ? video.volume : 0.5;
+                        video.muted = false;
+                        return;
+                    case 'addExtraSubtitles':
+                        if (loaded) {
+                            //
+                        }
+                        break;
+                    case 'stop':
+                        video.removeEventListener('ended', onEnded);
+                        video.removeEventListener('error', onError);
+                        loaded = false;
+                        dispatchArgsQueue = [];
+                        subtitleTracks = [];
+                        selectedSubtitleTrack = null;
+                        video.removeAttribute('src');
+                        video.load();
+                        video.currentTime = 0;
+                        onPausedChanged();
+                        onTimeChanged();
+                        onDurationChanged();
+                        onSubtitleTracksChanged();
+                        onSelectedSubtitleTrackChanged();
+                        return;
+                    case 'load':
+                        var dispatchArgsQueueCopy = dispatchArgsQueue.slice();
+                        self.dispatch('command', 'stop');
+                        dispatchArgsQueue = dispatchArgsQueueCopy;
+                        video.addEventListener('ended', onEnded);
+                        video.addEventListener('error', onError);
+                        video.autoplay = typeof arguments[3].autoplay === 'boolean' ? arguments[3].autoplay : true;
+                        video.currentTime = !isNaN(arguments[3].time) ? arguments[3].time / 1000 : 0;
+                        video.src = arguments[2].url;
+                        loaded = true;
+                        onPausedChanged();
+                        onTimeChanged();
+                        onDurationChanged();
+                        onSubtitleTracksChanged();
+                        onSelectedSubtitleTrackChanged();
+                        flushArgsQueue();
+                        return;
+                    case 'destroy':
+                        self.dispatch('command', 'stop');
+                        events.removeAllListeners();
+                        video.removeEventListener('pause', onPausedChanged);
+                        video.removeEventListener('play', onPausedChanged);
+                        video.removeEventListener('timeupdate', onTimeChanged);
+                        video.removeEventListener('durationchange', onDurationChanged);
+                        video.removeEventListener('volumechange', onVolumeChanged);
+                        destroyed = true;
+                        return;
+                    default:
+                        throw new Error('command not supported: ' + arguments[1]);
+                }
+                break;
+            default:
+                throw new Error('Invalid dispatch call: ' + arguments[0]);
         }
 
         if (!loaded) {
