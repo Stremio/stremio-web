@@ -67,7 +67,7 @@ Video.propTypes = {
     onPropChanged: PropTypes.func.isRequired
 };
 Video.defaultProps = {
-    extra: {}
+    extra: Object.freeze({})
 };
 
 export default Video;
