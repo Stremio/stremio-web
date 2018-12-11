@@ -1,6 +1,10 @@
 var EventEmitter = require('events');
 
 var HTMLVideo = function(container) {
+    if (!(container instanceof HTMLElement)) {
+        throw new Error('Instance of HTMLElement required as a first argument');
+    }
+
     var self = this;
     var events = new EventEmitter();
     var loaded = false;
