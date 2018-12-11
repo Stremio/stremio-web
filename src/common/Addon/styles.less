@@ -1,45 +1,21 @@
-@addon-width: 514px;
-@logo-width: floor((@addon-width * 0.2));
-
 .addon {
-    width: @addon-width;
-    grid-template-rows: floor((@logo-width * 0.25)) floor((@logo-width * 0.20)) auto auto ceil((@addon-width * 0.08));
-
-    .logo {
-        width: @logo-width;
-        height: @logo-width;
-    }
-
-    .name {
-        font-size: 20px;
-    }
-
-    .type {
-        font-size: 12px;
-    }
-
-    .description {
-        font-size: 12px;
-    }
-
-    .urls-container {
-        font-size: 12px;
-    }
-
-    .button {
-        border-width: 2px;
-
-        .label {
-            font-size: 14px;
-        }
-    }
+    --addon-width: 514px;
+    --name-font-size: 20px;
+    --version-font-size: 12px;
+    --type-font-size: 12px;
+    --description-font-size: 12px;
+    --url-font-size: 12px;
+    --button-border-width: 2px;
+    --button-label-font-size: 14px;
 }
 
 .addon {
     display: grid;
+    width: var(--addon-width);
     padding: 2%;
-    // background-color: @colorglass;
+    background-color: var(--color-background);
     grid-template-columns: 1fr 4fr;
+    grid-template-rows: calc(0.04 * var(--addon-width)) calc(0.04 * var(--addon-width)) auto auto calc((0.08 * var(--addon-width)));
     grid-template-areas:
         "logo header"
         "logo type"
@@ -51,9 +27,11 @@
         grid-area: logo;
 
         .logo {
+            width: calc(0.2 * var(--addon-width));
+            height: calc(0.2 * var(--addon-width));
             padding: 20%;
-            // fill: @colorwhite;
-            // background-color: @colordarkest;
+            fill: var(--color-surfacelighter);
+            background-color: var(--color-backgrounddarker);
         }
     }
 
@@ -72,7 +50,8 @@
             .name {
                 max-width: 80%;
                 margin-right: 3%;
-                // color: @colorwhite;
+                font-size: var(--name-font-size);
+                color: var(--color-surfacelighter);
                 overflow: hidden;
                 white-space: pre;
                 text-overflow: ellipsis;
@@ -80,7 +59,8 @@
 
             .version {
                 flex: 1;
-                // color: @colorwhite60;
+                font-size: var(--version-font-size);
+                color: var(--color-surface);
                 overflow: hidden;
                 white-space: pre;
                 text-overflow: ellipsis;
@@ -93,13 +73,15 @@
         display: flex;
         align-items: center;
         padding-left: 4%;
-        // color: @coloraccent;
+        font-size: var(--type-font-size);
+        color: var(--color-secondarylighter);
     }
 
     .description {
         grid-area: description;
         padding-left: 4%;
-        // color: @colorwhite;
+        font-size: var(--description-font-size);
+        color: var(--color-surfacelighter);
         word-break: break-all; //Firefox doesn't support { break-word }
         word-break: break-word;
     }
@@ -111,7 +93,8 @@
         word-break: break-all;
 
         .url {
-//            color: @colorwhite60;
+            font-size: var(--url-font-size);
+            color: var(--color-surface);
         }
     }
 
@@ -127,6 +110,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            border-width: var(--button-border-width);
             border-style: solid;
 
             .icon {
@@ -135,47 +119,47 @@
             }
 
             .label {
-                // color: @colorwhite;
+                color: var(--color-surfacelighter);
             }
 
             &.share-button {
-                // border-color: @coloraccent;
+                border-color: var(--color-secondarylighter);
 
                 .icon {
-                    // fill: @coloraccent;
+                    fill: var(--color-secondarylighter);
                 }
 
                 .label {
-                    // color: @coloraccent;
+                    color: var(--color-secondarylighter);
                 }
 
                 &:hover {
-                    // background-color: @coloraccent;
+                    background-color: var(--color-secondarylighter);
 
                     .icon {
-                        // fill: @colorwhite;
+                        fill: var(--color-surfacelighter);
                     }
 
                     .label {
-                        // color: @colorwhite;
+                        color: var(--color-surfacelighter);
                     }
                 }
             }
 
             &.install-button {
-                // border-color: @colorsignal5;
-                // background-color: @colorsignal5;
+                border-color: var(--color-signal5);
+                background-color: var(--color-signal5);
 
                 &:hover {
-                    // background-color: @colorsignal580;
+                    background-color: var(--color-signal580);
                 }
             }
 
             &.uninstall-button {
-                // border-color: @colorneutral;
+                border-color: var(--color-surfacedark);
 
                 &:hover {
-                    // background-color: @colorneutral;
+                    background-color: var(--color-surfacedark);
                 }
             }
 

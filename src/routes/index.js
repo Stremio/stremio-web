@@ -7,6 +7,7 @@ import Calendar from './Calendar';
 import Search from './Search';
 import Settings from './Settings';
 import Player from './Player';
+import Detail from './Detail';
 
 export {
     Addons,
@@ -17,5 +18,6 @@ export {
     Calendar,
     Search,
     Settings,
-    Player
+    Player,
+    Detail
 };

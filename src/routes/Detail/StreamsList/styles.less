@@ -1,0 +1,59 @@
+.streams-list-container {
+    --scroll-container-width: 392px;
+    --stream-width: 360px;
+    --spacing: 8px;
+    --button-label-font-size: 18px;
+}
+
+.streams-list-container {
+    height: 100%;
+    display: inline-flex;
+    flex-direction: column;
+    background: var(--color-background);
+
+    .scroll-container {
+        flex: 1;
+        width: var(--scroll-container-width);
+        padding: 0 calc(2 * var(--spacing));
+        margin: var(--spacing);
+        overflow-y: auto;
+        overflow-x: hidden;
+
+        >:not(:first-child) {
+            margin-top: var(--spacing);
+        }
+
+        .button {
+            width: var(--stream-width);
+            height: calc(0.2 * var(--stream-width));
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-primary);
+            background-color: var(--color-surfacelighter);
+
+            .button-icon {
+                height: 44%;
+                margin-right: var(--spacing);
+                fill: var(--color-primary);
+            }
+
+            .button-label {
+                font-size: var(--button-label-font-size);
+            }
+        }
+    }
+
+    .scroll-container::-webkit-scrollbar {
+        width: var(--spacing);
+    }
+
+    .scroll-container::-webkit-scrollbar-thumb {
+        background-color: var(--color-secondarylighter80);
+    }
+
+    .scroll-container::-webkit-scrollbar-track {
+        background-color: var(--color-backgroundlight);
+    }
+}

@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import Icon, { dataUrl as iconDataUrl } from 'stremio-icons/dom';
-import colors from 'stremio-colors';
+import Icon from 'stremio-icons/dom';
 import styles from './styles';
 
 const MAX_TITLE_SYMBOLS = 100;
@@ -12,23 +11,20 @@ const renderPoster = (poster) => {
         return null;
     }
 
-    const placeholderIconUrl = iconDataUrl({ icon: 'ic_channels', fill: colors.accent });
-    const imageStyle = {
-        backgroundImage: `url('${poster}'), url('${placeholderIconUrl}')`
-    };
-
     return (
-        <div style={imageStyle} className={styles['poster']} />
+        <div className={styles['poster-container']}>
+            <img className={styles['poster']} src={poster} alt={''} />
+        </div>
     );
 }
 
-const renderTitle = (number, title) => {
+const renderTitle = (episode, title) => {
     if (title.length === 0) {
         return null;
     }
 
     return (
-        <div className={styles['title']}>{number}. {title.length > MAX_TITLE_SYMBOLS ? title.slice(0, MAX_TITLE_SYMBOLS) + '...' : title}</div>
+        <div className={styles['title']}>{episode}. {title.length > MAX_TITLE_SYMBOLS ? title.slice(0, MAX_TITLE_SYMBOLS) + '...' : title}</div>
     );
 }
 
@@ -95,7 +91,7 @@ const Video = (props) => {
             <div className={styles['flex-row-container']}>
                 {renderPoster(props.poster)}
                 <div className={styles['info-container']}>
-                    {renderTitle(props.number, props.title)}
+                    {renderTitle(props.episode, props.title)}
                     {renderReleasedDate(props.released)}
                     {renderLabels(props.isUpcoming, props.isWatched)}
                 </div>
@@ -111,7 +107,7 @@ const Video = (props) => {
 Video.propTypes = {
     className: PropTypes.string,
     poster: PropTypes.string.isRequired,
-    number: PropTypes.number.isRequired,
+    episode: PropTypes.number.isRequired,
     title: PropTypes.string.isRequired,
     released: PropTypes.instanceOf(Date).isRequired,
     isWatched: PropTypes.bool.isRequired,
@@ -121,7 +117,7 @@ Video.propTypes = {
 };
 Video.defaultProps = {
     poster: '',
-    number: 0,
+    episode: 0,
     title: '',
     released: new Date(''), //Invalid Date
     isWatched: false,

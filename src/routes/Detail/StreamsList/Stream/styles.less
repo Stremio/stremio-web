@@ -1,0 +1,96 @@
+.stream-container {
+    --stream-width: 360px;
+    --spacing: 8px;
+    --source-name-font-size: 13px;
+    --title-font-size: 11px;
+    --subtitle-font-size: 11px;
+}
+
+.stream-container {
+    width: var(--stream-width);
+    background-color: var(--color-backgroundlight);
+
+    .flex-row-container {
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+
+        .logo-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: var(--spacing) 0 var(--spacing) var(--spacing);
+
+            .logo {
+                width: 100%;
+                fill: var(--color-surfacelighter);
+            }
+        }
+
+        .source-name {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            margin: var(--spacing) 0 var(--spacing) var(--spacing);
+            font-size: var(--source-name-font-size);
+            color: var(--color-surfacelighter);
+            word-break: break-all; //Firefox doesn't support { break-word }
+            word-break: break-word;
+        }
+
+        .text-container {
+            flex: 3;
+            min-height: calc(0.2 * var(--stream-width));
+            padding: var(--spacing);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            .title {
+                font-size: var(--title-font-size);
+                color: var(--color-surfacelighter);
+                word-break: break-all;
+                word-break: break-word;
+            }
+
+            .subtitle {
+                font-size: var(--subtitle-font-size);
+                color: var(--color-surfacelighter);
+                word-break: break-all;
+                word-break: break-word;
+            }
+
+            :not(:last-child) {
+                margin-bottom: calc(0.5 * var(--spacing));
+            }
+        }
+
+        .play-container {
+            width: calc(0.07 * var(--stream-width));
+            display: flex;
+            align-items: center;
+            padding: var(--spacing) var(--spacing) var(--spacing) 0;
+
+            .play {
+                width: 100%;
+                fill: var(--color-surfacelighter);
+            }
+        }
+    }
+
+    .progress-container {
+        height: calc(0.5 * var(--spacing));
+        background-color: var(--color-primarydark);
+
+        .progress {
+            height: 100%;
+            background-color: var(--color-primarylight);
+        }
+    }
+
+    &:hover {
+        cursor: pointer;
+        background-color: var(--color-surfacelighter20);
+    }
+}

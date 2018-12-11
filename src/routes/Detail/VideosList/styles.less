@@ -1,0 +1,62 @@
+.videos-list-container {
+    --scroll-container-width: 392px;
+    --seasons-bar-height: 50px;
+    --spacing: 8px;
+}
+
+.videos-list-container {
+    height: 100%;
+    display: inline-flex;
+    flex-direction: column;
+    background: var(--color-background);
+
+    .seasons-bar {
+        height: var(--seasons-bar-height);
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: var(--spacing);
+
+        .button-container {
+            width: calc(1.5 * var(--seasons-bar-height));
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            .button-icon {
+                width: 60%;
+                height: 60%;
+                fill: var(--color-surfacelighter);
+            }
+
+            &:hover {
+                background-color: var(--color-surfacelighter20);
+            }
+        }
+    }
+
+    .scroll-container {
+        flex: 1;
+        width: var(--scroll-container-width);
+        padding: 0 calc(2 * var(--spacing));
+        margin: 0 var(--spacing);
+        overflow-y: auto;
+        overflow-x: hidden;
+
+        >:not(:first-child) {
+            margin-top: var(--spacing);
+        }
+    }
+
+    .scroll-container::-webkit-scrollbar {
+        width: var(--spacing);
+    }
+
+    .scroll-container::-webkit-scrollbar-thumb {
+        background-color: var(--color-secondarylighter80);
+    }
+
+    .scroll-container::-webkit-scrollbar-track {
+        background-color: var(--color-backgroundlight);
+    }
+}

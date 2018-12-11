@@ -1,0 +1,116 @@
+.video-container {
+    --video-width: 360px;
+    --spacing: 8px;
+    --title-font-size: 12px;
+    --released-date-font-size: 11px;
+    --label-font-size: 10px;
+    --label-border-width: 2px;
+}
+
+.video-container {
+    width: var(--video-width);
+    background-color: var(--color-backgroundlight);
+
+    .flex-row-container {
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+
+        .poster-container {
+            flex: 1;
+            margin: var(--spacing) 0 var(--spacing) var(--spacing);
+
+            .poster {
+                display: block;
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+
+                &[alt]:after {
+                    display: block;
+                    width: 100%;
+                    height: 100%;
+                    background-image: url("data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 1391 1024\" width=\"undefined\" height=\"undefined\" fill=\"rgba(140,163,220,1)\"><path d=\"M501.459 632.471v-377.374c-0-0-0-0.001-0-0.001 0-22.516 18.167-40.788 40.643-40.959l0.016-0c7.294 0.019 14.141 1.915 20.089 5.228l-0.212-0.108 341.534 188.536c12.694 7.123 21.13 20.496 21.13 35.84s-8.437 28.717-20.924 35.734l-0.206 0.106-341.233 188.838c-5.741 3.22-12.599 5.116-19.9 5.116-15.251 0-28.57-8.275-35.712-20.58l-0.106-0.198c-3.172-5.843-5.060-12.784-5.12-20.16l-0-0.018z\" /><path d=\"M1141.459 1024h-897.807c-22.669-1.937-40.336-20.816-40.336-43.821s17.666-41.884 40.173-43.81l0.163-0.011h897.807c22.669 1.937 40.336 20.816 40.336 43.821s-17.666 41.884-40.173 43.81l-0.163 0.011z\" /><path d=\"M1275.181 887.868h-1159.529c-63.841-0.341-115.482-52.088-115.652-115.937l-0-0.016v-656.264c0-63.873 51.779-115.652 115.652-115.652v0h1159.529c63.873 0 115.652 51.779 115.652 115.652v0 656.264c-0.17 63.865-51.811 115.612-115.619 115.953l-0.032 0zM115.652 74.692c-22.622 0-40.96 18.338-40.96 40.96l-0-0v656.264c-0.001 0.089-0.001 0.195-0.001 0.301 0 22.622 18.338 40.96 40.96 40.96 0 0 0.001-0 0.001-0l1159.529 0c22.622 0 40.96-18.338 40.96-40.96v0 0-656.565c0-22.622-18.338-40.96-40.96-40.96v0h-1159.529z\" /></svg>");
+                    background-repeat: no-repeat;
+                    background-position: center;
+                    content: "";
+                }
+            }
+        }
+
+        .info-container {
+            flex: 3;
+            min-height: calc(0.2 * var(--video-width));
+            padding: var(--spacing);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            .title {
+                font-size: var(--title-font-size);
+                color: var(--color-surfacelighter);
+                word-break: break-all; //Firefox doesn't support { break-word }
+                word-break: break-word;
+            }
+
+            .released-date {
+                font-size: var(--released-date-font-size);
+                color: var(--color-surface);
+            }
+
+            .label-container {
+                display: flex;
+
+                .upcoming-label, .watched-label {
+                    font-size: var(--label-font-size);
+                    font-weight: 600;
+                    line-height: 1.5;
+                    border-width: var(--label-border-width);
+                    border-style: solid;
+                    padding: 0 0.6em;
+                    color: var(--color-surfacelighter);
+                }
+
+                .upcoming-label {
+                    margin-right: var(--spacing);
+                    border-color: var(--color-signal5);
+                }
+
+                .watched-label {
+                    border-color: var(--color-primarylight);
+                }
+            }
+
+            >:not(:last-child) {
+                margin-bottom: calc(0.5 * var(--spacing));
+            }
+        }
+
+        .arrow-container {
+            width: calc(0.07 * var(--video-width));
+            display: flex;
+            align-items: center;
+            padding: var(--spacing) var(--spacing) var(--spacing) 0;
+
+            .arrow {
+                width: 100%;
+                fill: var(--color-surfacelighter);
+            }
+        }
+    }
+
+    .progress-container {
+        height: calc(0.5 * var(--spacing));
+        background-color: var(--color-primarydark);
+
+        .progress {
+            height: 100%;
+            background-color: var(--color-primarylight);
+        }
+    }
+
+    &:hover {
+        cursor: pointer;
+        background-color: var(--color-surfacelighter20);
+    }
+}

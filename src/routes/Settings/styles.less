@@ -2,7 +2,7 @@
     height: 100%;
     width: 100%;
     display: flex;
-    // color: @colorwhite60;
+    color: var(--color-surfacelighter60);
 
     .side-menu {
         width: 240px;
@@ -10,7 +10,7 @@
         display: flex;
         flex-direction: column;
         font-size: 14px;
-        // background: @colordarkest;
+        background: var(--color-backgrounddark);
 
         .menu-option {
             padding: 14px;
@@ -18,8 +18,8 @@
 
             &:hover, &.selected {
                 cursor: pointer;
-//                color: @colorwhite;
-//                background: @colorglass;
+               color: var(--color-surfacelighter);
+               background: var(--color-background);
             }
         }
     }
@@ -52,14 +52,14 @@
 
                 &:hover {
                     .preference {
-                        // color: @colorwhite;
+                        color: var(--color-surfacelighter);
                     }
                 }
             }
 
             &:not(:last-child) {
                 margin-bottom: 30px;
-                // border-bottom: 1px solid @colormedium;
+                border-bottom: 1px solid var(--color-primary);
             }
         }
     }
