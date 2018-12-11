@@ -207,6 +207,7 @@ var HTMLVideo = function(container) {
                         dispatchArgsQueue = [];
                         subtitleTracks = [];
                         selectedSubtitleTrack = null;
+                        while (video.hasChildNodes()) video.removeChild(video.lastChild);
                         video.removeAttribute('src');
                         video.load();
                         video.currentTime = 0;
