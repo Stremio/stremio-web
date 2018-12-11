@@ -178,6 +178,21 @@ var HTMLVideo = function(container) {
                 break;
             case 'command':
                 switch (arguments[1]) {
+                    case 'addSubtitleTracks':
+                        if (loaded) {
+                            var uniqSubtitleIds = {};
+                            subtitleTracks = subtitleTracks.concat(arguments[2])
+                                .reduce(function(result, subtitleTrack) {
+                                    if (!uniqSubtitleIds[subtitleTrack.id]) {
+                                        uniqSubtitleIds[subtitleTrack.id] = true;
+                                        result.push(Object.freeze(subtitleTrack));
+                                    }
+
+                                    return result;
+                                }, []);
+                            onSubtitleTracksChanged();
+                        }
+                        break;
                     case 'mute':
                         video.muted = true;
                         return;
@@ -185,11 +200,6 @@ var HTMLVideo = function(container) {
                         video.volume = video.volume !== 0 ? video.volume : 0.5;
                         video.muted = false;
                         return;
-                    case 'addExtraSubtitles':
-                        if (loaded) {
-                            //
-                        }
-                        break;
                     case 'stop':
                         video.removeEventListener('ended', onEnded);
                         video.removeEventListener('error', onError);
