@@ -1,44 +1,52 @@
 var EventEmitter = require('events');
 
-var HTMLVideo = function(containerElement) {
+var HTMLVideo = function(container) {
     var self = this;
-    var style = document.createElement('style');
-    containerElement.appendChild(style);
-    style.sheet.insertRule('#' + containerElement.id + ' video { width: 100%; height: 100%; }', style.sheet.cssRules.length);
-    style.sheet.insertRule('#' + containerElement.id + ' video::cue { font-size: 22px; }', style.sheet.cssRules.length);
-    var videoElement = document.createElement('video');
-    containerElement.appendChild(videoElement);
-    videoElement.crossOrigin = 'anonymous';
     var events = new EventEmitter();
     var loaded = false;
     var destroyed = false;
     var dispatchArgsQueue = [];
+    var subtitleTracks = [];
+    var selectedSubtitleTrack = null;
+    var styles = document.createElement('style');
+    var video = document.createElement('video');
+
+    container.appendChild(styles);
+    styles.sheet.insertRule('#' + container.id + ' video { width: 100%; height: 100%; }', styles.sheet.cssRules.length);
+    styles.sheet.insertRule('#' + container.id + ' video::cue { font-size: 22px; }', styles.sheet.cssRules.length);
+    container.appendChild(video);
+    video.crossOrigin = 'anonymous';
+    video.controls = false;
+
     var getPaused = function() {
         if (!loaded) {
             return null;
         }
 
-        return !!videoElement.paused;
+        return !!video.paused;
     };
     var getTime = function() {
         if (!loaded) {
             return null;
         }
 
-        return Math.floor(videoElement.currentTime * 1000);
+        return Math.floor(video.currentTime * 1000);
     };
     var getDuration = function() {
-        if (!loaded || isNaN(videoElement.duration)) {
+        if (!loaded || isNaN(video.duration)) {
             return null;
         }
 
-        return Math.floor(videoElement.duration * 1000);
+        return Math.floor(video.duration * 1000);
     };
     var getVolume = function() {
-        return videoElement.muted ? 0 : Math.floor(videoElement.volume * 100);
+        return video.muted ? 0 : Math.floor(video.volume * 100);
     };
-    var getSubtitles = function() {
-        return [];
+    var getSubtitleTracks = function() {
+        return subtitleTracks.slice();
+    };
+    var getSelectedSubtitleTrack = function() {
+        return selectedSubtitleTrack;
     };
     var onEnded = function() {
         events.emit('ended');
@@ -46,7 +54,7 @@ var HTMLVideo = function(containerElement) {
     var onError = function() {
         var message;
         var critical;
-        switch (videoElement.error.code) {
+        switch (video.error.code) {
             case 1:
                 message = 'Fetching process aborted';
                 critical = false;
@@ -69,17 +77,10 @@ var HTMLVideo = function(containerElement) {
         }
 
         events.emit('error', {
-            code: videoElement.error.code,
+            code: video.error.code,
             message: message,
             critical: critical
         });
-    };
-    var flushArgsQueue = function() {
-        for (var i = 0; i < dispatchArgsQueue.length; i++) {
-            self.dispatch.apply(self, dispatchArgsQueue[i]);
-        }
-
-        dispatchArgsQueue = [];
     };
     var onPausedChanged = function() {
         events.emit('propChanged', 'paused', getPaused());
@@ -93,8 +94,18 @@ var HTMLVideo = function(containerElement) {
     var onVolumeChanged = function() {
         events.emit('propChanged', 'volume', getVolume());
     };
-    var onSubtitlesChanged = function() {
-        events.emit('propChanged', 'subtitles', getSubtitles());
+    var onSubtitleTracksChanged = function() {
+        events.emit('propChanged', 'subtitleTracks', getSubtitleTracks());
+    };
+    var onSelectedSubtitleTrackChanged = function() {
+        events.emit('propChanged', 'selectedSubtitleTrack', getSelectedSubtitleTrack());
+    };
+    var flushArgsQueue = function() {
+        for (var i = 0; i < dispatchArgsQueue.length; i++) {
+            self.dispatch.apply(self, dispatchArgsQueue[i]);
+        }
+
+        dispatchArgsQueue = [];
     };
 
     this.on = function(eventName, listener) {
@@ -114,28 +125,31 @@ var HTMLVideo = function(containerElement) {
             switch (arguments[1]) {
                 case 'paused':
                     events.emit('propValue', 'paused', getPaused());
-                    videoElement.removeEventListener('pause', onPausedChanged);
-                    videoElement.removeEventListener('play', onPausedChanged);
-                    videoElement.addEventListener('pause', onPausedChanged);
-                    videoElement.addEventListener('play', onPausedChanged);
+                    video.removeEventListener('pause', onPausedChanged);
+                    video.removeEventListener('play', onPausedChanged);
+                    video.addEventListener('pause', onPausedChanged);
+                    video.addEventListener('play', onPausedChanged);
                     return;
                 case 'time':
                     events.emit('propValue', 'time', getTime());
-                    videoElement.removeEventListener('timeupdate', onTimeChanged);
-                    videoElement.addEventListener('timeupdate', onTimeChanged);
+                    video.removeEventListener('timeupdate', onTimeChanged);
+                    video.addEventListener('timeupdate', onTimeChanged);
                     return;
                 case 'duration':
                     events.emit('propValue', 'duration', getDuration());
-                    videoElement.removeEventListener('durationchange', onDurationChanged);
-                    videoElement.addEventListener('durationchange', onDurationChanged);
+                    video.removeEventListener('durationchange', onDurationChanged);
+                    video.addEventListener('durationchange', onDurationChanged);
                     return;
                 case 'volume':
                     events.emit('propValue', 'volume', getVolume());
-                    videoElement.removeEventListener('volumechange', onVolumeChanged);
-                    videoElement.addEventListener('volumechange', onVolumeChanged);
+                    video.removeEventListener('volumechange', onVolumeChanged);
+                    video.addEventListener('volumechange', onVolumeChanged);
                     return;
-                case 'subtitles':
-                    events.emit('propValue', 'subtitles', getSubtitles());
+                case 'subtitleTracks':
+                    events.emit('propValue', 'subtitleTracks', getSubtitleTracks());
+                    return;
+                case 'selectedSubtitleTrack':
+                    events.emit('propValue', 'selectedSubtitleTrack', getSelectedSubtitleTrack());
                     return;
                 default:
                     throw new Error('observeProp not supported: ' + arguments[1]);
@@ -144,17 +158,17 @@ var HTMLVideo = function(containerElement) {
             switch (arguments[1]) {
                 case 'paused':
                     if (loaded) {
-                        arguments[2] ? videoElement.pause() : videoElement.play();
+                        arguments[2] ? video.pause() : video.play();
                     }
                     break;
                 case 'time':
                     if (loaded) {
-                        videoElement.currentTime = arguments[2] / 1000;
+                        video.currentTime = arguments[2] / 1000;
                     }
                     break;
                 case 'volume':
-                    videoElement.muted = false;
-                    videoElement.volume = arguments[2] / 100;
+                    video.muted = false;
+                    video.volume = arguments[2] / 100;
                     return;
                 default:
                     throw new Error('setProp not supported: ' + arguments[1]);
@@ -162,53 +176,58 @@ var HTMLVideo = function(containerElement) {
         } else if (arguments[0] === 'command') {
             switch (arguments[1]) {
                 case 'mute':
-                    videoElement.muted = true;
+                    video.muted = true;
                     return;
                 case 'unmute':
-                    videoElement.volume = videoElement.volume !== 0 ? videoElement.volume : 0.5;
-                    videoElement.muted = false;
+                    video.volume = video.volume !== 0 ? video.volume : 0.5;
+                    video.muted = false;
                     return;
                 case 'addExtraSubtitles':
                     if (loaded) {
+                        //
                     }
                     break;
                 case 'stop':
-                    videoElement.removeEventListener('ended', onEnded);
-                    videoElement.removeEventListener('error', onError);
+                    video.removeEventListener('ended', onEnded);
+                    video.removeEventListener('error', onError);
                     loaded = false;
                     dispatchArgsQueue = [];
-                    videoElement.removeAttribute('src');
-                    videoElement.load();
-                    videoElement.currentTime = 0;
+                    subtitleTracks = [];
+                    selectedSubtitleTrack = null;
+                    video.removeAttribute('src');
+                    video.load();
+                    video.currentTime = 0;
                     onPausedChanged();
                     onTimeChanged();
                     onDurationChanged();
-                    onSubtitlesChanged();
+                    onSubtitleTracksChanged();
+                    onSelectedSubtitleTrackChanged();
                     return;
                 case 'load':
                     var dispatchArgsQueueCopy = dispatchArgsQueue.slice();
                     self.dispatch('command', 'stop');
                     dispatchArgsQueue = dispatchArgsQueueCopy;
-                    videoElement.addEventListener('ended', onEnded);
-                    videoElement.addEventListener('error', onError);
-                    videoElement.autoplay = typeof arguments[3].autoplay === 'boolean' ? arguments[3].autoplay : true;
-                    videoElement.currentTime = !isNaN(arguments[3].time) ? arguments[3].time / 1000 : 0;
-                    videoElement.src = arguments[2].url;
+                    video.addEventListener('ended', onEnded);
+                    video.addEventListener('error', onError);
+                    video.autoplay = typeof arguments[3].autoplay === 'boolean' ? arguments[3].autoplay : true;
+                    video.currentTime = !isNaN(arguments[3].time) ? arguments[3].time / 1000 : 0;
+                    video.src = arguments[2].url;
                     loaded = true;
                     onPausedChanged();
                     onTimeChanged();
                     onDurationChanged();
-                    onSubtitlesChanged();
+                    onSubtitleTracksChanged();
+                    onSelectedSubtitleTrackChanged();
                     flushArgsQueue();
                     return;
                 case 'destroy':
                     self.dispatch('command', 'stop');
                     events.removeAllListeners();
-                    videoElement.removeEventListener('pause', onPausedChanged);
-                    videoElement.removeEventListener('play', onPausedChanged);
-                    videoElement.removeEventListener('timeupdate', onTimeChanged);
-                    videoElement.removeEventListener('durationchange', onDurationChanged);
-                    videoElement.removeEventListener('volumechange', onVolumeChanged);
+                    video.removeEventListener('pause', onPausedChanged);
+                    video.removeEventListener('play', onPausedChanged);
+                    video.removeEventListener('timeupdate', onTimeChanged);
+                    video.removeEventListener('durationchange', onDurationChanged);
+                    video.removeEventListener('volumechange', onVolumeChanged);
                     destroyed = true;
                     return;
                 default:
@@ -225,7 +244,7 @@ var HTMLVideo = function(containerElement) {
 HTMLVideo.manifest = {
     name: 'HTMLVideo',
     embedded: true,
-    props: ['paused', 'time', 'duration', 'volume', 'subtitles']
+    props: ['paused', 'time', 'duration', 'volume', 'subtitleTracks', 'selectedSubtitleTrack']
 };
 
 module.exports = HTMLVideo;
