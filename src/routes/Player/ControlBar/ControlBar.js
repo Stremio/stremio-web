@@ -12,7 +12,8 @@ class ControlBar extends Component {
         super(props);
 
         this.state = {
-            sharePopupOpen: false
+            sharePopupOpen: false,
+            subtitlesPopupOpen: false
         };
     }
 
@@ -22,7 +23,10 @@ class ControlBar extends Component {
             nextProps.time !== this.props.time ||
             nextProps.duration !== this.props.duration ||
             nextProps.volume !== this.props.volume ||
-            nextState.sharePopupOpen !== this.state.sharePopupOpen;
+            nextProps.subtitleTracks !== this.props.subtitleTracks ||
+            nextProps.selectedSubtitleTrack !== this.props.selectedSubtitleTrack ||
+            nextState.sharePopupOpen !== this.state.sharePopupOpen ||
+            nextState.subtitlesPopupOpen !== this.state.subtitlesPopupOpen;
     }
 
     setTime = (time) => {
@@ -31,6 +35,10 @@ class ControlBar extends Component {
 
     setVolume = (volume) => {
         this.props.setVolume(volume);
+    }
+
+    setSelectedSubtitleTrack = (selectedSubtitleTrack) => {
+        this.props.setSelectedSubtitleTrack(selectedSubtitleTrack);
     }
 
     toogleVolumeMute = () => {
@@ -49,6 +57,14 @@ class ControlBar extends Component {
         this.setState({ sharePopupOpen: false });
     }
 
+    onSubtitlesPopupOpen = () => {
+        this.setState({ subtitlesPopupOpen: true });
+    }
+
+    onSubtitlesPopupClose = () => {
+        this.setState({ subtitlesPopupOpen: false });
+    }
+
     renderShareButton() {
         return (
             <Popup className={styles['popup-container']} border={true} onOpen={this.onSharePopupOpen} onClose={this.onSharePopupClose}>
@@ -61,6 +77,27 @@ class ControlBar extends Component {
                     <div className={classnames(styles['popup-content'], styles['share-popup-content'])} />
                 </Popup.Menu>
             </Popup>
+        );
+    }
+
+    renderSubtitlesButton() {
+        if (this.props.subtitleTracks.length === 0) {
+            return null;
+        }
+
+        return (
+            <Popup className={styles['popup-container']} border={true} onOpen={this.onSubtitlesPopupOpen} onClose={this.onSubtitlesPopupClose}>
+                <Popup.Label>
+                    <div className={classnames(styles['control-bar-button'], { [styles['active']]: this.state.subtitlesPopupOpen })}>
+                        <Icon className={styles['icon']} icon={'ic_sub'} />
+                    </div>
+                </Popup.Label>
+                <Popup.Menu>
+                    <div className={classnames(styles['popup-content'], styles['subtitles-popup-content'])}>
+
+                    </div>
+                </Popup.Menu>
+            </Popup >
         );
     }
 
@@ -115,6 +152,7 @@ class ControlBar extends Component {
                         setVolume={this.setVolume}
                     />
                     <div className={styles['flex-spacing']} />
+                    {this.renderSubtitlesButton()}
                     {this.renderShareButton()}
                 </div>
             </div>
@@ -128,15 +166,16 @@ ControlBar.propTypes = {
     time: PropTypes.number,
     duration: PropTypes.number,
     volume: PropTypes.number,
-    subtitles: PropTypes.arrayOf(PropTypes.shape({
+    subtitleTracks: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.string.isRequired,
         label: PropTypes.string.isRequired,
-        language: PropTypes.string.isRequired
-    })),
+    })).isRequired,
+    selectedSubtitleTrack: PropTypes.string,
     play: PropTypes.func.isRequired,
     pause: PropTypes.func.isRequired,
     setTime: PropTypes.func.isRequired,
     setVolume: PropTypes.func.isRequired,
+    setSelectedSubtitleTrack: PropTypes.func.isRequired,
     mute: PropTypes.func.isRequired,
     unmute: PropTypes.func.isRequired
 };

@@ -15,7 +15,8 @@ class Player extends Component {
             time: null,
             duration: null,
             volume: null,
-            subtitles: null
+            subtitleTracks: [],
+            selectedSubtitleTrack: null
         };
     }
 
@@ -24,16 +25,15 @@ class Player extends Component {
             nextState.time !== this.state.time ||
             nextState.duration !== this.state.duration ||
             nextState.volume !== this.state.volume ||
-            nextState.subtitles !== this.state.subtitles;
+            nextState.subtitleTracks !== this.state.subtitleTracks ||
+            nextState.selectedSubtitleTrack !== this.state.selectedSubtitleTrack;
     }
 
     componentDidMount() {
-        this.addExtraSubtitles([
+        this.addSubtitleTracks([
             {
-                id: 'id1',
                 url: 'https://raw.githubusercontent.com/amzn/web-app-starter-kit-for-fire-tv/master/out/mrss/assets/sample_video-en.vtt',
-                label: 'English (Github)',
-                language: 'en'
+                label: 'English'
             }
         ]);
     }
@@ -43,10 +43,6 @@ class Player extends Component {
     }
 
     onError = (error) => {
-        if (error.critical) {
-            this.stop();
-        }
-
         alert(error.message);
     }
 
@@ -74,6 +70,10 @@ class Player extends Component {
         this.videoRef.current && this.videoRef.current.dispatch('setProp', 'volume', volume);
     }
 
+    setSelectedSubtitleTrack = (selectedSubtitleTrack) => {
+        this.videoRef.current && this.videoRef.current.dispatch('setProp', 'selectedSubtitleTrack', selectedSubtitleTrack);
+    }
+
     mute = () => {
         this.videoRef.current && this.videoRef.current.dispatch('command', 'mute');
     }
@@ -82,8 +82,8 @@ class Player extends Component {
         this.videoRef.current && this.videoRef.current.dispatch('command', 'unmute');
     }
 
-    addExtraSubtitles = (subtitles) => {
-        this.videoRef.current && this.videoRef.current.dispatch('command', 'addExtraSubtitles', subtitles);
+    addSubtitleTracks = (subtitleTracks) => {
+        this.videoRef.current && this.videoRef.current.dispatch('command', 'addSubtitleTracks', subtitleTracks);
     }
 
     stop = () => {
@@ -115,11 +115,13 @@ class Player extends Component {
                 time={this.state.time}
                 duration={this.state.duration}
                 volume={this.state.volume}
-                subtitles={this.state.subtitles}
+                subtitleTracks={this.state.subtitleTracks}
+                selectedSubtitleTrack={this.state.selectedSubtitleTrack}
                 play={this.play}
                 pause={this.pause}
                 setTime={this.setTime}
                 setVolume={this.setVolume}
+                setSelectedSubtitleTrack={this.setSelectedSubtitleTrack}
                 mute={this.mute}
                 unmute={this.unmute}
             />
