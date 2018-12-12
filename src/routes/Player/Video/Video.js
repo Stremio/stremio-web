@@ -31,7 +31,7 @@ class Video extends Component {
     }
 
     componentWillUnmount() {
-        this.dispatch('stop');
+        this.dispatch('command', 'destroy');
     }
 
     selectVideoImplementation = () => {
