@@ -196,7 +196,7 @@ var HTMLVideo = function(container) {
                 switch (arguments[1]) {
                     case 'addSubtitleTracks':
                         if (loaded) {
-                            subtitleTracks = (Array.isArray(arguments[2]) ? arguments[2] : [])
+                            var extraSubtitleTracks = (Array.isArray(arguments[2]) ? arguments[2] : [])
                                 .filter(function(track) {
                                     return track && typeof track.url === 'string' && track.url.length > 0;
                                 })
@@ -204,8 +204,8 @@ var HTMLVideo = function(container) {
                                     return Object.freeze(Object.assign({}, track, {
                                         id: track.url
                                     }));
-                                })
-                                .concat(subtitleTracks)
+                                });
+                            subtitleTracks = subtitleTracks.concat(extraSubtitleTracks)
                                 .filter(function(track, index, tracks) {
                                     for (var i = 0; i < tracks.length; i++) {
                                         if (tracks[i].id === track.id) {
