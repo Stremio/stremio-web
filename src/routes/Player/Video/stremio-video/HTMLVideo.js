@@ -93,6 +93,10 @@ var HTMLVideo = function(container) {
             message: message,
             critical: critical
         });
+
+        if (error.critical) {
+            self.dispatch('command', 'stop');
+        }
     };
     function onPausedChanged() {
         events.emit('propChanged', 'paused', getPaused());
