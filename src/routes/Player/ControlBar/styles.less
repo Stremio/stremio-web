@@ -3,8 +3,11 @@
 }
 
 .control-bar-container {
-    top: initial !important;
     padding: 0 calc(var(--control-bar-button-height) * 0.4);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    overflow: hidden;
 
     .time-slider {
         --time-slider-thumb-size: calc(var(--control-bar-button-height) * 0.4);
@@ -58,6 +61,16 @@
         .flex-spacing {
             flex: 1
         }
+    }
+
+    &::after {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: -1;
+        box-shadow: 0 0 calc(var(--control-bar-button-height) * 2) calc(var(--control-bar-button-height) * 2) var(--color-backgrounddarker);
+        content: "";
     }
 }
 
