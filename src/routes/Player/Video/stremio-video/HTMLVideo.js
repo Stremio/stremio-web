@@ -47,9 +47,17 @@ var HTMLVideo = function(container) {
         return video.muted ? 0 : Math.floor(video.volume * 100);
     };
     function getSubtitleTracks() {
+        if (!loaded) {
+            return [];
+        }
+
         return subtitleTracks.slice();
     };
     function getSelectedSubtitleTrack() {
+        if (!loaded) {
+            return null;
+        }
+
         return selectedSubtitleTrack;
     };
     function onEnded() {
