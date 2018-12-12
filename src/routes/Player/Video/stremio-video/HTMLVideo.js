@@ -22,40 +22,40 @@ var HTMLVideo = function(container) {
     video.crossOrigin = 'anonymous';
     video.controls = false;
 
-    var getPaused = function() {
+    function getPaused() {
         if (!loaded) {
             return null;
         }
 
         return !!video.paused;
     };
-    var getTime = function() {
+    function getTime() {
         if (!loaded) {
             return null;
         }
 
         return Math.floor(video.currentTime * 1000);
     };
-    var getDuration = function() {
+    function getDuration() {
         if (!loaded || isNaN(video.duration)) {
             return null;
         }
 
         return Math.floor(video.duration * 1000);
     };
-    var getVolume = function() {
+    function getVolume() {
         return video.muted ? 0 : Math.floor(video.volume * 100);
     };
-    var getSubtitleTracks = function() {
+    function getSubtitleTracks() {
         return subtitleTracks.slice();
     };
-    var getSelectedSubtitleTrack = function() {
+    function getSelectedSubtitleTrack() {
         return selectedSubtitleTrack;
     };
-    var onEnded = function() {
+    function onEnded() {
         events.emit('ended');
     };
-    var onError = function() {
+    function onError() {
         var message;
         var critical;
         switch (video.error.code) {
@@ -86,25 +86,25 @@ var HTMLVideo = function(container) {
             critical: critical
         });
     };
-    var onPausedChanged = function() {
+    function onPausedChanged() {
         events.emit('propChanged', 'paused', getPaused());
     };
-    var onTimeChanged = function() {
+    function onTimeChanged() {
         events.emit('propChanged', 'time', getTime());
     };
-    var onDurationChanged = function() {
+    function onDurationChanged() {
         events.emit('propChanged', 'duration', getDuration());
     };
-    var onVolumeChanged = function() {
+    function onVolumeChanged() {
         events.emit('propChanged', 'volume', getVolume());
     };
-    var onSubtitleTracksChanged = function() {
+    function onSubtitleTracksChanged() {
         events.emit('propChanged', 'subtitleTracks', getSubtitleTracks());
     };
-    var onSelectedSubtitleTrackChanged = function() {
+    function onSelectedSubtitleTrackChanged() {
         events.emit('propChanged', 'selectedSubtitleTrack', getSelectedSubtitleTrack());
     };
-    var flushArgsQueue = function() {
+    function flushArgsQueue() {
         for (var i = 0; i < dispatchArgsQueue.length; i++) {
             self.dispatch.apply(self, dispatchArgsQueue[i]);
         }
