@@ -184,16 +184,25 @@ var HTMLVideo = function(container) {
                 switch (arguments[1]) {
                     case 'addSubtitleTracks':
                         if (loaded) {
-                            var uniqSubtitleIds = {};
-                            subtitleTracks = subtitleTracks.concat(arguments[2])
-                                .reduce(function(result, subtitleTrack) {
-                                    if (!uniqSubtitleIds[subtitleTrack.id]) {
-                                        uniqSubtitleIds[subtitleTrack.id] = true;
-                                        result.push(Object.freeze(subtitleTrack));
+                            subtitleTracks = (Array.isArray(arguments[2]) ? arguments[2] : [])
+                                .filter(function(track) {
+                                    return track && typeof track.url === 'string' && track.url.length > 0;
+                                })
+                                .map(function(track) {
+                                    return Object.freeze(Object.assign({}, track, {
+                                        id: track.url
+                                    }));
+                                })
+                                .concat(subtitleTracks)
+                                .filter(function(track, index, tracks) {
+                                    for (var i = 0; i < tracks.length; i++) {
+                                        if (tracks[i].id === track.id) {
+                                            return i === index;
+                                        }
                                     }
 
-                                    return result;
-                                }, []);
+                                    return false;
+                                });
                             onSubtitleTracksChanged();
                         }
                         break;
