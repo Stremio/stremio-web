@@ -182,6 +182,19 @@ var HTMLVideo = function(container) {
                             }
                         }
                         break;
+                    case 'selectedSubtitleTrack':
+                        if (loaded) {
+                            var subtitleTrack;
+                            for (var i = 0; i < subtitleTracks.length; i++) {
+                                if (subtitleTracks[i].id === arguments[2]) {
+                                    subtitleTrack = subtitleTracks[i];
+                                    break;
+                                }
+                            }
+                            selectedSubtitleTrack = subtitleTrack ? subtitleTrack.id : null;
+                            onSelectedSubtitleTrackChanged();
+                        }
+                        break;
                     case 'volume':
                         if (!isNaN(arguments[2])) {
                             video.muted = false;
