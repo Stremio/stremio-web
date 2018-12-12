@@ -169,12 +169,16 @@ var HTMLVideo = function(container) {
                         break;
                     case 'time':
                         if (loaded) {
-                            video.currentTime = arguments[2] / 1000;
+                            if (!isNaN(arguments[2])) {
+                                video.currentTime = arguments[2] / 1000;
+                            }
                         }
                         break;
                     case 'volume':
-                        video.muted = false;
-                        video.volume = arguments[2] / 100;
+                        if (!isNaN(arguments[2])) {
+                            video.muted = false;
+                            video.volume = arguments[2] / 100;
+                        }
                         return;
                     default:
                         throw new Error('setProp not supported: ' + arguments[1]);
