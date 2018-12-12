@@ -89,7 +89,7 @@ class Slider extends Component {
 
     render() {
         const thumbStartProp = this.orientation === 'horizontal' ? 'left' : 'bottom';
-        const thumbStart = (this.props.value - this.props.minimumValue) / (this.props.maximumValue - this.props.minimumValue);
+        const thumbStart = Math.min((this.props.value - this.props.minimumValue) / (this.props.maximumValue - this.props.minimumValue), 1);
         return (
             <div className={classnames(styles['slider-container'], styles[this.orientation], { [styles['active']]: this.state.active }, this.props.className)} onMouseDown={this.onStartSliding}>
                 <div className={styles['track']} />
