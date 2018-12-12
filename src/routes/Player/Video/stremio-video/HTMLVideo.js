@@ -268,7 +268,7 @@ var HTMLVideo = function(container) {
                 }
                 break;
             default:
-                throw new Error('Invalid dispatch call: ' + arguments[0]);
+                throw new Error('Invalid dispatch call: ' + Array.from(arguments).map(String));
         }
 
         if (!loaded) {
