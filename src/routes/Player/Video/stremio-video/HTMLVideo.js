@@ -11,7 +11,7 @@ var HTMLVideo = function(container) {
     var destroyed = false;
     var dispatchArgsQueue = [];
     var subtitleTracks = [];
-    var selectedSubtitleTrack = null;
+    var selectedSubtitleTrackId = null;
     var styles = document.createElement('style');
     var video = document.createElement('video');
 
@@ -53,12 +53,12 @@ var HTMLVideo = function(container) {
 
         return subtitleTracks.slice();
     };
-    function getSelectedSubtitleTrack() {
+    function getSelectedSubtitleTrackId() {
         if (!loaded) {
             return null;
         }
 
-        return selectedSubtitleTrack;
+        return selectedSubtitleTrackId;
     };
     function onEnded() {
         events.emit('ended');
@@ -113,8 +113,8 @@ var HTMLVideo = function(container) {
     function onSubtitleTracksChanged() {
         events.emit('propChanged', 'subtitleTracks', getSubtitleTracks());
     };
-    function onSelectedSubtitleTrackChanged() {
-        events.emit('propChanged', 'selectedSubtitleTrack', getSelectedSubtitleTrack());
+    function onSelectedSubtitleTrackIdChanged() {
+        events.emit('propChanged', 'selectedSubtitleTrackId', getSelectedSubtitleTrackId());
     };
     function flushArgsQueue() {
         for (var i = 0; i < dispatchArgsQueue.length; i++) {
@@ -165,8 +165,8 @@ var HTMLVideo = function(container) {
                     case 'subtitleTracks':
                         events.emit('propValue', 'subtitleTracks', getSubtitleTracks());
                         return;
-                    case 'selectedSubtitleTrack':
-                        events.emit('propValue', 'selectedSubtitleTrack', getSelectedSubtitleTrack());
+                    case 'selectedSubtitleTrackId':
+                        events.emit('propValue', 'selectedSubtitleTrackId', getSelectedSubtitleTrackId());
                         return;
                     default:
                         throw new Error('observeProp not supported: ' + arguments[1]);
@@ -186,7 +186,7 @@ var HTMLVideo = function(container) {
                             }
                         }
                         break;
-                    case 'selectedSubtitleTrack':
+                    case 'selectedSubtitleTrackId':
                         if (loaded) {
                             var subtitleTrack;
                             for (var i = 0; i < subtitleTracks.length; i++) {
@@ -195,8 +195,8 @@ var HTMLVideo = function(container) {
                                     break;
                                 }
                             }
-                            selectedSubtitleTrack = subtitleTrack ? subtitleTrack.id : null;
-                            onSelectedSubtitleTrackChanged();
+                            selectedSubtitleTrackId = subtitleTrack ? subtitleTrack.id : null;
+                            onSelectedSubtitleTrackIdChanged();
                         }
                         break;
                     case 'volume':
@@ -248,7 +248,7 @@ var HTMLVideo = function(container) {
                         loaded = false;
                         dispatchArgsQueue = [];
                         subtitleTracks = [];
-                        selectedSubtitleTrack = null;
+                        selectedSubtitleTrackId = null;
                         while (video.hasChildNodes()) video.removeChild(video.lastChild);
                         video.removeAttribute('src');
                         video.load();
@@ -257,7 +257,7 @@ var HTMLVideo = function(container) {
                         onTimeChanged();
                         onDurationChanged();
                         onSubtitleTracksChanged();
-                        onSelectedSubtitleTrackChanged();
+                        onSelectedSubtitleTrackIdChanged();
                         return;
                     case 'load':
                         var dispatchArgsQueueCopy = dispatchArgsQueue.slice();
@@ -273,7 +273,7 @@ var HTMLVideo = function(container) {
                         onTimeChanged();
                         onDurationChanged();
                         onSubtitleTracksChanged();
-                        onSelectedSubtitleTrackChanged();
+                        onSelectedSubtitleTrackIdChanged();
                         flushArgsQueue();
                         return;
                     case 'destroy':
@@ -305,7 +305,7 @@ var HTMLVideo = function(container) {
 HTMLVideo.manifest = {
     name: 'HTMLVideo',
     embedded: true,
-    props: ['paused', 'time', 'duration', 'volume', 'subtitleTracks', 'selectedSubtitleTrack']
+    props: ['paused', 'time', 'duration', 'volume', 'subtitleTracks', 'selectedSubtitleTrackId']
 };
 
 module.exports = HTMLVideo;

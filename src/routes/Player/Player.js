@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import Video from './Video';
 import ControlBar from './ControlBar';
+import subtitles from './subtitles';
 import styles from './styles';
 
 class Player extends Component {
@@ -16,7 +17,7 @@ class Player extends Component {
             duration: null,
             volume: null,
             subtitleTracks: [],
-            selectedSubtitleTrack: null
+            selectedSubtitleTrackId: null
         };
     }
 
@@ -26,16 +27,11 @@ class Player extends Component {
             nextState.duration !== this.state.duration ||
             nextState.volume !== this.state.volume ||
             nextState.subtitleTracks !== this.state.subtitleTracks ||
-            nextState.selectedSubtitleTrack !== this.state.selectedSubtitleTrack;
+            nextState.selectedSubtitleTrackId !== this.state.selectedSubtitleTrackId;
     }
 
     componentDidMount() {
-        this.addSubtitleTracks([
-            {
-                url: 'https://raw.githubusercontent.com/amzn/web-app-starter-kit-for-fire-tv/master/out/mrss/assets/sample_video-en.vtt',
-                label: 'English'
-            }
-        ]);
+        this.addSubtitleTracks(subtitles);
     }
 
     onEnded = () => {
@@ -70,8 +66,8 @@ class Player extends Component {
         this.videoRef.current && this.videoRef.current.dispatch('setProp', 'volume', volume);
     }
 
-    setSelectedSubtitleTrack = (selectedSubtitleTrack) => {
-        this.videoRef.current && this.videoRef.current.dispatch('setProp', 'selectedSubtitleTrack', selectedSubtitleTrack);
+    setSelectedSubtitleTrackId = (selectedSubtitleTrackId) => {
+        this.videoRef.current && this.videoRef.current.dispatch('setProp', 'selectedSubtitleTrackId', selectedSubtitleTrackId);
     }
 
     mute = () => {
@@ -116,12 +112,12 @@ class Player extends Component {
                 duration={this.state.duration}
                 volume={this.state.volume}
                 subtitleTracks={this.state.subtitleTracks}
-                selectedSubtitleTrack={this.state.selectedSubtitleTrack}
+                selectedSubtitleTrackId={this.state.selectedSubtitleTrackId}
                 play={this.play}
                 pause={this.pause}
                 setTime={this.setTime}
                 setVolume={this.setVolume}
-                setSelectedSubtitleTrack={this.setSelectedSubtitleTrack}
+                setSelectedSubtitleTrackId={this.setSelectedSubtitleTrackId}
                 mute={this.mute}
                 unmute={this.unmute}
             />

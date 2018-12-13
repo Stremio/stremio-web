@@ -5,6 +5,7 @@ import Icon from 'stremio-icons/dom';
 import { Popup } from 'stremio-common';
 import TimeSlider from './TimeSlider';
 import VolumeSlider from './VolumeSlider';
+import SubtitlesPicker from './SubtitlesPicker';
 import styles from './styles';
 
 class ControlBar extends Component {
@@ -24,7 +25,7 @@ class ControlBar extends Component {
             nextProps.duration !== this.props.duration ||
             nextProps.volume !== this.props.volume ||
             nextProps.subtitleTracks !== this.props.subtitleTracks ||
-            nextProps.selectedSubtitleTrack !== this.props.selectedSubtitleTrack ||
+            nextProps.selectedSubtitleTrackId !== this.props.selectedSubtitleTrackId ||
             nextState.sharePopupOpen !== this.state.sharePopupOpen ||
             nextState.subtitlesPopupOpen !== this.state.subtitlesPopupOpen;
     }
@@ -37,8 +38,8 @@ class ControlBar extends Component {
         this.props.setVolume(volume);
     }
 
-    setSelectedSubtitleTrack = (selectedSubtitleTrack) => {
-        this.props.setSelectedSubtitleTrack(selectedSubtitleTrack);
+    setSelectedSubtitleTrackId = (selectedSubtitleTrackId) => {
+        this.props.setSelectedSubtitleTrackId(selectedSubtitleTrackId);
     }
 
     toogleVolumeMute = () => {
@@ -93,9 +94,12 @@ class ControlBar extends Component {
                     </div>
                 </Popup.Label>
                 <Popup.Menu>
-                    <div className={classnames(styles['popup-content'], styles['subtitles-popup-content'])}>
-
-                    </div>
+                    <SubtitlesPicker
+                        className={classnames(styles['popup-content'], styles['subtitles-popup-content'])}
+                        subtitleTracks={this.props.subtitleTracks}
+                        selectedSubtitleTrackId={this.props.selectedSubtitleTrackId}
+                        setSelectedSubtitleTrackId={this.setSelectedSubtitleTrackId}
+                    />
                 </Popup.Menu>
             </Popup >
         );
@@ -169,13 +173,14 @@ ControlBar.propTypes = {
     subtitleTracks: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.string.isRequired,
         label: PropTypes.string.isRequired,
+        origin: PropTypes.string.isRequired
     })).isRequired,
-    selectedSubtitleTrack: PropTypes.string,
+    selectedSubtitleTrackId: PropTypes.string,
     play: PropTypes.func.isRequired,
     pause: PropTypes.func.isRequired,
     setTime: PropTypes.func.isRequired,
     setVolume: PropTypes.func.isRequired,
-    setSelectedSubtitleTrack: PropTypes.func.isRequired,
+    setSelectedSubtitleTrackId: PropTypes.func.isRequired,
     mute: PropTypes.func.isRequired,
     unmute: PropTypes.func.isRequired
 };
