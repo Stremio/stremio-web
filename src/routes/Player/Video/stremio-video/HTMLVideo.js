@@ -215,7 +215,10 @@ var HTMLVideo = function(container) {
                         if (loaded) {
                             var extraSubtitleTracks = (Array.isArray(arguments[2]) ? arguments[2] : [])
                                 .filter(function(track) {
-                                    return track && typeof track.url === 'string' && track.url.length > 0;
+                                    return track &&
+                                        typeof track.url === 'string' &&
+                                        track.url.length > 0 &&
+                                        track.origin !== 'EMBEDDED';
                                 })
                                 .map(function(track) {
                                     return Object.freeze(Object.assign({}, track, {
