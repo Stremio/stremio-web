@@ -1,14 +1,15 @@
 .subtitles-picker-container {
-    width: var(--subtitles-picker-width);
-    height: calc(var(--subtitles-picker-width) * 0.6);
-    padding: calc(var(--subtitles-picker-width) * 0.03);
-    gap: calc(var(--subtitles-picker-width) * 0.03);
+    width: calc(var(--subtitles-picker-button-size) * 14);
+    height: calc(var(--subtitles-picker-button-size) * 8);
+    font-size: calc(var(--subtitles-picker-button-size) * 0.5);
+    padding: calc(var(--subtitles-picker-button-size) * 0.3);
+    gap: calc(var(--subtitles-picker-button-size) * 0.3);
     display: grid;
-    grid-template-columns: 3fr 5fr;
-    grid-template-rows: 1fr 6fr;
+    grid-template-columns: auto calc(var(--subtitles-picker-button-size) * 8);
+    grid-template-rows: var(--subtitles-picker-button-size) auto;
     grid-template-areas:
         "toggle-button preferences"
-        "languages-list preferences";
+        "labels-list preferences";
 
     .toggle-button-container {
         grid-area: toggle-button;
@@ -17,35 +18,32 @@
         cursor: pointer;
 
         .toggle-label {
-            width: 45%;
+            width: 40%;
             height: 100%;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
+            font-weight: 500;
             line-height: 1;
             color: var(--color-surfacelight);
 
             &:first-of-type {
-                margin-right: 10%;
+                margin-right: 20%;
             }
         }
 
         .toggle-thumb {
-            width: 45%;
+            width: 40%;
             position: absolute;
             top: 0;
             bottom: 0;
+            left: 0;
             z-index: 1;
             background-color: var(--color-primarydark);
             transition: left 0.2s;
 
-            &.off {
-                left: 0;
-            }
-
             &.on {
-                left: 55%;
+                left: 60%;
             }
         }
 
@@ -60,41 +58,40 @@
         }
     }
 
-    .languages-container {
-        grid-area: languages-list;
+    .labels-list-container {
+        grid-area: labels-list;
         display: flex;
         flex-direction: column;
         align-items: stretch;
         overflow-y: auto;
+        overflow-x: hidden;
 
-        .language-origin {
+        .track-origin {
             padding: 0 0.2em;
-            font-size: 14px;
+            margin-bottom: 0.2em;
+            font-size: 80%;
             font-style: italic;
-            word-wrap: break-word;
-            color: var(--color-surfacelighter80);
+            overflow-wrap: break-word;
             border-bottom: 1px solid var(--color-surfacelighter80);
+            color: var(--color-surfacelighter80);
 
             &:not(:first-of-type) {
-                margin-top: 1.5em;
+                margin-top: 0.7em;
             }
         }
 
         .language-label {
-            padding: 0.4em;
-            font-size: 18px;
+            padding: 0.5em 0.3em;
+            overflow-wrap: break-word;
             text-align: center;
-            color: var(--color-surfacelight);
-            word-wrap: break-word;
+            color: var(--color-surfacelighter);
             cursor: pointer;
 
             &.selected {
-                color: var(--color-surfacelighter);
                 background-color: var(--color-primarydark);
             }
 
             &:hover {
-                color: var(--color-surfacelighter);
                 background-color: var(--color-primarylight);
             }
         }
@@ -105,16 +102,93 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: center;
+
+        .subtitles-disabled-label {
+            font-size: 170%;
+            line-height: 1.2;
+            text-align: center;
+            word-spacing: calc(var(--subtitles-picker-button-size) * 9);
+            color: var(--color-surfacelighter);
+        }
+
+        .preferences-label {
+            height: var(--subtitles-picker-button-size);
+            color: var(--color-surfacelight);
+            display: flex;
+            align-items: center;
+            margin-bottom: calc(var(--subtitles-picker-button-size) * 0.3);
+        }
 
         .variants-container {
+            align-self: stretch;
+            height: calc(var(--subtitles-picker-button-size) * 2);
+            display: flex;
+            flex-direction: row;
+            align-content: flex-start;
+            flex-wrap: wrap;
+            overflow-x: hidden;
+            overflow-y: auto;
+
+            .variant-button {
+                flex: none;
+                min-width: var(--subtitles-picker-button-size);
+                height: var(--subtitles-picker-button-size);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--color-surfacelight);
+                background-color: var(--color-backgroundlighter);
+
+                &.selected {
+                    color: var(--color-surfacelighter);
+                    background-color: var(--color-primarydark);
+                }
+
+                &:hover {
+                    color: var(--color-surfacelighter);
+                    background-color: var(--color-primarylight);
+                }
+            }
+        }
+
+        .number-input-container {
             flex: 1;
+            width: 65%;
             display: flex;
             flex-direction: row;
             align-items: center;
 
-            .variant-button {
-                width: calc(var(--subtitles-picker-width) * 0.1);
-                height: calc(var(--subtitles-picker-width) * 0.1);
+            .number-input-button {
+                width: var(--subtitles-picker-button-size);
+                height: var(--subtitles-picker-button-size);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: var(--color-primary);
+                cursor: pointer;
+
+                .number-input-icon {
+                    height: 50%;
+                    fill: var(--color-surfacelighter);
+                }
+
+                &:hover {
+                    background-color: var(--color-primarylight);
+                }
+            }
+
+            .number-input-value {
+                flex: 1;
+                height: var(--subtitles-picker-button-size);
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+                color: var(--color-surfacelighter);
+                border-style: solid;
+                border-color: var(--color-primary);
+                border-width: 1px 0;
             }
         }
     }
