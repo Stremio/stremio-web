@@ -218,6 +218,8 @@ var HTMLVideo = function(container) {
                                     return track &&
                                         typeof track.url === 'string' &&
                                         track.url.length > 0 &&
+                                        typeof track.origin === 'string' &&
+                                        track.origin.length > 0 &&
                                         track.origin !== 'EMBEDDED';
                                 })
                                 .map(function(track) {
