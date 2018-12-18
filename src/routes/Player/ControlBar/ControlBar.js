@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import Icon from 'stremio-icons/dom';
 import { Popup } from 'stremio-common';
-import TimeSlider from './TimeSlider';
+import SeekBar from './SeekBar';
 import VolumeSlider from './VolumeSlider';
 import SubtitlesPicker from './SubtitlesPicker';
 import styles from './styles';
@@ -66,6 +66,53 @@ class ControlBar extends Component {
         this.setState({ subtitlesPopupOpen: false });
     }
 
+    renderSeekBar() {
+        return (
+            <SeekBar
+                className={styles['seek-bar']}
+                time={this.props.time}
+                duration={this.props.duration}
+                setTime={this.setTime}
+            />
+        );
+    }
+
+    renderPlayPauseButton() {
+        if (this.props.paused === null) {
+            return null;
+        }
+
+        const icon = this.props.paused ? 'ic_play' : 'ic_pause';
+        return (
+            <div className={styles['control-bar-button']} onClick={this.onPlayPauseButtonClick}>
+                <Icon className={styles['icon']} icon={icon} />
+            </div>
+        );
+    }
+
+    renderVolumeBar() {
+        if (this.props.volume === null) {
+            return null;
+        }
+
+        const icon = this.props.volume === 0 ? 'ic_volume0' :
+            this.props.volume < 50 ? 'ic_volume1' :
+                this.props.volume < 100 ? 'ic_volume2' :
+                    'ic_volume3';
+        return (
+            <Fragment>
+                <div className={styles['control-bar-button']} onClick={this.toogleVolumeMute}>
+                    <Icon className={styles['icon']} icon={icon} />
+                </div>
+                <VolumeSlider
+                    className={styles['volume-slider']}
+                    volume={this.props.volume}
+                    setVolume={this.setVolume}
+                />
+            </Fragment>
+        );
+    }
+
     renderShareButton() {
         return (
             <Popup className={styles['popup-container']} border={true} onOpen={this.onSharePopupOpen} onClose={this.onSharePopupClose}>
@@ -105,56 +152,17 @@ class ControlBar extends Component {
         );
     }
 
-    renderVolumeButton() {
-        if (this.props.volume === null) {
-            return null;
-        }
-
-        const icon = this.props.volume === 0 ? 'ic_volume0' :
-            this.props.volume < 50 ? 'ic_volume1' :
-                this.props.volume < 100 ? 'ic_volume2' :
-                    'ic_volume3';
-        return (
-            <div className={styles['control-bar-button']} onClick={this.toogleVolumeMute}>
-                <Icon className={styles['icon']} icon={icon} />
-            </div>
-        );
-    }
-
-    renderPlayPauseButton() {
-        if (this.props.paused === null) {
-            return null;
-        }
-
-        const icon = this.props.paused ? 'ic_play' : 'ic_pause';
-        return (
-            <div className={styles['control-bar-button']} onClick={this.onPlayPauseButtonClick}>
-                <Icon className={styles['icon']} icon={icon} />
-            </div>
-        );
-    }
-
     render() {
-        if (['paused', 'time', 'duration', 'volume', 'subtitles'].every(propName => this.props[propName] === null)) {
+        if (['paused', 'time', 'duration', 'volume', 'subtitleTracks'].every(propName => this.props[propName] === null)) {
             return null;
         }
 
         return (
             <div className={classnames(styles['control-bar-container'], this.props.className)}>
-                <TimeSlider
-                    className={styles['time-slider']}
-                    time={this.props.time}
-                    duration={this.props.duration}
-                    setTime={this.setTime}
-                />
+                {this.renderSeekBar()}
                 <div className={styles['control-bar-buttons-container']}>
                     {this.renderPlayPauseButton()}
-                    {this.renderVolumeButton()}
-                    <VolumeSlider
-                        className={styles['volume-slider']}
-                        volume={this.props.volume}
-                        setVolume={this.setVolume}
-                    />
+                    {this.renderVolumeBar()}
                     <div className={styles['flex-spacing']} />
                     {this.renderSubtitlesButton()}
                     {this.renderShareButton()}

@@ -1,20 +1,20 @@
-.time-slider-container {
+.seek-bar-container {
     display: flex;
     flex-direction: row;
     align-items: center;
 
     .label {
-        font-size: calc(var(--time-slider-thumb-size) * 0.7);
+        font-size: calc(var(--seek-bar-thumb-size) * 0.7);
         color: var(--color-surfacelight);
     }
 
     .slider {
-        --thumb-size: var(--time-slider-thumb-size);
+        --thumb-size: var(--seek-bar-thumb-size);
         --track-color: var(--color-primarydark);
         --thumb-color: var(--color-primary);
         --thumb-active-color: var(--color-primarylight);
         flex: 1;
-        margin: 0 var(--time-slider-thumb-size);
+        margin: 0 var(--seek-bar-thumb-size);
     }
 
     &:hover, &.active {
