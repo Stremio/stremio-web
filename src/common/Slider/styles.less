@@ -1,4 +1,5 @@
 .slider-container {
+    display: inline-block;
     position: relative;
     z-index: 0;
     min-width: var(--thumb-size);
@@ -16,15 +17,8 @@
         z-index: 2;
         width: var(--thumb-size);
         height: var(--thumb-size);
-
-        &::after {
-            display: block;
-            width: var(--thumb-size);
-            height: var(--thumb-size);
-            border-radius: 50%;
-            background-color: var(--thumb-color);
-            content: "";
-        }
+        border-radius: 50%;
+        background-color: var(--thumb-color);
     }
 
     &.horizontal {
@@ -35,8 +29,8 @@
             bottom: 40%;
         }
 
-        .thumb::after {
-            margin-left: calc(-0.5 * var(--thumb-size));
+        .thumb {
+            transform: translateX(-50%);
         }
     }
 
@@ -48,8 +42,8 @@
             bottom: 0;
         }
 
-        .thumb::after {
-            margin-top: calc(0.5 * var(--thumb-size));
+        .thumb {
+            transform: translateY(50%);
         }
     }
 }
