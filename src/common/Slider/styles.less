@@ -25,25 +25,27 @@
         .track {
             left: 0;
             right: 0;
-            top: 40%;
-            bottom: 40%;
+            top: calc(50% - var(--thumb-size) * 0.1);
+            bottom: calc(50% - var(--thumb-size) * 0.1);
         }
 
         .thumb {
             transform: translateX(-50%);
+            top: calc(50% - var(--thumb-size) * 0.5);
         }
     }
 
     &.vertical {
         .track {
-            left: 40%;
-            right: 40%;
+            left: calc(50% - var(--thumb-size) * 0.1);
+            right: calc(50% - var(--thumb-size) * 0.1);
             top: 0;
             bottom: 0;
         }
 
         .thumb {
             transform: translateY(50%);
+            left: calc(50% - var(--thumb-size) * 0.5);
         }
     }
 }
