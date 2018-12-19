@@ -76,10 +76,12 @@ class Slider extends Component {
 
     render() {
         const thumbStartProp = this.orientation === 'horizontal' ? 'left' : 'bottom';
+        const trackBeforeSizeProp = this.orientation === 'horizontal' ? 'width' : 'height';
         const thumbStart = Math.min((this.props.value - this.props.minimumValue) / (this.props.maximumValue - this.props.minimumValue), 1);
         return (
             <div className={classnames(styles['slider-container'], styles[this.orientation], this.props.className)} onMouseDown={this.onStartSliding}>
                 <div className={styles['track']} />
+                <div className={styles['track-before']} style={{ [trackBeforeSizeProp]: `calc(100% * ${thumbStart})` }} />
                 <div className={styles['thumb']} style={{ [thumbStartProp]: `calc(100% * ${thumbStart})` }} />
             </div>
         );

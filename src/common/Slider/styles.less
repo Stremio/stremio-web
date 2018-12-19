@@ -10,9 +10,15 @@
         background-color: var(--track-color);
     }
 
-    .thumb {
+    .track-before {
         position: absolute;
         z-index: 2;
+        background-color: var(--track-before-color);
+    }
+
+    .thumb {
+        position: absolute;
+        z-index: 3;
         width: var(--thumb-size);
         height: var(--thumb-size);
         border-radius: 50%;
@@ -27,6 +33,12 @@
             height: var(--track-size);
         }
 
+        .track-before {
+            top: calc(50% - var(--track-size) * 0.5);
+            left: 0;
+            height: var(--track-size);
+        }
+
         .thumb {
             top: calc(50% - var(--thumb-size) * 0.5);
             transform: translateX(-50%);
@@ -36,6 +48,12 @@
     &.vertical {
         .track {
             top: 0;
+            bottom: 0;
+            left: calc(50% - var(--track-size) * 0.1);
+            width: var(--track-size);
+        }
+
+        .track-before {
             bottom: 0;
             left: calc(50% - var(--track-size) * 0.1);
             width: var(--track-size);
