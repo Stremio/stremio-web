@@ -13,7 +13,6 @@
         --thumb-size: var(--seek-bar-thumb-size);
         --track-color: var(--color-primarydark);
         --thumb-color: var(--color-primary);
-        --thumb-active-color: var(--color-primarylight);
         flex: 1;
         margin: 0 var(--seek-bar-thumb-size);
     }
@@ -21,6 +20,10 @@
     &:hover, &.active {
         .label {
             color: var(--color-surfacelighter);
+        }
+
+        .slider {
+            --thumb-color: var(--color-primarylight);
         }
     }
 }

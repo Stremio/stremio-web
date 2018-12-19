@@ -99,7 +99,7 @@ class SeekBar extends Component {
         }
 
         return (
-            <div className={classnames(styles['seek-bar-container'], { [styles['active']]: this.state.time !== null }, this.props.className)}>
+            <div className={classnames(styles['seek-bar-container'], { 'active': this.state.time !== null }, this.props.className)}>
                 {this.renderTimeLabel()}
                 {this.renderSlider()}
                 {this.renderDurationLabel()}
