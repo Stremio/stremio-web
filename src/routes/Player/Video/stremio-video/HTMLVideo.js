@@ -94,7 +94,7 @@ var HTMLVideo = function(container) {
             critical: critical
         });
 
-        if (error.critical) {
+        if (critical) {
             self.dispatch('command', 'stop');
         }
     };
