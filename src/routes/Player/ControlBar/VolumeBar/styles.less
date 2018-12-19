@@ -4,15 +4,17 @@
     align-items: center;
 
     .slider {
-        --track-size: var(--volume-bar-track-size);
+        --thumb-size: var(--volume-bar-thumb-size);
+        --track-size: calc(var(--volume-bar-thumb-size) * 0.2);
+        --thumb-color: var(--color-surfacelight);
         --track-color: var(--color-surfacelight);
-        --track-before-color: var(--color-primary);
         flex: 1;
         align-self: stretch;
     }
 
     &:hover, &.active {
         .slider {
+            --thumb-color: var(--color-surfacelighter);
             --track-color: var(--color-surfacelighter);
         }
     }
