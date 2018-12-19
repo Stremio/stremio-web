@@ -8,9 +8,6 @@ class Slider extends Component {
         super(props);
 
         this.orientation = props.orientation;
-        this.onSlide = props.onSlide;
-        this.onComplete = props.onComplete;
-        this.onCancel = props.onCancel;
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -18,6 +15,18 @@ class Slider extends Component {
             nextProps.minimumValue !== this.props.minimumValue ||
             nextProps.maximumValue !== this.props.maximumValue ||
             nextProps.className !== this.props.className;
+    }
+
+    onSlide = (value) => {
+        this.props.onSlide(value);
+    }
+
+    onComplete = (value) => {
+        this.props.onComplete(value);
+    }
+
+    onCancel = () => {
+        this.props.onCancel();
     }
 
     calculateSlidingValue = ({ mouseX, mouseY, sliderElement }) => {
