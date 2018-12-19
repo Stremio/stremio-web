@@ -2,6 +2,9 @@ const path = require('path');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
+const cssUtils = require('css-loader/dist/utils');
+
+const WHITE_LIST_CLASS_NAMES = ['active'];
 
 module.exports = {
     entry: './src/index.js',
@@ -38,6 +41,12 @@ module.exports = {
                         options: {
                             modules: true,
                             localIdentName: '[local]_[hash:base64:5]',
+                            getLocalIdent: (context, localIdentName, localName, options) => {
+                                return WHITE_LIST_CLASS_NAMES.includes(localName) ?
+                                    localName
+                                    :
+                                    cssUtils.getLocalIdent(context, localIdentName, localName, options);
+                            },
                             importLoaders: 2
                         }
                     },
