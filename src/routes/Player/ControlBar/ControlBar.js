@@ -1,12 +1,19 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import Icon from 'stremio-icons/dom';
 import { Popup } from 'stremio-common';
 import SeekBar from './SeekBar';
-import VolumeSlider from './VolumeSlider';
+import VolumeBar from './VolumeBar';
 import SubtitlesPicker from './SubtitlesPicker';
 import styles from './styles';
+
+//TODO move this in separate file
+const ControlBarButton = React.forwardRef(({ active, icon, onClick }, ref) => (
+    <div ref={ref} className={classnames(styles['control-bar-button'], { [styles['active']]: active })} onClick={onClick}>
+        <Icon className={styles['icon']} icon={icon} />
+    </div>
+));
 
 class ControlBar extends Component {
     constructor(props) {
@@ -42,11 +49,15 @@ class ControlBar extends Component {
         this.props.setSelectedSubtitleTrackId(selectedSubtitleTrackId);
     }
 
-    toogleVolumeMute = () => {
-        this.props.volume === 0 ? this.props.unmute() : this.props.mute();
+    mute = () => {
+        this.props.mute();
     }
 
-    onPlayPauseButtonClick = () => {
+    unmute = () => {
+        this.props.unmute();
+    }
+
+    togglePaused = () => {
         this.props.paused ? this.props.play() : this.props.pause();
     }
 
@@ -84,32 +95,23 @@ class ControlBar extends Component {
 
         const icon = this.props.paused ? 'ic_play' : 'ic_pause';
         return (
-            <div className={styles['control-bar-button']} onClick={this.onPlayPauseButtonClick}>
-                <Icon className={styles['icon']} icon={icon} />
-            </div>
+            <ControlBarButton
+                icon={icon}
+                onClick={this.togglePaused}
+            />
         );
     }
 
     renderVolumeBar() {
-        if (this.props.volume === null) {
-            return null;
-        }
-
-        const icon = this.props.volume === 0 ? 'ic_volume0' :
-            this.props.volume < 50 ? 'ic_volume1' :
-                this.props.volume < 100 ? 'ic_volume2' :
-                    'ic_volume3';
         return (
-            <Fragment>
-                <div className={styles['control-bar-button']} onClick={this.toogleVolumeMute}>
-                    <Icon className={styles['icon']} icon={icon} />
-                </div>
-                <VolumeSlider
-                    className={styles['volume-slider']}
-                    volume={this.props.volume}
-                    setVolume={this.setVolume}
-                />
-            </Fragment>
+            <VolumeBar
+                className={styles['volume-bar']}
+                toggleButtonComponent={ControlBarButton}
+                volume={this.props.volume}
+                setVolume={this.setVolume}
+                mute={this.mute}
+                unmute={this.unmute}
+            />
         );
     }
 
@@ -117,9 +119,7 @@ class ControlBar extends Component {
         return (
             <Popup className={styles['popup-container']} border={true} onOpen={this.onSharePopupOpen} onClose={this.onSharePopupClose}>
                 <Popup.Label>
-                    <div className={classnames(styles['control-bar-button'], { [styles['active']]: this.state.sharePopupOpen })}>
-                        <Icon className={styles['icon']} icon={'ic_share'} />
-                    </div>
+                    <ControlBarButton active={this.state.sharePopupOpen} icon={'ic_share'} />
                 </Popup.Label>
                 <Popup.Menu>
                     <div className={classnames(styles['popup-content'], styles['share-popup-content'])} />
@@ -136,9 +136,7 @@ class ControlBar extends Component {
         return (
             <Popup className={styles['popup-container']} border={true} onOpen={this.onSubtitlesPopupOpen} onClose={this.onSubtitlesPopupClose}>
                 <Popup.Label>
-                    <div className={classnames(styles['control-bar-button'], { [styles['active']]: this.state.subtitlesPopupOpen })}>
-                        <Icon className={styles['icon']} icon={'ic_sub'} />
-                    </div>
+                    <ControlBarButton active={this.state.subtitlesPopupOpen} icon={'ic_sub'} />
                 </Popup.Label>
                 <Popup.Menu>
                     <SubtitlesPicker
@@ -153,10 +151,6 @@ class ControlBar extends Component {
     }
 
     render() {
-        if (['paused', 'time', 'duration', 'volume', 'subtitleTracks'].every(propName => this.props[propName] === null)) {
-            return null;
-        }
-
         return (
             <div className={classnames(styles['control-bar-container'], this.props.className)}>
                 {this.renderSeekBar()}

@@ -1,0 +1,15 @@
+.volume-bar-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    .slider {
+        --thumb-size: var(--volume-bar-thumb-size);
+        --track-color: var(--color-surfacelight);
+        --thumb-color: var(--color-surfacelight);
+        --thumb-active-color: var(--color-surfacelighter);
+        --track-active-color: var(--color-surfacelighter);
+        flex: 1;
+        margin: 0 calc(var(--volume-slider-thumb-size) * 0.5);
+    }
+}
