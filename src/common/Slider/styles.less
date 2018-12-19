@@ -2,8 +2,6 @@
     display: inline-block;
     position: relative;
     z-index: 0;
-    min-width: var(--thumb-size);
-    min-height: var(--thumb-size);
     cursor: pointer;
 
     .track {
@@ -23,29 +21,29 @@
 
     &.horizontal {
         .track {
-            left: 0;
+            top: calc(50% - var(--track-size) * 0.5);
             right: 0;
-            top: calc(50% - var(--thumb-size) * 0.1);
-            bottom: calc(50% - var(--thumb-size) * 0.1);
+            left: 0;
+            height: var(--track-size);
         }
 
         .thumb {
-            transform: translateX(-50%);
             top: calc(50% - var(--thumb-size) * 0.5);
+            transform: translateX(-50%);
         }
     }
 
     &.vertical {
         .track {
-            left: calc(50% - var(--thumb-size) * 0.1);
-            right: calc(50% - var(--thumb-size) * 0.1);
             top: 0;
             bottom: 0;
+            left: calc(50% - var(--track-size) * 0.1);
+            width: var(--track-size);
         }
 
         .thumb {
-            transform: translateY(50%);
             left: calc(50% - var(--thumb-size) * 0.5);
+            transform: translateY(50%);
         }
     }
 }
