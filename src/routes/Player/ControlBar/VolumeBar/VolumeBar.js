@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import debounce from 'lodash.debounce';
@@ -59,7 +59,7 @@ class VolumeBar extends Component {
                 volume < 70 ? 'ic_volume2' :
                     'ic_volume3';
         return (
-            <div className={classnames(styles['volume-bar-container'], this.props.className)}>
+            <div className={classnames(styles['volume-bar-container'], { 'active': this.state.volume !== null }, this.props.className)}>
                 {React.createElement(this.props.toggleButtonComponent, { icon, onClick: this.toogleVolumeMute }, null)}
                 <Slider
                     className={styles['slider']}
@@ -80,30 +80,9 @@ VolumeBar.propTypes = {
     className: PropTypes.string,
     volume: PropTypes.number,
     toggleButtonComponent: PropTypes.oneOfType([PropTypes.object, PropTypes.func]).isRequired,
-    setVolume: PropTypes.func.isRequired
+    setVolume: PropTypes.func.isRequired,
+    mute: PropTypes.func.isRequired,
+    unmute: PropTypes.func.isRequired
 };
 
 export default VolumeBar;
-
-
-
-// if (this.props.volume === null) {
-//     return null;
-// }
-
-// const icon = this.props.volume === 0 ? 'ic_volume0' :
-//     this.props.volume < 50 ? 'ic_volume1' :
-//         this.props.volume < 100 ? 'ic_volume2' :
-//             'ic_volume3';
-// return (
-//     <Fragment>
-//         <div className={styles['control-bar-button']} onClick={this.toogleVolumeMute}>
-//             <Icon className={styles['icon']} icon={icon} />
-//         </div>
-//         <VolumeSlider
-//             className={styles['volume-slider']}
-//             volume={this.props.volume}
-//             setVolume={this.setVolume}
-//         />
-//     </Fragment>
-// );

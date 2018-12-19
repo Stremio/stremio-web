@@ -7,17 +7,16 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
+    align-items: stretch;
     overflow: hidden;
 
     .seek-bar {
         --seek-bar-thumb-size: calc(var(--control-bar-button-height) * 0.4);
         height: var(--seek-bar-thumb-size);
-        width: 100%;
     }
 
     .control-bar-buttons-container {
         height: var(--control-bar-button-height);
-        width: 100%;
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -56,6 +55,14 @@
             --volume-bar-thumb-size: calc(var(--control-bar-button-height) * 0.3);
             height: var(--control-bar-button-height);
             width: calc(var(--control-bar-button-height) * 4);
+
+            &:hover, &.active {
+                .control-bar-button {
+                    .icon {
+                        fill: var(--color-surfacelighter);
+                    }
+                }
+            }
         }
 
         .flex-spacing {
