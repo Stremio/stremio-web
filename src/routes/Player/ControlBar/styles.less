@@ -38,7 +38,7 @@
                 overflow: visible;
             }
 
-            &.active {
+            &:global(.active) {
                 background-color: var(--color-backgrounddarker);
 
                 .icon {
@@ -59,7 +59,7 @@
             height: var(--control-bar-button-height);
             width: calc(var(--control-bar-button-height) * 5);
 
-            &:hover, &.active {
+            &:hover, &:global(.active) {
                 .control-bar-button {
                     .icon {
                         fill: var(--color-surfacelighter);

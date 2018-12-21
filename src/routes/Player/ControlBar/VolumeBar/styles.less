@@ -14,7 +14,7 @@
         margin: 0 calc(var(--volume-bar-thumb-size) / 2);
     }
 
-    &:hover, &.active {
+    &:hover, &:global(.active) {
         .slider {
             --track-before-color: var(--color-primarylight);
             --thumb-color: var(--color-surfacelighter);

@@ -10,7 +10,7 @@ import styles from './styles';
 
 //TODO move this in separate file
 const ControlBarButton = React.forwardRef(({ active, icon, onClick }, ref) => (
-    <div ref={ref} className={classnames(styles['control-bar-button'], { [styles['active']]: active })} onClick={onClick}>
+    <div ref={ref} className={classnames(styles['control-bar-button'], { 'active': active })} onClick={onClick}>
         <Icon className={styles['icon']} icon={icon} />
     </div>
 ));
