@@ -30,7 +30,8 @@
         "stremio-json-data": "git+ssh://git@github.com/stremio/stremio-json-data.git#v1.2.3",
         "stremio-models": "git+ssh://git@github.com/stremio/stremio-models.git#v1.51.5",
         "stremio-official-addons": "git+ssh://git@github.com/Stremio/stremio-official-addons.git#v1.1.1",
-        "stremio-translations": "git+ssh://git@github.com/Stremio/stremio-translations.git#v1.41.0"
+        "stremio-translations": "git+ssh://git@github.com/Stremio/stremio-translations.git#v1.41.0",
+        "vtt.js": "0.13.0"
     },
     "devDependencies": {
         "@babel/core": "7.2.2",
