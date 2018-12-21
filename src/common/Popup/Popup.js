@@ -10,6 +10,7 @@ class Popup extends Component {
     constructor(props) {
         super(props);
 
+        this.hiddenBorderRef = React.createRef();
         this.labelRef = React.createRef();
         this.labelBorderTopRef = React.createRef();
         this.labelBorderRightRef = React.createRef();
@@ -60,7 +61,7 @@ class Popup extends Component {
         const bodyRect = document.body.getBoundingClientRect();
         const menuRect = this.menuRef.current.getBoundingClientRect();
         const labelRect = this.labelRef.current.getBoundingClientRect();
-        const borderWidth = 1 / window.devicePixelRatio;
+        const borderWidth = parseFloat(window.getComputedStyle(this.hiddenBorderRef.current).getPropertyValue('border-top-width'));
         const labelPosition = {
             left: labelRect.x - bodyRect.x,
             top: labelRect.y - bodyRect.y,
@@ -185,6 +186,7 @@ class Popup extends Component {
                     <div ref={this.menuBorderBottomRef} className={classnames(styles['border'], styles['border-bottom'])} />
                     <div ref={this.menuBorderLeftRef} className={classnames(styles['border'], styles['border-left'])} />
                 </div>
+                <div ref={this.hiddenBorderRef} className={styles['hidden-border']} />
                 <div ref={this.labelBorderTopRef} className={classnames(styles['border'], styles['border-top'])} />
                 <div ref={this.labelBorderRightRef} className={classnames(styles['border'], styles['border-right'])} />
                 <div ref={this.labelBorderBottomRef} className={classnames(styles['border'], styles['border-bottom'])} />
