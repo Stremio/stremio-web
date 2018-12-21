@@ -11,8 +11,10 @@
     align-items: stretch;
 
     .seek-bar {
-        --seek-bar-thumb-size: calc(var(--control-bar-button-height) * 0.5);
-        height: var(--seek-bar-thumb-size);
+        --seek-bar-thumb-size: calc(var(--control-bar-button-height) * 0.40);
+        --seek-bar-track-size: calc(var(--control-bar-button-height) * 0.12);
+        --seek-bar-font-size: calc(var(--control-bar-button-height) * 0.35);
+        height: calc(var(--control-bar-button-height) * 0.6);
     }
 
     .control-bar-buttons-container {
@@ -52,9 +54,10 @@
         }
 
         .volume-bar {
-            --volume-bar-thumb-size: calc(var(--control-bar-button-height) * 0.4);
+            --volume-bar-thumb-size: calc(var(--control-bar-button-height) * 0.36);
+            --volume-bar-track-size: calc(var(--control-bar-button-height) * 0.10);
             height: var(--control-bar-button-height);
-            width: calc(var(--control-bar-button-height) * 4);
+            width: calc(var(--control-bar-button-height) * 5);
 
             &:hover, &.active {
                 .control-bar-button {

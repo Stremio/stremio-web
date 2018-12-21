@@ -5,17 +5,19 @@
 
     .slider {
         --thumb-size: var(--volume-bar-thumb-size);
-        --track-size: calc(var(--volume-bar-thumb-size) * 0.2);
-        --thumb-color: var(--color-surfacelight);
-        --track-color: var(--color-surfacelight);
+        --track-size: var(--volume-bar-track-size);
+        --track-before-color: var(--color-primary);
+        --track-color: var(--color-backgroundlighter);
+        --thumb-color: transparent;
         flex: 1;
         align-self: stretch;
+        margin: 0 calc(var(--volume-bar-thumb-size) / 2);
     }
 
     &:hover, &.active {
         .slider {
+            --track-before-color: var(--color-primarylight);
             --thumb-color: var(--color-surfacelighter);
-            --track-color: var(--color-surfacelighter);
         }
     }
 }
