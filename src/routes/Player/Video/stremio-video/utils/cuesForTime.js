@@ -1,38 +1,29 @@
 module.exports = function(cues, time) {
     var timeInSeconds = time / 1000;
     var cuesForTime = [];
-    var middleCueIndex = -1;
     var left = 0;
     var right = cues.length - 1;
+    var lastCueIndex = -1;
     while (left <= right) {
         var middle = Math.floor((left + right) / 2);
-        if (cues[middle].endTime < timeInSeconds) {
+        if (cues[middle].startTime === timeInSeconds) {
+            lastCueIndex = middle;
             left = middle + 1;
         } else if (cues[middle].startTime > timeInSeconds) {
             right = middle - 1;
         } else {
-            middleCueIndex = middle;
-            break;
+            left = middle + 1;
         }
     }
 
-    if (middleCueIndex !== -1) {
-        cuesForTime.push(cues[middleCueIndex]);
-        for (var i = middleCueIndex - 1; i >= 0; i--) {
-            if (cues[i].startTime > timeInSeconds || cues[i].endTime < timeInSeconds) {
-                break;
-            }
-
-            cuesForTime.push(cues[i]);
+    var cueIndex = lastCueIndex !== -1 ? lastCueIndex : right;
+    while (cueIndex >= 0) {
+        if (cues[cueIndex].startTime > timeInSeconds || cues[cueIndex].endTime < timeInSeconds) {
+            break;
         }
 
-        for (var i = middleCueIndex + 1; i < cues.length; i++) {
-            if (cues[i].startTime > timeInSeconds || cues[i].endTime < timeInSeconds) {
-                break;
-            }
-
-            cuesForTime.push(cues[i]);
-        }
+        cuesForTime.push(cues[cueIndex]);
+        cueIndex--;
     }
 
     return cuesForTime.sort(function(c1, c2) {
