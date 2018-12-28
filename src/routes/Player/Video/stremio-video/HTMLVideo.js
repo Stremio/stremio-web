@@ -1,4 +1,6 @@
 var EventEmitter = require('events');
+var cuesForTime = require('./utils/cuesForTime');
+var fetchCues = require('./utils/fetchCues');
 
 var HTMLVideo = function(container) {
     if (!(container instanceof HTMLElement)) {
@@ -10,6 +12,7 @@ var HTMLVideo = function(container) {
     var loaded = false;
     var destroyed = false;
     var dispatchArgsQueue = [];
+    var subtitleCues = [];
     var subtitleTracks = [];
     var selectedSubtitleTrackId = null;
     var styles = document.createElement('style');
@@ -22,6 +25,9 @@ var HTMLVideo = function(container) {
     video.crossOrigin = 'anonymous';
     video.controls = false;
 
+    function onSubtitlesCuesChanged() {
+        
+    }
     function getPaused() {
         if (!loaded) {
             return null;
@@ -195,7 +201,27 @@ var HTMLVideo = function(container) {
                                     break;
                                 }
                             }
-                            selectedSubtitleTrackId = subtitleTrack ? subtitleTrack.id : null;
+
+                            if (subtitleTrack) {
+                                selectedSubtitleTrackId = subtitleTrack.id;
+                                fetchCues(subtitleTrack.url)
+                                    .then(function(cues) {
+                                        if (selectedSubtitleTrackId === subtitleTrack.id) {
+                                            subtitleCues = cues;
+                                        }
+                                    })
+                                    .catch(function() {
+                                        events.emit('error', {
+                                            code: 68,
+                                            message: 'Failed to fetch subtitles from ' + subtitleTrack.origin,
+                                            critical: false
+                                        });
+                                    });
+                            } else {
+                                selectedSubtitleTrackId = null;
+                                subtitleCues = [];
+                            }
+
                             onSelectedSubtitleTrackIdChanged();
                         }
                         break;
@@ -250,11 +276,11 @@ var HTMLVideo = function(container) {
                     case 'stop':
                         video.removeEventListener('ended', onEnded);
                         video.removeEventListener('error', onError);
+                        video.removeEventListener('timeupdate', onSubtitlesCuesChanged);
                         loaded = false;
                         dispatchArgsQueue = [];
                         subtitleTracks = [];
                         selectedSubtitleTrackId = null;
-                        while (video.hasChildNodes()) video.removeChild(video.lastChild);
                         video.removeAttribute('src');
                         video.load();
                         video.currentTime = 0;
@@ -270,6 +296,7 @@ var HTMLVideo = function(container) {
                         dispatchArgsQueue = dispatchArgsQueueCopy;
                         video.addEventListener('ended', onEnded);
                         video.addEventListener('error', onError);
+                        video.addEventListener('timeupdate', onSubtitlesCuesChanged);
                         video.autoplay = typeof arguments[3].autoplay === 'boolean' ? arguments[3].autoplay : true;
                         video.currentTime = !isNaN(arguments[3].time) ? arguments[3].time / 1000 : 0;
                         video.src = arguments[2].url;
