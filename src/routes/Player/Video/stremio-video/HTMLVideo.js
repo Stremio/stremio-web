@@ -1,4 +1,5 @@
 var EventEmitter = require('events');
+var VTTJS = require('vtt.js');
 var cuesForTime = require('./utils/cuesForTime');
 var fetchCues = require('./utils/fetchCues');
 
@@ -17,17 +18,17 @@ var HTMLVideo = function(container) {
     var selectedSubtitleTrackId = null;
     var styles = document.createElement('style');
     var video = document.createElement('video');
+    var subtitles = document.createElement('div');
 
     container.appendChild(styles);
-    styles.sheet.insertRule('#' + container.id + ' video { width: 100%; height: 100%; }', styles.sheet.cssRules.length);
-    styles.sheet.insertRule('#' + container.id + ' video::cue { font-size: 22px; }', styles.sheet.cssRules.length);
+    styles.sheet.insertRule('#' + container.id + ' video { width: 100%; height: 100%; position: relative; z-index: 0; }', styles.sheet.cssRules.length);
+    styles.sheet.insertRule('#' + container.id + ' .subtitles { position: absolute; right: 0; bottom: 120px; left: 0; font-size: 22px; color: white; text-align: center; }', styles.sheet.cssRules.length);
     container.appendChild(video);
     video.crossOrigin = 'anonymous';
     video.controls = false;
+    container.appendChild(subtitles);
+    subtitles.classList.add('subtitles');
 
-    function onSubtitlesCuesChanged() {
-        
-    }
     function getPaused() {
         if (!loaded) {
             return null;
@@ -66,6 +67,22 @@ var HTMLVideo = function(container) {
 
         return selectedSubtitleTrackId;
     };
+    function onSubtitlesCuesChanged() {
+        while (subtitles.hasChildNodes()) {
+            subtitles.removeChild(subtitles.lastChild);
+        }
+
+        if (!loaded || subtitleCues.length === 0) {
+            return;
+        }
+
+        var time = getTime();
+        var cues = cuesForTime(subtitleCues, time);
+        for (var i = 0; i < cues.length; i++) {
+            var cue = VTTJS.WebVTT.convertCueToDOMTree(window, cues[i].text);
+            subtitles.appendChild(cue);
+        }
+    }
     function onEnded() {
         events.emit('ended');
     };
@@ -208,6 +225,7 @@ var HTMLVideo = function(container) {
                                     .then(function(cues) {
                                         if (selectedSubtitleTrackId === subtitleTrack.id) {
                                             subtitleCues = cues;
+                                            console.log(subtitleCues)
                                         }
                                     })
                                     .catch(function() {
