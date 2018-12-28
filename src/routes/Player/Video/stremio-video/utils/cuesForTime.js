@@ -36,6 +36,7 @@ module.exports = function(cues, time) {
     }
 
     return cuesForTime.sort(function(c1, c2) {
-        return c1.startTime - c2.startTime;
+        return c1.startTime - c2.startTime ||
+            c1.endTime - c2.endTime;
     });
 };
