@@ -35,5 +35,7 @@ module.exports = function(cues, time) {
         }
     }
 
-    return cuesForTime;
+    return cuesForTime.sort(function(c1, c2) {
+        return c1.startTime - c2.startTime;
+    });
 };
