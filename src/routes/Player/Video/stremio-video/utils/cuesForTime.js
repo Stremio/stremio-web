@@ -1,29 +1,25 @@
 module.exports = function(cues, time) {
-    var timeInSeconds = time / 1000;
     var cuesForTime = [];
+    var cueBoundTimes = Object.keys(cues).map(function(time) {
+        return parseInt(time);
+    });
     var left = 0;
-    var right = cues.length - 1;
-    var lastCueIndex = -1;
+    var right = cueBoundTimes.length - 1;
+    var index = -1;
     while (left <= right) {
         var middle = Math.floor((left + right) / 2);
-        if (cues[middle].startTime === timeInSeconds) {
-            lastCueIndex = middle;
+        if (cueBoundTimes[middle] < time) {
             left = middle + 1;
-        } else if (cues[middle].startTime > timeInSeconds) {
+        } else if (cueBoundTimes[middle] > time) {
             right = middle - 1;
         } else {
+            index = middle;
             left = middle + 1;
         }
     }
 
-    var cueIndex = lastCueIndex !== -1 ? lastCueIndex : right;
-    while (cueIndex >= 0) {
-        if (cues[cueIndex].startTime > timeInSeconds || cues[cueIndex].endTime < timeInSeconds) {
-            break;
-        }
-
-        cuesForTime.push(cues[cueIndex]);
-        cueIndex--;
+    if (index !== -1) {
+        cuesForTime = cues[cueBoundTimes[index]];
     }
 
     return cuesForTime.sort(function(c1, c2) {
