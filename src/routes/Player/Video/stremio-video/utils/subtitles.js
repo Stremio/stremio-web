@@ -59,8 +59,8 @@ function parse(text) {
             cuesForTime[cuesForTime.times[j]].push(cues[i]);
         }
     }
-    for (var i = 0; i < cuesForTime.times; i++) {
-        cuesForTime[cuesForTime.times[j]].sort(function(c1, c2) {
+    for (var i = 0; i < cuesForTime.times.length; i++) {
+        cuesForTime[cuesForTime.times[i]].sort(function(c1, c2) {
             return c1.startTime - c2.startTime ||
                 c1.endTime - c2.endTime;
         });
