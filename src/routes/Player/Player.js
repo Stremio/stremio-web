@@ -2,7 +2,6 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import Video from './Video';
 import ControlBar from './ControlBar';
-import subtitles from './subtitles';
 import styles from './styles';
 
 class Player extends Component {
@@ -31,7 +30,12 @@ class Player extends Component {
     }
 
     componentDidMount() {
-        this.addSubtitleTracks(subtitles);
+        this.addSubtitleTracks([{
+            url: 'https://raw.githubusercontent.com/caitp/ng-media/master/example/assets/captions/bunny-en.vtt',
+            origin: 'Github',
+            label: 'English'
+        }]);
+        this.setSelectedSubtitleTrackId('https://raw.githubusercontent.com/caitp/ng-media/master/example/assets/captions/bunny-en.vtt');
     }
 
     onEnded = () => {
