@@ -39,6 +39,10 @@ class SubtitlesPicker extends PureComponent {
         this.props.setSelectedSubtitleTrackId(event.currentTarget.dataset.trackId);
     }
 
+    setSubtitleSize = (event) => {
+        this.props.setSubtitleSize(event.currentTarget.dataset.value);
+    }
+
     renderToggleButton({ selectedTrack }) {
         return (
             <div className={styles['toggle-button-container']} onClick={this.toggleOnClick}>
@@ -77,6 +81,24 @@ class SubtitlesPicker extends PureComponent {
                             </Fragment>
                         ))
                 }
+            </div>
+        );
+    }
+
+    renderNumberInput({ value, unit, onChange }) {
+        if (value === null) {
+            return null;
+        }
+
+        return (
+            <div className={styles['number-input-container']}>
+                <div className={styles['number-input-button']} data-value={value - 1} onClick={onChange}>
+                    <Icon className={styles['number-input-icon']} icon={'ic_minus'} />
+                </div>
+                <div className={styles['number-input-value']}>{value}{unit}</div>
+                <div className={styles['number-input-button']} data-value={value + 1} onClick={onChange}>
+                    <Icon className={styles['number-input-icon']} icon={'ic_plus'} />
+                </div>
             </div>
         );
     }
@@ -120,15 +142,7 @@ class SubtitlesPicker extends PureComponent {
                         <Icon className={styles['number-input-icon']} icon={'ic_plus'} />
                     </div>
                 </div>
-                <div className={styles['number-input-container']}>
-                    <div className={styles['number-input-button']}>
-                        <Icon className={styles['number-input-icon']} icon={'ic_minus'} />
-                    </div>
-                    <div className={styles['number-input-value']}>17pt</div>
-                    <div className={styles['number-input-button']}>
-                        <Icon className={styles['number-input-icon']} icon={'ic_plus'} />
-                    </div>
-                </div>
+                {this.renderNumberInput({ value: this.props.subtitleSize, unit: 'pt', onChange: this.setSubtitleSize })}
             </div>
         );
     }

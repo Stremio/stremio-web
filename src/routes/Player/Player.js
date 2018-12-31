@@ -16,7 +16,8 @@ class Player extends Component {
             duration: null,
             volume: null,
             subtitleTracks: [],
-            selectedSubtitleTrackId: null
+            selectedSubtitleTrackId: null,
+            subtitleSize: null
         };
     }
 
@@ -26,7 +27,8 @@ class Player extends Component {
             nextState.duration !== this.state.duration ||
             nextState.volume !== this.state.volume ||
             nextState.subtitleTracks !== this.state.subtitleTracks ||
-            nextState.selectedSubtitleTrackId !== this.state.selectedSubtitleTrackId;
+            nextState.selectedSubtitleTrackId !== this.state.selectedSubtitleTrackId ||
+            nextState.subtitleSize !== this.state.subtitleSize;
     }
 
     componentDidMount() {
@@ -74,6 +76,10 @@ class Player extends Component {
         this.videoRef.current && this.videoRef.current.dispatch('setProp', 'selectedSubtitleTrackId', selectedSubtitleTrackId);
     }
 
+    setSubtitleSize = (size) => {
+        this.videoRef.current && this.videoRef.current.dispatch('setProp', 'subtitleSize', size);
+    }
+
     mute = () => {
         this.videoRef.current && this.videoRef.current.dispatch('command', 'mute');
     }
@@ -117,11 +123,13 @@ class Player extends Component {
                 volume={this.state.volume}
                 subtitleTracks={this.state.subtitleTracks}
                 selectedSubtitleTrackId={this.state.selectedSubtitleTrackId}
+                subtitleSize={this.state.subtitleSize}
                 play={this.play}
                 pause={this.pause}
                 setTime={this.setTime}
                 setVolume={this.setVolume}
                 setSelectedSubtitleTrackId={this.setSelectedSubtitleTrackId}
+                setSubtitleSize={this.setSubtitleSize}
                 mute={this.mute}
                 unmute={this.unmute}
             />

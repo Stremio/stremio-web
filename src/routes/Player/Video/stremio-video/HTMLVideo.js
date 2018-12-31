@@ -20,7 +20,7 @@ var HTMLVideo = function(container) {
 
     container.appendChild(styles);
     styles.sheet.insertRule('#' + container.id + ' video { width: 100%; height: 100%; position: relative; z-index: 0; }', styles.sheet.cssRules.length);
-    styles.sheet.insertRule('#' + container.id + ' .subtitles { position: absolute; right: 0; bottom: 120px; left: 0; font-size: 22px; color: white; text-align: center; }', styles.sheet.cssRules.length);
+    var subtitleStylesIndex = styles.sheet.insertRule('#' + container.id + ' .subtitles { position: absolute; right: 0; bottom: 120px; left: 0; font-size: 22px; color: white; text-align: center; }', styles.sheet.cssRules.length);
     container.appendChild(video);
     video.crossOrigin = 'anonymous';
     video.controls = false;
@@ -64,6 +64,9 @@ var HTMLVideo = function(container) {
         }
 
         return selectedSubtitleTrackId;
+    }
+    function getSubtitleSize() {
+        return parseInt(styles.sheet.cssRules[subtitleStylesIndex].style.fontSize);
     }
     function onEnded() {
         events.emit('ended');
@@ -120,6 +123,9 @@ var HTMLVideo = function(container) {
     }
     function onSelectedSubtitleTrackIdChanged() {
         events.emit('propChanged', 'selectedSubtitleTrackId', getSelectedSubtitleTrackId());
+    }
+    function onSubtitleSizeChanged() {
+        events.emit('propChanged', 'subtitleSize', getSubtitleSize());
     }
     function updateSubtitlesText() {
         while (subtitles.hasChildNodes()) {
@@ -189,6 +195,9 @@ var HTMLVideo = function(container) {
                     case 'selectedSubtitleTrackId':
                         events.emit('propValue', 'selectedSubtitleTrackId', getSelectedSubtitleTrackId());
                         return;
+                    case 'subtitleSize':
+                        events.emit('propValue', 'subtitleSize', getSubtitleSize());
+                        return;
                     default:
                         throw new Error('observeProp not supported: ' + arguments[1]);
                 }
@@ -237,6 +246,12 @@ var HTMLVideo = function(container) {
                             onSelectedSubtitleTrackIdChanged();
                         }
                         break;
+                    case 'subtitleSize':
+                        if (!isNaN(arguments[2])) {
+                            styles.sheet.cssRules[subtitleStylesIndex].style.fontSize = parseInt(arguments[2]) + 'px';
+                            onSubtitleSizeChanged();
+                        }
+                        return;
                     case 'volume':
                         if (!isNaN(arguments[2])) {
                             video.muted = false;
@@ -353,7 +368,7 @@ var HTMLVideo = function(container) {
 HTMLVideo.manifest = {
     name: 'HTMLVideo',
     embedded: true,
-    props: ['paused', 'time', 'duration', 'volume', 'subtitleTracks', 'selectedSubtitleTrackId']
+    props: ['paused', 'time', 'duration', 'volume', 'subtitleTracks', 'selectedSubtitleTrackId', 'subtitleSize']
 };
 
 module.exports = HTMLVideo;

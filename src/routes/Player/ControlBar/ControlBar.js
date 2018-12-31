@@ -33,6 +33,7 @@ class ControlBar extends Component {
             nextProps.volume !== this.props.volume ||
             nextProps.subtitleTracks !== this.props.subtitleTracks ||
             nextProps.selectedSubtitleTrackId !== this.props.selectedSubtitleTrackId ||
+            nextProps.subtitleSize !== this.props.subtitleSize ||
             nextState.sharePopupOpen !== this.state.sharePopupOpen ||
             nextState.subtitlesPopupOpen !== this.state.subtitlesPopupOpen;
     }
@@ -47,6 +48,10 @@ class ControlBar extends Component {
 
     setSelectedSubtitleTrackId = (selectedSubtitleTrackId) => {
         this.props.setSelectedSubtitleTrackId(selectedSubtitleTrackId);
+    }
+
+    setSubtitleSize = (size) => {
+        this.props.setSubtitleSize(size);
     }
 
     mute = () => {
@@ -142,8 +147,10 @@ class ControlBar extends Component {
                     <SubtitlesPicker
                         className={classnames(styles['popup-content'], styles['subtitles-popup-content'])}
                         subtitleTracks={this.props.subtitleTracks}
+                        subtitleSize={this.props.subtitleSize}
                         selectedSubtitleTrackId={this.props.selectedSubtitleTrackId}
                         setSelectedSubtitleTrackId={this.setSelectedSubtitleTrackId}
+                        setSubtitleSize={this.setSubtitleSize}
                     />
                 </Popup.Menu>
             </Popup >
