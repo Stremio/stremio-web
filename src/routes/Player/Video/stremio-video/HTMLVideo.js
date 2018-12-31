@@ -127,7 +127,7 @@ var HTMLVideo = function(container) {
     function onSubtitleSizeChanged() {
         events.emit('propChanged', 'subtitleSize', getSubtitleSize());
     }
-    function updateSubtitlesText() {
+    function updateSubtitleText() {
         while (subtitles.hasChildNodes()) {
             subtitles.removeChild(subtitles.lastChild);
         }
@@ -243,7 +243,7 @@ var HTMLVideo = function(container) {
                                 }
                             }
 
-                            updateSubtitlesText();
+                            updateSubtitleText();
                             onSelectedSubtitleTrackIdChanged();
                         }
                         break;
@@ -304,7 +304,7 @@ var HTMLVideo = function(container) {
                     case 'stop':
                         video.removeEventListener('ended', onEnded);
                         video.removeEventListener('error', onError);
-                        video.removeEventListener('timeupdate', updateSubtitlesText);
+                        video.removeEventListener('timeupdate', updateSubtitleText);
                         loaded = false;
                         dispatchArgsQueue = [];
                         subtitleCues = {};
@@ -318,7 +318,7 @@ var HTMLVideo = function(container) {
                         onDurationChanged();
                         onSubtitleTracksChanged();
                         onSelectedSubtitleTrackIdChanged();
-                        updateSubtitlesText();
+                        updateSubtitleText();
                         return;
                     case 'load':
                         var dispatchArgsQueueCopy = dispatchArgsQueue.slice();
@@ -326,7 +326,7 @@ var HTMLVideo = function(container) {
                         dispatchArgsQueue = dispatchArgsQueueCopy;
                         video.addEventListener('ended', onEnded);
                         video.addEventListener('error', onError);
-                        video.addEventListener('timeupdate', updateSubtitlesText);
+                        video.addEventListener('timeupdate', updateSubtitleText);
                         video.autoplay = typeof arguments[3].autoplay === 'boolean' ? arguments[3].autoplay : true;
                         video.currentTime = !isNaN(arguments[3].time) ? arguments[3].time / 1000 : 0;
                         video.src = arguments[2].url;
@@ -336,7 +336,7 @@ var HTMLVideo = function(container) {
                         onDurationChanged();
                         onSubtitleTracksChanged();
                         onSelectedSubtitleTrackIdChanged();
-                        updateSubtitlesText();
+                        updateSubtitleText();
                         flushArgsQueue();
                         return;
                     case 'destroy':
