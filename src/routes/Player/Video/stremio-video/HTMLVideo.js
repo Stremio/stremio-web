@@ -66,7 +66,7 @@ var HTMLVideo = function(container) {
         return selectedSubtitleTrackId;
     }
     function getSubtitleSize() {
-        return parseInt(styles.sheet.cssRules[subtitleStylesIndex].style.fontSize);
+        return parseFloat(styles.sheet.cssRules[subtitleStylesIndex].style.fontSize);
     }
     function onEnded() {
         events.emit('ended');
@@ -248,7 +248,7 @@ var HTMLVideo = function(container) {
                         break;
                     case 'subtitleSize':
                         if (!isNaN(arguments[2])) {
-                            styles.sheet.cssRules[subtitleStylesIndex].style.fontSize = parseInt(arguments[2]) + 'px';
+                            styles.sheet.cssRules[subtitleStylesIndex].style.fontSize = parseFloat(arguments[2]) + 'px';
                             onSubtitleSizeChanged();
                         }
                         return;
