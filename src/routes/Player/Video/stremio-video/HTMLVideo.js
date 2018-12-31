@@ -243,6 +243,7 @@ var HTMLVideo = function(container) {
                                 }
                             }
 
+                            updateSubtitlesText();
                             onSelectedSubtitleTrackIdChanged();
                         }
                         break;
