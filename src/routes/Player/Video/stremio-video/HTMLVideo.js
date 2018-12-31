@@ -20,7 +20,7 @@ var HTMLVideo = function(container) {
 
     container.appendChild(styles);
     styles.sheet.insertRule('#' + container.id + ' video { width: 100%; height: 100%; position: relative; z-index: 0; }', styles.sheet.cssRules.length);
-    var subtitleStylesIndex = styles.sheet.insertRule('#' + container.id + ' .subtitles { position: absolute; right: 0; bottom: 120px; left: 0; font-size: 22px; color: white; text-align: center; }', styles.sheet.cssRules.length);
+    var subtitleStylesIndex = styles.sheet.insertRule('#' + container.id + ' .subtitles { position: absolute; right: 0; bottom: 120px; left: 0; font-size: 16pt; color: white; text-align: center; }', styles.sheet.cssRules.length);
     container.appendChild(video);
     video.crossOrigin = 'anonymous';
     video.controls = false;
@@ -248,7 +248,7 @@ var HTMLVideo = function(container) {
                         break;
                     case 'subtitleSize':
                         if (!isNaN(arguments[2])) {
-                            styles.sheet.cssRules[subtitleStylesIndex].style.fontSize = parseFloat(arguments[2]) + 'px';
+                            styles.sheet.cssRules[subtitleStylesIndex].style.fontSize = parseFloat(arguments[2]) + 'pt';
                             onSubtitleSizeChanged();
                         }
                         return;
