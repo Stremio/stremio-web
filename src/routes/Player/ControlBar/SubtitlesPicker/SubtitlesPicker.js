@@ -85,18 +85,20 @@ class SubtitlesPicker extends PureComponent {
         );
     }
 
-    renderNumberInput({ value, unit, onChange }) {
+    renderNumberInput({ value, unit, delta, onChange }) {
         if (value === null) {
             return null;
         }
 
+        const fractionalDigits = delta.toString().split('.')[1];
+        const digitsCount = typeof fractionalDigits === 'string' ? fractionalDigits.length : 0;
         return (
             <div className={styles['number-input-container']}>
-                <div className={styles['number-input-button']} data-value={value - 1} onClick={onChange}>
+                <div className={styles['number-input-button']} data-value={value - delta} onClick={onChange}>
                     <Icon className={styles['number-input-icon']} icon={'ic_minus'} />
                 </div>
-                <div className={styles['number-input-value']}>{value}{unit}</div>
-                <div className={styles['number-input-button']} data-value={value + 1} onClick={onChange}>
+                <div className={styles['number-input-value']}>{value.toFixed(digitsCount)}{unit}</div>
+                <div className={styles['number-input-button']} data-value={value + delta} onClick={onChange}>
                     <Icon className={styles['number-input-icon']} icon={'ic_plus'} />
                 </div>
             </div>
@@ -142,7 +144,7 @@ class SubtitlesPicker extends PureComponent {
                         <Icon className={styles['number-input-icon']} icon={'ic_plus'} />
                     </div>
                 </div>
-                {this.renderNumberInput({ value: this.props.subtitleSize, unit: 'pt', onChange: this.setSubtitleSize })}
+                {this.renderNumberInput({ value: this.props.subtitleSize, unit: 'pt', delta: 0.5, onChange: this.setSubtitleSize })}
             </div>
         );
     }
