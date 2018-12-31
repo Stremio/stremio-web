@@ -85,6 +85,28 @@ class SubtitlesPicker extends PureComponent {
         );
     }
 
+    renderVariantsList({ groupedTracks, selectedTrack }) {
+        if (groupedTracks[selectedTrack.origin][selectedTrack.label].length <= 1) {
+            return null;
+        }
+
+        return (
+            <div className={styles['variants-container']}>
+                {groupedTracks[selectedTrack.origin][selectedTrack.label].map((track, index) => {
+                    return (
+                        <div key={track.id}
+                            className={classnames(styles['variant-button'], { [styles['selected']]: track.id === selectedTrack.id })}
+                            title={track.id}
+                            onClick={this.trackOnClick}
+                            data-track-id={track.id}
+                            children={index}
+                        />
+                    );
+                })}
+            </div>
+        );
+    }
+
     renderNumberInput({ value, unit, delta, onChange }) {
         if (value === null) {
             return null;
@@ -117,24 +139,7 @@ class SubtitlesPicker extends PureComponent {
         return (
             <div className={styles['preferences-container']}>
                 <div className={styles['preferences-label']}>Preferences</div>
-                {
-                    groupedTracks[selectedTrack.origin][selectedTrack.label].length > 1 ?
-                        <div className={styles['variants-container']}>
-                            {groupedTracks[selectedTrack.origin][selectedTrack.label].map((track, index) => {
-                                return (
-                                    <div key={track.id}
-                                        className={classnames(styles['variant-button'], { [styles['selected']]: track.id === selectedTrack.id })}
-                                        title={track.id}
-                                        onClick={this.trackOnClick}
-                                        data-track-id={track.id}
-                                        children={index}
-                                    />
-                                );
-                            })}
-                        </div>
-                        :
-                        null
-                }
+                {this.renderVariantsList({ groupedTracks, selectedTrack })}
                 <div className={styles['number-input-container']}>
                     <div className={styles['number-input-button']}>
                         <Icon className={styles['number-input-icon']} icon={'ic_minus'} />
