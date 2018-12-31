@@ -138,17 +138,9 @@ class SubtitlesPicker extends PureComponent {
 
         return (
             <div className={styles['preferences-container']}>
-                <div className={styles['preferences-label']}>Preferences</div>
+                <div className={styles['preferences-title']}>Preferences</div>
                 {this.renderVariantsList({ groupedTracks, selectedTrack })}
-                <div className={styles['number-input-container']}>
-                    <div className={styles['number-input-button']}>
-                        <Icon className={styles['number-input-icon']} icon={'ic_minus'} />
-                    </div>
-                    <div className={styles['number-input-value']}>{(17).toFixed(2)}s</div>
-                    <div className={styles['number-input-button']}>
-                        <Icon className={styles['number-input-icon']} icon={'ic_plus'} />
-                    </div>
-                </div>
+                {this.renderNumberInput({ value: this.props.subtitleSize, unit: 'pt', delta: 0.5, onChange: this.setSubtitleSize })}
                 {this.renderNumberInput({ value: this.props.subtitleSize, unit: 'pt', delta: 0.5, onChange: this.setSubtitleSize })}
             </div>
         );

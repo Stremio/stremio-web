@@ -1,11 +1,12 @@
 .subtitles-picker-container {
+    --scroll-bar-width: 12px;
     width: calc(var(--subtitles-picker-button-size) * 14);
-    height: calc(var(--subtitles-picker-button-size) * 8);
-    font-size: calc(var(--subtitles-picker-button-size) * 0.5);
+    height: calc(var(--subtitles-picker-button-size) * 9);
+    font-size: calc(var(--subtitles-picker-button-size) * 0.45);
     padding: calc(var(--subtitles-picker-button-size) * 0.3);
     gap: calc(var(--subtitles-picker-button-size) * 0.3);
     display: grid;
-    grid-template-columns: auto calc(var(--subtitles-picker-button-size) * 8);
+    grid-template-columns: auto calc(var(--subtitles-picker-button-size) * 8 + var(--scroll-bar-width));
     grid-template-rows: var(--subtitles-picker-button-size) auto;
     grid-template-areas:
         "toggle-button preferences"
@@ -25,7 +26,7 @@
             justify-content: center;
             font-weight: 500;
             line-height: 1;
-            color: var(--color-surfacelight);
+            color: var(--color-surfacelighter);
 
             &:first-of-type {
                 margin-right: 20%;
@@ -69,7 +70,7 @@
         .track-origin {
             padding: 0 0.2em;
             margin-bottom: 0.2em;
-            font-size: 80%;
+            font-size: 85%;
             font-style: italic;
             overflow-wrap: break-word;
             border-bottom: 1px solid var(--color-surfacelighter80);
@@ -105,19 +106,20 @@
         justify-content: center;
 
         .subtitles-disabled-label {
-            font-size: 170%;
+            font-size: 150%;
             line-height: 1.2;
             text-align: center;
             word-spacing: calc(var(--subtitles-picker-button-size) * 9);
             color: var(--color-surfacelighter);
         }
 
-        .preferences-label {
+        .preferences-title {
             height: var(--subtitles-picker-button-size);
-            color: var(--color-surfacelight);
+            color: var(--color-surfacelighter);
             display: flex;
             align-items: center;
             margin-bottom: calc(var(--subtitles-picker-button-size) * 0.3);
+            font-size: 110%;
         }
 
         .variants-container {
@@ -137,24 +139,27 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                color: var(--color-surfacelight);
+                color: var(--color-surfacelighter);
                 background-color: var(--color-backgroundlighter);
 
                 &.selected {
-                    color: var(--color-surfacelighter);
                     background-color: var(--color-primarydark);
                 }
 
                 &:hover {
-                    color: var(--color-surfacelighter);
                     background-color: var(--color-primarylight);
                 }
+            }
+
+            &::-webkit-scrollbar {
+                // TODO reuse app scrollbar styles
+                width: var(--scroll-bar-width);
             }
         }
 
         .number-input-container {
             flex: 1;
-            width: 65%;
+            width: 60%;
             display: flex;
             flex-direction: row;
             align-items: center;
