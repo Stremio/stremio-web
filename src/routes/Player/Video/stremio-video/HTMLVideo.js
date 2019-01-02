@@ -20,7 +20,8 @@ var HTMLVideo = function(container) {
 
     container.appendChild(styles);
     styles.sheet.insertRule('#' + container.id + ' video { width: 100%; height: 100%; position: relative; z-index: 0; }', styles.sheet.cssRules.length);
-    var subtitleStylesIndex = styles.sheet.insertRule('#' + container.id + ' .subtitles { position: absolute; right: 0; bottom: 120px; left: 0; font-size: 16pt; color: white; text-align: center; }', styles.sheet.cssRules.length);
+    var subtitleStylesIndex = styles.sheet.insertRule('#' + container.id + ' .subtitles { position: absolute; right: 0; bottom: 0; left: 0; font-size: 26pt; color: white; text-align: center; }', styles.sheet.cssRules.length);
+    styles.sheet.insertRule('#' + container.id + ' .subtitles .cue { display: inline-block; padding: 0.2em; text-shadow: #222222 0px 0px 1.8px, #222222 0px 0px 1.8px, #222222 0px 0px 1.8px, #222222 0px 0px 1.8px, #222222 0px 0px 1.8px; }', styles.sheet.cssRules.length);
     container.appendChild(video);
     video.crossOrigin = 'anonymous';
     video.controls = false;
@@ -139,8 +140,9 @@ var HTMLVideo = function(container) {
         var time = getTime();
         var cuesForTime = subtitleUtils.cuesForTime(subtitleCues, time);
         for (var i = 0; i < cuesForTime.length; i++) {
-            const cue = subtitleUtils.render(cuesForTime[i]);
-            subtitles.appendChild(cue);
+            var cueNode = subtitleUtils.render(cuesForTime[i]);
+            cueNode.classList.add('cue');
+            subtitles.append(cueNode, document.createElement('br'));
         }
     }
     function flushArgsQueue() {
