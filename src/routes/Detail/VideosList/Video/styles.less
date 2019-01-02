@@ -9,7 +9,7 @@
 
         .poster-container {
             flex: 1;
-            margin: var(--video-spacing) 0 var(--video-spacing) var(--video-spacing);
+            margin: var(--spacing) 0 var(--spacing) var(--spacing);
 
             .poster {
                 display: block;
@@ -31,14 +31,13 @@
 
         .info-container {
             flex: 3;
-            min-height: calc(0.2 * var(--video-width));
-            padding: var(--video-spacing);
+            min-height: calc(var(--video-width) * 0.2);
+            padding: var(--spacing);
             display: flex;
             flex-direction: column;
             justify-content: center;
 
             .title {
-                font-size: var(--video-title-font-size);
                 line-height: 1.2em;
                 color: var(--color-surfacelighter);
                 word-break: break-all; //Firefox doesn't support { break-word }
@@ -46,7 +45,7 @@
             }
 
             .released-date {
-                font-size: var(--video-released-date-font-size);
+                font-size: 90%;
                 color: var(--color-surface);
             }
 
@@ -54,17 +53,17 @@
                 display: flex;
 
                 .upcoming-label, .watched-label {
-                    font-size: var(--video-label-font-size);
+                    font-size: 80%;
                     font-weight: 500;
                     line-height: 1.5;
-                    border-width: var(--video-label-border-width);
+                    border-width: calc(var(--spacing) * 0.25);
                     border-style: solid;
                     padding: 0 0.6em;
                     color: var(--color-surfacelighter);
                 }
 
                 .upcoming-label {
-                    margin-right: var(--video-spacing);
+                    margin-right: var(--spacing);
                     border-color: var(--color-signal5);
                 }
 
@@ -74,15 +73,15 @@
             }
 
             >:not(:last-child) {
-                margin-bottom: calc(0.5 * var(--video-spacing));
+                margin-bottom: calc(var(--spacing) * 0.5);
             }
         }
 
         .arrow-container {
-            width: calc(0.07 * var(--video-width));
+            width: calc(var(--video-width) * 0.07);
             display: flex;
             align-items: center;
-            padding: var(--video-spacing) var(--video-spacing) var(--video-spacing) 0;
+            padding: var(--spacing) var(--spacing) var(--spacing) 0;
 
             .arrow {
                 width: 100%;
@@ -92,7 +91,7 @@
     }
 
     .progress-container {
-        height: calc(0.5 * var(--video-spacing));
+        height: calc(var(--spacing) * 0.5);
         background-color: var(--color-primarydark);
 
         .progress {

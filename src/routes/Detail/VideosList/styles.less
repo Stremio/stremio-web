@@ -1,10 +1,12 @@
 .videos-list-container {
+    width: calc(var(--video-width) + var(--spacing) * 6);
     flex-direction: column;
     padding: calc(3 * var(--spacing)) 0;
     background: var(--color-backgrounddarker40);
 
     .seasons-bar {
-        height: var(--seasons-bar-height);
+        height: calc(var(--video-width) * 0.14);
+        width: 100%;
         display: flex;
         justify-content: space-between;
         margin-bottom: var(--spacing);
@@ -12,7 +14,7 @@
 
         .control-bar-button {
             cursor: pointer;
-            width: 258px;
+            flex: 3;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -34,8 +36,8 @@
         }
 
         .button-container {
-            width: calc(1.5 * var(--seasons-bar-height));
             cursor: pointer;
+            flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -54,7 +56,7 @@
 
     .scroll-container {
         flex: 1;
-        width: calc(var(--video-width) + 4 * var(--spacing));
+        width: calc(var(--video-width) + var(--spacing) * 4);
         padding: 0 calc(2 * var(--spacing));
         margin: 0 var(--spacing);
         overflow-y: auto;
@@ -66,7 +68,7 @@
     }
 
     .scroll-container::-webkit-scrollbar {
-        width: var(--spacing);
+        width: var(--spacing) !important;
     }
 
     .scroll-container::-webkit-scrollbar-thumb {
@@ -82,16 +84,16 @@
     --border-color: var(--color-primarylight);
 
     .popup-content {
-        cursor: pointer;
         width: 258px;
         background-color: var(--color-backgrounddark);
-        
+
         .season {
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 16px;
-            width: 258px;
+            width: 100%;
             border-top: 1px solid var(--color-primarylight);
             color: var(--color-surfacelight);
 
