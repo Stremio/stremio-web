@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import classnames from 'classnames';
 import Icon from 'stremio-icons/dom';
+import { Popup } from 'stremio-common';
 import Video from './Video';
 import styles from './styles';
 
@@ -8,16 +10,19 @@ class VideosList extends Component {
     constructor(props) {
         super(props);
 
+        this.seasonsPopupRef = React.createRef();
         this.seasons = this.props.videos.map((video) => video.season)
             .filter((season, index, seasons) => seasons.indexOf(season) === index);
 
         this.state = {
-            selectedSeason: this.seasons[0]
+            selectedSeason: this.seasons[0],
+            selectedVideoId: 0
         }
     }
 
     changeSeason = (event) => {
-        this.setState({ selectedSeason: parseInt(event.target.value) });
+        this.setState({ selectedSeason: parseInt(event.currentTarget.dataset.season) });
+        this.seasonsPopupRef.current && this.seasonsPopupRef.current.close();
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -34,20 +39,35 @@ class VideosList extends Component {
         this.setState({ selectedSeason: this.seasons[nextSeasonIndex] });
     }
 
+    onClick = (event) => {
+        this.setState({ selectedVideoId: event.currentTarget.dataset.id });
+        console.log(event.currentTarget.dataset.id);
+    }
+
     render() {
         return (
-            <div className={styles['videos-list-container']}>
+            <div className={classnames(styles['videos-list-container'], this.props.className)}>
                 <div className={styles['seasons-bar']}>
                     <div className={styles['button-container']} onClick={this.onPrevButtonClicked}>
                         <Icon className={styles['button-icon']} icon={'ic_arrow_left'} />
                     </div>
-                    <select value={this.state.selectedSeason} onChange={this.changeSeason}>
-                        {this.seasons.map((season) =>
-                            <option key={season} value={season}>
-                                {season}
-                            </option>
-                        )}
-                    </select>
+                    <Popup ref={this.seasonsPopupRef} className={styles['popup-container']} border={true}>
+                        <Popup.Label>
+                            <div className={styles['control-bar-button']}>
+                                S {this.state.selectedSeason}
+                                <Icon className={styles['icon']} icon={'ic_arrow_down'} />
+                            </div>
+                        </Popup.Label>
+                        <Popup.Menu>
+                            <div className={styles['popup-content']}>
+                                {this.seasons.map((season) =>
+                                    <div className={styles['season']} key={season} data-season={season} onClick={this.changeSeason}>
+                                        S {season}
+                                    </div>
+                                )}
+                            </div>
+                        </Popup.Menu>
+                    </Popup>
                     <div className={styles['button-container']} onClick={this.onNextButtonClicked} >
                         <Icon className={styles['button-icon']} icon={'ic_arrow_left'} />
                     </div>
@@ -58,13 +78,16 @@ class VideosList extends Component {
                         .map((video) =>
                             <Video key={video.id}
                                 className={styles['video']}
+                                id={video.id}
                                 poster={video.poster}
                                 episode={video.episode}
+                                season={video.season}
                                 title={video.name}
                                 released={video.released}
                                 isWatched={video.isWatched}
                                 isUpcoming={video.isUpcoming}
                                 progress={video.progress}
+                                onClick={this.onClick}
                             />
                         )}
                 </div>
@@ -74,6 +97,7 @@ class VideosList extends Component {
 }
 
 VideosList.propTypes = {
+    className: PropTypes.string,
     videos: PropTypes.arrayOf(PropTypes.object).isRequired
 };
 VideosList.defaultProps = {

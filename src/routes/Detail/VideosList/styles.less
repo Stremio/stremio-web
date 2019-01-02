@@ -1,20 +1,37 @@
 .videos-list-container {
-    --scroll-container-width: 392px;
-    --seasons-bar-height: 50px;
-    --spacing: 8px;
-}
-
-.videos-list-container {
-    height: 100%;
-    display: inline-flex;
     flex-direction: column;
-    background: var(--color-background);
+    padding: calc(3 * var(--spacing)) 0;
+    background: var(--color-backgrounddarker40);
 
     .seasons-bar {
         height: var(--seasons-bar-height);
         display: flex;
         justify-content: space-between;
         margin-bottom: var(--spacing);
+        background: var(--color-backgrounddarker);
+
+        .control-bar-button {
+            cursor: pointer;
+            width: 258px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--color-surfacelighter);
+
+            .icon {
+                width: 14%;
+                height: 14%;
+                fill: var(--color-surfacelight);
+            }
+
+            &:hover {
+                background-color: var(--color-surfacedarker60);
+
+                .icon {
+                    fill: var(--color-surfacelighter);
+                }
+            }
+        }
 
         .button-container {
             width: calc(1.5 * var(--seasons-bar-height));
@@ -30,14 +47,14 @@
             }
 
             &:hover {
-                background-color: var(--color-surfacelighter20);
+                background-color: var(--color-surfacedarker60);
             }
         }
     }
 
     .scroll-container {
         flex: 1;
-        width: var(--scroll-container-width);
+        width: calc(var(--video-width) + 4 * var(--spacing));
         padding: 0 calc(2 * var(--spacing));
         margin: 0 var(--spacing);
         overflow-y: auto;
@@ -53,10 +70,35 @@
     }
 
     .scroll-container::-webkit-scrollbar-thumb {
-        background-color: var(--color-secondarylighter80);
+        background-color: var(--color-secondarylighter);
     }
 
     .scroll-container::-webkit-scrollbar-track {
-        background-color: var(--color-backgroundlight);
+        background-color: var(--color-backgroundlighter);
+    }
+}
+
+.popup-container {
+    --border-color: var(--color-primarylight);
+
+    .popup-content {
+        cursor: pointer;
+        width: 258px;
+        background-color: var(--color-backgrounddark);
+        
+        .season {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            width: 258px;
+            border-top: 1px solid var(--color-primarylight);
+            color: var(--color-surfacelight);
+
+            &:hover {
+                color: var(--color-surfacelighter);
+                background-color: var(--color-surfacedarker60);
+            }
+        }
     }
 }
