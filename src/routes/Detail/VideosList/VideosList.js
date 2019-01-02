@@ -40,8 +40,8 @@ class VideosList extends Component {
     }
 
     onClick = (event) => {
-        this.setState({ selectedVideoId: event.currentTarget.dataset.id });
-        console.log(event.currentTarget.dataset.id);
+        this.setState({ selectedVideoId: event.currentTarget.dataset.videoId });
+        console.log(event.currentTarget.dataset.videoId);
     }
 
     render() {
