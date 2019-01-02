@@ -87,7 +87,7 @@ const renderProgress = (progress) => {
 
 const Video = (props) => {
     return (
-        <div onClick={props.onVideoClicked} className={classnames(styles['video-container'], props.className)}>
+        <div className={classnames(styles['video-container'], props.className)} data-id={props.id} onClick={props.onClick}>
             <div className={styles['flex-row-container']}>
                 {renderPoster(props.poster)}
                 <div className={styles['info-container']}>
@@ -106,14 +106,16 @@ const Video = (props) => {
 
 Video.propTypes = {
     className: PropTypes.string,
+    id: PropTypes.string.isRequired,
     poster: PropTypes.string.isRequired,
     episode: PropTypes.number.isRequired,
+    season: PropTypes.number.isRequired,
     title: PropTypes.string.isRequired,
     released: PropTypes.instanceOf(Date).isRequired,
     isWatched: PropTypes.bool.isRequired,
     isUpcoming: PropTypes.bool.isRequired,
     progress: PropTypes.number.isRequired,
-    onVideoClicked: PropTypes.func
+    onClick: PropTypes.func
 };
 Video.defaultProps = {
     poster: '',

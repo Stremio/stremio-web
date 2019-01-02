@@ -1,15 +1,6 @@
 .video-container {
-    --video-width: 360px;
-    --spacing: 8px;
-    --title-font-size: 12px;
-    --released-date-font-size: 11px;
-    --label-font-size: 10px;
-    --label-border-width: 2px;
-}
-
-.video-container {
     width: var(--video-width);
-    background-color: var(--color-backgroundlight);
+    background-color: var(--color-surfacedarker60);
 
     .flex-row-container {
         display: flex;
@@ -18,7 +9,7 @@
 
         .poster-container {
             flex: 1;
-            margin: var(--spacing) 0 var(--spacing) var(--spacing);
+            margin: var(--video-spacing) 0 var(--video-spacing) var(--video-spacing);
 
             .poster {
                 display: block;
@@ -41,20 +32,21 @@
         .info-container {
             flex: 3;
             min-height: calc(0.2 * var(--video-width));
-            padding: var(--spacing);
+            padding: var(--video-spacing);
             display: flex;
             flex-direction: column;
             justify-content: center;
 
             .title {
-                font-size: var(--title-font-size);
+                font-size: var(--video-title-font-size);
+                line-height: 1.2em;
                 color: var(--color-surfacelighter);
                 word-break: break-all; //Firefox doesn't support { break-word }
                 word-break: break-word;
             }
 
             .released-date {
-                font-size: var(--released-date-font-size);
+                font-size: var(--video-released-date-font-size);
                 color: var(--color-surface);
             }
 
@@ -62,17 +54,17 @@
                 display: flex;
 
                 .upcoming-label, .watched-label {
-                    font-size: var(--label-font-size);
-                    font-weight: 600;
+                    font-size: var(--video-label-font-size);
+                    font-weight: 500;
                     line-height: 1.5;
-                    border-width: var(--label-border-width);
+                    border-width: var(--video-label-border-width);
                     border-style: solid;
                     padding: 0 0.6em;
                     color: var(--color-surfacelighter);
                 }
 
                 .upcoming-label {
-                    margin-right: var(--spacing);
+                    margin-right: var(--video-spacing);
                     border-color: var(--color-signal5);
                 }
 
@@ -82,7 +74,7 @@
             }
 
             >:not(:last-child) {
-                margin-bottom: calc(0.5 * var(--spacing));
+                margin-bottom: calc(0.5 * var(--video-spacing));
             }
         }
 
@@ -90,7 +82,7 @@
             width: calc(0.07 * var(--video-width));
             display: flex;
             align-items: center;
-            padding: var(--spacing) var(--spacing) var(--spacing) 0;
+            padding: var(--video-spacing) var(--video-spacing) var(--video-spacing) 0;
 
             .arrow {
                 width: 100%;
@@ -100,7 +92,7 @@
     }
 
     .progress-container {
-        height: calc(0.5 * var(--spacing));
+        height: calc(0.5 * var(--video-spacing));
         background-color: var(--color-primarydark);
 
         .progress {
@@ -111,6 +103,6 @@
 
     &:hover {
         cursor: pointer;
-        background-color: var(--color-surfacelighter20);
+        background-color: var(--color-surfacedarker);
     }
 }
