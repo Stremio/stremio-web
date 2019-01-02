@@ -99,7 +99,7 @@ class SubtitlesPicker extends PureComponent {
                             title={track.id}
                             onClick={this.trackOnClick}
                             data-track-id={track.id}
-                            children={index}
+                            children={index + 1}
                         />
                     );
                 })}
