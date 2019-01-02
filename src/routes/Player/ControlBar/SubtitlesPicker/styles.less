@@ -1,12 +1,11 @@
 .subtitles-picker-container {
-    --scroll-bar-width: 12px;
     width: calc(var(--subtitles-picker-button-size) * 14);
     height: calc(var(--subtitles-picker-button-size) * 9);
     font-size: calc(var(--subtitles-picker-button-size) * 0.45);
     padding: calc(var(--subtitles-picker-button-size) * 0.3);
     gap: calc(var(--subtitles-picker-button-size) * 0.3);
     display: grid;
-    grid-template-columns: auto calc(var(--subtitles-picker-button-size) * 8 + var(--scroll-bar-width));
+    grid-template-columns: auto calc(var(--subtitles-picker-button-size) * 8 + var(--scroll-bar-width) * 1.5);
     grid-template-rows: var(--subtitles-picker-button-size) auto;
     grid-template-areas:
         "toggle-button preferences"
@@ -64,7 +63,8 @@
         display: flex;
         flex-direction: column;
         align-items: stretch;
-        overflow-y: auto;
+        padding-right: calc(var(--scroll-bar-width) * 0.5);
+        overflow-y: scroll;
         overflow-x: hidden;
 
         .track-origin {
@@ -150,11 +150,6 @@
                 &:hover {
                     background-color: var(--color-primarylight);
                 }
-            }
-
-            &::-webkit-scrollbar {
-                // TODO reuse app scrollbar styles
-                width: var(--scroll-bar-width);
             }
         }
 
