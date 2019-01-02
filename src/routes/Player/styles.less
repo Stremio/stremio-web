@@ -1,3 +1,7 @@
+.player-container, :global(.player-popup-container) {
+    --control-bar-button-height: 60px;
+}
+
 .player-container {
     position: relative;
     z-index: 0;
@@ -12,5 +16,9 @@
         right: 0;
         bottom: 0;
         z-index: 0;
+    }
+
+    :global(.subtitles) {
+        bottom: calc(var(--control-bar-button-height) * 2.6) !important;
     }
 }

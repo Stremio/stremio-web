@@ -122,7 +122,7 @@ class ControlBar extends Component {
 
     renderShareButton() {
         return (
-            <Popup className={styles['popup-container']} border={true} onOpen={this.onSharePopupOpen} onClose={this.onSharePopupClose}>
+            <Popup className={'player-popup-container'} border={true} onOpen={this.onSharePopupOpen} onClose={this.onSharePopupClose}>
                 <Popup.Label>
                     <ControlBarButton active={this.state.sharePopupOpen} icon={'ic_share'} />
                 </Popup.Label>
@@ -139,7 +139,7 @@ class ControlBar extends Component {
         }
 
         return (
-            <Popup className={styles['popup-container']} border={true} onOpen={this.onSubtitlesPopupOpen} onClose={this.onSubtitlesPopupClose}>
+            <Popup className={'player-popup-container'} border={true} onOpen={this.onSubtitlesPopupOpen} onClose={this.onSubtitlesPopupClose}>
                 <Popup.Label>
                     <ControlBarButton active={this.state.subtitlesPopupOpen} icon={'ic_sub'} />
                 </Popup.Label>

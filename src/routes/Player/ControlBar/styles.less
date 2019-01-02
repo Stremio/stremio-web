@@ -1,7 +1,3 @@
-.control-bar-container, .popup-container {
-    --control-bar-button-height: 60px;
-}
-
 .control-bar-container {
     top: initial !important;
     padding: 0 calc(var(--control-bar-button-height) * 0.4);
@@ -84,7 +80,7 @@
     }
 }
 
-.popup-container {
+:global(.player-popup-container) {
     --border-color: var(--color-primarylight);
 
     .popup-content {
