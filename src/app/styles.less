@@ -61,6 +61,19 @@
         min-width: 1000px;
         min-height: 650px;
         font-family: 'Roboto', 'sans-serif';
+        line-height: 1;
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: var(--color-secondarylighter80);
+        }
+
+        ::-webkit-scrollbar-track {
+            background-color: var(--color-backgroundlight);
+        }
     }
 
     #app {
@@ -84,5 +97,6 @@
     bottom: 0;
     left: 0;
     z-index: 0;
+    overflow: hidden;
     background-color: var(--color-background);
 }

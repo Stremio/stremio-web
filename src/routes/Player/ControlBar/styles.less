@@ -5,16 +5,20 @@
 .control-bar-container {
     top: initial !important;
     padding: 0 calc(var(--control-bar-button-height) * 0.4);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: stretch;
 
-    .time-slider {
-        --time-slider-thumb-size: calc(var(--control-bar-button-height) * 0.4);
-        height: var(--time-slider-thumb-size);
-        width: 100%;
+    .seek-bar {
+        --seek-bar-thumb-size: calc(var(--control-bar-button-height) * 0.40);
+        --seek-bar-track-size: calc(var(--control-bar-button-height) * 0.12);
+        --seek-bar-font-size: calc(var(--control-bar-button-height) * 0.35);
+        height: calc(var(--control-bar-button-height) * 0.6);
     }
 
     .control-bar-buttons-container {
         height: var(--control-bar-button-height);
-        width: 100%;
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -34,7 +38,7 @@
                 overflow: visible;
             }
 
-            &.active {
+            &:global(.active) {
                 background-color: var(--color-backgrounddarker);
 
                 .icon {
@@ -49,15 +53,34 @@
             }
         }
 
-        .volume-slider {
-            --volume-slider-thumb-size: calc(var(--control-bar-button-height) * 0.3);
-            height: var(--volume-slider-thumb-size);
-            width: calc(var(--control-bar-button-height) * 3);
+        .volume-bar {
+            --volume-bar-thumb-size: calc(var(--control-bar-button-height) * 0.36);
+            --volume-bar-track-size: calc(var(--control-bar-button-height) * 0.10);
+            height: var(--control-bar-button-height);
+            width: calc(var(--control-bar-button-height) * 5);
+
+            &:hover, &:global(.active) {
+                .control-bar-button {
+                    .icon {
+                        fill: var(--color-surfacelighter);
+                    }
+                }
+            }
         }
 
         .flex-spacing {
             flex: 1
         }
+    }
+
+    &::after {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: -1;
+        box-shadow: 0 0 calc(var(--control-bar-button-height) * 2) calc(var(--control-bar-button-height) * 2.3) var(--color-backgrounddarker);
+        content: "";
     }
 }
 
@@ -70,6 +93,10 @@
         &.share-popup-content {
             width: calc(var(--control-bar-button-height) * 5);
             height: calc(var(--control-bar-button-height) * 3);
+        }
+
+        &.subtitles-popup-content {
+            --subtitles-picker-button-size: calc(var(--control-bar-button-height) * 0.6);
         }
     }
 }

@@ -15,7 +15,9 @@ class Player extends Component {
             time: null,
             duration: null,
             volume: null,
-            subtitles: null
+            subtitleTracks: [],
+            selectedSubtitleTrackId: null,
+            subtitleSize: null
         };
     }
 
@@ -24,18 +26,18 @@ class Player extends Component {
             nextState.time !== this.state.time ||
             nextState.duration !== this.state.duration ||
             nextState.volume !== this.state.volume ||
-            nextState.subtitles !== this.state.subtitles;
+            nextState.subtitleTracks !== this.state.subtitleTracks ||
+            nextState.selectedSubtitleTrackId !== this.state.selectedSubtitleTrackId ||
+            nextState.subtitleSize !== this.state.subtitleSize;
     }
 
     componentDidMount() {
-        this.addExtraSubtitles([
-            {
-                id: 'id1',
-                url: 'https://raw.githubusercontent.com/amzn/web-app-starter-kit-for-fire-tv/master/out/mrss/assets/sample_video-en.vtt',
-                label: 'English (Github)',
-                language: 'en'
-            }
-        ]);
+        this.addSubtitleTracks([{
+            url: 'https://raw.githubusercontent.com/caitp/ng-media/master/example/assets/captions/bunny-en.vtt',
+            origin: 'Github',
+            label: 'English'
+        }]);
+        this.setSelectedSubtitleTrackId('https://raw.githubusercontent.com/caitp/ng-media/master/example/assets/captions/bunny-en.vtt');
     }
 
     onEnded = () => {
@@ -43,16 +45,6 @@ class Player extends Component {
     }
 
     onError = (error) => {
-        if (error.critical) {
-            this.stop();
-            this.setState({
-                paused: null,
-                time: null,
-                duration: null,
-                volume: null
-            });
-        }
-
         alert(error.message);
     }
 
@@ -80,6 +72,14 @@ class Player extends Component {
         this.videoRef.current && this.videoRef.current.dispatch('setProp', 'volume', volume);
     }
 
+    setSelectedSubtitleTrackId = (selectedSubtitleTrackId) => {
+        this.videoRef.current && this.videoRef.current.dispatch('setProp', 'selectedSubtitleTrackId', selectedSubtitleTrackId);
+    }
+
+    setSubtitleSize = (size) => {
+        this.videoRef.current && this.videoRef.current.dispatch('setProp', 'subtitleSize', size);
+    }
+
     mute = () => {
         this.videoRef.current && this.videoRef.current.dispatch('command', 'mute');
     }
@@ -88,8 +88,8 @@ class Player extends Component {
         this.videoRef.current && this.videoRef.current.dispatch('command', 'unmute');
     }
 
-    addExtraSubtitles = (subtitles) => {
-        this.videoRef.current && this.videoRef.current.dispatch('command', 'addExtraSubtitles', subtitles);
+    addSubtitleTracks = (subtitleTracks) => {
+        this.videoRef.current && this.videoRef.current.dispatch('command', 'addSubtitleTracks', subtitleTracks);
     }
 
     stop = () => {
@@ -121,11 +121,15 @@ class Player extends Component {
                 time={this.state.time}
                 duration={this.state.duration}
                 volume={this.state.volume}
-                subtitles={this.state.subtitles}
+                subtitleTracks={this.state.subtitleTracks}
+                selectedSubtitleTrackId={this.state.selectedSubtitleTrackId}
+                subtitleSize={this.state.subtitleSize}
                 play={this.play}
                 pause={this.pause}
                 setTime={this.setTime}
                 setVolume={this.setVolume}
+                setSelectedSubtitleTrackId={this.setSelectedSubtitleTrackId}
+                setSubtitleSize={this.setSubtitleSize}
                 mute={this.mute}
                 unmute={this.unmute}
             />

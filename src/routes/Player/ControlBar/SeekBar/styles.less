@@ -1,0 +1,32 @@
+.seek-bar-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    .label {
+        font-size: var(--seek-bar-font-size);
+        color: var(--color-surfacelight);
+    }
+
+    .slider {
+        --thumb-size: var(--seek-bar-thumb-size);
+        --track-size: var(--seek-bar-track-size);
+        --track-before-color: var(--color-primary);
+        --track-color: var(--color-backgroundlighter);
+        --thumb-color: transparent;
+        flex: 1;
+        align-self: stretch;
+        margin: 0 var(--seek-bar-thumb-size);
+    }
+
+    &:hover, &:global(.active) {
+        .label {
+            color: var(--color-surfacelighter);
+        }
+
+        .slider {
+            --track-before-color: var(--color-primarylight);
+            --thumb-color: var(--color-surfacelighter);
+        }
+    }
+}
