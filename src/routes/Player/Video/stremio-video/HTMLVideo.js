@@ -14,6 +14,7 @@ var HTMLVideo = function(container) {
     var subtitleCues = {};
     var subtitleTracks = [];
     var selectedSubtitleTrackId = null;
+    var subtitleDelay = 0;
     var styles = document.createElement('style');
     var video = document.createElement('video');
     var subtitles = document.createElement('div');
@@ -65,6 +66,9 @@ var HTMLVideo = function(container) {
         }
 
         return selectedSubtitleTrackId;
+    }
+    function getSubtitleDelay() {
+        return subtitleDelay;
     }
     function getSubtitleSize() {
         return parseFloat(styles.sheet.cssRules[subtitleStylesIndex].style.fontSize);
@@ -125,6 +129,9 @@ var HTMLVideo = function(container) {
     function onSelectedSubtitleTrackIdChanged() {
         events.emit('propChanged', 'selectedSubtitleTrackId', getSelectedSubtitleTrackId());
     }
+    function onSubtitleDelayChanged() {
+        events.emit('propChanged', 'subtitleDelay', getSubtitleDelay());
+    }
     function onSubtitleSizeChanged() {
         events.emit('propChanged', 'subtitleSize', getSubtitleSize());
     }
@@ -137,7 +144,7 @@ var HTMLVideo = function(container) {
             return;
         }
 
-        var time = getTime();
+        var time = getTime() + getSubtitleDelay();
         var cuesForTime = subtitleUtils.cuesForTime(subtitleCues, time);
         for (var i = 0; i < cuesForTime.length; i++) {
             var cueNode = subtitleUtils.render(cuesForTime[i]);
@@ -200,6 +207,9 @@ var HTMLVideo = function(container) {
                     case 'subtitleSize':
                         events.emit('propValue', 'subtitleSize', getSubtitleSize());
                         return;
+                    case 'subtitleDelay':
+                        events.emit('propValue', 'subtitleDelay', getSubtitleDelay());
+                        return;
                     default:
                         throw new Error('observeProp not supported: ' + arguments[1]);
                 }
@@ -253,6 +263,13 @@ var HTMLVideo = function(container) {
                         if (!isNaN(arguments[2])) {
                             styles.sheet.cssRules[subtitleStylesIndex].style.fontSize = parseFloat(arguments[2]) + 'pt';
                             onSubtitleSizeChanged();
+                        }
+                        return;
+                    case 'subtitleDelay':
+                        if (!isNaN(arguments[2])) {
+                            subtitleDelay = parseFloat(arguments[2]);
+                            onSubtitleDelayChanged();
+                            updateSubtitleText();
                         }
                         return;
                     case 'volume':
@@ -371,7 +388,7 @@ var HTMLVideo = function(container) {
 HTMLVideo.manifest = {
     name: 'HTMLVideo',
     embedded: true,
-    props: ['paused', 'time', 'duration', 'volume', 'subtitleTracks', 'selectedSubtitleTrackId', 'subtitleSize']
+    props: ['paused', 'time', 'duration', 'volume', 'subtitleTracks', 'selectedSubtitleTrackId', 'subtitleSize', 'subtitleDelay']
 };
 
 module.exports = HTMLVideo;

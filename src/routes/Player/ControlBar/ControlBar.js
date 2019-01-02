@@ -34,6 +34,7 @@ class ControlBar extends Component {
             nextProps.subtitleTracks !== this.props.subtitleTracks ||
             nextProps.selectedSubtitleTrackId !== this.props.selectedSubtitleTrackId ||
             nextProps.subtitleSize !== this.props.subtitleSize ||
+            nextProps.subtitleDelay !== this.props.subtitleDelay ||
             nextState.sharePopupOpen !== this.state.sharePopupOpen ||
             nextState.subtitlesPopupOpen !== this.state.subtitlesPopupOpen;
     }
@@ -52,6 +53,10 @@ class ControlBar extends Component {
 
     setSubtitleSize = (size) => {
         this.props.setSubtitleSize(size);
+    }
+
+    setSubtitleDelay = (delay) => {
+        this.props.setSubtitleDelay(delay);
     }
 
     mute = () => {
@@ -148,9 +153,11 @@ class ControlBar extends Component {
                         className={classnames(styles['popup-content'], styles['subtitles-popup-content'])}
                         subtitleTracks={this.props.subtitleTracks}
                         subtitleSize={this.props.subtitleSize}
+                        subtitleDelay={this.props.subtitleDelay}
                         selectedSubtitleTrackId={this.props.selectedSubtitleTrackId}
                         setSelectedSubtitleTrackId={this.setSelectedSubtitleTrackId}
                         setSubtitleSize={this.setSubtitleSize}
+                        setSubtitleDelay={this.setSubtitleDelay}
                     />
                 </Popup.Menu>
             </Popup >
@@ -185,11 +192,15 @@ ControlBar.propTypes = {
         origin: PropTypes.string.isRequired
     })).isRequired,
     selectedSubtitleTrackId: PropTypes.string,
+    subtitleSize: PropTypes.number,
+    subtitleDelay: PropTypes.number,
     play: PropTypes.func.isRequired,
     pause: PropTypes.func.isRequired,
     setTime: PropTypes.func.isRequired,
     setVolume: PropTypes.func.isRequired,
     setSelectedSubtitleTrackId: PropTypes.func.isRequired,
+    setSubtitleSize: PropTypes.func.isRequired,
+    setSubtitleDelay: PropTypes.func.isRequired,
     mute: PropTypes.func.isRequired,
     unmute: PropTypes.func.isRequired
 };

@@ -43,6 +43,10 @@ class SubtitlesPicker extends PureComponent {
         this.props.setSubtitleSize(event.currentTarget.dataset.value);
     }
 
+    setSubtitleDelay = (event) => {
+        this.props.setSubtitleDelay(event.currentTarget.dataset.value * 1000);
+    }
+
     renderToggleButton({ selectedTrack }) {
         return (
             <div className={styles['toggle-button-container']} onClick={this.toggleOnClick}>
@@ -141,7 +145,7 @@ class SubtitlesPicker extends PureComponent {
                 <div className={styles['preferences-title']}>Preferences</div>
                 {this.renderVariantsList({ groupedTracks, selectedTrack })}
                 {this.renderNumberInput({ value: this.props.subtitleSize, unit: 'pt', delta: 0.5, onChange: this.setSubtitleSize })}
-                {this.renderNumberInput({ value: this.props.subtitleSize, unit: 'pt', delta: 0.5, onChange: this.setSubtitleSize })}
+                {this.renderNumberInput({ value: this.props.subtitleDelay / 1000, unit: 's', delta: 0.2, onChange: this.setSubtitleDelay })}
             </div>
         );
     }
@@ -167,14 +171,18 @@ class SubtitlesPicker extends PureComponent {
 
 SubtitlesPicker.propTypes = {
     className: PropTypes.string,
-    selectedSubtitleTrackId: PropTypes.string,
     languagePriorities: PropTypes.objectOf(PropTypes.number).isRequired,
     subtitleTracks: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.string.isRequired,
         label: PropTypes.string.isRequired,
         origin: PropTypes.string.isRequired
     })).isRequired,
-    setSelectedSubtitleTrackId: PropTypes.func.isRequired
+    selectedSubtitleTrackId: PropTypes.string,
+    subtitleSize: PropTypes.number,
+    subtitleDelay: PropTypes.number,
+    setSelectedSubtitleTrackId: PropTypes.func.isRequired,
+    setSubtitleSize: PropTypes.func.isRequired,
+    setSubtitleDelay: PropTypes.func.isRequired
 };
 SubtitlesPicker.defaultProps = {
     languagePriorities: Object.freeze({
