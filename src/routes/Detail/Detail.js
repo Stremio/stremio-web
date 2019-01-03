@@ -17,7 +17,7 @@ class Detail extends Component {
         return (
             <div className={styles['section-container']}>
                 {title ? <div className={styles['title']}>{title}</div> : null}
-                {links.slice(0, 4).map(link => <a key={link} className={styles['link']}>{link}</a>)}
+                {links.map(link => <a key={link} className={styles['link']}>{link}</a>)}
             </div>
         );
     }
@@ -30,30 +30,28 @@ class Detail extends Component {
                     {
                         this.state.logoLoaded ? <img className={styles['logo']} src={this.props.metaItem.logo} onError={() => this.setState({ logoLoaded: false })} /> : null
                     }
-                    <div className={styles['basic-info']}>
-                        <div className={styles['duration']}>{this.props.metaItem.duration} min</div>
-                        <div className={styles['release-info']}>{this.props.metaItem.releaseInfo.length > 0 ? this.props.metaItem.releaseInfo : this.props.metaItem.released.getFullYear()}</div>
-                        <a href={this.props.metaItem.links.imdb} target={'_blank'} className={styles['imdb-container']}>
-                            <Icon className={styles['imdb-logo']} icon={'ic_imdbnoframe'} />
-                            <div className={styles['imdb-rating']}>{this.props.metaItem.imdbRating}</div>
-                        </a>
-                    </div>
+                    <div className={styles['duration']}>{this.props.metaItem.duration} min</div>
+                    <div className={styles['release-info']}>{this.props.metaItem.releaseInfo.length > 0 ? this.props.metaItem.releaseInfo : this.props.metaItem.released.getFullYear()}</div>
                     <div className={styles['name']}>{this.props.metaItem.name}</div>
                     <div className={styles['description']}>{this.props.metaItem.description}</div>
                     {this.renderSection({ title: 'GENRES', links: this.props.metaItem.genres })}
                     {this.renderSection({ title: 'WRITTEN BY', links: this.props.metaItem.writers })}
                     {this.renderSection({ title: 'DIRECTED BY', links: this.props.metaItem.directors })}
                     {this.renderSection({ title: 'CAST', links: this.props.metaItem.cast })}
-                    <div className={styles['buttons']}>
-                        <a href={this.props.metaItem.links.youtube} className={styles['button-container']}>
+                    <div className={styles['action-buttons-container']}>
+                        <a href={this.props.metaItem.links.youtube} className={styles['action-button-container']}>
                             <Icon className={styles['icon']} icon={'ic_movies'} />
                             <div className={styles['label']}>Trailer</div>
                         </a>
-                        <div className={styles['button-container']} onClick={this.props.toggleLibraryButton}>
+                        <a href={this.props.metaItem.links.imdb} target={'_blank'} className={styles['action-button-container']}>
+                            <Icon className={styles['icon']} icon={'ic_imdb'} />
+                            <div className={styles['label']}>{this.props.metaItem.imdbRating} / 10</div>
+                        </a>
+                        <div className={styles['action-button-container']} onClick={this.props.toggleLibraryButton}>
                             <Icon className={styles['icon']} icon={this.props.inLibrary ? 'ic_removelib' : 'ic_addlib'} />
                             <div className={styles['label']}>{this.props.inLibrary ? 'Remove from Library' : 'Add to library'}</div>
                         </div>
-                        <div className={styles['button-container']}>
+                        <div className={styles['action-button-container']}>
                             <Icon className={styles['icon']} icon={'ic_share'} />
                             <div className={styles['label']}>Share</div>
                         </div>

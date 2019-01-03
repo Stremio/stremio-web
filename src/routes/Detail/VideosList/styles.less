@@ -1,16 +1,15 @@
 .videos-list-container {
     width: calc(var(--video-width) + var(--spacing) * 6);
+    display: flex;
     flex-direction: column;
-    padding: calc(3 * var(--spacing)) 0;
+    align-items: center;
     background: var(--color-backgrounddarker40);
 
     .seasons-bar {
         height: calc(var(--video-width) * 0.14);
         width: 100%;
         display: flex;
-        justify-content: space-between;
         margin-bottom: var(--spacing);
-        background: var(--color-backgrounddarker);
 
         .control-bar-button {
             cursor: pointer;
