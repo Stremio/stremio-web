@@ -69,6 +69,10 @@ var HTMLVideo = function(container) {
         return selectedSubtitleTrackId;
     }
     function getSubtitleDelay() {
+        if (!loaded) {
+            return null;
+        }
+
         return subtitleDelay;
     }
     function getSubtitleSize() {
@@ -240,6 +244,7 @@ var HTMLVideo = function(container) {
                     case 'selectedSubtitleTrackId':
                         if (loaded) {
                             selectedSubtitleTrackId = null;
+                            subtitleDelay = 0;
                             subtitleCues = {};
                             for (var i = 0; i < subtitleTracks.length; i++) {
                                 var subtitleTrack = subtitleTracks[i];
@@ -265,8 +270,18 @@ var HTMLVideo = function(container) {
                                 }
                             }
 
-                            updateSubtitleText();
+                            onSubtitleDelayChanged();
                             onSelectedSubtitleTrackIdChanged();
+                            updateSubtitleText();
+                        }
+                        break;
+                    case 'subtitleDelay':
+                        if (loaded) {
+                            if (!isNaN(arguments[2])) {
+                                subtitleDelay = parseFloat(arguments[2]);
+                                onSubtitleDelayChanged();
+                                updateSubtitleText();
+                            }
                         }
                         break;
                     case 'subtitleSize':
@@ -283,13 +298,6 @@ var HTMLVideo = function(container) {
                         }
 
                         onSubtitleDarkBackgroundChanged();
-                        return;
-                    case 'subtitleDelay':
-                        if (!isNaN(arguments[2])) {
-                            subtitleDelay = parseFloat(arguments[2]);
-                            onSubtitleDelayChanged();
-                            updateSubtitleText();
-                        }
                         return;
                     case 'volume':
                         if (!isNaN(arguments[2])) {
@@ -348,6 +356,7 @@ var HTMLVideo = function(container) {
                         subtitleCues = {};
                         subtitleTracks = [];
                         selectedSubtitleTrackId = null;
+                        subtitleDelay = 0;
                         video.removeAttribute('src');
                         video.load();
                         video.currentTime = 0;
@@ -356,6 +365,7 @@ var HTMLVideo = function(container) {
                         onDurationChanged();
                         onSubtitleTracksChanged();
                         onSelectedSubtitleTrackIdChanged();
+                        onSubtitleDelayChanged();
                         updateSubtitleText();
                         return;
                     case 'load':
