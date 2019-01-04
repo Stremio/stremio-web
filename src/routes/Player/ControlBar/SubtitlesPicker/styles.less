@@ -155,7 +155,7 @@
 
         .background-toggle-container {
             align-self: stretch;
-            height: var(--subtitles-picker-button-size);
+            flex: 1;
             display: flex;
             flex-direction: row;
             align-items: center;
@@ -173,8 +173,12 @@
             }
 
             .background-toggle-label {
-                margin-left: 0.5em;
-                max-height: 2em;
+                flex: 1;
+                padding: 0 0.5em;
+                font-size: 1em;
+                line-height: 1.1em;
+                max-height: 2.2em;
+                word-break: break-all;
                 overflow: hidden;
                 color: var(--color-surfacelighter);
             }
