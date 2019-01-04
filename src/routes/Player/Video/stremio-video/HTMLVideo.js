@@ -257,6 +257,7 @@ var HTMLVideo = function(container) {
                                         .then(function(text) {
                                             if (selectedSubtitleTrackId === subtitleTrack.id) {
                                                 subtitleCues = subtitleUtils.parse(text);
+                                                updateSubtitleText();
                                             }
                                         })
                                         .catch(function() {
