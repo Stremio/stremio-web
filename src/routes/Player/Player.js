@@ -42,8 +42,6 @@ class Player extends Component {
             label: 'English'
         }]);
         this.setSelectedSubtitleTrackId('https://raw.githubusercontent.com/caitp/ng-media/master/example/assets/captions/bunny-en.vtt');
-        this.addSubtitleTracks(require('./subtitles').default);
-        this.setSelectedSubtitleTrackId('https://raw.githubusercontent.com/NikolaBorislavovHristov/test-resources/master/1.vtt?token=AFrNArKXTTDZRHR16bqQBFQmJlB8FIUSks5cNgCGwA%3D%3D')
     }
 
     onEnded = () => {
