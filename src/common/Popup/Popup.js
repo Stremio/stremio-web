@@ -10,7 +10,6 @@ class Popup extends Component {
     constructor(props) {
         super(props);
 
-        this.hiddenBorderRef = React.createRef();
         this.labelRef = React.createRef();
         this.labelBorderTopRef = React.createRef();
         this.labelBorderRightRef = React.createRef();
@@ -22,6 +21,7 @@ class Popup extends Component {
         this.menuBorderRightRef = React.createRef();
         this.menuBorderBottomRef = React.createRef();
         this.menuBorderLeftRef = React.createRef();
+        this.hiddenBorderRef = React.createRef();
 
         this.state = {
             open: false
@@ -61,7 +61,7 @@ class Popup extends Component {
         const bodyRect = document.body.getBoundingClientRect();
         const menuRect = this.menuRef.current.getBoundingClientRect();
         const labelRect = this.labelRef.current.getBoundingClientRect();
-        const borderWidth = parseFloat(window.getComputedStyle(this.hiddenBorderRef.current).getPropertyValue('border-top-width'));
+        const borderSize = parseFloat(window.getComputedStyle(this.hiddenBorderRef.current).getPropertyValue('border-top-width'));
         const labelPosition = {
             left: labelRect.x - bodyRect.x,
             top: labelRect.y - bodyRect.y,
@@ -106,23 +106,23 @@ class Popup extends Component {
         }
 
         if (this.props.border) {
-            this.menuBorderTopRef.current.style.height = `${borderWidth}px`;
-            this.menuBorderRightRef.current.style.width = `${borderWidth}px`;
-            this.menuBorderBottomRef.current.style.height = `${borderWidth}px`;
-            this.menuBorderLeftRef.current.style.width = `${borderWidth}px`;
-            this.labelBorderTopRef.current.style.height = `${borderWidth}px`;
+            this.menuBorderTopRef.current.style.height = `${borderSize}px`;
+            this.menuBorderRightRef.current.style.width = `${borderSize}px`;
+            this.menuBorderBottomRef.current.style.height = `${borderSize}px`;
+            this.menuBorderLeftRef.current.style.width = `${borderSize}px`;
+            this.labelBorderTopRef.current.style.height = `${borderSize}px`;
             this.labelBorderTopRef.current.style.top = `${labelPosition.top}px`;
             this.labelBorderTopRef.current.style.right = `${labelPosition.right}px`;
             this.labelBorderTopRef.current.style.left = `${labelPosition.left}px`;
-            this.labelBorderRightRef.current.style.width = `${borderWidth}px`;
+            this.labelBorderRightRef.current.style.width = `${borderSize}px`;
             this.labelBorderRightRef.current.style.top = `${labelPosition.top}px`;
             this.labelBorderRightRef.current.style.right = `${labelPosition.right}px`;
             this.labelBorderRightRef.current.style.bottom = `${labelPosition.bottom}px`;
-            this.labelBorderBottomRef.current.style.height = `${borderWidth}px`;
+            this.labelBorderBottomRef.current.style.height = `${borderSize}px`;
             this.labelBorderBottomRef.current.style.right = `${labelPosition.right}px`;
             this.labelBorderBottomRef.current.style.bottom = `${labelPosition.bottom}px`;
             this.labelBorderBottomRef.current.style.left = `${labelPosition.left}px`;
-            this.labelBorderLeftRef.current.style.width = `${borderWidth}px`;
+            this.labelBorderLeftRef.current.style.width = `${borderSize}px`;
             this.labelBorderLeftRef.current.style.top = `${labelPosition.top}px`;
             this.labelBorderLeftRef.current.style.bottom = `${labelPosition.bottom}px`;
             this.labelBorderLeftRef.current.style.left = `${labelPosition.left}px`;
@@ -130,16 +130,16 @@ class Popup extends Component {
             if (menuDirections.top) {
                 this.labelBorderTopRef.current.style.display = 'none';
                 if (menuDirections.left) {
-                    this.menuBorderBottomRef.current.style.right = `${labelRect.width - borderWidth}px`;
+                    this.menuBorderBottomRef.current.style.right = `${labelRect.width - borderSize}px`;
                 } else {
-                    this.menuBorderBottomRef.current.style.left = `${labelRect.width - borderWidth}px`;
+                    this.menuBorderBottomRef.current.style.left = `${labelRect.width - borderSize}px`;
                 }
             } else {
                 this.labelBorderBottomRef.current.style.display = 'none';
                 if (menuDirections.left) {
-                    this.menuBorderTopRef.current.style.right = `${labelRect.width - borderWidth}px`;
+                    this.menuBorderTopRef.current.style.right = `${labelRect.width - borderSize}px`;
                 } else {
-                    this.menuBorderTopRef.current.style.left = `${labelRect.width - borderWidth}px`;
+                    this.menuBorderTopRef.current.style.left = `${labelRect.width - borderSize}px`;
                 }
             }
         }
@@ -186,11 +186,11 @@ class Popup extends Component {
                     <div ref={this.menuBorderBottomRef} className={classnames(styles['border'], styles['border-bottom'])} />
                     <div ref={this.menuBorderLeftRef} className={classnames(styles['border'], styles['border-left'])} />
                 </div>
-                <div ref={this.hiddenBorderRef} className={styles['hidden-border']} />
                 <div ref={this.labelBorderTopRef} className={classnames(styles['border'], styles['border-top'])} />
                 <div ref={this.labelBorderRightRef} className={classnames(styles['border'], styles['border-right'])} />
                 <div ref={this.labelBorderBottomRef} className={classnames(styles['border'], styles['border-bottom'])} />
                 <div ref={this.labelBorderLeftRef} className={classnames(styles['border'], styles['border-left'])} />
+                <div ref={this.hiddenBorderRef} className={classnames(styles['border'], styles['border-hidden'])} />
             </Modal>
         );
     }
