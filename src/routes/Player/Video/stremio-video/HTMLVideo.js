@@ -254,6 +254,13 @@ var HTMLVideo = function(container) {
                                         .then(function(resp) {
                                             return resp.text();
                                         })
+                                        .catch(function() {
+                                            events.emit('error', {
+                                                code: 70,
+                                                message: 'Failed to fetch subtitles from ' + subtitleTrack.origin,
+                                                critical: false
+                                            });
+                                        })
                                         .then(function(text) {
                                             if (selectedSubtitleTrackId === subtitleTrack.id) {
                                                 subtitleCues = subtitleUtils.parse(text);
@@ -262,8 +269,8 @@ var HTMLVideo = function(container) {
                                         })
                                         .catch(function() {
                                             events.emit('error', {
-                                                code: 68,
-                                                message: 'Failed to fetch subtitles from ' + subtitleTrack.origin,
+                                                code: 71,
+                                                message: 'Failed to parse subtitles from ' + subtitleTrack.origin,
                                                 critical: false
                                             });
                                         });
