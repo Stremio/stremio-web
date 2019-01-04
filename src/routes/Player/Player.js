@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
+import classnames from 'classnames';
 import Video from './Video';
 import ControlBar from './ControlBar';
 import styles from './styles';
@@ -36,12 +37,12 @@ class Player extends Component {
     }
 
     componentDidMount() {
-        this.addSubtitleTracks([{
+        this.dispatch('command', 'addSubtitleTracks', [{
             url: 'https://raw.githubusercontent.com/caitp/ng-media/master/example/assets/captions/bunny-en.vtt',
             origin: 'Github',
             label: 'English'
         }]);
-        this.setSelectedSubtitleTrackId('https://raw.githubusercontent.com/caitp/ng-media/master/example/assets/captions/bunny-en.vtt');
+        this.dispatch('setProp', 'selectedSubtitleTrackId', 'https://raw.githubusercontent.com/caitp/ng-media/master/example/assets/captions/bunny-en.vtt');
     }
 
     onEnded = () => {
@@ -60,52 +61,8 @@ class Player extends Component {
         this.setState({ [propName]: propValue });
     }
 
-    play = () => {
-        this.videoRef.current && this.videoRef.current.dispatch('setProp', 'paused', false);
-    }
-
-    pause = () => {
-        this.videoRef.current && this.videoRef.current.dispatch('setProp', 'paused', true);
-    }
-
-    setTime = (time) => {
-        this.videoRef.current && this.videoRef.current.dispatch('setProp', 'time', time);
-    }
-
-    setVolume = (volume) => {
-        this.videoRef.current && this.videoRef.current.dispatch('setProp', 'volume', volume);
-    }
-
-    setSelectedSubtitleTrackId = (selectedSubtitleTrackId) => {
-        this.videoRef.current && this.videoRef.current.dispatch('setProp', 'selectedSubtitleTrackId', selectedSubtitleTrackId);
-    }
-
-    setSubtitleSize = (size) => {
-        this.videoRef.current && this.videoRef.current.dispatch('setProp', 'subtitleSize', size);
-    }
-
-    setSubtitleDelay = (delay) => {
-        this.videoRef.current && this.videoRef.current.dispatch('setProp', 'subtitleDelay', delay);
-    }
-
-    setSubtitleDarkBackground = (value) => {
-        this.videoRef.current && this.videoRef.current.dispatch('setProp', 'subtitleDarkBackground', value);
-    }
-
-    mute = () => {
-        this.videoRef.current && this.videoRef.current.dispatch('command', 'mute');
-    }
-
-    unmute = () => {
-        this.videoRef.current && this.videoRef.current.dispatch('command', 'unmute');
-    }
-
-    addSubtitleTracks = (subtitleTracks) => {
-        this.videoRef.current && this.videoRef.current.dispatch('command', 'addSubtitleTracks', subtitleTracks);
-    }
-
-    stop = () => {
-        this.videoRef.current && this.videoRef.current.dispatch('command', 'stop');
+    dispatch = (...args) => {
+        this.videoRef.current && this.videoRef.current.dispatch(...args);
     }
 
     renderVideo() {
@@ -128,7 +85,7 @@ class Player extends Component {
     renderControlBar() {
         return (
             <ControlBar
-                className={styles['layer']}
+                className={classnames(styles['layer'], styles['control-bar-layer'])}
                 paused={this.state.paused}
                 time={this.state.time}
                 duration={this.state.duration}
@@ -138,16 +95,7 @@ class Player extends Component {
                 subtitleSize={this.state.subtitleSize}
                 subtitleDelay={this.state.subtitleDelay}
                 subtitleDarkBackground={this.state.subtitleDarkBackground}
-                play={this.play}
-                pause={this.pause}
-                setTime={this.setTime}
-                setVolume={this.setVolume}
-                setSelectedSubtitleTrackId={this.setSelectedSubtitleTrackId}
-                setSubtitleSize={this.setSubtitleSize}
-                setSubtitleDelay={this.setSubtitleDelay}
-                setSubtitleDarkBackground={this.setSubtitleDarkBackground}
-                mute={this.mute}
-                unmute={this.unmute}
+                dispatch={this.dispatch}
             />
         );
     }
@@ -166,10 +114,10 @@ Player.propTypes = {
     stream: PropTypes.object.isRequired
 };
 Player.defaultProps = {
-    stream: {
+    stream: Object.freeze({
         // ytId: 'E4A0bcCQke0',
         url: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
-    }
+    })
 };
 
 export default Player;

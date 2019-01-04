@@ -4,12 +4,12 @@ import classnames from 'classnames';
 import Icon from 'stremio-icons/dom';
 import { Popup } from 'stremio-common';
 import SeekBar from './SeekBar';
+import PlayPauseButton from './PlayPauseButton';
 import VolumeBar from './VolumeBar';
 import SubtitlesPicker from './SubtitlesPicker';
 import styles from './styles';
 
-//TODO move this in separate file
-const ControlBarButton = React.forwardRef(({ active, icon, onClick }, ref) => (
+const ControlBarButton = React.forwardRef(({ icon, active, onClick }, ref) => (
     <div ref={ref} className={classnames(styles['control-bar-button'], { 'active': active })} onClick={onClick}>
         <Icon className={styles['icon']} icon={icon} />
     </div>
@@ -40,40 +40,8 @@ class ControlBar extends Component {
             nextState.subtitlesPopupOpen !== this.state.subtitlesPopupOpen;
     }
 
-    setTime = (time) => {
-        this.props.setTime(time);
-    }
-
-    setVolume = (volume) => {
-        this.props.setVolume(volume);
-    }
-
-    setSelectedSubtitleTrackId = (selectedSubtitleTrackId) => {
-        this.props.setSelectedSubtitleTrackId(selectedSubtitleTrackId);
-    }
-
-    setSubtitleSize = (size) => {
-        this.props.setSubtitleSize(size);
-    }
-
-    setSubtitleDelay = (delay) => {
-        this.props.setSubtitleDelay(delay);
-    }
-
-    setSubtitleDarkBackground = (value) => {
-        this.props.setSubtitleDarkBackground(value);
-    }
-
-    mute = () => {
-        this.props.mute();
-    }
-
-    unmute = () => {
-        this.props.unmute();
-    }
-
-    togglePaused = () => {
-        this.props.paused ? this.props.play() : this.props.pause();
+    dispatch = (...args) => {
+        this.props.dispatch(...args);
     }
 
     onSharePopupOpen = () => {
@@ -98,21 +66,17 @@ class ControlBar extends Component {
                 className={styles['seek-bar']}
                 time={this.props.time}
                 duration={this.props.duration}
-                setTime={this.setTime}
+                dispatch={this.dispatch}
             />
         );
     }
 
     renderPlayPauseButton() {
-        if (this.props.paused === null) {
-            return null;
-        }
-
-        const icon = this.props.paused ? 'ic_play' : 'ic_pause';
         return (
-            <ControlBarButton
-                icon={icon}
-                onClick={this.togglePaused}
+            <PlayPauseButton
+                toggleButtonComponent={ControlBarButton}
+                paused={this.props.paused}
+                dispatch={this.dispatch}
             />
         );
     }
@@ -123,9 +87,7 @@ class ControlBar extends Component {
                 className={styles['volume-bar']}
                 toggleButtonComponent={ControlBarButton}
                 volume={this.props.volume}
-                setVolume={this.setVolume}
-                mute={this.mute}
-                unmute={this.unmute}
+                dispatch={this.dispatch}
             />
         );
     }
@@ -134,7 +96,10 @@ class ControlBar extends Component {
         return (
             <Popup className={'player-popup-container'} border={true} onOpen={this.onSharePopupOpen} onClose={this.onSharePopupClose}>
                 <Popup.Label>
-                    <ControlBarButton active={this.state.sharePopupOpen} icon={'ic_share'} />
+                    <ControlBarButton
+                        icon={'ic_share'}
+                        active={this.state.sharePopupOpen}
+                    />
                 </Popup.Label>
                 <Popup.Menu>
                     <div className={classnames(styles['popup-content'], styles['share-popup-content'])} />
@@ -151,20 +116,20 @@ class ControlBar extends Component {
         return (
             <Popup className={'player-popup-container'} border={true} onOpen={this.onSubtitlesPopupOpen} onClose={this.onSubtitlesPopupClose}>
                 <Popup.Label>
-                    <ControlBarButton active={this.state.subtitlesPopupOpen} icon={'ic_sub'} />
+                    <ControlBarButton
+                        icon={'ic_sub'}
+                        active={this.state.subtitlesPopupOpen}
+                    />
                 </Popup.Label>
                 <Popup.Menu>
                     <SubtitlesPicker
                         className={classnames(styles['popup-content'], styles['subtitles-popup-content'])}
                         subtitleTracks={this.props.subtitleTracks}
+                        selectedSubtitleTrackId={this.props.selectedSubtitleTrackId}
                         subtitleSize={this.props.subtitleSize}
                         subtitleDelay={this.props.subtitleDelay}
                         subtitleDarkBackground={this.props.subtitleDarkBackground}
-                        selectedSubtitleTrackId={this.props.selectedSubtitleTrackId}
-                        setSelectedSubtitleTrackId={this.setSelectedSubtitleTrackId}
-                        setSubtitleSize={this.setSubtitleSize}
-                        setSubtitleDelay={this.setSubtitleDelay}
-                        setSubtitleDarkBackground={this.setSubtitleDarkBackground}
+                        dispatch={this.dispatch}
                     />
                 </Popup.Menu>
             </Popup >
@@ -178,7 +143,7 @@ class ControlBar extends Component {
                 <div className={styles['control-bar-buttons-container']}>
                     {this.renderPlayPauseButton()}
                     {this.renderVolumeBar()}
-                    <div className={styles['flex-spacing']} />
+                    <div className={styles['spacing']} />
                     {this.renderSubtitlesButton()}
                     {this.renderShareButton()}
                 </div>
@@ -202,16 +167,7 @@ ControlBar.propTypes = {
     subtitleSize: PropTypes.number,
     subtitleDelay: PropTypes.number,
     subtitleDarkBackground: PropTypes.bool,
-    play: PropTypes.func.isRequired,
-    pause: PropTypes.func.isRequired,
-    setTime: PropTypes.func.isRequired,
-    setVolume: PropTypes.func.isRequired,
-    setSelectedSubtitleTrackId: PropTypes.func.isRequired,
-    setSubtitleSize: PropTypes.func.isRequired,
-    setSubtitleDelay: PropTypes.func.isRequired,
-    setSubtitleDarkBackground: PropTypes.func.isRequired,
-    mute: PropTypes.func.isRequired,
-    unmute: PropTypes.func.isRequired
+    dispatch: PropTypes.func.isRequired
 };
 
 export default ControlBar;
