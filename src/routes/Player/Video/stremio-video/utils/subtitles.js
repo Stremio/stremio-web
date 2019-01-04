@@ -31,8 +31,8 @@ function parse(text) {
     var parser = new VTTJS.WebVTT.Parser(window, VTTJS.WebVTT.StringDecoder());
     parser.oncue = function(c) {
         var cue = {
-            startTime: c.startTime * 1000,
-            endTime: c.endTime * 1000,
+            startTime: (c.startTime * 1000) | 0,
+            endTime: (c.endTime * 1000) | 0,
             text: c.text
         };
         cues.push(cue);
