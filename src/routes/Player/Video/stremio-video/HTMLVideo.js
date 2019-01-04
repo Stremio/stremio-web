@@ -22,6 +22,7 @@ var HTMLVideo = function(container) {
     container.appendChild(styles);
     styles.sheet.insertRule('#' + container.id + ' video { width: 100%; height: 100%; position: relative; z-index: 0; }', styles.sheet.cssRules.length);
     var subtitleStylesIndex = styles.sheet.insertRule('#' + container.id + ' .subtitles { position: absolute; right: 0; bottom: 0; left: 0; font-size: 26pt; color: white; text-align: center; }', styles.sheet.cssRules.length);
+    styles.sheet.insertRule('#' + container.id + ' .subtitles.dark-background .cue { text-shadow: none; background-color: #222222; }', styles.sheet.cssRules.length);
     styles.sheet.insertRule('#' + container.id + ' .subtitles .cue { display: inline-block; padding: 0.2em; text-shadow: #222222 0px 0px 1.8px, #222222 0px 0px 1.8px, #222222 0px 0px 1.8px, #222222 0px 0px 1.8px, #222222 0px 0px 1.8px; }', styles.sheet.cssRules.length);
     container.appendChild(video);
     video.crossOrigin = 'anonymous';
@@ -72,6 +73,9 @@ var HTMLVideo = function(container) {
     }
     function getSubtitleSize() {
         return parseFloat(styles.sheet.cssRules[subtitleStylesIndex].style.fontSize);
+    }
+    function getSubtitleDarkBackground() {
+        return subtitles.classList.contains('dark-background');
     }
     function onEnded() {
         events.emit('ended');
@@ -134,6 +138,9 @@ var HTMLVideo = function(container) {
     }
     function onSubtitleSizeChanged() {
         events.emit('propChanged', 'subtitleSize', getSubtitleSize());
+    }
+    function onSubtitleDarkBackgroundChanged() {
+        events.emit('propChanged', 'subtitleDarkBackground', getSubtitleDarkBackground());
     }
     function updateSubtitleText() {
         while (subtitles.hasChildNodes()) {
@@ -210,6 +217,9 @@ var HTMLVideo = function(container) {
                     case 'subtitleDelay':
                         events.emit('propValue', 'subtitleDelay', getSubtitleDelay());
                         return;
+                    case 'subtitleDarkBackground':
+                        events.emit('propValue', 'subtitleDarkBackground', getSubtitleDarkBackground());
+                        return;
                     default:
                         throw new Error('observeProp not supported: ' + arguments[1]);
                 }
@@ -264,6 +274,15 @@ var HTMLVideo = function(container) {
                             styles.sheet.cssRules[subtitleStylesIndex].style.fontSize = parseFloat(arguments[2]) + 'pt';
                             onSubtitleSizeChanged();
                         }
+                        return;
+                    case 'subtitleDarkBackground':
+                        if (arguments[2]) {
+                            subtitles.classList.add('dark-background');
+                        } else {
+                            subtitles.classList.remove('dark-background');
+                        }
+
+                        onSubtitleDarkBackgroundChanged();
                         return;
                     case 'subtitleDelay':
                         if (!isNaN(arguments[2])) {
@@ -388,7 +407,7 @@ var HTMLVideo = function(container) {
 HTMLVideo.manifest = {
     name: 'HTMLVideo',
     embedded: true,
-    props: ['paused', 'time', 'duration', 'volume', 'subtitleTracks', 'selectedSubtitleTrackId', 'subtitleSize', 'subtitleDelay']
+    props: ['paused', 'time', 'duration', 'volume', 'subtitleTracks', 'selectedSubtitleTrackId', 'subtitleSize', 'subtitleDelay', 'subtitleDarkBackground']
 };
 
 module.exports = HTMLVideo;

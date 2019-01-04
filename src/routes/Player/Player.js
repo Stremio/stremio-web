@@ -18,7 +18,8 @@ class Player extends Component {
             subtitleTracks: [],
             selectedSubtitleTrackId: null,
             subtitleSize: null,
-            subtitleDelay: null
+            subtitleDelay: null,
+            subtitleDarkBackground: null
         };
     }
 
@@ -30,7 +31,8 @@ class Player extends Component {
             nextState.subtitleTracks !== this.state.subtitleTracks ||
             nextState.selectedSubtitleTrackId !== this.state.selectedSubtitleTrackId ||
             nextState.subtitleSize !== this.state.subtitleSize ||
-            nextState.subtitleDelay !== this.state.subtitleDelay;
+            nextState.subtitleDelay !== this.state.subtitleDelay ||
+            nextState.subtitleDarkBackground !== this.state.subtitleDarkBackground;
     }
 
     componentDidMount() {
@@ -40,6 +42,8 @@ class Player extends Component {
             label: 'English'
         }]);
         this.setSelectedSubtitleTrackId('https://raw.githubusercontent.com/caitp/ng-media/master/example/assets/captions/bunny-en.vtt');
+        this.addSubtitleTracks(require('./subtitles').default);
+        this.setSelectedSubtitleTrackId('https://raw.githubusercontent.com/NikolaBorislavovHristov/test-resources/master/1.vtt?token=AFrNArKXTTDZRHR16bqQBFQmJlB8FIUSks5cNgCGwA%3D%3D')
     }
 
     onEnded = () => {
@@ -84,6 +88,10 @@ class Player extends Component {
 
     setSubtitleDelay = (delay) => {
         this.videoRef.current && this.videoRef.current.dispatch('setProp', 'subtitleDelay', delay);
+    }
+
+    setSubtitleDarkBackground = (value) => {
+        this.videoRef.current && this.videoRef.current.dispatch('setProp', 'subtitleDarkBackground', value);
     }
 
     mute = () => {
@@ -131,6 +139,7 @@ class Player extends Component {
                 selectedSubtitleTrackId={this.state.selectedSubtitleTrackId}
                 subtitleSize={this.state.subtitleSize}
                 subtitleDelay={this.state.subtitleDelay}
+                subtitleDarkBackground={this.state.subtitleDarkBackground}
                 play={this.play}
                 pause={this.pause}
                 setTime={this.setTime}
@@ -138,6 +147,7 @@ class Player extends Component {
                 setSelectedSubtitleTrackId={this.setSelectedSubtitleTrackId}
                 setSubtitleSize={this.setSubtitleSize}
                 setSubtitleDelay={this.setSubtitleDelay}
+                setSubtitleDarkBackground={this.setSubtitleDarkBackground}
                 mute={this.mute}
                 unmute={this.unmute}
             />

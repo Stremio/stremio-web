@@ -2,6 +2,7 @@ import React, { PureComponent, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import Icon from 'stremio-icons/dom';
+import { Checkbox } from 'stremio-common';
 import styles from './styles';
 
 const ORIGIN_PRIORITIES = {
@@ -45,6 +46,10 @@ class SubtitlesPicker extends PureComponent {
 
     setSubtitleDelay = (event) => {
         this.props.setSubtitleDelay(event.currentTarget.dataset.value * 1000);
+    }
+
+    setSubtitleDarkBackground = () => {
+        this.props.setSubtitleDarkBackground(!this.props.subtitleDarkBackground);
     }
 
     renderToggleButton({ selectedTrack }) {
@@ -111,6 +116,23 @@ class SubtitlesPicker extends PureComponent {
         );
     }
 
+    renderDarkBackgroundToggle() {
+        if (this.props.subtitleDarkBackground === null) {
+            return null;
+        }
+
+        return (
+            <label className={styles['background-toggle-container']}>
+                <Checkbox
+                    className={styles['background-toggle-checkbox']}
+                    checked={this.props.subtitleDarkBackground}
+                    onClick={this.setSubtitleDarkBackground}
+                />
+                <div className={styles['background-toggle-label']}>Dark background</div>
+            </label>
+        );
+    }
+
     renderNumberInput({ value, unit, delta, onChange }) {
         if (value === null) {
             return null;
@@ -144,6 +166,7 @@ class SubtitlesPicker extends PureComponent {
             <div className={styles['preferences-container']}>
                 <div className={styles['preferences-title']}>Preferences</div>
                 {this.renderVariantsList({ groupedTracks, selectedTrack })}
+                {this.renderDarkBackgroundToggle()}
                 {this.renderNumberInput({ value: this.props.subtitleSize, unit: 'pt', delta: 0.5, onChange: this.setSubtitleSize })}
                 {this.renderNumberInput({ value: this.props.subtitleDelay / 1000, unit: 's', delta: 0.2, onChange: this.setSubtitleDelay })}
             </div>
@@ -180,9 +203,11 @@ SubtitlesPicker.propTypes = {
     selectedSubtitleTrackId: PropTypes.string,
     subtitleSize: PropTypes.number,
     subtitleDelay: PropTypes.number,
+    subtitleDarkBackground: PropTypes.bool,
     setSelectedSubtitleTrackId: PropTypes.func.isRequired,
     setSubtitleSize: PropTypes.func.isRequired,
-    setSubtitleDelay: PropTypes.func.isRequired
+    setSubtitleDelay: PropTypes.func.isRequired,
+    setSubtitleDarkBackground: PropTypes.func.isRequired
 };
 SubtitlesPicker.defaultProps = {
     languagePriorities: Object.freeze({

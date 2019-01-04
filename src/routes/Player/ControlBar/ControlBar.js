@@ -35,6 +35,7 @@ class ControlBar extends Component {
             nextProps.selectedSubtitleTrackId !== this.props.selectedSubtitleTrackId ||
             nextProps.subtitleSize !== this.props.subtitleSize ||
             nextProps.subtitleDelay !== this.props.subtitleDelay ||
+            nextProps.subtitleDarkBackground !== this.props.subtitleDarkBackground ||
             nextState.sharePopupOpen !== this.state.sharePopupOpen ||
             nextState.subtitlesPopupOpen !== this.state.subtitlesPopupOpen;
     }
@@ -57,6 +58,10 @@ class ControlBar extends Component {
 
     setSubtitleDelay = (delay) => {
         this.props.setSubtitleDelay(delay);
+    }
+
+    setSubtitleDarkBackground = (value) => {
+        this.props.setSubtitleDarkBackground(value);
     }
 
     mute = () => {
@@ -154,10 +159,12 @@ class ControlBar extends Component {
                         subtitleTracks={this.props.subtitleTracks}
                         subtitleSize={this.props.subtitleSize}
                         subtitleDelay={this.props.subtitleDelay}
+                        subtitleDarkBackground={this.props.subtitleDarkBackground}
                         selectedSubtitleTrackId={this.props.selectedSubtitleTrackId}
                         setSelectedSubtitleTrackId={this.setSelectedSubtitleTrackId}
                         setSubtitleSize={this.setSubtitleSize}
                         setSubtitleDelay={this.setSubtitleDelay}
+                        setSubtitleDarkBackground={this.setSubtitleDarkBackground}
                     />
                 </Popup.Menu>
             </Popup >
@@ -194,6 +201,7 @@ ControlBar.propTypes = {
     selectedSubtitleTrackId: PropTypes.string,
     subtitleSize: PropTypes.number,
     subtitleDelay: PropTypes.number,
+    subtitleDarkBackground: PropTypes.bool,
     play: PropTypes.func.isRequired,
     pause: PropTypes.func.isRequired,
     setTime: PropTypes.func.isRequired,
@@ -201,6 +209,7 @@ ControlBar.propTypes = {
     setSelectedSubtitleTrackId: PropTypes.func.isRequired,
     setSubtitleSize: PropTypes.func.isRequired,
     setSubtitleDelay: PropTypes.func.isRequired,
+    setSubtitleDarkBackground: PropTypes.func.isRequired,
     mute: PropTypes.func.isRequired,
     unmute: PropTypes.func.isRequired
 };
