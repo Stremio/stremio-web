@@ -52,6 +52,10 @@ var HTMLVideo = function(containerElement) {
         return Math.floor(videoElement.duration * 1000);
     }
     function getVolume() {
+        if (destroyed) {
+            return null;
+        }
+
         return videoElement.muted ? 0 : Math.floor(videoElement.volume * 100);
     }
     function getSubtitleTracks() {
@@ -76,9 +80,17 @@ var HTMLVideo = function(containerElement) {
         return subtitleDelay;
     }
     function getSubtitleSize() {
+        if (destroyed) {
+            return null;
+        }
+
         return parseFloat(stylesElement.sheet.cssRules[subtitleStylesIndex].style.fontSize);
     }
     function getSubtitleDarkBackground() {
+        if (destroyed) {
+            return null;
+        }
+
         return subtitlesElement.classList.contains('dark-background');
     }
     function onEnded() {
@@ -395,6 +407,10 @@ var HTMLVideo = function(containerElement) {
                         return;
                     case 'destroy':
                         self.dispatch('command', 'stop');
+                        destroyed = true;
+                        onVolumeChanged();
+                        onSubtitleSizeChanged();
+                        onSubtitleDarkBackgroundChanged();
                         events.removeAllListeners();
                         videoElement.removeEventListener('pause', onPausedChanged);
                         videoElement.removeEventListener('play', onPausedChanged);
@@ -404,7 +420,6 @@ var HTMLVideo = function(containerElement) {
                         containerElement.removeChild(videoElement);
                         containerElement.removeChild(stylesElement);
                         containerElement.removeChild(subtitlesElement);
-                        destroyed = true;
                         return;
                     default:
                         throw new Error('command not supported: ' + arguments[1]);
