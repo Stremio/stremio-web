@@ -13,6 +13,10 @@ class Detail extends Component {
         };
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        return nextState.logoLoaded !== this.state.logoLoaded;
+    }
+
     renderSection({ title, links }) {
         return (
             <div className={styles['section-container']}>
