@@ -39,13 +39,13 @@
 
             .title {
                 line-height: 1.2em;
-                color: var(--color-surfacelighter);
+                color: var(--color-surfacelight);
                 word-break: break-all; //Firefox doesn't support { break-word }
                 word-break: break-word;
             }
 
             .released-date {
-                font-size: 90%;
+                font-size: 0.9em;
                 color: var(--color-surface);
             }
 
@@ -53,13 +53,13 @@
                 display: flex;
 
                 .upcoming-label, .watched-label {
-                    font-size: 80%;
+                    font-size: 0.8em;
                     font-weight: 500;
                     line-height: 1.5;
                     border-width: calc(var(--spacing) * 0.25);
                     border-style: solid;
                     padding: 0 0.6em;
-                    color: var(--color-surfacelighter);
+                    color: var(--color-surfacelight);
                 }
 
                 .upcoming-label {
@@ -85,7 +85,7 @@
 
             .arrow {
                 width: 100%;
-                fill: var(--color-surfacelighter);
+                fill: var(--color-surfacelight);
             }
         }
     }
@@ -103,5 +103,23 @@
     &:hover {
         cursor: pointer;
         background-color: var(--color-surfacedarker);
+
+        .info-container {
+            .title {
+                color: var(--color-surfacelighter);
+            }
+
+            .label-container {
+                .upcoming-label, .watched-label {
+                    color: var(--color-surfacelighter);
+                }
+            }
+        }
+
+        .arrow-container {
+            .arrow {
+                fill: var(--color-surfacelighter);
+            }
+        }
     }
 }
