@@ -1,8 +1,8 @@
 var EventEmitter = require('events');
 var subtitleUtils = require('./utils/subtitles');
 
-var HTMLVideo = function(container) {
-    if (!(container instanceof HTMLElement)) {
+var HTMLVideo = function(containerElement) {
+    if (!(containerElement instanceof HTMLElement)) {
         throw new Error('Instance of HTMLElement required as a first argument');
     }
 
@@ -15,44 +15,44 @@ var HTMLVideo = function(container) {
     var subtitleTracks = [];
     var selectedSubtitleTrackId = null;
     var subtitleDelay = 0;
-    var styles = document.createElement('style');
-    var video = document.createElement('video');
-    var subtitles = document.createElement('div');
+    var stylesElement = document.createElement('style');
+    var videoElement = document.createElement('video');
+    var subtitlesElement = document.createElement('div');
 
-    container.appendChild(styles);
-    styles.sheet.insertRule('#' + container.id + ' video { width: 100%; height: 100%; position: relative; z-index: 0; }', styles.sheet.cssRules.length);
-    var subtitleStylesIndex = styles.sheet.insertRule('#' + container.id + ' .subtitles { position: absolute; right: 0; bottom: 0; left: 0; font-size: 26pt; color: white; text-align: center; }', styles.sheet.cssRules.length);
-    styles.sheet.insertRule('#' + container.id + ' .subtitles.dark-background .cue { text-shadow: none; background-color: #222222; }', styles.sheet.cssRules.length);
-    styles.sheet.insertRule('#' + container.id + ' .subtitles .cue { display: inline-block; padding: 0.2em; text-shadow: #222222 0px 0px 1.8px, #222222 0px 0px 1.8px, #222222 0px 0px 1.8px, #222222 0px 0px 1.8px, #222222 0px 0px 1.8px; }', styles.sheet.cssRules.length);
-    container.appendChild(video);
-    video.crossOrigin = 'anonymous';
-    video.controls = false;
-    container.appendChild(subtitles);
-    subtitles.classList.add('subtitles');
+    containerElement.appendChild(stylesElement);
+    stylesElement.sheet.insertRule('#' + containerElement.id + ' video { width: 100%; height: 100%; position: relative; z-index: 0; }', stylesElement.sheet.cssRules.length);
+    var subtitleStylesIndex = stylesElement.sheet.insertRule('#' + containerElement.id + ' .subtitles { position: absolute; right: 0; bottom: 0; left: 0; font-size: 26pt; color: white; text-align: center; }', stylesElement.sheet.cssRules.length);
+    stylesElement.sheet.insertRule('#' + containerElement.id + ' .subtitles.dark-background .cue { text-shadow: none; background-color: #222222; }', stylesElement.sheet.cssRules.length);
+    stylesElement.sheet.insertRule('#' + containerElement.id + ' .subtitles .cue { display: inline-block; padding: 0.2em; text-shadow: #222222 0px 0px 1.8px, #222222 0px 0px 1.8px, #222222 0px 0px 1.8px, #222222 0px 0px 1.8px, #222222 0px 0px 1.8px; }', stylesElement.sheet.cssRules.length);
+    containerElement.appendChild(videoElement);
+    videoElement.crossOrigin = 'anonymous';
+    videoElement.controls = false;
+    containerElement.appendChild(subtitlesElement);
+    subtitlesElement.classList.add('subtitles');
 
     function getPaused() {
         if (!loaded) {
             return null;
         }
 
-        return !!video.paused;
+        return !!videoElement.paused;
     }
     function getTime() {
         if (!loaded) {
             return null;
         }
 
-        return Math.floor(video.currentTime * 1000);
+        return Math.floor(videoElement.currentTime * 1000);
     }
     function getDuration() {
-        if (!loaded || isNaN(video.duration)) {
+        if (!loaded || isNaN(videoElement.duration)) {
             return null;
         }
 
-        return Math.floor(video.duration * 1000);
+        return Math.floor(videoElement.duration * 1000);
     }
     function getVolume() {
-        return video.muted ? 0 : Math.floor(video.volume * 100);
+        return videoElement.muted ? 0 : Math.floor(videoElement.volume * 100);
     }
     function getSubtitleTracks() {
         if (!loaded) {
@@ -76,10 +76,10 @@ var HTMLVideo = function(container) {
         return subtitleDelay;
     }
     function getSubtitleSize() {
-        return parseFloat(styles.sheet.cssRules[subtitleStylesIndex].style.fontSize);
+        return parseFloat(stylesElement.sheet.cssRules[subtitleStylesIndex].style.fontSize);
     }
     function getSubtitleDarkBackground() {
-        return subtitles.classList.contains('dark-background');
+        return subtitlesElement.classList.contains('dark-background');
     }
     function onEnded() {
         events.emit('ended');
@@ -87,7 +87,7 @@ var HTMLVideo = function(container) {
     function onError() {
         var message;
         var critical;
-        switch (video.error.code) {
+        switch (videoElement.error.code) {
             case 1:
                 message = 'Fetching process aborted';
                 critical = false;
@@ -110,7 +110,7 @@ var HTMLVideo = function(container) {
         }
 
         events.emit('error', {
-            code: video.error.code,
+            code: videoElement.error.code,
             message: message,
             critical: critical
         });
@@ -147,8 +147,8 @@ var HTMLVideo = function(container) {
         events.emit('propChanged', 'subtitleDarkBackground', getSubtitleDarkBackground());
     }
     function updateSubtitleText() {
-        while (subtitles.hasChildNodes()) {
-            subtitles.removeChild(subtitles.lastChild);
+        while (subtitlesElement.hasChildNodes()) {
+            subtitlesElement.removeChild(subtitlesElement.lastChild);
         }
 
         if (!loaded || !Array.isArray(subtitleCues.times)) {
@@ -160,7 +160,7 @@ var HTMLVideo = function(container) {
         for (var i = 0; i < cuesForTime.length; i++) {
             var cueNode = subtitleUtils.render(cuesForTime[i]);
             cueNode.classList.add('cue');
-            subtitles.append(cueNode, document.createElement('br'));
+            subtitlesElement.append(cueNode, document.createElement('br'));
         }
     }
     function flushArgsQueue() {
@@ -189,25 +189,25 @@ var HTMLVideo = function(container) {
                 switch (arguments[1]) {
                     case 'paused':
                         events.emit('propValue', 'paused', getPaused());
-                        video.removeEventListener('pause', onPausedChanged);
-                        video.removeEventListener('play', onPausedChanged);
-                        video.addEventListener('pause', onPausedChanged);
-                        video.addEventListener('play', onPausedChanged);
+                        videoElement.removeEventListener('pause', onPausedChanged);
+                        videoElement.removeEventListener('play', onPausedChanged);
+                        videoElement.addEventListener('pause', onPausedChanged);
+                        videoElement.addEventListener('play', onPausedChanged);
                         return;
                     case 'time':
                         events.emit('propValue', 'time', getTime());
-                        video.removeEventListener('timeupdate', onTimeChanged);
-                        video.addEventListener('timeupdate', onTimeChanged);
+                        videoElement.removeEventListener('timeupdate', onTimeChanged);
+                        videoElement.addEventListener('timeupdate', onTimeChanged);
                         return;
                     case 'duration':
                         events.emit('propValue', 'duration', getDuration());
-                        video.removeEventListener('durationchange', onDurationChanged);
-                        video.addEventListener('durationchange', onDurationChanged);
+                        videoElement.removeEventListener('durationchange', onDurationChanged);
+                        videoElement.addEventListener('durationchange', onDurationChanged);
                         return;
                     case 'volume':
                         events.emit('propValue', 'volume', getVolume());
-                        video.removeEventListener('volumechange', onVolumeChanged);
-                        video.addEventListener('volumechange', onVolumeChanged);
+                        videoElement.removeEventListener('volumechange', onVolumeChanged);
+                        videoElement.addEventListener('volumechange', onVolumeChanged);
                         return;
                     case 'subtitleTracks':
                         events.emit('propValue', 'subtitleTracks', getSubtitleTracks());
@@ -231,13 +231,13 @@ var HTMLVideo = function(container) {
                 switch (arguments[1]) {
                     case 'paused':
                         if (loaded) {
-                            arguments[2] ? video.pause() : video.play();
+                            arguments[2] ? videoElement.pause() : videoElement.play();
                         }
                         break;
                     case 'time':
                         if (loaded) {
                             if (!isNaN(arguments[2])) {
-                                video.currentTime = arguments[2] / 1000;
+                                videoElement.currentTime = arguments[2] / 1000;
                             }
                         }
                         break;
@@ -294,23 +294,23 @@ var HTMLVideo = function(container) {
                         break;
                     case 'subtitleSize':
                         if (!isNaN(arguments[2])) {
-                            styles.sheet.cssRules[subtitleStylesIndex].style.fontSize = parseFloat(arguments[2]) + 'pt';
+                            stylesElement.sheet.cssRules[subtitleStylesIndex].style.fontSize = parseFloat(arguments[2]) + 'pt';
                             onSubtitleSizeChanged();
                         }
                         return;
                     case 'subtitleDarkBackground':
                         if (arguments[2]) {
-                            subtitles.classList.add('dark-background');
+                            subtitlesElement.classList.add('dark-background');
                         } else {
-                            subtitles.classList.remove('dark-background');
+                            subtitlesElement.classList.remove('dark-background');
                         }
 
                         onSubtitleDarkBackgroundChanged();
                         return;
                     case 'volume':
                         if (!isNaN(arguments[2])) {
-                            video.muted = false;
-                            video.volume = arguments[2] / 100;
+                            videoElement.muted = false;
+                            videoElement.volume = arguments[2] / 100;
                         }
                         return;
                     default:
@@ -349,25 +349,25 @@ var HTMLVideo = function(container) {
                         }
                         break;
                     case 'mute':
-                        video.muted = true;
+                        videoElement.muted = true;
                         return;
                     case 'unmute':
-                        video.volume = video.volume !== 0 ? video.volume : 0.5;
-                        video.muted = false;
+                        videoElement.volume = videoElement.volume !== 0 ? videoElement.volume : 0.5;
+                        videoElement.muted = false;
                         return;
                     case 'stop':
-                        video.removeEventListener('ended', onEnded);
-                        video.removeEventListener('error', onError);
-                        video.removeEventListener('timeupdate', updateSubtitleText);
+                        videoElement.removeEventListener('ended', onEnded);
+                        videoElement.removeEventListener('error', onError);
+                        videoElement.removeEventListener('timeupdate', updateSubtitleText);
                         loaded = false;
                         dispatchArgsQueue = [];
                         subtitleCues = {};
                         subtitleTracks = [];
                         selectedSubtitleTrackId = null;
                         subtitleDelay = 0;
-                        video.removeAttribute('src');
-                        video.load();
-                        video.currentTime = 0;
+                        videoElement.removeAttribute('src');
+                        videoElement.load();
+                        videoElement.currentTime = 0;
                         onPausedChanged();
                         onTimeChanged();
                         onDurationChanged();
@@ -380,12 +380,12 @@ var HTMLVideo = function(container) {
                         var dispatchArgsQueueCopy = dispatchArgsQueue.slice();
                         self.dispatch('command', 'stop');
                         dispatchArgsQueue = dispatchArgsQueueCopy;
-                        video.addEventListener('ended', onEnded);
-                        video.addEventListener('error', onError);
-                        video.addEventListener('timeupdate', updateSubtitleText);
-                        video.autoplay = typeof arguments[3].autoplay === 'boolean' ? arguments[3].autoplay : true;
-                        video.currentTime = !isNaN(arguments[3].time) ? arguments[3].time / 1000 : 0;
-                        video.src = arguments[2].url;
+                        videoElement.addEventListener('ended', onEnded);
+                        videoElement.addEventListener('error', onError);
+                        videoElement.addEventListener('timeupdate', updateSubtitleText);
+                        videoElement.autoplay = typeof arguments[3].autoplay === 'boolean' ? arguments[3].autoplay : true;
+                        videoElement.currentTime = !isNaN(arguments[3].time) ? arguments[3].time / 1000 : 0;
+                        videoElement.src = arguments[2].url;
                         loaded = true;
                         onPausedChanged();
                         onTimeChanged();
@@ -398,14 +398,14 @@ var HTMLVideo = function(container) {
                     case 'destroy':
                         self.dispatch('command', 'stop');
                         events.removeAllListeners();
-                        video.removeEventListener('pause', onPausedChanged);
-                        video.removeEventListener('play', onPausedChanged);
-                        video.removeEventListener('timeupdate', onTimeChanged);
-                        video.removeEventListener('durationchange', onDurationChanged);
-                        video.removeEventListener('volumechange', onVolumeChanged);
-                        container.removeChild(video);
-                        container.removeChild(styles);
-                        container.removeChild(subtitles);
+                        videoElement.removeEventListener('pause', onPausedChanged);
+                        videoElement.removeEventListener('play', onPausedChanged);
+                        videoElement.removeEventListener('timeupdate', onTimeChanged);
+                        videoElement.removeEventListener('durationchange', onDurationChanged);
+                        videoElement.removeEventListener('volumechange', onVolumeChanged);
+                        containerElement.removeChild(videoElement);
+                        containerElement.removeChild(stylesElement);
+                        containerElement.removeChild(subtitlesElement);
                         destroyed = true;
                         return;
                     default:
