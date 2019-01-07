@@ -9,34 +9,61 @@
         height: calc(var(--video-width) * 0.14);
         width: 100%;
         display: flex;
+        justify-content: space-between;
         margin-bottom: var(--spacing);
 
-        .control-bar-button {
+        .season-bar-button {
             cursor: pointer;
-            flex: 3;
+            width: calc(var(--video-width) * 0.6);
             display: flex;
-            justify-content: center;
             align-items: center;
-            color: var(--color-surfacelighter);
+            justify-content: center;
+            padding: var(--spacing);
+            color: var(--color-surfacelight);
+
+            .season-label {
+                max-width: 8em;
+                max-height: 2.4em;
+                font-size: 1.2em;
+                line-height: 1.2em;
+                text-align: end;
+                overflow: hidden;
+            }
+
+            .season-number {
+                margin: 0 calc(var(--spacing) * 1.5) 0 var(--spacing);
+                font-size: 1.2em;
+                line-height: 1.2em;
+            }
 
             .icon {
-                width: 14%;
-                height: 14%;
+                width: calc(var(--video-width) * 0.04);
+                height: calc(var(--video-width) * 0.04);
                 fill: var(--color-surfacelight);
             }
 
             &:hover {
+                color: var(--color-surfacelighter);
                 background-color: var(--color-surfacedarker60);
 
                 .icon {
                     fill: var(--color-surfacelighter);
                 }
             }
+
+            &:global(.active) {
+                color: var(--color-backgrounddarker);
+                background-color: var(--color-surfacelighter);
+
+                .icon {
+                    fill: var(--color-backgrounddarker);
+                }
+            }
         }
 
         .button-container {
             cursor: pointer;
-            flex: 1;
+            width: calc(var(--video-width) * 0.2);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -44,11 +71,15 @@
             .button-icon {
                 width: 60%;
                 height: 60%;
-                fill: var(--color-surfacelighter);
+                fill: var(--color-surfacelight);
             }
 
             &:hover {
                 background-color: var(--color-surfacedarker60);
+
+                .button-icon {
+                    fill: var(--color-surfacelighter);
+                }
             }
         }
     }
@@ -79,26 +110,41 @@
     }
 }
 
-.popup-container {
-    --border-color: var(--color-primarylight);
+:global(.detail-popup-container) {
+    --border-color: var(--color-backgrounddarker80);
 
     .popup-content {
-        width: 258px;
-        background-color: var(--color-backgrounddark);
+        width: calc(var(--video-width) * 0.6);
+        background-color: var(--color-surfacelighter);
 
         .season {
             cursor: pointer;
             display: flex;
             align-items: center;
-            justify-content: center;
-            padding: 16px;
             width: 100%;
-            border-top: 1px solid var(--color-primarylight);
-            color: var(--color-surfacelight);
+            padding: calc(var(--spacing) * 1.5);
+            font-size: 1.2em;
+            color: var(--color-backgrounddark);
+
+            .season-label {
+                max-height: 2.4em;
+                line-height: 1.2em;
+                overflow: hidden;
+            }
+
+            .season-number {
+                margin-left: var(--spacing);
+                line-height: 1.2em;
+            }
+
+            &.selected-season {
+                color: var(--color-surfacelighter);
+                background-color: var(--color-primarydark);
+            }
 
             &:hover {
                 color: var(--color-surfacelighter);
-                background-color: var(--color-surfacedarker60);
+                background-color: var(--color-primarylight);
             }
         }
     }

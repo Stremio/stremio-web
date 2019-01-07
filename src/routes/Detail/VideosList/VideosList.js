@@ -16,7 +16,8 @@ class VideosList extends Component {
 
         this.state = {
             selectedSeason: this.seasons[0],
-            selectedVideoId: 0
+            selectedVideoId: 0,
+            seasonsPopupOpen: false
         }
     }
 
@@ -26,7 +27,8 @@ class VideosList extends Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return nextState.selectedSeason !== this.state.selectedSeason;
+        return nextState.selectedSeason !== this.state.selectedSeason ||
+            nextState.seasonsPopupOpen !== this.state.seasonsPopupOpen;
     }
 
     onPrevButtonClicked = () => {
@@ -37,6 +39,14 @@ class VideosList extends Component {
     onNextButtonClicked = () => {
         const nextSeasonIndex = Math.min(this.seasons.indexOf(this.state.selectedSeason) + 1, this.seasons.length - 1);
         this.setState({ selectedSeason: this.seasons[nextSeasonIndex] });
+    }
+
+    onSeasonsPopupOpen = () => {
+        this.setState({ seasonsPopupOpen: true });
+    }
+
+    onSeasonsPopupClose = () => {
+        this.setState({ seasonsPopupOpen: false });
     }
 
     onClick = (event) => {
@@ -51,18 +61,20 @@ class VideosList extends Component {
                     <div className={styles['button-container']} onClick={this.onPrevButtonClicked}>
                         <Icon className={styles['button-icon']} icon={'ic_arrow_left'} />
                     </div>
-                    <Popup ref={this.seasonsPopupRef} className={styles['popup-container']} border={true}>
+                    <Popup ref={this.seasonsPopupRef} className={'detail-popup-container'} onOpen={this.onSeasonsPopupOpen} onClose={this.onSeasonsPopupClose}>
                         <Popup.Label>
-                            <div className={styles['control-bar-button']}>
-                                S {this.state.selectedSeason}
+                            <div className={classnames(styles['season-bar-button'], { 'active': this.state.seasonsPopupOpen })}>
+                                <div className={styles['season-label']}>Season</div>
+                                <div className={styles['season-number']}>{this.state.selectedSeason}</div>
                                 <Icon className={styles['icon']} icon={'ic_arrow_down'} />
                             </div>
                         </Popup.Label>
                         <Popup.Menu>
                             <div className={styles['popup-content']}>
                                 {this.seasons.map((season) =>
-                                    <div className={styles['season']} key={season} data-season={season} onClick={this.changeSeason}>
-                                        S {season}
+                                    <div className={classnames(styles['season'], { [styles['selected-season']]: this.state.selectedSeason === season })} key={season} data-season={season} onClick={this.changeSeason}>
+                                        <div className={styles['season-label']}>Season</div>
+                                        <div className={styles['season-number']}>{season}</div>
                                     </div>
                                 )}
                             </div>
