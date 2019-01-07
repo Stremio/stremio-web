@@ -16,7 +16,12 @@ class Detail extends Component {
     renderSection({ title, links }) {
         return (
             <div className={styles['section-container']}>
-                {title ? <div className={styles['title']}>{title}</div> : null}
+                {
+                    title ?
+                        <div className={styles['title']}>{title}</div>
+                        :
+                        null
+                }
                 {links.map(link => <a key={link} className={styles['link']}>{link}</a>)}
             </div>
         );
@@ -28,10 +33,20 @@ class Detail extends Component {
                 <div className={styles['overlay-container']} />
                 <div className={styles['info-container']}>
                     {
-                        this.state.logoLoaded ? <img className={styles['logo']} src={this.props.metaItem.logo} onError={() => this.setState({ logoLoaded: false })} /> : null
+                        this.state.logoLoaded ?
+                            <img className={styles['logo']} src={this.props.metaItem.logo} onError={() => this.setState({ logoLoaded: false })} />
+                            :
+                            null
                     }
-                    <div className={styles['duration']}>{this.props.metaItem.duration} min</div>
-                    <div className={styles['release-info']}>{this.props.metaItem.releaseInfo.length > 0 ? this.props.metaItem.releaseInfo : this.props.metaItem.released.getFullYear()}</div>
+                    <div className={styles['duration']}>{this.props.metaItem.duration}</div>
+                    <div className={styles['release-info']}>
+                        {
+                            this.props.metaItem.releaseInfo.length > 0 ?
+                                this.props.metaItem.releaseInfo
+                                :
+                                this.props.metaItem.released.getFullYear()
+                        }
+                    </div>
                     <div className={styles['name']}>{this.props.metaItem.name}</div>
                     <div className={styles['description']}>{this.props.metaItem.description}</div>
                     {this.renderSection({ title: 'GENRES', links: this.props.metaItem.genres })}
@@ -73,7 +88,7 @@ Detail.defaultProps = {
     metaItem: {
         logo: 'https://images.metahub.space/logo/medium/tt4123430/img',
         background: 'https://images.metahub.space/background/medium/tt4123430/img',
-        duration: '134',
+        duration: '134 min',
         releaseInfo: '2018',
         released: new Date(2018, 4, 23),
         imdbRating: '7.4',

@@ -1,4 +1,4 @@
-.detail-container {
+.detail-container, :global(.detail-popup-container) {
     --spacing: 8px;
     --action-button-width: 80px;
     --video-width: 360px;
@@ -45,25 +45,33 @@
         }
 
         .duration {
-            display: inline-flex;
-            margin-right: 0.6em;
-            font-size: 115%;
-            color: var(--color-surfacelighter);
+            display: inline-block;
+            max-width: 45%;
+            margin-right: 1.2em;
+            font-size: 1.15em;
+            overflow: hidden;
+            white-space: pre;
+            text-overflow: ellipsis;
+            color: var(--color-surfacelight);
         }
 
         .release-info {
-            display: inline-flex;
-            font-size: 115%;
-            color: var(--color-surfacelighter);
+            display: inline-block;
+            max-width: 45%;
+            font-size: 1.15em;
+            overflow: hidden;
+            white-space: pre;
+            text-overflow: ellipsis;
+            color: var(--color-surfacelight);
         }
 
         .name {
             max-height: 3em;
             overflow: hidden;
             overflow-wrap: break-word;
-            font-size: 150%;
+            font-size: 1.5em;
             line-height: 1.5;
-            color: var(--color-surfacelighter);
+            color: var(--color-surfacelight);
         }
 
         .description {
@@ -71,29 +79,36 @@
             overflow: hidden;
             overflow-wrap: break-word;
             line-height: 1.5;
-            color: var(--color-surfacelighter);
+            color: var(--color-surfacelight);
         }
 
         .section-container {
+            max-height: 3.2em;
+            overflow: hidden;
+
             .title {
                 margin-bottom: 0.3em;
-                font-size: 115%;
+                font-size: 1.15em;
                 color: var(--color-surface);
             }
 
             .link {
                 display: none;
-                cursor: pointer;
+                max-width: 100%;
                 padding: 0.3em 0.6em;
-                font-size: 115%;
+                font-size: 1.15em;
+                overflow: hidden;
+                white-space: pre;
+                text-overflow: ellipsis;
                 color: var(--color-surfacelight);
+                cursor: pointer;
 
                 &:hover {
                     color: var(--color-surfacelighter);
                     background-color: var(--color-surface40);
                 }
 
-                &:nth-child(-n+5) {
+                &:nth-child(-n+6) {
                     display: inline-block;
                 }
             }
@@ -125,7 +140,7 @@
                     padding: 0 1em;
                     overflow-wrap: break-word;
                     overflow: hidden;
-                    font-size: 105%;
+                    font-size: 1.05em;
                     line-height: 1.2em;
                     color: var(--color-surfacelight);
                 }
