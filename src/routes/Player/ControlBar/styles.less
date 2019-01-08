@@ -41,7 +41,15 @@
                 }
             }
 
-            &:hover {
+            &:global(.disabled) {
+                cursor: default;
+
+                .icon {
+                    fill: var(--color-surfacedark);
+                }
+            }
+
+            &:hover:not(:global(.disabled)) {
                 .icon {
                     fill: var(--color-surfacelighter);
                 }

@@ -9,8 +9,8 @@ import VolumeBar from './VolumeBar';
 import SubtitlesPicker from './SubtitlesPicker';
 import styles from './styles';
 
-const ControlBarButton = React.forwardRef(({ icon, active, onClick }, ref) => (
-    <div ref={ref} className={classnames(styles['control-bar-button'], { 'active': active })} onClick={onClick}>
+const ControlBarButton = React.forwardRef(({ icon, active, disabled, onClick }, ref) => (
+    <div ref={ref} className={classnames(styles['control-bar-button'], { 'active': active }, { 'disabled': disabled })} onClick={!disabled ? onClick : null}>
         <Icon className={styles['icon']} icon={icon} />
     </div>
 ));
@@ -109,15 +109,12 @@ class ControlBar extends Component {
     }
 
     renderSubtitlesButton() {
-        if (this.props.subtitleTracks.length === 0) {
-            return null;
-        }
-
         return (
             <Popup className={'player-popup-container'} border={true} onOpen={this.onSubtitlesPopupOpen} onClose={this.onSubtitlesPopupClose}>
                 <Popup.Label>
                     <ControlBarButton
                         icon={'ic_sub'}
+                        disabled={this.props.subtitleTracks.length === 0}
                         active={this.state.subtitlesPopupOpen}
                     />
                 </Popup.Label>
