@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 class PlayPauseButton extends Component {
     shouldComponentUpdate(nextProps, nextState) {
@@ -19,5 +20,15 @@ class PlayPauseButton extends Component {
         return React.createElement(this.props.toggleButtonComponent, { icon, onClick: this.togglePaused }, null);
     }
 }
+
+PlayPauseButton.propTypes = {
+    paused: PropTypes.bool,
+    dispatch: PropTypes.func.isRequired,
+    toggleButtonComponent: PropTypes.oneOfType([
+        PropTypes.func,
+        PropTypes.string,
+        PropTypes.shape({ render: PropTypes.func.isRequired }),
+    ]).isRequired
+};
 
 export default PlayPauseButton;
