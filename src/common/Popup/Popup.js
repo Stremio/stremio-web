@@ -22,6 +22,7 @@ class Popup extends Component {
         this.menuBorderBottomRef = React.createRef();
         this.menuBorderLeftRef = React.createRef();
         this.hiddenBorderRef = React.createRef();
+        this.labelMutationObserver = this.createLabelMutationObserver();
 
         this.state = {
             open: false
@@ -38,6 +39,7 @@ class Popup extends Component {
         window.removeEventListener('blur', this.close);
         window.removeEventListener('resize', this.close);
         window.removeEventListener('keyup', this.onKeyUp);
+        this.labelMutationObserver.disconnect();
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -48,12 +50,39 @@ class Popup extends Component {
     componentDidUpdate(prevProps, prevState) {
         if (this.state.open && !prevState.open) {
             this.updateStyles();
+            this.labelMutationObserver.observe(document.documentElement, {
+                childList: true,
+                attributes: true,
+                subtree: true
+            });
             if (typeof this.props.onOpen === 'function') {
                 this.props.onOpen();
             }
-        } else if (!this.state.open && prevState.open && typeof this.props.onClose === 'function') {
-            this.props.onClose();
+        } else if (!this.state.open && prevState.open) {
+            this.labelMutationObserver.disconnect();
+            if (typeof this.props.onClose === 'function') {
+                this.props.onClose();
+            }
         }
+    }
+
+    createLabelMutationObserver = () => {
+        let prevLabelRect = {};
+        return new MutationObserver(() => {
+            if (this.state.open) {
+                const labelRect = this.labelRef.current.getBoundingClientRect();
+                if (labelRect.x !== prevLabelRect.x ||
+                    labelRect.y !== prevLabelRect.y ||
+                    labelRect.width !== prevLabelRect.width ||
+                    labelRect.height !== prevLabelRect.height) {
+                    this.updateStyles();
+                }
+
+                prevLabelRect = labelRect;
+            } else {
+                prevLabelRect = {};
+            }
+        });
     }
 
     updateStyles = () => {
