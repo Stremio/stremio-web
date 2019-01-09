@@ -157,14 +157,14 @@ class Popup extends Component {
             this.labelBorderLeftRef.current.style.left = `${labelPosition.left}px`;
 
             if (menuDirections.top) {
-                this.labelBorderTopRef.current.style.display = 'none';
+                this.labelBorderTopRef.current.style.left = `${labelPosition.left + menuRect.width}px`;
                 if (menuDirections.left) {
                     this.menuBorderBottomRef.current.style.right = `${labelRect.width - borderSize}px`;
                 } else {
                     this.menuBorderBottomRef.current.style.left = `${labelRect.width - borderSize}px`;
                 }
             } else {
-                this.labelBorderBottomRef.current.style.display = 'none';
+                this.labelBorderBottomRef.current.style.left = `${labelPosition.left + menuRect.width}px`;
                 if (menuDirections.left) {
                     this.menuBorderTopRef.current.style.right = `${labelRect.width - borderSize}px`;
                 } else {
