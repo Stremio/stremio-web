@@ -1,6 +1,7 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
-import { Addon, Checkbox, LibraryItemList, MetaItem, ShareAddon, UserPanel } from 'stremio-common';
+import { Checkbox, LibraryItemList, MetaItem, ShareAddon, UserPanel } from 'stremio-common';
+import Addon from '../src/routes/Addons/Addon';
 import Stream from '../src/routes/Detail/StreamsList/Stream';
 import Video from '../src/routes/Detail/VideosList/Video';
 import VideosList from '../src/routes/Detail/VideosList';
