@@ -3,7 +3,7 @@
     width: var(--addon-width);
     padding: 1.6em;
     background-color: var(--color-backgroundlighter);
-    grid-template-columns: 1fr 6fr 3fr;
+    grid-template-columns: 1fr 5fr 4fr;
     grid-template-rows: calc(0.03 * var(--addon-width)) calc(0.03 * var(--addon-width)) auto;
     grid-template-areas:
         "logo header buttons"
@@ -54,12 +54,19 @@
         }
     }
 
-    .type {
+    .types-container {
         grid-area: type;
         display: flex;
         align-items: center;
         padding-left: 4%;
+        overflow: hidden;
         color: var(--color-secondarylighter);
+
+        .type {
+            overflow: hidden;
+            white-space: pre;
+            text-overflow: ellipsis;
+        }
     }
 
     .description {
@@ -76,7 +83,7 @@
         align-items: flex-end;
 
         .button {
-            width: 85%;
+            width: 70%;
             height: calc(0.05 * var(--addon-width));
             cursor: pointer;
             display: flex;

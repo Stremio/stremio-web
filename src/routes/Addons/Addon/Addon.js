@@ -32,8 +32,10 @@ const renderType = (types) => {
     }
 
     return (
-        <div className={styles['type']}>
-            {types.length <= 1 ? types.join('') : types.slice(0, -1).join(', ') + ' & ' + types[types.length - 1]}
+        <div className={styles['types-container']}>
+            <div className={styles['type']}>
+                {types.length <= 1 ? types.join('') : types.slice(0, -1).join(', ') + ' & ' + types[types.length - 1]}
+            </div>
         </div>
     );
 }
