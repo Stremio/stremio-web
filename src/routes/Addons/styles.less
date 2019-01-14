@@ -1,6 +1,7 @@
 .addons-container {
     --addon-width: 960px;
     --label-width: 196px;
+    --label-height: 44px;
     --spacing: 8px;
     --button-border-width: 2px;
     font-size: 14px;
@@ -13,7 +14,7 @@
     flex-direction: row;
 
     .side-menu {
-        width: calc(var(--addon-width) * 0.25);
+        width: calc(var(--label-width) + var(--spacing) * 5.5);
         display: flex;
         flex-direction: column;
         padding: 0 calc(var(--spacing) * 2.5 + var(--button-border-width));
@@ -21,19 +22,48 @@
         overflow-y: auto;
         overflow-x: hidden;
 
-        .label-container {
+        .add-addon-container {
             width: var(--label-width);
+            min-height: var(--label-height);
+            display: flex;
+            align-items: center;
             cursor: pointer;
             margin-top: var(--button-border-width);
+            margin-bottom: calc(var(--spacing) * 2.5 + var(--button-border-width));
             padding: calc(var(--spacing) * 1.5);
-            font-size: 1.2em;
-            color: var(--color-surfacelight);
+            background: var(--color-signal5);
 
-            .label {
+            .add-addon-icon {
+                flex: 1;
+                margin-right: calc(var(--spacing) * 2);
+                fill: var(--color-surfacelighter);
+            }
+
+            .add-addon-label {
+                flex: 8;
+                font-size: 1.2em;
+                color: var(--color-surfacelighter);
                 overflow: hidden;
                 white-space: pre;
                 text-overflow: ellipsis;
             }
+
+            &:hover {
+                background: var(--color-signal560);
+            }
+        }
+
+        .label {
+            width: var(--label-width);
+            min-height: var(--label-height);
+            cursor: pointer;
+            margin-top: var(--button-border-width);
+            padding: calc(var(--spacing) * 1.5);
+            font-size: 1.2em;
+            overflow: hidden;
+            white-space: pre;
+            text-overflow: ellipsis;
+            color: var(--color-surfacelight);
 
             &.selected {
                 color: var(--color-surfacelighter);
@@ -55,10 +85,9 @@
 
             &:focus {
                 outline: var(--button-border-width) solid var(--color-surfacelighter);
-
             }
 
-            &:nth-child(3) {
+            &:nth-child(4) {
                 margin-bottom: calc(var(--spacing) * 2.5 + var(--button-border-width));
             }
 

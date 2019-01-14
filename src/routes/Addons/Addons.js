@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import Addon from './Addon';
+import Icon from 'stremio-icons/dom';
 import styles from './styles';
 
 const ADDON_CATEGORIES = {
@@ -76,19 +77,21 @@ class Addons extends Component {
         return (
             <div className={styles['addons-container']}>
                 <div className={styles['side-menu']}>
+                    <div className={styles['add-addon-container']}>
+                        <Icon className={styles['add-addon-icon']} icon={'ic_plus'} />
+                        <div className={styles['add-addon-label']}>Add new Add-On</div>
+                    </div>
                     {Object.keys(ADDON_CATEGORIES).map((category) =>
-                        <div className={classnames(styles['label-container'], { [styles['selected']]: this.state.selectedCategory === ADDON_CATEGORIES[category] })} tabIndex={this.state.selectedCategory === ADDON_CATEGORIES[category] ? null : '0'} key={category} data-category={category} onClick={this.changeSelectedCategory}>
-                            <div className={styles['label']}>
-                                {category}
-                            </div>
+                        <div className={classnames(styles['label'], { [styles['selected']]: this.state.selectedCategory === ADDON_CATEGORIES[category] })} tabIndex={'0'} key={category} data-category={category} onClick={this.changeSelectedCategory}>
+                            {category}
                         </div>
                     )}
-                    <div className={classnames(styles['label-container'], { [styles['selected']]: this.state.selectedAddonType === DEFAULT_TYPE })} tabIndex={this.state.selectedAddonType === DEFAULT_TYPE ? null : '0'} data-type={DEFAULT_TYPE} onClick={this.changeSelectedAddonType}>
-                        <div className={styles['label-']}>All</div>
+                    <div className={classnames(styles['label'], { [styles['selected']]: this.state.selectedAddonType === DEFAULT_TYPE })} tabIndex={'0'} data-type={DEFAULT_TYPE} onClick={this.changeSelectedAddonType}>
+                        All
                     </div>
                     {this.getAddonTypes().map((type) =>
-                        <div className={classnames(styles['label-container'], { [styles['selected']]: this.state.selectedAddonType === type })} tabIndex={this.state.selectedAddonType === type ? null : '0'} key={type} data-type={type} onClick={this.changeSelectedAddonType}>
-                            <div className={styles['label']}>{type}</div>
+                        <div className={classnames(styles['label'], { [styles['selected']]: this.state.selectedAddonType === type })} tabIndex={'0'} key={type} data-type={type} onClick={this.changeSelectedAddonType}>
+                            {type}
                         </div>
                     )}
                 </div>

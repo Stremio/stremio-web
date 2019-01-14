@@ -103,7 +103,7 @@
             }
 
             &.share-button {
-                margin-top: 4em;
+                margin-top: 2.5em;
                 border-color: var(--color-secondarylighter);
 
                 .icon {
@@ -140,8 +140,16 @@
             &.uninstall-button {
                 border-color: var(--color-surfacedark);
 
+                .label {
+                    color: var(--color-surfacedark);
+                }
+
                 &:hover {
                     background-color: var(--color-surfacedark);
+
+                    .label {
+                        color: var(--color-surfacelighter);
+                    }
                 }
             }
 
