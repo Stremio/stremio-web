@@ -31,7 +31,7 @@ class Video extends Component {
     }
 
     componentWillUnmount() {
-        this.dispatch('stop');
+        this.dispatch('command', 'destroy');
     }
 
     selectVideoImplementation = () => {
@@ -67,7 +67,7 @@ Video.propTypes = {
     onPropChanged: PropTypes.func.isRequired
 };
 Video.defaultProps = {
-    extra: {}
+    extra: Object.freeze({})
 };
 
 export default Video;

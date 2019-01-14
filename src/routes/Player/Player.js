@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
+import classnames from 'classnames';
 import Video from './Video';
 import ControlBar from './ControlBar';
 import styles from './styles';
@@ -15,7 +16,11 @@ class Player extends Component {
             time: null,
             duration: null,
             volume: null,
-            subtitles: null
+            subtitleTracks: [],
+            selectedSubtitleTrackId: null,
+            subtitleSize: null,
+            subtitleDelay: null,
+            subtitleDarkBackground: null
         };
     }
 
@@ -24,18 +29,20 @@ class Player extends Component {
             nextState.time !== this.state.time ||
             nextState.duration !== this.state.duration ||
             nextState.volume !== this.state.volume ||
-            nextState.subtitles !== this.state.subtitles;
+            nextState.subtitleTracks !== this.state.subtitleTracks ||
+            nextState.selectedSubtitleTrackId !== this.state.selectedSubtitleTrackId ||
+            nextState.subtitleSize !== this.state.subtitleSize ||
+            nextState.subtitleDelay !== this.state.subtitleDelay ||
+            nextState.subtitleDarkBackground !== this.state.subtitleDarkBackground;
     }
 
     componentDidMount() {
-        this.addExtraSubtitles([
-            {
-                id: 'id1',
-                url: 'https://raw.githubusercontent.com/amzn/web-app-starter-kit-for-fire-tv/master/out/mrss/assets/sample_video-en.vtt',
-                label: 'English (Github)',
-                language: 'en'
-            }
-        ]);
+        this.dispatch('command', 'addSubtitleTracks', [{
+            url: 'https://raw.githubusercontent.com/caitp/ng-media/master/example/assets/captions/bunny-en.vtt',
+            origin: 'Github',
+            label: 'English'
+        }]);
+        this.dispatch('setProp', 'selectedSubtitleTrackId', 'https://raw.githubusercontent.com/caitp/ng-media/master/example/assets/captions/bunny-en.vtt');
     }
 
     onEnded = () => {
@@ -43,16 +50,6 @@ class Player extends Component {
     }
 
     onError = (error) => {
-        if (error.critical) {
-            this.stop();
-            this.setState({
-                paused: null,
-                time: null,
-                duration: null,
-                volume: null
-            });
-        }
-
         alert(error.message);
     }
 
@@ -64,36 +61,8 @@ class Player extends Component {
         this.setState({ [propName]: propValue });
     }
 
-    play = () => {
-        this.videoRef.current && this.videoRef.current.dispatch('setProp', 'paused', false);
-    }
-
-    pause = () => {
-        this.videoRef.current && this.videoRef.current.dispatch('setProp', 'paused', true);
-    }
-
-    setTime = (time) => {
-        this.videoRef.current && this.videoRef.current.dispatch('setProp', 'time', time);
-    }
-
-    setVolume = (volume) => {
-        this.videoRef.current && this.videoRef.current.dispatch('setProp', 'volume', volume);
-    }
-
-    mute = () => {
-        this.videoRef.current && this.videoRef.current.dispatch('command', 'mute');
-    }
-
-    unmute = () => {
-        this.videoRef.current && this.videoRef.current.dispatch('command', 'unmute');
-    }
-
-    addExtraSubtitles = (subtitles) => {
-        this.videoRef.current && this.videoRef.current.dispatch('command', 'addExtraSubtitles', subtitles);
-    }
-
-    stop = () => {
-        this.videoRef.current && this.videoRef.current.dispatch('command', 'stop');
+    dispatch = (...args) => {
+        this.videoRef.current && this.videoRef.current.dispatch(...args);
     }
 
     renderVideo() {
@@ -116,18 +85,17 @@ class Player extends Component {
     renderControlBar() {
         return (
             <ControlBar
-                className={styles['layer']}
+                className={classnames(styles['layer'], styles['control-bar-layer'])}
                 paused={this.state.paused}
                 time={this.state.time}
                 duration={this.state.duration}
                 volume={this.state.volume}
-                subtitles={this.state.subtitles}
-                play={this.play}
-                pause={this.pause}
-                setTime={this.setTime}
-                setVolume={this.setVolume}
-                mute={this.mute}
-                unmute={this.unmute}
+                subtitleTracks={this.state.subtitleTracks}
+                selectedSubtitleTrackId={this.state.selectedSubtitleTrackId}
+                subtitleSize={this.state.subtitleSize}
+                subtitleDelay={this.state.subtitleDelay}
+                subtitleDarkBackground={this.state.subtitleDarkBackground}
+                dispatch={this.dispatch}
             />
         );
     }
@@ -146,10 +114,10 @@ Player.propTypes = {
     stream: PropTypes.object.isRequired
 };
 Player.defaultProps = {
-    stream: {
+    stream: Object.freeze({
         // ytId: 'E4A0bcCQke0',
         url: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
-    }
+    })
 };
 
 export default Player;

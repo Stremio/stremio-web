@@ -1,18 +1,14 @@
-.root {
-    cursor: pointer;
+.checkbox-container {
+    position: relative;
+    z-index: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--background-color);
 
-    &.checkbox-checked {
-        background-color: var(--color-primarylight);
-
-        .icon {
-            padding: 10%;
-            fill: var(--color-surfacelighter);
-        }
-    }
-
-    &.checkbox-disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
+    .icon {
+        height: 100%;
+        fill: var(--icon-color);
     }
 
     .native-checkbox {
@@ -20,14 +16,13 @@
         opacity: 0;
         height: 0;
         width: 0;
-        top: -9999px;
-        left: -9999px;
+        top: -99999999px;
+        left: -99999999px;
     }
 
-    .icon {
-        width: 100%;
-        height: 100%;
-        margin: auto;
-        fill: var(--color-surfacelighter60);
+    &:global(.checked) {
+        .icon {
+            height: 55%;
+        }
     }
 }

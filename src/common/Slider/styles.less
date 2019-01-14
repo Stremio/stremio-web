@@ -1,8 +1,7 @@
 .slider-container {
+    display: inline-block;
     position: relative;
     z-index: 0;
-    min-width: var(--thumb-size);
-    min-height: var(--thumb-size);
     cursor: pointer;
 
     .track {
@@ -11,55 +10,58 @@
         background-color: var(--track-color);
     }
 
-    .thumb {
+    .track-before {
         position: absolute;
         z-index: 2;
+        background-color: var(--track-before-color);
+    }
+
+    .thumb {
+        position: absolute;
+        z-index: 3;
         width: var(--thumb-size);
         height: var(--thumb-size);
-
-        &::after {
-            display: block;
-            width: var(--thumb-size);
-            height: var(--thumb-size);
-            border-radius: 50%;
-            background-color: var(--thumb-color);
-            content: "";
-        }
+        border-radius: 50%;
+        background-color: var(--thumb-color);
     }
 
     &.horizontal {
         .track {
-            left: 0;
+            top: calc(50% - var(--track-size) * 0.5);
             right: 0;
-            top: 40%;
-            bottom: 40%;
+            left: 0;
+            height: var(--track-size);
         }
 
-        .thumb::after {
-            margin-left: calc(-0.5 * var(--thumb-size));
+        .track-before {
+            top: calc(50% - var(--track-size) * 0.5);
+            left: 0;
+            height: var(--track-size);
+        }
+
+        .thumb {
+            top: calc(50% - var(--thumb-size) * 0.5);
+            transform: translateX(-50%);
         }
     }
 
     &.vertical {
         .track {
-            left: 40%;
-            right: 40%;
             top: 0;
             bottom: 0;
+            left: calc(50% - var(--track-size) * 0.1);
+            width: var(--track-size);
         }
 
-        .thumb::after {
-            margin-top: calc(0.5 * var(--thumb-size));
-        }
-    }
-
-    &:hover, &.active {
-        .track {
-            background-color: var(--track-active-color, var(--track-color));
+        .track-before {
+            bottom: 0;
+            left: calc(50% - var(--track-size) * 0.1);
+            width: var(--track-size);
         }
 
-        .thumb::after {
-            background-color: var(--thumb-active-color, var(--thumb-color));
+        .thumb {
+            left: calc(50% - var(--thumb-size) * 0.5);
+            transform: translateY(50%);
         }
     }
 }

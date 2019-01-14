@@ -5,7 +5,7 @@ import debounce from 'lodash.debounce';
 import { Slider } from 'stremio-common';
 import styles from './styles';
 
-class TimeSlider extends Component {
+class SeekBar extends Component {
     constructor(props) {
         super(props);
 
@@ -37,7 +37,7 @@ class TimeSlider extends Component {
     onComplete = (time) => {
         this.resetTimeDebounced();
         this.setState({ time });
-        this.props.setTime(time);
+        this.props.dispatch('setProp', 'time', time);
     }
 
     onCancel = () => {
@@ -99,7 +99,7 @@ class TimeSlider extends Component {
         }
 
         return (
-            <div className={classnames(styles['time-slider-container'], { [styles['active']]: this.state.time !== null }, this.props.className)}>
+            <div className={classnames(styles['seek-bar-container'], { 'active': this.state.time !== null }, this.props.className)}>
                 {this.renderTimeLabel()}
                 {this.renderSlider()}
                 {this.renderDurationLabel()}
@@ -108,11 +108,11 @@ class TimeSlider extends Component {
     }
 }
 
-TimeSlider.propTypes = {
+SeekBar.propTypes = {
     className: PropTypes.string,
     time: PropTypes.number,
     duration: PropTypes.number,
-    setTime: PropTypes.func.isRequired
+    dispatch: PropTypes.func.isRequired
 };
 
-export default TimeSlider;
+export default SeekBar;
