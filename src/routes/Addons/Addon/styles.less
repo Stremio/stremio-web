@@ -4,10 +4,11 @@
     padding: 1.6em;
     background-color: var(--color-backgroundlighter);
     grid-template-columns: 1fr 5fr 4fr;
-    grid-template-rows: calc(0.03 * var(--addon-width)) calc(0.03 * var(--addon-width)) auto;
+    grid-template-rows: calc(0.03 * var(--addon-width)) calc(0.03 * var(--addon-width)) calc(0.03 * var(--addon-width)) auto;
     grid-template-areas:
         "logo header buttons"
         "logo type buttons"
+        "logo hostname buttons"
         "logo description buttons";
 
     .logo-container {
@@ -69,10 +70,27 @@
         }
     }
 
+    .hostname-container {
+        grid-area: hostname;
+        display: flex;
+        align-items: center;
+        padding-left: 4%;
+        overflow: hidden;
+        overflow-wrap: break-word;
+        color: var(--color-surfacelighter);
+
+        .hostname {
+            overflow: hidden;
+            white-space: pre;
+            text-overflow: ellipsis;
+        }
+    }
+
     .description {
         grid-area: description;
         padding-left: 4%;
         color: var(--color-surfacelighter);
+        overflow: hidden;
         overflow-wrap: break-word;
     }
 

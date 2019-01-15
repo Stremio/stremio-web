@@ -40,6 +40,18 @@ const renderType = (types) => {
     );
 }
 
+const renderHostname = (hostname) => {
+    if (hostname.length === 0) {
+        return null;
+    }
+
+    return (
+        <div className={styles['hostname-container']}>
+            <div className={styles['hostname']}>{hostname}</div>
+        </div>
+    )
+}
+
 const renderDescription = (description) => {
     if (description.length === 0) {
         return null;
@@ -63,6 +75,7 @@ const Addon = (props) => {
                 </div>
             </div>
             {renderType(props.types)}
+            {renderHostname(props.hostname)}
             {renderDescription(props.description)}
             <div className={styles['buttons']}>
                 <div className={classnames(styles['button'], props.isInstalled ? styles['uninstall-button'] : styles['install-button'])} onClick={props.onToggleClicked}>
@@ -83,6 +96,7 @@ Addon.propTypes = {
     name: PropTypes.string.isRequired,
     version: PropTypes.string.isRequired,
     types: PropTypes.arrayOf(PropTypes.string).isRequired,
+    hostname: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
     isOfficial: PropTypes.bool.isRequired,
     isInstalled: PropTypes.bool.isRequired,
@@ -94,6 +108,7 @@ Addon.defaultProps = {
     name: '',
     version: '',
     types: [],
+    hostname: '',
     description: '',
     isOfficial: false,
     isInstalled: false
