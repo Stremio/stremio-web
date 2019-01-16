@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import Video from './Video';
+import BufferingLoader from './BufferingLoader';
 import ControlBar from './ControlBar';
 import styles from './styles';
 
@@ -15,6 +16,7 @@ class Player extends Component {
             paused: null,
             time: null,
             duration: null,
+            buffering: null,
             volume: null,
             subtitleTracks: [],
             selectedSubtitleTrackId: null,
@@ -28,6 +30,7 @@ class Player extends Component {
         return nextState.paused !== this.state.paused ||
             nextState.time !== this.state.time ||
             nextState.duration !== this.state.duration ||
+            nextState.buffering !== this.state.buffering ||
             nextState.volume !== this.state.volume ||
             nextState.subtitleTracks !== this.state.subtitleTracks ||
             nextState.selectedSubtitleTrackId !== this.state.selectedSubtitleTrackId ||
@@ -82,6 +85,15 @@ class Player extends Component {
         );
     }
 
+    renderBufferingLoader() {
+        return (
+            <BufferingLoader
+                className={styles['layer']}
+                buffering={this.state.buffering}
+            />
+        );
+    }
+
     renderControlBar() {
         return (
             <ControlBar
@@ -104,6 +116,7 @@ class Player extends Component {
         return (
             <div className={styles['player-container']}>
                 {this.renderVideo()}
+                {this.renderBufferingLoader()}
                 {this.renderControlBar()}
             </div>
         );
