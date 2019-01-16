@@ -423,6 +423,7 @@ var HTMLVideo = function(containerElement) {
                         onTimeChanged();
                         onDurationChanged();
                         onBufferingChanged();
+                        onSubtitleDelayChanged();
                         updateSubtitleText();
                         flushArgsQueue();
                         return;
