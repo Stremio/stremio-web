@@ -46,6 +46,7 @@ class Player extends Component {
             label: 'English'
         }]);
         this.dispatch('setProp', 'selectedSubtitleTrackId', 'https://raw.githubusercontent.com/caitp/ng-media/master/example/assets/captions/bunny-en.vtt');
+        this.dispatch('command', 'load', this.props.stream);
     }
 
     onEnded = () => {
@@ -74,7 +75,6 @@ class Player extends Component {
                 <Video
                     ref={this.videoRef}
                     className={styles['layer']}
-                    stream={this.props.stream}
                     onEnded={this.onEnded}
                     onError={this.onError}
                     onPropValue={this.onPropValue}

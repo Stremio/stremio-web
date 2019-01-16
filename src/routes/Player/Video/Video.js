@@ -13,19 +13,6 @@ class Video extends Component {
         this.video = null;
     }
 
-    componentDidMount() {
-        const Video = this.selectVideoImplementation();
-        this.video = new Video(this.containerRef.current);
-        this.video.on('ended', this.props.onEnded);
-        this.video.on('error', this.props.onError);
-        this.video.on('propValue', this.props.onPropValue);
-        this.video.on('propChanged', this.props.onPropChanged);
-        this.video.constructor.manifest.props.forEach((propName) => {
-            this.dispatch('observeProp', propName);
-        });
-        this.dispatch('command', 'load', this.props.stream, this.props.extra);
-    }
-
     shouldComponentUpdate() {
         return false;
     }
@@ -34,8 +21,8 @@ class Video extends Component {
         this.dispatch('command', 'destroy');
     }
 
-    selectVideoImplementation = () => {
-        if (this.props.stream.ytId) {
+    selectVideoImplementation = (stream, extra) => {
+        if (stream.ytId) {
             return YouTubeVideo;
         } else {
             return HTMLVideo;
@@ -43,6 +30,21 @@ class Video extends Component {
     }
 
     dispatch = (...args) => {
+        if (args[0] === 'command' && args[1] === 'load') {
+            const Video = this.selectVideoImplementation(args[2], args[3]);
+            if (this.video === null || this.video.constructor !== Video) {
+                this.dispatch('command', 'destroy');
+                this.video = new Video(this.containerRef.current);
+                this.video.on('ended', this.props.onEnded);
+                this.video.on('error', this.props.onError);
+                this.video.on('propValue', this.props.onPropValue);
+                this.video.on('propChanged', this.props.onPropChanged);
+                this.video.constructor.manifest.props.forEach((propName) => {
+                    this.dispatch('observeProp', propName);
+                });
+            }
+        }
+
         try {
             this.video && this.video.dispatch(...args);
         } catch (e) {
@@ -59,15 +61,10 @@ class Video extends Component {
 
 Video.propTypes = {
     className: PropTypes.string,
-    stream: PropTypes.object.isRequired,
-    extra: PropTypes.object.isRequired,
     onEnded: PropTypes.func.isRequired,
     onError: PropTypes.func.isRequired,
     onPropValue: PropTypes.func.isRequired,
     onPropChanged: PropTypes.func.isRequired
-};
-Video.defaultProps = {
-    extra: Object.freeze({})
 };
 
 export default Video;
