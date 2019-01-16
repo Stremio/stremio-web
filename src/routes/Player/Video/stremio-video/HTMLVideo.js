@@ -232,6 +232,8 @@ var HTMLVideo = function(containerElement) {
                         videoElement.addEventListener('waiting', onBufferingChanged);
                         videoElement.removeEventListener('playing', onBufferingChanged);
                         videoElement.addEventListener('playing', onBufferingChanged);
+                        videoElement.removeEventListener('loadeddata', onBufferingChanged);
+                        videoElement.addEventListener('loadeddata', onBufferingChanged);
                         return;
                     case 'volume':
                         events.emit('propValue', 'volume', getVolume());
@@ -438,6 +440,7 @@ var HTMLVideo = function(containerElement) {
                         videoElement.removeEventListener('volumechange', onVolumeChanged);
                         videoElement.removeEventListener('waiting', onBufferingChanged);
                         videoElement.removeEventListener('playing', onBufferingChanged);
+                        videoElement.removeEventListener('loadeddata', onBufferingChanged);
                         containerElement.removeChild(videoElement);
                         containerElement.removeChild(stylesElement);
                         containerElement.removeChild(subtitlesElement);
