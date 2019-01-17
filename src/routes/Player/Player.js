@@ -46,7 +46,7 @@ class Player extends Component {
             label: 'English'
         }]);
         this.dispatch('setProp', 'selectedSubtitleTrackId', 'https://raw.githubusercontent.com/caitp/ng-media/master/example/assets/captions/bunny-en.vtt');
-        this.dispatch('command', 'load', this.props.stream);
+        this.dispatch('command', 'load', this.props.stream, {});
     }
 
     onEnded = () => {
