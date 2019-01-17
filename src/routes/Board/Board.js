@@ -1,34 +1,10 @@
 import React, { PureComponent } from 'react';
-import { UserPanel } from 'stremio-common';
 
 class Board extends PureComponent {
-    constructor(props) {
-        super(props);
-
-        // this.aggregator = new Catalogs(addons.addons);
-
-        this.state = {
-            catalogs: []
-        };
-    }
-
-    componentDidMount() {
-        // this.aggregator.evs.addListener('updated', this.onCatalogsUpdated);
-        // this.aggregator.run();
-    }
-
-    componentWillUnmount() {
-        // this.aggregator.evs.removeListener('updated', this.onCatalogsUpdated);
-    }
-
-    onCatalogsUpdated = () => {
-        // this.setState({ catalogs: this.aggregator.results.slice() });
-    }
-
     render() {
         return (
             <div style={{ paddingTop: 40, color: 'yellow' }}>
-                <UserPanel photo={'https://image.freepik.com/free-vector/wild-animals-cartoon_1196-361.jpg'} email={'animals@mail.com'}></UserPanel>
+                Board
             </div>
         );
     }
