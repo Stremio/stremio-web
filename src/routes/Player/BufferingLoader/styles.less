@@ -1,0 +1,24 @@
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.buffering-loader-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .bufferring-loader {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        border: 10px solid #f3f3f3;
+        border-top: 10px solid #3498db;
+        animation: spin 2s linear infinite;
+    }
+}

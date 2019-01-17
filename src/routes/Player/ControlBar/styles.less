@@ -41,7 +41,15 @@
                 }
             }
 
-            &:hover {
+            &:global(.disabled) {
+                cursor: default;
+
+                .icon {
+                    fill: var(--color-surfacedark);
+                }
+            }
+
+            &:hover:not(:global(.disabled)) {
                 .icon {
                     fill: var(--color-surfacelighter);
                 }
@@ -80,7 +88,7 @@
 }
 
 :global(.player-popup-container) {
-    --border-color: var(--color-primarylight);
+    --border-color: var(--color-surfacelighter);
 
     .popup-content {
         background-color: var(--color-backgrounddark);

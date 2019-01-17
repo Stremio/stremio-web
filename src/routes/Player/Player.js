@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import Video from './Video';
+import BufferingLoader from './BufferingLoader';
 import ControlBar from './ControlBar';
 import styles from './styles';
 
@@ -15,6 +16,7 @@ class Player extends Component {
             paused: null,
             time: null,
             duration: null,
+            buffering: null,
             volume: null,
             subtitleTracks: [],
             selectedSubtitleTrackId: null,
@@ -28,6 +30,7 @@ class Player extends Component {
         return nextState.paused !== this.state.paused ||
             nextState.time !== this.state.time ||
             nextState.duration !== this.state.duration ||
+            nextState.buffering !== this.state.buffering ||
             nextState.volume !== this.state.volume ||
             nextState.subtitleTracks !== this.state.subtitleTracks ||
             nextState.selectedSubtitleTrackId !== this.state.selectedSubtitleTrackId ||
@@ -43,6 +46,7 @@ class Player extends Component {
             label: 'English'
         }]);
         this.dispatch('setProp', 'selectedSubtitleTrackId', 'https://raw.githubusercontent.com/caitp/ng-media/master/example/assets/captions/bunny-en.vtt');
+        this.dispatch('command', 'load', this.props.stream, {});
     }
 
     onEnded = () => {
@@ -71,7 +75,6 @@ class Player extends Component {
                 <Video
                     ref={this.videoRef}
                     className={styles['layer']}
-                    stream={this.props.stream}
                     onEnded={this.onEnded}
                     onError={this.onError}
                     onPropValue={this.onPropValue}
@@ -79,6 +82,15 @@ class Player extends Component {
                 />
                 <div className={styles['layer']} />
             </Fragment>
+        );
+    }
+
+    renderBufferingLoader() {
+        return (
+            <BufferingLoader
+                className={styles['layer']}
+                buffering={this.state.buffering}
+            />
         );
     }
 
@@ -104,6 +116,7 @@ class Player extends Component {
         return (
             <div className={styles['player-container']}>
                 {this.renderVideo()}
+                {this.renderBufferingLoader()}
                 {this.renderControlBar()}
             </div>
         );
