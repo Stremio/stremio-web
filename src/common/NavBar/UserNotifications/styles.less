@@ -1,0 +1,68 @@
+@import 'constants';
+
+.popup-label-container {
+    cursor: pointer;
+    outline: none;
+    background-color: transparent;
+
+    .icon {
+        height: @nav-bar-height;
+        fill: var(--color-surfacelighter80)
+    }
+
+    .notifications-icon {
+        width: 40%;
+    }
+
+    &:hover, &.active {
+        background-color: var(--color-backgrounddark20);
+
+        .icon {
+            fill: var(--color-surfacelighter);
+        }
+    }
+}
+
+.popup-content {
+    background-color: var(--color-surfacelighter);
+
+    .meta-item {
+        display: flex;
+        cursor: pointer;
+        padding: 16px;
+
+        .poster {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+
+        .info-container {
+            .name {
+                font-size: 15px;
+            }
+
+            .released {
+                font-size: 14px;
+                color: var(--color-surfacedarker);
+            }
+        }
+
+        .video-poster {
+            width: 100px;
+            height: 50px;
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+
+        .icon {
+            fill: var(--color-surfacedarker);
+            width: 4px;
+            height: 12px;
+        }
+    }
+}

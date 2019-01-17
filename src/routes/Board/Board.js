@@ -8,6 +8,7 @@ import { MetaItem } from 'stremio-common';
 import { Addon } from 'stremio-common';
 import { ShareAddon } from 'stremio-common';
 import { UserPanel } from 'stremio-common';
+import NavBar from '../../common/NavBar/NavBar';
 
 class Board extends PureComponent {
     constructor(props) {
@@ -36,7 +37,10 @@ class Board extends PureComponent {
     render() {
         return (
             <div style={{ paddingTop: 40, color: 'yellow' }}>
-                <UserPanel photo={'https://image.freepik.com/free-vector/wild-animals-cartoon_1196-361.jpg'} email={'animals@mail.com'}></UserPanel>
+                <NavBar
+                    userNotifications={true}
+                    userMenu={true}
+                />
             </div>
         );
     }
