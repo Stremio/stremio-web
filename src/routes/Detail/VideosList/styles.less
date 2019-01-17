@@ -1,24 +1,69 @@
 .videos-list-container {
-    --scroll-container-width: 392px;
-    --seasons-bar-height: 50px;
-    --spacing: 8px;
-}
-
-.videos-list-container {
-    height: 100%;
-    display: inline-flex;
+    width: calc(var(--video-width) + var(--spacing) * 6);
+    display: flex;
     flex-direction: column;
-    background: var(--color-background);
+    align-items: center;
+    background: var(--color-backgrounddarker40);
 
     .seasons-bar {
-        height: var(--seasons-bar-height);
+        height: calc(var(--video-width) * 0.14);
+        width: 100%;
         display: flex;
         justify-content: space-between;
         margin-bottom: var(--spacing);
 
-        .button-container {
-            width: calc(1.5 * var(--seasons-bar-height));
+        .season-bar-button {
             cursor: pointer;
+            width: calc(var(--video-width) * 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--spacing);
+            color: var(--color-surfacelight);
+
+            .season-label {
+                max-width: 8em;
+                max-height: 2.4em;
+                font-size: 1.2em;
+                line-height: 1.2em;
+                text-align: end;
+                overflow: hidden;
+            }
+
+            .season-number {
+                margin: 0 calc(var(--spacing) * 1.5) 0 var(--spacing);
+                font-size: 1.2em;
+                line-height: 1.2em;
+            }
+
+            .icon {
+                width: calc(var(--video-width) * 0.04);
+                height: calc(var(--video-width) * 0.04);
+                fill: var(--color-surfacelight);
+            }
+
+            &:hover {
+                color: var(--color-surfacelighter);
+                background-color: var(--color-surfacedarker60);
+
+                .icon {
+                    fill: var(--color-surfacelighter);
+                }
+            }
+
+            &:global(.active) {
+                color: var(--color-backgrounddarker);
+                background-color: var(--color-surfacelighter);
+
+                .icon {
+                    fill: var(--color-backgrounddarker);
+                }
+            }
+        }
+
+        .button-container {
+            cursor: pointer;
+            width: calc(var(--video-width) * 0.2);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -26,18 +71,22 @@
             .button-icon {
                 width: 60%;
                 height: 60%;
-                fill: var(--color-surfacelighter);
+                fill: var(--color-surfacelight);
             }
 
             &:hover {
-                background-color: var(--color-surfacelighter20);
+                background-color: var(--color-surfacedarker60);
+
+                .button-icon {
+                    fill: var(--color-surfacelighter);
+                }
             }
         }
     }
 
     .scroll-container {
         flex: 1;
-        width: var(--scroll-container-width);
+        width: calc(var(--video-width) + var(--spacing) * 4);
         padding: 0 calc(2 * var(--spacing));
         margin: 0 var(--spacing);
         overflow-y: auto;
@@ -49,14 +98,54 @@
     }
 
     .scroll-container::-webkit-scrollbar {
-        width: var(--spacing);
+        width: var(--spacing) !important;
     }
 
     .scroll-container::-webkit-scrollbar-thumb {
-        background-color: var(--color-secondarylighter80);
+        background-color: var(--color-secondarylighter);
     }
 
     .scroll-container::-webkit-scrollbar-track {
-        background-color: var(--color-backgroundlight);
+        background-color: var(--color-backgroundlighter);
+    }
+}
+
+:global(.detail-popup-container) {
+    --border-color: var(--color-backgrounddarker80);
+
+    .popup-content {
+        width: calc(var(--video-width) * 0.6);
+        background-color: var(--color-surfacelighter);
+
+        .season {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: calc(var(--spacing) * 1.5);
+            font-size: 1.2em;
+            color: var(--color-backgrounddark);
+
+            .season-label {
+                max-height: 2.4em;
+                line-height: 1.2em;
+                overflow: hidden;
+            }
+
+            .season-number {
+                margin-left: var(--spacing);
+                line-height: 1.2em;
+            }
+
+            &.selected-season {
+                color: var(--color-surfacelighter);
+                background-color: var(--color-primarydark);
+            }
+
+            &:hover {
+                color: var(--color-surfacelighter);
+                background-color: var(--color-primarylight);
+            }
+        }
     }
 }

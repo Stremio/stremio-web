@@ -81,7 +81,11 @@ class VolumeBar extends Component {
 VolumeBar.propTypes = {
     className: PropTypes.string,
     volume: PropTypes.number,
-    toggleButtonComponent: PropTypes.oneOfType([PropTypes.object, PropTypes.func]).isRequired,
+    toggleButtonComponent: PropTypes.oneOfType([
+        PropTypes.func,
+        PropTypes.string,
+        PropTypes.shape({ render: PropTypes.func.isRequired }),
+    ]).isRequired,
     dispatch: PropTypes.func.isRequired
 };
 

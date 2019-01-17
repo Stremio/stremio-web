@@ -51,6 +51,13 @@ var HTMLVideo = function(containerElement) {
 
         return Math.floor(videoElement.duration * 1000);
     }
+    function getBuffering() {
+        if (!loaded) {
+            return null;
+        }
+
+        return videoElement.readyState < videoElement.HAVE_FUTURE_DATA;
+    }
     function getVolume() {
         if (destroyed) {
             return null;
@@ -140,6 +147,9 @@ var HTMLVideo = function(containerElement) {
     function onDurationChanged() {
         events.emit('propChanged', 'duration', getDuration());
     }
+    function onBufferingChanged() {
+        events.emit('propChanged', 'buffering', getBuffering());
+    }
     function onVolumeChanged() {
         events.emit('propChanged', 'volume', getVolume());
     }
@@ -215,6 +225,15 @@ var HTMLVideo = function(containerElement) {
                         events.emit('propValue', 'duration', getDuration());
                         videoElement.removeEventListener('durationchange', onDurationChanged);
                         videoElement.addEventListener('durationchange', onDurationChanged);
+                        return;
+                    case 'buffering':
+                        events.emit('propValue', 'buffering', getBuffering());
+                        videoElement.removeEventListener('waiting', onBufferingChanged);
+                        videoElement.addEventListener('waiting', onBufferingChanged);
+                        videoElement.removeEventListener('playing', onBufferingChanged);
+                        videoElement.addEventListener('playing', onBufferingChanged);
+                        videoElement.removeEventListener('loadeddata', onBufferingChanged);
+                        videoElement.addEventListener('loadeddata', onBufferingChanged);
                         return;
                     case 'volume':
                         events.emit('propValue', 'volume', getVolume());
@@ -383,6 +402,7 @@ var HTMLVideo = function(containerElement) {
                         onPausedChanged();
                         onTimeChanged();
                         onDurationChanged();
+                        onBufferingChanged();
                         onSubtitleTracksChanged();
                         onSelectedSubtitleTrackIdChanged();
                         onSubtitleDelayChanged();
@@ -402,6 +422,8 @@ var HTMLVideo = function(containerElement) {
                         onPausedChanged();
                         onTimeChanged();
                         onDurationChanged();
+                        onBufferingChanged();
+                        onSubtitleDelayChanged();
                         updateSubtitleText();
                         flushArgsQueue();
                         return;
@@ -417,6 +439,9 @@ var HTMLVideo = function(containerElement) {
                         videoElement.removeEventListener('timeupdate', onTimeChanged);
                         videoElement.removeEventListener('durationchange', onDurationChanged);
                         videoElement.removeEventListener('volumechange', onVolumeChanged);
+                        videoElement.removeEventListener('waiting', onBufferingChanged);
+                        videoElement.removeEventListener('playing', onBufferingChanged);
+                        videoElement.removeEventListener('loadeddata', onBufferingChanged);
                         containerElement.removeChild(videoElement);
                         containerElement.removeChild(stylesElement);
                         containerElement.removeChild(subtitlesElement);
@@ -438,7 +463,7 @@ var HTMLVideo = function(containerElement) {
 HTMLVideo.manifest = {
     name: 'HTMLVideo',
     embedded: true,
-    props: ['paused', 'time', 'duration', 'volume', 'subtitleTracks', 'selectedSubtitleTrackId', 'subtitleSize', 'subtitleDelay', 'subtitleDarkBackground']
+    props: ['paused', 'time', 'duration', 'volume', 'buffering', 'subtitleTracks', 'selectedSubtitleTrackId', 'subtitleSize', 'subtitleDelay', 'subtitleDarkBackground']
 };
 
 module.exports = HTMLVideo;

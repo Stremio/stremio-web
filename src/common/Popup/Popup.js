@@ -15,13 +15,15 @@ class Popup extends Component {
         this.labelBorderRightRef = React.createRef();
         this.labelBorderBottomRef = React.createRef();
         this.labelBorderLeftRef = React.createRef();
-        this.menuRef = React.createRef();
+        this.menuContainerRef = React.createRef();
         this.menuScrollRef = React.createRef();
+        this.menuChildrenRef = React.createRef();
         this.menuBorderTopRef = React.createRef();
         this.menuBorderRightRef = React.createRef();
         this.menuBorderBottomRef = React.createRef();
         this.menuBorderLeftRef = React.createRef();
         this.hiddenBorderRef = React.createRef();
+        this.popupMutationObserver = this.createPopupMutationObserver();
 
         this.state = {
             open: false
@@ -38,6 +40,7 @@ class Popup extends Component {
         window.removeEventListener('blur', this.close);
         window.removeEventListener('resize', this.close);
         window.removeEventListener('keyup', this.onKeyUp);
+        this.popupMutationObserver.disconnect();
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -48,19 +51,65 @@ class Popup extends Component {
     componentDidUpdate(prevProps, prevState) {
         if (this.state.open && !prevState.open) {
             this.updateStyles();
+            this.popupMutationObserver.observe(document.documentElement, {
+                childList: true,
+                attributes: true,
+                subtree: true
+            });
             if (typeof this.props.onOpen === 'function') {
                 this.props.onOpen();
             }
-        } else if (!this.state.open && prevState.open && typeof this.props.onClose === 'function') {
-            this.props.onClose();
+        } else if (!this.state.open && prevState.open) {
+            this.popupMutationObserver.disconnect();
+            if (typeof this.props.onClose === 'function') {
+                this.props.onClose();
+            }
         }
     }
 
+    createPopupMutationObserver = () => {
+        let prevLabelRect = {};
+        let prevMenuChildrenRect = {};
+        return new MutationObserver(() => {
+            if (this.state.open) {
+                const labelRect = this.labelRef.current.getBoundingClientRect();
+                const menuChildrenRect = this.menuChildrenRef.current.getBoundingClientRect();
+                if (labelRect.x !== prevLabelRect.x ||
+                    labelRect.y !== prevLabelRect.y ||
+                    labelRect.width !== prevLabelRect.width ||
+                    labelRect.height !== prevLabelRect.height ||
+                    menuChildrenRect.x !== prevMenuChildrenRect.x ||
+                    menuChildrenRect.y !== prevMenuChildrenRect.y ||
+                    menuChildrenRect.width !== prevMenuChildrenRect.width ||
+                    menuChildrenRect.height !== prevMenuChildrenRect.height) {
+                    this.updateStyles();
+                }
+
+                prevLabelRect = labelRect;
+                prevMenuChildrenRect = menuChildrenRect;
+            } else {
+                prevLabelRect = {};
+                prevMenuChildrenRect = {};
+            }
+        });
+    }
+
     updateStyles = () => {
+        this.menuContainerRef.current.removeAttribute('style');
+        this.menuScrollRef.current.removeAttribute('style');
+        this.menuBorderTopRef.current.removeAttribute('style');
+        this.menuBorderRightRef.current.removeAttribute('style');
+        this.menuBorderBottomRef.current.removeAttribute('style');
+        this.menuBorderLeftRef.current.removeAttribute('style');
+        this.labelBorderTopRef.current.removeAttribute('style');
+        this.labelBorderRightRef.current.removeAttribute('style');
+        this.labelBorderBottomRef.current.removeAttribute('style');
+        this.labelBorderLeftRef.current.removeAttribute('style');
+
         const menuDirections = {};
         const bodyRect = document.body.getBoundingClientRect();
-        const menuRect = this.menuRef.current.getBoundingClientRect();
         const labelRect = this.labelRef.current.getBoundingClientRect();
+        const menuChildredRect = this.menuChildrenRef.current.getBoundingClientRect();
         const borderSize = parseFloat(window.getComputedStyle(this.hiddenBorderRef.current).getPropertyValue('border-top-width'));
         const labelPosition = {
             left: labelRect.x - bodyRect.x,
@@ -69,38 +118,38 @@ class Popup extends Component {
             bottom: (bodyRect.height + bodyRect.y) - (labelRect.y + labelRect.height)
         };
 
-        if (menuRect.height <= labelPosition.bottom) {
-            this.menuRef.current.style.top = `${labelPosition.top + labelRect.height}px`;
+        if (menuChildredRect.height <= labelPosition.bottom) {
+            this.menuContainerRef.current.style.top = `${labelPosition.top + labelRect.height}px`;
             this.menuScrollRef.current.style.maxHeight = `${labelPosition.bottom}px`;
             menuDirections.bottom = true;
-        } else if (menuRect.height <= labelPosition.top) {
-            this.menuRef.current.style.bottom = `${labelPosition.bottom + labelRect.height}px`;
+        } else if (menuChildredRect.height <= labelPosition.top) {
+            this.menuContainerRef.current.style.bottom = `${labelPosition.bottom + labelRect.height}px`;
             this.menuScrollRef.current.style.maxHeight = `${labelPosition.top}px`;
             menuDirections.top = true;
         } else if (labelPosition.bottom >= labelPosition.top) {
-            this.menuRef.current.style.top = `${labelPosition.top + labelRect.height}px`;
+            this.menuContainerRef.current.style.top = `${labelPosition.top + labelRect.height}px`;
             this.menuScrollRef.current.style.maxHeight = `${labelPosition.bottom}px`;
             menuDirections.bottom = true;
         } else {
-            this.menuRef.current.style.bottom = `${labelPosition.bottom + labelRect.height}px`;
+            this.menuContainerRef.current.style.bottom = `${labelPosition.bottom + labelRect.height}px`;
             this.menuScrollRef.current.style.maxHeight = `${labelPosition.top}px`;
             menuDirections.top = true;
         }
 
-        if (menuRect.width <= (labelPosition.right + labelRect.width)) {
-            this.menuRef.current.style.left = `${labelPosition.left}px`;
+        if (menuChildredRect.width <= (labelPosition.right + labelRect.width)) {
+            this.menuContainerRef.current.style.left = `${labelPosition.left}px`;
             this.menuScrollRef.current.style.maxWidth = `${labelPosition.right + labelRect.width}px`;
             menuDirections.right = true;
-        } else if (menuRect.width <= (labelPosition.left + labelRect.width)) {
-            this.menuRef.current.style.right = `${labelPosition.right}px`;
+        } else if (menuChildredRect.width <= (labelPosition.left + labelRect.width)) {
+            this.menuContainerRef.current.style.right = `${labelPosition.right}px`;
             this.menuScrollRef.current.style.maxWidth = `${labelPosition.left + labelRect.width}px`;
             menuDirections.left = true;
         } else if (labelPosition.right > labelPosition.left) {
-            this.menuRef.current.style.left = `${labelPosition.left}px`;
+            this.menuContainerRef.current.style.left = `${labelPosition.left}px`;
             this.menuScrollRef.current.style.maxWidth = `${labelPosition.right + labelRect.width}px`;
             menuDirections.right = true;
         } else {
-            this.menuRef.current.style.right = `${labelPosition.right}px`;
+            this.menuContainerRef.current.style.right = `${labelPosition.right}px`;
             this.menuScrollRef.current.style.maxWidth = `${labelPosition.left + labelRect.width}px`;
             menuDirections.left = true;
         }
@@ -128,14 +177,14 @@ class Popup extends Component {
             this.labelBorderLeftRef.current.style.left = `${labelPosition.left}px`;
 
             if (menuDirections.top) {
-                this.labelBorderTopRef.current.style.display = 'none';
+                this.labelBorderTopRef.current.style.left = `${labelPosition.left + menuChildredRect.width}px`;
                 if (menuDirections.left) {
                     this.menuBorderBottomRef.current.style.right = `${labelRect.width - borderSize}px`;
                 } else {
                     this.menuBorderBottomRef.current.style.left = `${labelRect.width - borderSize}px`;
                 }
             } else {
-                this.labelBorderBottomRef.current.style.display = 'none';
+                this.labelBorderBottomRef.current.style.left = `${labelPosition.left + menuChildredRect.width}px`;
                 if (menuDirections.left) {
                     this.menuBorderTopRef.current.style.right = `${labelRect.width - borderSize}px`;
                 } else {
@@ -144,7 +193,7 @@ class Popup extends Component {
             }
         }
 
-        this.menuRef.current.style.visibility = 'visible';
+        this.menuContainerRef.current.style.visibility = 'visible';
     }
 
     onKeyUp = (event) => {
@@ -177,9 +226,11 @@ class Popup extends Component {
 
         return (
             <Modal className={classnames('modal-container', this.props.className)} onClick={this.close}>
-                <div ref={this.menuRef} className={styles['menu-container']} onClick={this.menuContainerOnClick}>
-                    <div ref={this.menuScrollRef} className={styles['scroll-container']}>
-                        {children}
+                <div ref={this.menuContainerRef} className={styles['menu-container']} onClick={this.menuContainerOnClick}>
+                    <div ref={this.menuScrollRef} className={styles['menu-scroll-container']}>
+                        <div ref={this.menuChildrenRef}>
+                            {children}
+                        </div>
                     </div>
                     <div ref={this.menuBorderTopRef} className={classnames(styles['border'], styles['border-top'])} />
                     <div ref={this.menuBorderRightRef} className={classnames(styles['border'], styles['border-right'])} />
