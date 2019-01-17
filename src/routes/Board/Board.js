@@ -1,12 +1,4 @@
 import React, { PureComponent } from 'react';
-import { Catalogs } from 'stremio-aggregators';
-import { addons } from 'stremio-services';
-import { Stream } from 'stremio-common';
-import { Video } from 'stremio-common';
-import { LibraryItemList } from 'stremio-common';
-import { MetaItem } from 'stremio-common';
-import { Addon } from 'stremio-common';
-import { ShareAddon } from 'stremio-common';
 import { UserPanel } from 'stremio-common';
 
 class Board extends PureComponent {
