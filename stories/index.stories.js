@@ -1,6 +1,7 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
-import { Addon, Checkbox, LibraryItemList, MetaItem, ShareAddon, UserPanel } from 'stremio-common';
+import { Checkbox, LibraryItemList, MetaItem, ShareAddon, UserPanel } from 'stremio-common';
+import Addon from '../src/routes/Addons/Addon';
 import Stream from '../src/routes/Detail/StreamsList/Stream';
 import Video from '../src/routes/Detail/VideosList/Video';
 import VideosList from '../src/routes/Detail/VideosList';
@@ -42,7 +43,6 @@ storiesOf('Addon', module)
                 isInstalled={false}
                 types={['Movies', 'Series']}
                 description={'Find where to stream your favourite movies and shows amongst iTunes, Hulu, Amazon and other UK/US services.'}
-                urls={['http://nfxaddon.strem.io/stremioget', 'http://127.0.0.1:11470/addons/com.stremio.subtitles/stremioget', 'http://127.0.0.1:11470/addons/com.stremio.localfiles/stremioget']}
             />
         </div>
     ))
@@ -54,7 +54,6 @@ storiesOf('Addon', module)
                 isInstalled={true}
                 types={['Movies', 'Series']}
                 description={'Watch your favourite YouTube channels ad-free and get notified when they upload new videos.'}
-                urls={['https://channels.strem.io/stremioget/stremio/v1', 'https://channels.strem.io/stremioget/stremio/v1']}
             />
         </div>
     ))
@@ -67,7 +66,6 @@ storiesOf('Addon', module)
                 isInstalled={true}
                 types={['Channels', 'Videos']}
                 description={'Watch your favourite YouTube channels ad-free and get notiour favourite YouTube channels ad-free and get notiour favourite YouTube channels ad-free and get notiour favourite YouTube channels ad-free and get notiour favourite YouTube channels ad-free and get notiourfavourite YouTube channels ad-free and get notiour favourite YouTube channels ad-free and get notiourfavourite YouTube channels ad-free and get notiour favourite YouTube channels ad-free and get notiour favourite YouTube channels ad-free and get notified when they upload new videos.'}
-                urls={['https://channels.strem.io/stremioget/stremio/v1', 'https://channels.strem.io/stremioget/stremio/v1']}
             />
         </div>
     ))
@@ -79,7 +77,6 @@ storiesOf('Addon', module)
                 isInstalled={false}
                 types={['Movies', 'Series']}
                 description={'Watch your favourite YouTube channels ad-free and get notified when they upload new videos.'}
-                urls={['https://channels.strem.io/stremioget/stremio/v1channels.strem.io/stremioget/stremio/v1channels.strem.io/stremioget/stremio/v1', 'https://channels.strem.io/stremioget/stremio/v1', 'http://127.0.0.1:11470/addons/com.stremio.subtitles/stremioget', 'https://channels.strem.io/stremioget/stremio/v1']}
             />
         </div>
     ));

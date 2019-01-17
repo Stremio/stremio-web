@@ -1,34 +1,22 @@
 .addon {
-    --addon-width: 514px;
-    --name-font-size: 20px;
-    --version-font-size: 12px;
-    --type-font-size: 12px;
-    --description-font-size: 12px;
-    --url-font-size: 12px;
-    --button-border-width: 2px;
-    --button-label-font-size: 14px;
-}
-
-.addon {
-    display: grid;
+    display: inline-grid;
     width: var(--addon-width);
-    padding: 2%;
-    background-color: var(--color-background);
-    grid-template-columns: 1fr 4fr;
-    grid-template-rows: calc(0.04 * var(--addon-width)) calc(0.04 * var(--addon-width)) auto auto calc((0.08 * var(--addon-width)));
+    padding: 1.6em;
+    background-color: var(--color-backgroundlighter);
+    grid-template-columns: 1fr 5fr 4fr;
+    grid-template-rows: calc(0.03 * var(--addon-width)) calc(0.03 * var(--addon-width)) calc(0.03 * var(--addon-width)) auto;
     grid-template-areas:
-        "logo header"
-        "logo type"
-        "logo description"
-        "urls urls"
-        "buttons buttons";
+        "logo header buttons"
+        "logo type buttons"
+        "logo hostname buttons"
+        "logo description buttons";
 
     .logo-container {
         grid-area: logo;
 
         .logo {
-            width: calc(0.2 * var(--addon-width));
-            height: calc(0.2 * var(--addon-width));
+            width: calc(0.12 * var(--addon-width));
+            height: calc(0.12 * var(--addon-width));
             padding: 20%;
             fill: var(--color-surfacelighter);
             background-color: var(--color-backgrounddarker);
@@ -50,7 +38,7 @@
             .name {
                 max-width: 80%;
                 margin-right: 3%;
-                font-size: var(--name-font-size);
+                font-size: 1.8em;
                 color: var(--color-surfacelighter);
                 overflow: hidden;
                 white-space: pre;
@@ -59,7 +47,6 @@
 
             .version {
                 flex: 1;
-                font-size: var(--version-font-size);
                 color: var(--color-surface);
                 overflow: hidden;
                 white-space: pre;
@@ -68,44 +55,56 @@
         }
     }
 
-    .type {
+    .types-container {
         grid-area: type;
         display: flex;
         align-items: center;
         padding-left: 4%;
-        font-size: var(--type-font-size);
+        overflow: hidden;
         color: var(--color-secondarylighter);
+
+        .type {
+            overflow: hidden;
+            white-space: pre;
+            text-overflow: ellipsis;
+        }
+    }
+
+    .hostname-container {
+        grid-area: hostname;
+        display: flex;
+        align-items: center;
+        padding-left: 4%;
+        overflow: hidden;
+        overflow-wrap: break-word;
+        color: var(--color-surfacelighter);
+
+        .hostname {
+            overflow: hidden;
+            white-space: pre;
+            text-overflow: ellipsis;
+        }
     }
 
     .description {
         grid-area: description;
         padding-left: 4%;
-        font-size: var(--description-font-size);
         color: var(--color-surfacelighter);
-        word-break: break-all; //Firefox doesn't support { break-word }
-        word-break: break-word;
-    }
-
-    .urls-container {
-        grid-area: urls;
-        padding: 4% 0%;
-        overflow: auto;
-        word-break: break-all;
-
-        .url {
-            font-size: var(--url-font-size);
-            color: var(--color-surface);
-        }
+        overflow: hidden;
+        overflow-wrap: break-word;
     }
 
     .buttons {
         grid-area: buttons;
+        height: calc(0.12 * var(--addon-width));
         display: flex;
-        align-items: stretch;
+        flex-direction: column;
+        align-items: flex-end;
         justify-content: space-between;
 
         .button {
-            width: 46%;
+            width: 65%;
+            height: calc(0.05 * var(--addon-width));
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -114,11 +113,12 @@
             border-style: solid;
 
             .icon {
-                width: 7%;
-                margin-right: 2%;
+                width: 8%;
+                margin-right: 3%;
             }
 
             .label {
+                font-size: 1.1em;
                 color: var(--color-surfacelighter);
             }
 
@@ -134,7 +134,8 @@
                 }
 
                 &:hover {
-                    background-color: var(--color-secondarylighter);
+                    border-color: var(--color-secondarylight);
+                    background-color: var(--color-secondarylight);
 
                     .icon {
                         fill: var(--color-surfacelighter);
@@ -151,15 +152,23 @@
                 background-color: var(--color-signal5);
 
                 &:hover {
-                    background-color: var(--color-signal580);
+                    background-color: var(--color-signal560);
                 }
             }
 
             &.uninstall-button {
                 border-color: var(--color-surfacedark);
 
+                .label {
+                    color: var(--color-surfacedark);
+                }
+
                 &:hover {
                     background-color: var(--color-surfacedark);
+
+                    .label {
+                        color: var(--color-surfacelighter);
+                    }
                 }
             }
 

@@ -1,15 +1,6 @@
 .video-container {
-    --video-width: 360px;
-    --spacing: 8px;
-    --title-font-size: 12px;
-    --released-date-font-size: 11px;
-    --label-font-size: 10px;
-    --label-border-width: 2px;
-}
-
-.video-container {
     width: var(--video-width);
-    background-color: var(--color-backgroundlight);
+    background-color: var(--color-surfacedarker60);
 
     .flex-row-container {
         display: flex;
@@ -40,21 +31,21 @@
 
         .info-container {
             flex: 3;
-            min-height: calc(0.2 * var(--video-width));
+            min-height: calc(var(--video-width) * 0.2);
             padding: var(--spacing);
             display: flex;
             flex-direction: column;
             justify-content: center;
 
             .title {
-                font-size: var(--title-font-size);
-                color: var(--color-surfacelighter);
+                line-height: 1.2em;
+                color: var(--color-surfacelight);
                 word-break: break-all; //Firefox doesn't support { break-word }
                 word-break: break-word;
             }
 
             .released-date {
-                font-size: var(--released-date-font-size);
+                font-size: 0.9em;
                 color: var(--color-surface);
             }
 
@@ -62,13 +53,13 @@
                 display: flex;
 
                 .upcoming-label, .watched-label {
-                    font-size: var(--label-font-size);
-                    font-weight: 600;
+                    font-size: 0.8em;
+                    font-weight: 500;
                     line-height: 1.5;
-                    border-width: var(--label-border-width);
+                    border-width: calc(var(--spacing) * 0.25);
                     border-style: solid;
                     padding: 0 0.6em;
-                    color: var(--color-surfacelighter);
+                    color: var(--color-surfacelight);
                 }
 
                 .upcoming-label {
@@ -82,25 +73,25 @@
             }
 
             >:not(:last-child) {
-                margin-bottom: calc(0.5 * var(--spacing));
+                margin-bottom: calc(var(--spacing) * 0.5);
             }
         }
 
         .arrow-container {
-            width: calc(0.07 * var(--video-width));
+            width: calc(var(--video-width) * 0.07);
             display: flex;
             align-items: center;
             padding: var(--spacing) var(--spacing) var(--spacing) 0;
 
             .arrow {
                 width: 100%;
-                fill: var(--color-surfacelighter);
+                fill: var(--color-surfacelight);
             }
         }
     }
 
     .progress-container {
-        height: calc(0.5 * var(--spacing));
+        height: calc(var(--spacing) * 0.5);
         background-color: var(--color-primarydark);
 
         .progress {
@@ -111,6 +102,24 @@
 
     &:hover {
         cursor: pointer;
-        background-color: var(--color-surfacelighter20);
+        background-color: var(--color-surfacedarker);
+
+        .info-container {
+            .title {
+                color: var(--color-surfacelighter);
+            }
+
+            .label-container {
+                .upcoming-label, .watched-label {
+                    color: var(--color-surfacelighter);
+                }
+            }
+        }
+
+        .arrow-container {
+            .arrow {
+                fill: var(--color-surfacelighter);
+            }
+        }
     }
 }

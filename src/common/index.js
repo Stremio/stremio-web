@@ -6,7 +6,6 @@ import MetadataItem from './MetadataItem';
 import Router from './Router';
 import LibraryItemList from './LibraryItemList';
 import MetaItem from './MetaItem';
-import Addon from './Addon';
 import ShareAddon from './ShareAddon';
 import UserPanel from './UserPanel';
 import Slider from './Slider';
@@ -20,7 +19,6 @@ export {
     Router,
     LibraryItemList,
     MetaItem,
-    Addon,
     ShareAddon,
     UserPanel,
     Slider
