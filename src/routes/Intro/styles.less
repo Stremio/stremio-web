@@ -1,0 +1,156 @@
+.intro-container {
+    --login-form-width: 270px;
+    --spacing: 16px;
+}
+
+.intro-container {
+    position: relative;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('https://www.stremio.com/website/home-testimonials.jpg');
+    background-size: cover;
+    background-attachment: fixed;
+
+    .overlay {
+        position: absolute;
+        z-index: 0;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: var(--color-backgrounddark80);
+    }
+
+    .login-form {
+        width: var(--login-form-width);
+        position: absolute;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        margin: auto;
+
+        .fb-button {
+            width: var(--login-form-width);
+            height: 68px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            padding: 20px 0;
+            background: var(--color-secondarydark);
+
+            .icon {
+                height: 100%;
+                margin-right: 16px;
+                fill: var(--color-surfacelighter);
+            }
+
+            .label {
+                font-size: 15px;
+                color: var(--color-surfacelighter);
+            }
+        }
+
+        .text {
+            margin: calc(var(--spacing) * 0.5) 0;
+            font-size: 14px;
+            color: var(--color-surface);
+        }
+
+        .or {
+            margin: calc(var(--spacing) * 3) 0 var(--spacing) 0;
+            font-size: 18px;
+            color: var(--color-surface);
+        }
+
+        .email {
+            width: var(--login-form-width);
+            margin-bottom: var(--spacing);
+            padding: calc(var(--spacing) * 0.5) 0;
+            border-bottom: 1px solid var(--color-surface);
+            font-size: 15px;
+            color: var(--color-surfacelighter);
+            outline: none;
+            background: none;
+
+            &::placeholder {
+                color: var(--color-secondarylighter);
+            }
+        }
+
+        .password {
+            width: var(--login-form-width);
+            margin-bottom: var(--spacing);
+            padding: calc(var(--spacing) * 0.5) 0;
+            border-bottom: 1px solid var(--color-surface);
+            font-size: 15px;
+            color: var(--color-surfacelighter);
+            outline: none;
+            background: none;
+
+            &::placeholder {
+                color: var(--color-secondarylighter);
+            }
+        }
+
+        .acceptance-section {
+            width: var(--login-form-width);
+
+            .toggle-option {
+                display: flex;
+                flex-direction: row;
+                margin-bottom: var(--spacing);
+
+                .checkbox-size {
+                    width: var(--spacing);
+                    height: var(--spacing);
+                    margin-right: calc(var(--spacing) * 0.5);
+                    fill: var(--color-surface);
+                }
+
+                .accept {
+                    font-size: 14px;
+                    color: var(--color-surface);
+                }
+
+                .acceptance-label {
+                    font-size: 14px;
+                    color: var(--color-surfacelighter);
+                }
+            }
+        }
+
+        .login-button {
+            width: var(--login-form-width);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            padding: 18px;
+            background: var(--color-primary);
+
+            .label {
+                font-weight: 600;
+                color: var(--color-surfacelighter);
+            }
+        }
+
+        .option {
+            margin-top: calc(var(--spacing) * 3);
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--color-surfacelighter);
+
+            // &:last-child {
+            //     margin-top: var(--spacing);
+            // }
+        }
+    }
+}
