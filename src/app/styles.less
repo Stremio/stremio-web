@@ -42,6 +42,10 @@
     font-style: normal;
 }
 
+:root {
+    --scroll-bar-width: 8px;
+}
+
 :global {
     * {
         margin: 0px;
@@ -64,7 +68,7 @@
         line-height: 1;
 
         ::-webkit-scrollbar {
-            width: 8px;
+            width: var(--scroll-bar-width);
         }
 
         ::-webkit-scrollbar-thumb {

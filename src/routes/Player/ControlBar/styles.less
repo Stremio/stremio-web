@@ -1,31 +1,26 @@
-.control-bar-container, .popup-container {
-    --control-bar-button-height: 60px;
-}
-
 .control-bar-container {
-    top: initial !important;
-    padding: 0 calc(var(--control-bar-button-height) * 0.4);
+    padding: 0 calc(var(--control-bar-button-size) * 0.4);
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
     align-items: stretch;
 
     .seek-bar {
-        --seek-bar-thumb-size: calc(var(--control-bar-button-height) * 0.40);
-        --seek-bar-track-size: calc(var(--control-bar-button-height) * 0.12);
-        --seek-bar-font-size: calc(var(--control-bar-button-height) * 0.35);
-        height: calc(var(--control-bar-button-height) * 0.6);
+        --seek-bar-thumb-size: calc(var(--control-bar-button-size) * 0.40);
+        --seek-bar-track-size: calc(var(--control-bar-button-size) * 0.12);
+        height: calc(var(--control-bar-button-size) * 0.6);
+        font-size: calc(var(--control-bar-button-size) * 0.35);
     }
 
     .control-bar-buttons-container {
-        height: var(--control-bar-button-height);
+        height: var(--control-bar-button-size);
         display: flex;
         flex-direction: row;
         align-items: center;
 
         .control-bar-button {
-            width: var(--control-bar-button-height);
-            height: var(--control-bar-button-height);
+            width: var(--control-bar-button-size);
+            height: var(--control-bar-button-size);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -46,7 +41,15 @@
                 }
             }
 
-            &:hover {
+            &:global(.disabled) {
+                cursor: default;
+
+                .icon {
+                    fill: var(--color-surfacedark);
+                }
+            }
+
+            &:hover:not(:global(.disabled)) {
                 .icon {
                     fill: var(--color-surfacelighter);
                 }
@@ -54,10 +57,10 @@
         }
 
         .volume-bar {
-            --volume-bar-thumb-size: calc(var(--control-bar-button-height) * 0.36);
-            --volume-bar-track-size: calc(var(--control-bar-button-height) * 0.10);
-            height: var(--control-bar-button-height);
-            width: calc(var(--control-bar-button-height) * 5);
+            --volume-bar-thumb-size: calc(var(--control-bar-button-size) * 0.36);
+            --volume-bar-track-size: calc(var(--control-bar-button-size) * 0.10);
+            height: var(--control-bar-button-size);
+            width: calc(var(--control-bar-button-size) * 5);
 
             &:hover, &:global(.active) {
                 .control-bar-button {
@@ -68,7 +71,7 @@
             }
         }
 
-        .flex-spacing {
+        .spacing {
             flex: 1
         }
     }
@@ -79,24 +82,24 @@
         bottom: 0;
         left: 0;
         z-index: -1;
-        box-shadow: 0 0 calc(var(--control-bar-button-height) * 2) calc(var(--control-bar-button-height) * 2.3) var(--color-backgrounddarker);
+        box-shadow: 0 0 calc(var(--control-bar-button-size) * 2) calc(var(--control-bar-button-size) * 2.3) var(--color-backgrounddarker);
         content: "";
     }
 }
 
-.popup-container {
-    --border-color: var(--color-primarylight);
+:global(.player-popup-container) {
+    --border-color: var(--color-surfacelighter);
 
     .popup-content {
         background-color: var(--color-backgrounddark);
 
         &.share-popup-content {
-            width: calc(var(--control-bar-button-height) * 5);
-            height: calc(var(--control-bar-button-height) * 3);
+            width: calc(var(--control-bar-button-size) * 5);
+            height: calc(var(--control-bar-button-size) * 3);
         }
 
         &.subtitles-popup-content {
-            --subtitles-picker-button-size: calc(var(--control-bar-button-height) * 0.6);
+            --subtitles-picker-button-size: calc(var(--control-bar-button-size) * 0.6);
         }
     }
 }

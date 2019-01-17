@@ -1,12 +1,11 @@
 .subtitles-picker-container {
-    --scroll-bar-width: 12px;
     width: calc(var(--subtitles-picker-button-size) * 14);
     height: calc(var(--subtitles-picker-button-size) * 9);
     font-size: calc(var(--subtitles-picker-button-size) * 0.45);
     padding: calc(var(--subtitles-picker-button-size) * 0.3);
     gap: calc(var(--subtitles-picker-button-size) * 0.3);
     display: grid;
-    grid-template-columns: auto calc(var(--subtitles-picker-button-size) * 8 + var(--scroll-bar-width));
+    grid-template-columns: auto calc(var(--subtitles-picker-button-size) * 8 + var(--scroll-bar-width) * 1.5);
     grid-template-rows: var(--subtitles-picker-button-size) auto;
     grid-template-areas:
         "toggle-button preferences"
@@ -64,7 +63,8 @@
         display: flex;
         flex-direction: column;
         align-items: stretch;
-        overflow-y: auto;
+        padding-right: calc(var(--scroll-bar-width) * 0.5);
+        overflow-y: scroll;
         overflow-x: hidden;
 
         .track-origin {
@@ -151,10 +151,44 @@
                     background-color: var(--color-primarylight);
                 }
             }
+        }
 
-            &::-webkit-scrollbar {
-                // TODO reuse app scrollbar styles
-                width: var(--scroll-bar-width);
+        .background-toggle-container {
+            align-self: stretch;
+            flex: 1;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            cursor: pointer;
+
+            .background-toggle-checkbox {
+                --icon-color: var(--color-surfacelighter);
+                --background-color: transparent;
+                width: calc(var(--subtitles-picker-button-size) * 0.6);
+                height: calc(var(--subtitles-picker-button-size) * 0.6);
+
+                &:global(.checked) {
+                    --background-color: var(--color-primarydark);
+                }
+            }
+
+            .background-toggle-label {
+                flex: 1;
+                padding: 0 0.5em;
+                font-size: 1em;
+                line-height: 1.1em;
+                max-height: 2.2em;
+                word-break: break-all;
+                overflow: hidden;
+                color: var(--color-surfacelighter);
+            }
+
+            &:hover {
+                .background-toggle-checkbox {
+                    &:global(.checked) {
+                        --background-color: var(--color-primarylight);
+                    }
+                }
             }
         }
 
@@ -171,7 +205,7 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                background-color: var(--color-primary);
+                background-color: var(--color-primarydark);
                 cursor: pointer;
 
                 .number-input-icon {

@@ -16,8 +16,9 @@ class VolumeBar extends Component {
 
     shouldComponentUpdate(nextProps, nextState) {
         return nextState.volume !== this.state.volume ||
+            nextProps.className !== this.props.className ||
             nextProps.volume !== this.props.volume ||
-            nextProps.className !== this.props.className;
+            nextProps.toggleButtonComponent !== this.props.toggleButtonComponent;
     }
 
     componentWillUnmount() {
@@ -25,7 +26,8 @@ class VolumeBar extends Component {
     }
 
     toogleVolumeMute = () => {
-        this.props.volume === 0 ? this.props.unmute() : this.props.mute();
+        const command = this.props.volume > 0 ? 'mute' : 'unmute';
+        this.props.dispatch('command', command);
     }
 
     resetVolumeDebounced = debounce(() => {
@@ -40,7 +42,7 @@ class VolumeBar extends Component {
     onComplete = (volume) => {
         this.resetVolumeDebounced();
         this.setState({ volume });
-        this.props.setVolume(volume);
+        this.props.dispatch('setProp', 'volume', volume);
     }
 
     onCancel = () => {
@@ -79,10 +81,12 @@ class VolumeBar extends Component {
 VolumeBar.propTypes = {
     className: PropTypes.string,
     volume: PropTypes.number,
-    toggleButtonComponent: PropTypes.oneOfType([PropTypes.object, PropTypes.func]).isRequired,
-    setVolume: PropTypes.func.isRequired,
-    mute: PropTypes.func.isRequired,
-    unmute: PropTypes.func.isRequired
+    toggleButtonComponent: PropTypes.oneOfType([
+        PropTypes.func,
+        PropTypes.string,
+        PropTypes.shape({ render: PropTypes.func.isRequired }),
+    ]).isRequired,
+    dispatch: PropTypes.func.isRequired
 };
 
 export default VolumeBar;

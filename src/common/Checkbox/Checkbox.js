@@ -5,22 +5,33 @@ import Icon from 'stremio-icons/dom';
 import styles from './styles';
 
 class Checkbox extends Component {
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps) {
         return nextProps.checked !== this.props.checked ||
-            nextProps.enabled !== this.props.enabled;
+            nextProps.disabled !== this.props.disabled ||
+            nextProps.className !== this.props.className;
     }
 
-    onClick = () => {
-        if (this.props.enabled && typeof this.props.onClick === 'function') {
+    onClick = (event) => {
+        event.preventDefault();
+        if (typeof this.props.onClick === 'function') {
             this.props.onClick();
         }
     }
 
     render() {
         return (
-            <div className={classnames(styles['root'], this.props.className, { [styles['checkbox-checked']]: this.props.checked }, { [styles['checkbox-disabled']]: !this.props.enabled })}>
-                <Icon className={classnames(styles['icon'])} icon={this.props.checked ? 'ic_check' : 'ic_box_empty'} />
-                <input type={'checkbox'} className={styles['native-checkbox']} defaultChecked={this.props.checked} disabled={!this.props.enabled} onClick={this.onClick} />
+            <div className={classnames(this.props.className, styles['checkbox-container'], { 'checked': this.props.checked }, { 'disabled': this.props.disabled })}>
+                <Icon
+                    className={styles['icon']}
+                    icon={this.props.checked ? 'ic_check' : 'ic_box_empty'}
+                />
+                <input
+                    className={styles['native-checkbox']}
+                    type={'checkbox'}
+                    disabled={this.props.disabled}
+                    defaultChecked={this.props.checked}
+                    onClick={this.onClick}
+                />
             </div>
         );
     }
@@ -28,13 +39,13 @@ class Checkbox extends Component {
 
 Checkbox.propTypes = {
     className: PropTypes.string,
-    enabled: PropTypes.bool.isRequired,
+    disabled: PropTypes.bool.isRequired,
     checked: PropTypes.bool.isRequired,
     onClick: PropTypes.func
 };
 
 Checkbox.defaultProps = {
-    enabled: true,
+    disabled: false,
     checked: false
 };
 

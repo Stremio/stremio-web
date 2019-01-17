@@ -37,7 +37,7 @@ class SeekBar extends Component {
     onComplete = (time) => {
         this.resetTimeDebounced();
         this.setState({ time });
-        this.props.setTime(time);
+        this.props.dispatch('setProp', 'time', time);
     }
 
     onCancel = () => {
@@ -112,7 +112,7 @@ SeekBar.propTypes = {
     className: PropTypes.string,
     time: PropTypes.number,
     duration: PropTypes.number,
-    setTime: PropTypes.func.isRequired
+    dispatch: PropTypes.func.isRequired
 };
 
 export default SeekBar;
