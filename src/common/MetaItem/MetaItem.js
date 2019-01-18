@@ -14,6 +14,21 @@ class MetaItem extends Component {
         };
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        return nextState.menuPopupOpen !== this.state.menuPopupOpen ||
+            nextProps.className !== this.props.className ||
+            nextProps.popupClassName !== this.props.popupClassName ||
+            nextProps.type !== this.props.type ||
+            nextProps.relativeSize !== this.props.relativeSize ||
+            nextProps.posterShape !== this.props.posterShape ||
+            nextProps.poster !== this.props.poster ||
+            nextProps.title !== this.props.title ||
+            nextProps.subtitle !== this.props.subtitle ||
+            nextProps.progress !== this.props.progress ||
+            nextProps.released !== this.props.released ||
+            nextProps.menu !== this.props.menu;
+    }
+
     onMenuPopupOpen = () => {
         this.setState({ menuPopupOpen: true });
     }
