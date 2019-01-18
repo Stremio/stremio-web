@@ -11,12 +11,29 @@ class Intro extends Component {
             selectedOption: 'signUp',
             termsAccepted: false,
             privacyPolicyAccepted: false,
-            communicationsAccepted: false
+            communicationsAccepted: false,
+            email: '',
+            password: '',
+            error: ''
         };
     }
 
     changeSelectedOption = (event) => {
-        this.setState({ selectedOption: event.currentTarget.dataset.option });
+        this.setState({ selectedOption: event.currentTarget.dataset.option,
+            termsAccepted: false,
+            privacyPolicyAccepted: false,
+            communicationsAccepted: false,
+            email: '',
+            password: '',
+            error: '', });
+    }
+
+    emailOnChange = (event) => {
+        this.setState({ email: event.target.value });
+    }
+
+    passwordOnChange = (event) => {
+        this.setState({ password: event.target.value });
     }
 
     toggleTerms = () => {
@@ -41,70 +58,121 @@ class Intro extends Component {
         return nextState.selectedOption !== this.state.selectedOption ||
             nextState.termsAccepted !== this.state.termsAccepted ||
             nextState.privacyPolicyAccepted !== this.state.privacyPolicyAccepted ||
-            nextState.communicationsAccepted !== this.state.communicationsAccepted;
+            nextState.communicationsAccepted !== this.state.communicationsAccepted ||
+            nextState.email !== this.state.email ||
+            nextState.password !== this.state.password ||
+            nextState.error !== this.state.error;
     }
 
-    renderAcceptanceOption({ label, href, checked, onClick }) {
+    renderAcceptanceOption({ accept, label, href, checked, onClick }) {
         return (
             <label className={styles['toggle-option']}>
-                <Checkbox className={styles['checkbox-size']} checked={checked} disabled={false} onClick={onClick} />
-                <div className={styles['accept']}>I accept the
-                        <span>&nbsp;</span>
-                    <a href={href} target={'_blank'} className={styles['acceptance-label']}>{label}</a>
+                <div className={styles['checkbox-container']}>
+                    <Checkbox className={styles['checkbox']} checked={checked} disabled={false} onClick={onClick} />
+                </div>
+                <div className={styles['accept']}>{accept}
+                    <span>&nbsp;</span>
+                    <a href={href} target={'_blank'} tabIndex={'-1'} className={styles['acceptance-label']}>{label}</a>
                 </div>
             </label>
         );
     }
 
-    renderErrorLabel = () => {
-        return (
-            <div className={styles['error-label']}></div>
-        );
+    renderLoginErrorLabel = () => {
+        if (this.state.email.length < 8) {
+            event.preventDefault();
+            this.setState({ error: 'Please enter a valid email' });
+        } else {
+            if (this.state.password.length < 1) {
+                event.preventDefault();
+                this.setState({ error: 'Wrong email or password. In case you have forgotten your password, click here.' });
+            }
+        }
+    }
+
+    renderSingUpErrorLabel = () => {
+        if (this.state.email.length < 8) {
+            event.preventDefault();
+            this.setState({ error: 'Please enter a valid email' });
+        } else {
+            if (!this.state.termsAccepted) {
+                event.preventDefault();
+                this.setState({ error: 'You must accept the Terms of Service' });
+            } else {
+                if (!this.state.privacyPolicyAccepted) {
+                    event.preventDefault();
+                    this.setState({ error: 'You must accept the Privacy Policy' });
+                } else {
+                    if (this.state.password.length < 1) {
+                        event.preventDefault();
+                        this.setState({ error: 'Invalid password' });
+                    } else {
+                        this.setState({ error: 'Passwords dont match' });
+                    }
+                }
+            }
+        }
+    }
+
+    renderGuestLoginErrorLabel = () => {
+        if (!this.state.termsAccepted) {
+            event.preventDefault();
+            this.setState({ error: 'You must accept the Terms of Service' });
+        }
     }
 
     renderSignUpForm = () => {
         return (
-            <div className={styles['login-form']}>
+            <form className={styles['login-form']}>
                 <div className={styles['fb-button']}>
                     <Icon className={styles['icon']} icon={'ic_facebook'} />
                     <div className={styles['label']}>Login with Facebook</div>
                 </div>
                 <div className={styles['text']}>We won't post anything on your behalf</div>
                 <div className={styles['or']}>OR</div>
-                <input className={styles['email']} type={'text'} placeholder={'Email'} />
-                <input className={styles['password']} type={'text'} placeholder={'Password'} />
-                <input className={styles['password']} type={'text'} placeholder={'Confirm Password'} />
+                <input className={styles['email']} type={'text'} placeholder={'Email'} value={this.state.email} onChange={this.emailOnChange} />
+                <input className={styles['password']} type={'password'} placeholder={'Password'} value={this.state.password} onChange={this.passwordOnChange} />
+                <input className={styles['password']} type={'password'} placeholder={'Confirm Password'} />
                 <div className={styles['acceptance-section']}>
-                    {this.renderAcceptanceOption({ label: 'Terms and conditions', href: 'https://www.stremio.com/tos', checked: this.state.termsAccepted, onClick: this.toggleTerms })}
-                    {this.renderAcceptanceOption({ label: 'Privacy Policy', href: 'https://www.stremio.com/privacy', checked: this.state.privacyPolicyAccepted, onClick: this.togglePrivacyPolicy })}
-                    {this.renderAcceptanceOption({ label: 'to receive marketing communications from Stremio', href: 'https://www.stremio.com/privacy', checked: this.state.communicationsAccepted, onClick: this.toggleCommunications })}
+                    {this.renderAcceptanceOption({ accept: 'I have read and agree with the Stremio', label: 'Terms and conditions', href: 'https://www.stremio.com/tos', checked: this.state.termsAccepted, onClick: this.toggleTerms })}
+                    {this.renderAcceptanceOption({ accept: 'I have read and agree with the Stremio', label: 'Privacy Policy', href: 'https://www.stremio.com/privacy', checked: this.state.privacyPolicyAccepted, onClick: this.togglePrivacyPolicy })}
+                    {this.renderAcceptanceOption({ accept: 'I agree', label: 'to receive marketing communications from Stremio', href: 'https://www.stremio.com/privacy', checked: this.state.communicationsAccepted, onClick: this.toggleCommunications })}
                 </div>
-                <div className={styles['login-button']}>
-                    <div className={styles['label']}>SIGN UP</div>
-                </div>
+                {
+                    this.state.error ?
+                        <div className={styles['error']}>{this.state.error}</div>
+                        :
+                        null
+                }
+                <input className={styles['submit-button']} type={'submit'} value={'SING UP'} onClick={this.renderSingUpErrorLabel}>
+                </input>
                 <div className={styles['option']} data-option={'login'} onClick={this.changeSelectedOption}>LOG IN</div>
-                <div className={styles['option']}>GUEST LOGIN</div>
-                {/* <a href={this.state.termsAccepted ? '#/' : null} className={styles['option']}>GUEST LOGIN</a> */}
-            </div>
+                <a href={'#/'} className={styles['option']} onClick={this.renderGuestLoginErrorLabel}>GUEST LOGIN</a>
+            </form>
         );
     }
 
     renderLoginForm = () => {
         return (
-            <div className={styles['login-form']}>
+            <form className={styles['login-form']}>
                 <div className={styles['fb-button']}>
                     <Icon className={styles['icon']} icon={'ic_facebook'} />
                     <div className={styles['label']}>Login with Facebook</div>
                 </div>
                 <div className={styles['text']}>We won't post anything on your behalf</div>
                 <div className={styles['or']}>OR</div>
-                <input className={styles['email']} type={'text'} placeholder={'Email'} />
-                <input className={styles['password']} type={'text'} placeholder={'Password'} />
-                <div className={styles['login-button']}>
-                    <div className={styles['label']}>LOG IN</div>
-                </div>
+                <input className={styles['email']} type={'text'} placeholder={'Email'} value={this.state.email} onChange={this.emailOnChange} />
+                <input className={styles['password']} type={'password'} placeholder={'Password'} value={this.state.password} onChange={this.passwordOnChange} />
+                {
+                    this.state.error ?
+                        <div className={styles['error']}>{this.state.error}</div>
+                        :
+                        null
+                }
+                <input className={styles['submit-button']} type={'submit'} value={'LOG IN'} onClick={this.renderLoginErrorLabel}>
+                </input>
                 <div className={styles['option']} data-option={'signUp'} onClick={this.changeSelectedOption}>SING UP WITH EMAIL</div>
-            </div>
+            </form>
         );
     }
 
