@@ -60,12 +60,10 @@ class MetaItem extends Component {
                     this.props.menu.length > 0 ?
                         <Popup className={this.props.popupClassName} onOpen={this.onMenuPopupOpen} onClose={this.onMenuPopupClose}>
                             <Popup.Label>
-                                <div className={classnames(styles['menu-label'], { 'active': this.state.menuPopupOpen })}>
-                                    <Icon
-                                        className={styles['menu-icon']}
-                                        icon={'ic_more'}
-                                    />
-                                </div>
+                                <Icon
+                                    className={classnames(styles['menu-icon'], { 'active': this.state.menuPopupOpen })}
+                                    icon={'ic_more'}
+                                />
                             </Popup.Label>
                             <Popup.Menu>
                                 <div className={styles['menu-items-container']}>
