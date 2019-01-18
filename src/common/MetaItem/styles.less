@@ -1,5 +1,6 @@
 .meta-item-container {
     margin: 10px;
+    padding: calc(var(--progress-bar-size) * 0.5);
     display: inline-flex;
     flex-direction: column;
     background-color: var(--color-backgroundlight);
@@ -73,6 +74,12 @@
         }
     }
 
+    &:hover {
+        cursor: pointer;
+        padding: 0;
+        border: calc(var(--progress-bar-size) * 0.5) solid white;
+    }
+
     &.poster-shape-square {
         .poster-image-container {
             width: var(--poster-relative-size);
@@ -133,6 +140,7 @@
 
         &:hover {
             background-color: var(--color-surfacelight);
+            cursor: pointer;
         }
     }
 }
