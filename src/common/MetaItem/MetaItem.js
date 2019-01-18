@@ -31,10 +31,23 @@ class MetaItem extends PureComponent {
         );
     }
 
+    renderTitleBar() {
+        if (this.props.title.length === 0) {
+            return null;
+        }
+
+        return (
+            <div className={styles['title-bar-container']}>
+                <div className={styles['title']}>{this.props.title}</div>
+            </div>
+        );
+    }
+
     render() {
         return (
             <div className={classnames(styles['meta-item-container'], styles[`relative-size-${this.props.relativeSize}`], styles[`poster-shape-${this.props.posterShape}`], this.props.className)}>
                 {this.renderPoster()}
+                {this.renderTitleBar()}
             </div>
         );
     }

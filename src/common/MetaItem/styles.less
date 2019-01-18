@@ -8,6 +8,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        overflow: hidden;
         z-index: 0;
 
         .placeholder-image {
@@ -43,6 +44,20 @@
                 height: 100%;
                 background-color: var(--color-primary);
             }
+        }
+    }
+
+    .title-bar-container {
+        height: calc(var(--poster-relative-size) * 0.14);
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        .title {
+            flex: 1;
+            font-size: 1.4em;
+            padding: 0 0.5em;
+            color: var(--color-surfacelighter);
         }
     }
 
