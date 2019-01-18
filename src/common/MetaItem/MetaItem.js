@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { Popup } from 'stremio-common';
@@ -48,35 +48,45 @@ class MetaItem extends Component {
         );
     }
 
-    renderTitleBar() {
-        if (this.props.title.length === 0 && this.props.menu.length === 0) {
+    renderInfoBar() {
+        if (this.props.title.length === 0 && this.props.menu.length === 0 && this.props.subtitle.length === 0) {
             return null;
         }
 
         return (
-            <div className={styles['title-bar-container']}>
-                <div className={styles['title']}>{this.props.title}</div>
+            <Fragment>
+                <div className={styles['title-bar-container']}>
+                    <div className={styles['title']}>{this.props.title}</div>
+                    {
+                        this.props.menu.length > 0 ?
+                            <Popup className={this.props.popupClassName} onOpen={this.onMenuPopupOpen} onClose={this.onMenuPopupClose}>
+                                <Popup.Label>
+                                    <Icon
+                                        className={classnames(styles['menu-icon'], { 'active': this.state.menuPopupOpen })}
+                                        icon={'ic_more'}
+                                    />
+                                </Popup.Label>
+                                <Popup.Menu>
+                                    <div className={styles['menu-items-container']}>
+                                        {this.props.menu.map(({ label, callback }) => (
+                                            <div key={label} className={styles['menu-item']} onClick={callback}>{label}</div>
+                                        ))}
+                                    </div>
+                                </Popup.Menu>
+                            </Popup>
+                            :
+                            null
+                    }
+                </div>
                 {
-                    this.props.menu.length > 0 ?
-                        <Popup className={this.props.popupClassName} onOpen={this.onMenuPopupOpen} onClose={this.onMenuPopupClose}>
-                            <Popup.Label>
-                                <Icon
-                                    className={classnames(styles['menu-icon'], { 'active': this.state.menuPopupOpen })}
-                                    icon={'ic_more'}
-                                />
-                            </Popup.Label>
-                            <Popup.Menu>
-                                <div className={styles['menu-items-container']}>
-                                    {this.props.menu.map(({ label, callback }) => (
-                                        <div key={label} className={styles['menu-item']} onClick={callback}>{label}</div>
-                                    ))}
-                                </div>
-                            </Popup.Menu>
-                        </Popup>
+                    this.props.subtitle.length > 0 ?
+                        <div className={styles['title-bar-container']}>
+                            <div className={styles['title']}>{this.props.subtitle}</div>
+                        </div>
                         :
                         null
                 }
-            </div>
+            </Fragment>
         );
     }
 
@@ -84,7 +94,7 @@ class MetaItem extends Component {
         return (
             <div className={classnames(styles['meta-item-container'], styles[`relative-size-${this.props.relativeSize}`], styles[`poster-shape-${this.props.posterShape}`], this.props.className)}>
                 {this.renderPoster()}
-                {this.renderTitleBar()}
+                {this.renderInfoBar()}
             </div>
         );
     }
