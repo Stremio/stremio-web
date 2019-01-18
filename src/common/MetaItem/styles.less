@@ -35,9 +35,9 @@
             bottom: 0;
             left: 0;
             z-index: 2;
-            height: 6px;
+            height: var(--progress-bar-size);
             background-color: var(--color-backgroundlighter);
-            box-shadow: 0 0 20px 8px var(--color-backgrounddarker);
+            box-shadow: 0 0 calc(var(--progress-bar-size) * 4) calc(var(--progress-bar-size) * 1.5) var(--color-backgrounddarker);
 
             .progress {
                 height: 100%;
