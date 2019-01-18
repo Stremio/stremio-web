@@ -1,16 +1,60 @@
 .meta-item-container {
     margin: 10px;
     display: inline-block;
+    background-color: var(--color-backgroundlight);
+
+    .poster-image-container {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 0;
+
+        .placeholder-image {
+            width: calc(var(--poster-relative-size) * 0.5);
+            height: calc(var(--poster-relative-size) * 0.5);
+            fill: var(--color-surfacelighter);
+        }
+
+        .poster-image {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 1;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-origin: border-box;
+        }
+
+        .progress-bar-container {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 2;
+            height: 6px;
+            background-color: var(--color-backgroundlighter);
+            box-shadow: 0 0 20px 8px var(--color-backgrounddarker);
+
+            .progress {
+                height: 100%;
+                background-color: var(--color-primary);
+            }
+        }
+    }
 
     &.poster-shape-square {
-        .poster-image {
+        .poster-image-container {
             width: var(--poster-relative-size);
             height: var(--poster-relative-size);
         }
     }
 
     &.poster-shape-landscape {
-        .poster-image {
+        .poster-image-container {
             width: calc(var(--poster-relative-size) / var(--landscape-shape-ratio));
             height: var(--poster-relative-size);
         }
@@ -18,14 +62,14 @@
 
     &.poster-shape-poster {
         &.relative-size-auto {
-            .poster-image {
+            .poster-image-container {
                 width: var(--poster-relative-size);
                 height: calc(var(--poster-relative-size) * var(--poster-shape-ratio));
             }
         }
 
         &.relative-size-height {
-            .poster-image {
+            .poster-image-container {
                 width: calc(var(--poster-relative-size) / var(--poster-shape-ratio));
                 height: var(--poster-relative-size);
             }
