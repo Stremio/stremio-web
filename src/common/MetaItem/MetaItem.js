@@ -22,6 +22,13 @@ class MetaItem extends Component {
         this.setState({ menuPopupOpen: false });
     }
 
+    onClick = (event) => {
+        event.preventDefault();
+        if (typeof this.props.onClick === 'function') {
+            this.props.onClick();
+        }
+    }
+
     renderProgress() {
         if (this.props.progress === 0) {
             return null;
@@ -92,10 +99,10 @@ class MetaItem extends Component {
 
     render() {
         return (
-            <div className={classnames(styles['meta-item-container'], styles[`relative-size-${this.props.relativeSize}`], styles[`poster-shape-${this.props.posterShape}`], this.props.className)}>
+            <a className={classnames(styles['meta-item-container'], styles[`relative-size-${this.props.relativeSize}`], styles[`poster-shape-${this.props.posterShape}`], this.props.className)} href="#" onClick={this.onClick}>
                 {this.renderPoster()}
                 {this.renderInfoBar()}
-            </div>
+            </a>
         );
     }
 }
@@ -103,6 +110,7 @@ class MetaItem extends Component {
 MetaItem.propTypes = {
     className: PropTypes.string,
     popupClassName: PropTypes.string,
+    onClick: PropTypes.func,
     type: PropTypes.string.isRequired,
     relativeSize: PropTypes.oneOf(['auto', 'height']).isRequired,
     posterShape: PropTypes.oneOf(['poster', 'landscape', 'square']).isRequired,
