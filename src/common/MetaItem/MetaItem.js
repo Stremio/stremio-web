@@ -1,10 +1,27 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
+import { Popup } from 'stremio-common';
 import Icon from 'stremio-icons/dom';
 import styles from './styles';
 
-class MetaItem extends PureComponent {
+class MetaItem extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            menuPopupOpen: false
+        };
+    }
+
+    onMenuPopupOpen = () => {
+        this.setState({ menuPopupOpen: true });
+    }
+
+    onMenuPopupClose = () => {
+        this.setState({ menuPopupOpen: false });
+    }
+
     renderProgress() {
         if (this.props.progress === 0) {
             return null;
@@ -32,13 +49,35 @@ class MetaItem extends PureComponent {
     }
 
     renderTitleBar() {
-        if (this.props.title.length === 0) {
+        if (this.props.title.length === 0 && this.props.menu.length === 0) {
             return null;
         }
 
         return (
             <div className={styles['title-bar-container']}>
                 <div className={styles['title']}>{this.props.title}</div>
+                {
+                    this.props.menu.length > 0 ?
+                        <Popup className={this.props.popupClassName} onOpen={this.onMenuPopupOpen} onClose={this.onMenuPopupClose}>
+                            <Popup.Label>
+                                <div className={classnames(styles['menu-label'], { 'active': this.state.menuPopupOpen })}>
+                                    <Icon
+                                        className={styles['menu-icon']}
+                                        icon={'ic_more'}
+                                    />
+                                </div>
+                            </Popup.Label>
+                            <Popup.Menu>
+                                <div className={styles['menu-items-container']}>
+                                    {this.props.menu.map(({ label, callback }) => (
+                                        <div key={label} className={styles['menu-item']} onClick={callback}>{label}</div>
+                                    ))}
+                                </div>
+                            </Popup.Menu>
+                        </Popup>
+                        :
+                        null
+                }
             </div>
         );
     }
@@ -55,6 +94,7 @@ class MetaItem extends PureComponent {
 
 MetaItem.propTypes = {
     className: PropTypes.string,
+    popupClassName: PropTypes.string,
     type: PropTypes.string.isRequired,
     relativeSize: PropTypes.oneOf(['auto', 'height']).isRequired,
     posterShape: PropTypes.oneOf(['poster', 'landscape', 'square']).isRequired,
@@ -63,6 +103,10 @@ MetaItem.propTypes = {
     subtitle: PropTypes.string.isRequired,
     progress: PropTypes.number.isRequired,
     released: PropTypes.instanceOf(Date).isRequired,
+    menu: PropTypes.arrayOf(PropTypes.shape({
+        label: PropTypes.string.isRequired,
+        callback: PropTypes.func.isRequired
+    })).isRequired
 };
 MetaItem.defaultProps = {
     relativeSize: 'auto',
@@ -71,7 +115,8 @@ MetaItem.defaultProps = {
     title: '',
     subtitle: '',
     progress: 0,
-    released: new Date(NaN)
+    released: new Date(NaN),
+    menu: Object.freeze([])
 };
 
 export default MetaItem;
