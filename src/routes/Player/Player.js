@@ -98,6 +98,7 @@ class Player extends Component {
         return (
             <ControlBar
                 className={classnames(styles['layer'], styles['control-bar-layer'])}
+                popupClassName={styles['control-bar-popup-container']}
                 paused={this.state.paused}
                 time={this.state.time}
                 duration={this.state.duration}
