@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import pathToRegexp from 'path-to-regexp';
 import PathUtils from 'path';
 import UrlUtils from 'url';
+import { FocusableProvider } from 'stremio-common';
 
 class Router extends Component {
     constructor(props) {
@@ -99,7 +100,11 @@ class Router extends Component {
                 {
                     this.state.views
                         .filter(({ element }) => React.isValidElement(element))
-                        .map(({ path, element }) => <div key={path} className={this.props.routeContainerClassName}>{element}</div>)
+                        .map(({ path, element }) => (
+                            <FocusableProvider key={path}>
+                                <div className={this.props.routeContainerClassName}>{element}</div>
+                            </FocusableProvider>
+                        ))
                 }
             </Fragment>
         );
