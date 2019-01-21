@@ -54,6 +54,7 @@ class Popup extends Component {
             this.popupMutationObserver.observe(document.documentElement, {
                 childList: true,
                 attributes: true,
+                characterData: true,
                 subtree: true
             });
             if (typeof this.props.onOpen === 'function') {
