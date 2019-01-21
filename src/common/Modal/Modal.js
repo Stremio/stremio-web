@@ -6,7 +6,7 @@ const Modal = (props) => ReactDOM.createPortal(
     <FocusableProvider>
         <div {...props} />
     </FocusableProvider>,
-    document.getElementById('app')
+    Modal.container
 );
 
 export default Modal;
