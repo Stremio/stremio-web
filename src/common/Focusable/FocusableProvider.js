@@ -29,16 +29,7 @@ class FocusableProvider extends Component {
     }
 
     containerClildListOnChange = () => {
-        for (let i = this.childElementRef.current.parentElement.children.length - 1; i >= 0; i--) {
-            const child = this.childElementRef.current.parentElement.children[i];
-            const tagName = child.tagName.toLowerCase();
-            if (tagName !== 'script' && tagName !== 'style') {
-                this.setState({
-                    focusable: this.childElementRef.current === child
-                });
-                break;
-            }
-        }
+        this.setState({ focusable: this.childElementRef.current.nextElementSibling === null });
     }
 
     render() {
