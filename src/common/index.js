@@ -9,6 +9,7 @@ import MetaItem from './MetaItem';
 import ShareAddon from './ShareAddon';
 import UserPanel from './UserPanel';
 import Slider from './Slider';
+import { Focusable, FocusableProvider } from './Focusable';
 
 export {
     Checkbox,
@@ -21,5 +22,7 @@ export {
     MetaItem,
     ShareAddon,
     UserPanel,
-    Slider
+    Slider,
+    Focusable,
+    FocusableProvider
 };
