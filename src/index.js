@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './app';
 import { Modal } from 'stremio-common';
+import App from './app';
 
-const appContainer = document.getElementById('app');
+const container = document.getElementById('app');
 
-Modal.container = appContainer;
+Modal.container = container;
 
-ReactDOM.render(<App />, appContainer);
+ReactDOM.render(<App />, container);
