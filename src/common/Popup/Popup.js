@@ -108,15 +108,15 @@ class Popup extends Component {
         this.labelBorderLeftRef.current.removeAttribute('style');
 
         const menuDirections = {};
-        const bodyRect = document.body.getBoundingClientRect();
+        const documentRect = document.documentElement.getBoundingClientRect();
         const labelRect = this.labelRef.current.getBoundingClientRect();
         const menuChildredRect = this.menuChildrenRef.current.getBoundingClientRect();
         const borderSize = parseFloat(window.getComputedStyle(this.hiddenBorderRef.current).getPropertyValue('border-top-width'));
         const labelPosition = {
-            left: labelRect.x - bodyRect.x,
-            top: labelRect.y - bodyRect.y,
-            right: (bodyRect.width + bodyRect.x) - (labelRect.x + labelRect.width),
-            bottom: (bodyRect.height + bodyRect.y) - (labelRect.y + labelRect.height)
+            left: labelRect.x - documentRect.x,
+            top: labelRect.y - documentRect.y,
+            right: (documentRect.width + documentRect.x) - (labelRect.x + labelRect.width),
+            bottom: (documentRect.height + documentRect.y) - (labelRect.y + labelRect.height)
         };
 
         if (menuChildredRect.height <= labelPosition.bottom) {
