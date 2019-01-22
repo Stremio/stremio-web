@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import { Popup } from 'stremio-common';
+import { Popup, Button } from 'stremio-common';
 import Icon from 'stremio-icons/dom';
 import styles from './styles';
 
@@ -18,6 +18,7 @@ class MetaItem extends Component {
         return nextState.menuPopupOpen !== this.state.menuPopupOpen ||
             nextProps.className !== this.props.className ||
             nextProps.popupClassName !== this.props.popupClassName ||
+            nextProps.id !== this.props.id ||
             nextProps.type !== this.props.type ||
             nextProps.relativeSize !== this.props.relativeSize ||
             nextProps.posterShape !== this.props.posterShape ||
@@ -38,14 +39,13 @@ class MetaItem extends Component {
     }
 
     onClick = (event) => {
-        event.preventDefault();
         if (typeof this.props.onClick === 'function') {
-            this.props.onClick();
+            this.props.onClick(event);
         }
     }
 
     renderProgress() {
-        if (this.props.progress === 0) {
+        if (this.props.progress <= 0) {
             return null;
         }
 
@@ -71,7 +71,7 @@ class MetaItem extends Component {
     }
 
     renderInfoBar() {
-        if (this.props.title.length === 0 && this.props.menu.length === 0 && this.props.subtitle.length === 0) {
+        if (this.props.title.length === 0 && this.props.subtitle.length === 0 && this.props.menu.length === 0) {
             return null;
         }
 
@@ -90,8 +90,8 @@ class MetaItem extends Component {
                                 </Popup.Label>
                                 <Popup.Menu>
                                     <div className={styles['menu-items-container']}>
-                                        {this.props.menu.map(({ label, callback }) => (
-                                            <div key={label} className={styles['menu-item']} onClick={callback}>{label}</div>
+                                        {this.props.menu.map(({ label, onSelect }) => (
+                                            <Button key={label} className={styles['menu-item']} onClick={onSelect}>{label}</Button>
                                         ))}
                                     </div>
                                 </Popup.Menu>
@@ -114,10 +114,10 @@ class MetaItem extends Component {
 
     render() {
         return (
-            <a className={classnames(styles['meta-item-container'], styles[`relative-size-${this.props.relativeSize}`], styles[`poster-shape-${this.props.posterShape}`], this.props.className)} href="#" onClick={this.onClick}>
+            <Button className={classnames(styles['meta-item-container'], styles[`relative-size-${this.props.relativeSize}`], styles[`poster-shape-${this.props.posterShape}`], this.props.className)} data-meta-item-id={this.props.id} onClick={this.onClick}>
                 {this.renderPoster()}
                 {this.renderInfoBar()}
-            </a>
+            </Button>
         );
     }
 }
@@ -126,6 +126,7 @@ MetaItem.propTypes = {
     className: PropTypes.string,
     popupClassName: PropTypes.string,
     onClick: PropTypes.func,
+    id: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
     relativeSize: PropTypes.oneOf(['auto', 'height']).isRequired,
     posterShape: PropTypes.oneOf(['poster', 'landscape', 'square']).isRequired,
@@ -136,7 +137,7 @@ MetaItem.propTypes = {
     released: PropTypes.instanceOf(Date).isRequired,
     menu: PropTypes.arrayOf(PropTypes.shape({
         label: PropTypes.string.isRequired,
-        callback: PropTypes.func.isRequired
+        onSelect: PropTypes.func.isRequired
     })).isRequired
 };
 MetaItem.defaultProps = {
