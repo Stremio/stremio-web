@@ -118,8 +118,12 @@
                         fill: var(--color-surface);
 
                         &:global(.checked) {
-                            fill: var(--color-surfacelighter);
+                            fill: var(--color-surfacelight);
                             background-color: var(--color-primary);
+                        }
+
+                        &:focus-within {
+                            fill: var(--color-surfacelighter);
                         }
                     }
                 }

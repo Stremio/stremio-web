@@ -7,6 +7,10 @@ class Intro extends Component {
     constructor(props) {
         super(props);
 
+        this.emailRef = React.createRef();
+        this.passwordRef = React.createRef();
+        this.confirmPasswordRef = React.createRef();
+
         this.state = {
             selectedOption: 'signUp',
             termsAccepted: false,
@@ -78,7 +82,7 @@ class Intro extends Component {
         );
     }
 
-    renderLoginErrorLabel = () => {
+    loginErrorLabel = () => {
         if (this.state.email.length < 8) {
             event.preventDefault();
             this.setState({ error: 'Please enter a valid email' });
@@ -90,7 +94,7 @@ class Intro extends Component {
         }
     }
 
-    renderSingUpErrorLabel = () => {
+    singUpErrorLabel = () => {
         if (this.state.email.length < 8) {
             event.preventDefault();
             this.setState({ error: 'Please enter a valid email' });
@@ -114,10 +118,16 @@ class Intro extends Component {
         }
     }
 
-    renderGuestLoginErrorLabel = () => {
+    guestLoginErrorLabel = () => {
         if (!this.state.termsAccepted) {
             event.preventDefault();
             this.setState({ error: 'You must accept the Terms of Service' });
+        }
+    }
+
+    focusNextRef = (event) => {
+        if(event.keyCode === 13 && this.state.email.length > 7) {
+            this.passwordRef.current.focus();
         }
     }
 
@@ -130,13 +140,13 @@ class Intro extends Component {
                 </div>
                 <div className={styles['text']}>We won't post anything on your behalf</div>
                 <div className={styles['or']}>OR</div>
-                <input className={styles['email']} type={'text'} placeholder={'Email'} value={this.state.email} onChange={this.emailOnChange} />
-                <input className={styles['password']} type={'password'} placeholder={'Password'} value={this.state.password} onChange={this.passwordOnChange} />
-                <input className={styles['password']} type={'password'} placeholder={'Confirm Password'} />
+                <input ref={this.emailRef} onKeyDown={this.focusNextRef} className={styles['email']} type={'text'} placeholder={'Email'} value={this.state.email} onChange={this.emailOnChange} />
+                <input ref={this.passwordRef} onKeyDown={this.focusNextRef} className={styles['password']} type={'password'} placeholder={'Password'} value={this.state.password} onChange={this.passwordOnChange} />
+                <input ref={this.confirmPasswordRef} className={styles['password']} type={'password'} placeholder={'Confirm Password'} />
                 <div className={styles['acceptance-section']}>
                     {this.renderAcceptanceOption({ accept: 'I have read and agree with the Stremio', label: 'Terms and conditions', href: 'https://www.stremio.com/tos', checked: this.state.termsAccepted, onClick: this.toggleTerms })}
                     {this.renderAcceptanceOption({ accept: 'I have read and agree with the Stremio', label: 'Privacy Policy', href: 'https://www.stremio.com/privacy', checked: this.state.privacyPolicyAccepted, onClick: this.togglePrivacyPolicy })}
-                    {this.renderAcceptanceOption({ accept: 'I agree', label: 'to receive marketing communications from Stremio', href: 'https://www.stremio.com/privacy', checked: this.state.communicationsAccepted, onClick: this.toggleCommunications })}
+                    {this.renderAcceptanceOption({ accept: 'I agree to receive marketing communications from Stremio', checked: this.state.communicationsAccepted, onClick: this.toggleCommunications })}
                 </div>
                 {
                     this.state.error ?
@@ -144,10 +154,10 @@ class Intro extends Component {
                         :
                         null
                 }
-                <input className={styles['submit-button']} type={'submit'} value={'SING UP'} onClick={this.renderSingUpErrorLabel}>
+                <input className={styles['submit-button']} type={'submit'} value={'SING UP'} onClick={this.singUpErrorLabel}>
                 </input>
                 <div className={styles['option']} data-option={'login'} onClick={this.changeSelectedOption}>LOG IN</div>
-                <a href={'#/'} className={styles['option']} onClick={this.renderGuestLoginErrorLabel}>GUEST LOGIN</a>
+                <a href={'#/'} className={styles['option']} onClick={this.guestLoginErrorLabel}>GUEST LOGIN</a>
             </form>
         );
     }
@@ -161,15 +171,15 @@ class Intro extends Component {
                 </div>
                 <div className={styles['text']}>We won't post anything on your behalf</div>
                 <div className={styles['or']}>OR</div>
-                <input className={styles['email']} type={'text'} placeholder={'Email'} value={this.state.email} onChange={this.emailOnChange} />
-                <input className={styles['password']} type={'password'} placeholder={'Password'} value={this.state.password} onChange={this.passwordOnChange} />
+                <input ref={this.emailRef} className={styles['email']} type={'text'} placeholder={'Email'} value={this.state.email} onChange={this.emailOnChange} />
+                <input ref={this.passwordRef} className={styles['password']} type={'password'} placeholder={'Password'} value={this.state.password} onChange={this.passwordOnChange} />
                 {
                     this.state.error ?
                         <div className={styles['error']}>{this.state.error}</div>
                         :
                         null
                 }
-                <input className={styles['submit-button']} type={'submit'} value={'LOG IN'} onClick={this.renderLoginErrorLabel}>
+                <input className={styles['submit-button']} type={'submit'} value={'LOG IN'} onClick={this.loginErrorLabel}>
                 </input>
                 <div className={styles['option']} data-option={'signUp'} onClick={this.changeSelectedOption}>SING UP WITH EMAIL</div>
             </form>
