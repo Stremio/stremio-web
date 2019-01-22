@@ -15,6 +15,8 @@ const ControlBarButton = React.forwardRef(({ icon, active, disabled, onClick }, 
     </div>
 ));
 
+ControlBarButton.displayName = 'ControlBarButton';
+
 class ControlBar extends Component {
     constructor(props) {
         super(props);

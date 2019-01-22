@@ -44,4 +44,6 @@ const ButtonWithForwardedRef = React.forwardRef((props, ref) => (
     <Button {...props} forwardedRef={ref} />
 ));
 
+ButtonWithForwardedRef.displayName = 'ButtonWithForwardedRef';
+
 export default ButtonWithForwardedRef;

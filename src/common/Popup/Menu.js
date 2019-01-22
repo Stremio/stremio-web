@@ -6,4 +6,6 @@ const Menu = React.forwardRef(({ children }, ref) => (
     </div>
 ));
 
+Menu.displayName = 'Popup.Menu';
+
 export default Menu;

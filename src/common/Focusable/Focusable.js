@@ -9,4 +9,6 @@ const Focusable = React.forwardRef(({ children, ...props }, ref) => {
     );
 });
 
+Focusable.displayName = 'Focusable';
+
 export default Focusable;
