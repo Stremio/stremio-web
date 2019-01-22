@@ -10,6 +10,7 @@ import ShareAddon from './ShareAddon';
 import UserPanel from './UserPanel';
 import Slider from './Slider';
 import { Focusable, FocusableProvider } from './Focusable';
+import Button from './Button';
 
 export {
     Checkbox,
@@ -24,5 +25,6 @@ export {
     UserPanel,
     Slider,
     Focusable,
-    FocusableProvider
+    FocusableProvider,
+    Button
 };
