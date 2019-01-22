@@ -28,6 +28,15 @@ class FocusableProvider extends Component {
             nextState.focusable !== this.state.focusable;
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        if (!this.state.focusable) {
+            const focusedElement = this.childElementRef.current.querySelector(':focus');
+            if (focusedElement) {
+                focusedElement.blur();
+            }
+        }
+    }
+
     containerClildListOnChange = () => {
         this.setState({ focusable: this.childElementRef.current.nextElementSibling === null });
     }
