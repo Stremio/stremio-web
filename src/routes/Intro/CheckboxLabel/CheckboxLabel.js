@@ -6,20 +6,29 @@ import styles from './styles';
 
 const CheckboxLabel = React.forwardRef(({ className, label, link, href, checked, onClick }, ref) => (
     <label className={classnames(styles['checkbox-label-container'], className)}>
-        <div className={styles['checkbox-container']}>
-            <Checkbox ref={ref} className={styles['checkbox']} checked={checked} onClick={onClick} />
-        </div>
+        <Checkbox ref={ref} className={styles['checkbox']} checked={checked} onClick={onClick} />
         <div className={styles['label']}>
             {label}
-            {link ? <a className={styles['link']} href={href} target={'_blank'} tabIndex={'-1'}> {link}</a> : null}
+            {link && href ? <a className={styles['link']} href={href} target={'_blank'} tabIndex={'-1'}> {link}</a> : null}
         </div>
     </label>
 ));
 
-CheckboxLabel.propTypes = {
-    className: PropTypes.string
-};
-
 CheckboxLabel.displayName = 'CheckboxLabel';
+
+CheckboxLabel.propTypes = {
+    className: PropTypes.string,
+    onClick: PropTypes.func,
+    label: PropTypes.string,
+    link: PropTypes.string,
+    href: PropTypes.string,
+    checked: PropTypes.bool
+};
+CheckboxLabel.defaultProps = {
+    label: '',
+    link: '',
+    href: '',
+    checked: false
+};
 
 export default CheckboxLabel;
