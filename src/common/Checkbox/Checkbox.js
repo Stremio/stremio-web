@@ -26,6 +26,7 @@ class Checkbox extends Component {
                     icon={this.props.checked ? 'ic_check' : 'ic_box_empty'}
                 />
                 <input
+                    ref={this.props.forwardedRef}
                     className={styles['native-checkbox']}
                     type={'checkbox'}
                     disabled={this.props.disabled}
@@ -49,4 +50,10 @@ Checkbox.defaultProps = {
     checked: false
 };
 
-export default Checkbox;
+const CheckboxWithForwardedRef = React.forwardRef((props, ref) => (
+    <Checkbox {...props} forwardedRef={ref} />
+));
+
+CheckboxWithForwardedRef.displayName = 'CheckboxWithForwardedRef';
+
+export default CheckboxWithForwardedRef;

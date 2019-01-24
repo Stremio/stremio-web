@@ -1,6 +1,7 @@
 .intro-container {
     --login-form-width: 270px;
     --spacing: 16px;
+    font-size: 14px;
 }
 
 .intro-container {
@@ -22,8 +23,7 @@
         background-color: var(--color-backgrounddark80);
     }
 
-    .login-form {
-        width: var(--login-form-width);
+    .intro {
         position: absolute;
         z-index: 1;
         top: 0;
@@ -31,140 +31,124 @@
         right: 0;
         bottom: 0;
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
-        flex-direction: column;
-        margin: auto;
 
-        .fb-button {
+        .facebook-button {
             width: var(--login-form-width);
-            height: 68px;
+            height: calc(var(--login-form-width) * 0.25);
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            padding: 20px 0;
+            padding: calc(var(--spacing) * 1.25) 0;
             background: var(--color-secondarydark);
 
             .icon {
                 height: 100%;
-                margin-right: 16px;
+                margin-right: var(--spacing);
                 fill: var(--color-surfacelighter);
             }
 
             .label {
-                font-size: 15px;
+                font-size: 1.1em;
                 color: var(--color-surfacelighter);
             }
         }
 
         .text {
             margin: calc(var(--spacing) * 0.5) 0;
-            font-size: 14px;
             color: var(--color-surface);
         }
 
         .or {
             margin: calc(var(--spacing) * 3) 0 var(--spacing) 0;
-            font-size: 18px;
+            font-size: 1.3em;
             color: var(--color-surface);
         }
 
-        .email {
+        .form-container {
             width: var(--login-form-width);
-            margin-bottom: var(--spacing);
-            padding: calc(var(--spacing) * 0.5) 0;
-            border-bottom: 1px solid var(--color-surface);
-            font-size: 15px;
-            color: var(--color-surfacelighter);
-            outline: none;
-            background: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
 
-            &::placeholder {
-                color: var(--color-surfacelight);
-            }
-        }
-
-        .password {
-            width: var(--login-form-width);
-            margin-bottom: var(--spacing);
-            padding: calc(var(--spacing) * 0.5) 0;
-            border-bottom: 1px solid var(--color-surface);
-            font-size: 15px;
-            color: var(--color-surfacelighter);
-            outline: none;
-            background: none;
-
-            &::placeholder {
-                color: var(--color-surfacelight);
-            }
-        }
-
-        .acceptance-section {
-            width: var(--login-form-width);
-
-            .toggle-option {
-                display: flex;
-                flex-direction: row;
+            .email {
+                width: var(--login-form-width);
                 margin-bottom: var(--spacing);
+                padding: calc(var(--spacing) * 0.5) 0;
+                border-bottom: 1px solid var(--color-surface);
+                font-size: 1.1em;
+                color: var(--color-surfacelighter);
+                outline: none;
+                background: none;
+
+                &::placeholder {
+                    color: var(--color-surfacelight);
+                }
+            }
+
+            .password {
+                width: var(--login-form-width);
+                margin-bottom: var(--spacing);
+                padding: calc(var(--spacing) * 0.5) 0;
+                border-bottom: 1px solid var(--color-surface);
+                font-size: 1.1em;
+                color: var(--color-surfacelighter);
+                outline: none;
+                background: none;
+
+                &::placeholder {
+                    color: var(--color-surfacelight);
+                }
+            }
+
+            .acceptance-section {
+                width: var(--login-form-width);
+
+                .checkbox-label {
+                    margin-bottom: var(--spacing);
+                }
+            }
+
+            .forgot-password {
                 cursor: pointer;
+                margin-bottom: var(--spacing);
+                color: var(--color-surfacelight);
 
-                .checkbox-container {
-                    margin-right: calc(var(--spacing) * 0.5);
-
-                    .checkbox {
-                        width: var(--spacing);
-                        height: var(--spacing);
-                        fill: var(--color-surface);
-
-                        &:global(.checked) {
-                            fill: var(--color-surfacelight);
-                            background-color: var(--color-primary);
-                        }
-
-                        &:focus-within {
-                            fill: var(--color-surfacelighter);
-                        }
-                    }
-                }
-
-                .accept {
-                    font-size: 14px;
-                    color: var(--color-surface);
-                }
-
-                .acceptance-label {
-                    font-size: 14px;
+                &:hover {
                     color: var(--color-surfacelighter);
                 }
             }
-        }
 
-        .error {
-            margin: 0 0 var(--spacing) 0;
-            font-size: 14px;
-            text-align: center;
-            color: var(--color-signal1);
-        }
+            .error {
+                margin: 0 0 var(--spacing) 0;
+                text-align: center;
+                color: var(--color-signal1);
+            }
 
-        .submit-button {
-            width: var(--login-form-width);
-            cursor: pointer;
-            outline: none;
-            padding: 17px;
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--color-surfacelighter);
-            background-color: var(--color-primary);
-
-            &:hover, &:focus {
+            .submit-button {
+                width: var(--login-form-width);
+                cursor: pointer;
+                outline: none;
+                padding: calc(var(--spacing) * 1.1);
+                font-size: 1.1em;
+                font-weight: 600;
+                color: var(--color-surfacelighter);
                 background-color: var(--color-primarydark);
+
+                &:hover, &:focus {
+                    background-color: var(--color-primary);
+                }
             }
         }
 
         .option {
             margin-top: calc(var(--spacing) * 2);
             cursor: pointer;
+            font-size: 1.1em;
             font-weight: 600;
             color: var(--color-surfacelighter);
         }
