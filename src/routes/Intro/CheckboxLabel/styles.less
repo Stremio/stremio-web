@@ -1,0 +1,32 @@
+.checkbox-label-container {
+    display: flex;
+    flex-direction: row;
+    cursor: pointer;
+
+    .checkbox-container {
+        margin-right: calc(var(--spacing) * 0.5);
+
+        .checkbox {
+            width: var(--spacing);
+            height: var(--spacing);
+            fill: var(--color-surface);
+
+            &:global(.checked) {
+                fill: var(--color-surfacelight);
+                background-color: var(--color-primary);
+            }
+
+            &:focus-within {
+                fill: var(--color-surfacelighter);
+            }
+        }
+    }
+
+    .label {
+        color: var(--color-surface);
+    }
+
+    .link {
+        color: var(--color-surfacelighter);
+    }
+}
