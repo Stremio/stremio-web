@@ -14,7 +14,7 @@ class Checkbox extends Component {
     onClick = (event) => {
         event.preventDefault();
         if (typeof this.props.onClick === 'function') {
-            this.props.onClick();
+            this.props.onClick(event);
         }
     }
 
