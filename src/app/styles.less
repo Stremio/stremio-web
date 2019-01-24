@@ -46,6 +46,8 @@
     --scroll-bar-width: 8px;
     --landscape-shape-ratio: 0.5625;
     --poster-shape-ratio: 1.464;
+    --window-min-width: 1000px;
+    --window-min-height: 650px;
 }
 
 * {
@@ -64,8 +66,8 @@ html, body, :global(#app) {
     z-index: 0;
     width: 100vw;
     height: 100vh;
-    min-width: 1000px;
-    min-height: 650px;
+    min-width: var(--window-min-width);
+    min-height: var(--window-min-height);
     font-family: 'Roboto', 'sans-serif';
     line-height: 1;
 
@@ -84,18 +86,34 @@ html, body, :global(#app) {
 
 :global(#app) {
     overflow: hidden;
+
+    .route-container {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 0;
+        overflow: hidden;
+        background-color: var(--color-background);
+    }
 }
 
-:global(.modal-container), .route-container {
+:global(#modals) {
     position: absolute;
     top: 0;
-    right: 0;
-    bottom: 0;
     left: 0;
-    z-index: 0;
-    overflow: hidden;
-}
+    z-index: 1;
 
-.route-container {
-    background-color: var(--color-background);
+    .modal-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 0;
+        width: 100vw;
+        height: 100vh;
+        min-width: var(--window-min-width);
+        min-height: var(--window-min-height);
+        overflow: hidden;
+    }
 }
