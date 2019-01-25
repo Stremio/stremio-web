@@ -24,11 +24,5 @@ CheckboxLabel.propTypes = {
     href: PropTypes.string,
     checked: PropTypes.bool
 };
-CheckboxLabel.defaultProps = {
-    label: '',
-    link: '',
-    href: '',
-    checked: false
-};
 
 export default CheckboxLabel;
