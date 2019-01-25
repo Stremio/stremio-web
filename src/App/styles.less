@@ -71,6 +71,33 @@ html, body, :global(#app) {
     font-family: 'Roboto', 'sans-serif';
     line-height: 1;
 
+    .application-layer {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 0;
+
+        :global(.modal-container), .route {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 0;
+            width: 100vw;
+            height: 100vh;
+            min-width: var(--window-min-width);
+            min-height: var(--window-min-height);
+            overflow: hidden;
+
+            &.route {
+                background-color: var(--color-background);
+            }
+
+            &:not(:last-child) {
+                display: none;
+            }
+        }
+    }
+
     ::-webkit-scrollbar {
         width: var(--scroll-bar-width);
     }
@@ -81,39 +108,5 @@ html, body, :global(#app) {
 
     ::-webkit-scrollbar-track {
         background-color: var(--color-backgroundlight);
-    }
-}
-
-:global(#app) {
-    overflow: hidden;
-
-    .route-container {
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        z-index: 0;
-        overflow: hidden;
-        background-color: var(--color-background);
-    }
-}
-
-:global(#modals) {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 1;
-
-    .modal-container {
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: 0;
-        width: 100vw;
-        height: 100vh;
-        min-width: var(--window-min-width);
-        min-height: var(--window-min-height);
-        overflow: hidden;
     }
 }

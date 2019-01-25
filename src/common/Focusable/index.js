@@ -1,7 +1,7 @@
-import Focusable from './Focusable';
-import FocusableProvider from './FocusableProvider';
+import FocusableContext from './FocusableContext';
+import withFocusable from './withFocusable';
 
 export {
-    Focusable,
-    FocusableProvider
+    FocusableContext,
+    withFocusable
 };

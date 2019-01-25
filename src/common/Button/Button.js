@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { Focusable } from 'stremio-common';
+import { withFocusable } from 'stremio-common';
 
 class Button extends PureComponent {
     onClick = (event) => {
@@ -20,23 +20,25 @@ class Button extends PureComponent {
     }
 
     render() {
-        const { stopPropagation, forwardedRef, ...props } = this.props;
+        const { forwardedRef, focusable, stopPropagation, ...props } = this.props;
         return (
-            <Focusable ref={forwardedRef}>
-                <div
-                    {...props}
-                    onClick={this.onClick}
-                    onKeyUp={this.onKeyUp}
-                />
-            </Focusable>
+            <div
+                {...props}
+                ref={forwardedRef}
+                tabIndex={focusable ? 0 : -1}
+                onClick={this.onClick}
+                onKeyUp={this.onKeyUp}
+            />
         );
     }
 }
 
 Button.propTypes = {
+    focusable: PropTypes.bool.isRequired,
     stopPropagation: PropTypes.bool.isRequired
 };
 Button.defaultProps = {
+    focusable: false,
     stopPropagation: true
 };
 
@@ -46,4 +48,4 @@ const ButtonWithForwardedRef = React.forwardRef((props, ref) => (
 
 ButtonWithForwardedRef.displayName = 'ButtonWithForwardedRef';
 
-export default ButtonWithForwardedRef;
+export default withFocusable(ButtonWithForwardedRef);

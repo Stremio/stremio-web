@@ -1,26 +1,21 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
-import { FocusableProvider } from 'stremio-common';
+import { FocusableContext } from 'stremio-common';
+import withModalsContainer from './withModalsContainer';
 
-const Modal = ({ children }) => {
-    const [modalContainer] = useState(document.createElement('div'));
-    const onDomTreeChange = useCallback(({ onFocusableChange }) => {
-        onFocusableChange(modalContainer.nextElementSibling === null);
-    });
-    useEffect(() => {
-        modalContainer.className = Modal.modalClassName;
-        Modal.modalsContainer.appendChild(modalContainer);
-        return () => {
-            Modal.modalsContainer.removeChild(modalContainer);
-        };
-    });
+const Modal = ({ modalsContainer, children }) => {
+    if (modalsContainer === null) {
+        return null;
+    }
 
     return ReactDOM.createPortal(
-        <FocusableProvider elements={[Modal.modalsContainer]} onDomTreeChange={onDomTreeChange}>
-            {React.Children.only(children)}
-        </FocusableProvider>,
-        modalContainer
+        <FocusableContext.Provider value={true}>
+            <div className={'modal-container'}>
+                {children}
+            </div>
+        </FocusableContext.Provider>,
+        modalsContainer
     );
 };
 
-export default Modal;
+export default withModalsContainer(Modal);
