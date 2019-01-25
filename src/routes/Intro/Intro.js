@@ -57,9 +57,9 @@ class Intro extends Component {
     }
 
     toggleTerms = () => {
-        this.setState(({ termsAccepted }) => {
-            return { termsAccepted: !termsAccepted }
-        });
+        this.setState(({ termsAccepted }) => ({
+            termsAccepted: !termsAccepted
+        }));
     }
 
     togglePrivacyPolicy = () => {
@@ -69,9 +69,9 @@ class Intro extends Component {
     }
 
     toggleMarketing = () => {
-        this.setState(({ marketingAccepted }) => {
-            return { marketingAccepted: !marketingAccepted }
-        });
+        this.setState(({ marketingAccepted }) => ({
+            marketingAccepted: !marketingAccepted
+        }));
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -85,7 +85,7 @@ class Intro extends Component {
             nextState.error !== this.state.error;
     }
 
-    loginErrorLabel = (event) => {
+    validateLogin = (event) => {
         event.preventDefault();
         if (this.state.email.length < 8) {
             this.setState({ error: 'Please enter a valid email' });
@@ -95,12 +95,12 @@ class Intro extends Component {
             }
 
             if (this.state.password.length < 1) {
-                this.setState({ error: 'Wrong email or password.' });
+                this.setState({ error: 'Invalid password' });
             }
         }
     }
 
-    singUpErrorLabel = (event) => {
+    validateSignUp = (event) => {
         event.preventDefault();
         if (this.state.email.length < 8) {
             this.setState({ error: 'Please enter a valid email' });
@@ -143,7 +143,7 @@ class Intro extends Component {
         }
     }
 
-    guestLoginErrorLabel = (event) => {
+    validateGuestLogin = (event) => {
         if (!this.state.termsAccepted) {
             event.preventDefault();
             this.setState({ error: 'You must accept the Terms of Service' });
@@ -152,17 +152,15 @@ class Intro extends Component {
 
     renderSignUpForm = () => {
         return (
-            <form className={styles['form-container']} onSubmit={this.singUpErrorLabel}>
+            <form className={styles['form-container']} onSubmit={this.validateSignUp}>
                 <input ref={this.emailRef} className={styles['email']} type={'text'} placeholder={'Email'} value={this.state.email} onChange={this.emailOnChange} />
                 <input ref={this.passwordRef} className={styles['password']} type={'password'} placeholder={'Password'} value={this.state.password} onChange={this.passwordOnChange} />
                 <input ref={this.confirmPasswordRef} className={styles['password']} type={'password'} placeholder={'Confirm Password'} value={this.state.confirmPassword} onChange={this.confirmPasswordOnChange} />
-                <div className={styles['acceptance-section']}>
-                    <CheckboxLabel ref={this.termsRef} className={styles['checkbox-label']} label='I have read and agree with the Stremio' link='Terms and conditions' href='https://www.stremio.com/tos' checked={this.state.termsAccepted} onClick={this.toggleTerms} />
-                    <CheckboxLabel ref={this.privacyPolicyRef} className={styles['checkbox-label']} label='I have read and agree with the Stremio' link='Privacy Policy' href='https://www.stremio.com/privacy' checked={this.state.privacyPolicyAccepted} onClick={this.togglePrivacyPolicy} />
-                    <CheckboxLabel ref={this.marketingRef} className={styles['checkbox-label']} label='I agree to receive marketing communications from Stremio' checked={this.state.marketingAccepted} onClick={this.toggleMarketing} />
-                </div>
+                <CheckboxLabel ref={this.termsRef} className={styles['checkbox-label']} label={'I have read and agree with the Stremio'} link={'Terms and conditions'} href={'https://www.stremio.com/tos'} checked={this.state.termsAccepted} onClick={this.toggleTerms} />
+                <CheckboxLabel ref={this.privacyPolicyRef} className={styles['checkbox-label']} label={'I have read and agree with the Stremio'} link={'Privacy Policy'} href={'https://www.stremio.com/privacy'} checked={this.state.privacyPolicyAccepted} onClick={this.togglePrivacyPolicy} />
+                <CheckboxLabel ref={this.marketingRef} className={styles['checkbox-label']} label={'I agree to receive marketing communications from Stremio'} checked={this.state.marketingAccepted} onClick={this.toggleMarketing} />
                 {
-                    this.state.error ?
+                    this.state.error.length > 0 ?
                         <div className={styles['error']}>{this.state.error}</div>
                         :
                         null
@@ -174,12 +172,12 @@ class Intro extends Component {
 
     renderLoginForm = () => {
         return (
-            <form className={styles['form-container']} onSubmit={this.loginErrorLabel}>
+            <form className={styles['form-container']} onSubmit={this.validateLogin}>
                 <input ref={this.emailRef} className={styles['email']} type={'text'} placeholder={'Email'} value={this.state.email} onChange={this.emailOnChange} />
                 <input ref={this.passwordRef} className={styles['password']} type={'password'} placeholder={'Password'} value={this.state.password} onChange={this.passwordOnChange} />
                 <a className={styles['forgot-password']} href={'https://www.strem.io/reset-password/'} target={'_blank'}>Forgot password?</a>
                 {
-                    this.state.error ?
+                    this.state.error.length > 0 ?
                         <div className={styles['error']}>{this.state.error}</div>
                         :
                         null
@@ -205,17 +203,16 @@ class Intro extends Component {
             <div className={styles['intro-container']}>
                 <div className={styles['overlay']} />
                 <div className={styles['intro']}>
-                    <div className={styles['facebook-button']}>
+                    <div className={styles['facebook-button']} tabIndex={'0'}>
                         <Icon className={styles['icon']} icon={'ic_facebook'} />
                         <div className={styles['label']}>Login with Facebook</div>
                     </div>
-                    <div className={styles['text']}>We won't post anything on your behalf</div>
-                    <div className={styles['or']}>OR</div>
+                    <div className={styles['facebook-subtext']}>We won't post anything on your behalf</div>
                     {this.renderSelectedMenu()}
                     <div className={styles['option']} data-option={this.state.selectedForm === FORMS.SIGN_UP ? FORMS.LOGIN : FORMS.SIGN_UP} onClick={this.changeSelectedForm}>{this.state.selectedForm === FORMS.SIGN_UP ? 'LOG IN' : 'SING UP WITH EMAIL'}</div>
                     {
                         this.state.selectedForm === FORMS.SIGN_UP ?
-                            <a className={styles['option']} href={'#/'} onClick={this.guestLoginErrorLabel}>GUEST LOGIN</a>
+                            <a className={styles['option']} href={'#/'} onClick={this.validateGuestLogin}>GUEST LOGIN</a>
                             :
                             null
                     }

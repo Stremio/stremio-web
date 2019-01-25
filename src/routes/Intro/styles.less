@@ -9,7 +9,7 @@
     z-index: 0;
     width: 100%;
     height: 100%;
-    background-image: url('https://www.stremio.com/website/home-testimonials.jpg');
+    background-image: url('/images/home-testimonials.jpg');
     background-size: cover;
     background-attachment: fixed;
 
@@ -57,14 +57,8 @@
             }
         }
 
-        .text {
-            margin: calc(var(--spacing) * 0.5) 0;
-            color: var(--color-surface);
-        }
-
-        .or {
-            margin: calc(var(--spacing) * 3) 0 var(--spacing) 0;
-            font-size: 1.3em;
+        .facebook-subtext {
+            margin: calc(var(--spacing) * 0.5) 0 calc(var(--spacing) * 4) 0;
             color: var(--color-surface);
         }
 
@@ -76,9 +70,9 @@
             flex-direction: column;
 
             .email {
-                width: var(--login-form-width);
+                width: 100%;
                 margin-bottom: var(--spacing);
-                padding: calc(var(--spacing) * 0.5) 0;
+                padding: 0.5em 0;
                 border-bottom: 1px solid var(--color-surface);
                 font-size: 1.1em;
                 color: var(--color-surfacelighter);
@@ -91,9 +85,9 @@
             }
 
             .password {
-                width: var(--login-form-width);
+                width: 100%;
                 margin-bottom: var(--spacing);
-                padding: calc(var(--spacing) * 0.5) 0;
+                padding: 0.5em 0;
                 border-bottom: 1px solid var(--color-surface);
                 font-size: 1.1em;
                 color: var(--color-surfacelighter);
@@ -105,13 +99,11 @@
                 }
             }
 
-            .acceptance-section {
-                width: var(--login-form-width);
-
-                .checkbox-label {
-                    margin-bottom: var(--spacing);
-                }
+            .checkbox-label {
+                width: 100%;
+                margin-bottom: var(--spacing);
             }
+
 
             .forgot-password {
                 cursor: pointer;
@@ -130,7 +122,7 @@
             }
 
             .submit-button {
-                width: var(--login-form-width);
+                width: 100%;
                 cursor: pointer;
                 outline: none;
                 padding: calc(var(--spacing) * 1.1);
