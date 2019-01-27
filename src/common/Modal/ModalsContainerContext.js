@@ -1,3 +1,8 @@
 import React from 'react';
 
-export default React.createContext(null);
+const ModalsContainerContext = React.createContext(null);
+
+ModalsContainerContext.displayName = 'ModalsContainerContext';
+
+export default ModalsContainerContext;
+

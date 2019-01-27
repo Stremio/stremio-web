@@ -1,3 +1,7 @@
 import React from 'react';
 
-export default React.createContext(false);
+const FocusableContext = React.createContext(false);
+
+FocusableContext.displayName = 'FocusableContext';
+
+export default FocusableContext;
