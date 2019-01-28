@@ -23,4 +23,8 @@ const Modal = ({ modalsContainer, children }) => {
     );
 };
 
-export default withModalsContainer(Modal);
+const ModalWithModalsContainer = withModalsContainer(Modal);
+
+ModalWithModalsContainer.displayName = 'ModalWithModalsContainer';
+
+export default ModalWithModalsContainer;

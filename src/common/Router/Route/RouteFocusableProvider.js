@@ -51,4 +51,8 @@ class RouteFocusableProvider extends Component {
     }
 }
 
-export default withModalsContainer(RouteFocusableProvider);
+const RouteFocusableProviderWithModalsContainer = withModalsContainer(RouteFocusableProvider);
+
+RouteFocusableProviderWithModalsContainer.displayName = 'RouteFocusableProviderWithModalsContainer';
+
+export default RouteFocusableProviderWithModalsContainer;
