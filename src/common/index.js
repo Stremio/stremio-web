@@ -1,5 +1,5 @@
 import Slider from './Slider';
-import { FocusableContext, withFocusable } from './Focusable';
+import { FocusableProvider, withFocusable } from './Focusable';
 import Button from './Button';
 import Checkbox from './Checkbox';
 import TextInput from './TextInput';
@@ -28,7 +28,7 @@ export {
     ShareAddon,
     UserPanel,
     Slider,
-    FocusableContext,
+    FocusableProvider,
     withFocusable,
     Button
 };

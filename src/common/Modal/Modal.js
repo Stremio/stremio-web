@@ -1,26 +1,26 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
-import { FocusableContext } from 'stremio-common';
+import { FocusableProvider } from 'stremio-common';
 import withModalsContainer from './withModalsContainer';
 
-const Modal = ({ modalsContainer, children }) => {
-    const modalContainerRef = useRef(null);
-    const [focusable, setFocusable] = useState(false);
-    useEffect(() => {
-        const nextFocusable = modalsContainer.lastElementChild === modalContainerRef.current;
-        if (nextFocusable !== focusable) {
-            setFocusable(nextFocusable);
-        }
-    });
+const onModalsContainerDomTreeChange = ({ modalsContainerElement, contentElement }) => {
+    return modalsContainerElement.lastElementChild === contentElement;
+};
 
+const Modal = ({ modalsContainer, children }) => {
     return ReactDOM.createPortal(
-        <FocusableContext.Provider value={focusable}>
-            <div ref={modalContainerRef} className={'modal-container'}>
+        <FocusableProvider onModalsContainerDomTreeChange={onModalsContainerDomTreeChange}>
+            <div className={'modal-container'}>
                 {children}
             </div>
-        </FocusableContext.Provider>,
+        </FocusableProvider>,
         modalsContainer
     );
+};
+
+Modal.propTypes = {
+    modalsContainer: PropTypes.instanceOf(HTMLElement).isRequired
 };
 
 const ModalWithModalsContainer = withModalsContainer(Modal);
