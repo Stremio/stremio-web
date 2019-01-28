@@ -16,7 +16,6 @@ class Main extends Component {
                         { icon: 'ic_calendar', label: 'Calendar', to: '/calendar', replace: true }
                     ]}
                     searchInput={true}
-                    userNotificatons={true}
                     userMenu={true}
                 />
                 <Switch>
