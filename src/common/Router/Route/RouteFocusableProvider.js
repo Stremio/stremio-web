@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { FocusableContext, withModalsContainer } from 'stremio-common';
 
 class RouteFocusableProvider extends Component {
@@ -50,6 +51,10 @@ class RouteFocusableProvider extends Component {
         );
     }
 }
+
+RouteFocusableProvider.propTypes = {
+    modalsContainer: PropTypes.instanceOf(HTMLElement).isRequired
+};
 
 const RouteFocusableProviderWithModalsContainer = withModalsContainer(RouteFocusableProvider);
 
