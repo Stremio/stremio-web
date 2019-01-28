@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Icon from 'stremio-icons/dom';
+import { Button } from 'stremio-common';
 import CheckboxLabel from './CheckboxLabel';
 import styles from './styles';
 
@@ -204,10 +205,10 @@ class Intro extends Component {
             <div className={styles['intro-container']}>
                 <div className={styles['overlay']} />
                 <div className={styles['intro']}>
-                    <div className={styles['facebook-button']} tabIndex={'0'}>
+                    <Button className={styles['facebook-button']}>
                         <Icon className={styles['icon']} icon={'ic_facebook'} />
                         <div className={styles['label']}>Login with Facebook</div>
-                    </div>
+                    </Button>
                     <div className={styles['facebook-subtext']}>We won't post anything on your behalf</div>
                     {this.renderSelectedMenu()}
                     <div className={styles['option']} data-option={this.state.selectedForm === FORMS.SIGN_UP ? FORMS.LOGIN : FORMS.SIGN_UP} onClick={this.changeSelectedForm}>{this.state.selectedForm === FORMS.SIGN_UP ? 'LOG IN' : 'SING UP WITH EMAIL'}</div>
