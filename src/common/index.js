@@ -1,17 +1,17 @@
-import Popup from './Popup';
-import NavBar from './NavBar';
+import Slider from './Slider';
+import { FocusableContext, withFocusable } from './Focusable';
+import Button from './Button';
+import Checkbox from './Checkbox';
+import TextInput from './TextInput';
 import { Modal, ModalsContainerContext, withModalsContainer } from './Modal';
-import MetadataItem from './MetadataItem';
+import Popup from './Popup';
 import Router from './Router';
+import NavBar from './NavBar';
+import MetadataItem from './MetadataItem';
 import LibraryItemList from './LibraryItemList';
 import MetaItem from './MetaItem';
 import ShareAddon from './ShareAddon';
 import UserPanel from './UserPanel';
-import Slider from './Slider';
-import { FocusableContext, withFocusable } from './Focusable';
-import Checkbox from './Checkbox';
-import Button from './Button';
-import TextInput from './TextInput';
 
 export {
     Checkbox,
