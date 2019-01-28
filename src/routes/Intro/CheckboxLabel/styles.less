@@ -8,10 +8,10 @@
         margin-right: calc(var(--spacing) * 0.5);
         width: var(--spacing);
         height: var(--spacing);
-        fill: var(--color-surface);
+        --icon-color: var(--color-surface);
 
         &:global(.checked) {
-            fill: var(--color-surfacelight);
+            --icon-color: var(--color-surfacelight);
             background-color: var(--color-primary);
         }
     }
@@ -28,7 +28,7 @@
 
     &:focus-within, &:hover {
         .checkbox {
-            fill: var(--color-surfacelighter);
+            --icon-color: var(--color-surfacelighter);
         }
 
         .label {
