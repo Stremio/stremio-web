@@ -85,7 +85,7 @@ class Intro extends Component {
             nextState.error !== this.state.error;
     }
 
-    validateLogin = (event) => {
+    loginOnSubmit = (event) => {
         event.preventDefault();
         if (this.state.email.length < 8) {
             this.setState({ error: 'Please enter a valid email' });
@@ -94,13 +94,13 @@ class Intro extends Component {
                 this.passwordRef.current.focus();
             }
 
-            if (this.state.password.length < 1) {
+            if (this.state.password.length === 0) {
                 this.setState({ error: 'Invalid password' });
             }
         }
     }
 
-    validateSignUp = (event) => {
+    signUpOnSubmit = (event) => {
         event.preventDefault();
         if (this.state.email.length < 8) {
             this.setState({ error: 'Please enter a valid email' });
@@ -109,7 +109,7 @@ class Intro extends Component {
                 this.passwordRef.current.focus();
             }
 
-            if (this.state.password.length < 1) {
+            if (this.state.password.length === 0) {
                 this.setState({ error: 'Invalid password' });
             } else {
                 if (this.passwordRef.current === document.activeElement) {
@@ -136,6 +136,7 @@ class Intro extends Component {
                             if (this.privacyPolicyRef.current === document.activeElement) {
                                 this.marketingRef.current.focus();
                             }
+                            this.setState({ error: '' });
                         }
                     }
                 }
@@ -152,7 +153,7 @@ class Intro extends Component {
 
     renderSignUpForm = () => {
         return (
-            <form className={styles['form-container']} onSubmit={this.validateSignUp}>
+            <form className={styles['form-container']} onSubmit={this.signUpOnSubmit}>
                 <input ref={this.emailRef} className={styles['email']} type={'text'} placeholder={'Email'} value={this.state.email} onChange={this.emailOnChange} />
                 <input ref={this.passwordRef} className={styles['password']} type={'password'} placeholder={'Password'} value={this.state.password} onChange={this.passwordOnChange} />
                 <input ref={this.confirmPasswordRef} className={styles['password']} type={'password'} placeholder={'Confirm Password'} value={this.state.confirmPassword} onChange={this.confirmPasswordOnChange} />
@@ -172,7 +173,7 @@ class Intro extends Component {
 
     renderLoginForm = () => {
         return (
-            <form className={styles['form-container']} onSubmit={this.validateLogin}>
+            <form className={styles['form-container']} onSubmit={this.loginOnSubmit}>
                 <input ref={this.emailRef} className={styles['email']} type={'text'} placeholder={'Email'} value={this.state.email} onChange={this.emailOnChange} />
                 <input ref={this.passwordRef} className={styles['password']} type={'password'} placeholder={'Password'} value={this.state.password} onChange={this.passwordOnChange} />
                 <a className={styles['forgot-password']} href={'https://www.strem.io/reset-password/'} target={'_blank'}>Forgot password?</a>
