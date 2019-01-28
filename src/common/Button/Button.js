@@ -42,10 +42,14 @@ Button.defaultProps = {
     stopPropagation: true
 };
 
+const ButtonWithFocusable = withFocusable(Button);
+
+ButtonWithFocusable.displayName = 'ButtonWithFocusable';
+
 const ButtonWithForwardedRef = React.forwardRef((props, ref) => (
-    <Button {...props} forwardedRef={ref} />
+    <ButtonWithFocusable {...props} forwardedRef={ref} />
 ));
 
 ButtonWithForwardedRef.displayName = 'ButtonWithForwardedRef';
 
-export default withFocusable(ButtonWithForwardedRef);
+export default ButtonWithForwardedRef;
