@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Icon from 'stremio-icons/dom';
-import { Button } from 'stremio-common';
+import { Button, TextInput } from 'stremio-common';
 import CheckboxLabel from './CheckboxLabel';
 import styles from './styles';
 
@@ -155,7 +155,7 @@ class Intro extends Component {
     renderSignUpForm = () => {
         return (
             <form className={styles['form-container']} onSubmit={this.signUpOnSubmit}>
-                <input ref={this.emailRef} className={styles['email']} type={'text'} placeholder={'Email'} value={this.state.email} onChange={this.emailOnChange} />
+                <TextInput ref={this.emailRef} className={styles['email']} type={'text'} placeholder={'Email'} value={this.state.email} onChange={this.emailOnChange} />
                 <input ref={this.passwordRef} className={styles['password']} type={'password'} placeholder={'Password'} value={this.state.password} onChange={this.passwordOnChange} />
                 <input ref={this.confirmPasswordRef} className={styles['password']} type={'password'} placeholder={'Confirm Password'} value={this.state.confirmPassword} onChange={this.confirmPasswordOnChange} />
                 <CheckboxLabel ref={this.termsRef} className={styles['checkbox-label']} label={'I have read and agree with the Stremio'} link={'Terms and conditions'} href={'https://www.stremio.com/tos'} checked={this.state.termsAccepted} onClick={this.toggleTerms} />
