@@ -7,8 +7,6 @@ import { Modal, ModalsContainerContext, withModalsContainer } from './Modal';
 import Popup from './Popup';
 import Router from './Router';
 import NavBar from './NavBar';
-import MetadataItem from './MetadataItem';
-import LibraryItemList from './LibraryItemList';
 import MetaItem from './MetaItem';
 import ShareAddon from './ShareAddon';
 import UserPanel from './UserPanel';
@@ -21,9 +19,7 @@ export {
     ModalsContainerContext,
     Modal,
     withModalsContainer,
-    MetadataItem,
     Router,
-    LibraryItemList,
     MetaItem,
     ShareAddon,
     UserPanel,
