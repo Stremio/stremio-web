@@ -70,32 +70,11 @@ html, body, :global(#app) {
     min-height: var(--window-min-height);
     font-family: 'Roboto', 'sans-serif';
     line-height: 1;
+    background-color: var(--color-background);
 
-    .application-layer {
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: 0;
-
-        :global(.modal-container), .route {
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 0;
-            width: 100vw;
-            height: 100vh;
-            min-width: var(--window-min-width);
-            min-height: var(--window-min-height);
-            overflow: hidden;
-
-            &.route {
-                background-color: var(--color-background);
-
-                &:not(:last-child) {
-                    display: none;
-                }
-            }
-        }
+    .router {
+        width: 100%;
+        height: 100%;
     }
 
     ::-webkit-scrollbar {

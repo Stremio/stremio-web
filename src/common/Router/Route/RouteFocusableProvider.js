@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { FocusableContext, withModalsContainer } from 'stremio-common';
 
-class RouterFocusableProvider extends Component {
+class RouteFocusableProvider extends Component {
     constructor(props) {
         super(props);
 
-        this.routesContainerRef = React.createRef();
+        this.routeContentRef = React.createRef();
         this.modalsContainerDomTreeObserver = new MutationObserver(this.onModalsContainerDomTreeChange);
         this.state = {
             focusable: false
@@ -13,12 +13,10 @@ class RouterFocusableProvider extends Component {
     }
 
     componentDidMount() {
-        if (this.props.modalsContainer !== null) {
-            this.onModalsContainerDomTreeChange();
-            this.modalsContainerDomTreeObserver.observe(this.props.modalsContainer, {
-                childList: true
-            });
-        }
+        this.onModalsContainerDomTreeChange();
+        this.modalsContainerDomTreeObserver.observe(this.props.modalsContainer, {
+            childList: true
+        });
     }
 
     componentWillUnmount() {
@@ -27,25 +25,16 @@ class RouterFocusableProvider extends Component {
 
     shouldComponentUpdate(nextProps, nextState) {
         return nextState.focusable !== this.state.focusable ||
-            nextProps.routesContainerClassName !== this.props.routesContainerClassName ||
             nextProps.modalsContainer !== this.props.modalsContainer ||
             nextProps.children !== this.props.children;
     }
 
     componentDidUpdate(prevProps, prevState) {
         if (prevState.focusable && !this.state.focusable) {
-            const focusedElement = this.routesContainerRef.current.querySelector(':focus');
+            const focusedElement = this.routeContentRef.current.querySelector(':focus');
             if (focusedElement !== null) {
                 focusedElement.blur();
             }
-        }
-
-        if (prevProps.modalsContainer !== this.props.modalsContainer) {
-            this.onModalsContainerDomTreeChange();
-            this.modalsContainerDomTreeObserver.disconnect();
-            this.modalsContainerDomTreeObserver.observe(this.props.modalsContainer, {
-                childList: true
-            });
         }
     }
 
@@ -56,12 +45,10 @@ class RouterFocusableProvider extends Component {
     render() {
         return (
             <FocusableContext.Provider value={this.state.focusable}>
-                <div ref={this.routesContainerRef} className={this.props.routesContainerClassName}>
-                    {this.props.children}
-                </div>
+                {React.cloneElement(React.Children.only(this.props.children), { ref: this.routeContentRef })}
             </FocusableContext.Provider>
         );
     }
 }
 
-export default withModalsContainer(RouterFocusableProvider);
+export default withModalsContainer(RouteFocusableProvider);

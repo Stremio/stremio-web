@@ -6,22 +6,25 @@ class ModalsContainerProvider extends Component {
     constructor(props) {
         super(props);
 
-        this.modalsContainerRef = React.createRef();
+        this.state = {
+            modalsContainer: null
+        };
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return nextProps.children !== this.props.children ||
-            nextProps.modalsContainerClassName !== this.props.modalsContainerClassName;
+        return nextState.modalsContainer !== this.state.modalsContainer ||
+            nextProps.modalsContainerClassName !== this.props.modalsContainerClassName ||
+            nextProps.children !== this.props.children;
     }
 
-    componentDidMount() {
-        this.forceUpdate();
+    modalsContainerRef = (modalsContainer) => {
+        this.setState({ modalsContainer });
     }
 
     render() {
         return (
-            <ModalsContainerContext.Provider value={this.modalsContainerRef.current}>
-                {this.props.children}
+            <ModalsContainerContext.Provider value={this.state.modalsContainer}>
+                {this.state.modalsContainer ? this.props.children : null}
                 <div ref={this.modalsContainerRef} className={this.props.modalsContainerClassName} />
             </ModalsContainerContext.Provider>
         );
