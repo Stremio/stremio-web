@@ -11,9 +11,11 @@ import Slider from './Slider';
 import { FocusableContext, withFocusable } from './Focusable';
 import Checkbox from './Checkbox';
 import Button from './Button';
+import TextInput from './TextInput';
 
 export {
     Checkbox,
+    TextInput,
     Popup,
     NavBar,
     ModalsContainerContext,
