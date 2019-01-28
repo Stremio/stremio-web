@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { matchPath, withRouter } from 'react-router-dom';
 import Icon from 'stremio-icons/dom';
 import classnames from 'classnames';
 import styles from './styles';
@@ -86,4 +85,4 @@ class SearchInput extends Component {
     }
 }
 
-export default withRouter(SearchInput);
+export default SearchInput;

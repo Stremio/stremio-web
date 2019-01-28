@@ -40,13 +40,13 @@ class Player extends Component {
     }
 
     componentDidMount() {
+        this.dispatch('command', 'load', this.props.stream, {});
         this.dispatch('command', 'addSubtitleTracks', [{
             url: 'https://raw.githubusercontent.com/caitp/ng-media/master/example/assets/captions/bunny-en.vtt',
             origin: 'Github',
             label: 'English'
         }]);
         this.dispatch('setProp', 'selectedSubtitleTrackId', 'https://raw.githubusercontent.com/caitp/ng-media/master/example/assets/captions/bunny-en.vtt');
-        this.dispatch('command', 'load', this.props.stream, {});
     }
 
     onEnded = () => {
@@ -98,6 +98,7 @@ class Player extends Component {
         return (
             <ControlBar
                 className={classnames(styles['layer'], styles['control-bar-layer'])}
+                popupClassName={styles['control-bar-popup-container']}
                 paused={this.state.paused}
                 time={this.state.time}
                 duration={this.state.duration}

@@ -15,6 +15,8 @@ const ControlBarButton = React.forwardRef(({ icon, active, disabled, onClick }, 
     </div>
 ));
 
+ControlBarButton.displayName = 'ControlBarButton';
+
 class ControlBar extends Component {
     constructor(props) {
         super(props);
@@ -27,6 +29,7 @@ class ControlBar extends Component {
 
     shouldComponentUpdate(nextProps, nextState) {
         return nextProps.className !== this.props.className ||
+            nextProps.popupClassName !== this.props.popupClassName ||
             nextProps.paused !== this.props.paused ||
             nextProps.time !== this.props.time ||
             nextProps.duration !== this.props.duration ||
@@ -94,7 +97,7 @@ class ControlBar extends Component {
 
     renderShareButton() {
         return (
-            <Popup className={'player-popup-container'} border={true} onOpen={this.onSharePopupOpen} onClose={this.onSharePopupClose}>
+            <Popup className={classnames(styles['popup-container'], this.props.popupClassName)} border={true} onOpen={this.onSharePopupOpen} onClose={this.onSharePopupClose}>
                 <Popup.Label>
                     <ControlBarButton
                         icon={'ic_share'}
@@ -110,7 +113,7 @@ class ControlBar extends Component {
 
     renderSubtitlesButton() {
         return (
-            <Popup className={'player-popup-container'} border={true} onOpen={this.onSubtitlesPopupOpen} onClose={this.onSubtitlesPopupClose}>
+            <Popup className={classnames(styles['popup-container'], this.props.popupClassName)} border={true} onOpen={this.onSubtitlesPopupOpen} onClose={this.onSubtitlesPopupClose}>
                 <Popup.Label>
                     <ControlBarButton
                         icon={'ic_sub'}
@@ -151,6 +154,7 @@ class ControlBar extends Component {
 
 ControlBar.propTypes = {
     className: PropTypes.string,
+    popupClassName: PropTypes.string,
     paused: PropTypes.bool,
     time: PropTypes.number,
     duration: PropTypes.number,

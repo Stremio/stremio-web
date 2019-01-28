@@ -1,3 +1,9 @@
+import ModalsContainerContext from './ModalsContainerContext';
 import Modal from './Modal';
+import withModalsContainer from './withModalsContainer';
 
-export default Modal;
+export {
+    ModalsContainerContext,
+    Modal,
+    withModalsContainer
+};

@@ -1,0 +1,30 @@
+.board-container, .meta-item-popup-container {
+    --poster-relative-size: 180px;
+    --progress-bar-size: 6px;
+    font-size: 12px;
+
+    .continue-watching-row {
+        --poster-relative-size: calc(180px * var(--poster-shape-ratio));
+    }
+
+    .search-row {
+        --poster-relative-size: 220px;
+    }
+}
+
+.board-container {
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    .continue-watching-row, .search-row {
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+    }
+
+    .meta-item-container {
+        margin: 10px;
+    }
+}

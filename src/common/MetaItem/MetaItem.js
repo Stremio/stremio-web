@@ -1,173 +1,154 @@
-import React from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import Icon, { dataUrl as iconDataUrl } from 'stremio-icons/dom';
-import colors from 'stremio-colors';
-import { RELATIVE_POSTER_SIZE } from './constants';
+import classnames from 'classnames';
+import { Popup, Button } from 'stremio-common';
+import Icon from 'stremio-icons/dom';
 import styles from './styles';
 
-const getShapeSize = (posterShape, progress) => {
-    switch (posterShape) {
-        case 'poster':
-            return {
-                width: RELATIVE_POSTER_SIZE
-            };
-        case 'landscape':
-            return {
-                width: RELATIVE_POSTER_SIZE / 0.5625
-            };
-        default:
-            if (progress) {
-                return {
-                    width: RELATIVE_POSTER_SIZE * 1.464
-                };
-            }
-            return {
-                width: RELATIVE_POSTER_SIZE
-            };
-    }
-}
+class MetaItem extends Component {
+    constructor(props) {
+        super(props);
 
-const getPlaceholderIcon = (type) => {
-    switch (type) {
-        case 'tv':
-            return 'ic_tv';
-        case 'series':
-            return 'ic_series';
-        case 'channel':
-            return 'ic_channels';
-        default:
-            return 'ic_movies';
-    }
-}
-
-const renderProgress = (progress) => {
-    if (progress <= 0) {
-        return null;
+        this.state = {
+            menuPopupOpen: false
+        };
     }
 
-    return (
-        <div className={styles['progress-container']}>
-            <div style={{ width: progress + '%' }} className={styles['progress']} />
-        </div>
-    );
-}
-
-const renderEpisode = (episode) => {
-    if (episode.length === 0) {
-        return null;
+    shouldComponentUpdate(nextProps, nextState) {
+        return nextState.menuPopupOpen !== this.state.menuPopupOpen ||
+            nextProps.className !== this.props.className ||
+            nextProps.popupClassName !== this.props.popupClassName ||
+            nextProps.id !== this.props.id ||
+            nextProps.type !== this.props.type ||
+            nextProps.relativeSize !== this.props.relativeSize ||
+            nextProps.posterShape !== this.props.posterShape ||
+            nextProps.poster !== this.props.poster ||
+            nextProps.title !== this.props.title ||
+            nextProps.subtitle !== this.props.subtitle ||
+            nextProps.progress !== this.props.progress ||
+            nextProps.released !== this.props.released ||
+            nextProps.menu !== this.props.menu;
     }
 
-    return (
-        <div className={styles['episode']}>{episode}</div>
-    );
-}
-
-const renderTitle = (title) => {
-    if (title.length === 0) {
-        return null;
+    onMenuPopupOpen = () => {
+        this.setState({ menuPopupOpen: true });
     }
 
-    return (
-        <div className={styles['title']}>{title}</div>
-    );
-}
-
-const renderReleaseInfo = (releaseInfo) => {
-    if (releaseInfo.length === 0) {
-        return null;
+    onMenuPopupClose = () => {
+        this.setState({ menuPopupOpen: false });
     }
 
-    return (
-        <div className={styles['year']}>{releaseInfo}</div>
-    );
-}
+    onClick = (event) => {
+        if (typeof this.props.onClick === 'function') {
+            this.props.onClick(event);
+        }
+    }
 
-const renderPopupIcon = (onItemClicked, popup) => {
-    if (!popup) {
-        return null;
-    }
-    
-    return (
-        <div onClick={onItemClicked} className={styles['popup-icon-container']}>
-            <Icon className={styles['popup-icon']} icon={'ic_more'} />
-        </div>
-    );
-}
+    renderProgress() {
+        if (this.props.progress <= 0) {
+            return null;
+        }
 
-const getClassName = (progress, posterShape, title, releaseInfo, episode) => {
-    if ((progress > 0) && (title.length > 0 || releaseInfo.length > 0 || episode.length > 0)) {
-        if (posterShape === 'landscape') return 'progress-info-landscape-shape';
-        if (posterShape === 'square') return 'progress-info-square-shape';
-        return 'progress-info-poster-shape';
+        return (
+            <div className={styles['progress-bar-container']}>
+                <div className={styles['progress']} style={{ width: `${this.props.progress * 100}%` }} />
+            </div>
+        );
     }
-    if ((progress > 0) && (title.length === 0 && releaseInfo.length === 0 && episode.length === 0)) {
-        if (posterShape === 'landscape') return 'progress-landscape-shape';
-        if (posterShape === 'square') return 'progress-square-shape';
-        return 'progress-poster-shape';
-    }
-    if (!progress && (title.length > 0 || releaseInfo.length > 0 || episode.length > 0)) {
-        if (posterShape === 'landscape') return 'info-landscape-shape';
-        if (posterShape === 'square') return 'info-square-shape';
-        return 'info-poster-shape';
-    }
-    if (!progress && (title.length === 0 && releaseInfo.length === 0 && episode.length === 0)) {
-        if (posterShape === 'landscape') return 'landscape-shape';
-        if (posterShape === 'square') return 'square-shape';
-        return 'poster-shape';
-    }
-    return 'meta-item';
-}
 
-const MetaItem = (props) => {
-    const posterSize = getShapeSize(props.posterShape, props.progress);
-    const contentContainerStyle = {
-        width: posterSize.width
-    };
-    const placeholderIcon = getPlaceholderIcon(props.type);
-    const placeholderIconUrl = iconDataUrl({ icon: placeholderIcon, fill: colors.accent, width: Math.round(RELATIVE_POSTER_SIZE / 2.2), height: Math.round(RELATIVE_POSTER_SIZE / 2.2) });
-    const imageStyle = {
-        backgroundImage: `url(${props.poster}), url('${placeholderIconUrl}')`
-    };
+    renderPoster() {
+        const placeholderIcon = this.props.type === 'tv' ? 'ic_tv'
+            : this.props.type === 'series' ? 'ic_series'
+                : this.props.type === 'channel' ? 'ic_channels'
+                    : 'ic_movies';
+        return (
+            <div className={styles['poster-image-container']}>
+                <Icon className={styles['placeholder-image']} icon={placeholderIcon} />
+                <div className={styles['poster-image']} style={{ backgroundImage: `url('${this.props.poster}')` }} />
+                {this.renderProgress()}
+            </div>
+        );
+    }
 
-    return (
-        <div style={contentContainerStyle} className={styles[getClassName(props.progress, props.posterShape, props.title, props.releaseInfo, props.episode)]}>
-            <div style={imageStyle} className={styles['poster']}>
-                <div onClick={props.play} style={props.progress ? { visibility: 'visible' } : null} className={styles['play-container']}>
-                    <Icon className={styles['play']} icon={'ic_play'} />
+    renderInfoBar() {
+        if (this.props.title.length === 0 && this.props.subtitle.length === 0 && this.props.menu.length === 0) {
+            return null;
+        }
+
+        return (
+            <Fragment>
+                <div className={styles['title-bar-container']}>
+                    <div className={styles['title']}>{this.props.title}</div>
+                    {
+                        this.props.menu.length > 0 ?
+                            <Popup className={classnames(styles['menu-popup-container'], this.props.popupClassName)} onOpen={this.onMenuPopupOpen} onClose={this.onMenuPopupClose}>
+                                <Popup.Label>
+                                    <Icon
+                                        className={classnames(styles['menu-icon'], { 'active': this.state.menuPopupOpen })}
+                                        icon={'ic_more'}
+                                    />
+                                </Popup.Label>
+                                <Popup.Menu>
+                                    <div className={styles['menu-items-container']}>
+                                        {this.props.menu.map(({ label, onSelect }) => (
+                                            <Button key={label} className={styles['menu-item']} onClick={onSelect}>{label}</Button>
+                                        ))}
+                                    </div>
+                                </Popup.Menu>
+                            </Popup>
+                            :
+                            null
+                    }
                 </div>
-            </div>
-            {renderProgress(props.progress)}
-            <div className={styles['info']}>
-                {renderEpisode(props.episode)}
-                {renderTitle(props.title)}
-                {renderReleaseInfo(props.releaseInfo)}
-            </div>
-            {renderPopupIcon(props.onItemClicked, props.popup)}
-        </div>
-    );
+                {
+                    this.props.subtitle.length > 0 ?
+                        <div className={styles['title-bar-container']}>
+                            <div className={styles['title']}>{this.props.subtitle}</div>
+                        </div>
+                        :
+                        null
+                }
+            </Fragment>
+        );
+    }
+
+    render() {
+        return (
+            <Button className={classnames(styles['meta-item-container'], styles[`relative-size-${this.props.relativeSize}`], styles[`poster-shape-${this.props.posterShape}`], this.props.className)} data-meta-item-id={this.props.id} onClick={this.onClick}>
+                {this.renderPoster()}
+                {this.renderInfoBar()}
+            </Button>
+        );
+    }
 }
 
 MetaItem.propTypes = {
-    type: PropTypes.oneOf(['movie', 'series', 'channel', 'tv', 'other']).isRequired,
-    poster: PropTypes.string.isRequired,
+    className: PropTypes.string,
+    popupClassName: PropTypes.string,
+    onClick: PropTypes.func,
+    id: PropTypes.string.isRequired,
+    type: PropTypes.string.isRequired,
+    relativeSize: PropTypes.oneOf(['auto', 'height']).isRequired,
     posterShape: PropTypes.oneOf(['poster', 'landscape', 'square']).isRequired,
-    progress: PropTypes.number.isRequired,
-    episode: PropTypes.string.isRequired,
+    poster: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
-    releaseInfo: PropTypes.string.isRequired,
-    popup: PropTypes.bool.isRequired,
-    play: PropTypes.func,
-    onItemClicked: PropTypes.func
+    subtitle: PropTypes.string.isRequired,
+    progress: PropTypes.number.isRequired,
+    released: PropTypes.instanceOf(Date).isRequired,
+    menu: PropTypes.arrayOf(PropTypes.shape({
+        label: PropTypes.string.isRequired,
+        onSelect: PropTypes.func.isRequired
+    })).isRequired
 };
 MetaItem.defaultProps = {
-    type: 'other',
+    relativeSize: 'auto',
+    posterShape: 'square',
     poster: '',
-    posterShape: 'poster',
-    progress: 0,
-    episode: '',
     title: '',
-    releaseInfo: '',
-    popup: false
+    subtitle: '',
+    progress: 0,
+    released: new Date(NaN),
+    menu: Object.freeze([])
 };
 
 export default MetaItem;
