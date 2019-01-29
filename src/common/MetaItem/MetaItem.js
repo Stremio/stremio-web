@@ -27,7 +27,7 @@ class MetaItem extends Component {
             nextProps.subtitle !== this.props.subtitle ||
             nextProps.progress !== this.props.progress ||
             nextProps.released !== this.props.released ||
-            nextProps.menu !== this.props.menu;
+            nextProps.menuOptions !== this.props.menuOptions;
     }
 
     onMenuPopupOpen = () => {
@@ -80,7 +80,7 @@ class MetaItem extends Component {
     }
 
     renderInfoBar() {
-        if (this.props.title.length === 0 && this.props.subtitle.length === 0 && this.props.menu.length === 0) {
+        if (this.props.title.length === 0 && this.props.subtitle.length === 0 && this.props.menuOptions.length === 0) {
             return null;
         }
 
