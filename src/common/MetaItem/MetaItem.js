@@ -65,8 +65,8 @@ class MetaItem extends Component {
             <div className={styles['poster-image-container']}>
                 <Icon className={styles['placeholder-image']} icon={placeholderIcon} />
                 <div className={styles['poster-image']} style={{ backgroundImage: `url('${this.props.poster}')` }} />
-                <div className={styles['play-button-container']}>
-                    <Icon className={styles['play-button-icon']} icon={'ic_play'} viewBox={'-291.6 0 1190.6 1024'} />
+                <div className={styles['play-icon-container']}>
+                    <Icon className={styles['play-icon']} icon={'ic_play'} viewBox={'-291.6 0 1190.6 1024'} />
                 </div>
                 {this.renderProgress()}
             </div>
@@ -94,7 +94,7 @@ class MetaItem extends Component {
                                 <Popup.Menu>
                                     <div className={styles['menu-items-container']}>
                                         {this.props.menu.map(({ label, onSelect }) => (
-                                            <Button key={label} className={styles['menu-item']} onClick={onSelect}>{label}</Button>
+                                            <Button key={label} data-meta-item-id={this.props.id} className={styles['menu-item']} onClick={onSelect}>{label}</Button>
                                         ))}
                                     </div>
                                 </Popup.Menu>
