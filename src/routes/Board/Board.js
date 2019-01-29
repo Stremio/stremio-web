@@ -56,7 +56,7 @@ class Board extends PureComponent {
                             key={props.id}
                             className={styles['meta-item']}
                             popupClassName={styles['meta-item-popup-container']}
-                            relativeSize={'height'}
+                            relativeSide={'height'}
                             menuOptions={CONTINUE_WATCHING_MENU}
                             onClick={this.onClick}
                             menuOptionOnSelect={this.menuOptionOnSelect}

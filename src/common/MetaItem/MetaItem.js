@@ -20,7 +20,7 @@ class MetaItem extends Component {
             nextProps.popupClassName !== this.props.popupClassName ||
             nextProps.id !== this.props.id ||
             nextProps.type !== this.props.type ||
-            nextProps.relativeSize !== this.props.relativeSize ||
+            nextProps.relativeSide !== this.props.relativeSide ||
             nextProps.posterShape !== this.props.posterShape ||
             nextProps.poster !== this.props.poster ||
             nextProps.title !== this.props.title ||
@@ -120,7 +120,7 @@ class MetaItem extends Component {
 
     render() {
         return (
-            <Button className={classnames(styles['meta-item-container'], styles[`relative-size-${this.props.relativeSize}`], styles[`poster-shape-${this.props.posterShape}`], this.props.className)} data-meta-item-id={this.props.id} onClick={this.onClick}>
+            <Button className={classnames(styles['meta-item-container'], styles[`relative-side-${this.props.relativeSide}`], styles[`poster-shape-${this.props.posterShape}`], this.props.className)} data-meta-item-id={this.props.id} onClick={this.onClick}>
                 {this.renderPoster()}
                 {this.renderInfoBar()}
             </Button>
@@ -135,7 +135,7 @@ MetaItem.propTypes = {
     menuOptionOnSelect: PropTypes.func,
     id: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
-    relativeSize: PropTypes.oneOf(['auto', 'height']).isRequired,
+    relativeSide: PropTypes.oneOf(['auto', 'height']).isRequired,
     posterShape: PropTypes.oneOf(['poster', 'landscape', 'square']).isRequired,
     poster: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
@@ -148,7 +148,7 @@ MetaItem.propTypes = {
     })).isRequired
 };
 MetaItem.defaultProps = {
-    relativeSize: 'auto',
+    relativeSide: 'auto',
     posterShape: 'square',
     poster: '',
     title: '',
