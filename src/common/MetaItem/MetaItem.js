@@ -44,6 +44,12 @@ class MetaItem extends Component {
         }
     }
 
+    menuOptionOnSelect = (event) => {
+        if (typeof this.props.menuOptionOnSelect === 'function') {
+            this.props.menuOptionOnSelect(event);
+        }
+    }
+
     renderProgress() {
         if (this.props.progress <= 0) {
             return null;
@@ -83,7 +89,7 @@ class MetaItem extends Component {
                 <div className={styles['title-bar-container']}>
                     <div className={styles['title']}>{this.props.title}</div>
                     {
-                        this.props.menu.length > 0 ?
+                        this.props.menuOptions.length > 0 ?
                             <Popup className={classnames(styles['menu-popup-container'], this.props.popupClassName)} onOpen={this.onMenuPopupOpen} onClose={this.onMenuPopupClose}>
                                 <Popup.Label>
                                     <Icon
@@ -93,8 +99,8 @@ class MetaItem extends Component {
                                 </Popup.Label>
                                 <Popup.Menu>
                                     <div className={styles['menu-items-container']}>
-                                        {this.props.menu.map(({ label, onSelect }) => (
-                                            <Button key={label} data-meta-item-id={this.props.id} className={styles['menu-item']} onClick={onSelect}>{label}</Button>
+                                        {this.props.menuOptions.map(({ label, type }) => (
+                                            <Button key={type} className={styles['menu-item']} data-meta-item-id={this.props.id} data-menu-option-type={type} onClick={this.menuOptionOnSelect}>{label}</Button>
                                         ))}
                                     </div>
                                 </Popup.Menu>
@@ -129,6 +135,7 @@ MetaItem.propTypes = {
     className: PropTypes.string,
     popupClassName: PropTypes.string,
     onClick: PropTypes.func,
+    menuOptionOnSelect: PropTypes.func,
     id: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
     relativeSize: PropTypes.oneOf(['auto', 'height']).isRequired,
@@ -138,9 +145,9 @@ MetaItem.propTypes = {
     subtitle: PropTypes.string.isRequired,
     progress: PropTypes.number.isRequired,
     released: PropTypes.instanceOf(Date).isRequired,
-    menu: PropTypes.arrayOf(PropTypes.shape({
+    menuOptions: PropTypes.arrayOf(PropTypes.shape({
         label: PropTypes.string.isRequired,
-        onSelect: PropTypes.func.isRequired
+        type: PropTypes.string.isRequired
     })).isRequired
 };
 MetaItem.defaultProps = {
@@ -151,7 +158,7 @@ MetaItem.defaultProps = {
     subtitle: '',
     progress: 0,
     released: new Date(NaN),
-    menu: Object.freeze([])
+    menuOptions: Object.freeze([])
 };
 
 export default MetaItem;

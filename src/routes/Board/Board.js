@@ -20,21 +20,11 @@ class Board extends PureComponent {
         this.cwMenu = [
             {
                 label: 'Play',
-                onSelect: (event) => {
-                    console.log('Play', {
-                        defaultPrevented: event.isDefaultPrevented(),
-                        propagationStopped: event.isPropagationStopped()
-                    });
-                }
+                type: 'play'
             },
             {
                 label: 'Dismiss',
-                onSelect: (event) => {
-                    console.log('Dismiss', {
-                        defaultPrevented: event.isDefaultPrevented(),
-                        propagationStopped: event.isPropagationStopped()
-                    });
-                }
+                type: 'dismiss'
             }
         ];
     }
@@ -42,6 +32,15 @@ class Board extends PureComponent {
     onClick = (event) => {
         console.log('onClick', {
             id: event.currentTarget.dataset.metaItemId,
+            defaultPrevented: event.isDefaultPrevented(),
+            propagationStopped: event.isPropagationStopped()
+        });
+    }
+
+    menuOptionOnSelect = (event) => {
+        console.log('menuOptionOnSelect', {
+            id: event.currentTarget.dataset.metaItemId,
+            type: event.currentTarget.dataset.menuOptionType,
             defaultPrevented: event.isDefaultPrevented(),
             propagationStopped: event.isPropagationStopped()
         });
@@ -57,8 +56,9 @@ class Board extends PureComponent {
                             className={styles['meta-item']}
                             popupClassName={styles['meta-item-popup-container']}
                             relativeSize={'height'}
-                            menu={this.cwMenu}
+                            menuOptions={this.cwMenu}
                             onClick={this.onClick}
+                            menuOptionOnSelect={this.menuOptionOnSelect}
                             {...props}
                         />
                     ))}
