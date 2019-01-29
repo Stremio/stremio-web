@@ -57,7 +57,7 @@ class MetaItem extends Component {
 
         return (
             <div className={styles['progress-bar-container']}>
-                <div className={styles['progress']} style={{ width: `${this.props.progress * 100}%` }} />
+                <div className={styles['progress']} style={{ width: `${Math.min(this.props.progress, 1) * 100}%` }} />
             </div>
         );
     }
@@ -92,10 +92,7 @@ class MetaItem extends Component {
                         this.props.menuOptions.length > 0 ?
                             <Popup className={classnames(styles['menu-popup-container'], this.props.popupClassName)} onOpen={this.onMenuPopupOpen} onClose={this.onMenuPopupClose}>
                                 <Popup.Label>
-                                    <Icon
-                                        className={classnames(styles['menu-icon'], { 'active': this.state.menuPopupOpen })}
-                                        icon={'ic_more'}
-                                    />
+                                    <Icon className={classnames(styles['menu-icon'], { 'active': this.state.menuPopupOpen })} icon={'ic_more'} />
                                 </Popup.Label>
                                 <Popup.Menu>
                                     <div className={styles['menu-items-container']}>
