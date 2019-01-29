@@ -2,6 +2,17 @@ import React, { PureComponent } from 'react';
 import { MetaItem } from 'stremio-common';
 import styles from './styles';
 
+const CONTINUE_WATCHING_MENU = [
+    {
+        label: 'Play',
+        type: 'play'
+    },
+    {
+        label: 'Dismiss',
+        type: 'dismiss'
+    }
+];
+
 class Board extends PureComponent {
     constructor(props) {
         super(props);
@@ -17,16 +28,6 @@ class Board extends PureComponent {
                 }
             ]
         };
-        this.cwMenu = [
-            {
-                label: 'Play',
-                type: 'play'
-            },
-            {
-                label: 'Dismiss',
-                type: 'dismiss'
-            }
-        ];
     }
 
     onClick = (event) => {
@@ -56,7 +57,7 @@ class Board extends PureComponent {
                             className={styles['meta-item']}
                             popupClassName={styles['meta-item-popup-container']}
                             relativeSize={'height'}
-                            menuOptions={this.cwMenu}
+                            menuOptions={CONTINUE_WATCHING_MENU}
                             onClick={this.onClick}
                             menuOptionOnSelect={this.menuOptionOnSelect}
                             {...props}
