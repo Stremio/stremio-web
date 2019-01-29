@@ -23,7 +23,8 @@
         background-color: var(--color-backgrounddark80);
     }
 
-    .scroll-container { 
+    .scroll-container {
+        display: flex;
         position: absolute;
         z-index: 1;
         top: 0;
@@ -34,8 +35,9 @@
         overflow-x: hidden;
 
         .intro {
-            width: 270px;
             margin: auto;
+            padding: calc(var(--login-form-width) * 0.2) 0;
+            width: var(--login-form-width);
 
             .facebook-button {
                 width: var(--login-form-width);
@@ -44,7 +46,7 @@
                 align-items: center;
                 justify-content: center;
                 padding: calc(var(--spacing) * 1.25) 0;
-                border: 2px solid transparent;
+                border: var(--focusable-border-size) solid transparent;
                 background: var(--color-secondarydark);
                 cursor: pointer;
 
@@ -68,7 +70,7 @@
                 }
             }
 
-            .facebook-subtext {
+            .facebook-statement {
                 margin: calc(var(--spacing) * 0.5) 0 calc(var(--spacing) * 4) 0;
                 text-align: center;
                 color: var(--color-surface);
@@ -77,9 +79,9 @@
             .form-container {
                 width: var(--login-form-width);
                 display: flex;
+                flex-direction: column;
                 align-items: stretch;
                 justify-content: center;
-                flex-direction: column;
 
                 .text-input {
                     margin: 0 calc(var(--spacing) * 0.5) var(--spacing) calc(var(--spacing) * 0.5);
@@ -102,12 +104,11 @@
                     }
                 }
 
-                .checkbox-label {
+                .consent-checkbox {
                     width: 100%;
                     margin-bottom: var(--spacing);
                     padding: calc(var(--spacing) * 0.5);
-                    text-align: left;
-                    border: 2px solid transparent;
+                    border: var(--focusable-border-size) solid transparent;
 
                     &:focus-within {
                         border-color: var(--color-surfacelighter);
@@ -119,7 +120,7 @@
                     align-self: flex-end;
                     margin-bottom: var(--spacing);
                     padding: calc(var(--spacing) * 0.5);
-                    border: 2px solid transparent;
+                    border: var(--focusable-border-size) solid transparent;
                     color: var(--color-surfacelight);
                     cursor: pointer;
 
@@ -148,7 +149,7 @@
                     padding: calc(var(--spacing) * 1.1);
                     font-size: 1.1em;
                     font-weight: 600;
-                    border: 2px solid transparent;
+                    border: var(--focusable-border-size) solid transparent;
                     color: var(--color-surfacelighter);
                     background-color: var(--color-primarydark);
                     cursor: pointer;
@@ -158,7 +159,7 @@
                     }
 
                     &:focus {
-                        border: 2px solid var(--color-surfacelighter);
+                        border-color: var(--color-surfacelighter);
                     }
 
                     &:hover {
@@ -167,7 +168,7 @@
                 }
             }
 
-            .option {
+            .switch-form-button, .guest-login-button {
                 width: 100%;
                 display: inline-block;
                 margin-top: var(--spacing);
@@ -175,12 +176,12 @@
                 text-align: center;
                 font-size: 1.1em;
                 font-weight: 600;
-                border: 2px solid transparent;
+                border: var(--focusable-border-size) solid transparent;
                 color: var(--color-surfacelighter);
                 cursor: pointer;
 
                 &:focus {
-                    border: 2px solid var(--color-surfacelighter);
+                    border-color: var(--color-surfacelighter);
                 }
 
                 &:hover {
