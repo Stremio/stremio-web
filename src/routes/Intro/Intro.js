@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Icon from 'stremio-icons/dom';
+import { Button, TextInput } from 'stremio-common';
 import CheckboxLabel from './CheckboxLabel';
 import styles from './styles';
 

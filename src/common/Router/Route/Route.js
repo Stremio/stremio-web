@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
+import { FocusableProvider } from 'stremio-common';
 import ModalsContainerProvider from './ModalsContainerProvider';
-import RouteFocusableProvider from './RouteFocusableProvider';
 import styles from './styles';
 
 class Route extends Component {
@@ -8,15 +8,19 @@ class Route extends Component {
         return nextProps.children !== this.props.children;
     }
 
+    onModalsContainerDomTreeChange = ({ modalsContainerElement }) => {
+        return modalsContainerElement.childElementCount === 0;
+    };
+
     render() {
         return (
             <div className={styles['route']}>
                 <ModalsContainerProvider modalsContainerClassName={styles['modals-container']}>
-                    <RouteFocusableProvider>
+                    <FocusableProvider onModalsContainerDomTreeChange={this.onModalsContainerDomTreeChange}>
                         <div className={styles['route-content']}>
                             {this.props.children}
                         </div>
-                    </RouteFocusableProvider>
+                    </FocusableProvider>
                 </ModalsContainerProvider>
             </div>
         );

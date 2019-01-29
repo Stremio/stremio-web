@@ -32,12 +32,32 @@
             background-origin: border-box;
         }
 
+        .play-button-container {
+            position: absolute;
+            top: calc(50% - (var(--poster-relative-size) * 0.2));
+            left: calc(50% - (var(--poster-relative-size) * 0.2));
+            width: calc(var(--poster-relative-size) * 0.4);
+            height: calc(var(--poster-relative-size) * 0.4);
+            z-index: 2;
+            background-color: var(--color-surfacelighter);
+            border-radius: 50%;
+            box-shadow: 0 0 calc(var(--poster-relative-size) * 0.1) calc(var(--poster-relative-size) * 0.015) var(--color-backgroundlight);
+            visibility: var(--play-button-visibility, collapse);
+            text-align: center;
+
+            .play-button-icon {
+                height: 40%;
+                margin-top: 30%;
+                fill: var(--color-primary);
+            }
+        }
+
         .progress-bar-container {
             position: absolute;
             right: 0;
             bottom: 0;
             left: 0;
-            z-index: 2;
+            z-index: 3;
             height: var(--progress-bar-size);
             background-color: var(--color-backgroundlighter);
             box-shadow: 0 0 calc(var(--progress-bar-size) * 4) calc(var(--progress-bar-size) * 1.5) var(--color-backgroundlight);

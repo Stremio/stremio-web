@@ -17,6 +17,26 @@ class Button extends PureComponent {
         if (event.which === 13) { // Enter key code
             this.onClick(event);
         }
+
+        if (typeof this.props.onKeyUp === 'function') {
+            this.props.onKeyUp(event);
+        }
+    }
+
+    onDrag = (event) => {
+        event.currentTarget.blur();
+
+        if (typeof this.props.onDrag === 'function') {
+            this.props.onDrag(event);
+        }
+    }
+
+    onMouseOut = (event) => {
+        event.currentTarget.blur();
+
+        if (typeof this.props.onMouseOut === 'function') {
+            this.props.onMouseOut(event);
+        }
     }
 
     render() {
@@ -28,6 +48,8 @@ class Button extends PureComponent {
                 tabIndex={focusable ? 0 : -1}
                 onClick={this.onClick}
                 onKeyUp={this.onKeyUp}
+                onDrag={this.onDrag}
+                onMouseOut={this.onMouseOut}
             />
         );
     }
