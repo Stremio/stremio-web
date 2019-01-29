@@ -65,6 +65,12 @@ class MetaItem extends Component {
             <div className={styles['poster-image-container']}>
                 <Icon className={styles['placeholder-image']} icon={placeholderIcon} />
                 <div className={styles['poster-image']} style={{ backgroundImage: `url('${this.props.poster}')` }} />
+                <div className={styles['play-button-container']}>
+                    {/* <Icon className={styles['play-button-icon']} icon={'ic_play'} /> */}
+                    <svg className={styles['play-button-icon']} viewBox="-291.6 0 1190.6 1024">
+                        <path d="M891.482 512l-884.254 512v-1024z"></path>
+                    </svg>
+                </div>
                 {this.renderProgress()}
             </div>
         );

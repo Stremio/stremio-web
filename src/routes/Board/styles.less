@@ -5,10 +5,20 @@
 
     .continue-watching-row {
         --poster-relative-size: calc(180px * var(--poster-shape-ratio));
+
+        .meta-item {
+            --play-button-visibility: visible;
+        }
     }
 
     .search-row {
         --poster-relative-size: 220px;
+
+        .meta-item {
+            &:hover, &:focus {
+                --play-button-visibility: visible;
+            }
+        }
     }
 }
 
@@ -24,7 +34,7 @@
         align-items: stretch;
     }
 
-    .meta-item-container {
+    .meta-item {
         margin: 10px;
     }
 }

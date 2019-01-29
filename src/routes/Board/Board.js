@@ -54,7 +54,7 @@ class Board extends PureComponent {
                     {this.items.cw.map((props) => (
                         <MetaItem
                             key={props.id}
-                            className={styles['meta-item-container']}
+                            className={styles['meta-item']}
                             popupClassName={styles['meta-item-popup-container']}
                             relativeSize={'height'}
                             menu={this.cwMenu}
