@@ -1,6 +1,6 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
-import { Checkbox, LibraryItemList, MetaItem, ShareAddon, UserPanel } from 'stremio-common';
+import { Checkbox, LibraryItemList, MetaItem, ShareModal, UserPanel } from 'stremio-common';
 import Addon from '../src/routes/Addons/Addon';
 import Stream from '../src/routes/Detail/StreamsList/Stream';
 import Video from '../src/routes/Detail/VideosList/Video';
@@ -171,10 +171,10 @@ storiesOf('MetaItem', module)
     ));
 
 
-storiesOf('ShareAddon', module)
-    .add('share addon', () => (
+storiesOf('ShareModal', module)
+    .add('share modal', () => (
         <div style={storyStyle} className={appStyles['app']}>
-            <ShareAddon url={'....'} />
+            <ShareModal url={'....'} />
         </div>
     ));
 

@@ -1,8 +1,8 @@
-@share-addon-width: 380px;
-@spacing: floor((@share-addon-width * 0.06));
+@share-modal-width: 380px;
+@spacing: floor((@share-modal-width * 0.06));
 
-.share-addon {
-    width: @share-addon-width;
+.share-modal {
+    width: @share-modal-width;
     padding: ceil((@spacing * 0.5));
 
     .x-icon {
@@ -18,8 +18,8 @@
         }
 
         .facebook-button, .twitter-button, .gplus-button {
-            width: ceil((@share-addon-width * 0.26));
-            height: floor((@share-addon-width * 0.09));
+            width: ceil((@share-modal-width * 0.26));
+            height: floor((@share-modal-width * 0.09));
 
             .facebook-icon, .twitter-icon, .gplus-icon {
                 width: ceil((@spacing * 0.6));
@@ -54,7 +54,7 @@
     }
 }
 
-.share-addon {
+.share-modal {
     color: var(--color-surfacelighter);
     background-color: var(--color-surfacelighter);
 

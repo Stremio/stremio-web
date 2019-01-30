@@ -19,14 +19,14 @@ const renderUrl = (copyToClipboard, url) => {
     );
 }
 
-const ShareAddon = (props) => {
+const ShareModal = (props) => {
     const placeholderIconUrl = iconDataUrl({ icon: 'ic_x', fill: colors.surface });
     const imageStyle = {
         backgroundImage: `url('${placeholderIconUrl}')`
     };
 
     return (
-        <div className={styles['share-addon']}>
+        <div className={styles['share-modal']}>
             <div className={styles['x-container']}>
                 <div onClick={props.closeModalDialog} style={imageStyle} className={styles['x-icon']} />
             </div>
@@ -49,7 +49,7 @@ const ShareAddon = (props) => {
     );
 }
 
-ShareAddon.propTypes = {
+ShareModal.propTypes = {
     url: PropTypes.string.isRequired,
     closeModalDialog: PropTypes.func,
     shareInFacebook: PropTypes.func,
@@ -57,8 +57,8 @@ ShareAddon.propTypes = {
     shareInGplus: PropTypes.func,
     copyToClipboard: PropTypes.func
 };
-ShareAddon.defaultProps = {
+ShareModal.defaultProps = {
     url: ''
 };
 
-export default ShareAddon;
+export default ShareModal;
