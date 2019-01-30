@@ -114,8 +114,11 @@
                     &:focus-within {
                         border-color: var(--color-surfacelighter);
                     }
-                }
 
+                    &:hover {
+                        border-color: transparent;
+                    }
+                }
 
                 .forgot-password {
                     align-self: flex-end;
@@ -146,7 +149,6 @@
 
                 .submit-button {
                     width: 100%;
-                    outline: none;
                     padding: calc(var(--spacing) * 1.1);
                     font-size: 1.1em;
                     font-weight: 600;
