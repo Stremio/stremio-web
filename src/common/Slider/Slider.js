@@ -7,6 +7,7 @@ class Slider extends Component {
     constructor(props) {
         super(props);
 
+        this.sliderContainerRef = React.createRef();
         this.orientation = props.orientation;
     }
 
@@ -17,20 +18,12 @@ class Slider extends Component {
             nextProps.className !== this.props.className;
     }
 
-    onSlide = (value) => {
-        this.props.onSlide(value);
+    componentWillUnmount() {
+        this.releaseThumb();
     }
 
-    onComplete = (value) => {
-        this.props.onComplete(value);
-    }
-
-    onCancel = () => {
-        this.props.onCancel();
-    }
-
-    calculateSlidingValue = ({ mouseX, mouseY, sliderElement }) => {
-        const { x: sliderX, y: sliderY, width: sliderWidth, height: sliderHeight } = sliderElement.getBoundingClientRect();
+    calculateSlidingValue = ({ mouseX, mouseY }) => {
+        const { x: sliderX, y: sliderY, width: sliderWidth, height: sliderHeight } = this.sliderContainerRef.current.getBoundingClientRect();
         const sliderStart = this.orientation === 'horizontal' ? sliderX : sliderY;
         const sliderLength = this.orientation === 'horizontal' ? sliderWidth : sliderHeight;
         const mouseStart = this.orientation === 'horizontal' ? mouseX : mouseY;
@@ -40,38 +33,41 @@ class Slider extends Component {
         return slidingValue;
     }
 
-    onStartSliding = ({ currentTarget: sliderElement, clientX: mouseX, clientY: mouseY, button }) => {
+    releaseThumb = () => {
+        window.removeEventListener('blur', this.onBlur);
+        window.removeEventListener('mouseup', this.onMouseUp);
+        window.removeEventListener('mousemove', this.onMouseMove);
+        document.documentElement.style.cursor = 'initial';
+        document.body.style['pointer-events'] = 'initial';
+    }
+
+    onBlur = () => {
+        this.releaseThumb();
+        this.props.onCancel();
+    }
+
+    onMouseUp = ({ clientX: mouseX, clientY: mouseY }) => {
+        this.releaseThumb();
+        const slidingValue = this.calculateSlidingValue({ mouseX, mouseY });
+        this.props.onComplete(slidingValue);
+    }
+
+    onMouseMove = ({ clientX: mouseX, clientY: mouseY }) => {
+        const slidingValue = this.calculateSlidingValue({ mouseX, mouseY });
+        this.props.onSlide(slidingValue);
+    }
+
+    onStartSliding = ({ clientX: mouseX, clientY: mouseY, button }) => {
         if (button !== 0) {
             return;
         }
 
-        const releaseThumb = () => {
-            window.removeEventListener('blur', onBlur);
-            window.removeEventListener('mouseup', onMouseUp);
-            window.removeEventListener('mousemove', onMouseMove);
-            document.documentElement.style.cursor = 'initial';
-            document.body.style['pointer-events'] = 'initial';
-        };
-        const onBlur = () => {
-            releaseThumb();
-            this.onCancel();
-        };
-        const onMouseUp = ({ clientX: mouseX, clientY: mouseY }) => {
-            releaseThumb();
-            const slidingValue = this.calculateSlidingValue({ mouseX, mouseY, sliderElement });
-            this.onComplete(slidingValue);
-        };
-        const onMouseMove = ({ clientX: mouseX, clientY: mouseY }) => {
-            const slidingValue = this.calculateSlidingValue({ mouseX, mouseY, sliderElement });
-            this.onSlide(slidingValue);
-        };
-
-        window.addEventListener('blur', onBlur);
-        window.addEventListener('mouseup', onMouseUp);
-        window.addEventListener('mousemove', onMouseMove);
+        window.addEventListener('blur', this.onBlur);
+        window.addEventListener('mouseup', this.onMouseUp);
+        window.addEventListener('mousemove', this.onMouseMove);
         document.documentElement.style.cursor = 'pointer';
         document.body.style['pointer-events'] = 'none';
-        onMouseMove({ clientX: mouseX, clientY: mouseY });
+        this.onMouseMove({ clientX: mouseX, clientY: mouseY });
     }
 
     render() {
@@ -79,7 +75,7 @@ class Slider extends Component {
         const trackBeforeSizeProp = this.orientation === 'horizontal' ? 'width' : 'height';
         const thumbStart = Math.min((this.props.value - this.props.minimumValue) / (this.props.maximumValue - this.props.minimumValue), 1);
         return (
-            <div className={classnames(styles['slider-container'], styles[this.orientation], this.props.className)} onMouseDown={this.onStartSliding}>
+            <div ref={this.sliderContainerRef} className={classnames(styles['slider-container'], styles[this.orientation], this.props.className)} onMouseDown={this.onStartSliding}>
                 <div className={styles['track']} />
                 <div className={styles['track-before']} style={{ [trackBeforeSizeProp]: `calc(100% * ${thumbStart})` }} />
                 <div className={styles['thumb']} style={{ [thumbStartProp]: `calc(100% * ${thumbStart})` }} />

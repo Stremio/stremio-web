@@ -1,7 +1,9 @@
 import React from 'react';
 
-const Label = ({ children, ...props }, ref) => {
+const Label = React.forwardRef(({ children, ...props }, ref) => {
     return React.cloneElement(React.Children.only(children), { ...props, ref });
-};
+});
 
-export default React.forwardRef(Label);
+Label.displayName = 'Popup.Label';
+
+export default Label;

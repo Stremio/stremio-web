@@ -1,7 +1,8 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import pathToRegexp from 'path-to-regexp';
 import PathUtils from 'path';
 import UrlUtils from 'url';
+import Route from './Route';
 
 class Router extends Component {
     constructor(props) {
@@ -44,7 +45,8 @@ class Router extends Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return nextState.views !== this.state.views;
+        return nextState.views !== this.state.views ||
+            nextProps.className !== this.props.className;
     }
 
     onLocationChanged = () => {
@@ -95,13 +97,15 @@ class Router extends Component {
 
     render() {
         return (
-            <Fragment>
+            <div className={this.props.className}>
                 {
                     this.state.views
                         .filter(({ element }) => React.isValidElement(element))
-                        .map(({ path, element }) => <div key={path} className={this.props.routeContainerClassName}>{element}</div>)
+                        .map(({ path, element }) => (
+                            <Route key={path}>{element}</Route>
+                        ))
                 }
-            </Fragment>
+            </div>
         );
     }
 }

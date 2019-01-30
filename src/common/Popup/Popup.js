@@ -54,6 +54,7 @@ class Popup extends Component {
             this.popupMutationObserver.observe(document.documentElement, {
                 childList: true,
                 attributes: true,
+                characterData: true,
                 subtree: true
             });
             if (typeof this.props.onOpen === 'function') {
@@ -107,15 +108,15 @@ class Popup extends Component {
         this.labelBorderLeftRef.current.removeAttribute('style');
 
         const menuDirections = {};
-        const bodyRect = document.body.getBoundingClientRect();
+        const documentRect = document.documentElement.getBoundingClientRect();
         const labelRect = this.labelRef.current.getBoundingClientRect();
         const menuChildredRect = this.menuChildrenRef.current.getBoundingClientRect();
         const borderSize = parseFloat(window.getComputedStyle(this.hiddenBorderRef.current).getPropertyValue('border-top-width'));
         const labelPosition = {
-            left: labelRect.x - bodyRect.x,
-            top: labelRect.y - bodyRect.y,
-            right: (bodyRect.width + bodyRect.x) - (labelRect.x + labelRect.width),
-            bottom: (bodyRect.height + bodyRect.y) - (labelRect.y + labelRect.height)
+            left: labelRect.x - documentRect.x,
+            top: labelRect.y - documentRect.y,
+            right: (documentRect.width + documentRect.x) - (labelRect.x + labelRect.width),
+            bottom: (documentRect.height + documentRect.y) - (labelRect.y + labelRect.height)
         };
 
         if (menuChildredRect.height <= labelPosition.bottom) {
@@ -211,12 +212,22 @@ class Popup extends Component {
         this.setState({ open: false });
     }
 
+    labelOnClick = (event) => {
+        event.stopPropagation();
+        this.open();
+    }
+
     menuContainerOnClick = (event) => {
         event.stopPropagation();
     }
 
+    modalBackgroundOnClick = (event) => {
+        event.stopPropagation();
+        this.close();
+    }
+
     renderLabel(children) {
-        return React.cloneElement(children, { ref: this.labelRef, onClick: this.open });
+        return React.cloneElement(children, { ref: this.labelRef, onClick: this.labelOnClick });
     }
 
     renderMenu(children) {
@@ -225,23 +236,23 @@ class Popup extends Component {
         }
 
         return (
-            <Modal className={classnames('modal-container', this.props.className)} onClick={this.close}>
-                <div ref={this.menuContainerRef} className={styles['menu-container']} onClick={this.menuContainerOnClick}>
-                    <div ref={this.menuScrollRef} className={styles['menu-scroll-container']}>
-                        <div ref={this.menuChildrenRef}>
-                            {children}
+            <Modal>
+                <div className={classnames(styles['modal-container'], this.props.className)} onClick={this.modalBackgroundOnClick}>
+                    <div ref={this.menuContainerRef} className={styles['menu-container']} onClick={this.menuContainerOnClick}>
+                        <div ref={this.menuScrollRef} className={styles['menu-scroll-container']}>
+                            {React.cloneElement(children, { ref: this.menuChildrenRef })}
                         </div>
+                        <div ref={this.menuBorderTopRef} className={classnames(styles['border'], styles['border-top'])} />
+                        <div ref={this.menuBorderRightRef} className={classnames(styles['border'], styles['border-right'])} />
+                        <div ref={this.menuBorderBottomRef} className={classnames(styles['border'], styles['border-bottom'])} />
+                        <div ref={this.menuBorderLeftRef} className={classnames(styles['border'], styles['border-left'])} />
                     </div>
-                    <div ref={this.menuBorderTopRef} className={classnames(styles['border'], styles['border-top'])} />
-                    <div ref={this.menuBorderRightRef} className={classnames(styles['border'], styles['border-right'])} />
-                    <div ref={this.menuBorderBottomRef} className={classnames(styles['border'], styles['border-bottom'])} />
-                    <div ref={this.menuBorderLeftRef} className={classnames(styles['border'], styles['border-left'])} />
+                    <div ref={this.labelBorderTopRef} className={classnames(styles['border'], styles['border-top'])} />
+                    <div ref={this.labelBorderRightRef} className={classnames(styles['border'], styles['border-right'])} />
+                    <div ref={this.labelBorderBottomRef} className={classnames(styles['border'], styles['border-bottom'])} />
+                    <div ref={this.labelBorderLeftRef} className={classnames(styles['border'], styles['border-left'])} />
+                    <div ref={this.hiddenBorderRef} className={classnames(styles['border'], styles['border-hidden'])} />
                 </div>
-                <div ref={this.labelBorderTopRef} className={classnames(styles['border'], styles['border-top'])} />
-                <div ref={this.labelBorderRightRef} className={classnames(styles['border'], styles['border-right'])} />
-                <div ref={this.labelBorderBottomRef} className={classnames(styles['border'], styles['border-bottom'])} />
-                <div ref={this.labelBorderLeftRef} className={classnames(styles['border'], styles['border-left'])} />
-                <div ref={this.hiddenBorderRef} className={classnames(styles['border'], styles['border-hidden'])} />
             </Modal>
         );
     }

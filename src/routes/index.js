@@ -8,6 +8,7 @@ import Search from './Search';
 import Settings from './Settings';
 import Player from './Player';
 import Detail from './Detail';
+import Intro from './Intro';
 
 export {
     Addons,
@@ -19,5 +20,6 @@ export {
     Search,
     Settings,
     Player,
-    Detail
+    Detail,
+    Intro
 };
