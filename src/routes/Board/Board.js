@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import classnames from 'classnames';
 import { MetaItem } from 'stremio-common';
 import styles from './styles';
 
@@ -18,14 +19,59 @@ class Board extends PureComponent {
         super(props);
 
         this.items = {
-            cw: [
+            continueWatchingItems: [
                 {
-                    id: 'cw1',
-                    posterShape: 'poster',
+                    id: '0',
                     type: 'movie',
-                    progress: 0.4,
-                    title: 'Movie title'
+                    posterShape: 'poster',
+                    title: 'Movie title',
+                    progress: 0.7
+                },
+                {
+                    id: '1',
+                    type: 'movie',
+                    posterShape: 'poster',
+                    title: 'Movie title',
+                    progress: 0.2
+                },
+                {
+                    id: '3',
+                    type: 'movie',
+                    poster: 'https://www.stremio.com/website/home-stremio.png',
+                    posterShape: 'poster',
+                    title: 'Movie title',
+                    progress: 0.4
+                },
+                {
+                    id: '4',
+                    type: 'movie',
+                    poster: 'https://blog.stremio.com/wp-content/uploads/2018/11/product-post-360x240.jpg',
+                    posterShape: 'poster',
+                    title: 'Movie title',
+                    progress: 122
+                },
+                {
+                    id: '5',
+                    type: 'channel',
+                    posterShape: 'square',
+                    title: 'Movie title',
+                    progress: 1
                 }
+            ],
+            addonCatalogItems: [
+                {
+                    id: '01',
+                    type: 'movie',
+                    posterShape: 'landscape',
+                    title: 'Movie title'
+                },
+                {
+                    id: '02',
+                    type: 'movie',
+                    posterShape: 'landscape',
+                    title: 'Movie title',
+                    subtitle: 'Movie subtitle'
+                },
             ]
         };
     }
@@ -50,8 +96,8 @@ class Board extends PureComponent {
     render() {
         return (
             <div className={styles['board-container']}>
-                <div className={styles['continue-watching-row']}>
-                    {this.items.cw.map((props) => (
+                <div className={classnames(styles['board-row'], styles['continue-watching-row'])}>
+                    {this.items.continueWatchingItems.map((props) => (
                         <MetaItem
                             key={props.id}
                             className={styles['meta-item']}
@@ -60,6 +106,16 @@ class Board extends PureComponent {
                             menuOptions={CONTINUE_WATCHING_MENU}
                             onClick={this.onClick}
                             menuOptionOnSelect={this.menuOptionOnSelect}
+                            {...props}
+                        />
+                    ))}
+                </div>
+                <div className={classnames(styles['board-row'], styles['notificatins-row'])}>
+                    {this.items.addonCatalogItems.map((props) => (
+                        <MetaItem
+                            key={props.id}
+                            className={styles['meta-item']}
+                            onClick={this.onClick}
                             {...props}
                         />
                     ))}

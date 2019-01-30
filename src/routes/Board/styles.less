@@ -1,22 +1,23 @@
 .board-container, .meta-item-popup-container {
-    --poster-relative-size: 180px;
-    --progress-bar-size: 6px;
     font-size: 12px;
+    --progress-bar-size: 6px;
 
-    .continue-watching-row {
-        --poster-relative-size: calc(180px * var(--poster-shape-ratio));
-
-        .meta-item {
-            --play-icon-visibility: visible;
-        }
-    }
-
-    .search-row {
-        --poster-relative-size: 220px;
-
-        .meta-item {
-            &:hover, &:focus {
+    .board-row {
+        &.continue-watching-row {
+            .meta-item {
+                --poster-relative-size: calc(180px * var(--poster-shape-ratio));
                 --play-icon-visibility: visible;
+            }
+        }
+
+        &.notificatins-row {
+            .meta-item {
+                --poster-relative-size: 180px;
+                --play-icon-size: 105px;
+
+                &:hover, &:focus {
+                    --play-icon-visibility: visible;
+                }
             }
         }
     }
@@ -28,13 +29,13 @@
     overflow-x: hidden;
     overflow-y: auto;
 
-    .continue-watching-row, .search-row {
+    .board-row {
         display: flex;
         flex-direction: row;
         align-items: stretch;
-    }
 
-    .meta-item {
-        margin: 10px;
+        .meta-item {
+            margin: 10px;
+        }
     }
 }

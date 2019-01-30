@@ -1,4 +1,6 @@
 .meta-item-container {
+    --play-icon-size: calc(var(--poster-relative-size) * .4);
+
     display: inline-flex;
     flex-direction: column;
     background-color: var(--color-backgroundlight);
@@ -34,14 +36,12 @@
 
         .play-icon-container {
             position: absolute;
-            top: calc(50% - (var(--poster-relative-size) * 0.2));
-            left: calc(50% - (var(--poster-relative-size) * 0.2));
-            width: calc(var(--poster-relative-size) * 0.4);
-            height: calc(var(--poster-relative-size) * 0.4);
+            width: var(--play-icon-size);
+            height: var(--play-icon-size);
             z-index: 2;
             background-color: var(--color-surfacelighter);
             border-radius: 50%;
-            box-shadow: 0 0 calc(var(--poster-relative-size) * 0.1) calc(var(--poster-relative-size) * 0.015) var(--color-backgroundlight);
+            box-shadow: 0 0 calc(var(--play-icon-size) * 0.25) calc(var(--play-icon-size) * 0.04) var(--color-backgroundlight);
             visibility: var(--play-icon-visibility, collapse);
             text-align: center;
 
