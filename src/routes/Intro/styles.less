@@ -25,6 +25,7 @@
 
     .scroll-content {
         display: flex;
+        flex-direction: row;
         position: absolute;
         z-index: 1;
         top: 0;
@@ -43,15 +44,15 @@
                 width: var(--login-form-width);
                 height: calc(var(--login-form-width) * 0.25);
                 display: flex;
+                flex-direction: row;
                 align-items: center;
                 justify-content: center;
-                padding: calc(var(--spacing) * 1.25) 0;
                 border: var(--focusable-border-size) solid transparent;
                 background: var(--color-secondarydark);
                 cursor: pointer;
 
                 .icon {
-                    height: 100%;
+                    height: 1.7em;
                     margin-right: var(--spacing);
                     fill: var(--color-surfacelighter);
                 }
