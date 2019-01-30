@@ -17,16 +17,6 @@ const TAG_NAMES_FOR_TYPE = {
 };
 
 class Input extends PureComponent {
-    onClick = (event) => {
-        if (typeof this.props.onClick === 'function') {
-            this.props.onClick(event);
-        }
-
-        if (this.props.type === 'checkbox') {
-            event.preventDefault();
-        }
-    }
-
     onKeyUp = (event) => {
         if (typeof this.props.onKeyUp === 'function') {
             this.props.onKeyUp(event);
