@@ -3,8 +3,18 @@ import PropTypes from 'prop-types';
 import { withFocusable } from 'stremio-common';
 
 const ENTER_KEY_CODE = 13;
-const BUTTON_INPUT_TYPES = ['button', 'submit', 'link', 'checkbox'];
-const TEXT_INPUT_TYPES = ['text', 'password', 'email'];
+const BUTTON_INPUT_TYPES = ['button', 'link', 'submit', 'checkbox'];
+const TEXT_INPUT_TYPES = ['text', 'password', 'email', 'search'];
+const TAG_NAMES_FOR_TYPE = {
+    button: 'div',
+    link: 'a',
+    submit: 'input',
+    checkbox: 'input',
+    text: 'input',
+    password: 'input',
+    email: 'input',
+    search: 'input'
+};
 
 class Input extends PureComponent {
     onClick = (event) => {
@@ -48,45 +58,18 @@ class Input extends PureComponent {
     }
 
     render() {
-        const { forwardedRef, focusable, type, ...props } = this.props;
-
-        if (type === 'button') {
-            return (
-                <div
-                    {...props}
-                    ref={forwardedRef}
-                    tabIndex={focusable ? 0 : -1}
-                    onKeyUp={this.onKeyUp}
-                    onDrag={this.onDrag}
-                    onMouseOut={this.onMouseOut}
-                />
-            );
-        }
-
-        if (type === 'link') {
-            return (
-                <a
-                    {...props}
-                    ref={forwardedRef}
-                    tabIndex={focusable ? 0 : -1}
-                    onKeyUp={this.onKeyUp}
-                    onDrag={this.onDrag}
-                    onMouseOut={this.onMouseOut}
-                />
-            );
-        }
-
-        return (
-            <input
-                {...props}
-                ref={forwardedRef}
-                tabIndex={focusable ? 0 : -1}
-                type={type}
-                onKeyUp={this.onKeyUp}
-                onDrag={this.onDrag}
-                onMouseOut={this.onMouseOut}
-            />
-        );
+        const { forwardedRef, focusable, type, children, ...props } = this.props;
+        const tagName = TAG_NAMES_FOR_TYPE[type];
+        const elementProps = {
+            ...props,
+            ref: forwardedRef,
+            type: tagName === 'input' ? type : null,
+            tabIndex: focusable ? 0 : -1,
+            onKeyUp: this.onKeyUp,
+            onDrag: this.onDrag,
+            onMouseOut: this.onMouseOut
+        };
+        return React.createElement(tagName, elementProps, children);
     }
 }
 
