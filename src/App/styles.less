@@ -79,8 +79,12 @@ html, body, :global(#app) {
         height: 100%;
     }
 
-    input {
+    input[type="email"], input[type="password"], input[type="text"] {
         user-select: text;
+    }
+
+    input::-moz-focus-inner {
+        border: 0;
     }
 
     ::-webkit-scrollbar {
