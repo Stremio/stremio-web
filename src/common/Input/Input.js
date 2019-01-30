@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { withFocusable } from 'stremio-common';
 
-class TextInput extends PureComponent {
+class Input extends PureComponent {
     render() {
         const { forwardedRef, focusable, ...props } = this.props;
         return (
@@ -15,21 +15,21 @@ class TextInput extends PureComponent {
     }
 }
 
-TextInput.propTypes = {
+Input.propTypes = {
     focusable: PropTypes.bool.isRequired
 };
-TextInput.defaultProps = {
+Input.defaultProps = {
     focusable: false
 };
 
-const TextInputWithFocusable = withFocusable(TextInput);
+const InputWithFocusable = withFocusable(Input);
 
-TextInputWithFocusable.displayName = 'TextInputWithFocusable';
+InputWithFocusable.displayName = 'InputWithFocusable';
 
-const TextInputWithForwardedRef = React.forwardRef((props, ref) => (
-    <TextInputWithFocusable {...props} forwardedRef={ref} />
+const InputWithForwardedRef = React.forwardRef((props, ref) => (
+    <InputWithFocusable {...props} forwardedRef={ref} />
 ));
 
-TextInputWithForwardedRef.displayName = 'TextInputWithForwardedRef';
+InputWithForwardedRef.displayName = 'InputWithForwardedRef';
 
-export default TextInputWithForwardedRef;
+export default InputWithForwardedRef;

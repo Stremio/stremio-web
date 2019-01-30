@@ -9,7 +9,7 @@
     z-index: 0;
     width: 100%;
     height: 100%;
-    background-image: url('/images/home-testimonials.jpg');
+    background-image: url('/images/login_background.jpg');
     background-size: cover;
     background-attachment: fixed;
 
@@ -23,123 +23,172 @@
         background-color: var(--color-backgrounddark80);
     }
 
-    .intro {
+    .scroll-content {
+        display: flex;
+        flex-direction: row;
         position: absolute;
         z-index: 1;
         top: 0;
         left: 0;
         right: 0;
         bottom: 0;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
+        overflow-y: auto;
+        overflow-x: hidden;
 
-        .facebook-button {
+        .intro {
+            margin: auto;
+            padding: calc(var(--login-form-width) * 0.2) 0;
             width: var(--login-form-width);
-            height: calc(var(--login-form-width) * 0.25);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            padding: calc(var(--spacing) * 1.25) 0;
-            background: var(--color-secondarydark);
 
-            .icon {
-                height: 100%;
-                margin-right: var(--spacing);
-                fill: var(--color-surfacelighter);
-            }
-
-            .label {
-                font-size: 1.1em;
-                color: var(--color-surfacelighter);
-            }
-        }
-
-        .facebook-subtext {
-            margin: calc(var(--spacing) * 0.5) 0 calc(var(--spacing) * 4) 0;
-            color: var(--color-surface);
-        }
-
-        .form-container {
-            width: var(--login-form-width);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-
-            .email {
-                width: 100%;
-                margin-bottom: var(--spacing);
-                padding: 0.5em 0;
-                border-bottom: 1px solid var(--color-surface);
-                font-size: 1.1em;
-                color: var(--color-surfacelighter);
-                background: none;
-
-                &::placeholder {
-                    color: var(--color-surfacelight);
-                }
-            }
-
-            .password {
-                width: 100%;
-                margin-bottom: var(--spacing);
-                padding: 0.5em 0;
-                border-bottom: 1px solid var(--color-surface);
-                font-size: 1.1em;
-                color: var(--color-surfacelighter);
-                background: none;
-
-                &::placeholder {
-                    color: var(--color-surfacelight);
-                }
-            }
-
-            .checkbox-label {
-                width: 100%;
-                margin-bottom: var(--spacing);
-            }
-
-
-            .forgot-password {
+            .facebook-button {
+                width: var(--login-form-width);
+                height: calc(var(--login-form-width) * 0.25);
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+                border: var(--focusable-border-size) solid transparent;
+                background: var(--color-secondarydark);
                 cursor: pointer;
-                margin-bottom: var(--spacing);
-                color: var(--color-surfacelight);
 
-                &:hover {
+                .icon {
+                    height: 1.7em;
+                    margin-right: var(--spacing);
+                    fill: var(--color-surfacelighter);
+                }
+
+                .label {
+                    font-size: 1.1em;
                     color: var(--color-surfacelighter);
                 }
-            }
 
-            .error {
-                margin-bottom: var(--spacing);
-                text-align: center;
-                color: var(--color-signal1);
-            }
+                &:focus {
+                    border-color: var(--color-surfacelighter);
+                }
 
-            .submit-button {
-                width: 100%;
-                cursor: pointer;
-                padding: calc(var(--spacing) * 1.1);
-                font-size: 1.1em;
-                font-weight: 600;
-                color: var(--color-surfacelighter);
-                background-color: var(--color-primarydark);
-
-                &:hover, &:focus {
-                    background-color: var(--color-primary);
+                &:hover {
+                    border-color: transparent;
                 }
             }
-        }
 
-        .option {
-            margin-top: calc(var(--spacing) * 2);
-            cursor: pointer;
-            font-size: 1.1em;
-            font-weight: 600;
-            color: var(--color-surfacelighter);
+            .facebook-statement {
+                margin: calc(var(--spacing) * 0.5) 0 calc(var(--spacing) * 4) 0;
+                text-align: center;
+                color: var(--color-surface);
+            }
+
+            .form-container {
+                width: var(--login-form-width);
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
+                justify-content: center;
+
+                .text-input {
+                    margin: 0 calc(var(--spacing) * 0.5) var(--spacing) calc(var(--spacing) * 0.5);
+                    padding: 0.5em 0;
+                    border-bottom: 1px solid var(--color-surface);
+                    font-size: 1.1em;
+                    color: var(--color-surfacelighter);
+                    background: none;
+
+                    &::placeholder {
+                        color: var(--color-surfacelight);
+                    }
+
+                    &:hover, &:focus {
+                        border-bottom-color: var(--color-surfacelighter);
+
+                        &::placeholder {
+                            color: var(--color-surfacelighter);
+                        }
+                    }
+                }
+
+                .consent-checkbox {
+                    width: 100%;
+                    margin-bottom: var(--spacing);
+                    padding: calc(var(--spacing) * 0.5);
+                    border: var(--focusable-border-size) solid transparent;
+
+                    &:focus-within {
+                        border-color: var(--color-surfacelighter);
+                    }
+                }
+
+
+                .forgot-password {
+                    align-self: flex-end;
+                    margin-bottom: var(--spacing);
+                    padding: calc(var(--spacing) * 0.5);
+                    border: var(--focusable-border-size) solid transparent;
+                    color: var(--color-surfacelight);
+                    cursor: pointer;
+
+                    &:hover, &:focus {
+                        color: var(--color-surfacelighter);
+                    }
+
+                    &:focus {
+                        border-color: var(--color-surfacelighter);
+                    }
+
+                    &:hover {
+                        border-color: transparent;
+                    }
+                }
+
+                .error {
+                    margin-bottom: var(--spacing);
+                    text-align: center;
+                    color: var(--color-signal1);
+                }
+
+                .submit-button {
+                    width: 100%;
+                    outline: none;
+                    padding: calc(var(--spacing) * 1.1);
+                    font-size: 1.1em;
+                    font-weight: 600;
+                    border: var(--focusable-border-size) solid transparent;
+                    color: var(--color-surfacelighter);
+                    background-color: var(--color-primarydark);
+                    cursor: pointer;
+
+                    &:hover, &:focus {
+                        background-color: var(--color-primary);
+                    }
+
+                    &:focus {
+                        border-color: var(--color-surfacelighter);
+                    }
+
+                    &:hover {
+                        border-color: transparent;
+                    }
+                }
+            }
+
+            .switch-form-button, .guest-login-button {
+                width: 100%;
+                display: inline-block;
+                margin-top: var(--spacing);
+                padding: calc(var(--spacing) * 0.5);
+                text-align: center;
+                font-size: 1.1em;
+                font-weight: 600;
+                border: var(--focusable-border-size) solid transparent;
+                color: var(--color-surfacelighter);
+                cursor: pointer;
+
+                &:focus {
+                    border-color: var(--color-surfacelighter);
+                }
+
+                &:hover {
+                    border-color: transparent;
+                }
+            }
         }
     }
 }

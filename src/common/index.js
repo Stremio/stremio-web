@@ -2,7 +2,8 @@ import Slider from './Slider';
 import { FocusableProvider, withFocusable } from './Focusable';
 import Button from './Button';
 import Checkbox from './Checkbox';
-import TextInput from './TextInput';
+import Input from './Input';
+import Link from './Link';
 import { Modal, ModalsContainerContext, withModalsContainer } from './Modal';
 import Popup from './Popup';
 import Router from './Router';
@@ -13,7 +14,8 @@ import UserPanel from './UserPanel';
 
 export {
     Checkbox,
-    TextInput,
+    Input,
+    Link,
     Popup,
     NavBar,
     ModalsContainerContext,

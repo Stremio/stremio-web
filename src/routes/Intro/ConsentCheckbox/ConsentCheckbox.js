@@ -4,8 +4,8 @@ import classnames from 'classnames';
 import { Checkbox } from 'stremio-common';
 import styles from './styles';
 
-const CheckboxLabel = React.forwardRef(({ className, label, link, href, checked, onClick }, ref) => (
-    <label className={classnames(styles['checkbox-label-container'], className)}>
+const ConsentCheckbox = React.forwardRef(({ className, label, link, href, checked, onClick }, ref) => (
+    <label className={classnames(styles['consent-checkbox-container'], className)}>
         <Checkbox ref={ref} className={styles['checkbox']} checked={checked} onClick={onClick} />
         <div className={styles['label']}>
             {label}
@@ -14,9 +14,9 @@ const CheckboxLabel = React.forwardRef(({ className, label, link, href, checked,
     </label>
 ));
 
-CheckboxLabel.displayName = 'CheckboxLabel';
+ConsentCheckbox.displayName = 'ConsentCheckbox';
 
-CheckboxLabel.propTypes = {
+ConsentCheckbox.propTypes = {
     className: PropTypes.string,
     onClick: PropTypes.func,
     label: PropTypes.string,
@@ -25,4 +25,4 @@ CheckboxLabel.propTypes = {
     checked: PropTypes.bool
 };
 
-export default CheckboxLabel;
+export default ConsentCheckbox;
