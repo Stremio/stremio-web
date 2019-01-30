@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import Icon from 'stremio-icons/dom';
-import { Button, Input, Link } from 'stremio-common';
+import { Input } from 'stremio-common';
 import ConsentCheckbox from './ConsentCheckbox';
 import styles from './styles';
 
@@ -33,10 +33,30 @@ class Intro extends Component {
         };
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        return nextState.selectedForm !== this.state.selectedForm ||
+            nextState.termsAccepted !== this.state.termsAccepted ||
+            nextState.privacyPolicyAccepted !== this.state.privacyPolicyAccepted ||
+            nextState.marketingAccepted !== this.state.marketingAccepted ||
+            nextState.email !== this.state.email ||
+            nextState.password !== this.state.password ||
+            nextState.confirmPassword !== this.state.confirmPassword ||
+            nextState.error !== this.state.error;
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.error !== this.state.error && this.state.error.length > 0) {
+            this.errorRef.current.scrollIntoView();
+        }
+
+        if (prevState.selectedForm !== this.state.selectedForm) {
+            this.emailRef.current.focus();
+        }
+    }
+
     changeSelectedForm = (event) => {
-        event.currentTarget.blur();
         this.setState({
-            selectedForm: event.currentTarget.dataset.option,
+            selectedForm: event.currentTarget.dataset.form,
             termsAccepted: false,
             privacyPolicyAccepted: false,
             marketingAccepted: false,
@@ -75,27 +95,6 @@ class Intro extends Component {
         this.setState(({ marketingAccepted }) => ({
             marketingAccepted: !marketingAccepted
         }));
-    }
-
-    shouldComponentUpdate(nextProps, nextState) {
-        return nextState.selectedForm !== this.state.selectedForm ||
-            nextState.termsAccepted !== this.state.termsAccepted ||
-            nextState.privacyPolicyAccepted !== this.state.privacyPolicyAccepted ||
-            nextState.marketingAccepted !== this.state.marketingAccepted ||
-            nextState.email !== this.state.email ||
-            nextState.password !== this.state.password ||
-            nextState.confirmPassword !== this.state.confirmPassword ||
-            nextState.error !== this.state.error;
-    }
-
-    componentDidUpdate(prevProps, prevState) {
-        if (prevState.error !== this.state.error && this.state.error.length > 0) {
-            this.errorRef.current.scrollIntoView();
-        }
-
-        if (prevState.selectedForm !== this.state.selectedForm) {
-            this.emailRef.current.focus();
-        }
     }
 
     loginOnSubmit = (event) => {
@@ -174,17 +173,17 @@ class Intro extends Component {
                 <div className={styles['overlay']} />
                 <div className={styles['scroll-content']}>
                     <div className={styles['intro']}>
-                        <Button className={styles['facebook-button']}>
+                        <Input className={styles['facebook-button']} type={'button'} >
                             <Icon className={styles['icon']} icon={'ic_facebook'} />
                             <div className={styles['label']}>Login with Facebook</div>
-                        </Button>
+                        </Input>
                         <div className={styles['facebook-statement']}>We won't post anything on your behalf</div>
                         <form className={styles['form-container']} onSubmit={this.state.selectedForm === FORMS.LOGIN ? this.loginOnSubmit : this.signUpOnSubmit}>
-                            <Input ref={this.emailRef} className={styles['text-input']} type={'text'} placeholder={'Email'} value={this.state.email} onChange={this.emailOnChange} />
+                            <Input ref={this.emailRef} className={styles['text-input']} type={'email'} placeholder={'Email'} value={this.state.email} onChange={this.emailOnChange} />
                             <Input ref={this.passwordRef} className={styles['text-input']} type={'password'} placeholder={'Password'} value={this.state.password} onChange={this.passwordOnChange} />
                             {
                                 this.state.selectedForm === FORMS.LOGIN ?
-                                    <Link className={styles['forgot-password']} href={'https://www.strem.io/reset-password/'} target={'_blank'}>Forgot password?</Link>
+                                    <Input className={styles['forgot-password']} type={'link'} href={'https://www.strem.io/reset-password/'} target={'_blank'}>Forgot password?</Input>
                                     :
                                     <Fragment>
                                         <Input ref={this.confirmPasswordRef} className={styles['text-input']} type={'password'} placeholder={'Confirm Password'} value={this.state.confirmPassword} onChange={this.confirmPasswordOnChange} />
@@ -201,10 +200,10 @@ class Intro extends Component {
                             }
                             <Input className={styles['submit-button']} type={'submit'} value={this.state.selectedForm === FORMS.LOGIN ? 'LOG IN' : 'SING UP'} />
                         </form>
-                        <Button className={styles['switch-form-button']} data-option={this.state.selectedForm === FORMS.SIGN_UP ? FORMS.LOGIN : FORMS.SIGN_UP} onClick={this.changeSelectedForm}>{this.state.selectedForm === FORMS.SIGN_UP ? 'LOG IN' : 'SING UP WITH EMAIL'}</Button>
+                        <Input className={styles['switch-form-button']} type={'button'} data-form={this.state.selectedForm === FORMS.SIGN_UP ? FORMS.LOGIN : FORMS.SIGN_UP} onClick={this.changeSelectedForm}>{this.state.selectedForm === FORMS.SIGN_UP ? 'LOG IN' : 'SING UP WITH EMAIL'}</Input>
                         {
                             this.state.selectedForm === FORMS.SIGN_UP ?
-                                <Button className={styles['guest-login-button']} onClick={this.guestLoginOnSubmit}>GUEST LOGIN</Button>
+                                <Input className={styles['guest-login-button']} type={'button'} onClick={this.guestLoginOnSubmit}>GUEST LOGIN</Input>
                                 :
                                 null
                         }
