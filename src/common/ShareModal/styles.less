@@ -1,60 +1,12 @@
-@share-modal-width: 380px;
-@spacing: floor((@share-modal-width * 0.06));
-
 .share-modal {
-    width: @share-modal-width;
-    padding: ceil((@spacing * 0.5));
-
-    .x-icon {
-        width: ceil((@spacing * 0.5));
-        height: ceil((@spacing * 0.5));
-    }
-
-    .info-container {
-        padding: floor((@spacing * 0.3)) ceil((@spacing * 0.9)) @spacing ceil((@spacing * 0.9));
-
-        .buttons {
-            padding: @spacing 0;
-        }
-
-        .facebook-button, .twitter-button, .gplus-button {
-            width: ceil((@share-modal-width * 0.26));
-            height: floor((@share-modal-width * 0.09));
-
-            .facebook-icon, .twitter-icon, .gplus-icon {
-                width: ceil((@spacing * 0.6));
-                height: ceil((@spacing * 0.6));
-                margin-right: floor((@spacing * 0.3));
-            }
-        }
-
-        .url-container {
-            border-radius: 4px;
-            border-width: 1px;
-
-            .url {
-                font-size: 12px;
-                border-radius: 4px;
-                padding: ceil((@spacing * 0.5));
-            }
-
-            .copy-label {
-                font-size: 14px;
-                border-top-right-radius: 3px;
-                border-bottom-right-radius: 3px;
-                padding: ceil((@spacing * 0.5));
-
-                .copy-icon {
-                    width: ceil((@spacing * 0.7));
-                    height: ceil((@spacing * 0.7));
-                    margin-right: floor((@spacing * 0.3));
-                }
-            }
-        }
-    }
+    --share-modal-width: 380px;
+    --spacing: 22px;
+    font-size: 14px;
 }
 
 .share-modal {
+    padding: calc(var(--spacing) * 0.5);
+    width: var(--share-modal-width);
     color: var(--color-surfacelighter);
     background-color: var(--color-surfacelighter);
 
@@ -63,73 +15,91 @@
         justify-content: flex-end;
 
         .x-icon {
-            cursor: pointer;
+            width: calc(var(--spacing) * 0.5);
+            height: calc(var(--spacing) * 0.5);
             background-position: center;
             background-repeat: no-repeat;
+            cursor: pointer;
         }
     }
 
-    .share-label {
-        color: var(--color-backgrounddarker);
-        font-weight: 500;
-    }
+    .info-container {
+        padding: calc(var(--spacing) * 0.2) calc(var(--spacing) * 0.9) calc(var(--spacing) * 1.2) calc(var(--spacing) * 0.9);
 
-    .buttons {
-        display: flex;
-        font-size: 11px;
-        justify-content: space-between;
+        .share-label {
+            font-size: 1.1em;
+            color: var(--color-backgrounddarker);
+        }
 
-        .facebook-button, .twitter-button, .gplus-button {
+        .buttons {
+            padding: var(--spacing) 0;
             display: flex;
-            cursor: pointer;
-            align-items: center;
-            justify-content: center;
+            justify-content: space-between;
+    
+            .facebook-button, .twitter-button, .gplus-button {
+                width: calc(var(--share-modal-width) * 0.26);
+                height: calc(var(--share-modal-width) * 0.09);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 0.8em;
+                color: var(--color-surfacelighter);
+                cursor: pointer;
 
-            .facebook-icon, .twitter-icon, .gplus-icon {
-                fill: var(--color-surfacelighter);
+                .icon {
+                    margin-right: calc(var(--spacing) * 0.3);
+                    width: calc(var(--spacing) * 0.7);
+                    height: calc(var(--spacing) * 0.7);
+                    fill: var(--color-surfacelighter);
+                }
+            }
+
+            .facebook-button {
+                background-color: var(--color-secondary);
+            }
+
+            .twitter-button {
+                background-color: var(--color-secondarylighter);
+            }
+
+            .gplus-button {
+                background-color: var(--color-signal2);
             }
         }
 
-        .facebook-button {
-            background-color: var(--color-secondary);
-        }
-
-        .twitter-button {
-            background-color: var(--color-secondarylighter);
-        }
-
-        .gplus-button {
-            background-color: var(--color-signal2);
-        }
-    }
-
-    .url-container {
-        display: flex;
-        border-style: solid;
-        border-color: var(--color-surface);
-
-        .url, .copy-label {
-            color: var(--color-backgrounddarker40);
-        }
-
-        .url {
-            width: 75%;
-            outline: none;
-            font-weight: 600;
-            text-align: center;
-            text-overflow: ellipsis;
-        }
-
-        .copy-label {
-            cursor: pointer;
-            width: 25%;
-            font-weight: 500;
+        .url-container {
             display: flex;
-            justify-content: center;
-            background-color: var(--color-backgrounddarker20);
+            border-radius: 4px;
+            border: 1px solid var(--color-surface);
 
-            .copy-icon {
-                fill: var(--color-backgrounddarker40);
+            .url {
+                padding: calc(var(--spacing) * 0.5);
+                width: 75%;
+                font-size: 0.9em;
+                text-align: center;
+                text-overflow: ellipsis;
+                border-radius: 4px;
+                color: var(--color-surfacedark);
+                outline: none;
+            }
+
+            .copy-label {
+                padding: calc(var(--spacing) * 0.5);
+                width: 25%;
+                display: flex;
+                justify-content: center;
+                border-top-right-radius: 3px;
+                border-bottom-right-radius: 3px;
+                color: var(--color-surfacedark);
+                background-color: var(--color-surfacelight);
+                cursor: pointer;
+
+                .copy-icon {
+                    margin-right: calc(var(--spacing) * 0.3);
+                    width: calc(var(--spacing) * 0.7);
+                    height: calc(var(--spacing) * 0.7);
+                    fill: var(--color-backgrounddarker40);
+                }
             }
         }
     }
