@@ -1,42 +1,41 @@
 .consent-checkbox-container {
+    --icon-size: 1.2em;
+    --icon-color: var(--color-surface);
+    --icon-background-color: transparent;
+
+    padding: calc(var(--spacing) * 0.5);
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: center;
     cursor: pointer;
 
-    .checkbox {
-        --icon-color: var(--color-surface);
-        margin-right: calc(var(--spacing) * 0.5);
-        width: 1.3em;
-        height: 1.3em;
+    .label {
+        flex: 1;
+        margin-left: calc(var(--spacing) * 0.5);
+        line-height: 1.2em;
+        color: var(--color-surface);
 
-        &:global(.checked) {
-            --icon-color: var(--color-surfacelight);
-            background-color: var(--color-primary);
+        .link {
+            line-height: 1.2em;
+            color: var(--color-surfacelight);
         }
     }
 
-    .label {
-        line-height: 1.2em;
-        color: var(--color-surface);
-    }
-
-    .link {
-        line-height: 1.2em;
-        color: var(--color-surfacelight);
+    &:global(.checked) {
+        --icon-color: var(--color-surfacelight);
+        --icon-background-color: var(--color-primary);
     }
 
     &:focus-within, &:hover {
-        .checkbox {
-            --icon-color: var(--color-surfacelighter);
-        }
+        --icon-color: var(--color-surfacelighter);
 
         .label {
             color: var(--color-surfacelight);
-        }
 
-        .link {
-            color: var(--color-surfacelighter);
+            .link {
+                color: var(--color-surfacelighter);
+            }
         }
     }
 }
