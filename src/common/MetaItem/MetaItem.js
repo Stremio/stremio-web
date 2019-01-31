@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import { Popup, Button } from 'stremio-common';
+import { Popup, Input } from 'stremio-common';
 import Icon from 'stremio-icons/dom';
 import styles from './styles';
 
@@ -97,7 +97,7 @@ class MetaItem extends Component {
                                 <Popup.Menu>
                                     <div className={styles['menu-items-container']}>
                                         {this.props.menuOptions.map(({ label, type }) => (
-                                            <Button key={type} className={styles['menu-item']} data-meta-item-id={this.props.id} data-menu-option-type={type} onClick={this.menuOptionOnSelect}>{label}</Button>
+                                            <Input key={type} className={styles['menu-item']} type={'button'} data-meta-item-id={this.props.id} data-menu-option-type={type} onClick={this.menuOptionOnSelect}>{label}</Input>
                                         ))}
                                     </div>
                                 </Popup.Menu>
@@ -120,10 +120,10 @@ class MetaItem extends Component {
 
     render() {
         return (
-            <Button className={classnames(styles['meta-item-container'], styles[`relative-side-${this.props.relativeSide}`], styles[`poster-shape-${this.props.posterShape}`], this.props.className)} data-meta-item-id={this.props.id} onClick={this.onClick}>
+            <Input className={classnames(styles['meta-item-container'], styles[`relative-side-${this.props.relativeSide}`], styles[`poster-shape-${this.props.posterShape}`], this.props.className)} type={'button'} data-meta-item-id={this.props.id} onClick={this.onClick}>
                 {this.renderPoster()}
                 {this.renderInfoBar()}
-            </Button>
+            </Input>
         );
     }
 }
