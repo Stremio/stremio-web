@@ -89,7 +89,7 @@ class Board extends PureComponent {
                 {
                     id: '0234',
                     type: 'movie',
-                    posterShape: 'poster',
+                    posterShape: 'landscape',
                     title: 'Movie title',
                     subtitle: 'Movie subtitle'
                 },
