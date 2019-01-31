@@ -1,19 +1,18 @@
 .meta-item-container {
-    --play-icon-size: calc(var(--poster-relative-size) * .4);
-
     display: inline-flex;
     flex-direction: column;
     background-color: var(--color-backgroundlight);
-    border: calc(var(--progress-bar-size) * 0.5) solid transparent;
+    border: var(--focusable-border-size) solid transparent;
     cursor: pointer;
 
     .poster-image-container {
         position: relative;
+        z-index: 0;
         display: flex;
+        flex-direction: row;
         justify-content: center;
         align-items: center;
         overflow: hidden;
-        z-index: 0;
 
         .placeholder-image {
             width: calc(var(--poster-relative-size) * 0.5);
@@ -36,18 +35,18 @@
 
         .play-icon-container {
             position: absolute;
-            width: var(--play-icon-size);
-            height: var(--play-icon-size);
+            width: calc(var(--poster-relative-size) * .4);
+            height: calc(var(--poster-relative-size) * .4);
             z-index: 2;
             background-color: var(--color-surfacelighter);
             border-radius: 50%;
-            box-shadow: 0 0 calc(var(--play-icon-size) * 0.25) calc(var(--play-icon-size) * 0.04) var(--color-backgroundlight);
+            box-shadow: 0 0 calc(var(--poster-relative-size) * 0.1) calc(var(--poster-relative-size) * 0.015) var(--color-backgroundlight);
             visibility: var(--play-icon-visibility, collapse);
             text-align: center;
 
             .play-icon {
-                height: 40%;
                 margin-top: 30%;
+                height: 40%;
                 fill: var(--color-primary);
             }
         }
@@ -145,6 +144,12 @@
 
     &:hover, &:focus {
         border-color: var(--color-surfacelighter);
+
+        .poster-image-container {
+            .poster-image {
+                filter: brightness(1.2);
+            }
+        }
     }
 }
 
@@ -152,16 +157,16 @@
     --box-shadow: 0 0 2em .15em var(--color-background);
 
     .menu-items-container {
-        background-color: var(--color-surfacelighter);
         min-width: calc(var(--poster-relative-size) * 0.6);
         max-width: var(--poster-relative-size);
+        background-color: var(--color-surfacelighter);
 
         .menu-item {
-            display: inline-block;
-            width: 100%;
-            color: var(--color-backgrounddarker);
-            font-size: 1.2em;
             padding: 0.5em;
+            width: 100%;
+            display: inline-block;
+            font-size: 1.5em;
+            color: var(--color-backgrounddarker);
             cursor: pointer;
 
             &:hover, &:focus {
