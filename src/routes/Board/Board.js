@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import classnames from 'classnames';
-import { MetaItem } from 'stremio-common';
+import { MetaItem, Input } from 'stremio-common';
 import styles from './styles';
 
 const CONTINUE_WATCHING_MENU = [
@@ -56,6 +56,13 @@ class Board extends PureComponent {
                     posterShape: 'square',
                     title: 'Movie title',
                     progress: 1
+                },
+                {
+                    id: '6',
+                    type: 'channel',
+                    posterShape: 'square',
+                    title: 'Movie title',
+                    progress: 0.1
                 }
             ],
             addonCatalogItems: [
@@ -69,6 +76,20 @@ class Board extends PureComponent {
                     id: '02',
                     type: 'movie',
                     posterShape: 'landscape',
+                    title: 'Movie title',
+                    subtitle: 'Movie subtitle'
+                },
+                {
+                    id: '022',
+                    type: 'movie',
+                    posterShape: 'square',
+                    title: 'Movie title',
+                    subtitle: 'Movie subtitle'
+                },
+                {
+                    id: '0234',
+                    type: 'movie',
+                    posterShape: 'poster',
                     title: 'Movie title',
                     subtitle: 'Movie subtitle'
                 },
@@ -97,18 +118,23 @@ class Board extends PureComponent {
         return (
             <div className={styles['board-container']}>
                 <div className={classnames(styles['board-row'], styles['continue-watching-row'])}>
-                    {this.items.continueWatchingItems.map((props) => (
-                        <MetaItem
-                            key={props.id}
-                            className={styles['meta-item']}
-                            popupClassName={styles['meta-item-popup-container']}
-                            relativeSide={'height'}
-                            menuOptions={CONTINUE_WATCHING_MENU}
-                            onClick={this.onClick}
-                            menuOptionOnSelect={this.menuOptionOnSelect}
-                            {...props}
-                        />
-                    ))}
+                    <div className={styles['meta-items-container']}>
+                        {this.items.continueWatchingItems.map((props) => (
+                            <MetaItem
+                                key={props.id}
+                                className={styles['meta-item']}
+                                popupClassName={styles['meta-item-popup-container']}
+                                relativeSide={'height'}
+                                menuOptions={CONTINUE_WATCHING_MENU}
+                                onClick={this.onClick}
+                                menuOptionOnSelect={this.menuOptionOnSelect}
+                                {...props}
+                            />
+                        ))}
+                    </div>
+                    <Input className={styles['show-more-container']} type={'button'}>
+                        show more
+                    </Input>
                 </div>
                 <div className={classnames(styles['board-row'], styles['notificatins-row'])}>
                     {this.items.addonCatalogItems.map((props) => (

@@ -1,20 +1,18 @@
 .board-container, .meta-item-popup-container {
     font-size: 12px;
-    --progress-bar-size: 6px;
 
     .board-row {
+
         &.continue-watching-row {
-            .meta-item {
-                --poster-relative-size: calc(180px * var(--poster-shape-ratio));
-                --play-icon-visibility: visible;
-            }
+            --poster-relative-size: calc(180px * var(--poster-shape-ratio));
+            --progress-bar-size: 6px;
+            --play-icon-visibility: visible;
         }
 
         &.notificatins-row {
-            .meta-item {
-                --poster-relative-size: 180px;
-                --play-icon-size: 105px;
+            --poster-relative-size: 180px;
 
+            .meta-item {
                 &:hover, &:focus {
                     --play-icon-visibility: visible;
                 }
@@ -34,8 +32,22 @@
         flex-direction: row;
         align-items: stretch;
 
-        .meta-item {
-            margin: 10px;
+        .meta-items-container {
+            display: flex;
+            flex-direction: row;
+            overflow: hidden;
+
+            .meta-item {
+                margin: 1em;
+            }
+        }
+
+        .show-more-container {
+            margin: 1em;
+            flex: 1;
+            min-width: calc(var(--poster-relative-size) * 0.8);
+            background-color: var(--color-backgroundlighter);
+            cursor: pointer;
         }
     }
 }
