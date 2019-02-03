@@ -19,26 +19,86 @@ class Board extends PureComponent {
         super(props);
 
         this.items = {
+            addonCatalogItems2: [
+                {
+                    id: '0',
+                    type: 'movie',
+                    posterShape: 'poster',
+                    poster: 'qwe',
+                    title: 'Movie title',
+                    subtitle: '123',
+                    progress: 0.7
+                },
+                {
+                    id: '120',
+                    type: 'movie',
+                    posterShape: 'square',
+                    poster: 'qwe',
+                    title: 'Movie title',
+                    progress: 0.7
+                },
+                {
+                    id: '03',
+                    type: 'movie',
+                    posterShape: 'poster',
+                    poster: 'qwe',
+                    title: 'Movie title',
+                    progress: 0.7
+                },
+                {
+                    id: '40',
+                    type: 'movie',
+                    posterShape: 'poster',
+                    poster: 'qwe',
+                    title: 'Movie title',
+                    progress: 0.7
+                },
+                {
+                    id: '05',
+                    type: 'movie',
+                    posterShape: 'poster',
+                    poster: 'qwe',
+                    title: 'Movie title',
+                    progress: 0.7
+                },
+                {
+                    id: '055',
+                    type: 'movie',
+                    posterShape: 'poster',
+                    poster: 'qwe',
+                    title: 'Movie title',
+                    progress: 0.7
+                },
+                {
+                    id: '058',
+                    type: 'movie',
+                    posterShape: 'poster',
+                    poster: 'qwe',
+                    title: 'Movie title',
+                    progress: 0.7
+                },
+            ],
             continueWatchingItems: [
                 {
                     id: '0',
                     type: 'movie',
                     posterShape: 'poster',
+                    poster: 'https://i.ytimg.com/vi/97AUCrEgTj0/hqdefault.jpg',
                     title: 'Movie title',
                     progress: 0.7
                 },
                 {
                     id: '1',
                     type: 'movie',
-                    posterShape: 'poster',
+                    posterShape: 'square',
                     title: 'Movie title',
                     progress: 0.2
                 },
                 {
                     id: '3',
                     type: 'movie',
-                    poster: 'https://www.stremio.com/website/home-stremio.png',
-                    posterShape: 'poster',
+                    poster: 'https://www.stremio.com/website/home-testimonials.jpg',
+                    posterShape: 'square',
                     title: 'Movie title',
                     progress: 0.4
                 },
@@ -53,46 +113,17 @@ class Board extends PureComponent {
                 {
                     id: '5',
                     type: 'channel',
-                    posterShape: 'square',
+                    posterShape: 'poster',
                     title: 'Movie title',
                     progress: 1
                 },
                 {
                     id: '6',
                     type: 'channel',
-                    posterShape: 'square',
+                    posterShape: 'poster',
                     title: 'Movie title',
                     progress: 0.1
                 }
-            ],
-            addonCatalogItems: [
-                {
-                    id: '01',
-                    type: 'movie',
-                    posterShape: 'landscape',
-                    title: 'Movie title'
-                },
-                {
-                    id: '02',
-                    type: 'movie',
-                    posterShape: 'landscape',
-                    title: 'Movie title',
-                    subtitle: 'Movie subtitle'
-                },
-                {
-                    id: '022',
-                    type: 'movie',
-                    posterShape: 'square',
-                    title: 'Movie title',
-                    subtitle: 'Movie subtitle'
-                },
-                {
-                    id: '0234',
-                    type: 'movie',
-                    posterShape: 'landscape',
-                    title: 'Movie title',
-                    subtitle: 'Movie subtitle'
-                },
             ]
         };
     }
@@ -119,32 +150,34 @@ class Board extends PureComponent {
             <div className={styles['board-container']}>
                 <div className={classnames(styles['board-row'], styles['continue-watching-row'])}>
                     <div className={styles['meta-items-container']}>
-                        {this.items.continueWatchingItems.map((props) => (
+                        {this.items.continueWatchingItems.map((item) => (
                             <MetaItem
-                                key={props.id}
-                                className={styles['meta-item']}
-                                popupClassName={styles['meta-item-popup-container']}
-                                relativeSide={'height'}
+                                {...item}
+                                key={item.id}
+                                className={classnames(styles['meta-item'], styles[`poster-shape-${item.posterShape === 'landscape' ? 'square' : item.posterShape}`])}
+                                posterShape={item.posterShape === 'landscape' ? 'square' : item.posterShape}
                                 menuOptions={CONTINUE_WATCHING_MENU}
-                                onClick={this.onClick}
                                 menuOptionOnSelect={this.menuOptionOnSelect}
-                                {...props}
+                                onClick={this.onClick}
                             />
                         ))}
                     </div>
-                    <Input className={styles['show-more-container']} type={'button'}>
-                        show more
-                    </Input>
+                    <Input className={styles['show-more-container']} type={'button'} />
                 </div>
-                <div className={classnames(styles['board-row'], styles['notificatins-row'])}>
-                    {this.items.addonCatalogItems.map((props) => (
-                        <MetaItem
-                            key={props.id}
-                            className={styles['meta-item']}
-                            onClick={this.onClick}
-                            {...props}
-                        />
-                    ))}
+                <div className={classnames(styles['board-row'], styles['addon-catalog-row'])}>
+                    <div className={styles['meta-items-container']}>
+                        {this.items.addonCatalogItems2.map((item, _, metaItems) => (
+                            <MetaItem
+                                {...item}
+                                key={item.id}
+                                className={classnames(styles['meta-item'], styles[`poster-shape-${metaItems[0].posterShape}`])}
+                                posterShape={metaItems[0].posterShape}
+                                progress={0}
+                                onClick={this.onClick}
+                            />
+                        ))}
+                    </div>
+                    <Input className={styles['show-more-container']} type={'button'} />
                 </div>
             </div>
         );
