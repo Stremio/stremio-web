@@ -20,8 +20,8 @@ var HTMLVideo = function(containerElement) {
     var subtitlesElement = document.createElement('div');
 
     containerElement.appendChild(stylesElement);
-    stylesElement.sheet.insertRule('#' + containerElement.id + ' video { width: 100%; height: 100%; position: relative; z-index: 0; }', stylesElement.sheet.cssRules.length);
-    var subtitleStylesIndex = stylesElement.sheet.insertRule('#' + containerElement.id + ' .subtitles { position: absolute; right: 0; bottom: 0; left: 0; font-size: 26pt; color: white; text-align: center; }', stylesElement.sheet.cssRules.length);
+    stylesElement.sheet.insertRule('#' + containerElement.id + ' video { position: absolute; width: 100%; height: 100%; z-index: -1; }', stylesElement.sheet.cssRules.length);
+    var subtitleStylesIndex = stylesElement.sheet.insertRule('#' + containerElement.id + ' .subtitles { position: absolute; right: 0; bottom: 0; left: 0; z-index: 0; font-size: 26pt; color: white; text-align: center; }', stylesElement.sheet.cssRules.length);
     stylesElement.sheet.insertRule('#' + containerElement.id + ' .subtitles .cue { display: inline-block; padding: 0.2em; text-shadow: #222222 0px 0px 1.8px, #222222 0px 0px 1.8px, #222222 0px 0px 1.8px, #222222 0px 0px 1.8px, #222222 0px 0px 1.8px; }', stylesElement.sheet.cssRules.length);
     stylesElement.sheet.insertRule('#' + containerElement.id + ' .subtitles.dark-background .cue { text-shadow: none; background-color: #222222; }', stylesElement.sheet.cssRules.length);
     containerElement.appendChild(videoElement);
