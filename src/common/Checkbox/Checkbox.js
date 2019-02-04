@@ -6,6 +6,12 @@ import { Input } from 'stremio-common';
 import styles from './styles';
 
 class Checkbox extends PureComponent {
+    constructor(props) {
+        super(props);
+
+        this.checkboxRef = props.forwardedRef || React.createRef();
+    }
+
     onClick = (event) => {
         event.preventDefault();
         if (typeof this.props.onClick === 'function') {
@@ -19,7 +25,7 @@ class Checkbox extends PureComponent {
         }
 
         if (!event.defaultPrevented) {
-            this.props.forwardedRef.current.blur();
+            this.checkboxRef.current.blur();
         }
     }
 
@@ -29,7 +35,7 @@ class Checkbox extends PureComponent {
         }
 
         if (!event.defaultPrevented) {
-            this.props.forwardedRef.current.blur();
+            this.checkboxRef.current.blur();
         }
     }
 
@@ -37,7 +43,7 @@ class Checkbox extends PureComponent {
         return (
             <label className={classnames(this.props.className, styles['checkbox-container'], { 'checked': this.props.checked }, { 'disabled': this.props.disabled })} onClick={this.onClick} onDrag={this.onDrag} onMouseOut={this.onMouseOut}>
                 <Input
-                    ref={this.props.forwardedRef}
+                    ref={this.checkboxRef}
                     className={styles['native-checkbox']}
                     type={'checkbox'}
                     disabled={this.props.disabled}

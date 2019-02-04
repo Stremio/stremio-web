@@ -153,24 +153,17 @@
             }
         }
 
-        .background-toggle-container {
+        .background-toggle-checkbox {
+            --icon-background-color: transparent;
+            --icon-color: var(--color-surfacelighter);
+            --icon-size: calc(var(--subtitles-picker-button-size) * 0.6);
+
             align-self: stretch;
             flex: 1;
             display: flex;
             flex-direction: row;
             align-items: center;
             cursor: pointer;
-
-            .background-toggle-checkbox {
-                --icon-color: var(--color-surfacelighter);
-                --background-color: transparent;
-                width: calc(var(--subtitles-picker-button-size) * 0.6);
-                height: calc(var(--subtitles-picker-button-size) * 0.6);
-
-                &:global(.checked) {
-                    --background-color: var(--color-primarydark);
-                }
-            }
 
             .background-toggle-label {
                 flex: 1;
@@ -183,11 +176,11 @@
                 color: var(--color-surfacelighter);
             }
 
-            &:hover {
-                .background-toggle-checkbox {
-                    &:global(.checked) {
-                        --background-color: var(--color-primarylight);
-                    }
+            &:global(.checked) {
+                --icon-background-color: var(--color-primarydark);
+
+                &:hover {
+                    --icon-background-color: var(--color-primarylight);
                 }
             }
         }

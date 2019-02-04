@@ -152,14 +152,9 @@ class SubtitlesPicker extends Component {
         }
 
         return (
-            <label className={styles['background-toggle-container']}>
-                <Checkbox
-                    className={styles['background-toggle-checkbox']}
-                    checked={this.props.subtitleDarkBackground}
-                    onClick={this.toggleSubtitleDarkBackground}
-                />
+            <Checkbox className={styles['background-toggle-checkbox']} checked={this.props.subtitleDarkBackground} onClick={this.toggleSubtitleDarkBackground}>
                 <div className={styles['background-toggle-label']}>Dark background</div>
-            </label>
+            </Checkbox>
         );
     }
 
