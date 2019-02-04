@@ -22,8 +22,14 @@ class Input extends PureComponent {
             this.props.onKeyUp(event);
         }
 
-        if (!event.defaultPrevented && BUTTON_INPUT_TYPES.includes(this.props.type) && event.which === ENTER_KEY_CODE) {
-            event.currentTarget.click();
+        if (!event.defaultPrevented && event.which === ENTER_KEY_CODE) {
+            if (BUTTON_INPUT_TYPES.includes(this.props.type)) {
+                event.currentTarget.click();
+            } else if (TEXT_INPUT_TYPES.includes(this.props.type)) {
+                if (typeof this.props.onSubmit === 'function') {
+                    this.props.onSubmit(event);
+                }
+            }
         }
     }
 

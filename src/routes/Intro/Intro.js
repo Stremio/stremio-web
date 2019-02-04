@@ -189,20 +189,14 @@ class Intro extends Component {
                             <div className={styles['label']}>Login with Facebook</div>
                         </Input>
                         <div className={styles['facebook-statement']}>We won't post anything on your behalf</div>
-                        <form onSubmit={this.emailOnSubmit}>
-                            <Input ref={this.emailRef} className={styles['text-input']} type={'email'} placeholder={'Email'} value={this.state.email} onChange={this.emailOnChange} />
-                        </form>
-                        <form onSubmit={this.passwordOnSubmit}>
-                            <Input ref={this.passwordRef} className={styles['text-input']} type={'password'} placeholder={'Password'} value={this.state.password} onChange={this.passwordOnChange} />
-                        </form>
+                        <Input ref={this.emailRef} className={styles['text-input']} type={'email'} placeholder={'Email'} value={this.state.email} onChange={this.emailOnChange} onSubmit={this.emailOnSubmit} />
+                        <Input ref={this.passwordRef} className={styles['text-input']} type={'password'} placeholder={'Password'} value={this.state.password} onChange={this.passwordOnChange} onSubmit={this.passwordOnSubmit} />
                         {
                             this.state.selectedForm === FORMS.LOGIN ?
                                 <Input className={styles['forgot-password-link']} type={'link'} href={'https://www.strem.io/reset-password/'} target={'_blank'}>Forgot password?</Input>
                                 :
                                 <Fragment>
-                                    <form onSubmit={this.confirmPasswordOnSubmit}>
-                                        <Input ref={this.confirmPasswordRef} className={styles['text-input']} type={'password'} placeholder={'Confirm Password'} value={this.state.confirmPassword} onChange={this.confirmPasswordOnChange} />
-                                    </form>
+                                    <Input ref={this.confirmPasswordRef} className={styles['text-input']} type={'password'} placeholder={'Confirm Password'} value={this.state.confirmPassword} onChange={this.confirmPasswordOnChange} onSubmit={this.confirmPasswordOnSubmit} />
                                     <ConsentCheckbox ref={this.termsRef} className={styles['consent-checkbox']} label={'I have read and agree with the Stremio'} link={'Terms and conditions'} href={'https://www.stremio.com/tos'} checked={this.state.termsAccepted} onClick={this.toggleTerms} />
                                     <ConsentCheckbox ref={this.privacyPolicyRef} className={styles['consent-checkbox']} label={'I have read and agree with the Stremio'} link={'Privacy Policy'} href={'https://www.stremio.com/privacy'} checked={this.state.privacyPolicyAccepted} onClick={this.togglePrivacyPolicy} />
                                     <ConsentCheckbox ref={this.marketingRef} className={styles['consent-checkbox']} label={'I agree to receive marketing communications from Stremio'} checked={this.state.marketingAccepted} onClick={this.toggleMarketing} />
