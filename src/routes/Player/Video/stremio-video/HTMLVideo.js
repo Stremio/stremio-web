@@ -460,10 +460,10 @@ var HTMLVideo = function(containerElement) {
     };
 };
 
-HTMLVideo.manifest = {
+HTMLVideo.manifest = Object.freeze({
     name: 'HTMLVideo',
     embedded: true,
-    props: ['paused', 'time', 'duration', 'volume', 'buffering', 'subtitleTracks', 'selectedSubtitleTrackId', 'subtitleSize', 'subtitleDelay', 'subtitleDarkBackground']
-};
+    props: Object.freeze(['paused', 'time', 'duration', 'volume', 'buffering', 'subtitleTracks', 'selectedSubtitleTrackId', 'subtitleSize', 'subtitleDelay', 'subtitleDarkBackground'])
+});
 
 module.exports = HTMLVideo;
