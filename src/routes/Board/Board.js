@@ -26,7 +26,6 @@ class Board extends PureComponent {
                     posterShape: 'poster',
                     poster: 'qwe',
                     title: 'Movie title',
-                    subtitle: '123',
                     progress: 0.7
                 },
                 {
@@ -155,6 +154,7 @@ class Board extends PureComponent {
                                 {...item}
                                 key={item.id}
                                 className={classnames(styles['meta-item'], styles[`poster-shape-${item.posterShape === 'landscape' ? 'square' : item.posterShape}`])}
+                                popupClassName={styles['meta-item-popup-container']}
                                 posterShape={item.posterShape === 'landscape' ? 'square' : item.posterShape}
                                 menuOptions={CONTINUE_WATCHING_MENU}
                                 menuOptionOnSelect={this.menuOptionOnSelect}
