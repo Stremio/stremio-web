@@ -81,21 +81,21 @@
 
     .title-bar-container {
         height: 3em;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
+        overflow: hidden;
 
         .title {
-            flex: 1;
-            font-size: 1.4em;
+            display: inline-block;
+            width: calc(100% - 3em);
+            height: 3em;
             padding: 0 0.5em;
+            line-height: 3em;
             color: var(--color-surfacelighter);
             overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
+            word-break: break-all;
         }
 
         .menu-icon {
+            display: inline-block;
             width: 3em;
             height: 3em;
             padding: 0.8em;
