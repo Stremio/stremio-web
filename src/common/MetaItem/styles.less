@@ -139,6 +139,18 @@
     }
 
     &:hover, &:focus {
+        .poster-image-container {
+            .placeholder-image-container {
+                .placeholder-image {
+                    fill: var(--color-surfacelighter);
+                }
+            }
+
+            .poster-image {
+                filter: brightness(120%);
+            }
+        }
+
         &::after {
             border-color: var(--color-surfacelighter);
         }
