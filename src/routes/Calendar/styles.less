@@ -1,0 +1,194 @@
+.calendar-container {
+    --spacing: 16px;
+    font-size: 14px;
+}
+
+.calendar-container {
+    padding: var(--spacing);
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+
+    .calendar {
+        // width: 75%;
+        flex: 1;
+
+        .months {
+            padding: var(--spacing) calc(var(--spacing) * 2) calc(var(--spacing) * 2) calc(var(--spacing) * 2);
+            display: flex;
+            flex-direction: row;
+            justify-content: space-evenly;
+
+            .month {
+                margin-right: var(--spacing);
+                font-size: 1.7em;
+                color: var(--color-surfacelighter);
+                cursor: pointer;
+
+                &:first-child, &:last-child {
+                    font-size: 1.4em;
+                    color: var(--color-surface);
+                }
+            }
+
+        }
+
+        .week-days {
+            margin-bottom: var(--spacing);
+            display: flex;
+            flex-direction: row;
+
+            .day {
+                margin: 0 1px 1px 0;
+                width: 14%;
+                font-size: 1.2em;
+                color: var(--color-secondarylighter);
+            }
+        }
+
+        .month-days {
+            height: 100%;
+
+            .pad {
+                margin: 0 1px 1px 0;
+                width: 14%;
+                height: 14%;
+                float: left;
+            }
+
+            .day {
+                margin: 0 1px 1px 0;
+                width: 14%;
+                height: 15%;
+                float: left;
+                font-size: 1.4em;
+                background-color: var(--color-backgroundlighter);
+                cursor: pointer;
+
+                .date-container {
+                    margin: calc(var(--spacing) * 0.5);
+                    width: 34px;
+                    height: 34px;
+
+                    .date {
+                        width: 100%;
+                        height: 100%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        color: var(--color-secondarylighter);
+
+                        &.selected {
+                            border-radius: 50%;
+                            color: var(--color-surfacelighter);
+                            background-color: var(--color-primary);
+                        }
+                    }
+
+                }
+
+                .episodes {
+                    margin: 0 4px;
+                    height: 40px;
+                    display: flex;
+                    flex-direction: row;
+
+                    .poster {
+                        display: none;
+                        width: 33%;
+                        height: 100%;
+                        background-size: cover;
+                        background-repeat: no-repeat;
+                        background-position: center;
+
+                        &:nth-child(-n+3) {
+                            display: inline-block;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .future-episodes {
+        width: 270px;
+        // width: 25%;
+        // padding: 10px;
+        overflow-y: auto;
+        overflow-x: hidden;
+
+        .episode-container {
+            margin-bottom: var(--spacing);
+            background-color: var(--color-backgroundlighter);
+
+            .date {
+                padding: var(--spacing);
+                font-size: 1.2em;
+                color: var(--color-primarylight);
+            }
+
+            .episodes {
+
+                .episode {
+                    padding: var(--spacing);
+                    display: flex;
+                    flex-direction: column;
+                    cursor: pointer;
+
+                    .main-info {
+                        display: flex;
+                        flex-direction: row;
+                        justify-content: space-between;
+
+                        .serie-name {
+                            color: var(--color-surface);
+                        }
+
+                        .episode-number {
+                            color: var(--color-surface);
+                        }
+                    }
+
+                    .name {
+                        // display: none;
+                        padding: calc(var(--spacing) * 0.5) 0 var(--spacing) 0;
+                        color: var(--color-surfacelighter);
+                    }
+
+                    .description {
+                        // display: none;
+                        padding: var(--spacing) 0;
+                        line-height: 1.2em;
+                        color: var(--color-surfacelighter);
+                    }
+
+                    .watch-button {
+                        // display: none;
+                        margin: 0 calc(var(--spacing) * 0.5);
+                        padding: var(--spacing) var(--spacing) 0 var(--spacing);
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+                        justify-content: center;
+                        border-top: 1px solid var(--color-background);
+
+                        .icon {
+                            margin-right: var(--spacing);
+                            width: 6%;
+                            height: 6%;
+                            fill: var(--color-surfacelighter);
+                        }
+
+                        .label {
+                            color: var(--color-surfacelighter);
+                        }
+                    }
+
+                    &:hover {
+                        background-color: var(--color-primarydark60);
+                    }
+                }
+            }
+        }
+    }
+}
