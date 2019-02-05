@@ -1,9 +1,10 @@
 .meta-item-container {
+    position: relative;
+    z-index: 0;
     display: inline-flex;
     flex-direction: column;
     align-items: stretch;
     background-color: var(--color-backgroundlight);
-    border: var(--focusable-border-size) solid transparent;
     cursor: pointer;
 
     .poster-image-container {
@@ -124,8 +125,23 @@
         }
     }
 
+    &::after {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1;
+        display: block;
+        pointer-events: none;
+        border: var(--focusable-border-size) solid transparent;
+        content: "";
+    }
+
     &:hover, &:focus {
-        border-color: var(--color-surfacelighter);
+        &::after {
+            border-color: var(--color-surfacelighter);
+        }
     }
 }
 
