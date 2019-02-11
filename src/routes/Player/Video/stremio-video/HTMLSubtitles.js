@@ -165,6 +165,8 @@ var HTMLSubtitles = function(containerElement) {
         containerElement.removeChild(stylesElement);
         containerElement.removeChild(subtitlesElement);
     };
+
+    Object.freeze(this);
 };
 
 module.exports = HTMLSubtitles;

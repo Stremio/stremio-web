@@ -397,6 +397,8 @@ var HTMLVideo = function(containerElement) {
             dispatchArgsQueue.push(Array.from(arguments));
         }
     };
+
+    Object.freeze(this);
 };
 
 HTMLVideo.manifest = Object.freeze({
