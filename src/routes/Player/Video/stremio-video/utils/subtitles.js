@@ -66,7 +66,7 @@ function parse(text) {
         });
     }
     global.VTTCue = nativeVTTCue;
-    return cuesForTime;
+    return Object.freeze(cuesForTime);
 }
 
 function cuesForTime(cues, time) {
