@@ -1,5 +1,5 @@
 var EventEmitter = require('events');
-var subtitleUtils = require('./utils/subtitles');
+var HTMLSubtitles = require('./HTMLSubtitles');
 
 var HTMLVideo = function(containerElement) {
     if (!(containerElement instanceof HTMLElement)) {
@@ -11,24 +11,15 @@ var HTMLVideo = function(containerElement) {
     var loaded = false;
     var destroyed = false;
     var dispatchArgsQueue = [];
-    var subtitleCues = {};
-    var subtitleTracks = [];
-    var selectedSubtitleTrackId = null;
-    var subtitleDelay = 0;
+    var subtitles = new HTMLSubtitles(containerElement);
     var stylesElement = document.createElement('style');
     var videoElement = document.createElement('video');
-    var subtitlesElement = document.createElement('div');
 
     containerElement.appendChild(stylesElement);
     stylesElement.sheet.insertRule('#' + containerElement.id + ' video { position: absolute; width: 100%; height: 100%; z-index: -1; }', stylesElement.sheet.cssRules.length);
-    var subtitleStylesIndex = stylesElement.sheet.insertRule('#' + containerElement.id + ' .subtitles { position: absolute; right: 0; bottom: 0; left: 0; z-index: 0; font-size: 26pt; color: white; text-align: center; }', stylesElement.sheet.cssRules.length);
-    stylesElement.sheet.insertRule('#' + containerElement.id + ' .subtitles .cue { display: inline-block; padding: 0.2em; text-shadow: #222222 0px 0px 1.8px, #222222 0px 0px 1.8px, #222222 0px 0px 1.8px, #222222 0px 0px 1.8px, #222222 0px 0px 1.8px; }', stylesElement.sheet.cssRules.length);
-    stylesElement.sheet.insertRule('#' + containerElement.id + ' .subtitles.dark-background .cue { text-shadow: none; background-color: #222222; }', stylesElement.sheet.cssRules.length);
     containerElement.appendChild(videoElement);
     videoElement.crossOrigin = 'anonymous';
     videoElement.controls = false;
-    containerElement.appendChild(subtitlesElement);
-    subtitlesElement.classList.add('subtitles');
 
     function getPaused() {
         if (!loaded) {
@@ -70,40 +61,66 @@ var HTMLVideo = function(containerElement) {
             return [];
         }
 
-        return subtitleTracks.slice();
+        return Object.freeze(subtitles.tracks.slice());
     }
     function getSelectedSubtitleTrackId() {
         if (!loaded) {
             return null;
         }
 
-        return selectedSubtitleTrackId;
+        return subtitles.selectedTrackId;
     }
     function getSubtitleDelay() {
         if (!loaded) {
             return null;
         }
 
-        return subtitleDelay;
+        return subtitles.delay;
     }
     function getSubtitleSize() {
         if (destroyed) {
             return null;
         }
 
-        return parseFloat(stylesElement.sheet.cssRules[subtitleStylesIndex].style.fontSize);
+        return subtitles.size;
     }
     function getSubtitleDarkBackground() {
         if (destroyed) {
             return null;
         }
 
-        return subtitlesElement.classList.contains('dark-background');
+        return subtitles.darkBackground;
+    }
+    function onError(error) {
+        Object.freeze(error)
+        events.emit('error', error);
+        if (error.critical) {
+            self.dispatch('command', 'stop');
+        }
     }
     function onEnded() {
         events.emit('ended');
     }
-    function onError() {
+    function onSubtitlesError(error) {
+        var message;
+        switch (error.code) {
+            case 70:
+                message = 'Failed to fetch subtitles from ' + error.track.origin;
+                break;
+            case 71:
+                message = 'Failed to parse subtitles from ' + error.track.origin;
+                break;
+            default:
+                message = 'Unknown subtitles error';
+        }
+
+        onError({
+            code: error.code,
+            message: message,
+            critical: false
+        });
+    }
+    function onVideoError() {
         var message;
         var critical;
         switch (videoElement.error.code) {
@@ -128,15 +145,11 @@ var HTMLVideo = function(containerElement) {
                 critical = true;
         }
 
-        events.emit('error', {
+        onError({
             code: videoElement.error.code,
             message: message,
             critical: critical
         });
-
-        if (critical) {
-            self.dispatch('command', 'stop');
-        }
     }
     function onPausedChanged() {
         events.emit('propChanged', 'paused', getPaused());
@@ -169,21 +182,8 @@ var HTMLVideo = function(containerElement) {
         events.emit('propChanged', 'subtitleDarkBackground', getSubtitleDarkBackground());
     }
     function updateSubtitleText() {
-        while (subtitlesElement.hasChildNodes()) {
-            subtitlesElement.removeChild(subtitlesElement.lastChild);
-        }
-
-        if (!loaded || !Array.isArray(subtitleCues.times)) {
-            return;
-        }
-
-        var time = getTime() + getSubtitleDelay();
-        var cuesForTime = subtitleUtils.cuesForTime(subtitleCues, time);
-        for (var i = 0; i < cuesForTime.length; i++) {
-            var cueNode = subtitleUtils.render(cuesForTime[i]);
-            cueNode.classList.add('cue');
-            subtitlesElement.append(cueNode, document.createElement('br'));
-        }
+        var time = getTime();
+        subtitles.updateTextForTime(time);
     }
     function flushArgsQueue() {
         for (var i = 0; i < dispatchArgsQueue.length; i++) {
@@ -274,41 +274,7 @@ var HTMLVideo = function(containerElement) {
                         break;
                     case 'selectedSubtitleTrackId':
                         if (loaded) {
-                            selectedSubtitleTrackId = null;
-                            subtitleDelay = 0;
-                            subtitleCues = {};
-                            for (var i = 0; i < subtitleTracks.length; i++) {
-                                var subtitleTrack = subtitleTracks[i];
-                                if (subtitleTrack.id === arguments[2]) {
-                                    selectedSubtitleTrackId = subtitleTrack.id;
-                                    fetch(subtitleTrack.url)
-                                        .then(function(resp) {
-                                            return resp.text();
-                                        })
-                                        .catch(function() {
-                                            events.emit('error', {
-                                                code: 70,
-                                                message: 'Failed to fetch subtitles from ' + subtitleTrack.origin,
-                                                critical: false
-                                            });
-                                        })
-                                        .then(function(text) {
-                                            if (selectedSubtitleTrackId === subtitleTrack.id) {
-                                                subtitleCues = subtitleUtils.parse(text);
-                                                updateSubtitleText();
-                                            }
-                                        })
-                                        .catch(function() {
-                                            events.emit('error', {
-                                                code: 71,
-                                                message: 'Failed to parse subtitles from ' + subtitleTrack.origin,
-                                                critical: false
-                                            });
-                                        });
-                                    break;
-                                }
-                            }
-
+                            subtitles.selectedTrackId = arguments[2];
                             onSubtitleDelayChanged();
                             onSelectedSubtitleTrackIdChanged();
                             updateSubtitleText();
@@ -317,7 +283,7 @@ var HTMLVideo = function(containerElement) {
                     case 'subtitleDelay':
                         if (loaded) {
                             if (!isNaN(arguments[2])) {
-                                subtitleDelay = parseFloat(arguments[2]);
+                                subtitles.delay = arguments[2];
                                 onSubtitleDelayChanged();
                                 updateSubtitleText();
                             }
@@ -325,17 +291,12 @@ var HTMLVideo = function(containerElement) {
                         break;
                     case 'subtitleSize':
                         if (!isNaN(arguments[2])) {
-                            stylesElement.sheet.cssRules[subtitleStylesIndex].style.fontSize = parseFloat(arguments[2]) + 'pt';
+                            subtitles.size = arguments[2];
                             onSubtitleSizeChanged();
                         }
                         return;
                     case 'subtitleDarkBackground':
-                        if (arguments[2]) {
-                            subtitlesElement.classList.add('dark-background');
-                        } else {
-                            subtitlesElement.classList.remove('dark-background');
-                        }
-
+                        subtitles.darkBackground = arguments[2];
                         onSubtitleDarkBackgroundChanged();
                         return;
                     case 'volume':
@@ -352,30 +313,7 @@ var HTMLVideo = function(containerElement) {
                 switch (arguments[1]) {
                     case 'addSubtitleTracks':
                         if (loaded) {
-                            var extraSubtitleTracks = (Array.isArray(arguments[2]) ? arguments[2] : [])
-                                .filter(function(track) {
-                                    return track &&
-                                        typeof track.url === 'string' &&
-                                        track.url.length > 0 &&
-                                        typeof track.origin === 'string' &&
-                                        track.origin.length > 0 &&
-                                        track.origin !== 'EMBEDDED';
-                                })
-                                .map(function(track) {
-                                    return Object.freeze(Object.assign({}, track, {
-                                        id: track.url
-                                    }));
-                                });
-                            subtitleTracks = subtitleTracks.concat(extraSubtitleTracks)
-                                .filter(function(track, index, tracks) {
-                                    for (var i = 0; i < tracks.length; i++) {
-                                        if (tracks[i].id === track.id) {
-                                            return i === index;
-                                        }
-                                    }
-
-                                    return false;
-                                });
+                            subtitles.addTracks(arguments[2]);
                             onSubtitleTracksChanged();
                         }
                         break;
@@ -388,14 +326,13 @@ var HTMLVideo = function(containerElement) {
                         return;
                     case 'stop':
                         videoElement.removeEventListener('ended', onEnded);
-                        videoElement.removeEventListener('error', onError);
+                        videoElement.removeEventListener('error', onVideoError);
                         videoElement.removeEventListener('timeupdate', updateSubtitleText);
+                        subtitles.removeListener('error', onSubtitlesError);
+                        subtitles.removeListener('load', updateSubtitleText);
                         loaded = false;
                         dispatchArgsQueue = [];
-                        subtitleCues = {};
-                        subtitleTracks = [];
-                        selectedSubtitleTrackId = null;
-                        subtitleDelay = 0;
+                        subtitles.clearTracks();
                         videoElement.removeAttribute('src');
                         videoElement.load();
                         videoElement.currentTime = 0;
@@ -413,8 +350,10 @@ var HTMLVideo = function(containerElement) {
                         self.dispatch('command', 'stop');
                         dispatchArgsQueue = dispatchArgsQueueCopy;
                         videoElement.addEventListener('ended', onEnded);
-                        videoElement.addEventListener('error', onError);
+                        videoElement.addEventListener('error', onVideoError);
                         videoElement.addEventListener('timeupdate', updateSubtitleText);
+                        subtitles.addListener('error', onSubtitlesError);
+                        subtitles.addListener('load', updateSubtitleText);
                         videoElement.autoplay = typeof arguments[3].autoplay === 'boolean' ? arguments[3].autoplay : true;
                         videoElement.currentTime = !isNaN(arguments[3].time) ? arguments[3].time / 1000 : 0;
                         videoElement.src = arguments[2].url;
@@ -444,7 +383,7 @@ var HTMLVideo = function(containerElement) {
                         videoElement.removeEventListener('loadeddata', onBufferingChanged);
                         containerElement.removeChild(videoElement);
                         containerElement.removeChild(stylesElement);
-                        containerElement.removeChild(subtitlesElement);
+                        subtitles.detachElements();
                         return;
                     default:
                         throw new Error('command not supported: ' + arguments[1]);
