@@ -28,6 +28,10 @@
                 &:first-child, &:last-child {
                     font-size: 1.4em;
                     color: var(--color-surface);
+
+                    &:hover {
+                        color: var(--color-surfacelight);
+                    }
                 }
             }
 
@@ -59,9 +63,10 @@
             .day {
                 margin: 0 1px 1px 0;
                 width: 14%;
-                height: 15%;
+                height: 16%;
                 float: left;
                 font-size: 1.4em;
+                border: 2px solid transparent;
                 background-color: var(--color-backgroundlighter);
                 cursor: pointer;
 
@@ -84,12 +89,11 @@
                             background-color: var(--color-primary);
                         }
                     }
-
                 }
 
                 .episodes {
-                    margin: 0 4px;
-                    height: 40px;
+                    margin: 0 2px;
+                    height: 42px;
                     display: flex;
                     flex-direction: row;
 
@@ -101,10 +105,19 @@
                         background-repeat: no-repeat;
                         background-position: center;
 
+                        &.past {
+                            opacity: 0.4;
+                        }
+
                         &:nth-child(-n+3) {
                             display: inline-block;
                         }
                     }
+                }
+
+                &.selected {
+                    border-color: var(--color-primary);
+                    background-color: var(--color-backgroundlighter60);
                 }
             }
         }
@@ -116,9 +129,11 @@
         // padding: 10px;
         overflow-y: auto;
         overflow-x: hidden;
+        scroll-behavior: smooth;
 
         .episode-container {
             margin-bottom: var(--spacing);
+            border: 2px solid transparent;
             background-color: var(--color-backgroundlighter);
 
             .date {
@@ -127,13 +142,16 @@
                 color: var(--color-primarylight);
             }
 
-            .episodes {
+            .episode {
+                display: flex;
+                flex-direction: column;
+                cursor: pointer;
 
-                .episode {
+                .info {
                     padding: var(--spacing);
                     display: flex;
                     flex-direction: column;
-                    cursor: pointer;
+                    justify-content: space-between;
 
                     .main-info {
                         display: flex;
@@ -150,44 +168,76 @@
                     }
 
                     .name {
-                        // display: none;
+                        display: none;
                         padding: calc(var(--spacing) * 0.5) 0 var(--spacing) 0;
                         color: var(--color-surfacelighter);
                     }
 
                     .description {
-                        // display: none;
+                        display: none;
                         padding: var(--spacing) 0;
                         line-height: 1.2em;
                         color: var(--color-surfacelighter);
                     }
 
-                    .watch-button {
-                        // display: none;
+                    .watch-button-container {
+                        display: none;
                         margin: 0 calc(var(--spacing) * 0.5);
-                        padding: var(--spacing) var(--spacing) 0 var(--spacing);
-                        display: flex;
-                        flex-direction: row;
-                        align-items: center;
-                        justify-content: center;
+                        padding: var(--spacing);
                         border-top: 1px solid var(--color-background);
+                        cursor: pointer;
 
-                        .icon {
-                            margin-right: var(--spacing);
-                            width: 6%;
-                            height: 6%;
-                            fill: var(--color-surfacelighter);
+                        .watch-button {
+                            display: flex;
+                            flex-direction: row;
+                            align-items: center;
+                            justify-content: center;
+
+                            .icon {
+                                margin-right: var(--spacing);
+                                width: 6%;
+                                height: 6%;
+                                fill: var(--color-surfacelighter);
+                            }
+
+                            .label {
+                                color: var(--color-surfacelighter);
+                            }
                         }
-
-                        .label {
-                            color: var(--color-surfacelighter);
-                        }
-                    }
-
-                    &:hover {
-                        background-color: var(--color-primarydark60);
                     }
                 }
+
+                &.selected {
+                    .info {
+                        padding-bottom: 0;
+                        background-color: var(--color-primarydark);
+                        cursor: default;
+
+                        .name {
+                            display: inline-block;
+                        }
+
+                        .description {
+                            display: inline-block;
+                        }
+
+                        .watch-button-container {
+                            display: inline-block;
+                        }
+                    }
+                }
+
+                &.today {
+                    background-color: var(--color-primarydarker40);
+                }
+
+                &:hover {
+                    background-color: var(--color-primarydark60);
+                }
+            }
+
+            &.selected {
+                border-color: var(--color-primary);
             }
         }
     }
