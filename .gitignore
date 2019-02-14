@@ -9,3 +9,4 @@ dist
 .DS_Store
 npm-debug.log
 .cache
+.notes
