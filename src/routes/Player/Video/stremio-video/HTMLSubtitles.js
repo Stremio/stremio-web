@@ -3,10 +3,12 @@ var subtitleUtils = require('./utils/subtitles');
 
 var HTMLSubtitles = function(containerElement) {
     if (!(containerElement instanceof HTMLElement)) {
-        throw new Error('Instance of HTMLElement required as a first argument to HTMLSubtitles');
+        throw new Error('Instance of HTMLElement required as a first argument');
     }
 
+    var self = this;
     var events = new EventEmitter();
+    var destroyed = false;
     var tracks = Object.freeze([]);
     var cues = Object.freeze({});
     var selectedTrackId = null;
@@ -21,156 +23,169 @@ var HTMLSubtitles = function(containerElement) {
     containerElement.appendChild(subtitlesElement);
     subtitlesElement.classList.add('subtitles');
 
-    Object.defineProperty(this, 'tracks', {
-        configurable: false,
-        enumerable: true,
-        get: function() { return Object.freeze(tracks.slice()); }
-    });
-
-    Object.defineProperty(this, 'selectedTrackId', {
-        configurable: false,
-        enumerable: true,
-        get: function() { return selectedTrackId; },
-        set: function(nextSelectedTrackId) {
-            cues = Object.freeze({});
-            selectedTrackId = null;
-            delay = 0;
-            for (var i = 0; i < tracks.length; i++) {
-                var track = tracks[i];
-                if (track.id === nextSelectedTrackId) {
-                    selectedTrackId = track.id;
-                    fetch(track.url)
-                        .then(function(resp) {
-                            return resp.text();
-                        })
-                        .catch(function() {
-                            events.emit('error', Object.freeze({
-                                code: 70,
-                                track: track
-                            }));
-                        })
-                        .then(function(text) {
-                            if (typeof text === 'string' && selectedTrackId === track.id) {
-                                cues = subtitleUtils.parse(text);
-                                events.emit('load', Object.freeze({
-                                    track: track
-                                }));
-                            }
-                        })
-                        .catch(function() {
-                            events.emit('error', Object.freeze({
-                                code: 71,
-                                track: track
-                            }));
-                        });
-                    break;
-                }
-            }
-        }
-    });
-
-    Object.defineProperty(this, 'delay', {
-        configurable: false,
-        enumerable: true,
-        get: function() { return delay; },
-        set: function(nextDelay) {
-            if (!isNaN(nextDelay)) {
-                delay = parseFloat(nextDelay);
-            }
-        }
-    });
-
-    Object.defineProperty(this, 'size', {
-        configurable: false,
-        enumerable: true,
-        get: function() { return parseFloat(stylesElement.sheet.cssRules[subtitleStylesIndex].style.fontSize); },
-        set: function(nextSize) {
-            if (!isNaN(nextSize)) {
-                stylesElement.sheet.cssRules[subtitleStylesIndex].style.fontSize = parseFloat(nextSize) + 'pt';
-            }
-        }
-    });
-
-    Object.defineProperty(this, 'darkBackground', {
-        configurable: false,
-        enumerable: true,
-        get: function() { return subtitlesElement.classList.contains('dark-background'); },
-        set: function(nextDarkBackground) {
-            if (!!nextDarkBackground) {
-                subtitlesElement.classList.add('dark-background');
-            } else {
-                subtitlesElement.classList.remove('dark-background');
-            }
-        }
-    });
-
     this.addListener = function(eventName, listener) {
+        if (destroyed) {
+            throw new Error('Unable to add ' + eventName + ' listener');
+        }
+
         events.addListener(eventName, listener);
     };
 
     this.removeListener = function(eventName, listener) {
+        if (destroyed) {
+            throw new Error('Unable to remove ' + eventName + ' listener');
+        }
+
         events.removeListener(eventName, listener);
     };
 
-    this.addTracks = function(extraTracks) {
-        tracks = (Array.isArray(extraTracks) ? extraTracks : [])
-            .filter(function(track) {
-                return track &&
-                    typeof track.url === 'string' &&
-                    track.url.length > 0 &&
-                    typeof track.origin === 'string' &&
-                    track.origin.length > 0 &&
-                    track.origin !== 'EMBEDDED';
-            })
-            .map(function(track) {
-                return Object.freeze(Object.assign({}, track, {
-                    id: track.url
-                }));
-            })
-            .concat(tracks)
-            .filter(function(track, index, tracks) {
-                for (var i = 0; i < tracks.length; i++) {
-                    if (tracks[i].id === track.id) {
-                        return i === index;
-                    }
+    this.dispatch = function() {
+        if (destroyed) {
+            throw new Error('Unable to dispatch ' + arguments[0]);
+        }
+
+        switch (arguments[0]) {
+            case 'getProp':
+                switch (arguments[1]) {
+                    case 'tracks':
+                        return Object.freeze(tracks.slice());
+                    case 'selectedTrackId':
+                        return selectedTrackId;
+                    case 'delay':
+                        return delay;
+                    case 'size':
+                        return parseFloat(stylesElement.sheet.cssRules[subtitleStylesIndex].style.fontSize);
+                    case 'darkBackground':
+                        return subtitlesElement.classList.contains('dark-background');
+                    default:
+                        throw new Error('getProp not supported: ' + arguments[1]);
                 }
+            case 'setProp':
+                switch (arguments[1]) {
+                    case 'selectedTrackId':
+                        cues = Object.freeze({});
+                        selectedTrackId = null;
+                        delay = 0;
+                        for (var i = 0; i < tracks.length; i++) {
+                            var track = tracks[i];
+                            if (track.id === arguments[2]) {
+                                selectedTrackId = track.id;
+                                fetch(track.url)
+                                    .then(function(resp) {
+                                        return resp.text();
+                                    })
+                                    .catch(function() {
+                                        events.emit('error', Object.freeze({
+                                            code: 70,
+                                            track: track
+                                        }));
+                                    })
+                                    .then(function(text) {
+                                        if (typeof text === 'string' && selectedTrackId === track.id) {
+                                            cues = subtitleUtils.parse(text);
+                                            events.emit('load', Object.freeze({
+                                                track: track
+                                            }));
+                                        }
+                                    })
+                                    .catch(function() {
+                                        events.emit('error', Object.freeze({
+                                            code: 71,
+                                            track: track
+                                        }));
+                                    });
+                                break;
+                            }
+                        }
+                        return;
+                    case 'delay':
+                        if (!isNaN(arguments[2])) {
+                            delay = parseFloat(arguments[2]);
+                        }
+                        return;
+                    case 'size':
+                        if (!isNaN(arguments[2])) {
+                            stylesElement.sheet.cssRules[subtitleStylesIndex].style.fontSize = parseFloat(arguments[2]) + 'pt';
+                        }
+                        return;
+                    case 'darkBackground':
+                        if (arguments[2]) {
+                            subtitlesElement.classList.add('dark-background');
+                        } else {
+                            subtitlesElement.classList.remove('dark-background');
+                        }
+                        return;
+                    default:
+                        throw new Error('setProp not supported: ' + arguments[1]);
+                }
+            case 'command':
+                switch (arguments[1]) {
+                    case 'addTracks':
+                        tracks = (Array.isArray(arguments[2]) ? arguments[2] : [])
+                            .filter(function(track) {
+                                return track &&
+                                    typeof track.url === 'string' &&
+                                    track.url.length > 0 &&
+                                    typeof track.origin === 'string' &&
+                                    track.origin.length > 0 &&
+                                    track.origin !== 'EMBEDDED';
+                            })
+                            .map(function(track) {
+                                return Object.freeze(Object.assign({}, track, {
+                                    id: track.url
+                                }));
+                            })
+                            .concat(tracks)
+                            .filter(function(track, index, tracks) {
+                                for (var i = 0; i < tracks.length; i++) {
+                                    if (tracks[i].id === track.id) {
+                                        return i === index;
+                                    }
+                                }
 
-                return false;
-            });
-        Object.freeze(tracks);
-    };
+                                return false;
+                            });
+                        Object.freeze(tracks);
+                        return;
+                    case 'clearTracks':
+                        tracks = Object.freeze([]);
+                        cues = Object.freeze({});
+                        selectedTrackId = null;
+                        delay = 0;
+                        return;
+                    case 'updateText':
+                        while (subtitlesElement.hasChildNodes()) {
+                            subtitlesElement.removeChild(subtitlesElement.lastChild);
+                        }
 
-    this.updateTextForTime = function(mediaTime) {
-        while (subtitlesElement.hasChildNodes()) {
-            subtitlesElement.removeChild(subtitlesElement.lastChild);
+                        if (isNaN(arguments[2]) || !Array.isArray(cues.times)) {
+                            return;
+                        }
+
+                        var time = arguments[2] + delay;
+                        var cuesForTime = subtitleUtils.cuesForTime(cues, time);
+                        for (var i = 0; i < cuesForTime.length; i++) {
+                            var cueNode = subtitleUtils.render(cuesForTime[i]);
+                            cueNode.classList.add('cue');
+                            subtitlesElement.append(cueNode, document.createElement('br'));
+                        }
+                        return;
+                    case 'destroy':
+                        destroyed = true;
+                        events.removeAllListeners();
+                        self.dispatch('clearTracks');
+                        containerElement.removeChild(stylesElement);
+                        containerElement.removeChild(subtitlesElement);
+                        return;
+                }
+            default:
+                throw new Error('Invalid dispatch call: ' + Array.from(arguments).map(String));
         }
-
-        if (isNaN(mediaTime) || !Array.isArray(cues.times)) {
-            return;
-        }
-
-        var time = mediaTime + delay;
-        var cuesForTime = subtitleUtils.cuesForTime(cues, time);
-        for (var i = 0; i < cuesForTime.length; i++) {
-            var cueNode = subtitleUtils.render(cuesForTime[i]);
-            cueNode.classList.add('cue');
-            subtitlesElement.append(cueNode, document.createElement('br'));
-        }
-    };
-
-    this.clearTracks = function() {
-        tracks = Object.freeze([]);
-        cues = Object.freeze({});
-        selectedTrackId = null;
-        delay = 0;
-    };
-
-    this.detachElements = function() {
-        containerElement.removeChild(stylesElement);
-        containerElement.removeChild(subtitlesElement);
     };
 
     Object.freeze(this);
 };
+
+Object.freeze(HTMLSubtitles);
 
 module.exports = HTMLSubtitles;

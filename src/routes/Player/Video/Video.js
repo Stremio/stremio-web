@@ -35,10 +35,10 @@ class Video extends Component {
             if (this.video === null || this.video.constructor !== Video) {
                 this.dispatch('command', 'destroy');
                 this.video = new Video(this.containerRef.current);
-                this.video.on('ended', this.props.onEnded);
-                this.video.on('error', this.props.onError);
-                this.video.on('propValue', this.props.onPropValue);
-                this.video.on('propChanged', this.props.onPropChanged);
+                this.video.addListener('ended', this.props.onEnded);
+                this.video.addListener('error', this.props.onError);
+                this.video.addListener('propValue', this.props.onPropValue);
+                this.video.addListener('propChanged', this.props.onPropChanged);
                 this.video.constructor.manifest.props.forEach((propName) => {
                     this.dispatch('observeProp', propName);
                 });

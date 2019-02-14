@@ -61,38 +61,38 @@ var HTMLVideo = function(containerElement) {
             return [];
         }
 
-        return Object.freeze(subtitles.tracks.slice());
+        return subtitles.dispatch('getProp', 'tracks');
     }
     function getSelectedSubtitleTrackId() {
         if (!loaded) {
             return null;
         }
 
-        return subtitles.selectedTrackId;
+        return subtitles.dispatch('getProp', 'selectedTrackId');
     }
     function getSubtitleDelay() {
         if (!loaded) {
             return null;
         }
 
-        return subtitles.delay;
+        return subtitles.dispatch('getProp', 'delay');
     }
     function getSubtitleSize() {
         if (destroyed) {
             return null;
         }
 
-        return subtitles.size;
+        return subtitles.dispatch('getProp', 'size');
     }
     function getSubtitleDarkBackground() {
         if (destroyed) {
             return null;
         }
 
-        return subtitles.darkBackground;
+        return subtitles.dispatch('getProp', 'darkBackground');
     }
     function onError(error) {
-        Object.freeze(error)
+        Object.freeze(error);
         events.emit('error', error);
         if (error.critical) {
             self.dispatch('command', 'stop');
@@ -182,8 +182,7 @@ var HTMLVideo = function(containerElement) {
         events.emit('propChanged', 'subtitleDarkBackground', getSubtitleDarkBackground());
     }
     function updateSubtitleText() {
-        var time = getTime();
-        subtitles.updateTextForTime(time);
+        subtitles.dispatch('command', 'updateText', getTime());
     }
     function flushArgsQueue() {
         for (var i = 0; i < dispatchArgsQueue.length; i++) {
@@ -193,12 +192,20 @@ var HTMLVideo = function(containerElement) {
         dispatchArgsQueue = [];
     }
 
-    this.on = function(eventName, listener) {
+    this.addListener = function(eventName, listener) {
         if (destroyed) {
-            throw new Error('Unable to add ' + eventName + ' listener to destroyed video');
+            throw new Error('Unable to add ' + eventName + ' listener');
         }
 
-        events.on(eventName, listener);
+        events.addListener(eventName, listener);
+    };
+
+    this.removeListener = function(eventName, listener) {
+        if (destroyed) {
+            throw new Error('Unable to add ' + eventName + ' listener');
+        }
+
+        events.removeListener(eventName, listener);
     };
 
     this.dispatch = function() {
@@ -274,7 +281,7 @@ var HTMLVideo = function(containerElement) {
                         break;
                     case 'selectedSubtitleTrackId':
                         if (loaded) {
-                            subtitles.selectedTrackId = arguments[2];
+                            subtitles.dispatch('setProp', 'selectedTrackId', arguments[2]);
                             onSubtitleDelayChanged();
                             onSelectedSubtitleTrackIdChanged();
                             updateSubtitleText();
@@ -283,7 +290,7 @@ var HTMLVideo = function(containerElement) {
                     case 'subtitleDelay':
                         if (loaded) {
                             if (!isNaN(arguments[2])) {
-                                subtitles.delay = arguments[2];
+                                subtitles.dispatch('setProp', 'delay', arguments[2]);
                                 onSubtitleDelayChanged();
                                 updateSubtitleText();
                             }
@@ -291,12 +298,12 @@ var HTMLVideo = function(containerElement) {
                         break;
                     case 'subtitleSize':
                         if (!isNaN(arguments[2])) {
-                            subtitles.size = arguments[2];
+                            subtitles.dispatch('setProp', 'size', arguments[2]);
                             onSubtitleSizeChanged();
                         }
                         return;
                     case 'subtitleDarkBackground':
-                        subtitles.darkBackground = arguments[2];
+                        subtitles.dispatch('setProp', 'darkBackground', arguments[2]);
                         onSubtitleDarkBackgroundChanged();
                         return;
                     case 'volume':
@@ -313,7 +320,7 @@ var HTMLVideo = function(containerElement) {
                 switch (arguments[1]) {
                     case 'addSubtitleTracks':
                         if (loaded) {
-                            subtitles.addTracks(arguments[2]);
+                            subtitles.dispatch('command', 'addTracks', arguments[2]);
                             onSubtitleTracksChanged();
                         }
                         break;
@@ -332,7 +339,7 @@ var HTMLVideo = function(containerElement) {
                         subtitles.removeListener('load', updateSubtitleText);
                         loaded = false;
                         dispatchArgsQueue = [];
-                        subtitles.clearTracks();
+                        subtitles.dispatch('command', 'clearTracks');
                         videoElement.removeAttribute('src');
                         videoElement.load();
                         videoElement.currentTime = 0;
@@ -383,7 +390,7 @@ var HTMLVideo = function(containerElement) {
                         videoElement.removeEventListener('loadeddata', onBufferingChanged);
                         containerElement.removeChild(videoElement);
                         containerElement.removeChild(stylesElement);
-                        subtitles.detachElements();
+                        subtitles.dispatch('command', 'destroy');
                         return;
                     default:
                         throw new Error('command not supported: ' + arguments[1]);
