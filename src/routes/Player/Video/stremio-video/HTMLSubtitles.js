@@ -2,6 +2,10 @@ var EventEmitter = require('events');
 var subtitleUtils = require('./utils/subtitles');
 
 var HTMLSubtitles = function(containerElement) {
+    if (!(containerElement instanceof HTMLElement)) {
+        throw new Error('Instance of HTMLElement required as a first argument to HTMLSubtitles');
+    }
+
     var events = new EventEmitter();
     var tracks = Object.freeze([]);
     var cues = Object.freeze({});
