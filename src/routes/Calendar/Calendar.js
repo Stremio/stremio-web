@@ -84,7 +84,7 @@ class Calendar extends Component {
         }
 
         if (prevState.date.getMonth() !== this.state.date.getMonth()) {
-            this.setState({ selectedDate: new Date() });
+            this.setState({ selectedDate: new Date(this.state.date.getFullYear(), this.state.date.getMonth(), 1) });
             const newDate = this.state.date;
             this.resetMonth(newDate);
         }
@@ -113,7 +113,7 @@ class Calendar extends Component {
                             <div className={styles['pad']} key={pad} />
                         )}
                         {this.monthDays.map((day) =>
-                            <div className={classnames(styles['day'], { [styles['selected']]: this.state.date.getMonth() === this.state.selectedDate.getMonth() && this.state.selectedDate.getDate() === day + 1 })} key={day} data-day={new Date(new Date().getFullYear(), this.state.date.getMonth(), day + 1)} onClick={this.changeSelectedDate}>
+                            <div className={classnames(styles['day'], { [styles['selected']]: this.state.selectedDate.getDate() === day + 1 })} key={day} data-day={new Date(new Date().getFullYear(), this.state.date.getMonth(), day + 1)} onClick={this.changeSelectedDate}>
                                 <div className={styles['date-container']}>
                                     <div className={classnames(styles['date'], { [styles['selected']]: this.state.date.getMonth() === new Date().getMonth() && this.state.date.getDate() === day + 1 })}>{day + 1}</div>
                                 </div>
