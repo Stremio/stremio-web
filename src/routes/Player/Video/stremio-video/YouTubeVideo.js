@@ -38,6 +38,7 @@ function YouTubeVideo(containerElement) {
     videoContainer.classList.add('video');
     subtitles.addListener('error', onSubtitlesError);
     subtitles.addListener('load', updateSubtitleText);
+    events.addListener('error', function() { });
 
     function getPaused() {
         if (!loaded) {
@@ -174,7 +175,7 @@ function YouTubeVideo(containerElement) {
     }
     function onYouTubePlayerApiError() {
         onError({
-            code: 12,
+            code: YouTubeVideo.ERROR.API_LOAD_FAILED,
             message: 'YouTube player API failed to load',
             critical: true
         });
@@ -219,27 +220,33 @@ function YouTubeVideo(containerElement) {
         });
     }
     function onVideoError(error) {
+        var code;
         var message;
         switch (error.data) {
-            case 2:
+            case YouTubeVideo.ERROR.INVALID_REQUEST:
+                code = YouTubeVideo.ERROR.INVALID_REQUEST;
                 message = 'Invalid request';
                 break;
-            case 5:
+            case YouTubeVideo.ERROR.CONTENT_CANNOT_BE_PLAYED:
+                code = YouTubeVideo.ERROR.CONTENT_CANNOT_BE_PLAYED;
                 message = 'The requested content cannot be played';
                 break;
-            case 100:
+            case YouTubeVideo.ERROR.REMOVED_VIDEO:
+                code = YouTubeVideo.ERROR.REMOVED_VIDEO;
                 message = 'The video has been removed or marked as private';
                 break;
-            case 101:
-            case 150:
+            case YouTubeVideo.ERROR.CONTENT_CANNOT_BE_EMBEDDED1:
+            case YouTubeVideo.ERROR.CONTENT_CANNOT_BE_EMBEDDED2:
+                code = YouTubeVideo.ERROR.CONTENT_CANNOT_BE_EMBEDDED1;
                 message = 'The video cannot be played in embedded players';
                 break;
             default:
-                message = 'Unknown error';
+                code = -1;
+                message = 'Unknown video error';
         }
 
         onError({
-            code: error.data,
+            code: code,
             message: message,
             critical: true
         });
@@ -326,7 +333,6 @@ function YouTubeVideo(containerElement) {
     };
 
     this.dispatch = function() {
-        console.log(Array.from(arguments).map(String))
         if (destroyed) {
             throw new Error('Unable to dispatch ' + arguments[0]);
         }
@@ -539,8 +545,13 @@ function YouTubeVideo(containerElement) {
     Object.freeze(this);
 };
 
-YouTubeVideo.error = Object.freeze({
-
+YouTubeVideo.ERROR = Object.freeze({
+    API_LOAD_FAILED: 12,
+    INVALID_REQUEST: 2,
+    CONTENT_CANNOT_BE_PLAYED: 5,
+    REMOVED_VIDEO: 100,
+    CONTENT_CANNOT_BE_EMBEDDED1: 101,
+    CONTENT_CANNOT_BE_EMBEDDED2: 150
 });
 
 YouTubeVideo.manifest = Object.freeze({
