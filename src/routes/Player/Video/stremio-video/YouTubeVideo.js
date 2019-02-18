@@ -23,45 +23,21 @@ function YouTubeVideo(containerElement) {
     var volumeChangedIntervalId = window.setInterval(onVolumeChangedInterval, 100);
     var subtitles = new HTMLSubtitles(containerElement);
     var video = null;
-    // TODO handle script element
+    var scriptElement = document.createElement('script');
     var stylesElement = document.createElement('style');
     var videoContainer = document.createElement('div');
 
-    subtitles.addListener('error', onSubtitlesError);
-    subtitles.addListener('load', updateSubtitleText);
+    scriptElement.type = 'text/javascript';
+    scriptElement.src = 'https://www.youtube.com/iframe_api';
+    scriptElement.onload = onYouTubePlayerApiLoaded;
+    scriptElement.onerror = onYouTubePlayerApiError;
+    containerElement.appendChild(scriptElement);
     containerElement.appendChild(stylesElement);
     stylesElement.sheet.insertRule('#' + containerElement.id + ' .video { position: absolute; width: 100%; height: 100%; z-index: -1; }', stylesElement.sheet.cssRules.length);
     containerElement.appendChild(videoContainer);
     videoContainer.classList.add('video');
-
-    YT.ready(() => {
-        if (destroyed) {
-            return;
-        }
-
-        video = new YT.Player(videoContainer, {
-            height: '100%',
-            width: '100%',
-            playerVars: {
-                autoplay: 1,
-                cc_load_policy: 3,
-                controls: 0,
-                disablekb: 1,
-                enablejsapi: 1,
-                fs: 0,
-                iv_load_policy: 3,
-                loop: 0,
-                modestbranding: 1,
-                playsinline: 1,
-                rel: 0
-            },
-            events: {
-                onError: onVideoError,
-                onReady: onVideoReady,
-                onStateChange: onVideoStateChange
-            }
-        });
-    });
+    subtitles.addListener('error', onSubtitlesError);
+    subtitles.addListener('load', updateSubtitleText);
 
     function getPaused() {
         if (!loaded) {
@@ -190,6 +166,52 @@ function YouTubeVideo(containerElement) {
             code: error.code,
             message: message,
             critical: false
+        });
+    }
+    function onYouTubePlayerApiError() {
+        onError({
+            code: 12,
+            message: 'YouTube player API failed to load',
+            critical: true
+        });
+    }
+    function onYouTubePlayerApiLoaded() {
+        if (destroyed) {
+            return;
+        }
+
+        if (!YT) {
+            onYouTubePlayerApiError();
+            return;
+        }
+
+        YT.ready(() => {
+            if (destroyed) {
+                return;
+            }
+
+            video = new YT.Player(videoContainer, {
+                height: '100%',
+                width: '100%',
+                playerVars: {
+                    autoplay: 1,
+                    cc_load_policy: 3,
+                    controls: 0,
+                    disablekb: 1,
+                    enablejsapi: 1,
+                    fs: 0,
+                    iv_load_policy: 3,
+                    loop: 0,
+                    modestbranding: 1,
+                    playsinline: 1,
+                    rel: 0
+                },
+                events: {
+                    onError: onVideoError,
+                    onReady: onVideoReady,
+                    onStateChange: onVideoStateChange
+                }
+            });
         });
     }
     function onVideoError(error) {
@@ -497,6 +519,7 @@ function YouTubeVideo(containerElement) {
                         clearInterval(durationChangedIntervalId);
                         clearInterval(volumeChangedIntervalId);
                         video.destroy();
+                        containerElement.removeChild(scriptElement);
                         containerElement.removeChild(videoElement);
                         containerElement.removeChild(stylesElement);
                         subtitles.dispatch('command', 'destroy');
