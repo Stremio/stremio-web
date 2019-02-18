@@ -9,8 +9,8 @@ function HTMLSubtitles(containerElement) {
     var self = this;
     var destroyed = false;
     var events = new EventEmitter();
-    var tracks = Object.freeze([]);
     var cuesByTime = null;
+    var tracks = Object.freeze([]);
     var selectedTrackId = null;
     var delay = 0;
     var stylesElement = document.createElement('style');
@@ -148,8 +148,8 @@ function HTMLSubtitles(containerElement) {
                         Object.freeze(tracks);
                         return;
                     case 'clearTracks':
-                        tracks = Object.freeze([]);
                         cuesByTime = null;
+                        tracks = Object.freeze([]);
                         selectedTrackId = null;
                         delay = 0;
                         return;
