@@ -150,20 +150,24 @@ function YouTubeVideo(containerElement) {
         events.emit('propChanged', 'subtitleDarkBackground', getSubtitleDarkBackground());
     }
     function onSubtitlesError(error) {
+        var code;
         var message;
         switch (error.code) {
-            case 70:
+            case HTMLSubtitles.ERROR.SUBTITLES_FETCH_FAILED:
+                code = HTMLSubtitles.ERROR.SUBTITLES_FETCH_FAILED;
                 message = 'Failed to fetch subtitles from ' + error.track.origin;
                 break;
-            case 71:
+            case HTMLSubtitles.ERROR.SUBTITLES_PARSE_FAILED:
+                code = HTMLSubtitles.ERROR.SUBTITLES_PARSE_FAILED;
                 message = 'Failed to parse subtitles from ' + error.track.origin;
                 break;
             default:
+                code = -1;
                 message = 'Unknown subtitles error';
         }
 
         onError({
-            code: error.code,
+            code: code,
             message: message,
             critical: false
         });
@@ -534,6 +538,10 @@ function YouTubeVideo(containerElement) {
 
     Object.freeze(this);
 };
+
+YouTubeVideo.error = Object.freeze({
+
+});
 
 YouTubeVideo.manifest = Object.freeze({
     name: 'YouTubeVideo',

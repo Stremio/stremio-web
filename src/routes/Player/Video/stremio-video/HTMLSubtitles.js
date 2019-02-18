@@ -76,7 +76,7 @@ function HTMLSubtitles(containerElement) {
                                     })
                                     .catch(function() {
                                         events.emit('error', Object.freeze({
-                                            code: 70,
+                                            code: HTMLSubtitles.ERROR.SUBTITLES_FETCH_FAILED,
                                             track: track
                                         }));
                                     })
@@ -90,7 +90,7 @@ function HTMLSubtitles(containerElement) {
                                     })
                                     .catch(function() {
                                         events.emit('error', Object.freeze({
-                                            code: 71,
+                                            code: HTMLSubtitles.ERROR.SUBTITLES_PARSE_FAILED,
                                             track: track
                                         }));
                                     });
@@ -185,6 +185,11 @@ function HTMLSubtitles(containerElement) {
 
     Object.freeze(this);
 };
+
+HTMLSubtitles.ERROR = Object.freeze({
+    SUBTITLES_FETCH_FAILED: 70,
+    SUBTITLES_PARSE_FAILED: 71
+});
 
 Object.freeze(HTMLSubtitles);
 
