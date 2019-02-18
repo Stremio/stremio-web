@@ -1,16 +1,16 @@
 var EventEmitter = require('events');
 var subtitleUtils = require('./utils/subtitles');
 
-var HTMLSubtitles = function(containerElement) {
+function HTMLSubtitles(containerElement) {
     if (!(containerElement instanceof HTMLElement)) {
         throw new Error('Instance of HTMLElement required as a first argument');
     }
 
     var self = this;
-    var events = new EventEmitter();
     var destroyed = false;
+    var events = new EventEmitter();
     var tracks = Object.freeze([]);
-    var cues = Object.freeze({});
+    var cuesByTime = null;
     var selectedTrackId = null;
     var delay = 0;
     var stylesElement = document.createElement('style');
@@ -51,10 +51,10 @@ var HTMLSubtitles = function(containerElement) {
                         return Object.freeze(tracks.slice());
                     case 'selectedTrackId':
                         return selectedTrackId;
-                    case 'delay':
-                        return delay;
                     case 'size':
                         return parseFloat(stylesElement.sheet.cssRules[subtitleStylesIndex].style.fontSize);
+                    case 'delay':
+                        return delay;
                     case 'darkBackground':
                         return subtitlesElement.classList.contains('dark-background');
                     default:
@@ -63,7 +63,7 @@ var HTMLSubtitles = function(containerElement) {
             case 'setProp':
                 switch (arguments[1]) {
                     case 'selectedTrackId':
-                        cues = Object.freeze({});
+                        cuesByTime = null;
                         selectedTrackId = null;
                         delay = 0;
                         for (var i = 0; i < tracks.length; i++) {
@@ -82,7 +82,7 @@ var HTMLSubtitles = function(containerElement) {
                                     })
                                     .then(function(text) {
                                         if (typeof text === 'string' && selectedTrackId === track.id) {
-                                            cues = subtitleUtils.parse(text);
+                                            cuesByTime = subtitleUtils.parse(text);
                                             events.emit('load', Object.freeze({
                                                 track: track
                                             }));
@@ -98,14 +98,14 @@ var HTMLSubtitles = function(containerElement) {
                             }
                         }
                         return;
-                    case 'delay':
-                        if (!isNaN(arguments[2])) {
-                            delay = parseFloat(arguments[2]);
-                        }
-                        return;
                     case 'size':
                         if (!isNaN(arguments[2])) {
                             stylesElement.sheet.cssRules[subtitleStylesIndex].style.fontSize = parseFloat(arguments[2]) + 'pt';
+                        }
+                        return;
+                    case 'delay':
+                        if (!isNaN(arguments[2])) {
+                            delay = parseFloat(arguments[2]);
                         }
                         return;
                     case 'darkBackground':
@@ -149,7 +149,7 @@ var HTMLSubtitles = function(containerElement) {
                         return;
                     case 'clearTracks':
                         tracks = Object.freeze([]);
-                        cues = Object.freeze({});
+                        cuesByTime = null;
                         selectedTrackId = null;
                         delay = 0;
                         return;
@@ -158,14 +158,14 @@ var HTMLSubtitles = function(containerElement) {
                             subtitlesElement.removeChild(subtitlesElement.lastChild);
                         }
 
-                        if (isNaN(arguments[2]) || !Array.isArray(cues.times)) {
+                        if (isNaN(arguments[2]) || cuesByTime === null) {
                             return;
                         }
 
                         var time = arguments[2] + delay;
-                        var cuesForTime = subtitleUtils.cuesForTime(cues, time);
+                        var cuesForTime = subtitleUtils.cuesForTime(cuesByTime, time);
                         for (var i = 0; i < cuesForTime.length; i++) {
-                            var cueNode = subtitleUtils.render(cuesForTime[i]);
+                            var cueNode = subtitleUtils.render(cuesForTime[i].text);
                             cueNode.classList.add('cue');
                             subtitlesElement.append(cueNode, document.createElement('br'));
                         }

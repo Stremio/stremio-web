@@ -26,60 +26,67 @@ function binarySearchUpperBound(array, value) {
 function parse(text) {
     var nativeVTTCue = VTTCue;
     global.VTTCue = VTTJS.VTTCue;
-    var cues = [];
-    var cuesForTime = {};
     var parser = new VTTJS.WebVTT.Parser(window, VTTJS.WebVTT.StringDecoder());
+    global.VTTCue = nativeVTTCue;
+    var cues = [];
+    var cuesByTime = {};
     parser.oncue = function(c) {
-        var cue = {
+        var cue = Object.freeze({
             startTime: (c.startTime * 1000) | 0,
             endTime: (c.endTime * 1000) | 0,
             text: c.text
-        };
+        });
         cues.push(cue);
-        cuesForTime[cue.startTime] = cuesForTime[cue.startTime] || [];
-        cuesForTime[cue.endTime] = cuesForTime[cue.endTime] || [];
+        cuesByTime[cue.startTime] = cuesByTime[cue.startTime] || [];
+        cuesByTime[cue.endTime] = cuesByTime[cue.endTime] || [];
     };
     parser.parse(text);
     parser.flush();
-    cuesForTime.times = Object.keys(cuesForTime)
+    cuesByTime.times = Object.keys(cuesByTime)
         .map(function(time) {
             return parseInt(time);
         })
         .sort(function(t1, t2) {
             return t1 - t2;
         });
+    Object.freeze(cues);
+    Object.freeze(cuesByTime);
+    Object.freeze(cuesByTime.times);
     for (var i = 0; i < cues.length; i++) {
-        cuesForTime[cues[i].startTime].push(cues[i]);
-        var startTimeIndex = binarySearchUpperBound(cuesForTime.times, cues[i].startTime);
-        for (var j = startTimeIndex + 1; j < cuesForTime.times.length; j++) {
-            if (cues[i].endTime <= cuesForTime.times[j]) {
+        cuesByTime[cues[i].startTime].push(cues[i]);
+        var startTimeIndex = binarySearchUpperBound(cuesByTime.times, cues[i].startTime);
+        for (var j = startTimeIndex + 1; j < cuesByTime.times.length; j++) {
+            if (cues[i].endTime <= cuesByTime.times[j]) {
                 break;
             }
 
-            cuesForTime[cuesForTime.times[j]].push(cues[i]);
+            cuesByTime[cuesByTime.times[j]].push(cues[i]);
         }
     }
-    for (var i = 0; i < cuesForTime.times.length; i++) {
-        cuesForTime[cuesForTime.times[i]].sort(function(c1, c2) {
+
+    for (var i = 0; i < cuesByTime.times.length; i++) {
+        cuesByTime[cuesByTime.times[i]].sort(function(c1, c2) {
             return c1.startTime - c2.startTime ||
                 c1.endTime - c2.endTime;
         });
+
+        Object.freeze(cuesByTime[cuesByTime.times[i]]);
     }
-    global.VTTCue = nativeVTTCue;
-    return Object.freeze(cuesForTime);
+
+    return cuesByTime;
 }
 
-function cuesForTime(cues, time) {
-    var index = binarySearchUpperBound(cues.times, time);
-    return index !== -1 ? cues[cues.times[index]] : [];
+function cuesForTime(cuesByTime, time) {
+    var index = binarySearchUpperBound(cuesByTime.times, time);
+    return index !== -1 ? cuesByTime[cuesByTime.times[index]] : Object.freeze([]);
 }
 
-function render(cue) {
-    return VTTJS.WebVTT.convertCueToDOMTree(window, cue.text);
+function render(text) {
+    return VTTJS.WebVTT.convertCueToDOMTree(window, text);
 }
 
-module.exports = {
-    parse,
-    cuesForTime,
-    render
-};
+module.exports = Object.freeze({
+    parse: parse,
+    cuesForTime: cuesForTime,
+    render: render
+});
