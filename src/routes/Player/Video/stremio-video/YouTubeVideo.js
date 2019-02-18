@@ -89,19 +89,19 @@ function YouTubeVideo(containerElement) {
 
         return subtitles.dispatch('getProp', 'selectedTrackId');
     }
-    function getSubtitleDelay() {
-        if (!loaded) {
-            return null;
-        }
-
-        return subtitles.dispatch('getProp', 'delay');
-    }
     function getSubtitleSize() {
         if (!ready || destroyed) {
             return null;
         }
 
         return subtitles.dispatch('getProp', 'size');
+    }
+    function getSubtitleDelay() {
+        if (!loaded) {
+            return null;
+        }
+
+        return subtitles.dispatch('getProp', 'delay');
     }
     function getSubtitleDarkBackground() {
         if (!ready || destroyed) {
