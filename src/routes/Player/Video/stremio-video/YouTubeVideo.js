@@ -489,7 +489,6 @@ function YouTubeVideo(containerElement) {
                         return;
                     case 'load':
                         if (ready) {
-                            debugger;
                             var dispatchArgsLoadedQueueCopy = dispatchArgsLoadedQueue.slice();
                             self.dispatch('command', 'stop');
                             dispatchArgsLoadedQueue = dispatchArgsLoadedQueueCopy;
@@ -528,7 +527,9 @@ function YouTubeVideo(containerElement) {
                         clearInterval(timeChangedIntervalId);
                         clearInterval(durationChangedIntervalId);
                         clearInterval(volumeChangedIntervalId);
-                        video.destroy();
+                        if (ready) {
+                            video.destroy();
+                        }
                         containerElement.removeChild(scriptElement);
                         containerElement.removeChild(videoElement);
                         containerElement.removeChild(stylesElement);
