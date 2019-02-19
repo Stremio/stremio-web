@@ -141,11 +141,11 @@ function YouTubeVideo(containerElement) {
     function onSelectedSubtitleTrackIdChanged() {
         events.emit('propChanged', 'selectedSubtitleTrackId', getSelectedSubtitleTrackId());
     }
-    function onSubtitleDelayChanged() {
-        events.emit('propChanged', 'subtitleDelay', getSubtitleDelay());
-    }
     function onSubtitleSizeChanged() {
         events.emit('propChanged', 'subtitleSize', getSubtitleSize());
+    }
+    function onSubtitleDelayChanged() {
+        events.emit('propChanged', 'subtitleDelay', getSubtitleDelay());
     }
     function onSubtitleDarkBackgroundChanged() {
         events.emit('propChanged', 'subtitleDarkBackground', getSubtitleDarkBackground());
@@ -154,17 +154,20 @@ function YouTubeVideo(containerElement) {
         var code;
         var message;
         switch (error.code) {
-            case HTMLSubtitles.ERROR.SUBTITLES_FETCH_FAILED:
+            case HTMLSubtitles.ERROR.SUBTITLES_FETCH_FAILED: {
                 code = HTMLSubtitles.ERROR.SUBTITLES_FETCH_FAILED;
                 message = 'Failed to fetch subtitles from ' + error.track.origin;
                 break;
-            case HTMLSubtitles.ERROR.SUBTITLES_PARSE_FAILED:
+            }
+            case HTMLSubtitles.ERROR.SUBTITLES_PARSE_FAILED: {
                 code = HTMLSubtitles.ERROR.SUBTITLES_PARSE_FAILED;
                 message = 'Failed to parse subtitles from ' + error.track.origin;
                 break;
-            default:
+            }
+            default: {
                 code = -1;
                 message = 'Unknown subtitles error';
+            }
         }
 
         onError({
@@ -223,26 +226,31 @@ function YouTubeVideo(containerElement) {
         var code;
         var message;
         switch (error.data) {
-            case YouTubeVideo.ERROR.INVALID_REQUEST:
+            case YouTubeVideo.ERROR.INVALID_REQUEST: {
                 code = YouTubeVideo.ERROR.INVALID_REQUEST;
                 message = 'Invalid request';
                 break;
-            case YouTubeVideo.ERROR.CONTENT_CANNOT_BE_PLAYED:
+            }
+            case YouTubeVideo.ERROR.CONTENT_CANNOT_BE_PLAYED: {
                 code = YouTubeVideo.ERROR.CONTENT_CANNOT_BE_PLAYED;
                 message = 'The requested content cannot be played';
                 break;
-            case YouTubeVideo.ERROR.REMOVED_VIDEO:
+            }
+            case YouTubeVideo.ERROR.REMOVED_VIDEO: {
                 code = YouTubeVideo.ERROR.REMOVED_VIDEO;
                 message = 'The video has been removed or marked as private';
                 break;
+            }
             case YouTubeVideo.ERROR.CONTENT_CANNOT_BE_EMBEDDED1:
-            case YouTubeVideo.ERROR.CONTENT_CANNOT_BE_EMBEDDED2:
+            case YouTubeVideo.ERROR.CONTENT_CANNOT_BE_EMBEDDED2: {
                 code = YouTubeVideo.ERROR.CONTENT_CANNOT_BE_EMBEDDED1;
                 message = 'The video cannot be played in embedded players';
                 break;
-            default:
+            }
+            default: {
                 code = -1;
                 message = 'Unknown video error';
+            }
         }
 
         onError({
@@ -264,11 +272,12 @@ function YouTubeVideo(containerElement) {
         }
 
         switch (state.data) {
-            case YT.PlayerState.ENDED:
+            case YT.PlayerState.ENDED: {
                 onEnded();
                 break;
+            }
             case YT.PlayerState.PAUSED:
-            case YT.PlayerState.PLAYING:
+            case YT.PlayerState.PLAYING: {
                 if (pausedObserved) {
                     onPausedChanged();
                 }
@@ -282,12 +291,14 @@ function YouTubeVideo(containerElement) {
                 }
 
                 break;
-            case YT.PlayerState.UNSTARTED:
+            }
+            case YT.PlayerState.UNSTARTED: {
                 if (pausedObserved) {
                     onPausedChanged();
                 }
 
                 break;
+            }
         }
     }
     function onTimeChangedInterval() {
@@ -338,56 +349,70 @@ function YouTubeVideo(containerElement) {
         }
 
         switch (arguments[0]) {
-            case 'observeProp':
+            case 'observeProp': {
                 switch (arguments[1]) {
-                    case 'paused':
+                    case 'paused': {
                         events.emit('propValue', 'paused', getPaused());
                         pausedObserved = true;
                         return;
-                    case 'time':
+                    }
+                    case 'time': {
                         events.emit('propValue', 'time', getTime());
                         timeObserved = true;
                         return;
-                    case 'duration':
+                    }
+                    case 'duration': {
                         events.emit('propValue', 'duration', getDuration());
                         durationObserved = true;
                         return;
-                    case 'buffering':
+                    }
+                    case 'buffering': {
                         events.emit('propValue', 'duration', getBuffering());
                         bufferingObserved = true;
                         return;
-                    case 'volume':
+                    }
+                    case 'volume': {
                         events.emit('propValue', 'volume', getVolume());
                         volumeObserved = true;
                         return;
-                    case 'subtitleTracks':
+                    }
+                    case 'subtitleTracks': {
                         events.emit('propValue', 'subtitleTracks', getSubtitleTracks());
                         return;
-                    case 'selectedSubtitleTrackId':
+                    }
+                    case 'selectedSubtitleTrackId': {
                         events.emit('propValue', 'selectedSubtitleTrackId', getSelectedSubtitleTrackId());
                         return;
-                    case 'subtitleSize':
+                    }
+                    case 'subtitleSize': {
                         events.emit('propValue', 'subtitleSize', getSubtitleSize());
                         return;
-                    case 'subtitleDelay':
+                    }
+                    case 'subtitleDelay': {
                         events.emit('propValue', 'subtitleDelay', getSubtitleDelay());
                         return;
-                    case 'subtitleDarkBackground':
+                    }
+                    case 'subtitleDarkBackground': {
                         events.emit('propValue', 'subtitleDarkBackground', getSubtitleDarkBackground());
                         return;
-                    default:
+                    }
+                    default: {
                         throw new Error('observeProp not supported: ' + arguments[1]);
+                    }
                 }
-            case 'setProp':
+            }
+            case 'setProp': {
                 switch (arguments[1]) {
-                    case 'paused':
+                    case 'paused': {
                         if (loaded) {
                             arguments[2] ? video.pauseVideo() : video.playVideo();
                         } else {
                             dispatchArgsLoadedQueue.push(Array.from(arguments));
                         }
+
                         return;
-                    case 'time':
+                    }
+                    case 'time': {
                         if (loaded) {
                             if (!isNaN(arguments[2])) {
                                 video.seekTo(arguments[2] / 1000);
@@ -395,8 +420,10 @@ function YouTubeVideo(containerElement) {
                         } else {
                             dispatchArgsLoadedQueue.push(Array.from(arguments));
                         }
+
                         return;
-                    case 'volume':
+                    }
+                    case 'volume': {
                         if (ready) {
                             if (!isNaN(arguments[2])) {
                                 video.unMute();
@@ -405,8 +432,10 @@ function YouTubeVideo(containerElement) {
                         } else {
                             dispatchArgsReadyQueue.push(Array.from(arguments));
                         }
+
                         return;
-                    case 'selectedSubtitleTrackId':
+                    }
+                    case 'selectedSubtitleTrackId': {
                         if (loaded) {
                             subtitles.dispatch('setProp', 'selectedTrackId', arguments[2]);
                             onSubtitleDelayChanged();
@@ -415,16 +444,20 @@ function YouTubeVideo(containerElement) {
                         } else {
                             dispatchArgsLoadedQueue.push(Array.from(arguments));
                         }
+
                         return;
-                    case 'subtitleSize':
+                    }
+                    case 'subtitleSize': {
                         if (ready) {
                             subtitles.dispatch('setProp', 'size', arguments[2]);
                             onSubtitleSizeChanged();
                         } else {
                             dispatchArgsReadyQueue.push(Array.from(arguments));
                         }
+
                         return;
-                    case 'subtitleDelay':
+                    }
+                    case 'subtitleDelay': {
                         if (loaded) {
                             subtitles.dispatch('setProp', 'delay', arguments[2]);
                             onSubtitleDelayChanged();
@@ -432,36 +465,46 @@ function YouTubeVideo(containerElement) {
                         } else {
                             dispatchArgsLoadedQueue.push(Array.from(arguments));
                         }
+
                         return;
-                    case 'subtitleDarkBackground':
+                    }
+                    case 'subtitleDarkBackground': {
                         if (ready) {
                             subtitles.dispatch('setProp', 'darkBackground', arguments[2]);
                             onSubtitleDarkBackgroundChanged();
                         } else {
                             dispatchArgsReadyQueue.push(Array.from(arguments));
                         }
+
                         return;
-                    default:
+                    }
+                    default: {
                         throw new Error('setProp not supported: ' + arguments[1]);
+                    }
                 }
-            case 'command':
+            }
+            case 'command': {
                 switch (arguments[1]) {
-                    case 'addSubtitleTracks':
+                    case 'addSubtitleTracks': {
                         if (loaded) {
                             subtitles.dispatch('command', 'addTracks', arguments[2]);
                             onSubtitleTracksChanged();
                         } else {
                             dispatchArgsLoadedQueue.push(Array.from(arguments));
                         }
+
                         return;
-                    case 'mute':
+                    }
+                    case 'mute': {
                         if (ready) {
                             video.mute();
                         } else {
                             dispatchArgsReadyQueue.push(Array.from(arguments));
                         }
+
                         return;
-                    case 'unmute':
+                    }
+                    case 'unmute': {
                         if (ready) {
                             video.unMute();
                             if (video.getVolume() === 0) {
@@ -470,8 +513,10 @@ function YouTubeVideo(containerElement) {
                         } else {
                             dispatchArgsReadyQueue.push(Array.from(arguments));
                         }
+
                         return;
-                    case 'stop':
+                    }
+                    case 'stop': {
                         loaded = false;
                         dispatchArgsLoadedQueue = [];
                         subtitles.dispatch('command', 'clearTracks');
@@ -487,7 +532,8 @@ function YouTubeVideo(containerElement) {
                         onSubtitleDelayChanged();
                         updateSubtitleText();
                         return;
-                    case 'load':
+                    }
+                    case 'load': {
                         if (ready) {
                             var dispatchArgsLoadedQueueCopy = dispatchArgsLoadedQueue.slice();
                             self.dispatch('command', 'stop');
@@ -516,8 +562,10 @@ function YouTubeVideo(containerElement) {
                         } else {
                             dispatchArgsReadyQueue.push(Array.from(arguments));
                         }
+
                         return;
-                    case 'destroy':
+                    }
+                    case 'destroy': {
                         self.dispatch('command', 'stop');
                         destroyed = true;
                         onVolumeChanged();
@@ -535,11 +583,15 @@ function YouTubeVideo(containerElement) {
                         containerElement.removeChild(stylesElement);
                         subtitles.dispatch('command', 'destroy');
                         return;
-                    default:
+                    }
+                    default: {
                         throw new Error('command not supported: ' + arguments[1]);
+                    }
                 }
-            default:
+            }
+            default: {
                 throw new Error('Invalid dispatch call: ' + Array.from(arguments).map(String));
+            }
         }
     };
 
