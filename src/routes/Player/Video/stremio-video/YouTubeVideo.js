@@ -80,7 +80,26 @@ function YouTubeVideo(containerElement) {
             return Object.freeze([]);
         }
 
-        return subtitles.dispatch('getProp', 'tracks');
+        var embeddedTracks = (video.getOption('captions', 'tracklist') || [])
+            .map(function(track) {
+                return {
+                    id: track.languageCode,
+                    origin: 'EMBEDDED',
+                    label: track.languageName
+                };
+            });
+        var extraTracks = subtitles.dispatch('getProp', 'tracks');
+        var allTracks = embeddedTracks.concat(extraTracks)
+            .filter(function(track, index, tracks) {
+                for (var i = 0; i < tracks.length; i++) {
+                    if (tracks[i].id === track.id) {
+                        return i === index;
+                    }
+                }
+
+                return false;
+            });
+        return allTracks;
     }
     function getSelectedSubtitleTrackId() {
         if (!loaded) {
@@ -217,7 +236,8 @@ function YouTubeVideo(containerElement) {
                 events: {
                     onError: onVideoError,
                     onReady: onVideoReady,
-                    onStateChange: onVideoStateChange
+                    onStateChange: onVideoStateChange,
+                    onApiChange: onVideoApiChange
                 }
             });
         });
@@ -300,6 +320,10 @@ function YouTubeVideo(containerElement) {
                 break;
             }
         }
+    }
+    function onVideoApiChange() {
+        video.loadModule('captions');
+        onSubtitleTracksChanged();
     }
     function onTimeChangedInterval() {
         updateSubtitleText();
@@ -437,6 +461,7 @@ function YouTubeVideo(containerElement) {
                     }
                     case 'selectedSubtitleTrackId': {
                         if (loaded) {
+                            video.setOption('captions', 'track', arguments[2]);
                             subtitles.dispatch('setProp', 'selectedTrackId', arguments[2]);
                             onSubtitleDelayChanged();
                             onSelectedSubtitleTrackIdChanged();
