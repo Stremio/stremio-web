@@ -604,7 +604,7 @@ function YouTubeVideo(containerElement) {
                             video.destroy();
                         }
                         containerElement.removeChild(scriptElement);
-                        containerElement.removeChild(videoElement);
+                        containerElement.removeChild(videoContainer);
                         containerElement.removeChild(stylesElement);
                         subtitles.dispatch('command', 'destroy');
                         return;
