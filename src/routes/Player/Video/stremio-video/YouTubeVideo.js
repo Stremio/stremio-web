@@ -18,9 +18,7 @@ function YouTubeVideo(containerElement) {
     var durationObserved = false;
     var bufferingObserved = false;
     var volumeObserved = false;
-    var timeChangedIntervalId = window.setInterval(onTimeChangedInterval, 100);
-    var durationChangedIntervalId = window.setInterval(onDurationChangedInterval, 100);
-    var volumeChangedIntervalId = window.setInterval(onVolumeChangedInterval, 100);
+    var propChangedIntervalId = window.setInterval(onPropChangedInterval, 100);
     var subtitles = new HTMLSubtitles(containerElement);
     var video = null;
     var scriptElement = document.createElement('script');
@@ -325,21 +323,20 @@ function YouTubeVideo(containerElement) {
         video.loadModule('captions');
         onSubtitleTracksChanged();
     }
-    function onTimeChangedInterval() {
-        updateSubtitleText();
+    function onPropChangedInterval() {
         if (timeObserved) {
             onTimeChanged();
         }
-    }
-    function onDurationChangedInterval() {
+
         if (durationObserved) {
             onDurationChanged();
         }
-    }
-    function onVolumeChangedInterval() {
+
         if (volumeObserved) {
             onVolumeChanged();
         }
+
+        updateSubtitleText();
     }
     function updateSubtitleText() {
         subtitles.dispatch('command', 'updateText', getTime());
@@ -597,9 +594,7 @@ function YouTubeVideo(containerElement) {
                         onSubtitleSizeChanged();
                         onSubtitleDarkBackgroundChanged();
                         events.removeAllListeners();
-                        clearInterval(timeChangedIntervalId);
-                        clearInterval(durationChangedIntervalId);
-                        clearInterval(volumeChangedIntervalId);
+                        clearInterval(propChangedIntervalId);
                         if (ready) {
                             video.destroy();
                         }
