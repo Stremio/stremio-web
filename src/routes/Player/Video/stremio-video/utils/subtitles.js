@@ -27,7 +27,6 @@ function parse(text) {
     var nativeVTTCue = VTTCue;
     global.VTTCue = VTTJS.VTTCue;
     var parser = new VTTJS.WebVTT.Parser(window, VTTJS.WebVTT.StringDecoder());
-    global.VTTCue = nativeVTTCue;
     var cues = [];
     var cuesByTime = {};
     parser.oncue = function(c) {
@@ -42,6 +41,7 @@ function parse(text) {
     };
     parser.parse(text);
     parser.flush();
+    global.VTTCue = nativeVTTCue;
     cuesByTime.times = Object.keys(cuesByTime)
         .map(function(time) {
             return parseInt(time);
