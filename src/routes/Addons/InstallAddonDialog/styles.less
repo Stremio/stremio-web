@@ -1,0 +1,161 @@
+.install-addon-dialog {
+    --addon-dialog-width: 380px;
+    --spacing: 16px;
+    font-size: 13px;
+}
+
+.install-addon-dialog {
+    padding: calc(var(--spacing) * 0.6);
+    width: var(--addon-dialog-width);
+    background-color: var(--color-surfacelighter);
+
+    .x-container {
+        display: flex;
+        justify-content: flex-end;
+
+        .x-icon {
+            width: calc(var(--spacing) * 0.7);
+            height: calc(var(--spacing) * 0.7);
+            fill: var(--color-surface);
+            background-position: center;
+            background-repeat: no-repeat;
+            cursor: pointer;
+        }
+    }
+
+    .info-container {
+        padding: calc(var(--spacing) * 0.3) var(--spacing) var(--spacing) var(--spacing);
+
+        .install-label {
+            font-size: 1.2em;
+            font-weight: 500;
+            color: var(--color-backgrounddarker);
+        }
+
+        .basic-info {
+            margin: calc(var(--spacing) * 0.5) 0;
+            display: flex;
+            flex-direction: row;
+
+            .logo-container {
+                margin-right: var(--spacing);
+                width: calc(var(--spacing) * 3);
+                height: calc(var(--spacing) * 3);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                .logo {
+                    width: 100%;
+                    height: 100%;
+                }
+            }
+
+            .header-container {
+                flex: 1;
+                display: flex;
+                align-items: center;
+                overflow: hidden;
+
+                .header {
+                    width: 100%;
+                    display: flex;
+                    align-items: baseline;
+
+                    .name {
+                        margin-right: var(--spacing);
+                        max-width: 80%;
+                        font-size: 1.5em;
+                        font-weight: 100;
+                        overflow: hidden;
+                        white-space: pre;
+                        text-overflow: ellipsis;
+                        color: var(--color-backgrounddarker);
+                    }
+
+                    .version {
+                        flex: 1;
+                        font-weight: 100;
+                        overflow: hidden;
+                        white-space: pre;
+                        text-overflow: ellipsis;
+                        color: var(--color-backgrounddarker);
+                    }
+                }
+            }
+        }
+
+        .types {
+            min-height: var(--spacing);
+            font-weight: 100;
+            overflow: hidden;
+            white-space: pre;
+            text-overflow: ellipsis;
+            color: var(--color-backgrounddarker);
+        }
+
+        .description {
+            margin-top: calc(var(--spacing) * 0.5);
+            font-weight: 100;
+            overflow: hidden;
+            overflow-wrap: break-word;
+            color: var(--color-backgrounddarker);
+        }
+
+        .notice {
+            margin-top: var(--spacing);
+            font-weight: 100;
+            font-style: italic;
+            color: var(--color-backgrounddarker);
+        }
+
+        .buttons {
+            margin-top: var(--spacing);
+            height: calc(var(--spacing) * 2.5);
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+
+            .cancel-button {
+                width: 45%;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: var(--color-surfacedark);
+                cursor: pointer;
+
+                .label {
+                    font-size: 1.1em;
+                    font-weight: 100;
+                    color: var(--color-surfacelighter);
+                }
+
+                &:hover {
+                    background-color: var(--color-surface);
+                }
+            }
+
+            .install-button {
+                width: 45%;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: var(--color-signal5);
+                cursor: pointer;
+
+                .label {
+                    font-size: 1.1em;
+                    font-weight: 100;
+                    color: var(--color-surfacelighter);
+                }
+
+                &:hover {
+                    background-color: var(--color-signal560);
+                }
+            }
+        }
+    }
+}
