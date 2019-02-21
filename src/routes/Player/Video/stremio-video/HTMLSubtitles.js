@@ -1,6 +1,14 @@
 var EventEmitter = require('events');
 var subtitleUtils = require('./utils/subtitles');
 
+var FONT_SIZE = Object.freeze({
+    1: '3vmin',
+    2: '4vmin',
+    3: '5vmin',
+    4: '8vmin',
+    5: '10vmin'
+});
+
 function HTMLSubtitles(containerElement) {
     if (!(containerElement instanceof HTMLElement)) {
         throw new Error('Instance of HTMLElement required as a first argument');
@@ -17,7 +25,7 @@ function HTMLSubtitles(containerElement) {
     var subtitlesElement = document.createElement('div');
 
     containerElement.appendChild(stylesElement);
-    var subtitleStylesIndex = stylesElement.sheet.insertRule('#' + containerElement.id + ' .subtitles { position: absolute; right: 0; bottom: 0; left: 0; z-index: 0; font-size: 26pt; color: white; text-align: center; }', stylesElement.sheet.cssRules.length);
+    var subtitleStylesIndex = stylesElement.sheet.insertRule('#' + containerElement.id + ' .subtitles { position: absolute; right: 0; bottom: 0; left: 0; z-index: 0; font-size: ' + FONT_SIZE[2] + '; color: white; text-align: center; }', stylesElement.sheet.cssRules.length);
     stylesElement.sheet.insertRule('#' + containerElement.id + ' .subtitles .cue { display: inline-block; padding: 0.2em; text-shadow: #222222 0px 0px 1.8px, #222222 0px 0px 1.8px, #222222 0px 0px 1.8px, #222222 0px 0px 1.8px, #222222 0px 0px 1.8px; }', stylesElement.sheet.cssRules.length);
     stylesElement.sheet.insertRule('#' + containerElement.id + ' .subtitles.dark-background .cue { text-shadow: none; background-color: #222222; }', stylesElement.sheet.cssRules.length);
     containerElement.appendChild(subtitlesElement);
@@ -52,7 +60,9 @@ function HTMLSubtitles(containerElement) {
                     case 'selectedTrackId':
                         return selectedTrackId;
                     case 'size':
-                        return parseFloat(stylesElement.sheet.cssRules[subtitleStylesIndex].style.fontSize);
+                        return parseInt(Object.keys(FONT_SIZE).find(function(size) {
+                            return FONT_SIZE[size] === stylesElement.sheet.cssRules[subtitleStylesIndex].style.fontSize;
+                        }));
                     case 'delay':
                         return delay;
                     case 'darkBackground':
@@ -100,7 +110,7 @@ function HTMLSubtitles(containerElement) {
                         return;
                     case 'size':
                         if (!isNaN(arguments[2])) {
-                            stylesElement.sheet.cssRules[subtitleStylesIndex].style.fontSize = parseFloat(arguments[2]) + 'pt';
+                            stylesElement.sheet.cssRules[subtitleStylesIndex].style.fontSize = FONT_SIZE[Math.max(1, Math.min(5, Math.floor(arguments[2])))];
                         }
                         return;
                     case 'delay':

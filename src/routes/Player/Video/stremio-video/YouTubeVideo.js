@@ -492,6 +492,7 @@ function YouTubeVideo(containerElement) {
                     case 'subtitleSize': {
                         if (ready) {
                             subtitles.dispatch('setProp', 'size', arguments[2]);
+                            video.setOption('captions', 'fontSize', Math.max(1, Math.min(5, Math.floor(arguments[2]))) - 2);
                             onSubtitleSizeChanged();
                         } else {
                             dispatchArgsReadyQueue.push(Array.from(arguments));
