@@ -173,7 +173,7 @@ function HTMLSubtitles(containerElement) {
                     case 'destroy':
                         destroyed = true;
                         events.removeAllListeners();
-                        self.dispatch('clearTracks');
+                        self.dispatch('command', 'clearTracks');
                         containerElement.removeChild(stylesElement);
                         containerElement.removeChild(subtitlesElement);
                         return;
