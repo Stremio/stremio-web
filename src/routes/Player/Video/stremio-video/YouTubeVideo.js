@@ -19,6 +19,7 @@ function YouTubeVideo(containerElement) {
     var bufferingObserved = false;
     var volumeObserved = false;
     var propChangedIntervalId = window.setInterval(onPropChangedInterval, 100);
+    var embeddedSubtitlesSelectedTrackId = null;
     var subtitles = new HTMLSubtitles(containerElement);
     var video = null;
     var scriptElement = document.createElement('script');
@@ -104,7 +105,10 @@ function YouTubeVideo(containerElement) {
             return null;
         }
 
-        return subtitles.dispatch('getProp', 'selectedTrackId');
+        return embeddedSubtitlesSelectedTrackId !== null ?
+            embeddedSubtitlesSelectedTrackId
+            :
+            subtitles.dispatch('getProp', 'selectedTrackId');
     }
     function getSubtitleSize() {
         if (!ready || destroyed) {
@@ -118,14 +122,20 @@ function YouTubeVideo(containerElement) {
             return null;
         }
 
-        return subtitles.dispatch('getProp', 'delay');
+        return embeddedSubtitlesSelectedTrackId !== null ?
+            null
+            :
+            subtitles.dispatch('getProp', 'delay');
     }
     function getSubtitleDarkBackground() {
         if (!ready || destroyed) {
             return null;
         }
 
-        return subtitles.dispatch('getProp', 'darkBackground');
+        return embeddedSubtitlesSelectedTrackId !== null ?
+            null
+            :
+            subtitles.dispatch('getProp', 'darkBackground');
     }
     function onEnded() {
         events.emit('ended');
@@ -458,9 +468,19 @@ function YouTubeVideo(containerElement) {
                     }
                     case 'selectedSubtitleTrackId': {
                         if (loaded) {
-                            video.setOption('captions', 'track', arguments[2]);
+                            embeddedSubtitlesSelectedTrackId = null;
+                            var tracks = getSubtitleTracks();
+                            for (var i = 0; i < tracks.length; i++) {
+                                if (tracks[i].id === arguments[2] && tracks[i].origin === 'EMBEDDED') {
+                                    embeddedSubtitlesSelectedTrackId = tracks[i].id;
+                                    break;
+                                }
+                            }
+
+                            video.setOption('captions', 'track', { languageCode: arguments[2] });
                             subtitles.dispatch('setProp', 'selectedTrackId', arguments[2]);
                             onSubtitleDelayChanged();
+                            onSubtitleDarkBackgroundChanged();
                             onSelectedSubtitleTrackIdChanged();
                             updateSubtitleText();
                         } else {
