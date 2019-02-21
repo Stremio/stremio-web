@@ -179,7 +179,7 @@ class SubtitlesPicker extends Component {
                     onChange={this.setSubtitleSize}
                 />
                 <NumberInput
-                    value={this.props.subtitleDelay / 1000}
+                    value={this.props.subtitleDelay !== null ? this.props.subtitleDelay / 1000 : null}
                     unit={'s'}
                     delta={0.2}
                     onChange={this.setSubtitleDelay}
