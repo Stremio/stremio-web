@@ -10,8 +10,8 @@ var FONT_SIZE = Object.freeze({
 });
 
 function HTMLSubtitles(containerElement) {
-    if (!(containerElement instanceof HTMLElement)) {
-        throw new Error('Instance of HTMLElement required as a first argument');
+    if (!(containerElement instanceof HTMLElement) || typeof containerElement.id !== 'string') {
+        throw new Error('Instance of HTMLElement with id attribute required as a first argument');
     }
 
     var self = this;
@@ -20,7 +20,7 @@ function HTMLSubtitles(containerElement) {
     var cuesByTime = null;
     var tracks = Object.freeze([]);
     var selectedTrackId = null;
-    var delay = 0;
+    var delay = null;
     var stylesElement = document.createElement('style');
     var subtitlesElement = document.createElement('div');
 
@@ -31,20 +31,12 @@ function HTMLSubtitles(containerElement) {
     containerElement.appendChild(subtitlesElement);
     subtitlesElement.classList.add('subtitles');
 
-    this.addListener = function(eventName, listener) {
+    this.on = function(eventName, listener) {
         if (destroyed) {
             throw new Error('Unable to add ' + eventName + ' listener');
         }
 
         events.addListener(eventName, listener);
-    };
-
-    this.removeListener = function(eventName, listener) {
-        if (destroyed) {
-            throw new Error('Unable to remove ' + eventName + ' listener');
-        }
-
-        events.removeListener(eventName, listener);
     };
 
     this.dispatch = function() {
@@ -53,84 +45,101 @@ function HTMLSubtitles(containerElement) {
         }
 
         switch (arguments[0]) {
-            case 'getProp':
+            case 'getProp': {
                 switch (arguments[1]) {
-                    case 'tracks':
+                    case 'tracks': {
                         return Object.freeze(tracks.slice());
-                    case 'selectedTrackId':
+                    }
+                    case 'selectedTrackId': {
                         return selectedTrackId;
-                    case 'size':
+                    }
+                    case 'delay': {
+                        return delay;
+                    }
+                    case 'size': {
                         return parseInt(Object.keys(FONT_SIZE).find(function(size) {
                             return FONT_SIZE[size] === stylesElement.sheet.cssRules[subtitleStylesIndex].style.fontSize;
                         }));
-                    case 'delay':
-                        return delay;
-                    case 'darkBackground':
+                    }
+                    case 'darkBackground': {
                         return subtitlesElement.classList.contains('dark-background');
-                    default:
+                    }
+                    default: {
                         throw new Error('getProp not supported: ' + arguments[1]);
+                    }
                 }
-            case 'setProp':
+            }
+            case 'setProp': {
                 switch (arguments[1]) {
-                    case 'selectedTrackId':
+                    case 'selectedTrackId': {
                         cuesByTime = null;
                         selectedTrackId = null;
-                        delay = 0;
+                        delay = null;
                         for (var i = 0; i < tracks.length; i++) {
-                            var track = tracks[i];
-                            if (track.id === arguments[2]) {
-                                selectedTrackId = track.id;
-                                fetch(track.url)
+                            if (tracks[i].id === arguments[2]) {
+                                selectedTrackId = tracks[i].id;
+                                delay = 0;
+                                fetch(tracks[i].url)
                                     .then(function(resp) {
                                         return resp.text();
                                     })
                                     .catch(function() {
                                         events.emit('error', Object.freeze({
                                             code: HTMLSubtitles.ERROR.SUBTITLES_FETCH_FAILED,
-                                            track: track
+                                            track: tracks[i]
                                         }));
                                     })
                                     .then(function(text) {
-                                        if (typeof text === 'string' && selectedTrackId === track.id) {
+                                        if (typeof text === 'string' && selectedTrackId === tracks[i].id) {
                                             cuesByTime = subtitleUtils.parse(text);
                                             events.emit('load', Object.freeze({
-                                                track: track
+                                                track: tracks[i]
                                             }));
                                         }
                                     })
                                     .catch(function() {
                                         events.emit('error', Object.freeze({
                                             code: HTMLSubtitles.ERROR.SUBTITLES_PARSE_FAILED,
-                                            track: track
+                                            track: tracks[i]
                                         }));
                                     });
                                 break;
                             }
                         }
+
                         return;
-                    case 'size':
-                        if (!isNaN(arguments[2])) {
+                    }
+                    case 'delay': {
+                        if (typeof arguments[2] === 'number' && !isNaN(arguments[2]) && selectedTrackId !== null) {
+                            delay = parseInt(arguments[2]);
+                        }
+
+                        return;
+                    }
+                    case 'size': {
+                        if (typeof arguments[2] === 'number' && !isNaN(arguments[2])) {
                             stylesElement.sheet.cssRules[subtitleStylesIndex].style.fontSize = FONT_SIZE[Math.max(1, Math.min(5, Math.floor(arguments[2])))];
                         }
+
                         return;
-                    case 'delay':
-                        if (!isNaN(arguments[2])) {
-                            delay = parseFloat(arguments[2]);
-                        }
-                        return;
-                    case 'darkBackground':
+                    }
+                    case 'darkBackground': {
                         if (arguments[2]) {
                             subtitlesElement.classList.add('dark-background');
                         } else {
                             subtitlesElement.classList.remove('dark-background');
                         }
+
                         return;
-                    default:
+                    }
+                    default: {
                         throw new Error('setProp not supported: ' + arguments[1]);
+                    }
                 }
-            case 'command':
+            }
+            case 'command': {
                 switch (arguments[1]) {
-                    case 'addTracks':
+                    case 'addTracks': {
                         tracks = (Array.isArray(arguments[2]) ? arguments[2] : [])
                             .filter(function(track) {
                                 return track &&
@@ -157,18 +166,20 @@ function HTMLSubtitles(containerElement) {
                             });
                         Object.freeze(tracks);
                         return;
-                    case 'clearTracks':
+                    }
+                    case 'clearTracks': {
                         cuesByTime = null;
                         tracks = Object.freeze([]);
                         selectedTrackId = null;
-                        delay = 0;
+                        delay = null;
                         return;
-                    case 'updateText':
+                    }
+                    case 'updateText': {
                         while (subtitlesElement.hasChildNodes()) {
                             subtitlesElement.removeChild(subtitlesElement.lastChild);
                         }
 
-                        if (isNaN(arguments[2]) || cuesByTime === null) {
+                        if (typeof arguments[2] !== 'number' || isNaN(arguments[2]) || cuesByTime === null) {
                             return;
                         }
 
@@ -179,17 +190,22 @@ function HTMLSubtitles(containerElement) {
                             cueNode.classList.add('cue');
                             subtitlesElement.append(cueNode, document.createElement('br'));
                         }
+
                         return;
-                    case 'destroy':
+                    }
+                    case 'destroy': {
                         destroyed = true;
                         events.removeAllListeners();
                         self.dispatch('command', 'clearTracks');
                         containerElement.removeChild(stylesElement);
                         containerElement.removeChild(subtitlesElement);
                         return;
+                    }
                 }
-            default:
+            }
+            default: {
                 throw new Error('Invalid dispatch call: ' + Array.from(arguments).map(String));
+            }
         }
     };
 
