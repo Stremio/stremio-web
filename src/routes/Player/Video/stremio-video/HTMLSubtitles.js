@@ -30,6 +30,7 @@ function HTMLSubtitles(containerElement) {
     stylesElement.sheet.insertRule('#' + containerElement.id + ' .subtitles.dark-background .cue { text-shadow: none; background-color: #222222; }', stylesElement.sheet.cssRules.length);
     containerElement.appendChild(subtitlesElement);
     subtitlesElement.classList.add('subtitles');
+    events.addListener('error', function() { });
 
     this.on = function(eventName, listener) {
         if (destroyed) {
