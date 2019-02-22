@@ -11,7 +11,7 @@ var FONT_SIZE = Object.freeze({
 });
 
 function HTMLSubtitles(containerElement) {
-    if (!(containerElement instanceof HTMLElement) || typeof containerElement.id !== 'string') {
+    if (!(containerElement instanceof HTMLElement) || !containerElement.hasAttribute('id')) {
         throw new Error('Instance of HTMLElement with id attribute required as a first argument');
     }
 
