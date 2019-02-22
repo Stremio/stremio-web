@@ -26,6 +26,9 @@ function YouTubeVideo(containerElement) {
     var stylesElement = document.createElement('style');
     var videoContainer = document.createElement('div');
 
+    events.on('error', function() { });
+    subtitles.on('error', onSubtitlesError);
+    subtitles.on('load', updateSubtitleText);
     scriptElement.type = 'text/javascript';
     scriptElement.src = 'https://www.youtube.com/iframe_api';
     scriptElement.onload = onYouTubePlayerApiLoaded;
@@ -35,9 +38,6 @@ function YouTubeVideo(containerElement) {
     stylesElement.sheet.insertRule('#' + containerElement.id + ' .video { position: absolute; width: 100%; height: 100%; z-index: -1; }', stylesElement.sheet.cssRules.length);
     containerElement.appendChild(videoContainer);
     videoContainer.classList.add('video');
-    subtitles.on('error', onSubtitlesError);
-    subtitles.on('load', updateSubtitleText);
-    events.addListener('error', function() { });
 
     function getPaused() {
         if (!loaded) {
@@ -110,13 +110,6 @@ function YouTubeVideo(containerElement) {
             :
             subtitles.dispatch('getProp', 'selectedTrackId');
     }
-    function getSubtitleSize() {
-        if (!ready || destroyed) {
-            return null;
-        }
-
-        return subtitles.dispatch('getProp', 'size');
-    }
     function getSubtitleDelay() {
         if (!loaded) {
             return null;
@@ -126,6 +119,13 @@ function YouTubeVideo(containerElement) {
             null
             :
             subtitles.dispatch('getProp', 'delay');
+    }
+    function getSubtitleSize() {
+        if (!ready || destroyed) {
+            return null;
+        }
+
+        return subtitles.dispatch('getProp', 'size');
     }
     function getSubtitleDarkBackground() {
         if (!ready || destroyed) {
@@ -168,11 +168,11 @@ function YouTubeVideo(containerElement) {
     function onSelectedSubtitleTrackIdChanged() {
         events.emit('propChanged', 'selectedSubtitleTrackId', getSelectedSubtitleTrackId());
     }
-    function onSubtitleSizeChanged() {
-        events.emit('propChanged', 'subtitleSize', getSubtitleSize());
-    }
     function onSubtitleDelayChanged() {
         events.emit('propChanged', 'subtitleDelay', getSubtitleDelay());
+    }
+    function onSubtitleSizeChanged() {
+        events.emit('propChanged', 'subtitleSize', getSubtitleSize());
     }
     function onSubtitleDarkBackgroundChanged() {
         events.emit('propChanged', 'subtitleDarkBackground', getSubtitleDarkBackground());
