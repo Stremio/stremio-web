@@ -5,24 +5,29 @@ import Icon from 'stremio-icons/dom';
 import { Checkbox } from 'stremio-common';
 import styles from './styles';
 
-const ORIGIN_PRIORITIES = {
+const ORIGIN_PRIORITIES = Object.freeze({
     'LOCAL': 1,
     'EMBEDDED': 2
-};
+});
+const SUBTITLES_SIZE_LABELS = Object.freeze({
+    1: '75%',
+    2: '100%',
+    3: '125%',
+    4: '200%',
+    5: '250%'
+});
 
-const NumberInput = ({ value, unit, delta, onChange }) => {
+const NumberInput = ({ value, label, delta, onChange }) => {
     if (value === null) {
         return null;
     }
 
-    const fractionalDigits = delta.toString().split('.')[1];
-    const digitsCount = typeof fractionalDigits === 'string' ? fractionalDigits.length : 0;
     return (
         <div className={styles['number-input-container']}>
             <div className={styles['number-input-button']} data-value={value - delta} onClick={onChange}>
                 <Icon className={styles['number-input-icon']} icon={'ic_minus'} />
             </div>
-            <div className={styles['number-input-value']}>{value.toFixed(digitsCount)}{unit}</div>
+            <div className={styles['number-input-value']}>{label}</div>
             <div className={styles['number-input-button']} data-value={value + delta} onClick={onChange}>
                 <Icon className={styles['number-input-icon']} icon={'ic_plus'} />
             </div>
@@ -52,7 +57,10 @@ class SubtitlesPicker extends Component {
     }
 
     toggleSubtitleEnabled = () => {
-        const selectedSubtitleTrackId = this.props.selectedSubtitleTrackId === null ? this.props.subtitleTracks[0].id : null
+        const selectedSubtitleTrackId = this.props.selectedSubtitleTrackId === null && this.props.subtitleTracks.length > 0 ?
+            this.props.subtitleTracks[0].id
+            :
+            null;
         this.props.dispatch('setProp', 'selectedSubtitleTrackId', selectedSubtitleTrackId);
     }
 
@@ -75,7 +83,7 @@ class SubtitlesPicker extends Component {
     }
 
     setSubtitleDelay = (event) => {
-        this.props.dispatch('setProp', 'subtitleDelay', event.currentTarget.dataset.value * 1000);
+        this.props.dispatch('setProp', 'subtitleDelay', event.currentTarget.dataset.value);
     }
 
     toggleSubtitleDarkBackground = () => {
@@ -87,7 +95,7 @@ class SubtitlesPicker extends Component {
             <div className={styles['toggle-button-container']} onClick={this.toggleSubtitleEnabled}>
                 <div className={styles['toggle-label']}>ON</div>
                 <div className={styles['toggle-label']}>OFF</div>
-                <div className={classnames(styles['toggle-thumb'], { [styles['on']]: selectedTrack })} />
+                <div className={classnames(styles['toggle-thumb'], { [styles['on']]: !!selectedTrack })} />
             </div>
         );
     }
@@ -173,15 +181,15 @@ class SubtitlesPicker extends Component {
                 {this.renderVariantsList({ groupedTracks, selectedTrack })}
                 {this.renderDarkBackgroundToggle()}
                 <NumberInput
+                    label={SUBTITLES_SIZE_LABELS[this.props.subtitleSize]}
                     value={this.props.subtitleSize}
-                    unit={'pt'}
-                    delta={0.5}
+                    delta={1}
                     onChange={this.setSubtitleSize}
                 />
                 <NumberInput
-                    value={this.props.subtitleDelay !== null ? this.props.subtitleDelay / 1000 : null}
-                    unit={'s'}
-                    delta={0.2}
+                    label={`${(this.props.subtitleDelay / 1000).toFixed(2)}s`}
+                    value={this.props.subtitleDelay}
+                    delta={100}
                     onChange={this.setSubtitleDelay}
                 />
             </div>
@@ -222,6 +230,7 @@ SubtitlesPicker.propTypes = {
     dispatch: PropTypes.func.isRequired
 };
 SubtitlesPicker.defaultProps = {
+    subtitleTracks: [],
     languagePriorities: Object.freeze({
         English: 1
     })
