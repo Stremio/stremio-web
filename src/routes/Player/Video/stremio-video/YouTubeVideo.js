@@ -2,8 +2,8 @@ var EventEmitter = require('events');
 var HTMLSubtitles = require('./HTMLSubtitles');
 
 function YouTubeVideo(containerElement) {
-    if (!(containerElement instanceof HTMLElement)) {
-        throw new Error('Instance of HTMLElement required as a first argument');
+    if (!(containerElement instanceof HTMLElement) || !containerElement.hasAttribute('id')) {
+        throw new Error('Instance of HTMLElement with id attribute required as a first argument');
     }
 
     var self = this;
@@ -35,8 +35,8 @@ function YouTubeVideo(containerElement) {
     stylesElement.sheet.insertRule('#' + containerElement.id + ' .video { position: absolute; width: 100%; height: 100%; z-index: -1; }', stylesElement.sheet.cssRules.length);
     containerElement.appendChild(videoContainer);
     videoContainer.classList.add('video');
-    subtitles.addListener('error', onSubtitlesError);
-    subtitles.addListener('load', updateSubtitleText);
+    subtitles.on('error', onSubtitlesError);
+    subtitles.on('load', updateSubtitleText);
     events.addListener('error', function() { });
 
     function getPaused() {
@@ -47,14 +47,14 @@ function YouTubeVideo(containerElement) {
         return video.getPlayerState() !== YT.PlayerState.PLAYING;
     }
     function getTime() {
-        if (!loaded) {
+        if (!loaded || isNaN(video.getCurrentTime()) || video.getCurrentTime() === null) {
             return null;
         }
 
         return Math.floor(video.getCurrentTime() * 1000);
     }
     function getDuration() {
-        if (!loaded) {
+        if (!loaded || isNaN(video.getDuration()) || video.getDuration() === null) {
             return null;
         }
 
@@ -68,7 +68,7 @@ function YouTubeVideo(containerElement) {
         return video.getPlayerState() === YT.PlayerState.BUFFERING;
     }
     function getVolume() {
-        if (!ready || destroyed) {
+        if (!ready || destroyed || isNaN(video.getVolume()) || video.getVolume() === null) {
             return null;
         }
 
@@ -358,20 +358,12 @@ function YouTubeVideo(containerElement) {
         }
     }
 
-    this.addListener = function(eventName, listener) {
+    this.on = function(eventName, listener) {
         if (destroyed) {
             throw new Error('Unable to add ' + eventName + ' listener');
         }
 
-        events.addListener(eventName, listener);
-    };
-
-    this.removeListener = function(eventName, listener) {
-        if (destroyed) {
-            throw new Error('Unable to remove ' + eventName + ' listener');
-        }
-
-        events.removeListener(eventName, listener);
+        events.on(eventName, listener);
     };
 
     this.dispatch = function() {
@@ -415,12 +407,12 @@ function YouTubeVideo(containerElement) {
                         events.emit('propValue', 'selectedSubtitleTrackId', getSelectedSubtitleTrackId());
                         return;
                     }
-                    case 'subtitleSize': {
-                        events.emit('propValue', 'subtitleSize', getSubtitleSize());
-                        return;
-                    }
                     case 'subtitleDelay': {
                         events.emit('propValue', 'subtitleDelay', getSubtitleDelay());
+                        return;
+                    }
+                    case 'subtitleSize': {
+                        events.emit('propValue', 'subtitleSize', getSubtitleSize());
                         return;
                     }
                     case 'subtitleDarkBackground': {
@@ -445,7 +437,7 @@ function YouTubeVideo(containerElement) {
                     }
                     case 'time': {
                         if (loaded) {
-                            if (!isNaN(arguments[2])) {
+                            if (!isNaN(arguments[2]) && arguments[2] !== null) {
                                 video.seekTo(arguments[2] / 1000);
                             }
                         } else {
@@ -456,7 +448,7 @@ function YouTubeVideo(containerElement) {
                     }
                     case 'volume': {
                         if (ready) {
-                            if (!isNaN(arguments[2])) {
+                            if (!isNaN(arguments[2]) && arguments[2] !== null) {
                                 video.unMute();
                                 video.setVolume(Math.max(0, Math.min(100, arguments[2])));
                             }
@@ -489,17 +481,6 @@ function YouTubeVideo(containerElement) {
 
                         return;
                     }
-                    case 'subtitleSize': {
-                        if (ready) {
-                            subtitles.dispatch('setProp', 'size', arguments[2]);
-                            video.setOption('captions', 'fontSize', Math.max(1, Math.min(5, Math.floor(arguments[2]))) - 2);
-                            onSubtitleSizeChanged();
-                        } else {
-                            dispatchArgsReadyQueue.push(Array.from(arguments));
-                        }
-
-                        return;
-                    }
                     case 'subtitleDelay': {
                         if (loaded) {
                             subtitles.dispatch('setProp', 'delay', arguments[2]);
@@ -507,6 +488,17 @@ function YouTubeVideo(containerElement) {
                             updateSubtitleText();
                         } else {
                             dispatchArgsLoadedQueue.push(Array.from(arguments));
+                        }
+
+                        return;
+                    }
+                    case 'subtitleSize': {
+                        if (ready) {
+                            subtitles.dispatch('setProp', 'size', arguments[2]);
+                            video.setOption('captions', 'fontSize', Math.max(1, Math.min(5, Math.floor(arguments[2]))) - 2);
+                            onSubtitleSizeChanged();
+                        } else {
+                            dispatchArgsReadyQueue.push(Array.from(arguments));
                         }
 
                         return;
@@ -582,7 +574,7 @@ function YouTubeVideo(containerElement) {
                             self.dispatch('command', 'stop');
                             dispatchArgsLoadedQueue = dispatchArgsLoadedQueueCopy;
                             var autoplay = typeof arguments[3].autoplay === 'boolean' ? arguments[3].autoplay : true;
-                            var time = !isNaN(arguments[3].time) ? arguments[3].time / 1000 : 0;
+                            var time = !isNaN(arguments[3].time) && arguments[3].time !== null ? arguments[3].time / 1000 : 0;
                             if (autoplay) {
                                 video.loadVideoById({
                                     videoId: arguments[2].ytId,
@@ -599,6 +591,8 @@ function YouTubeVideo(containerElement) {
                             onTimeChanged();
                             onDurationChanged();
                             onBufferingChanged();
+                            onSubtitleTracksChanged();
+                            onSelectedSubtitleTrackIdChanged();
                             onSubtitleDelayChanged();
                             updateSubtitleText();
                             flushDispatchArgsQueue(dispatchArgsLoadedQueue);
