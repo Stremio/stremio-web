@@ -1,31 +1,9 @@
 var VTTJS = require('vtt.js');
-
-function binarySearchUpperBound(array, value) {
-    if (value < array[0] || array[array.length - 1] < value) {
-        return -1;
-    }
-
-    var left = 0;
-    var right = array.length - 1;
-    var index = -1;
-    while (left <= right) {
-        var middle = Math.floor((left + right) / 2);
-        if (array[middle] > value) {
-            right = middle - 1;
-        } else if (array[middle] < value) {
-            left = middle + 1;
-        } else {
-            index = middle;
-            left = middle + 1;
-        }
-    }
-
-    return index !== -1 ? index : right;
-}
+var binarySearchUpperBound = require('./binarySearchUpperBound');
 
 function parse(text) {
-    var nativeVTTCue = VTTCue;
-    global.VTTCue = VTTJS.VTTCue;
+    var nativeVTTCue = window.VTTCue;
+    window.VTTCue = VTTJS.VTTCue;
     var parser = new VTTJS.WebVTT.Parser(window, VTTJS.WebVTT.StringDecoder());
     var cues = [];
     var cuesByTime = {};
@@ -41,7 +19,7 @@ function parse(text) {
     };
     parser.parse(text);
     parser.flush();
-    global.VTTCue = nativeVTTCue;
+    window.VTTCue = nativeVTTCue;
     cuesByTime.times = Object.keys(cuesByTime)
         .map(function(time) {
             return parseInt(time);
@@ -76,17 +54,6 @@ function parse(text) {
     return cuesByTime;
 }
 
-function cuesForTime(cuesByTime, time) {
-    var index = binarySearchUpperBound(cuesByTime.times, time);
-    return index !== -1 ? cuesByTime[cuesByTime.times[index]] : Object.freeze([]);
-}
-
-function render(text) {
-    return VTTJS.WebVTT.convertCueToDOMTree(window, text);
-}
-
 module.exports = Object.freeze({
-    parse: parse,
-    cuesForTime: cuesForTime,
-    render: render
+    parse: parse
 });

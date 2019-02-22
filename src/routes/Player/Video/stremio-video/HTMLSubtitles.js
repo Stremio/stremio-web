@@ -1,5 +1,6 @@
 var EventEmitter = require('events');
-var subtitleUtils = require('./utils/subtitles');
+var subtitlesParser = require('./subtitlesParser');
+var subtitlesRenderer = require('./subtitlesRenderer');
 
 var FONT_SIZE = Object.freeze({
     1: '3vmin',
@@ -26,7 +27,7 @@ function HTMLSubtitles(containerElement) {
 
     containerElement.appendChild(stylesElement);
     var subtitleStylesIndex = stylesElement.sheet.insertRule('#' + containerElement.id + ' .subtitles { position: absolute; right: 0; bottom: 0; left: 0; z-index: 0; font-size: ' + FONT_SIZE[2] + '; color: white; text-align: center; }', stylesElement.sheet.cssRules.length);
-    stylesElement.sheet.insertRule('#' + containerElement.id + ' .subtitles .cue { display: inline-block; padding: 0.2em; text-shadow: #222222 0px 0px 1.8px, #222222 0px 0px 1.8px, #222222 0px 0px 1.8px, #222222 0px 0px 1.8px, #222222 0px 0px 1.8px; }', stylesElement.sheet.cssRules.length);
+    stylesElement.sheet.insertRule('#' + containerElement.id + ' .subtitles .cue { display: inline-block; padding: 0.2em; text-shadow: 0px 0px 0.03em #222222, 0px 0px 0.03em #222222, 0px 0px 0.03em #222222, 0px 0px 0.03em #222222, 0px 0px 0.03em #222222; }', stylesElement.sheet.cssRules.length);
     stylesElement.sheet.insertRule('#' + containerElement.id + ' .subtitles.dark-background .cue { text-shadow: none; background-color: #222222; }', stylesElement.sheet.cssRules.length);
     containerElement.appendChild(subtitlesElement);
     subtitlesElement.classList.add('subtitles');
@@ -42,7 +43,7 @@ function HTMLSubtitles(containerElement) {
 
     this.dispatch = function() {
         if (destroyed) {
-            throw new Error('Unable to dispatch ' + arguments[0]);
+            throw new Error('Unable to dispatch ' + Array.from(arguments).map(String));
         }
 
         switch (arguments[0]) {
@@ -92,7 +93,7 @@ function HTMLSubtitles(containerElement) {
                                     })
                                     .then(function(text) {
                                         if (typeof text === 'string' && selectedTrackId === tracks[i].id) {
-                                            cuesByTime = subtitleUtils.parse(text);
+                                            cuesByTime = subtitlesParser.parse(text);
                                             events.emit('load', Object.freeze({
                                                 track: tracks[i]
                                             }));
@@ -111,14 +112,14 @@ function HTMLSubtitles(containerElement) {
                         return;
                     }
                     case 'delay': {
-                        if (typeof arguments[2] === 'number' && !isNaN(arguments[2]) && selectedTrackId !== null) {
+                        if (!isNaN(arguments[2]) && arguments[2] !== null && selectedTrackId !== null) {
                             delay = parseInt(arguments[2]);
                         }
 
                         return;
                     }
                     case 'size': {
-                        if (typeof arguments[2] === 'number' && !isNaN(arguments[2])) {
+                        if (!isNaN(arguments[2]) && arguments[2] !== null) {
                             stylesElement.sheet.cssRules[subtitleStylesIndex].style.fontSize = FONT_SIZE[Math.max(1, Math.min(5, Math.floor(arguments[2])))];
                         }
 
@@ -180,16 +181,15 @@ function HTMLSubtitles(containerElement) {
                             subtitlesElement.removeChild(subtitlesElement.lastChild);
                         }
 
-                        if (typeof arguments[2] !== 'number' || isNaN(arguments[2]) || cuesByTime === null) {
+                        if (cuesByTime === null || isNaN(arguments[2]) || arguments[2] === null) {
                             return;
                         }
 
                         var time = arguments[2] + delay;
-                        var cuesForTime = subtitleUtils.cuesForTime(cuesByTime, time);
-                        for (var i = 0; i < cuesForTime.length; i++) {
-                            var cueNode = subtitleUtils.render(cuesForTime[i].text);
-                            cueNode.classList.add('cue');
-                            subtitlesElement.append(cueNode, document.createElement('br'));
+                        var cueNodes = subtitlesRenderer.render(cuesByTime, time);
+                        for (var i = 0; i < cueNodes.length; i++) {
+                            cueNodes[i].classList.add('cue');
+                            subtitlesElement.append(cueNodes[i], document.createElement('br'));
                         }
 
                         return;
