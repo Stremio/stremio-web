@@ -137,6 +137,16 @@ function YouTubeVideo(containerElement) {
             :
             subtitles.dispatch('getProp', 'darkBackground');
     }
+    function getSubtitleOffset() {
+        if (!ready || destroyed) {
+            return null;
+        }
+
+        return embeddedSubtitlesSelectedTrackId !== null ?
+            null
+            :
+            subtitles.dispatch('getProp', 'offset');
+    }
     function onEnded() {
         events.emit('ended');
     }
@@ -176,6 +186,9 @@ function YouTubeVideo(containerElement) {
     }
     function onSubtitleDarkBackgroundChanged() {
         events.emit('propChanged', 'subtitleDarkBackground', getSubtitleDarkBackground());
+    }
+    function onSubtitleOffsetChanged() {
+        events.emit('propChanged', 'subtitleOffset', getSubtitleOffset());
     }
     function onSubtitlesError(error) {
         var code;
@@ -292,6 +305,7 @@ function YouTubeVideo(containerElement) {
         onVolumeChanged();
         onSubtitleSizeChanged();
         onSubtitleDarkBackgroundChanged();
+        onSubtitleOffsetChanged();
         flushDispatchArgsQueue(dispatchArgsReadyQueue);
     }
     function onVideoStateChange(state) {
@@ -419,6 +433,10 @@ function YouTubeVideo(containerElement) {
                         events.emit('propValue', 'subtitleDarkBackground', getSubtitleDarkBackground());
                         return;
                     }
+                    case 'subtitleOffset': {
+                        events.emit('propValue', 'subtitleOffset', getSubtitleOffset());
+                        return;
+                    }
                     default: {
                         throw new Error('observeProp not supported: ' + arguments[1]);
                     }
@@ -507,6 +525,16 @@ function YouTubeVideo(containerElement) {
                         if (ready) {
                             subtitles.dispatch('setProp', 'darkBackground', arguments[2]);
                             onSubtitleDarkBackgroundChanged();
+                        } else {
+                            dispatchArgsReadyQueue.push(Array.from(arguments));
+                        }
+
+                        return;
+                    }
+                    case 'subtitleOffset': {
+                        if (ready) {
+                            subtitles.dispatch('setProp', 'offset', arguments[2]);
+                            onSubtitleOffsetChanged();
                         } else {
                             dispatchArgsReadyQueue.push(Array.from(arguments));
                         }
@@ -608,6 +636,7 @@ function YouTubeVideo(containerElement) {
                         onVolumeChanged();
                         onSubtitleSizeChanged();
                         onSubtitleDarkBackgroundChanged();
+                        onSubtitleOffsetChanged();
                         events.removeAllListeners();
                         clearInterval(propChangedIntervalId);
                         if (ready) {
@@ -645,7 +674,7 @@ YouTubeVideo.ERROR = Object.freeze({
 YouTubeVideo.manifest = Object.freeze({
     name: 'YouTubeVideo',
     embedded: true,
-    props: Object.freeze(['paused', 'time', 'duration', 'volume', 'buffering', 'subtitleTracks', 'selectedSubtitleTrackId', 'subtitleSize', 'subtitleDelay', 'subtitleDarkBackground'])
+    props: Object.freeze(['paused', 'time', 'duration', 'volume', 'buffering', 'subtitleTracks', 'selectedSubtitleTrackId', 'subtitleSize', 'subtitleDelay', 'subtitleDarkBackground', 'subtitleOffset'])
 });
 
 Object.freeze(YouTubeVideo);

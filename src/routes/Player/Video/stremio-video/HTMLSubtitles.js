@@ -66,6 +66,9 @@ function HTMLSubtitles(containerElement) {
                     case 'darkBackground': {
                         return subtitlesElement.classList.contains('dark-background');
                     }
+                    case 'offset': {
+                        return parseInt(stylesElement.sheet.cssRules[subtitleStylesIndex].style.bottom);
+                    }
                     default: {
                         throw new Error('getProp not supported: ' + arguments[1]);
                     }
@@ -130,6 +133,13 @@ function HTMLSubtitles(containerElement) {
                             subtitlesElement.classList.add('dark-background');
                         } else {
                             subtitlesElement.classList.remove('dark-background');
+                        }
+
+                        return;
+                    }
+                    case 'offset': {
+                        if (!isNaN(arguments[2]) && arguments[2] !== null) {
+                            stylesElement.sheet.cssRules[subtitleStylesIndex].style.bottom = Math.max(0, Math.min(100, Math.floor(arguments[2]))) + '%';
                         }
 
                         return;

@@ -98,6 +98,13 @@ function HTMLVideo(containerElement) {
 
         return subtitles.dispatch('getProp', 'darkBackground');
     }
+    function getSubtitleOffset() {
+        if (destroyed) {
+            return null;
+        }
+
+        return subtitles.dispatch('getProp', 'offset');
+    }
     function onEnded() {
         events.emit('ended');
     }
@@ -137,6 +144,9 @@ function HTMLVideo(containerElement) {
     }
     function onSubtitleDarkBackgroundChanged() {
         events.emit('propChanged', 'subtitleDarkBackground', getSubtitleDarkBackground());
+    }
+    function onSubtitleOffsetChanged() {
+        events.emit('propChanged', 'subtitleOffset', getSubtitleOffset());
     }
     function onSubtitlesError(error) {
         var code;
@@ -274,6 +284,10 @@ function HTMLVideo(containerElement) {
                         events.emit('propValue', 'subtitleDarkBackground', getSubtitleDarkBackground());
                         return;
                     }
+                    case 'subtitleOffset': {
+                        events.emit('propValue', 'subtitleOffset', getSubtitleOffset());
+                        return;
+                    }
                     default: {
                         throw new Error('observeProp not supported: ' + arguments[1]);
                     }
@@ -340,6 +354,11 @@ function HTMLVideo(containerElement) {
                     case 'subtitleDarkBackground': {
                         subtitles.dispatch('setProp', 'darkBackground', arguments[2]);
                         onSubtitleDarkBackgroundChanged();
+                        return;
+                    }
+                    case 'subtitleOffset': {
+                        subtitles.dispatch('setProp', 'offset', arguments[2]);
+                        onSubtitleOffsetChanged();
                         return;
                     }
                     default: {
@@ -413,6 +432,7 @@ function HTMLVideo(containerElement) {
                         onVolumeChanged();
                         onSubtitleSizeChanged();
                         onSubtitleDarkBackgroundChanged();
+                        onSubtitleOffsetChanged();
                         events.removeAllListeners();
                         videoElement.removeEventListener('ended', onEnded);
                         videoElement.removeEventListener('error', onVideoError);
@@ -454,7 +474,7 @@ HTMLVideo.ERROR = Object.freeze({
 HTMLVideo.manifest = Object.freeze({
     name: 'HTMLVideo',
     embedded: true,
-    props: Object.freeze(['paused', 'time', 'duration', 'volume', 'buffering', 'subtitleTracks', 'selectedSubtitleTrackId', 'subtitleSize', 'subtitleDelay', 'subtitleDarkBackground'])
+    props: Object.freeze(['paused', 'time', 'duration', 'volume', 'buffering', 'subtitleTracks', 'selectedSubtitleTrackId', 'subtitleSize', 'subtitleDelay', 'subtitleDarkBackground', 'subtitleOffset'])
 });
 
 Object.freeze(HTMLVideo);
