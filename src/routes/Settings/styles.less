@@ -97,6 +97,7 @@
                     cursor: pointer;
 
                     .value {
+                        width: 100%;
                         font-size: 14px;
                         color: var(--color-surface);
                     }
@@ -182,6 +183,7 @@
                     }
 
                     .label {
+                        max-width: 95%;
                         font-size: 14px;
                         color: var(--color-surfacelighter);
                     }
@@ -215,6 +217,7 @@
                     cursor: pointer;
 
                     .label {
+                        width: 100%;
                         margin-left: 0.5em;
                         font-size: 14px;
                         color: var(--color-surfacelight);
@@ -250,8 +253,6 @@
                     display: flex;
                     flex-direction: row;
                     align-items: center;
-                    font-size: 14px;
-                    color: var(--color-surfacelighter);
 
                     .icon {
                         margin-right: calc(var(--spacing) * 0.5);
@@ -265,6 +266,12 @@
                         width: var(--spacing);
                         height: var(--spacing);
                         fill: var(--color-signal2);
+                    }
+
+                    .label {
+                        width: 100%;
+                        font-size: 14px;
+                        color: var(--color-surfacelighter);
                     }
                 }
             }

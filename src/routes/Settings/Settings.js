@@ -142,9 +142,9 @@ class Settings extends Component {
         })
     }
 
-    renderPopup({ ref, activate, deactivate, active, value, inputLabel, options, onClick }) {
+    renderPopup({ ref, activate, deactivate, active, value, label, options, onClick }) {
         return (
-            <Popup ref={ref} className={'popup-container'} onOpen={activate.bind(null, inputLabel)} onClose={deactivate.bind(null, inputLabel)}>
+            <Popup ref={ref} className={'popup-container'} onOpen={activate.bind(null, label)} onClose={deactivate.bind(null, label)}>
                 <Popup.Label>
                     <div className={classnames(styles['bar-button'], { 'active': active })}>
                         <div className={styles['value']}>{value}</div>
@@ -154,7 +154,7 @@ class Settings extends Component {
                 <Popup.Menu>
                     <div className={styles['popup-content']}>
                         {options.map((option) =>
-                            <div key={option} className={classnames(styles['option'], { [styles['selected']]: value === option })} data-option={option} data-label={inputLabel} onClick={onClick}>{option}</div>
+                            <div key={option} className={classnames(styles['option'], { [styles['selected']]: value === option })} data-option={option} data-label={label} onClick={onClick}>{option}</div>
                         )}
                     </div>
                 </Popup.Menu>
@@ -210,7 +210,7 @@ class Settings extends Component {
                                                     activate: this.activate,
                                                     deactivate: this.deactivate,
                                                     active: input.active,
-                                                    inputLabel: input.label,
+                                                    label: input.label,
                                                     value: input.value,
                                                     options: input.options,
                                                     onClick: this.onChange
@@ -249,7 +249,7 @@ class Settings extends Component {
                                                 {input.header ? <div className={styles['header']}>{input.header}</div> : null}
                                                 <div className={styles['text']}>
                                                     {input.icon ? <Icon className={styles[input.icon === 'ic_x' ? 'x-icon' : 'icon']} icon={input.icon} /> : null}
-                                                    {input.label}
+                                                    <div className={styles['label']}>{input.label}</div>
                                                 </div>
                                             </div>
                                         );
