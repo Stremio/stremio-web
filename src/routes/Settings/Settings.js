@@ -5,100 +5,156 @@ import { Input, Popup, Checkbox } from 'stremio-common';
 import classnames from 'classnames';
 import styles from './styles';
 
+const SECTIONS_ORDER = {
+    'General': 1,
+    'Player': 2,
+    'Streaming': 3
+};
+
 class Settings extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {}
+        this.state = {
+            selectedSectionId: null,
+            sections: [],
+            inputs: []
+        };
     }
 
-    static getDerivedStateFromProps(nextProps, prevState) {
-        const sections = nextProps.settingsConfiguration.reduce((sections, setting) => {
-            if (!sections[setting.section]) {
-                sections[setting.section] = {
+    componentDidMount() {
+        this.settingsOnUpdate([
+            { section: 'General', label: 'LOG OUT', type: 'button' },
+            { section: 'General', label: 'Change password', type: 'link', href: '' },
+            { section: 'General', label: 'Import options', type: 'text' },
+            { section: 'General', label: 'Import from Facebook', type: 'link', href: '' },
+            { section: 'General', label: 'Export user data', type: 'link', href: '' },
+            { section: 'General', label: 'Subscribe to calendar', type: 'link', href: '' },
+            { section: 'General', label: 'Contact support', type: 'link', href: 'https://stremio.zendesk.com/' },
+            { section: 'General', label: 'Request account deletion', type: 'link', href: 'https://docs.google.com/forms/d/e/1FAIpQLScubrlTpDMIPUUBlhZ5lwcXl3HxzKfunIMCX5Jnp-cDyglWjQ/viewform?usp=sf_link' },
+            { section: 'General', header: 'Trakt Scrobbling', label: 'AUTHENTICATE', type: 'button', icon: 'ic_trackt' },
+            { section: 'General', header: 'UI Language', label: 'UI Language', type: 'select', options: ['Български език', 'English', 'Deutsch', 'Español', 'Italiano'], value: 'English' },
+            { section: 'Player', label: 'ADD-ONS', type: 'button', icon: 'ic_addons' },
+            { section: 'Player', header: 'Default Subtitles Language', label: 'Default Subtitles Language', type: 'select', options: ['English', 'Nederlands', 'Avesta', 'Български език', 'Deutsch', 'Español', 'Italiano'], value: 'English' },
+            { section: 'Player', header: 'Default Subtitles Size', label: 'Default Subtitles Size', type: 'select', options: ['72%', '80%', '100%', '120%', '140%', '160%', '180%'], value: '100%' },
+            { section: 'Player', header: 'Subtitles Background', label: 'Subtitles background', type: 'select', options: ['None', 'Solid', 'Transparent'], value: 'None' },
+            { section: 'Player', header: 'Subtitles color', label: 'Subtitles color', type: 'color', color: '#FFFFFF' },
+            { section: 'Player', header: 'Subtitles outline color', label: 'Subtitles outline color', type: 'color', color: '#000000' },
+            { section: 'Player', label: 'Auto-play next episode', type: 'checkbox', value: true },
+            { section: 'Player', label: 'Pause playback when minimized', type: 'checkbox', value: false },
+            { section: 'Player', label: 'Hardware-accelerated decoding', type: 'checkbox', value: true },
+            { section: 'Player', label: 'Launch player in a separate window (advanced)', type: 'checkbox', value: true },
+            { section: 'Streaming', header: 'Caching', label: 'Caching', type: 'select', options: ['No Caching', '2GB', '5GB', '10GB'], value: '2GB' },
+            { section: 'Streaming', header: 'Torrent Profile', label: 'Torrent Profile', type: 'select', options: ['Default', 'Soft', 'Fast'], value: 'Default' },
+            { section: 'Streaming', header: 'Streaming server URL: http://127.0.0.1:11470', label: 'Streaming server is available.', type: 'text', icon: 'ic_check' }
+        ]);
+    }
+
+    settingsOnUpdate = (settings) => {
+        this.setState(({ selectedSectionId, inputs }) => {
+            const sections = settings.map(({ section }) => section)
+                .filter((section, index, sections) => sections.indexOf(section) === index)
+                .sort(function(a, b) {
+                    const valueA = SECTIONS_ORDER[a];
+                    const valueB = SECTIONS_ORDER[b];
+                    if (!isNaN(valueA) && !isNaN(valueB)) return valueA - valueB;
+                    if (!isNaN(valueA)) return -1;
+                    if (!isNaN(valueB)) return 1;
+                    return a - b;
+                })
+                .map((section) => ({
+                    id: section,
+                    ref: React.createRef()
+                }));
+
+            return {
+                selectedSectionId: selectedSectionId !== null && sections.map(({ id }) => id === selectedSectionId) ? selectedSectionId : (sections.length > 0 ? sections[0].id : null),
+                sections: sections,
+                inputs: settings.map((setting) => ({
+                    ...setting,
+                    id: setting.label,
                     ref: React.createRef(),
-                    order: Object.keys(sections).length,
-                    inputs: []
-                };
+                    active: inputs.find(({ id }) => id === setting.id)
+                }))
             }
-
-            sections[setting.section].inputs.push({
-                ref: React.createRef(),
-                active: prevState.sections && prevState.sections[setting.section].inputs.find(({ label }) => label === setting.label).active,
-                ...setting
-            });
-            return sections;
-        }, {});
-
-        const selectedSection = sections[prevState.selectedSection] ?
-            prevState.selectedSection
-            :
-            Object.keys(sections).find((sectionName) => sections[sectionName].order === 0);
-
-        return { selectedSection, sections };
+        });
     }
 
     changeSection = (event) => {
-        this.setState({ selectedSection: event.currentTarget.dataset.section });
+        this.setState({ selectedSectionId: event.currentTarget.dataset.section });
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return nextState.selectedSection !== this.state.selectedSection ||
-            nextState.sections !== this.state.sections;
+        return nextState.selectedSectionId !== this.state.selectedSectionId ||
+            nextState.sections !== this.state.sections ||
+            nextState.inputs !== this.state.inputs;
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevState.selectedSection !== this.state.selectedSection) {
-            const sectionName = Object.keys(this.state.sections).find((sectionName) => sectionName === this.state.selectedSection);
-            this.state.sections[sectionName].ref.current.scrollIntoView();
+        if (prevState.selectedSectionId !== this.state.selectedSectionId) {
+            const sectionName = this.state.sections.find((sectionName) => sectionName.id === this.state.selectedSectionId);
+            sectionName.ref.current.scrollIntoView();
         }
 
-        Object.values(this.state.sections).forEach(({ inputs }) => {
-            inputs.forEach((input) => {
-                input.ref.current && !input.active && input.ref.current.close && input.ref.current.close();
-            });
+        this.state.inputs.forEach((input) => {
+            input.ref.current && !input.active && input.ref.current.close && input.ref.current.close();
         });
     }
 
     activate = (label) => {
-        this.setState(({ sections }) => ({
-            sections: Object.keys(sections).reduce((nextSections, sectionName) => {
-                nextSections[sectionName] = nextSections[sectionName] || sections[sectionName];
-                nextSections[sectionName].inputs = nextSections[sectionName].inputs.map((input) => ({
-                    ...input,
-                    active: label === input.label
-                }));
-                return nextSections;
-            }, {})
+        this.setState(({ inputs }) => ({
+            inputs: inputs.map((input) => ({
+                ...input,
+                active: label === input.label
+            }))
         }));
     }
 
-    deactivate = () => {
-        this.setState(({ sections }) => ({
-            sections: Object.keys(sections).reduce((nextSections, sectionName) => {
-                nextSections[sectionName] = nextSections[sectionName] || sections[sectionName];
-                nextSections[sectionName].inputs = nextSections[sectionName].inputs.map((input) => ({
+    deactivate = (label) => {
+        this.setState(({ inputs }) => ({
+            inputs: inputs.map((input) => ({
+                ...input,
+                active: label === input.label ? false : input.active
+            }))
+        }));
+    }
+
+    toggleCheckbox = (label) => {
+        this.setState(({ inputs }) => ({
+            inputs: inputs.map((input) => ({
+                ...input,
+                value: label === input.label ? !input.value : input.value
+            }))
+        }));
+    }
+
+    onChange = (event) => {
+        var data = event.currentTarget.dataset;
+
+        this.setState(({ inputs }) => {
+            return {
+                inputs: inputs.map((input) => ({
                     ...input,
+                    value: data.label === input.id ? data.option : input.value,
                     active: false
-                }));
-                return nextSections;
-            }, {})
-        }));
+                }))
+            }
+        })
     }
 
-    renderPopup({ ref, activate, deactivate, active, label, inputLabel, array, onClick }) {
+    renderPopup({ ref, activate, deactivate, active, value, inputLabel, options, onClick }) {
         return (
-            <Popup ref={ref} className={'popup-container'} onOpen={activate.bind(null, inputLabel)} onClose={deactivate}>
+            <Popup ref={ref} className={'popup-container'} onOpen={activate.bind(null, inputLabel)} onClose={deactivate.bind(null, inputLabel)}>
                 <Popup.Label>
                     <div className={classnames(styles['bar-button'], { 'active': active })}>
-                        <div className={styles['label']}>{label}</div>
+                        <div className={styles['value']}>{value}</div>
                         <Icon className={styles['icon']} icon={'ic_arrow_down'} />
                     </div>
                 </Popup.Label>
                 <Popup.Menu>
                     <div className={styles['popup-content']}>
-                        {array.map((element) =>
-                            <div className={classnames(styles['label'], { [styles['selected']]: label === element })} key={element} data-element={element} onClick={onClick}>{element}</div>
+                        {options.map((option) =>
+                            <div key={option} className={classnames(styles['option'], { [styles['selected']]: value === option })} data-option={option} data-label={inputLabel} onClick={onClick}>{option}</div>
                         )}
                     </div>
                 </Popup.Menu>
@@ -122,16 +178,18 @@ class Settings extends Component {
         return (
             <div className={styles['settings-container']}>
                 <div className={styles['side-menu']}>
-                    {Object.keys(this.state.sections).map((section) =>
-                        <div className={classnames(styles['setting'], { [styles['selected']]: this.state.selectedSection === section })} key={section} data-section={section} onClick={this.changeSection}>{section}</div>
+                    {this.state.sections.map((section) =>
+                        <div key={section.id} className={classnames(styles['setting'], { [styles['selected']]: this.state.selectedSectionId === section.id })} data-section={section.id} onClick={this.changeSection}>
+                            {section.id}
+                        </div>
                     )}
                 </div>
                 <div className={styles['scroll-container']}>
-                    {Object.keys(this.state.sections).map((section) =>
-                        <section ref={this.state.sections[section].ref} className={styles['section']} key={section}>
-                            <div className={styles['section-header']}>{section}</div>
+                    {this.state.sections.map((section) =>
+                        <div key={section.id} ref={section.ref} className={styles['section']} data-section={section.id}>
+                            <div className={styles['section-header']}>{section.id}</div>
                             {
-                                section === 'General'
+                                section.id === 'General'
                                     ?
                                     <div className={styles['user-info']}>
                                         {this.renderAvatar()}
@@ -140,69 +198,71 @@ class Settings extends Component {
                                     :
                                     null
                             }
-                            {this.state.sections[section].inputs.map((input) => {
-                                if (input.type === 'select') {
-                                    return (
-                                        <div className={styles['select-container']} key={input.label}>
-                                            {input.header ? <div className={styles['header']}>{input.header}</div> : null}
-                                            {this.renderPopup({
-                                                ref: input.ref,
-                                                activate: this.activate,
-                                                deactivate: this.deactivate,
-                                                active: input.active,
-                                                inputLabel: input.label,
-                                                label: input.options[0],
-                                                array: input.options,
-                                                onClick: input.onChange
-                                            })}
-                                        </div>
-                                    );
-                                } else if (input.type === 'link') {
-                                    return (
-                                        <div className={styles['link-container']} key={input.label}>
-                                            {input.header ? <div className={styles['header']}>{input.header}</div> : null}
-                                            <Input ref={input.ref} className={styles['link']} type={input.type} href={input.href} target={'_blank'}>{input.label}</Input>
-                                        </div>
-                                    );
-                                } else if (input.type === 'button') {
-                                    return (
-                                        <div className={styles['button-container']} key={input.label}>
-                                            {input.header ? <div className={styles['header']}>{input.header}</div> : null}
-                                            <Input ref={input.ref} className={styles['button']} type={input.type}>
-                                                {input.icon ? <Icon className={styles['icon']} icon={input.icon} /> : null}
-                                                <div className={styles['label']}>{input.label}</div>
-                                            </Input>
-                                        </div>
-                                    );
-                                } else if (input.type === 'checkbox') {
-                                    return (
-                                        <div className={styles['checkbox-container']} key={input.label}>
-                                            {input.header ? <div className={styles['header']}>{input.header}</div> : null}
-                                            <Checkbox ref={input.ref} className={styles['checkbox']} checked={input.value} onClick={this.onChange}>
-                                                <div className={styles['label']}>{input.label}</div>
-                                            </Checkbox>
-                                        </div>
-                                    );
-                                } else if (input.type === 'text') {
-                                    return (
-                                        <div className={styles['text-container']} key={input.label}>
-                                            {input.header ? <div className={styles['header']}>{input.header}</div> : null}
-                                            <div className={styles['text']}>
-                                                {input.icon ? <Icon className={styles['icon']} icon={input.icon} /> : null}
-                                                {input.label}
+                            {this.state.inputs
+                                .filter((input) => input.section === section.id)
+                                .map((input) => {
+                                    if (input.type === 'select') {
+                                        return (
+                                            <div key={input.id} className={styles['select-container']}>
+                                                {input.header ? <div className={styles['header']}>{input.header}</div> : null}
+                                                {this.renderPopup({
+                                                    ref: input.ref,
+                                                    activate: this.activate,
+                                                    deactivate: this.deactivate,
+                                                    active: input.active,
+                                                    inputLabel: input.label,
+                                                    value: input.value,
+                                                    options: input.options,
+                                                    onClick: this.onChange
+                                                })}
                                             </div>
-                                        </div>
-                                    );
-                                } else if (input.type === 'color') {
-                                    return (
-                                        <div className={styles['color-container']} key={input.label}>
-                                            {input.header ? <div className={styles['header']}>{input.header}</div> : null}
-                                            <input className={styles['color-picker']} type={input.type} defaultValue={input.color} tabIndex={'-1'} />
-                                        </div>
-                                    );
-                                }
-                            })}
-                        </section>
+                                        );
+                                    } else if (input.type === 'link') {
+                                        return (
+                                            <div key={input.id} className={styles['link-container']}>
+                                                {input.header ? <div className={styles['header']}>{input.header}</div> : null}
+                                                <Input ref={input.ref} className={styles['link']} type={input.type} href={input.href} target={'_blank'}>{input.label}</Input>
+                                            </div>
+                                        );
+                                    } else if (input.type === 'button') {
+                                        return (
+                                            <div key={input.id} className={styles['button-container']}>
+                                                {input.header ? <div className={styles['header']}>{input.header}</div> : null}
+                                                <Input ref={input.ref} className={styles['button']} type={input.type}>
+                                                    {input.icon ? <Icon className={styles['icon']} icon={input.icon} /> : null}
+                                                    <div className={styles['label']}>{input.label}</div>
+                                                </Input>
+                                            </div>
+                                        );
+                                    } else if (input.type === 'checkbox') {
+                                        return (
+                                            <div key={input.id} className={styles['checkbox-container']}>
+                                                {input.header ? <div className={styles['header']}>{input.header}</div> : null}
+                                                <Checkbox ref={input.ref} className={styles['checkbox']} checked={input.value} onClick={this.toggleCheckbox.bind(null, input.label)}>
+                                                    <div className={styles['label']}>{input.label}</div>
+                                                </Checkbox>
+                                            </div>
+                                        );
+                                    } else if (input.type === 'text') {
+                                        return (
+                                            <div key={input.id} className={styles['text-container']}>
+                                                {input.header ? <div className={styles['header']}>{input.header}</div> : null}
+                                                <div className={styles['text']}>
+                                                    {input.icon ? <Icon className={styles[input.icon === 'ic_x' ? 'x-icon' : 'icon']} icon={input.icon} /> : null}
+                                                    {input.label}
+                                                </div>
+                                            </div>
+                                        );
+                                    } else if (input.type === 'color') {
+                                        return (
+                                            <div key={input.id} className={styles['color-container']}>
+                                                {input.header ? <div className={styles['header']}>{input.header}</div> : null}
+                                                <input className={styles['color-picker']} type={input.type} defaultValue={input.color} tabIndex={'-1'} />
+                                            </div>
+                                        );
+                                    }
+                                })}
+                        </div>
                     )})}
                 </div>
             </div>
@@ -231,31 +291,7 @@ Settings.propTypes = {
 Settings.defaultProps = {
     avatar: '',
     email: '',
-    settingsConfiguration: [
-        { section: 'General', label: 'LOG OUT', type: 'button' },
-        { section: 'General', label: 'Change password', type: 'link', href: '' },
-        { section: 'General', label: 'Import options', type: 'text' },
-        { section: 'General', label: 'Import from Facebook', type: 'link', href: '' },
-        { section: 'General', label: 'Export user data', type: 'link', href: '' },
-        { section: 'General', label: 'Subscribe to calendar', type: 'link', href: '' },
-        { section: 'General', label: 'Contact support', type: 'link', href: 'https://stremio.zendesk.com/' },
-        { section: 'General', label: 'Request account deletion', type: 'link', href: 'https://docs.google.com/forms/d/e/1FAIpQLScubrlTpDMIPUUBlhZ5lwcXl3HxzKfunIMCX5Jnp-cDyglWjQ/viewform?usp=sf_link' },
-        { section: 'General', header: 'Trakt Scrobbling', label: 'AUTHENTICATE', type: 'button', icon: 'ic_trackt' },
-        { section: 'General', header: 'UI Language', label: 'UI Language', type: 'select', options: ['Български език', 'English', 'Deutsch', 'Español', 'Italiano'], value: 'English', onChange: (function() { alert('32423') }) },
-        { section: 'Player', label: 'ADD-ONS', type: 'button', icon: 'ic_addons' },
-        { section: 'Player', header: 'Default Subtitles Language', label: 'Default Subtitles Language', type: 'select', options: ['English', 'Nederlands', 'Avesta', 'Български език', 'Deutsch', 'Español', 'Italiano'], value: 'English' },
-        { section: 'Player', header: 'Default Subtitles Size', label: 'Default Subtitles Size', type: 'select', options: ['72%', '80%', '100%', '120%', '140%', '160%', '180%'], value: '100%' },
-        { section: 'Player', header: 'Subtitles Background', label: 'Subtitles background', type: 'select', options: ['None', 'Solid', 'Transparent'], value: 'None' },
-        { section: 'Player', header: 'Subtitles color', label: 'Subtitles color', type: 'color', color: '#FFFFFF' },
-        { section: 'Player', header: 'Subtitles outline color', label: 'Subtitles outline color', type: 'color', color: '#000000' },
-        { section: 'Player', label: 'Auto-play next episode', type: 'checkbox', value: true },
-        { section: 'Player', label: 'Pause playback when minimized', type: 'checkbox', value: false },
-        { section: 'Player', label: 'Hardware-accelerated decoding', type: 'checkbox', value: true },
-        { section: 'Player', label: 'Launch player in a separate window (advanced)', type: 'checkbox', value: true },
-        { section: 'Streaming', header: 'Caching', label: 'Caching', type: 'select', options: ['No Caching', '2GB', '5GB', '10GB'] },
-        { section: 'Streaming', header: 'Torrent Profile', label: 'Torrent Profile', type: 'select', options: ['Default', 'Soft', 'Fast'] },
-        { section: 'Streaming', header: 'Streaming server URL: http://127.0.0.1:11470', label: 'Streaming server is available.', type: 'text', icon: 'ic_check' }
-    ]
+    settingsConfiguration: []
 }
 
 export default Settings;

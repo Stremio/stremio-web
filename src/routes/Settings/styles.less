@@ -23,6 +23,7 @@
             cursor: pointer;
 
             &.selected {
+                color: var(--color-surfacelighter);
                 background-color: var(--color-background);
 
                 &:hover {
@@ -95,7 +96,7 @@
                     border: 1px solid var(--color-primary);
                     cursor: pointer;
 
-                    .label {
+                    .value {
                         font-size: 14px;
                         color: var(--color-surface);
                     }
@@ -109,7 +110,7 @@
                     &:hover {
                         background-color: var(--color-backgroundlight);
 
-                        .label {
+                        .value {
                             color: var(--color-surfacelighter);
                         }
 
@@ -121,7 +122,7 @@
                     &:global(.active) {
                         background-color: var(--color-surfacelighter);
 
-                        .label {
+                        .value {
                             color: var(--color-backgrounddarker);
                         }
 
@@ -258,6 +259,13 @@
                         height: var(--spacing);
                         fill: var(--color-signal5);
                     }
+
+                    .x-icon {
+                        margin-right: calc(var(--spacing) * 0.5);
+                        width: var(--spacing);
+                        height: var(--spacing);
+                        fill: var(--color-signal2);
+                    }
                 }
             }
 
@@ -275,6 +283,7 @@
                 .color-picker {
                     width: 100%;
                     height: calc(var(--spacing) * 2.5);
+                    cursor: pointer;
                 }
             }
         }
@@ -292,7 +301,7 @@
         border: 1px solid var(--color-primary);
         background-color: var(--color-surfacelighter);
 
-        .label {
+        .option {
             padding: calc(var(--spacing) * 0.5);
             width: 100%;
             display: flex;
