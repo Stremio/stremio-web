@@ -7,7 +7,7 @@ ipc.send = function() { };
 ipc.isDesktop = false;
 
 // New method of communication
-function initShellComm() {
+window.initShellComm = function() {
 	var transport = window.qt && window.qt.webChannelTransport
 	if (! transport) throw "no viable transport found (qt.webChannelTransport)"
 
