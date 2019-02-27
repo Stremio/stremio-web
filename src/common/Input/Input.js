@@ -3,13 +3,14 @@ import PropTypes from 'prop-types';
 import { withFocusable } from 'stremio-common';
 
 const ENTER_KEY_CODE = 13;
-const BUTTON_INPUT_TYPES = ['button', 'link', 'submit', 'checkbox'];
+const BUTTON_INPUT_TYPES = ['button', 'link', 'submit', 'checkbox', 'color'];
 const TEXT_INPUT_TYPES = ['text', 'password', 'email', 'search'];
 const TAG_NAMES_FOR_TYPE = {
     button: 'div',
     link: 'a',
     submit: 'input',
     checkbox: 'input',
+    color: 'input',
     text: 'input',
     password: 'input',
     email: 'input',

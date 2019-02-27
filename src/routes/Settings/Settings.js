@@ -15,6 +15,8 @@ class Settings extends Component {
     constructor(props) {
         super(props);
 
+        this.scrollContainerRef = React.createRef();
+
         this.state = {
             selectedSectionId: null,
             sections: [],
@@ -81,7 +83,23 @@ class Settings extends Component {
     }
 
     changeSection = (event) => {
-        this.setState({ selectedSectionId: event.currentTarget.dataset.section });
+        this.setState({ selectedSectionId: event.currentTarget.dataset.section }, () => {
+            const section = this.state.sections.find((sectionName) => sectionName.id === this.state.selectedSectionId);
+            section.ref.current.scrollIntoView();
+        });
+    }
+
+    onScroll = () => {
+        if (this.scrollContainerRef.current.scrollTop + this.scrollContainerRef.current.clientHeight === this.scrollContainerRef.current.scrollHeight) {
+            this.setState({ selectedSectionId: this.state.sections[this.state.sections.length - 1].id });
+        } else {
+            for (let i = this.state.sections.length - 1; i >= 0; i--) {
+                if (this.state.sections[i].ref.current.offsetTop <= this.scrollContainerRef.current.scrollTop) {
+                    this.setState({ selectedSectionId: this.state.sections[i].id });
+                    break;
+                }
+            }
+        }
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -91,11 +109,6 @@ class Settings extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevState.selectedSectionId !== this.state.selectedSectionId) {
-            const sectionName = this.state.sections.find((sectionName) => sectionName.id === this.state.selectedSectionId);
-            sectionName.ref.current.scrollIntoView();
-        }
-
         this.state.inputs.forEach((input) => {
             input.ref.current && !input.active && input.ref.current.close && input.ref.current.close();
         });
@@ -170,7 +183,7 @@ class Settings extends Component {
         }
 
         return (
-            <div style={{ backgroundImage: `url('${this.props.avatar}'), url('/images/default_avatar.png') ` }} className={styles['avatar']} />
+            <div style={{ backgroundImage: `url('${this.props.avatar}'), url('/images/default_avatar.png')` }} className={styles['avatar']} />
         );
     }
 
@@ -184,7 +197,7 @@ class Settings extends Component {
                         </div>
                     )}
                 </div>
-                <div className={styles['scroll-container']}>
+                <div ref={this.scrollContainerRef} className={styles['scroll-container']} onScroll={this.onScroll}>
                     {this.state.sections.map((section) =>
                         <div key={section.id} ref={section.ref} className={styles['section']} data-section={section.id}>
                             <div className={styles['section-header']}>{section.id}</div>
@@ -257,13 +270,13 @@ class Settings extends Component {
                                         return (
                                             <div key={input.id} className={styles['color-container']}>
                                                 {input.header ? <div className={styles['header']}>{input.header}</div> : null}
-                                                <input className={styles['color-picker']} type={input.type} defaultValue={input.color} tabIndex={'-1'} />
+                                                <Input className={styles['color-picker']} type={input.type} defaultValue={input.color} tabIndex={'-1'} />
                                             </div>
                                         );
                                     }
                                 })}
                         </div>
-                    )})}
+                    )}
                 </div>
             </div>
         );
@@ -284,8 +297,7 @@ Settings.propTypes = {
         value: PropTypes.oneOfType([
             PropTypes.bool,
             PropTypes.string
-        ]),
-        onChange: PropTypes.func
+        ])
     })).isRequired
 }
 Settings.defaultProps = {
