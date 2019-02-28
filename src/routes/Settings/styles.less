@@ -1,6 +1,6 @@
 .settings-container, :global(.popup-container) {
     --spacing: 16px;
-    --side-menu-width: 240px;
+    --section-width: 500px;
     font-size: 14px;
 }
 
@@ -11,7 +11,7 @@
 
     .side-menu {
         padding: var(--spacing);
-        width: var(--side-menu-width);
+        width: 17em;
         display: flex;
         flex-direction: column;
         background-color: var(--color-backgroundlighter);
@@ -45,7 +45,7 @@
 
         .section {
             padding: calc(var(--spacing) * 4) calc(var(--spacing) * 2);
-            width: 500px;
+            width: var(--section-width);
             font-size: 2em;
 
             .section-header {
@@ -61,17 +61,17 @@
 
                 .avatar {
                     margin: 0 var(--spacing);
-                    width: calc(var(--side-menu-width) * 0.25);
-                    height: calc(var(--side-menu-width) * 0.25);
+                    width: 2.2em;
+                    height: 2.2em;
                     border-radius: 50%;
-                    border: 2px solid var(--color-primary);
+                    border: 0.09em solid var(--color-primary);
                     background-size: cover;
                     background-position: center;
                     background-repeat: no-repeat;
                 }
 
                 .email {
-                    font-size: 14px;
+                    font-size: 0.5em;
                     color: var(--color-surfacelighter);
                 }
             }
@@ -83,7 +83,7 @@
 
                 .header {
                     margin-bottom: calc(var(--spacing) * 0.5);
-                    font-size: 14px;
+                    font-size: 0.5em;
                     color: var(--color-surfacelighter);
                 }
 
@@ -93,12 +93,12 @@
                     flex-direction: row;
                     align-items: center;
                     justify-content: space-between;
-                    border: 1px solid var(--color-primary);
+                    border: 0.05em solid var(--color-primary);
                     cursor: pointer;
 
                     .value {
                         width: 100%;
-                        font-size: 14px;
+                        font-size: 0.5em;
                         color: var(--color-surface);
                     }
 
@@ -141,13 +141,13 @@
 
                 .header {
                     margin-bottom: calc(var(--spacing) * 0.5);
-                    font-size: 14px;
+                    font-size: 0.5em;
                     color: var(--color-surfacelighter);
                 }
 
                 .link {
                     display: block;
-                    font-size: 14px;
+                    font-size: 0.5em;
                     color: var(--color-secondarylight);
 
                     &:hover {
@@ -163,13 +163,13 @@
 
                 .header {
                     margin-bottom: calc(var(--spacing) * 0.5);
-                    font-size: 14px;
+                    font-size: 0.5em;
                     color: var(--color-surfacelighter);
                 }
 
                 .button {
-                    padding: 12px;
-                    min-height: 45px;
+                    padding: calc(var(--spacing) * 0.7);
+                    min-height: calc(var(--section-width) * 0.09);
                     display: flex;
                     align-items: center;
                     justify-content: center;
@@ -177,14 +177,14 @@
                     cursor: pointer;
 
                     .icon {
-                        width: 5%;
+                        width: calc(var(--spacing) * 1.4);
                         margin-right: calc(var(--spacing) * 0.5);
                         fill: var(--color-surfacelighter);
                     }
 
                     .label {
-                        max-width: 95%;
-                        font-size: 14px;
+                        max-width: 27em;
+                        font-size: 0.5em;
                         color: var(--color-surfacelighter);
                     }
 
@@ -198,11 +198,11 @@
                 display: flex;
                 flex-direction: column;
                 margin: var(--spacing) 0;
-                font-size: 14px;
+                font-size: 0.5em;
 
                 .header {
                     margin-bottom: calc(var(--spacing) * 0.5);
-                    font-size: 14px;
+                    font-size: 0.5em;
                     color: var(--color-surfacelighter);
                 }
 
@@ -219,7 +219,7 @@
                     .label {
                         width: 100%;
                         margin-left: 0.5em;
-                        font-size: 14px;
+                        font-size: 1em;
                         color: var(--color-surfacelight);
                     }
 
@@ -245,7 +245,7 @@
 
                 .header {
                     margin-bottom: calc(var(--spacing) * 0.5);
-                    font-size: 14px;
+                    font-size: 0.5em;
                     color: var(--color-surfacelighter);
                 }
 
@@ -270,7 +270,7 @@
 
                     .label {
                         width: 100%;
-                        font-size: 14px;
+                        font-size: 0.5em;
                         color: var(--color-surfacelighter);
                     }
                 }
@@ -283,13 +283,13 @@
 
                 .header {
                     margin-bottom: calc(var(--spacing) * 0.5);
-                    font-size: 14px;
+                    font-size: 0.5em;
                     color: var(--color-surfacelighter);
                 }
 
                 .color-picker {
                     width: 100%;
-                    height: calc(var(--spacing) * 2.5);
+                    height: calc(var(--section-width) * 0.08);
                     cursor: pointer;
                 }
             }
@@ -300,7 +300,7 @@
         }
 
         >:not(:last-child) {
-            border-bottom: 1px solid var(--color-primary);
+            border-bottom: 0.05em solid var(--color-primary);
         }
     }
 }
@@ -308,8 +308,8 @@
 :global(.popup-container) {
 
     .popup-content {
-        width: 436px;
-        border: 1px solid var(--color-primary);
+        width: calc(var(--section-width) - calc(var(--spacing) * 4));
+        border: 0.05em solid var(--color-primary);
         background-color: var(--color-surfacelighter);
 
         .option {
@@ -317,7 +317,7 @@
             width: 100%;
             display: flex;
             align-items: center;
-            font-size: 14px;
+            font-size: 1em;
             color: var(--color-backgrounddarker);
             cursor: pointer;
 
