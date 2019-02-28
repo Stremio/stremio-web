@@ -69,14 +69,21 @@ class Settings extends Component {
                     ref: React.createRef()
                 }));
 
+            const sectionId =
+                selectedSectionId !== null && sections.forEach(({ id }) => id === selectedSectionId)
+                    ?
+                    selectedSectionId
+                    :
+                    (sections.length > 0 ? sections[0].id : null);
+
             return {
-                selectedSectionId: selectedSectionId !== null && sections.map(({ id }) => id === selectedSectionId) ? selectedSectionId : (sections.length > 0 ? sections[0].id : null),
+                selectedSectionId: sectionId,
                 sections: sections,
                 inputs: settings.map((setting) => ({
                     ...setting,
                     id: setting.label,
                     ref: React.createRef(),
-                    active: inputs.find(({ id }) => id === setting.id)
+                    active: setting.active ? inputs.find(({ id }) => id === setting.id).active : false
                 }))
             }
         });
@@ -84,12 +91,16 @@ class Settings extends Component {
 
     changeSection = (event) => {
         this.setState({ selectedSectionId: event.currentTarget.dataset.section }, () => {
-            const section = this.state.sections.find((sectionName) => sectionName.id === this.state.selectedSectionId);
+            const section = this.state.sections.find((section) => section.id === this.state.selectedSectionId);
             section.ref.current.scrollIntoView();
         });
     }
 
     onScroll = () => {
+        if (this.state.sections.length <= 0) {
+            return;
+        }
+
         if (this.scrollContainerRef.current.scrollTop + this.scrollContainerRef.current.clientHeight === this.scrollContainerRef.current.scrollHeight) {
             this.setState({ selectedSectionId: this.state.sections[this.state.sections.length - 1].id });
         } else {
@@ -114,29 +125,29 @@ class Settings extends Component {
         });
     }
 
-    activate = (label) => {
+    activate = (id) => {
         this.setState(({ inputs }) => ({
             inputs: inputs.map((input) => ({
                 ...input,
-                active: label === input.label
+                active: id === input.id
             }))
         }));
     }
 
-    deactivate = (label) => {
+    deactivate = (id) => {
         this.setState(({ inputs }) => ({
             inputs: inputs.map((input) => ({
                 ...input,
-                active: label === input.label ? false : input.active
+                active: id === input.id ? false : input.active
             }))
         }));
     }
 
-    toggleCheckbox = (label) => {
+    toggleCheckbox = (id) => {
         this.setState(({ inputs }) => ({
             inputs: inputs.map((input) => ({
                 ...input,
-                value: label === input.label ? !input.value : input.value
+                value: id === input.id ? !input.value : input.value
             }))
         }));
     }
@@ -148,16 +159,16 @@ class Settings extends Component {
             return {
                 inputs: inputs.map((input) => ({
                     ...input,
-                    value: data.label === input.id ? data.option : input.value,
+                    value: data.id === input.id ? data.option : input.value,
                     active: false
                 }))
             }
         })
     }
 
-    renderPopup({ ref, activate, deactivate, active, value, label, options, onClick }) {
+    renderPopup({ ref, activate, deactivate, active, value, id, options, onClick }) {
         return (
-            <Popup ref={ref} className={'popup-container'} onOpen={activate.bind(null, label)} onClose={deactivate.bind(null, label)}>
+            <Popup ref={ref} className={'popup-container'} onOpen={activate.bind(null, id)} onClose={deactivate.bind(null, id)}>
                 <Popup.Label>
                     <div className={classnames(styles['bar-button'], { 'active': active })}>
                         <div className={styles['value']}>{value}</div>
@@ -167,7 +178,7 @@ class Settings extends Component {
                 <Popup.Menu>
                     <div className={styles['popup-content']}>
                         {options.map((option) =>
-                            <div key={option} className={classnames(styles['option'], { [styles['selected']]: value === option })} data-option={option} data-label={label} onClick={onClick}>{option}</div>
+                            <div key={option} className={classnames(styles['option'], { [styles['selected']]: value === option })} data-option={option} data-id={id} onClick={onClick}>{option}</div>
                         )}
                     </div>
                 </Popup.Menu>
@@ -223,7 +234,7 @@ class Settings extends Component {
                                                     activate: this.activate,
                                                     deactivate: this.deactivate,
                                                     active: input.active,
-                                                    label: input.label,
+                                                    id: input.id,
                                                     value: input.value,
                                                     options: input.options,
                                                     onClick: this.onChange
@@ -289,7 +300,7 @@ Settings.propTypes = {
     settingsConfiguration: PropTypes.arrayOf(PropTypes.shape({
         section: PropTypes.string.isRequired,
         header: PropTypes.string,
-        label: PropTypes.string,
+        label: PropTypes.string.isRequired,
         type: PropTypes.string.isRequired,
         href: PropTypes.string,
         icon: PropTypes.string,
