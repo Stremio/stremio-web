@@ -21,7 +21,7 @@ class Video extends Component {
         this.dispatch('command', 'destroy');
     }
 
-    selectVideoImplementation = (stream, extra) => {
+    selectVideoImplementation = (stream, options) => {
         if (stream.ytId) {
             return YouTubeVideo;
         } else {
@@ -34,7 +34,7 @@ class Video extends Component {
             const Video = this.selectVideoImplementation(args[2], args[3]);
             if (this.video === null || this.video.constructor !== Video) {
                 this.dispatch('command', 'destroy');
-                this.video = new Video(this.containerRef.current);
+                this.video = new Video({ containerElement: this.containerRef.current });
                 this.video.on('ended', this.props.onEnded);
                 this.video.on('error', this.props.onError);
                 this.video.on('propValue', this.props.onPropValue);
