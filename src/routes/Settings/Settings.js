@@ -26,9 +26,10 @@ class Settings extends Component {
 
     componentDidMount() {
         this.settingsOnUpdate([
+            { section: 'General', label: 'Username', type: 'user', avatar: '', email: '' },
             { section: 'General', label: 'LOG OUT', type: 'button' },
             { section: 'General', label: 'Change password', type: 'link', href: '' },
-            { section: 'General', label: 'Import options', type: 'text' },
+            { section: 'General', label: 'Import options', type: 'static-text' },
             { section: 'General', label: 'Import from Facebook', type: 'link', href: '' },
             { section: 'General', label: 'Export user data', type: 'link', href: '' },
             { section: 'General', label: 'Subscribe to calendar', type: 'link', href: '' },
@@ -48,7 +49,7 @@ class Settings extends Component {
             { section: 'Player', label: 'Launch player in a separate window (advanced)', type: 'checkbox', value: true },
             { section: 'Streaming', header: 'Caching', label: 'Caching', type: 'select', options: ['No Caching', '2GB', '5GB', '10GB'], value: '2GB' },
             { section: 'Streaming', header: 'Torrent Profile', label: 'Torrent Profile', type: 'select', options: ['Default', 'Soft', 'Fast'], value: 'Default' },
-            { section: 'Streaming', header: 'Streaming server URL: http://127.0.0.1:11470', label: 'Streaming server is available.', type: 'text', icon: 'ic_check' }
+            { section: 'Streaming', header: 'Streaming server URL: http://127.0.0.1:11470', label: 'Streaming server is available.', type: 'static-text', icon: 'ic_check' }
         ]);
     }
 
@@ -170,10 +171,10 @@ class Settings extends Component {
         return (
             <Popup ref={ref} className={'popup-container'} onOpen={activate.bind(null, id)} onClose={deactivate.bind(null, id)}>
                 <Popup.Label>
-                    <div className={classnames(styles['bar-button'], { 'active': active })}>
+                    <Input className={classnames(styles['bar-button'], { 'active': active })} type={'button'}>
                         <div className={styles['value']}>{value}</div>
                         <Icon className={styles['icon']} icon={'ic_arrow_down'} />
-                    </div>
+                    </Input>
                 </Popup.Label>
                 <Popup.Menu>
                     <div className={styles['popup-content']}>
@@ -186,49 +187,40 @@ class Settings extends Component {
         );
     }
 
-    renderAvatar() {
-        if (this.props.email.length === 0) {
-            return (
-                <div style={{ backgroundImage: `url('/images/anonymous.png')` }} className={styles['avatar']} />
-            );
-        }
-
-        return (
-            <div style={{ backgroundImage: `url('${this.props.avatar}'), url('/images/default_avatar.png')` }} className={styles['avatar']} />
-        );
-    }
-
     render() {
         return (
             <div className={styles['settings-container']}>
                 <div className={styles['side-menu']}>
                     {this.state.sections.map((section) =>
-                        <div key={section.id} className={classnames(styles['setting'], { [styles['selected']]: this.state.selectedSectionId === section.id })} data-section={section.id} onClick={this.changeSection}>
+                        <Input key={section.id} className={classnames(styles['section-label'], { [styles['selected']]: this.state.selectedSectionId === section.id })} type={'button'} data-section={section.id} onClick={this.changeSection}>
                             {section.id}
-                        </div>
+                        </Input>
                     )}
                 </div>
                 <div ref={this.scrollContainerRef} className={styles['scroll-container']} onScroll={this.onScroll}>
                     {this.state.sections.map((section) =>
                         <div key={section.id} ref={section.ref} className={styles['section']} data-section={section.id}>
                             <div className={styles['section-header']}>{section.id}</div>
-                            {
-                                section.id === 'General'
-                                    ?
-                                    <div className={styles['user-info']}>
-                                        {this.renderAvatar()}
-                                        <div className={styles['email']}>{this.props.email.length === 0 ? 'Anonymous user' : this.props.email}</div>
-                                    </div>
-                                    :
-                                    null
-                            }
                             {this.state.inputs
                                 .filter((input) => input.section === section.id)
                                 .map((input) => {
-                                    if (input.type === 'select') {
+                                    if (input.type === 'user') {
                                         return (
-                                            <div key={input.id} className={styles['select-container']}>
-                                                {input.header ? <div className={styles['header']}>{input.header}</div> : null}
+                                            <div key={input.id} className={classnames(styles['input-container'], styles['user-container'])}>
+                                                {
+                                                    input.email.length === 0
+                                                        ?
+                                                        <div style={{ backgroundImage: `url('/images/anonymous.png')` }} className={styles['avatar']} />
+                                                        :
+                                                        <div style={{ backgroundImage: `url('${this.props.avatar}'), url('/images/default_avatar.png')` }} className={styles['avatar']} />
+                                                }
+                                                <div className={styles['email']}>{input.email.length === 0 ? 'Anonymous user' : input.email}</div>
+                                            </div>
+                                        );
+                                    } else if (input.type === 'select') {
+                                        return (
+                                            <div key={input.id} className={classnames(styles['input-container'], styles['select-container'])}>
+                                                {input.header ? <div className={styles['input-header']}>{input.header}</div> : null}
                                                 {this.renderPopup({
                                                     ref: input.ref,
                                                     activate: this.activate,
@@ -243,15 +235,15 @@ class Settings extends Component {
                                         );
                                     } else if (input.type === 'link') {
                                         return (
-                                            <div key={input.id} className={styles['link-container']}>
-                                                {input.header ? <div className={styles['header']}>{input.header}</div> : null}
+                                            <div key={input.id} className={classnames(styles['input-container'], styles['link-container'])}>
+                                                {input.header ? <div className={styles['input-header']}>{input.header}</div> : null}
                                                 <Input ref={input.ref} className={styles['link']} type={input.type} href={input.href} target={'_blank'}>{input.label}</Input>
                                             </div>
                                         );
                                     } else if (input.type === 'button') {
                                         return (
-                                            <div key={input.id} className={styles['button-container']}>
-                                                {input.header ? <div className={styles['header']}>{input.header}</div> : null}
+                                            <div key={input.id} className={classnames(styles['input-container'], styles['button-container'])}>
+                                                {input.header ? <div className={styles['input-header']}>{input.header}</div> : null}
                                                 <Input ref={input.ref} className={styles['button']} type={input.type}>
                                                     {input.icon ? <Icon className={styles['icon']} icon={input.icon} /> : null}
                                                     <div className={styles['label']}>{input.label}</div>
@@ -260,17 +252,17 @@ class Settings extends Component {
                                         );
                                     } else if (input.type === 'checkbox') {
                                         return (
-                                            <div key={input.id} className={styles['checkbox-container']}>
-                                                {input.header ? <div className={styles['header']}>{input.header}</div> : null}
+                                            <div key={input.id} className={classnames(styles['input-container'], styles['checkbox-container'])}>
+                                                {input.header ? <div className={styles['input-header']}>{input.header}</div> : null}
                                                 <Checkbox ref={input.ref} className={styles['checkbox']} checked={input.value} onClick={this.toggleCheckbox.bind(null, input.label)}>
                                                     <div className={styles['label']}>{input.label}</div>
                                                 </Checkbox>
                                             </div>
                                         );
-                                    } else if (input.type === 'text') {
+                                    } else if (input.type === 'static-text') {
                                         return (
-                                            <div key={input.id} className={styles['text-container']}>
-                                                {input.header ? <div className={styles['header']}>{input.header}</div> : null}
+                                            <div key={input.id} className={classnames(styles['input-container'], styles['text-container'])}>
+                                                {input.header ? <div className={styles['input-header']}>{input.header}</div> : null}
                                                 <div className={styles['text']}>
                                                     {input.icon ? <Icon className={styles[input.icon === 'ic_x' ? 'x-icon' : 'icon']} icon={input.icon} /> : null}
                                                     <div className={styles['label']}>{input.label}</div>
@@ -279,8 +271,8 @@ class Settings extends Component {
                                         );
                                     } else if (input.type === 'color') {
                                         return (
-                                            <div key={input.id} className={styles['color-container']}>
-                                                {input.header ? <div className={styles['header']}>{input.header}</div> : null}
+                                            <div key={input.id} className={classnames(styles['input-container'], styles['color-container'])}>
+                                                {input.header ? <div className={styles['input-header']}>{input.header}</div> : null}
                                                 <Input className={styles['color-picker']} type={input.type} defaultValue={input.color} tabIndex={'-1'} />
                                             </div>
                                         );
@@ -295,13 +287,13 @@ class Settings extends Component {
 }
 
 Settings.propTypes = {
-    avatar: PropTypes.string.isRequired,
-    email: PropTypes.string.isRequired,
     settingsConfiguration: PropTypes.arrayOf(PropTypes.shape({
         section: PropTypes.string.isRequired,
         header: PropTypes.string,
         label: PropTypes.string.isRequired,
         type: PropTypes.string.isRequired,
+        avatar: PropTypes.string,
+        email: PropTypes.string,
         href: PropTypes.string,
         icon: PropTypes.string,
         options: PropTypes.arrayOf(PropTypes.string),
@@ -312,8 +304,6 @@ Settings.propTypes = {
     })).isRequired
 }
 Settings.defaultProps = {
-    avatar: '',
-    email: '',
     settingsConfiguration: []
 }
 
