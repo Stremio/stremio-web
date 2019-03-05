@@ -20,7 +20,7 @@
         .section-label {
             padding: var(--spacing);
             font-size: 1.1em;
-            border: 0.05em solid transparent;
+            border: calc(var(--focusable-border-size) * 0.5) solid transparent;
             color: var(--color-surfacelight);
             cursor: pointer;
 
@@ -78,7 +78,7 @@
                         width: 4.2em;
                         height: 4.2em;
                         border-radius: 50%;
-                        border: 0.15em solid var(--color-primary);
+                        border: var(--focusable-border-size) solid var(--color-primary);
                         background-size: cover;
                         background-position: center;
                         background-repeat: no-repeat;
@@ -97,7 +97,7 @@
                         flex-direction: row;
                         align-items: center;
                         justify-content: space-between;
-                        border: 0.08em solid var(--color-primary);
+                        border: calc(var(--focusable-border-size) * 0.5) solid var(--color-primary);
                         cursor: pointer;
 
                         .value {
@@ -167,7 +167,7 @@
                         align-items: center;
                         justify-content: center;
                         background-color: var(--color-primary);
-                        border: 0.08em solid transparent;
+                        border: calc(var(--focusable-border-size) * 0.5) solid transparent;
                         cursor: pointer;
 
                         .icon {
@@ -256,7 +256,7 @@
                     .color-picker {
                         width: var(--input-width);
                         height: calc(var(--input-width) * 0.08);
-                        border: 0.08em solid transparent;
+                        border: calc(var(--focusable-border-size) * 0.5) solid transparent;
                         cursor: pointer;
 
                         &:focus {
@@ -276,7 +276,7 @@
         }
 
         >:not(:last-child) {
-            border-bottom: 0.08em solid var(--color-primary);
+            border-bottom: calc(var(--focusable-border-size) * 0.5) solid var(--color-primary);
         }
     }
 }
@@ -284,7 +284,7 @@
 :global(.popup-container) {
     .popup-content {
         width: var(--input-width);
-        border: 0.08em solid var(--color-primary);
+        border: calc(var(--focusable-border-size) * 0.5) solid var(--color-primary);
         background-color: var(--color-surfacelighter);
 
         .option {

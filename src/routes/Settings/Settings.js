@@ -70,12 +70,12 @@ class Settings extends Component {
                     ref: React.createRef()
                 }));
 
-            const sectionId =
-                selectedSectionId !== null && sections.forEach(({ id }) => id === selectedSectionId)
-                    ?
-                    selectedSectionId
-                    :
-                    (sections.length > 0 ? sections[0].id : null);
+            var sectionId = null;
+            if (selectedSectionId !== null && sections.find(({ id }) => id === selectedSectionId)) {
+                sectionId = selectedSectionId
+            } else if (sections.length > 0) {
+                sectionId = sections[0].id
+            }
 
             return {
                 selectedSectionId: sectionId,
@@ -84,7 +84,7 @@ class Settings extends Component {
                     ...setting,
                     id: setting.label,
                     ref: React.createRef(),
-                    active: setting.active ? inputs.find(({ id }) => id === setting.id).active : false
+                    active: !!(inputs.find(({ id }) => id === setting.label) || {}).active
                 }))
             }
         });
@@ -93,7 +93,9 @@ class Settings extends Component {
     changeSection = (event) => {
         this.setState({ selectedSectionId: event.currentTarget.dataset.section }, () => {
             const section = this.state.sections.find((section) => section.id === this.state.selectedSectionId);
-            section.ref.current.scrollIntoView();
+            this.scrollContainerRef.current.scrollTo({
+                top: section.ref.current.offsetTop
+            });
         });
     }
 
