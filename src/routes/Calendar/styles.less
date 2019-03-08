@@ -10,17 +10,16 @@
     flex-direction: row;
 
     .calendar {
-        // width: 75%;
         flex: 1;
 
         .months {
-            padding: var(--spacing) calc(var(--spacing) * 2) calc(var(--spacing) * 2) calc(var(--spacing) * 2);
+            padding: var(--spacing) 0 calc(var(--spacing) * 2) 0;
             display: flex;
             flex-direction: row;
-            justify-content: space-evenly;
+            align-items: center;
+            justify-content: center;
 
             .month {
-                margin-right: var(--spacing);
                 font-size: 1.7em;
                 color: var(--color-surfacelighter);
                 cursor: pointer;
@@ -33,8 +32,11 @@
                         color: var(--color-surfacelight);
                     }
                 }
-            }
 
+                &:not(:last-child) {
+                    margin-right: calc(var(--spacing) * 4);
+                }
+            }
         }
 
         .week-days {
@@ -43,7 +45,7 @@
             flex-direction: row;
 
             .day {
-                margin: 0 1px 1px 0;
+                margin-right: calc(var(--focusable-border-size) * 0.5);
                 width: 14%;
                 font-size: 1.2em;
                 color: var(--color-secondarylighter);
@@ -54,26 +56,26 @@
             height: 100%;
 
             .pad {
-                margin: 0 1px 1px 0;
+                margin: 0 calc(var(--focusable-border-size) * 0.5) calc(var(--focusable-border-size) * 0.5) 0;
                 width: 14%;
                 height: 14%;
                 float: left;
             }
 
             .day {
-                margin: 0 1px 1px 0;
+                margin: 0 calc(var(--focusable-border-size) * 0.5) calc(var(--focusable-border-size) * 0.5) 0;
                 width: 14%;
-                height: 16%;
+                height: 14%;
                 float: left;
                 font-size: 1.4em;
-                border: 2px solid transparent;
+                border: var(--focusable-border-size) solid transparent;
                 background-color: var(--color-backgroundlighter);
                 cursor: pointer;
 
                 .date-container {
                     margin: calc(var(--spacing) * 0.5);
-                    width: 34px;
-                    height: 34px;
+                    width: 30px;
+                    height: 30px;
 
                     .date {
                         width: 100%;
@@ -92,14 +94,15 @@
                 }
 
                 .episodes {
-                    margin: 0 2px;
-                    height: 42px;
+                    margin: 0 var(--focusable-border-size) var(--focusable-border-size) var(--focusable-border-size);
+                    height: 34px;
                     display: flex;
                     flex-direction: row;
 
                     .poster {
+                        margin-right: var(--focusable-border-size);
                         display: none;
-                        width: 33%;
+                        width: 25%;
                         height: 100%;
                         background-size: cover;
                         background-repeat: no-repeat;
@@ -109,7 +112,7 @@
                             opacity: 0.4;
                         }
 
-                        &:nth-child(-n+3) {
+                        &:nth-child(-n+4) {
                             display: inline-block;
                         }
                     }
@@ -124,16 +127,16 @@
     }
 
     .future-episodes {
+        padding-right: 10px;
         width: 270px;
-        // width: 25%;
-        // padding: 10px;
         overflow-y: auto;
         overflow-x: hidden;
         scroll-behavior: smooth;
 
         .episode-container {
             margin-bottom: var(--spacing);
-            border: 2px solid transparent;
+            width: 252px;
+            border: var(--focusable-border-size) solid var(--color-background);
             background-color: var(--color-backgroundlighter);
 
             .date {
@@ -143,60 +146,64 @@
             }
 
             .episode {
+                padding: var(--spacing);
                 display: flex;
                 flex-direction: column;
+                justify-content: space-between;
                 cursor: pointer;
 
-                .info {
-                    padding: var(--spacing);
+                .main-info {
                     display: flex;
-                    flex-direction: column;
+                    flex-direction: row;
                     justify-content: space-between;
 
-                    .main-info {
+                    .serie-name {
+                        color: var(--color-surface);
+                    }
+
+                    .episode-number {
+                        color: var(--color-surface);
+                    }
+                }
+
+                .name {
+                    display: none;
+                    padding: calc(var(--spacing) * 0.5) 0 var(--spacing) 0;
+                    color: var(--color-surfacelighter);
+                }
+
+                .description {
+                    display: none;
+                    padding: var(--spacing) 0;
+                    line-height: 1.2em;
+                    color: var(--color-surfacelighter);
+                }
+
+                .watch-button-container {
+                    display: none;
+                    margin: 0 calc(var(--spacing) * 0.5);
+                    padding: var(--spacing);
+                    border-top: calc(var(--focusable-border-size) * 0.5) solid var(--color-background);
+                    cursor: pointer;
+
+                    .watch-button {
                         display: flex;
                         flex-direction: row;
-                        justify-content: space-between;
+                        align-items: center;
+                        justify-content: center;
 
-                        .serie-name {
-                            color: var(--color-surface);
+                        .icon {
+                            margin-right: var(--spacing);
+                            width: 8%;
+                            fill: var(--color-surfacelight);
                         }
 
-                        .episode-number {
-                            color: var(--color-surface);
+                        .label {
+                            color: var(--color-surfacelight);
                         }
-                    }
 
-                    .name {
-                        display: none;
-                        padding: calc(var(--spacing) * 0.5) 0 var(--spacing) 0;
-                        color: var(--color-surfacelighter);
-                    }
-
-                    .description {
-                        display: none;
-                        padding: var(--spacing) 0;
-                        line-height: 1.2em;
-                        color: var(--color-surfacelighter);
-                    }
-
-                    .watch-button-container {
-                        display: none;
-                        margin: 0 calc(var(--spacing) * 0.5);
-                        padding: var(--spacing);
-                        border-top: 1px solid var(--color-background);
-                        cursor: pointer;
-
-                        .watch-button {
-                            display: flex;
-                            flex-direction: row;
-                            align-items: center;
-                            justify-content: center;
-
+                        &:hover {
                             .icon {
-                                margin-right: var(--spacing);
-                                width: 6%;
-                                height: 6%;
                                 fill: var(--color-surfacelighter);
                             }
 
@@ -208,22 +215,24 @@
                 }
 
                 &.selected {
-                    .info {
-                        padding-bottom: 0;
+                    padding-bottom: 0;
+                    background-color: var(--color-primarydark);
+                    cursor: default;
+
+                    .name {
+                        display: inline-block;
+                    }
+
+                    .description {
+                        display: inline-block;
+                    }
+
+                    .watch-button-container {
+                        display: inline-block;
+                    }
+
+                    &:hover {
                         background-color: var(--color-primarydark);
-                        cursor: default;
-
-                        .name {
-                            display: inline-block;
-                        }
-
-                        .description {
-                            display: inline-block;
-                        }
-
-                        .watch-button-container {
-                            display: inline-block;
-                        }
                     }
                 }
 
