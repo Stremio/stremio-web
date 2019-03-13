@@ -1,5 +1,7 @@
 .calendar-container {
     --spacing: 16px;
+    --episodes-height: 50px;
+    --future-episodes-width: 270px;
     font-size: 14px;
 }
 
@@ -11,16 +13,22 @@
 
     .calendar {
         flex: 1;
+        padding-right: calc(var(--spacing) * 0.5);
 
         .months {
-            padding: var(--spacing) 0 calc(var(--spacing) * 2) 0;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: center;
+            padding-top: calc(var(--spacing) * 0.5);
+            height: 8%;
+            text-align: center;
 
             .month {
+                width: 12%;
+                display: inline-block;
                 font-size: 1.7em;
+                line-height: 1.2em;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                vertical-align: middle;
                 color: var(--color-surfacelighter);
                 cursor: pointer;
 
@@ -33,109 +41,109 @@
                     }
                 }
 
-                &:not(:last-child) {
-                    margin-right: calc(var(--spacing) * 4);
+                &:not(:first-child):not(:last-child) {
+                    margin: 0 var(--spacing);
                 }
-            }
-        }
-
-        .week-days {
-            margin-bottom: var(--spacing);
-            display: flex;
-            flex-direction: row;
-
-            .day {
-                margin-right: calc(var(--focusable-border-size) * 0.5);
-                width: 14%;
-                font-size: 1.2em;
-                color: var(--color-secondarylighter);
             }
         }
 
         .month-days {
-            height: 100%;
+            width: 100%;
+            height: 92%;
+            table-layout: fixed;
 
-            .pad {
-                margin: 0 calc(var(--focusable-border-size) * 0.5) calc(var(--focusable-border-size) * 0.5) 0;
-                width: 14%;
-                height: 14%;
-                float: left;
+            .week-days {
+                .day {
+                    padding: 0 calc(var(--spacing) * 0.5) calc(var(--spacing) * 0.5) 0;
+                    font-size: 1.2em;
+                    line-height: 1.2em;
+                    text-align: left;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    color: var(--color-secondarylighter);
+                }
             }
 
-            .day {
-                margin: 0 calc(var(--focusable-border-size) * 0.5) calc(var(--focusable-border-size) * 0.5) 0;
-                width: 14%;
-                height: 14%;
-                float: left;
-                font-size: 1.4em;
-                border: var(--focusable-border-size) solid transparent;
-                background-color: var(--color-backgroundlighter);
-                cursor: pointer;
+            .row {
+                .day {
+                    border: var(--focusable-border-size) solid transparent;
+                    background-color: var(--color-backgroundlighter);
+                    cursor: pointer;
 
-                .date-container {
-                    margin: calc(var(--spacing) * 0.5);
-                    width: 30px;
-                    height: 30px;
+                    .date-container {
+                        margin: calc(var(--spacing) * 0.5);
+                        width: calc(var(--episodes-height) * 0.64);
+                        height: calc(var(--episodes-height) * 0.64);
 
-                    .date {
-                        width: 100%;
-                        height: 100%;
+                        .date {
+                            width: 100%;
+                            height: 100%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            font-size: 1.4em;
+                            color: var(--color-secondarylighter);
+
+                            &.selected {
+                                border-radius: 50%;
+                                color: var(--color-surfacelighter);
+                                background-color: var(--color-primary);
+                            }
+                        }
+                    }
+
+                    .episodes {
+                        margin: var(--focusable-border-size);
+                        height: var(--episodes-height);
                         display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        color: var(--color-secondarylighter);
+                        flex-direction: row;
 
-                        &.selected {
-                            border-radius: 50%;
-                            color: var(--color-surfacelighter);
-                            background-color: var(--color-primary);
+                        .poster {
+                            margin-right: var(--focusable-border-size);
+                            display: none;
+                            width: 25%;
+                            height: 100%;
+                            background-size: cover;
+                            background-repeat: no-repeat;
+                            background-position: center;
+
+                            &.past {
+                                opacity: 0.4;
+                            }
+
+                            &:nth-child(-n+4) {
+                                display: block;
+                            }
+                        }
+
+                        &.small {
+                            height: calc(var(--episodes-height) * 0.64);
+                        }
+
+                        &.big {
+                            height: calc(var(--episodes-height) * 1.54);
                         }
                     }
-                }
 
-                .episodes {
-                    margin: 0 var(--focusable-border-size) var(--focusable-border-size) var(--focusable-border-size);
-                    height: 34px;
-                    display: flex;
-                    flex-direction: row;
-
-                    .poster {
-                        margin-right: var(--focusable-border-size);
-                        display: none;
-                        width: 25%;
-                        height: 100%;
-                        background-size: cover;
-                        background-repeat: no-repeat;
-                        background-position: center;
-
-                        &.past {
-                            opacity: 0.4;
-                        }
-
-                        &:nth-child(-n+4) {
-                            display: inline-block;
-                        }
+                    &.selected {
+                        border-color: var(--color-primary);
+                        background-color: var(--color-backgroundlighter60);
                     }
-                }
-
-                &.selected {
-                    border-color: var(--color-primary);
-                    background-color: var(--color-backgroundlighter60);
                 }
             }
         }
     }
 
     .future-episodes {
-        padding-right: 10px;
-        width: 270px;
+        padding-right: calc(var(--spacing) * 0.5);
+        width: var(--future-episodes-width);
         overflow-y: auto;
         overflow-x: hidden;
         scroll-behavior: smooth;
 
         .episode-container {
-            margin-bottom: var(--spacing);
-            width: 252px;
+            margin-bottom: calc(var(--spacing) * 0.5);
             border: var(--focusable-border-size) solid var(--color-background);
             background-color: var(--color-backgroundlighter);
 
@@ -147,9 +155,6 @@
 
             .episode {
                 padding: var(--spacing);
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
                 cursor: pointer;
 
                 .main-info {
@@ -158,17 +163,28 @@
                     justify-content: space-between;
 
                     .serie-name {
+                        margin-right: 5%;
+                        width: 75%;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
                         color: var(--color-surface);
                     }
 
                     .episode-number {
+                        width: 20%;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
                         color: var(--color-surface);
                     }
                 }
 
                 .name {
+                    width: 100%;
                     display: none;
                     padding: calc(var(--spacing) * 0.5) 0 var(--spacing) 0;
+                    overflow-wrap: break-word;
                     color: var(--color-surfacelighter);
                 }
 
@@ -193,16 +209,21 @@
                         justify-content: center;
 
                         .icon {
-                            margin-right: var(--spacing);
+                            margin-right: 8%;
                             width: 8%;
                             fill: var(--color-surfacelight);
                         }
 
                         .label {
+                            max-width: 84%;
+                            word-break: break-all; //Firefox doesn't support { break-word }
+                            word-break: break-word;
                             color: var(--color-surfacelight);
                         }
+                    }
 
-                        &:hover {
+                    &:hover {
+                        .watch-button {
                             .icon {
                                 fill: var(--color-surfacelighter);
                             }
@@ -219,16 +240,30 @@
                     background-color: var(--color-primarydark);
                     cursor: default;
 
+                    .main-info {
+                        .serie-name {
+                            white-space: unset;
+                            overflow: visible;
+                            overflow-wrap: break-word;
+                        }
+
+                        .episode-number {
+                            white-space: unset;
+                            overflow: visible;
+                            overflow-wrap: break-word;
+                        }
+                    }
+
                     .name {
-                        display: inline-block;
+                        display: block;
                     }
 
                     .description {
-                        display: inline-block;
+                        display: block;
                     }
 
                     .watch-button-container {
-                        display: inline-block;
+                        display: block;
                     }
 
                     &:hover {
