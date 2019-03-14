@@ -1,7 +1,7 @@
 .calendar-container {
     --spacing: 16px;
     --episodes-height: 50px;
-    --future-episodes-width: 270px;
+    --videos-scroll-container-width: 270px;
     font-size: 14px;
 }
 
@@ -21,6 +21,7 @@
             text-align: center;
 
             .month {
+                padding: 2px;
                 width: 12%;
                 display: inline-block;
                 font-size: 1.7em;
@@ -29,6 +30,7 @@
                 white-space: nowrap;
                 text-overflow: ellipsis;
                 vertical-align: middle;
+                border: 1px solid transparent;
                 color: var(--color-surfacelighter);
                 cursor: pointer;
 
@@ -85,7 +87,7 @@
                             font-size: 1.4em;
                             color: var(--color-secondarylighter);
 
-                            &.selected {
+                            &.today {
                                 border-radius: 50%;
                                 color: var(--color-surfacelighter);
                                 background-color: var(--color-primary);
@@ -93,7 +95,7 @@
                         }
                     }
 
-                    .episodes {
+                    .videos {
                         margin: var(--focusable-border-size);
                         height: var(--episodes-height);
                         display: flex;
@@ -135,14 +137,14 @@
         }
     }
 
-    .future-episodes {
+    .videos-scroll-container {
         padding-right: calc(var(--spacing) * 0.5);
-        width: var(--future-episodes-width);
+        width: var(--videos-scroll-container-width);
         overflow-y: auto;
         overflow-x: hidden;
         scroll-behavior: smooth;
 
-        .episode-container {
+        .videos-container {
             margin-bottom: calc(var(--spacing) * 0.5);
             border: var(--focusable-border-size) solid var(--color-background);
             background-color: var(--color-backgroundlighter);
@@ -151,9 +153,10 @@
                 padding: var(--spacing);
                 font-size: 1.2em;
                 color: var(--color-primarylight);
+                cursor: pointer;
             }
 
-            .episode {
+            .video {
                 padding: var(--spacing);
                 cursor: pointer;
 
@@ -162,7 +165,7 @@
                     flex-direction: row;
                     justify-content: space-between;
 
-                    .serie-name {
+                    .meta-item-name {
                         margin-right: 5%;
                         width: 75%;
                         white-space: nowrap;
@@ -171,7 +174,7 @@
                         color: var(--color-surface);
                     }
 
-                    .episode-number {
+                    .video-number {
                         width: 20%;
                         white-space: nowrap;
                         overflow: hidden;
