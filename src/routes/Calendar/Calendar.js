@@ -145,7 +145,7 @@ class Calendar extends Component {
                                                                 .filter((video) => video.released.getFullYear() === this.state.date.getFullYear() && video.released.getMonth() === this.state.date.getMonth() && video.released.getDate() === (row * 7) + (day - padsCount + 1))
                                                                 .map((video) =>
                                                                     <div key={video.id}
-                                                                        style={{ backgroundImage: `url('${metaitem.background}')` }}
+                                                                        style={{ backgroundImage: `url('${metaitem.poster}')` }}
                                                                         className={classnames(styles['poster'], { [styles['past']]: video.released.getTime() < new Date().getTime() })}
                                                                         data-video-id={video.id}
                                                                         onClick={this.showVideoInfo}
@@ -225,73 +225,74 @@ class Calendar extends Component {
 }
 
 Calendar.propTypes = {
-    metaItems: PropTypes.arrayOf(PropTypes.object).isRequired
+    metaItems: PropTypes.arrayOf(PropTypes.shape({
+        poster: PropTypes.string,
+        name: PropTypes.string.isRequired,
+        videos: PropTypes.arrayOf(PropTypes.shape({
+            id: PropTypes.string.isRequired,
+            name: PropTypes.string.isRequired,
+            description: PropTypes.string,
+            released: PropTypes.PropTypes.instanceOf(Date),
+            season: PropTypes.number,
+            episode: PropTypes.number
+        }))
+    }))
 };
 Calendar.defaultProps = {
     metaItems: [
         {
-            background: 'https://images.metahub.space/poster/medium/tt2306299/img',
-            releaseInfo: '2018',
-            released: new Date(2018, 4, 23),
+            poster: 'https://images.metahub.space/poster/medium/tt2306299/img',
             name: 'Vikings',
             videos: [
-                { id: '1', poster: 'https://www.stremio.com/websiste/home-stremio.png', episode: 16, name: 'Homeland', description: 'Bjorn achieves one of Ragnars dreams. Back in Kattegat, Ivar hatches a new plan while preparing for a divine arrival. In Iceland, a settler returns in a terrible state. King Alfred faces his greatest threat yet.', released: new Date(2019, 2, 1), isUpcoming: true, isWatched: true, season: 5 },
-                { id: '2', poster: 'https://www.stremio.com/websiste/home-stremio.png', episode: 17, name: 'The Buddha', description: 'Bjorn achieves one of Ragnars dreams. Back in Kattegat, Ivar hatches a new plan while preparing for a divine arrival. In Iceland, a settler returns in a terrible state. King Alfred faces his greatest threat yet.', released: new Date(2019, 2, 2), isUpcoming: true, isWatched: true, season: 5 },
-                { id: '3', poster: 'https://www.stremio.com/websiste/home-stremio.png', episode: 18, name: 'Boneless', description: 'Bjorn achieves one of Ragnars dreams. Back in Kattegat, Ivar hatches a new plan while preparing for a divine arrival. In Iceland, a settler returns in a terrible state. King Alfred faces his greatest threat yet.', released: new Date(2019, 2, 3), isUpcoming: true, isWatched: true, season: 5 },
-                { id: '4', poster: 'https://www.stremio.com/websiste/home-stremio.png', episode: 19, name: 'Revenge', description: 'Bjorn achieves one of Ragnars dreams. Back in Kattegat, Ivar hatches a new plan while preparing for a divine arrival. In Iceland, a settler returns in a terrible state. King Alfred faces his greatest threat yet.', released: new Date(2019, 2, 4), isUpcoming: true, isWatched: true, season: 5 },
-                { id: '5', poster: 'https://www.stremio.com/websiste/home-stremio.png', episode: 20, name: 'Ragnarok', description: 'Bjorn achieves one of Ragnars dreams. Back in Kattegat, Ivar hatches a new plan while preparing for a divine arrival. In Iceland, a settler returns in a terrible state. King Alfred faces his greatest threat yet.', released: new Date(2019, 2, 5), isUpcoming: true, isWatched: true, season: 5 }
+                { id: '1', episode: 16, name: 'Homeland', description: 'Bjorn achieves one of Ragnars dreams. Back in Kattegat, Ivar hatches a new plan while preparing for a divine arrival. In Iceland, a settler returns in a terrible state. King Alfred faces his greatest threat yet.', released: new Date(2019, 2, 1), season: 5 },
+                { id: '2', episode: 17, name: 'The Buddha', description: 'Bjorn achieves one of Ragnars dreams. Back in Kattegat, Ivar hatches a new plan while preparing for a divine arrival. In Iceland, a settler returns in a terrible state. King Alfred faces his greatest threat yet.', released: new Date(2019, 2, 2), season: 5 },
+                { id: '3', episode: 18, name: 'Boneless', description: 'Bjorn achieves one of Ragnars dreams. Back in Kattegat, Ivar hatches a new plan while preparing for a divine arrival. In Iceland, a settler returns in a terrible state. King Alfred faces his greatest threat yet.', released: new Date(2019, 2, 3), season: 5 },
+                { id: '4', episode: 19, name: 'Revenge', description: 'Bjorn achieves one of Ragnars dreams. Back in Kattegat, Ivar hatches a new plan while preparing for a divine arrival. In Iceland, a settler returns in a terrible state. King Alfred faces his greatest threat yet.', released: new Date(2019, 2, 4), season: 5 },
+                { id: '5', episode: 20, name: 'Ragnarok', description: 'Bjorn achieves one of Ragnars dreams. Back in Kattegat, Ivar hatches a new plan while preparing for a divine arrival. In Iceland, a settler returns in a terrible state. King Alfred faces his greatest threat yet.', released: new Date(2019, 2, 5), season: 5 }
             ]
         },
         {
-            background: 'https://images.metahub.space/poster/medium/tt1520211/img',
-            releaseInfo: '2018',
-            released: new Date(2018, 4, 23),
+            poster: 'https://images.metahub.space/poster/medium/tt1520211/img',
             name: 'The Walking Dead',
             videos: [
-                { id: '6', poster: 'https://www.stremio.com/websiste/home-stremio.png', episode: 16, name: 'Sing me a song', description: 'Bjorn achieves one of Ragnars dreams. Back in Kattegat, Ivar hatches a new plan while preparing for a divine arrival. In Iceland, a settler returns in a terrible state. King Alfred faces his greatest threat yet.', released: new Date(2019, 2, 7), isUpcoming: true, isWatched: true, season: 5 },
-                { id: '7', poster: 'https://www.stremio.com/websiste/home-stremio.png', episode: 17, name: 'Say yes', description: 'Bjorn achieves one of Ragnars dreams. Back in Kattegat, Ivar hatches a new plan while preparing for a divine arrival. In Iceland, a settler returns in a terrible state. King Alfred faces his greatest threat yet.', released: new Date(2019, 2, 12), isUpcoming: true, isWatched: true, season: 5 },
-                { id: '8', poster: 'https://www.stremio.com/websiste/home-stremio.png', episode: 18, name: 'Bury me here', description: 'Bjorn achieves one of Ragnars dreams. Back in Kattegat, Ivar hatches a new plan while preparing for a divine arrival. In Iceland, a settler returns in a terrible state. King Alfred faces his greatest threat yet.', released: new Date(2019, 2, 19), isUpcoming: true, isWatched: true, season: 5 },
-                { id: '9', poster: 'https://www.stremio.com/websiste/home-stremio.png', episode: 19, name: 'Honor', description: 'Bjorn achieves one of Ragnars dreams. Back in Kattegat, Ivar hatches a new plan while preparing for a divine arrival. In Iceland, a settler returns in a terrible state. King Alfred faces his greatest threat yet.', released: new Date(2019, 4, 3), isUpcoming: true, isWatched: true, season: 5 },
-                { id: '10', poster: 'https://www.stremio.com/websiste/home-stremio.png', episode: 20, name: 'The Bridge', description: 'Bjorn achieves one of Ragnars dreams. Back in Kattegat, Ivar hatches a new plan while preparing for a divine arrival. In Iceland, a settler returns in a terrible state. King Alfred faces his greatest threat yet.', released: new Date(2019, 5, 10), isUpcoming: true, isWatched: true, season: 5 }
+                { id: '6', episode: 16, name: 'Sing me a song', description: 'Bjorn achieves one of Ragnars dreams. Back in Kattegat, Ivar hatches a new plan while preparing for a divine arrival. In Iceland, a settler returns in a terrible state. King Alfred faces his greatest threat yet.', released: new Date(2019, 2, 7), season: 5 },
+                { id: '7', episode: 17, name: 'Say yes', description: 'Bjorn achieves one of Ragnars dreams. Back in Kattegat, Ivar hatches a new plan while preparing for a divine arrival. In Iceland, a settler returns in a terrible state. King Alfred faces his greatest threat yet.', released: new Date(2019, 2, 12), season: 5 },
+                { id: '8', episode: 18, name: 'Bury me here', description: 'Bjorn achieves one of Ragnars dreams. Back in Kattegat, Ivar hatches a new plan while preparing for a divine arrival. In Iceland, a settler returns in a terrible state. King Alfred faces his greatest threat yet.', released: new Date(2019, 2, 19), season: 5 },
+                { id: '9', episode: 19, name: 'Honor', description: 'Bjorn achieves one of Ragnars dreams. Back in Kattegat, Ivar hatches a new plan while preparing for a divine arrival. In Iceland, a settler returns in a terrible state. King Alfred faces his greatest threat yet.', released: new Date(2019, 4, 3), season: 5 },
+                { id: '10', episode: 20, name: 'The Bridge', description: 'Bjorn achieves one of Ragnars dreams. Back in Kattegat, Ivar hatches a new plan while preparing for a divine arrival. In Iceland, a settler returns in a terrible state. King Alfred faces his greatest threat yet.', released: new Date(2019, 5, 10), season: 5 }
             ]
         },
         {
-            background: 'https://images.metahub.space/poster/medium/tt0944947/img',
-            releaseInfo: '2018',
-            released: new Date(2018, 4, 23),
+            poster: 'https://images.metahub.space/poster/medium/tt0944947/img',
             name: 'Game of Thrones',
             videos: [
-                { id: '11', poster: 'https://www.stremio.com/websiste/home-stremio.png', episode: 16, name: 'The North Remembers', description: 'Bjorn achieves one of Ragnars dreams. Back in Kattegat, Ivar hatches a new plan while preparing for a divine arrival. In Iceland, a settler returns in a terrible state. King Alfred faces his greatest threat yet.', released: new Date(2019, 2, 4), isUpcoming: true, isWatched: true, season: 5 },
-                { id: '12', poster: 'https://www.stremio.com/websiste/home-stremio.png', episode: 17, name: 'Garden of Bones', description: 'Bjorn achieves one of Ragnars dreams. Back in Kattegat, Ivar hatches a new plan while preparing for a divine arrival. In Iceland, a settler returns in a terrible state. King Alfred faces his greatest threat yet.', released: new Date(2019, 2, 10), isUpcoming: true, isWatched: true, season: 5 },
-                { id: '13', poster: 'https://www.stremio.com/websiste/home-stremio.png', episode: 18, name: 'Dragonstone', description: 'Bjorn achieves one of Ragnars dreams. Back in Kattegat, Ivar hatches a new plan while preparing for a divine arrival. In Iceland, a settler returns in a terrible state. King Alfred faces his greatest threat yet.', released: new Date(2019, 3, 17), isUpcoming: true, isWatched: true, season: 5 },
-                { id: '14', poster: 'https://www.stremio.com/websiste/home-stremio.png', episode: 19, name: 'Stormborn', description: 'Bjorn achieves one of Ragnars dreams. Back in Kattegat, Ivar hatches a new plan while preparing for a divine arrival. In Iceland, a settler returns in a terrible state. King Alfred faces his greatest threat yet.', released: new Date(2019, 4, 3), isUpcoming: true, isWatched: true, season: 5 },
-                { id: '15', poster: 'https://www.stremio.com/websiste/home-stremio.png', episode: 20, name: 'Eastwatch', description: 'Bjorn achieves one of Ragnars dreams. Back in Kattegat, Ivar hatches a new plan while preparing for a divine arrival. In Iceland, a settler returns in a terrible state. King Alfred faces his greatest threat yet.', released: new Date(2019, 5, 10), isUpcoming: true, isWatched: true, season: 5 }
+                { id: '11', episode: 16, name: 'The North Remembers', description: 'Bjorn achieves one of Ragnars dreams. Back in Kattegat, Ivar hatches a new plan while preparing for a divine arrival. In Iceland, a settler returns in a terrible state. King Alfred faces his greatest threat yet.', released: new Date(2019, 2, 4), season: 5 },
+                { id: '12', episode: 17, name: 'Garden of Bones', description: 'Bjorn achieves one of Ragnars dreams. Back in Kattegat, Ivar hatches a new plan while preparing for a divine arrival. In Iceland, a settler returns in a terrible state. King Alfred faces his greatest threat yet.', released: new Date(2019, 2, 10), season: 5 },
+                { id: '13', episode: 18, name: 'Dragonstone', description: 'Bjorn achieves one of Ragnars dreams. Back in Kattegat, Ivar hatches a new plan while preparing for a divine arrival. In Iceland, a settler returns in a terrible state. King Alfred faces his greatest threat yet.', released: new Date(2019, 3, 17), season: 5 },
+                { id: '14', episode: 19, name: 'Stormborn', description: 'Bjorn achieves one of Ragnars dreams. Back in Kattegat, Ivar hatches a new plan while preparing for a divine arrival. In Iceland, a settler returns in a terrible state. King Alfred faces his greatest threat yet.', released: new Date(2019, 4, 3), season: 5 },
+                { id: '15', episode: 20, name: 'Eastwatch', description: 'Bjorn achieves one of Ragnars dreams. Back in Kattegat, Ivar hatches a new plan while preparing for a divine arrival. In Iceland, a settler returns in a terrible state. King Alfred faces his greatest threat yet.', released: new Date(2019, 5, 10), season: 5 }
             ]
         },
         {
-            background: 'https://images.metahub.space/poster/medium/tt0411008/img',
-            releaseInfo: '2018',
-            released: new Date(2018, 4, 23),
+            poster: 'https://images.metahub.space/poster/medium/tt0411008/img',
             name: 'Lost',
             videos: [
-                { id: '16', poster: 'https://www.stremio.com/websiste/home-stremio.png', episode: 16, name: 'The Lie', description: 'Bjorn achieves one of Ragnars dreams. Back in Kattegat, Ivar hatches a new plan while preparing for a divine arrival. In Iceland, a settler returns in a terrible state. King Alfred faces his greatest threat yet.', released: new Date(2019, 2, 4), isUpcoming: true, isWatched: true, season: 5 },
-                { id: '17', poster: 'https://www.stremio.com/websiste/home-stremio.png', episode: 17, name: '316', description: 'Bjorn achieves one of Ragnars dreams. Back in Kattegat, Ivar hatches a new plan while preparing for a divine arrival. In Iceland, a settler returns in a terrible state. King Alfred faces his greatest threat yet.', released: new Date(2019, 2, 10), isUpcoming: true, isWatched: true, season: 5 },
-                { id: '18', poster: 'https://www.stremio.com/websiste/home-stremio.png', episode: 18, name: 'Dead Is Dead', description: 'Bjorn achieves one of Ragnars dreams. Back in Kattegat, Ivar hatches a new plan while preparing for a divine arrival. In Iceland, a settler returns in a terrible state. King Alfred faces his greatest threat yet.', released: new Date(2019, 2, 17), isUpcoming: true, isWatched: true, season: 5 },
-                { id: '19', poster: 'https://www.stremio.com/websiste/home-stremio.png', episode: 19, name: 'Racon', description: 'Bjorn achieves one of Ragnars dreams. Back in Kattegat, Ivar hatches a new plan while preparing for a divine arrival. In Iceland, a settler returns in a terrible state. King Alfred faces his greatest threat yet.', released: new Date(2019, 4, 3), isUpcoming: true, isWatched: true, season: 5 },
-                { id: '20', poster: 'https://www.stremio.com/websiste/home-stremio.png', episode: 20, name: 'Sundown', description: 'Bjorn achieves one of Ragnars dreams. Back in Kattegat, Ivar hatches a new plan while preparing for a divine arrival. In Iceland, a settler returns in a terrible state. King Alfred faces his greatest threat yet.', released: new Date(2019, 2, 10), isUpcoming: true, isWatched: true, season: 5 }
+                { id: '16', episode: 16, name: 'The Lie', description: 'Bjorn achieves one of Ragnars dreams. Back in Kattegat, Ivar hatches a new plan while preparing for a divine arrival. In Iceland, a settler returns in a terrible state. King Alfred faces his greatest threat yet.', released: new Date(2019, 2, 4), season: 5 },
+                { id: '17', episode: 17, name: '316', description: 'Bjorn achieves one of Ragnars dreams. Back in Kattegat, Ivar hatches a new plan while preparing for a divine arrival. In Iceland, a settler returns in a terrible state. King Alfred faces his greatest threat yet.', released: new Date(2019, 2, 10), season: 5 },
+                { id: '18', episode: 18, name: 'Dead Is Dead', description: 'Bjorn achieves one of Ragnars dreams. Back in Kattegat, Ivar hatches a new plan while preparing for a divine arrival. In Iceland, a settler returns in a terrible state. King Alfred faces his greatest threat yet.', released: new Date(2019, 2, 17), season: 5 },
+                { id: '19', episode: 19, name: 'Racon', description: 'Bjorn achieves one of Ragnars dreams. Back in Kattegat, Ivar hatches a new plan while preparing for a divine arrival. In Iceland, a settler returns in a terrible state. King Alfred faces his greatest threat yet.', released: new Date(2019, 4, 3), season: 5 },
+                { id: '20', episode: 20, name: 'Sundown', description: 'Bjorn achieves one of Ragnars dreams. Back in Kattegat, Ivar hatches a new plan while preparing for a divine arrival. In Iceland, a settler returns in a terrible state. King Alfred faces his greatest threat yet.', released: new Date(2019, 2, 10), season: 5 }
             ]
         },
         {
-            background: 'https://images.metahub.space/poster/medium/tt0813715/img',
-            releaseInfo: '2018',
-            released: new Date(2018, 4, 23),
+            poster: 'https://images.metahub.space/poster/medium/tt0813715/img',
             name: 'Heroes',
             videos: [
-                { id: '21', poster: 'https://www.stremio.com/websiste/home-stremio.png', episode: 16, name: 'Genesis', description: 'Bjorn achieves one of Ragnars dreams. Back in Kattegat, Ivar hatches a new plan while preparing for a divine arrival. In Iceland, a settler returns in a terrible state. King Alfred faces his greatest threat yet.', released: new Date(2019, 3, 3), isUpcoming: true, isWatched: true, season: 5 },
-                { id: '22', poster: 'https://www.stremio.com/websiste/home-stremio.png', episode: 17, name: 'Six Months Ago', description: 'Bjorn achieves one of Ragnars dreams. Back in Kattegat, Ivar hatches a new plan while preparing for a divine arrival. In Iceland, a settler returns in a terrible state. King Alfred faces his greatest threat yet.', released: new Date(2019, 3, 10), isUpcoming: true, isWatched: true, season: 5 },
-                { id: '23', poster: 'https://www.stremio.com/websiste/home-stremio.png', episode: 18, name: 'Fallout', description: 'Bjorn achieves one of Ragnars dreams. Back in Kattegat, Ivar hatches a new plan while preparing for a divine arrival. In Iceland, a settler returns in a terrible state. King Alfred faces his greatest threat yet.', released: new Date(2019, 3, 17), isUpcoming: true, isWatched: true, season: 5 },
-                { id: '24', poster: 'https://www.stremio.com/websiste/home-stremio.png', episode: 19, name: 'Parasite', description: 'Bjorn achieves one of Ragnars dreams. Back in Kattegat, Ivar hatches a new plan while preparing for a divine arrival. In Iceland, a settler returns in a terrible state. King Alfred faces his greatest threat yet.', released: new Date(2019, 3, 8), isUpcoming: true, isWatched: true, season: 5 },
-                { id: '25', poster: 'https://www.stremio.com/websiste/home-stremio.png', episode: 20, name: 'The Wall', description: 'Bjorn achieves one of Ragnars dreams. Back in Kattegat, Ivar hatches a new plan while preparing for a divine arrival. In Iceland, a settler returns in a terrible state. King Alfred faces his greatest threat yet.', released: new Date(2019, 5, 10), isUpcoming: true, isWatched: true, season: 5 }
+                { id: '21', episode: 16, name: 'Genesis', description: 'Bjorn achieves one of Ragnars dreams. Back in Kattegat, Ivar hatches a new plan while preparing for a divine arrival. In Iceland, a settler returns in a terrible state. King Alfred faces his greatest threat yet.', released: new Date(2019, 3, 3), season: 5 },
+                { id: '22', episode: 17, name: 'Six Months Ago', description: 'Bjorn achieves one of Ragnars dreams. Back in Kattegat, Ivar hatches a new plan while preparing for a divine arrival. In Iceland, a settler returns in a terrible state. King Alfred faces his greatest threat yet.', released: new Date(2019, 3, 10), season: 5 },
+                { id: '23', episode: 18, name: 'Fallout', description: 'Bjorn achieves one of Ragnars dreams. Back in Kattegat, Ivar hatches a new plan while preparing for a divine arrival. In Iceland, a settler returns in a terrible state. King Alfred faces his greatest threat yet.', released: new Date(2019, 3, 17), season: 5 },
+                { id: '24', episode: 19, name: 'Parasite', description: 'Bjorn achieves one of Ragnars dreams. Back in Kattegat, Ivar hatches a new plan while preparing for a divine arrival. In Iceland, a settler returns in a terrible state. King Alfred faces his greatest threat yet.', released: new Date(2019, 3, 8), season: 5 },
+                { id: '25', episode: 20, name: 'The Wall', description: 'Bjorn achieves one of Ragnars dreams. Back in Kattegat, Ivar hatches a new plan while preparing for a divine arrival. In Iceland, a settler returns in a terrible state. King Alfred faces his greatest threat yet.', released: new Date(2019, 5, 10), season: 5 }
             ]
         }
     ]
