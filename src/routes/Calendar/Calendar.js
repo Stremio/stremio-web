@@ -16,8 +16,7 @@ class Calendar extends Component {
 
         this.state = {
             date: new Date(),
-            videoId: '',
-            selectedDate: new Date()
+            videoId: ''
         };
     }
 
@@ -27,17 +26,12 @@ class Calendar extends Component {
 
     shouldComponentUpdate(nextProps, nextState) {
         return nextState.date !== this.state.date ||
-            nextState.videoId !== this.state.videoId ||
-            nextState.selectedDate !== this.state.selectedDate;
+            nextState.videoId !== this.state.videoId;
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevState.selectedDate !== this.state.selectedDate) {
+        if (prevState.date !== this.state.date) {
             this.scrollToSelectedVideo();
-        }
-
-        if (prevState.date.getMonth() !== this.state.date.getMonth()) {
-            this.setState({ selectedDate: new Date(this.state.date.getFullYear(), this.state.date.getMonth(), 1) });
         }
     }
 
@@ -51,7 +45,19 @@ class Calendar extends Component {
     }
 
     changeDate = (event) => {
-        this.setState({ date: new Date(parseInt(event.currentTarget.dataset.date)) });
+        const date = new Date(parseInt(event.currentTarget.dataset.date));
+
+        var videosIds = this.props.metaItems
+            .map((metaitem) => metaitem.videos
+                .filter((video) => video.released.getFullYear() === this.state.date.getFullYear() && video.released.getMonth() === this.state.date.getMonth() && video.released.getDate() === date.getDate())
+                .map((video) => video.id))
+            .filter((videos) => videos.length > 0);
+
+        if (videosIds.length > 0) {
+            this.setState({ date, videoId: videosIds[0][0] });
+        } else {
+            this.setState({ date });
+        }
     }
 
     showVideoInfo = (event) => {
@@ -65,23 +71,7 @@ class Calendar extends Component {
                 return result;
             }, [])[0].released;
 
-        this.setState({ videoId: event.currentTarget.dataset.videoId, selectedDate: new Date(selectedVideoDate) });
-    }
-
-    changeSelectedDate = (event) => {
-        const selectedDate = new Date(event.currentTarget.dataset.day);
-
-        var videosIds = this.props.metaItems
-            .map((metaitem) => metaitem.videos
-                .filter((video) => video.released.getFullYear() === this.state.date.getFullYear() && video.released.getMonth() === this.state.date.getMonth() && video.released.getDate() === selectedDate.getDate())
-                .map((video) => video.id))
-            .filter((videos) => videos.length > 0);
-
-        if (videosIds.length > 0) {
-            this.setState({ videoId: videosIds[0][0], selectedDate });
-        } else {
-            this.setState({ selectedDate });
-        }
+        this.setState({ videoId: event.currentTarget.dataset.videoId, date: new Date(selectedVideoDate) });
     }
 
     getMonthInfo = (date) => {
@@ -123,9 +113,9 @@ class Calendar extends Component {
             <div className={styles['calendar-container']}>
                 <div className={styles['calendar']}>
                     <div className={styles['months']}>
-                        {this.renderMonthButton(new Date((new Date(this.state.date)).setMonth(this.state.date.getMonth() - 1)))}
-                        {this.renderMonthButton(new Date(this.state.date))}
-                        {this.renderMonthButton(new Date((new Date(this.state.date)).setMonth(this.state.date.getMonth() + 1)))}
+                        {this.renderMonthButton(new Date(new Date(new Date((new Date(this.state.date)).setMonth(this.state.date.getMonth() - 1))).setDate(1)))}
+                        {this.renderMonthButton(new Date(new Date(new Date(this.state.date)).setDate(1)))}
+                        {this.renderMonthButton(new Date(new Date(new Date((new Date(this.state.date)).setMonth(this.state.date.getMonth() + 1))).setDate(1)))}
                     </div>
                     <table className={styles['month-days']}>
                         <tbody>
@@ -142,12 +132,12 @@ class Calendar extends Component {
                                             (row * 7) + (day - padsCount) < daysCount
                                                 ?
                                                 <td key={day}
-                                                    className={classnames(styles['day'], { [styles['selected']]: this.state.selectedDate.getDate() === (row * 7) + (day - padsCount + 1) })}
-                                                    data-day={new Date(this.state.date.getFullYear(), this.state.date.getMonth(), (row * 7) + (day - padsCount + 1))}
-                                                    onClick={this.changeSelectedDate}
+                                                    className={classnames(styles['day'], { [styles['selected']]: this.state.date.getDate() === (row * 7) + (day - padsCount + 1) })}
+                                                    data-date={new Date(this.state.date.getFullYear(), this.state.date.getMonth(), (row * 7) + (day - padsCount + 1)).getTime()}
+                                                    onClick={this.changeDate}
                                                 >
                                                     <div className={styles['date-container']}>
-                                                        <div className={classnames(styles['date'], { [styles['today']]: this.state.date.getFullYear() === new Date().getFullYear() && this.state.date.getMonth() === new Date().getMonth() && this.state.date.getDate() === (row * 7) + (day - padsCount + 1) })}>{(row * 7) + (day - padsCount + 1)}</div>
+                                                        <div className={classnames(styles['date'], { [styles['today']]: this.state.date.getFullYear() === new Date().getFullYear() && this.state.date.getMonth() === new Date().getMonth() && new Date().getDate() === (row * 7) + (day - padsCount + 1) })}>{(row * 7) + (day - padsCount + 1)}</div>
                                                     </div>
                                                     <div className={classnames(styles['videos'], { [styles['small']]: rowsCount === 6 }, { [styles['big']]: rowsCount === 4 })}>
                                                         {this.props.metaItems
@@ -183,10 +173,10 @@ class Calendar extends Component {
                                 })
                                 .map((videoDate) =>
                                     <div key={videoDate}
-                                        ref={videoDate === this.state.selectedDate.getDate() ? this.videosContainerRef : null}
-                                        className={classnames(styles['videos-container'], { [styles['selected']]: parseInt(videoDate) === this.state.selectedDate.getDate() })}
-                                        data-day={new Date(this.state.date.getFullYear(), this.state.date.getMonth(), parseInt(videoDate))}
-                                        onClick={this.changeSelectedDate}
+                                        ref={videoDate === this.state.date.getDate() ? this.videosContainerRef : null}
+                                        className={classnames(styles['videos-container'], { [styles['selected']]: parseInt(videoDate) === this.state.date.getDate() })}
+                                        data-date={new Date(this.state.date.getFullYear(), this.state.date.getMonth(), parseInt(videoDate)).getTime()}
+                                        onClick={this.changeDate}
                                     >
                                         <div className={styles['date']}>
                                             {months[this.state.date.getMonth()].slice(0, 3)} {videoDate}
