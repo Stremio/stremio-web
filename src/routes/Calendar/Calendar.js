@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
+import { Input } from 'stremio-common';
 import Icon from 'stremio-icons/dom';
 import styles from './styles';
 
@@ -92,7 +93,10 @@ class Calendar extends Component {
 
     renderMonthButton(date) {
         return (
-            <div className={styles['month']} data-date={date.getTime()} onClick={this.changeDate}>{months[date.getMonth()]}</div>
+            date.getMonth() === this.state.date.getMonth() ?
+                <div className={styles['month']} data-date={date.getTime()}>{months[date.getMonth()]}</div>
+                :
+                <Input className={styles['month']} type={'button'} data-date={date.getTime()} onClick={this.changeDate}>{months[date.getMonth()]}</Input>
         );
     }
 
@@ -117,50 +121,49 @@ class Calendar extends Component {
                         {this.renderMonthButton(new Date(new Date(new Date(this.state.date)).setDate(1)))}
                         {this.renderMonthButton(new Date(new Date(new Date((new Date(this.state.date)).setMonth(this.state.date.getMonth() + 1))).setDate(1)))}
                     </div>
-                    <table className={styles['month-days']}>
-                        <tbody>
-                            <tr className={styles['week-days']}>
-                                {days.map((day) => <td key={day} className={styles['day']}>{day}</td>)}
-                            </tr>
-                            {Array.apply(null, { length: rowsCount }).map((_, row) => (
-                                <tr key={row} className={styles['row']}>
-                                    {Array.apply(null, { length: 7 }).map((_, day) => (
-                                        day < padsCount && row === 0
+                    <div className={styles['month-days']}>
+                        <div className={styles['week-days']}>
+                            {days.map((day) => <div key={day} className={styles['day']}>{day}</div>)}
+                        </div>
+                        {Array.apply(null, { length: rowsCount }).map((_, row) => (
+                            <div key={row} className={styles['row']}>
+                                {Array.apply(null, { length: 7 }).map((_, day) => (
+                                    day < padsCount && row === 0
+                                        ?
+                                        <div key={day} className={styles['pad']} />
+                                        :
+                                        (row * 7) + (day - padsCount) < daysCount
                                             ?
-                                            <td key={day} />
+                                            <Input key={day}
+                                                className={classnames(styles['day'], { [styles['selected']]: this.state.date.getDate() === (row * 7) + (day - padsCount + 1) })}
+                                                type={'button'}
+                                                data-date={new Date(this.state.date.getFullYear(), this.state.date.getMonth(), (row * 7) + (day - padsCount + 1)).getTime()}
+                                                onClick={this.changeDate}
+                                            >
+                                                <div className={styles['date-container']}>
+                                                    <div className={classnames(styles['date'], { [styles['today']]: this.state.date.getFullYear() === new Date().getFullYear() && this.state.date.getMonth() === new Date().getMonth() && new Date().getDate() === (row * 7) + (day - padsCount + 1) })}>{(row * 7) + (day - padsCount + 1)}</div>
+                                                </div>
+                                                <div className={classnames(styles['videos'], { [styles['small']]: rowsCount === 6 }, { [styles['big']]: rowsCount === 4 })}>
+                                                    {this.props.metaItems
+                                                        .map((metaitem) => metaitem.videos
+                                                            .filter((video) => video.released.getFullYear() === this.state.date.getFullYear() && video.released.getMonth() === this.state.date.getMonth() && video.released.getDate() === (row * 7) + (day - padsCount + 1))
+                                                            .map((video) =>
+                                                                <div key={video.id}
+                                                                    style={{ backgroundImage: `url('${metaitem.poster}')` }}
+                                                                    className={classnames(styles['poster'], { [styles['past']]: video.released.getTime() < new Date().getTime() })}
+                                                                    data-video-id={video.id}
+                                                                    onClick={this.showVideoInfo}
+                                                                />
+                                                            )
+                                                        )}
+                                                </div>
+                                            </Input>
                                             :
-                                            (row * 7) + (day - padsCount) < daysCount
-                                                ?
-                                                <td key={day}
-                                                    className={classnames(styles['day'], { [styles['selected']]: this.state.date.getDate() === (row * 7) + (day - padsCount + 1) })}
-                                                    data-date={new Date(this.state.date.getFullYear(), this.state.date.getMonth(), (row * 7) + (day - padsCount + 1)).getTime()}
-                                                    onClick={this.changeDate}
-                                                >
-                                                    <div className={styles['date-container']}>
-                                                        <div className={classnames(styles['date'], { [styles['today']]: this.state.date.getFullYear() === new Date().getFullYear() && this.state.date.getMonth() === new Date().getMonth() && new Date().getDate() === (row * 7) + (day - padsCount + 1) })}>{(row * 7) + (day - padsCount + 1)}</div>
-                                                    </div>
-                                                    <div className={classnames(styles['videos'], { [styles['small']]: rowsCount === 6 }, { [styles['big']]: rowsCount === 4 })}>
-                                                        {this.props.metaItems
-                                                            .map((metaitem) => metaitem.videos
-                                                                .filter((video) => video.released.getFullYear() === this.state.date.getFullYear() && video.released.getMonth() === this.state.date.getMonth() && video.released.getDate() === (row * 7) + (day - padsCount + 1))
-                                                                .map((video) =>
-                                                                    <div key={video.id}
-                                                                        style={{ backgroundImage: `url('${metaitem.poster}')` }}
-                                                                        className={classnames(styles['poster'], { [styles['past']]: video.released.getTime() < new Date().getTime() })}
-                                                                        data-video-id={video.id}
-                                                                        onClick={this.showVideoInfo}
-                                                                    />
-                                                                )
-                                                            )}
-                                                    </div>
-                                                </td>
-                                                :
-                                                null
-                                    ))}
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                                            null
+                                ))}
+                            </div>
+                        ))}
+                    </div>
                 </div>
                 <div ref={this.videosScrollContainerRef} className={styles['videos-scroll-container']}>
                     {
@@ -185,8 +188,9 @@ class Calendar extends Component {
                                             .map((metaitem) => metaitem.videos
                                                 .filter((video) => video.released.getFullYear() === this.state.date.getFullYear() && video.released.getMonth() === this.state.date.getMonth() && video.released.getDate() === parseInt(videoDate))
                                                 .map((video) =>
-                                                    <div key={video.id}
+                                                    <Input key={video.id}
                                                         className={classnames(styles['video'], { [styles['selected']]: this.state.videoId === video.id }, { [styles['today']]: video.released.getFullYear() === new Date().getFullYear() && video.released.getMonth() === new Date().getMonth() && parseInt(videoDate) === new Date().getDate() && this.state.videoId !== video.id })}
+                                                        type={'button'}
                                                         data-video-id={video.id}
                                                         onClick={this.showVideoInfo}
                                                     >
@@ -204,13 +208,13 @@ class Calendar extends Component {
                                                         <div className={styles['description']}>
                                                             {video.description}
                                                         </div>
-                                                        <a className={styles['watch-button-container']} href={video.released.getDate() < new Date().getDate() && video.released.getMonth() <= new Date().getMonth() && video.released.getFullYear() <= new Date().getFullYear() ? '#/player' : '#/detail'}>
+                                                        <Input className={styles['watch-button-container']} type={'link'} href={video.released.getDate() < new Date().getDate() && video.released.getMonth() <= new Date().getMonth() && video.released.getFullYear() <= new Date().getFullYear() ? '#/player' : '#/detail'}>
                                                             <div className={styles['watch-button']}>
                                                                 <Icon className={styles['icon']} icon={'ic_play'} />
                                                                 <div className={styles['label']}>{video.released.getDate() < new Date().getDate() && video.released.getMonth() <= new Date().getMonth() && video.released.getFullYear() <= new Date().getFullYear() ? 'WATCH NOW' : 'SHOW'}</div>
                                                             </div>
-                                                        </a>
-                                                    </div>
+                                                        </Input>
+                                                    </Input>
                                                 )
                                             )}
                                     </div>

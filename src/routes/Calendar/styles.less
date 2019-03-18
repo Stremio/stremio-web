@@ -21,7 +21,7 @@
             text-align: center;
 
             .month {
-                padding: 2px;
+                padding: var(--focusable-border-size);
                 width: 12%;
                 display: inline-block;
                 font-size: 1.7em;
@@ -30,9 +30,13 @@
                 white-space: nowrap;
                 text-overflow: ellipsis;
                 vertical-align: middle;
-                border: 1px solid transparent;
+                border: calc(var(--focusable-border-size) * 0.5) solid transparent;
                 color: var(--color-surfacelighter);
                 cursor: pointer;
+                
+                &:focus {
+                    border-color: var(--color-surfacelighter);
+                }
 
                 &:first-child, &:last-child {
                     font-size: 1.4em;
@@ -52,11 +56,16 @@
         .month-days {
             width: 100%;
             height: 92%;
+            display: table;
             table-layout: fixed;
+            border-spacing: var(--focusable-border-size);
 
             .week-days {
+                display: table-row;
+
                 .day {
                     padding: 0 calc(var(--spacing) * 0.5) calc(var(--spacing) * 0.5) 0;
+                    display: table-cell;
                     font-size: 1.2em;
                     line-height: 1.2em;
                     text-align: left;
@@ -68,7 +77,14 @@
             }
 
             .row {
+                display: table-row;
+
+                .pad {
+                    display: table-cell;
+                }
+
                 .day {
+                    display: table-cell;
                     border: var(--focusable-border-size) solid transparent;
                     background-color: var(--color-backgroundlighter);
                     cursor: pointer;
@@ -128,9 +144,17 @@
                         }
                     }
 
+                    &:focus {
+                        border-color: var(--color-surfacelighter);
+                    }
+
                     &.selected {
                         border-color: var(--color-primary);
                         background-color: var(--color-backgroundlighter60);
+
+                        &:focus {
+                            border-color: var(--color-surfacelighter);
+                        }
                     }
                 }
             }
@@ -158,6 +182,7 @@
 
             .video {
                 padding: var(--spacing);
+                border: calc(var(--focusable-border-size) * 0.5) solid transparent;
                 cursor: pointer;
 
                 .main-info {
@@ -168,6 +193,7 @@
                     .meta-item-name {
                         margin-right: 5%;
                         width: 75%;
+                        line-height: 1.2em;
                         white-space: nowrap;
                         overflow: hidden;
                         text-overflow: ellipsis;
@@ -175,7 +201,8 @@
                     }
 
                     .video-number {
-                        width: 20%;
+                        width: 22%;
+                        line-height: 1.2em;
                         white-space: nowrap;
                         overflow: hidden;
                         text-overflow: ellipsis;
@@ -186,7 +213,7 @@
                 .name {
                     width: 100%;
                     display: none;
-                    padding: calc(var(--spacing) * 0.5) 0 var(--spacing) 0;
+                    padding: calc(var(--spacing) * 0.5) 0;
                     overflow-wrap: break-word;
                     color: var(--color-surfacelighter);
                 }
@@ -195,14 +222,15 @@
                     display: none;
                     padding: var(--spacing) 0;
                     line-height: 1.2em;
+                    border-bottom: calc(var(--focusable-border-size) * 0.5) solid var(--color-background);
                     color: var(--color-surfacelighter);
                 }
 
                 .watch-button-container {
                     display: none;
-                    margin: 0 calc(var(--spacing) * 0.5);
+                    margin: calc(var(--spacing) * 0.5);
                     padding: var(--spacing);
-                    border-top: calc(var(--focusable-border-size) * 0.5) solid var(--color-background);
+                    border: calc(var(--focusable-border-size) * 0.5) solid transparent;
                     cursor: pointer;
 
                     .watch-button {
@@ -223,6 +251,10 @@
                             word-break: break-word;
                             color: var(--color-surfacelight);
                         }
+                    }
+
+                    &:focus {
+                        border: calc(var(--focusable-border-size) * 0.5) solid var(--color-surfacelighter);
                     }
 
                     &:hover {
@@ -276,6 +308,10 @@
 
                 &.today {
                     background-color: var(--color-primarydarker40);
+                }
+
+                &:focus {
+                    border-color: var(--color-surfacelighter);
                 }
 
                 &:hover {
