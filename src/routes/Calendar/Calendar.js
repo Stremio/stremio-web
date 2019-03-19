@@ -12,7 +12,7 @@ class Calendar extends Component {
     constructor(props) {
         super(props);
 
-        this.videosContainerRef = React.createRef();
+        this.selectedDateVideosContainerRef = React.createRef();
         this.videosScrollContainerRef = React.createRef();
 
         this.state = {
@@ -37,8 +37,8 @@ class Calendar extends Component {
     }
 
     scrollToSelectedVideo = () => {
-        if (this.videosContainerRef.current !== null) {
-            var topPosition = this.videosContainerRef.current.offsetTop;
+        if (this.selectedDateVideosContainerRef.current !== null) {
+            var topPosition = this.selectedDateVideosContainerRef.current.offsetTop;
             this.videosScrollContainerRef.current.scrollTop = topPosition - this.videosScrollContainerRef.current.offsetTop;
         } else {
             this.setState({ videoId: '' });
@@ -157,15 +157,27 @@ class Calendar extends Component {
     }
 
     render() {
-        const videosDates = this.props.metaItems
+        const videoDates = this.props.metaItems
             .map((metaitem) => metaitem.videos
                 .filter((video) => video.released.getFullYear() === this.state.date.getFullYear() && video.released.getMonth() === this.state.date.getMonth()))
             .filter((videos) => videos.length > 0)
-            .map((videos) => videos.map((video) => video.released.getDate()))
+            .map((videos) => videos.map((video) => video.released))
             .reduce((result, videoDates) => {
                 result = result.concat(videoDates);
                 return result;
-            }, []);
+            }, [])
+            .filter((date, index, dates) => {
+                for (var i = 0; i < dates.length; i++) {
+                    if (dates[i].getTime() === date.getTime()) {
+                        return i === index;
+                    }
+                }
+
+                return false;
+            })
+            .sort(function(a, b) {
+                return a - b;
+            });
 
         return (
             <div className={styles['calendar-container']}>
@@ -184,58 +196,53 @@ class Calendar extends Component {
                 </div>
                 <div ref={this.videosScrollContainerRef} className={styles['videos-scroll-container']}>
                     {
-                        videosDates.length > 0
+                        videoDates.length > 0
                             ?
-                            videosDates
-                                .filter((date, index, dates) => dates.indexOf(date) === index)
-                                .sort(function(a, b) {
-                                    return a - b;
-                                })
-                                .map((videoDate) =>
-                                    <div key={videoDate}
-                                        ref={videoDate === this.state.date.getDate() ? this.videosContainerRef : null}
-                                        className={classnames(styles['videos-container'], { [styles['selected']]: videoDate === this.state.date.getDate() })}
-                                        data-date={new Date(this.state.date.getFullYear(), this.state.date.getMonth(), videoDate).getTime()}
-                                        onClick={this.changeDate}
-                                    >
-                                        <div className={styles['date']}>
-                                            {months[this.state.date.getMonth()].slice(0, 3)} {videoDate}
-                                        </div>
-                                        {this.props.metaItems
-                                            .map((metaitem) => metaitem.videos
-                                                .filter((video) => video.released.getFullYear() === this.state.date.getFullYear() && video.released.getMonth() === this.state.date.getMonth() && video.released.getDate() === videoDate)
-                                                .map((video) =>
-                                                    <Input key={video.id}
-                                                        className={classnames(styles['video'], { [styles['selected']]: this.state.videoId === video.id }, { [styles['today']]: new Date().toDateString() === new Date(video.released.getFullYear(), video.released.getMonth(), videoDate).toDateString() && this.state.videoId !== video.id })}
-                                                        type={'button'}
-                                                        data-video-id={video.id}
-                                                        onClick={this.showVideoInfo}
-                                                    >
-                                                        <div className={styles['main-info']}>
-                                                            <div className={styles['meta-item-name']}>
-                                                                {metaitem.name}
-                                                            </div>
-                                                            <div className={styles['video-number']}>
-                                                                S{video.season} E{video.episode}
-                                                            </div>
-                                                        </div>
-                                                        <div className={styles['name']}>
-                                                            {video.name}
-                                                        </div>
-                                                        <div className={styles['description']}>
-                                                            {video.description}
-                                                        </div>
-                                                        <Input className={styles['watch-button-container']} type={'link'} href={video.released.getTime() < new Date().getTime() ? '#/player' : '#/detail'}>
-                                                            <div className={styles['watch-button']}>
-                                                                <Icon className={styles['icon']} icon={'ic_play'} />
-                                                                <div className={styles['label']}>{video.released.getTime() < new Date().getTime() ? 'WATCH NOW' : 'SHOW'}</div>
-                                                            </div>
-                                                        </Input>
-                                                    </Input>
-                                                )
-                                            )}
+                            videoDates.map((videoDate) =>
+                                <div key={videoDate.getDate()}
+                                    ref={videoDate.getDate() === this.state.date.getDate() ? this.selectedDateVideosContainerRef : null}
+                                    className={classnames(styles['videos-container'], { [styles['selected']]: videoDate.getDate() === this.state.date.getDate() })}
+                                    data-date={new Date(this.state.date.getFullYear(), this.state.date.getMonth(), videoDate.getDate()).getTime()}
+                                    onClick={this.changeDate}
+                                >
+                                    <div className={styles['date']}>
+                                        {months[this.state.date.getMonth()].slice(0, 3)} {videoDate.getDate()}
                                     </div>
-                                )
+                                    {this.props.metaItems
+                                        .map((metaitem) => metaitem.videos
+                                            .filter((video) => video.released.getFullYear() === this.state.date.getFullYear() && video.released.getMonth() === this.state.date.getMonth() && video.released.getDate() === videoDate.getDate())
+                                            .map((video) =>
+                                                <Input key={video.id}
+                                                    className={classnames(styles['video'], { [styles['selected']]: this.state.videoId === video.id }, { [styles['today']]: new Date().toDateString() === new Date(video.released.getFullYear(), video.released.getMonth(), videoDate.getDate()).toDateString() && this.state.videoId !== video.id })}
+                                                    type={'button'}
+                                                    data-video-id={video.id}
+                                                    onClick={this.showVideoInfo}
+                                                >
+                                                    <div className={styles['main-info']}>
+                                                        <div className={styles['meta-item-name']}>
+                                                            {metaitem.name}
+                                                        </div>
+                                                        <div className={styles['video-number']}>
+                                                            S{video.season} E{video.episode}
+                                                        </div>
+                                                    </div>
+                                                    <div className={styles['name']}>
+                                                        {video.name}
+                                                    </div>
+                                                    <div className={styles['description']}>
+                                                        {video.description}
+                                                    </div>
+                                                    <Input className={styles['watch-button-container']} type={'link'} href={video.released.getTime() < new Date().getTime() ? '#/player' : '#/detail'}>
+                                                        <div className={styles['watch-button']}>
+                                                            <Icon className={styles['icon']} icon={'ic_play'} />
+                                                            <div className={styles['label']}>{video.released.getTime() < new Date().getTime() ? 'WATCH NOW' : 'SHOW'}</div>
+                                                        </div>
+                                                    </Input>
+                                                </Input>
+                                            )
+                                        )}
+                                </div>
+                            )
                             :
                             null
                     }
