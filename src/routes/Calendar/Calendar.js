@@ -82,12 +82,12 @@ class Calendar extends Component {
         monthDate.setMonth(monthDate.getMonth() + 1);
         monthDate.setDate(0);
         var daysCount = monthDate.getDate();
-        var rowsCount = Math.ceil((padsCount + daysCount) / 7);
+        var weeksCount = Math.ceil((padsCount + daysCount) / 7);
 
         return {
             padsCount,
             daysCount,
-            rowsCount
+            weeksCount
         };
     }
 
@@ -100,44 +100,44 @@ class Calendar extends Component {
         );
     }
 
-    renderMonthRows = () => {
-        const { padsCount, daysCount, rowsCount } = this.getMonthInfo(this.state.date);
-        var rows = [];
+    renderMonthWeeks = () => {
+        const { padsCount, daysCount, weeksCount } = this.getMonthInfo(this.state.date);
+        var weeks = [];
 
-        for (let row = 0; row < rowsCount; row++) {
-            rows.push(
-                <div key={row} className={styles['row']}>
-                    {this.renderMonthDays(row, rowsCount, padsCount, daysCount)}
+        for (let week = 0; week < weeksCount; week++) {
+            weeks.push(
+                <div key={week} className={styles['week']}>
+                    {this.renderMonthDays(week, weeksCount, padsCount, daysCount)}
                 </div>
             )
         }
-        return rows;
+        return weeks;
     }
 
-    renderMonthDays = (row, rowsCount, padsCount, daysCount) => {
+    renderMonthDays = (week, weeksCount, padsCount, daysCount) => {
         var days = [];
 
         for (let day = 0; day < 7; day++) {
             days.push(
-                day < padsCount && row === 0
+                day < padsCount && week === 0
                     ?
                     <div key={day} className={styles['pad']} />
                     :
-                    (row * 7) + (day - padsCount) < daysCount
+                    (week * 7) + (day - padsCount) < daysCount
                         ?
                         <Input key={day}
-                            className={classnames(styles['day'], { [styles['selected']]: this.state.date.getDate() === (row * 7) + (day - padsCount + 1) })}
+                            className={classnames(styles['day'], { [styles['selected']]: this.state.date.getDate() === (week * 7) + (day - padsCount + 1) })}
                             type={'button'}
-                            data-date={new Date(this.state.date.getFullYear(), this.state.date.getMonth(), (row * 7) + (day - padsCount + 1)).getTime()}
+                            data-date={new Date(this.state.date.getFullYear(), this.state.date.getMonth(), (week * 7) + (day - padsCount + 1)).getTime()}
                             onClick={this.changeDate}
                         >
                             <div className={styles['date-container']}>
-                                <div className={classnames(styles['date'], { [styles['today']]: this.state.date.getFullYear() === new Date().getFullYear() && this.state.date.getMonth() === new Date().getMonth() && new Date().getDate() === (row * 7) + (day - padsCount + 1) })}>{(row * 7) + (day - padsCount + 1)}</div>
+                                <div className={classnames(styles['date'], { [styles['today']]: new Date().toDateString() === new Date(this.state.date.getFullYear(), this.state.date.getMonth(), (week * 7) + day - padsCount + 1).toDateString() })}>{(week * 7) + (day - padsCount + 1)}</div>
                             </div>
-                            <div className={classnames(styles['videos'], { [styles['small']]: rowsCount === 6 }, { [styles['big']]: rowsCount === 4 })}>
+                            <div className={classnames(styles['videos'], { [styles['small']]: weeksCount === 6 }, { [styles['big']]: weeksCount === 4 })}>
                                 {this.props.metaItems
                                     .map((metaitem) => metaitem.videos
-                                        .filter((video) => video.released.getFullYear() === this.state.date.getFullYear() && video.released.getMonth() === this.state.date.getMonth() && video.released.getDate() === (row * 7) + (day - padsCount + 1))
+                                        .filter((video) => video.released.getFullYear() === this.state.date.getFullYear() && video.released.getMonth() === this.state.date.getMonth() && video.released.getDate() === (week * 7) + (day - padsCount + 1))
                                         .map((video) =>
                                             <div key={video.id}
                                                 style={{ backgroundImage: `url('${metaitem.poster}')` }}
@@ -179,7 +179,7 @@ class Calendar extends Component {
                         <div className={styles['week-days']}>
                             {days.map((day) => <div key={day} className={styles['day']}>{day}</div>)}
                         </div>
-                        {this.renderMonthRows()}
+                        {this.renderMonthWeeks()}
                     </div>
                 </div>
                 <div ref={this.videosScrollContainerRef} className={styles['videos-scroll-container']}>
@@ -194,8 +194,8 @@ class Calendar extends Component {
                                 .map((videoDate) =>
                                     <div key={videoDate}
                                         ref={videoDate === this.state.date.getDate() ? this.videosContainerRef : null}
-                                        className={classnames(styles['videos-container'], { [styles['selected']]: parseInt(videoDate) === this.state.date.getDate() })}
-                                        data-date={new Date(this.state.date.getFullYear(), this.state.date.getMonth(), parseInt(videoDate)).getTime()}
+                                        className={classnames(styles['videos-container'], { [styles['selected']]: videoDate === this.state.date.getDate() })}
+                                        data-date={new Date(this.state.date.getFullYear(), this.state.date.getMonth(), videoDate).getTime()}
                                         onClick={this.changeDate}
                                     >
                                         <div className={styles['date']}>
@@ -203,10 +203,10 @@ class Calendar extends Component {
                                         </div>
                                         {this.props.metaItems
                                             .map((metaitem) => metaitem.videos
-                                                .filter((video) => video.released.getFullYear() === this.state.date.getFullYear() && video.released.getMonth() === this.state.date.getMonth() && video.released.getDate() === parseInt(videoDate))
+                                                .filter((video) => video.released.getFullYear() === this.state.date.getFullYear() && video.released.getMonth() === this.state.date.getMonth() && video.released.getDate() === videoDate)
                                                 .map((video) =>
                                                     <Input key={video.id}
-                                                        className={classnames(styles['video'], { [styles['selected']]: this.state.videoId === video.id }, { [styles['today']]: video.released.getFullYear() === new Date().getFullYear() && video.released.getMonth() === new Date().getMonth() && parseInt(videoDate) === new Date().getDate() && this.state.videoId !== video.id })}
+                                                        className={classnames(styles['video'], { [styles['selected']]: this.state.videoId === video.id }, { [styles['today']]: new Date().toDateString() === new Date(video.released.getFullYear(), video.released.getMonth(), videoDate).toDateString() && this.state.videoId !== video.id })}
                                                         type={'button'}
                                                         data-video-id={video.id}
                                                         onClick={this.showVideoInfo}
@@ -225,10 +225,10 @@ class Calendar extends Component {
                                                         <div className={styles['description']}>
                                                             {video.description}
                                                         </div>
-                                                        <Input className={styles['watch-button-container']} type={'link'} href={video.released.getDate() < new Date().getDate() && video.released.getMonth() <= new Date().getMonth() && video.released.getFullYear() <= new Date().getFullYear() ? '#/player' : '#/detail'}>
+                                                        <Input className={styles['watch-button-container']} type={'link'} href={video.released.getTime() < new Date().getTime() ? '#/player' : '#/detail'}>
                                                             <div className={styles['watch-button']}>
                                                                 <Icon className={styles['icon']} icon={'ic_play'} />
-                                                                <div className={styles['label']}>{video.released.getDate() < new Date().getDate() && video.released.getMonth() <= new Date().getMonth() && video.released.getFullYear() <= new Date().getFullYear() ? 'WATCH NOW' : 'SHOW'}</div>
+                                                                <div className={styles['label']}>{video.released.getTime() < new Date().getTime() ? 'WATCH NOW' : 'SHOW'}</div>
                                                             </div>
                                                         </Input>
                                                     </Input>
