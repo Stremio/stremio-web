@@ -68,6 +68,12 @@ class Player extends Component {
         this.setState({ [propName]: propValue });
     }
 
+    onImplementationChanged = (manifest) => {
+        manifest.props.forEach((propName) => {
+            this.dispatch('observeProp', propName);
+        });
+    }
+
     dispatch = (...args) => {
         this.videoRef.current && this.videoRef.current.dispatch(...args);
     }
@@ -82,6 +88,7 @@ class Player extends Component {
                     onError={this.onError}
                     onPropValue={this.onPropValue}
                     onPropChanged={this.onPropChanged}
+                    onImplementationChanged={this.onImplementationChanged}
                 />
                 <div className={styles['layer']} />
             </Fragment>

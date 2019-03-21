@@ -46,9 +46,7 @@ class Video extends Component {
                 this.video.on('error', this.props.onError);
                 this.video.on('propValue', this.props.onPropValue);
                 this.video.on('propChanged', this.props.onPropChanged);
-                this.video.constructor.manifest.props.forEach((propName) => {
-                    this.dispatch('observeProp', propName);
-                });
+                this.props.onImplementationChanged(this.video.constructor.manifest);
             }
         }
 
@@ -71,7 +69,8 @@ Video.propTypes = {
     onEnded: PropTypes.func.isRequired,
     onError: PropTypes.func.isRequired,
     onPropValue: PropTypes.func.isRequired,
-    onPropChanged: PropTypes.func.isRequired
+    onPropChanged: PropTypes.func.isRequired,
+    onImplementationChanged: PropTypes.func.isRequired
 };
 
 export default Video;
