@@ -1,9 +1,9 @@
-import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
-import classnames from 'classnames';
-import styles from './styles';
+const React = require('react');
+const PropTypes = require('prop-types');
+const classnames = require('classnames');
+const styles = require('./styles');
 
-class BufferingLoader extends PureComponent {
+class BufferingLoader extends React.PureComponent {
     render() {
         if (!this.props.buffering) {
             return null;
@@ -22,4 +22,4 @@ BufferingLoader.propTypes = {
     buffering: PropTypes.bool
 };
 
-export default BufferingLoader;
+module.exports = BufferingLoader;

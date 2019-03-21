@@ -1,3 +1,3 @@
-import BufferingLoader from './BufferingLoader';
+const BufferingLoader = require('./BufferingLoader');
 
-export default BufferingLoader;
+module.exports = BufferingLoader;
