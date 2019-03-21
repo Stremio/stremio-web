@@ -82,11 +82,11 @@ function YouTubeVideo(options) {
 
         var embeddedTracks = (video.getOption('captions', 'tracklist') || [])
             .map(function(track) {
-                return {
+                return Object.freeze({
                     id: track.languageCode,
                     origin: 'EMBEDDED',
                     label: track.languageName
-                };
+                });
             });
         var extraTracks = subtitles.dispatch('getProp', 'tracks');
         var allTracks = embeddedTracks.concat(extraTracks)
@@ -99,7 +99,7 @@ function YouTubeVideo(options) {
 
                 return false;
             });
-        return allTracks;
+        return Object.freeze(allTracks);
     }
     function getSelectedSubtitleTrackId() {
         if (!loaded) {
@@ -234,7 +234,7 @@ function YouTubeVideo(options) {
             return;
         }
 
-        YT.ready(() => {
+        YT.ready(function() {
             if (destroyed) {
                 return;
             }
@@ -405,7 +405,7 @@ function YouTubeVideo(options) {
                         return;
                     }
                     case 'buffering': {
-                        events.emit('propValue', 'duration', getBuffering());
+                        events.emit('propValue', 'buffering', getBuffering());
                         bufferingObserved = true;
                         return;
                     }
