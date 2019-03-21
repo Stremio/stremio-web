@@ -206,8 +206,8 @@ function MPVVideo(options) {
                 return null;
             });
     }
-    function setProp(propName) {
-        ipc.dispatch('mpv', 'setProp', id, propName)
+    function setProp(propName, propValue) {
+        ipc.dispatch('mpv', 'setProp', id, propName, propValue)
             .catch(function(error) {
                 onChannelError(error);
             });
