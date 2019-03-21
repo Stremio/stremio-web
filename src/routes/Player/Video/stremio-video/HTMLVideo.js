@@ -3,8 +3,13 @@ var HTMLSubtitles = require('./HTMLSubtitles');
 
 function HTMLVideo(options) {
     var containerElement = options && options.containerElement;
-    if (!(containerElement instanceof HTMLElement) || !containerElement.hasAttribute('id')) {
-        throw new Error('Instance of HTMLElement with id attribute required');
+    var id = options && options.id;
+    if (!(containerElement instanceof HTMLElement)) {
+        throw new Error('Instance of HTMLElement is required');
+    }
+
+    if (typeof id !== 'string') {
+        throw new Error('id parameter is required');
     }
 
     var self = this;
@@ -12,15 +17,19 @@ function HTMLVideo(options) {
     var destroyed = false;
     var events = new EventEmitter();
     var dispatchArgsLoadedQueue = [];
-    var subtitles = new HTMLSubtitles(containerElement);
+    var subtitles = new HTMLSubtitles({
+        id: id,
+        containerElement: containerElement
+    });
     var stylesElement = document.createElement('style');
     var videoElement = document.createElement('video');
 
     events.on('error', function() { });
     subtitles.on('error', onSubtitlesError);
     subtitles.on('load', updateSubtitleText);
+    containerElement.setAttribute('id', id);
     containerElement.appendChild(stylesElement);
-    stylesElement.sheet.insertRule('#' + containerElement.id + ' .video { position: absolute; width: 100%; height: 100%; z-index: -1; }', stylesElement.sheet.cssRules.length);
+    stylesElement.sheet.insertRule('#' + containerElement.id + ' .video { position: absolute; width: 100%; height: 100%; z-index: -1; background-color: black; }', stylesElement.sheet.cssRules.length);
     containerElement.appendChild(videoElement);
     videoElement.classList.add('video');
     videoElement.crossOrigin = 'anonymous';

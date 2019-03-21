@@ -10,9 +10,15 @@ var FONT_SIZE = Object.freeze({
     5: '10vmin'
 });
 
-function HTMLSubtitles(containerElement) {
-    if (!(containerElement instanceof HTMLElement) || !containerElement.hasAttribute('id')) {
-        throw new Error('Instance of HTMLElement with id attribute required as a first argument');
+function HTMLSubtitles(options) {
+    var containerElement = options && options.containerElement;
+    var id = options && options.id;
+    if (!(containerElement instanceof HTMLElement)) {
+        throw new Error('Instance of HTMLElement is required');
+    }
+
+    if (typeof id !== 'string') {
+        throw new Error('id parameter is required');
     }
 
     var self = this;
@@ -26,9 +32,9 @@ function HTMLSubtitles(containerElement) {
     var subtitlesElement = document.createElement('div');
 
     containerElement.appendChild(stylesElement);
-    var subtitleStylesIndex = stylesElement.sheet.insertRule('#' + containerElement.id + ' .subtitles { position: absolute; right: 0; bottom: 0; left: 0; z-index: 0; font-size: ' + FONT_SIZE[2] + '; color: white; text-align: center; }', stylesElement.sheet.cssRules.length);
-    stylesElement.sheet.insertRule('#' + containerElement.id + ' .subtitles .cue { display: inline-block; padding: 0.2em; text-shadow: 0px 0px 0.03em #222222, 0px 0px 0.03em #222222, 0px 0px 0.03em #222222, 0px 0px 0.03em #222222, 0px 0px 0.03em #222222; }', stylesElement.sheet.cssRules.length);
-    stylesElement.sheet.insertRule('#' + containerElement.id + ' .subtitles.dark-background .cue { text-shadow: none; background-color: #222222; }', stylesElement.sheet.cssRules.length);
+    var subtitleStylesIndex = stylesElement.sheet.insertRule('#' + id + ' .subtitles { position: absolute; right: 0; bottom: 0; left: 0; z-index: 0; font-size: ' + FONT_SIZE[2] + '; color: white; text-align: center; }', stylesElement.sheet.cssRules.length);
+    stylesElement.sheet.insertRule('#' + id + ' .subtitles .cue { display: inline-block; padding: 0.2em; text-shadow: 0px 0px 0.03em #222222, 0px 0px 0.03em #222222, 0px 0px 0.03em #222222, 0px 0px 0.03em #222222, 0px 0px 0.03em #222222; }', stylesElement.sheet.cssRules.length);
+    stylesElement.sheet.insertRule('#' + id + ' .subtitles.dark-background .cue { text-shadow: none; background-color: #222222; }', stylesElement.sheet.cssRules.length);
     containerElement.appendChild(subtitlesElement);
     subtitlesElement.classList.add('subtitles');
     events.addListener('error', function() { });
