@@ -109,9 +109,6 @@ class Calendar extends Component {
 
         return (
             <div className={styles['month-days']}>
-                <div className={styles['week-days']}>
-                    {DAYS.map((day) => <div key={day} className={styles['day']}>{day}</div>)}
-                </div>
                 {weeks}
             </div>
         );
@@ -134,10 +131,8 @@ class Calendar extends Component {
                             data-date={new Date(this.state.date.getFullYear(), this.state.date.getMonth(), (weekNumber * 7) + (day - padsCount + 1)).getTime()}
                             onClick={this.changeDate}
                         >
-                            <div className={styles['date-container']}>
-                                <div className={classnames(styles['date'], { [styles['today']]: this.state.date.getFullYear() === today.getFullYear() && this.state.date.getMonth() === today.getMonth() && ((weekNumber * 7) + day - padsCount + 1) === today.getDate() })}>{(weekNumber * 7) + (day - padsCount + 1)}</div>
-                            </div>
-                            <div className={styles['videos']}>
+                            <div className={classnames(styles['date'], { [styles['today']]: /*this.state.date.getFullYear() === today.getFullYear() && this.state.date.getMonth() === today.getMonth() &&*/ ((weekNumber * 7) + day - padsCount + 1) === today.getDate() })}>{(weekNumber * 7) + (day - padsCount + 1)}</div>
+                            <div className={styles['posters-container']}>
                                 {
                                     videosForMonth
                                         .filter((video) => video.released.getDate() === (weekNumber * 7) + (day - padsCount + 1))
@@ -272,6 +267,9 @@ class Calendar extends Component {
                         {this.renderMonthButton(new Date(this.state.date.getFullYear(), this.state.date.getMonth() - 1), 1)}
                         {this.renderMonthButton(this.state.date)}
                         {this.renderMonthButton(new Date(this.state.date.getFullYear(), this.state.date.getMonth() + 1), 1)}
+                    </div>
+                    <div className={styles['week-days']}>
+                        {DAYS.map((day) => <div key={day} className={styles['day']}>{day}</div>)}
                     </div>
                     {this.renderCalendar(videosForMonth)}
                 </div>

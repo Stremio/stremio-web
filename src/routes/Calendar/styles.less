@@ -1,6 +1,5 @@
 .calendar-container {
     --spacing: 16px;
-    --episodes-height: 50px;
     --videos-scroll-container-width: 270px;
     font-size: 14px;
 }
@@ -10,19 +9,20 @@
     height: 100%;
     display: flex;
     flex-direction: row;
+    background-color: var(--color-background);
 
     .calendar {
-        flex: 1;
         padding-right: calc(var(--spacing) * 0.5);
+        flex: 1;
 
         .months {
             padding-top: calc(var(--spacing) * 0.5);
-            height: 8%;
+            height: 3.5em;
             text-align: center;
 
             .month {
-                padding: var(--focusable-border-size);
-                width: 12%;
+                padding: calc(var(--spacing) * 0.25);
+                width: 6em;
                 display: inline-block;
                 font-size: 1.7em;
                 line-height: 1.2em;
@@ -33,7 +33,7 @@
                 border: calc(var(--focusable-border-size) * 0.5) solid transparent;
                 color: var(--color-surfacelighter);
                 cursor: pointer;
-                
+
                 &:focus {
                     border-color: var(--color-surfacelighter);
                 }
@@ -53,28 +53,31 @@
             }
         }
 
+        .week-days {
+            height: 3.5em;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+
+            .day {
+                padding-right: calc(var(--spacing) * 0.5);
+                flex: 1;
+                font-size: 1.2em;
+                line-height: 1.2em;
+                text-align: center;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                color: var(--color-secondarylighter);
+            }
+        }
+
         .month-days {
             width: 100%;
-            height: 92%;
+            height: 36.5em;
             display: table;
             table-layout: fixed;
             border-spacing: var(--focusable-border-size);
-
-            .week-days {
-                display: table-row;
-
-                .day {
-                    padding: 0 calc(var(--spacing) * 0.5) calc(var(--spacing) * 0.5) 0;
-                    display: table-cell;
-                    font-size: 1.2em;
-                    line-height: 1.2em;
-                    text-align: left;
-                    white-space: nowrap;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    color: var(--color-secondarylighter);
-                }
-            }
 
             .week {
                 display: table-row;
@@ -85,39 +88,41 @@
 
                 .day {
                     display: table-cell;
+                    position: relative;
+                    z-index: 0;
                     border: calc(var(--focusable-border-size) * 0.5) solid transparent;
                     background-color: var(--color-backgroundlighter);
                     cursor: pointer;
 
-                    .date-container {
-                        margin: calc(var(--spacing) * 0.5);
-                        flex: 1;
+                    .date {
+                        position: absolute;
+                        z-index: 1;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        padding: 0.4em 0;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 1.4em;
+                        color: var(--color-secondarylighter);
 
-                        .date {
-                            width: 100%;
-                            height: 100%;
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            font-size: 1.4em;
-                            color: var(--color-secondarylighter);
-
-                            &.today {
-                                color: var(--color-surfacelighter);
-                                background-color: var(--color-primary);
-                            }
+                        &.today {
+                            color: var(--color-surfacelighter);
+                            background-color: var(--color-primary);
                         }
                     }
 
-                    .videos {
-                        height: var(--episodes-height);
-                        display: flex;
-                        flex-direction: row;
+                    .posters-container {
+                        position: absolute;
+                        z-index: 0;
+                        right: 0;
+                        bottom: 0;
+                        left: 0;
 
                         .poster {
                             display: none;
-                            flex: calc(1 / var(--poster-shape-ratio));
-                            height: 100%;
+                            width: calc(100% / 4);
                             background-size: cover;
                             background-repeat: no-repeat;
                             background-position: center;
@@ -127,11 +132,13 @@
                             }
 
                             &:nth-child(-n+4) {
-                                display: block;
+                                display: inline-block;
                             }
 
-                            &:not(:last-child) {
-                                margin-right: var(--focusable-border-size);
+                            &:before {
+                                content: "";
+                                display: inline-block;
+                                padding-top: calc(100% * var(--poster-shape-ratio));
                             }
                         }
                     }
@@ -156,12 +163,11 @@
     .videos-scroll-container {
         padding-right: calc(var(--spacing) * 0.5);
         width: var(--videos-scroll-container-width);
-        overflow-y: auto;
         overflow-x: hidden;
+        overflow-y: auto;
         scroll-behavior: smooth;
 
         .videos-container {
-            margin-bottom: calc(var(--spacing) * 0.5);
             border: var(--focusable-border-size) solid var(--color-background);
             background-color: var(--color-backgroundlighter);
 
@@ -183,20 +189,20 @@
                     justify-content: space-between;
 
                     .meta-item-name {
-                        margin-right: 5%;
-                        width: 75%;
+                        flex: 3;
                         line-height: 1.2em;
-                        white-space: nowrap;
                         overflow: hidden;
+                        white-space: nowrap;
                         text-overflow: ellipsis;
                         color: var(--color-surface);
                     }
 
                     .video-number {
-                        width: 22%;
+                        flex: 1;
                         line-height: 1.2em;
-                        white-space: nowrap;
+                        text-align: end;
                         overflow: hidden;
+                        white-space: nowrap;
                         text-overflow: ellipsis;
                         color: var(--color-surface);
                     }
@@ -268,15 +274,13 @@
                     cursor: default;
 
                     .main-info {
-                        .serie-name {
+                        .meta-item-name {
                             white-space: unset;
-                            overflow: visible;
                             overflow-wrap: break-word;
                         }
 
-                        .episode-number {
+                        .video-number {
                             white-space: unset;
-                            overflow: visible;
                             overflow-wrap: break-word;
                         }
                     }
@@ -313,6 +317,10 @@
 
             &.selected {
                 border-color: var(--color-primary);
+            }
+
+            &:not(:last-child) {
+                margin-bottom: calc(var(--spacing) * 0.5);
             }
         }
     }
