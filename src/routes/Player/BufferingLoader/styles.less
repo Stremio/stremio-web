@@ -14,11 +14,13 @@
     justify-content: center;
 
     .bufferring-loader {
-        width: 150px;
-        height: 150px;
+        width: calc(var(--control-bar-button-size) * 3);
+        height: calc(var(--control-bar-button-size) * 3);
         border-radius: 50%;
-        border: 10px solid #f3f3f3;
-        border-top: 10px solid #3498db;
+        border-width: 1em;
+        border-style: solid;
+        border-color: #f3f3f3;
+        border-top-color: #3498db;
         animation: spin 2s linear infinite;
     }
 }
