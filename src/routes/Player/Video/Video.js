@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import hat from 'hat';
-import HTMLVideo from './stremio-video/HTMLVideo';
-import YouTubeVideo from './stremio-video/YouTubeVideo';
-import MPVVideo from './stremio-video/MPVVideo';
+const React = require('react');
+const PropTypes = require('prop-types');
+const hat = require('hat');
+const HTMLVideo = require('./stremio-video/HTMLVideo');
+const YouTubeVideo = require('./stremio-video/YouTubeVideo');
+const MPVVideo = require('./stremio-video/MPVVideo');
 
-class Video extends Component {
+class Video extends React.Component {
     constructor(props) {
         super(props);
 
@@ -50,10 +50,12 @@ class Video extends Component {
             }
         }
 
-        try {
-            this.video && this.video.dispatch(...args);
-        } catch (e) {
-            console.error(this.video.constructor.manifest.name, e);
+        if (this.video !== null) {
+            try {
+                this.video.dispatch(...args);
+            } catch (e) {
+                console.error(this.video.constructor.manifest.name, e);
+            }
         }
     }
 
@@ -73,4 +75,4 @@ Video.propTypes = {
     onImplementationChanged: PropTypes.func.isRequired
 };
 
-export default Video;
+module.exports = Video;

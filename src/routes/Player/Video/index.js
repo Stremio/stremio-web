@@ -1,3 +1,3 @@
-import Video from './Video';
+const Video = require('./Video');
 
-export default Video;
+module.exports = Video;
