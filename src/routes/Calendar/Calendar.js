@@ -131,7 +131,7 @@ class Calendar extends Component {
                             data-date={new Date(this.state.date.getFullYear(), this.state.date.getMonth(), (weekNumber * 7) + (day - padsCount + 1)).getTime()}
                             onClick={this.changeDate}
                         >
-                            <div className={classnames(styles['date'], { [styles['today']]: /*this.state.date.getFullYear() === today.getFullYear() && this.state.date.getMonth() === today.getMonth() &&*/ ((weekNumber * 7) + day - padsCount + 1) === today.getDate() })}>{(weekNumber * 7) + (day - padsCount + 1)}</div>
+                            <div className={classnames(styles['date'], { [styles['today']]: this.state.date.getFullYear() === today.getFullYear() && this.state.date.getMonth() === today.getMonth() && ((weekNumber * 7) + day - padsCount + 1) === today.getDate() })}>{(weekNumber * 7) + (day - padsCount + 1)}</div>
                             <div className={styles['posters-container']}>
                                 {
                                     videosForMonth
