@@ -1,12 +1,12 @@
-import React, { StrictMode } from 'react';
-import { Router } from 'stremio-common';
-import routerConfig from './routerConfig';
-import styles from './styles';
+const React = require('react');
+const { Router } = require('stremio-common');
+const routerConfig = require('./routerConfig').default;
+const styles = require('./styles');
 
 const App = () => (
-    <StrictMode>
+    <React.StrictMode>
         <Router className={styles['router']} config={routerConfig} />
-    </StrictMode>
+    </React.StrictMode>
 );
 
-export default App;
+module.exports = App;

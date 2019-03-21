@@ -40,7 +40,9 @@ class Player extends Component {
     }
 
     componentDidMount() {
-        this.dispatch('command', 'load', this.props.stream, {});
+        this.dispatch('command', 'load', this.props.stream, {
+            ipc: window.shell
+        });
         this.dispatch('setProp', 'subtitleOffset', 18);
         this.dispatch('command', 'addSubtitleTracks', [{
             url: 'https://raw.githubusercontent.com/caitp/ng-media/master/example/assets/captions/bunny-en.vtt',

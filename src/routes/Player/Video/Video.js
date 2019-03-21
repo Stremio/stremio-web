@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import hat from 'hat';
 import HTMLVideo from './stremio-video/HTMLVideo';
 import YouTubeVideo from './stremio-video/YouTubeVideo';
+import MPVVideo from './stremio-video/MPVVideo';
 
 class Video extends Component {
     constructor(props) {
@@ -22,7 +23,9 @@ class Video extends Component {
     }
 
     selectVideoImplementation = (stream, options) => {
-        if (stream.ytId) {
+        if (options.ipc) {
+            return MPVVideo;
+        } else if (stream.ytId) {
             return YouTubeVideo;
         } else {
             return HTMLVideo;
@@ -34,7 +37,11 @@ class Video extends Component {
             const Video = this.selectVideoImplementation(args[2], args[3]);
             if (this.video === null || this.video.constructor !== Video) {
                 this.dispatch('command', 'destroy');
-                this.video = new Video({ containerElement: this.containerRef.current });
+                this.video = new Video({
+                    ...args[3],
+                    id: this.id,
+                    containerElement: this.containerRef.current
+                });
                 this.video.on('ended', this.props.onEnded);
                 this.video.on('error', this.props.onError);
                 this.video.on('propValue', this.props.onPropValue);
@@ -54,7 +61,7 @@ class Video extends Component {
 
     render() {
         return (
-            <div ref={this.containerRef} id={this.id} className={this.props.className} />
+            <div ref={this.containerRef} className={this.props.className} />
         );
     }
 }
