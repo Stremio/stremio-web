@@ -85,14 +85,13 @@
 
                 .day {
                     display: table-cell;
-                    border: var(--focusable-border-size) solid transparent;
+                    border: calc(var(--focusable-border-size) * 0.5) solid transparent;
                     background-color: var(--color-backgroundlighter);
                     cursor: pointer;
 
                     .date-container {
                         margin: calc(var(--spacing) * 0.5);
-                        width: calc(var(--episodes-height) * 0.64);
-                        height: calc(var(--episodes-height) * 0.64);
+                        flex: 1;
 
                         .date {
                             width: 100%;
@@ -104,7 +103,6 @@
                             color: var(--color-secondarylighter);
 
                             &.today {
-                                border-radius: 50%;
                                 color: var(--color-surfacelighter);
                                 background-color: var(--color-primary);
                             }
@@ -112,15 +110,13 @@
                     }
 
                     .videos {
-                        margin: var(--focusable-border-size);
                         height: var(--episodes-height);
                         display: flex;
                         flex-direction: row;
 
                         .poster {
-                            margin-right: var(--focusable-border-size);
                             display: none;
-                            width: 25%;
+                            flex: calc(1 / var(--poster-shape-ratio));
                             height: 100%;
                             background-size: cover;
                             background-repeat: no-repeat;
@@ -133,18 +129,14 @@
                             &:nth-child(-n+4) {
                                 display: block;
                             }
-                        }
 
-                        &.small {
-                            height: calc(var(--episodes-height) * 0.64);
-                        }
-
-                        &.big {
-                            height: calc(var(--episodes-height) * 1.54);
+                            &:not(:last-child) {
+                                margin-right: var(--focusable-border-size);
+                            }
                         }
                     }
 
-                    &:focus {
+                    &:hover, &:focus {
                         border-color: var(--color-surfacelighter);
                     }
 
@@ -240,13 +232,13 @@
                         justify-content: center;
 
                         .icon {
-                            margin-right: 8%;
-                            width: 8%;
+                            margin-right: 1em;
+                            width: 1em;
                             fill: var(--color-surfacelight);
                         }
 
                         .label {
-                            max-width: 84%;
+                            max-width: 9em;
                             word-break: break-all; //Firefox doesn't support { break-word }
                             word-break: break-word;
                             color: var(--color-surfacelight);
