@@ -4,7 +4,7 @@ const classnames = require('classnames');
 const SeekBar = require('./SeekBar');
 const PlayPauseButton = require('./PlayPauseButton');
 const MuteButton = require('./MuteButton');
-const VolumeBar = require('./VolumeBar');
+const VolumeSlider = require('./VolumeSlider');
 const SubtitlesButton = require('./SubtitlesButton');
 const ShareButton = require('./ShareButton');
 const styles = require('./styles');
@@ -29,11 +29,9 @@ const ControlBar = (props) => (
                 muted={props.muted}
                 dispatch={props.dispatch}
             />
-            <VolumeBar
-                className={styles['volume-bar']}
-                buttonClassName={styles['control-bar-button']}
+            <VolumeSlider
+                className={styles['volume-slider']}
                 volume={props.volume}
-                muted={props.muted}
                 dispatch={props.dispatch}
             />
             <div className={styles['spacing']} />

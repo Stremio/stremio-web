@@ -1,0 +1,24 @@
+.volume-slider-container {
+    padding: 0 calc(var(--thumb-size) / 2);
+
+    .volume-slider {
+        --thumb-size: var(--volume-slider-thumb-size);
+        --track-size: var(--volume-slider-track-size);
+        --track-before-color: var(--color-primary);
+        --track-color: var(--color-backgroundlighter);
+        --thumb-color: transparent;
+        width: 100%;
+        height: 100%;
+
+        &:global(.disabled) {
+            --track-color: var(--color-surfacedark);
+        }
+    }
+
+    &:hover, &:global(.active) {
+        .volume-slider {
+            --track-before-color: var(--color-primarylight);
+            --thumb-color: var(--color-surfacelighter);
+        }
+    }
+}

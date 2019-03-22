@@ -57,19 +57,11 @@
             }
         }
 
-        .volume-bar {
-            --volume-bar-thumb-size: calc(var(--control-bar-button-size) * 0.36);
-            --volume-bar-track-size: calc(var(--control-bar-button-size) * 0.10);
+        .volume-slider {
+            --volume-slider-thumb-size: calc(var(--control-bar-button-size) * 0.36);
+            --volume-slider-track-size: calc(var(--control-bar-button-size) * 0.10);
+            width: calc(var(--control-bar-button-size) * 4);
             height: var(--control-bar-button-size);
-            width: calc(var(--control-bar-button-size) * 5);
-
-            &:hover, &:global(.active) {
-                .control-bar-button {
-                    :global(.icon) {
-                        fill: var(--color-surfacelighter);
-                    }
-                }
-            }
         }
 
         .spacing {

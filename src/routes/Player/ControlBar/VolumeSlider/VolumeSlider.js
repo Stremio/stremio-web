@@ -2,11 +2,10 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const debounce = require('lodash.debounce');
-const Icon = require('stremio-icons/dom');
 const { Slider } = require('stremio-common');
 const styles = require('./styles');
 
-class VolumeBar extends React.Component {
+class VolumeSlider extends React.Component {
     constructor(props) {
         super(props);
 
@@ -18,17 +17,11 @@ class VolumeBar extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
         return nextState.volume !== this.state.volume ||
             nextProps.className !== this.props.className ||
-            nextProps.buttonClassName !== this.props.buttonClassName ||
-            nextProps.volume !== this.props.volume ||
-            nextProps.muted !== this.props.muted;
+            nextProps.volume !== this.props.volume;
     }
 
     componentWillUnmount() {
         this.resetVolumeDebounced.cancel();
-    }
-
-    toogleVolumeMute = () => {
-        this.props.dispatch('setProp', 'muted', !this.props.muted);
     }
 
     resetVolumeDebounced = debounce(() => {
@@ -52,22 +45,11 @@ class VolumeBar extends React.Component {
     }
 
     render() {
-        if (this.props.volume === null) {
-            return null;
-        }
-
         const volume = this.state.volume !== null ? this.state.volume : this.props.volume;
-        const icon = (volume === 0 || this.props.muted) ? 'ic_volume0' :
-            volume < 30 ? 'ic_volume1' :
-                volume < 70 ? 'ic_volume2' :
-                    'ic_volume3';
         return (
-            <div className={classnames(styles['volume-bar-container'], { 'active': this.state.volume !== null }, this.props.className)}>
-                <div className={this.props.buttonClassName} onClick={this.toogleVolumeMute}>
-                    <Icon className={'icon'} icon={icon} />
-                </div>
+            <div className={classnames(this.props.className, styles['volume-slider-container'], { 'active': this.state.volume !== null })}>
                 <Slider
-                    className={styles['slider']}
+                    className={styles['volume-slider']}
                     value={volume}
                     minimumValue={0}
                     maximumValue={100}
@@ -81,12 +63,10 @@ class VolumeBar extends React.Component {
     }
 }
 
-VolumeBar.propTypes = {
+VolumeSlider.propTypes = {
     className: PropTypes.string,
-    buttonClassName: PropTypes.string,
     volume: PropTypes.number,
-    muted: PropTypes.bool,
     dispatch: PropTypes.func.isRequired
 };
 
-module.exports = VolumeBar;
+module.exports = VolumeSlider;
