@@ -18,6 +18,7 @@ class Player extends Component {
             duration: null,
             buffering: null,
             volume: null,
+            muted: null,
             subtitleTracks: [],
             selectedSubtitleTrackId: null,
             subtitleSize: null,
@@ -32,6 +33,7 @@ class Player extends Component {
             nextState.duration !== this.state.duration ||
             nextState.buffering !== this.state.buffering ||
             nextState.volume !== this.state.volume ||
+            nextState.muted !== this.state.muted ||
             nextState.subtitleTracks !== this.state.subtitleTracks ||
             nextState.selectedSubtitleTrackId !== this.state.selectedSubtitleTrackId ||
             nextState.subtitleSize !== this.state.subtitleSize ||
@@ -113,6 +115,7 @@ class Player extends Component {
                 time={this.state.time}
                 duration={this.state.duration}
                 volume={this.state.volume}
+                muted={this.state.muted}
                 subtitleTracks={this.state.subtitleTracks}
                 selectedSubtitleTrackId={this.state.selectedSubtitleTrackId}
                 subtitleSize={this.state.subtitleSize}

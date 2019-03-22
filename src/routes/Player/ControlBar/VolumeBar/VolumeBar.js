@@ -19,7 +19,8 @@ class VolumeBar extends React.Component {
         return nextState.volume !== this.state.volume ||
             nextProps.className !== this.props.className ||
             nextProps.buttonClassName !== this.props.buttonClassName ||
-            nextProps.volume !== this.props.volume;
+            nextProps.volume !== this.props.volume ||
+            nextProps.muted !== this.props.muted;
     }
 
     componentWillUnmount() {
@@ -27,8 +28,7 @@ class VolumeBar extends React.Component {
     }
 
     toogleVolumeMute = () => {
-        const command = this.props.volume > 0 ? 'mute' : 'unmute';
-        this.props.dispatch('command', command);
+        this.props.dispatch('setProp', 'muted', !this.props.muted);
     }
 
     resetVolumeDebounced = debounce(() => {
@@ -57,7 +57,7 @@ class VolumeBar extends React.Component {
         }
 
         const volume = this.state.volume !== null ? this.state.volume : this.props.volume;
-        const icon = volume === 0 ? 'ic_volume0' :
+        const icon = (volume === 0 || this.props.muted) ? 'ic_volume0' :
             volume < 30 ? 'ic_volume1' :
                 volume < 70 ? 'ic_volume2' :
                     'ic_volume3';
@@ -85,6 +85,7 @@ VolumeBar.propTypes = {
     className: PropTypes.string,
     buttonClassName: PropTypes.string,
     volume: PropTypes.number,
+    muted: PropTypes.bool,
     dispatch: PropTypes.func.isRequired
 };
 

@@ -26,6 +26,7 @@ class ControlBar extends Component {
             nextProps.time !== this.props.time ||
             nextProps.duration !== this.props.duration ||
             nextProps.volume !== this.props.volume ||
+            nextProps.muted !== this.props.muted ||
             nextProps.subtitleTracks !== this.props.subtitleTracks ||
             nextProps.selectedSubtitleTrackId !== this.props.selectedSubtitleTrackId ||
             nextProps.subtitleSize !== this.props.subtitleSize ||
@@ -74,6 +75,7 @@ class ControlBar extends Component {
                         className={styles['volume-bar']}
                         buttonClassName={styles['control-bar-button']}
                         volume={this.props.volume}
+                        muted={this.props.muted}
                         dispatch={this.dispatch}
                     />
                     <div className={styles['spacing']} />
@@ -118,6 +120,7 @@ ControlBar.propTypes = {
     time: PropTypes.number,
     duration: PropTypes.number,
     volume: PropTypes.number,
+    muted: PropTypes.bool,
     subtitleTracks: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.string.isRequired,
         label: PropTypes.string.isRequired,
