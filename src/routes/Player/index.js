@@ -1,3 +1,3 @@
-import Player from './Player';
+const Player = require('./Player');
 
-export default Player;
+module.exports = Player;
