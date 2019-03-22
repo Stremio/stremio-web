@@ -1,11 +1,12 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import classnames from 'classnames';
-import debounce from 'lodash.debounce';
-import { Slider } from 'stremio-common';
-import styles from './styles';
+const React = require('react');
+const PropTypes = require('prop-types');
+const classnames = require('classnames');
+const debounce = require('lodash.debounce');
+const Icon = require('stremio-icons/dom');
+const { Slider } = require('stremio-common');
+const styles = require('./styles');
 
-class VolumeBar extends Component {
+class VolumeBar extends React.Component {
     constructor(props) {
         super(props);
 
@@ -17,8 +18,8 @@ class VolumeBar extends Component {
     shouldComponentUpdate(nextProps, nextState) {
         return nextState.volume !== this.state.volume ||
             nextProps.className !== this.props.className ||
-            nextProps.volume !== this.props.volume ||
-            nextProps.toggleButtonComponent !== this.props.toggleButtonComponent;
+            nextProps.buttonClassName !== this.props.buttonClassName ||
+            nextProps.volume !== this.props.volume;
     }
 
     componentWillUnmount() {
@@ -62,7 +63,9 @@ class VolumeBar extends Component {
                     'ic_volume3';
         return (
             <div className={classnames(styles['volume-bar-container'], { 'active': this.state.volume !== null }, this.props.className)}>
-                {React.createElement(this.props.toggleButtonComponent, { icon, onClick: this.toogleVolumeMute }, null)}
+                <div className={this.props.buttonClassName} onClick={this.toogleVolumeMute}>
+                    <Icon className={'icon'} icon={icon} />
+                </div>
                 <Slider
                     className={styles['slider']}
                     value={volume}
@@ -80,12 +83,8 @@ class VolumeBar extends Component {
 
 VolumeBar.propTypes = {
     className: PropTypes.string,
+    buttonClassName: PropTypes.string,
     volume: PropTypes.number,
-    toggleButtonComponent: PropTypes.oneOfType([
-        PropTypes.func,
-        PropTypes.string,
-        PropTypes.shape({ render: PropTypes.func.isRequired }),
-    ]).isRequired,
     dispatch: PropTypes.func.isRequired
 };
 

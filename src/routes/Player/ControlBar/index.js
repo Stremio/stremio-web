@@ -1,3 +1,3 @@
-import ControlBar from './ControlBar';
+const ControlBar = require('./ControlBar');
 
-export default ControlBar;
+module.exports = ControlBar;

@@ -1,10 +1,11 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+const React = require('react');
+const PropTypes = require('prop-types');
+const Icon = require('stremio-icons/dom');
 
-class PlayPauseButton extends Component {
+class PlayPauseButton extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
         return nextProps.paused !== this.props.paused ||
-            nextProps.toggleButtonComponent !== this.props.toggleButtonComponent;
+            nextProps.className !== this.props.className;
     }
 
     togglePaused = () => {
@@ -17,18 +18,18 @@ class PlayPauseButton extends Component {
         }
 
         const icon = this.props.paused ? 'ic_play' : 'ic_pause';
-        return React.createElement(this.props.toggleButtonComponent, { icon, onClick: this.togglePaused }, null);
+        return (
+            <div className={this.props.className} onClick={this.togglePaused}>
+                <Icon className={'icon'} icon={icon} />
+            </div>
+        );
     }
 }
 
 PlayPauseButton.propTypes = {
+    className: PropTypes.string,
     paused: PropTypes.bool,
-    dispatch: PropTypes.func.isRequired,
-    toggleButtonComponent: PropTypes.oneOfType([
-        PropTypes.func,
-        PropTypes.string,
-        PropTypes.shape({ render: PropTypes.func.isRequired }),
-    ]).isRequired
+    dispatch: PropTypes.func.isRequired
 };
 
-export default PlayPauseButton;
+module.exports = PlayPauseButton;

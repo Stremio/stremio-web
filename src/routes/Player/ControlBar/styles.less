@@ -26,7 +26,7 @@
             align-items: center;
             cursor: pointer;
 
-            .icon {
+            :global(.icon) {
                 width: 60%;
                 height: 60%;
                 fill: var(--color-surfacelight);
@@ -36,7 +36,7 @@
             &:global(.active) {
                 background-color: var(--color-backgrounddarker);
 
-                .icon {
+                :global(.icon) {
                     fill: var(--color-surfacelighter);
                 }
             }
@@ -44,13 +44,13 @@
             &:global(.disabled) {
                 cursor: default;
 
-                .icon {
+                :global(.icon) {
                     fill: var(--color-surfacedark);
                 }
             }
 
             &:hover:not(:global(.disabled)) {
-                .icon {
+                :global(.icon) {
                     fill: var(--color-surfacelighter);
                 }
             }
@@ -64,7 +64,7 @@
 
             &:hover, &:global(.active) {
                 .control-bar-button {
-                    .icon {
+                    :global(.icon) {
                         fill: var(--color-surfacelighter);
                     }
                 }

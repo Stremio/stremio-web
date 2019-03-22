@@ -1,3 +1,3 @@
-import PlayPauseButton from './PlayPauseButton';
+const PlayPauseButton = require('./PlayPauseButton');
 
-export default PlayPauseButton;
+module.exports = PlayPauseButton;

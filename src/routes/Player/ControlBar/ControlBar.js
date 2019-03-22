@@ -9,14 +9,6 @@ import VolumeBar from './VolumeBar';
 import SubtitlesPicker from './SubtitlesPicker';
 import styles from './styles';
 
-const ControlBarButton = React.forwardRef(({ icon, active, disabled, onClick }, ref) => (
-    <div ref={ref} className={classnames(styles['control-bar-button'], { 'active': active }, { 'disabled': disabled })} onClick={!disabled ? onClick : null}>
-        <Icon className={styles['icon']} icon={icon} />
-    </div>
-));
-
-ControlBarButton.displayName = 'ControlBarButton';
-
 class ControlBar extends Component {
     constructor(props) {
         super(props);
@@ -63,89 +55,56 @@ class ControlBar extends Component {
         this.setState({ subtitlesPopupOpen: false });
     }
 
-    renderSeekBar() {
-        return (
-            <SeekBar
-                className={styles['seek-bar']}
-                time={this.props.time}
-                duration={this.props.duration}
-                dispatch={this.dispatch}
-            />
-        );
-    }
-
-    renderPlayPauseButton() {
-        return (
-            <PlayPauseButton
-                toggleButtonComponent={ControlBarButton}
-                paused={this.props.paused}
-                dispatch={this.dispatch}
-            />
-        );
-    }
-
-    renderVolumeBar() {
-        return (
-            <VolumeBar
-                className={styles['volume-bar']}
-                toggleButtonComponent={ControlBarButton}
-                volume={this.props.volume}
-                dispatch={this.dispatch}
-            />
-        );
-    }
-
-    renderShareButton() {
-        return (
-            <Popup className={classnames(styles['popup-container'], this.props.popupClassName)} border={true} onOpen={this.onSharePopupOpen} onClose={this.onSharePopupClose}>
-                <Popup.Label>
-                    <ControlBarButton
-                        icon={'ic_share'}
-                        active={this.state.sharePopupOpen}
-                    />
-                </Popup.Label>
-                <Popup.Menu>
-                    <div className={classnames(styles['popup-content'], styles['share-popup-content'])} />
-                </Popup.Menu>
-            </Popup>
-        );
-    }
-
-    renderSubtitlesButton() {
-        return (
-            <Popup className={classnames(styles['popup-container'], this.props.popupClassName)} border={true} onOpen={this.onSubtitlesPopupOpen} onClose={this.onSubtitlesPopupClose}>
-                <Popup.Label>
-                    <ControlBarButton
-                        icon={'ic_sub'}
-                        disabled={this.props.subtitleTracks.length === 0}
-                        active={this.state.subtitlesPopupOpen}
-                    />
-                </Popup.Label>
-                <Popup.Menu>
-                    <SubtitlesPicker
-                        className={classnames(styles['popup-content'], styles['subtitles-popup-content'])}
-                        subtitleTracks={this.props.subtitleTracks}
-                        selectedSubtitleTrackId={this.props.selectedSubtitleTrackId}
-                        subtitleSize={this.props.subtitleSize}
-                        subtitleDelay={this.props.subtitleDelay}
-                        subtitleDarkBackground={this.props.subtitleDarkBackground}
-                        dispatch={this.dispatch}
-                    />
-                </Popup.Menu>
-            </Popup >
-        );
-    }
-
     render() {
         return (
             <div className={classnames(styles['control-bar-container'], this.props.className)}>
-                {this.renderSeekBar()}
+                <SeekBar
+                    className={styles['seek-bar']}
+                    time={this.props.time}
+                    duration={this.props.duration}
+                    dispatch={this.dispatch}
+                />
                 <div className={styles['control-bar-buttons-container']}>
-                    {this.renderPlayPauseButton()}
-                    {this.renderVolumeBar()}
+                    <PlayPauseButton
+                        className={styles['control-bar-button']}
+                        paused={this.props.paused}
+                        dispatch={this.dispatch}
+                    />
+                    <VolumeBar
+                        className={styles['volume-bar']}
+                        buttonClassName={styles['control-bar-button']}
+                        volume={this.props.volume}
+                        dispatch={this.dispatch}
+                    />
                     <div className={styles['spacing']} />
-                    {this.renderSubtitlesButton()}
-                    {this.renderShareButton()}
+                    <Popup className={classnames(styles['popup-container'], this.props.popupClassName)} border={true} onOpen={this.onSubtitlesPopupOpen} onClose={this.onSubtitlesPopupClose}>
+                        <Popup.Label>
+                            <div className={classnames(styles['control-bar-button'], { 'active': this.state.subtitlesPopupOpen }, { 'disabled': this.props.subtitleTracks.length === 0 })}>
+                                <Icon className={'icon'} icon={'ic_sub'} />
+                            </div>
+                        </Popup.Label>
+                        <Popup.Menu>
+                            <SubtitlesPicker
+                                className={classnames(styles['popup-content'], styles['subtitles-popup-content'])}
+                                subtitleTracks={this.props.subtitleTracks}
+                                selectedSubtitleTrackId={this.props.selectedSubtitleTrackId}
+                                subtitleSize={this.props.subtitleSize}
+                                subtitleDelay={this.props.subtitleDelay}
+                                subtitleDarkBackground={this.props.subtitleDarkBackground}
+                                dispatch={this.dispatch}
+                            />
+                        </Popup.Menu>
+                    </Popup>
+                    <Popup className={classnames(styles['popup-container'], this.props.popupClassName)} border={true} onOpen={this.onSharePopupOpen} onClose={this.onSharePopupClose}>
+                        <Popup.Label>
+                            <div className={classnames(styles['control-bar-button'], { 'active': this.state.sharePopupOpen })}>
+                                <Icon className={'icon'} icon={'ic_share'} />
+                            </div>
+                        </Popup.Label>
+                        <Popup.Menu>
+                            <div className={classnames(styles['popup-content'], styles['share-popup-content'])} />
+                        </Popup.Menu>
+                    </Popup>
                 </div>
             </div>
         );

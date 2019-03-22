@@ -1,3 +1,3 @@
-import VolumeBar from './VolumeBar';
+const VolumeBar = require('./VolumeBar');
 
-export default VolumeBar;
+module.exports = VolumeBar;
