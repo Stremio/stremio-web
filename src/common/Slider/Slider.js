@@ -43,18 +43,24 @@ class Slider extends Component {
 
     onBlur = () => {
         this.releaseThumb();
-        this.props.onCancel();
+        if (typeof this.props.onCancel === 'function') {
+            this.props.onCancel();
+        }
     }
 
     onMouseUp = ({ clientX: mouseX, clientY: mouseY }) => {
         this.releaseThumb();
         const slidingValue = this.calculateSlidingValue({ mouseX, mouseY });
-        this.props.onComplete(slidingValue);
+        if (typeof this.props.onComplete === 'function') {
+            this.props.onComplete(slidingValue);
+        }
     }
 
     onMouseMove = ({ clientX: mouseX, clientY: mouseY }) => {
         const slidingValue = this.calculateSlidingValue({ mouseX, mouseY });
-        this.props.onSlide(slidingValue);
+        if (typeof this.props.onSlide === 'function') {
+            this.props.onSlide(slidingValue);
+        }
     }
 
     onStartSliding = ({ clientX: mouseX, clientY: mouseY, button }) => {
@@ -90,9 +96,9 @@ Slider.propTypes = {
     minimumValue: PropTypes.number.isRequired,
     maximumValue: PropTypes.number.isRequired,
     orientation: PropTypes.oneOf(['horizontal', 'vertical']).isRequired,
-    onSlide: PropTypes.func.isRequired,
-    onComplete: PropTypes.func.isRequired,
-    onCancel: PropTypes.func.isRequired
+    onSlide: PropTypes.func,
+    onComplete: PropTypes.func,
+    onCancel: PropTypes.func
 };
 Slider.defaultProps = {
     value: 0,
