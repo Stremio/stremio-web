@@ -37,7 +37,7 @@ const ControlBar = (props) => (
             <div className={styles['spacing']} />
             <SubtitlesButton
                 className={styles['control-bar-button']}
-                popupContainerClassName={classnames(styles['popup-container'], props.popupClassName)}
+                popupContainerClassName={classnames(styles['popup-container'], props.popupContainerClassName)}
                 popupContentClassName={styles['popup-content']}
                 subtitleTracks={props.subtitleTracks}
                 selectedSubtitleTrackId={props.selectedSubtitleTrackId}
@@ -48,7 +48,7 @@ const ControlBar = (props) => (
             />
             <ShareButton
                 className={styles['control-bar-button']}
-                popupContainerClassName={classnames(styles['popup-container'], props.popupClassName)}
+                popupContainerClassName={classnames(styles['popup-container'], props.popupContainerClassName)}
                 popupContentClassName={styles['popup-content']}
             />
         </div>
@@ -57,7 +57,7 @@ const ControlBar = (props) => (
 
 ControlBar.propTypes = {
     className: PropTypes.string,
-    popupClassName: PropTypes.string,
+    popupContainerClassName: PropTypes.string,
     paused: PropTypes.bool,
     time: PropTypes.number,
     duration: PropTypes.number,
