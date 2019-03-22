@@ -14,10 +14,9 @@ class PlayPauseButton extends React.Component {
     }
 
     render() {
-        const disabled = this.props.paused === null;
         const icon = this.props.paused ? 'ic_play' : 'ic_pause';
         return (
-            <div className={classnames(this.props.className, { 'disabled': disabled })} onClick={this.togglePaused}>
+            <div className={classnames(this.props.className, { 'disabled': this.props.paused === null })} onClick={this.togglePaused}>
                 <Icon className={'icon'} icon={icon} />
             </div>
         );
