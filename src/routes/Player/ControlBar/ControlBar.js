@@ -6,7 +6,7 @@ import { Popup } from 'stremio-common';
 import SeekBar from './SeekBar';
 import PlayPauseButton from './PlayPauseButton';
 import VolumeBar from './VolumeBar';
-import SubtitlesPicker from './SubtitlesPicker';
+import SubtitlesButton from './SubtitlesButton';
 import styles from './styles';
 
 class ControlBar extends Component {
@@ -14,8 +14,7 @@ class ControlBar extends Component {
         super(props);
 
         this.state = {
-            sharePopupOpen: false,
-            subtitlesPopupOpen: false
+            sharePopupOpen: false
         };
     }
 
@@ -32,8 +31,7 @@ class ControlBar extends Component {
             nextProps.subtitleSize !== this.props.subtitleSize ||
             nextProps.subtitleDelay !== this.props.subtitleDelay ||
             nextProps.subtitleDarkBackground !== this.props.subtitleDarkBackground ||
-            nextState.sharePopupOpen !== this.state.sharePopupOpen ||
-            nextState.subtitlesPopupOpen !== this.state.subtitlesPopupOpen;
+            nextState.sharePopupOpen !== this.state.sharePopupOpen;
     }
 
     dispatch = (...args) => {
@@ -46,14 +44,6 @@ class ControlBar extends Component {
 
     onSharePopupClose = () => {
         this.setState({ sharePopupOpen: false });
-    }
-
-    onSubtitlesPopupOpen = () => {
-        this.setState({ subtitlesPopupOpen: true });
-    }
-
-    onSubtitlesPopupClose = () => {
-        this.setState({ subtitlesPopupOpen: false });
     }
 
     render() {
@@ -79,24 +69,17 @@ class ControlBar extends Component {
                         dispatch={this.dispatch}
                     />
                     <div className={styles['spacing']} />
-                    <Popup className={classnames(styles['popup-container'], this.props.popupClassName)} border={true} onOpen={this.onSubtitlesPopupOpen} onClose={this.onSubtitlesPopupClose}>
-                        <Popup.Label>
-                            <div className={classnames(styles['control-bar-button'], { 'active': this.state.subtitlesPopupOpen }, { 'disabled': this.props.subtitleTracks.length === 0 })}>
-                                <Icon className={'icon'} icon={'ic_sub'} />
-                            </div>
-                        </Popup.Label>
-                        <Popup.Menu>
-                            <SubtitlesPicker
-                                className={classnames(styles['popup-content'], styles['subtitles-popup-content'])}
-                                subtitleTracks={this.props.subtitleTracks}
-                                selectedSubtitleTrackId={this.props.selectedSubtitleTrackId}
-                                subtitleSize={this.props.subtitleSize}
-                                subtitleDelay={this.props.subtitleDelay}
-                                subtitleDarkBackground={this.props.subtitleDarkBackground}
-                                dispatch={this.dispatch}
-                            />
-                        </Popup.Menu>
-                    </Popup>
+                    <SubtitlesButton
+                        className={styles['control-bar-button']}
+                        popupContainerClassName={classnames(styles['popup-container'], this.props.popupClassName)}
+                        popupContentClassName={styles['popup-content']}
+                        subtitleTracks={this.props.subtitleTracks}
+                        selectedSubtitleTrackId={this.props.selectedSubtitleTrackId}
+                        subtitleSize={this.props.subtitleSize}
+                        subtitleDelay={this.props.subtitleDelay}
+                        subtitleDarkBackground={this.props.subtitleDarkBackground}
+                        dispatch={this.dispatch}
+                    />
                     <Popup className={classnames(styles['popup-container'], this.props.popupClassName)} border={true} onOpen={this.onSharePopupOpen} onClose={this.onSharePopupClose}>
                         <Popup.Label>
                             <div className={classnames(styles['control-bar-button'], { 'active': this.state.sharePopupOpen })}>

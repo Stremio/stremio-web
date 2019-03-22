@@ -1,9 +1,9 @@
-import React, { Component, Fragment } from 'react';
-import PropTypes from 'prop-types';
-import classnames from 'classnames';
-import Icon from 'stremio-icons/dom';
-import { Checkbox } from 'stremio-common';
-import styles from './styles';
+const React = require('react');
+const PropTypes = require('prop-types');
+const classnames = require('classnames');
+const Icon = require('stremio-icons/dom');
+const { Checkbox } = require('stremio-common');
+const styles = require('./styles');
 
 const ORIGIN_PRIORITIES = Object.freeze({
     'LOCAL': 1,
@@ -35,7 +35,7 @@ const NumberInput = ({ value, label, delta, onChange }) => {
     );
 };
 
-class SubtitlesPicker extends Component {
+class SubtitlesPicker extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
         return nextProps.className !== this.props.className ||
             nextProps.subtitleTracks !== this.props.subtitleTracks ||
@@ -107,7 +107,7 @@ class SubtitlesPicker extends Component {
                     Object.keys(groupedTracks)
                         .sort(this.subtitlesComparator(ORIGIN_PRIORITIES))
                         .map((origin) => (
-                            <Fragment key={origin}>
+                            <React.Fragment key={origin}>
                                 <div className={styles['track-origin']}>{origin}</div>
                                 {
                                     Object.keys(groupedTracks[origin])
@@ -125,7 +125,7 @@ class SubtitlesPicker extends Component {
                                             );
                                         })
                                 }
-                            </Fragment>
+                            </React.Fragment>
                         ))
                 }
             </div>
@@ -236,4 +236,4 @@ SubtitlesPicker.defaultProps = {
     })
 };
 
-export default SubtitlesPicker;
+module.exports = SubtitlesPicker;
