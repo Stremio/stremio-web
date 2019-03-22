@@ -13,6 +13,12 @@ class ShareButton extends React.Component {
         };
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        return nextState.popupOpen !== this.state.popupOpen ||
+            nextProps.className !== this.props.className ||
+            nextProps.popupContentClassName !== this.props.popupContentClassName;
+    }
+
     onPopupOpen = () => {
         this.setState({ popupOpen: true });
     }
@@ -23,7 +29,7 @@ class ShareButton extends React.Component {
 
     render() {
         return (
-            <Popup className={this.props.popupContainerClassName} border={true} onOpen={this.onPopupOpen} onClose={this.onPopupClose} >
+            <Popup className={this.props.popupContainerClassName} border={true} onOpen={this.onPopupOpen} onClose={this.onPopupClose}>
                 <Popup.Label>
                     <div className={classnames(this.props.className, { 'active': this.state.popupOpen })}>
                         <Icon className={'icon'} icon={'ic_share'} />
@@ -32,9 +38,9 @@ class ShareButton extends React.Component {
                 <Popup.Menu>
                     <div className={classnames(this.props.popupContentClassName, styles['popup-content'])} />
                 </Popup.Menu>
-            </Popup >
+            </Popup>
         );
-    };
+    }
 }
 
 module.exports = ShareButton;
