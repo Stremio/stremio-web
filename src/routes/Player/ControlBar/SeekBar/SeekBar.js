@@ -16,9 +16,9 @@ class SeekBar extends React.Component {
 
     shouldComponentUpdate(nextProps, nextState) {
         return nextState.time !== this.state.time ||
+            nextProps.className !== this.props.className ||
             nextProps.time !== this.props.time ||
-            nextProps.duration !== this.props.duration ||
-            nextProps.className !== this.props.className;
+            nextProps.duration !== this.props.duration;
     }
 
     componentWillUnmount() {
@@ -46,63 +46,32 @@ class SeekBar extends React.Component {
     }
 
     formatTime = (time) => {
+        if (time === null || isNaN(time)) {
+            return '--:--:--';
+        }
+
         const hours = ('0' + Math.floor((time / (1000 * 60 * 60)) % 24)).slice(-2);
         const minutes = ('0' + Math.floor((time / (1000 * 60)) % 60)).slice(-2);
         const seconds = ('0' + Math.floor((time / 1000) % 60)).slice(-2);
         return `${hours}:${minutes}:${seconds}`;
     }
 
-    renderTimeLabel() {
-        if (this.props.time === null) {
-            return null;
-        }
-
-        const time = this.state.time !== null ? this.state.time : this.props.time;
-        return (
-            <div className={styles['label']}>{this.formatTime(time)}</div>
-        );
-    }
-
-    renderDurationLabel() {
-        if (this.props.duration === null) {
-            return null;
-        }
-
-        return (
-            <div className={styles['label']}>{this.formatTime(this.props.duration)}</div>
-        );
-    }
-
-    renderSlider() {
-        if (this.props.time === null || this.props.duration === null) {
-            return null;
-        }
-
-        const time = this.state.time !== null ? this.state.time : this.props.time;
-        return (
-            <Slider
-                className={styles['slider']}
-                value={time}
-                minimumValue={0}
-                maximumValue={this.props.duration}
-                orientation={'horizontal'}
-                onSlide={this.onSlide}
-                onComplete={this.onComplete}
-                onCancel={this.onCancel}
-            />
-        );
-    }
-
     render() {
-        if (this.props.time === null && this.props.duration === null) {
-            return null;
-        }
-
+        const time = this.state.time !== null ? this.state.time : this.props.time;
         return (
-            <div className={classnames(styles['seek-bar-container'], { 'active': this.state.time !== null }, this.props.className)}>
-                {this.renderTimeLabel()}
-                {this.renderSlider()}
-                {this.renderDurationLabel()}
+            <div className={classnames(this.props.className, styles['seek-bar-container'], { 'active': this.state.time !== null })}>
+                <div className={styles['label']}>{this.formatTime(time)}</div>
+                <Slider
+                    className={styles['slider']}
+                    value={time}
+                    minimumValue={0}
+                    maximumValue={this.props.duration}
+                    orientation={'horizontal'}
+                    onSlide={this.onSlide}
+                    onComplete={this.onComplete}
+                    onCancel={this.onCancel}
+                />
+                <div className={styles['label']}>{this.formatTime(this.props.duration)}</div>
             </div>
         );
     }

@@ -4,7 +4,6 @@
     align-items: center;
 
     .label {
-        font-size: 1em;
         color: var(--color-surfacelight);
     }
 
@@ -17,6 +16,10 @@
         flex: 1;
         align-self: stretch;
         margin: 0 var(--seek-bar-thumb-size);
+
+        &:global(.disabled) {
+            --track-color: var(--color-surfacedark);
+        }
     }
 
     &:hover, &:global(.active) {
