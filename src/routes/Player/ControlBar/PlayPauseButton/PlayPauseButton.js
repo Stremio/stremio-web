@@ -1,11 +1,12 @@
 const React = require('react');
 const PropTypes = require('prop-types');
+const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 
 class PlayPauseButton extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
-        return nextProps.paused !== this.props.paused ||
-            nextProps.className !== this.props.className;
+        return nextProps.className !== this.props.className ||
+            nextProps.paused !== this.props.paused;
     }
 
     togglePaused = () => {
@@ -13,13 +14,10 @@ class PlayPauseButton extends React.Component {
     }
 
     render() {
-        if (this.props.paused === null) {
-            return null;
-        }
-
+        const disabled = this.props.paused === null;
         const icon = this.props.paused ? 'ic_play' : 'ic_pause';
         return (
-            <div className={this.props.className} onClick={this.togglePaused}>
+            <div className={classnames(this.props.className, { 'disabled': disabled })} onClick={this.togglePaused}>
                 <Icon className={'icon'} icon={icon} />
             </div>
         );
