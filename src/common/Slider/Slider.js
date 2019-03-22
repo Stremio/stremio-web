@@ -80,11 +80,22 @@ class Slider extends Component {
         const thumbStartProp = this.orientation === 'horizontal' ? 'left' : 'bottom';
         const trackBeforeSizeProp = this.orientation === 'horizontal' ? 'width' : 'height';
         const thumbStart = Math.max(0, Math.min(1, (this.props.value - this.props.minimumValue) / (this.props.maximumValue - this.props.minimumValue)));
+        const disabled = this.props.value === null || isNaN(this.props.value) ||
+            this.props.minimumValue === null || isNaN(this.props.minimumValue) ||
+            this.props.maximumValue === null || isNaN(this.props.maximumValue) ||
+            this.props.minimumValue === this.props.maximumValue;
         return (
-            <div ref={this.sliderContainerRef} className={classnames(styles['slider-container'], styles[this.orientation], { 'disabled': this.props.minimumValue === this.props.maximumValue }, this.props.className)} onMouseDown={this.onStartSliding}>
+            <div ref={this.sliderContainerRef} className={classnames(styles['slider-container'], styles[this.orientation], { 'disabled': disabled }, this.props.className)} onMouseDown={this.onStartSliding}>
                 <div className={styles['track']} />
-                <div className={styles['track-before']} style={{ [trackBeforeSizeProp]: `calc(100% * ${thumbStart})` }} />
-                <div className={styles['thumb']} style={{ [thumbStartProp]: `calc(100% * ${thumbStart})` }} />
+                {
+                    !disabled ?
+                        <React.Fragment>
+                            <div className={styles['track-before']} style={{ [trackBeforeSizeProp]: `calc(100% * ${thumbStart})` }} />
+                            <div className={styles['thumb']} style={{ [thumbStartProp]: `calc(100% * ${thumbStart})` }} />
+                        </React.Fragment>
+                        :
+                        null
+                }
             </div>
         );
     }
@@ -92,9 +103,9 @@ class Slider extends Component {
 
 Slider.propTypes = {
     className: PropTypes.string,
-    value: PropTypes.number.isRequired,
-    minimumValue: PropTypes.number.isRequired,
-    maximumValue: PropTypes.number.isRequired,
+    value: PropTypes.number,
+    minimumValue: PropTypes.number,
+    maximumValue: PropTypes.number,
     orientation: PropTypes.oneOf(['horizontal', 'vertical']).isRequired,
     onSlide: PropTypes.func,
     onComplete: PropTypes.func,
