@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import classnames from 'classnames';
-import debounce from 'lodash.debounce';
-import { Slider } from 'stremio-common';
-import styles from './styles';
+const React = require('react');
+const PropTypes = require('prop-types');
+const classnames = require('classnames');
+const debounce = require('lodash.debounce');
+const { Slider } = require('stremio-common');
+const styles = require('./styles');
 
-class SeekBar extends Component {
+class SeekBar extends React.Component {
     constructor(props) {
         super(props);
 
@@ -115,4 +115,4 @@ SeekBar.propTypes = {
     dispatch: PropTypes.func.isRequired
 };
 
-export default SeekBar;
+module.exports = SeekBar;

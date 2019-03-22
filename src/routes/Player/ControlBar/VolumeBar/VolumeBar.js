@@ -89,4 +89,4 @@ VolumeBar.propTypes = {
     dispatch: PropTypes.func.isRequired
 };
 
-export default VolumeBar;
+module.exports = VolumeBar;

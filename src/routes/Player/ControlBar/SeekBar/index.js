@@ -1,3 +1,3 @@
-import SeekBar from './SeekBar';
+const SeekBar = require('./SeekBar');
 
-export default SeekBar;
+module.exports = SeekBar;
