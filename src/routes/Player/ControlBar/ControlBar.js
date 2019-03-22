@@ -3,13 +3,14 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const SeekBar = require('./SeekBar');
 const PlayPauseButton = require('./PlayPauseButton');
+const MuteButton = require('./MuteButton');
 const VolumeBar = require('./VolumeBar');
 const SubtitlesButton = require('./SubtitlesButton');
 const ShareButton = require('./ShareButton');
 const styles = require('./styles');
 
 const ControlBar = (props) => (
-    <div className={classnames(styles['control-bar-container'], props.className)}>
+    <div className={classnames(props.className, styles['control-bar-container'])}>
         <SeekBar
             className={styles['seek-bar']}
             time={props.time}
@@ -20,6 +21,12 @@ const ControlBar = (props) => (
             <PlayPauseButton
                 className={styles['control-bar-button']}
                 paused={props.paused}
+                dispatch={props.dispatch}
+            />
+            <MuteButton
+                className={styles['control-bar-button']}
+                volume={props.volume}
+                muted={props.muted}
                 dispatch={props.dispatch}
             />
             <VolumeBar
