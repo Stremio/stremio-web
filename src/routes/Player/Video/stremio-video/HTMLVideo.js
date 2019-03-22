@@ -71,7 +71,14 @@ function HTMLVideo(options) {
             return null;
         }
 
-        return videoElement.muted ? 0 : Math.floor(videoElement.volume * 100);
+        return Math.floor(videoElement.volume * 100);
+    }
+    function getMuted() {
+        if (destroyed) {
+            return null;
+        }
+
+        return videoElement.muted;
     }
     function getSubtitleTracks() {
         if (!loaded) {
@@ -138,6 +145,7 @@ function HTMLVideo(options) {
         events.emit('propChanged', 'buffering', getBuffering());
     }
     function onVolumeChanged() {
+        events.emit('propChanged', 'muted', getMuted());
         events.emit('propChanged', 'volume', getVolume());
     }
     function onSubtitleTracksChanged() {
@@ -274,6 +282,12 @@ function HTMLVideo(options) {
                         videoElement.addEventListener('volumechange', onVolumeChanged);
                         return;
                     }
+                    case 'muted': {
+                        events.emit('propValue', 'muted', getMuted());
+                        videoElement.removeEventListener('volumechange', onVolumeChanged);
+                        videoElement.addEventListener('volumechange', onVolumeChanged);
+                        return;
+                    }
                     case 'subtitleTracks': {
                         events.emit('propValue', 'subtitleTracks', getSubtitleTracks());
                         return;
@@ -333,6 +347,10 @@ function HTMLVideo(options) {
 
                         return;
                     }
+                    case 'muted': {
+                        videoElement.muted = !!arguments[2];
+                        return;
+                    }
                     case 'selectedSubtitleTrackId': {
                         if (loaded) {
                             subtitles.dispatch('setProp', 'selectedTrackId', arguments[2]);
@@ -384,18 +402,6 @@ function HTMLVideo(options) {
                             onSubtitleTracksChanged();
                         } else {
                             dispatchArgsLoadedQueue.push(Array.from(arguments));
-                        }
-
-                        return;
-                    }
-                    case 'mute': {
-                        videoElement.muted = true;
-                        return;
-                    }
-                    case 'unmute': {
-                        videoElement.muted = false;
-                        if (videoElement.volume === 0) {
-                            videoElement.volume = 0.5;
                         }
 
                         return;
@@ -484,7 +490,7 @@ HTMLVideo.ERROR = Object.freeze({
 HTMLVideo.manifest = Object.freeze({
     name: 'HTMLVideo',
     embedded: true,
-    props: Object.freeze(['paused', 'time', 'duration', 'volume', 'buffering', 'subtitleTracks', 'selectedSubtitleTrackId', 'subtitleSize', 'subtitleDelay', 'subtitleDarkBackground', 'subtitleOffset'])
+    props: Object.freeze(['paused', 'time', 'duration', 'volume', 'muted', 'buffering', 'subtitleTracks', 'selectedSubtitleTrackId', 'subtitleSize', 'subtitleDelay', 'subtitleDarkBackground', 'subtitleOffset'])
 });
 
 Object.freeze(HTMLVideo);
