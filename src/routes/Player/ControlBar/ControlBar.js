@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import Icon from 'stremio-icons/dom';
-import { Popup } from 'stremio-common';
 import SeekBar from './SeekBar';
 import PlayPauseButton from './PlayPauseButton';
 import VolumeBar from './VolumeBar';
 import SubtitlesButton from './SubtitlesButton';
+import ShareButton from './ShareButton';
 import styles from './styles';
 
 class ControlBar extends Component {
@@ -80,16 +79,11 @@ class ControlBar extends Component {
                         subtitleDarkBackground={this.props.subtitleDarkBackground}
                         dispatch={this.dispatch}
                     />
-                    <Popup className={classnames(styles['popup-container'], this.props.popupClassName)} border={true} onOpen={this.onSharePopupOpen} onClose={this.onSharePopupClose}>
-                        <Popup.Label>
-                            <div className={classnames(styles['control-bar-button'], { 'active': this.state.sharePopupOpen })}>
-                                <Icon className={'icon'} icon={'ic_share'} />
-                            </div>
-                        </Popup.Label>
-                        <Popup.Menu>
-                            <div className={classnames(styles['popup-content'], styles['share-popup-content'])} />
-                        </Popup.Menu>
-                    </Popup>
+                    <ShareButton
+                        className={styles['control-bar-button']}
+                        popupContainerClassName={classnames(styles['popup-container'], this.props.popupClassName)}
+                        popupContentClassName={styles['popup-content']}
+                    />
                 </div>
             </div>
         );
