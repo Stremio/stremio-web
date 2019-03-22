@@ -1,12 +1,12 @@
-import React, { Component, Fragment } from 'react';
-import PropTypes from 'prop-types';
-import classnames from 'classnames';
-import Video from './Video';
-import BufferingLoader from './BufferingLoader';
-import ControlBar from './ControlBar';
-import styles from './styles';
+const React = require('react');
+const PropTypes = require('prop-types');
+const classnames = require('classnames');
+const Video = require('./Video');
+const BufferingLoader = require('./BufferingLoader');
+const ControlBar = require('./ControlBar');
+const styles = require('./styles');
 
-class Player extends Component {
+class Player extends React.Component {
     constructor(props) {
         super(props);
 
@@ -80,9 +80,9 @@ class Player extends Component {
         this.videoRef.current && this.videoRef.current.dispatch(...args);
     }
 
-    renderVideo() {
+    render() {
         return (
-            <Fragment>
+            <div className={styles['player-container']}>
                 <Video
                     ref={this.videoRef}
                     className={styles['layer']}
@@ -93,45 +93,25 @@ class Player extends Component {
                     onImplementationChanged={this.onImplementationChanged}
                 />
                 <div className={styles['layer']} />
-            </Fragment>
-        );
-    }
-
-    renderBufferingLoader() {
-        return (
-            <BufferingLoader
-                className={styles['layer']}
-                buffering={this.state.buffering}
-            />
-        );
-    }
-
-    renderControlBar() {
-        return (
-            <ControlBar
-                className={classnames(styles['layer'], styles['control-bar-layer'])}
-                popupClassName={styles['control-bar-popup-container']}
-                paused={this.state.paused}
-                time={this.state.time}
-                duration={this.state.duration}
-                volume={this.state.volume}
-                muted={this.state.muted}
-                subtitleTracks={this.state.subtitleTracks}
-                selectedSubtitleTrackId={this.state.selectedSubtitleTrackId}
-                subtitleSize={this.state.subtitleSize}
-                subtitleDelay={this.state.subtitleDelay}
-                subtitleDarkBackground={this.state.subtitleDarkBackground}
-                dispatch={this.dispatch}
-            />
-        );
-    }
-
-    render() {
-        return (
-            <div className={styles['player-container']}>
-                {this.renderVideo()}
-                {this.renderBufferingLoader()}
-                {this.renderControlBar()}
+                <BufferingLoader
+                    className={styles['layer']}
+                    buffering={this.state.buffering}
+                />
+                <ControlBar
+                    className={classnames(styles['layer'], styles['control-bar-layer'])}
+                    popupContainerClassName={styles['control-bar-popup-container']}
+                    paused={this.state.paused}
+                    time={this.state.time}
+                    duration={this.state.duration}
+                    volume={this.state.volume}
+                    muted={this.state.muted}
+                    subtitleTracks={this.state.subtitleTracks}
+                    selectedSubtitleTrackId={this.state.selectedSubtitleTrackId}
+                    subtitleSize={this.state.subtitleSize}
+                    subtitleDelay={this.state.subtitleDelay}
+                    subtitleDarkBackground={this.state.subtitleDarkBackground}
+                    dispatch={this.dispatch}
+                />
             </div>
         );
     }
@@ -147,4 +127,4 @@ Player.defaultProps = {
     })
 };
 
-export default Player;
+module.exports = Player;
