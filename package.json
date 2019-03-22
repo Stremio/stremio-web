@@ -20,7 +20,7 @@
         "react": "16.8.0-alpha.1",
         "react-dom": "16.8.0-alpha.1",
         "stremio-colors": "git+ssh://git@github.com/Stremio/stremio-colors.git#v2.0.3",
-        "stremio-icons": "git+ssh://git@github.com/Stremio/stremio-icons.git#v1.0.5",
+        "stremio-icons": "git+ssh://git@github.com/Stremio/stremio-icons.git#v1.0.6",
         "stremio-json-data": "git+ssh://git@github.com/stremio/stremio-json-data.git#v1.2.3",
         "stremio-translations": "git+ssh://git@github.com/Stremio/stremio-translations.git#v1.41.0",
         "vtt.js": "0.13.0"
