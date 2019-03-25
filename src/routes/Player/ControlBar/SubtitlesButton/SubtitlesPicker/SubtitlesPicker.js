@@ -17,6 +17,17 @@ const SUBTITLES_SIZE_LABELS = Object.freeze({
     5: '250%'
 });
 
+const comparatorWithPriorities = (priorities) => {
+    return (a, b) => {
+        const valueA = priorities[a];
+        const valueB = priorities[b];
+        if (!isNaN(valueA) && !isNaN(valueB)) return valueA - valueB;
+        if (!isNaN(valueA)) return -1;
+        if (!isNaN(valueB)) return 1;
+        return a - b;
+    };
+}
+
 const NumberInput = ({ value, label, delta, onChange }) => {
     if (value === null) {
         return null;
@@ -43,17 +54,6 @@ class SubtitlesPicker extends React.Component {
             nextProps.subtitleSize !== this.props.subtitleSize ||
             nextProps.subtitleDelay !== this.props.subtitleDelay ||
             nextProps.subtitleDarkBackground !== this.props.subtitleDarkBackground;
-    }
-
-    subtitlesComparator = (priorities) => {
-        return (a, b) => {
-            const valueA = priorities[a];
-            const valueB = priorities[b];
-            if (!isNaN(valueA) && !isNaN(valueB)) return valueA - valueB;
-            if (!isNaN(valueA)) return -1;
-            if (!isNaN(valueB)) return 1;
-            return a - b;
-        };
     }
 
     toggleSubtitleEnabled = () => {
@@ -105,13 +105,13 @@ class SubtitlesPicker extends React.Component {
             <div className={styles['labels-list-container']}>
                 {
                     Object.keys(groupedTracks)
-                        .sort(this.subtitlesComparator(ORIGIN_PRIORITIES))
+                        .sort(comparatorWithPriorities(ORIGIN_PRIORITIES))
                         .map((origin) => (
                             <React.Fragment key={origin}>
                                 <div className={styles['track-origin']}>{origin}</div>
                                 {
                                     Object.keys(groupedTracks[origin])
-                                        .sort(this.subtitlesComparator(this.props.languagePriorities))
+                                        .sort(comparatorWithPriorities(this.props.languagePriorities))
                                         .map((label) => {
                                             const selected = selectedTrack && selectedTrack.label === label && selectedTrack.origin === origin;
                                             return (
@@ -139,8 +139,8 @@ class SubtitlesPicker extends React.Component {
 
         return (
             <div className={styles['variants-container']}>
-                {groupedTracks[selectedTrack.origin][selectedTrack.label].map((track, index) => {
-                    return (
+                {
+                    groupedTracks[selectedTrack.origin][selectedTrack.label].map((track, index) => (
                         <div key={track.id}
                             className={classnames(styles['variant-button'], { [styles['selected']]: track.id === selectedTrack.id })}
                             title={track.id}
@@ -148,8 +148,8 @@ class SubtitlesPicker extends React.Component {
                             data-track-id={track.id}
                             children={index + 1}
                         />
-                    );
-                })}
+                    ))
+                }
             </div>
         );
     }
@@ -230,7 +230,7 @@ SubtitlesPicker.propTypes = {
     dispatch: PropTypes.func.isRequired
 };
 SubtitlesPicker.defaultProps = {
-    subtitleTracks: [],
+    subtitleTracks: Object.freeze([]),
     languagePriorities: Object.freeze({
         English: 1
     })
