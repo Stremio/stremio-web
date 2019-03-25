@@ -15,6 +15,18 @@ class SubtitlesButton extends React.Component {
         };
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        return nextState.popupOpen !== this.state.popupOpen ||
+            nextProps.className !== this.props.className ||
+            nextProps.popupContainerClassName !== this.props.popupContainerClassName ||
+            nextProps.popupContentClassName !== this.props.popupContentClassName ||
+            nextProps.subtitleTracks !== this.props.subtitleTracks ||
+            nextProps.selectedSubtitleTrackId !== this.props.selectedSubtitleTrackId ||
+            nextProps.subtitleSize !== this.props.subtitleSize ||
+            nextProps.subtitleDelay !== this.props.subtitleDelay ||
+            nextProps.subtitleDarkBackground !== this.props.subtitleDarkBackground;
+    }
+
     onPopupOpen = () => {
         this.setState({ popupOpen: true });
     }
@@ -63,7 +75,7 @@ SubtitlesButton.propTypes = {
     dispatch: PropTypes.func.isRequired
 };
 SubtitlesButton.defaultProps = {
-    subtitleTracks: []
+    subtitleTracks: Object.freeze([])
 };
 
 module.exports = SubtitlesButton;
