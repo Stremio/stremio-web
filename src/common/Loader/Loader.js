@@ -5,9 +5,7 @@ class Loader extends PureComponent {
     render() {
         return (
             <svg width="100" height="100" viewBox="0 0 1024 1024">
-
                 <path d={'M512 0l-512 512 512 512 512-512zM411.106 752.941v-480.376l323.464 240.941z'} fill={colors.surfacelighter}/>
-
                 <path d={'M256,256 512,0 768,256 512,512Z'} fillOpacity={0.8}>
                     <animate
                         attributeType="CSS"
