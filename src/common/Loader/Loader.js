@@ -4,7 +4,7 @@ class Loader extends PureComponent {
     render() {
         const { fill, children, ...props } = this.props;
         return (
-            <svg {...props} viewBox="0 0 1024 1024">
+            <svg {...props} viewBox={'0 0 1024 1024'}>
                 <path d={'M512 0l-512 512 512 512 512-512zM411.106 752.941v-480.376l323.464 240.941z'} fill={fill} />
                 <path d={'M256,256 512,0 768,256 512,512Z'} fillOpacity={0.8}>
                     <animate
