@@ -27,7 +27,8 @@ class Addons extends Component {
 
         this.state = {
             selectedCategory: ADDON_CATEGORIES.OFFICIAL,
-            selectedAddonType: DEFAULT_TYPE
+            selectedAddonType: DEFAULT_TYPE,
+            isLoaded: true
         };
     }
 
@@ -75,6 +76,21 @@ class Addons extends Component {
         return addonTypes;
     }
 
+    renderAddonPlaceholders(key) {
+        return (
+            <div key={key} className={styles['placeholder']}>
+                <div className={styles['logo-placeholder']}>
+                    <div className={styles['logo']} />
+                </div>
+                <div className={styles['text-placeholder']} />
+                <div className={styles['buttons-placeholder']}>
+                    <div className={styles['button']} />
+                    <div className={styles['button']} />
+                </div>
+            </div>
+        );
+    }
+
     render() {
         return (
             <div className={styles['addons-container']}>
@@ -109,17 +125,21 @@ class Addons extends Component {
                                 addon.types.indexOf(this.state.selectedAddonType) !== -1;
                         })
                         .map((addon) =>
-                            <Addon key={addon.name}
-                                className={styles['addon']}
-                                logo={addon.logo}
-                                name={addon.name}
-                                version={addon.version}
-                                isOfficial={addon.isOfficial}
-                                isInstalled={addon.isInstalled}
-                                types={addon.types}
-                                hostname={addon.hostname}
-                                description={addon.description}
-                            />
+                            this.state.isLoaded
+                                ?
+                                this.renderAddonPlaceholders(addon.name)
+                                :
+                                <Addon key={addon.name}
+                                    className={styles['addon']}
+                                    logo={addon.logo}
+                                    name={addon.name}
+                                    version={addon.version}
+                                    isOfficial={addon.isOfficial}
+                                    isInstalled={addon.isInstalled}
+                                    types={addon.types}
+                                    hostname={addon.hostname}
+                                    description={addon.description}
+                                />
                         )}
                 </div>
             </div>
@@ -132,6 +152,7 @@ Addons.propTypes = {
 };
 Addons.defaultProps = {
     addons: [
+        { logo: '', name: '', version: '', isOfficial: true, isInstalled: false, types: [], hostname: '', description: '' },
         { logo: 'ic_series', name: 'Watch Hub', version: '1.3.0', isOfficial: true, isInstalled: false, types: ['ovies', 'Series'], hostname: 'piratebay-stremio-addon.herokuappstremio-addon.herokuappstremio-addon.herokuappstremio-addon.herokuappstremio-addon.herokuappstremio-addon.herokuappstremio-addon.herokuappstremio-addon.herokuapp.com', description: 'Find where to stream your favourite movies and shows amongst iTunes, Hulu, Amazon and other UK/US services.' },
         { name: 'Cinemeta', version: '2.4.0', isOfficial: false, isInstalled: true, types: ['Moies', 'Series'], hostname: 'stremio-zooqle.now.sh', description: 'Watch your favourite YouTube channels ad-free and get notified when they upload new videos.' },
         { logo: 'ic_youtube_small', name: 'YouTube', version: '1.3.0', isOfficial: false, isInstalled: true, types: ['Channels', 'Videos'], hostname: 'pct.best4stremio.space', description: 'Watch your favourite YouTube channels ad-free and get notiour favourite YouTube channels ad-free and get notiour favourite YouTube channels ad-free and get notiour favourite YouTube channels ad-free and get notiour favourite YouTube channels ad-free and get notiourfavourite YouTube channels ad-free and get notiour favourite YouTube channels ad-free and get notiourfavourite YouTube channels ad-free and get notiour favourite YouTube channels ad-free and get notiour favourite YouTube channels ad-free and get notified when they upload new videos.' },

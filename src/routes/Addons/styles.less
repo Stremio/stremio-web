@@ -101,6 +101,73 @@
         overflow-y: auto;
         overflow-x: hidden;
 
+        .placeholder {
+            display: inline-grid;
+            position: relative;
+            width: var(--addon-width);
+            padding: 1.6em;
+            overflow: hidden;
+            background-color: var(--color-backgroundlighter);
+            grid-template-columns: 1fr 5fr 4fr;
+            grid-template-rows: calc(0.12 * var(--addon-width));
+            grid-template-areas:
+                "logo-placeholder text-placeholder buttons-placeholder";
+
+            &:before {
+                content: " ";
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 50%;
+                z-index: 1;
+                width: 500%;
+                margin-left: -250%;
+                animation: placeholderAnimation 0.8s linear infinite;
+                background: linear-gradient(to right, rgba(255, 255, 255, 0) 46%, rgba(255, 255, 255, 0.35) 50%, rgba(255, 255, 255, 0) 54%) 50% 50%;
+            }
+
+            @keyframes placeholderAnimation {
+                0% {
+                    transform: translate3d(-30%, 0, 0);
+                }
+
+                100% {
+                    transform: translate3d(30%, 0, 0);
+                }
+            }
+
+            .logo-placeholder {
+                grid-area: logo-placeholder;
+                background-color: var(--color-secondarylighter40);
+
+                .logo {
+                    width: calc(0.12 * var(--addon-width));
+                    height: calc(0.12 * var(--addon-width));
+                }
+            }
+
+            .text-placeholder {
+                grid-area: text-placeholder;
+                margin-left: 4%;
+                background-color: var(--color-secondarylighter40);
+            }
+
+            .buttons-placeholder {
+                grid-area: buttons-placeholder;
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+                justify-content: space-between;
+
+                .button {
+                    width: 65%;
+                    height: calc(0.05 * var(--addon-width));
+                    background-color: var(--color-secondarylighter40);
+                }
+            }
+        }
+
         >:not(:first-child) {
             margin-top: calc(var(--spacing) * 2.5 + var(--button-border-width));
         }
