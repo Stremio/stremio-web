@@ -76,19 +76,24 @@ class Addons extends Component {
         return addonTypes;
     }
 
-    renderAddonPlaceholders(key) {
-        return (
-            <div key={key} className={styles['placeholder']}>
-                <div className={styles['logo-placeholder']}>
-                    <div className={styles['logo']} />
+    renderAddonPlaceholders() {
+        const addonPlaceholders = [];
+        for (let placeholderNumber = 0; placeholderNumber < 6; placeholderNumber++) {
+            addonPlaceholders.push(
+                <div key={placeholderNumber} className={styles['placeholder']}>
+                    <div className={styles['logo-placeholder']}>
+                        <div className={styles['logo']} />
+                    </div>
+                    <div className={styles['text-placeholder']} />
+                    <div className={styles['buttons-placeholder']}>
+                        <div className={styles['button']} />
+                        <div className={styles['button']} />
+                    </div>
                 </div>
-                <div className={styles['text-placeholder']} />
-                <div className={styles['buttons-placeholder']}>
-                    <div className={styles['button']} />
-                    <div className={styles['button']} />
-                </div>
-            </div>
-        );
+            )
+        }
+
+        return addonPlaceholders;
     }
 
     render() {
@@ -114,33 +119,35 @@ class Addons extends Component {
                     )}
                 </div>
                 <div className={styles['scroll-container']}>
-                    {this.props.addons
-                        .filter((addon) => {
-                            if (this.state.selectedCategory === ADDON_CATEGORIES.OFFICIAL) return addon.isOfficial === true;
-                            if (this.state.selectedCategory === ADDON_CATEGORIES.COMMUNITY) return addon.isOfficial === false;
-                            if (this.state.selectedCategory === ADDON_CATEGORIES.MY) return addon.isInstalled === true;
-                        })
-                        .filter((addon) => {
-                            return this.state.selectedAddonType === DEFAULT_TYPE ||
-                                addon.types.indexOf(this.state.selectedAddonType) !== -1;
-                        })
-                        .map((addon) =>
-                            this.state.isLoaded
-                                ?
-                                this.renderAddonPlaceholders(addon.name)
-                                :
-                                <Addon key={addon.name}
-                                    className={styles['addon']}
-                                    logo={addon.logo}
-                                    name={addon.name}
-                                    version={addon.version}
-                                    isOfficial={addon.isOfficial}
-                                    isInstalled={addon.isInstalled}
-                                    types={addon.types}
-                                    hostname={addon.hostname}
-                                    description={addon.description}
-                                />
-                        )}
+                    {
+                        this.state.isLoaded
+                            ?
+                            this.renderAddonPlaceholders()
+                            :
+                            this.props.addons
+                                .filter((addon) => {
+                                    if (this.state.selectedCategory === ADDON_CATEGORIES.OFFICIAL) return addon.isOfficial === true;
+                                    if (this.state.selectedCategory === ADDON_CATEGORIES.COMMUNITY) return addon.isOfficial === false;
+                                    if (this.state.selectedCategory === ADDON_CATEGORIES.MY) return addon.isInstalled === true;
+                                })
+                                .filter((addon) => {
+                                    return this.state.selectedAddonType === DEFAULT_TYPE ||
+                                        addon.types.indexOf(this.state.selectedAddonType) !== -1;
+                                })
+                                .map((addon) =>
+                                    <Addon key={addon.name}
+                                        className={styles['addon']}
+                                        logo={addon.logo}
+                                        name={addon.name}
+                                        version={addon.version}
+                                        isOfficial={addon.isOfficial}
+                                        isInstalled={addon.isInstalled}
+                                        types={addon.types}
+                                        hostname={addon.hostname}
+                                        description={addon.description}
+                                    />
+                                )
+                    }
                 </div>
             </div>
         );
