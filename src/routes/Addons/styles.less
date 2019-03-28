@@ -97,30 +97,26 @@
     .scroll-container {
         flex: 1;
         align-self: stretch;
-        margin: calc(var(--spacing) * 2.5 + var(--button-border-width)) calc(var(--spacing) * 2.5 + var(--button-border-width)) calc(var(--spacing) * 2.5 + var(--button-border-width)) 0;
+        padding: calc(var(--spacing) * 2.5 + var(--button-border-width)) calc(var(--spacing) * 2.5 + var(--button-border-width)) calc(var(--spacing) * 2.5 + var(--button-border-width)) 0;
         overflow-y: auto;
         overflow-x: hidden;
 
         .placeholder {
-            display: inline-grid;
+            display: flex;
             position: relative;
+            z-index: 0;
             width: var(--addon-width);
             padding: 1.6em;
             overflow: hidden;
             background-color: var(--color-backgroundlighter);
-            grid-template-columns: 1fr 5fr 4fr;
-            grid-template-rows: calc(0.12 * var(--addon-width));
-            grid-template-areas:
-                "logo-placeholder text-placeholder buttons-placeholder";
 
-            &:before {
+            &:after {
                 content: " ";
                 position: absolute;
                 top: 0;
                 right: 0;
                 bottom: 0;
                 left: 50%;
-                z-index: 1;
                 width: 500%;
                 margin-left: -250%;
                 animation: placeholderAnimation 1s linear infinite;
@@ -138,7 +134,7 @@
             }
 
             .logo-placeholder {
-                grid-area: logo-placeholder;
+                flex: 1;
                 background-color: var(--color-secondarylighter20);
 
                 .logo {
@@ -148,13 +144,38 @@
             }
 
             .text-placeholder {
-                grid-area: text-placeholder;
-                margin-left: 4%;
-                background-color: var(--color-secondarylighter20);
+                flex: 5;
+                margin-left: 3em;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+
+                .header-placeholder {
+                    height: 15%;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+
+                    .name {
+                        flex: 2;
+                        margin-right: 3em;
+                        background-color: var(--color-secondarylighter20);
+                    }
+
+                    .version {
+                        flex: 1;
+                        background-color: var(--color-secondarylighter20);
+                    }
+                }
+
+                .types-placeholder, .hostname-placeholder, .description-placeholder {
+                    height: 15%;
+                    background-color: var(--color-secondarylighter20);
+                }
             }
 
             .buttons-placeholder {
-                grid-area: buttons-placeholder;
+                flex: 4;
                 display: flex;
                 flex-direction: column;
                 align-items: flex-end;

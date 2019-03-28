@@ -84,7 +84,15 @@ class Addons extends Component {
                     <div className={styles['logo-placeholder']}>
                         <div className={styles['logo']} />
                     </div>
-                    <div className={styles['text-placeholder']} />
+                    <div className={styles['text-placeholder']}>
+                        <div className={styles['header-placeholder']}>
+                            <div className={styles['name']} />
+                            <div className={styles['version']} />
+                        </div>
+                        <div className={styles['types-placeholder']} />
+                        <div className={styles['hostname-placeholder']} />
+                        <div className={styles['description-placeholder']} />
+                    </div>
                     <div className={styles['buttons-placeholder']}>
                         <div className={styles['button']} />
                         <div className={styles['button']} />
