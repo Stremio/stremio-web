@@ -41,6 +41,65 @@
     overflow-x: hidden;
     overflow-y: auto;
 
+    .placeholder-container {
+        display: flex;
+        flex-direction: row;
+
+        .placeholder {
+            flex: 1;
+            margin: 1em;
+            position: relative;
+            overflow: hidden;
+            background-color: var(--color-backgroundlighter);
+
+            .poster-image-placeholder {
+                flex: calc(1 / var(--poster-shape-ratio));
+                margin-bottom: 1em;
+                background-color: var(--color-secondarylighter20);
+
+                &:before {
+                    content: "";
+                    display: inline-block;
+                    padding-top: calc(100% * var(--poster-shape-ratio));
+                }
+            }
+
+            .title-bar-placeholder {
+                height: 2em;
+                display: flex;
+                flex-direction: row;
+                background-color: var(--color-secondarylighter20);
+            }
+
+            &:after {
+                content: " ";
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 50%;
+                width: 600%;
+                margin-left: -300%;
+                animation: placeholderAnimation 0.8s linear infinite;
+                background: linear-gradient(to right, rgba(255, 255, 255, 0) 42%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0) 58%) 50% 50%;
+            }
+
+            @keyframes placeholderAnimation {
+                0% {
+                    transform: translate3d(-30%, 0, 0);
+                }
+
+                100% {
+                    transform: translate3d(30%, 0, 0);
+                }
+            }
+
+            &:nth-child(n+8) {
+                display: none;
+            }
+        }
+    }
+
     .board-row {
         width: 100%;
         display: flex;
