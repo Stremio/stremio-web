@@ -48,7 +48,9 @@
         .placeholder {
             flex: 1;
             margin: 1em;
+            padding: 0.4em;
             position: relative;
+            z-index: 0;
             overflow: hidden;
             background-color: var(--color-backgroundlighter);
 
@@ -78,10 +80,10 @@
                 right: 0;
                 bottom: 0;
                 left: 50%;
-                width: 600%;
-                margin-left: -300%;
-                animation: placeholderAnimation 0.8s linear infinite;
-                background: linear-gradient(to right, rgba(255, 255, 255, 0) 42%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0) 58%) 50% 50%;
+                width: 800%;
+                margin-left: -400%;
+                animation: placeholderAnimation 1s linear infinite;
+                background: linear-gradient(to right, rgba(255, 255, 255, 0) 44%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0) 56%);
             }
 
             @keyframes placeholderAnimation {
@@ -94,7 +96,7 @@
                 }
             }
 
-            &:nth-child(n+8) {
+            &:nth-child(n+7) {
                 display: none;
             }
         }

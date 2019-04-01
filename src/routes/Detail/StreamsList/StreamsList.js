@@ -9,9 +9,8 @@ const renderStreamPlaceholders = () => {
     for (let placeholderNumber = 0; placeholderNumber < 20; placeholderNumber++) {
         streamPlaceholders.push(
             <div key={placeholderNumber} className={styles['placeholder']}>
-                <div className={styles['logo-placeholder']}></div>
-                <div className={styles['text-placeholder']}></div>
-                <div className={styles['button-placeholder']}></div>
+                <div className={styles['logo-placeholder']} />
+                <div className={styles['text-placeholder']} />
             </div>
         )
     }
