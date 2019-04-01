@@ -27,8 +27,7 @@ class Addons extends Component {
 
         this.state = {
             selectedCategory: ADDON_CATEGORIES.OFFICIAL,
-            selectedAddonType: DEFAULT_TYPE,
-            isLoaded: true
+            selectedAddonType: DEFAULT_TYPE
         };
     }
 
@@ -78,7 +77,7 @@ class Addons extends Component {
 
     renderAddonPlaceholders() {
         const addonPlaceholders = [];
-        for (let placeholderNumber = 0; placeholderNumber < 6; placeholderNumber++) {
+        for (let placeholderNumber = 0; placeholderNumber < 20; placeholderNumber++) {
             addonPlaceholders.push(
                 <div key={placeholderNumber} className={styles['placeholder']}>
                     <div className={styles['logo-placeholder']}>
@@ -128,7 +127,7 @@ class Addons extends Component {
                 </div>
                 <div className={styles['scroll-container']}>
                     {
-                        this.state.isLoaded
+                        this.props.addons.length === 0
                             ?
                             this.renderAddonPlaceholders()
                             :

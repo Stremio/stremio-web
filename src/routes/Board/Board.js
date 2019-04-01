@@ -125,10 +125,6 @@ class Board extends PureComponent {
                 }
             ]
         };
-
-        this.state = {
-            isLoaded: true
-        }
     }
 
     onClick = (event) => {
@@ -172,7 +168,7 @@ class Board extends PureComponent {
         return (
             <div className={styles['board-container']}>
                 {
-                    this.state.isLoaded ?
+                    this.items.addonCatalogItems2.length === 0 || this.items.continueWatchingItems.length === 0 ?
                         this.renderMetaItemPlaceholders()
                         :
                         <Fragment>
