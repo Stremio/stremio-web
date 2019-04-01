@@ -19,6 +19,63 @@
         overflow-y: auto;
         overflow-x: hidden;
 
+        .placeholder {
+            margin-top: var(--spacing);
+            width: var(--stream-width);
+            display: flex;
+            position: relative;
+            overflow: hidden;
+            background-color: var(--color-backgroundlighter);
+            
+            .logo-placeholder {
+                flex: 1;
+                margin: var(--spacing) 0 var(--spacing) var(--spacing);
+                height: calc(.2 * var(--stream-width));
+                background-color: var(--color-secondarylighter20);
+            }
+
+            .text-placeholder {
+                flex: 3;
+                margin: var(--spacing) 0 var(--spacing) var(--spacing);
+                height: calc(.2 * var(--stream-width));
+                background-color: var(--color-secondarylighter20);
+            }
+
+            .button-placeholder {
+                margin: var(--spacing) var(--spacing) var(--spacing) 0;
+                height: calc(.2 * var(--stream-width));
+                width: calc(0.07 * var(--stream-width));
+                background-color: var(--color-secondarylighter20);
+            }
+
+            &:after {
+                content: " ";
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 50%;
+                width: 600%;
+                margin-left: -300%;
+                animation: placeholderAnimation 0.8s linear infinite;
+                background: linear-gradient(to right, rgba(255, 255, 255, 0) 42%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0) 58%) 50% 50%;
+            }
+
+            @keyframes placeholderAnimation {
+                0% {
+                    transform: translate3d(-30%, 0, 0);
+                }
+
+                100% {
+                    transform: translate3d(30%, 0, 0);
+                }
+            }
+
+            &:nth-child(n+8) {
+                display: none;
+            }
+        }
+
         >:not(:first-child) {
             margin-top: var(--spacing);
         }

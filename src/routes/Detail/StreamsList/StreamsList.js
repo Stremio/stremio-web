@@ -4,12 +4,29 @@ import Icon from 'stremio-icons/dom';
 import Stream from './Stream';
 import styles from './styles';
 
+const renderStreamPlaceholders = () => {
+    const streamPlaceholders = [];
+    for (let placeholderNumber = 0; placeholderNumber < 20; placeholderNumber++) {
+        streamPlaceholders.push(
+            <div key={placeholderNumber} className={styles['placeholder']}>
+                <div className={styles['logo-placeholder']}></div>
+                <div className={styles['text-placeholder']}></div>
+                <div className={styles['button-placeholder']}></div>
+            </div>
+        )
+    }
+
+    return streamPlaceholders;
+}
+
 const StreamsList = (props) => {
     return (
         <div className={styles['streams-list-container']}>
             <div className={styles['scroll-container']}>
-                {props.streams
-                    .map((stream) =>
+                {props.streams.length === 0 ?
+                    renderStreamPlaceholders()
+                    :
+                    props.streams.map((stream) =>
                         <Stream key={stream.id}
                             className={styles['stream']}
                             logo={stream.logo}
