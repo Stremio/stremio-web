@@ -75,6 +75,34 @@ class Addons extends Component {
         return addonTypes;
     }
 
+    renderAddonPlaceholders() {
+        const addonPlaceholders = [];
+        for (let placeholderNumber = 0; placeholderNumber < 20; placeholderNumber++) {
+            addonPlaceholders.push(
+                <div key={placeholderNumber} className={styles['placeholder']}>
+                    <div className={styles['logo-placeholder']}>
+                        <div className={styles['logo']} />
+                    </div>
+                    <div className={styles['text-placeholder']}>
+                        <div className={styles['header-placeholder']}>
+                            <div className={styles['name']} />
+                            <div className={styles['version']} />
+                        </div>
+                        <div className={styles['types-placeholder']} />
+                        <div className={styles['hostname-placeholder']} />
+                        <div className={styles['description-placeholder']} />
+                    </div>
+                    <div className={styles['buttons-placeholder']}>
+                        <div className={styles['button']} />
+                        <div className={styles['button']} />
+                    </div>
+                </div>
+            )
+        }
+
+        return addonPlaceholders;
+    }
+
     render() {
         return (
             <div className={styles['addons-container']}>
@@ -98,29 +126,35 @@ class Addons extends Component {
                     )}
                 </div>
                 <div className={styles['scroll-container']}>
-                    {this.props.addons
-                        .filter((addon) => {
-                            if (this.state.selectedCategory === ADDON_CATEGORIES.OFFICIAL) return addon.isOfficial === true;
-                            if (this.state.selectedCategory === ADDON_CATEGORIES.COMMUNITY) return addon.isOfficial === false;
-                            if (this.state.selectedCategory === ADDON_CATEGORIES.MY) return addon.isInstalled === true;
-                        })
-                        .filter((addon) => {
-                            return this.state.selectedAddonType === DEFAULT_TYPE ||
-                                addon.types.indexOf(this.state.selectedAddonType) !== -1;
-                        })
-                        .map((addon) =>
-                            <Addon key={addon.name}
-                                className={styles['addon']}
-                                logo={addon.logo}
-                                name={addon.name}
-                                version={addon.version}
-                                isOfficial={addon.isOfficial}
-                                isInstalled={addon.isInstalled}
-                                types={addon.types}
-                                hostname={addon.hostname}
-                                description={addon.description}
-                            />
-                        )}
+                    {
+                        this.props.addons.length === 0
+                            ?
+                            this.renderAddonPlaceholders()
+                            :
+                            this.props.addons
+                                .filter((addon) => {
+                                    if (this.state.selectedCategory === ADDON_CATEGORIES.OFFICIAL) return addon.isOfficial === true;
+                                    if (this.state.selectedCategory === ADDON_CATEGORIES.COMMUNITY) return addon.isOfficial === false;
+                                    if (this.state.selectedCategory === ADDON_CATEGORIES.MY) return addon.isInstalled === true;
+                                })
+                                .filter((addon) => {
+                                    return this.state.selectedAddonType === DEFAULT_TYPE ||
+                                        addon.types.indexOf(this.state.selectedAddonType) !== -1;
+                                })
+                                .map((addon) =>
+                                    <Addon key={addon.name}
+                                        className={styles['addon']}
+                                        logo={addon.logo}
+                                        name={addon.name}
+                                        version={addon.version}
+                                        isOfficial={addon.isOfficial}
+                                        isInstalled={addon.isInstalled}
+                                        types={addon.types}
+                                        hostname={addon.hostname}
+                                        description={addon.description}
+                                    />
+                                )
+                    }
                 </div>
             </div>
         );
@@ -132,6 +166,7 @@ Addons.propTypes = {
 };
 Addons.defaultProps = {
     addons: [
+        { logo: '', name: '', version: '', isOfficial: true, isInstalled: false, types: [], hostname: '', description: '' },
         { logo: 'ic_series', name: 'Watch Hub', version: '1.3.0', isOfficial: true, isInstalled: false, types: ['ovies', 'Series'], hostname: 'piratebay-stremio-addon.herokuappstremio-addon.herokuappstremio-addon.herokuappstremio-addon.herokuappstremio-addon.herokuappstremio-addon.herokuappstremio-addon.herokuappstremio-addon.herokuapp.com', description: 'Find where to stream your favourite movies and shows amongst iTunes, Hulu, Amazon and other UK/US services.' },
         { name: 'Cinemeta', version: '2.4.0', isOfficial: false, isInstalled: true, types: ['Moies', 'Series'], hostname: 'stremio-zooqle.now.sh', description: 'Watch your favourite YouTube channels ad-free and get notified when they upload new videos.' },
         { logo: 'ic_youtube_small', name: 'YouTube', version: '1.3.0', isOfficial: false, isInstalled: true, types: ['Channels', 'Videos'], hostname: 'pct.best4stremio.space', description: 'Watch your favourite YouTube channels ad-free and get notiour favourite YouTube channels ad-free and get notiour favourite YouTube channels ad-free and get notiour favourite YouTube channels ad-free and get notiour favourite YouTube channels ad-free and get notiourfavourite YouTube channels ad-free and get notiour favourite YouTube channels ad-free and get notiourfavourite YouTube channels ad-free and get notiour favourite YouTube channels ad-free and get notiour favourite YouTube channels ad-free and get notified when they upload new videos.' },
