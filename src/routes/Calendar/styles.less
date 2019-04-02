@@ -15,12 +15,12 @@
         padding-right: calc(var(--spacing) * 0.5);
         flex: 1;
 
-        .months {
+        .month-buttons-container {
             padding-top: calc(var(--spacing) * 0.5);
             height: 3.5em;
             text-align: center;
 
-            .month {
+            .month-button {
                 padding: calc(var(--spacing) * 0.25);
                 width: 6em;
                 display: inline-block;
@@ -43,6 +43,7 @@
                     color: var(--color-surface);
 
                     &:hover {
+                        border-color: transparent;
                         color: var(--color-surfacelight);
                     }
                 }
@@ -154,6 +155,10 @@
                         &:focus {
                             border-color: var(--color-surfacelighter);
                         }
+
+                        &:hover {
+                            border-color: var(--color-primary);
+                        }
                     }
                 }
             }
@@ -256,6 +261,8 @@
                     }
 
                     &:hover {
+                        border-color: transparent;
+
                         .watch-button {
                             .icon {
                                 fill: var(--color-surfacelighter);
@@ -311,6 +318,7 @@
                 }
 
                 &:hover {
+                    border-color: transparent;
                     background-color: var(--color-primarydark60);
                 }
             }
