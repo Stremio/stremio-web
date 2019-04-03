@@ -34,12 +34,13 @@
         .buttons {
             padding: var(--spacing) 0;
             display: flex;
-            justify-content: space-between;
+            flex-direction: row;
     
-            .facebook-button, .twitter-button, .gplus-button {
-                width: calc(var(--share-modal-width) * 0.26);
+            .button {
+                flex: 1;
                 height: calc(var(--share-modal-width) * 0.09);
                 display: flex;
+                flex-direction: row;
                 align-items: center;
                 justify-content: center;
                 font-size: 0.8em;
@@ -52,6 +53,14 @@
                     height: calc(var(--spacing) * 0.7);
                     fill: var(--color-surfacelighter);
                 }
+
+                &:focus, &:hover {
+                    filter: brightness(1.2);
+                }
+
+                &:not(:last-child) {
+                    margin-right: 1em;
+                }
             }
 
             .facebook-button {
@@ -61,16 +70,12 @@
             .twitter-button {
                 background-color: var(--color-secondarylighter);
             }
-
-            .gplus-button {
-                background-color: var(--color-signal2);
-            }
         }
 
         .url-container {
             display: flex;
-            border-radius: 4px;
-            border: 1px solid var(--color-surface);
+            flex-direction: row;
+            border: calc(var(--focusable-border-size) * 0.5) solid var(--color-surface);
 
             .url {
                 padding: calc(var(--spacing) * 0.5);
@@ -78,27 +83,31 @@
                 font-size: 0.9em;
                 text-align: center;
                 text-overflow: ellipsis;
-                border-radius: 4px;
                 color: var(--color-surfacedark);
-                outline: none;
             }
 
-            .copy-label {
+            .copy-button {
                 padding: calc(var(--spacing) * 0.5);
                 width: 25%;
                 display: flex;
+                flex-direction: row;
                 justify-content: center;
-                border-top-right-radius: 3px;
-                border-bottom-right-radius: 3px;
-                color: var(--color-surfacedark);
-                background-color: var(--color-surfacelight);
+                background-color: var(--color-surface);
                 cursor: pointer;
 
-                .copy-icon {
+                .icon {
                     margin-right: calc(var(--spacing) * 0.3);
                     width: calc(var(--spacing) * 0.7);
                     height: calc(var(--spacing) * 0.7);
-                    fill: var(--color-backgrounddarker40);
+                    fill: var(--color-surfacedarker);
+                }
+
+                .label {
+                    color: var(--color-surfacedarker);
+                }
+
+                &:hover {
+                    background-color: var(--color-surface60);
                 }
             }
         }

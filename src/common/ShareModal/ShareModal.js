@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import classnames from 'classnames';
 import { Input } from 'stremio-common';
 import Icon, { dataUrl as iconDataUrl } from 'stremio-icons/dom';
 import colors from 'stremio-colors';
@@ -7,7 +8,7 @@ import styles from './styles';
 
 const renderInput = ({ className, href, icon, label }, url) => {
     return (
-        <Input className={styles[className]} type={'link'} href={href + url} target={'_blank'}>
+        <Input className={classnames(styles['button'], styles[className])} type={'link'} href={href + url} target={'_blank'}>
             <Icon className={styles['icon']} icon={icon} />{label}
         </Input>
     );
@@ -21,8 +22,9 @@ const renderUrl = (url) => {
     return (
         <div className={styles['url-container']}>
             <input className={styles['url']} defaultValue={url} readOnly={true} />
-            <div onClick={copyToClipboard} className={styles['copy-label']}>
-                <Icon className={styles['copy-icon']} icon={'ic_link'} />Copy
+            <div onClick={copyToClipboard} className={styles['copy-button']}>
+                <Icon className={styles['icon']} icon={'ic_link'} />
+                <div className={styles['label']}>Copy</div>
             </div>
         </div>
     );
@@ -42,14 +44,13 @@ const ShareModal = (props) => {
     return (
         <div className={styles['share-modal']}>
             <div className={styles['x-container']}>
-                <div onClick={props.onClose} style={imageStyle} className={styles['x-icon']} />
+                <div style={imageStyle} className={styles['x-icon']} onClick={props.onClose}/>
             </div>
             <div className={styles['info-container']}>
                 <div className={styles['share-label']}>Share</div>
                 <div className={styles['buttons']}>
                     {renderInput({ className: 'facebook-button', href: 'https://www.facebook.com/sharer/sharer.php?u=', icon: 'ic_facebook', label: 'FACEBOOK' })}
                     {renderInput({ className: 'twitter-button', href: 'https://twitter.com/home?status=', icon: 'ic_twitter', label: 'TWITTER' })}
-                    {renderInput({ className: 'gplus-button', href: 'https://plus.google.com/share?url=', icon: 'ic_gplus', label: 'GOOGLE+' })}
                 </div>
                 {renderUrl(props.url)}
             </div>
