@@ -1,6 +1,6 @@
 .share-modal {
-    --share-modal-width: 380px;
-    --spacing: 22px;
+    --share-modal-width: 350px;
+    --spacing: 20px;
     font-size: 14px;
 }
 
@@ -28,7 +28,7 @@
     }
 
     .info-container {
-        padding: calc(var(--spacing) * 0.2) calc(var(--spacing) * 0.9) calc(var(--spacing) * 1.2) calc(var(--spacing) * 0.9);
+        padding: calc(var(--spacing) * 0.2) var(--spacing) calc(var(--spacing) * 1.2) var(--spacing);
 
         .share-label {
             font-size: 1.1em;
@@ -42,7 +42,7 @@
 
             .button {
                 flex: 1;
-                height: calc(var(--share-modal-width) * 0.09);
+                height: 3.2em;
                 display: flex;
                 flex-direction: row;
                 align-items: center;
@@ -52,7 +52,7 @@
                 cursor: pointer;
 
                 .icon {
-                    margin-right: calc(var(--spacing) * 0.3);
+                    margin-right: 0.6em;
                     width: 1.4em;
                     height: 1.4em;
                     fill: var(--color-surfacelighter);
@@ -63,7 +63,7 @@
                 }
 
                 &:not(:last-child) {
-                    margin-right: 1em;
+                    margin-right: 2em;
                 }
             }
 
@@ -82,17 +82,16 @@
             border: calc(var(--focusable-border-size) * 0.5) solid var(--color-surface);
 
             .url {
+                flex: 4;
                 padding: calc(var(--spacing) * 0.5);
-                width: 75%;
                 font-size: 0.9em;
                 text-align: center;
-                text-overflow: ellipsis;
                 color: var(--color-surfacedark);
             }
 
             .copy-button {
+                flex: 1;
                 padding: calc(var(--spacing) * 0.5);
-                width: 25%;
                 display: flex;
                 flex-direction: row;
                 justify-content: center;
@@ -100,9 +99,9 @@
                 cursor: pointer;
 
                 .icon {
-                    margin-right: calc(var(--spacing) * 0.3);
-                    width: 1.1em;
-                    height: 1.1em;
+                    margin-right: 0.4em;
+                    width: 1em;
+                    height: 1em;
                     fill: var(--color-surfacedarker);
                 }
 
