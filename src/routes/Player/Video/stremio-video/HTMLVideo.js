@@ -3,494 +3,513 @@ var HTMLSubtitles = require('./HTMLSubtitles');
 
 function HTMLVideo(options) {
     var containerElement = options && options.containerElement;
-    var id = options && options.id;
-    if (!(containerElement instanceof HTMLElement)) {
-        throw new Error('Instance of HTMLElement is required');
+    if (!(containerElement instanceof HTMLElement) || !containerElement.hasAttribute('id')) {
+        throw new Error('Instance of HTMLElement with id attribute required');
     }
 
-    if (typeof id !== 'string') {
-        throw new Error('id parameter is required');
-    }
-
-    var self = this;
-    var loaded = false;
     var destroyed = false;
+    var loaded = false;
     var events = new EventEmitter();
-    var dispatchArgsLoadedQueue = [];
-    var subtitles = new HTMLSubtitles({
-        id: id,
-        containerElement: containerElement
-    });
+    var observedProps = {};
+    var subtitles = new HTMLSubtitles({ containerElement: containerElement });
     var stylesElement = document.createElement('style');
     var videoElement = document.createElement('video');
 
     events.on('error', function() { });
+    subtitles.on('textShouldUpdate', onSubtitlesTextShouldUpdate);
+    subtitles.on('propChanged', onSubtitlesPropChanged);
     subtitles.on('error', onSubtitlesError);
-    subtitles.on('load', updateSubtitleText);
-    containerElement.setAttribute('id', id);
     containerElement.appendChild(stylesElement);
     stylesElement.sheet.insertRule('#' + containerElement.id + ' .video { position: absolute; width: 100%; height: 100%; z-index: -1; background-color: black; }', stylesElement.sheet.cssRules.length);
     containerElement.appendChild(videoElement);
     videoElement.classList.add('video');
     videoElement.crossOrigin = 'anonymous';
     videoElement.controls = false;
-    videoElement.addEventListener('ended', onEnded);
-    videoElement.addEventListener('error', onVideoError);
-    videoElement.addEventListener('timeupdate', updateSubtitleText);
+    videoElement.onended = onVideoEnded;
+    videoElement.onerror = onVideoError;
+    videoElement.ontimeupdate = function() {
+        onSubtitlesTextShouldUpdate();
+    };
 
-    function getPaused() {
-        if (!loaded) {
-            return null;
-        }
-
-        return !!videoElement.paused;
-    }
-    function getTime() {
-        if (!loaded || isNaN(videoElement.currentTime) || videoElement.currentTime === null) {
-            return null;
-        }
-
-        return Math.floor(videoElement.currentTime * 1000);
-    }
-    function getDuration() {
-        if (!loaded || isNaN(videoElement.duration) || videoElement.duration === null) {
-            return null;
-        }
-
-        return Math.floor(videoElement.duration * 1000);
-    }
-    function getBuffering() {
-        if (!loaded) {
-            return null;
-        }
-
-        return videoElement.readyState < videoElement.HAVE_FUTURE_DATA;
-    }
-    function getVolume() {
-        if (destroyed || isNaN(videoElement.volume) || videoElement.volume === null) {
-            return null;
-        }
-
-        return Math.floor(videoElement.volume * 100);
-    }
-    function getMuted() {
-        if (destroyed) {
-            return null;
-        }
-
-        return videoElement.muted;
-    }
-    function getSubtitleTracks() {
-        if (!loaded) {
-            return Object.freeze([]);
-        }
-
-        return subtitles.dispatch('getProp', 'tracks');
-    }
-    function getSelectedSubtitleTrackId() {
-        if (!loaded) {
-            return null;
-        }
-
-        return subtitles.dispatch('getProp', 'selectedTrackId');
-    }
-    function getSubtitleDelay() {
-        if (!loaded) {
-            return null;
-        }
-
-        return subtitles.dispatch('getProp', 'delay');
-    }
-    function getSubtitleSize() {
-        if (destroyed) {
-            return null;
-        }
-
-        return subtitles.dispatch('getProp', 'size');
-    }
-    function getSubtitleDarkBackground() {
-        if (destroyed) {
-            return null;
-        }
-
-        return subtitles.dispatch('getProp', 'darkBackground');
-    }
-    function getSubtitleOffset() {
-        if (destroyed) {
-            return null;
-        }
-
-        return subtitles.dispatch('getProp', 'offset');
-    }
-    function onEnded() {
-        events.emit('ended');
-    }
     function onError(error) {
+        if (destroyed || !error) {
+            return;
+        }
+
         Object.freeze(error);
         events.emit('error', error);
         if (error.critical) {
-            self.dispatch('command', 'stop');
+            dispatch({ commandName: 'stop' });
         }
     }
-    function onPausedChanged() {
-        events.emit('propChanged', 'paused', getPaused());
+    function getPropValue(propName) {
+        switch (propName) {
+            case 'paused': {
+                if (!loaded) {
+                    return null;
+                }
+
+                return !!videoElement.paused;
+            }
+            case 'time': {
+                if (!loaded || isNaN(videoElement.currentTime) || videoElement.currentTime === null) {
+                    return null;
+                }
+
+                return Math.floor(videoElement.currentTime * 1000);
+            }
+            case 'duration': {
+                if (!loaded || isNaN(videoElement.duration) || videoElement.duration === null) {
+                    return null;
+                }
+
+                return Math.floor(videoElement.duration * 1000);
+            }
+            case 'buffering': {
+                if (!loaded) {
+                    return null;
+                }
+
+                return videoElement.readyState < videoElement.HAVE_FUTURE_DATA;
+            }
+            case 'volume': {
+                if (destroyed || isNaN(videoElement.volume) || videoElement.volume === null) {
+                    return null;
+                }
+
+                return Math.floor(videoElement.volume * 100);
+            }
+            case 'muted': {
+                if (destroyed) {
+                    return null;
+                }
+
+                return !!videoElement.muted;
+            }
+            case 'subtitlesTracks': {
+                if (!loaded) {
+                    return Object.freeze([]);
+                }
+
+                return subtitles.dispatch({ propName: 'tracks' });
+            }
+            case 'selectedSubtitlesTrackId': {
+                if (!loaded) {
+                    return null;
+                }
+
+                return subtitles.dispatch({ propName: 'selectedTrackId' });
+            }
+            case 'subtitlesDelay': {
+                if (!loaded) {
+                    return null;
+                }
+
+                return subtitles.dispatch({ propName: 'delay' });
+            }
+            case 'subtitlesSize': {
+                if (destroyed) {
+                    return null;
+                }
+
+                return subtitles.dispatch({ propName: 'size' });
+            }
+            case 'subtitlesDarkBackground': {
+                if (destroyed) {
+                    return null;
+                }
+
+                return subtitles.dispatch({ propName: 'darkBackground' });
+            }
+            case 'subtitlesOffset': {
+                if (destroyed) {
+                    return null;
+                }
+
+                return subtitles.dispatch({ propName: 'offset' });
+            }
+            default: {
+                throw new Error('getProp not supported: ' + propName);
+            }
+        }
     }
-    function onTimeChanged() {
-        events.emit('propChanged', 'time', getTime());
-    }
-    function onDurationChanged() {
-        events.emit('propChanged', 'duration', getDuration());
-    }
-    function onBufferingChanged() {
-        events.emit('propChanged', 'buffering', getBuffering());
-    }
-    function onVolumeChanged() {
-        events.emit('propChanged', 'muted', getMuted());
-        events.emit('propChanged', 'volume', getVolume());
-    }
-    function onSubtitleTracksChanged() {
-        events.emit('propChanged', 'subtitleTracks', getSubtitleTracks());
-    }
-    function onSelectedSubtitleTrackIdChanged() {
-        events.emit('propChanged', 'selectedSubtitleTrackId', getSelectedSubtitleTrackId());
-    }
-    function onSubtitleDelayChanged() {
-        events.emit('propChanged', 'subtitleDelay', getSubtitleDelay());
-    }
-    function onSubtitleSizeChanged() {
-        events.emit('propChanged', 'subtitleSize', getSubtitleSize());
-    }
-    function onSubtitleDarkBackgroundChanged() {
-        events.emit('propChanged', 'subtitleDarkBackground', getSubtitleDarkBackground());
-    }
-    function onSubtitleOffsetChanged() {
-        events.emit('propChanged', 'subtitleOffset', getSubtitleOffset());
-    }
-    function onSubtitlesError(error) {
-        var code;
-        var message;
-        switch (error.code) {
-            case HTMLSubtitles.ERROR.SUBTITLES_FETCH_FAILED:
-                code = HTMLSubtitles.ERROR.SUBTITLES_FETCH_FAILED;
-                message = 'Failed to fetch subtitles from ' + error.track.origin;
-                break;
-            case HTMLSubtitles.ERROR.SUBTITLES_PARSE_FAILED:
-                code = HTMLSubtitles.ERROR.SUBTITLES_PARSE_FAILED;
-                message = 'Failed to parse subtitles from ' + error.track.origin;
-                break;
-            default:
-                code = -1;
-                message = 'Unknown subtitles error';
+    function onVideoEnded() {
+        if (destroyed) {
+            return;
         }
 
-        onError({
-            code: code,
-            message: message,
-            critical: false
-        });
+        events.emit('ended');
     }
     function onVideoError() {
-        var code;
-        var message;
-        switch (videoElement.error.code) {
-            case HTMLVideo.ERROR.FETCH_ABORTED:
-                code = HTMLVideo.ERROR.FETCH_ABORTED;
-                message = 'Fetching process aborted';
-                break;
-            case HTMLVideo.ERROR.DOWNLOAD_FAILED:
-                code = HTMLVideo.ERROR.DOWNLOAD_FAILED;
-                message = 'Error occurred when downloading';
-                break;
-            case HTMLVideo.ERROR.DECODING_FAILED:
-                code = HTMLVideo.ERROR.DECODING_FAILED;
-                message = 'Error occurred when decoding';
-                break;
-            case HTMLVideo.ERROR.VIDEO_NOT_SUPPORTED:
-                code = HTMLVideo.ERROR.VIDEO_NOT_SUPPORTED;
-                message = 'Video is not supported';
-                break;
-            default:
-                code = -1;
-                message = 'Unknown error';
-        }
-
         onError({
-            code: code,
-            message: message,
+            code: videoElement.error.code,
+            message: videoElement.error.message,
             critical: true
         });
     }
-    function updateSubtitleText() {
-        subtitles.dispatch('command', 'updateText', getTime());
-    }
-    function flushDispatchArgsQueue(dispatchArgsQueue) {
-        while (dispatchArgsQueue.length > 0) {
-            var args = dispatchArgsQueue.shift();
-            self.dispatch.apply(self, args);
+    function onVideoPropChanged(propName) {
+        switch (propName) {
+            case 'paused': {
+                if (observedProps['paused']) {
+                    events.emit('propChanged', 'paused', getPropValue('paused'));
+                }
+
+                break;
+            }
+            case 'currentTime': {
+                if (observedProps['time']) {
+                    events.emit('propChanged', 'time', getPropValue('time'));
+                }
+
+                break;
+            }
+            case 'duration': {
+                if (observedProps['duration']) {
+                    events.emit('propChanged', 'duration', getPropValue('duration'));
+                }
+
+                break;
+            }
+            case 'readyState': {
+                if (observedProps['buffering']) {
+                    events.emit('propChanged', 'buffering', getPropValue('buffering'));
+                }
+
+                break;
+            }
+            case 'volume': {
+                if (observedProps['volume']) {
+                    events.emit('propChanged', 'volume', getPropValue('volume'));
+                }
+
+                break;
+            }
+            case 'muted': {
+                if (observedProps['muted']) {
+                    events.emit('propChanged', 'muted', getPropValue('muted'));
+                }
+
+                break;
+            }
         }
     }
+    function onSubtitlesError(error) {
+        onError(Object.assign({}, error, {
+            critical: false
+        }));
+    }
+    function onSubtitlesPropChanged(propName) {
+        switch (propName) {
+            case 'tracks': {
+                if (observedProps['subtitlesTracks']) {
+                    events.emit('propChanged', 'subtitlesTracks', getPropValue('subtitlesTracks'));
+                }
 
-    this.on = function(eventName, listener) {
+                break;
+            }
+            case 'selectedTrackId': {
+                if (observedProps['selectedSubtitlesTrackId']) {
+                    events.emit('propChanged', 'selectedSubtitlesTrackId', getPropValue('selectedSubtitlesTrackId'));
+                }
+
+                break;
+            }
+            case 'delay': {
+                if (observedProps['subtitlesDelay']) {
+                    events.emit('propChanged', 'subtitlesDelay', getPropValue('subtitlesDelay'));
+                }
+
+                break;
+            }
+            case 'size': {
+                if (observedProps['subtitlesSize']) {
+                    events.emit('propChanged', 'subtitlesSize', getPropValue('subtitlesSize'));
+                }
+
+                break;
+            }
+            case 'darkBackground': {
+                if (observedProps['subtitlesDarkBackground']) {
+                    events.emit('propChanged', 'subtitlesDarkBackground', getPropValue('subtitlesDarkBackground'));
+                }
+
+                break;
+            }
+            case 'offset': {
+                if (observedProps['subtitlesOffset']) {
+                    events.emit('propChanged', 'subtitlesOffset', getPropValue('subtitlesOffset'));
+                }
+
+                break;
+            }
+        }
+    }
+    function onSubtitlesTextShouldUpdate() {
+        subtitles.dispatch({
+            commandName: 'updateText',
+            commandArgs: {
+                time: getPropValue('time')
+            }
+        });
+    }
+    function observeProp(propName) {
+        switch (propName) {
+            case 'paused': {
+                observedProps['paused'] = true;
+                events.emit('propValue', 'paused', getPropValue('paused'));
+                videoElement.onpause = function() {
+                    onVideoPropChanged('paused');
+                };
+                videoElement.onplay = function() {
+                    onVideoPropChanged('paused');
+                };
+                return;
+            }
+            case 'time': {
+                observedProps['time'] = true;
+                events.emit('propValue', 'time', getPropValue('time'));
+                videoElement.ontimeupdate = function() {
+                    onSubtitlesTextShouldUpdate();
+                    onVideoPropChanged('currentTime');
+                };
+                return;
+            }
+            case 'duration': {
+                observedProps['duration'] = true;
+                events.emit('propValue', 'duration', getPropValue('duration'));
+                videoElement.ondurationchange = function() {
+                    onVideoPropChanged('duration');
+                };
+                return;
+            }
+            case 'buffering': {
+                observedProps['buffering'] = true;
+                events.emit('propValue', 'buffering', getPropValue('buffering'));
+                videoElement.onwaiting = function() {
+                    onVideoPropChanged('readyState');
+                };
+                videoElement.onplaying = function() {
+                    onVideoPropChanged('readyState');
+                };
+                videoElement.onloadeddata = function() {
+                    onVideoPropChanged('readyState');
+                };
+                return;
+            }
+            case 'volume': {
+                observedProps['volume'] = true;
+                events.emit('propValue', 'volume', getPropValue('volume'));
+                videoElement.onvolumechange = function() {
+                    onVideoPropChanged('volume');
+                    onVideoPropChanged('muted');
+                };
+                return;
+            }
+            case 'muted': {
+                observedProps['muted'] = true;
+                events.emit('propValue', 'muted', getPropValue('muted'));
+                videoElement.onvolumechange = function() {
+                    onVideoPropChanged('volume');
+                    onVideoPropChanged('muted');
+                };
+                return;
+            }
+            case 'subtitlesTracks': {
+                observedProps['subtitlesTracks'] = true;
+                events.emit('propValue', 'subtitlesTracks', getPropValue('subtitlesTracks'));
+                return;
+            }
+            case 'selectedSubtitlesTrackId': {
+                observedProps['selectedSubtitlesTrackId'] = true;
+                events.emit('propValue', 'selectedSubtitlesTrackId', getPropValue('selectedSubtitlesTrackId'));
+                return;
+            }
+            case 'subtitlesDelay': {
+                observedProps['subtitlesDelay'] = true;
+                events.emit('propValue', 'subtitlesDelay', getPropValue('subtitlesDelay'));
+                return;
+            }
+            case 'subtitlesSize': {
+                observedProps['subtitlesSize'] = true;
+                events.emit('propValue', 'subtitlesSize', getPropValue('subtitlesSize'));
+                return;
+            }
+            case 'subtitlesDarkBackground': {
+                observedProps['subtitlesDarkBackground'] = true;
+                events.emit('propValue', 'subtitlesDarkBackground', getPropValue('subtitlesDarkBackground'));
+                return;
+            }
+            case 'subtitlesOffset': {
+                observedProps['subtitlesOffset'] = true;
+                events.emit('propValue', 'subtitlesOffset', getPropValue('subtitlesOffset'));
+                return;
+            }
+            default: {
+                throw new Error('observeProp not supported: ' + propName);
+            }
+        }
+    }
+    function setProp(propName, propValue) {
+        switch (propName) {
+            case 'paused': {
+                if (loaded) {
+                    if (!!propValue) {
+                        videoElement.pause();
+                    } else {
+                        videoElement.play();
+                    }
+                }
+
+                return;
+            }
+            case 'time': {
+                if (loaded && !isNaN(propValue) && propValue !== null) {
+                    videoElement.currentTime = parseInt(propValue) / 1000;
+                }
+
+                return;
+            }
+            case 'volume': {
+                if (!isNaN(propValue) && propValue !== null) {
+                    videoElement.muted = false;
+                    videoElement.volume = Math.max(0, Math.min(100, parseInt(propValue))) / 100;
+                }
+
+                return;
+            }
+            case 'muted': {
+                videoElement.muted = !!propValue;
+                return;
+            }
+            case 'selectedSubtitlesTrackId': {
+                if (loaded) {
+                    subtitles.dispatch({ propName: 'selectedTrackId', propValue: propValue });
+                }
+
+                return;
+            }
+            case 'subtitlesDelay': {
+                if (loaded) {
+                    subtitles.dispatch({ propName: 'delay', propValue: propValue });
+                }
+
+                return;
+            }
+            case 'subtitlesSize': {
+                subtitles.dispatch({ propName: 'size', propValue: propValue });
+                return;
+            }
+            case 'subtitlesDarkBackground': {
+                subtitles.dispatch({ propName: 'darkBackground', propValue: propValue });
+                return;
+            }
+            case 'subtitlesOffset': {
+                subtitles.dispatch({ propName: 'offset', propValue: propValue });
+                return;
+            }
+            default: {
+                throw new Error('setProp not supported: ' + propName);
+            }
+        }
+    }
+    function command(commandName, commandArgs) {
+        switch (commandName) {
+            case 'addSubtitleTracks': {
+                subtitles.dispatch({ commandName: 'addTracks', commandArgs: commandArgs });
+                return;
+            }
+            case 'stop': {
+                loaded = false;
+                subtitles.dispatch({ commandName: 'clearTracks' });
+                videoElement.removeAttribute('src');
+                videoElement.load();
+                videoElement.currentTime = 0;
+                onVideoPropChanged('paused');
+                onVideoPropChanged('currentTime');
+                onVideoPropChanged('duration');
+                onVideoPropChanged('readyState');
+                return;
+            }
+            case 'load': {
+                dispatch({ commandName: 'stop' });
+                videoElement.autoplay = commandArgs.autoplay !== false;
+                videoElement.currentTime = !isNaN(commandArgs.time) && commandArgs.time !== null ? parseInt(commandArgs.time) / 1000 : 0;
+                videoElement.src = commandArgs.url;
+                loaded = true;
+                onVideoPropChanged('paused');
+                onVideoPropChanged('currentTime');
+                onVideoPropChanged('duration');
+                onVideoPropChanged('readyState');
+                return;
+            }
+            case 'destroy': {
+                dispatch({ commandName: 'stop' });
+                destroyed = true;
+                onVideoPropChanged('volume');
+                onVideoPropChanged('muted');
+                onSubtitlesPropChanged('size');
+                onSubtitlesPropChanged('darkBackground');
+                onSubtitlesPropChanged('offset');
+                events.removeAllListeners();
+                events.on('error', function() { });
+                videoElement.onended = null;
+                videoElement.onerror = null;
+                videoElement.onpause = null;
+                videoElement.onplay = null;
+                videoElement.ontimeupdate = null;
+                videoElement.ondurationchange = null;
+                videoElement.onwaiting = null;
+                videoElement.onplaying = null;
+                videoElement.onloadeddata = null;
+                videoElement.onvolumechange = null;
+                containerElement.removeChild(videoElement);
+                containerElement.removeChild(stylesElement);
+                subtitles.dispatch({ commandName: 'destroy' });
+                return;
+            }
+            default: {
+                throw new Error('command not supported: ' + commandName);
+            }
+        }
+    }
+    function on(eventName, listener) {
         if (destroyed) {
-            throw new Error('Unable to add ' + eventName + ' listener');
+            throw new Error('Video is destroyed');
         }
 
         events.on(eventName, listener);
-    };
-
-    this.dispatch = function() {
+    }
+    function dispatch(args) {
         if (destroyed) {
-            throw new Error('Unable to dispatch ' + arguments[0]);
+            throw new Error('Video is destroyed');
         }
 
-        switch (arguments[0]) {
-            case 'observeProp': {
-                switch (arguments[1]) {
-                    case 'paused': {
-                        events.emit('propValue', 'paused', getPaused());
-                        videoElement.removeEventListener('pause', onPausedChanged);
-                        videoElement.removeEventListener('play', onPausedChanged);
-                        videoElement.addEventListener('pause', onPausedChanged);
-                        videoElement.addEventListener('play', onPausedChanged);
-                        return;
-                    }
-                    case 'time': {
-                        events.emit('propValue', 'time', getTime());
-                        videoElement.removeEventListener('timeupdate', onTimeChanged);
-                        videoElement.addEventListener('timeupdate', onTimeChanged);
-                        return;
-                    }
-                    case 'duration': {
-                        events.emit('propValue', 'duration', getDuration());
-                        videoElement.removeEventListener('durationchange', onDurationChanged);
-                        videoElement.addEventListener('durationchange', onDurationChanged);
-                        return;
-                    }
-                    case 'buffering': {
-                        events.emit('propValue', 'buffering', getBuffering());
-                        videoElement.removeEventListener('waiting', onBufferingChanged);
-                        videoElement.addEventListener('waiting', onBufferingChanged);
-                        videoElement.removeEventListener('playing', onBufferingChanged);
-                        videoElement.addEventListener('playing', onBufferingChanged);
-                        videoElement.removeEventListener('loadeddata', onBufferingChanged);
-                        videoElement.addEventListener('loadeddata', onBufferingChanged);
-                        return;
-                    }
-                    case 'volume': {
-                        events.emit('propValue', 'volume', getVolume());
-                        videoElement.removeEventListener('volumechange', onVolumeChanged);
-                        videoElement.addEventListener('volumechange', onVolumeChanged);
-                        return;
-                    }
-                    case 'muted': {
-                        events.emit('propValue', 'muted', getMuted());
-                        videoElement.removeEventListener('volumechange', onVolumeChanged);
-                        videoElement.addEventListener('volumechange', onVolumeChanged);
-                        return;
-                    }
-                    case 'subtitleTracks': {
-                        events.emit('propValue', 'subtitleTracks', getSubtitleTracks());
-                        return;
-                    }
-                    case 'selectedSubtitleTrackId': {
-                        events.emit('propValue', 'selectedSubtitleTrackId', getSelectedSubtitleTrackId());
-                        return;
-                    }
-                    case 'subtitleDelay': {
-                        events.emit('propValue', 'subtitleDelay', getSubtitleDelay());
-                        return;
-                    }
-                    case 'subtitleSize': {
-                        events.emit('propValue', 'subtitleSize', getSubtitleSize());
-                        return;
-                    }
-                    case 'subtitleDarkBackground': {
-                        events.emit('propValue', 'subtitleDarkBackground', getSubtitleDarkBackground());
-                        return;
-                    }
-                    case 'subtitleOffset': {
-                        events.emit('propValue', 'subtitleOffset', getSubtitleOffset());
-                        return;
-                    }
-                    default: {
-                        throw new Error('observeProp not supported: ' + arguments[1]);
-                    }
-                }
-            }
-            case 'setProp': {
-                switch (arguments[1]) {
-                    case 'paused': {
-                        if (loaded) {
-                            arguments[2] ? videoElement.pause() : videoElement.play();
-                        } else {
-                            dispatchArgsLoadedQueue.push(Array.from(arguments));
-                        }
-
-                        return;
-                    }
-                    case 'time': {
-                        if (loaded) {
-                            if (!isNaN(arguments[2]) && arguments[2] !== null) {
-                                videoElement.currentTime = arguments[2] / 1000;
-                            }
-                        } else {
-                            dispatchArgsLoadedQueue.push(Array.from(arguments));
-                        }
-
-                        return;
-                    }
-                    case 'volume': {
-                        if (!isNaN(arguments[2]) && arguments[2] !== null) {
-                            videoElement.muted = false;
-                            videoElement.volume = Math.max(0, Math.min(100, arguments[2])) / 100;
-                        }
-
-                        return;
-                    }
-                    case 'muted': {
-                        videoElement.muted = !!arguments[2];
-                        return;
-                    }
-                    case 'selectedSubtitleTrackId': {
-                        if (loaded) {
-                            subtitles.dispatch('setProp', 'selectedTrackId', arguments[2]);
-                            onSubtitleDelayChanged();
-                            onSelectedSubtitleTrackIdChanged();
-                            updateSubtitleText();
-                        } else {
-                            dispatchArgsLoadedQueue.push(Array.from(arguments));
-                        }
-
-                        return;
-                    }
-                    case 'subtitleDelay': {
-                        if (loaded) {
-                            subtitles.dispatch('setProp', 'delay', arguments[2]);
-                            onSubtitleDelayChanged();
-                            updateSubtitleText();
-                        } else {
-                            dispatchArgsLoadedQueue.push(Array.from(arguments));
-                        }
-
-                        return;
-                    }
-                    case 'subtitleSize': {
-                        subtitles.dispatch('setProp', 'size', arguments[2]);
-                        onSubtitleSizeChanged();
-                        return;
-                    }
-                    case 'subtitleDarkBackground': {
-                        subtitles.dispatch('setProp', 'darkBackground', arguments[2]);
-                        onSubtitleDarkBackgroundChanged();
-                        return;
-                    }
-                    case 'subtitleOffset': {
-                        subtitles.dispatch('setProp', 'offset', arguments[2]);
-                        onSubtitleOffsetChanged();
-                        return;
-                    }
-                    default: {
-                        throw new Error('setProp not supported: ' + arguments[1]);
-                    }
-                }
-            }
-            case 'command': {
-                switch (arguments[1]) {
-                    case 'addSubtitleTracks': {
-                        if (loaded) {
-                            subtitles.dispatch('command', 'addTracks', arguments[2]);
-                            onSubtitleTracksChanged();
-                        } else {
-                            dispatchArgsLoadedQueue.push(Array.from(arguments));
-                        }
-
-                        return;
-                    }
-                    case 'stop': {
-                        loaded = false;
-                        dispatchArgsLoadedQueue = [];
-                        subtitles.dispatch('command', 'clearTracks');
-                        videoElement.removeAttribute('src');
-                        videoElement.load();
-                        videoElement.currentTime = 0;
-                        onPausedChanged();
-                        onTimeChanged();
-                        onDurationChanged();
-                        onBufferingChanged();
-                        onSubtitleTracksChanged();
-                        onSelectedSubtitleTrackIdChanged();
-                        onSubtitleDelayChanged();
-                        updateSubtitleText();
-                        return;
-                    }
-                    case 'load': {
-                        var dispatchArgsLoadedQueueCopy = dispatchArgsLoadedQueue.slice();
-                        self.dispatch('command', 'stop');
-                        dispatchArgsLoadedQueue = dispatchArgsLoadedQueueCopy;
-                        videoElement.autoplay = typeof arguments[3].autoplay === 'boolean' ? arguments[3].autoplay : true;
-                        videoElement.currentTime = !isNaN(arguments[3].time) && arguments[3].time !== null ? arguments[3].time / 1000 : 0;
-                        videoElement.src = arguments[2].url;
-                        loaded = true;
-                        onPausedChanged();
-                        onTimeChanged();
-                        onDurationChanged();
-                        onBufferingChanged();
-                        onSubtitleTracksChanged();
-                        onSelectedSubtitleTrackIdChanged();
-                        onSubtitleDelayChanged();
-                        updateSubtitleText();
-                        flushDispatchArgsQueue(dispatchArgsLoadedQueue);
-                        return;
-                    }
-                    case 'destroy': {
-                        self.dispatch('command', 'stop');
-                        destroyed = true;
-                        onVolumeChanged();
-                        onSubtitleSizeChanged();
-                        onSubtitleDarkBackgroundChanged();
-                        onSubtitleOffsetChanged();
-                        events.removeAllListeners();
-                        videoElement.removeEventListener('ended', onEnded);
-                        videoElement.removeEventListener('error', onVideoError);
-                        videoElement.removeEventListener('timeupdate', updateSubtitleText);
-                        videoElement.removeEventListener('pause', onPausedChanged);
-                        videoElement.removeEventListener('play', onPausedChanged);
-                        videoElement.removeEventListener('timeupdate', onTimeChanged);
-                        videoElement.removeEventListener('durationchange', onDurationChanged);
-                        videoElement.removeEventListener('waiting', onBufferingChanged);
-                        videoElement.removeEventListener('playing', onBufferingChanged);
-                        videoElement.removeEventListener('loadeddata', onBufferingChanged);
-                        videoElement.removeEventListener('volumechange', onVolumeChanged);
-                        containerElement.removeChild(videoElement);
-                        containerElement.removeChild(stylesElement);
-                        subtitles.dispatch('command', 'destroy');
-                        return;
-                    }
-                    default: {
-                        throw new Error('command not supported: ' + arguments[1]);
-                    }
-                }
-            }
-            default: {
-                throw new Error('Invalid dispatch call: ' + Array.from(arguments).map(String));
+        if (args) {
+            if (typeof args.commandName === 'string') {
+                command(args.commandName, args.commandArgs);
+                return;
+            } else if (typeof args.propName === 'string') {
+                setProp(args.propName, args.propValue);
+                return;
+            } else if (typeof args.observedPropName === 'string') {
+                observeProp(args.observedPropName);
+                return;
             }
         }
-    };
+
+        throw new Error('Invalid dispatch call: ' + JSON.stringify(args));
+    }
+
+    this.on = on;
+    this.dispatch = dispatch;
 
     Object.freeze(this);
 };
 
-HTMLVideo.ERROR = Object.freeze({
-    FETCH_ABORTED: 1,
-    DOWNLOAD_FAILED: 2,
-    DECODING_FAILED: 3,
-    VIDEO_NOT_SUPPORTED: 4
-});
-
 HTMLVideo.manifest = Object.freeze({
     name: 'HTMLVideo',
     embedded: true,
-    props: Object.freeze(['paused', 'time', 'duration', 'volume', 'muted', 'buffering', 'subtitleTracks', 'selectedSubtitleTrackId', 'subtitleSize', 'subtitleDelay', 'subtitleDarkBackground', 'subtitleOffset'])
+    props: Object.freeze(['paused', 'time', 'duration', 'buffering', 'volume', 'muted', 'subtitlesTracks', 'selectedSubtitlesTrackId', 'subtitlesSize', 'subtitlesDelay', 'subtitlesDarkBackground', 'subtitlesOffset'])
 });
 
 Object.freeze(HTMLVideo);

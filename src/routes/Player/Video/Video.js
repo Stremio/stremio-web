@@ -19,28 +19,29 @@ class Video extends React.Component {
     }
 
     componentWillUnmount() {
-        this.dispatch('command', 'destroy');
+        this.dispatch({ commandName: 'destroy' });
     }
 
-    selectVideoImplementation = (stream, options) => {
-        if (options.ipc) {
+    selectVideoImplementation = (args) => {
+        if (args.ipc) {
             return MPVVideo;
-        } else if (stream.ytId) {
+        } else if (args.ytId) {
             return YouTubeVideo;
         } else {
             return HTMLVideo;
         }
     }
 
-    dispatch = (...args) => {
-        if (args[0] === 'command' && args[1] === 'load') {
-            const Video = this.selectVideoImplementation(args[2], args[3]);
+    dispatch = (args = {}) => {
+        if (args.commandName === 'load') {
+            const { commandArgs = {} } = args;
+            const Video = this.selectVideoImplementation(commandArgs);
             if (this.video === null || this.video.constructor !== Video) {
-                this.dispatch('command', 'destroy');
+                this.dispatch({ commandName: 'destroy' });
                 this.video = new Video({
-                    ...args[3],
                     id: this.id,
-                    containerElement: this.containerRef.current
+                    containerElement: this.containerRef.current,
+                    ipc: commandArgs.ipc
                 });
                 this.video.on('ended', this.props.onEnded);
                 this.video.on('error', this.props.onError);
@@ -52,7 +53,7 @@ class Video extends React.Component {
 
         if (this.video !== null) {
             try {
-                this.video.dispatch(...args);
+                this.video.dispatch(args);
             } catch (e) {
                 console.error(this.video.constructor.manifest.name, e);
             }
@@ -61,7 +62,7 @@ class Video extends React.Component {
 
     render() {
         return (
-            <div ref={this.containerRef} className={this.props.className} />
+            <div ref={this.containerRef} id={this.id} className={this.props.className} />
         );
     }
 }
