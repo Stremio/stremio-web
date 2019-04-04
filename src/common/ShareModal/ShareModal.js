@@ -2,9 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { Input } from 'stremio-common';
-import Icon, { dataUrl as iconDataUrl } from 'stremio-icons/dom';
-import colors from 'stremio-colors';
+import Icon from 'stremio-icons/dom';
 import styles from './styles';
+
+const textRef = React.createRef();
 
 const renderInput = ({ className, href, icon, label }, url) => {
     return (
@@ -21,7 +22,7 @@ const renderUrl = (url) => {
 
     return (
         <div className={styles['url-container']}>
-            <input className={styles['url']} defaultValue={url} readOnly={true} />
+            <Input ref={textRef} className={styles['url']} type={'text'} tabIndex={'-1'} defaultValue={url} />
             <div onClick={copyToClipboard} className={styles['copy-button']}>
                 <Icon className={styles['icon']} icon={'ic_link'} />
                 <div className={styles['label']}>Copy</div>
@@ -30,21 +31,16 @@ const renderUrl = (url) => {
     );
 }
 
-const copyToClipboard = (event) => {
-    event.currentTarget.parentNode.children[0].select();
+const copyToClipboard = () => {
+    textRef.current.select();
     document.execCommand('copy');
 }
 
 const ShareModal = (props) => {
-    const placeholderIconUrl = iconDataUrl({ icon: 'ic_x', fill: colors.surface });
-    const imageStyle = {
-        backgroundImage: `url('${placeholderIconUrl}')`
-    };
-
     return (
         <div className={styles['share-modal']}>
             <div className={styles['x-container']}>
-                <div style={imageStyle} className={styles['x-icon']} onClick={props.onClose}/>
+                <Icon className={styles['icon']} icon={'ic_x'} onClick={props.onClose} />
             </div>
             <div className={styles['info-container']}>
                 <div className={styles['share-label']}>Share</div>

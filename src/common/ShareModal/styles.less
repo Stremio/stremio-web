@@ -12,14 +12,18 @@
 
     .x-container {
         display: flex;
+        flex-direction: row;
         justify-content: flex-end;
 
-        .x-icon {
-            width: calc(var(--spacing) * 0.5);
-            height: calc(var(--spacing) * 0.5);
-            background-position: center;
-            background-repeat: no-repeat;
+        .icon {
+            width: 0.8em;
+            height: 0.8em;
+            fill: var(--color-surfacedark);
             cursor: pointer;
+
+            &:hover {
+                fill: var(--color-surface);
+            }
         }
     }
 
@@ -35,7 +39,7 @@
             padding: var(--spacing) 0;
             display: flex;
             flex-direction: row;
-    
+
             .button {
                 flex: 1;
                 height: calc(var(--share-modal-width) * 0.09);
@@ -49,8 +53,8 @@
 
                 .icon {
                     margin-right: calc(var(--spacing) * 0.3);
-                    width: calc(var(--spacing) * 0.7);
-                    height: calc(var(--spacing) * 0.7);
+                    width: 1.4em;
+                    height: 1.4em;
                     fill: var(--color-surfacelighter);
                 }
 
@@ -97,8 +101,8 @@
 
                 .icon {
                     margin-right: calc(var(--spacing) * 0.3);
-                    width: calc(var(--spacing) * 0.7);
-                    height: calc(var(--spacing) * 0.7);
+                    width: 1.1em;
+                    height: 1.1em;
                     fill: var(--color-surfacedarker);
                 }
 
