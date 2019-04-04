@@ -19,13 +19,13 @@
     font-size: 12px;
 }
 
-.videos-list {
+.videos-list, :global(.detail-popup-container) {
     --spacing: 8px;
     --video-width: 360px;
     font-size: 12px;
 
     position: absolute;
-    z-index: 2;
+    z-index: 1;
     top: 0;
     bottom: 0;
     padding: calc(3 * var(--spacing)) 0;
