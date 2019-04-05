@@ -16,8 +16,9 @@
         justify-content: flex-end;
 
         .icon {
-            width: 0.8em;
-            height: 0.8em;
+            padding: 0.2em;
+            width: 1.2em;
+            height: 1.2em;
             fill: var(--color-surfacedark);
             cursor: pointer;
 
@@ -25,10 +26,22 @@
                 fill: var(--color-surface);
             }
         }
+
+        &:focus {
+            .icon {
+                background-color: var(--color-surfacelight);
+            }
+        }
+
+        &:hover {
+            .icon {
+                background-color: transparent;
+            }
+        }
     }
 
     .info-container {
-        padding: calc(var(--spacing) * 0.2) var(--spacing) calc(var(--spacing) * 1.2) var(--spacing);
+        padding: 0 var(--spacing) calc(var(--spacing) * 1.2) var(--spacing);
 
         .share-label {
             font-size: 1.1em;
@@ -109,7 +122,7 @@
                     color: var(--color-surfacedarker);
                 }
 
-                &:hover {
+                &:focus, &:hover {
                     background-color: var(--color-surface60);
                 }
             }

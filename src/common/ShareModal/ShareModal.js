@@ -27,10 +27,10 @@ const renderUrl = (url) => {
     return (
         <div className={styles['url-container']}>
             <input ref={inputRef} className={styles['url']} type={'text'} tabIndex={'-1'} defaultValue={url} readOnly />
-            <div className={styles['copy-button']} onClick={copyToClipboard}>
+            <Input className={styles['copy-button']} type={'button'} onClick={copyToClipboard}>
                 <Icon className={styles['icon']} icon={'ic_link'} />
                 <div className={styles['label']}>Copy</div>
-            </div>
+            </Input>
         </div>
     );
 };
@@ -39,9 +39,9 @@ const ShareModal = (props) => {
     return (
         <Modal>
             <div className={styles['share-modal']}>
-                <div className={styles['x-container']}>
+                <Input className={styles['x-container']} type={'button'}>
                     <Icon className={styles['icon']} icon={'ic_x'} onClick={props.onClose} />
-                </div>
+                </Input>
                 <div className={styles['info-container']}>
                     <div className={styles['share-label']}>Share</div>
                     <div className={styles['buttons']}>
