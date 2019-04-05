@@ -15,7 +15,7 @@ class Route extends Component {
     render() {
         return (
             <div className={styles['route']}>
-                <ModalsContainerProvider modalsContainerClassName={styles['modals-container']}>
+                <ModalsContainerProvider>
                     <FocusableProvider onModalsContainerDomTreeChange={this.onModalsContainerDomTreeChange}>
                         <div className={styles['route-content']}>
                             {this.props.children}

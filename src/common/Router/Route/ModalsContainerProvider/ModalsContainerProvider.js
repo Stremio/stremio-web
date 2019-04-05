@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { ModalsContainerContext } from 'stremio-common';
+import styles from './styles';
 
 class ModalsContainerProvider extends Component {
     constructor(props) {
@@ -13,7 +13,6 @@ class ModalsContainerProvider extends Component {
 
     shouldComponentUpdate(nextProps, nextState) {
         return nextState.modalsContainer !== this.state.modalsContainer ||
-            nextProps.modalsContainerClassName !== this.props.modalsContainerClassName ||
             nextProps.children !== this.props.children;
     }
 
@@ -25,14 +24,10 @@ class ModalsContainerProvider extends Component {
         return (
             <ModalsContainerContext.Provider value={this.state.modalsContainer}>
                 {this.state.modalsContainer ? this.props.children : null}
-                <div ref={this.modalsContainerRef} className={this.props.modalsContainerClassName} />
+                <div ref={this.modalsContainerRef} className={styles['modals-container']} />
             </ModalsContainerContext.Provider>
         );
     }
 }
-
-ModalsContainerProvider.propTypes = {
-    modalsContainerClassName: PropTypes.string
-};
 
 export default ModalsContainerProvider;
