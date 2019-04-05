@@ -19,11 +19,11 @@ class Player extends React.Component {
             buffering: null,
             volume: null,
             muted: null,
-            subtitleTracks: [],
-            selectedSubtitleTrackId: null,
-            subtitleSize: null,
-            subtitleDelay: null,
-            subtitleDarkBackground: null
+            subtitlesTracks: [],
+            selectedSubtitlesTrackId: null,
+            subtitlesSize: null,
+            subtitlesDelay: null,
+            subtitlesDarkBackground: null
         };
     }
 
@@ -34,24 +34,41 @@ class Player extends React.Component {
             nextState.buffering !== this.state.buffering ||
             nextState.volume !== this.state.volume ||
             nextState.muted !== this.state.muted ||
-            nextState.subtitleTracks !== this.state.subtitleTracks ||
-            nextState.selectedSubtitleTrackId !== this.state.selectedSubtitleTrackId ||
-            nextState.subtitleSize !== this.state.subtitleSize ||
-            nextState.subtitleDelay !== this.state.subtitleDelay ||
-            nextState.subtitleDarkBackground !== this.state.subtitleDarkBackground;
+            nextState.subtitlesTracks !== this.state.subtitlesTracks ||
+            nextState.selectedSubtitlesTrackId !== this.state.selectedSubtitlesTrackId ||
+            nextState.subtitlesSize !== this.state.subtitlesSize ||
+            nextState.subtitlesDelay !== this.state.subtitlesDelay ||
+            nextState.subtitlesDarkBackground !== this.state.subtitlesDarkBackground;
     }
 
     componentDidMount() {
-        this.dispatch('command', 'load', this.props.stream, {
-            ipc: window.shell
+        this.dispatch({
+            commandName: 'load',
+            commandArgs: {
+                stream: this.props.stream,
+                ipc: window.shell
+            }
         });
-        this.dispatch('setProp', 'subtitleOffset', 18);
-        this.dispatch('command', 'addSubtitleTracks', [{
-            url: 'https://raw.githubusercontent.com/caitp/ng-media/master/example/assets/captions/bunny-en.vtt',
-            origin: 'Github',
-            label: 'English'
-        }]);
-        this.dispatch('setProp', 'selectedSubtitleTrackId', 'https://raw.githubusercontent.com/caitp/ng-media/master/example/assets/captions/bunny-en.vtt');
+        this.dispatch({
+            propName: 'subtitlesOffset',
+            propValue: 18
+        });
+        this.dispatch({
+            commandName: 'addSubtitlesTracks',
+            commandArgs: {
+                tracks: [
+                    {
+                        url: 'https://raw.githubusercontent.com/caitp/ng-media/master/example/assets/captions/bunny-en.vtt',
+                        origin: 'Github',
+                        label: 'English'
+                    }
+                ]
+            }
+        });
+        this.dispatch({
+            propName: 'selectedSubtitlesTrackId',
+            propValue: 'https://raw.githubusercontent.com/caitp/ng-media/master/example/assets/captions/bunny-en.vtt'
+        });
     }
 
     onEnded = () => {
@@ -60,6 +77,7 @@ class Player extends React.Component {
 
     onError = (error) => {
         alert(error.message);
+        console.error(error);
     }
 
     onPropValue = (propName, propValue) => {
@@ -72,12 +90,12 @@ class Player extends React.Component {
 
     onImplementationChanged = (manifest) => {
         manifest.props.forEach((propName) => {
-            this.dispatch('observeProp', propName);
+            this.dispatch({ observedPropName: propName });
         });
     }
 
-    dispatch = (...args) => {
-        this.videoRef.current && this.videoRef.current.dispatch(...args);
+    dispatch = (args) => {
+        this.videoRef.current && this.videoRef.current.dispatch(args);
     }
 
     render() {
@@ -105,11 +123,11 @@ class Player extends React.Component {
                     duration={this.state.duration}
                     volume={this.state.volume}
                     muted={this.state.muted}
-                    subtitleTracks={this.state.subtitleTracks}
-                    selectedSubtitleTrackId={this.state.selectedSubtitleTrackId}
-                    subtitleSize={this.state.subtitleSize}
-                    subtitleDelay={this.state.subtitleDelay}
-                    subtitleDarkBackground={this.state.subtitleDarkBackground}
+                    subtitlesTracks={this.state.subtitlesTracks}
+                    selectedSubtitlesTrackId={this.state.selectedSubtitlesTrackId}
+                    subtitlesSize={this.state.subtitlesSize}
+                    subtitlesDelay={this.state.subtitlesDelay}
+                    subtitlesDarkBackground={this.state.subtitlesDarkBackground}
                     dispatch={this.dispatch}
                 />
             </div>

@@ -36,7 +36,7 @@ class VolumeSlider extends React.Component {
     onComplete = (volume) => {
         this.resetVolumeDebounced();
         this.setState({ volume });
-        this.props.dispatch('setProp', 'volume', volume);
+        this.props.dispatch({ propName: 'volume', propValue: volume });
     }
 
     onCancel = () => {

@@ -49,45 +49,45 @@ const NumberInput = ({ value, label, delta, onChange }) => {
 class SubtitlesPicker extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
         return nextProps.className !== this.props.className ||
-            nextProps.subtitleTracks !== this.props.subtitleTracks ||
-            nextProps.selectedSubtitleTrackId !== this.props.selectedSubtitleTrackId ||
-            nextProps.subtitleSize !== this.props.subtitleSize ||
-            nextProps.subtitleDelay !== this.props.subtitleDelay ||
-            nextProps.subtitleDarkBackground !== this.props.subtitleDarkBackground;
+            nextProps.subtitlesTracks !== this.props.subtitlesTracks ||
+            nextProps.selectedSubtitlesTrackId !== this.props.selectedSubtitlesTrackId ||
+            nextProps.subtitlesSize !== this.props.subtitlesSize ||
+            nextProps.subtitlesDelay !== this.props.subtitlesDelay ||
+            nextProps.subtitlesDarkBackground !== this.props.subtitlesDarkBackground;
     }
 
     toggleSubtitleEnabled = () => {
-        const selectedSubtitleTrackId = this.props.selectedSubtitleTrackId === null && this.props.subtitleTracks.length > 0 ?
-            this.props.subtitleTracks[0].id
+        const selectedSubtitlesTrackId = this.props.selectedSubtitlesTrackId === null && this.props.subtitlesTracks.length > 0 ?
+            this.props.subtitlesTracks[0].id
             :
             null;
-        this.props.dispatch('setProp', 'selectedSubtitleTrackId', selectedSubtitleTrackId);
+        this.props.dispatch({ propName: 'selectedSubtitlesTrackId', propValue: selectedSubtitlesTrackId });
     }
 
     labelOnClick = (event) => {
-        const subtitleTrack = this.props.subtitleTracks.find(({ label, origin }) => {
+        const subtitleTrack = this.props.subtitlesTracks.find(({ label, origin }) => {
             return label === event.currentTarget.dataset.label &&
                 origin === event.currentTarget.dataset.origin;
         });
         if (subtitleTrack) {
-            this.props.dispatch('setProp', 'selectedSubtitleTrackId', subtitleTrack.id);
+            this.props.dispatch({ propName: 'selectedSubtitlesTrackId', propValue: subtitleTrack.id });
         }
     }
 
     variantOnClick = (event) => {
-        this.props.dispatch('setProp', 'selectedSubtitleTrackId', event.currentTarget.dataset.trackId);
+        this.props.dispatch({ propName: 'selectedSubtitlesTrackId', propValue: event.currentTarget.dataset.trackId });
     }
 
-    setSubtitleSize = (event) => {
-        this.props.dispatch('setProp', 'subtitleSize', event.currentTarget.dataset.value);
+    setsubtitlesSize = (event) => {
+        this.props.dispatch({ propName: 'subtitlesSize', propValue: event.currentTarget.dataset.value });
     }
 
-    setSubtitleDelay = (event) => {
-        this.props.dispatch('setProp', 'subtitleDelay', event.currentTarget.dataset.value);
+    setSubtitlesDelay = (event) => {
+        this.props.dispatch({ propName: 'subtitlesDelay', propValue: event.currentTarget.dataset.value });
     }
 
-    toggleSubtitleDarkBackground = () => {
-        this.props.dispatch('setProp', 'subtitleDarkBackground', !this.props.subtitleDarkBackground);
+    toggleSubtitlesDarkBackground = () => {
+        this.props.dispatch({ propName: 'subtitlesDarkBackground', propValue: !this.props.subtitlesDarkBackground });
     }
 
     renderToggleButton({ selectedTrack }) {
@@ -155,12 +155,12 @@ class SubtitlesPicker extends React.Component {
     }
 
     renderDarkBackgroundToggle() {
-        if (this.props.subtitleDarkBackground === null) {
+        if (this.props.subtitlesDarkBackground === null) {
             return null;
         }
 
         return (
-            <Checkbox className={styles['background-toggle-checkbox']} checked={this.props.subtitleDarkBackground} onClick={this.toggleSubtitleDarkBackground}>
+            <Checkbox className={styles['background-toggle-checkbox']} checked={this.props.subtitlesDarkBackground} onClick={this.toggleSubtitlesDarkBackground}>
                 <div className={styles['background-toggle-label']}>Dark background</div>
             </Checkbox>
         );
@@ -181,24 +181,24 @@ class SubtitlesPicker extends React.Component {
                 {this.renderVariantsList({ groupedTracks, selectedTrack })}
                 {this.renderDarkBackgroundToggle()}
                 <NumberInput
-                    label={SUBTITLES_SIZE_LABELS[this.props.subtitleSize]}
-                    value={this.props.subtitleSize}
+                    label={SUBTITLES_SIZE_LABELS[this.props.subtitlesSize]}
+                    value={this.props.subtitlesSize}
                     delta={1}
-                    onChange={this.setSubtitleSize}
+                    onChange={this.setsubtitlesSize}
                 />
                 <NumberInput
-                    label={`${(this.props.subtitleDelay / 1000).toFixed(2)}s`}
-                    value={this.props.subtitleDelay}
+                    label={`${(this.props.subtitlesDelay / 1000).toFixed(2)}s`}
+                    value={this.props.subtitlesDelay}
                     delta={100}
-                    onChange={this.setSubtitleDelay}
+                    onChange={this.setSubtitlesDelay}
                 />
             </div>
         );
     }
 
     render() {
-        const selectedTrack = this.props.subtitleTracks.find(({ id }) => id === this.props.selectedSubtitleTrackId);
-        const groupedTracks = this.props.subtitleTracks.reduce((result, track) => {
+        const selectedTrack = this.props.subtitlesTracks.find(({ id }) => id === this.props.selectedSubtitlesTrackId);
+        const groupedTracks = this.props.subtitlesTracks.reduce((result, track) => {
             result[track.origin] = result[track.origin] || {};
             result[track.origin][track.label] = result[track.origin][track.label] || [];
             result[track.origin][track.label].push(track);
@@ -218,19 +218,19 @@ class SubtitlesPicker extends React.Component {
 SubtitlesPicker.propTypes = {
     className: PropTypes.string,
     languagePriorities: PropTypes.objectOf(PropTypes.number).isRequired,
-    subtitleTracks: PropTypes.arrayOf(PropTypes.shape({
+    subtitlesTracks: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.string.isRequired,
         label: PropTypes.string.isRequired,
         origin: PropTypes.string.isRequired
     })).isRequired,
-    selectedSubtitleTrackId: PropTypes.string,
-    subtitleSize: PropTypes.number,
-    subtitleDelay: PropTypes.number,
-    subtitleDarkBackground: PropTypes.bool,
+    selectedSubtitlesTrackId: PropTypes.string,
+    subtitlesSize: PropTypes.number,
+    subtitlesDelay: PropTypes.number,
+    subtitlesDarkBackground: PropTypes.bool,
     dispatch: PropTypes.func.isRequired
 };
 SubtitlesPicker.defaultProps = {
-    subtitleTracks: Object.freeze([]),
+    subtitlesTracks: Object.freeze([]),
     languagePriorities: Object.freeze({
         English: 1
     })

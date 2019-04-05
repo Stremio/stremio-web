@@ -39,11 +39,11 @@ const ControlBar = (props) => (
                 className={styles['control-bar-button']}
                 popupContainerClassName={classnames(styles['popup-container'], props.popupContainerClassName)}
                 popupContentClassName={styles['popup-content']}
-                subtitleTracks={props.subtitleTracks}
-                selectedSubtitleTrackId={props.selectedSubtitleTrackId}
-                subtitleSize={props.subtitleSize}
-                subtitleDelay={props.subtitleDelay}
-                subtitleDarkBackground={props.subtitleDarkBackground}
+                subtitlesTracks={props.subtitlesTracks}
+                selectedSubtitlesTrackId={props.selectedSubtitlesTrackId}
+                subtitlesSize={props.subtitlesSize}
+                subtitlesDelay={props.subtitlesDelay}
+                subtitlesDarkBackground={props.subtitlesDarkBackground}
                 dispatch={props.dispatch}
             />
             <ShareButton
@@ -63,20 +63,20 @@ ControlBar.propTypes = {
     duration: PropTypes.number,
     volume: PropTypes.number,
     muted: PropTypes.bool,
-    subtitleTracks: PropTypes.arrayOf(PropTypes.shape({
+    subtitlesTracks: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.string.isRequired,
         label: PropTypes.string.isRequired,
         origin: PropTypes.string.isRequired
     })).isRequired,
-    selectedSubtitleTrackId: PropTypes.string,
-    subtitleSize: PropTypes.number,
-    subtitleDelay: PropTypes.number,
-    subtitleDarkBackground: PropTypes.bool,
+    selectedSubtitlesTrackId: PropTypes.string,
+    subtitlesSize: PropTypes.number,
+    subtitlesDelay: PropTypes.number,
+    subtitlesDarkBackground: PropTypes.bool,
     dispatch: PropTypes.func
 };
 
 ControlBar.defaultProps = {
-    subtitleTracks: Object.freeze([])
+    subtitlesTracks: Object.freeze([])
 };
 
 module.exports = ControlBar;

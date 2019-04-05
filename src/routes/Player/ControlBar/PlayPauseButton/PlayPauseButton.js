@@ -10,7 +10,7 @@ class PlayPauseButton extends React.Component {
     }
 
     togglePaused = () => {
-        this.props.dispatch('setProp', 'paused', !this.props.paused);
+        this.props.dispatch({ propName: 'paused', propValue: !this.props.paused });
     }
 
     render() {

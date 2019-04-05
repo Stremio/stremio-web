@@ -11,7 +11,7 @@ class MuteButton extends React.Component {
     }
 
     toggleMuted = () => {
-        this.props.dispatch('setProp', 'muted', !this.props.muted);
+        this.props.dispatch({ propName: 'muted', propValue: !this.props.muted });
     }
 
     render() {

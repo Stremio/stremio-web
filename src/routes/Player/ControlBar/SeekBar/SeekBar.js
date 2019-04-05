@@ -37,7 +37,7 @@ class SeekBar extends React.Component {
     onComplete = (time) => {
         this.resetTimeDebounced();
         this.setState({ time });
-        this.props.dispatch('setProp', 'time', time);
+        this.props.dispatch({ propName: 'time', propValue: time });
     }
 
     onCancel = () => {

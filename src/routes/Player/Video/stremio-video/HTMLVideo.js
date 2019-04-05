@@ -6,6 +6,9 @@ function HTMLVideo(options) {
     if (!(containerElement instanceof HTMLElement) || !containerElement.hasAttribute('id')) {
         throw new Error('Instance of HTMLElement with id attribute required');
     }
+    if (!document.body.contains(containerElement)) {
+        throw new Error('Container element not attached to body');
+    }
 
     var destroyed = false;
     var loaded = false;
@@ -16,8 +19,8 @@ function HTMLVideo(options) {
     var videoElement = document.createElement('video');
 
     events.on('error', function() { });
-    subtitles.on('textShouldUpdate', onSubtitlesTextShouldUpdate);
     subtitles.on('propChanged', onSubtitlesPropChanged);
+    subtitles.on('trackLoaded', onSubtitlesTrackLoaded);
     subtitles.on('error', onSubtitlesError);
     containerElement.appendChild(stylesElement);
     stylesElement.sheet.insertRule('#' + containerElement.id + ' .video { position: absolute; width: 100%; height: 100%; z-index: -1; background-color: black; }', stylesElement.sheet.cssRules.length);
@@ -25,24 +28,164 @@ function HTMLVideo(options) {
     videoElement.classList.add('video');
     videoElement.crossOrigin = 'anonymous';
     videoElement.controls = false;
-    videoElement.onended = onVideoEnded;
-    videoElement.onerror = onVideoError;
+    videoElement.onpause = function() {
+        onVideoPropChanged('paused');
+    };
+    videoElement.onplay = function() {
+        onVideoPropChanged('paused');
+    };
     videoElement.ontimeupdate = function() {
-        onSubtitlesTextShouldUpdate();
+        onVideoPropChanged('currentTime');
+    };
+    videoElement.ondurationchange = function() {
+        onVideoPropChanged('duration');
+    };
+    videoElement.onwaiting = function() {
+        onVideoPropChanged('readyState');
+    };
+    videoElement.onplaying = function() {
+        onVideoPropChanged('readyState');
+    };
+    videoElement.onloadeddata = function() {
+        onVideoPropChanged('readyState');
+    };
+    videoElement.onvolumechange = function() {
+        onVideoPropChanged('volume');
+        onVideoPropChanged('muted');
+    };
+    videoElement.onended = function() {
+        onVideoEnded();
+    };
+    videoElement.onerror = function() {
+        onVideoError();
     };
 
+    function onSubtitlesPropChanged(propName) {
+        switch (propName) {
+            case 'tracks': {
+                if (observedProps['subtitlesTracks']) {
+                    events.emit('propChanged', 'subtitlesTracks', getProp('subtitlesTracks'));
+                }
+
+                break;
+            }
+            case 'selectedTrackId': {
+                subtitles.updateText(getProp('time'));
+                if (observedProps['selectedSubtitlesTrackId']) {
+                    events.emit('propChanged', 'selectedSubtitlesTrackId', getProp('selectedSubtitlesTrackId'));
+                }
+
+                break;
+            }
+            case 'delay': {
+                subtitles.updateText(getProp('time'));
+                if (observedProps['subtitlesDelay']) {
+                    events.emit('propChanged', 'subtitlesDelay', getProp('subtitlesDelay'));
+                }
+
+                break;
+            }
+            case 'size': {
+                if (observedProps['subtitlesSize']) {
+                    events.emit('propChanged', 'subtitlesSize', getProp('subtitlesSize'));
+                }
+
+                break;
+            }
+            case 'darkBackground': {
+                if (observedProps['subtitlesDarkBackground']) {
+                    events.emit('propChanged', 'subtitlesDarkBackground', getProp('subtitlesDarkBackground'));
+                }
+
+                break;
+            }
+            case 'offset': {
+                if (observedProps['subtitlesOffset']) {
+                    events.emit('propChanged', 'subtitlesOffset', getProp('subtitlesOffset'));
+                }
+
+                break;
+            }
+        }
+    }
+    function onSubtitlesTrackLoaded(track) {
+        subtitles.updateText(getProp('time'));
+        events.emit('subtitlesTrackLoaded', track);
+    }
+    function onSubtitlesError(error) {
+        onError(Object.assign({}, error, {
+            critical: false
+        }));
+    }
+    function onVideoPropChanged(propName) {
+        switch (propName) {
+            case 'paused': {
+                if (observedProps['paused']) {
+                    events.emit('propChanged', 'paused', getProp('paused'));
+                }
+
+                break;
+            }
+            case 'currentTime': {
+                subtitles.updateText(getProp('time'));
+                if (observedProps['time']) {
+                    events.emit('propChanged', 'time', getProp('time'));
+                }
+
+                break;
+            }
+            case 'duration': {
+                if (observedProps['duration']) {
+                    events.emit('propChanged', 'duration', getProp('duration'));
+                }
+
+                break;
+            }
+            case 'readyState': {
+                if (observedProps['buffering']) {
+                    events.emit('propChanged', 'buffering', getProp('buffering'));
+                }
+
+                break;
+            }
+            case 'volume': {
+                if (observedProps['volume']) {
+                    events.emit('propChanged', 'volume', getProp('volume'));
+                }
+
+                break;
+            }
+            case 'muted': {
+                if (observedProps['muted']) {
+                    events.emit('propChanged', 'muted', getProp('muted'));
+                }
+
+                break;
+            }
+        }
+    }
+    function onVideoEnded() {
+        events.emit('ended');
+    }
+    function onVideoError() {
+        onError({
+            code: videoElement.error.code,
+            message: videoElement.error.message,
+            critical: true
+        });
+    }
     function onError(error) {
-        if (destroyed || !error) {
+        if (!error) {
             return;
         }
 
         Object.freeze(error);
         events.emit('error', error);
         if (error.critical) {
-            dispatch({ commandName: 'stop' });
+            command('stop');
         }
     }
-    function getPropValue(propName) {
+    function getProp(propName) {
         switch (propName) {
             case 'paused': {
                 if (!loaded) {
@@ -87,267 +230,35 @@ function HTMLVideo(options) {
                 return !!videoElement.muted;
             }
             case 'subtitlesTracks': {
-                if (!loaded) {
-                    return Object.freeze([]);
-                }
-
-                return subtitles.dispatch({ propName: 'tracks' });
+                return subtitles.tracks;
             }
             case 'selectedSubtitlesTrackId': {
-                if (!loaded) {
-                    return null;
-                }
-
-                return subtitles.dispatch({ propName: 'selectedTrackId' });
+                return subtitles.selectedTrackId;
             }
             case 'subtitlesDelay': {
-                if (!loaded) {
-                    return null;
-                }
-
-                return subtitles.dispatch({ propName: 'delay' });
+                return subtitles.delay;
             }
             case 'subtitlesSize': {
-                if (destroyed) {
-                    return null;
-                }
-
-                return subtitles.dispatch({ propName: 'size' });
+                return subtitles.size;
             }
             case 'subtitlesDarkBackground': {
-                if (destroyed) {
-                    return null;
-                }
-
-                return subtitles.dispatch({ propName: 'darkBackground' });
+                return subtitles.darkBackground;
             }
             case 'subtitlesOffset': {
-                if (destroyed) {
-                    return null;
-                }
-
-                return subtitles.dispatch({ propName: 'offset' });
+                return subtitles.offset;
             }
             default: {
                 throw new Error('getProp not supported: ' + propName);
             }
         }
     }
-    function onVideoEnded() {
-        if (destroyed) {
-            return;
-        }
-
-        events.emit('ended');
-    }
-    function onVideoError() {
-        onError({
-            code: videoElement.error.code,
-            message: videoElement.error.message,
-            critical: true
-        });
-    }
-    function onVideoPropChanged(propName) {
-        switch (propName) {
-            case 'paused': {
-                if (observedProps['paused']) {
-                    events.emit('propChanged', 'paused', getPropValue('paused'));
-                }
-
-                break;
-            }
-            case 'currentTime': {
-                if (observedProps['time']) {
-                    events.emit('propChanged', 'time', getPropValue('time'));
-                }
-
-                break;
-            }
-            case 'duration': {
-                if (observedProps['duration']) {
-                    events.emit('propChanged', 'duration', getPropValue('duration'));
-                }
-
-                break;
-            }
-            case 'readyState': {
-                if (observedProps['buffering']) {
-                    events.emit('propChanged', 'buffering', getPropValue('buffering'));
-                }
-
-                break;
-            }
-            case 'volume': {
-                if (observedProps['volume']) {
-                    events.emit('propChanged', 'volume', getPropValue('volume'));
-                }
-
-                break;
-            }
-            case 'muted': {
-                if (observedProps['muted']) {
-                    events.emit('propChanged', 'muted', getPropValue('muted'));
-                }
-
-                break;
-            }
-        }
-    }
-    function onSubtitlesError(error) {
-        onError(Object.assign({}, error, {
-            critical: false
-        }));
-    }
-    function onSubtitlesPropChanged(propName) {
-        switch (propName) {
-            case 'tracks': {
-                if (observedProps['subtitlesTracks']) {
-                    events.emit('propChanged', 'subtitlesTracks', getPropValue('subtitlesTracks'));
-                }
-
-                break;
-            }
-            case 'selectedTrackId': {
-                if (observedProps['selectedSubtitlesTrackId']) {
-                    events.emit('propChanged', 'selectedSubtitlesTrackId', getPropValue('selectedSubtitlesTrackId'));
-                }
-
-                break;
-            }
-            case 'delay': {
-                if (observedProps['subtitlesDelay']) {
-                    events.emit('propChanged', 'subtitlesDelay', getPropValue('subtitlesDelay'));
-                }
-
-                break;
-            }
-            case 'size': {
-                if (observedProps['subtitlesSize']) {
-                    events.emit('propChanged', 'subtitlesSize', getPropValue('subtitlesSize'));
-                }
-
-                break;
-            }
-            case 'darkBackground': {
-                if (observedProps['subtitlesDarkBackground']) {
-                    events.emit('propChanged', 'subtitlesDarkBackground', getPropValue('subtitlesDarkBackground'));
-                }
-
-                break;
-            }
-            case 'offset': {
-                if (observedProps['subtitlesOffset']) {
-                    events.emit('propChanged', 'subtitlesOffset', getPropValue('subtitlesOffset'));
-                }
-
-                break;
-            }
-        }
-    }
-    function onSubtitlesTextShouldUpdate() {
-        subtitles.dispatch({
-            commandName: 'updateText',
-            commandArgs: {
-                time: getPropValue('time')
-            }
-        });
-    }
     function observeProp(propName) {
-        switch (propName) {
-            case 'paused': {
-                observedProps['paused'] = true;
-                events.emit('propValue', 'paused', getPropValue('paused'));
-                videoElement.onpause = function() {
-                    onVideoPropChanged('paused');
-                };
-                videoElement.onplay = function() {
-                    onVideoPropChanged('paused');
-                };
-                return;
-            }
-            case 'time': {
-                observedProps['time'] = true;
-                events.emit('propValue', 'time', getPropValue('time'));
-                videoElement.ontimeupdate = function() {
-                    onSubtitlesTextShouldUpdate();
-                    onVideoPropChanged('currentTime');
-                };
-                return;
-            }
-            case 'duration': {
-                observedProps['duration'] = true;
-                events.emit('propValue', 'duration', getPropValue('duration'));
-                videoElement.ondurationchange = function() {
-                    onVideoPropChanged('duration');
-                };
-                return;
-            }
-            case 'buffering': {
-                observedProps['buffering'] = true;
-                events.emit('propValue', 'buffering', getPropValue('buffering'));
-                videoElement.onwaiting = function() {
-                    onVideoPropChanged('readyState');
-                };
-                videoElement.onplaying = function() {
-                    onVideoPropChanged('readyState');
-                };
-                videoElement.onloadeddata = function() {
-                    onVideoPropChanged('readyState');
-                };
-                return;
-            }
-            case 'volume': {
-                observedProps['volume'] = true;
-                events.emit('propValue', 'volume', getPropValue('volume'));
-                videoElement.onvolumechange = function() {
-                    onVideoPropChanged('volume');
-                    onVideoPropChanged('muted');
-                };
-                return;
-            }
-            case 'muted': {
-                observedProps['muted'] = true;
-                events.emit('propValue', 'muted', getPropValue('muted'));
-                videoElement.onvolumechange = function() {
-                    onVideoPropChanged('volume');
-                    onVideoPropChanged('muted');
-                };
-                return;
-            }
-            case 'subtitlesTracks': {
-                observedProps['subtitlesTracks'] = true;
-                events.emit('propValue', 'subtitlesTracks', getPropValue('subtitlesTracks'));
-                return;
-            }
-            case 'selectedSubtitlesTrackId': {
-                observedProps['selectedSubtitlesTrackId'] = true;
-                events.emit('propValue', 'selectedSubtitlesTrackId', getPropValue('selectedSubtitlesTrackId'));
-                return;
-            }
-            case 'subtitlesDelay': {
-                observedProps['subtitlesDelay'] = true;
-                events.emit('propValue', 'subtitlesDelay', getPropValue('subtitlesDelay'));
-                return;
-            }
-            case 'subtitlesSize': {
-                observedProps['subtitlesSize'] = true;
-                events.emit('propValue', 'subtitlesSize', getPropValue('subtitlesSize'));
-                return;
-            }
-            case 'subtitlesDarkBackground': {
-                observedProps['subtitlesDarkBackground'] = true;
-                events.emit('propValue', 'subtitlesDarkBackground', getPropValue('subtitlesDarkBackground'));
-                return;
-            }
-            case 'subtitlesOffset': {
-                observedProps['subtitlesOffset'] = true;
-                events.emit('propValue', 'subtitlesOffset', getPropValue('subtitlesOffset'));
-                return;
-            }
-            default: {
-                throw new Error('observeProp not supported: ' + propName);
-            }
+        if (HTMLVideo.manifest.props.indexOf(propName) === -1) {
+            throw new Error('observeProp not supported: ' + propName);
         }
+
+        events.emit('propValue', propName, getProp(propName));
+        observedProps[propName] = true;
     }
     function setProp(propName, propValue) {
         switch (propName) {
@@ -383,28 +294,28 @@ function HTMLVideo(options) {
             }
             case 'selectedSubtitlesTrackId': {
                 if (loaded) {
-                    subtitles.dispatch({ propName: 'selectedTrackId', propValue: propValue });
+                    subtitles.selectedTrackId = propValue;
                 }
 
                 return;
             }
             case 'subtitlesDelay': {
                 if (loaded) {
-                    subtitles.dispatch({ propName: 'delay', propValue: propValue });
+                    subtitles.delay = propValue;
                 }
 
                 return;
             }
             case 'subtitlesSize': {
-                subtitles.dispatch({ propName: 'size', propValue: propValue });
+                subtitles.size = propValue;
                 return;
             }
             case 'subtitlesDarkBackground': {
-                subtitles.dispatch({ propName: 'darkBackground', propValue: propValue });
+                subtitles.darkBackground = propValue;
                 return;
             }
             case 'subtitlesOffset': {
-                subtitles.dispatch({ propName: 'offset', propValue: propValue });
+                subtitles.offset = propValue;
                 return;
             }
             default: {
@@ -414,13 +325,16 @@ function HTMLVideo(options) {
     }
     function command(commandName, commandArgs) {
         switch (commandName) {
-            case 'addSubtitleTracks': {
-                subtitles.dispatch({ commandName: 'addTracks', commandArgs: commandArgs });
-                return;
+            case 'addSubtitlesTracks': {
+                if (loaded) {
+                    subtitles.addTracks(commandArgs.tracks);
+                }
+
+                break;
             }
             case 'stop': {
                 loaded = false;
-                subtitles.dispatch({ commandName: 'clearTracks' });
+                subtitles.clearTracks();
                 videoElement.removeAttribute('src');
                 videoElement.load();
                 videoElement.currentTime = 0;
@@ -428,32 +342,28 @@ function HTMLVideo(options) {
                 onVideoPropChanged('currentTime');
                 onVideoPropChanged('duration');
                 onVideoPropChanged('readyState');
-                return;
+                break;
             }
             case 'load': {
-                dispatch({ commandName: 'stop' });
+                command('stop');
                 videoElement.autoplay = commandArgs.autoplay !== false;
                 videoElement.currentTime = !isNaN(commandArgs.time) && commandArgs.time !== null ? parseInt(commandArgs.time) / 1000 : 0;
-                videoElement.src = commandArgs.url;
+                videoElement.src = commandArgs.stream.url;
                 loaded = true;
                 onVideoPropChanged('paused');
                 onVideoPropChanged('currentTime');
                 onVideoPropChanged('duration');
                 onVideoPropChanged('readyState');
-                return;
+                break;
             }
             case 'destroy': {
-                dispatch({ commandName: 'stop' });
+                command('stop');
                 destroyed = true;
                 onVideoPropChanged('volume');
                 onVideoPropChanged('muted');
-                onSubtitlesPropChanged('size');
-                onSubtitlesPropChanged('darkBackground');
-                onSubtitlesPropChanged('offset');
+                subtitles.destroy();
                 events.removeAllListeners();
                 events.on('error', function() { });
-                videoElement.onended = null;
-                videoElement.onerror = null;
                 videoElement.onpause = null;
                 videoElement.onplay = null;
                 videoElement.ontimeupdate = null;
@@ -462,10 +372,11 @@ function HTMLVideo(options) {
                 videoElement.onplaying = null;
                 videoElement.onloadeddata = null;
                 videoElement.onvolumechange = null;
+                videoElement.onended = null;
+                videoElement.onerror = null;
                 containerElement.removeChild(videoElement);
                 containerElement.removeChild(stylesElement);
-                subtitles.dispatch({ commandName: 'destroy' });
-                return;
+                break;
             }
             default: {
                 throw new Error('command not supported: ' + commandName);
@@ -486,7 +397,7 @@ function HTMLVideo(options) {
 
         if (args) {
             if (typeof args.commandName === 'string') {
-                command(args.commandName, args.commandArgs);
+                command(args.commandName, args.commandArgs || {});
                 return;
             } else if (typeof args.propName === 'string') {
                 setProp(args.propName, args.propValue);

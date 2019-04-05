@@ -20,11 +20,11 @@ class SubtitlesButton extends React.Component {
             nextProps.className !== this.props.className ||
             nextProps.popupContainerClassName !== this.props.popupContainerClassName ||
             nextProps.popupContentClassName !== this.props.popupContentClassName ||
-            nextProps.subtitleTracks !== this.props.subtitleTracks ||
-            nextProps.selectedSubtitleTrackId !== this.props.selectedSubtitleTrackId ||
-            nextProps.subtitleSize !== this.props.subtitleSize ||
-            nextProps.subtitleDelay !== this.props.subtitleDelay ||
-            nextProps.subtitleDarkBackground !== this.props.subtitleDarkBackground;
+            nextProps.subtitlesTracks !== this.props.subtitlesTracks ||
+            nextProps.selectedSubtitlesTrackId !== this.props.selectedSubtitlesTrackId ||
+            nextProps.subtitlesSize !== this.props.subtitlesSize ||
+            nextProps.subtitlesDelay !== this.props.subtitlesDelay ||
+            nextProps.subtitlesDarkBackground !== this.props.subtitlesDarkBackground;
     }
 
     onPopupOpen = () => {
@@ -39,18 +39,18 @@ class SubtitlesButton extends React.Component {
         return (
             <Popup className={this.props.popupContainerClassName} border={true} onOpen={this.onPopupOpen} onClose={this.onPopupClose}>
                 <Popup.Label>
-                    <div className={classnames(this.props.className, { 'active': this.state.popupOpen }, { 'disabled': this.props.subtitleTracks.length === 0 })}>
+                    <div className={classnames(this.props.className, { 'active': this.state.popupOpen }, { 'disabled': this.props.subtitlesTracks.length === 0 })}>
                         <Icon className={'icon'} icon={'ic_sub'} />
                     </div>
                 </Popup.Label>
                 <Popup.Menu>
                     <SubtitlesPicker
                         className={classnames(this.props.popupContentClassName, styles['subtitles-picker-container'])}
-                        subtitleTracks={this.props.subtitleTracks}
-                        selectedSubtitleTrackId={this.props.selectedSubtitleTrackId}
-                        subtitleSize={this.props.subtitleSize}
-                        subtitleDelay={this.props.subtitleDelay}
-                        subtitleDarkBackground={this.props.subtitleDarkBackground}
+                        subtitlesTracks={this.props.subtitlesTracks}
+                        selectedSubtitlesTrackId={this.props.selectedSubtitlesTrackId}
+                        subtitlesSize={this.props.subtitlesSize}
+                        subtitlesDelay={this.props.subtitlesDelay}
+                        subtitlesDarkBackground={this.props.subtitlesDarkBackground}
                         dispatch={this.props.dispatch}
                     />
                 </Popup.Menu>
@@ -63,19 +63,19 @@ SubtitlesButton.propTypes = {
     className: PropTypes.string,
     popupContainerClassName: PropTypes.string,
     popupContentClassName: PropTypes.string,
-    subtitleTracks: PropTypes.arrayOf(PropTypes.shape({
+    subtitlesTracks: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.string.isRequired,
         label: PropTypes.string.isRequired,
         origin: PropTypes.string.isRequired
     })).isRequired,
-    selectedSubtitleTrackId: PropTypes.string,
-    subtitleSize: PropTypes.number,
-    subtitleDelay: PropTypes.number,
-    subtitleDarkBackground: PropTypes.bool,
+    selectedSubtitlesTrackId: PropTypes.string,
+    subtitlesSize: PropTypes.number,
+    subtitlesDelay: PropTypes.number,
+    subtitlesDarkBackground: PropTypes.bool,
     dispatch: PropTypes.func.isRequired
 };
 SubtitlesButton.defaultProps = {
-    subtitleTracks: Object.freeze([])
+    subtitlesTracks: Object.freeze([])
 };
 
 module.exports = SubtitlesButton;
