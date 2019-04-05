@@ -1,5 +1,5 @@
 .intro-container {
-    --login-form-width: 270px;
+    --form-width: 270px;
     --spacing: 16px;
     font-size: 14px;
 }
@@ -9,9 +9,11 @@
     z-index: 0;
     width: 100%;
     height: 100%;
-    background-image: url('/images/login_background.jpg');
+    background-image: url('/images/intro_background.jpg');
     background-size: cover;
-    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-origin: border-box;
 
     .overlay {
         position: absolute;
@@ -24,42 +26,49 @@
     }
 
     .scroll-content {
-        display: flex;
-        flex-direction: row;
         position: absolute;
         z-index: 1;
         top: 0;
         left: 0;
         right: 0;
         bottom: 0;
+        display: flex;
+        flex-direction: row;
         overflow-y: auto;
         overflow-x: hidden;
 
-        .intro {
+        .form-container {
+            width: var(--form-width);
             margin: auto;
-            padding: calc(var(--login-form-width) * 0.2) 0;
-            width: var(--login-form-width);
+            padding: 5% 0;
 
-            .facebook-button {
-                width: var(--login-form-width);
-                height: calc(var(--login-form-width) * 0.25);
+            .facebook-button, .submit-button, .switch-form-button, .guest-login-button {
                 display: flex;
                 flex-direction: row;
                 align-items: center;
                 justify-content: center;
                 border: var(--focusable-border-size) solid transparent;
-                background: var(--color-secondarydark);
                 cursor: pointer;
 
                 .icon {
                     height: 1.7em;
-                    margin-right: var(--spacing);
+                    margin-right: 1em;
                     fill: var(--color-surfacelighter);
                 }
 
                 .label {
-                    font-size: 1.1em;
+                    font-size: 1em;
+                    font-weight: 600;
                     color: var(--color-surfacelighter);
+                }
+
+                &:before {
+                    content: "";
+                    display: block;
+                }
+
+                &:focus, &:hover {
+                    filter: brightness(1.2);
                 }
 
                 &:focus {
@@ -68,118 +77,64 @@
 
                 &:hover {
                     border-color: transparent;
+                }
+            }
+
+            .facebook-button {
+                background: var(--color-secondarydark);
+
+                .label {
+                    font-size: 1.2em;
+                }
+
+                &:before {
+                    padding-top: 25%;
                 }
             }
 
             .facebook-statement {
-                margin: calc(var(--spacing) * 0.5) 0 calc(var(--spacing) * 4) 0;
+                display: block;
+                margin-top: 0.5em;
+                margin-bottom: calc(var(--spacing) * 4);
                 text-align: center;
                 color: var(--color-surface);
             }
 
-            .form-container {
-                width: var(--login-form-width);
-                display: flex;
-                flex-direction: column;
-                align-items: stretch;
-                justify-content: center;
+            .text-input {
+                display: block;
+                width: 100%;
+                margin: var(--spacing) 0;
+                padding: 0.5em 0.2em;
+                font-size: 1em;
+                line-height: 1em;
+                border-bottom: 1px solid var(--color-surface);
+                color: var(--color-surfacelighter);
 
-                .text-input {
-                    margin: 0 calc(var(--spacing) * 0.5) var(--spacing) calc(var(--spacing) * 0.5);
-                    padding: 0.5em 0;
-                    border-bottom: 1px solid var(--color-surface);
-                    font-size: 1.1em;
-                    color: var(--color-surfacelighter);
-                    background: none;
+                &::placeholder {
+                    color: var(--color-surfacelight);
+                }
+
+                &:hover, &:focus {
+                    border-bottom-color: var(--color-surfacelighter);
 
                     &::placeholder {
-                        color: var(--color-surfacelight);
-                    }
-
-                    &:hover, &:focus {
-                        border-bottom-color: var(--color-surfacelighter);
-
-                        &::placeholder {
-                            color: var(--color-surfacelighter);
-                        }
-                    }
-                }
-
-                .consent-checkbox {
-                    width: 100%;
-                    margin-bottom: var(--spacing);
-                    padding: calc(var(--spacing) * 0.5);
-                    border: var(--focusable-border-size) solid transparent;
-
-                    &:focus-within {
-                        border-color: var(--color-surfacelighter);
-                    }
-                }
-
-
-                .forgot-password {
-                    align-self: flex-end;
-                    margin-bottom: var(--spacing);
-                    padding: calc(var(--spacing) * 0.5);
-                    border: var(--focusable-border-size) solid transparent;
-                    color: var(--color-surfacelight);
-                    cursor: pointer;
-
-                    &:hover, &:focus {
                         color: var(--color-surfacelighter);
-                    }
-
-                    &:focus {
-                        border-color: var(--color-surfacelighter);
-                    }
-
-                    &:hover {
-                        border-color: transparent;
-                    }
-                }
-
-                .error {
-                    margin-bottom: var(--spacing);
-                    text-align: center;
-                    color: var(--color-signal1);
-                }
-
-                .submit-button {
-                    width: 100%;
-                    outline: none;
-                    padding: calc(var(--spacing) * 1.1);
-                    font-size: 1.1em;
-                    font-weight: 600;
-                    border: var(--focusable-border-size) solid transparent;
-                    color: var(--color-surfacelighter);
-                    background-color: var(--color-primarydark);
-                    cursor: pointer;
-
-                    &:hover, &:focus {
-                        background-color: var(--color-primary);
-                    }
-
-                    &:focus {
-                        border-color: var(--color-surfacelighter);
-                    }
-
-                    &:hover {
-                        border-color: transparent;
                     }
                 }
             }
 
-            .switch-form-button, .guest-login-button {
-                width: 100%;
-                display: inline-block;
-                margin-top: var(--spacing);
-                padding: calc(var(--spacing) * 0.5);
-                text-align: center;
-                font-size: 1.1em;
-                font-weight: 600;
+            .forgot-password-link {
+                display: block;
+                margin: var(--spacing) 0;
+                padding: 0.5em;
                 border: var(--focusable-border-size) solid transparent;
-                color: var(--color-surfacelighter);
+                color: var(--color-surfacelight);
+                text-align: right;
                 cursor: pointer;
+
+                &:hover, &:focus {
+                    color: var(--color-surfacelighter);
+                }
 
                 &:focus {
                     border-color: var(--color-surfacelighter);
@@ -187,6 +142,49 @@
 
                 &:hover {
                     border-color: transparent;
+                }
+            }
+
+            .consent-checkbox {
+                margin: var(--spacing) 0;
+                padding: 0.5em 0.2em;
+                border: var(--focusable-border-size) solid transparent;
+
+                &:focus-within {
+                    border-color: var(--color-surfacelighter);
+                }
+
+                &:hover {
+                    border-color: transparent;
+                }
+            }
+
+            .error {
+                margin: var(--spacing) 0;
+                padding: 0.5em 0.2em;
+                text-align: center;
+                color: var(--color-signal1);
+            }
+
+            .submit-button {
+                background-color: var(--color-primarydark);
+
+                .label {
+                    font-size: 1.2em;
+                    font-weight: 600;
+                }
+
+                &:before {
+                    padding-top: 20%;
+                }
+            }
+
+            .switch-form-button, .guest-login-button {
+                margin: var(--spacing) 0;
+                padding: 0.8em 0.2em;
+
+                .label {
+                    font-size: 1.1em;
                 }
             }
         }

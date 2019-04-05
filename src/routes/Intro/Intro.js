@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import Icon from 'stremio-icons/dom';
-import { Button, Input, Link } from 'stremio-common';
+import { Input } from 'stremio-common';
 import ConsentCheckbox from './ConsentCheckbox';
 import styles from './styles';
 
@@ -33,48 +33,8 @@ class Intro extends Component {
         };
     }
 
-    changeSelectedForm = (event) => {
-        event.currentTarget.blur();
-        this.setState({
-            selectedForm: event.currentTarget.dataset.option,
-            termsAccepted: false,
-            privacyPolicyAccepted: false,
-            marketingAccepted: false,
-            email: '',
-            password: '',
-            confirmPassword: '',
-            error: '',
-        });
-    }
-
-    emailOnChange = (event) => {
-        this.setState({ email: event.target.value });
-    }
-
-    passwordOnChange = (event) => {
-        this.setState({ password: event.target.value });
-    }
-
-    confirmPasswordOnChange = (event) => {
-        this.setState({ confirmPassword: event.target.value });
-    }
-
-    toggleTerms = () => {
-        this.setState(({ termsAccepted }) => ({
-            termsAccepted: !termsAccepted
-        }));
-    }
-
-    togglePrivacyPolicy = () => {
-        this.setState(({ privacyPolicyAccepted }) => ({
-            privacyPolicyAccepted: !privacyPolicyAccepted
-        }));
-    }
-
-    toggleMarketing = () => {
-        this.setState(({ marketingAccepted }) => ({
-            marketingAccepted: !marketingAccepted
-        }));
+    componentDidMount() {
+        this.emailRef.current.focus();
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -98,73 +58,123 @@ class Intro extends Component {
         }
     }
 
-    loginOnSubmit = (event) => {
-        event.preventDefault();
-        if (this.state.email.length < 8) {
-            this.setState({ error: 'Please enter a valid email' });
-        } else {
-            if (this.emailRef.current === document.activeElement) {
-                this.passwordRef.current.focus();
-            }
+    changeSelectedForm = (event) => {
+        this.setState({
+            selectedForm: event.currentTarget.dataset.form,
+            termsAccepted: false,
+            privacyPolicyAccepted: false,
+            marketingAccepted: false,
+            email: '',
+            password: '',
+            confirmPassword: '',
+            error: '',
+        });
+    }
 
-            if (this.state.password.length === 0) {
-                this.setState({ error: 'Invalid password' });
-            } else {
-                this.setState({ error: '' });
-            }
+    emailOnChange = (event) => {
+        this.setState({ email: event.target.value });
+    }
+
+    emailOnSubmit = (event) => {
+        event.preventDefault();
+        this.passwordRef.current.focus();
+    }
+
+    passwordOnChange = (event) => {
+        this.setState({ password: event.target.value });
+    }
+
+    passwordOnSubmit = (event) => {
+        event.preventDefault();
+        if (this.state.selectedForm === FORMS.LOGIN) {
+            this.loginWithEmail();
+        } else {
+            this.confirmPasswordRef.current.focus();
         }
     }
 
-    signUpOnSubmit = (event) => {
-        event.preventDefault();
-        if (this.state.email.length < 8) {
-            this.setState({ error: 'Please enter a valid email' });
-        } else {
-            if (this.emailRef.current === document.activeElement) {
-                this.passwordRef.current.focus();
-            }
-
-            if (this.state.password.length === 0) {
-                this.setState({ error: 'Invalid password' });
-            } else {
-                if (this.passwordRef.current === document.activeElement) {
-                    this.confirmPasswordRef.current.focus();
-                }
-
-                if (this.state.password !== this.state.confirmPassword) {
-                    this.setState({ error: 'Passwords dont match' });
-                } else {
-                    if (this.confirmPasswordRef.current === document.activeElement) {
-                        this.termsRef.current.focus();
-                    }
-
-                    if (!this.state.termsAccepted) {
-                        this.setState({ error: 'You must accept the Terms of Service' });
-                    } else {
-                        if (this.termsRef.current === document.activeElement) {
-                            this.privacyPolicyRef.current.focus();
-                        }
-
-                        if (!this.state.privacyPolicyAccepted) {
-                            this.setState({ error: 'You must accept the Privacy Policy' });
-                        } else {
-                            if (this.privacyPolicyRef.current === document.activeElement) {
-                                this.marketingRef.current.focus();
-                            }
-
-                            this.setState({ error: '' });
-                        }
-                    }
-                }
-            }
-        }
+    confirmPasswordOnChange = (event) => {
+        this.setState({ confirmPassword: event.target.value });
     }
 
-    guestLoginOnSubmit = () => {
+    confirmPasswordOnSubmit = (event) => {
+        event.preventDefault();
+        this.termsRef.current.focus();
+    }
+
+    toggleTerms = () => {
+        this.setState(({ termsAccepted }) => ({
+            termsAccepted: !termsAccepted
+        }));
+    }
+
+    togglePrivacyPolicy = () => {
+        this.setState(({ privacyPolicyAccepted }) => ({
+            privacyPolicyAccepted: !privacyPolicyAccepted
+        }));
+    }
+
+    toggleMarketing = () => {
+        this.setState(({ marketingAccepted }) => ({
+            marketingAccepted: !marketingAccepted
+        }));
+    }
+
+    loginWithFacebook = () => {
+        alert('Facebook login');
+    }
+
+    loginWithEmail = () => {
+        if (this.state.email.length < 8) {
+            this.setState({ error: 'Please enter a valid email' });
+            return;
+        }
+
+        if (this.state.password.length === 0) {
+            this.setState({ error: 'Invalid password' });
+            return;
+        }
+
+        this.setState({ error: '' });
+        alert('Email login');
+    }
+
+    signup = () => {
+        if (this.state.email.length < 8) {
+            this.setState({ error: 'Please enter a valid email' });
+            return;
+        }
+
+        if (this.state.password.length === 0) {
+            this.setState({ error: 'Invalid password' });
+            return;
+        }
+
+        if (this.state.password !== this.state.confirmPassword) {
+            this.setState({ error: 'Passwords dont match' });
+            return;
+        }
+
+        if (!this.state.termsAccepted) {
+            this.setState({ error: 'You must accept the Terms of Service' });
+            return;
+        }
+
+        if (!this.state.privacyPolicyAccepted) {
+            this.setState({ error: 'You must accept the Privacy Policy' });
+            return;
+        }
+
+        this.setState({ error: '' });
+        alert('Signup');
+    }
+
+    loginAsGuest = () => {
         if (!this.state.termsAccepted) {
             this.setState({ error: 'You must accept the Terms of Service' });
         } else {
             this.setState({ error: '' });
+            alert('Guest login');
         }
     }
 
@@ -173,44 +183,48 @@ class Intro extends Component {
             <div className={styles['intro-container']}>
                 <div className={styles['overlay']} />
                 <div className={styles['scroll-content']}>
-                    <div className={styles['intro']}>
-                        <Button className={styles['facebook-button']}>
+                    <div className={styles['form-container']}>
+                        <Input className={styles['facebook-button']} type={'button'} onClick={this.loginWithFacebook}>
                             <Icon className={styles['icon']} icon={'ic_facebook'} />
                             <div className={styles['label']}>Login with Facebook</div>
-                        </Button>
+                        </Input>
                         <div className={styles['facebook-statement']}>We won't post anything on your behalf</div>
-                        <form className={styles['form-container']} onSubmit={this.state.selectedForm === FORMS.LOGIN ? this.loginOnSubmit : this.signUpOnSubmit}>
-                            <Input ref={this.emailRef} className={styles['text-input']} type={'text'} placeholder={'Email'} value={this.state.email} onChange={this.emailOnChange} />
-                            <Input ref={this.passwordRef} className={styles['text-input']} type={'password'} placeholder={'Password'} value={this.state.password} onChange={this.passwordOnChange} />
-                            {
-                                this.state.selectedForm === FORMS.LOGIN ?
-                                    <Link className={styles['forgot-password']} href={'https://www.strem.io/reset-password/'} target={'_blank'}>Forgot password?</Link>
-                                    :
-                                    <Fragment>
-                                        <Input ref={this.confirmPasswordRef} className={styles['text-input']} type={'password'} placeholder={'Confirm Password'} value={this.state.confirmPassword} onChange={this.confirmPasswordOnChange} />
-                                        <ConsentCheckbox ref={this.termsRef} className={styles['consent-checkbox']} label={'I have read and agree with the Stremio'} link={'Terms and conditions'} href={'https://www.stremio.com/tos'} checked={this.state.termsAccepted} onClick={this.toggleTerms} />
-                                        <ConsentCheckbox ref={this.privacyPolicyRef} className={styles['consent-checkbox']} label={'I have read and agree with the Stremio'} link={'Privacy Policy'} href={'https://www.stremio.com/privacy'} checked={this.state.privacyPolicyAccepted} onClick={this.togglePrivacyPolicy} />
-                                        <ConsentCheckbox ref={this.marketingRef} className={styles['consent-checkbox']} label={'I agree to receive marketing communications from Stremio'} checked={this.state.marketingAccepted} onClick={this.toggleMarketing} />
-                                    </Fragment>
-                            }
-                            {
-                                this.state.error.length > 0 ?
-                                    <div ref={this.errorRef} className={styles['error']}>{this.state.error}</div>
-                                    :
-                                    null
-                            }
-                            <Input className={styles['submit-button']} type={'submit'} value={this.state.selectedForm === FORMS.LOGIN ? 'LOG IN' : 'SING UP'} />
-                        </form>
-                        <Button className={styles['switch-form-button']} data-option={this.state.selectedForm === FORMS.SIGN_UP ? FORMS.LOGIN : FORMS.SIGN_UP} onClick={this.changeSelectedForm}>{this.state.selectedForm === FORMS.SIGN_UP ? 'LOG IN' : 'SING UP WITH EMAIL'}</Button>
+                        <Input ref={this.emailRef} className={styles['text-input']} type={'email'} placeholder={'Email'} value={this.state.email} onChange={this.emailOnChange} onSubmit={this.emailOnSubmit} />
+                        <Input ref={this.passwordRef} className={styles['text-input']} type={'password'} placeholder={'Password'} value={this.state.password} onChange={this.passwordOnChange} onSubmit={this.passwordOnSubmit} />
                         {
-                            this.state.selectedForm === FORMS.SIGN_UP ?
-                                <Button className={styles['guest-login-button']} onClick={this.guestLoginOnSubmit}>GUEST LOGIN</Button>
+                            this.state.selectedForm === FORMS.LOGIN ?
+                                <Input className={styles['forgot-password-link']} type={'link'} href={'https://www.strem.io/reset-password/'} target={'_blank'}>Forgot password?</Input>
+                                :
+                                <Fragment>
+                                    <Input ref={this.confirmPasswordRef} className={styles['text-input']} type={'password'} placeholder={'Confirm Password'} value={this.state.confirmPassword} onChange={this.confirmPasswordOnChange} onSubmit={this.confirmPasswordOnSubmit} />
+                                    <ConsentCheckbox ref={this.termsRef} className={styles['consent-checkbox']} label={'I have read and agree with the Stremio'} link={'Terms and conditions'} href={'https://www.stremio.com/tos'} checked={this.state.termsAccepted} onClick={this.toggleTerms} />
+                                    <ConsentCheckbox ref={this.privacyPolicyRef} className={styles['consent-checkbox']} label={'I have read and agree with the Stremio'} link={'Privacy Policy'} href={'https://www.stremio.com/privacy'} checked={this.state.privacyPolicyAccepted} onClick={this.togglePrivacyPolicy} />
+                                    <ConsentCheckbox ref={this.marketingRef} className={styles['consent-checkbox']} label={'I agree to receive marketing communications from Stremio'} checked={this.state.marketingAccepted} onClick={this.toggleMarketing} />
+                                </Fragment>
+                        }
+                        {
+                            this.state.error.length > 0 ?
+                                <div ref={this.errorRef} className={styles['error']}>{this.state.error}</div>
                                 :
                                 null
                         }
+                        <Input className={styles['submit-button']} type={'button'} onClick={this.state.selectedForm === FORMS.LOGIN ? this.loginWithEmail : this.signup}>
+                            <div className={styles['label']}>{this.state.selectedForm === FORMS.LOGIN ? 'LOG IN' : 'SING UP'}</div>
+                        </Input>
+                        {
+                            this.state.selectedForm === FORMS.SIGN_UP ?
+                                <Input className={styles['guest-login-button']} type={'button'} onClick={this.loginAsGuest}>
+                                    <div className={styles['label']}>GUEST LOGIN</div>
+                                </Input>
+                                :
+                                null
+                        }
+                        <Input className={styles['switch-form-button']} type={'button'} data-form={this.state.selectedForm === FORMS.SIGN_UP ? FORMS.LOGIN : FORMS.SIGN_UP} onClick={this.changeSelectedForm}>
+                            <div className={styles['label']}>{this.state.selectedForm === FORMS.SIGN_UP ? 'LOG IN' : 'SING UP WITH EMAIL'}</div>
+                        </Input>
                     </div>
                 </div>
-            </div>
+            </div >
         );
     }
 }

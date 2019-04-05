@@ -61,6 +61,8 @@
     text-decoration: none;
     outline: none;
     appearance: none;
+    background: none;
+    box-shadow: none;
 }
 
 html, body, :global(#app) {
@@ -79,12 +81,14 @@ html, body, :global(#app) {
         height: 100%;
     }
 
-    input[type="email"], input[type="password"], input[type="text"] {
-        user-select: text;
-    }
+    input {
+        &::-moz-focus-inner {
+            border: none;
+        }
 
-    input::-moz-focus-inner {
-        border: 0;
+        &[type="email"], &[type="password"], &[type="text"] {
+            user-select: text;
+        }
     }
 
     ::-webkit-scrollbar {

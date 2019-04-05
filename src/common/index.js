@@ -9,6 +9,7 @@ import NavBar from './NavBar';
 import MetaItem from './MetaItem';
 import ShareModal from './ShareModal';
 import UserPanel from './UserPanel';
+import Loader from './Loader';
 
 export {
     Checkbox,
@@ -22,6 +23,7 @@ export {
     MetaItem,
     ShareModal,
     UserPanel,
+    Loader,
     Slider,
     FocusableProvider,
     withFocusable

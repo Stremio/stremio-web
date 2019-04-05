@@ -4,14 +4,17 @@ import classnames from 'classnames';
 import { Checkbox } from 'stremio-common';
 import styles from './styles';
 
+const linkOnClick = (event) => {
+    event.stopPropagation();
+};
+
 const ConsentCheckbox = React.forwardRef(({ className, label, link, href, checked, onClick }, ref) => (
-    <label className={classnames(styles['consent-checkbox-container'], className)}>
-        <Checkbox ref={ref} className={styles['checkbox']} checked={checked} onClick={onClick} />
+    <Checkbox ref={ref} className={classnames(styles['consent-checkbox-container'], className)} checked={checked} onClick={onClick}>
         <div className={styles['label']}>
             {label}
-            {link && href ? <a className={styles['link']} href={href} target={'_blank'} tabIndex={'-1'}> {link}</a> : null}
+            {link && href ? <a className={styles['link']} href={href} target={'_blank'} tabIndex={'-1'} onClick={linkOnClick}> {link}</a> : null}
         </div>
-    </label>
+    </Checkbox>
 ));
 
 ConsentCheckbox.displayName = 'ConsentCheckbox';

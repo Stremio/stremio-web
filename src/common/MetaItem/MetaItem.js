@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import { Popup, Button } from 'stremio-common';
+import { Popup, Input } from 'stremio-common';
 import Icon from 'stremio-icons/dom';
 import styles from './styles';
 
@@ -20,7 +20,6 @@ class MetaItem extends Component {
             nextProps.popupClassName !== this.props.popupClassName ||
             nextProps.id !== this.props.id ||
             nextProps.type !== this.props.type ||
-            nextProps.relativeSide !== this.props.relativeSide ||
             nextProps.posterShape !== this.props.posterShape ||
             nextProps.poster !== this.props.poster ||
             nextProps.title !== this.props.title ||
@@ -69,11 +68,16 @@ class MetaItem extends Component {
                     : 'ic_movies';
         return (
             <div className={styles['poster-image-container']}>
-                <Icon className={styles['placeholder-image']} icon={placeholderIcon} />
-                <div className={styles['poster-image']} style={{ backgroundImage: `url('${this.props.poster}')` }} />
-                <div className={styles['play-icon-container']}>
-                    <Icon className={styles['play-icon']} icon={'ic_play'} viewBox={'-291.6 0 1190.6 1024'} />
+                <div className={styles['placeholder-image-container']}>
+                    <Icon className={styles['placeholder-image']} icon={placeholderIcon} />
                 </div>
+                <div className={styles['poster-image']} style={{ backgroundImage: `url('${this.props.poster}')` }} />
+                <svg className={styles['play-icon-container']} viewBox={'0 0 100 100'}>
+                    <circle className={styles['play-icon-background']} cx={'50'} cy={'50'} r={'50'} />
+                    <svg className={styles['play-icon']} x={0} y={25} width={100} height={50} viewBox={'0 0 37.14 32'}>
+                        <path d={'M 9.14,0 37.14,16 9.14,32 Z'} />
+                    </svg>
+                </svg>
                 {this.renderProgress()}
             </div>
         );
@@ -97,7 +101,7 @@ class MetaItem extends Component {
                                 <Popup.Menu>
                                     <div className={styles['menu-items-container']}>
                                         {this.props.menuOptions.map(({ label, type }) => (
-                                            <Button key={type} className={styles['menu-item']} data-meta-item-id={this.props.id} data-menu-option-type={type} onClick={this.menuOptionOnSelect}>{label}</Button>
+                                            <Input key={type} className={styles['menu-item']} type={'button'} data-meta-item-id={this.props.id} data-menu-option-type={type} onClick={this.menuOptionOnSelect}>{label}</Input>
                                         ))}
                                     </div>
                                 </Popup.Menu>
@@ -120,10 +124,10 @@ class MetaItem extends Component {
 
     render() {
         return (
-            <Button className={classnames(styles['meta-item-container'], styles[`relative-side-${this.props.relativeSide}`], styles[`poster-shape-${this.props.posterShape}`], this.props.className)} data-meta-item-id={this.props.id} onClick={this.onClick}>
+            <Input className={classnames(styles['meta-item-container'], styles[`poster-shape-${this.props.posterShape}`], this.props.className)} type={'button'} data-meta-item-id={this.props.id} onClick={this.onClick}>
                 {this.renderPoster()}
                 {this.renderInfoBar()}
-            </Button>
+            </Input>
         );
     }
 }
@@ -135,7 +139,6 @@ MetaItem.propTypes = {
     menuOptionOnSelect: PropTypes.func,
     id: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
-    relativeSide: PropTypes.oneOf(['auto', 'height']).isRequired,
     posterShape: PropTypes.oneOf(['poster', 'landscape', 'square']).isRequired,
     poster: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
@@ -148,7 +151,6 @@ MetaItem.propTypes = {
     })).isRequired
 };
 MetaItem.defaultProps = {
-    relativeSide: 'auto',
     posterShape: 'square',
     poster: '',
     title: '',
