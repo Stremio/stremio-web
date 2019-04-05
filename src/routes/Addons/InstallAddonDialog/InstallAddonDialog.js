@@ -101,8 +101,7 @@ InstallAddonDialog.defaultProps = {
     name: '',
     version: '',
     types: [],
-    description: '',
-    isInstalled: false
+    description: ''
 };
 
 export default InstallAddonDialog;
