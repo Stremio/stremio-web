@@ -1,5 +1,5 @@
 .install-addon-dialog {
-    --addon-dialog-width: 380px;
+    --addon-dialog-width: 450px;
     --spacing: 16px;
     font-size: 13px;
 }
@@ -11,20 +11,36 @@
 
     .x-container {
         display: flex;
+        flex-direction: row;
         justify-content: flex-end;
 
-        .x-icon {
-            width: calc(var(--spacing) * 0.7);
-            height: calc(var(--spacing) * 0.7);
-            fill: var(--color-surface);
-            background-position: center;
-            background-repeat: no-repeat;
+        .icon {
+            padding: 0.3em;
+            width: 1.5em;
+            height: 1.5em;
+            fill: var(--color-surfacedark);
             cursor: pointer;
+
+            &:hover {
+                fill: var(--color-surface);
+            }
+        }
+
+        &:focus {
+            .icon {
+                background-color: var(--color-surfacelight);
+            }
+        }
+
+        &:hover {
+            .icon {
+                background-color: transparent;
+            }
         }
     }
 
     .info-container {
-        padding: calc(var(--spacing) * 0.3) var(--spacing) var(--spacing) var(--spacing);
+        padding: 0 var(--spacing) var(--spacing) var(--spacing);
 
         .install-label {
             font-size: 1.2em;
@@ -33,17 +49,13 @@
         }
 
         .basic-info {
-            margin: calc(var(--spacing) * 0.5) 0;
             display: flex;
             flex-direction: row;
 
             .logo-container {
                 margin-right: var(--spacing);
-                width: calc(var(--spacing) * 3);
-                height: calc(var(--spacing) * 3);
-                display: flex;
-                align-items: center;
-                justify-content: center;
+                width: 4em;
+                height: 4em;
 
                 .logo {
                     width: 100%;
@@ -54,17 +66,19 @@
             .header-container {
                 flex: 1;
                 display: flex;
+                flex-direction: row;
                 align-items: center;
                 overflow: hidden;
 
                 .header {
                     width: 100%;
                     display: flex;
+                    flex-direction: row;
                     align-items: baseline;
 
                     .name {
                         margin-right: var(--spacing);
-                        max-width: 80%;
+                        max-width: 10em;
                         font-size: 1.5em;
                         font-weight: 100;
                         overflow: hidden;
@@ -86,7 +100,7 @@
         }
 
         .types {
-            min-height: var(--spacing);
+            min-height: 1.2em;
             font-weight: 100;
             overflow: hidden;
             white-space: pre;
@@ -95,7 +109,6 @@
         }
 
         .description {
-            margin-top: calc(var(--spacing) * 0.5);
             font-weight: 100;
             overflow: hidden;
             overflow-wrap: break-word;
@@ -103,27 +116,25 @@
         }
 
         .notice {
-            margin-top: var(--spacing);
+            padding: 0.5em 0;
             font-weight: 100;
             font-style: italic;
             color: var(--color-backgrounddarker);
         }
 
         .buttons {
-            margin-top: var(--spacing);
-            height: calc(var(--spacing) * 2.5);
             display: flex;
             flex-direction: row;
             align-items: center;
             justify-content: space-between;
 
-            .cancel-button {
-                width: 45%;
-                height: 100%;
+            .button {
+                flex: 1;
+                padding: 1em;
                 display: flex;
+                flex-direction: row;
                 align-items: center;
                 justify-content: center;
-                background-color: var(--color-surfacedark);
                 cursor: pointer;
 
                 .label {
@@ -132,30 +143,27 @@
                     color: var(--color-surfacelighter);
                 }
 
-                &:hover {
-                    background-color: var(--color-surface);
+                &.cancel-button {
+                    margin-right: 3em;
+                    background-color: var(--color-surfacedark);
+
+                    &:focus, &:hover {
+                        background-color: var(--color-surface);
+                    }
+                }
+
+                &.install-button {
+                    background-color: var(--color-signal5);
+
+                    &:focus, &:hover {
+                        background-color: var(--color-signal560);
+                    }
                 }
             }
+        }
 
-            .install-button {
-                width: 45%;
-                height: 100%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                background-color: var(--color-signal5);
-                cursor: pointer;
-
-                .label {
-                    font-size: 1.1em;
-                    font-weight: 100;
-                    color: var(--color-surfacelighter);
-                }
-
-                &:hover {
-                    background-color: var(--color-signal560);
-                }
-            }
+        >:not(:last-child) {
+            margin-bottom: calc(var(--spacing) * 0.5);
         }
     }
 }
