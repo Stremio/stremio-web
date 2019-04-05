@@ -97,11 +97,11 @@ InstallAddonDialog.propTypes = {
     onInstallClicked: PropTypes.func.isRequired
 };
 InstallAddonDialog.defaultProps = {
-    logo: 'ic_youtube_small',
-    name: 'YouTube',
-    version: '1.3.0',
-    types: ['Channels', 'Videos'],
-    description: 'Watch your favourite YouTube channels ad-free and get notified when they upload new videos.',
+    logo: '',
+    name: '',
+    version: '',
+    types: [],
+    description: '',
     isInstalled: false
 };
 
