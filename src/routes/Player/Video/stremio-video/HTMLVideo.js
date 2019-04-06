@@ -70,7 +70,6 @@ function HTMLVideo(options) {
                 break;
             }
             case 'selectedTrackId': {
-                subtitles.updateText(getProp('time'));
                 if (observedProps['selectedSubtitlesTrackId']) {
                     events.emit('propChanged', 'selectedSubtitlesTrackId', getProp('selectedSubtitlesTrackId'));
                 }
@@ -271,14 +270,14 @@ function HTMLVideo(options) {
                     }
                 }
 
-                return;
+                break;
             }
             case 'time': {
                 if (loaded && !isNaN(propValue) && propValue !== null) {
                     videoElement.currentTime = parseInt(propValue) / 1000;
                 }
 
-                return;
+                break;
             }
             case 'volume': {
                 if (!isNaN(propValue) && propValue !== null) {
@@ -286,37 +285,37 @@ function HTMLVideo(options) {
                     videoElement.volume = Math.max(0, Math.min(100, parseInt(propValue))) / 100;
                 }
 
-                return;
+                break;
             }
             case 'muted': {
                 videoElement.muted = !!propValue;
-                return;
+                break;
             }
             case 'selectedSubtitlesTrackId': {
                 if (loaded) {
                     subtitles.selectedTrackId = propValue;
                 }
 
-                return;
+                break;
             }
             case 'subtitlesDelay': {
                 if (loaded) {
                     subtitles.delay = propValue;
                 }
 
-                return;
+                break;
             }
             case 'subtitlesSize': {
                 subtitles.size = propValue;
-                return;
+                break;
             }
             case 'subtitlesDarkBackground': {
                 subtitles.darkBackground = propValue;
-                return;
+                break;
             }
             case 'subtitlesOffset': {
                 subtitles.offset = propValue;
-                return;
+                break;
             }
             default: {
                 throw new Error('setProp not supported: ' + propName);
@@ -334,7 +333,6 @@ function HTMLVideo(options) {
             }
             case 'stop': {
                 loaded = false;
-                subtitles.clearTracks();
                 videoElement.removeAttribute('src');
                 videoElement.load();
                 videoElement.currentTime = 0;
@@ -342,6 +340,7 @@ function HTMLVideo(options) {
                 onVideoPropChanged('currentTime');
                 onVideoPropChanged('duration');
                 onVideoPropChanged('readyState');
+                subtitles.clearTracks();
                 break;
             }
             case 'load': {
