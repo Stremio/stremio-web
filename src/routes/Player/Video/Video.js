@@ -25,7 +25,7 @@ class Video extends React.Component {
     selectVideoImplementation = (args) => {
         if (args.ipc) {
             return MPVVideo;
-        } else if (args.ytId) {
+        } else if (args.stream.ytId) {
             return YouTubeVideo;
         } else {
             return HTMLVideo;
