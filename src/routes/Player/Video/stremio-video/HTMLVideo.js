@@ -91,16 +91,30 @@ function HTMLVideo(options) {
 
                 break;
             }
-            case 'darkBackground': {
-                if (observedProps['subtitlesDarkBackground']) {
-                    events.emit('propChanged', 'subtitlesDarkBackground', getProp('subtitlesDarkBackground'));
+            case 'offset': {
+                if (observedProps['subtitlesOffset']) {
+                    events.emit('propChanged', 'subtitlesOffset', getProp('subtitlesOffset'));
                 }
 
                 break;
             }
-            case 'offset': {
-                if (observedProps['subtitlesOffset']) {
-                    events.emit('propChanged', 'subtitlesOffset', getProp('subtitlesOffset'));
+            case 'textColor': {
+                if (observedProps['subtitlesTextColor']) {
+                    events.emit('propChanged', 'subtitlesTextColor', getProp('subtitlesTextColor'));
+                }
+
+                break;
+            }
+            case 'backgroundColor': {
+                if (observedProps['subtitlesBackgroundColor']) {
+                    events.emit('propChanged', 'subtitlesBackgroundColor', getProp('subtitlesBackgroundColor'));
+                }
+
+                break;
+            }
+            case 'outlineColor': {
+                if (observedProps['subtitlesOutlineColor']) {
+                    events.emit('propChanged', 'subtitlesOutlineColor', getProp('subtitlesOutlineColor'));
                 }
 
                 break;
@@ -240,11 +254,17 @@ function HTMLVideo(options) {
             case 'subtitlesSize': {
                 return subtitles.size;
             }
-            case 'subtitlesDarkBackground': {
-                return subtitles.darkBackground;
-            }
             case 'subtitlesOffset': {
                 return subtitles.offset;
+            }
+            case 'subtitlesTextColor': {
+                return subtitles.textColor;
+            }
+            case 'subtitlesBackgroundColor': {
+                return subtitles.backgroundColor;
+            }
+            case 'subtitlesOutlineColor': {
+                return subtitles.outlineColor;
             }
             default: {
                 throw new Error('getProp not supported: ' + propName);
@@ -309,12 +329,20 @@ function HTMLVideo(options) {
                 subtitles.size = propValue;
                 break;
             }
-            case 'subtitlesDarkBackground': {
-                subtitles.darkBackground = propValue;
-                break;
-            }
             case 'subtitlesOffset': {
                 subtitles.offset = propValue;
+                break;
+            }
+            case 'subtitlesTextColor': {
+                subtitles.textColor = propValue;
+                break;
+            }
+            case 'subtitlesBackgroundColor': {
+                subtitles.backgroundColor = propValue;
+                break;
+            }
+            case 'subtitlesOutlineColor': {
+                subtitles.outlineColor = propValue;
                 break;
             }
             default: {
@@ -419,7 +447,7 @@ function HTMLVideo(options) {
 HTMLVideo.manifest = Object.freeze({
     name: 'HTMLVideo',
     embedded: true,
-    props: Object.freeze(['paused', 'time', 'duration', 'buffering', 'volume', 'muted', 'subtitlesTracks', 'selectedSubtitlesTrackId', 'subtitlesSize', 'subtitlesDelay', 'subtitlesDarkBackground', 'subtitlesOffset'])
+    props: Object.freeze(['paused', 'time', 'duration', 'buffering', 'volume', 'muted', 'subtitlesTracks', 'selectedSubtitlesTrackId', 'subtitlesSize', 'subtitlesDelay', 'subtitlesOffset', 'subtitlesTextColor', 'subtitlesBackgroundColor', 'subtitlesOutlineColor'])
 });
 
 Object.freeze(HTMLVideo);
