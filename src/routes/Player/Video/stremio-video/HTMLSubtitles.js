@@ -289,11 +289,11 @@ function HTMLSubtitles(options) {
                 }
 
                 stylesElement.sheet.cssRules[subtitlesCueStylesIndex].style.textShadow =
-                    value + '0 0 0.03em,' +
-                    value + '0 0 0.03em,' +
-                    value + '0 0 0.03em,' +
-                    value + '0 0 0.03em,' +
-                    value + '0 0 0.03em';
+                    value + ' 0 0 0.03em,' +
+                    value + ' 0 0 0.03em,' +
+                    value + ' 0 0 0.03em,' +
+                    value + ' 0 0 0.03em,' +
+                    value + ' 0 0 0.03em';
                 events.emit('propChanged', 'outlineColor');
             }
         }
