@@ -110,7 +110,9 @@ function HTMLSubtitles(options) {
         destroyed = true;
         clearTracks();
         events.emit('propChanged', 'size');
-        events.emit('propChanged', 'darkBackground');
+        events.emit('propChanged', 'textColor');
+        events.emit('propChanged', 'backgroundColor');
+        events.emit('propChanged', 'outlineColor');
         events.emit('propChanged', 'offset');
         events.removeAllListeners();
         events.on('error', function() { });
