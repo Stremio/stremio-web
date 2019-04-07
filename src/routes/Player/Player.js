@@ -23,7 +23,9 @@ class Player extends React.Component {
             selectedSubtitlesTrackId: null,
             subtitlesSize: null,
             subtitlesDelay: null,
-            subtitlesDarkBackground: null
+            subtitlesTextColor: null,
+            subtitlesBackgroundColor: null,
+            subtitlesOutlineColor: null
         };
     }
 
@@ -38,7 +40,9 @@ class Player extends React.Component {
             nextState.selectedSubtitlesTrackId !== this.state.selectedSubtitlesTrackId ||
             nextState.subtitlesSize !== this.state.subtitlesSize ||
             nextState.subtitlesDelay !== this.state.subtitlesDelay ||
-            nextState.subtitlesDarkBackground !== this.state.subtitlesDarkBackground;
+            nextState.subtitlesTextColor !== this.state.subtitlesTextColor ||
+            nextState.subtitlesBackgroundColor !== this.state.subtitlesBackgroundColor ||
+            nextState.subtitlesOutlineColor !== this.state.subtitlesOutlineColor;
     }
 
     componentDidMount() {
@@ -127,7 +131,9 @@ class Player extends React.Component {
                     selectedSubtitlesTrackId={this.state.selectedSubtitlesTrackId}
                     subtitlesSize={this.state.subtitlesSize}
                     subtitlesDelay={this.state.subtitlesDelay}
-                    subtitlesDarkBackground={this.state.subtitlesDarkBackground}
+                    subtitlesTextColor={this.state.subtitlesTextColor}
+                    subtitlesBackgroundColor={this.state.subtitlesBackgroundColor}
+                    subtitlesOutlineColor={this.state.subtitlesOutlineColor}
                     dispatch={this.dispatch}
                 />
             </div>

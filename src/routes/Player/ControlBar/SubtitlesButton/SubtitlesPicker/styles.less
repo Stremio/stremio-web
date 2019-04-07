@@ -153,11 +153,7 @@
             }
         }
 
-        .background-toggle-checkbox {
-            --icon-background-color: transparent;
-            --icon-color: var(--color-surfacelighter);
-            --icon-size: calc(var(--subtitles-picker-button-size) * 0.6);
-
+        .color-picker-container {
             align-self: stretch;
             flex: 1;
             display: flex;
@@ -165,7 +161,12 @@
             align-items: center;
             cursor: pointer;
 
-            .background-toggle-label {
+            .color-picker-input {
+                width: 2.2em;
+                height: 2.2em;
+            }
+
+            .color-picker-label {
                 flex: 1;
                 padding: 0 0.5em;
                 line-height: 1.1em;
@@ -173,14 +174,6 @@
                 word-break: break-all;
                 overflow: hidden;
                 color: var(--color-surfacelighter);
-            }
-
-            &:global(.checked) {
-                --icon-background-color: var(--color-primarydark);
-
-                &:hover {
-                    --icon-background-color: var(--color-primarylight);
-                }
             }
         }
 

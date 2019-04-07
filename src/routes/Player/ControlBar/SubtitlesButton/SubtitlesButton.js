@@ -24,7 +24,9 @@ class SubtitlesButton extends React.Component {
             nextProps.selectedSubtitlesTrackId !== this.props.selectedSubtitlesTrackId ||
             nextProps.subtitlesSize !== this.props.subtitlesSize ||
             nextProps.subtitlesDelay !== this.props.subtitlesDelay ||
-            nextProps.subtitlesDarkBackground !== this.props.subtitlesDarkBackground;
+            nextProps.subtitlesTextColor !== this.props.subtitlesTextColor ||
+            nextProps.subtitlesBackgroundColor !== this.props.subtitlesBackgroundColor ||
+            nextProps.subtitlesOutlineColor !== this.props.subtitlesOutlineColor;
     }
 
     onPopupOpen = () => {
@@ -50,7 +52,9 @@ class SubtitlesButton extends React.Component {
                         selectedSubtitlesTrackId={this.props.selectedSubtitlesTrackId}
                         subtitlesSize={this.props.subtitlesSize}
                         subtitlesDelay={this.props.subtitlesDelay}
-                        subtitlesDarkBackground={this.props.subtitlesDarkBackground}
+                        subtitlesTextColor={this.props.subtitlesTextColor}
+                        subtitlesBackgroundColor={this.props.subtitlesBackgroundColor}
+                        subtitlesOutlineColor={this.props.subtitlesOutlineColor}
                         dispatch={this.props.dispatch}
                     />
                 </Popup.Menu>
@@ -71,7 +75,9 @@ SubtitlesButton.propTypes = {
     selectedSubtitlesTrackId: PropTypes.string,
     subtitlesSize: PropTypes.number,
     subtitlesDelay: PropTypes.number,
-    subtitlesDarkBackground: PropTypes.bool,
+    subtitlesTextColor: PropTypes.string,
+    subtitlesBackgroundColor: PropTypes.string,
+    subtitlesOutlineColor: PropTypes.string,
     dispatch: PropTypes.func.isRequired
 };
 SubtitlesButton.defaultProps = {

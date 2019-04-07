@@ -2,7 +2,6 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
-const { Checkbox } = require('stremio-common');
 const styles = require('./styles');
 
 const ORIGIN_PRIORITIES = Object.freeze({
@@ -53,7 +52,9 @@ class SubtitlesPicker extends React.Component {
             nextProps.selectedSubtitlesTrackId !== this.props.selectedSubtitlesTrackId ||
             nextProps.subtitlesSize !== this.props.subtitlesSize ||
             nextProps.subtitlesDelay !== this.props.subtitlesDelay ||
-            nextProps.subtitlesDarkBackground !== this.props.subtitlesDarkBackground;
+            nextProps.subtitlesTextColor !== this.props.subtitlesTextColor ||
+            nextProps.subtitlesBackgroundColor !== this.props.subtitlesBackgroundColor ||
+            nextProps.subtitlesOutlineColor !== this.props.subtitlesOutlineColor;
     }
 
     toggleSubtitleEnabled = () => {
@@ -86,8 +87,16 @@ class SubtitlesPicker extends React.Component {
         this.props.dispatch({ propName: 'subtitlesDelay', propValue: event.currentTarget.dataset.value });
     }
 
-    toggleSubtitlesDarkBackground = () => {
-        this.props.dispatch({ propName: 'subtitlesDarkBackground', propValue: !this.props.subtitlesDarkBackground });
+    setSubtitlesTextColor = (event) => {
+        // TODO fix it
+    }
+
+    setSubtitlesBackgrondColor = (event) => {
+        // TODO fix it
+    }
+
+    setSubtitlesOutlineColor = (event) => {
+        // TODO fix it
     }
 
     renderToggleButton({ selectedTrack }) {
@@ -154,15 +163,16 @@ class SubtitlesPicker extends React.Component {
         );
     }
 
-    renderDarkBackgroundToggle() {
-        if (this.props.subtitlesDarkBackground === null) {
+    renderColorPicker(label, value, onChange) {
+        if (value === null) {
             return null;
         }
 
         return (
-            <Checkbox className={styles['background-toggle-checkbox']} checked={this.props.subtitlesDarkBackground} onClick={this.toggleSubtitlesDarkBackground}>
-                <div className={styles['background-toggle-label']}>Dark background</div>
-            </Checkbox>
+            <div className={styles['color-picker-container']}>
+                <input className={styles['color-picker-input']} type={'color'} value={value} onChange={onChange} />
+                <div className={styles['color-picker-label']}>{label}</div>
+            </div>
         );
     }
 
@@ -179,7 +189,9 @@ class SubtitlesPicker extends React.Component {
             <div className={styles['preferences-container']}>
                 <div className={styles['preferences-title']}>Preferences</div>
                 {this.renderVariantsList({ groupedTracks, selectedTrack })}
-                {this.renderDarkBackgroundToggle()}
+                {this.renderColorPicker('Text color', this.props.subtitlesTextColor, this.setSubtitlesTextColor)}
+                {this.renderColorPicker('Background color', this.props.subtitlesBackgroundColor, this.setSubtitlesBackgrondColor)}
+                {this.renderColorPicker('Outline color', this.props.subtitlesOutlineColor, this.setSubtitlesOutlineColor)}
                 <NumberInput
                     label={SUBTITLES_SIZE_LABELS[this.props.subtitlesSize]}
                     value={this.props.subtitlesSize}
@@ -226,7 +238,9 @@ SubtitlesPicker.propTypes = {
     selectedSubtitlesTrackId: PropTypes.string,
     subtitlesSize: PropTypes.number,
     subtitlesDelay: PropTypes.number,
-    subtitlesDarkBackground: PropTypes.bool,
+    subtitlesTextColor: PropTypes.string,
+    subtitlesBackgroundColor: PropTypes.string,
+    subtitlesOutlineColor: PropTypes.string,
     dispatch: PropTypes.func.isRequired
 };
 SubtitlesPicker.defaultProps = {

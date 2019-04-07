@@ -43,7 +43,9 @@ const ControlBar = (props) => (
                 selectedSubtitlesTrackId={props.selectedSubtitlesTrackId}
                 subtitlesSize={props.subtitlesSize}
                 subtitlesDelay={props.subtitlesDelay}
-                subtitlesDarkBackground={props.subtitlesDarkBackground}
+                subtitlesTextColor={props.subtitlesTextColor}
+                subtitlesBackgroundColor={props.subtitlesBackgroundColor}
+                subtitlesOutlineColor={props.subtitlesOutlineColor}
                 dispatch={props.dispatch}
             />
             <ShareButton
@@ -71,7 +73,9 @@ ControlBar.propTypes = {
     selectedSubtitlesTrackId: PropTypes.string,
     subtitlesSize: PropTypes.number,
     subtitlesDelay: PropTypes.number,
-    subtitlesDarkBackground: PropTypes.bool,
+    subtitlesTextColor: PropTypes.string,
+    subtitlesBackgroundColor: PropTypes.string,
+    subtitlesOutlineColor: PropTypes.string,
     dispatch: PropTypes.func
 };
 
