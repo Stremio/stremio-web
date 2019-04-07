@@ -1,7 +1,9 @@
 var EventEmitter = require('events');
 var subtitlesParser = require('./subtitlesParser');
 var subtitlesRenderer = require('./subtitlesRenderer');
+var colorConverter = require('./colorConverter');
 
+var COLOR_REGEX = /^#[A-Fa-f0-9]{8}$/;
 var ERROR_CODE = Object.freeze({
     FETCH_FAILED: 70,
     PARSE_FAILED: 71
@@ -34,9 +36,8 @@ function HTMLSubtitles(options) {
 
     events.on('error', function() { });
     containerElement.appendChild(stylesElement);
-    var subtitlesStylesIndex = stylesElement.sheet.insertRule('#' + containerElement.id + ' .subtitles { position: absolute; right: 0; bottom: 0; left: 0; z-index: 0; font-size: ' + FONT_SIZE[2] + '; color: white; text-align: center; }', stylesElement.sheet.cssRules.length);
-    stylesElement.sheet.insertRule('#' + containerElement.id + ' .subtitles .cue { display: inline-block; padding: 0.2em; text-shadow: 0 0 0.03em #222222, 0 0 0.03em #222222, 0 0 0.03em #222222, 0 0 0.03em #222222, 0 0 0.03em #222222; }', stylesElement.sheet.cssRules.length);
-    stylesElement.sheet.insertRule('#' + containerElement.id + ' .subtitles.dark-background .cue { text-shadow: none; background-color: #222222; }', stylesElement.sheet.cssRules.length);
+    var subtitlesContainerStylesIndex = stylesElement.sheet.insertRule('#' + containerElement.id + ' .subtitles { position: absolute; right: 0; bottom: 0; left: 0; z-index: 0; text-align: center; }', stylesElement.sheet.cssRules.length);
+    var subtitlesCueStylesIndex = stylesElement.sheet.insertRule('#' + containerElement.id + ' .subtitles .cue { display: inline-block; padding: 0.2em; text-shadow: 0 0 0.03em #222222ff, 0 0 0.03em #222222ff, 0 0 0.03em #222222ff, 0 0 0.03em #222222ff, 0 0 0.03em #222222ff; background-color: #00000000; color: #ffffffff; font-size: ' + FONT_SIZE[2] + '; }', stylesElement.sheet.cssRules.length);
     containerElement.appendChild(subtitlesElement);
     subtitlesElement.classList.add('subtitles');
 
@@ -203,7 +204,7 @@ function HTMLSubtitles(options) {
                 }
 
                 return parseInt(Object.keys(FONT_SIZE).find(function(size) {
-                    return FONT_SIZE[size] === stylesElement.sheet.cssRules[subtitlesStylesIndex].style.fontSize;
+                    return FONT_SIZE[size] === stylesElement.sheet.cssRules[subtitlesCueStylesIndex].style.fontSize;
                 }));
             },
             set: function(value) {
@@ -211,32 +212,8 @@ function HTMLSubtitles(options) {
                     return;
                 }
 
-                stylesElement.sheet.cssRules[subtitlesStylesIndex].style.fontSize = FONT_SIZE[Math.max(1, Math.min(5, parseInt(value)))];
+                stylesElement.sheet.cssRules[subtitlesCueStylesIndex].style.fontSize = FONT_SIZE[Math.max(1, Math.min(5, parseInt(value)))];
                 events.emit('propChanged', 'size');
-            }
-        },
-        darkBackground: {
-            configurable: false,
-            enumerable: true,
-            get: function() {
-                if (destroyed) {
-                    return null;
-                }
-
-                return subtitlesElement.classList.contains('dark-background');
-            },
-            set: function(value) {
-                if (destroyed) {
-                    return;
-                }
-
-                if (value) {
-                    subtitlesElement.classList.add('dark-background');
-                } else {
-                    subtitlesElement.classList.remove('dark-background');
-                }
-
-                events.emit('propChanged', 'darkBackground');
             }
         },
         offset: {
@@ -247,15 +224,77 @@ function HTMLSubtitles(options) {
                     return null;
                 }
 
-                return parseInt(stylesElement.sheet.cssRules[subtitlesStylesIndex].style.bottom);
+                return parseInt(stylesElement.sheet.cssRules[subtitlesContainerStylesIndex].style.bottom);
             },
             set: function(value) {
                 if (destroyed || isNaN(value) || value === null) {
                     return;
                 }
 
-                stylesElement.sheet.cssRules[subtitlesStylesIndex].style.bottom = Math.max(0, Math.min(100, parseInt(value))) + '%';
+                stylesElement.sheet.cssRules[subtitlesContainerStylesIndex].style.bottom = Math.max(0, Math.min(100, parseInt(value))) + '%';
                 events.emit('propChanged', 'offset');
+            }
+        },
+        textColor: {
+            configurable: false,
+            enumerable: true,
+            get: function() {
+                if (destroyed) {
+                    return null;
+                }
+
+                return colorConverter.rgbaToHex(stylesElement.sheet.cssRules[subtitlesCueStylesIndex].style.color);
+            },
+            set: function(value) {
+                if (destroyed || typeof value !== 'string' || value.length !== 9 || !value.match(COLOR_REGEX)) {
+                    return;
+                }
+
+                stylesElement.sheet.cssRules[subtitlesCueStylesIndex].style.color = value;
+                events.emit('propChanged', 'textColor');
+            }
+        },
+        backgroundColor: {
+            configurable: false,
+            enumerable: true,
+            get: function() {
+                if (destroyed) {
+                    return null;
+                }
+
+                return colorConverter.rgbaToHex(stylesElement.sheet.cssRules[subtitlesCueStylesIndex].style.backgroundColor);
+            },
+            set: function(value) {
+                if (destroyed || typeof value !== 'string' || value.length !== 9 || !value.match(COLOR_REGEX)) {
+                    return;
+                }
+
+                stylesElement.sheet.cssRules[subtitlesCueStylesIndex].style.backgroundColor = value;
+                events.emit('propChanged', 'backgroundColor');
+            }
+        },
+        outlineColor: {
+            configurable: false,
+            enumerable: false,
+            get: function() {
+                if (destroyed) {
+                    return null;
+                }
+
+                return colorConverter.rgbaToHex(stylesElement.sheet.cssRules[subtitlesCueStylesIndex].style.textShadow);
+            },
+            set: function(value) {
+                if (destroyed || typeof value !== 'string' || value.length !== 9 || !value.match(COLOR_REGEX)) {
+                    return;
+                }
+
+                stylesElement.sheet.cssRules[subtitlesCueStylesIndex].style.textShadow =
+                    value + '0 0 0.03em,' +
+                    value + '0 0 0.03em,' +
+                    value + '0 0 0.03em,' +
+                    value + '0 0 0.03em,' +
+                    value + '0 0 0.03em';
+                events.emit('propChanged', 'outlineColor');
             }
         }
     });
