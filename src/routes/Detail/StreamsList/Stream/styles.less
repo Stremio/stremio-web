@@ -1,12 +1,4 @@
 .stream-container {
-    --stream-width: 360px;
-    --spacing: 8px;
-    --source-name-font-size: 13px;
-    --title-font-size: 11px;
-    --subtitle-font-size: 11px;
-}
-
-.stream-container {
     width: var(--stream-width);
     background-color: var(--color-backgroundlight);
 
@@ -33,7 +25,7 @@
             display: flex;
             align-items: center;
             margin: var(--spacing) 0 var(--spacing) var(--spacing);
-            font-size: var(--source-name-font-size);
+            font-size: 1.1em;
             color: var(--color-surfacelighter);
             word-break: break-all; //Firefox doesn't support { break-word }
             word-break: break-word;
@@ -48,14 +40,12 @@
             justify-content: center;
 
             .title {
-                font-size: var(--title-font-size);
                 color: var(--color-surfacelighter);
                 word-break: break-all;
                 word-break: break-word;
             }
 
             .subtitle {
-                font-size: var(--subtitle-font-size);
                 color: var(--color-surfacelighter);
                 word-break: break-all;
                 word-break: break-word;
