@@ -7,7 +7,7 @@ function rgbaToHex(rgbaString) {
     var red = parseInt(values[0]).toString(16);
     var green = parseInt(values[1]).toString(16);
     var blue = parseInt(values[2]).toString(16);
-    var alpha = Math.round((values[3] || 0) * 255).toString(16);
+    var alpha = Math.round((values[3] || 1) * 255).toString(16);
     return '#' + padWithZero(red) + padWithZero(green) + padWithZero(blue) + padWithZero(alpha);
 }
 
