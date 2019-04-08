@@ -1,0 +1,131 @@
+.share-modal {
+    --share-modal-width: 350px;
+    --spacing: 20px;
+    font-size: 14px;
+}
+
+.share-modal {
+    padding: calc(var(--spacing) * 0.5);
+    width: var(--share-modal-width);
+    color: var(--color-surfacelighter);
+    background-color: var(--color-surfacelighter);
+
+    .x-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+
+        .icon {
+            padding: 0.2em;
+            width: 1.2em;
+            height: 1.2em;
+            fill: var(--color-surfacedark);
+            cursor: pointer;
+
+            &:hover {
+                fill: var(--color-surface);
+            }
+        }
+
+        &:focus {
+            .icon {
+                background-color: var(--color-surfacelight);
+            }
+        }
+
+        &:hover {
+            .icon {
+                background-color: transparent;
+            }
+        }
+    }
+
+    .info-container {
+        padding: 0 var(--spacing) calc(var(--spacing) * 1.2) var(--spacing);
+
+        .share-label {
+            font-size: 1.1em;
+            color: var(--color-backgrounddarker);
+        }
+
+        .buttons {
+            padding: var(--spacing) 0;
+            display: flex;
+            flex-direction: row;
+
+            .button {
+                flex: 1;
+                height: 3.2em;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+                font-size: 0.8em;
+                color: var(--color-surfacelighter);
+                cursor: pointer;
+
+                .icon {
+                    margin-right: 0.6em;
+                    width: 1.4em;
+                    height: 1.4em;
+                    fill: var(--color-surfacelighter);
+                }
+
+                &:focus, &:hover {
+                    filter: brightness(1.2);
+                }
+
+                &:not(:last-child) {
+                    margin-right: 2em;
+                }
+            }
+
+            .facebook-button {
+                background-color: var(--color-secondary);
+            }
+
+            .twitter-button {
+                background-color: var(--color-secondarylighter);
+            }
+        }
+
+        .url-container {
+            display: flex;
+            flex-direction: row;
+            border: calc(var(--focusable-border-size) * 0.5) solid var(--color-surface);
+
+            .url {
+                flex: 4;
+                padding: calc(var(--spacing) * 0.5);
+                font-size: 0.9em;
+                text-align: center;
+                color: var(--color-surfacedark);
+            }
+
+            .copy-button {
+                flex: 1;
+                padding: calc(var(--spacing) * 0.5);
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                background-color: var(--color-surface);
+                cursor: pointer;
+
+                .icon {
+                    margin-right: 0.4em;
+                    width: 1em;
+                    height: 1em;
+                    fill: var(--color-surfacedarker);
+                }
+
+                .label {
+                    color: var(--color-surfacedarker);
+                }
+
+                &:focus, &:hover {
+                    background-color: var(--color-surface60);
+                }
+            }
+        }
+    }
+}

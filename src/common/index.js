@@ -7,8 +7,9 @@ import Popup from './Popup';
 import Router from './Router';
 import NavBar from './NavBar';
 import MetaItem from './MetaItem';
-import ShareAddon from './ShareAddon';
+import ShareModal from './ShareModal';
 import UserPanel from './UserPanel';
+import Loader from './Loader';
 
 export {
     Checkbox,
@@ -20,8 +21,9 @@ export {
     withModalsContainer,
     Router,
     MetaItem,
-    ShareAddon,
+    ShareModal,
     UserPanel,
+    Loader,
     Slider,
     FocusableProvider,
     withFocusable
