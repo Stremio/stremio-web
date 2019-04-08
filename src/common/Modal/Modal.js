@@ -11,9 +11,7 @@ const onModalsContainerDomTreeChange = ({ modalsContainerElement, contentElement
 const Modal = ({ modalsContainer, children }) => {
     return ReactDOM.createPortal(
         <FocusableProvider onModalsContainerDomTreeChange={onModalsContainerDomTreeChange}>
-            <div className={'modal-container'}>
-                {children}
-            </div>
+            <div>{children}</div>
         </FocusableProvider>,
         modalsContainer
     );

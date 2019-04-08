@@ -237,7 +237,7 @@ class Popup extends Component {
 
         return (
             <Modal>
-                <div className={classnames(styles['modal-container'], this.props.className)} onClick={this.modalBackgroundOnClick}>
+                <div className={classnames(styles['modal-content-container'], this.props.className)} onClick={this.modalBackgroundOnClick}>
                     <div ref={this.menuContainerRef} className={styles['menu-container']} onClick={this.menuContainerOnClick}>
                         <div ref={this.menuScrollRef} className={styles['menu-scroll-container']}>
                             {React.cloneElement(children, { ref: this.menuChildrenRef })}
