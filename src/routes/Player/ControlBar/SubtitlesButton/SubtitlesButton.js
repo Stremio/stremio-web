@@ -18,8 +18,7 @@ class SubtitlesButton extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
         return nextState.popupOpen !== this.state.popupOpen ||
             nextProps.className !== this.props.className ||
-            nextProps.popupContainerClassName !== this.props.popupContainerClassName ||
-            nextProps.popupContentClassName !== this.props.popupContentClassName ||
+            nextProps.modalContainerClassName !== this.props.modalContainerClassName ||
             nextProps.subtitlesTracks !== this.props.subtitlesTracks ||
             nextProps.selectedSubtitlesTrackId !== this.props.selectedSubtitlesTrackId ||
             nextProps.subtitlesSize !== this.props.subtitlesSize ||
@@ -39,7 +38,7 @@ class SubtitlesButton extends React.Component {
 
     render() {
         return (
-            <Popup className={this.props.popupContainerClassName} border={true} onOpen={this.onPopupOpen} onClose={this.onPopupClose}>
+            <Popup modalContainerClassName={this.props.modalContainerClassName} onOpen={this.onPopupOpen} onClose={this.onPopupClose}>
                 <Popup.Label>
                     <div className={classnames(this.props.className, { 'active': this.state.popupOpen }, { 'disabled': this.props.subtitlesTracks.length === 0 })}>
                         <Icon className={'icon'} icon={'ic_sub'} />
@@ -47,7 +46,7 @@ class SubtitlesButton extends React.Component {
                 </Popup.Label>
                 <Popup.Menu>
                     <SubtitlesPicker
-                        className={classnames(this.props.popupContentClassName, styles['subtitles-picker-container'])}
+                        className={styles['subtitles-picker-container']}
                         subtitlesTracks={this.props.subtitlesTracks}
                         selectedSubtitlesTrackId={this.props.selectedSubtitlesTrackId}
                         subtitlesSize={this.props.subtitlesSize}
@@ -65,8 +64,7 @@ class SubtitlesButton extends React.Component {
 
 SubtitlesButton.propTypes = {
     className: PropTypes.string,
-    popupContainerClassName: PropTypes.string,
-    popupContentClassName: PropTypes.string,
+    modalContainerClassName: PropTypes.string,
     subtitlesTracks: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.string.isRequired,
         label: PropTypes.string.isRequired,
