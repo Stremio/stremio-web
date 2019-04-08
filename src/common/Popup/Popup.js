@@ -44,8 +44,9 @@ class Popup extends Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return nextProps.children !== this.props.children ||
-            nextState.open !== this.state.open;
+        return nextState.open !== this.state.open ||
+            nextProps.children !== this.props.children ||
+            nextProps.modalContainerClassName !== this.props.modalContainerClassName;
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -112,6 +113,7 @@ class Popup extends Component {
         const labelRect = this.labelRef.current.getBoundingClientRect();
         const menuChildredRect = this.menuChildrenRef.current.getBoundingClientRect();
         const borderSize = parseFloat(window.getComputedStyle(this.hiddenBorderRef.current).getPropertyValue('border-top-width'));
+        const borderColor = window.getComputedStyle(this.hiddenBorderRef.current).getPropertyValue('--border-color');
         const labelPosition = {
             left: labelRect.x - documentRect.x,
             top: labelRect.y - documentRect.y,
@@ -155,7 +157,7 @@ class Popup extends Component {
             menuDirections.left = true;
         }
 
-        if (this.props.border) {
+        if (borderColor) {
             this.menuBorderTopRef.current.style.height = `${borderSize}px`;
             this.menuBorderRightRef.current.style.width = `${borderSize}px`;
             this.menuBorderBottomRef.current.style.height = `${borderSize}px`;
@@ -176,21 +178,21 @@ class Popup extends Component {
             this.labelBorderLeftRef.current.style.top = `${labelPosition.top}px`;
             this.labelBorderLeftRef.current.style.bottom = `${labelPosition.bottom}px`;
             this.labelBorderLeftRef.current.style.left = `${labelPosition.left}px`;
+        }
 
-            if (menuDirections.top) {
-                this.labelBorderTopRef.current.style.left = `${labelPosition.left + menuChildredRect.width}px`;
-                if (menuDirections.left) {
-                    this.menuBorderBottomRef.current.style.right = `${labelRect.width - borderSize}px`;
-                } else {
-                    this.menuBorderBottomRef.current.style.left = `${labelRect.width - borderSize}px`;
-                }
+        if (menuDirections.top) {
+            this.labelBorderTopRef.current.style.left = `${labelPosition.left + menuChildredRect.width}px`;
+            if (menuDirections.left) {
+                this.menuBorderBottomRef.current.style.right = `${labelRect.width - borderSize}px`;
             } else {
-                this.labelBorderBottomRef.current.style.left = `${labelPosition.left + menuChildredRect.width}px`;
-                if (menuDirections.left) {
-                    this.menuBorderTopRef.current.style.right = `${labelRect.width - borderSize}px`;
-                } else {
-                    this.menuBorderTopRef.current.style.left = `${labelRect.width - borderSize}px`;
-                }
+                this.menuBorderBottomRef.current.style.left = `${labelRect.width - borderSize}px`;
+            }
+        } else {
+            this.labelBorderBottomRef.current.style.left = `${labelPosition.left + menuChildredRect.width}px`;
+            if (menuDirections.left) {
+                this.menuBorderTopRef.current.style.right = `${labelRect.width - borderSize}px`;
+            } else {
+                this.menuBorderTopRef.current.style.left = `${labelRect.width - borderSize}px`;
             }
         }
 
@@ -237,7 +239,7 @@ class Popup extends Component {
 
         return (
             <Modal>
-                <div className={classnames(styles['modal-content-container'], this.props.className)} onClick={this.modalBackgroundOnClick}>
+                <div className={classnames(styles['modal-container'], this.props.modalContainerClassName)} onClick={this.modalBackgroundOnClick}>
                     <div ref={this.menuContainerRef} className={styles['menu-container']} onClick={this.menuContainerOnClick}>
                         <div ref={this.menuScrollRef} className={styles['menu-scroll-container']}>
                             {React.cloneElement(children, { ref: this.menuChildrenRef })}
@@ -286,13 +288,9 @@ Popup.Label = Label;
 Popup.Menu = Menu;
 
 Popup.propTypes = {
-    className: PropTypes.string,
+    modalContainerClassName: PropTypes.string,
     onOpen: PropTypes.func,
-    onClose: PropTypes.func,
-    border: PropTypes.bool.isRequired
-};
-Popup.defaultProps = {
-    border: false
+    onClose: PropTypes.func
 };
 
 export default Popup;
