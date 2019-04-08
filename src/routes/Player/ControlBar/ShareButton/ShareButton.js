@@ -1,4 +1,5 @@
 const React = require('react');
+const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const { Popup } = require('stremio-common');
@@ -16,7 +17,7 @@ class ShareButton extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
         return nextState.popupOpen !== this.state.popupOpen ||
             nextProps.className !== this.props.className ||
-            nextProps.popupContentClassName !== this.props.popupContentClassName;
+            nextProps.modalContainerClassName !== this.props.modalContainerClassName;
     }
 
     onPopupOpen = () => {
@@ -29,18 +30,23 @@ class ShareButton extends React.Component {
 
     render() {
         return (
-            <Popup className={this.props.popupContainerClassName} border={true} onOpen={this.onPopupOpen} onClose={this.onPopupClose}>
+            <Popup modalContainerClassName={this.props.modalContainerClassName} onOpen={this.onPopupOpen} onClose={this.onPopupClose}>
                 <Popup.Label>
                     <div className={classnames(this.props.className, { 'active': this.state.popupOpen })}>
                         <Icon className={'icon'} icon={'ic_share'} />
                     </div>
                 </Popup.Label>
                 <Popup.Menu>
-                    <div className={classnames(this.props.popupContentClassName, styles['popup-content'])} />
+                    <div className={styles['share-dialog-container']} />
                 </Popup.Menu>
             </Popup>
         );
     }
 }
+
+ShareButton.propTypes = {
+    className: PropTypes.string,
+    modalContainerClassName: PropTypes.string
+};
 
 module.exports = ShareButton;

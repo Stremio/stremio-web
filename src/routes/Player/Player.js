@@ -121,7 +121,7 @@ class Player extends React.Component {
                 />
                 <ControlBar
                     className={classnames(styles['layer'], styles['control-bar-layer'])}
-                    popupContainerClassName={styles['control-bar-popup-container']}
+                    modalContainerClassName={styles['modal-container']}
                     paused={this.state.paused}
                     time={this.state.time}
                     duration={this.state.duration}
