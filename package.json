@@ -18,6 +18,7 @@
         "lodash.debounce": "4.0.8",
         "prop-types": "15.7.2",
         "react": "16.8.6",
+        "react-color": "2.17.0",
         "react-dom": "16.8.6",
         "stremio-colors": "git+ssh://git@github.com/Stremio/stremio-colors.git#v2.0.3",
         "stremio-icons": "git+ssh://git@github.com/Stremio/stremio-icons.git#v1.0.6",
