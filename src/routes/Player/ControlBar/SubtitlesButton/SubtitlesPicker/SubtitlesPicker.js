@@ -2,6 +2,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
+const { ColorPicker, Modal } = require('stremio-common');
 const styles = require('./styles');
 
 const ORIGIN_PRIORITIES = Object.freeze({
@@ -42,6 +43,34 @@ const NumberInput = ({ value, label, delta, onChange }) => {
                 <Icon className={styles['number-input-icon']} icon={'ic_plus'} />
             </div>
         </div>
+    );
+};
+
+const SubtitlesColorPicker = ({ label, value, onChange }) => {
+    const [open, setOpen] = React.useState(false);
+    const onOpen = () => setOpen(true);
+    const onClose = () => setOpen(false);
+    if (value === null) {
+        return null;
+    }
+
+    return (
+        <React.Fragment>
+            <div className={styles['color-picker-button-container']}>
+                <div style={{ backgroundColor: value }} className={styles['color-picker-indicator']} onClick={onOpen} />
+                <div className={styles['color-picker-label']}>{label}</div>
+            </div>
+            {
+                open ?
+                    <Modal>
+                        <div className={styles['color-picker-modal-container']} onClick={onClose}>
+                            <ColorPicker className={styles['color-picker-container']} value={value} onChange={onChange} />
+                        </div>
+                    </Modal>
+                    :
+                    null
+            }
+        </React.Fragment>
     );
 };
 
@@ -91,7 +120,7 @@ class SubtitlesPicker extends React.Component {
         // TODO fix it
     }
 
-    setSubtitlesBackgrondColor = (event) => {
+    setSubtitlesBackgroundColor = (event) => {
         // TODO fix it
     }
 
@@ -163,19 +192,6 @@ class SubtitlesPicker extends React.Component {
         );
     }
 
-    renderColorPicker(label, value, onChange) {
-        if (value === null) {
-            return null;
-        }
-
-        return (
-            <div className={styles['color-picker-container']}>
-                <input className={styles['color-picker-input']} type={'color'} value={value} onChange={onChange} />
-                <div className={styles['color-picker-label']}>{label}</div>
-            </div>
-        );
-    }
-
     renderPreferences({ groupedTracks, selectedTrack }) {
         if (!selectedTrack) {
             return (
@@ -189,9 +205,21 @@ class SubtitlesPicker extends React.Component {
             <div className={styles['preferences-container']}>
                 <div className={styles['preferences-title']}>Preferences</div>
                 {this.renderVariantsList({ groupedTracks, selectedTrack })}
-                {this.renderColorPicker('Text color', this.props.subtitlesTextColor, this.setSubtitlesTextColor)}
-                {this.renderColorPicker('Background color', this.props.subtitlesBackgroundColor, this.setSubtitlesBackgrondColor)}
-                {this.renderColorPicker('Outline color', this.props.subtitlesOutlineColor, this.setSubtitlesOutlineColor)}
+                <SubtitlesColorPicker
+                    label={'Text color'}
+                    value={this.props.subtitlesTextColor}
+                    onChange={this.setSubtitlesTextColor}
+                />
+                <SubtitlesColorPicker
+                    label={'Background color'}
+                    value={this.props.subtitlesBackgroundColor}
+                    onChange={this.setSubtitlesBackgroundColor}
+                />
+                <SubtitlesColorPicker
+                    label={'Outline color'}
+                    value={this.props.subtitlesOutlineColor}
+                    onChange={this.setSubtitlesOutlineColor}
+                />
                 <NumberInput
                     label={SUBTITLES_SIZE_LABELS[this.props.subtitlesSize]}
                     value={this.props.subtitlesSize}
