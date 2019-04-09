@@ -116,16 +116,16 @@ class SubtitlesPicker extends React.Component {
         this.props.dispatch({ propName: 'subtitlesDelay', propValue: event.currentTarget.dataset.value });
     }
 
-    setSubtitlesTextColor = (event) => {
-        // TODO fix it
+    setSubtitlesTextColor = (color) => {
+        this.props.dispatch({ propName: 'subtitlesTextColor', propValue: color });
     }
 
-    setSubtitlesBackgroundColor = (event) => {
-        // TODO fix it
+    setSubtitlesBackgroundColor = (color) => {
+        this.props.dispatch({ propName: 'subtitlesBackgroundColor', propValue: color });
     }
 
-    setSubtitlesOutlineColor = (event) => {
-        // TODO fix it
+    setSubtitlesOutlineColor = (color) => {
+        this.props.dispatch({ propName: 'subtitlesOutlineColor', propValue: color });
     }
 
     renderToggleButton({ selectedTrack }) {

@@ -1,6 +1,7 @@
 import Slider from './Slider';
 import { FocusableProvider, withFocusable } from './Focusable';
 import Checkbox from './Checkbox';
+import ColorPicker from './ColorPicker';
 import Input from './Input';
 import { Modal, ModalsContainerContext, withModalsContainer } from './Modal';
 import Popup from './Popup';
@@ -13,6 +14,7 @@ import Loader from './Loader';
 
 export {
     Checkbox,
+    ColorPicker,
     Input,
     Popup,
     NavBar,
