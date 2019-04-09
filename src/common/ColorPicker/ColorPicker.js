@@ -3,6 +3,11 @@ const PropTypes = require('prop-types');
 const { SketchPicker } = require('react-color');
 
 class ColorPicker extends React.Component {
+    shouldComponentUpdate(nextProps, nextState) {
+        return nextProps.className !== this.props.className ||
+            nextProps.value !== this.props.value;
+    }
+
     onContainerClicked = (e) => {
         e.stopPropagation();
     }
@@ -34,9 +39,7 @@ class ColorPicker extends React.Component {
 ColorPicker.propTypes = {
     className: PropTypes.string,
     value: PropTypes.string.isRequired,
-    onChange: PropTypes.func,
-    onOpen: PropTypes.func,
-    onClose: PropTypes.func
+    onChange: PropTypes.func
 };
 
 module.exports = ColorPicker;
