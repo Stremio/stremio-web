@@ -1,3 +1,3 @@
-import Loader from './Loader';
+const Loader = require('./Loader');
 
-export default Loader;
+module.exports = Loader;

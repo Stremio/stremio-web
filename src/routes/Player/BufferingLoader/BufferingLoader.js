@@ -1,6 +1,8 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
+const { Loader } = require('stremio-common');
+const colors = require('stremio-colors');
 const styles = require('./styles');
 
 class BufferingLoader extends React.PureComponent {
@@ -11,7 +13,7 @@ class BufferingLoader extends React.PureComponent {
 
         return (
             <div className={classnames(this.props.className, styles['buffering-loader-container'])}>
-                <div className={styles['bufferring-loader']} />
+                <Loader className={styles['bufferring-loader']} fill={colors.surfacelighter80} />
             </div>
         );
     }
