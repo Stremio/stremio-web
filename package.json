@@ -23,6 +23,7 @@
         "stremio-colors": "git+ssh://git@github.com/Stremio/stremio-colors.git#v2.0.3",
         "stremio-icons": "git+ssh://git@github.com/Stremio/stremio-icons.git#v1.0.6",
         "stremio-json-data": "git+ssh://git@github.com/stremio/stremio-json-data.git#v1.2.3",
+        "stremio-state-container-web": "git+ssh://git@github.com/stremio/stremio-state-container-web.git#f98635fb004a95d894eafd23ac0c6a2c0803cddd",
         "stremio-translations": "git+ssh://git@github.com/Stremio/stremio-translations.git#v1.41.0",
         "vtt.js": "0.13.0"
     },
@@ -30,6 +31,7 @@
         "@babel/core": "7.4.3",
         "@babel/plugin-proposal-class-properties": "7.4.0",
         "@babel/plugin-proposal-object-rest-spread": "7.4.3",
+        "@babel/plugin-syntax-dynamic-import": "7.2.0",
         "@babel/preset-env": "7.4.3",
         "@babel/preset-react": "7.0.0",
         "@babel/runtime": "7.4.3",

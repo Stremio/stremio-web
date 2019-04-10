@@ -22,7 +22,11 @@ module.exports = {
                     loader: 'babel-loader',
                     options: {
                         presets: ['@babel/preset-env', '@babel/preset-react'],
-                        plugins: ['@babel/plugin-proposal-class-properties', '@babel/plugin-proposal-object-rest-spread']
+                        plugins: [
+                            '@babel/plugin-proposal-class-properties',
+                            '@babel/plugin-proposal-object-rest-spread',
+                            '@babel/plugin-syntax-dynamic-import'
+                        ]
                     }
                 }
             },
@@ -67,7 +71,7 @@ module.exports = {
         ]
     },
     resolve: {
-        extensions: ['.js', '.json', '.less'],
+        extensions: ['.js', '.json', '.less', '.wasm'],
         alias: {
             'stremio-common': path.resolve(__dirname, 'src/common'),
             'stremio-routes': path.resolve(__dirname, 'src/routes'),
