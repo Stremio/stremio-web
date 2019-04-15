@@ -16,8 +16,7 @@ module.exports = {
                 test: /\.js$/,
                 include: [
                     path.resolve(__dirname, 'src'),
-                    path.resolve(__dirname, 'node_modules/stremio-icons/dom'),
-                    path.resolve(__dirname, 'node_modules/stremio-state-container-web')
+                    path.resolve(__dirname, 'node_modules/stremio-icons/dom')
                 ],
                 use: {
                     loader: 'babel-loader',
@@ -107,6 +106,7 @@ module.exports = {
             inject: false
         }),
         new CopyWebpackPlugin([
+            { from: 'node_modules/stremio-state-container-web/static', to: '' },
             { from: 'images', to: 'images' },
             { from: 'fonts', to: 'fonts' }
         ])
