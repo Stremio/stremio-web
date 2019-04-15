@@ -22,8 +22,7 @@
         "react-dom": "16.8.6",
         "stremio-colors": "git+ssh://git@github.com/Stremio/stremio-colors.git#v2.0.3",
         "stremio-icons": "git+ssh://git@github.com/Stremio/stremio-icons.git#v1.0.6",
-        "stremio-state-container-web": "git+ssh://git@github.com/stremio/stremio-state-container-web.git#4be829a53890dd3988572c171d5e5b2159c47063",
-        "stremio-translations": "git+ssh://git@github.com/Stremio/stremio-translations.git#v1.41.0",
+        "stremio-state-container-web": "git+ssh://git@github.com/stremio/stremio-state-container-web.git#v0.3.0",
         "vtt.js": "0.13.0"
     },
     "devDependencies": {

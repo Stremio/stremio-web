@@ -7657,13 +7657,9 @@ stream-shift@^1.0.0:
   version "1.0.6"
   resolved "git+ssh://git@github.com/Stremio/stremio-icons.git#03f8580a423d69c2b1a6fa2e5b391ec334df4e50"
 
-"stremio-state-container-web@git+ssh://git@github.com/stremio/stremio-state-container-web.git#4be829a53890dd3988572c171d5e5b2159c47063":
-  version "0.2.0"
-  resolved "git+ssh://git@github.com/stremio/stremio-state-container-web.git#4be829a53890dd3988572c171d5e5b2159c47063"
-
-"stremio-translations@git+ssh://git@github.com/Stremio/stremio-translations.git#v1.41.0":
-  version "1.41.0"
-  resolved "git+ssh://git@github.com/Stremio/stremio-translations.git#bef5f0f86329a6393222ac197f6cc6b4d3367ca4"
+"stremio-state-container-web@git+ssh://git@github.com/stremio/stremio-state-container-web.git#v0.3.0":
+  version "0.3.0"
+  resolved "git+ssh://git@github.com/stremio/stremio-state-container-web.git#a2f0f815f7711153451dd80c5351f0eb553bf10b"
 
 string-width@^1.0.1:
   version "1.0.2"
