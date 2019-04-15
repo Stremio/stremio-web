@@ -1,13 +1,33 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
+const StateContainer = require('stremio-state-container-web');
 const App = require('./App');
 
-const renderApp = () => {
-    ReactDOM.render(<App />, document.getElementById('app'));
+const loadShell = () => {
+    if (!window.qt || window.shell) {
+        return Promise.resolve();
+    }
+
+    return new Promise((resolve) => {
+        window.shellOnLoad = () => {
+            resolve();
+        };
+    });
 };
 
-if (window.qt) {
-    window.shellOnLoad = () => {
+const loadStateContainer = () => {
+    if (window.stateContainer) {
+        return Promise.resolve();
+    }
+
+    return StateContainer.load();
+};
+
+Promise.all([
+    loadShell(),
+    loadStateContainer()
+]).then(() => {
+    if (window.shell) {
         window.shell.dispatch('mpv', 'setOption', null, 'terminal', 'yes');
         window.shell.dispatch('mpv', 'setOption', null, 'msg-level', 'all=v');
         window.shell.dispatch('mpv', 'setProp', null, 'vo', 'opengl-cb');
@@ -19,8 +39,7 @@ if (window.qt) {
         window.shell.dispatch('mpv', 'setProp', null, 'title', 'Stremio');
         window.shell.dispatch('mpv', 'setProp', null, 'audio-fallback-to-null', 'yes');
         window.shell.dispatch('mpv', 'setProp', null, 'sid', 'no');
-        renderApp();
-    };
-} else {
-    renderApp();
-}
+    }
+
+    ReactDOM.render(<App />, document.getElementById('app'));
+});
