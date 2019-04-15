@@ -16,7 +16,8 @@ module.exports = {
                 test: /\.js$/,
                 include: [
                     path.resolve(__dirname, 'src'),
-                    path.resolve(__dirname, 'node_modules/stremio-icons/dom')
+                    path.resolve(__dirname, 'node_modules/stremio-icons/dom'),
+                    path.resolve(__dirname, 'node_modules/stremio-state-container-web')
                 ],
                 use: {
                     loader: 'babel-loader',
