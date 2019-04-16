@@ -1,4 +1,4 @@
-import { Calendar, Discover, Addons, Settings, Board, Player, Detail, Intro } from 'stremio-routes';
+const { Calendar, Discover, Addons, Settings, Board, Player, Detail, Intro } = require('stremio-routes');
 
 const config = {
     views: [
@@ -49,4 +49,4 @@ const config = {
     ]
 };
 
-export default config;
+module.exports = config;

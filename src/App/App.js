@@ -1,6 +1,6 @@
 const React = require('react');
 const { Router } = require('stremio-common');
-const routerConfig = require('./routerConfig').default;
+const routerConfig = require('./routerConfig');
 const styles = require('./styles');
 
 const App = () => (
