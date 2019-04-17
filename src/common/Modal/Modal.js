@@ -1,6 +1,6 @@
 const React = require('react');
-const PropTypes = require('prop-types');
 const ReactDOM = require('react-dom');
+const PropTypes = require('prop-types');
 const FocusableProvider = require('../Focusable/FocusableProvider');
 const withModalsContainer = require('./withModalsContainer');
 

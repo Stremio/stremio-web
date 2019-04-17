@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { FocusableProvider } from 'stremio-common';
-import ModalsContainerProvider from './ModalsContainerProvider';
+import ModalsContainerProvider from '../../Modal/ModalsContainerProvider';
 import styles from './styles';
 
 class Route extends Component {
@@ -10,7 +10,7 @@ class Route extends Component {
 
     onModalsContainerDomTreeChange = ({ modalsContainerElement }) => {
         return modalsContainerElement.childElementCount === 0;
-    };
+    }
 
     render() {
         return (

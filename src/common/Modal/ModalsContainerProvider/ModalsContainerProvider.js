@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import { ModalsContainerContext } from 'stremio-common';
-import styles from './styles';
+const React = require('react');
+const ModalsContainerContext = require('../ModalsContainerContext');
+const styles = require('./styles');
 
-class ModalsContainerProvider extends Component {
+class ModalsContainerProvider extends React.Component {
     constructor(props) {
         super(props);
 
@@ -23,11 +23,11 @@ class ModalsContainerProvider extends Component {
     render() {
         return (
             <ModalsContainerContext.Provider value={this.state.modalsContainer}>
-                {this.state.modalsContainer ? this.props.children : null}
+                {this.state.modalsContainer instanceof HTMLElement ? this.props.children : null}
                 <div ref={this.modalsContainerRef} className={styles['modals-container']} />
             </ModalsContainerContext.Provider>
         );
     }
 }
 
-export default ModalsContainerProvider;
+module.exports = ModalsContainerProvider;
