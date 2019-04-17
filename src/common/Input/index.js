@@ -1,3 +1,3 @@
-import Input from './Input';
+const Input = require('./Input');
 
-export default Input;
+module.exports = Input;

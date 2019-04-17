@@ -1,6 +1,6 @@
-import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
-import { withFocusable } from 'stremio-common';
+const React = require('react');
+const PropTypes = require('prop-types');
+const withFocusable = require('../Focusable/withFocusable');
 
 const ENTER_KEY_CODE = 13;
 const BUTTON_INPUT_TYPES = ['button', 'link', 'submit', 'checkbox'];
@@ -16,7 +16,7 @@ const TAG_NAMES_FOR_TYPE = {
     search: 'input'
 };
 
-class Input extends PureComponent {
+class Input extends React.PureComponent {
     onKeyUp = (event) => {
         if (typeof this.props.onKeyUp === 'function') {
             this.props.onKeyUp(event);
@@ -87,4 +87,4 @@ const InputWithForwardedRef = React.forwardRef((props, ref) => (
 
 InputWithForwardedRef.displayName = 'InputWithForwardedRef';
 
-export default InputWithForwardedRef;
+module.exports = InputWithForwardedRef;
