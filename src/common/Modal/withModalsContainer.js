@@ -1,5 +1,5 @@
-import React from 'react';
-import ModalsContainerContext from './ModalsContainerContext';
+const React = require('react');
+const ModalsContainerContext = require('./ModalsContainerContext');
 
 const withModalsContainer = (Component) => {
     return function withModalsContainer(props) {
@@ -11,4 +11,4 @@ const withModalsContainer = (Component) => {
     };
 };
 
-export default withModalsContainer;
+module.exports = withModalsContainer;

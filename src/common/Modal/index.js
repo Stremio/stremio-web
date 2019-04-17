@@ -1,8 +1,8 @@
-import ModalsContainerContext from './ModalsContainerContext';
-import Modal from './Modal';
-import withModalsContainer from './withModalsContainer';
+const ModalsContainerContext = require('./ModalsContainerContext');
+const Modal = require('./Modal');
+const withModalsContainer = require('./withModalsContainer');
 
-export {
+module.exports = {
     ModalsContainerContext,
     Modal,
     withModalsContainer

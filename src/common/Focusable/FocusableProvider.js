@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import withModalsContainer from '../Modal/withModalsContainer';
-import FocusableContext from './FocusableContext';
+const React = require('react');
+const PropTypes = require('prop-types');
+const withModalsContainer = require('../Modal/withModalsContainer');
+const FocusableContext = require('./FocusableContext');
 
-class FocusableProvider extends Component {
+class FocusableProvider extends React.Component {
     constructor(props) {
         super(props);
 
@@ -74,4 +74,4 @@ const FocusableProviderWithModalsContainer = withModalsContainer(FocusableProvid
 
 FocusableProviderWithModalsContainer.displayName = 'FocusableProviderWithModalsContainer';
 
-export default FocusableProviderWithModalsContainer;
+module.exports = FocusableProviderWithModalsContainer;

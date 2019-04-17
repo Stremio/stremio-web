@@ -1,8 +1,7 @@
-import React from 'react';
+const React = require('react');
 
 const ModalsContainerContext = React.createContext(null);
 
 ModalsContainerContext.displayName = 'ModalsContainerContext';
 
-export default ModalsContainerContext;
-
+module.exports = ModalsContainerContext;

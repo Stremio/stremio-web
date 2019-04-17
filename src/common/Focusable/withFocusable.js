@@ -1,5 +1,5 @@
-import React from 'react';
-import FocusableContext from './FocusableContext';
+const React = require('react');
+const FocusableContext = require('./FocusableContext');
 
 const withFocusable = (Component) => {
     return function withFocusable(props) {
@@ -11,4 +11,4 @@ const withFocusable = (Component) => {
     };
 };
 
-export default withFocusable;
+module.exports = withFocusable;

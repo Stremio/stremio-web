@@ -1,7 +1,7 @@
-import FocusableProvider from './FocusableProvider';
-import withFocusable from './withFocusable';
+const FocusableProvider = require('./FocusableProvider');
+const withFocusable = require('./withFocusable');
 
-export {
+module.exports = {
     FocusableProvider,
     withFocusable
 };

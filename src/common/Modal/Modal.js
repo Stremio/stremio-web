@@ -1,8 +1,8 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import ReactDOM from 'react-dom';
-import { FocusableProvider } from 'stremio-common';
-import withModalsContainer from './withModalsContainer';
+const React = require('react');
+const PropTypes = require('prop-types');
+const ReactDOM = require('react-dom');
+const FocusableProvider = require('../Focusable/FocusableProvider');
+const withModalsContainer = require('./withModalsContainer');
 
 const onModalsContainerDomTreeChange = ({ modalsContainerElement, contentElement }) => {
     return modalsContainerElement.lastElementChild === contentElement;
@@ -25,4 +25,4 @@ const ModalWithModalsContainer = withModalsContainer(Modal);
 
 ModalWithModalsContainer.displayName = 'ModalWithModalsContainer';
 
-export default ModalWithModalsContainer;
+module.exports = ModalWithModalsContainer;
