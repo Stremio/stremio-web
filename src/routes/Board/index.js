@@ -1,3 +1,3 @@
-import Board from './Board';
+const Board = require('./Board');
 
-export default Board;
+module.exports = Board;

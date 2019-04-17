@@ -1,7 +1,8 @@
-import React, { PureComponent, Fragment } from 'react';
-import classnames from 'classnames';
-import { MetaItem, Input } from 'stremio-common';
-import styles from './styles';
+const React = require('react');
+const classnames = require('classnames');
+const { MetaItem, Input } = require('stremio-common');
+const withGroups = require('./withGroups');
+const styles = require('./styles');
 
 const CONTINUE_WATCHING_MENU = [
     {
@@ -14,119 +15,7 @@ const CONTINUE_WATCHING_MENU = [
     }
 ];
 
-class Board extends PureComponent {
-    constructor(props) {
-        super(props);
-
-        this.items = {
-            addonCatalogItems2: [
-                {
-                    id: '0',
-                    type: 'movie',
-                    posterShape: 'poster',
-                    poster: 'qwe',
-                    title: 'Movie title',
-                    progress: 0.7
-                },
-                {
-                    id: '120',
-                    type: 'movie',
-                    posterShape: 'square',
-                    poster: 'qwe',
-                    title: 'Movie title',
-                    progress: 0.7
-                },
-                {
-                    id: '03',
-                    type: 'movie',
-                    posterShape: 'poster',
-                    poster: 'qwe',
-                    title: 'Movie title',
-                    progress: 0.7
-                },
-                {
-                    id: '40',
-                    type: 'movie',
-                    posterShape: 'poster',
-                    poster: 'qwe',
-                    title: 'Movie title',
-                    progress: 0.7
-                },
-                {
-                    id: '05',
-                    type: 'movie',
-                    posterShape: 'poster',
-                    poster: 'qwe',
-                    title: 'Movie title',
-                    progress: 0.7
-                },
-                {
-                    id: '055',
-                    type: 'movie',
-                    posterShape: 'poster',
-                    poster: 'qwe',
-                    title: 'Movie title',
-                    progress: 0.7
-                },
-                {
-                    id: '058',
-                    type: 'movie',
-                    posterShape: 'poster',
-                    poster: 'qwe',
-                    title: 'Movie title',
-                    progress: 0.7
-                },
-            ],
-            continueWatchingItems: [
-                {
-                    id: '0',
-                    type: 'movie',
-                    posterShape: 'poster',
-                    poster: 'https://i.ytimg.com/vi/97AUCrEgTj0/hqdefault.jpg',
-                    title: 'Movie title',
-                    progress: 0.7
-                },
-                {
-                    id: '1',
-                    type: 'movie',
-                    posterShape: 'square',
-                    title: 'Movie title',
-                    progress: 0.2
-                },
-                {
-                    id: '3',
-                    type: 'movie',
-                    poster: 'https://www.stremio.com/website/home-testimonials.jpg',
-                    posterShape: 'square',
-                    title: 'Movie title',
-                    progress: 0.4
-                },
-                {
-                    id: '4',
-                    type: 'movie',
-                    poster: 'https://blog.stremio.com/wp-content/uploads/2018/11/product-post-360x240.jpg',
-                    posterShape: 'poster',
-                    title: 'Movie title',
-                    progress: 122
-                },
-                {
-                    id: '5',
-                    type: 'channel',
-                    posterShape: 'poster',
-                    title: 'Movie title',
-                    progress: 1
-                },
-                {
-                    id: '6',
-                    type: 'channel',
-                    posterShape: 'poster',
-                    title: 'Movie title',
-                    progress: 0.1
-                }
-            ]
-        };
-    }
-
+class Board extends React.PureComponent {
     onClick = (event) => {
         console.log('onClick', {
             id: event.currentTarget.dataset.metaItemId,
@@ -168,18 +57,18 @@ class Board extends PureComponent {
         return (
             <div className={styles['board-container']}>
                 {
-                    this.items.addonCatalogItems2.length === 0 || this.items.continueWatchingItems.length === 0 ?
+                    this.props.groups.length === 0 ?
                         this.renderMetaItemPlaceholders()
                         :
-                        <Fragment>
+                        <React.Fragment>
                             <div className={classnames(styles['board-row'], styles['continue-watching-row'])}>
                                 <div className={styles['meta-items-container']}>
-                                    {this.items.continueWatchingItems.map((item) => (
+                                    {this.props.groups[0].items.map((item) => (
                                         <MetaItem
                                             {...item}
                                             key={item.id}
                                             className={classnames(styles['meta-item'], styles[`poster-shape-${item.posterShape === 'landscape' ? 'square' : item.posterShape}`])}
-                                            popupClassName={styles['meta-item-popup-container']}
+                                            modalContainerClassName={styles['modal-container']}
                                             posterShape={item.posterShape === 'landscape' ? 'square' : item.posterShape}
                                             menuOptions={CONTINUE_WATCHING_MENU}
                                             menuOptionOnSelect={this.menuOptionOnSelect}
@@ -189,26 +78,32 @@ class Board extends PureComponent {
                                 </div>
                                 <Input className={styles['show-more-container']} type={'button'} />
                             </div>
-                            <div className={classnames(styles['board-row'], styles['addon-catalog-row'])}>
-                                <div className={styles['meta-items-container']}>
-                                    {this.items.addonCatalogItems2.map((item, _, metaItems) => (
-                                        <MetaItem
-                                            {...item}
-                                            key={item.id}
-                                            className={classnames(styles['meta-item'], styles[`poster-shape-${metaItems[0].posterShape}`])}
-                                            posterShape={metaItems[0].posterShape}
-                                            progress={0}
-                                            onClick={this.onClick}
-                                        />
-                                    ))}
-                                </div>
-                                <Input className={styles['show-more-container']} type={'button'} />
-                            </div>
-                        </Fragment>
+                            {
+                                this.props.groups.slice(1, this.props.groups.length).map((group) => {
+                                    return (
+                                        <div key={group.id} className={classnames(styles['board-row'], styles['addon-catalog-row'])}>
+                                            <div className={styles['meta-items-container']}>
+                                                {group.items.map((item, _, metaItems) => (
+                                                    <MetaItem
+                                                        {...item}
+                                                        key={item.id}
+                                                        className={classnames(styles['meta-item'], styles[`poster-shape-${metaItems[0].posterShape}`])}
+                                                        posterShape={metaItems[0].posterShape}
+                                                        progress={0}
+                                                        onClick={this.onClick}
+                                                    />
+                                                ))}
+                                            </div>
+                                            <Input className={styles['show-more-container']} type={'button'} />
+                                        </div>
+                                    );
+                                })
+                            }
+                        </React.Fragment>
                 }
             </div>
         );
     }
 }
 
-export default Board;
+module.exports = withGroups(Board);

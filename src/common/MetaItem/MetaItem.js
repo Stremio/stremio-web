@@ -17,7 +17,7 @@ class MetaItem extends Component {
     shouldComponentUpdate(nextProps, nextState) {
         return nextState.menuPopupOpen !== this.state.menuPopupOpen ||
             nextProps.className !== this.props.className ||
-            nextProps.popupClassName !== this.props.popupClassName ||
+            nextProps.modalContainerClassName !== this.props.modalContainerClassName ||
             nextProps.id !== this.props.id ||
             nextProps.type !== this.props.type ||
             nextProps.posterShape !== this.props.posterShape ||
@@ -94,7 +94,7 @@ class MetaItem extends Component {
                     <div className={styles['title']}>{this.props.title}</div>
                     {
                         this.props.menuOptions.length > 0 ?
-                            <Popup className={classnames(styles['menu-popup-container'], this.props.popupClassName)} onOpen={this.onMenuPopupOpen} onClose={this.onMenuPopupClose}>
+                            <Popup modalContainerClassName={classnames(styles['menu-popup-container'], this.props.modalContainerClassName)} onOpen={this.onMenuPopupOpen} onClose={this.onMenuPopupClose}>
                                 <Popup.Label>
                                     <Icon className={classnames(styles['menu-icon'], { 'active': this.state.menuPopupOpen })} icon={'ic_more'} />
                                 </Popup.Label>
@@ -134,7 +134,7 @@ class MetaItem extends Component {
 
 MetaItem.propTypes = {
     className: PropTypes.string,
-    popupClassName: PropTypes.string,
+    modalContainerClassName: PropTypes.string,
     onClick: PropTypes.func,
     menuOptionOnSelect: PropTypes.func,
     id: PropTypes.string.isRequired,
