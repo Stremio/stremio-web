@@ -1,4 +1,4 @@
-import React from 'react';
+const React = require('react');
 
 const Menu = React.forwardRef(({ children }, ref) => (
     <div ref={ref}>
@@ -8,4 +8,4 @@ const Menu = React.forwardRef(({ children }, ref) => (
 
 Menu.displayName = 'Popup.Menu';
 
-export default Menu;
+module.exports = Menu;

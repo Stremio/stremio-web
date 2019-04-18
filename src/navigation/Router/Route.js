@@ -1,6 +1,6 @@
 const React = require('react');
-const FocusableProvider = require('../../Focusable/FocusableProvider');
-const ModalsContainerProvider = require('../../Modal/ModalsContainerProvider');
+const { FocusableProvider } = require('../FocusableContext');
+const { ModalsContainerProvider } = require('../ModalsContainerContext');
 const styles = require('./styles');
 
 const onModalsContainerDomTreeChange = ({ modalsContainerElement }) => {

@@ -1,5 +1,5 @@
 const React = require('react');
-const ModalsContainerContext = require('../ModalsContainerContext');
+const ModalsContainerContext = require('./ModalsContainerContext');
 const styles = require('./styles');
 
 class ModalsContainerProvider extends React.Component {

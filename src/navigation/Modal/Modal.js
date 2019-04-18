@@ -1,8 +1,8 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
 const PropTypes = require('prop-types');
-const FocusableProvider = require('../Focusable/FocusableProvider');
-const withModalsContainer = require('./withModalsContainer');
+const { FocusableProvider } = require('../FocusableContext');
+const { withModalsContainer } = require('../ModalsContainerContext');
 
 const onModalsContainerDomTreeChange = ({ modalsContainerElement, contentElement }) => {
     return modalsContainerElement.lastElementChild === contentElement;

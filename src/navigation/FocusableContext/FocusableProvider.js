@@ -1,6 +1,6 @@
 const React = require('react');
 const PropTypes = require('prop-types');
-const withModalsContainer = require('../Modal/withModalsContainer');
+const { withModalsContainer } = require('../ModalsContainerContext');
 const FocusableContext = require('./FocusableContext');
 
 class FocusableProvider extends React.Component {

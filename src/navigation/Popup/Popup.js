@@ -1,12 +1,12 @@
-import React, { Component, Fragment } from 'react';
-import PropTypes from 'prop-types';
-import classnames from 'classnames';
-import { Modal } from 'stremio-common';
-import Label from './Label';
-import Menu from './Menu';
-import styles from './styles';
+const React = require('react');
+const PropTypes = require('prop-types');
+const classnames = require('classnames');
+const Modal = require('../Modal');
+const Label = require('./Label');
+const Menu = require('./Menu');
+const styles = require('./styles');
 
-class Popup extends Component {
+class Popup extends React.Component {
     constructor(props) {
         super(props);
 
@@ -276,10 +276,10 @@ class Popup extends Component {
         }
 
         return (
-            <Fragment>
+            <React.Fragment>
                 {this.renderLabel(this.props.children[0])}
                 {this.renderMenu(this.props.children[1])}
-            </Fragment>
+            </React.Fragment>
         );
     }
 }
@@ -293,4 +293,4 @@ Popup.propTypes = {
     onClose: PropTypes.func
 };
 
-export default Popup;
+module.exports = Popup;

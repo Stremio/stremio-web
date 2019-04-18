@@ -1,6 +1,6 @@
 const React = require('react');
 const PropTypes = require('prop-types');
-const withFocusable = require('../Focusable/withFocusable');
+const { withFocusable } = require('../FocusableContext');
 
 const ENTER_KEY_CODE = 13;
 const BUTTON_INPUT_TYPES = ['button', 'link', 'submit', 'checkbox'];

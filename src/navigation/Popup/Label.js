@@ -1,4 +1,4 @@
-import React from 'react';
+const React = require('react');
 
 const Label = React.forwardRef(({ children, ...props }, ref) => {
     return React.cloneElement(React.Children.only(children), { ...props, ref });
@@ -6,4 +6,4 @@ const Label = React.forwardRef(({ children, ...props }, ref) => {
 
 Label.displayName = 'Popup.Label';
 
-export default Label;
+module.exports = Label;
