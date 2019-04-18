@@ -1,31 +1,31 @@
-import React, { Component } from 'react';
-import pathToRegexp from 'path-to-regexp';
-import PathUtils from 'path';
-import UrlUtils from 'url';
-import Route from './Route';
+const React = require('react');
+const PropTypes = require('prop-types');
+const pathToRegexp = require('path-to-regexp');
+const PathUtils = require('path');
+const UrlUtils = require('url');
+const Route = require('./Route');
 
-class Router extends Component {
+class Router extends React.Component {
     constructor(props) {
         super(props);
 
-        this.viewsConfig = props.config.views
-            .map((viewConfig) => ({
-                ...viewConfig,
-                routes: viewConfig.routes.map((routeConfig) => {
-                    const keys = [];
-                    const regexp = pathToRegexp(routeConfig.path, keys, {
-                        strict: false,
-                        sensitive: false,
-                        end: true,
-                        ...routeConfig.options
-                    });
-                    return {
-                        ...routeConfig,
-                        keys,
-                        regexp
-                    };
-                })
-            }));
+        this.viewsConfig = props.viewsConfig.map((viewConfig) => {
+            return viewConfig.map(({ path, component, options }) => {
+                const keys = [];
+                const regexp = pathToRegexp(path, keys, {
+                    strict: false,
+                    sensitive: false,
+                    end: true,
+                    ...options
+                });
+                return {
+                    path,
+                    component,
+                    keys,
+                    regexp
+                };
+            });
+        });
 
         this.state = {
             views: Array(this.viewsConfig.length).fill({
@@ -62,28 +62,27 @@ class Router extends Component {
         const queryParams = new URLSearchParams(query);
         for (let viewConfigIndex = 0; viewConfigIndex < this.viewsConfig.length; viewConfigIndex++) {
             const viewConfig = this.viewsConfig[viewConfigIndex];
-            for (const routeConfig of viewConfig.routes) {
-                const { keys, regexp } = routeConfig;
-                const match = regexp.exec(pathname);
+            for (const routeConfig of viewConfig) {
+                const match = routeConfig.regexp.exec(pathname);
                 if (match) {
-                    const urlParams = keys.reduce((urlParams, key, index) => {
+                    const urlParams = routeConfig.keys.reduce((urlParams, key, index) => {
                         urlParams[key.name] = match[index + 1];
                         return urlParams;
                     }, {});
                     this.setState(({ views }) => ({
                         views: views.map((view, viewIndex) => {
-                            if (viewIndex > viewConfigIndex) {
-                                return {
-                                    path: null,
-                                    element: null
-                                };
+                            if (viewIndex < viewConfigIndex) {
+                                return view;
                             } else if (viewIndex === viewConfigIndex) {
                                 return {
                                     path: routeConfig.path,
                                     element: React.createElement(routeConfig.component, { queryParams, urlParams })
                                 };
                             } else {
-                                return view;
+                                return {
+                                    path: null,
+                                    element: null
+                                };
                             }
                         })
                     }));
@@ -110,4 +109,13 @@ class Router extends Component {
     }
 }
 
-export default Router;
+Router.propTypes = {
+    className: PropTypes.string,
+    viewsConfig: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.exact({
+        path: PropTypes.string.isRequired,
+        component: PropTypes.elementType.isRequired,
+        options: PropTypes.object
+    })))
+};
+
+module.exports = Router;

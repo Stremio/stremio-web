@@ -1,30 +1,22 @@
-import React, { Component } from 'react';
-import { FocusableProvider } from 'stremio-common';
-import ModalsContainerProvider from '../../Modal/ModalsContainerProvider';
-import styles from './styles';
+const React = require('react');
+const FocusableProvider = require('../../Focusable/FocusableProvider');
+const ModalsContainerProvider = require('../../Modal/ModalsContainerProvider');
+const styles = require('./styles');
 
-class Route extends Component {
-    shouldComponentUpdate(nextProps, nextState) {
-        return nextProps.children !== this.props.children;
-    }
+const onModalsContainerDomTreeChange = ({ modalsContainerElement }) => {
+    return modalsContainerElement.childElementCount === 0;
+};
 
-    onModalsContainerDomTreeChange = ({ modalsContainerElement }) => {
-        return modalsContainerElement.childElementCount === 0;
-    }
+const Route = ({ children }) => (
+    <div className={styles['route']}>
+        <ModalsContainerProvider>
+            <FocusableProvider onModalsContainerDomTreeChange={onModalsContainerDomTreeChange}>
+                <div className={styles['route-content']}>
+                    {children}
+                </div>
+            </FocusableProvider>
+        </ModalsContainerProvider>
+    </div>
+);
 
-    render() {
-        return (
-            <div className={styles['route']}>
-                <ModalsContainerProvider>
-                    <FocusableProvider onModalsContainerDomTreeChange={this.onModalsContainerDomTreeChange}>
-                        <div className={styles['route-content']}>
-                            {this.props.children}
-                        </div>
-                    </FocusableProvider>
-                </ModalsContainerProvider>
-            </div>
-        );
-    }
-}
-
-export default Route;
+module.exports = Route;
