@@ -1,3 +1,3 @@
-import Checkbox from './Checkbox';
+const Checkbox = require('./Checkbox');
 
-export default Checkbox;
+module.exports = Checkbox;

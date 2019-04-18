@@ -1,66 +1,61 @@
-import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
-import classnames from 'classnames';
-import Icon from 'stremio-icons/dom';
-import { Input } from 'stremio-common';
-import styles from './styles';
+const React = require('react');
+const PropTypes = require('prop-types');
+const classnames = require('classnames');
+const Icon = require('stremio-icons/dom');
+const Input = require('../Input');
+const styles = require('./styles');
 
-class Checkbox extends PureComponent {
-    constructor(props) {
-        super(props);
-
-        this.checkboxRef = props.forwardedRef || React.createRef();
-    }
-
-    onClick = (event) => {
+const Checkbox = React.forwardRef((props, forwardedRef) => {
+    const fallbackRef = React.useRef(null);
+    const inputRef = forwardedRef || fallbackRef;
+    const onClick = React.useCallback((event) => {
         event.preventDefault();
-        if (typeof this.props.onClick === 'function') {
-            this.props.onClick(event);
+        if (typeof props.onClick === 'function') {
+            props.onClick(event);
         }
-    }
-
-    onDrag = (event) => {
-        if (typeof this.props.onDrag === 'function') {
-            this.props.onDrag(event);
-        }
-
-        if (!event.defaultPrevented) {
-            this.checkboxRef.current.blur();
-        }
-    }
-
-    onMouseOut = (event) => {
-        if (typeof this.props.onMouseOut === 'function') {
-            this.props.onMouseOut(event);
+    }, [props.onClick]);
+    const onDrag = React.useCallback((event) => {
+        if (typeof props.onDrag === 'function') {
+            props.onDrag(event);
         }
 
         if (!event.defaultPrevented) {
-            this.checkboxRef.current.blur();
+            inputRef.current && inputRef.current.blur();
         }
-    }
+    }, [props.onDrag, inputRef]);
+    const onMouseOut = React.useCallback((event) => {
+        if (typeof props.onMouseOut === 'function') {
+            props.onMouseOut(event);
+        }
 
-    render() {
-        return (
-            <label className={classnames(this.props.className, styles['checkbox-container'], { 'checked': this.props.checked }, { 'disabled': this.props.disabled })} onClick={this.onClick} onDrag={this.onDrag} onMouseOut={this.onMouseOut}>
-                <Input
-                    ref={this.checkboxRef}
-                    className={styles['native-checkbox']}
-                    type={'checkbox'}
-                    disabled={this.props.disabled}
-                    defaultChecked={this.props.checked}
-                />
-                <div className={styles['icon-container']}>
-                    <Icon className={styles['icon']} icon={this.props.checked ? 'ic_check' : 'ic_box_empty'} />
-                </div>
-                {React.Children.only(this.props.children)}
-            </label>
-        );
-    }
-}
+        if (!event.defaultPrevented) {
+            inputRef.current && inputRef.current.blur();
+        }
+    }, [props.onMouseOut, inputRef]);
+    return (
+        <label className={classnames(props.className, styles['checkbox-container'], { 'checked': props.checked }, { 'disabled': props.disabled })} onClick={onClick} onDrag={onDrag} onMouseOut={onMouseOut}>
+            <Input
+                ref={inputRef}
+                className={styles['native-checkbox']}
+                type={'checkbox'}
+                disabled={props.disabled}
+                defaultChecked={props.checked}
+            />
+            <Icon className={styles['icon']} icon={props.checked ? 'ic_check' : 'ic_box_empty'} />
+            {React.Children.only(props.children)}
+        </label>
+    );
+});
+
+Checkbox.displayName = 'Checkbox';
 
 Checkbox.propTypes = {
+    className: PropTypes.string,
     disabled: PropTypes.bool.isRequired,
-    checked: PropTypes.bool.isRequired
+    checked: PropTypes.bool.isRequired,
+    onClick: PropTypes.func,
+    onDrag: PropTypes.func,
+    onMouseOut: PropTypes.func
 };
 
 Checkbox.defaultProps = {
@@ -68,10 +63,4 @@ Checkbox.defaultProps = {
     checked: false
 };
 
-const CheckboxWithForwardedRef = React.forwardRef((props, ref) => (
-    <Checkbox {...props} forwardedRef={ref} />
-));
-
-CheckboxWithForwardedRef.displayName = 'CheckboxWithForwardedRef';
-
-export default CheckboxWithForwardedRef;
+module.exports = Checkbox;
