@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import classnames from 'classnames';
-import styles from './styles';
+const React = require('react');
+const PropTypes = require('prop-types');
+const classnames = require('classnames');
+const styles = require('./styles');
 
-class Slider extends Component {
+class Slider extends React.Component {
     constructor(props) {
         super(props);
 
@@ -118,4 +118,4 @@ Slider.defaultProps = {
     orientation: 'horizontal'
 };
 
-export default Slider;
+module.exports = Slider;

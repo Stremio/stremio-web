@@ -1,3 +1,3 @@
-import Slider from './Slider';
+const Slider = require('./Slider');
 
-export default Slider;
+module.exports = Slider;
