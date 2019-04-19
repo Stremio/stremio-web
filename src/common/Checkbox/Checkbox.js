@@ -2,12 +2,10 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
-const Input = require('../Input');
+const { Input } = require('stremio-navigation');
 const styles = require('./styles');
 
-const Checkbox = React.forwardRef((props, forwardedRef) => {
-    const fallbackRef = React.useRef(null);
-    const inputRef = forwardedRef || fallbackRef;
+const Checkbox = React.forwardRef((props, ref) => {
     const onClick = React.useCallback((event) => {
         event.preventDefault();
         if (typeof props.onClick === 'function') {
@@ -20,22 +18,22 @@ const Checkbox = React.forwardRef((props, forwardedRef) => {
         }
 
         if (!event.defaultPrevented) {
-            inputRef.current && inputRef.current.blur();
+            event.currentTarget.firstChild.blur();
         }
-    }, [props.onDrag, inputRef]);
+    }, [props.onDrag]);
     const onMouseOut = React.useCallback((event) => {
         if (typeof props.onMouseOut === 'function') {
             props.onMouseOut(event);
         }
 
         if (!event.defaultPrevented) {
-            inputRef.current && inputRef.current.blur();
+            event.currentTarget.firstChild.blur();
         }
-    }, [props.onMouseOut, inputRef]);
+    }, [props.onMouseOut]);
     return (
         <label className={classnames(props.className, styles['checkbox-container'], { 'checked': props.checked }, { 'disabled': props.disabled })} onClick={onClick} onDrag={onDrag} onMouseOut={onMouseOut}>
             <Input
-                ref={inputRef}
+                ref={ref}
                 className={styles['native-checkbox']}
                 type={'checkbox'}
                 disabled={props.disabled}
