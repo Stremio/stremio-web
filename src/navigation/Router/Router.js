@@ -35,6 +35,16 @@ class Router extends React.Component {
     }
 
     componentDidMount() {
+        if (typeof this.props.homePath === 'string') {
+            const hashPath = this.getHashPath();
+            if (hashPath !== this.props.homePath) {
+                window.location.replace(`#${this.props.homePath}`);
+                if (hashPath.startsWith('/')) {
+                    window.location = `#${hashPath}`;
+                }
+            }
+        }
+
         window.addEventListener('hashchange', this.onLocationChanged);
         this.onLocationChanged();
     }
@@ -48,14 +58,15 @@ class Router extends React.Component {
             nextProps.className !== this.props.className;
     }
 
-    onLocationChanged = () => {
-        const hashIndex = window.location.href.indexOf('#');
-        const hashPath = hashIndex === -1 ? '' : window.location.href.substring(hashIndex + 1);
-        if (hashPath.length === 0 || !hashPath.startsWith('/')) {
-            window.location.replace(`#/${hashPath}`);
-            return;
-        }
+    getHashPath = () => {
+        return window.location.hash.startsWith('#') ?
+            window.location.hash.slice(1)
+            :
+            window.location.hash;
+    }
 
+    onLocationChanged = () => {
+        const hashPath = this.getHashPath();
         const { pathname, query } = UrlUtils.parse(hashPath);
         const queryParams = new URLSearchParams(query);
         for (let viewConfigIndex = 0; viewConfigIndex < this.viewsConfig.length; viewConfigIndex++) {
@@ -89,7 +100,11 @@ class Router extends React.Component {
             }
         }
 
-        window.location.replace(`#${this.props.defaultPath}`);
+        if (typeof this.props.onPathNotMatch === 'function') {
+            this.props.onPathNotMatch(hashPath);
+        } else {
+            window.location.replace(`#${this.props.homePath}`);
+        }
     }
 
     render() {
@@ -109,15 +124,13 @@ class Router extends React.Component {
 
 Router.propTypes = {
     className: PropTypes.string,
-    defaultPath: PropTypes.string.isRequired,
+    homePath: PropTypes.string,
+    onPathNotMatch: PropTypes.func,
     viewsConfig: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.exact({
         path: PropTypes.string.isRequired,
         component: PropTypes.elementType.isRequired,
         options: PropTypes.object
     }))).isRequired
-};
-Router.defaultProps = {
-    defaultPath: '/'
 };
 
 module.exports = Router;

@@ -1,14 +1,15 @@
 const React = require('react');
 const { Router } = require('stremio-navigation');
-const { defaultPath, views: viewsConfig } = require('./routerConfig');
+const { homePath, onPathNotMatch, views: viewsConfig } = require('./routerConfig');
 const styles = require('./styles');
 
 const App = () => (
     <React.StrictMode>
         <Router
             className={styles['router']}
-            defaultPath={defaultPath}
+            homePath={homePath}
             viewsConfig={viewsConfig}
+            onPathNotMatch={onPathNotMatch}
         />
     </React.StrictMode>
 );
