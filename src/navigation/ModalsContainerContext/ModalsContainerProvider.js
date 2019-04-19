@@ -1,6 +1,6 @@
 const React = require('react');
+const PropTypes = require('prop-types');
 const ModalsContainerContext = require('./ModalsContainerContext');
-const styles = require('./styles');
 
 class ModalsContainerProvider extends React.Component {
     constructor(props) {
@@ -13,6 +13,7 @@ class ModalsContainerProvider extends React.Component {
 
     shouldComponentUpdate(nextProps, nextState) {
         return nextState.modalsContainer !== this.state.modalsContainer ||
+            nextProps.modalsContainerClassName !== this.props.modalsContainerClassName ||
             nextProps.children !== this.props.children;
     }
 
@@ -24,10 +25,18 @@ class ModalsContainerProvider extends React.Component {
         return (
             <ModalsContainerContext.Provider value={this.state.modalsContainer}>
                 {this.state.modalsContainer instanceof HTMLElement ? this.props.children : null}
-                <div ref={this.modalsContainerRef} className={styles['modals-container']} />
+                <div ref={this.modalsContainerRef} className={this.props.modalsContainerClassName} />
             </ModalsContainerContext.Provider>
         );
     }
 }
+
+ModalsContainerProvider.propTypes = {
+    modalsContainerClassName: PropTypes.string,
+    children: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.node),
+        PropTypes.node
+    ])
+};
 
 module.exports = ModalsContainerProvider;

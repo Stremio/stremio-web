@@ -9,7 +9,7 @@ const onModalsContainerDomTreeChange = ({ modalsContainerElement }) => {
 
 const Route = ({ children }) => (
     <div className={styles['route']}>
-        <ModalsContainerProvider>
+        <ModalsContainerProvider modalsContainerClassName={styles['modals-container']}>
             <FocusableProvider onModalsContainerDomTreeChange={onModalsContainerDomTreeChange}>
                 <div className={styles['route-content']}>
                     {children}
