@@ -6,7 +6,6 @@ const NavBar = require('./NavBar');
 const Popup = require('./Popup');
 const ShareModal = require('./ShareModal');
 const Slider = require('./Slider');
-const UserPanel = require('./UserPanel');
 
 module.exports = {
     Checkbox,
@@ -16,6 +15,5 @@ module.exports = {
     NavBar,
     Popup,
     ShareModal,
-    Slider,
-    UserPanel
+    Slider
 };
