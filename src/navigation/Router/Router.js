@@ -1,7 +1,6 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const PathToRegexp = require('path-to-regexp');
-const PathUtils = require('path');
 const UrlUtils = require('url');
 const Route = require('./Route');
 
@@ -52,13 +51,12 @@ class Router extends React.Component {
     onLocationChanged = () => {
         const hashIndex = window.location.href.indexOf('#');
         const hashPath = hashIndex === -1 ? '' : window.location.href.substring(hashIndex + 1);
-        const path = PathUtils.join('/', hashPath);
-        if (hashPath !== path) {
-            window.location.replace(`#${path}`);
+        if (hashPath.length === 0 || !hashPath.startsWith('/')) {
+            window.location.replace(`#/${hashPath}`);
             return;
         }
 
-        const { pathname, query } = UrlUtils.parse(path);
+        const { pathname, query } = UrlUtils.parse(hashPath);
         const queryParams = new URLSearchParams(query);
         for (let viewConfigIndex = 0; viewConfigIndex < this.viewsConfig.length; viewConfigIndex++) {
             const viewConfig = this.viewsConfig[viewConfigIndex];
