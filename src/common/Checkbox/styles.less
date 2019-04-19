@@ -3,6 +3,12 @@
     z-index: 0;
     display: inline-block;
 
+    &:global(.checked) {
+        .icon {
+            padding: 10%;
+        }
+    }
+
     .icon {
         width: var(--icon-size);
         height: var(--icon-size);
@@ -18,11 +24,5 @@
         height: 0;
         opacity: 0;
         z-index: -1;
-    }
-
-    &:global(.checked) {
-        .icon {
-            padding: 10%;
-        }
     }
 }
