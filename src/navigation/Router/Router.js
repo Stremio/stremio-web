@@ -89,7 +89,7 @@ class Router extends React.Component {
             }
         }
 
-        window.location.replace('#/');
+        window.location.replace(`#${this.props.defaultPath}`);
     }
 
     render() {
@@ -109,11 +109,15 @@ class Router extends React.Component {
 
 Router.propTypes = {
     className: PropTypes.string,
+    defaultPath: PropTypes.string.isRequired,
     viewsConfig: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.exact({
         path: PropTypes.string.isRequired,
         component: PropTypes.elementType.isRequired,
         options: PropTypes.object
     }))).isRequired
+};
+Router.defaultProps = {
+    defaultPath: '/'
 };
 
 module.exports = Router;
