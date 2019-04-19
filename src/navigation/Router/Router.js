@@ -1,6 +1,6 @@
 const React = require('react');
 const PropTypes = require('prop-types');
-const pathToRegexp = require('path-to-regexp');
+const PathToRegexp = require('path-to-regexp');
 const PathUtils = require('path');
 const UrlUtils = require('url');
 const Route = require('./Route');
@@ -12,7 +12,7 @@ class Router extends React.Component {
         this.viewsConfig = props.viewsConfig.map((viewConfig) => {
             return viewConfig.map(({ path, component, options }) => {
                 const keys = [];
-                const regexp = pathToRegexp(path, keys, {
+                const regexp = PathToRegexp(path, keys, {
                     strict: false,
                     sensitive: false,
                     end: true,
