@@ -4,27 +4,6 @@
     z-index: 0;
     cursor: pointer;
 
-    .track {
-        position: absolute;
-        z-index: 1;
-        background-color: var(--track-color);
-    }
-
-    .track-before {
-        position: absolute;
-        z-index: 2;
-        background-color: var(--track-before-color);
-    }
-
-    .thumb {
-        position: absolute;
-        z-index: 3;
-        width: var(--thumb-size);
-        height: var(--thumb-size);
-        border-radius: 50%;
-        background-color: var(--thumb-color);
-    }
-
     &.horizontal {
         .track {
             top: calc(50% - var(--track-size) * 0.5);
@@ -67,5 +46,26 @@
 
     &:global(.disabled) {
         pointer-events: none;
+    }
+
+    .track {
+        position: absolute;
+        z-index: 1;
+        background-color: var(--track-color);
+    }
+
+    .track-before {
+        position: absolute;
+        z-index: 2;
+        background-color: var(--track-before-color);
+    }
+
+    .thumb {
+        position: absolute;
+        z-index: 3;
+        width: var(--thumb-size);
+        height: var(--thumb-size);
+        border-radius: 50%;
+        background-color: var(--thumb-color);
     }
 }
