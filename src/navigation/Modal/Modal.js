@@ -18,7 +18,11 @@ const Modal = ({ modalsContainer, children }) => {
 };
 
 Modal.propTypes = {
-    modalsContainer: PropTypes.instanceOf(HTMLElement).isRequired
+    modalsContainer: PropTypes.instanceOf(HTMLElement).isRequired,
+    children: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.node),
+        PropTypes.node
+    ])
 };
 
 const ModalWithModalsContainer = withModalsContainer(Modal);

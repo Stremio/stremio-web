@@ -115,7 +115,7 @@ Router.propTypes = {
         path: PropTypes.string.isRequired,
         component: PropTypes.elementType.isRequired,
         options: PropTypes.object
-    })))
+    }))).isRequired
 };
 
 module.exports = Router;

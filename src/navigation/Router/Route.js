@@ -1,4 +1,5 @@
 const React = require('react');
+const PropTypes = require('prop-types');
 const { FocusableProvider } = require('../FocusableContext');
 const { ModalsContainerProvider } = require('../ModalsContainerContext');
 const styles = require('./styles');
@@ -18,5 +19,12 @@ const Route = ({ children }) => (
         </ModalsContainerProvider>
     </div>
 );
+
+Route.propTypes = {
+    children: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.node),
+        PropTypes.node
+    ])
+};
 
 module.exports = Route;
