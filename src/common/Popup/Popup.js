@@ -1,7 +1,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const Modal = require('../Modal');
+const { Modal } = require('stremio-navigation');
 const Label = require('./Label');
 const Menu = require('./Menu');
 const styles = require('./styles');
