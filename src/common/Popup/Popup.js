@@ -290,7 +290,11 @@ Popup.Menu = Menu;
 Popup.propTypes = {
     modalContainerClassName: PropTypes.string,
     onOpen: PropTypes.func,
-    onClose: PropTypes.func
+    onClose: PropTypes.func,
+    children: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.node),
+        PropTypes.node
+    ])
 };
 
 module.exports = Popup;
