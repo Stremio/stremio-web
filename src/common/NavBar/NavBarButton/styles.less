@@ -1,0 +1,32 @@
+.button {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0 1.4em;
+    overflow: hidden;
+    cursor: pointer;
+
+    &:hover {
+        background-color: var(--color-backgrounddark20);
+    }
+
+    &:global(.active) {
+        background-color: var(--color-backgrounddark);
+    }
+
+    .icon {
+        height: 1.2em;
+        margin-right: 0.6em;
+        fill: var(--color-surfacelighter);
+    }
+
+    .label {
+        flex: 1;
+        height: 1.4em;
+        line-height: 1.4em;
+        word-break: break-all;
+        overflow: hidden;
+        text-transform: capitalize;
+        color: var(--color-surfacelighter);
+    }
+}
