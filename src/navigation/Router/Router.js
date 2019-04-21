@@ -81,7 +81,7 @@ class Router extends React.Component {
         const routeConfig = this.routeConfigForPath(hashPath);
         if (routeConfig === null) {
             if (typeof this.props.onPathNotMatch === 'function') {
-                this.props.onPathNotMatch(hashPath);
+                this.props.onPathNotMatch(event);
             } else if (typeof this.props.homePath === 'string') {
                 window.location.replace(`#${this.props.homePath}`);
             }
