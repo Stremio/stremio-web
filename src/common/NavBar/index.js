@@ -1,3 +1,3 @@
-import NavBar from './NavBar';
+const NavBar = require('./NavBar');
 
-export default NavBar;
+module.exports = NavBar;
