@@ -31,12 +31,12 @@ class Router extends React.Component {
             }
         }
 
-        window.addEventListener('hashchange', this.onLocationChanged);
-        this.onLocationChanged();
+        window.addEventListener('hashchange', this.onHashChanged);
+        this.onHashChanged();
     }
 
     componentWillUnmount() {
-        window.removeEventListener('hashchange', this.onLocationChanged);
+        window.removeEventListener('hashchange', this.onHashChanged);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -76,7 +76,7 @@ class Router extends React.Component {
         return null;
     }
 
-    onLocationChanged = () => {
+    onHashChanged = () => {
         const hashPath = this.getHashPath();
         const routeConfig = this.routeConfigForPath(hashPath);
         if (routeConfig === null) {
