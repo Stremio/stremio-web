@@ -1,7 +1,8 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import { Popup, Input } from 'stremio-common';
+import Popup from '../Popup';
+import { Input } from 'stremio-navigation';
 import Icon from 'stremio-icons/dom';
 import styles from './styles';
 

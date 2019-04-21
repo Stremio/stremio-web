@@ -1,6 +1,7 @@
 const React = require('react');
 const classnames = require('classnames');
-const { MetaItem, Input } = require('stremio-common');
+const { MetaItem } = require('stremio-common');
+const { Input } = require('stremio-navigation')
 const withGroups = require('./withGroups');
 const styles = require('./styles');
 
@@ -64,7 +65,7 @@ class Board extends React.PureComponent {
                             <div className={classnames(styles['board-row'], styles['continue-watching-row'])}>
                                 <div className={styles['meta-items-container']}>
                                     {this.props.groups[0].items.map((item) => (
-                                        <MetaItem
+                                        <MetaItem.default
                                             {...item}
                                             key={item.id}
                                             className={classnames(styles['meta-item'], styles[`poster-shape-${item.posterShape === 'landscape' ? 'square' : item.posterShape}`])}
@@ -84,7 +85,7 @@ class Board extends React.PureComponent {
                                         <div key={group.id} className={classnames(styles['board-row'], styles['addon-catalog-row'])}>
                                             <div className={styles['meta-items-container']}>
                                                 {group.items.map((item, _, metaItems) => (
-                                                    <MetaItem
+                                                    <MetaItem.default
                                                         {...item}
                                                         key={item.id}
                                                         className={classnames(styles['meta-item'], styles[`poster-shape-${metaItems[0].posterShape}`])}
