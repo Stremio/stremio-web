@@ -1,3 +1,3 @@
-import UserMenu from './UserMenu';
+const UserMenu = require('./UserMenu');
 
-export default UserMenu;
+module.exports = UserMenu;

@@ -1,6 +1,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const NavBarButton = require('./NavBarButton');
+const UserMenu = require('./UserMenu');
 const styles = require('./styles');
 
 const onBackButtonClick = () => {
@@ -44,7 +45,7 @@ const NavBar = ({ backButton, tabs, title, searchInput, userMenu }) => (
         }
         {
             userMenu ?
-                <div className={styles['user-menu']} />
+                <UserMenu className={styles['user-menu']} />
                 :
                 null
         }

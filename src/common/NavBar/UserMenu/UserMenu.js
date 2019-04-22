@@ -1,25 +1,22 @@
-import React, { PureComponent } from 'react';
-import classnames from 'classnames';
-import Icon from 'stremio-icons/dom';
-import { Popup } from 'stremio-common';
-import styles from './styles';
+const React = require('react');
+const classnames = require('classnames');
+const Icon = require('stremio-icons/dom');
+const Popup = require('../../Popup');
+const { Input } = require('stremio-navigation');
+const styles = require('./styles');
 
-class UserMenu extends PureComponent {
-    render() {
-        return (
-            <Popup>
-                <Popup.Label>
-                    <button className={classnames(this.props.className, styles['popup-label-container'])}>
-                        <Icon className={classnames(styles['user-icon'], styles['icon'])} icon={'ic_user'} />
-                        <Icon className={classnames(styles['arrow-icon'], styles['icon'])} icon={'ic_arrow_down'} />
-                    </button>
-                </Popup.Label>
-                <Popup.Menu width={300}>
-                    <div style={{ background: 'red', width: '100%', height: 300 }}>popup</div>
-                </Popup.Menu>
-            </Popup>
-        );
-    }
-}
+const UserMenu = ({ className }) => (
+    <Popup>
+        <Popup.Label>
+            <Input className={classnames(className, styles['user-menu-button'])} type={'button'}>
+                <Icon className={classnames(styles['icon'], styles['user-icon'])} icon={'ic_user'} />
+                <Icon className={classnames(styles['icon'], styles['arrow-icon'])} icon={'ic_arrow_down'} />
+            </Input>
+        </Popup.Label>
+        <Popup.Menu>
+            <div style={{ background: 'red', width: 400, height: 300 }}>userpanel</div>
+        </Popup.Menu>
+    </Popup>
+);
 
-export default UserMenu;
+module.exports = UserMenu;

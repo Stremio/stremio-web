@@ -1,23 +1,22 @@
-
-@import 'constants';
-.popup-label-container {
+.user-menu-button {
+    text-align: center;
+    overflow: hidden;
     cursor: pointer;
-    outline: none;
-    background-color: transparent;
-    .icon {
-        height: @nav-bar-height;
-        fill: var(--color-surfacelighter80)
-    }
-    .user-icon {
-        width: 40%;
-    }
-    .arrow-icon {
-        width: 16%;
-    }
-    &:hover, &.active {
+
+    &:hover, &:focus {
         background-color: var(--color-backgrounddark20);
-        .icon {
-           fill: var(--color-surfacelighter);
+    }
+
+    .icon {
+        height: 100%;
+        fill: var(--color-surfacelighter);
+
+        &.user-icon {
+            width: 40%;
+        }
+
+        &.arrow-icon {
+            width: 16%;
         }
     }
 }
