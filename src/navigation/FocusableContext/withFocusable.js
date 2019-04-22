@@ -1,12 +1,13 @@
 const React = require('react');
-const FocusableContext = require('./FocusableContext');
+const useFocusable = require('./useFocusable');
 
 const withFocusable = (Component) => {
-    return (props) => (
-        <FocusableContext.Consumer>
-            {focusable => <Component {...props} focusable={focusable} />}
-        </FocusableContext.Consumer>
-    );
+    return (props) => {
+        const focusable = useFocusable();
+        return (
+            <Component {...props} focusable={focusable} />
+        );
+    };
 };
 
 module.exports = withFocusable;
