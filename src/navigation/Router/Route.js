@@ -4,21 +4,22 @@ const { FocusableProvider } = require('../FocusableContext');
 const { ModalsContainerProvider } = require('../ModalsContainerContext');
 const styles = require('./styles');
 
-const onModalsContainerDomTreeChange = ({ modalsContainerElement }) => {
-    return modalsContainerElement.childElementCount === 0;
+const Route = ({ children }) => {
+    const onModalsContainerDomTreeChange = React.useCallback(({ modalsContainerElement }) => {
+        return modalsContainerElement.childElementCount === 0;
+    }, []);
+    return (
+        <div className={styles['route']}>
+            <ModalsContainerProvider modalsContainerClassName={styles['modals-container']}>
+                <FocusableProvider onModalsContainerDomTreeChange={onModalsContainerDomTreeChange}>
+                    <div className={styles['route-content']}>
+                        {children}
+                    </div>
+                </FocusableProvider>
+            </ModalsContainerProvider>
+        </div>
+    );
 };
-
-const Route = ({ children }) => (
-    <div className={styles['route']}>
-        <ModalsContainerProvider modalsContainerClassName={styles['modals-container']}>
-            <FocusableProvider onModalsContainerDomTreeChange={onModalsContainerDomTreeChange}>
-                <div className={styles['route-content']}>
-                    {children}
-                </div>
-            </FocusableProvider>
-        </ModalsContainerProvider>
-    </div>
-);
 
 Route.propTypes = {
     children: PropTypes.oneOfType([
