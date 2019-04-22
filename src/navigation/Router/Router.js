@@ -76,7 +76,7 @@ class Router extends React.Component {
         return null;
     }
 
-    onHashChanged = () => {
+    onHashChanged = (event) => {
         const hashPath = this.getHashPath();
         const routeConfig = this.routeConfigForPath(hashPath);
         if (routeConfig === null) {
