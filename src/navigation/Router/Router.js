@@ -31,7 +31,7 @@ class Router extends React.Component {
 
     componentDidMount() {
         if (typeof this.props.homePath === 'string') {
-            const { pathname, href } = this.getParsedHashPath();
+            const { pathname, href } = this.locationHashPath();
             if (pathname !== this.props.homePath) {
                 window.location.replace(`#${this.props.homePath}`);
                 const routeConfig = this.routeConfigForPath(pathname);
@@ -41,12 +41,12 @@ class Router extends React.Component {
             }
         }
 
-        window.addEventListener('hashchange', this.onHashChanged);
-        this.onHashChanged();
+        window.addEventListener('hashchange', this.onLocationHashChanged);
+        this.onLocationHashChanged();
     }
 
     componentWillUnmount() {
-        window.removeEventListener('hashchange', this.onHashChanged);
+        window.removeEventListener('hashchange', this.onLocationHashChanged);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -54,7 +54,7 @@ class Router extends React.Component {
             nextProps.className !== this.props.className;
     }
 
-    getParsedHashPath = () => {
+    locationHashPath = () => {
         const hashPath = window.location.hash.startsWith('#') ?
             window.location.hash.slice(1)
             :
@@ -75,8 +75,8 @@ class Router extends React.Component {
         return null;
     }
 
-    onHashChanged = (event) => {
-        const { pathname, query } = this.getParsedHashPath();
+    onLocationHashChanged = (event) => {
+        const { pathname, query } = this.locationHashPath();
         const routeConfig = this.routeConfigForPath(pathname);
         if (routeConfig === null) {
             if (typeof this.props.onPathNotMatch === 'function') {
