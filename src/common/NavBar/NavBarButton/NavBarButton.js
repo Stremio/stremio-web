@@ -10,8 +10,10 @@ const NavBarButton = React.memo(({ className, icon, label, href, onClick }) => {
     const locationHash = useLocationHash();
     const active = React.useMemo(() => {
         const locationHashPath = locationHash.startsWith('#') ? locationHash.slice(1) : '';
-        const { pathname } = UrlUtils.parse(locationHashPath);
-        return `#${pathname}` === href;
+        const hrefHashPath = typeof href === 'string' && href.startsWith('#') ? href.slice(1) : '';
+        const { pathname: locationPathname } = UrlUtils.parse(locationHashPath);
+        const { pathname: hrefPathname } = UrlUtils.parse(hrefHashPath);
+        return locationPathname === hrefPathname;
     }, [href, locationHash]);
     const inputType = typeof onClick === 'function' ? 'button' : 'link';
     return (
