@@ -5,7 +5,7 @@ const useLocationHash = () => {
     const onLocationHashChanged = React.useCallback(() => {
         setLocationHash(window.location.hash);
     }, []);
-    useEffect(() => {
+    React.useEffect(() => {
         window.addEventListener('hashchange', onLocationHashChanged);
         return () => {
             window.removeEventListener('hashchange', onLocationHashChanged);
