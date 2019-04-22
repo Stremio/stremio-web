@@ -8,8 +8,18 @@ class Router extends React.Component {
     constructor(props) {
         super(props);
 
-        this.viewsConfig = props.viewsConfig
-            .map((v) => v.map(this.compilePaths));
+        this.viewsConfig = props.viewsConfig.map((viewConfig) => {
+            return viewConfig.map(({ path, options, ...props }) => {
+                const keys = [];
+                const regexp = PathToRegexp(path, keys, {
+                    strict: false,
+                    sensitive: false,
+                    end: true,
+                    ...options
+                });
+                return { path, keys, regexp, ...props };
+            });
+        });
 
         this.state = {
             views: Array(this.viewsConfig.length).fill({
@@ -21,12 +31,12 @@ class Router extends React.Component {
 
     componentDidMount() {
         if (typeof this.props.homePath === 'string') {
-            const hashPath = this.getHashPath();
-            if (hashPath !== this.props.homePath) {
+            const { pathname, href } = this.getParsedHashPath();
+            if (pathname !== this.props.homePath) {
                 window.location.replace(`#${this.props.homePath}`);
-                const routeConfig = this.routeConfigForPath(hashPath);
+                const routeConfig = this.routeConfigForPath(pathname);
                 if (routeConfig !== null) {
-                    window.location = `#${hashPath}`;
+                    window.location = `#${href}`;
                 }
             }
         }
@@ -44,29 +54,18 @@ class Router extends React.Component {
             nextProps.className !== this.props.className;
     }
 
-    compilePaths = ({ path, options, ...props }) => {
-        const keys = [];
-        const regexp = PathToRegexp(path, keys, {
-            strict: false,
-            sensitive: false,
-            end: true,
-            ...options
-        });
-        return { path, keys, regexp, ...props };
-    }
-
-    getHashPath = () => {
-        return window.location.hash.startsWith('#') ?
+    getParsedHashPath = () => {
+        const hashPath = window.location.hash.startsWith('#') ?
             window.location.hash.slice(1)
             :
-            window.location.hash;
+            '';
+        return UrlUtils.parse(hashPath);
     }
 
     routeConfigForPath = (path) => {
-        const { pathname } = UrlUtils.parse(path);
         for (const viewConfig of this.viewsConfig) {
             for (const routeConfig of viewConfig) {
-                const match = routeConfig.regexp.exec(pathname);
+                const match = routeConfig.regexp.exec(path);
                 if (match) {
                     return routeConfig;
                 }
@@ -77,8 +76,8 @@ class Router extends React.Component {
     }
 
     onHashChanged = (event) => {
-        const hashPath = this.getHashPath();
-        const routeConfig = this.routeConfigForPath(hashPath);
+        const { pathname, query } = this.getParsedHashPath();
+        const routeConfig = this.routeConfigForPath(pathname);
         if (routeConfig === null) {
             if (typeof this.props.onPathNotMatch === 'function') {
                 this.props.onPathNotMatch(event);
@@ -90,7 +89,6 @@ class Router extends React.Component {
         }
 
         const routeViewIndex = this.viewsConfig.findIndex((v) => v.includes(routeConfig));
-        const { pathname, query } = UrlUtils.parse(hashPath);
         const match = routeConfig.regexp.exec(pathname);
         const queryParams = new URLSearchParams(query);
         const urlParams = routeConfig.keys.reduce((urlParams, key, index) => {
