@@ -22,15 +22,17 @@ const NavBar = ({ backButton, tabs, title, searchInput, userMenu }) => (
         }
         {
             tabs.length > 0 ?
-                tabs.map(({ href, icon, label }) => (
-                    <NavBarButton
-                        key={href}
-                        className={styles['nav-bar-button']}
-                        href={href}
-                        icon={icon}
-                        label={label}
-                    />
-                ))
+                <div className={styles['tabs-container']}>
+                    {tabs.map(({ href, icon, label }) => (
+                        <NavBarButton
+                            key={href}
+                            className={styles['nav-bar-button']}
+                            href={href}
+                            icon={icon}
+                            label={label}
+                        />
+                    ))}
+                </div>
                 :
                 <h2 className={styles['title']}>{title}</h2>
         }

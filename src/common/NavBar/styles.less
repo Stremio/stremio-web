@@ -2,9 +2,11 @@
     --nav-bar-height: 44px;
     font-size: 16px;
 
-    .nav-bar-button {
-        &:nth-of-type(n+4) {
-            display: none;
+    .tabs-container {
+        .nav-bar-button {
+            &:nth-child(n+5) {
+                display: none;
+            }
         }
     }
 }
@@ -16,6 +18,12 @@
     height: var(--nav-bar-height);
     background-color: var(--color-secondarydark);
     overflow: hidden;
+
+    .tabs-container {
+        flex: none;
+        display: flex;
+        flex-direction: row;
+    }
 
     .nav-bar-button {
         max-width: calc(var(--nav-bar-height) * 3.5);
