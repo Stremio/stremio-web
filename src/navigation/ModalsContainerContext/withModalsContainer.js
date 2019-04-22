@@ -1,12 +1,13 @@
 const React = require('react');
-const ModalsContainerContext = require('./ModalsContainerContext');
+const useModalsContainer = require('./useModalsContainer');
 
 const withModalsContainer = (Component) => {
-    return (props) => (
-        <ModalsContainerContext.Consumer>
-            {modalsContainer => <Component {...props} modalsContainer={modalsContainer} />}
-        </ModalsContainerContext.Consumer>
-    );
+    return (props) => {
+        const modalsContainer = useModalsContainer();
+        return (
+            <Component {...props} modalsContainer={modalsContainer} />
+        );
+    };
 };
 
 module.exports = withModalsContainer;
