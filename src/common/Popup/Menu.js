@@ -1,11 +1,6 @@
-const React = require('react');
 const PropTypes = require('prop-types');
 
-const Menu = React.forwardRef(({ children }, ref) => (
-    <div ref={ref}>
-        {children}
-    </div>
-));
+const Menu = ({ children }) => children;
 
 Menu.displayName = 'Popup.Menu';
 
