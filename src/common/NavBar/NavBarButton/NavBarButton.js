@@ -1,4 +1,5 @@
 const React = require('react');
+const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const UrlUtils = require('url');
 const Icon = require('stremio-icons/dom');
@@ -23,5 +24,13 @@ const NavBarButton = React.memo(({ className, icon, label, href, onClick }) => {
         </Input>
     );
 });
+
+NavBarButton.propTypes = {
+    className: PropTypes.string,
+    icon: PropTypes.string,
+    label: PropTypes.string,
+    href: PropTypes.string,
+    onClick: PropTypes.func
+};
 
 module.exports = NavBarButton;
