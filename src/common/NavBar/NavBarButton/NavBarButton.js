@@ -25,6 +25,7 @@ const NavBarButton = React.memo(({ className, icon, label, href, onClick }) => {
     );
 });
 
+NavBarButton.displayName = 'NavBarButton';
 NavBarButton.propTypes = {
     className: PropTypes.string,
     icon: PropTypes.string,
