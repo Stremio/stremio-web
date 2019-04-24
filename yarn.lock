@@ -7634,9 +7634,9 @@ stream-shift@^1.0.0:
   version "2.0.3"
   resolved "git+ssh://git@github.com/Stremio/stremio-colors.git#23d5fcec9049dc3e5a2b3da0dec637fda702c9c5"
 
-"stremio-icons@git+ssh://git@github.com/Stremio/stremio-icons.git#v1.0.6":
-  version "1.0.6"
-  resolved "git+ssh://git@github.com/Stremio/stremio-icons.git#03f8580a423d69c2b1a6fa2e5b391ec334df4e50"
+"stremio-icons@git+ssh://git@github.com/Stremio/stremio-icons.git#v1.0.7":
+  version "1.0.7"
+  resolved "git+ssh://git@github.com/Stremio/stremio-icons.git#e06a475fa671584242b172eaf9e3c0388c751fb9"
 
 "stremio-state-container-web@git+ssh://git@github.com/stremio/stremio-state-container-web.git#v0.4.0":
   version "0.4.0"
@@ -8289,10 +8289,10 @@ web-namespaces@^1.1.2:
   resolved "https://registry.yarnpkg.com/web-namespaces/-/web-namespaces-1.1.2.tgz#c8dc267ab639505276bae19e129dbd6ae72b22b4"
   integrity sha512-II+n2ms4mPxK+RnIxRPOw3zwF2jRscdJIUE9BfkKHm4FYEg9+biIoTMnaZF5MpemE3T+VhMLrhbyD4ilkPCSbg==
 
-webpack-cli@3.3.0:
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/webpack-cli/-/webpack-cli-3.3.0.tgz#55c8a74cae1e88117f9dda3a801c7272e93ca318"
-  integrity sha512-t1M7G4z5FhHKJ92WRKwZ1rtvi7rHc0NZoZRbSkol0YKl4HvcC8+DsmGDmK7MmZxHSAetHagiOsjOB6MmzC2TUw==
+webpack-cli@3.3.1:
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/webpack-cli/-/webpack-cli-3.3.1.tgz#98b0499c7138ba9ece8898bd99c4f007db59909d"
+  integrity sha512-c2inFU7SM0IttEgF7fK6AaUsbBnORRzminvbyRKS+NlbQHVZdCtzKBlavRL5359bFsywXGRAItA5di/IruC8mg==
   dependencies:
     chalk "^2.4.1"
     cross-spawn "^6.0.5"
