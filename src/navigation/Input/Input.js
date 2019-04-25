@@ -64,6 +64,7 @@ const Input = React.forwardRef(({ type, tabIndex, children, ...props }, ref) => 
     return React.createElement(tagName, elementProps, children);
 });
 
+Input.displayName = 'Input';
 Input.propTypes = {
     type: PropTypes.oneOf([
         ...BUTTON_INPUT_TYPES,
