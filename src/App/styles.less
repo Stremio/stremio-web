@@ -102,3 +102,23 @@ html, body, :global(#app) {
         background-color: var(--color-backgroundlight);
     }
 }
+
+:global(.focusable-with-border) {
+    position: relative;
+    z-index: 0;
+
+    &:focus {
+        &::after {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 1;
+            display: block;
+            pointer-events: none;
+            border: var(--focusable-border-size) solid var(--color-surfacelighter);
+            content: "";
+        }
+    }
+}
