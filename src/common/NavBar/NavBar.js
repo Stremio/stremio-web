@@ -60,11 +60,11 @@ NavBar.propTypes = {
         icon: PropTypes.string.isRequired,
         label: PropTypes.string.isRequired,
         href: PropTypes.string.isRequired
-    })).isRequired,
-    title: PropTypes.string.isRequired,
-    backButton: PropTypes.bool.isRequired,
-    searchBar: PropTypes.bool.isRequired,
-    userMenu: PropTypes.bool.isRequired
+    })),
+    title: PropTypes.string,
+    backButton: PropTypes.bool,
+    searchBar: PropTypes.bool,
+    userMenu: PropTypes.bool
 };
 
 module.exports = NavBar;
