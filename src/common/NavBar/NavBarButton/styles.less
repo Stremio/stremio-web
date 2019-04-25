@@ -2,11 +2,11 @@
     display: inline-flex;
     flex-direction: row;
     align-items: center;
-    padding: 0 1.4em;
+    padding: 0 1.2em;
     overflow: hidden;
     cursor: pointer;
 
-    &:hover, &:focus {
+    &:hover {
         background-color: var(--color-backgrounddark20);
     }
 
@@ -24,8 +24,9 @@
         flex: 1;
         height: 1.4em;
         line-height: 1.4em;
-        word-break: break-all;
         overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
         text-transform: capitalize;
         color: var(--color-surfacelighter);
     }
