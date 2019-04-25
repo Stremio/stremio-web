@@ -32,6 +32,10 @@ const views = [
         {
             path: '/detail',
             component: Detail
+        },
+        {
+            path: '/search',
+            component: Search
         }
     ],
     [
