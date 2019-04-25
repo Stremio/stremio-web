@@ -2,11 +2,9 @@
     --nav-bar-height: 44px;
     font-size: 16px;
 
-    .tabs-container {
-        .nav-bar-button {
-            &:nth-child(n+5) {
-                display: none;
-            }
+    .nav-bar-button {
+        &:nth-child(n+5) {
+            display: none;
         }
     }
 }
@@ -19,35 +17,33 @@
     background-color: var(--color-secondarydark);
     overflow: hidden;
 
-    .tabs-container {
-        flex: none;
-        display: flex;
-        flex-direction: row;
-    }
-
     .nav-bar-button {
+        flex: none;
         max-width: calc(var(--nav-bar-height) * 3.5);
         height: var(--nav-bar-height);
     }
 
     .title {
         flex: 1;
-        height: 1em;
-        padding: 0 0.6em;
-        color: var(--color-surfacelighter);
         font-size: 1.1em;
+        height: 1.4em;
+        line-height: 1.4em;
+        padding: 0 0.6em;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
         font-style: normal;
         font-weight: normal;
-        word-break: break-all;
-        overflow: hidden;
+        color: var(--color-surfacelighter);
     }
 
-    .search-input {
+    .search-bar {
         flex: 1;
         height: var(--nav-bar-height);
     }
 
     .user-menu {
+        flex: none;
         width: var(--nav-bar-height);
         height: var(--nav-bar-height);
     }
