@@ -16,7 +16,7 @@ const TAG_NAMES_FOR_TYPE = {
     search: 'input'
 };
 
-const Input = React.forwardRef(({ type, children, ...props }, ref) => {
+const Input = React.forwardRef(({ type, tabIndex, children, ...props }, ref) => {
     const onKeyUp = React.useCallback((event) => {
         if (typeof props.onKeyUp === 'function') {
             props.onKeyUp(event);
@@ -56,7 +56,7 @@ const Input = React.forwardRef(({ type, children, ...props }, ref) => {
         ...props,
         ref: ref,
         type: tagName === 'input' ? type : null,
-        tabIndex: focusable ? 0 : -1,
+        tabIndex: (isNaN(tabIndex) || tabIndex === null) ? (focusable ? 0 : -1) : tabIndex,
         onKeyUp: onKeyUp,
         onDrag: onDrag,
         onMouseOut: onMouseOut
@@ -69,6 +69,7 @@ Input.propTypes = {
         ...BUTTON_INPUT_TYPES,
         ...TEXT_INPUT_TYPES
     ]).isRequired,
+    tabIndex: PropTypes.number,
     children: PropTypes.oneOfType([
         PropTypes.arrayOf(PropTypes.node),
         PropTypes.node
