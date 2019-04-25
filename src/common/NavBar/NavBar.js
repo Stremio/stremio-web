@@ -5,7 +5,7 @@ const SearchBar = require('./SearchBar');
 const UserMenu = require('./UserMenu');
 const styles = require('./styles');
 
-const NavBar = ({ backButton, tabs, title, searchBar, userMenu }) => {
+const NavBar = React.memo(({ backButton, tabs, title, searchBar, userMenu }) => {
     const onBackButtonClick = React.useCallback(() => {
         window.history.back();
     }, []);
@@ -23,7 +23,7 @@ const NavBar = ({ backButton, tabs, title, searchBar, userMenu }) => {
                     null
             }
             {
-                tabs.length > 0 ?
+                Array.isArray(tabs) && tabs.length > 0 ?
                     <div className={styles['nav-tabs-container']}>
                         {tabs.map(({ href, icon, label }) => (
                             <NavBarButton
@@ -52,8 +52,9 @@ const NavBar = ({ backButton, tabs, title, searchBar, userMenu }) => {
             }
         </nav>
     );
-};
+});
 
+NavBar.displayName = 'NavBar';
 NavBar.propTypes = {
     tabs: PropTypes.arrayOf(PropTypes.exact({
         icon: PropTypes.string.isRequired,
@@ -64,14 +65,6 @@ NavBar.propTypes = {
     backButton: PropTypes.bool.isRequired,
     searchBar: PropTypes.bool.isRequired,
     userMenu: PropTypes.bool.isRequired
-};
-
-NavBar.defaultProps = {
-    tabs: Object.freeze([]),
-    title: '',
-    backButton: false,
-    searchBar: false,
-    userMenu: false
 };
 
 module.exports = NavBar;
