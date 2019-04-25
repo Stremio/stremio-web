@@ -2,9 +2,11 @@
     --nav-bar-height: 44px;
     font-size: 16px;
 
-    .nav-bar-button {
-        &:nth-child(n+5) {
-            display: none;
+    .nav-tabs-container {
+        .nav-tab-button {
+            &:nth-child(n+5) {
+                display: none;
+            }
         }
     }
 }
@@ -17,10 +19,22 @@
     background-color: var(--color-secondarydark);
     overflow: hidden;
 
-    .nav-bar-button {
+    .back-button {
         flex: none;
-        max-width: calc(var(--nav-bar-height) * 3.5);
+        max-width: calc(var(--nav-bar-height) * 5);
         height: var(--nav-bar-height);
+    }
+
+    .nav-tabs-container {
+        flex: none;
+        display: flex;
+        flex-direction: row;
+
+        .nav-tab-button {
+            flex: none;
+            max-width: calc(var(--nav-bar-height) * 3.5);
+            height: var(--nav-bar-height);
+        }
     }
 
     .title {

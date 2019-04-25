@@ -14,7 +14,7 @@ const NavBar = ({ backButton, tabs, title, searchBar, userMenu }) => {
             {
                 backButton ?
                     <NavBarButton
-                        className={styles['nav-bar-button']}
+                        className={styles['back-button']}
                         icon={'ic_back_ios'}
                         label={'back'}
                         onClick={onBackButtonClick}
@@ -24,15 +24,17 @@ const NavBar = ({ backButton, tabs, title, searchBar, userMenu }) => {
             }
             {
                 tabs.length > 0 ?
-                    tabs.map(({ href, icon, label }) => (
-                        <NavBarButton
-                            key={href}
-                            className={styles['nav-bar-button']}
-                            href={href}
-                            icon={icon}
-                            label={label}
-                        />
-                    ))
+                    <div className={styles['nav-tabs-container']}>
+                        {tabs.map(({ href, icon, label }) => (
+                            <NavBarButton
+                                key={href}
+                                className={styles['nav-tab-button']}
+                                href={href}
+                                icon={icon}
+                                label={label}
+                            />
+                        ))}
+                    </div>
                     :
                     <h2 className={styles['title']}>{title}</h2>
             }
