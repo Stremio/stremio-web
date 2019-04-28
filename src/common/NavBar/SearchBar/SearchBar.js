@@ -57,6 +57,7 @@ const SearchBar = React.memo(({ className }) => {
 });
 
 SearchBar.displayName = 'SearchBar';
+
 SearchBar.propTypes = {
     className: PropTypes.string
 };

@@ -55,14 +55,15 @@ const NavBar = React.memo(({ backButton, tabs, title, searchBar, userMenu }) => 
 });
 
 NavBar.displayName = 'NavBar';
+
 NavBar.propTypes = {
+    backButton: PropTypes.bool,
     tabs: PropTypes.arrayOf(PropTypes.exact({
         icon: PropTypes.string.isRequired,
         label: PropTypes.string.isRequired,
         href: PropTypes.string.isRequired
     })),
     title: PropTypes.string,
-    backButton: PropTypes.bool,
     searchBar: PropTypes.bool,
     userMenu: PropTypes.bool
 };

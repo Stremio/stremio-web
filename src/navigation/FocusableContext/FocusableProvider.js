@@ -68,10 +68,7 @@ class FocusableProvider extends React.Component {
 FocusableProvider.propTypes = {
     modalsContainer: PropTypes.instanceOf(HTMLElement).isRequired,
     onModalsContainerDomTreeChange: PropTypes.func.isRequired,
-    children: PropTypes.oneOfType([
-        PropTypes.arrayOf(PropTypes.node),
-        PropTypes.node
-    ])
+    children: PropTypes.node.isRequired
 };
 
 const FocusableProviderWithModalsContainer = withModalsContainer(FocusableProvider);

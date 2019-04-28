@@ -17,6 +17,7 @@ const TAG_NAMES_FOR_TYPE = {
 };
 
 const Input = React.forwardRef(({ type, tabIndex, children, ...props }, ref) => {
+    const focusable = useFocusable();
     const onKeyUp = React.useCallback((event) => {
         if (typeof props.onKeyUp === 'function') {
             props.onKeyUp(event);
@@ -50,7 +51,6 @@ const Input = React.forwardRef(({ type, tabIndex, children, ...props }, ref) => 
             event.currentTarget.blur();
         }
     }, [props.onMouseOut, type]);
-    const focusable = useFocusable();
     const tagName = TAG_NAMES_FOR_TYPE[type];
     const elementProps = {
         ...props,
@@ -65,6 +65,7 @@ const Input = React.forwardRef(({ type, tabIndex, children, ...props }, ref) => 
 });
 
 Input.displayName = 'Input';
+
 Input.propTypes = {
     type: PropTypes.oneOf([
         ...BUTTON_INPUT_TYPES,
