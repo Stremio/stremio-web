@@ -54,10 +54,7 @@ Checkbox.propTypes = {
     onClick: PropTypes.func,
     onDrag: PropTypes.func,
     onMouseOut: PropTypes.func,
-    children: PropTypes.oneOfType([
-        PropTypes.arrayOf(PropTypes.node),
-        PropTypes.node
-    ])
+    children: PropTypes.node
 };
 
 Checkbox.defaultProps = {
