@@ -26,12 +26,12 @@ const SearchBar = React.memo(({ className }) => {
     }, [active]);
     const onQueryInputSubmit = React.useCallback(() => {
         window.location.replace(`#/search?q=${searchInputRef.current.value}`);
-    }, [searchInputRef]);
+    }, [searchInputRef.current]);
     React.useEffect(() => {
-        if (active && focusable) {
+        if (active && focusable && searchInputRef.current) {
             searchInputRef.current.focus();
         }
-    }, [active, focusable]);
+    }, [query, active, focusable, searchInputRef.current]);
     return (
         <div className={classnames(className, styles['search-bar-container'], { 'active': active })}>
             <label className={styles['search-label']}>
