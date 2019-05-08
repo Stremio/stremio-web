@@ -18,7 +18,7 @@ const NavBarButton = React.memo(({ className, icon, label, href, onClick }) => {
     }, [href, locationHash]);
     const inputType = typeof onClick === 'function' ? 'button' : 'link';
     return (
-        <Input className={classnames(className, styles['nav-bar-button-container'], 'focusable-with-border', { 'active': active })} type={inputType} href={href} onClick={onClick}>
+        <Input className={classnames(className, styles['nav-bar-button-container'], { 'active': active })} tabIndex={-1} type={inputType} href={href} onClick={onClick}>
             <Icon className={styles['icon']} icon={icon} />
             <div className={styles['label']}>{label}</div>
         </Input>
