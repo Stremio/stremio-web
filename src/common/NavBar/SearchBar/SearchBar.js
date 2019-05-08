@@ -38,6 +38,7 @@ const SearchBar = React.memo(({ className }) => {
                 <Input
                     key={query}
                     ref={searchInputRef}
+                    tabIndex={-1}
                     className={styles['search-input']}
                     type={'text'}
                     placeholder={'Search'}
