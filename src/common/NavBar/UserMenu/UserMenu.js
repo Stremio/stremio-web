@@ -48,7 +48,7 @@ const UserMenu = ({ className, email, avatar, logout }) => {
                         <div className={styles['email-container']}>
                             <div className={styles['user-info-label']}>{email.length === 0 ? 'Anonymous user' : email}</div>
                         </div>
-                        <Input className={styles['login-logout-button']} tabIndex={-1} type={email.length === 0 ? 'link' : 'button'} href={email.length === 0 ? '#/intro' : null} onClick={email.length === 0 ? null : logout}>
+                        <Input className={styles['login-logout-button']} tabIndex={-1} type={'link'} href={'#/intro'} onClick={email.length === 0 ? null : logout}>
                             <div className={styles['user-info-label']}>{email.length === 0 ? 'Log in / Sign up' : 'Log out'}</div>
                         </Input>
                     </div>
