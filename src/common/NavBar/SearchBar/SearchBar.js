@@ -21,7 +21,7 @@ const SearchBar = React.memo(({ className }) => {
     }, [locationHash]);
     const onQueryInputFocus = React.useCallback(() => {
         if (!active) {
-            window.location.replace('#/search');
+            window.location = '#/search';
         }
     }, [active]);
     const onQueryInputSubmit = React.useCallback(() => {
