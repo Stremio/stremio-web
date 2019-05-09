@@ -45,12 +45,8 @@ const views = [
         }
     ]
 ];
-const onPathNotMatch = () => {
-    window.history.back();
-};
 
 module.exports = {
     homePath,
-    views,
-    onPathNotMatch
+    views
 };
