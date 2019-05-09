@@ -45,8 +45,7 @@ class Popup extends React.Component {
 
     shouldComponentUpdate(nextProps, nextState) {
         return nextState.open !== this.state.open ||
-            nextProps.children !== this.props.children ||
-            nextProps.modalContainerClassName !== this.props.modalContainerClassName;
+            nextProps.children !== this.props.children;
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -239,7 +238,7 @@ class Popup extends React.Component {
 
         return React.cloneElement(menuElement, {},
             <Modal>
-                <div className={classnames(styles['modal-container'], this.props.modalContainerClassName)} onClick={this.modalBackgroundOnClick}>
+                <div className={classnames(styles['modal-container'], menuElement.props.className)} onClick={this.modalBackgroundOnClick}>
                     <div ref={this.menuContainerRef} className={styles['menu-container']} onClick={this.menuContainerOnClick}>
                         <div ref={this.menuScrollRef} className={styles['menu-scroll-container']}>
                             <div ref={this.menuChildrenRef}>
@@ -290,7 +289,6 @@ Popup.Label = Label;
 Popup.Menu = Menu;
 
 Popup.propTypes = {
-    modalContainerClassName: PropTypes.string,
     onOpen: PropTypes.func,
     onClose: PropTypes.func,
     children: PropTypes.oneOfType([
