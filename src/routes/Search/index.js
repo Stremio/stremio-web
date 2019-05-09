@@ -1,3 +1,3 @@
-import Search from './Search';
+const Search = require('./Search');
 
-export default Search;
+module.exports = Search;
