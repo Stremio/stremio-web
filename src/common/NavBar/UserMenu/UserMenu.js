@@ -7,6 +7,13 @@ const { Input } = require('stremio-navigation');
 const styles = require('./styles');
 
 const UserMenu = ({ className, email, avatar, logout }) => {
+    const [active, setActive] = React.useState(false);
+    const onPopupOpen = React.useCallback(() => {
+        setActive(true);
+    }, []);
+    const onPopupClose = React.useCallback(() => {
+        setActive(false);
+    }, []);
     const [fullscreen, setFullscreen] = React.useState(document.fullscreenElement instanceof HTMLElement);
     const toggleFullscreen = React.useCallback(() => {
         if (fullscreen) {
@@ -26,9 +33,9 @@ const UserMenu = ({ className, email, avatar, logout }) => {
     }, []);
 
     return (
-        <Popup>
+        <Popup onOpen={onPopupOpen} onClose={onPopupClose}>
             <Popup.Label>
-                <Input className={classnames(className, styles['user-menu-button'])} tabIndex={-1} type={'button'}>
+                <Input className={classnames(className, styles['user-menu-button'], { 'active': active })} tabIndex={-1} type={'button'}>
                     <Icon className={classnames(styles['icon'], styles['user-icon'])} icon={'ic_user'} />
                     <Icon className={classnames(styles['icon'], styles['arrow-icon'])} icon={'ic_arrow_down'} />
                 </Input>

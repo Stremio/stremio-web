@@ -8,8 +8,12 @@
     overflow: hidden;
     cursor: pointer;
 
-    &:hover, &:focus {
-        background-color: var(--color-backgrounddark20);
+    &:hover {
+        background-color: var(--color-secondary);
+    }
+
+    &:global(.active) {
+        background-color: var(--color-background);
     }
 
     .icon {
