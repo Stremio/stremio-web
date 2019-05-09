@@ -3,17 +3,15 @@ const PropTypes = require('prop-types');
 const { useFocusable } = require('../FocusableContext');
 
 const ENTER_KEY_CODE = 13;
-const BUTTON_INPUT_TYPES = ['button', 'link', 'submit', 'checkbox'];
-const TEXT_INPUT_TYPES = ['text', 'password', 'email', 'search'];
+const BUTTON_INPUT_TYPES = ['button', 'link', 'checkbox'];
+const TEXT_INPUT_TYPES = ['text', 'email', 'password'];
 const TAG_NAMES_FOR_TYPE = {
     button: 'div',
     link: 'a',
-    submit: 'input',
     checkbox: 'input',
     text: 'input',
-    password: 'input',
     email: 'input',
-    search: 'input'
+    password: 'input'
 };
 
 const Input = React.forwardRef(({ type, tabIndex, children, ...props }, ref) => {
