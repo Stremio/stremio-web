@@ -26,14 +26,14 @@ const UserMenu = ({ className, email, avatar, logout }) => {
     }, []);
 
     return (
-        <Popup modalContainerClassName={styles['user-menu-modal-container']}>
+        <Popup>
             <Popup.Label>
                 <Input className={classnames(className, styles['user-menu-button'])} tabIndex={-1} type={'button'}>
                     <Icon className={classnames(styles['icon'], styles['user-icon'])} icon={'ic_user'} />
                     <Icon className={classnames(styles['icon'], styles['arrow-icon'])} icon={'ic_arrow_down'} />
                 </Input>
             </Popup.Label>
-            <Popup.Menu>
+            <Popup.Menu className={styles['user-menu-container']}>
                 <div className={styles['user-menu']}>
                     <div className={styles['user-info']}>
                         <div
