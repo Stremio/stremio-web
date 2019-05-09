@@ -4,9 +4,25 @@
     justify-content: center;
     align-items: stretch;
 
+    &:not(:global(.active)) {
+        .search-label {
+            &:hover {
+                background-color: var(--color-secondary);
+
+                .submit-button {
+                    background-color: var(--color-secondarylight);
+                }
+            }
+        }
+    }
+
     &:global(.active) {
         .search-label {
             background-color: var(--color-background);
+
+            .submit-button {
+                background-color: var(--color-secondarylight);
+            }
         }
     }
 
@@ -16,7 +32,7 @@
         display: flex;
         flex-direction: row;
         align-items: stretch;
-        background-color: var(--color-secondary);
+        background-color: var(--color-secondary60);
 
         .search-input {
             flex: 1;
@@ -35,7 +51,7 @@
             flex-direction: row;
             justify-content: center;
             align-items: center;
-            background-color: var(--color-secondarylight);
+            background-color: var(--color-secondarylight60);
             cursor: pointer;
 
             .submit-icon {
