@@ -38,6 +38,7 @@ const NavBar = React.memo(({ backButton, tabs, title, searchBar, userMenu }) => 
                     :
                     <h2 className={styles['title']}>{title}</h2>
             }
+            <div className={styles['spacing']} />
             {
                 searchBar ?
                     <SearchBar className={styles['search-bar']} />

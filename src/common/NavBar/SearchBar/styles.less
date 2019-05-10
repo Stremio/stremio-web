@@ -1,64 +1,49 @@
-.search-bar-container {
+.search-label {
     display: flex;
     flex-direction: row;
-    justify-content: center;
     align-items: stretch;
+    background-color: var(--color-secondary60);
 
-    &:not(:global(.active)) {
-        .search-label {
-            &:hover {
-                background-color: var(--color-secondary);
+    &:hover {
+        background-color: var(--color-secondary);
 
-                .submit-button {
-                    background-color: var(--color-secondarylight);
-                }
-            }
+        .submit-button {
+            background-color: var(--color-secondarylight);
         }
     }
 
     &:global(.active) {
-        .search-label {
-            background-color: var(--color-background);
+        background-color: var(--color-background);
 
-            .submit-button {
-                background-color: var(--color-secondarylight);
-            }
+        .submit-button {
+            background-color: var(--color-secondarylight);
         }
     }
 
-    .search-label {
-        flex-grow: 0;
-        flex-basis: calc(var(--nav-bar-height) * 8);
+    .search-input {
+        flex: 1;
+        padding: 0 0.8em;
+        color: var(--color-surfacelighter);
+
+        &::placeholder {
+            color: var(--color-surfacelighter);
+        }
+    }
+
+    .submit-button {
+        width: var(--nav-bar-height);
+        height: var(--nav-bar-height);
         display: flex;
         flex-direction: row;
-        align-items: stretch;
-        background-color: var(--color-secondary60);
+        justify-content: center;
+        align-items: center;
+        background-color: var(--color-secondarylight60);
+        cursor: pointer;
 
-        .search-input {
-            flex: 1;
-            padding: 0 0.8em;
-            color: var(--color-surfacelighter);
-
-            &::placeholder {
-                color: var(--color-surfacelighter);
-            }
-        }
-
-        .submit-button {
-            width: var(--nav-bar-height);
-            height: var(--nav-bar-height);
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            align-items: center;
-            background-color: var(--color-secondarylight60);
-            cursor: pointer;
-
-            .submit-icon {
-                width: 1.1em;
-                height: 1.1em;
-                fill: var(--color-surfacelighter);
-            }
+        .submit-icon {
+            width: 1.1em;
+            height: 1.1em;
+            fill: var(--color-surfacelighter);
         }
     }
 }

@@ -33,27 +33,25 @@ const SearchBar = React.memo(({ className }) => {
         }
     }, [query, active, focusable, searchInputRef.current]);
     return (
-        <div className={classnames(className, styles['search-bar-container'], { 'active': active })}>
-            <label className={styles['search-label']}>
-                <Input
-                    key={query}
-                    ref={searchInputRef}
-                    tabIndex={-1}
-                    className={styles['search-input']}
-                    type={'text'}
-                    placeholder={'Search'}
-                    autoCorrect={'off'}
-                    autoCapitalize={'off'}
-                    spellCheck={false}
-                    defaultValue={query}
-                    onFocus={onQueryInputFocus}
-                    onSubmit={onQueryInputSubmit}
-                />
-                <Input className={styles['submit-button']} type={'button'} tabIndex={-1} onClick={onQueryInputSubmit}>
-                    <Icon className={styles['submit-icon']} icon={'ic_search'} />
-                </Input>
-            </label>
-        </div>
+        <label className={classnames(className, styles['search-label'], { 'active': active })}>
+            <Input
+                key={query}
+                ref={searchInputRef}
+                tabIndex={-1}
+                className={styles['search-input']}
+                type={'text'}
+                placeholder={'Search'}
+                autoCorrect={'off'}
+                autoCapitalize={'off'}
+                spellCheck={false}
+                defaultValue={query}
+                onFocus={onQueryInputFocus}
+                onSubmit={onQueryInputSubmit}
+            />
+            <Input className={styles['submit-button']} type={'button'} tabIndex={-1} onClick={onQueryInputSubmit}>
+                <Icon className={styles['submit-icon']} icon={'ic_search'} />
+            </Input>
+        </label>
     );
 });
 
