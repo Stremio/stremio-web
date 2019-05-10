@@ -38,10 +38,13 @@ const NavBar = React.memo(({ backButton, tabs, title, searchBar, userMenu }) => 
                     :
                     <h2 className={styles['title']}>{title}</h2>
             }
-            <div className={styles['spacing']} />
             {
                 searchBar ?
-                    <SearchBar className={styles['search-bar']} />
+                    <React.Fragment>
+                        <div className={styles['spacing']} />
+                        <SearchBar className={styles['search-bar']} />
+                        <div className={styles['spacing']} />
+                    </React.Fragment>
                     :
                     null
             }
