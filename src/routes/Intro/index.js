@@ -1,3 +1,3 @@
-import Intro from './Intro';
+const Intro = require('./Intro');
 
-export default Intro;
+module.exports = Intro;

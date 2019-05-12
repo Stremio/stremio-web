@@ -1,3 +1,3 @@
-import ConsentCheckbox from './ConsentCheckbox';
+const ConsentCheckbox = require('./ConsentCheckbox');
 
-export default ConsentCheckbox;
+module.exports = ConsentCheckbox;

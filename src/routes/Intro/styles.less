@@ -1,13 +1,11 @@
 .intro-container {
     --form-width: 270px;
-    --spacing: 16px;
     font-size: 14px;
 }
 
 .intro-container {
     position: relative;
     z-index: 0;
-    width: 100%;
     height: 100%;
     background-image: url('/images/intro_background.jpg');
     background-size: cover;
@@ -15,87 +13,82 @@
     background-position: center;
     background-origin: border-box;
 
-    .overlay {
+    .background-overlay {
         position: absolute;
-        z-index: 0;
         top: 0;
         left: 0;
         right: 0;
         bottom: 0;
+        z-index: 0;
         background-color: var(--color-backgrounddark80);
     }
 
     .scroll-content {
         position: absolute;
-        z-index: 1;
         top: 0;
         left: 0;
         right: 0;
         bottom: 0;
+        z-index: 1;
         display: flex;
         flex-direction: row;
+        justify-content: center;
+        align-items: center;
         overflow-y: auto;
         overflow-x: hidden;
 
         .form-container {
             width: var(--form-width);
             margin: auto;
-            padding: 5% 0;
+            padding: 4em 0;
 
-            .facebook-button, .submit-button, .switch-form-button, .guest-login-button {
+            .login-form-button {
+                width: 100%;
+                padding: 0 1em;
                 display: flex;
                 flex-direction: row;
                 align-items: center;
                 justify-content: center;
-                border: var(--focusable-border-size) solid transparent;
                 cursor: pointer;
 
                 .icon {
-                    height: 1.7em;
+                    width: 0.8em;
+                    height: 100%;
                     margin-right: 1em;
                     fill: var(--color-surfacelighter);
+
+                    &~.label {
+                        max-width: calc(100% - 1.8em);
+                    }
                 }
 
                 .label {
-                    font-size: 1em;
+                    padding: 0.3em 0;
+                    font-size: 1.1em;
+                    line-height: 1.2em;
                     font-weight: 600;
                     color: var(--color-surfacelighter);
-                }
-
-                &:before {
-                    content: "";
-                    display: block;
-                }
-
-                &:focus, &:hover {
-                    filter: brightness(1.2);
-                }
-
-                &:focus {
-                    border-color: var(--color-surfacelighter);
-                }
-
-                &:hover {
-                    border-color: transparent;
+                    overflow: hidden;
                 }
             }
 
             .facebook-button {
-                background: var(--color-secondarydark);
+                min-height: 4.5em;
+                background: #4267b2;
 
                 .label {
                     font-size: 1.2em;
                 }
 
-                &:before {
-                    padding-top: 25%;
+                &:hover {
+                    filter: brightness(1.2);
                 }
             }
 
             .facebook-statement {
-                display: block;
+                width: 100%;
                 margin-top: 0.5em;
-                margin-bottom: calc(var(--spacing) * 4);
+                margin-bottom: 2em;
                 text-align: center;
                 color: var(--color-surface);
             }
@@ -103,11 +96,9 @@
             .text-input {
                 display: block;
                 width: 100%;
-                margin: var(--spacing) 0;
-                padding: 0.5em 0.2em;
-                font-size: 1em;
-                line-height: 1em;
-                border-bottom: 1px solid var(--color-surface);
+                margin: 1em 0;
+                padding: 0.5em 0.3em;
+                border-bottom: calc(0.5 * var(--focusable-border-size)) solid var(--color-surface);
                 color: var(--color-surfacelighter);
 
                 &::placeholder {
@@ -115,6 +106,7 @@
                 }
 
                 &:hover, &:focus {
+                    background-color: var(--color-surfacedarker80);
                     border-bottom-color: var(--color-surfacelighter);
 
                     &::placeholder {
@@ -123,69 +115,55 @@
                 }
             }
 
-            .forgot-password-link {
-                display: block;
-                margin: var(--spacing) 0;
-                padding: 0.5em;
-                border: var(--focusable-border-size) solid transparent;
-                color: var(--color-surfacelight);
+            .forgot-password-link-container {
+                margin: 1em 0;
                 text-align: right;
-                cursor: pointer;
 
-                &:hover, &:focus {
-                    color: var(--color-surfacelighter);
-                }
+                .forgot-password-link {
+                    display: inline-block;
+                    padding: 0.5em 0.3em;
+                    color: var(--color-surfacelight);
+                    cursor: pointer;
 
-                &:focus {
-                    border-color: var(--color-surfacelighter);
-                }
-
-                &:hover {
-                    border-color: transparent;
+                    &:hover, &:focus {
+                        color: var(--color-surfacelighter);
+                    }
                 }
             }
 
             .consent-checkbox {
-                margin: var(--spacing) 0;
-                padding: 0.5em 0.2em;
-                border: var(--focusable-border-size) solid transparent;
-
-                &:focus-within {
-                    border-color: var(--color-surfacelighter);
-                }
-
-                &:hover {
-                    border-color: transparent;
-                }
+                margin: 1em 0;
+                padding: 0.5em 0.3em;
             }
 
-            .error {
-                margin: var(--spacing) 0;
-                padding: 0.5em 0.2em;
+            .error-message {
+                margin: 1em 0;
                 text-align: center;
                 color: var(--color-signal1);
             }
 
             .submit-button {
+                min-height: 4em;
+                margin: 1em 0;
                 background-color: var(--color-primarydark);
 
                 .label {
                     font-size: 1.2em;
-                    font-weight: 600;
                 }
 
-                &:before {
-                    padding-top: 20%;
+                &:hover {
+                    background-color: var(--color-primary);
                 }
             }
 
-            .switch-form-button, .guest-login-button {
-                margin: var(--spacing) 0;
-                padding: 0.8em 0.2em;
+            .guest-login-button {
+                margin-top: 1em;
+                margin-bottom: 0.2em;
+                padding: 0.8em .3em;
+            }
 
-                .label {
-                    font-size: 1.1em;
-                }
+            .switch-form-button {
+                padding: 0.8em .3em;
             }
         }
     }
