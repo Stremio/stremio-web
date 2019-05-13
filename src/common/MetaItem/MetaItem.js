@@ -23,7 +23,7 @@ const MetaItem = React.memo(({ className, menuClassName, id, type, posterShape =
         setMenuOpen(false);
     }, []);
     const onContextMenu = React.useCallback((event) => {
-        if (menuRef.current !== null && !menuOpen) {
+        if (menuRef.current !== null && !menuOpen && !event.ctrlKey) {
             event.preventDefault();
             menuRef.current.open();
         }
