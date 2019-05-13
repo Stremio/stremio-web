@@ -63,7 +63,7 @@ const MetaItem = React.memo(({ className, menuClassName, id, type, posterShape =
                                         <Popup.Label>
                                             <Icon className={classnames(styles['menu-icon'], { 'active': menuOpen })} icon={'ic_more'} />
                                         </Popup.Label>
-                                        <Popup.Menu className={classnames(menuClassName, styles['menu-container'])}>
+                                        <Popup.Menu className={classnames(menuClassName, styles['menu-container'])} tabIndex={-1}>
                                             <div className={styles['menu-items-container']}>
                                                 {menuOptions.map(({ label, type }) => (
                                                     <Input key={type} className={styles['menu-item']} type={'button'} data-meta-item-id={id} data-menu-option-type={type} onClick={menuOptionOnSelect}>{label}</Input>
