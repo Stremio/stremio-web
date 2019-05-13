@@ -38,9 +38,9 @@
         background-color: var(--color-background);
 
         .user-info {
-            display: grid;
             width: 100%;
             height: 6em;
+            display: grid;
             grid-template-columns: 6em 1fr;
             grid-template-rows: 50% 50%;
             grid-template-areas:
@@ -80,13 +80,14 @@
 
                 &:hover {
                     color: var(--color-surfacelighter);
+                    text-decoration: underline;
                 }
             }
 
             .email-container, .login-logout-button {
                 .user-info-label {
                     flex: 1;
-                    max-height: 100%;
+                    max-height: 2.2em;
                     line-height: 1.1em;
                     word-break: break-all;
                     overflow: hidden;
@@ -107,28 +108,29 @@
                 cursor: pointer;
 
                 &:hover {
-                    background-color: var(--color-backgroundlighter);
+                    background-color: var(--color-surfacedarker60);
                 }
 
                 .option-icon {
+                    flex: none;
                     width: 4em;
                     height: 4em;
                     padding: 1.3em;
                     fill: var(--color-secondarylight);
+
+                    &+.option-label {
+                        padding-left: 0;
+                    }
                 }
 
                 .option-label {
                     flex: 1;
-                    padding-right: 1.3em;
+                    padding: 0 1.3em;
                     max-height: 2.2em;
                     line-height: 1.1em;
                     color: var(--color-surfacelighter);
                     word-break: break-all;
                     overflow: hidden;
-
-                    &:only-child {
-                        padding-left: 1.3em;
-                    }
                 }
             }
         }
