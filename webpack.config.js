@@ -48,7 +48,26 @@ module.exports = {
                         options: {
                             ident: 'postcss-id',
                             plugins: () => [
-                                require('autoprefixer')()
+                                require('cssnano')({
+                                    preset: ['advanced', {
+                                        autoprefixer: true,
+                                        calc: false,
+                                        convertValues: false,
+                                        discardComments: {
+                                            removeAll: true,
+                                        },
+                                        discardOverridden: false,
+                                        mergeIdents: false,
+                                        normalizeDisplayValues: false,
+                                        normalizePositions: false,
+                                        normalizeRepeatStyle: false,
+                                        normalizeUnicode: false,
+                                        normalizeUrl: false,
+                                        reduceIdents: false,
+                                        reduceInitial: false,
+                                        zindex: false
+                                    }]
+                                })
                             ]
                         }
                     },
@@ -57,7 +76,6 @@ module.exports = {
                         options: {
                             strictMath: true,
                             noIeCompat: true,
-                            compress: true,
                             paths: [
                                 path.resolve(__dirname, 'node_modules/stremio-colors'),
                                 path.resolve(__dirname, 'src/common')
