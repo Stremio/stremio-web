@@ -1,16 +1,17 @@
 const React = require('react');
+const classnames = require('classnames');
 const PropTypes = require('prop-types');
 const NavBarButton = require('./NavBarButton');
 const SearchBar = require('./SearchBar');
 const UserMenu = require('./UserMenu');
 const styles = require('./styles');
 
-const NavBar = React.memo(({ backButton, tabs, title, searchBar, userMenu }) => {
+const NavBar = React.memo(({ className, backButton, tabs, title, searchBar, userMenu }) => {
     const onBackButtonClick = React.useCallback(() => {
         window.history.back();
     }, []);
     return (
-        <nav className={styles['nav-bar']}>
+        <nav className={classnames(className, styles['nav-bar'])}>
             {
                 backButton ?
                     <NavBarButton
@@ -61,6 +62,7 @@ const NavBar = React.memo(({ backButton, tabs, title, searchBar, userMenu }) => 
 NavBar.displayName = 'NavBar';
 
 NavBar.propTypes = {
+    className: PropTypes.string,
     backButton: PropTypes.bool,
     tabs: PropTypes.arrayOf(PropTypes.exact({
         icon: PropTypes.string.isRequired,
