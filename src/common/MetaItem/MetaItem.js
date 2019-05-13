@@ -14,17 +14,24 @@ const ICON_FOR_TYPE = Object.freeze({
 });
 
 const MetaItem = React.memo(({ className, menuClassName, id, type, posterShape = 'square', poster = '', title = '', subtitle = '', progress = 0, menuOptions = [], onClick, menuOptionOnSelect }) => {
-    const [menuPopupOpen, setMenuPopupOpen] = React.useState(false);
-    const onMenuPopupOpen = React.useCallback(() => {
-        setMenuPopupOpen(true);
+    const menuRef = React.useRef(null);
+    const [menuOpen, setMenuOpen] = React.useState(false);
+    const onMenuOpen = React.useCallback(() => {
+        setMenuOpen(true);
     }, []);
-    const onMenuPopupClose = React.useCallback(() => {
-        setMenuPopupOpen(false);
+    const onMenuClose = React.useCallback(() => {
+        setMenuOpen(false);
     }, []);
+    const onContextMenu = React.useCallback((event) => {
+        if (menuRef.current !== null) {
+            event.preventDefault();
+            menuRef.current.open();
+        }
+    }, [menuRef.current]);
     const placeholderIcon = ICON_FOR_TYPE[type] || 'ic_movies';
 
     return (
-        <Input className={classnames(className, styles['meta-item-container'], styles[`poster-shape-${posterShape}`])} type={'button'} data-meta-item-id={id} onClick={onClick}>
+        <Input className={classnames(className, styles['meta-item-container'], styles[`poster-shape-${posterShape}`])} type={'button'} data-meta-item-id={id} onClick={onClick} onContextMenu={onContextMenu}>
             <div className={styles['poster-image-container']}>
                 <div className={styles['placeholder-image-container']}>
                     <Icon className={styles['placeholder-image']} icon={placeholderIcon} />
@@ -52,9 +59,9 @@ const MetaItem = React.memo(({ className, menuClassName, id, type, posterShape =
                             <div className={styles['title']}>{title}</div>
                             {
                                 menuOptions.length > 0 ?
-                                    <Popup onOpen={onMenuPopupOpen} onClose={onMenuPopupClose}>
+                                    <Popup ref={menuRef} onOpen={onMenuOpen} onClose={onMenuClose}>
                                         <Popup.Label>
-                                            <Icon className={classnames(styles['menu-icon'], { 'active': menuPopupOpen })} icon={'ic_more'} />
+                                            <Icon className={classnames(styles['menu-icon'], { 'active': menuOpen })} icon={'ic_more'} />
                                         </Popup.Label>
                                         <Popup.Menu className={classnames(menuClassName, styles['menu-container'])}>
                                             <div className={styles['menu-items-container']}>
