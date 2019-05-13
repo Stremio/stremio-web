@@ -8,7 +8,7 @@ const useLocationHash = require('../../useLocationHash');
 const styles = require('./styles');
 
 const SearchBar = React.memo(({ className }) => {
-    const searchInputRef = React.useRef();
+    const searchInputRef = React.useRef(null);
     const locationHash = useLocationHash();
     const focusable = useFocusable();
     const [active, query] = React.useMemo(() => {
@@ -28,10 +28,10 @@ const SearchBar = React.memo(({ className }) => {
         window.location.replace(`#/search?q=${searchInputRef.current.value}`);
     }, [searchInputRef.current]);
     React.useEffect(() => {
-        if (active && focusable && searchInputRef.current) {
+        if (active && focusable && searchInputRef.current !== null) {
             searchInputRef.current.focus();
         }
-    }, [query, active, focusable, searchInputRef.current]);
+    }, [query, active, focusable]);
     return (
         <label className={classnames(className, styles['search-label'], { 'active': active })}>
             <Input
