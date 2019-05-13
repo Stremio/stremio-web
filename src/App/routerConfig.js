@@ -18,6 +18,10 @@ const views = [
         {
             path: '/discover/:type?/:sort?/:genre?',
             component: Discover
+        },
+        {
+            path: '/library/:type?/:sort?/:genre?',
+            component: Library
         }
     ],
     [
