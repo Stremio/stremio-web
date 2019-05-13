@@ -27,7 +27,7 @@ const MetaItem = React.memo(({ className, menuClassName, id, type, posterShape =
             event.preventDefault();
             menuRef.current.open();
         }
-    }, [menuRef.current]);
+    }, []);
     const placeholderIcon = ICON_FOR_TYPE[type] || 'ic_movies';
 
     return (
