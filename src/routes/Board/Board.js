@@ -78,11 +78,11 @@ class Board extends React.PureComponent {
                                 <div className={classnames(styles['board-row'], styles['continue-watching-row'])}>
                                     <div className={styles['meta-items-container']}>
                                         {this.props.groups[0].items.map((item) => (
-                                            <MetaItem.default
+                                            <MetaItem
                                                 {...item}
                                                 key={item.id}
                                                 className={classnames(styles['meta-item'], styles[`poster-shape-${item.posterShape === 'landscape' ? 'square' : item.posterShape}`])}
-                                                modalContainerClassName={styles['modal-container']}
+                                                menuClassName={styles['menu-container']}
                                                 posterShape={item.posterShape === 'landscape' ? 'square' : item.posterShape}
                                                 menuOptions={CONTINUE_WATCHING_MENU}
                                                 menuOptionOnSelect={this.menuOptionOnSelect}
@@ -98,7 +98,7 @@ class Board extends React.PureComponent {
                                             <div key={group.id} className={classnames(styles['board-row'], styles['addon-catalog-row'])}>
                                                 <div className={styles['meta-items-container']}>
                                                     {group.items.map((item, _, metaItems) => (
-                                                        <MetaItem.default
+                                                        <MetaItem
                                                             {...item}
                                                             key={item.id}
                                                             className={classnames(styles['meta-item'], styles[`poster-shape-${metaItems[0].posterShape}`])}
