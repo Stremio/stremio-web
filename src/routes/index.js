@@ -1,15 +1,15 @@
-import Addons from './Addons';
-import Board from './Board';
-import Discover from './Discover';
-import Library from './Library';
-import Calendar from './Calendar';
-import Search from './Search';
-import Settings from './Settings';
-import Player from './Player';
-import Detail from './Detail';
-import Intro from './Intro';
+const Addons = require('./Addons');
+const Board = require('./Board');
+const Discover = require('./Discover');
+const Library = require('./Library');
+const Calendar = require('./Calendar');
+const Search = require('./Search');
+const Settings = require('./Settings');
+const Player = require('./Player');
+const Detail = require('./Detail');
+const Intro = require('./Intro');
 
-export {
+module.exports = {
     Addons,
     Board,
     Discover,
