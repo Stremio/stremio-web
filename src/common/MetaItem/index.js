@@ -1,3 +1,3 @@
-import MetaItem from './MetaItem';
+const MetaItem = require('./MetaItem');
 
-export default MetaItem;
+module.exports = MetaItem;

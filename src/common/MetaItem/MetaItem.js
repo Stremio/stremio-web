@@ -1,164 +1,107 @@
-import React, { Component, Fragment } from 'react';
-import PropTypes from 'prop-types';
-import classnames from 'classnames';
-import Popup from '../Popup';
-import { Input } from 'stremio-navigation';
-import Icon from 'stremio-icons/dom';
-import styles from './styles';
+const React = require('react');
+const PropTypes = require('prop-types');
+const classnames = require('classnames');
+const { Input } = require('stremio-navigation');
+const Icon = require('stremio-icons/dom');
+const Popup = require('../Popup');
+const styles = require('./styles');
 
-class MetaItem extends Component {
-    constructor(props) {
-        super(props);
+const ICON_FOR_TYPE = Object.freeze({
+    'movie': 'ic_movies',
+    'series': 'ic_series',
+    'channel': 'ic_channels',
+    'tv': 'ic_tv'
+});
 
-        this.state = {
-            menuPopupOpen: false
-        };
-    }
+const MetaItem = React.memo(({ className, menuClassName, id, type, posterShape = 'square', poster = '', title = '', subtitle = '', progress = 0, menuOptions = [], onClick, menuOptionOnSelect }) => {
+    const [menuPopupOpen, setMenuPopupOpen] = React.useState(false);
+    const onMenuPopupOpen = React.useCallback(() => {
+        setMenuPopupOpen(true);
+    }, []);
+    const onMenuPopupClose = React.useCallback(() => {
+        setMenuPopupOpen(false);
+    }, []);
+    const placeholderIcon = ICON_FOR_TYPE[type] || 'ic_movies';
 
-    shouldComponentUpdate(nextProps, nextState) {
-        return nextState.menuPopupOpen !== this.state.menuPopupOpen ||
-            nextProps.className !== this.props.className ||
-            nextProps.modalContainerClassName !== this.props.modalContainerClassName ||
-            nextProps.id !== this.props.id ||
-            nextProps.type !== this.props.type ||
-            nextProps.posterShape !== this.props.posterShape ||
-            nextProps.poster !== this.props.poster ||
-            nextProps.title !== this.props.title ||
-            nextProps.subtitle !== this.props.subtitle ||
-            nextProps.progress !== this.props.progress ||
-            nextProps.released !== this.props.released ||
-            nextProps.menuOptions !== this.props.menuOptions;
-    }
-
-    onMenuPopupOpen = () => {
-        this.setState({ menuPopupOpen: true });
-    }
-
-    onMenuPopupClose = () => {
-        this.setState({ menuPopupOpen: false });
-    }
-
-    onClick = (event) => {
-        if (typeof this.props.onClick === 'function') {
-            this.props.onClick(event);
-        }
-    }
-
-    menuOptionOnSelect = (event) => {
-        if (typeof this.props.menuOptionOnSelect === 'function') {
-            this.props.menuOptionOnSelect(event);
-        }
-    }
-
-    renderProgress() {
-        if (this.props.progress <= 0) {
-            return null;
-        }
-
-        return (
-            <div className={styles['progress-bar-container']}>
-                <div className={styles['progress']} style={{ width: `${Math.min(this.props.progress, 1) * 100}%` }} />
-            </div>
-        );
-    }
-
-    renderPoster() {
-        const placeholderIcon = this.props.type === 'tv' ? 'ic_tv'
-            : this.props.type === 'series' ? 'ic_series'
-                : this.props.type === 'channel' ? 'ic_channels'
-                    : 'ic_movies';
-        return (
+    return (
+        <Input className={classnames(className, styles['meta-item-container'], styles[`poster-shape-${posterShape}`])} type={'button'} data-meta-item-id={id} onClick={onClick}>
             <div className={styles['poster-image-container']}>
                 <div className={styles['placeholder-image-container']}>
                     <Icon className={styles['placeholder-image']} icon={placeholderIcon} />
                 </div>
-                <div className={styles['poster-image']} style={{ backgroundImage: `url('${this.props.poster}')` }} />
+                <div className={styles['poster-image']} style={{ backgroundImage: `url('${poster}')` }} />
                 <svg className={styles['play-icon-container']} viewBox={'0 0 100 100'}>
                     <circle className={styles['play-icon-background']} cx={'50'} cy={'50'} r={'50'} />
-                    <svg className={styles['play-icon']} x={0} y={25} width={100} height={50} viewBox={'0 0 37.14 32'}>
+                    <svg className={styles['play-icon']} x={'0'} y={'25'} width={'100'} height={'50'} viewBox={'0 0 37.14 32'}>
                         <path d={'M 9.14,0 37.14,16 9.14,32 Z'} />
                     </svg>
                 </svg>
-                {this.renderProgress()}
-            </div>
-        );
-    }
-
-    renderInfoBar() {
-        if (this.props.title.length === 0 && this.props.subtitle.length === 0 && this.props.menuOptions.length === 0) {
-            return null;
-        }
-
-        return (
-            <Fragment>
-                <div className={styles['title-bar-container']}>
-                    <div className={styles['title']}>{this.props.title}</div>
-                    {
-                        this.props.menuOptions.length > 0 ?
-                            <Popup modalContainerClassName={classnames(styles['menu-popup-container'], this.props.modalContainerClassName)} onOpen={this.onMenuPopupOpen} onClose={this.onMenuPopupClose}>
-                                <Popup.Label>
-                                    <Icon className={classnames(styles['menu-icon'], { 'active': this.state.menuPopupOpen })} icon={'ic_more'} />
-                                </Popup.Label>
-                                <Popup.Menu>
-                                    <div className={styles['menu-items-container']}>
-                                        {this.props.menuOptions.map(({ label, type }) => (
-                                            <Input key={type} className={styles['menu-item']} type={'button'} data-meta-item-id={this.props.id} data-menu-option-type={type} onClick={this.menuOptionOnSelect}>{label}</Input>
-                                        ))}
-                                    </div>
-                                </Popup.Menu>
-                            </Popup>
-                            :
-                            null
-                    }
-                </div>
                 {
-                    this.props.subtitle.length > 0 ?
-                        <div className={styles['title-bar-container']}>
-                            <div className={styles['title']}>{this.props.subtitle}</div>
+                    progress > 0 ?
+                        <div className={styles['progress-bar-container']}>
+                            <div className={styles['progress']} style={{ width: `${Math.min(progress, 1) * 100}%` }} />
                         </div>
                         :
                         null
                 }
-            </Fragment>
-        );
-    }
+            </div>
+            {
+                title.length > 0 || subtitle.length > 0 || menuOptions.length > 0 ?
+                    <React.Fragment>
+                        <div className={styles['title-bar-container']}>
+                            <div className={styles['title']}>{title}</div>
+                            {
+                                menuOptions.length > 0 ?
+                                    <Popup onOpen={onMenuPopupOpen} onClose={onMenuPopupClose}>
+                                        <Popup.Label>
+                                            <Icon className={classnames(styles['menu-icon'], { 'active': menuPopupOpen })} icon={'ic_more'} />
+                                        </Popup.Label>
+                                        <Popup.Menu className={classnames(menuClassName, styles['menu-container'])}>
+                                            <div className={styles['menu-items-container']}>
+                                                {menuOptions.map(({ label, type }) => (
+                                                    <Input key={type} className={styles['menu-item']} type={'button'} data-meta-item-id={id} data-menu-option-type={type} onClick={menuOptionOnSelect}>{label}</Input>
+                                                ))}
+                                            </div>
+                                        </Popup.Menu>
+                                    </Popup>
+                                    :
+                                    null
+                            }
+                        </div>
+                        {
+                            subtitle.length > 0 ?
+                                <div className={styles['title-bar-container']}>
+                                    <div className={styles['title']}>{subtitle}</div>
+                                </div>
+                                :
+                                null
+                        }
+                    </React.Fragment>
+                    :
+                    null
+            }
+        </Input>
+    );
+});
 
-    render() {
-        return (
-            <Input className={classnames(styles['meta-item-container'], styles[`poster-shape-${this.props.posterShape}`], this.props.className)} type={'button'} data-meta-item-id={this.props.id} onClick={this.onClick}>
-                {this.renderPoster()}
-                {this.renderInfoBar()}
-            </Input>
-        );
-    }
-}
+MetaItem.displayName = 'MetaItem';
 
 MetaItem.propTypes = {
     className: PropTypes.string,
-    modalContainerClassName: PropTypes.string,
-    onClick: PropTypes.func,
-    menuOptionOnSelect: PropTypes.func,
+    menuClassName: PropTypes.string,
     id: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
-    posterShape: PropTypes.oneOf(['poster', 'landscape', 'square']).isRequired,
-    poster: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
-    subtitle: PropTypes.string.isRequired,
-    progress: PropTypes.number.isRequired,
-    released: PropTypes.instanceOf(Date).isRequired,
+    posterShape: PropTypes.oneOf(['poster', 'landscape', 'square']),
+    poster: PropTypes.string,
+    title: PropTypes.string,
+    subtitle: PropTypes.string,
+    progress: PropTypes.number,
     menuOptions: PropTypes.arrayOf(PropTypes.shape({
         label: PropTypes.string.isRequired,
         type: PropTypes.string.isRequired
-    })).isRequired
-};
-MetaItem.defaultProps = {
-    posterShape: 'square',
-    poster: '',
-    title: '',
-    subtitle: '',
-    progress: 0,
-    released: new Date(NaN),
-    menuOptions: Object.freeze([])
+    })),
+    onClick: PropTypes.func,
+    menuOptionOnSelect: PropTypes.func
 };
 
-export default MetaItem;
+module.exports = MetaItem;
