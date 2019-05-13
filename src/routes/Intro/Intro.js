@@ -184,7 +184,7 @@ class Intro extends React.Component {
         return (
             <div className={styles['intro-container']}>
                 <div className={styles['background-overlay']} />
-                <div className={styles['scroll-content']}>
+                <div className={styles['intro-content']} tabIndex={-1}>
                     <div className={styles['form-container']}>
                         <Input className={classnames(styles['login-form-button'], styles['facebook-button'], 'focusable-with-border')} type={'button'} onClick={this.loginWithFacebook}>
                             <Icon className={styles['icon']} icon={'ic_facebook'} />
