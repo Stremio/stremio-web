@@ -1,3 +1,3 @@
-import Library from './Library';
+const Library = require('./Library');
 
-export default Library;
+module.exports = Library;
