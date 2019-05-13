@@ -1,3 +1,3 @@
-import Discover from './Discover';
+const Discover = require('./Discover');
 
-export default Discover;
+module.exports = Discover;
