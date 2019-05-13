@@ -240,7 +240,7 @@ class Popup extends React.Component {
             <Modal>
                 <div className={classnames(styles['modal-container'], menuElement.props.className)} onClick={this.modalBackgroundOnClick}>
                     <div ref={this.menuContainerRef} className={styles['menu-container']} onClick={this.menuContainerOnClick}>
-                        <div ref={this.menuScrollRef} className={styles['menu-scroll-container']}>
+                        <div ref={this.menuScrollRef} className={styles['menu-scroll-container']} tabIndex={menuElement.props.tabIndex}>
                             <div ref={this.menuChildrenRef}>
                                 {menuElement.props.children}
                             </div>
