@@ -1,4 +1,11 @@
 .library-container {
-    background-color: var(--color-background);
     height: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-background);
+
+    .library-content {
+        flex: 1;
+        align-self: stretch;
+    }
 }

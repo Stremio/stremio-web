@@ -5,7 +5,7 @@ const styles = require('./styles');
 class Library extends React.Component {
     render() {
         return (
-            <React.Fragment>
+            <div className={styles['library-container']}>
                 <NavBar
                     backButton={false}
                     tabs={[
@@ -17,8 +17,8 @@ class Library extends React.Component {
                     searchBar={true}
                     userMenu={true}
                 />
-                <div className={styles['library-container']} />
-            </React.Fragment>
+                <div className={styles['library-content']} />
+            </div>
         );
     }
 }
