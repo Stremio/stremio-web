@@ -56,8 +56,9 @@ class Board extends React.PureComponent {
 
     render() {
         return (
-            <React.Fragment>
+            <div className={styles['board-container']}>
                 <NavBar
+                    className={styles['nav-bar']}
                     backButton={false}
                     tabs={[
                         { label: 'Board', icon: 'ic_board', href: '#/' },
@@ -68,7 +69,7 @@ class Board extends React.PureComponent {
                     searchBar={true}
                     userMenu={true}
                 />
-                <div className={styles['board-container']} tabIndex={-1}>
+                <div className={styles['board-content']} tabIndex={-1}>
                     {
                         this.props.groups.length === 0 ?
                             this.renderMetaItemPlaceholders()
@@ -115,7 +116,7 @@ class Board extends React.PureComponent {
                             </React.Fragment>
                     }
                 </div>
-            </React.Fragment>
+            </div>
         );
     }
 }
