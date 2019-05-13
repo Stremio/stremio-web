@@ -1,5 +1,5 @@
 .search-label {
-    display: flex;
+    display: inline-flex;
     flex-direction: row;
     align-items: stretch;
     background-color: var(--color-secondary60);
@@ -31,6 +31,7 @@
     }
 
     .submit-button {
+        flex: none;
         width: var(--nav-bar-height);
         height: var(--nav-bar-height);
         display: flex;
@@ -41,6 +42,7 @@
         cursor: pointer;
 
         .submit-icon {
+            flex: none;
             width: 1.1em;
             height: 1.1em;
             fill: var(--color-surfacelighter);
