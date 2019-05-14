@@ -63,12 +63,13 @@
                 }
 
                 .label {
+                    max-width: 100%;
                     padding: 0.3em 0;
                     font-size: 1.1em;
                     line-height: 1.2em;
                     font-weight: 600;
                     color: var(--color-surfacelighter);
-                    overflow: hidden;
+                    word-wrap: break-word;
                 }
             }
 
@@ -91,6 +92,7 @@
                 margin-bottom: 2em;
                 text-align: center;
                 color: var(--color-surface);
+                word-wrap: break-word;
             }
 
             .text-input {
@@ -120,9 +122,11 @@
                 text-align: right;
 
                 .forgot-password-link {
+                    max-width: 100%;
                     display: inline-block;
                     padding: 0.5em 0.3em;
                     color: var(--color-surfacelight);
+                    word-wrap: break-word;
                     cursor: pointer;
 
                     &:hover, &:focus {
@@ -140,6 +144,7 @@
                 margin: 1em 0;
                 text-align: center;
                 color: var(--color-signal1);
+                word-wrap: break-word;
             }
 
             .submit-button {
