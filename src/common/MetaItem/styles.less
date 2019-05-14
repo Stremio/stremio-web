@@ -7,11 +7,56 @@
     background-color: var(--color-backgroundlight);
     cursor: pointer;
 
+    &.poster-shape-square {
+        .poster-image-container::before {
+            display: block;
+            padding-top: 100%;
+            content: "";
+        }
+    }
+
+    &.poster-shape-landscape {
+        .poster-image-container::before {
+            display: block;
+            padding-top: calc(100% * var(--landscape-shape-ratio));
+            content: "";
+        }
+    }
+
+    &.poster-shape-poster {
+        .poster-image-container::before {
+            display: block;
+            padding-top: calc(100% * var(--poster-shape-ratio));
+            content: "";
+        }
+    }
+
+    &:hover, &:focus {
+        &::after {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 1;
+            display: block;
+            pointer-events: none;
+            border: var(--focusable-border-size) solid var(--color-surfacelighter);
+            content: "";
+        }
+
+        .poster-image-container {
+            .poster-image {
+                filter: brightness(120%);
+            }
+        }
+    }
+
     .poster-image-container {
         position: relative;
         z-index: 0;
 
-        .placeholder-image-container {
+        .placeholder-image-layer {
             position: absolute;
             top: 25%;
             right: 10%;
@@ -26,35 +71,46 @@
             }
         }
 
-        .poster-image {
+        .poster-image-layer {
             position: absolute;
             top: 0;
             right: 0;
             bottom: 0;
             left: 0;
             z-index: 1;
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-position: center;
-            background-origin: border-box;
+
+            .poster-image {
+                width: 100%;
+                height: 100%;
+                background-size: cover;
+                background-repeat: no-repeat;
+                background-position: center;
+                background-origin: border-box;
+            }
         }
 
-        .play-icon-container {
+        .play-icon-layer {
             position: absolute;
             top: 30%;
-            width: 100%;
-            height: 40%;
+            right: 0;
+            bottom: 30%;
+            left: 0;
             z-index: 2;
-            overflow: visible;
-            visibility: var(--play-icon-visibility, collapse);
-            filter: drop-shadow(0 0 0.5em var(--color-backgroundlight));
 
-            .play-icon-background {
-                fill: var(--color-surfacelighter);
-            }
+            .play-icon-container {
+                width: 100%;
+                height: 100%;
+                overflow: visible;
+                visibility: var(--play-icon-visibility, collapse);
+                filter: drop-shadow(0 0 0.5em var(--color-backgroundlight));
 
-            .play-icon {
-                fill: var(--color-primary);
+                .play-icon-background {
+                    fill: var(--color-surfacelighter);
+                }
+
+                .play-icon {
+                    fill: var(--color-primary);
+                }
             }
         }
 
@@ -72,93 +128,41 @@
                 background-color: var(--color-primary);
             }
         }
-
-        &:before {
-            content: "";
-            display: block;
-        }
     }
 
     .title-bar-container {
-        height: 3em;
+        height: 2.5em;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
         overflow: hidden;
 
         .title {
-            display: inline-block;
-            width: calc(100% - 3em);
-            height: 3em;
+            flex: 1;
+            max-height: 2.2em;
             padding: 0 0.5em;
-            line-height: 3em;
+            line-height: 1.1em;
             color: var(--color-surfacelighter);
-            overflow: hidden;
             word-break: break-all;
+            overflow: hidden;
         }
 
         .menu-icon {
-            display: inline-block;
-            width: 3em;
-            height: 3em;
-            padding: 0.8em;
+            flex: none;
+            width: 2.5em;
+            height: 2.5em;
+            padding: 0.6em 0;
             fill: var(--color-surfacelighter);
 
             &:hover, &:global(.active) {
-                background-color: var(--color-backgroundlighter);
+                background-color: var(--color-surfacedarker);
             }
-        }
-    }
-
-    &.poster-shape-square {
-        .poster-image-container:before {
-            padding-top: 100%;
-        }
-    }
-
-    &.poster-shape-landscape {
-        .poster-image-container:before {
-            padding-top: calc(100% * var(--landscape-shape-ratio));
-        }
-    }
-
-    &.poster-shape-poster {
-        .poster-image-container:before {
-            padding-top: calc(100% * var(--poster-shape-ratio));
-        }
-    }
-
-    &::after {
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        z-index: 1;
-        display: block;
-        pointer-events: none;
-        border: var(--focusable-border-size) solid transparent;
-        content: "";
-    }
-
-    &:hover, &:focus {
-        .poster-image-container {
-            .placeholder-image-container {
-                .placeholder-image {
-                    fill: var(--color-surfacelighter);
-                }
-            }
-
-            .poster-image {
-                filter: brightness(120%);
-            }
-        }
-
-        &::after {
-            border-color: var(--color-surfacelighter);
         }
     }
 }
 
 .menu-container {
-    --box-shadow: 0 0 1.5em .2em var(--color-backgroundlight);
+    --box-shadow: -0.6em .6em .5em -0.1em var(--color-backgrounddark40);
 
     .menu-items-container {
         min-width: 8em;
@@ -166,10 +170,11 @@
         background-color: var(--color-surfacelighter);
 
         .menu-item {
+            width: 100%;
             font-size: 1.2em;
             padding: 0.5em;
-            width: 100%;
             color: var(--color-backgrounddarker);
+            word-break: break-all;
             cursor: pointer;
 
             &:hover, &:focus {

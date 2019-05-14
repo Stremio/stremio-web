@@ -33,16 +33,20 @@ const MetaItem = React.memo(({ className, menuClassName, id, type, posterShape =
     return (
         <Input className={classnames(className, styles['meta-item-container'], styles[`poster-shape-${posterShape}`])} title={title} type={'button'} data-meta-item-id={id} onClick={onClick} onContextMenu={onContextMenu}>
             <div className={styles['poster-image-container']}>
-                <div className={styles['placeholder-image-container']}>
+                <div className={styles['placeholder-image-layer']}>
                     <Icon className={styles['placeholder-image']} icon={placeholderIcon} />
                 </div>
-                <div className={styles['poster-image']} style={{ backgroundImage: `url('${poster}')` }} />
-                <svg className={styles['play-icon-container']} viewBox={'0 0 100 100'}>
-                    <circle className={styles['play-icon-background']} cx={'50'} cy={'50'} r={'50'} />
-                    <svg className={styles['play-icon']} x={'0'} y={'25'} width={'100'} height={'50'} viewBox={'0 0 37.14 32'}>
-                        <path d={'M 9.14,0 37.14,16 9.14,32 Z'} />
+                <div className={styles['poster-image-layer']}>
+                    <div className={styles['poster-image']} style={{ backgroundImage: `url('${poster}')` }} />
+                </div>
+                <div className={styles['play-icon-layer']}>
+                    <svg className={styles['play-icon-container']} viewBox={'0 0 100 100'}>
+                        <circle className={styles['play-icon-background']} cx={'50'} cy={'50'} r={'50'} />
+                        <svg className={styles['play-icon']} x={'0'} y={'25'} width={'100'} height={'50'} viewBox={'0 0 37.14 32'}>
+                            <path d={'M 9.14,0 37.14,16 9.14,32 Z'} />
+                        </svg>
                     </svg>
-                </svg>
+                </div>
                 {
                     progress > 0 ?
                         <div className={styles['progress-bar-container']}>
