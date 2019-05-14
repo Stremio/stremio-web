@@ -50,7 +50,12 @@ module.exports = {
                             plugins: () => [
                                 require('cssnano')({
                                     preset: ['advanced', {
-                                        autoprefixer: true,
+                                        autoprefixer: {
+                                            add: true,
+                                            remove: true,
+                                            flexbox: true,
+                                            grid: 'autoplace'
+                                        },
                                         calc: false,
                                         convertValues: false,
                                         discardComments: {
