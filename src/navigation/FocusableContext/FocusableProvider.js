@@ -15,6 +15,7 @@ class FocusableProvider extends React.Component {
     }
 
     componentDidMount() {
+        this.focusContentContainer();
         this.onModalsContainerDomTreeChange();
         this.modalsContainerDomTreeObserver.observe(this.props.modalsContainer, {
             childList: true
@@ -32,11 +33,8 @@ class FocusableProvider extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevState.focusable && !this.state.focusable) {
-            const focusedElement = this.contentRef.current.querySelector(':focus');
-            if (focusedElement !== null) {
-                focusedElement.blur();
-            }
+        if (prevState.focusable !== this.state.focusable) {
+            this.focusContentContainer();
         }
 
         if (prevProps.modalsContainer !== this.props.modalsContainer) {
@@ -46,6 +44,14 @@ class FocusableProvider extends React.Component {
                 childList: true
             });
         }
+    }
+
+    focusContentContainer = () => {
+        if (!this.state.focusable || this.contentRef.current.hidden) {
+            return;
+        }
+
+        this.contentRef.current.focus();
     }
 
     onModalsContainerDomTreeChange = () => {
@@ -59,7 +65,7 @@ class FocusableProvider extends React.Component {
     render() {
         return (
             <FocusableContext.Provider value={this.state.focusable}>
-                {React.cloneElement(React.Children.only(this.props.children), { ref: this.contentRef })}
+                {React.cloneElement(React.Children.only(this.props.children), { ref: this.contentRef, tabIndex: -1 })}
             </FocusableContext.Provider>
         );
     }
