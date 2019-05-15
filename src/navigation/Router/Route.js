@@ -10,7 +10,7 @@ const Route = ({ children }) => {
     }, []);
     return (
         <div className={styles['route-container']}>
-            <ModalsContainerProvider modalsContainerClassName={styles['modals-container']}>
+            <ModalsContainerProvider containerClassName={styles['modals-container']}>
                 <FocusableProvider onModalsContainerDomTreeChange={onModalsContainerDomTreeChange}>
                     <div className={styles['route-content']}>
                         {children}
