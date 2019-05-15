@@ -5,66 +5,25 @@ const UrlUtils = require('url');
 const { RoutesContainerProvider } = require('../RoutesContainerContext');
 const Route = require('./Route');
 
-class Router extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.viewsConfig = props.viewsConfig.map((viewConfig) => {
+const Router = React.memo(({ className, homePath, onPathNotMatch, ...props }) => {
+    const viewsConfig = React.useMemo(() => {
+        return props.viewsConfig.map((viewConfig) => {
             return viewConfig.map(({ path, options, ...props }) => {
                 const keys = [];
-                const regexp = PathToRegexp(path, keys, {
-                    strict: false,
-                    sensitive: false,
-                    end: true,
-                    ...options
-                });
+                const regexp = PathToRegexp(path, keys, options);
                 return { path, keys, regexp, ...props };
             });
         });
-
-        this.state = {
-            views: Array(this.viewsConfig.length).fill({
-                path: null,
-                element: null
-            })
-        };
-    }
-
-    componentDidMount() {
-        if (typeof this.props.homePath === 'string') {
-            const { pathname, href } = this.locationHashPath();
-            if (pathname !== this.props.homePath) {
-                window.location.replace(`#${this.props.homePath}`);
-                const routeConfig = this.routeConfigForPath(pathname);
-                if (routeConfig !== null) {
-                    window.location = `#${href}`;
-                }
-            }
-        }
-
-        window.addEventListener('hashchange', this.onLocationHashChanged);
-        this.onLocationHashChanged();
-    }
-
-    componentWillUnmount() {
-        window.removeEventListener('hashchange', this.onLocationHashChanged);
-    }
-
-    shouldComponentUpdate(nextProps, nextState) {
-        return nextState.views !== this.state.views ||
-            nextProps.className !== this.props.className;
-    }
-
-    locationHashPath = () => {
-        const hashPath = window.location.hash.startsWith('#') ?
-            window.location.hash.slice(1)
-            :
-            '';
-        return UrlUtils.parse(hashPath);
-    }
-
-    routeConfigForPath = (path) => {
-        for (const viewConfig of this.viewsConfig) {
+    }, []);
+    const [views, setViews] = React.useState(() => {
+        return Array(viewsConfig.length).fill({
+            routeConfig: null,
+            queryParams: null,
+            urlParams: null
+        });
+    });
+    const routeConfigForPath = React.useCallback((path) => {
+        for (const viewConfig of viewsConfig) {
             for (const routeConfig of viewConfig) {
                 const match = routeConfig.regexp.exec(path);
                 if (match) {
@@ -74,61 +33,80 @@ class Router extends React.Component {
         }
 
         return null;
-    }
-
-    onLocationHashChanged = (event) => {
-        const { pathname, query } = this.locationHashPath();
-        const routeConfig = this.routeConfigForPath(pathname);
+    }, []);
+    const onLocationHashChanged = React.useCallback(() => {
+        const { pathname, query } = UrlUtils.parse(window.location.hash.slice(1));
+        const routeConfig = routeConfigForPath(pathname);
         if (routeConfig === null) {
-            if (typeof this.props.onPathNotMatch === 'function') {
-                this.props.onPathNotMatch(event);
-            } else if (typeof this.props.homePath === 'string') {
-                window.location.replace(`#${this.props.homePath}`);
+            if (typeof onPathNotMatch === 'function') {
+                onPathNotMatch();
             }
 
             return;
         }
 
-        const routeViewIndex = this.viewsConfig.findIndex((v) => v.includes(routeConfig));
+        const routeViewIndex = viewsConfig.findIndex((v) => v.includes(routeConfig));
         const match = routeConfig.regexp.exec(pathname);
         const queryParams = new URLSearchParams(query);
         const urlParams = routeConfig.keys.reduce((urlParams, key, index) => {
             urlParams[key.name] = match[index + 1];
             return urlParams;
         }, {});
-        this.setState(({ views }) => ({
-            views: views.map((view, index) => {
+        setViews((views) => {
+            return views.map((view, index) => {
                 if (index < routeViewIndex) {
                     return view;
                 } else if (index === routeViewIndex) {
                     return {
-                        path: routeConfig.path,
-                        element: React.createElement(routeConfig.component, { queryParams, urlParams })
+                        routeConfig,
+                        queryParams,
+                        urlParams
                     };
                 } else {
                     return {
-                        path: null,
-                        element: null
+                        routeConfig: null,
+                        queryParams: null,
+                        urlParams: null
                     };
                 }
-            })
-        }));
-    }
-
-    render() {
-        return (
-            <RoutesContainerProvider containerClassName={this.props.className}>
-                {
-                    this.state.views
-                        .filter(({ element }) => React.isValidElement(element))
-                        .map(({ path, element }) => (
-                            <Route key={path}>{element}</Route>
-                        ))
+            });
+        });
+    }, []);
+    React.useEffect(() => {
+        if (typeof homePath === 'string') {
+            const { pathname, path } = UrlUtils.parse(window.location.hash.slice(1));
+            if (homePath !== path) {
+                window.location.replace(`#${homePath}`);
+                const routeConfig = routeConfigForPath(pathname);
+                if (routeConfig !== null) {
+                    window.location = `#${path}`;
                 }
-            </RoutesContainerProvider>
-        );
-    }
-}
+            }
+        }
+
+        window.addEventListener('hashchange', onLocationHashChanged);
+        onLocationHashChanged();
+        return () => {
+            window.removeEventListener('hashchange', onLocationHashChanged);
+        };
+    }, []);
+
+    return (
+        <RoutesContainerProvider containerClassName={className}>
+            {
+                views
+                    .filter(({ routeConfig }) => routeConfig !== null)
+                    .map(({ routeConfig, queryParams, urlParams }) => (
+                        <Route key={routeConfig.path}>
+                            {React.createElement(routeConfig.component, { queryParams, urlParams })}
+                        </Route>
+                    ))
+            }
+        </RoutesContainerProvider>
+    );
+});
+
+Router.displayName = 'Router';
 
 Router.propTypes = {
     className: PropTypes.string,
