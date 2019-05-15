@@ -2,6 +2,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const PathToRegexp = require('path-to-regexp');
 const UrlUtils = require('url');
+const { RoutesContainerProvider } = require('../RoutesContainerContext');
 const Route = require('./Route');
 
 class Router extends React.Component {
@@ -116,7 +117,7 @@ class Router extends React.Component {
 
     render() {
         return (
-            <div className={this.props.className}>
+            <RoutesContainerProvider containerClassName={this.props.className}>
                 {
                     this.state.views
                         .filter(({ element }) => React.isValidElement(element))
@@ -124,7 +125,7 @@ class Router extends React.Component {
                             <Route key={path}>{element}</Route>
                         ))
                 }
-            </div>
+            </RoutesContainerProvider>
         );
     }
 }
