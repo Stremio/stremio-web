@@ -1,34 +1,41 @@
-.route-container {
+.router-container {
     position: relative;
     z-index: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
 
-    &:not(:last-child) {
-        display: none;
-    }
-
-    .route-content {
+    .route-container {
         position: absolute;
         top: 0;
         right: 0;
         bottom: 0;
         left: 0;
         z-index: 0;
-    }
+        overflow: hidden;
 
-    .modals-container {
-        width: 0;
-        height: 0;
+        &:not(:last-child) {
+            display: none;
+        }
 
-        >* {
+        .route-content {
             position: absolute;
             top: 0;
             right: 0;
             bottom: 0;
             left: 0;
-            z-index: 1;
+            z-index: 0;
+        }
+
+        .modals-container {
+            width: 0;
+            height: 0;
+
+            >* {
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                z-index: 1;
+            }
         }
     }
 }

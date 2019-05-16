@@ -1,9 +1,11 @@
 const React = require('react');
 const PropTypes = require('prop-types');
+const classnames = require('classnames');
 const PathToRegexp = require('path-to-regexp');
 const UrlUtils = require('url');
 const { RoutesContainerProvider } = require('../RoutesContainerContext');
 const Route = require('./Route');
+const styles = require('./styles');
 
 const Router = React.memo(({ className, homePath, ...props }) => {
     const onPathNotMatch = React.useRef(props.onPathNotMatch);
@@ -96,7 +98,7 @@ const Router = React.memo(({ className, homePath, ...props }) => {
     }, []);
 
     return (
-        <RoutesContainerProvider containerClassName={className}>
+        <RoutesContainerProvider containerClassName={classnames(className, styles['router-container'])}>
             {
                 views
                     .filter(({ routeConfig }) => routeConfig !== null)
