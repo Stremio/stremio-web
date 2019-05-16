@@ -8,12 +8,11 @@ const useLocationHash = require('../../useLocationHash');
 const styles = require('./styles');
 
 const SearchBar = React.memo(({ className }) => {
-    const searchInputRef = React.useRef(null);
     const locationHash = useLocationHash();
     const focusable = useFocusable();
+    const searchInputRef = React.useRef(null);
     const [active, query] = React.useMemo(() => {
-        const locationHashPath = locationHash.startsWith('#') ? locationHash.slice(1) : '';
-        const { pathname: locationPathname, search: locationSearch } = UrlUtils.parse(locationHashPath);
+        const { pathname: locationPathname, search: locationSearch } = UrlUtils.parse(locationHash.slice(1));
         const active = locationPathname === '/search';
         const queryParams = new URLSearchParams(locationSearch);
         const query = (active && queryParams.has('q')) ? queryParams.get('q') : '';
@@ -26,26 +25,26 @@ const SearchBar = React.memo(({ className }) => {
     }, [active]);
     const onQueryInputSubmit = React.useCallback(() => {
         window.location.replace(`#/search?q=${searchInputRef.current.value}`);
-    }, [searchInputRef.current]);
+    }, []);
     React.useEffect(() => {
-        if (active && focusable && searchInputRef.current !== null) {
+        if (active && focusable) {
             searchInputRef.current.focus();
         }
-    }, [query, active, focusable]);
+    }, [active, focusable]);
     return (
         <label className={classnames(className, styles['search-label'], { 'active': active })}>
             <Input
                 key={query}
                 ref={searchInputRef}
+                className={styles['search-input']}
+                defaultValue={query}
                 tabIndex={-1}
                 size={1}
-                className={styles['search-input']}
                 type={'text'}
                 placeholder={'Search'}
                 autoCorrect={'off'}
                 autoCapitalize={'off'}
                 spellCheck={false}
-                defaultValue={query}
                 onFocus={onQueryInputFocus}
                 onSubmit={onQueryInputSubmit}
             />
