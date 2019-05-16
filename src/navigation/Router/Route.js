@@ -5,16 +5,17 @@ const { ModalsContainerProvider } = require('../ModalsContainerContext');
 const styles = require('./styles');
 
 const Route = ({ children }) => {
-    const onModalsContainerDomTreeChange = React.useCallback(({ modalsContainerElement }) => {
-        return modalsContainerElement.childElementCount === 0;
+    const onRoutesContainerDomTreeChange = React.useCallback(({ routesContainer, contentContainer }) => {
+        return routesContainer.lastElementChild === contentContainer.parentElement;
+    }, []);
+    const onModalsContainerDomTreeChange = React.useCallback(({ modalsContainer }) => {
+        return modalsContainer.childElementCount === 0;
     }, []);
     return (
         <div className={styles['route-container']}>
             <ModalsContainerProvider containerClassName={styles['modals-container']}>
-                <FocusableProvider onModalsContainerDomTreeChange={onModalsContainerDomTreeChange}>
-                    <div className={styles['route-content']}>
-                        {children}
-                    </div>
+                <FocusableProvider onRoutesContainerDomTreeChange={onRoutesContainerDomTreeChange} onModalsContainerDomTreeChange={onModalsContainerDomTreeChange}>
+                    <div className={styles['route-content']}>{children}</div>
                 </FocusableProvider>
             </ModalsContainerProvider>
         </div>

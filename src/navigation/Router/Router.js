@@ -96,7 +96,6 @@ const Router = ({ className, homePath, ...props }) => {
             window.removeEventListener('hashchange', onLocationHashChanged);
         };
     }, []);
-
     return (
         <RoutesContainerProvider containerClassName={classnames(className, styles['router-container'])}>
             {

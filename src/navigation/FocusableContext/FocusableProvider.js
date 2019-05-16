@@ -1,90 +1,55 @@
 const React = require('react');
 const PropTypes = require('prop-types');
-const { withModalsContainer } = require('../ModalsContainerContext');
+const { useRoutesContainer } = require('../RoutesContainerContext');
+const { useModalsContainer } = require('../ModalsContainerContext');
 const FocusableContext = require('./FocusableContext');
 
-class FocusableProvider extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.contentRef = React.createRef();
-        this.modalsContainerDomTreeObserver = new MutationObserver(this.onModalsContainerDomTreeChange);
-        this.state = {
-            focusable: false
-        };
-    }
-
-    componentDidMount() {
-        this.findFocusInContentContainer();
-        this.onModalsContainerDomTreeChange();
-        this.modalsContainerDomTreeObserver.observe(this.props.modalsContainer, {
-            childList: true
-        });
-    }
-
-    componentWillUnmount() {
-        this.modalsContainerDomTreeObserver.disconnect();
-    }
-
-    shouldComponentUpdate(nextProps, nextState) {
-        return nextState.focusable !== this.state.focusable ||
-            nextProps.modalsContainer !== this.props.modalsContainer ||
-            nextProps.children !== this.props.children;
-    }
-
-    componentDidUpdate(prevProps, prevState) {
-        if (prevState.focusable !== this.state.focusable) {
-            this.findFocusInContentContainer();
-        }
-
-        if (prevProps.modalsContainer !== this.props.modalsContainer) {
-            this.onModalsContainerDomTreeChange();
-            this.modalsContainerDomTreeObserver.disconnect();
-            this.modalsContainerDomTreeObserver.observe(this.props.modalsContainer, {
-                childList: true
+const FocusableProvider = ({ children, ...props }) => {
+    const routesContainer = useRoutesContainer();
+    const modalsContainer = useModalsContainer();
+    const contentContainerRef = React.useRef();
+    const [focusable, setFocusable] = React.useState(false);
+    const onFocusableChange = React.useCallback(() => {
+        const focusable =
+            props.onModalsContainerDomTreeChange({
+                modalsContainer: modalsContainer,
+                contentContainer: contentContainerRef.current
+            })
+            &&
+            props.onRoutesContainerDomTreeChange({
+                routesContainer: routesContainer,
+                contentContainer: contentContainerRef.current
             });
+        setFocusable(focusable);
+    }, []);
+    const [modalsContainerDomTreeObserver, routesContainerDomTreeObserver] = React.useMemo(() => {
+        return [new MutationObserver(onFocusableChange), new MutationObserver(onFocusableChange)];
+    }, []);
+    React.useEffect(() => {
+        onFocusableChange();
+        modalsContainerDomTreeObserver.observe(modalsContainer, { childList: true });
+        routesContainerDomTreeObserver.observe(routesContainer, { childList: true });
+        return () => {
+            modalsContainerDomTreeObserver.disconnect();
+            routesContainerDomTreeObserver.disconnect();
         }
-    }
-
-    findFocusInContentContainer = () => {
-        if (!this.state.focusable || this.contentRef.current.hidden) {
-            return;
+    }, []);
+    React.useEffect(() => {
+        if (focusable) {
+            contentContainerRef.current.focus();
         }
-
-        const focusableChild = Array.from(this.contentRef.current.querySelectorAll('[tabIndex="0"]'))
-            .find((element) => !element.hidden);
-        if (focusableChild) {
-            focusableChild.focus();
-        } else {
-            this.contentRef.current.focus();
-        }
-    }
-
-    onModalsContainerDomTreeChange = () => {
-        const focusable = this.props.onModalsContainerDomTreeChange({
-            modalsContainerElement: this.props.modalsContainer,
-            contentElement: this.contentRef.current
-        });
-        this.setState({ focusable });
-    }
-
-    render() {
-        return (
-            <FocusableContext.Provider value={this.state.focusable}>
-                {React.cloneElement(React.Children.only(this.props.children), { ref: this.contentRef, tabIndex: -1 })}
-            </FocusableContext.Provider>
-        );
-    }
-}
-
-FocusableProvider.propTypes = {
-    modalsContainer: PropTypes.instanceOf(HTMLElement).isRequired,
-    onModalsContainerDomTreeChange: PropTypes.func.isRequired,
-    children: PropTypes.node.isRequired
+    }, [focusable]);
+    return (
+        <FocusableContext.Provider value={focusable}>
+            {React.cloneElement(React.Children.only(children), { ref: contentContainerRef, tabIndex: -1 })}
+        </FocusableContext.Provider>
+    );
 };
 
-const FocusableProviderWithModalsContainer = withModalsContainer(FocusableProvider);
+FocusableProvider.propTypes = {
+    children: PropTypes.node.isRequired,
+    onModalsContainerDomTreeChange: PropTypes.func.isRequired,
+    onRoutesContainerDomTreeChange: PropTypes.func.isRequired
+};
 
-FocusableProviderWithModalsContainer.displayName = 'FocusableProviderWithModalsContainer';
-
-module.exports = FocusableProviderWithModalsContainer;
+module.exports = FocusableProvider;
