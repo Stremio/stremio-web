@@ -10,10 +10,12 @@ const styles = require('./styles');
 const NavBarButton = React.memo(({ className, icon, label, href, onClick }) => {
     const locationHash = useLocationHash();
     const active = React.useMemo(() => {
-        const locationHashPath = locationHash.startsWith('#') ? locationHash.slice(1) : '';
-        const hrefHashPath = typeof href === 'string' && href.startsWith('#') ? href.slice(1) : '';
-        const { pathname: locationPathname } = UrlUtils.parse(locationHashPath);
-        const { pathname: hrefPathname } = UrlUtils.parse(hrefHashPath);
+        if (typeof href !== 'string') {
+            return false;
+        }
+
+        const { pathname: locationPathname } = UrlUtils.parse(locationHash.slice(1));
+        const { pathname: hrefPathname } = UrlUtils.parse(href.slice(1));
         return locationPathname === hrefPathname;
     }, [href, locationHash]);
     return (
