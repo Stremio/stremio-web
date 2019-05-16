@@ -1,7 +1,6 @@
 const { Addons, Board, Calendar, Detail, Discover, Intro, Library, Player, Search, Settings } = require('stremio-routes');
 
-const homePath = '/';
-const views = [
+const routerViewsConfig = [
     [
         {
             path: '/',
@@ -50,7 +49,4 @@ const views = [
     ]
 ];
 
-module.exports = {
-    homePath,
-    views
-};
+module.exports = routerViewsConfig;

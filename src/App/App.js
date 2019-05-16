@@ -1,6 +1,6 @@
 const React = require('react');
 const { Router } = require('stremio-navigation');
-const routerConfig = require('./routerConfig');
+const routerViewsConfig = require('./routerViewsConfig');
 const styles = require('./styles');
 
 const App = () => {
@@ -12,8 +12,8 @@ const App = () => {
         <React.StrictMode>
             <Router
                 className={styles['router']}
-                homePath={routerConfig.homePath}
-                viewsConfig={routerConfig.views}
+                homePath={'/'}
+                viewsConfig={routerViewsConfig}
                 onPathNotMatch={onPathNotMatch}
             />
         </React.StrictMode>
