@@ -7,7 +7,7 @@ const { RoutesContainerProvider } = require('../RoutesContainerContext');
 const Route = require('./Route');
 const styles = require('./styles');
 
-const Router = React.memo(({ className, homePath, ...props }) => {
+const Router = ({ className, homePath, ...props }) => {
     const onPathNotMatch = React.useRef(props.onPathNotMatch);
     const viewsConfig = React.useMemo(() => {
         return props.viewsConfig.map((viewConfig) => {
@@ -110,9 +110,7 @@ const Router = React.memo(({ className, homePath, ...props }) => {
             }
         </RoutesContainerProvider>
     );
-});
-
-Router.displayName = 'Router';
+};
 
 Router.propTypes = {
     className: PropTypes.string,
