@@ -2,7 +2,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const ModalsContainerContext = require('./ModalsContainerContext');
 
-const ModalsContainerProvider = React.memo(({ containerClassName, children }) => {
+const ModalsContainerProvider = ({ containerClassName, children }) => {
     const [container, setContainer] = React.useState(null);
     return (
         <ModalsContainerContext.Provider value={container}>
@@ -10,9 +10,7 @@ const ModalsContainerProvider = React.memo(({ containerClassName, children }) =>
             <div ref={setContainer} className={containerClassName} />
         </ModalsContainerContext.Provider>
     );
-});
-
-ModalsContainerProvider.displayName = 'ModalsContainerProvider';
+};
 
 ModalsContainerProvider.propTypes = {
     containerClassName: PropTypes.string,
