@@ -7,7 +7,7 @@ const FocusableContext = require('./FocusableContext');
 const FocusableProvider = ({ children, ...props }) => {
     const routesContainer = useRoutesContainer();
     const modalsContainer = useModalsContainer();
-    const contentContainerRef = React.useRef();
+    const contentContainerRef = React.useRef(null);
     const [focusable, setFocusable] = React.useState(false);
     const onFocusableChange = React.useCallback(() => {
         const focusable =
