@@ -5,7 +5,8 @@ const UrlUtils = require('url');
 const { RoutesContainerProvider } = require('../RoutesContainerContext');
 const Route = require('./Route');
 
-const Router = React.memo(({ className, homePath, onPathNotMatch, ...props }) => {
+const Router = React.memo(({ className, homePath, ...props }) => {
+    const onPathNotMatch = React.useRef(props.onPathNotMatch);
     const viewsConfig = React.useMemo(() => {
         return props.viewsConfig.map((viewConfig) => {
             return viewConfig.map(({ path, options, ...props }) => {
@@ -38,8 +39,8 @@ const Router = React.memo(({ className, homePath, onPathNotMatch, ...props }) =>
         const { pathname, query } = UrlUtils.parse(window.location.hash.slice(1));
         const routeConfig = routeConfigForPath(pathname);
         if (routeConfig === null) {
-            if (typeof onPathNotMatch === 'function') {
-                onPathNotMatch();
+            if (typeof onPathNotMatch.current === 'function') {
+                onPathNotMatch.current();
             }
 
             return;
@@ -72,6 +73,9 @@ const Router = React.memo(({ className, homePath, onPathNotMatch, ...props }) =>
             });
         });
     }, []);
+    React.useEffect(() => {
+        onPathNotMatch.current = props.onPathNotMatch;
+    }, [props.onPathNotMatch]);
     React.useEffect(() => {
         if (typeof homePath === 'string') {
             const { pathname, path } = UrlUtils.parse(window.location.hash.slice(1));
