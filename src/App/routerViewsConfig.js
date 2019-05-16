@@ -21,6 +21,10 @@ const routerViewsConfig = [
         {
             path: '/library/:type?/:sort?/:genre?',
             component: Library
+        },
+        {
+            path: '/search',
+            component: Search
         }
     ],
     [
@@ -35,10 +39,6 @@ const routerViewsConfig = [
         {
             path: '/detail',
             component: Detail
-        },
-        {
-            path: '/search',
-            component: Search
         }
     ],
     [
