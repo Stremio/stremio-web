@@ -3,7 +3,7 @@ const PropTypes = require('prop-types');
 const colors = require('stremio-colors');
 
 // TODO: implement it with polygon and clip-path
-const Loader = ({ fill, children, ...props }) => (
+const Loader = ({ fill = colors.surfacelighter80, children, ...props }) => (
     <svg {...props} viewBox={'0 0 1024 1024'}>
         <path d={'M512 0l-512 512 512 512 512-512zM411.106 752.941v-480.376l323.464 240.941z'} fill={fill} />
         <path d={'M256,256 512,0 768,256 512,512Z'} fillOpacity={0.8}>
@@ -55,10 +55,6 @@ const Loader = ({ fill, children, ...props }) => (
 
 Loader.propTypes = {
     fill: PropTypes.string.isRequired
-};
-
-Loader.defaultProps = {
-    fill: colors.surfacelighter80
 };
 
 module.exports = Loader;
