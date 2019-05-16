@@ -79,7 +79,9 @@ html, body, :global(#app) {
         width: 100%;
         height: 100%;
     }
+}
 
+:global {
     input {
         &::-moz-focus-inner {
             border: none;
@@ -103,24 +105,24 @@ html, body, :global(#app) {
     ::-webkit-scrollbar-track {
         background-color: var(--color-backgroundlight);
     }
-}
 
-:global(.focusable-with-border) {
-    position: relative;
-    z-index: 0;
+    .focusable-with-border {
+        position: relative;
+        z-index: 0;
 
-    &:focus, &:focus-within {
-        &:not(:hover)::after {
-            position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            z-index: 1;
-            display: block;
-            pointer-events: none;
-            border: var(--focusable-border-size) solid var(--color-surfacelighter);
-            content: "";
+        &:focus, &:focus-within {
+            &:not(:hover)::after {
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                z-index: 1;
+                display: block;
+                pointer-events: none;
+                border: var(--focusable-border-size) solid var(--color-surfacelighter);
+                content: "";
+            }
         }
     }
 }
