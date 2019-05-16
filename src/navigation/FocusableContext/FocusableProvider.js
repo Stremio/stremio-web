@@ -20,6 +20,10 @@ const FocusableProvider = ({ children, ...props }) => {
                 routesContainer: routesContainer,
                 contentContainer: contentContainerRef.current
             });
+        if (focusable) {
+            contentContainerRef.current.focus();
+        }
+
         setFocusable(focusable);
     }, []);
     const [modalsContainerDomTreeObserver, routesContainerDomTreeObserver] = React.useMemo(() => {
@@ -34,11 +38,6 @@ const FocusableProvider = ({ children, ...props }) => {
             routesContainerDomTreeObserver.disconnect();
         }
     }, []);
-    React.useEffect(() => {
-        if (focusable) {
-            contentContainerRef.current.focus();
-        }
-    }, [focusable]);
     return (
         <FocusableContext.Provider value={focusable}>
             {React.cloneElement(React.Children.only(children), { ref: contentContainerRef, tabIndex: -1 })}
