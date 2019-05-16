@@ -7,7 +7,6 @@ const Popup = require('./Popup');
 const ShareModal = require('./ShareModal');
 const Slider = require('./Slider');
 const useLocationHash = require('./useLocationHash');
-const withLocationHash = require('./withLocationHash');
 
 module.exports = {
     Checkbox,
@@ -18,6 +17,5 @@ module.exports = {
     Popup,
     ShareModal,
     Slider,
-    useLocationHash,
-    withLocationHash
+    useLocationHash
 };
