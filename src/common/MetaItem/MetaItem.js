@@ -23,9 +23,9 @@ const MetaItem = React.memo(({ className, menuClassName, id, type, posterShape =
         setMenuOpen(false);
     }, []);
     const onContextMenu = React.useCallback((event) => {
-        if (menuRef.current !== null && !menuOpen && !event.ctrlKey) {
+        if (!event.ctrlKey && menuRef.current !== null) {
             event.preventDefault();
-            menuRef.current.open();
+            menuOpen ? menuRef.current.close() : menuRef.current.open();
         }
     }, [menuOpen]);
     const placeholderIcon = ICON_FOR_TYPE[type] || 'ic_movies';
