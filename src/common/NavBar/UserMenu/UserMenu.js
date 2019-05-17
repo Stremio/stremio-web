@@ -6,7 +6,7 @@ const Popup = require('../../Popup');
 const { Input } = require('stremio-navigation');
 const styles = require('./styles');
 
-const UserMenu = ({ className, email, avatar, logout }) => {
+const UserMenu = ({ className, email = '', avatar = '', logout }) => {
     const [active, setActive] = React.useState(false);
     const onPopupOpen = React.useCallback(() => {
         setActive(true);
@@ -31,7 +31,6 @@ const UserMenu = ({ className, email, avatar, logout }) => {
             document.removeEventListener('fullscreenchange', onFullscreenChange);
         };
     }, []);
-
     return (
         <Popup onOpen={onPopupOpen} onClose={onPopupClose}>
             <Popup.Label>
@@ -103,14 +102,9 @@ const UserMenu = ({ className, email, avatar, logout }) => {
 
 UserMenu.propTypes = {
     className: PropTypes.string,
-    email: PropTypes.string.isRequired,
-    avatar: PropTypes.string.isRequired,
-    logout: PropTypes.func.isRequired
-};
-
-UserMenu.defaultProps = {
-    email: '',
-    avatar: ''
+    email: PropTypes.string,
+    avatar: PropTypes.string,
+    logout: PropTypes.func
 };
 
 module.exports = UserMenu;
