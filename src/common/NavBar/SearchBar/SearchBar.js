@@ -7,7 +7,7 @@ const { Input, useFocusable } = require('stremio-navigation');
 const useLocationHash = require('../../useLocationHash');
 const styles = require('./styles');
 
-const SearchBar = React.memo(({ className }) => {
+const SearchBar = ({ className }) => {
     const locationHash = useLocationHash();
     const focusable = useFocusable();
     const searchInputRef = React.useRef(null);
@@ -21,7 +21,7 @@ const SearchBar = React.memo(({ className }) => {
     const navigateToSearch = React.useCallback(() => {
         window.location = '#/search';
     }, []);
-    const onQueryInputSubmit = React.useCallback(() => {
+    const queryInputOnSubmit = React.useCallback(() => {
         window.location.replace(`#/search?q=${searchInputRef.current.value}`);
     }, []);
     React.useEffect(() => {
@@ -45,21 +45,19 @@ const SearchBar = React.memo(({ className }) => {
                         autoCorrect={'off'}
                         autoCapitalize={'off'}
                         spellCheck={false}
-                        onSubmit={onQueryInputSubmit}
+                        onSubmit={queryInputOnSubmit}
                     />
                     :
                     <div className={styles['search-input']}>
                         <div className={styles['placeholder']}>Search</div>
                     </div>
             }
-            <Input className={styles['submit-button']} type={'button'} tabIndex={-1} onClick={active ? onQueryInputSubmit : null}>
+            <Input className={styles['submit-button']} type={'button'} tabIndex={-1} onClick={active ? queryInputOnSubmit : null}>
                 <Icon className={styles['submit-icon']} icon={'ic_search'} />
             </Input>
         </label>
     );
-});
-
-SearchBar.displayName = 'SearchBar';
+};
 
 SearchBar.propTypes = {
     className: PropTypes.string
