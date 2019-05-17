@@ -68,10 +68,11 @@
             }
 
             .meta-items-container {
-                flex: 5;
+                flex: 1;
                 display: flex;
                 flex-direction: row;
                 align-items: stretch;
+                overflow: hidden;
 
                 .meta-item {
                     margin: 1em;
@@ -91,8 +92,9 @@
             }
 
             .show-more-container {
+                flex: none;
+                width: 10em;
                 margin: 1em;
-                flex: 1;
                 background-color: var(--color-backgroundlighter);
                 cursor: pointer;
             }
