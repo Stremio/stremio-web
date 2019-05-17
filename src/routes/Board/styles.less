@@ -1,4 +1,4 @@
-.board-container, .modal-container {
+.board-container, .menu-container {
     font-size: 14px;
 
     .board-row {
@@ -6,7 +6,7 @@
             .meta-item {
                 --play-icon-visibility: visible;
 
-                &:nth-child(n+6) {
+                &:nth-child(n+7) {
                     display: none;
                 }
             }
@@ -18,7 +18,7 @@
                     --play-icon-visibility: visible;
                 }
 
-                &:nth-child(n+4) {
+                &:nth-child(n+5) {
                     display: none;
                 }
             }
@@ -26,7 +26,7 @@
 
         &.addon-catalog-row {
             .meta-item {
-                &:nth-child(n+7) {
+                &:nth-child(n+8) {
                     display: none;
                 }
             }
@@ -42,82 +42,30 @@
     background-color: var(--color-background);
 
     .nav-bar {
-        width: 100%;
+        flex: none;
+        align-self: stretch;
     }
 
     .board-content {
         flex: 1;
         align-self: stretch;
-        padding: 2em;
         overflow-x: hidden;
         overflow-y: auto;
 
-        .placeholder-container {
-            display: flex;
-            flex-direction: row;
-
-            .placeholder {
-                flex: 1;
-                margin: 1em;
-                padding: 0.4em;
-                position: relative;
-                z-index: 0;
-                overflow: hidden;
-                background-color: var(--color-backgroundlighter);
-
-                .poster-image-placeholder {
-                    flex: calc(1 / var(--poster-shape-ratio));
-                    margin-bottom: 1em;
-                    background-color: var(--color-secondarylighter20);
-
-                    &:before {
-                        content: "";
-                        display: inline-block;
-                        padding-top: calc(100% * var(--poster-shape-ratio));
-                    }
-                }
-
-                .title-bar-placeholder {
-                    height: 2em;
-                    display: flex;
-                    flex-direction: row;
-                    background-color: var(--color-secondarylighter20);
-                }
-
-                &:after {
-                    content: " ";
-                    position: absolute;
-                    top: 0;
-                    right: 0;
-                    bottom: 0;
-                    left: 50%;
-                    width: 800%;
-                    margin-left: -400%;
-                    animation: placeholderAnimation 1s linear infinite;
-                    background: linear-gradient(to right, rgba(255, 255, 255, 0) 44%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0) 56%);
-                }
-
-                @keyframes placeholderAnimation {
-                    0% {
-                        transform: translate3d(-30%, 0, 0);
-                    }
-
-                    100% {
-                        transform: translate3d(30%, 0, 0);
-                    }
-                }
-
-                &:nth-child(n+7) {
-                    display: none;
-                }
-            }
-        }
-
         .board-row {
             width: 100%;
+            padding: 0 1em;
             display: flex;
             flex-direction: row;
             align-items: stretch;
+
+            &:first-child {
+                padding-top: 1em;
+            }
+
+            &:last-child {
+                padding-bottom: 1em;
+            }
 
             .meta-items-container {
                 flex: 5;
