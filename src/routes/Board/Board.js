@@ -1,7 +1,8 @@
 const React = require('react');
 const classnames = require('classnames');
-const { MetaItem, NavBar } = require('stremio-common');
+const Icon = require('stremio-icons/dom');
 const { Input } = require('stremio-navigation')
+const { MetaItem, NavBar } = require('stremio-common');
 const withGroups = require('./withGroups');
 const styles = require('./styles');
 
@@ -68,7 +69,10 @@ class Board extends React.PureComponent {
                                             />
                                         ))}
                                     </div>
-                                    <Input className={styles['show-more-container']} type={'button'} />
+                                    <Input className={classnames(styles['show-more-container'], 'focusable-with-border')} type={'button'}>
+                                        <div className={styles['label']}>SEE ALL</div>
+                                        <Icon className={styles['icon']} icon={'ic_back_ios'} />
+                                    </Input>
                                 </div>
                                 {
                                     this.props.groups.slice(1, this.props.groups.length).map((group) => {
@@ -86,7 +90,10 @@ class Board extends React.PureComponent {
                                                         />
                                                     ))}
                                                 </div>
-                                                <Input className={styles['show-more-container']} type={'button'} />
+                                                <Input className={classnames(styles['show-more-container'], 'focusable-with-border')} type={'button'}>
+                                                    <div className={styles['label']}>SEE ALL</div>
+                                                    <Icon className={styles['icon']} icon={'ic_back_ios'} />
+                                                </Input>
                                             </div>
                                         );
                                     })

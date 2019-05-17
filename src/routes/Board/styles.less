@@ -93,10 +93,47 @@
 
             .show-more-container {
                 flex: none;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
                 width: 10em;
                 margin: 1em;
-                background-color: var(--color-backgroundlighter);
+                padding: 0 0.5em;
+                background-color: var(--color-backgroundlight);
                 cursor: pointer;
+
+                &:hover, &:focus {
+                    background-color: var(--color-backgroundlighter);
+
+                    .label {
+                        color: var(--color-surfacelighter);
+                    }
+
+                    .icon {
+                        fill: var(--color-surfacelighter);
+                    }
+                }
+
+                .label {
+                    font-size: 1.1em;
+                    line-height: 1.3em;
+                    max-height: 2.6em;
+                    color: var(--color-surfacelight);
+                    word-break: break-all;
+                    word-break: break-word;
+                    overflow: hidden;
+                }
+
+                .icon {
+                    flex: none;
+                    width: 1.3em;
+                    height: 1.3em;
+                    margin-left: 0.3em;
+                    transform: rotateY(180deg);
+                    fill: var(--color-surfacelight);
+                    overflow: visible;
+                }
             }
         }
     }
