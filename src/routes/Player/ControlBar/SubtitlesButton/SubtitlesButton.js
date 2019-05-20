@@ -38,13 +38,13 @@ class SubtitlesButton extends React.Component {
 
     render() {
         return (
-            <Popup modalContainerClassName={this.props.modalContainerClassName} onOpen={this.onPopupOpen} onClose={this.onPopupClose}>
+            <Popup onOpen={this.onPopupOpen} onClose={this.onPopupClose}>
                 <Popup.Label>
                     <div className={classnames(this.props.className, { 'active': this.state.popupOpen }, { 'disabled': this.props.subtitlesTracks.length === 0 })}>
                         <Icon className={'icon'} icon={'ic_sub'} />
                     </div>
                 </Popup.Label>
-                <Popup.Menu>
+                <Popup.Menu className={this.props.modalContainerClassName}>
                     <SubtitlesPicker
                         className={styles['subtitles-picker-container']}
                         subtitlesTracks={this.props.subtitlesTracks}

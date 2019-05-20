@@ -30,13 +30,13 @@ class ShareButton extends React.Component {
 
     render() {
         return (
-            <Popup modalContainerClassName={this.props.modalContainerClassName} onOpen={this.onPopupOpen} onClose={this.onPopupClose}>
+            <Popup onOpen={this.onPopupOpen} onClose={this.onPopupClose}>
                 <Popup.Label>
                     <div className={classnames(this.props.className, { 'active': this.state.popupOpen })}>
                         <Icon className={'icon'} icon={'ic_share'} />
                     </div>
                 </Popup.Label>
-                <Popup.Menu>
+                <Popup.Menu className={this.props.modalContainerClassName}>
                     <div className={styles['share-dialog-container']} />
                 </Popup.Menu>
             </Popup>
