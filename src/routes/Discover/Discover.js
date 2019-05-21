@@ -1,10 +1,10 @@
 const React = require('react');
 const { NavBar, MetaItem } = require('stremio-common');
+const useCatalog = require('./useCatalog');
 const styles = require('./styles');
 
 const Discover = () => {
-
-
+    const catalog = useCatalog();
     return (
         <div className={styles['discover-container']}>
             <NavBar
@@ -21,19 +21,17 @@ const Discover = () => {
             />
             <div className={styles['discover-content']}>
                 <div className={styles['meta-items-container']}>
-                    {
-                        Array(145).fill(null).map((_, index) => (
-                            <div key={index} className={styles['meta-item-container']}>
-                                <MetaItem
-                                    className={styles['meta-item']}
-                                    id={`tt${index}`}
-                                    type={'movie'}
-                                    title={index === 4 ? 'title' : ''}
-                                    posterShape={'poster'}
-                                />
-                            </div>
-                        ))
-                    }
+                    {catalog.map(({ id, type, name, posterShape }) => (
+                        <div key={id} className={styles['meta-item-container']}>
+                            <MetaItem
+                                className={styles['meta-item']}
+                                id={id}
+                                type={type}
+                                name={name}
+                                posterShape={posterShape}
+                            />
+                        </div>
+                    ))}
                 </div>
             </div>
         </div>
