@@ -34,7 +34,6 @@ const withGroups = (Component) => {
                         items: response.content.map((item) => {
                             return {
                                 ...item,
-                                title: item.name,
                                 posterShape: item.posterShape || 'poster'
                             };
                         })

@@ -60,6 +60,7 @@ class Board extends React.PureComponent {
                                             <MetaItem
                                                 {...item}
                                                 key={item.id}
+                                                title={item.name}
                                                 className={classnames(styles['meta-item'], styles[`poster-shape-${item.posterShape === 'landscape' ? 'square' : item.posterShape}`])}
                                                 menuClassName={styles['menu-container']}
                                                 posterShape={item.posterShape === 'landscape' ? 'square' : item.posterShape}
@@ -83,6 +84,7 @@ class Board extends React.PureComponent {
                                                         <MetaItem
                                                             {...item}
                                                             key={item.id}
+                                                            title={item.name}
                                                             className={classnames(styles['meta-item'], styles[`poster-shape-${metaItems[0].posterShape}`])}
                                                             posterShape={metaItems[0].posterShape}
                                                             progress={0}
