@@ -8,26 +8,20 @@
     cursor: pointer;
 
     &.poster-shape-square {
-        .poster-image-container::before {
-            display: block;
+        .poster-image-container {
             padding-top: 100%;
-            content: "";
         }
     }
 
     &.poster-shape-landscape {
-        .poster-image-container::before {
-            display: block;
+        .poster-image-container {
             padding-top: calc(100% * var(--landscape-shape-ratio));
-            content: "";
         }
     }
 
     &.poster-shape-poster {
-        .poster-image-container::before {
-            display: block;
+        .poster-image-container {
             padding-top: calc(100% * var(--poster-shape-ratio));
-            content: "";
         }
     }
 
