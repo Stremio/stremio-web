@@ -13,7 +13,7 @@ const ICON_FOR_TYPE = Object.freeze({
     'tv': 'ic_tv'
 });
 
-const MetaItem = React.memo(({ className, menuClassName, id, type, posterShape = 'square', poster = '', title = '', subtitle = '', progress = 0, menuOptions = [], onClick, menuOptionOnSelect }) => {
+const MetaItem = React.memo(({ className, menuClassName, id, type, name, posterShape = 'square', poster = '', title = '', subtitle = '', progress = 0, menuOptions = [], onClick, menuOptionOnSelect }) => {
     const menuRef = React.useRef(null);
     const [menuOpen, setMenuOpen] = React.useState(false);
     const onMenuOpen = React.useCallback(() => {
@@ -31,7 +31,7 @@ const MetaItem = React.memo(({ className, menuClassName, id, type, posterShape =
     const placeholderIcon = ICON_FOR_TYPE[type] || 'ic_movies';
 
     return (
-        <Input className={classnames(className, styles['meta-item-container'], styles[`poster-shape-${posterShape}`])} title={title} type={'button'} data-meta-item-id={id} onClick={onClick} onContextMenu={onContextMenu}>
+        <Input className={classnames(className, styles['meta-item-container'], styles[`poster-shape-${posterShape}`])} title={name} type={'button'} data-meta-item-id={id} onClick={onClick} onContextMenu={onContextMenu}>
             <div className={styles['poster-image-container']}>
                 <div className={styles['placeholder-image-layer']}>
                     <Icon className={styles['placeholder-image']} icon={placeholderIcon} />
@@ -102,6 +102,7 @@ MetaItem.propTypes = {
     menuClassName: PropTypes.string,
     id: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
     posterShape: PropTypes.oneOf(['poster', 'landscape', 'square']),
     poster: PropTypes.string,
     title: PropTypes.string,
