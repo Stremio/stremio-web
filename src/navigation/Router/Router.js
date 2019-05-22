@@ -11,10 +11,16 @@ const Router = ({ className, homePath, ...props }) => {
     const onPathNotMatch = React.useRef(props.onPathNotMatch);
     const viewsConfig = React.useMemo(() => {
         return props.viewsConfig.map((viewConfig) => {
-            return viewConfig.map(({ path, options, ...props }) => {
+            return viewConfig.map(({ path, options, defaultUrlParams, ...props }) => {
                 const keys = [];
                 const regexp = PathToRegexp(path, keys, options);
-                return { path, keys, regexp, ...props };
+                return {
+                    path,
+                    keys,
+                    regexp,
+                    defaultUrlParams: { ...defaultUrlParams },
+                    ...props
+                };
             });
         });
     }, []);
@@ -52,7 +58,14 @@ const Router = ({ className, homePath, ...props }) => {
         const match = routeConfig.regexp.exec(pathname);
         const queryParams = new URLSearchParams(query);
         const urlParams = routeConfig.keys.reduce((urlParams, key, index) => {
-            urlParams[key.name] = match[index + 1];
+            if (typeof match[index + 1] === 'string') {
+                urlParams[key.name] = match[index + 1];
+            } else if (typeof routeConfig.defaultUrlParams[key.name] === 'string') {
+                urlParams[key.name] = routeConfig.defaultUrlParams[key.name];
+            } else {
+                urlParams[key.name] = null;
+            }
+
             return urlParams;
         }, {});
         setViews((views) => {
