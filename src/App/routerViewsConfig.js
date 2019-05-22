@@ -15,11 +15,11 @@ const routerViewsConfig = [
             component: Calendar
         },
         {
-            path: '/discover/:type?/:sort?/:genre?',
+            path: '/discover/:type?/:catalog?/:category?',
             component: Discover
         },
         {
-            path: '/library/:type?/:sort?/:genre?',
+            path: '/library/:type?/:sort?',
             component: Library
         },
         {
