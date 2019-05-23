@@ -53,12 +53,23 @@
                 justify-content: space-between;
                 margin: 0 0.8em;
                 padding: 0 0.8em;
-                text-transform: capitalize;
                 background-color: var(--color-backgroundlighter);
                 cursor: pointer;
 
                 &:hover {
                     background-color: var(--color-surfacedarker60);
+                }
+
+                &:global(.active) {
+                    background-color: var(--color-surfacelight);
+
+                    .picker-label {
+                        color: var(--color-backgrounddarker);
+                    }
+
+                    .picker-icon {
+                        fill: var(--color-backgrounddarker);
+                    }
                 }
 
                 .picker-label {

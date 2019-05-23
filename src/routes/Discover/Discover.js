@@ -2,13 +2,16 @@ const React = require('react');
 const classnames = require('classnames');
 const { Input } = require('stremio-navigation');
 const Icon = require('stremio-icons/dom');
-const { NavBar, MetaItem, Popup } = require('stremio-common');
+const { NavBar, MetaItem, Popup, useBinaryState } = require('stremio-common');
 const useCatalog = require('./useCatalog');
 const styles = require('./styles');
 
 // TODO impl refocus to left of the scroll view
 const Discover = ({ urlParams }) => {
     const catalog = useCatalog(urlParams);
+    const [typePickerOpen, typePickerOnOpen, typePickerOnClose] = useBinaryState(false);
+    const [catalogPickerOpen, catalogPickerOnOpen, catalogPickerOnClose] = useBinaryState(false);
+    const [categoryPickerOpen, categoryPickerOnOpen, categoryPickerOnClose] = useBinaryState(false);
     React.useEffect(() => {
         if (typeof urlParams.type !== 'string' || typeof urlParams.catalog !== 'string') {
             const type = urlParams.type || 'movie';
@@ -35,9 +38,9 @@ const Discover = ({ urlParams }) => {
                 typeof urlParams.type === 'string' || typeof urlParams.catalog === 'string' ?
                     <div className={styles['discover-content']}>
                         <div className={styles['pickers-container']}>
-                            <Popup>
+                            <Popup onOpen={typePickerOnOpen} onClose={typePickerOnClose}>
                                 <Popup.Label>
-                                    <Input className={classnames(styles['picker-button'], 'focusable-with-border')} type={'button'}>
+                                    <Input className={classnames(styles['picker-button'], { 'active': typePickerOpen }, 'focusable-with-border')} type={'button'}>
                                         <div className={styles['picker-label']}>{urlParams.type}</div>
                                         <Icon className={styles['picker-icon']} icon={'ic_arrow_down'} />
                                     </Input>
@@ -55,10 +58,10 @@ const Discover = ({ urlParams }) => {
                                     </div>
                                 </Popup.Menu>
                             </Popup>
-                            <Popup>
+                            <Popup onOpen={catalogPickerOnOpen} onClose={catalogPickerOnClose}>
                                 <Popup.Label>
-                                    <Input className={classnames(styles['picker-button'], 'focusable-with-border')} type={'button'}>
-                                        <div className={styles['picker-label']}>{urlParams.type}</div>
+                                    <Input className={classnames(styles['picker-button'], { 'active': catalogPickerOpen }, 'focusable-with-border')} type={'button'}>
+                                        <div className={styles['picker-label']}>{urlParams.catalog}</div>
                                         <Icon className={styles['picker-icon']} icon={'ic_arrow_down'} />
                                     </Input>
                                 </Popup.Label>
@@ -75,10 +78,10 @@ const Discover = ({ urlParams }) => {
                                     </div>
                                 </Popup.Menu>
                             </Popup>
-                            <Popup>
+                            <Popup onOpen={categoryPickerOnOpen} onClose={categoryPickerOnClose}>
                                 <Popup.Label>
-                                    <Input className={classnames(styles['picker-button'], 'focusable-with-border')} type={'button'}>
-                                        <div className={styles['picker-label']}>{urlParams.type}</div>
+                                    <Input className={classnames(styles['picker-button'], { 'active': categoryPickerOpen }, 'focusable-with-border')} type={'button'}>
+                                        <div className={styles['picker-label']}>{urlParams.category !== null ? urlParams.category : 'Select category'}</div>
                                         <Icon className={styles['picker-icon']} icon={'ic_arrow_down'} />
                                     </Input>
                                 </Popup.Label>
