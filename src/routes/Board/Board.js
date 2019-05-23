@@ -2,7 +2,7 @@ const React = require('react');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const { Input } = require('stremio-navigation')
-const { MetaItem, NavBar } = require('stremio-common');
+const { MetaItem, MainNavBar } = require('stremio-common');
 const withGroups = require('./withGroups');
 const styles = require('./styles');
 
@@ -38,18 +38,7 @@ class Board extends React.PureComponent {
     render() {
         return (
             <div className={styles['board-container']}>
-                <NavBar
-                    className={styles['nav-bar']}
-                    backButton={false}
-                    tabs={[
-                        { label: 'Board', icon: 'ic_board', href: '#/' },
-                        { label: 'Discover', icon: 'ic_discover', href: '#/discover' },
-                        { label: 'Library', icon: 'ic_library', href: '#/library' },
-                        { label: 'Calendar', icon: 'ic_calendar', href: '#/calendar' },
-                    ]}
-                    searchBar={true}
-                    userMenu={true}
-                />
+                <MainNavBar className={styles['nav-bar']} />
                 <div className={styles['board-content']} tabIndex={-1}>
                     {
                         this.props.groups.length > 0 ?
