@@ -1,7 +1,6 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const PathToRegexp = require('path-to-regexp');
 const UrlUtils = require('url');
 const { RoutesContainerProvider } = require('../RoutesContainerContext');
 const Route = require('./Route');
@@ -11,17 +10,10 @@ const Router = ({ className, homePath, ...props }) => {
     const onPathNotMatch = React.useRef(props.onPathNotMatch);
     const viewsConfig = React.useMemo(() => {
         return props.viewsConfig.map((viewConfig) => {
-            return viewConfig.map(({ path, options, defaultUrlParams, ...props }) => {
-                const keys = [];
-                const regexp = PathToRegexp(path, keys, options);
-                return {
-                    path,
-                    keys,
-                    regexp,
-                    defaultUrlParams: { ...defaultUrlParams },
-                    ...props
-                };
-            });
+            return viewConfig.map(({ defaultUrlParams, ...props }) => ({
+                defaultUrlParams: { ...defaultUrlParams },
+                ...props
+            }));
         });
     }, []);
     const [views, setViews] = React.useState(() => {
@@ -115,7 +107,7 @@ const Router = ({ className, homePath, ...props }) => {
                 views
                     .filter(({ routeConfig }) => routeConfig !== null)
                     .map(({ routeConfig, queryParams, urlParams }) => (
-                        <Route key={routeConfig.path}>
+                        <Route key={routeConfig.component.name}>
                             {React.createElement(routeConfig.component, { queryParams, urlParams })}
                         </Route>
                     ))
@@ -129,9 +121,14 @@ Router.propTypes = {
     homePath: PropTypes.string,
     onPathNotMatch: PropTypes.func,
     viewsConfig: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.exact({
-        path: PropTypes.string.isRequired,
+        regexp: PropTypes.shape({
+            exec: PropTypes.func.isRequired
+        }).isRequired,
+        keys: PropTypes.arrayOf(PropTypes.shape({
+            name: PropTypes.string.isRequired
+        })).isRequired,
+        defaultUrlParams: PropTypes.objectOf(PropTypes.string),
         component: PropTypes.elementType.isRequired,
-        options: PropTypes.object
     }))).isRequired
 };
 

@@ -1,49 +1,50 @@
 const { Addons, Board, Calendar, Detail, Discover, Intro, Library, Player, Search, Settings } = require('stremio-routes');
+const { routesRegexp } = require('stremio-common');
 
 const routerViewsConfig = [
     [
         {
-            path: '/',
-            component: Board
-        },
-        {
-            path: '/intro',
+            ...routesRegexp.intro,
             component: Intro
         },
         {
-            path: '/calendar',
-            component: Calendar
+            ...routesRegexp.board,
+            component: Board
         },
         {
-            path: '/discover/:type?/:catalog?/:category?',
+            ...routesRegexp.discover,
             component: Discover
         },
         {
-            path: '/library/:type?/:sort?',
+            ...routesRegexp.library,
             component: Library
         },
         {
-            path: '/search',
+            ...routesRegexp.calendar,
+            component: Calendar
+        },
+        {
+            ...routesRegexp.search,
             component: Search
         }
     ],
     [
         {
-            path: '/addons',
+            ...routesRegexp.detail,
+            component: Detail
+        },
+        {
+            ...routesRegexp.addons,
             component: Addons
         },
         {
-            path: '/settings',
+            ...routesRegexp.settings,
             component: Settings
-        },
-        {
-            path: '/detail',
-            component: Detail
         }
     ],
     [
         {
-            path: '/player',
+            ...routesRegexp.player,
             component: Player
         }
     ]
