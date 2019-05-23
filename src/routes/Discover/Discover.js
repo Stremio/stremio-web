@@ -1,10 +1,22 @@
 const React = require('react');
-const { NavBar, MetaItem } = require('stremio-common');
+const classnames = require('classnames');
+const { Input } = require('stremio-navigation');
+const Icon = require('stremio-icons/dom');
+const { NavBar, MetaItem, Popup } = require('stremio-common');
 const useCatalog = require('./useCatalog');
 const styles = require('./styles');
 
-const Discover = () => {
-    const catalog = useCatalog();
+// TODO impl refocus to left of the scroll view
+const Discover = ({ urlParams }) => {
+    const catalog = useCatalog(urlParams);
+    React.useEffect(() => {
+        if (typeof urlParams.type !== 'string' || typeof urlParams.catalog !== 'string') {
+            const type = urlParams.type || 'movie';
+            const catalog = urlParams.catalog || 'com.linvo.cinemeta:top';
+            const category = urlParams.category || '';
+            window.location.replace(`#/discover/${type}/${catalog}/${category}`);
+        }
+    }, []);
     return (
         <div className={styles['discover-container']}>
             <NavBar
@@ -19,21 +31,90 @@ const Discover = () => {
                 searchBar={true}
                 userMenu={true}
             />
-            <div className={styles['discover-content']}>
-                <div className={styles['meta-items-container']}>
-                    {catalog.map(({ id, type, name, posterShape }) => (
-                        <div key={id} className={styles['meta-item-container']}>
-                            <MetaItem
-                                className={styles['meta-item']}
-                                id={id}
-                                type={type}
-                                name={name}
-                                posterShape={posterShape}
-                            />
+            {
+                typeof urlParams.type === 'string' || typeof urlParams.catalog === 'string' ?
+                    <div className={styles['discover-content']}>
+                        <div className={styles['pickers-container']}>
+                            <Popup>
+                                <Popup.Label>
+                                    <Input className={classnames(styles['picker-button'], 'focusable-with-border')} type={'button'}>
+                                        <div className={styles['picker-label']}>{urlParams.type}</div>
+                                        <Icon className={styles['picker-icon']} icon={'ic_arrow_down'} />
+                                    </Input>
+                                </Popup.Label>
+                                <Popup.Menu className={styles['menu-layer']}>
+                                    <div className={styles['menu-items-container']}>
+                                        <Input className={styles['menu-item']} type={'button'}>Movie</Input>
+                                        <Input className={styles['menu-item']} type={'button'}>Movie</Input>
+                                        <Input className={styles['menu-item']} type={'button'}>Movie</Input>
+                                        <Input className={styles['menu-item']} type={'button'}>Movie</Input>
+                                        <Input className={styles['menu-item']} type={'button'}>Movie</Input>
+                                        <Input className={styles['menu-item']} type={'button'}>Movie</Input>
+                                        <Input className={styles['menu-item']} type={'button'}>Movie</Input>
+                                        <Input className={styles['menu-item']} type={'button'}>Movie</Input>
+                                    </div>
+                                </Popup.Menu>
+                            </Popup>
+                            <Popup>
+                                <Popup.Label>
+                                    <Input className={classnames(styles['picker-button'], 'focusable-with-border')} type={'button'}>
+                                        <div className={styles['picker-label']}>{urlParams.type}</div>
+                                        <Icon className={styles['picker-icon']} icon={'ic_arrow_down'} />
+                                    </Input>
+                                </Popup.Label>
+                                <Popup.Menu className={styles['menu-layer']}>
+                                    <div className={styles['menu-items-container']}>
+                                        <Input className={styles['menu-item']} type={'button'}>Movie</Input>
+                                        <Input className={styles['menu-item']} type={'button'}>Movie</Input>
+                                        <Input className={styles['menu-item']} type={'button'}>Movie</Input>
+                                        <Input className={styles['menu-item']} type={'button'}>Movie</Input>
+                                        <Input className={styles['menu-item']} type={'button'}>Movie</Input>
+                                        <Input className={styles['menu-item']} type={'button'}>Movie</Input>
+                                        <Input className={styles['menu-item']} type={'button'}>Movie</Input>
+                                        <Input className={styles['menu-item']} type={'button'}>Movie</Input>
+                                    </div>
+                                </Popup.Menu>
+                            </Popup>
+                            <Popup>
+                                <Popup.Label>
+                                    <Input className={classnames(styles['picker-button'], 'focusable-with-border')} type={'button'}>
+                                        <div className={styles['picker-label']}>{urlParams.type}</div>
+                                        <Icon className={styles['picker-icon']} icon={'ic_arrow_down'} />
+                                    </Input>
+                                </Popup.Label>
+                                <Popup.Menu className={styles['menu-layer']}>
+                                    <div className={styles['menu-items-container']}>
+                                        <Input className={styles['menu-item']} type={'button'}>Movie</Input>
+                                        <Input className={styles['menu-item']} type={'button'}>Movie</Input>
+                                        <Input className={styles['menu-item']} type={'button'}>Movie</Input>
+                                        <Input className={styles['menu-item']} type={'button'}>Movie</Input>
+                                        <Input className={styles['menu-item']} type={'button'}>Movie</Input>
+                                        <Input className={styles['menu-item']} type={'button'}>Movie</Input>
+                                        <Input className={styles['menu-item']} type={'button'}>Movie</Input>
+                                        <Input className={styles['menu-item']} type={'button'}>Movie</Input>
+                                    </div>
+                                </Popup.Menu>
+                            </Popup>
                         </div>
-                    ))}
-                </div>
-            </div>
+                        <div className={styles['meta-items-container']} tabIndex={-1}>
+                            {catalog.map(({ id, type, name, posterShape }) => (
+                                <div key={id} className={styles['meta-item-container']}>
+                                    <MetaItem
+                                        className={styles['meta-item']}
+                                        id={id}
+                                        type={type}
+                                        name={name}
+                                        posterShape={posterShape}
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                        <div className={styles['info-container']}>
+                        </div>
+                    </div>
+                    :
+                    null
+            }
         </div>
     );
 };

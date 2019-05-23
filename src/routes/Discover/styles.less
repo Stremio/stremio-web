@@ -1,6 +1,16 @@
-.discover-container {
+.discover-container, .menu-layer {
     font-size: 14px;
     --items-per-row: 10;
+
+    .discover-content {
+        .meta-items-container {
+            .meta-item-container {
+                &:nth-child(-n+10) {
+                    padding-top: 0;
+                }
+            }
+        }
+    }
 }
 
 .discover-container {
@@ -18,29 +28,82 @@
     .discover-content {
         flex: 1;
         align-self: stretch;
-        display: flex;
-        flex-direction: row;
+        display: grid;
+        grid-template-columns: 1fr 24em;
+        grid-template-rows: 4.6em 1fr;
+        grid-template-areas:
+            "picker-area info-area"
+            "meta-items-area info-area";
         overflow: hidden;
 
+        .pickers-container {
+            grid-area: picker-area;
+            display: flex;
+            flex-direction: row;
+            align-items: stretch;
+            padding: 0.8em;
+
+            .picker-button {
+                flex-grow: 0;
+                flex-shrink: 1;
+                flex-basis: 16em;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+                margin: 0 0.8em;
+                padding: 0 0.8em;
+                text-transform: capitalize;
+                background-color: var(--color-backgroundlighter);
+                cursor: pointer;
+
+                &:hover {
+                    background-color: var(--color-surfacedarker60);
+                }
+
+                .picker-label {
+                    flex: 1;
+                    font-size: 1.1em;
+                    line-height: 1.1em;
+                    max-height: 2.2em;
+                    color: var(--color-surfacelighter);
+                    word-break: break-all;
+                    word-break: break-word;
+                }
+
+                .picker-icon {
+                    flex: none;
+                    width: 1.2em;
+                    height: 1.2em;
+                    margin-left: 0.8em;
+                    fill: var(--color-surfacelighter);
+                }
+            }
+        }
+
         .meta-items-container {
-            flex: 1;
-            align-self: stretch;
+            grid-area: meta-items-area;
             display: flex;
             flex-direction: row;
             justify-content: flex-start;
             align-content: flex-start;
             flex-wrap: wrap;
-            padding-top: 0.8em;
-            padding-left: 0.8em;
+            padding: 0 0.4em;
             overflow-x: hidden;
             overflow-y: auto;
+
+            &::after {
+                width: 100%;
+                height: 0.4em;
+                display: block;
+                content: "";
+            }
 
             .meta-item-container {
                 flex-grow: 0;
                 flex-shrink: 0;
                 flex-basis: calc(100% / var(--items-per-row));
-                padding-right: 0.8em;
-                padding-bottom: 0.8em;
+                padding: 0.4em;
 
                 .meta-item {
                     width: 100%;
@@ -48,5 +111,32 @@
                 }
             }
         }
+
+        .info-container {
+            grid-area: info-area;
+        }
     }
+}
+
+.menu-layer {
+    --box-shadow: -0.6em .6em .5em -0.1em var(--color-backgrounddark40);
+
+    .menu-items-container {
+        max-height: 18em;
+        overflow-y: auto;
+
+        .menu-item {
+            width: 16em;
+            padding: 0.8em;
+            text-align: center;
+            color: var(--color-surfacelighter);
+            background-color: var(--color-backgroundlight);
+            cursor: pointer;
+
+            &:hover {
+                background-color: var(--color-surfacedarker60);
+            }
+        }
+    }
+
 }
