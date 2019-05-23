@@ -19,7 +19,7 @@ const Discover = ({ urlParams }) => {
             const category = urlParams.category || '';
             window.location.replace(`#/discover/${type}/${catalog}/${category}`);
         }
-    }, []);
+    }, [urlParams.type, urlParams.catalog]);
     return (
         <div className={styles['discover-container']}>
             <NavBar
