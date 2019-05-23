@@ -40,21 +40,25 @@ const Discover = ({ urlParams }) => {
                         <div className={styles['pickers-container']}>
                             <Popup onOpen={typePickerOnOpen} onClose={typePickerOnClose}>
                                 <Popup.Label>
-                                    <Input className={classnames(styles['picker-button'], { 'active': typePickerOpen }, 'focusable-with-border')} type={'button'}>
+                                    <Input className={classnames(styles['picker-button'], styles['types-picker-button'], { 'active': typePickerOpen }, 'focusable-with-border')} type={'button'}>
                                         <div className={styles['picker-label']}>{urlParams.type}</div>
                                         <Icon className={styles['picker-icon']} icon={'ic_arrow_down'} />
                                     </Input>
                                 </Popup.Label>
                                 <Popup.Menu className={styles['menu-layer']}>
-                                    <div className={styles['menu-items-container']}>
-                                        <Input className={styles['menu-item']} type={'button'}>Movie</Input>
-                                        <Input className={styles['menu-item']} type={'button'}>Movie</Input>
-                                        <Input className={styles['menu-item']} type={'button'}>Movie</Input>
-                                        <Input className={styles['menu-item']} type={'button'}>Movie</Input>
-                                        <Input className={styles['menu-item']} type={'button'}>Movie</Input>
-                                        <Input className={styles['menu-item']} type={'button'}>Movie</Input>
-                                        <Input className={styles['menu-item']} type={'button'}>Movie</Input>
-                                        <Input className={styles['menu-item']} type={'button'}>Movie</Input>
+                                    <div className={classnames(styles['menu-items-container'], styles['menu-types-container'])}>
+                                        <Input className={classnames(styles['menu-item-container'], 'focusable-with-border')} type={'button'}>
+                                            <div className={styles['menu-label']}>movie</div>
+                                        </Input>
+                                        <Input className={classnames(styles['menu-item-container'], 'focusable-with-border')} type={'button'}>
+                                            <div className={styles['menu-label']}>series</div>
+                                        </Input>
+                                        <Input className={classnames(styles['menu-item-container'], 'focusable-with-border')} type={'button'}>
+                                            <div className={styles['menu-label']}>channel</div>
+                                        </Input>
+                                        <Input className={classnames(styles['menu-item-container'], 'focusable-with-border')} type={'button'}>
+                                            <div className={styles['menu-label']}>TV channels</div>
+                                        </Input>
                                     </div>
                                 </Popup.Menu>
                             </Popup>
@@ -67,14 +71,12 @@ const Discover = ({ urlParams }) => {
                                 </Popup.Label>
                                 <Popup.Menu className={styles['menu-layer']}>
                                     <div className={styles['menu-items-container']}>
-                                        <Input className={styles['menu-item']} type={'button'}>Movie</Input>
-                                        <Input className={styles['menu-item']} type={'button'}>Movie</Input>
-                                        <Input className={styles['menu-item']} type={'button'}>Movie</Input>
-                                        <Input className={styles['menu-item']} type={'button'}>Movie</Input>
-                                        <Input className={styles['menu-item']} type={'button'}>Movie</Input>
-                                        <Input className={styles['menu-item']} type={'button'}>Movie</Input>
-                                        <Input className={styles['menu-item']} type={'button'}>Movie</Input>
-                                        <Input className={styles['menu-item']} type={'button'}>Movie</Input>
+                                        <Input className={classnames(styles['menu-item-container'], 'focusable-with-border')} type={'button'}>
+                                            <div className={styles['menu-label']}>catalog1</div>
+                                        </Input>
+                                        <Input className={classnames(styles['menu-item-container'], 'focusable-with-border')} type={'button'}>
+                                            <div className={styles['menu-label']}>catalog2</div>
+                                        </Input>
                                     </div>
                                 </Popup.Menu>
                             </Popup>
@@ -87,14 +89,12 @@ const Discover = ({ urlParams }) => {
                                 </Popup.Label>
                                 <Popup.Menu className={styles['menu-layer']}>
                                     <div className={styles['menu-items-container']}>
-                                        <Input className={styles['menu-item']} type={'button'}>Movie</Input>
-                                        <Input className={styles['menu-item']} type={'button'}>Movie</Input>
-                                        <Input className={styles['menu-item']} type={'button'}>Movie</Input>
-                                        <Input className={styles['menu-item']} type={'button'}>Movie</Input>
-                                        <Input className={styles['menu-item']} type={'button'}>Movie</Input>
-                                        <Input className={styles['menu-item']} type={'button'}>Movie</Input>
-                                        <Input className={styles['menu-item']} type={'button'}>Movie</Input>
-                                        <Input className={styles['menu-item']} type={'button'}>Movie</Input>
+                                        <Input className={classnames(styles['menu-item-container'], 'focusable-with-border')} type={'button'}>
+                                            <div className={styles['menu-label']}>category1</div>
+                                        </Input>
+                                        <Input className={classnames(styles['menu-item-container'], 'focusable-with-border')} type={'button'}>
+                                            <div className={styles['menu-label']}>category2</div>
+                                        </Input>
                                     </div>
                                 </Popup.Menu>
                             </Popup>

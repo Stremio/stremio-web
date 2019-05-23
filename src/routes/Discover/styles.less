@@ -51,7 +51,7 @@
                 flex-direction: row;
                 align-items: center;
                 justify-content: space-between;
-                margin: 0 0.8em;
+                margin-right: 0.8em;
                 padding: 0 0.8em;
                 background-color: var(--color-backgroundlighter);
                 cursor: pointer;
@@ -72,6 +72,12 @@
                     }
                 }
 
+                &.types-picker-button {
+                    .picker-label {
+                        text-transform: capitalize;
+                    }
+                }
+
                 .picker-label {
                     flex: 1;
                     font-size: 1.1em;
@@ -84,8 +90,8 @@
 
                 .picker-icon {
                     flex: none;
-                    width: 1.2em;
-                    height: 1.2em;
+                    width: 1em;
+                    height: 1em;
                     margin-left: 0.8em;
                     fill: var(--color-surfacelighter);
                 }
@@ -130,22 +136,38 @@
 }
 
 .menu-layer {
-    --box-shadow: -0.6em .6em .5em -0.1em var(--color-backgrounddark40);
+    --border-color: var(--color-backgroundlighter40);
+    --box-shadow: -0.6em 0.6em 0.5em -0.1em var(--color-backgrounddark40);
 
     .menu-items-container {
+        width: 16em;
         max-height: 18em;
         overflow-y: auto;
+        background-color: var(--color-backgroundlighter);
 
-        .menu-item {
-            width: 16em;
+        &.menu-types-container {
+            .menu-item-container {
+                .menu-label {
+                    text-transform: capitalize;
+                }
+            }
+        }
+
+        .menu-item-container {
+            width: 100%;
             padding: 0.8em;
-            text-align: center;
-            color: var(--color-surfacelighter);
-            background-color: var(--color-backgroundlight);
             cursor: pointer;
 
             &:hover {
                 background-color: var(--color-surfacedarker60);
+            }
+
+            .menu-label {
+                line-height: 1.1em;
+                max-height: 2.2em;
+                color: var(--color-surfacelighter);
+                word-break: break-all;
+                word-break: break-word;
             }
         }
     }
