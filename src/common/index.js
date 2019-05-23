@@ -6,6 +6,7 @@ const NavBar = require('./NavBar');
 const Popup = require('./Popup');
 const ShareModal = require('./ShareModal');
 const Slider = require('./Slider');
+const useBinaryState = require('./useBinaryState');
 const useLocationHash = require('./useLocationHash');
 
 module.exports = {
@@ -17,5 +18,6 @@ module.exports = {
     Popup,
     ShareModal,
     Slider,
+    useBinaryState,
     useLocationHash
 };
