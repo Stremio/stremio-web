@@ -4,20 +4,31 @@ const classnames = require('classnames');
 const UrlUtils = require('url');
 const Icon = require('stremio-icons/dom');
 const { Input } = require('stremio-navigation');
+const routesRegexp = require('../../routesRegexp');
 const useLocationHash = require('../../useLocationHash');
 const styles = require('./styles');
 
 const NavBarButton = React.memo(({ className, icon, label, href, onClick }) => {
     const locationHash = useLocationHash();
-    const active = React.useMemo(() => {
-        if (typeof href !== 'string') {
-            return false;
+    const routeRegexp = React.useMemo(() => {
+        if (typeof href === 'string') {
+            for (const { regexp } of Object.values(routesRegexp)) {
+                if (regexp.exec(href.slice(1))) {
+                    return regexp;
+                }
+            }
         }
 
-        const { pathname: locationPathname } = UrlUtils.parse(locationHash.slice(1));
-        const { pathname: hrefPathname } = UrlUtils.parse(href.slice(1));
-        return locationPathname === hrefPathname;
-    }, [href, locationHash]);
+        return null;
+    }, [href]);
+    const active = React.useMemo(() => {
+        if (routeRegexp !== null) {
+            const { pathname: locationPathname } = UrlUtils.parse(locationHash.slice(1));
+            return routeRegexp.exec(locationPathname);
+        }
+
+        return false;
+    }, [routeRegexp, locationHash]);
     return (
         <Input className={classnames(className, styles['nav-bar-button-container'], { 'active': active })} tabIndex={-1} type={typeof onClick === 'function' ? 'button' : 'link'} href={href} onClick={onClick}>
             <Icon className={styles['icon']} icon={icon} />
