@@ -31,33 +31,33 @@ const Input = React.forwardRef(({ type, tabIndex, children, ...props }, ref) => 
             }
         }
     }, [props.onKeyUp, props.onSubmit, type]);
-    const onDrag = React.useCallback((event) => {
-        if (typeof props.onDrag === 'function') {
-            props.onDrag(event);
+    const onMouseDown = React.useCallback((event) => {
+        if (typeof props.onMouseDown === 'function') {
+            props.onMouseDown(event);
         }
 
         if (!event.defaultPrevented && BUTTON_INPUT_TYPES.includes(type)) {
             event.currentTarget.blur();
         }
-    }, [props.onDrag, type]);
-    const onMouseOut = React.useCallback((event) => {
-        if (typeof props.onMouseOut === 'function') {
-            props.onMouseOut(event);
+    }, [props.onMouseDown, type]);
+    const onMouseMove = React.useCallback((event) => {
+        if (typeof props.onMouseMove === 'function') {
+            props.onMouseMove(event);
         }
 
         if (!event.defaultPrevented && BUTTON_INPUT_TYPES.includes(type)) {
             event.currentTarget.blur();
         }
-    }, [props.onMouseOut, type]);
+    }, [props.onMouseMove, type]);
     const tagName = TAG_NAMES_FOR_TYPE[type];
     const elementProps = {
         ...props,
-        ref: ref,
+        ref,
         type: tagName === 'input' ? type : null,
         tabIndex: (isNaN(tabIndex) || tabIndex === null) ? (focusable ? 0 : -1) : tabIndex,
-        onKeyUp: onKeyUp,
-        onDrag: onDrag,
-        onMouseOut: onMouseOut
+        onKeyUp,
+        onMouseDown,
+        onMouseMove
     };
     return React.createElement(tagName, elementProps, children);
 });
