@@ -12,35 +12,36 @@ const Checkbox = React.forwardRef(({ className, disabled = false, checked = fals
             props.onClick(event);
         }
     }, [props.onClick]);
-    const onDrag = React.useCallback((event) => {
-        if (typeof props.onDrag === 'function') {
-            props.onDrag(event);
+    const onMouseDown = React.useCallback((event) => {
+        if (typeof props.onMouseDown === 'function') {
+            props.onMouseDown(event);
         }
 
         if (!event.defaultPrevented) {
             event.currentTarget.firstChild.blur();
         }
-    }, [props.onDrag]);
-    const onMouseOut = React.useCallback((event) => {
-        if (typeof props.onMouseOut === 'function') {
-            props.onMouseOut(event);
+    }, [props.onMouseDown]);
+    const onMouseMove = React.useCallback((event) => {
+        if (typeof props.onMouseMove === 'function') {
+            props.onMouseMove(event);
         }
 
         if (!event.defaultPrevented) {
             event.currentTarget.firstChild.blur();
         }
-    }, [props.onMouseOut]);
+    }, [props.onMouseMove]);
     return (
-        <label className={classnames(className, styles['checkbox-container'], { 'checked': checked }, { 'disabled': disabled })} onClick={onClick} onDrag={onDrag} onMouseOut={onMouseOut}>
+        <label className={classnames(className, styles['checkbox-container'], { 'checked': checked }, { 'disabled': disabled })} {...props} onClick={onClick} onMouseDown={onMouseDown} onMouseMove={onMouseMove}>
             <Input
                 ref={ref}
                 className={styles['native-checkbox']}
                 type={'checkbox'}
                 disabled={disabled}
-                defaultChecked={checked}
+                checked={checked}
+                readOnly={true}
             />
             <Icon className={styles['icon']} icon={checked ? 'ic_check' : 'ic_box_empty'} />
-            {React.isValidElement(children) ? React.Children.only(children) : null}
+            {React.isValidElement(React.Children.only(children)) ? children : null}
         </label>
     );
 });
@@ -52,8 +53,8 @@ Checkbox.propTypes = {
     disabled: PropTypes.bool,
     checked: PropTypes.bool,
     onClick: PropTypes.func,
-    onDrag: PropTypes.func,
-    onMouseOut: PropTypes.func,
+    onMouseDown: PropTypes.func,
+    onMouseMove: PropTypes.func,
     children: PropTypes.node
 };
 
