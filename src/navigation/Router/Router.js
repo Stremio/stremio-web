@@ -6,16 +6,7 @@ const { RoutesContainerProvider } = require('../RoutesContainerContext');
 const Route = require('./Route');
 const styles = require('./styles');
 
-const Router = ({ className, homePath, ...props }) => {
-    const onPathNotMatch = React.useRef(props.onPathNotMatch);
-    const viewsConfig = React.useMemo(() => {
-        return props.viewsConfig.map((viewConfig) => {
-            return viewConfig.map(({ defaultUrlParams, ...props }) => ({
-                defaultUrlParams: { ...defaultUrlParams },
-                ...props
-            }));
-        });
-    }, []);
+const Router = ({ className, homePath, viewsConfig, onPathNotMatch }) => {
     const [views, setViews] = React.useState(() => {
         return Array(viewsConfig.length).fill({
             routeConfig: null,
@@ -39,8 +30,8 @@ const Router = ({ className, homePath, ...props }) => {
         const { pathname, query } = UrlUtils.parse(window.location.hash.slice(1));
         const routeConfig = routeConfigForPath(pathname);
         if (routeConfig === null) {
-            if (typeof onPathNotMatch.current === 'function') {
-                onPathNotMatch.current();
+            if (typeof onPathNotMatch === 'function') {
+                onPathNotMatch();
             }
 
             return;
@@ -52,8 +43,6 @@ const Router = ({ className, homePath, ...props }) => {
         const urlParams = routeConfig.keys.reduce((urlParams, key, index) => {
             if (typeof match[index + 1] === 'string') {
                 urlParams[key.name] = match[index + 1];
-            } else if (typeof routeConfig.defaultUrlParams[key.name] === 'string') {
-                urlParams[key.name] = routeConfig.defaultUrlParams[key.name];
             } else {
                 urlParams[key.name] = null;
             }
@@ -80,9 +69,6 @@ const Router = ({ className, homePath, ...props }) => {
             });
         });
     }, []);
-    React.useEffect(() => {
-        onPathNotMatch.current = props.onPathNotMatch;
-    }, [props.onPathNotMatch]);
     React.useEffect(() => {
         if (typeof homePath === 'string') {
             const { pathname, path } = UrlUtils.parse(window.location.hash.slice(1));
@@ -127,8 +113,7 @@ Router.propTypes = {
         keys: PropTypes.arrayOf(PropTypes.shape({
             name: PropTypes.string.isRequired
         })).isRequired,
-        defaultUrlParams: PropTypes.objectOf(PropTypes.string),
-        component: PropTypes.elementType.isRequired,
+        component: PropTypes.elementType.isRequired
     }))).isRequired
 };
 
