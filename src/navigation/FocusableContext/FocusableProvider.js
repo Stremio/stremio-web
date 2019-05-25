@@ -4,40 +4,39 @@ const { useRoutesContainer } = require('../RoutesContainerContext');
 const { useModalsContainer } = require('../ModalsContainerContext');
 const FocusableContext = require('./FocusableContext');
 
-const FocusableProvider = ({ children, ...props }) => {
+const FocusableProvider = ({ children, onRoutesContainerDomTreeChange, onModalsContainerDomTreeChange }) => {
     const routesContainer = useRoutesContainer();
     const modalsContainer = useModalsContainer();
     const contentContainerRef = React.useRef(null);
     const [focusable, setFocusable] = React.useState(false);
-    const onFocusableChange = React.useCallback(() => {
-        const focusable =
-            props.onModalsContainerDomTreeChange({
-                modalsContainer: modalsContainer,
-                contentContainer: contentContainerRef.current
-            })
-            &&
-            props.onRoutesContainerDomTreeChange({
-                routesContainer: routesContainer,
-                contentContainer: contentContainerRef.current
-            });
-        if (focusable) {
-            contentContainerRef.current.focus();
-        }
-
-        setFocusable(focusable);
-    }, []);
-    const [modalsContainerDomTreeObserver, routesContainerDomTreeObserver] = React.useMemo(() => {
-        return [new MutationObserver(onFocusableChange), new MutationObserver(onFocusableChange)];
-    }, []);
     React.useEffect(() => {
-        onFocusableChange();
-        modalsContainerDomTreeObserver.observe(modalsContainer, { childList: true });
+        const onDomTreeChange = () => {
+            const focusable =
+                onRoutesContainerDomTreeChange({
+                    routesContainer: routesContainer,
+                    contentContainer: contentContainerRef.current
+                })
+                &&
+                onModalsContainerDomTreeChange({
+                    modalsContainer: modalsContainer,
+                    contentContainer: contentContainerRef.current
+                });
+            if (focusable) {
+                contentContainerRef.current.focus();
+            }
+
+            setFocusable(focusable);
+        };
+        const routesContainerDomTreeObserver = new MutationObserver(onDomTreeChange);
+        const modalsContainerDomTreeObserver = new MutationObserver(onDomTreeChange);
         routesContainerDomTreeObserver.observe(routesContainer, { childList: true });
+        modalsContainerDomTreeObserver.observe(modalsContainer, { childList: true });
+        onDomTreeChange();
         return () => {
-            modalsContainerDomTreeObserver.disconnect();
             routesContainerDomTreeObserver.disconnect();
+            modalsContainerDomTreeObserver.disconnect();
         }
-    }, []);
+    }, [routesContainer, modalsContainer, onRoutesContainerDomTreeChange, onModalsContainerDomTreeChange]);
     return (
         <FocusableContext.Provider value={focusable}>
             {React.cloneElement(React.Children.only(children), { ref: contentContainerRef, tabIndex: -1 })}
