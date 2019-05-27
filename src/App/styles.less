@@ -111,10 +111,8 @@ html, body, :global(#app) {
 
     .focusable-with-border {
         &:focus, &:focus-within {
-            &:not(:hover) {
-                outline-offset: calc(-1 * var(--focusable-border-size));
-                outline: var(--focusable-border-size) solid var(--color-surfacelighter);
-            }
+            outline-offset: calc(-1 * var(--focusable-border-size));
+            outline: var(--focusable-border-size) solid var(--color-surfacelighter);
         }
     }
 }
