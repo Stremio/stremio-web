@@ -21,7 +21,7 @@ const Input = React.forwardRef(({ type, tabIndex, children, ...props }, ref) => 
             props.onKeyUp(event);
         }
 
-        if (!event.defaultPrevented && event.which === ENTER_KEY_CODE) {
+        if (!event.handled && event.which === ENTER_KEY_CODE) {
             if (BUTTON_INPUT_TYPES.includes(type)) {
                 event.currentTarget.click();
             } else if (TEXT_INPUT_TYPES.includes(type)) {
@@ -36,19 +36,11 @@ const Input = React.forwardRef(({ type, tabIndex, children, ...props }, ref) => 
             props.onMouseDown(event);
         }
 
-        if (!event.defaultPrevented && BUTTON_INPUT_TYPES.includes(type)) {
+        if (!event.handled && BUTTON_INPUT_TYPES.includes(type)) {
+            event.preventDefault();
             event.currentTarget.blur();
         }
     }, [props.onMouseDown, type]);
-    const onMouseMove = React.useCallback((event) => {
-        if (typeof props.onMouseMove === 'function') {
-            props.onMouseMove(event);
-        }
-
-        if (!event.defaultPrevented && BUTTON_INPUT_TYPES.includes(type)) {
-            event.currentTarget.blur();
-        }
-    }, [props.onMouseMove, type]);
     const tagName = TAG_NAMES_FOR_TYPE[type];
     const elementProps = {
         ...props,
@@ -56,8 +48,7 @@ const Input = React.forwardRef(({ type, tabIndex, children, ...props }, ref) => 
         type: tagName === 'input' ? type : null,
         tabIndex: (isNaN(tabIndex) || tabIndex === null) ? (focusable ? 0 : -1) : tabIndex,
         onKeyUp,
-        onMouseDown,
-        onMouseMove
+        onMouseDown
     };
     return React.createElement(tagName, elementProps, children);
 });
