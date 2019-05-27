@@ -1,9 +1,4 @@
 .meta-item-container {
-    position: relative;
-    z-index: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
     background-color: var(--color-backgroundlight);
     cursor: pointer;
 
@@ -27,16 +22,10 @@
 
     &:hover, &:focus {
         outline: var(--focusable-border-size) solid var(--color-surfacelighter);
-        outline-offset: calc(-1 * var(--focusable-border-size));
-
-        .poster-image-container {
-            .poster-image {
-                filter: brightness(120%);
-            }
-        }
     }
 
     .poster-image-container {
+        width: 100%;
         position: relative;
         z-index: 0;
 
@@ -85,7 +74,6 @@
                 width: 100%;
                 height: 100%;
                 overflow: visible;
-                visibility: var(--play-icon-visibility, collapse);
                 filter: drop-shadow(0 0 0.5em var(--color-backgroundlight));
 
                 .play-icon-background {
@@ -115,21 +103,20 @@
     }
 
     .title-bar-container {
+        width: 100%;
         height: 2.5em;
         display: flex;
         flex-direction: row;
         align-items: center;
-        overflow: hidden;
 
         .title {
-            flex: 1;
-            max-height: 2.2em;
+            flex-grow: 1;
             padding: 0 0.5em;
             line-height: 1.1em;
+            max-height: 2.2em;
             color: var(--color-surfacelighter);
             word-break: break-all;
             word-break: break-word;
-            overflow: hidden;
         }
 
         .menu-icon {
