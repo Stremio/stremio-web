@@ -7,31 +7,16 @@ const styles = require('./styles');
 
 const Checkbox = React.forwardRef(({ className, disabled = false, checked = false, children, ...props }, ref) => {
     const onClick = React.useCallback((event) => {
-        event.preventDefault();
         if (typeof props.onClick === 'function') {
             props.onClick(event);
         }
+
+        if (!event.handled) {
+            event.preventDefault();
+        }
     }, [props.onClick]);
-    const onMouseDown = React.useCallback((event) => {
-        if (typeof props.onMouseDown === 'function') {
-            props.onMouseDown(event);
-        }
-
-        if (!event.defaultPrevented) {
-            event.currentTarget.firstChild.blur();
-        }
-    }, [props.onMouseDown]);
-    const onMouseMove = React.useCallback((event) => {
-        if (typeof props.onMouseMove === 'function') {
-            props.onMouseMove(event);
-        }
-
-        if (!event.defaultPrevented) {
-            event.currentTarget.firstChild.blur();
-        }
-    }, [props.onMouseMove]);
     return (
-        <label className={classnames(className, styles['checkbox-container'], { 'checked': checked }, { 'disabled': disabled })} {...props} onClick={onClick} onMouseDown={onMouseDown} onMouseMove={onMouseMove}>
+        <label className={classnames(className, styles['checkbox-container'], { 'checked': checked }, { 'disabled': disabled })} onClick={onClick}>
             <Input
                 ref={ref}
                 className={styles['native-checkbox']}
@@ -53,8 +38,6 @@ Checkbox.propTypes = {
     disabled: PropTypes.bool,
     checked: PropTypes.bool,
     onClick: PropTypes.func,
-    onMouseDown: PropTypes.func,
-    onMouseMove: PropTypes.func,
     children: PropTypes.node
 };
 
