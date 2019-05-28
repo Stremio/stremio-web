@@ -3,6 +3,7 @@ const ColorPicker = require('./ColorPicker');
 const Loader = require('./Loader');
 const MainNavBar = require('./MainNavBar');
 const MetaItem = require('./MetaItem');
+const MetaPreview = require('./MetaPreview');
 const NavBar = require('./NavBar');
 const Popup = require('./Popup');
 const ShareModal = require('./ShareModal');
@@ -17,6 +18,7 @@ module.exports = {
     Loader,
     MainNavBar,
     MetaItem,
+    MetaPreview,
     NavBar,
     Popup,
     ShareModal,

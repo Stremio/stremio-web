@@ -1,0 +1,118 @@
+.meta-preview-container {
+    background-color: var(--color-backgrounddarker);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-origin: border-box;
+    color: var(--color-surfacelighter);
+
+    &.compact {
+        .meta-preview-content {
+
+            .logo {
+                width: 100%;
+                object-position: center;
+                background-color: var(--color-surfacedark20);
+            }
+
+            .duration-release-info-container {
+                justify-content: space-evenly;
+
+                .duration, .release-info {
+                    margin-left: 0.4em;
+                    margin-right: 0.4em;
+                }
+            }
+        }
+    }
+
+    .meta-preview-content {
+        width: 100%;
+        height: 100%;
+        padding: 0.8em;
+        background-color: var(--color-backgrounddarker60);
+
+        .logo {
+            max-width: 100%;
+            height: 7em;
+            margin-bottom: 0.8em;
+            object-fit: contain;
+            object-position: left center;
+        }
+
+        .duration-release-info-container {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            justify-content: flex-start;
+            flex-wrap: wrap;
+
+            .duration, .release-info {
+                flex-grow: 0;
+                flex-shrink: 1;
+                margin-bottom: 0.8em;
+                margin-right: 0.8em;
+                line-height: 1.1em;
+                max-height: 2.2em;
+                text-align: center;
+                word-wrap: break-word;
+                word-break: break-word;
+            }
+        }
+
+        .name-container {
+            width: 100%;
+            margin-bottom: 0.8em;
+
+            .name {
+                font-size: 1.3em;
+                line-height: 1.2em;
+                max-height: 3.6em;
+                word-wrap: break-word;
+                word-break: break-word;
+            }
+        }
+
+        .description-container {
+            width: 100%;
+            margin-bottom: 0.8em;
+
+            .description {
+                font-size: 0.9em;
+                line-height: 1.15em;
+                max-height: 4.8em;
+                word-wrap: break-word;
+                word-break: break-word;
+            }
+        }
+
+        .links-container {
+            width: 100%;
+            max-height: 3.2em;
+            margin-bottom: 0.8em;
+
+            .title {
+                width: 100%;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                color: var(--color-surfacelight);
+            }
+
+            .link {
+                display: inline-block;
+                max-width: 100%;
+                padding-right: 0.4em;
+                font-size: 0.9em;
+                line-height: 1.15em;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                color: var(--color-surfacelighter);
+
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+        }
+    }
+}
