@@ -9,8 +9,8 @@ const compilePath = (path, options) => {
 const routesRegexp = {
     intro: compilePath('/intro'),
     board: compilePath('/'),
-    discover: compilePath('/discover/(:type?)/(:catalog?)/(:category?)'),
-    library: compilePath('/library/(:type?)/(:sort?)'),
+    discover: compilePath('/discover(?:/(:type|)(?:/(:catalog|)(?:/(:category|))?)?)?'),
+    library: compilePath('/library(?:/(:type|)(?:/(:sort|))?)?'),
     calendar: compilePath('/calendar'),
     search: compilePath('/search'),
     detail: compilePath('/detail'),
