@@ -2,7 +2,7 @@ const React = require('react');
 const classnames = require('classnames');
 const { Input } = require('stremio-navigation');
 const Icon = require('stremio-icons/dom');
-const { MainNavBar, MetaItem, Popup, useBinaryState } = require('stremio-common');
+const { MainNavBar, MetaItem, MetaPreview, Popup, useBinaryState } = require('stremio-common');
 const useCatalog = require('./useCatalog');
 const styles = require('./styles');
 
@@ -101,8 +101,28 @@ const Discover = ({ urlParams }) => {
                                 </div>
                             ))}
                         </div>
-                        <div className={styles['info-container']}>
-                        </div>
+                        <MetaPreview
+                            className={styles['meta-preview-container']}
+                            compact={true}
+                            id={'tt0117951'}
+                            type={'movie'}
+                            name={'Trainspotting'}
+                            logo={'https://s3.dexerto.com/thumbnails/_thumbnailLarge/Pewdiepie-overtaken-by-t-series.jpg'}
+                            logo={'https://images.metahub.space/logo/medium/tt0117951/img'}
+                            background={'https://images.metahub.space/background/medium/tt0117951/img'}
+                            duration={'93 min'}
+                            releaseInfo={'1996'}
+                            released={'1996-08-09T00:00:00.000Z'}
+                            description={'Renton, deeply immersed in the Edinburgh drug scene, tries to clean up and get out, despite the allure of the drugs and influence of friends.'}
+                            genres={['action', 'drama', 'drama', 'draggma', 'dggrama', 'draggma', 'drama', 'drama', 'drama']}
+                            writers={[]}
+                            directors={[]}
+                            cast={[]}
+                            imdbId={'tt0117951'}
+                            imdbRating={'8.2'}
+                            trailer={'encodedStream'}
+                            inLibrary={true}
+                        />
                     </div>
                     :
                     null

@@ -1,16 +1,6 @@
 .discover-container, .menu-layer {
     font-size: 14px;
     --items-per-row: 10;
-
-    .discover-content {
-        .meta-items-container {
-            .meta-item-container {
-                &:nth-child(-n+10) {
-                    padding-top: 0;
-                }
-            }
-        }
-    }
 }
 
 .discover-container {
@@ -32,8 +22,8 @@
         grid-template-columns: 1fr 24em;
         grid-template-rows: 4.6em 1fr;
         grid-template-areas:
-            "picker-area info-area"
-            "meta-items-area info-area";
+            "picker-area meta-preview-area"
+            "meta-items-area meta-preview-area";
         overflow: hidden;
 
         .pickers-container {
@@ -129,8 +119,9 @@
             }
         }
 
-        .info-container {
-            grid-area: info-area;
+        .meta-preview-container {
+            grid-area: meta-preview-area;
+            font-size: 1.2em;
         }
     }
 }
