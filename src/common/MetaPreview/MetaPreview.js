@@ -4,21 +4,54 @@ const Icon = require('stremio-icons/dom');
 const { Input } = require('stremio-navigation');
 const styles = require('./styles');
 
-const MetaPreview = ({ className, compact, id, type, name, logo = '', background = '', duration = '', releaseInfo = '', released, description, genres = [], writers = [], directors = [], cast = [], imdbId = '', imdbRating = '', inLibrary = false, trailer = '', share = '', toggleLibraryOnClick }) => {
+const MetaLinks = ({ label, links, href }) => (
+    <React.Fragment>
+        <div className={styles['links-label']}>{label}</div>
+        <div className={styles['links-container']}>
+            {links.map((link, index) => (
+                <Input key={`${link}-${index}`} className={styles['link']} title={link} type={'link'} tabIndex={-1} href={href(link)}>
+                    {link}
+                    {index < links.length - 1 ? ',' : null}
+                </Input>
+            ))}
+        </div>
+    </React.Fragment>
+);
+
+const MetaPreview = ({ className, compact, id, type, name, logo = '', background = '', duration = '', releaseInfo = '', released = '', description = '', genres = [], writers = [], directors = [], cast = [], imdbId = '', imdbRating = '', inLibrary = false, trailer = '', share = '', toggleLibraryOnClick }) => {
+    const releaseInfoText = React.useMemo(() => {
+        const releasedDate = new Date(released);
+        return releaseInfo.length > 0 ?
+            releaseInfo
+            :
+            !isNaN(releasedDate.getFullYear()) ?
+                releasedDate.getFullYear()
+                :
+                '';
+    }, [releaseInfo, released]);
     const logoOnError = React.useCallback((event) => {
         event.currentTarget.style.display = 'none';
     }, []);
-    const releaseInfoText = releaseInfo.length > 0 ?
-        releaseInfo
-        :
-        released instanceof Date && !isNaN(released.getFullYear()) ?
-            released.getFullYear()
-            :
-            '';
+    const hrefForGenre = React.useCallback((genre) => {
+        return `#/discover/${type}//${genre}`;
+    }, [type]);
+    const hrefForCrew = React.useCallback((name) => {
+        return `#/search?q=${name}`;
+    }, []);
     return (
         <div className={classnames(className, styles['meta-preview-container'], { [styles['compact']]: compact })} style={{ backgroundImage: `url(${background})` }}>
             <div className={styles['meta-preview-content']}>
-                <img className={styles['logo']} src={logo} onError={logoOnError} />
+                {
+                    logo.length > 0 ?
+                        <img
+                            key={logo}
+                            className={styles['logo']}
+                            src={logo}
+                            onError={logoOnError}
+                        />
+                        :
+                        null
+                }
                 {
                     releaseInfoText.length > 0 || duration.length > 0 ?
                         <div className={styles['duration-release-info-container']}>
@@ -41,7 +74,7 @@ const MetaPreview = ({ className, compact, id, type, name, logo = '', background
                 {
                     name.length > 0 ?
                         <div className={styles['name-container']}>
-                            <div className={styles['name']} title={name}>{name}</div>
+                            <div className={styles['name']}>{name}</div>
                         </div>
                         :
                         null
@@ -56,45 +89,30 @@ const MetaPreview = ({ className, compact, id, type, name, logo = '', background
                 }
                 {
                     genres.length > 0 ?
-                        <div className={styles['links-container']}>
-                            <div className={styles['title']}>Genres:</div>
-                            {genres.map((genre) => (
-                                <Input key={genre} className={styles['link']} tabIndex={-1} type={'link'} href={`#/discover/${type}//${genre}`}>
-                                    {genre}
-                                </Input>
-                            ))}
-                        </div>
+                        <MetaLinks label={'Genres:'} links={genres} href={hrefForGenre} />
+                        :
+                        null
+                }
+                {
+                    cast.length > 0 ?
+                        <MetaLinks label={'Cast:'} links={cast} href={hrefForCrew} />
+                        :
+                        null
+                }
+                {
+                    writers.length > 0 && !compact ?
+                        <MetaLinks label={'Writers:'} links={writers} href={hrefForCrew} />
+                        :
+                        null
+                }
+                {
+                    directors.length > 0 && !compact ?
+                        <MetaLinks label={'Directors:'} links={directors} href={hrefForCrew} />
                         :
                         null
                 }
             </div>
             {/* 
-            {
-                writers.length > 0 ?
-                    <div className={styles['links-container']}>
-                        <div className={styles['title']}>Writers</div>
-                        {writers.map((writer) => (
-                            <Input key={writer} className={styles['link']} type={'link'} href={`#/search?q=${writer}`}>
-                                {writer}
-                            </Input>
-                        ))}
-                    </div>
-                    :
-                    null
-            }
-            {
-                cast.length > 0 ?
-                    <div className={styles['links-container']}>
-                        <div className={styles['title']}>Cast</div>
-                        {cast.map((actor) => (
-                            <Input key={actor} className={styles['link']} type={'link'} href={`#/search?q=${actor}`}>
-                                {actor}
-                            </Input>
-                        ))}
-                    </div>
-                    :
-                    null
-            }
             <div className={styles['action-buttons-container']}>
                 {
                     trailer.length > 0 ?
