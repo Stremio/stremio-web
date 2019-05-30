@@ -109,19 +109,20 @@ const Discover = ({ urlParams }) => {
                             name={'Trainspotting'}
                             logo={'https://s3.dexerto.com/thumbnails/_thumbnailLarge/Pewdiepie-overtaken-by-t-series.jpg'}
                             logo={'https://images.metahub.space/logo/medium/tt0117951/img'}
-                            background={'https://images.metahub.space/background/medium/tt0117951/img'}
+                            background={'https://www.bfi.org.uk/sites/bfi.org.uk/files/styles/full/public/image/trainspotting-1996-008-ewan-bremner-ewan-mcgregor-robert-carlyle-00m-m63.jpg?itok=tmpxRcqP'}
                             duration={'93 min'}
                             releaseInfo={'1996'}
                             released={'1996-08-09T00:00:00.000Z'}
-                            description={'Renton, deeply immersed in the Edinburgh drug scene, tries to clean up and get out, despite the allure of the drugs and influence of friends.'}
-                            genres={['action', 'drama', 'drama', 'draggma', 'dggrama', 'draggma', 'drama', 'drama', 'drama']}
-                            writers={[]}
-                            directors={[]}
-                            cast={[]}
+                            description={'Renton, deeply immersed in the Edinburgh drug scene, tries to clean up and get out, despite the allure of the drugs and influence of friends. gg'}
+                            genres={['action', 'drama', 'drama', 'drama', 'drama', 'drama', 'drama', 'drama', 'drama']}
+                            writers={['Ewan McGregor', 'Ewen Bremner', 'Jonny Lee Miller', 'Kevin McKidd', 'Kevin McKidd', 'Kevin McKidd', 'Kevin McKidd', 'Kevin McKidd', 'Kevin McKidd']}
+                            directors={['Ewan McGregor', 'Ewen Bremner', 'Jonny Lee Miller', 'Kevin McKidd', 'Kevin McKidd', 'Kevin McKidd', 'Kevin McKidd', 'Kevin McKidd', 'Kevin McKidd']}
+                            cast={['Ewan McGregor', 'Ewen Bremner', 'Jonny Lee Miller', 'Kevin McKidd', 'Kevin McKidd', 'Kevin McKidd', 'Kevin McKidd', 'Kevin McKidd', 'Kevin McKidd']}
                             imdbId={'tt0117951'}
                             imdbRating={'8.2'}
                             trailer={'encodedStream'}
                             inLibrary={true}
+                            share={'share_url'}
                         />
                     </div>
                     :
