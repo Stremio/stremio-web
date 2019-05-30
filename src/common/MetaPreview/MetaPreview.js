@@ -1,4 +1,5 @@
 const React = require('react');
+const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const { Input, Modal } = require('stremio-navigation');
@@ -37,7 +38,7 @@ const ActionButton = ({ icon, label, ...props }) => {
     );
 };
 
-const MetaPreview = ({ className, compact, id, type, name, logo = '', background = '', duration = '', releaseInfo = '', released = '', description = '', genres = [], writers = [], directors = [], cast = [], imdbId = '', imdbRating = '', inLibrary = false, trailer = '', share = '', toggleIsInLibrary }) => {
+const MetaPreview = ({ className, compact, id, type, name, logo, background, duration, releaseInfo, released, description, genres, writers, directors, cast, imdbId, imdbRating, inLibrary, trailer, share, toggleIsInLibrary }) => {
     const [shareModalOpen, openShareModal, closeShareModal] = useBinaryState(false);
     const releaseInfoText = React.useMemo(() => {
         const releasedDate = new Date(released);
@@ -202,6 +203,30 @@ const MetaPreview = ({ className, compact, id, type, name, logo = '', background
             </div>
         </div>
     );
+};
+
+MetaPreview.propTypes = {
+    className: PropTypes.string,
+    compact: PropTypes.bool,
+    id: PropTypes.string,
+    type: PropTypes.string,
+    name: PropTypes.string,
+    logo: PropTypes.string,
+    background: PropTypes.string,
+    duration: PropTypes.string,
+    releaseInfo: PropTypes.string,
+    released: PropTypes.string,
+    description: PropTypes.string,
+    genres: PropTypes.arrayOf(PropTypes.string),
+    writers: PropTypes.arrayOf(PropTypes.string),
+    directors: PropTypes.arrayOf(PropTypes.string),
+    cast: PropTypes.arrayOf(PropTypes.string),
+    imdbId: PropTypes.string,
+    imdbRating: PropTypes.string,
+    inLibrary: PropTypes.bool,
+    trailer: PropTypes.string,
+    share: PropTypes.string,
+    toggleIsInLibrary: PropTypes.func
 };
 
 module.exports = MetaPreview;
