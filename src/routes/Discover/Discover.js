@@ -123,6 +123,7 @@ const Discover = ({ urlParams }) => {
                             trailer={'encodedStream'}
                             inLibrary={true}
                             share={'share_url'}
+                            toggleIsInLibrary={() => { }}
                         />
                     </div>
                     :

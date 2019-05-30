@@ -1,24 +1,44 @@
 const React = require('react');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
-const { Input } = require('stremio-navigation');
+const { Input, Modal } = require('stremio-navigation');
+const useBinaryState = require('../useBinaryState');
 const styles = require('./styles');
 
-const MetaLinks = ({ label, links, href }) => (
-    <React.Fragment>
-        <div className={styles['links-label']}>{label}</div>
-        <div className={styles['links-container']}>
-            {links.map((link, index) => (
-                <Input key={`${link}-${index}`} className={styles['link']} title={link} type={'link'} tabIndex={-1} href={href(link)}>
-                    {link}
-                    {index < links.length - 1 ? ',' : null}
-                </Input>
-            ))}
-        </div>
-    </React.Fragment>
-);
+const MetaLinks = ({ label, links, href }) => {
+    return (
+        <React.Fragment>
+            <div className={styles['links-label']}>{label}</div>
+            <div className={styles['links-container']}>
+                {links.map((link, index) => (
+                    <Input key={`${link}-${index}`} className={styles['link']} title={link} type={'link'} tabIndex={-1} href={href(link)}>
+                        {link}
+                        {index < links.length - 1 ? ',' : null}
+                    </Input>
+                ))}
+            </div>
+        </React.Fragment>
+    );
+};
 
-const MetaPreview = ({ className, compact, id, type, name, logo = '', background = '', duration = '', releaseInfo = '', released = '', description = '', genres = [], writers = [], directors = [], cast = [], imdbId = '', imdbRating = '', inLibrary = false, trailer = '', share = '', toggleLibraryOnClick }) => {
+const ActionButton = ({ icon, label, ...props }) => {
+    return (
+        <Input className={styles['action-button']} title={label} tabIndex={-1} {...props}>
+            <Icon className={styles['icon']} icon={icon} />
+            {
+                typeof label === 'string' && label.length > 0 ?
+                    <div className={styles['label-container']}>
+                        <div className={styles['label']}>{label}</div>
+                    </div>
+                    :
+                    null
+            }
+        </Input>
+    );
+};
+
+const MetaPreview = ({ className, compact, id, type, name, logo = '', background = '', duration = '', releaseInfo = '', released = '', description = '', genres = [], writers = [], directors = [], cast = [], imdbId = '', imdbRating = '', inLibrary = false, trailer = '', share = '', toggleIsInLibrary }) => {
+    const [shareModalOpen, openShareModal, closeShareModal] = useBinaryState(false);
     const releaseInfoText = React.useMemo(() => {
         const releasedDate = new Date(released);
         return releaseInfo.length > 0 ?
@@ -27,7 +47,7 @@ const MetaPreview = ({ className, compact, id, type, name, logo = '', background
             !isNaN(releasedDate.getFullYear()) ?
                 releasedDate.getFullYear()
                 :
-                '';
+                null;
     }, [releaseInfo, released]);
     const logoOnError = React.useCallback((event) => {
         event.currentTarget.style.display = 'none';
@@ -40,9 +60,9 @@ const MetaPreview = ({ className, compact, id, type, name, logo = '', background
     }, []);
     return (
         <div className={classnames(className, styles['meta-preview-container'], { [styles['compact']]: compact })} style={{ backgroundImage: `url(${background})` }}>
-            <div className={styles['meta-preview-content']}>
+            <div className={styles['meta-preview-content']} tabIndex={-1}>
                 {
-                    logo.length > 0 ?
+                    typeof logo === 'string' && logo.length > 0 ?
                         <img
                             key={logo}
                             className={styles['logo']}
@@ -53,16 +73,16 @@ const MetaPreview = ({ className, compact, id, type, name, logo = '', background
                         null
                 }
                 {
-                    releaseInfoText.length > 0 || duration.length > 0 ?
+                    (typeof releaseInfoText === 'string' && releaseInfoText.length > 0) || (typeof duration === 'string' && duration.length > 0) ?
                         <div className={styles['duration-release-info-container']}>
                             {
-                                releaseInfoText.length > 0 ?
+                                typeof releaseInfoText === 'string' && releaseInfoText.length > 0 ?
                                     <div className={styles['release-info']}>{releaseInfoText}</div>
                                     :
                                     null
                             }
                             {
-                                duration.length > 0 ?
+                                typeof duration === 'string' && duration.length > 0 ?
                                     <div className={styles['duration']}>{duration}</div>
                                     :
                                     null
@@ -72,7 +92,7 @@ const MetaPreview = ({ className, compact, id, type, name, logo = '', background
                         null
                 }
                 {
-                    name.length > 0 ?
+                    typeof name === 'string' && name.length > 0 ?
                         <div className={styles['name-container']}>
                             <div className={styles['name']}>{name}</div>
                         </div>
@@ -80,7 +100,7 @@ const MetaPreview = ({ className, compact, id, type, name, logo = '', background
                         null
                 }
                 {
-                    description.length > 0 ?
+                    typeof description === 'string' && description.length > 0 ?
                         <div className={styles['description-container']}>
                             <div className={styles['description']}>{description}</div>
                         </div>
@@ -88,78 +108,99 @@ const MetaPreview = ({ className, compact, id, type, name, logo = '', background
                         null
                 }
                 {
-                    genres.length > 0 ?
+                    Array.isArray(genres) && genres.length > 0 ?
                         <MetaLinks label={'Genres:'} links={genres} href={hrefForGenre} />
                         :
                         null
                 }
                 {
-                    cast.length > 0 ?
+                    Array.isArray(cast) && cast.length > 0 ?
                         <MetaLinks label={'Cast:'} links={cast} href={hrefForCrew} />
                         :
                         null
                 }
                 {
-                    writers.length > 0 && !compact ?
+                    Array.isArray(writers) && writers.length > 0 && !compact ?
                         <MetaLinks label={'Writers:'} links={writers} href={hrefForCrew} />
                         :
                         null
                 }
                 {
-                    directors.length > 0 && !compact ?
+                    Array.isArray(directors) && directors.length > 0 && !compact ?
                         <MetaLinks label={'Directors:'} links={directors} href={hrefForCrew} />
                         :
                         null
                 }
             </div>
-            {/* 
             <div className={styles['action-buttons-container']}>
                 {
-                    trailer.length > 0 ?
-                        <Input className={styles['action-button-container']} type={'link'} href={`#/player?stream=${trailer}`}>
-                            <Icon className={styles['icon']} icon={'ic_movies'} />
-                            <div className={styles['label']}>Trailer</div>
-                        </Input>
+                    typeof toggleIsInLibrary === 'function' ?
+                        <ActionButton
+                            type={'button'}
+                            icon={inLibrary ? 'ic_removelib' : 'ic_addlib'}
+                            label={inLibrary ? 'Remove from Library' : 'Add to library'}
+                            data-meta-item-id={id}
+                            onClick={toggleIsInLibrary}
+                        />
                         :
                         null
                 }
                 {
-                    imdbId.length > 0 ?
-                        <Input className={styles['action-button-container']} type={'link'} href={`https://imdb.com/title/${imdbId}`} target={'_blank'}>
-                            <Icon className={styles['icon']} icon={'ic_imdb'} />
-                            {
-                                imdbRating.length > 0 ?
-                                    <div className={styles['label']}>{imdbRating} / 10</div>
-                                    :
-                                    null
-                            }
-                        </Input>
+                    typeof trailer === 'string' && trailer.length > 0 ?
+                        <ActionButton
+                            type={'link'}
+                            icon={'ic_movies'}
+                            label={'Trailer'}
+                            href={`#/player?stream=${trailer}`}
+                        />
                         :
                         null
                 }
-                <Input className={styles['action-button-container']} type={'button'} data-meta-item-id={id} onClick={toggleLibraryOnClick}>
-                    <Icon className={styles['icon']} icon={inLibrary ? 'ic_removelib' : 'ic_addlib'} />
-                    <div className={styles['label']}>{inLibrary ? 'Remove from Library' : 'Add to library'}</div>
-                </Input>
                 {
-                    share.length > 0 ?
-                        <Input className={styles['action-button-container']} type={'button'}>
-                            <Icon className={styles['icon']} icon={'ic_share'} />
-                            <div className={styles['label']}>Share</div>
+                    typeof imdbId === 'string' && imdbId.length > 0 ?
+                        <ActionButton
+                            type={'link'}
+                            icon={'ic_imdb'}
+                            label={typeof imdbRating === 'string' && imdbRating.length > 0 ? `${imdbRating} / 10` : null}
+                            href={`https://imdb.com/title/${imdbId}`}
+                            target={'_blank'}
+                        />
+                        :
+                        null
+                }
+                {
+                    typeof share === 'string' && share.length > 0 && !compact ?
+                        <React.Fragment>
+                            <ActionButton
+                                type={'button'}
+                                icon={'ic_share'}
+                                label={'Share'}
+                                onClick={openShareModal}
+                            />
                             {
                                 shareModalOpen ?
                                     <Modal>
-                                        
+                                        <div
+                                            onClick={(event) => {
+                                                event.stopPropagation();
+                                                closeShareModal();
+                                            }}
+                                            style={{
+                                                width: '100%',
+                                                height: '100%',
+                                                backgroundColor: 'var(--color-surfacedarker40)'
+                                            }}
+                                        />
                                     </Modal>
                                     :
                                     null
                             }
-                        </Input>
+                        </React.Fragment>
                         :
                         null
                 }
-            </div> */}
-        </div >
+            </div>
+        </div>
     );
 };
 
