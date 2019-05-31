@@ -64,7 +64,7 @@ NavBar.displayName = 'NavBar';
 NavBar.propTypes = {
     className: PropTypes.string,
     backButton: PropTypes.bool,
-    tabs: PropTypes.arrayOf(PropTypes.exact({
+    tabs: PropTypes.arrayOf(PropTypes.shape({
         icon: PropTypes.string.isRequired,
         label: PropTypes.string.isRequired,
         href: PropTypes.string.isRequired
