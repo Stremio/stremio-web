@@ -23,7 +23,7 @@ class Intro extends React.Component {
         this.errorRef = React.createRef();
 
         this.state = {
-            selectedForm: FORMS.LOGIN,
+            selectedForm: FORMS.SIGN_UP,
             termsAccepted: false,
             privacyPolicyAccepted: false,
             marketingAccepted: false,
@@ -232,7 +232,7 @@ class Intro extends React.Component {
                                         link={'Terms and conditions'}
                                         href={'https://www.stremio.com/tos'}
                                         checked={this.state.termsAccepted}
-                                        onClick={this.toggleTerms}
+                                        toggle={this.toggleTerms}
                                     />
                                     <ConsentCheckbox
                                         ref={this.privacyPolicyRef}
@@ -241,14 +241,14 @@ class Intro extends React.Component {
                                         link={'Privacy Policy'}
                                         href={'https://www.stremio.com/privacy'}
                                         checked={this.state.privacyPolicyAccepted}
-                                        onClick={this.togglePrivacyPolicy}
+                                        toggle={this.togglePrivacyPolicy}
                                     />
                                     <ConsentCheckbox
                                         ref={this.marketingRef}
                                         className={classnames(styles['consent-checkbox'], 'focusable-with-border')}
                                         label={'I agree to receive marketing communications from Stremio'}
                                         checked={this.state.marketingAccepted}
-                                        onClick={this.toggleMarketing}
+                                        toggle={this.toggleMarketing}
                                     />
                                 </React.Fragment>
                         }
