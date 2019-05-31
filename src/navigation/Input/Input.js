@@ -21,7 +21,7 @@ const Input = React.forwardRef(({ type, tabIndex, children, ...props }, ref) => 
             props.onKeyUp(event);
         }
 
-        if (!event.handled && event.which === ENTER_KEY_CODE) {
+        if (!event.handled && event.keyCode === ENTER_KEY_CODE) {
             if (BUTTON_INPUT_TYPES.includes(type)) {
                 event.currentTarget.click();
             } else if (TEXT_INPUT_TYPES.includes(type)) {
