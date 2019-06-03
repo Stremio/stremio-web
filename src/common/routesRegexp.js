@@ -9,7 +9,7 @@ const compilePath = (path, options) => {
 const routesRegexp = {
     intro: compilePath('/intro'),
     board: compilePath('/'),
-    discover: compilePath('/discover(?:/(:type|)(?:/(:catalog|)(?:/(:category|))?)?)?'),
+    discover: compilePath('/discover(?:/(:type|)(?:/(:catalog|))?)?'),
     library: compilePath('/library(?:/(:type|)(?:/(:sort|))?)?'),
     calendar: compilePath('/calendar'),
     search: compilePath('/search'),
