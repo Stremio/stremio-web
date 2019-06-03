@@ -38,7 +38,9 @@ const Input = React.forwardRef(({ type, tabIndex, children, ...props }, ref) => 
 
         if (!event.handled && BUTTON_INPUT_TYPES.includes(type)) {
             event.preventDefault();
-            event.currentTarget.blur();
+            if (document.activeElement instanceof HTMLElement) {
+                document.activeElement.blur();
+            }
         }
     }, [props.onMouseDown, type]);
     const tagName = TAG_NAMES_FOR_TYPE[type];
