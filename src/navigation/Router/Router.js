@@ -39,7 +39,11 @@ const Router = ({ className, homePath, viewsConfig, onPathNotMatch }) => {
 
         const routeViewIndex = viewsConfig.findIndex((v) => v.includes(routeConfig));
         const match = routeConfig.regexp.exec(pathname);
-        const queryParams = new URLSearchParams(query);
+        const queryParams = Array.from(new URLSearchParams(query !== null ? query : '').entries())
+            .reduce((result, [key, value]) => {
+                result[key] = value;
+                return result;
+            }, {});
         const urlParams = routeConfig.keys.reduce((urlParams, key, index) => {
             if (typeof match[index + 1] === 'string') {
                 urlParams[key.name] = match[index + 1];
