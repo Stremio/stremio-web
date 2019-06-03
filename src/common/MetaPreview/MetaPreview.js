@@ -42,7 +42,7 @@ const MetaPreview = ({ className, compact, id, type, name, logo, background, dur
     const [shareModalOpen, openShareModal, closeShareModal] = useBinaryState(false);
     const releaseInfoText = React.useMemo(() => {
         const releasedDate = new Date(released);
-        return releaseInfo.length > 0 ?
+        return typeof releaseInfo === 'string' && releaseInfo.length > 0 ?
             releaseInfo
             :
             !isNaN(releasedDate.getFullYear()) ?
