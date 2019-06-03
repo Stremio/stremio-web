@@ -2,6 +2,10 @@
     background-color: var(--color-backgroundlight);
     cursor: pointer;
 
+    &:hover, &:focus {
+        outline: var(--focusable-border-size) solid var(--color-surfacelighter);
+    }
+
     &.poster-shape-square {
         .poster-image-container {
             padding-top: 100%;
@@ -18,10 +22,6 @@
         .poster-image-container {
             padding-top: calc(100% * var(--poster-shape-ratio));
         }
-    }
-
-    &:hover, &:focus {
-        outline: var(--focusable-border-size) solid var(--color-surfacelighter);
     }
 
     .poster-image-container {
@@ -108,6 +108,7 @@
         display: flex;
         flex-direction: row;
         align-items: center;
+        justify-content: flex-end;
 
         .title {
             flex-grow: 1;
@@ -115,8 +116,6 @@
             line-height: 1.1em;
             max-height: 2.2em;
             color: var(--color-surfacelighter);
-            word-break: break-all;
-            word-break: break-word;
         }
 
         .menu-icon {
@@ -146,8 +145,6 @@
             font-size: 1.2em;
             padding: 0.5em;
             color: var(--color-backgrounddarker);
-            word-break: break-all;
-            word-break: break-word;
             cursor: pointer;
 
             &:hover, &:focus {
