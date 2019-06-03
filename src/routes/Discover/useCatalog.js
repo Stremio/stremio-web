@@ -1,6 +1,6 @@
 const React = require('react');
 
-const useCatalog = () => {
+const useCatalog = (addonId, catalogId, extra) => {
     return React.useMemo(() => {
         return Array(303).fill(null).map((_, index) => ({
             id: `tt${index}`,
