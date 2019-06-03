@@ -20,29 +20,23 @@
         align-self: stretch;
         display: grid;
         grid-template-columns: 1fr 26em;
-        grid-template-rows: 4.6em 1fr;
+        grid-template-rows: auto 1fr;
         grid-template-areas:
-            "picker-area meta-preview-area"
+            "pickers-area meta-preview-area"
             "meta-items-area meta-preview-area";
-        overflow: hidden;
 
         .pickers-container {
-            grid-area: picker-area;
-            display: flex;
-            flex-direction: row;
-            align-items: stretch;
-            padding: 0.8em;
+            grid-area: pickers-area;
+            padding: 0.4em;
 
             .picker-button {
-                flex-grow: 0;
-                flex-shrink: 1;
-                flex-basis: 16em;
-                display: flex;
+                width: 16em;
+                height: 3em;
+                margin: 0.4em;
+                padding: 0 0.8em;
+                display: inline-flex;
                 flex-direction: row;
                 align-items: center;
-                justify-content: space-between;
-                margin-right: 0.8em;
-                padding: 0 0.8em;
                 background-color: var(--color-backgroundlighter);
                 cursor: pointer;
 
@@ -62,20 +56,16 @@
                     }
                 }
 
-                &.types-picker-button {
-                    .picker-label {
-                        text-transform: capitalize;
-                    }
-                }
-
                 .picker-label {
                     flex: 1;
                     font-size: 1.1em;
-                    line-height: 1.1em;
-                    max-height: 2.2em;
+                    line-height: 1.2em;
+                    max-height: 2.4em;
                     color: var(--color-surfacelighter);
-                    word-break: break-all;
-                    word-break: break-word;
+
+                    &.capitalized {
+                        text-transform: capitalize;
+                    }
                 }
 
                 .picker-icon {
@@ -90,31 +80,17 @@
 
         .meta-items-container {
             grid-area: meta-items-area;
-            display: flex;
-            flex-direction: row;
-            justify-content: flex-start;
-            align-content: flex-start;
-            flex-wrap: wrap;
             padding: 0 0.4em;
             overflow-x: hidden;
             overflow-y: auto;
 
-            &::after {
-                width: 100%;
-                height: 0.4em;
-                display: block;
-                content: "";
-            }
-
             .meta-item-container {
-                flex-grow: 0;
-                flex-shrink: 0;
-                flex-basis: calc(100% / var(--items-per-row));
+                display: inline-block;
+                width: calc(100% / var(--items-per-row));
                 padding: 0.4em;
 
                 .meta-item {
                     width: 100%;
-                    height: 100%;
                 }
             }
         }
@@ -130,22 +106,11 @@
     --border-color: var(--color-backgroundlighter40);
     --box-shadow: -0.6em 0.6em 0.5em -0.1em var(--color-backgrounddark40);
 
-    .menu-items-container {
+    .menu-container {
         width: 16em;
-        max-height: 18em;
-        overflow-y: auto;
         background-color: var(--color-backgroundlighter);
 
-        &.menu-types-container {
-            .menu-item-container {
-                .menu-label {
-                    text-transform: capitalize;
-                }
-            }
-        }
-
         .menu-item-container {
-            width: 100%;
             padding: 0.8em;
             cursor: pointer;
 
@@ -154,13 +119,14 @@
             }
 
             .menu-label {
-                line-height: 1.1em;
-                max-height: 2.2em;
+                line-height: 1.2em;
+                max-height: 2.4em;
                 color: var(--color-surfacelighter);
-                word-break: break-all;
-                word-break: break-word;
+
+                &.capitalized {
+                    text-transform: capitalize;
+                }
             }
         }
     }
-
 }
