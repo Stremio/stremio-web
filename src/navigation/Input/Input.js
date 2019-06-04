@@ -21,7 +21,7 @@ const Input = React.forwardRef(({ type, tabIndex, children, ...props }, ref) => 
             props.onKeyUp(event);
         }
 
-        if (!event.handled && event.keyCode === ENTER_KEY_CODE) {
+        if (!event.nativeEvent.handled && event.keyCode === ENTER_KEY_CODE) {
             if (BUTTON_INPUT_TYPES.includes(type)) {
                 event.currentTarget.click();
             } else if (TEXT_INPUT_TYPES.includes(type)) {
@@ -36,7 +36,7 @@ const Input = React.forwardRef(({ type, tabIndex, children, ...props }, ref) => 
             props.onMouseDown(event);
         }
 
-        if (!event.handled && BUTTON_INPUT_TYPES.includes(type)) {
+        if (!event.nativeEvent.handled && BUTTON_INPUT_TYPES.includes(type)) {
             event.preventDefault();
             if (document.activeElement instanceof HTMLElement) {
                 document.activeElement.blur();
