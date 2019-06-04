@@ -4,184 +4,164 @@
 }
 
 .intro-container {
-    position: relative;
-    z-index: 0;
     height: 100%;
-    background-image: url('/images/intro_background.jpg');
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background:
+        linear-gradient(var(--color-backgrounddark80), var(--color-backgrounddark80)),
+        url('/images/intro_background.jpg');
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
     background-origin: border-box;
+    overflow-y: auto;
+    overflow-x: hidden;
 
-    .background-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        z-index: 0;
-        background-color: var(--color-backgrounddark80);
-    }
+    .form-container {
+        width: var(--form-width);
+        margin: auto;
+        padding: 4em 0;
 
-    .intro-content {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        z-index: 1;
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-        overflow-y: auto;
-        overflow-x: hidden;
+        .login-form-button {
+            width: 100%;
+            padding: 0 1em;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
 
-        .form-container {
-            width: var(--form-width);
-            margin: auto;
-            padding: 4em 0;
-
-            .login-form-button {
-                width: 100%;
-                padding: 0 1em;
-                display: flex;
-                flex-direction: row;
-                align-items: center;
-                justify-content: center;
-                cursor: pointer;
-
-                .icon {
-                    width: 0.8em;
-                    height: 100%;
-                    margin-right: 1em;
-                    fill: var(--color-surfacelighter);
-
-                    &~.label {
-                        max-width: calc(100% - 1.8em);
-                    }
-                }
-
-                .label {
-                    max-width: 100%;
-                    padding: 0.3em 0;
-                    font-size: 1.1em;
-                    line-height: 1.2em;
-                    font-weight: 600;
-                    color: var(--color-surfacelighter);
-                    word-wrap: break-word;
-                }
-            }
-
-            .facebook-button {
-                min-height: 4.5em;
-                background: #4267b2;
-
-                .label {
-                    font-size: 1.2em;
-                }
-
-                &:hover {
-                    filter: brightness(1.1);
-                }
-            }
-
-            .facebook-statement {
-                width: 100%;
-                margin-top: 0.5em;
-                margin-bottom: 2em;
-                text-align: center;
-                color: var(--color-surface);
-                word-wrap: break-word;
-            }
-
-            .text-input {
+            .icon {
+                flex: none;
+                align-self: stretch;
                 display: block;
-                width: 100%;
-                margin: 1em 0;
-                padding: 0.5em 0.3em;
-                border-bottom: calc(0.5 * var(--focusable-border-size)) solid var(--color-surface);
+                width: 0.8em;
+                margin-right: 1em;
+                fill: var(--color-surfacelighter);
+
+                &~.label {
+                    max-width: calc(100% - 1.8em);
+                }
+            }
+
+            .label {
+                flex: none;
+                max-width: 100%;
+                padding: 0.3em 0;
+                font-size: 1.1em;
+                line-height: 1.2em;
+                font-weight: 600;
                 color: var(--color-surfacelighter);
+            }
+        }
+
+        .facebook-button {
+            min-height: 4.5em;
+            background: #4267b2;
+
+            .label {
+                font-size: 1.2em;
+            }
+
+            &:hover {
+                filter: brightness(1.1);
+            }
+        }
+
+        .facebook-statement {
+            width: 100%;
+            margin-top: 0.5em;
+            margin-bottom: 2em;
+            text-align: center;
+            color: var(--color-surface);
+        }
+
+        .text-input {
+            display: block;
+            width: 100%;
+            margin: 1em 0;
+            padding: 0.5em 0.3em;
+            border-bottom: calc(0.5 * var(--focusable-border-size)) solid var(--color-surface);
+            color: var(--color-surfacelighter);
+
+            &::placeholder {
+                color: var(--color-surfacelight);
+            }
+
+            &:hover, &:focus {
+                background-color: var(--color-surfacedarker60);
+                border-bottom-color: var(--color-surfacelighter);
 
                 &::placeholder {
-                    color: var(--color-surfacelight);
-                }
-
-                &:hover, &:focus {
-                    background-color: var(--color-surfacedarker60);
-                    border-bottom-color: var(--color-surfacelighter);
-
-                    &::placeholder {
-                        color: var(--color-surfacelighter);
-                    }
+                    color: var(--color-surfacelighter);
                 }
             }
+        }
 
-            .forgot-password-link-container {
-                margin: 1em 0;
-                text-align: right;
+        .forgot-password-link-container {
+            margin: 1em 0;
+            text-align: right;
 
-                .forgot-password-link {
-                    max-width: 100%;
-                    display: inline-block;
-                    padding: 0.5em 0.3em;
-                    color: var(--color-surfacelight);
-                    word-wrap: break-word;
-                    cursor: pointer;
-
-                    &:hover {
-                        text-decoration: underline;
-                        color: var(--color-surfacelighter);
-                    }
-
-                    &:focus {
-                        color: var(--color-surfacelighter);
-                    }
-                }
-            }
-
-            .consent-checkbox {
-                margin: 1em 0;
+            .forgot-password-link {
+                display: inline-block;
+                max-width: 100%;
                 padding: 0.5em 0.3em;
-            }
-
-            .error-message {
-                margin: 1em 0;
-                text-align: center;
-                color: var(--color-signal1);
-                word-wrap: break-word;
-            }
-
-            .submit-button {
-                min-height: 4em;
-                margin: 1em 0;
-                background-color: var(--color-primarydark);
-
-                .label {
-                    font-size: 1.2em;
-                }
+                color: var(--color-surfacelight);
+                cursor: pointer;
 
                 &:hover {
-                    background-color: var(--color-primary);
+                    text-decoration: underline;
+                    color: var(--color-surfacelighter);
+                }
+
+                &:focus {
+                    color: var(--color-surfacelighter);
                 }
             }
+        }
 
-            .guest-login-button {
-                margin-top: 1em;
-                margin-bottom: 0.2em;
-                padding: 0.8em .3em;
+        .consent-checkbox {
+            margin: 1em 0;
+            padding: 0.5em 0.3em;
+        }
 
-                &:hover, &:focus {
-                    background-color: var(--color-surfacedarker60);
-                }
+        .error-message {
+            margin: 1em 0;
+            text-align: center;
+            color: var(--color-signal1);
+        }
+
+        .submit-button {
+            min-height: 4em;
+            margin: 1em 0;
+            background-color: var(--color-primarydark);
+
+            .label {
+                font-size: 1.2em;
             }
 
-            .switch-form-button {
-                padding: 0.8em .3em;
+            &:hover {
+                background-color: var(--color-primary);
+            }
+        }
 
-                &:hover, &:focus {
-                    background-color: var(--color-surfacedarker60);
-                }
+        .guest-login-button {
+            margin-top: 1em;
+            margin-bottom: 0.2em;
+            padding: 0.8em .3em;
+
+            &:hover, &:focus {
+                background-color: var(--color-surfacedarker60);
+            }
+        }
+
+        .switch-form-button {
+            padding: 0.8em .3em;
+
+            &:hover, &:focus {
+                background-color: var(--color-surfacedarker60);
             }
         }
     }

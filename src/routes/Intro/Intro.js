@@ -182,99 +182,96 @@ class Intro extends React.Component {
 
     render() {
         return (
-            <div className={styles['intro-container']}>
-                <div className={styles['background-overlay']} />
-                <div className={styles['intro-content']} tabIndex={-1}>
-                    <div className={styles['form-container']}>
-                        <Input className={classnames(styles['login-form-button'], styles['facebook-button'], 'focusable-with-border')} type={'button'} onClick={this.loginWithFacebook}>
-                            <Icon className={styles['icon']} icon={'ic_facebook'} />
-                            <div className={styles['label']}>Login with Facebook</div>
-                        </Input>
-                        <div className={styles['facebook-statement']}>We won't post anything on your behalf</div>
-                        <Input
-                            ref={this.emailRef}
-                            className={styles['text-input']}
-                            type={'email'}
-                            placeholder={'Email'}
-                            value={this.state.email}
-                            onChange={this.emailOnChange}
-                            onSubmit={this.emailOnSubmit}
-                        />
-                        <Input
-                            ref={this.passwordRef}
-                            className={styles['text-input']}
-                            type={'password'}
-                            placeholder={'Password'}
-                            value={this.state.password}
-                            onChange={this.passwordOnChange}
-                            onSubmit={this.passwordOnSubmit}
-                        />
-                        {
-                            this.state.selectedForm === FORMS.LOGIN ?
-                                <div className={styles['forgot-password-link-container']}>
-                                    <Input className={classnames(styles['forgot-password-link'], 'focusable-with-border')} type={'link'} href={'https://www.strem.io/reset-password/'} target={'_blank'}>Forgot password?</Input>
-                                </div>
-                                :
-                                <React.Fragment>
-                                    <Input
-                                        ref={this.confirmPasswordRef}
-                                        className={styles['text-input']}
-                                        type={'password'}
-                                        placeholder={'Confirm Password'}
-                                        value={this.state.confirmPassword}
-                                        onChange={this.confirmPasswordOnChange}
-                                        onSubmit={this.confirmPasswordOnSubmit}
-                                    />
-                                    <ConsentCheckbox
-                                        ref={this.termsRef}
-                                        className={classnames(styles['consent-checkbox'], 'focusable-with-border')}
-                                        label={'I have read and agree with the Stremio'}
-                                        link={'Terms and conditions'}
-                                        href={'https://www.stremio.com/tos'}
-                                        checked={this.state.termsAccepted}
-                                        toggle={this.toggleTerms}
-                                    />
-                                    <ConsentCheckbox
-                                        ref={this.privacyPolicyRef}
-                                        className={classnames(styles['consent-checkbox'], 'focusable-with-border')}
-                                        label={'I have read and agree with the Stremio'}
-                                        link={'Privacy Policy'}
-                                        href={'https://www.stremio.com/privacy'}
-                                        checked={this.state.privacyPolicyAccepted}
-                                        toggle={this.togglePrivacyPolicy}
-                                    />
-                                    <ConsentCheckbox
-                                        ref={this.marketingRef}
-                                        className={classnames(styles['consent-checkbox'], 'focusable-with-border')}
-                                        label={'I agree to receive marketing communications from Stremio'}
-                                        checked={this.state.marketingAccepted}
-                                        toggle={this.toggleMarketing}
-                                    />
-                                </React.Fragment>
-                        }
-                        {
-                            this.state.error.length > 0 ?
-                                <div ref={this.errorRef} className={styles['error-message']}>{this.state.error}</div>
-                                :
-                                null
-                        }
-                        <Input className={classnames(styles['login-form-button'], styles['submit-button'], 'focusable-with-border')} type={'button'} onClick={this.state.selectedForm === FORMS.LOGIN ? this.loginWithEmail : this.signup}>
-                            <div className={styles['label']}>{this.state.selectedForm === FORMS.LOGIN ? 'LOG IN' : 'SING UP'}</div>
-                        </Input>
-                        {
-                            this.state.selectedForm === FORMS.SIGN_UP ?
-                                <Input className={classnames(styles['login-form-button'], styles['guest-login-button'], 'focusable-with-border')} type={'button'} onClick={this.loginAsGuest}>
-                                    <div className={styles['label']}>GUEST LOGIN</div>
-                                </Input>
-                                :
-                                null
-                        }
-                        <Input className={classnames(styles['login-form-button'], styles['switch-form-button'], 'focusable-with-border')} type={'button'} data-form={this.state.selectedForm === FORMS.SIGN_UP ? FORMS.LOGIN : FORMS.SIGN_UP} onClick={this.changeSelectedForm}>
-                            <div className={styles['label']}>{this.state.selectedForm === FORMS.SIGN_UP ? 'LOG IN' : 'SING UP WITH EMAIL'}</div>
-                        </Input>
-                    </div>
+            <div className={styles['intro-container']} tabIndex={-1}>
+                <div className={styles['form-container']}>
+                    <Input className={classnames(styles['login-form-button'], styles['facebook-button'], 'focusable-with-border')} type={'button'} onClick={this.loginWithFacebook}>
+                        <Icon className={styles['icon']} icon={'ic_facebook'} />
+                        <div className={styles['label']}>Login with Facebook</div>
+                    </Input>
+                    <div className={styles['facebook-statement']}>We won't post anything on your behalf</div>
+                    <Input
+                        ref={this.emailRef}
+                        className={styles['text-input']}
+                        type={'email'}
+                        placeholder={'Email'}
+                        value={this.state.email}
+                        onChange={this.emailOnChange}
+                        onSubmit={this.emailOnSubmit}
+                    />
+                    <Input
+                        ref={this.passwordRef}
+                        className={styles['text-input']}
+                        type={'password'}
+                        placeholder={'Password'}
+                        value={this.state.password}
+                        onChange={this.passwordOnChange}
+                        onSubmit={this.passwordOnSubmit}
+                    />
+                    {
+                        this.state.selectedForm === FORMS.LOGIN ?
+                            <div className={styles['forgot-password-link-container']}>
+                                <Input className={classnames(styles['forgot-password-link'], 'focusable-with-border')} type={'link'} href={'https://www.strem.io/reset-password/'} target={'_blank'}>Forgot password?</Input>
+                            </div>
+                            :
+                            <React.Fragment>
+                                <Input
+                                    ref={this.confirmPasswordRef}
+                                    className={styles['text-input']}
+                                    type={'password'}
+                                    placeholder={'Confirm Password'}
+                                    value={this.state.confirmPassword}
+                                    onChange={this.confirmPasswordOnChange}
+                                    onSubmit={this.confirmPasswordOnSubmit}
+                                />
+                                <ConsentCheckbox
+                                    ref={this.termsRef}
+                                    className={classnames(styles['consent-checkbox'], 'focusable-with-border')}
+                                    label={'I have read and agree with the Stremio'}
+                                    link={'Terms and conditions'}
+                                    href={'https://www.stremio.com/tos'}
+                                    checked={this.state.termsAccepted}
+                                    toggle={this.toggleTerms}
+                                />
+                                <ConsentCheckbox
+                                    ref={this.privacyPolicyRef}
+                                    className={classnames(styles['consent-checkbox'], 'focusable-with-border')}
+                                    label={'I have read and agree with the Stremio'}
+                                    link={'Privacy Policy'}
+                                    href={'https://www.stremio.com/privacy'}
+                                    checked={this.state.privacyPolicyAccepted}
+                                    toggle={this.togglePrivacyPolicy}
+                                />
+                                <ConsentCheckbox
+                                    ref={this.marketingRef}
+                                    className={classnames(styles['consent-checkbox'], 'focusable-with-border')}
+                                    label={'I agree to receive marketing communications from Stremio'}
+                                    checked={this.state.marketingAccepted}
+                                    toggle={this.toggleMarketing}
+                                />
+                            </React.Fragment>
+                    }
+                    {
+                        this.state.error.length > 0 ?
+                            <div ref={this.errorRef} className={styles['error-message']}>{this.state.error}</div>
+                            :
+                            null
+                    }
+                    <Input className={classnames(styles['login-form-button'], styles['submit-button'], 'focusable-with-border')} type={'button'} onClick={this.state.selectedForm === FORMS.LOGIN ? this.loginWithEmail : this.signup}>
+                        <div className={styles['label']}>{this.state.selectedForm === FORMS.LOGIN ? 'LOG IN' : 'SING UP'}</div>
+                    </Input>
+                    {
+                        this.state.selectedForm === FORMS.SIGN_UP ?
+                            <Input className={classnames(styles['login-form-button'], styles['guest-login-button'], 'focusable-with-border')} type={'button'} onClick={this.loginAsGuest}>
+                                <div className={styles['label']}>GUEST LOGIN</div>
+                            </Input>
+                            :
+                            null
+                    }
+                    <Input className={classnames(styles['login-form-button'], styles['switch-form-button'], 'focusable-with-border')} type={'button'} data-form={this.state.selectedForm === FORMS.SIGN_UP ? FORMS.LOGIN : FORMS.SIGN_UP} onClick={this.changeSelectedForm}>
+                        <div className={styles['label']}>{this.state.selectedForm === FORMS.SIGN_UP ? 'LOG IN' : 'SING UP WITH EMAIL'}</div>
+                    </Input>
                 </div>
-            </div >
+            </div>
         );
     }
 }
