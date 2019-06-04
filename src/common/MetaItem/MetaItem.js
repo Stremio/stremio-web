@@ -25,7 +25,7 @@ const MetaItem = React.memo(({ className, menuClassName, id, type, name, posterS
     }, [menuOpen]);
     const placeholderIcon = ICON_FOR_TYPE[type] || 'ic_movies';
     return (
-        <Input className={classnames(className, styles['meta-item-container'], styles[`poster-shape-${posterShape}`])} title={name} type={'button'} data-meta-item-id={id} onClick={onClick} onContextMenu={onContextMenu}>
+        <Input className={classnames(className, styles['meta-item-container'], styles[`poster-shape-${posterShape}`])} title={name} type={'button'} data-id={id} onClick={onClick} onContextMenu={onContextMenu}>
             <div className={styles['poster-image-container']}>
                 <div className={styles['placeholder-image-layer']}>
                     <Icon className={styles['placeholder-image']} icon={placeholderIcon} />
@@ -79,7 +79,7 @@ const MetaItem = React.memo(({ className, menuClassName, id, type, name, posterS
                                         <Popup.Menu className={classnames(menuClassName, styles['menu-container'])} tabIndex={-1}>
                                             <div className={styles['menu-items-container']}>
                                                 {menuOptions.map(({ label, type }) => (
-                                                    <Input key={type} className={styles['menu-item']} type={'button'} data-meta-item-id={id} data-menu-option-type={type} onClick={menuOptionOnSelect}>{label}</Input>
+                                                    <Input key={type} className={styles['menu-item']} type={'button'} data-id={id} data-type={type} onClick={menuOptionOnSelect}>{label}</Input>
                                                 ))}
                                             </div>
                                         </Popup.Menu>
