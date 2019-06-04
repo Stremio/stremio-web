@@ -32,11 +32,16 @@ const Discover = ({ urlParams, queryParams }) => {
                         </div>
                     ))}
                 </div>
-                <MetaPreview
-                    className={styles['meta-preview-container']}
-                    compact={true}
-                    {...selectedItem}
-                />
+                {
+                    selectedItem ?
+                        <MetaPreview
+                            className={styles['meta-preview-container']}
+                            compact={true}
+                            {...selectedItem}
+                        />
+                        :
+                        null
+                }
             </div>
         </div>
     );
