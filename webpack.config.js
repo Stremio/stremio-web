@@ -1,6 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
@@ -136,6 +137,11 @@ module.exports = {
         new HtmlWebPackPlugin({
             template: './src/index.html',
             inject: false
+        }),
+        new CleanWebpackPlugin({
+            verbose: true,
+            cleanOnceBeforeBuildPatterns: [],
+            cleanAfterEveryBuildPatterns: ['./bundle.js']
         })
     ]
 };
