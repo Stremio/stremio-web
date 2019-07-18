@@ -3,7 +3,7 @@
     "displayName": "Stremio",
     "version": "5.0.0",
     "publisher": "Smart Code Ltd.",
-    "website": "http://www.strem.io",
+    "website": "https://www.stremio.com",
     "private": true,
     "scripts": {
         "start": "webpack-dev-server --mode development",
