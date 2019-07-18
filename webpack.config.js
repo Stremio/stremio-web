@@ -7,9 +7,7 @@ const TerserPlugin = require('terser-webpack-plugin');
 module.exports = {
     entry: './src/index.js',
     output: {
-        path: path.join(__dirname, 'dist'),
-        filename: 'bundle.js',
-        publicPath: '/'
+        filename: 'bundle.js'
     },
     module: {
         rules: [
@@ -21,7 +19,10 @@ module.exports = {
                 use: {
                     loader: 'babel-loader',
                     options: {
-                        presets: ['@babel/preset-env', '@babel/preset-react'],
+                        presets: [
+                            '@babel/preset-env',
+                            '@babel/preset-react'
+                        ],
                         plugins: [
                             '@babel/plugin-proposal-class-properties',
                             '@babel/plugin-proposal-object-rest-spread'
@@ -50,29 +51,32 @@ module.exports = {
                             ident: 'postcss-id',
                             plugins: () => [
                                 require('cssnano')({
-                                    preset: ['advanced', {
-                                        autoprefixer: {
-                                            add: true,
-                                            remove: true,
-                                            flexbox: true,
-                                            grid: 'autoplace'
-                                        },
-                                        calc: false,
-                                        convertValues: false,
-                                        discardComments: {
-                                            removeAll: true,
-                                        },
-                                        discardOverridden: false,
-                                        mergeIdents: false,
-                                        normalizeDisplayValues: false,
-                                        normalizePositions: false,
-                                        normalizeRepeatStyle: false,
-                                        normalizeUnicode: false,
-                                        normalizeUrl: false,
-                                        reduceIdents: false,
-                                        reduceInitial: false,
-                                        zindex: false
-                                    }]
+                                    preset: [
+                                        'advanced',
+                                        {
+                                            autoprefixer: {
+                                                add: true,
+                                                remove: true,
+                                                flexbox: true,
+                                                grid: 'autoplace'
+                                            },
+                                            calc: false,
+                                            convertValues: false,
+                                            discardComments: {
+                                                removeAll: true,
+                                            },
+                                            discardOverridden: false,
+                                            mergeIdents: false,
+                                            normalizeDisplayValues: false,
+                                            normalizePositions: false,
+                                            normalizeRepeatStyle: false,
+                                            normalizeUnicode: false,
+                                            normalizeUrl: false,
+                                            reduceIdents: false,
+                                            reduceInitial: false,
+                                            zindex: false
+                                        }
+                                    ]
                                 })
                             ]
                         }
@@ -83,8 +87,7 @@ module.exports = {
                             strictMath: true,
                             noIeCompat: true,
                             paths: [
-                                path.resolve(__dirname, 'node_modules/stremio-colors'),
-                                path.resolve(__dirname, 'src/common')
+                                path.resolve(__dirname, 'node_modules')
                             ]
                         }
                     }
@@ -125,14 +128,14 @@ module.exports = {
     },
     plugins: [
         new webpack.ProgressPlugin(),
-        new HtmlWebPackPlugin({
-            template: './src/index.html',
-            inject: false
-        }),
         new CopyWebpackPlugin([
             { from: 'node_modules/stremio-state-container-web/static', to: '' },
             { from: 'images', to: 'images' },
             { from: 'fonts', to: 'fonts' }
-        ])
+        ]),
+        new HtmlWebPackPlugin({
+            template: './src/index.html',
+            inject: false
+        })
     ]
 };
