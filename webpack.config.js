@@ -7,7 +7,7 @@ module.exports = {
     entry: './src/index.js',
     output: {
         path: path.join(__dirname, 'dist'),
-        filename: 'stremio-web.js',
+        filename: 'bundle.js',
         publicPath: '/'
     },
     module: {

@@ -9,7 +9,9 @@
 
 <body>
     <div id="app"></div>
-    <script type="text/javascript" src="/stremio-web.js"></script>
+    <script type="text/javascript">
+        <%= compilation.assets['bundle.js'].source() %>
+    </script>
     <script type="text/javascript" src="qrc:///qtwebchannel/qwebchannel.js"></script>
     <script type="text/javascript" src="qrc:///stremio-shell.js"></script>
 </body>
