@@ -14,7 +14,7 @@ This repository can be built to two distributable products:
 
 Copyright
 =========
-![Linvo Logo](https://launchrock-assets.s3.amazonaws.com/logo-files/8FZQMF2G_1388280616887.png)
+
 Legal entity: Smart Code LTD.
 
 UIN 203358507
