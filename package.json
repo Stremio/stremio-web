@@ -8,8 +8,7 @@
     "scripts": {
         "start": "webpack-dev-server --mode development",
         "build": "webpack --mode production",
-        "storybook": "start-storybook -s ./ -p 6006",
-        "build-storybook": "build-storybook"
+        "storybook": "start-storybook -c ./storybook -s ./ -p 6006"
     },
     "dependencies": {
         "classnames": "2.2.6",
@@ -32,10 +31,7 @@
         "@babel/preset-env": "7.5.5",
         "@babel/preset-react": "7.0.0",
         "@babel/runtime": "7.5.5",
-        "@storybook/addon-actions": "4.1.11",
-        "@storybook/addon-links": "4.1.11",
-        "@storybook/addons": "4.1.11",
-        "@storybook/react": "4.1.11",
+        "@storybook/react": "5.1.9",
         "babel-loader": "8.0.6",
         "clean-webpack-plugin": "3.0.0",
         "copy-webpack-plugin": "5.0.3",
