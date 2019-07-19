@@ -1,0 +1,2 @@
+require('./InstalledAddon');
+require('./NotInstalledAddon');
