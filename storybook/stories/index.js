@@ -1,1 +1,2 @@
 require('./Addon');
+require('./MetaItem');
