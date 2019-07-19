@@ -21,7 +21,7 @@
         "react-color": "2.17.0",
         "react-dom": "16.8.6",
         "stremio-colors": "git+ssh://git@github.com/Stremio/stremio-colors.git#v2.0.3",
-        "stremio-icons": "git+ssh://git@github.com/Stremio/stremio-icons.git#v1.0.7",
+        "stremio-icons": "git+ssh://git@github.com/Stremio/stremio-icons.git#v1.0.11",
         "stremio-state-container-web": "git+ssh://git@github.com/stremio/stremio-state-container-web.git#v0.4.0",
         "vtt.js": "0.13.0"
     },
