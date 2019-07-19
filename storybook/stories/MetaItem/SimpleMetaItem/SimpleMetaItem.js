@@ -1,5 +1,6 @@
 const React = require('react');
 const { storiesOf } = require('@storybook/react');
+const { action } = require('@storybook/addon-actions');
 const { MetaItem } = require('stremio/common');
 const styles = require('./styles');
 
@@ -14,6 +15,6 @@ storiesOf('MetaItem', module).add('SimpleMetaItem', () => (
         title={'Demo item'}
         progress={0.4}
         playIcon={true}
-        onClick={() => console.log('Demo item clicked')}
+        onClick={action('Demo item clicked')}
     />
 ));
