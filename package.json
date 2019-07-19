@@ -8,7 +8,7 @@
     "scripts": {
         "start": "webpack-dev-server --mode development",
         "build": "webpack --mode production",
-        "storybook": "start-storybook -c ./storybook -s ./ -p 6006"
+        "storybook": "start-storybook --config-dir ./storybook --static-dir ./ --port 6006"
     },
     "dependencies": {
         "classnames": "2.2.6",
