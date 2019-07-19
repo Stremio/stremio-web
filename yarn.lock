@@ -1103,6 +1103,13 @@
     react-inspector "^3.0.2"
     uuid "^3.3.2"
 
+"@storybook/addon-console@1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@storybook/addon-console/-/addon-console-1.1.1.tgz#16c80fa40b817bd4c3e36e47be315dd5795d3423"
+  integrity sha512-uYfrjdJ98HhT8K244Z8VqeJ27JRaz7KanB6X9NkOHxzXuQM78F9fkS8HIcP8FV74z1yeAq0z5nj21cdgdxkYxg==
+  dependencies:
+    global "^4.3.2"
+
 "@storybook/addons@5.1.9":
   version "5.1.9"
   resolved "https://registry.yarnpkg.com/@storybook/addons/-/addons-5.1.9.tgz#ecf218d08508b97ca5e6e0f1ed361081385bd3ff"
