@@ -1,6 +1,6 @@
 const appConfig = require('../webpack.config.js');
 
-module.exports = async ({ config: storybookConfig, mode }) => {
+module.exports = async ({ config: storybookConfig }) => {
     storybookConfig.module = {
         ...storybookConfig.module
     };
