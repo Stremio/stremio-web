@@ -33,6 +33,7 @@
         "@babel/runtime": "7.5.5",
         "@storybook/addon-actions": "5.1.9",
         "@storybook/addon-console": "1.1.1",
+        "@storybook/addons": "5.1.9",
         "@storybook/react": "5.1.9",
         "babel-loader": "8.0.6",
         "clean-webpack-plugin": "3.0.0",
