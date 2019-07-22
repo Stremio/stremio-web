@@ -24,7 +24,7 @@
         margin: auto;
         padding: 4em 0;
 
-        .login-form-button {
+        .form-button {
             width: 100%;
             padding: 0 1em;
             display: flex;
@@ -74,6 +74,7 @@
             width: 100%;
             margin-top: 0.5em;
             margin-bottom: 2em;
+            line-height: 1.1em;
             text-align: center;
             color: var(--color-surface);
         }
@@ -102,11 +103,12 @@
 
         .forgot-password-link-container {
             margin: 1em 0;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
             text-align: right;
 
             .forgot-password-link {
-                display: inline-block;
-                max-width: 100%;
                 padding: 0.5em 0.3em;
                 color: var(--color-surfacelight);
                 cursor: pointer;

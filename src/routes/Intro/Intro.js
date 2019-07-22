@@ -76,8 +76,7 @@ class Intro extends React.Component {
         this.setState({ email: event.currentTarget.value });
     }
 
-    emailOnSubmit = (event) => {
-        event.preventDefault();
+    emailOnSubmit = () => {
         this.passwordRef.current.focus();
     }
 
@@ -85,8 +84,7 @@ class Intro extends React.Component {
         this.setState({ password: event.currentTarget.value });
     }
 
-    passwordOnSubmit = (event) => {
-        event.preventDefault();
+    passwordOnSubmit = () => {
         if (this.state.selectedForm === FORMS.LOGIN) {
             this.loginWithEmail();
         } else {
@@ -98,8 +96,7 @@ class Intro extends React.Component {
         this.setState({ confirmPassword: event.currentTarget.value });
     }
 
-    confirmPasswordOnSubmit = (event) => {
-        event.preventDefault();
+    confirmPasswordOnSubmit = () => {
         this.termsRef.current.focus();
     }
 
@@ -122,12 +119,12 @@ class Intro extends React.Component {
     }
 
     loginWithFacebook = () => {
-        alert('Facebook login');
+        alert('TODO: Facebook login');
     }
 
     loginWithEmail = () => {
-        if (this.state.email.length < 8) {
-            this.setState({ error: 'Please enter a valid email' });
+        if (this.state.email.length === 0) {
+            this.setState({ error: 'Invalid email' });
             return;
         }
 
@@ -137,12 +134,12 @@ class Intro extends React.Component {
         }
 
         this.setState({ error: '' });
-        alert('Email login');
+        alert('TODO: Email login');
     }
 
     signup = () => {
-        if (this.state.email.length < 8) {
-            this.setState({ error: 'Please enter a valid email' });
+        if (this.state.email.length === 0) {
+            this.setState({ error: 'Invalid email' });
             return;
         }
 
@@ -167,7 +164,7 @@ class Intro extends React.Component {
         }
 
         this.setState({ error: '' });
-        alert('Signup');
+        alert('TODO: Signup');
     }
 
     loginAsGuest = () => {
@@ -177,16 +174,16 @@ class Intro extends React.Component {
         }
 
         this.setState({ error: '' });
-        alert('Guest login');
+        alert('TODO: Guest login');
     }
 
     render() {
         return (
             <div className={styles['intro-container']} tabIndex={-1}>
                 <div className={styles['form-container']}>
-                    <Input className={classnames(styles['login-form-button'], styles['facebook-button'], 'focusable-with-border')} type={'button'} onClick={this.loginWithFacebook}>
+                    <Input className={classnames(styles['form-button'], styles['facebook-button'], 'focusable-with-border')} type={'button'} onClick={this.loginWithFacebook}>
                         <Icon className={styles['icon']} icon={'ic_facebook'} />
-                        <div className={styles['label']}>Login with Facebook</div>
+                        <div className={styles['label']}>Continue with Facebook</div>
                     </Input>
                     <div className={styles['facebook-statement']}>We won't post anything on your behalf</div>
                     <Input
@@ -256,18 +253,18 @@ class Intro extends React.Component {
                             :
                             null
                     }
-                    <Input className={classnames(styles['login-form-button'], styles['submit-button'], 'focusable-with-border')} type={'button'} onClick={this.state.selectedForm === FORMS.LOGIN ? this.loginWithEmail : this.signup}>
+                    <Input className={classnames(styles['form-button'], styles['submit-button'], 'focusable-with-border')} type={'button'} onClick={this.state.selectedForm === FORMS.LOGIN ? this.loginWithEmail : this.signup}>
                         <div className={styles['label']}>{this.state.selectedForm === FORMS.LOGIN ? 'LOG IN' : 'SING UP'}</div>
                     </Input>
                     {
                         this.state.selectedForm === FORMS.SIGN_UP ?
-                            <Input className={classnames(styles['login-form-button'], styles['guest-login-button'], 'focusable-with-border')} type={'button'} onClick={this.loginAsGuest}>
+                            <Input className={classnames(styles['form-button'], styles['guest-login-button'], 'focusable-with-border')} type={'button'} onClick={this.loginAsGuest}>
                                 <div className={styles['label']}>GUEST LOGIN</div>
                             </Input>
                             :
                             null
                     }
-                    <Input className={classnames(styles['login-form-button'], styles['switch-form-button'], 'focusable-with-border')} type={'button'} data-form={this.state.selectedForm === FORMS.SIGN_UP ? FORMS.LOGIN : FORMS.SIGN_UP} onClick={this.changeSelectedForm}>
+                    <Input className={classnames(styles['form-button'], styles['switch-form-button'], 'focusable-with-border')} type={'button'} data-form={this.state.selectedForm === FORMS.SIGN_UP ? FORMS.LOGIN : FORMS.SIGN_UP} onClick={this.changeSelectedForm}>
                         <div className={styles['label']}>{this.state.selectedForm === FORMS.SIGN_UP ? 'LOG IN' : 'SING UP WITH EMAIL'}</div>
                     </Input>
                 </div>
