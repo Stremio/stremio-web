@@ -1098,10 +1098,10 @@
     react-inspector "^3.0.2"
     uuid "^3.3.2"
 
-"@storybook/addon-console@1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@storybook/addon-console/-/addon-console-1.1.1.tgz#16c80fa40b817bd4c3e36e47be315dd5795d3423"
-  integrity sha512-uYfrjdJ98HhT8K244Z8VqeJ27JRaz7KanB6X9NkOHxzXuQM78F9fkS8HIcP8FV74z1yeAq0z5nj21cdgdxkYxg==
+"@storybook/addon-console@1.2.1":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@storybook/addon-console/-/addon-console-1.2.1.tgz#f338401661b4636118b13839848061e996d4e104"
+  integrity sha512-2iDbDTipWonvRpIqLLntfhCGvawFFvoG1xyErpyL7K/HRdQ1zzIvR1Qm83S7TK8Vg+RzZWm4wcDbxx7WOsFCNg==
   dependencies:
     global "^4.3.2"
 
@@ -7679,7 +7679,7 @@ react-draggable@^3.1.1:
     classnames "^2.2.5"
     prop-types "^15.6.0"
 
-react-element-to-jsx-string@^14.0.2:
+react-element-to-jsx-string@^14.0.3:
   version "14.0.3"
   resolved "https://registry.yarnpkg.com/react-element-to-jsx-string/-/react-element-to-jsx-string-14.0.3.tgz#64f50fdbf6ba154d6439da3d7307f79069b94d58"
   integrity sha512-ziZAm7OwEfFtyhCmQiFNI87KFu+G9EP8qVW4XtDHdKNqqprYifLzqXkzHqC1vnVsPhyp2znoPm0bJHAf1mUBZA==
@@ -8605,15 +8605,15 @@ store2@^2.7.1:
   resolved "https://registry.yarnpkg.com/store2/-/store2-2.7.1.tgz#22070b7dc04748a792fc6912a58ab99d3a21d788"
   integrity sha512-zzzP5ZY6QWumnAFV6kBRbS44pUMcpZBNER5DWUe1HETlaKXqLcCQxbNu6IHaKr1pUsjuhUGBdOy8sWKmMkL6pQ==
 
-storybook-addon-jsx@7.1.2:
-  version "7.1.2"
-  resolved "https://registry.yarnpkg.com/storybook-addon-jsx/-/storybook-addon-jsx-7.1.2.tgz#ec569f4d85ea9f10556f3837c837737372845385"
-  integrity sha512-a0XARVom72sNMvs7KkBvZXzoLQ0Q2X/T6ibjGA8glyhBl3WNL4nfgLtRTgquVxwhpj51UEouNOUUYWG4Aexs+g==
+storybook-addon-jsx@7.1.5:
+  version "7.1.5"
+  resolved "https://registry.yarnpkg.com/storybook-addon-jsx/-/storybook-addon-jsx-7.1.5.tgz#f57b4fdc7da5d07b85b1da6a9425207bffbc2fb1"
+  integrity sha512-OU3JcBYGmFHeZjkvG6nbEOKy8AesURi+s7CcT7Ud68adAP8cJEDNxL6DUXWdJyt5DUKUivxewRmyQT8B9v8qWw==
   dependencies:
     copy-to-clipboard "^3.0.8"
     js-beautify "^1.8.8"
     prismjs "^1.15.0"
-    react-element-to-jsx-string "^14.0.2"
+    react-element-to-jsx-string "^14.0.3"
 
 stream-browserify@^2.0.1:
   version "2.0.2"
