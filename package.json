@@ -5,6 +5,7 @@
     "publisher": "Smart Code Ltd.",
     "website": "www.stremio.com",
     "private": true,
+    "license": "GPLv3",
     "scripts": {
         "start": "webpack-dev-server --mode development",
         "build": "webpack --mode production",
