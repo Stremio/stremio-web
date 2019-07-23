@@ -7,7 +7,7 @@ const useBinaryState = require('../useBinaryState');
 const Popup = require('../Popup');
 const styles = require('./styles');
 
-const ICON_FOR_TYPE = Object.freeze({
+const ICON_FOR_TYPE = Object.assign(Object.create(null), {
     'movie': 'ic_movies',
     'series': 'ic_series',
     'channel': 'ic_channels',
