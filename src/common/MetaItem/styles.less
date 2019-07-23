@@ -2,8 +2,20 @@
     background-color: var(--color-backgroundlight);
     cursor: pointer;
 
-    &:hover, &:focus {
+    &:hover, &:focus, &:global(.active) {
         outline: var(--focusable-border-size) solid var(--color-surfacelighter);
+
+        .title-bar-container {
+            background-color: var(--color-surfacelighter);
+
+            .title {
+                color: var(--color-backgrounddarker);
+            }
+
+            .menu-icon {
+                fill: var(--color-backgrounddarker);
+            }
+        }
     }
 
     &.poster-shape-square {
@@ -114,9 +126,10 @@
         .title {
             flex-grow: 1;
             padding: 0 0.5em;
-            line-height: 1.1em;
-            max-height: 2.2em;
+            line-height: 2.5em;
             color: var(--color-surfacelighter);
+            white-space: nowrap;
+            text-overflow: ellipsis;
         }
 
         .menu-icon {
@@ -127,15 +140,13 @@
             fill: var(--color-surfacelighter);
 
             &:hover, &:global(.active) {
-                background-color: var(--color-surfacedarker);
+                background-color: var(--color-surface80);
             }
         }
     }
 }
 
 .menu-container {
-    --box-shadow: -0.6em .6em .5em -0.1em var(--color-backgrounddark40);
-
     .menu-items-container {
         min-width: 8em;
         max-width: 12em;

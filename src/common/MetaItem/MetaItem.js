@@ -25,7 +25,7 @@ const MetaItem = React.memo(({ className, menuClassName, id, type, name, posterS
     }, [menuOpen]);
     const placeholderIcon = ICON_FOR_TYPE[type] || 'ic_movies';
     return (
-        <Input className={classnames(className, styles['meta-item-container'], styles[`poster-shape-${posterShape}`])} title={name} type={'button'} data-id={id} onClick={onClick} onContextMenu={onContextMenu}>
+        <Input className={classnames(className, styles['meta-item-container'], styles[`poster-shape-${posterShape}`], { 'active': menuOpen })} title={name} type={'button'} data-id={id} onClick={onClick} onContextMenu={onContextMenu}>
             <div className={styles['poster-image-container']}>
                 <div className={styles['placeholder-image-layer']}>
                     <Icon className={styles['placeholder-image']} icon={placeholderIcon} />
