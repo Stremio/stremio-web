@@ -2,7 +2,7 @@ const React = require('react');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const { Input } = require('stremio-navigation')
-const { MetaItem, MainNavBar } = require('stremio-common');
+const { MetaItem, MainNavBar } = require('stremio/common');
 const useCatalogs = require('./useCatalogs');
 const styles = require('./styles');
 
@@ -33,9 +33,9 @@ const BoardRow = ({ className, items }) => {
                     />
                 ))}
             </div>
-            <Input className={classnames(styles['show-more-container'], 'focusable-with-border')} type={'button'}>
-                <div className={styles['label']}>SEE ALL</div>
-                <Icon className={styles['icon']} icon={'ic_back_ios'} />
+            <Input className={classnames(styles['show-more-container'], 'focusable-with-border')} type={'button'} title={'SHOW MORE'}>
+                <div className={styles['label']}>SHOW MORE</div>
+                <Icon className={styles['icon']} icon={'ic_arrow_thin_right'} />
             </Input>
         </div>
     );

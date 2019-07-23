@@ -20,7 +20,7 @@
 
         &.addon-catalog-row {
             .meta-item {
-                &:nth-child(n+8) {
+                &:nth-child(n+7) {
                     display: none;
                 }
             }
@@ -48,21 +48,14 @@
 
         .board-row {
             width: 100%;
+            margin: 2em 0;
             padding: 0 1em;
             display: flex;
             flex-direction: row;
             align-items: stretch;
 
-            &:first-child {
-                padding-top: 1em;
-            }
-
-            &:last-child {
-                padding-bottom: 1em;
-            }
-
             .meta-items-container {
-                flex: 1;
+                flex: 8;
                 display: flex;
                 flex-direction: row;
                 align-items: stretch;
@@ -86,14 +79,13 @@
             }
 
             .show-more-container {
-                flex: none;
+                flex: 1;
                 display: flex;
                 flex-direction: row;
                 align-items: center;
                 justify-content: center;
-                width: 10em;
                 margin: 1em;
-                padding: 0 0.5em;
+                padding: 0.5em;
                 background-color: var(--color-backgroundlight);
                 cursor: pointer;
 
@@ -110,13 +102,11 @@
                 }
 
                 .label {
-                    font-size: 1.1em;
-                    line-height: 1.3em;
-                    max-height: 2.6em;
+                    font-size: 1.2em;
+                    line-height: 1.2em;
+                    max-height: 3.6em;
                     color: var(--color-surfacelight);
-                    word-break: break-all;
-                    word-break: break-word;
-                    overflow: hidden;
+                    text-align: center;
                 }
 
                 .icon {
@@ -124,9 +114,7 @@
                     width: 1.3em;
                     height: 1.3em;
                     margin-left: 0.3em;
-                    transform: rotateY(180deg);
                     fill: var(--color-surfacelight);
-                    overflow: visible;
                 }
             }
         }
