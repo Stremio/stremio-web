@@ -1,15 +1,29 @@
 .board-row-container {
+    display: grid;
     padding: 0 1em;
-    display: flex;
-    flex-direction: row;
-    align-items: stretch;
+    grid-template-columns: 6fr 1fr;
+    grid-template-areas:
+        "title-area title-area"
+        "meta-items-area show-more-area";
+
+    .title-container {
+        grid-area: title-area;
+        padding: 0 1em;
+
+        .title {
+            font-size: 1.5em;
+            line-height: 1.2em;
+            max-height: 2.4em;
+            color: var(--color-surfacelighter);
+            text-transform: capitalize;
+        }
+    }
 
     .meta-items-container {
-        flex: 8;
+        grid-area: meta-items-area;
         display: flex;
         flex-direction: row;
         align-items: stretch;
-        overflow: hidden;
 
         .meta-item {
             margin: 1em;
@@ -29,7 +43,7 @@
     }
 
     .show-more-container {
-        flex: 1;
+        grid-area: show-more-area;
         display: flex;
         flex-direction: row;
         align-items: center;

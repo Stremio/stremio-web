@@ -17,6 +17,7 @@ const Board = () => {
                         className={classnames(styles['board-row'], styles['addon-catalog-row'])}
                         metaItemClassName={styles['meta-item']}
                         menuClassName={styles['menu-container']}
+                        title={catalog.title}
                         items={catalog.items}
                     />
                 ))}

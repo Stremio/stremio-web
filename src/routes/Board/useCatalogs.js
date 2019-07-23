@@ -9,6 +9,7 @@ const useCatalogs = () => {
                 if (response.type === 'Ready') {
                     catalogs.push({
                         id: `${index}${request.transport_url}`,
+                        title: `${request.resource_ref.id} - ${request.resource_ref.type_name}`,
                         items: response.content.map((item) => {
                             return {
                                 ...item,

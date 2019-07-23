@@ -16,16 +16,19 @@ const CONTINUE_WATCHING_MENU = [
     }
 ];
 
-const BoardRow = ({ className, metaItemClassName, menuClassName, items }) => {
+const BoardRow = ({ className, metaItemClassName, menuClassName, title, items }) => {
     return (
-        <div className={classnames(styles['board-row-container'], className)}>
+        <div className={classnames(className, styles['board-row-container'])}>
+            <div className={styles['title-container']}>
+                <div className={styles['title']}>{title}</div>
+            </div>
             <div className={styles['meta-items-container']}>
                 {items.map((item) => (
                     <MetaItem
                         {...item}
                         key={item.id}
-                        className={classnames(styles['meta-item'], styles[`poster-shape-${item.posterShape}`], metaItemClassName)}
-                        menuClassName={classnames(styles['menu-container'], menuClassName)}
+                        className={classnames(metaItemClassName, styles['meta-item'], styles[`poster-shape-${item.posterShape}`])}
+                        menuClassName={classnames(menuClassName, styles['menu-container'])}
                         title={item.name}
                         menuOptions={CONTINUE_WATCHING_MENU}
                     />
