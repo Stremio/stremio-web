@@ -3,26 +3,20 @@
 
     .board-row {
         &.continue-watching-row {
-            .meta-item {
-                &:nth-child(n+7) {
-                    display: none;
-                }
+            .meta-item:nth-child(n+7) {
+                display: none;
             }
         }
 
         &.notificatins-row {
-            .meta-item {
-                &:nth-child(n+5) {
-                    display: none;
-                }
+            .meta-item:nth-child(n+5) {
+                display: none;
             }
         }
 
         &.addon-catalog-row {
-            .meta-item {
-                &:nth-child(n+7) {
-                    display: none;
-                }
+            .meta-item:nth-child(n+7) {
+                display: none;
             }
         }
     }
@@ -49,74 +43,6 @@
         .board-row {
             width: 100%;
             margin: 2em 0;
-            padding: 0 1em;
-            display: flex;
-            flex-direction: row;
-            align-items: stretch;
-
-            .meta-items-container {
-                flex: 8;
-                display: flex;
-                flex-direction: row;
-                align-items: stretch;
-                overflow: hidden;
-
-                .meta-item {
-                    margin: 1em;
-
-                    &.poster-shape-square {
-                        flex: 1;
-                    }
-
-                    &.poster-shape-landscape {
-                        flex: calc(1 / var(--landscape-shape-ratio));
-                    }
-
-                    &.poster-shape-poster {
-                        flex: calc(1 / var(--poster-shape-ratio));
-                    }
-                }
-            }
-
-            .show-more-container {
-                flex: 1;
-                display: flex;
-                flex-direction: row;
-                align-items: center;
-                justify-content: center;
-                margin: 1em;
-                padding: 0.5em;
-                background-color: var(--color-backgroundlight);
-                cursor: pointer;
-
-                &:hover, &:focus {
-                    background-color: var(--color-backgroundlighter);
-
-                    .label {
-                        color: var(--color-surfacelighter);
-                    }
-
-                    .icon {
-                        fill: var(--color-surfacelighter);
-                    }
-                }
-
-                .label {
-                    font-size: 1.2em;
-                    line-height: 1.2em;
-                    max-height: 3.6em;
-                    color: var(--color-surfacelight);
-                    text-align: center;
-                }
-
-                .icon {
-                    flex: none;
-                    width: 1.3em;
-                    height: 1.3em;
-                    margin-left: 0.3em;
-                    fill: var(--color-surfacelight);
-                }
-            }
         }
     }
 }
