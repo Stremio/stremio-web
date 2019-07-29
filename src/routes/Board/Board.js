@@ -37,7 +37,6 @@ const Board = () => {
                         .map(([request, response], index) => (
                             <BoardRow
                                 key={`${index}${request.transport_url}`}
-                                className={styles['addon-catalog-row']}
                                 title={`${request.resource_ref.id} - ${request.resource_ref.type_name}`}
                                 items={response.content}
                             />

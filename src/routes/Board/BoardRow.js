@@ -5,9 +5,9 @@ const { Input } = require('stremio-navigation');
 const { MetaItem } = require('stremio/common');
 const styles = require('./styles');
 
-const BoardRow = ({ className, title, items, itemMenuOptions }) => {
+const BoardRow = ({ title, items, itemMenuOptions }) => {
     return (
-        <div className={classnames(className, styles['board-row'])}>
+        <div className={styles['board-row']}>
             <div className={styles['title-container']}>
                 <div className={styles['title']}>{title}</div>
             </div>
