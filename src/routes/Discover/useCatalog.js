@@ -1,7 +1,7 @@
 const React = require('react');
 
 const useCatalog = (urlParams, queryParams) => {
-    const query = new URLSearchParams(queryParams).toString();
+    const queryString = new URLSearchParams(queryParams).toString();
     const [addon, catalog] = React.useMemo(() => {
         // TODO impl this logic to stremio-core for code-reuse:
         // TODO use type if it is part of user's addons
@@ -21,7 +21,7 @@ const useCatalog = (urlParams, queryParams) => {
                 {
                     name: 'genre',
                     isRequired: false,
-                    options: ['Action', 'drama', 'Boring']
+                    options: ['Action', 'Drama', 'Boring']
                 },
                 {
                     name: 'year',
@@ -33,17 +33,17 @@ const useCatalog = (urlParams, queryParams) => {
         return [addon, catalog];
     }, [urlParams.type, urlParams.catalog]);
     const pickers = React.useMemo(() => {
-        const replaceType = (event) => {
+        const onTypeChange = (event) => {
             const { value } = event.currentTarget.dataset;
             const query = new URLSearchParams(queryParams);
             window.location = `#/discover/${value}/${addon.id}:${catalog.id}?${query}`;
         };
-        const replaceCatalog = (event) => {
+        const onCatalogChange = (event) => {
             const { value } = event.currentTarget.dataset;
             const query = new URLSearchParams(queryParams);
             window.location = `#/discover/${catalog.type}/${value}?${query}`;
         };
-        const replaceQueryParam = (event) => {
+        const onQueryParamChange = (event) => {
             const { name, value } = event.currentTarget.dataset;
             const query = new URLSearchParams({ ...queryParams, [name]: value });
             window.location = `#/discover/${catalog.type}/${addon.id}:${catalog.id}?${query}`;
@@ -58,7 +58,7 @@ const useCatalog = (urlParams, queryParams) => {
                     { value: 'channels', label: 'channels' },
                     { value: 'games', label: 'games' }
                 ],
-                toggle: replaceType
+                onChange: onTypeChange
             },
             {
                 name: 'catalog',
@@ -67,7 +67,7 @@ const useCatalog = (urlParams, queryParams) => {
                     { value: 'com.linvo.cinemeta:top', label: 'Top' },
                     { value: 'com.linvo.cinemeta:year', label: 'By year' }
                 ],
-                toggle: replaceCatalog
+                onChange: onCatalogChange
             }
         ];
         const extraPickers = catalog.extra
@@ -76,7 +76,7 @@ const useCatalog = (urlParams, queryParams) => {
             })
             .map((extra) => ({
                 ...extra,
-                toggle: replaceQueryParam,
+                onChange: onQueryParamChange,
                 options: extra.options.map((option) => ({ value: option, label: option })),
                 value: extra.options.includes(queryParams[extra.name]) ?
                     queryParams[extra.name]
@@ -87,14 +87,14 @@ const useCatalog = (urlParams, queryParams) => {
                         null
             }));
         return requiredPickers.concat(extraPickers);
-    }, [addon, catalog, query]);
+    }, [addon, catalog, queryString]);
     const items = React.useMemo(() => {
-        return Array(303).fill(null).map((_, index) => ({
+        return Array(100).fill(null).map((_, index) => ({
             id: `tt${index}`,
             type: 'movie',
-            name: `Stremio demo item${index}`,
-            poster: `https://dummyimage.com/300x400/000/0011ff.jpg&text=${index + 1}`,
-            logo: `https://dummyimage.com/300x400/000/0011ff.jpg&text=${index + 1}`,
+            name: `Stremio demo item ${index}`,
+            poster: `https://www.stremio.com/website/technology-hero.jpg`,
+            logo: `https://www.stremio.com/website/stremio-logo-small.png`,
             posterShape: 'poster'
         }));
     }, []);
