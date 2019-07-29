@@ -3,10 +3,9 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const { Input } = require('stremio-navigation');
-const { Popup, useBinaryState } = require('stremio-common');
+const { Popup, useBinaryState } = require('stremio/common');
 const styles = require('./styles');
 
-// TODO support optionsLimit
 const PickerMenu = ({ name, value, options, toggle }) => {
     const [open, onOpen, onClose] = useBinaryState(false);
     const label = typeof value === 'string' ? value : name;
@@ -18,8 +17,8 @@ const PickerMenu = ({ name, value, options, toggle }) => {
                     <Icon className={styles['picker-icon']} icon={'ic_arrow_down'} />
                 </Input>
             </Popup.Label>
-            <Popup.Menu className={styles['menu-layer']}>
-                <div className={styles['menu-container']}>
+            <Popup.Menu className={styles['menu-container']}>
+                <div className={styles['menu-content']}>
                     {
                         Array.isArray(options) ?
                             options.map(({ value, label }) => (
