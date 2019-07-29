@@ -7,7 +7,7 @@ const styles = require('./styles');
 
 const BoardRow = ({ className, title, items, itemMenuOptions }) => {
     return (
-        <div className={classnames(className, styles['board-row-container'])}>
+        <div className={classnames(className, styles['board-row'])}>
             <div className={styles['title-container']}>
                 <div className={styles['title']}>{title}</div>
             </div>
