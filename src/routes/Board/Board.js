@@ -1,9 +1,19 @@
 const React = require('react');
-const classnames = require('classnames');
 const { MainNavBar } = require('stremio/common');
 const BoardRow = require('./BoardRow');
 const useCatalogs = require('./useCatalogs');
 const styles = require('./styles');
+
+const CONTINUE_WATCHING_MENU = [
+    {
+        label: 'Play',
+        type: 'play'
+    },
+    {
+        label: 'Dismiss',
+        type: 'dismiss'
+    }
+];
 
 const Board = () => {
     const catalogs = useCatalogs();
@@ -14,9 +24,7 @@ const Board = () => {
                 {catalogs.map((catalog) => (
                     <BoardRow
                         key={catalog.id}
-                        className={classnames(styles['board-row'], styles['addon-catalog-row'])}
-                        metaItemClassName={styles['meta-item']}
-                        menuClassName={styles['menu-container']}
+                        className={styles['addon-catalog-row']}
                         title={catalog.title}
                         items={catalog.items}
                     />
