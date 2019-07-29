@@ -5,23 +5,7 @@ const useCatalogs = () => {
     React.useEffect(() => {
         const onNewState = () => {
             const state = window.stateContainer.getState();
-            const catalogs = state.groups.reduce((catalogs, [request, response], index) => {
-                if (response.type === 'Ready') {
-                    catalogs.push({
-                        id: `${index}${request.transport_url}`,
-                        title: `${request.resource_ref.id} - ${request.resource_ref.type_name}`,
-                        items: response.content.map((item) => {
-                            return {
-                                ...item,
-                                posterShape: item.posterShape || 'poster'
-                            };
-                        })
-                    });
-                }
-
-                return catalogs;
-            }, []);
-            setCatalogs(catalogs);
+            setCatalogs(state.groups);
         };
         window.stateContainer.on('NewState', onNewState);
         window.stateContainer.dispatch({

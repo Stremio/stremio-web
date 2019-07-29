@@ -21,14 +21,28 @@ const Board = () => {
         <div className={styles['board-container']}>
             <MainNavBar className={styles['nav-bar']} />
             <div className={styles['board-content']} tabIndex={-1}>
-                {catalogs.map((catalog) => (
-                    <BoardRow
-                        key={catalog.id}
-                        className={styles['addon-catalog-row']}
-                        title={catalog.title}
-                        items={catalog.items}
-                    />
-                ))}
+                {
+                    catalogs
+                        .filter(([_, response]) => response.type === 'Ready')
+                        .map(([request, response]) => [
+                            request,
+                            {
+                                ...response,
+                                content: response.content.map((item) => ({
+                                    ...item,
+                                    posterShape: item.posterShape || 'poster'
+                                }))
+                            }
+                        ])
+                        .map(([request, response], index) => (
+                            <BoardRow
+                                key={`${index}${request.transport_url}`}
+                                className={styles['addon-catalog-row']}
+                                title={`${request.resource_ref.id} - ${request.resource_ref.type_name}`}
+                                items={response.content}
+                            />
+                        ))
+                }
             </div>
         </div>
     );
