@@ -20,7 +20,7 @@ const Board = () => {
     return (
         <div className={styles['board-container']}>
             <MainNavBar className={styles['nav-bar']} />
-            <div className={styles['board-content']} tabIndex={-1}>
+            <div className={styles['board-content']}>
                 {
                     catalogs
                         .filter(([_, response]) => response.type === 'Ready')

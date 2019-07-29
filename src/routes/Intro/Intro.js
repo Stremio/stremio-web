@@ -179,7 +179,7 @@ class Intro extends React.Component {
 
     render() {
         return (
-            <div className={styles['intro-container']} tabIndex={-1}>
+            <div className={styles['intro-container']}>
                 <div className={styles['form-container']}>
                     <Input className={classnames(styles['form-button'], styles['facebook-button'], 'focusable-with-border')} type={'button'} onClick={this.loginWithFacebook}>
                         <Icon className={styles['icon']} icon={'ic_facebook'} />
