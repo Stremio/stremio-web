@@ -6,9 +6,9 @@ const styles = require('./styles');
 
 const Discover = ({ urlParams, queryParams }) => {
     const [pickers, metaItems] = useCatalog(urlParams, queryParams);
-    const [selectedItem, setSelectedItem] = React.useState(null);
+    const [selectedItem, setSelectedItem] = React.useState(metaItems[0]);
     const changeMetaItem = React.useCallback((event) => {
-        const { metaItemId } = event.currentTarget.dataset;
+        const { id: metaItemId } = event.currentTarget.dataset;
         const metaItem = metaItems.find(({ id }) => id === metaItemId);
         setSelectedItem(metaItem);
     }, [metaItems]);
