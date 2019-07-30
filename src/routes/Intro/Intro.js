@@ -222,7 +222,6 @@ class Intro extends React.Component {
                                 />
                                 <ConsentCheckbox
                                     ref={this.termsRef}
-                                    className={classnames(styles['consent-checkbox'], 'focusable-with-border')}
                                     label={'I have read and agree with the Stremio'}
                                     link={'Terms and conditions'}
                                     href={'https://www.stremio.com/tos'}
@@ -231,7 +230,6 @@ class Intro extends React.Component {
                                 />
                                 <ConsentCheckbox
                                     ref={this.privacyPolicyRef}
-                                    className={classnames(styles['consent-checkbox'], 'focusable-with-border')}
                                     label={'I have read and agree with the Stremio'}
                                     link={'Privacy Policy'}
                                     href={'https://www.stremio.com/privacy'}
@@ -240,7 +238,6 @@ class Intro extends React.Component {
                                 />
                                 <ConsentCheckbox
                                     ref={this.marketingRef}
-                                    className={classnames(styles['consent-checkbox'], 'focusable-with-border')}
                                     label={'I agree to receive marketing communications from Stremio'}
                                     checked={this.state.marketingAccepted}
                                     toggle={this.toggleMarketing}
