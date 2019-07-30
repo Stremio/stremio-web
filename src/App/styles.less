@@ -42,24 +42,18 @@
     font-style: normal;
 }
 
-:root {
-    --scroll-bar-width: 8px;
-    --landscape-shape-ratio: 0.5625;
-    --poster-shape-ratio: 1.464;
-    --window-min-width: 800px;
-    --window-min-height: 600px;
-    --focusable-border-size: 2px;
-}
-
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-size: 1rem;
+    line-height: 1.2em;
+    font-family: inherit;
     border: none;
+    outline: none;
     list-style: none;
     user-select: none;
     text-decoration: none;
-    outline: none;
     appearance: none;
     background: none;
     box-shadow: none;
@@ -67,35 +61,46 @@
     word-break: break-word;
 }
 
-html, body, :global(#app) {
-    position: relative;
-    z-index: 0;
-    width: 100vw;
-    height: 100vh;
-    min-width: var(--window-min-width);
-    min-height: var(--window-min-height);
-    font-family: 'Roboto', 'sans-serif';
-    line-height: 1;
-    overflow: auto;
+html {
+    --landscape-shape-ratio: 0.5625;
+    --poster-shape-ratio: 1.464;
+    --color-facebook: #4267b2;
+
+    &, body, :global(#app) {
+        position: relative;
+        z-index: 0;
+        width: 100vw;
+        height: 100vh;
+        min-width: 800px;
+        min-height: 600px;
+        font-family: 'Roboto', 'sans-serif';
+        overflow: auto;
+    }
 
     .router {
         width: 100%;
         height: 100%;
-    }
-}
 
-:global {
+        :global(.focusable-with-border) {
+            &:focus, &:focus-within {
+                outline-offset: calc(-1 * var(--focusable-border-size));
+                outline: var(--focusable-border-size) solid var(--color-surfacelighter);
+            }
+        }
+    }
+
     input {
         &::-moz-focus-inner {
             border: none;
         }
 
-        &[type="email"], &[type="password"], &[type="text"] {
+        &[type="text"], &[type="email"], &[type="password"] {
             user-select: text;
-            font-size: inherit;
-            line-height: inherit;
-            font-family: inherit;
         }
+    }
+
+    svg {
+        overflow: visible;
     }
 
     ::-webkit-scrollbar {
@@ -108,12 +113,5 @@ html, body, :global(#app) {
 
     ::-webkit-scrollbar-track {
         background-color: var(--color-backgroundlight);
-    }
-
-    .focusable-with-border {
-        &:focus, &:focus-within {
-            outline-offset: calc(-1 * var(--focusable-border-size));
-            outline: var(--focusable-border-size) solid var(--color-surfacelighter);
-        }
     }
 }
