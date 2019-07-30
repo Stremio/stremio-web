@@ -25,12 +25,12 @@
             display: flex;
             flex-direction: row;
             flex-flow: wrap;
-            padding: 0.4em;
+            padding: 0.6em;
 
             .picker-button {
-                width: 16em;
+                width: 18em;
                 height: 3em;
-                margin: 0.4em;
+                margin: 0.6em;
                 padding: 0 0.8em;
                 display: flex;
                 flex-direction: row;
@@ -78,14 +78,14 @@
 
         .meta-items-container {
             grid-area: meta-items-area;
-            padding: 0 0.4em;
+            padding: 0 0.6em;
             overflow-x: hidden;
             overflow-y: auto;
 
             .meta-item-container {
                 display: inline-block;
                 width: calc(100% / var(--items-per-row));
-                padding: 0.4em;
+                padding: 0.6em;
 
                 .meta-item {
                     width: 100%;
@@ -105,7 +105,7 @@
     --box-shadow: -0.6em 0.6em 0.5em -0.1em var(--color-backgrounddark40);
 
     .menu-content {
-        width: 16em;
+        width: 18em;
         background-color: var(--color-backgroundlighter);
 
         .menu-item-container {
@@ -149,28 +149,35 @@
 
 @media only screen and (min-width: 1200px) and (max-width: 1400px) {
     .discover-container, .menu-container {
-        font-size: 16px;
+        font-size: 14px;
         --items-per-row: 5;
     }
 }
 
 @media only screen and (min-width: 1400px) and (max-width: 1600px) {
     .discover-container, .menu-container {
-        font-size: 16px;
+        font-size: 14px;
         --items-per-row: 6;
     }
 }
 
 @media only screen and (min-width: 1600px) and (max-width: 2000px) {
     .discover-container, .menu-container {
-        font-size: 18px;
+        font-size: 15px;
         --items-per-row: 7;
     }
 }
 
-@media only screen and (min-width: 2000px) {
+@media only screen and (min-width: 2000px) and (max-width: 3000px) {
+    .discover-container, .menu-container {
+        font-size: 16px;
+        --items-per-row: 8;
+    }
+}
+
+@media only screen and (min-width: 3000px) {
     .discover-container, .menu-container {
         font-size: 18px;
-        --items-per-row: 8;
+        --items-per-row: 10;
     }
 }
