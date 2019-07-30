@@ -1,9 +1,9 @@
 .intro-container {
-    height: 100%;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    height: 100%;
     background:
         linear-gradient(var(--color-backgrounddark80), var(--color-backgrounddark80)),
         url('/images/intro_background.jpg');
@@ -15,61 +15,59 @@
     overflow-x: hidden;
 
     .form-container {
-        width: var(--form-width);
+        width: 20rem;
         margin: auto;
-        padding: 4em 0;
+        padding: 4rem 0;
 
         .form-button {
-            width: 100%;
-            padding: 0 1em;
             display: flex;
             flex-direction: row;
             align-items: center;
             justify-content: center;
+            width: 100%;
+            padding: 0 1rem;
             cursor: pointer;
 
             .icon {
                 flex: none;
                 align-self: stretch;
                 display: block;
-                width: 0.8em;
-                margin-right: 1em;
+                width: 0.8rem;
+                margin-right: 1rem;
                 fill: var(--color-surfacelighter);
 
                 &~.label {
-                    max-width: calc(100% - 1.8em);
+                    max-width: calc(100% - 1.8rem);
                 }
             }
 
             .label {
                 flex: none;
                 max-width: 100%;
-                padding: 0.3em 0;
-                font-size: 1.1em;
-                line-height: 1.2em;
+                padding: 0.3rem 0;
+                font-size: 1.1rem;
                 font-weight: 600;
                 color: var(--color-surfacelighter);
             }
         }
 
         .facebook-button {
-            min-height: 4.5em;
-            background: #4267b2;
-
-            .label {
-                font-size: 1.2em;
-            }
+            min-height: 4.5rem;
+            background: var(--color-facebook);
 
             &:hover {
                 filter: brightness(1.1);
+            }
+
+            .label {
+                font-size: 1.2rem;
             }
         }
 
         .facebook-statement {
             width: 100%;
-            margin-top: 0.5em;
-            margin-bottom: 2em;
-            line-height: 1.2em;
+            margin-top: 0.5rem;
+            margin-bottom: 2rem;
             text-align: center;
             color: var(--color-surface);
         }
@@ -77,8 +75,8 @@
         .text-input {
             display: block;
             width: 100%;
-            margin: 1em 0;
-            padding: 0.5em 0.3em;
+            margin: 1rem 0;
+            padding: 0.5rem 0.3rem;
             border-bottom: calc(0.5 * var(--focusable-border-size)) solid var(--color-surface);
             color: var(--color-surfacelighter);
 
@@ -97,14 +95,17 @@
         }
 
         .forgot-password-link-container {
-            margin: 1em 0;
             display: flex;
             flex-direction: row;
             justify-content: flex-end;
+            margin: 1rem 0;
             text-align: right;
 
             .forgot-password-link {
-                padding: 0.5em 0.3em;
+                flex-basis: auto;
+                flex-grow: 0;
+                flex-shrink: 1;
+                padding: 0.5rem 0.3rem;
                 color: var(--color-surfacelight);
                 cursor: pointer;
 
@@ -120,21 +121,20 @@
         }
 
         .consent-checkbox {
-            --icon-size: 1.2em;
+            --icon-size: 1.2rem;
             --icon-color: var(--color-surface);
             --icon-background-color: transparent;
             display: flex;
             flex-direction: row;
             align-items: center;
             justify-content: center;
-            margin: 1em 0;
-            padding: 0.5em 0.3em;
+            margin: 1rem 0;
+            padding: 0.5rem 0.3rem;
             cursor: pointer;
 
             .label {
                 flex: 1;
-                margin-left: 0.5em;
-                line-height: 1.2em;
+                margin-left: 0.5rem;
                 color: var(--color-surface);
 
                 .link {
@@ -166,18 +166,18 @@
         }
 
         .error-message {
-            margin: 1em 0;
+            margin: 1rem 0;
             text-align: center;
             color: var(--color-signal1);
         }
 
         .submit-button {
-            min-height: 4em;
-            margin: 1em 0;
+            min-height: 4rem;
+            margin: 1rem 0;
             background-color: var(--color-primarydark);
 
             .label {
-                font-size: 1.2em;
+                font-size: 1.2rem;
             }
 
             &:hover {
@@ -186,9 +186,9 @@
         }
 
         .guest-login-button {
-            margin-top: 1em;
-            margin-bottom: 0.2em;
-            padding: 0.8em .3em;
+            margin-top: 1rem;
+            margin-bottom: 0.2rem;
+            padding: 0.8rem .3rem;
 
             &:hover, &:focus {
                 background-color: var(--color-surfacedarker60);
@@ -196,16 +196,11 @@
         }
 
         .switch-form-button {
-            padding: 0.8em .3em;
+            padding: 0.8rem .3rem;
 
             &:hover, &:focus {
                 background-color: var(--color-surfacedarker60);
             }
         }
     }
-}
-
-.intro-container {
-    --form-width: 270px;
-    font-size: 14px;
 }
