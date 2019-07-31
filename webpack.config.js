@@ -1,6 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
@@ -34,14 +35,17 @@ module.exports = {
                 exclude: /node_modules/,
                 use: [
                     {
-                        loader: 'style-loader'
+                        loader: MiniCssExtractPlugin.loader,
+                        options: {
+                            reloadAll: true
+                        },
                     },
                     {
                         loader: 'css-loader',
                         options: {
                             importLoaders: 2,
                             modules: {
-                                localIdentName: '[local]_[hash:base64:5]',
+                                localIdentName: '[local]_[hash:base64:5]'
                             }
                         }
                     },
@@ -138,10 +142,13 @@ module.exports = {
             template: './src/index.html',
             inject: false
         }),
+        new MiniCssExtractPlugin({
+            filename: 'styles.css',
+        }),
         new CleanWebpackPlugin({
             verbose: true,
             cleanOnceBeforeBuildPatterns: [],
-            cleanAfterEveryBuildPatterns: ['./bundle.js']
+            cleanAfterEveryBuildPatterns: ['./bundle.js', './styles.css']
         })
     ]
 };
