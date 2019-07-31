@@ -17,98 +17,14 @@
         overflow-y: auto;
 
         .board-row {
-            display: grid;
-            width: 100%;
-            margin: 2em 0;
-            padding: 0 1em;
-            grid-template-columns: 6fr minmax(12em, 1fr);
-            grid-template-areas:
-                "title-area title-area"
-                "meta-items-area show-more-area";
-
-            .title-container {
-                grid-area: title-area;
-                padding: 0 1em;
-
-                .title {
-                    font-size: 1.5em;
-                    line-height: 1.2em;
-                    max-height: 2.4em;
-                    color: var(--color-surfacelighter);
-                    text-transform: capitalize;
-                }
-            }
-
-            .meta-items-container {
-                grid-area: meta-items-area;
-                display: flex;
-                flex-direction: row;
-                align-items: stretch;
-
-                .meta-item {
-                    margin: 1em;
-
-                    &.poster-shape-square {
-                        flex: 1;
-                    }
-
-                    &.poster-shape-landscape {
-                        flex: calc(1 / var(--landscape-shape-ratio));
-                    }
-
-                    &.poster-shape-poster {
-                        flex: calc(1 / var(--poster-shape-ratio));
-                    }
-                }
-            }
-
-            .show-more-container {
-                grid-area: show-more-area;
-                display: flex;
-                flex-direction: row;
-                align-items: center;
-                justify-content: center;
-                margin: 1em;
-                padding: 0.5em;
-                background-color: var(--color-backgroundlight);
-                cursor: pointer;
-
-                &:hover, &:focus {
-                    background-color: var(--color-backgroundlighter);
-
-                    .label {
-                        color: var(--color-surfacelighter);
-                    }
-
-                    .icon {
-                        fill: var(--color-surfacelighter);
-                    }
-                }
-
-                .label {
-                    font-size: 1.2em;
-                    line-height: 1.2em;
-                    max-height: 3.6em;
-                    color: var(--color-surfacelight);
-                    text-align: center;
-                }
-
-                .icon {
-                    flex: none;
-                    width: 1.3em;
-                    height: 1.3em;
-                    margin-left: 0.3em;
-                    fill: var(--color-surfacelight);
-                }
-            }
+            margin: 2rem 0;
+            padding: 0 1rem;
         }
     }
 }
 
 @media only screen and (max-width: 1000px) {
-    .board-container, .menu-container {
-        font-size: 14px;
-
+    .board-container {
         .board-content {
             .board-row {
                 .meta-item:nth-child(n+5) {
@@ -120,9 +36,7 @@
 }
 
 @media only screen and (min-width: 1000px) and (max-width: 1200px) {
-    .board-container, .menu-container {
-        font-size: 14px;
-
+    .board-container {
         .board-content {
             .board-row {
                 .meta-item:nth-child(n+6) {
@@ -134,9 +48,7 @@
 }
 
 @media only screen and (min-width: 1200px) and (max-width: 1600px) {
-    .board-container, .menu-container {
-        font-size: 16px;
-
+    .board-container {
         .board-content {
             .board-row {
                 .meta-item:nth-child(n+7) {
@@ -148,9 +60,7 @@
 }
 
 @media only screen and (min-width: 1600px) and (max-width: 2000px) {
-    .board-container, .menu-container {
-        font-size: 18px;
-
+    .board-container {
         .board-content {
             .board-row {
                 .meta-item:nth-child(n+8) {
@@ -162,9 +72,7 @@
 }
 
 @media only screen and (min-width: 2000px) {
-    .board-container, .menu-container {
-        font-size: 18px;
-
+    .board-container {
         .board-content {
             .board-row {
                 .meta-item:nth-child(n+9) {

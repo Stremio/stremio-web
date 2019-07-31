@@ -2,7 +2,7 @@ const React = require('react');
 const { MainNavBar } = require('stremio/common');
 const BoardRow = require('./BoardRow');
 const useCatalogs = require('./useCatalogs');
-const styles = require('./styles');
+require('./styles');
 
 const CONTINUE_WATCHING_MENU = [
     {
@@ -18,9 +18,9 @@ const CONTINUE_WATCHING_MENU = [
 const Board = () => {
     const catalogs = useCatalogs();
     return (
-        <div className={styles['board-container']}>
-            <MainNavBar className={styles['nav-bar']} />
-            <div className={styles['board-content']}>
+        <div className={'board-container'}>
+            <MainNavBar className={'nav-bar'} />
+            <div className={'board-content'}>
                 {
                     catalogs
                         .filter(([_, response]) => response.type === 'Ready')
@@ -37,6 +37,7 @@ const Board = () => {
                         .map(([request, response], index) => (
                             <BoardRow
                                 key={`${index}${request.transport_url}`}
+                                className={'board-row'}
                                 title={`${request.resource_ref.id} - ${request.resource_ref.type_name}`}
                                 items={response.content}
                             />
