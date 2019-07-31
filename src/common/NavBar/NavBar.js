@@ -11,7 +11,7 @@ const NavBar = React.memo(({ className, backButton, tabs, title, searchBar, user
         window.history.back();
     }, []);
     return (
-        <nav className={classnames(className, styles['nav-bar'])}>
+        <nav className={classnames(className, styles['nav-bar-container'])}>
             {
                 backButton ?
                     <NavBarButton

@@ -30,7 +30,7 @@ const SearchBar = ({ className }) => {
         }
     }, [active, focusable]);
     return (
-        <label className={classnames(className, styles['search-label'], { 'active': active })} onClick={!active ? navigateToSearch : null}>
+        <label className={classnames(className, styles['search-bar-container'], { 'active': active })} onClick={!active ? navigateToSearch : null}>
             {
                 active ?
                     <Input

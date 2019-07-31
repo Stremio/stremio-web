@@ -1,7 +1,6 @@
-.search-label {
+.search-bar-container {
     display: flex;
     flex-direction: row;
-    align-items: stretch;
     background-color: var(--color-secondary60);
 
     &:hover {
@@ -22,10 +21,11 @@
 
     .search-input {
         flex: 1;
+        align-self: stretch;
         display: flex;
         flex-direction: row;
         align-items: center;
-        padding: 0 0.8em;
+        padding: 0 0.8rem;
         color: var(--color-surfacelighter);
         cursor: text;
 
@@ -48,8 +48,8 @@
 
         .submit-icon {
             flex: none;
-            width: 1.1em;
-            height: 1.1em;
+            width: 1.1rem;
+            height: 1.1rem;
             fill: var(--color-surfacelighter);
         }
     }

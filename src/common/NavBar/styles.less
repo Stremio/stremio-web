@@ -1,23 +1,10 @@
-.nav-bar {
-    --nav-bar-height: 44px;
-    font-size: 16px;
-
-    .nav-tabs-container {
-        .nav-tab-button {
-            &:nth-child(n+5) {
-                display: none;
-            }
-        }
-    }
-}
-
-.nav-bar {
+.nav-bar-container {
+    --nav-bar-height: 3.2rem;
     display: flex;
     flex-direction: row;
     align-items: center;
     height: var(--nav-bar-height);
     background-color: var(--color-secondarydark);
-    overflow: hidden;
 
     .back-button {
         flex: none;
@@ -34,20 +21,21 @@
             flex: none;
             max-width: calc(var(--nav-bar-height) * 3.5);
             height: var(--nav-bar-height);
+
+            &:nth-child(n+5) {
+                display: none;
+            }
         }
     }
 
     .title {
         flex: 1;
-        font-size: 1.1em;
-        height: 1.4em;
-        line-height: 1.4em;
-        padding: 0 0.6em;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
+        padding: 0 0.6rem;
+        font-size: 1.1rem;
         font-style: normal;
         font-weight: normal;
+        white-space: nowrap;
+        text-overflow: ellipsis;
         color: var(--color-surfacelighter);
 
         &~.spacing {
