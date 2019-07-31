@@ -5,6 +5,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
+const { getLocalIdent } = require('css-loader/dist/utils');
 
 module.exports = {
     entry: './src/index.js',
@@ -38,14 +39,22 @@ module.exports = {
                         loader: MiniCssExtractPlugin.loader,
                         options: {
                             reloadAll: true
-                        },
+                        }
                     },
                     {
                         loader: 'css-loader',
                         options: {
                             importLoaders: 2,
                             modules: {
-                                localIdentName: '[local]_[hash:base64:5]'
+                                getLocalIdent: (context, localIdentName, localName, options) => {
+                                    if (context.resourcePath.startsWith(path.resolve(__dirname, 'src/routes'))) {
+                                        localIdentName = '[local]';
+                                    } else {
+                                        localIdentName = '[local]-[hash:base64:5]';
+                                    }
+
+                                    return getLocalIdent(context, localIdentName, localName, options);
+                                }
                             }
                         }
                     },
