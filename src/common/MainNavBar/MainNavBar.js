@@ -32,7 +32,7 @@ const MainNavBar = ({ className }) => {
             backButton={false}
             tabs={TABS}
             searchBar={true}
-            userMenu={true}
+            navMenu={true}
         />
     );
 };
