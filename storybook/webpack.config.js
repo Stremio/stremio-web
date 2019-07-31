@@ -1,4 +1,5 @@
 const appConfig = require('../webpack.config.js');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = async ({ config: storybookConfig }) => {
     storybookConfig.module = {
@@ -16,6 +17,10 @@ module.exports = async ({ config: storybookConfig }) => {
         ...storybookConfig.resolve.alias,
         ...appConfig.resolve.alias
     };
+    storybookConfig.plugins = [
+        ...storybookConfig.plugins,
+        new MiniCssExtractPlugin()
+    ];
 
     return storybookConfig;
 };
