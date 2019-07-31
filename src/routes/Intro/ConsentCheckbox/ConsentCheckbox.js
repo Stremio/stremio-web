@@ -3,9 +3,9 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { Input } = require('stremio-navigation');
 const { Checkbox } = require('stremio/common');
-const styles = require('./styles');
+require('./styles');
 
-const ConsentCheckbox = React.forwardRef(({ checked, label, link, href, toggle }, ref) => {
+const ConsentCheckbox = React.forwardRef(({ className, checked, label, link, href, toggle }, ref) => {
     const checkboxOnClick = React.useCallback((event) => {
         if (!event.nativeEvent.handled && typeof toggle === 'function') {
             toggle(event);
@@ -15,13 +15,13 @@ const ConsentCheckbox = React.forwardRef(({ checked, label, link, href, toggle }
         event.nativeEvent.handled = true;
     }, []);
     return (
-        <Checkbox ref={ref} className={classnames(styles['consent-checkbox'], 'focusable-with-border')} checked={checked} onClick={checkboxOnClick}>
-            <div className={styles['label']}>
+        <Checkbox ref={ref} className={classnames(className, 'consent-checkbox-container', 'focusable-with-border')} checked={checked} onClick={checkboxOnClick}>
+            <div className={'label'}>
                 {label}
                 {
                     typeof link === 'string' && typeof href === 'string' ?
                         <Input
-                            className={styles['link']}
+                            className={'link'}
                             type={'link'}
                             href={href}
                             target={'_blank'}
@@ -40,6 +40,7 @@ const ConsentCheckbox = React.forwardRef(({ checked, label, link, href, toggle }
 ConsentCheckbox.displayName = 'ConsentCheckbox';
 
 ConsentCheckbox.propTypes = {
+    className: PropTypes.string,
     checked: PropTypes.bool,
     label: PropTypes.string,
     link: PropTypes.string,

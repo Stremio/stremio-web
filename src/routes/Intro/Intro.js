@@ -3,12 +3,10 @@ const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const { Input } = require('stremio-navigation');
 const ConsentCheckbox = require('./ConsentCheckbox');
-const styles = require('./styles');
+require('./styles');
 
-const FORMS = {
-    LOGIN: 'LOGIN',
-    SIGN_UP: 'SIGN_UP'
-};
+const LOGIN_FORM = 'LOGIN_FORM';
+const SIGNUP_FORM = 'SIGNUP_FORM';
 
 class Intro extends React.Component {
     constructor(props) {
@@ -23,7 +21,7 @@ class Intro extends React.Component {
         this.errorRef = React.createRef();
 
         this.state = {
-            selectedForm: FORMS.SIGN_UP,
+            selectedForm: SIGNUP_FORM,
             termsAccepted: false,
             privacyPolicyAccepted: false,
             marketingAccepted: false,
@@ -85,10 +83,10 @@ class Intro extends React.Component {
     }
 
     passwordOnSubmit = () => {
-        if (this.state.selectedForm === FORMS.LOGIN) {
-            this.loginWithEmail();
-        } else {
+        if (this.state.selectedForm === SIGNUP_FORM) {
             this.confirmPasswordRef.current.focus();
+        } else {
+            this.loginWithEmail();
         }
     }
 
@@ -100,19 +98,19 @@ class Intro extends React.Component {
         this.termsRef.current.focus();
     }
 
-    toggleTerms = () => {
+    toggleTermsAccepted = () => {
         this.setState(({ termsAccepted }) => ({
             termsAccepted: !termsAccepted
         }));
     }
 
-    togglePrivacyPolicy = () => {
+    togglePrivacyPolicyAccepted = () => {
         this.setState(({ privacyPolicyAccepted }) => ({
             privacyPolicyAccepted: !privacyPolicyAccepted
         }));
     }
 
-    toggleMarketing = () => {
+    toggleMarketingAccepted = () => {
         this.setState(({ marketingAccepted }) => ({
             marketingAccepted: !marketingAccepted
         }));
@@ -173,22 +171,27 @@ class Intro extends React.Component {
             return;
         }
 
+        if (!this.state.privacyPolicyAccepted) {
+            this.setState({ error: 'You must accept the Privacy Policy' });
+            return;
+        }
+
         this.setState({ error: '' });
         alert('TODO: Guest login');
     }
 
     render() {
         return (
-            <div className={styles['intro-container']}>
-                <div className={styles['form-container']}>
-                    <Input className={classnames(styles['form-button'], styles['facebook-button'], 'focusable-with-border')} type={'button'} onClick={this.loginWithFacebook}>
-                        <Icon className={styles['icon']} icon={'ic_facebook'} />
-                        <div className={styles['label']}>Continue with Facebook</div>
+            <div className={'intro-container'}>
+                <div className={'form-container'}>
+                    <Input className={classnames('form-button', 'facebook-button', 'focusable-with-border')} type={'button'} onClick={this.loginWithFacebook}>
+                        <Icon className={'icon'} icon={'ic_facebook'} />
+                        <div className={'label'}>Continue with Facebook</div>
                     </Input>
-                    <div className={styles['facebook-statement']}>We won't post anything on your behalf</div>
+                    <div className={'facebook-statement'}>We won't post anything on your behalf</div>
                     <Input
                         ref={this.emailRef}
-                        className={styles['text-input']}
+                        className={'text-input'}
                         type={'email'}
                         placeholder={'Email'}
                         value={this.state.email}
@@ -197,7 +200,7 @@ class Intro extends React.Component {
                     />
                     <Input
                         ref={this.passwordRef}
-                        className={styles['text-input']}
+                        className={'text-input'}
                         type={'password'}
                         placeholder={'Password'}
                         value={this.state.password}
@@ -205,15 +208,11 @@ class Intro extends React.Component {
                         onSubmit={this.passwordOnSubmit}
                     />
                     {
-                        this.state.selectedForm === FORMS.LOGIN ?
-                            <div className={styles['forgot-password-link-container']}>
-                                <Input className={classnames(styles['forgot-password-link'], 'focusable-with-border')} type={'link'} href={'https://www.strem.io/reset-password/'} target={'_blank'}>Forgot password?</Input>
-                            </div>
-                            :
+                        this.state.selectedForm === SIGNUP_FORM ?
                             <React.Fragment>
                                 <Input
                                     ref={this.confirmPasswordRef}
-                                    className={styles['text-input']}
+                                    className={'text-input'}
                                     type={'password'}
                                     placeholder={'Confirm Password'}
                                     value={this.state.confirmPassword}
@@ -222,47 +221,54 @@ class Intro extends React.Component {
                                 />
                                 <ConsentCheckbox
                                     ref={this.termsRef}
+                                    className={'consent-checkbox'}
                                     label={'I have read and agree with the Stremio'}
                                     link={'Terms and conditions'}
                                     href={'https://www.stremio.com/tos'}
                                     checked={this.state.termsAccepted}
-                                    toggle={this.toggleTerms}
+                                    toggle={this.toggleTermsAccepted}
                                 />
                                 <ConsentCheckbox
                                     ref={this.privacyPolicyRef}
+                                    className={'consent-checkbox'}
                                     label={'I have read and agree with the Stremio'}
                                     link={'Privacy Policy'}
                                     href={'https://www.stremio.com/privacy'}
                                     checked={this.state.privacyPolicyAccepted}
-                                    toggle={this.togglePrivacyPolicy}
+                                    toggle={this.togglePrivacyPolicyAccepted}
                                 />
                                 <ConsentCheckbox
                                     ref={this.marketingRef}
+                                    className={'consent-checkbox'}
                                     label={'I agree to receive marketing communications from Stremio'}
                                     checked={this.state.marketingAccepted}
-                                    toggle={this.toggleMarketing}
+                                    toggle={this.toggleMarketingAccepted}
                                 />
                             </React.Fragment>
+                            :
+                            <div className={'forgot-password-link-container'}>
+                                <Input className={classnames('forgot-password-link', 'focusable-with-border')} type={'link'} href={'https://www.strem.io/reset-password/'} target={'_blank'}>Forgot password?</Input>
+                            </div>
                     }
                     {
                         this.state.error.length > 0 ?
-                            <div ref={this.errorRef} className={styles['error-message']}>{this.state.error}</div>
+                            <div ref={this.errorRef} className={'error-message'}>{this.state.error}</div>
                             :
                             null
                     }
-                    <Input className={classnames(styles['form-button'], styles['submit-button'], 'focusable-with-border')} type={'button'} onClick={this.state.selectedForm === FORMS.LOGIN ? this.loginWithEmail : this.signup}>
-                        <div className={styles['label']}>{this.state.selectedForm === FORMS.LOGIN ? 'LOG IN' : 'SING UP'}</div>
+                    <Input className={classnames('form-button', 'submit-button', 'focusable-with-border')} type={'button'} onClick={this.state.selectedForm === SIGNUP_FORM ? this.signup : this.loginWithEmail}>
+                        <div className={'label'}>{this.state.selectedForm === SIGNUP_FORM ? 'SING UP' : 'LOG IN'}</div>
                     </Input>
                     {
-                        this.state.selectedForm === FORMS.SIGN_UP ?
-                            <Input className={classnames(styles['form-button'], styles['guest-login-button'], 'focusable-with-border')} type={'button'} onClick={this.loginAsGuest}>
-                                <div className={styles['label']}>GUEST LOGIN</div>
+                        this.state.selectedForm === SIGNUP_FORM ?
+                            <Input className={classnames('form-button', 'guest-login-button', 'focusable-with-border')} type={'button'} onClick={this.loginAsGuest}>
+                                <div className={'label'}>GUEST LOGIN</div>
                             </Input>
                             :
                             null
                     }
-                    <Input className={classnames(styles['form-button'], styles['switch-form-button'], 'focusable-with-border')} type={'button'} data-form={this.state.selectedForm === FORMS.SIGN_UP ? FORMS.LOGIN : FORMS.SIGN_UP} onClick={this.changeSelectedForm}>
-                        <div className={styles['label']}>{this.state.selectedForm === FORMS.SIGN_UP ? 'LOG IN' : 'SING UP WITH EMAIL'}</div>
+                    <Input className={classnames('form-button', 'switch-form-button', 'focusable-with-border')} type={'button'} data-form={this.state.selectedForm === SIGNUP_FORM ? LOGIN_FORM : SIGNUP_FORM} onClick={this.changeSelectedForm}>
+                        <div className={'label'}>{this.state.selectedForm === SIGNUP_FORM ? 'LOG IN' : 'SING UP WITH EMAIL'}</div>
                     </Input>
                 </div>
             </div>

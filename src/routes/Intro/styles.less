@@ -121,48 +121,8 @@
         }
 
         .consent-checkbox {
-            --icon-size: 1.2rem;
-            --icon-color: var(--color-surface);
-            --icon-background-color: transparent;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: center;
             margin: 1rem 0;
             padding: 0.5rem 0.3rem;
-            cursor: pointer;
-
-            .label {
-                flex: 1;
-                margin-left: 0.5rem;
-                color: var(--color-surface);
-
-                .link {
-                    color: var(--color-surfacelight);
-
-                    &:hover {
-                        text-decoration: underline;
-                    }
-                }
-            }
-
-            &:global(.checked) {
-                --icon-color: var(--color-surfacelight);
-                --icon-background-color: var(--color-primary);
-            }
-
-            &:focus-within, &:hover {
-                --icon-color: var(--color-surfacelighter);
-                background-color: var(--color-surfacedarker60);
-
-                .label {
-                    color: var(--color-surfacelighter);
-
-                    .link {
-                        color: var(--color-surfacelighter);
-                    }
-                }
-            }
         }
 
         .error-message {
