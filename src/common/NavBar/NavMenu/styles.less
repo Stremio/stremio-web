@@ -1,11 +1,8 @@
-.user-menu {
-    --user-menu-width: 280px;
-    font-size: 14px;
-}
-
-.user-menu-button {
-    text-align: center;
-    overflow: hidden;
+.nav-menu-button {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
     cursor: pointer;
 
     &:hover {
@@ -17,39 +14,31 @@
     }
 
     .icon {
-        height: 100%;
+        display: block;
+        height: 50%;
         fill: var(--color-surfacelighter);
-
-        &.user-icon {
-            width: 40%;
-        }
-
-        &.arrow-icon {
-            width: 16%;
-        }
     }
 }
 
-.user-menu-container {
-    --box-shadow: -0.6em .6em .5em -0.1em var(--color-backgrounddark40);
+.nav-menu-container {
+    --box-shadow: -0.6rem .6rem .5rem -0.1rem var(--color-backgrounddark40);
 
-    .user-menu {
-        width: var(--user-menu-width);
+    .nav-menu {
+        width: 20rem;
         background-color: var(--color-background);
 
         .user-info {
-            width: 100%;
-            height: 6em;
             display: grid;
-            grid-template-columns: 6em 1fr;
+            height: 6rem;
+            grid-template-columns: 6rem 1fr;
             grid-template-rows: 50% 50%;
             grid-template-areas:
-                "avatar email"
-                "avatar login-logout-button";
+                "avatar-area email-area"
+                "avatar-area login-logout-button-area";
 
             .avatar {
-                grid-area: avatar;
-                padding: 0.8em;
+                grid-area: avatar-area;
+                padding: 0.8rem;
                 border-radius: 50%;
                 background-size: cover;
                 background-repeat: no-repeat;
@@ -59,23 +48,21 @@
             }
 
             .email-container {
-                grid-area: email;
+                grid-area: email-area;
                 display: flex;
                 flex-direction: row;
                 align-items: center;
-                padding: 0.8em 0.8em 0 0;
+                padding: 0.6rem 0.6rem 0 0;
                 color: var(--color-surfacelighter);
-                overflow: hidden;
             }
 
             .login-logout-button {
-                grid-area: login-logout-button;
+                grid-area: login-logout-button-area;
                 display: flex;
                 flex-direction: row;
                 align-items: center;
-                padding: 0 0.8em 0.8em 0;
+                padding: 0 0.6rem 0.6rem 0;
                 color: var(--color-surface);
-                overflow: hidden;
                 cursor: pointer;
 
                 &:hover {
@@ -87,24 +74,19 @@
             .email-container, .login-logout-button {
                 .user-info-label {
                     flex: 1;
-                    max-height: 2.2em;
-                    line-height: 1.1em;
-                    word-break: break-all;
-                    overflow: hidden;
+                    max-height: 2.4em;
                 }
             }
         }
 
-        .user-menu-section {
-            width: 100%;
+        .nav-menu-section {
             border-top: calc(0.5 * var(--focusable-border-size)) solid var(--color-surfacedark80);
 
             .option {
-                width: 100%;
-                height: 4em;
                 display: flex;
                 flex-direction: row;
                 align-items: center;
+                height: 4rem;
                 cursor: pointer;
 
                 &:hover {
@@ -113,9 +95,9 @@
 
                 .option-icon {
                     flex: none;
-                    width: 4em;
-                    height: 4em;
-                    padding: 1.3em;
+                    width: 4rem;
+                    height: 4rem;
+                    padding: 1.3rem;
                     fill: var(--color-secondarylight);
 
                     &+.option-label {
@@ -125,12 +107,9 @@
 
                 .option-label {
                     flex: 1;
-                    padding: 0 1.3em;
-                    max-height: 2.2em;
-                    line-height: 1.1em;
+                    max-height: 2.4em;
+                    padding: 0 1.3rem;
                     color: var(--color-surfacelighter);
-                    word-break: break-all;
-                    overflow: hidden;
                 }
             }
         }

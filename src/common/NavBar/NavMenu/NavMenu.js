@@ -2,11 +2,11 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
-const Popup = require('../../Popup');
 const { Input } = require('stremio-navigation');
+const Popup = require('../../Popup');
 const styles = require('./styles');
 
-const UserMenu = ({ className, email = '', avatar = '', logout }) => {
+const NavMenu = ({ className, email = '', avatar = '', logout }) => {
     const [active, setActive] = React.useState(false);
     const onPopupOpen = React.useCallback(() => {
         setActive(true);
@@ -34,13 +34,12 @@ const UserMenu = ({ className, email = '', avatar = '', logout }) => {
     return (
         <Popup onOpen={onPopupOpen} onClose={onPopupClose}>
             <Popup.Label>
-                <Input className={classnames(className, styles['user-menu-button'], { 'active': active })} tabIndex={-1} type={'button'}>
-                    <Icon className={classnames(styles['icon'], styles['user-icon'])} icon={'ic_user'} />
-                    <Icon className={classnames(styles['icon'], styles['arrow-icon'])} icon={'ic_arrow_down'} />
+                <Input className={classnames(className, styles['nav-menu-button'], { 'active': active })} tabIndex={-1} type={'button'}>
+                    <Icon className={styles['icon']} icon={'ic_more'} />
                 </Input>
             </Popup.Label>
-            <Popup.Menu className={styles['user-menu-container']}>
-                <div className={styles['user-menu']}>
+            <Popup.Menu className={styles['nav-menu-container']}>
+                <div className={styles['nav-menu']}>
                     <div className={styles['user-info']}>
                         <div
                             className={styles['avatar']}
@@ -58,13 +57,13 @@ const UserMenu = ({ className, email = '', avatar = '', logout }) => {
                             <div className={styles['user-info-label']}>{email.length === 0 ? 'Log in / Sign up' : 'Log out'}</div>
                         </Input>
                     </div>
-                    <div className={styles['user-menu-section']}>
+                    <div className={styles['nav-menu-section']}>
                         <Input className={classnames(styles['option'], 'focusable-with-border')} type={'button'} onClick={toggleFullscreen}>
                             <Icon className={styles['option-icon']} icon={'ic_fullscreen'} />
                             <div className={styles['option-label']}>{fullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'}</div>
                         </Input>
                     </div>
-                    <div className={styles['user-menu-section']}>
+                    <div className={styles['nav-menu-section']}>
                         <Input className={classnames(styles['option'], 'focusable-with-border')} type={'link'} href={'#/settings'}>
                             <Icon className={styles['option-icon']} icon={'ic_settings'} />
                             <div className={styles['option-label']}>Settings</div>
@@ -86,7 +85,7 @@ const UserMenu = ({ className, email = '', avatar = '', logout }) => {
                             <div className={styles['option-label']}>Help & Feedback</div>
                         </Input>
                     </div>
-                    <div className={styles['user-menu-section']}>
+                    <div className={styles['nav-menu-section']}>
                         <Input className={classnames(styles['option'], 'focusable-with-border')} type={'link'} href={'https://www.stremio.com/tos'} target={'_blank'}>
                             <div className={styles['option-label']}>Terms of Service</div>
                         </Input>
@@ -100,11 +99,11 @@ const UserMenu = ({ className, email = '', avatar = '', logout }) => {
     );
 };
 
-UserMenu.propTypes = {
+NavMenu.propTypes = {
     className: PropTypes.string,
     email: PropTypes.string,
     avatar: PropTypes.string,
     logout: PropTypes.func
 };
 
-module.exports = UserMenu;
+module.exports = NavMenu;

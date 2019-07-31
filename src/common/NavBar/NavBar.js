@@ -3,10 +3,10 @@ const classnames = require('classnames');
 const PropTypes = require('prop-types');
 const NavBarButton = require('./NavBarButton');
 const SearchBar = require('./SearchBar');
-const UserMenu = require('./UserMenu');
+const NavMenu = require('./NavMenu');
 const styles = require('./styles');
 
-const NavBar = React.memo(({ className, backButton, tabs, title, searchBar, userMenu }) => {
+const NavBar = React.memo(({ className, backButton, tabs, title, searchBar, navMenu }) => {
     const onBackButtonClick = React.useCallback(() => {
         window.history.back();
     }, []);
@@ -50,8 +50,8 @@ const NavBar = React.memo(({ className, backButton, tabs, title, searchBar, user
                     null
             }
             {
-                userMenu ?
-                    <UserMenu className={styles['user-menu']} />
+                navMenu ?
+                    <NavMenu className={styles['nav-menu']} />
                     :
                     null
             }
@@ -71,7 +71,7 @@ NavBar.propTypes = {
     })),
     title: PropTypes.string,
     searchBar: PropTypes.bool,
-    userMenu: PropTypes.bool
+    navMenu: PropTypes.bool
 };
 
 module.exports = NavBar;
