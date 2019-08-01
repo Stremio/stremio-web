@@ -219,11 +219,11 @@ class Popup extends React.Component {
     }
 
     menuContainerOnClick = (event) => {
-        event.nativeEvent.handled = true;
+        event.nativeEvent.closePrevented = true;
     }
 
     modalBackgroundOnClick = (event) => {
-        if (!event.nativeEvent.handled) {
+        if (!event.nativeEvent.closePrevented) {
             this.close();
         }
     }

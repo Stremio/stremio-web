@@ -7,12 +7,12 @@ require('./styles');
 
 const ConsentCheckbox = React.forwardRef(({ className, checked, label, link, href, toggle }, ref) => {
     const checkboxOnClick = React.useCallback((event) => {
-        if (!event.nativeEvent.handled && typeof toggle === 'function') {
+        if (!event.nativeEvent.togglePrevented && typeof toggle === 'function') {
             toggle(event);
         }
     }, [toggle]);
     const linkOnClick = React.useCallback((event) => {
-        event.nativeEvent.handled = true;
+        event.nativeEvent.togglePrevented = true;
     }, []);
     return (
         <Checkbox ref={ref} className={classnames(className, 'consent-checkbox-container', 'focusable-with-border')} checked={checked} onClick={checkboxOnClick}>
