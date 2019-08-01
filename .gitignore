@@ -1,12 +1,5 @@
-node_modules
-package-lock.json
-
-# production
-build
-dist
-
-# misc
+/node_modules
+/dist
+/package-lock.json
+/npm-debug.log
 .DS_Store
-npm-debug.log
-.cache
-.notes
