@@ -5,7 +5,7 @@ const Icon = require('stremio-icons/dom');
 const { Input } = require('stremio-navigation');
 const styles = require('./styles');
 
-const Checkbox = React.forwardRef(({ className, disabled = false, checked = false, onClick, children }, ref) => {
+const Checkbox = React.forwardRef(({ className, checked = false, disabled = false, onClick, children }, ref) => {
     return (
         <div className={classnames(className, styles['checkbox-container'], { 'checked': checked }, { 'disabled': disabled })} onClick={onClick}>
             <Input
@@ -26,8 +26,8 @@ Checkbox.displayName = 'Checkbox';
 
 Checkbox.propTypes = {
     className: PropTypes.string,
-    disabled: PropTypes.bool,
     checked: PropTypes.bool,
+    disabled: PropTypes.bool,
     onClick: PropTypes.func,
     children: PropTypes.node
 };
