@@ -13,17 +13,18 @@ const TABS = [
 const MainNavBar = ({ className }) => {
     const focusable = useFocusable();
     React.useEffect(() => {
-        const onKeyUp = (event) => {
+        const onKeyDown = (event) => {
             const tab = TABS.find(({ keyCode }) => event.keyCode === keyCode);
             if (tab) {
+                event.preventDefault();
                 window.location = tab.href;
             }
         };
         if (focusable) {
-            window.addEventListener('keyup', onKeyUp);
+            window.addEventListener('keydown', onKeyDown);
         }
         return () => {
-            window.removeEventListener('keyup', onKeyUp);
+            window.removeEventListener('keydown', onKeyDown);
         };
     }, [focusable]);
     return (
