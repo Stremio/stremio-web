@@ -1,6 +1,6 @@
 const PropTypes = require('prop-types');
 
-const Menu = ({ children }) => children;
+const Menu = ({ className, tabIndex, children }) => children;
 
 Menu.displayName = 'Popup.Menu';
 

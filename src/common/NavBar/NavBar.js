@@ -1,12 +1,12 @@
 const React = require('react');
-const classnames = require('classnames');
 const PropTypes = require('prop-types');
+const classnames = require('classnames');
 const NavBarButton = require('./NavBarButton');
 const SearchBar = require('./SearchBar');
 const NavMenu = require('./NavMenu');
 const styles = require('./styles');
 
-const NavBar = React.memo(({ className, backButton, tabs, title, searchBar, navMenu }) => {
+const NavBar = React.memo(({ className, backButton = false, tabs = [], title = '', searchBar = false, navMenu = false }) => {
     const onBackButtonClick = React.useCallback(() => {
         window.history.back();
     }, []);

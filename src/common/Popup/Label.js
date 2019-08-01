@@ -12,7 +12,7 @@ Label.propTypes = {
     children: PropTypes.oneOfType([
         PropTypes.arrayOf(PropTypes.node),
         PropTypes.node
-    ])
+    ]).isRequired
 };
 
 module.exports = Label;

@@ -49,21 +49,23 @@ class Popup extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (this.state.open && !prevState.open) {
-            this.updateStyles();
-            this.popupMutationObserver.observe(document.documentElement, {
-                childList: true,
-                attributes: true,
-                characterData: true,
-                subtree: true
-            });
-            if (typeof this.props.onOpen === 'function') {
-                this.props.onOpen();
-            }
-        } else if (!this.state.open && prevState.open) {
-            this.popupMutationObserver.disconnect();
-            if (typeof this.props.onClose === 'function') {
-                this.props.onClose();
+        if (this.state.open !== prevState.open) {
+            this.updateMenuStyles();
+            if (this.state.open) {
+                this.popupMutationObserver.observe(document.documentElement, {
+                    childList: true,
+                    attributes: true,
+                    characterData: true,
+                    subtree: true
+                });
+                if (typeof this.props.onOpen === 'function') {
+                    this.props.onOpen();
+                }
+            } else {
+                this.popupMutationObserver.disconnect();
+                if (typeof this.props.onClose === 'function') {
+                    this.props.onClose();
+                }
             }
         }
     }
@@ -83,7 +85,7 @@ class Popup extends React.Component {
                     menuChildrenRect.y !== prevMenuChildrenRect.y ||
                     menuChildrenRect.width !== prevMenuChildrenRect.width ||
                     menuChildrenRect.height !== prevMenuChildrenRect.height) {
-                    this.updateStyles();
+                    this.updateMenuStyles();
                 }
 
                 prevLabelRect = labelRect;
@@ -95,7 +97,11 @@ class Popup extends React.Component {
         });
     }
 
-    updateStyles = () => {
+    updateMenuStyles = () => {
+        if (!this.state.open) {
+            return;
+        }
+
         this.menuContainerRef.current.removeAttribute('style');
         this.menuScrollRef.current.removeAttribute('style');
         this.menuBorderTopRef.current.removeAttribute('style');
@@ -156,7 +162,7 @@ class Popup extends React.Component {
             menuDirections.left = true;
         }
 
-        if (borderColor) {
+        if (borderColor.length > 0) {
             this.menuBorderTopRef.current.style.height = `${borderSize}px`;
             this.menuBorderRightRef.current.style.width = `${borderSize}px`;
             this.menuBorderBottomRef.current.style.height = `${borderSize}px`;
@@ -199,8 +205,7 @@ class Popup extends React.Component {
     }
 
     onKeyUp = (event) => {
-        if (this.state.open && event.keyCode === 27) { // escape
-            event.stopPropagation();
+        if (this.state.open && event.keyCode === 27) {
             this.close();
         }
     }
@@ -213,22 +218,18 @@ class Popup extends React.Component {
         this.setState({ open: false });
     }
 
-    labelOnClick = (event) => {
-        event.stopPropagation();
-        this.open();
-    }
-
     menuContainerOnClick = (event) => {
-        event.stopPropagation();
+        event.nativeEvent.handled = true;
     }
 
     modalBackgroundOnClick = (event) => {
-        event.stopPropagation();
-        this.close();
+        if (!event.nativeEvent.handled) {
+            this.close();
+        }
     }
 
     renderLabel(labelElement) {
-        return React.cloneElement(labelElement, { ref: this.labelRef, onClick: this.labelOnClick });
+        return React.cloneElement(labelElement, { ref: this.labelRef, onClick: this.open });
     }
 
     renderMenu(menuElement) {
@@ -294,7 +295,7 @@ Popup.propTypes = {
     children: PropTypes.oneOfType([
         PropTypes.arrayOf(PropTypes.node),
         PropTypes.node
-    ])
+    ]).isRequired
 };
 
 module.exports = Popup;
