@@ -146,13 +146,11 @@ module.exports = {
             template: './src/index.html',
             inject: false
         }),
-        new MiniCssExtractPlugin({
-            filename: 'styles.css',
-        }),
+        new MiniCssExtractPlugin(),
         new CleanWebpackPlugin({
             verbose: true,
             cleanOnceBeforeBuildPatterns: [],
-            cleanAfterEveryBuildPatterns: ['./main.js', './styles.css']
+            cleanAfterEveryBuildPatterns: ['./main.js', './main.css']
         })
     ]
 };
