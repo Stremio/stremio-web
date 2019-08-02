@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Icon from 'stremio-icons/dom';
-import { Input, Popup, Checkbox } from 'stremio-common';
+import { Input, Popup, Checkbox } from 'stremio/common';
 import classnames from 'classnames';
 import styles from './styles';
 

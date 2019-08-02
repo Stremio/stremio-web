@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import Icon from 'stremio-icons/dom';
-import { Popup } from 'stremio-common';
+import { Popup } from 'stremio/common';
 import Video from './Video';
 import styles from './styles';
 

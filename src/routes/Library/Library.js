@@ -1,5 +1,5 @@
 const React = require('react');
-const { MainNavBar } = require('stremio-common');
+const { MainNavBar } = require('stremio/common');
 const styles = require('./styles');
 
 class Library extends React.Component {

@@ -3,7 +3,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const { Modal } = require('stremio-navigation');
-const { ColorPicker } = require('stremio-common');
+const { ColorPicker } = require('stremio/common');
 const styles = require('./styles');
 
 const ORIGIN_PRIORITIES = Object.freeze({

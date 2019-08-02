@@ -2,7 +2,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const debounce = require('lodash.debounce');
-const { Slider } = require('stremio-common');
+const { Slider } = require('stremio/common');
 const styles = require('./styles');
 
 class VolumeSlider extends React.Component {

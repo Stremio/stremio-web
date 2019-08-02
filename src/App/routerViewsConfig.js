@@ -1,5 +1,5 @@
-const { Addons, Board, Calendar, Detail, Discover, Intro, Library, Player, Search, Settings } = require('stremio-routes');
-const { routesRegexp } = require('stremio-common');
+const { Addons, Board, Calendar, Detail, Discover, Intro, Library, Player, Search, Settings } = require('stremio/routes');
+const { routesRegexp } = require('stremio/common');
 
 const routerViewsConfig = [
     [

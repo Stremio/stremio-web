@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import { Input, Modal } from 'stremio-common';
+import { Input, Modal } from 'stremio/common';
 import Icon from 'stremio-icons/dom';
 import styles from './styles';
 
