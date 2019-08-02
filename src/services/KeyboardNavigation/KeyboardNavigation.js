@@ -21,6 +21,7 @@ function KeyboardNavigation() {
         }
 
         window.addEventListener('keydown', onKeyDown);
+        active = true;
     }
     function stop() {
         if (!active) {
@@ -28,6 +29,7 @@ function KeyboardNavigation() {
         }
 
         window.removeEventListener('keydown', onKeyDown);
+        active = false;
     }
 
     Object.defineProperties(this, {
