@@ -1,4 +1,5 @@
 @import (inline, once, css) 'stremio-colors/css/stremio-colors.css';
+@import (reference) 'common/screen-sizes.less';
 
 @font-face {
     font-family: 'Roboto';
@@ -116,7 +117,7 @@ html {
     }
 }
 
-@media only screen and (max-width: 1600px) {
+@media only screen and (max-width: @medium) {
     html {
         --scroll-bar-width: 8px;
         --focusable-border-size: 2px;
@@ -124,7 +125,7 @@ html {
     }
 }
 
-@media only screen and (min-width: 1600px) and (max-width: 2000px) {
+@media only screen and (min-width: @medium) and (max-width: @large) {
     html {
         --scroll-bar-width: 8px;
         --focusable-border-size: 2px;
@@ -132,7 +133,7 @@ html {
     }
 }
 
-@media only screen and (min-width: 2000px) and (max-width: 3000px) {
+@media only screen and (min-width: @large) and (max-width: @xxlarge) {
     html {
         --scroll-bar-width: 8px;
         --focusable-border-size: 2px;
@@ -140,7 +141,7 @@ html {
     }
 }
 
-@media only screen and (min-width: 3000px) {
+@media only screen and (min-width: @xxlarge) {
     html {
         --scroll-bar-width: 10px;
         --focusable-border-size: 3px;
