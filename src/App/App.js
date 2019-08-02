@@ -14,7 +14,6 @@ const App = () => {
     React.useEffect(() => {
         services.keyboardNavigation.start();
     }, [services]);
-
     return (
         <React.StrictMode>
             <ServicesProvider services={services}>
