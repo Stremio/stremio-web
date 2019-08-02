@@ -9,9 +9,6 @@ const { getLocalIdent } = require('css-loader/dist/utils');
 
 module.exports = {
     entry: './src/index.js',
-    output: {
-        filename: 'bundle.js'
-    },
     module: {
         rules: [
             {
@@ -155,7 +152,7 @@ module.exports = {
         new CleanWebpackPlugin({
             verbose: true,
             cleanOnceBeforeBuildPatterns: [],
-            cleanAfterEveryBuildPatterns: ['./bundle.js', './styles.css']
+            cleanAfterEveryBuildPatterns: ['./main.js', './styles.css']
         })
     ]
 };
