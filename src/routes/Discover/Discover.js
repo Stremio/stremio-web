@@ -24,13 +24,12 @@ const Discover = ({ urlParams, queryParams }) => {
                 </div>
                 <div className={styles['meta-items-container']} tabIndex={-1}>
                     {metaItems.map((metaItem) => (
-                        <div key={metaItem.id} className={styles['meta-item-container']}>
-                            <MetaItem
-                                {...metaItem}
-                                className={classnames(styles['meta-item'], { 'active': metaItem.id === selectedItem.id })}
-                                onClick={changeMetaItem}
-                            />
-                        </div>
+                        <MetaItem
+                            {...metaItem}
+                            key={metaItem.id}
+                            className={classnames({ 'active': metaItem.id === selectedItem.id })}
+                            onClick={changeMetaItem}
+                        />
                     ))}
                 </div>
                 {

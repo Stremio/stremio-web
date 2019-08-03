@@ -81,18 +81,11 @@
             display: grid;
             grid-template-columns: repeat(var(--items-per-row), auto);
             grid-auto-rows: max-content;
+            grid-gap: 1.2em;
             align-items: center;
-            padding: 0 0.6em;
+            padding: var(--focusable-border-size) 1.2em 0;
             overflow-x: hidden;
             overflow-y: auto;
-
-            .meta-item-container {
-                padding: 0.6em;
-
-                .meta-item {
-                    width: 100%;
-                }
-            }
         }
 
         .meta-preview-container {
