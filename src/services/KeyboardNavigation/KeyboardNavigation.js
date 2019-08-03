@@ -1,3 +1,5 @@
+require('spatial-navigation-polyfill');
+
 const TABS = [
     { href: '#/', keyCode: 112 },
     { href: '#/discover', keyCode: 113 },
