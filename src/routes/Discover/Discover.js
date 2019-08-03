@@ -1,4 +1,5 @@
 const React = require('react');
+const classnames = require('classnames');
 const { MainNavBar, MetaItem, MetaPreview } = require('stremio/common');
 const PickerMenu = require('./PickerMenu');
 const useCatalog = require('./useCatalog');
@@ -26,7 +27,7 @@ const Discover = ({ urlParams, queryParams }) => {
                         <div key={metaItem.id} className={styles['meta-item-container']}>
                             <MetaItem
                                 {...metaItem}
-                                className={styles['meta-item']}
+                                className={classnames(styles['meta-item'], { 'active': metaItem.id === selectedItem.id })}
                                 onClick={changeMetaItem}
                             />
                         </div>
