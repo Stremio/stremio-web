@@ -88,12 +88,10 @@ html {
     }
 
     input {
+        user-select: text;
+
         &::-moz-focus-inner {
             border: none;
-        }
-
-        &[type="text"], &[type="email"], &[type="password"] {
-            user-select: text;
         }
     }
 
