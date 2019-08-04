@@ -82,13 +82,6 @@ html {
         width: 100%;
         height: 100%;
 
-        :global(.focusable) {
-            &:focus, &:focus-within {
-                outline-offset: calc(-1 * var(--focusable-border-size));
-                outline: var(--focusable-border-size) solid var(--color-surfacelighter);
-            }
-        }
-
         :global(.disabled) {
             pointer-events: none;
         }
@@ -124,7 +117,6 @@ html {
 @media only screen and (max-width: @medium) {
     html {
         --scroll-bar-width: 8px;
-        --focusable-border-size: 2px;
         font-size: 14px;
     }
 }
@@ -132,7 +124,6 @@ html {
 @media only screen and (min-width: @medium) and (max-width: @large) {
     html {
         --scroll-bar-width: 8px;
-        --focusable-border-size: 2px;
         font-size: 15px;
     }
 }
@@ -140,7 +131,6 @@ html {
 @media only screen and (min-width: @large) and (max-width: @xxlarge) {
     html {
         --scroll-bar-width: 8px;
-        --focusable-border-size: 2px;
         font-size: 16px;
     }
 }
@@ -148,7 +138,6 @@ html {
 @media only screen and (min-width: @xxlarge) {
     html {
         --scroll-bar-width: 10px;
-        --focusable-border-size: 3px;
         font-size: 18px;
     }
 }

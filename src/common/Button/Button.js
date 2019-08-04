@@ -2,6 +2,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { useFocusable } = require('stremio-navigation');
+const styles = require('./styles');
 
 const ENTER_KEY_CODE = 13;
 
@@ -33,7 +34,7 @@ const Button = React.forwardRef(({ children, ...props }, ref) => {
         {
             ...props,
             ref,
-            className: classnames(props.className, { 'focusable': focusable }, { 'disabled': props.disabled }),
+            className: classnames(props.className, styles['button-container'], { 'disabled': props.disabled }),
             tabIndex: (props.tabIndex === null || isNaN(props.tabIndex)) ?
                 (focusable ? 0 : -1)
                 :
