@@ -1,4 +1,5 @@
 const React = require('react');
+const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { useFocusable } = require('stremio-navigation');
 
@@ -45,5 +46,18 @@ const Button = React.forwardRef(({ children, ...props }, ref) => {
 });
 
 Button.displayName = 'Button';
+
+Button.propTypes = {
+    className: PropTypes.string,
+    tabIndex: PropTypes.number,
+    href: PropTypes.string,
+    disabled: PropTypes.bool,
+    onKeyUp: PropTypes.func,
+    onMouseDown: PropTypes.func,
+    children: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.node),
+        PropTypes.node
+    ])
+};
 
 module.exports = Button;
