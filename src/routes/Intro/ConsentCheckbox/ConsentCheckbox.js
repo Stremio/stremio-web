@@ -14,7 +14,7 @@ const ConsentCheckbox = React.forwardRef(({ label, link, href, toggle, ...props 
         event.nativeEvent.togglePrevented = true;
     }, []);
     return (
-        <Checkbox {...props} ref={ref} className={classnames(props.className, 'consent-checkbox-container', 'focusable-with-border')} onClick={checkboxOnClick}>
+        <Checkbox {...props} ref={ref} className={classnames(props.className, 'consent-checkbox-container')} onClick={checkboxOnClick}>
             <div className={'label'}>
                 {label}
                 {
