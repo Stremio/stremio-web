@@ -5,14 +5,14 @@ const { useFocusable } = require('../FocusableContext');
 const ENTER_KEY_CODE = 13;
 const BUTTON_INPUT_TYPES = ['button', 'link', 'checkbox'];
 const TEXT_INPUT_TYPES = ['text', 'email', 'password'];
-const TAG_NAMES_FOR_TYPE = {
+const TAG_NAMES_FOR_TYPE = Object.assign(Object.create(null), {
     button: 'div',
     link: 'a',
     checkbox: 'input',
     text: 'input',
     email: 'input',
     password: 'input'
-};
+});
 
 const Input = React.forwardRef(({ type, tabIndex, children, ...props }, ref) => {
     const focusable = useFocusable();
