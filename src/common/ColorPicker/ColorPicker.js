@@ -1,6 +1,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 
+// TODO: impl this
 const ColorPicker = ({ className, value, onChange }) => {
     return (
         <div style={{ backgroundColor: 'red' }} className={className}>
