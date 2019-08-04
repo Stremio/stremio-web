@@ -1,7 +1,4 @@
 .checkbox-container {
-    position: relative;
-    z-index: 0;
-
     &:global(.checked) {
         .icon {
             padding: calc(0.1 * var(--icon-size));
@@ -14,15 +11,5 @@
         height: var(--icon-size);
         fill: var(--icon-color);
         background-color: var(--icon-background-color);
-    }
-
-    .native-checkbox {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 0;
-        height: 0;
-        opacity: 0;
-        z-index: -1;
     }
 }
