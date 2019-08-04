@@ -2,7 +2,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
-const { Input } = require('stremio-navigation');
+const Input = require('../../Input');
 const Popup = require('../../Popup');
 const styles = require('./styles');
 

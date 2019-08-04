@@ -1,8 +1,8 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const { Input } = require('stremio-navigation');
 const Icon = require('stremio-icons/dom');
+const Input = require('../Input');
 const useBinaryState = require('../useBinaryState');
 const Popup = require('../Popup');
 const styles = require('./styles');

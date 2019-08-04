@@ -3,7 +3,8 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const UrlUtils = require('url');
 const Icon = require('stremio-icons/dom');
-const { Input, useFocusable } = require('stremio-navigation');
+const { useFocusable } = require('stremio-navigation');
+const Input = require('../../Input');
 const useLocationHash = require('../../useLocationHash');
 const styles = require('./styles');
 

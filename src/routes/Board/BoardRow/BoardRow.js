@@ -2,8 +2,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
-const { Input } = require('stremio-navigation');
-const { MetaItem } = require('stremio/common');
+const { Input, MetaItem } = require('stremio/common');
 require('./styles');
 
 const BoardRow = ({ className, title, items = [], itemMenuOptions = [] }) => {

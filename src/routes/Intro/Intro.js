@@ -1,7 +1,7 @@
 const React = require('react');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
-const { Input } = require('stremio-navigation');
+const { Input } = require('stremio/common');
 const ConsentCheckbox = require('./ConsentCheckbox');
 require('./styles');
 

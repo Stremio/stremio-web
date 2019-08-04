@@ -1,6 +1,6 @@
 const React = require('react');
 const PropTypes = require('prop-types');
-const { useFocusable } = require('../FocusableContext');
+const { useFocusable } = require('stremio-navigation');
 
 const ENTER_KEY_CODE = 13;
 const BUTTON_INPUT_TYPES = ['button', 'link', 'checkbox'];

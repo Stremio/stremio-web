@@ -1,8 +1,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const { Input } = require('stremio-navigation');
-const { Checkbox } = require('stremio/common');
+const { Input, Checkbox } = require('stremio/common');
 require('./styles');
 
 const ConsentCheckbox = React.forwardRef(({ className, checked, label, link, href, toggle }, ref) => {

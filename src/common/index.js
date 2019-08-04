@@ -1,5 +1,6 @@
 const Checkbox = require('./Checkbox');
 const ColorPicker = require('./ColorPicker');
+const Input = require('./Input');
 const Loader = require('./Loader');
 const MainNavBar = require('./MainNavBar');
 const MetaItem = require('./MetaItem');
@@ -15,6 +16,7 @@ const useLocationHash = require('./useLocationHash');
 module.exports = {
     Checkbox,
     ColorPicker,
+    Input,
     Loader,
     MainNavBar,
     MetaItem,
