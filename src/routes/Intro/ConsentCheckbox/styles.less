@@ -5,14 +5,13 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    cursor: pointer;
 
     &.checked {
         --icon-color: var(--color-surfacelight);
         --icon-background-color: var(--color-primary);
     }
 
-    &:focus-within, &:hover {
+    &:focus, &:hover {
         --icon-color: var(--color-surfacelighter);
         background-color: var(--color-surfacedarker60);
 

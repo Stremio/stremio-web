@@ -1,7 +1,7 @@
 const React = require('react');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
-const { Input } = require('stremio/common');
+const { Button, Input } = require('stremio/common');
 const ConsentCheckbox = require('./ConsentCheckbox');
 require('./styles');
 
@@ -184,10 +184,10 @@ class Intro extends React.Component {
         return (
             <div className={'intro-container'}>
                 <div className={'form-container'}>
-                    <Input className={classnames('form-button', 'facebook-button', 'focusable-with-border')} type={'button'} onClick={this.loginWithFacebook}>
+                    <Button className={classnames('form-button', 'facebook-button')} onClick={this.loginWithFacebook}>
                         <Icon className={'icon'} icon={'ic_facebook'} />
                         <div className={'label'}>Continue with Facebook</div>
-                    </Input>
+                    </Button>
                     <div className={'facebook-statement'}>We won't post anything on your behalf</div>
                     <Input
                         ref={this.emailRef}
@@ -247,7 +247,7 @@ class Intro extends React.Component {
                             </React.Fragment>
                             :
                             <div className={'forgot-password-link-container'}>
-                                <Input className={classnames('forgot-password-link', 'focusable-with-border')} type={'link'} href={'https://www.strem.io/reset-password/'} target={'_blank'}>Forgot password?</Input>
+                                <Button className={'forgot-password-link'} href={'https://www.strem.io/reset-password/'} target={'_blank'}>Forgot password?</Button>
                             </div>
                     }
                     {
@@ -256,20 +256,20 @@ class Intro extends React.Component {
                             :
                             null
                     }
-                    <Input className={classnames('form-button', 'submit-button', 'focusable-with-border')} type={'button'} onClick={this.state.selectedForm === SIGNUP_FORM ? this.signup : this.loginWithEmail}>
+                    <Button className={classnames('form-button', 'submit-button')} onClick={this.state.selectedForm === SIGNUP_FORM ? this.signup : this.loginWithEmail}>
                         <div className={'label'}>{this.state.selectedForm === SIGNUP_FORM ? 'SING UP' : 'LOG IN'}</div>
-                    </Input>
+                    </Button>
                     {
                         this.state.selectedForm === SIGNUP_FORM ?
-                            <Input className={classnames('form-button', 'guest-login-button', 'focusable-with-border')} type={'button'} onClick={this.loginAsGuest}>
+                            <Button className={classnames('form-button', 'guest-login-button')} onClick={this.loginAsGuest}>
                                 <div className={'label'}>GUEST LOGIN</div>
-                            </Input>
+                            </Button>
                             :
                             null
                     }
-                    <Input className={classnames('form-button', 'switch-form-button', 'focusable-with-border')} type={'button'} data-form={this.state.selectedForm === SIGNUP_FORM ? LOGIN_FORM : SIGNUP_FORM} onClick={this.changeSelectedForm}>
+                    <Button className={classnames('form-button', 'switch-form-button')} data-form={this.state.selectedForm === SIGNUP_FORM ? LOGIN_FORM : SIGNUP_FORM} onClick={this.changeSelectedForm}>
                         <div className={'label'}>{this.state.selectedForm === SIGNUP_FORM ? 'LOG IN' : 'SING UP WITH EMAIL'}</div>
-                    </Input>
+                    </Button>
                 </div>
             </div>
         );
