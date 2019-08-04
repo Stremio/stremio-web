@@ -1,12 +1,12 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const { useFocusable } = require('stremio-navigation');
+const useTabIndex = require('../useTabIndex');
 
 const ENTER_KEY_CODE = 13;
 
 const Input = React.forwardRef((props, ref) => {
-    const focusable = useFocusable();
+    const tabIndex = useTabIndex(props.tabIndex, props.disabled);
     const onKeyUp = React.useCallback((event) => {
         if (typeof props.onKeyUp === 'function') {
             props.onKeyUp(event);
@@ -21,7 +21,7 @@ const Input = React.forwardRef((props, ref) => {
             {...props}
             ref={ref}
             className={classnames(props.className, { 'disabled': props.disabled })}
-            tabIndex={(props.tabIndex === null || isNaN(props.tabIndex)) ? (focusable && !props.disabled ? 0 : -1) : props.tabIndex}
+            tabIndex={tabIndex}
             onKeyUp={onKeyUp}
         />
     );
