@@ -3,12 +3,11 @@ const PropTypes = require('prop-types');
 const { useFocusable } = require('stremio-navigation');
 
 const ENTER_KEY_CODE = 13;
-const BUTTON_INPUT_TYPES = ['button', 'link', 'checkbox'];
+const BUTTON_INPUT_TYPES = ['button', 'link'];
 const TEXT_INPUT_TYPES = ['text', 'email', 'password'];
 const TAG_NAMES_FOR_TYPE = Object.assign(Object.create(null), {
     button: 'div',
     link: 'a',
-    checkbox: 'input',
     text: 'input',
     email: 'input',
     password: 'input'
