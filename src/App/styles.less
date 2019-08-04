@@ -82,11 +82,15 @@ html {
         width: 100%;
         height: 100%;
 
-        :global(.focusable-with-border) {
+        :global(.focusable) {
             &:focus, &:focus-within {
                 outline-offset: calc(-1 * var(--focusable-border-size));
                 outline: var(--focusable-border-size) solid var(--color-surfacelighter);
             }
+        }
+
+        :global(.disabled) {
+            pointer-events: none;
         }
     }
 

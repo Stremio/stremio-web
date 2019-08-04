@@ -1,14 +1,11 @@
 const React = require('react');
+const classnames = require('classnames');
 const { useFocusable } = require('stremio-navigation');
 
 const ENTER_KEY_CODE = 13;
 
 const Button = React.forwardRef(({ children, ...props }, ref) => {
     const focusable = useFocusable();
-    const tabIndex = (props.tabIndex === null || isNaN(props.tabIndex)) ?
-        (focusable ? 0 : -1)
-        :
-        props.tabIndex;
     const onKeyUp = React.useCallback((event) => {
         if (typeof props.onKeyUp === 'function') {
             props.onKeyUp(event);
@@ -32,7 +29,17 @@ const Button = React.forwardRef(({ children, ...props }, ref) => {
     }, [props.onMouseDown]);
     return React.createElement(
         typeof props.href === 'string' ? 'a' : 'div',
-        { ...props, ref, tabIndex, onKeyUp, onMouseDown },
+        {
+            ...props,
+            ref,
+            className: classnames(props.className, { 'focusable': focusable }, { 'disabled': props.disabled }),
+            tabIndex: (props.tabIndex === null || isNaN(props.tabIndex)) ?
+                (focusable ? 0 : -1)
+                :
+                props.tabIndex,
+            onKeyUp,
+            onMouseDown
+        },
         children
     );
 });
