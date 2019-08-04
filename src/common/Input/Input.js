@@ -21,7 +21,7 @@ const Input = React.forwardRef((props, ref) => {
             {...props}
             ref={ref}
             className={classnames(props.className, { 'disabled': props.disabled })}
-            tabIndex={(props.tabIndex === null || isNaN(props.tabIndex)) ? (focusable ? 0 : -1) : props.tabIndex}
+            tabIndex={(props.tabIndex === null || isNaN(props.tabIndex)) ? (focusable && !props.disabled ? 0 : -1) : props.tabIndex}
             onKeyUp={onKeyUp}
         />
     );

@@ -36,7 +36,7 @@ const Button = React.forwardRef(({ children, ...props }, ref) => {
             ref,
             className: classnames(props.className, styles['button-container'], { 'disabled': props.disabled }),
             tabIndex: (props.tabIndex === null || isNaN(props.tabIndex)) ?
-                (focusable ? 0 : -1)
+                (focusable && !props.disabled ? 0 : -1)
                 :
                 props.tabIndex,
             onKeyUp,
