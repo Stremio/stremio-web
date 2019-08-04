@@ -1,3 +1,4 @@
+const Button = require('./Button');
 const Checkbox = require('./Checkbox');
 const ColorPicker = require('./ColorPicker');
 const Input = require('./Input');
@@ -14,6 +15,7 @@ const useBinaryState = require('./useBinaryState');
 const useLocationHash = require('./useLocationHash');
 
 module.exports = {
+    Button,
     Checkbox,
     ColorPicker,
     Input,
