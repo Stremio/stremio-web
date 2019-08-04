@@ -2,15 +2,15 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
-const Input = require('../Input');
+const Button = require('../Button');
 const styles = require('./styles');
 
 const Checkbox = React.forwardRef(({ className, checked = false, disabled = false, onClick, children }, ref) => {
     return (
-        <Input ref={ref} className={classnames(className, styles['checkbox-container'], { 'checked': checked }, { 'disabled': disabled })} type={'button'} onClick={!disabled ? onClick : null}>
+        <Button ref={ref} className={classnames(className, styles['checkbox-container'], { 'checked': checked })} disabled={disabled} onClick={onClick}>
             <Icon className={styles['icon']} icon={checked ? 'ic_check' : 'ic_box_empty'} />
             {React.isValidElement(children) ? children : null}
-        </Input>
+        </Button>
     );
 });
 
