@@ -5,12 +5,12 @@ const routerViewsConfig = require('./routerViewsConfig');
 const styles = require('./styles');
 
 const App = () => {
-    const services = React.useMemo(() => ({
-        keyboardNavigation: new KeyboardNavigation()
-    }), []);
     const onPathNotMatch = React.useCallback(() => {
         window.history.back();
     }, []);
+    const services = React.useMemo(() => ({
+        keyboardNavigation: new KeyboardNavigation()
+    }), []);
     React.useEffect(() => {
         services.keyboardNavigation.start();
     }, [services]);
