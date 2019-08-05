@@ -1,8 +1,8 @@
 const React = require('react');
 const classnames = require('classnames');
-const { RoutesContainerProvider } = require('stremio-navigation/RoutesContainerContext');
-const Route = require('stremio-navigation/Router/Route');
-const routerStyles = require('stremio-navigation/Router/styles');
+const { RoutesContainerProvider } = require('stremio-router/RoutesContainerContext');
+const Route = require('stremio-router/Router/Route');
+const routerStyles = require('stremio-router/Router/styles');
 const appStyles = require('stremio/App/styles');
 const styles = require('./styles');
 

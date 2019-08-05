@@ -1,5 +1,5 @@
 
-const { useFocusable } = require('stremio-navigation');
+const { useFocusable } = require('stremio-router');
 
 const useTabIndex = (tabIndex, disabled) => {
     const focusable = useFocusable();
