@@ -49,7 +49,7 @@
         "postcss-loader": "3.0.0",
         "storybook-addon-jsx": "7.1.5",
         "terser-webpack-plugin": "1.4.1",
-        "webpack": "4.39.0",
+        "webpack": "4.39.1",
         "webpack-cli": "3.3.6",
         "webpack-dev-server": "3.7.2"
     }
