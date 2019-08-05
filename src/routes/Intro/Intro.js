@@ -7,6 +7,7 @@ require('./styles');
 
 const LOGIN_FORM = 'LOGIN_FORM';
 const SIGNUP_FORM = 'SIGNUP_FORM';
+const ARROW_KEY_CODE = { 38: 'up', 40: 'down' };
 
 class Intro extends React.Component {
     constructor(props) {
@@ -54,6 +55,13 @@ class Intro extends React.Component {
 
         if (prevState.selectedForm !== this.state.selectedForm) {
             this.emailRef.current.focus();
+        }
+    }
+
+    textInputOnKeyDown = (event) => {
+        event.stopPropagation();
+        if (ARROW_KEY_CODE[event.keyCode]) {
+            window.navigate(ARROW_KEY_CODE[event.keyCode]);
         }
     }
 
@@ -195,6 +203,7 @@ class Intro extends React.Component {
                         type={'email'}
                         placeholder={'Email'}
                         value={this.state.email}
+                        onKeyDown={this.textInputOnKeyDown}
                         onChange={this.emailOnChange}
                         onSubmit={this.emailOnSubmit}
                     />
@@ -204,6 +213,7 @@ class Intro extends React.Component {
                         type={'password'}
                         placeholder={'Password'}
                         value={this.state.password}
+                        onKeyDown={this.textInputOnKeyDown}
                         onChange={this.passwordOnChange}
                         onSubmit={this.passwordOnSubmit}
                     />
@@ -216,6 +226,7 @@ class Intro extends React.Component {
                                     type={'password'}
                                     placeholder={'Confirm Password'}
                                     value={this.state.confirmPassword}
+                                    onKeyDown={this.textInputOnKeyDown}
                                     onChange={this.confirmPasswordOnChange}
                                     onSubmit={this.confirmPasswordOnSubmit}
                                 />
