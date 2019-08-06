@@ -60,11 +60,14 @@
     box-shadow: none;
     overflow: hidden;
     word-break: break-word;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-secondarylighter80) var(--color-backgroundlight);
 }
 
 html {
     --landscape-shape-ratio: 0.5625;
     --poster-shape-ratio: 1.464;
+    --scroll-bar-width: 6px;
     --color-facebook: #4267b2;
 
     &, body, :global(#app) {
@@ -98,28 +101,24 @@ html {
 
 @media only screen and (max-width: @medium) {
     html {
-        --scroll-bar-width: 8px;
         font-size: 14px;
     }
 }
 
 @media only screen and (min-width: @medium) and (max-width: @large) {
     html {
-        --scroll-bar-width: 8px;
         font-size: 15px;
     }
 }
 
 @media only screen and (min-width: @large) and (max-width: @xxlarge) {
     html {
-        --scroll-bar-width: 8px;
         font-size: 16px;
     }
 }
 
 @media only screen and (min-width: @xxlarge) {
     html {
-        --scroll-bar-width: 10px;
         font-size: 18px;
     }
 }
