@@ -2,7 +2,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
-const { Input, MetaItem } = require('stremio/common');
+const { Button, MetaItem } = require('stremio/common');
 require('./styles');
 
 const BoardRow = ({ className, title, items = [], itemMenuOptions = [] }) => {
@@ -20,10 +20,10 @@ const BoardRow = ({ className, title, items = [], itemMenuOptions = [] }) => {
                     />
                 ))}
             </div>
-            <Input className={classnames('see-all-container', 'focusable-with-border')} type={'button'} title={'SEE ALL'}>
+            <Button className={'see-all-container'} title={'SEE ALL'}>
                 <div className={'label'}>SEE ALL</div>
                 <Icon className={'icon'} icon={'ic_arrow_thin_right'} />
-            </Input>
+            </Button>
         </div>
     );
 };
