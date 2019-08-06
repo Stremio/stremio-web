@@ -4,8 +4,6 @@ const classnames = require('classnames');
 const useTabIndex = require('../useTabIndex');
 const styles = require('./styles');
 
-const ENTER_KEY_CODE = 13;
-
 const Input = React.forwardRef((props, ref) => {
     const tabIndex = useTabIndex(props.tabIndex, props.disabled);
     const onKeyUp = React.useCallback((event) => {
@@ -13,7 +11,7 @@ const Input = React.forwardRef((props, ref) => {
             props.onKeyUp(event);
         }
 
-        if (event.keyCode === ENTER_KEY_CODE && !event.nativeEvent.submitPrevented && typeof props.onSubmit === 'function') {
+        if (event.key === 'Enter' && !event.nativeEvent.submitPrevented && typeof props.onSubmit === 'function') {
             props.onSubmit(event);
         }
     }, [props.onKeyUp, props.onSubmit]);

@@ -1,17 +1,17 @@
 require('spatial-navigation-polyfill');
 
 const TABS = [
-    { href: '#/', keyCode: 112 },
-    { href: '#/discover', keyCode: 113 },
-    { href: '#/library', keyCode: 114 },
-    { href: '#/calendar', keyCode: 115 }
+    { href: '#/', key: 'F1' },
+    { href: '#/discover', key: 'F2' },
+    { href: '#/library', key: 'F3' },
+    { href: '#/calendar', key: 'F4' }
 ];
 
 function KeyboardNavigation() {
     var active = false;
 
     function onKeyDown(event) {
-        const tab = TABS.find(({ keyCode }) => event.keyCode === keyCode);
+        const tab = TABS.find(({ key }) => key === event.key);
         if (tab) {
             event.preventDefault();
             window.location = tab.href;

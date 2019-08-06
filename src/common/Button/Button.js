@@ -4,8 +4,6 @@ const classnames = require('classnames');
 const useTabIndex = require('../useTabIndex');
 const styles = require('./styles');
 
-const ENTER_KEY_CODE = 13;
-
 const Button = React.forwardRef(({ children, ...props }, ref) => {
     const tabIndex = useTabIndex(props.tabIndex, props.disabled);
     const onKeyUp = React.useCallback((event) => {
@@ -13,7 +11,7 @@ const Button = React.forwardRef(({ children, ...props }, ref) => {
             props.onKeyUp(event);
         }
 
-        if (event.keyCode === ENTER_KEY_CODE && !event.nativeEvent.clickPrevented) {
+        if (event.key === 'Enter' && !event.nativeEvent.clickPrevented) {
             event.currentTarget.click();
         }
     }, [props.onKeyUp]);

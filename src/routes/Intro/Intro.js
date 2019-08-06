@@ -7,7 +7,6 @@ require('./styles');
 
 const LOGIN_FORM = 'LOGIN_FORM';
 const SIGNUP_FORM = 'SIGNUP_FORM';
-const ARROW_KEY_CODE = { 38: 'up', 40: 'down' };
 
 class Intro extends React.Component {
     constructor(props) {
@@ -60,8 +59,10 @@ class Intro extends React.Component {
 
     textInputOnKeyDown = (event) => {
         event.stopPropagation();
-        if (ARROW_KEY_CODE[event.keyCode]) {
-            window.navigate(ARROW_KEY_CODE[event.keyCode]);
+        if (event.key === 'ArrowDown') {
+            window.navigate('down');
+        } else if (event.key === 'ArrowUp') {
+            window.navigate('up');
         }
     }
 
