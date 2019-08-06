@@ -22,13 +22,13 @@ class Intro extends React.Component {
         this.errorRef = React.createRef();
 
         this.state = {
-            selectedForm: SIGNUP_FORM,
-            termsAccepted: false,
-            privacyPolicyAccepted: false,
-            marketingAccepted: false,
+            form: SIGNUP_FORM,
             email: '',
             password: '',
             confirmPassword: '',
+            termsAccepted: false,
+            privacyPolicyAccepted: false,
+            marketingAccepted: false,
             error: ''
         };
     }
@@ -38,13 +38,13 @@ class Intro extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return nextState.selectedForm !== this.state.selectedForm ||
-            nextState.termsAccepted !== this.state.termsAccepted ||
-            nextState.privacyPolicyAccepted !== this.state.privacyPolicyAccepted ||
-            nextState.marketingAccepted !== this.state.marketingAccepted ||
+        return nextState.form !== this.state.form ||
             nextState.email !== this.state.email ||
             nextState.password !== this.state.password ||
             nextState.confirmPassword !== this.state.confirmPassword ||
+            nextState.termsAccepted !== this.state.termsAccepted ||
+            nextState.privacyPolicyAccepted !== this.state.privacyPolicyAccepted ||
+            nextState.marketingAccepted !== this.state.marketingAccepted ||
             nextState.error !== this.state.error;
     }
 
@@ -53,22 +53,22 @@ class Intro extends React.Component {
             this.errorRef.current.scrollIntoView();
         }
 
-        if (prevState.selectedForm !== this.state.selectedForm) {
+        if (prevState.form !== this.state.form) {
             this.emailRef.current.focus();
         }
     }
 
-    changeSelectedForm = (event) => {
-        this.setState({
-            selectedForm: event.currentTarget.dataset.form,
-            termsAccepted: false,
-            privacyPolicyAccepted: false,
-            marketingAccepted: false,
+    switchForm = () => {
+        this.setState(({ form }) => ({
+            form: form === SIGNUP_FORM ? LOGIN_FORM : SIGNUP_FORM,
             email: '',
             password: '',
             confirmPassword: '',
+            termsAccepted: false,
+            privacyPolicyAccepted: false,
+            marketingAccepted: false,
             error: ''
-        });
+        }));
     }
 
     emailOnChange = (event) => {
@@ -84,7 +84,7 @@ class Intro extends React.Component {
     }
 
     passwordOnSubmit = () => {
-        if (this.state.selectedForm === SIGNUP_FORM) {
+        if (this.state.form === SIGNUP_FORM) {
             this.confirmPasswordRef.current.focus();
         } else {
             this.loginWithEmail();
@@ -209,7 +209,7 @@ class Intro extends React.Component {
                         onSubmit={this.passwordOnSubmit}
                     />
                     {
-                        this.state.selectedForm === SIGNUP_FORM ?
+                        this.state.form === SIGNUP_FORM ?
                             <React.Fragment>
                                 <CredentialsTextInput
                                     ref={this.confirmPasswordRef}
@@ -257,19 +257,19 @@ class Intro extends React.Component {
                             :
                             null
                     }
-                    <Button className={classnames('form-button', 'submit-button')} onClick={this.state.selectedForm === SIGNUP_FORM ? this.signup : this.loginWithEmail}>
-                        <div className={'label'}>{this.state.selectedForm === SIGNUP_FORM ? 'SING UP' : 'LOG IN'}</div>
+                    <Button className={classnames('form-button', 'submit-button')} onClick={this.state.form === SIGNUP_FORM ? this.signup : this.loginWithEmail}>
+                        <div className={'label'}>{this.state.form === SIGNUP_FORM ? 'SING UP' : 'LOG IN'}</div>
                     </Button>
                     {
-                        this.state.selectedForm === SIGNUP_FORM ?
+                        this.state.form === SIGNUP_FORM ?
                             <Button className={classnames('form-button', 'guest-login-button')} onClick={this.loginAsGuest}>
                                 <div className={'label'}>GUEST LOGIN</div>
                             </Button>
                             :
                             null
                     }
-                    <Button className={classnames('form-button', 'switch-form-button')} data-form={this.state.selectedForm === SIGNUP_FORM ? LOGIN_FORM : SIGNUP_FORM} onClick={this.changeSelectedForm}>
-                        <div className={'label'}>{this.state.selectedForm === SIGNUP_FORM ? 'LOG IN' : 'SING UP WITH EMAIL'}</div>
+                    <Button className={classnames('form-button', 'switch-form-button')} onClick={this.switchForm}>
+                        <div className={'label'}>{this.state.form === SIGNUP_FORM ? 'LOG IN' : 'SING UP WITH EMAIL'}</div>
                     </Button>
                 </div>
             </div>
