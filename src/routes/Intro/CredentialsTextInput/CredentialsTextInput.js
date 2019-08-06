@@ -1,8 +1,8 @@
 const React = require('react');
 const PropTypes = require('prop-types');
-const { Input } = require('stremio/common');
+const { TextInput } = require('stremio/common');
 
-const CredentialsInput = React.forwardRef((props, ref) => {
+const CredentialsTextInput = React.forwardRef((props, ref) => {
     const onKeyDown = React.useCallback((event) => {
         if (typeof props.onKeyDown === 'function') {
             props.onKeyDown(event);
@@ -18,14 +18,14 @@ const CredentialsInput = React.forwardRef((props, ref) => {
         }
     }, [props.onKeyDown]);
     return (
-        <Input {...props} ref={ref} onKeyDown={onKeyDown} />
+        <TextInput {...props} ref={ref} onKeyDown={onKeyDown} />
     );
 });
 
-CredentialsInput.displayName = 'CredentialsInput';
+CredentialsTextInput.displayName = 'CredentialsTextInput';
 
-CredentialsInput.propTYpes = {
+CredentialsTextInput.propTYpes = {
     onKeyDown: PropTypes.func
 };
 
-module.exports = CredentialsInput;
+module.exports = CredentialsTextInput;

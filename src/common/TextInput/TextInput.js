@@ -4,7 +4,7 @@ const classnames = require('classnames');
 const useTabIndex = require('../useTabIndex');
 const styles = require('./styles');
 
-const Input = React.forwardRef((props, ref) => {
+const TextInput = React.forwardRef((props, ref) => {
     const tabIndex = useTabIndex(props.tabIndex, props.disabled);
     const onKeyUp = React.useCallback((event) => {
         if (typeof props.onKeyUp === 'function') {
@@ -19,16 +19,16 @@ const Input = React.forwardRef((props, ref) => {
         <input
             {...props}
             ref={ref}
-            className={classnames(props.className, styles['input-container'], { 'disabled': props.disabled })}
+            className={classnames(props.className, styles['text-input-container'], { 'disabled': props.disabled })}
             tabIndex={tabIndex}
             onKeyUp={onKeyUp}
         />
     );
 });
 
-Input.displayName = 'Input';
+TextInput.displayName = 'TextInput';
 
-Input.propTypes = {
+TextInput.propTypes = {
     className: PropTypes.string,
     tabIndex: PropTypes.number,
     disabled: PropTypes.bool,
@@ -36,4 +36,4 @@ Input.propTypes = {
     onSubmit: PropTypes.func
 };
 
-module.exports = Input;
+module.exports = TextInput;

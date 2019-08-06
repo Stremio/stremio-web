@@ -3,7 +3,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const UrlUtils = require('url');
 const Icon = require('stremio-icons/dom');
-const Input = require('../../Input');
+const Button = require('../../Button');
 const routesRegexp = require('../../routesRegexp');
 const useLocationHash = require('../../useLocationHash');
 const styles = require('./styles');
@@ -30,10 +30,10 @@ const NavBarButton = React.memo(({ className, icon, label, href, onClick }) => {
         return false;
     }, [routeRegexp, locationHash]);
     return (
-        <Input className={classnames(className, styles['nav-bar-button-container'], { 'active': active })} tabIndex={-1} type={typeof onClick === 'function' ? 'button' : 'link'} href={href} onClick={onClick}>
+        <Button className={classnames(className, styles['nav-bar-button-container'], { 'active': active })} tabIndex={-1} href={href} onClick={onClick}>
             <Icon className={styles['icon']} icon={icon} />
             <div className={styles['label']}>{label}</div>
-        </Input>
+        </Button>
     );
 });
 

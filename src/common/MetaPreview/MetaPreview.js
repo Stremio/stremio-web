@@ -3,7 +3,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const { Modal } = require('stremio-router');
-const Input = require('../Input');
+const Button = require('../Button');
 const useBinaryState = require('../useBinaryState');
 const styles = require('./styles');
 
@@ -13,10 +13,10 @@ const MetaLinks = ({ label, links, href }) => {
             <div className={styles['links-label']}>{label}</div>
             <div className={styles['links-container']}>
                 {links.map((link, index) => (
-                    <Input key={`${link}-${index}`} className={styles['link']} title={link} type={'link'} tabIndex={-1} href={href(link)}>
+                    <Button key={`${link}-${index}`} className={styles['link']} title={link} tabIndex={-1} href={href(link)}>
                         {link}
                         {index < links.length - 1 ? ',' : null}
-                    </Input>
+                    </Button>
                 ))}
             </div>
         </React.Fragment>
@@ -25,7 +25,7 @@ const MetaLinks = ({ label, links, href }) => {
 
 const ActionButton = ({ icon, label, ...props }) => {
     return (
-        <Input className={styles['action-button']} title={label} tabIndex={-1} {...props}>
+        <Button className={styles['action-button']} title={label} tabIndex={-1} {...props}>
             <Icon className={styles['icon']} icon={icon} />
             {
                 typeof label === 'string' && label.length > 0 ?
@@ -35,7 +35,7 @@ const ActionButton = ({ icon, label, ...props }) => {
                     :
                     null
             }
-        </Input>
+        </Button>
     );
 };
 
@@ -138,7 +138,6 @@ const MetaPreview = ({ className, compact, id, type, name, logo, background, dur
                 {
                     typeof toggleIsInLibrary === 'function' ?
                         <ActionButton
-                            type={'button'}
                             icon={inLibrary ? 'ic_removelib' : 'ic_addlib'}
                             label={inLibrary ? 'Remove from Library' : 'Add to library'}
                             data-meta-item-id={id}
@@ -150,7 +149,6 @@ const MetaPreview = ({ className, compact, id, type, name, logo, background, dur
                 {
                     typeof trailer === 'string' && trailer.length > 0 ?
                         <ActionButton
-                            type={'link'}
                             icon={'ic_movies'}
                             label={'Trailer'}
                             href={`#/player?stream=${trailer}`}
@@ -161,7 +159,6 @@ const MetaPreview = ({ className, compact, id, type, name, logo, background, dur
                 {
                     typeof imdbId === 'string' && imdbId.length > 0 ?
                         <ActionButton
-                            type={'link'}
                             icon={'ic_imdb'}
                             label={typeof imdbRating === 'string' && imdbRating.length > 0 ? `${imdbRating} / 10` : null}
                             href={`https://imdb.com/title/${imdbId}`}
@@ -174,7 +171,6 @@ const MetaPreview = ({ className, compact, id, type, name, logo, background, dur
                     typeof share === 'string' && share.length > 0 && !compact ?
                         <React.Fragment>
                             <ActionButton
-                                type={'button'}
                                 icon={'ic_share'}
                                 label={'Share'}
                                 onClick={openShareModal}

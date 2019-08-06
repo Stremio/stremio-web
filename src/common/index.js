@@ -1,7 +1,6 @@
 const Button = require('./Button');
 const Checkbox = require('./Checkbox');
 const ColorPicker = require('./ColorPicker');
-const Input = require('./Input');
 const Loader = require('./Loader');
 const MainNavBar = require('./MainNavBar');
 const MetaItem = require('./MetaItem');
@@ -10,6 +9,7 @@ const NavBar = require('./NavBar');
 const Popup = require('./Popup');
 const ShareModal = require('./ShareModal');
 const Slider = require('./Slider');
+const TextInput = require('./TextInput');
 const routesRegexp = require('./routesRegexp');
 const useBinaryState = require('./useBinaryState');
 const useLocationHash = require('./useLocationHash');
@@ -19,7 +19,6 @@ module.exports = {
     Button,
     Checkbox,
     ColorPicker,
-    Input,
     Loader,
     MainNavBar,
     MetaItem,
@@ -28,6 +27,7 @@ module.exports = {
     Popup,
     ShareModal,
     Slider,
+    TextInput,
     routesRegexp,
     useBinaryState,
     useLocationHash,

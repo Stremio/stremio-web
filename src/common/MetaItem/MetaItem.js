@@ -2,7 +2,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
-const Input = require('../Input');
+const Button = require('../Button');
 const useBinaryState = require('../useBinaryState');
 const Popup = require('../Popup');
 const styles = require('./styles');
@@ -25,7 +25,7 @@ const MetaItem = React.memo(({ className, menuClassName, id, type, name, posterS
     }, [menuOpen]);
     const placeholderIcon = ICON_FOR_TYPE[type] || 'ic_movies';
     return (
-        <Input className={classnames(className, styles['meta-item-container'], styles[`poster-shape-${posterShape}`], { 'active': menuOpen })} title={name} type={'button'} data-id={id} onClick={onClick} onContextMenu={onContextMenu}>
+        <Button className={classnames(className, styles['meta-item-container'], styles[`poster-shape-${posterShape}`], { 'active': menuOpen })} title={name} data-id={id} onClick={onClick} onContextMenu={onContextMenu}>
             <div className={styles['poster-image-container']}>
                 <div className={styles['placeholder-image-layer']}>
                     <Icon className={styles['placeholder-image']} icon={placeholderIcon} />
@@ -79,7 +79,7 @@ const MetaItem = React.memo(({ className, menuClassName, id, type, name, posterS
                                         <Popup.Menu className={classnames(menuClassName, styles['menu-container'])} tabIndex={-1}>
                                             <div className={styles['menu-items-container']}>
                                                 {menuOptions.map(({ label, type }) => (
-                                                    <Input key={type} className={styles['menu-item']} type={'button'} data-id={id} data-type={type} onClick={menuOptionOnSelect}>{label}</Input>
+                                                    <Button key={type} className={styles['menu-item']} data-id={id} data-type={type} onClick={menuOptionOnSelect}>{label}</Button>
                                                 ))}
                                             </div>
                                         </Popup.Menu>
@@ -100,7 +100,7 @@ const MetaItem = React.memo(({ className, menuClassName, id, type, name, posterS
                     :
                     null
             }
-        </Input>
+        </Button>
     );
 });
 

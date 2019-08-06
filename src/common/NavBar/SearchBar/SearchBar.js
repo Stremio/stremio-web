@@ -4,7 +4,8 @@ const classnames = require('classnames');
 const UrlUtils = require('url');
 const Icon = require('stremio-icons/dom');
 const { useFocusable } = require('stremio-router');
-const Input = require('../../Input');
+const Button = require('../../Button');
+const TextInput = require('../../TextInput');
 const useLocationHash = require('../../useLocationHash');
 const styles = require('./styles');
 
@@ -34,7 +35,7 @@ const SearchBar = ({ className }) => {
         <label className={classnames(className, styles['search-bar-container'], { 'active': active })} onClick={!active ? navigateToSearch : null}>
             {
                 active ?
-                    <Input
+                    <TextInput
                         key={query}
                         ref={searchInputRef}
                         className={styles['search-input']}
@@ -53,9 +54,9 @@ const SearchBar = ({ className }) => {
                         <div className={styles['placeholder']}>Search</div>
                     </div>
             }
-            <Input className={styles['submit-button']} type={'button'} tabIndex={-1} onClick={active ? queryInputOnSubmit : null}>
+            <Button className={styles['submit-button']} tabIndex={-1} disabled={!active} onClick={queryInputOnSubmit}>
                 <Icon className={styles['submit-icon']} icon={'ic_search'} />
-            </Input>
+            </Button>
         </label>
     );
 };

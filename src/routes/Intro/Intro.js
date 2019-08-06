@@ -2,7 +2,7 @@ const React = require('react');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const { Button } = require('stremio/common');
-const CredentialsInput = require('./CredentialsInput');
+const CredentialsTextInput = require('./CredentialsTextInput');
 const ConsentCheckbox = require('./ConsentCheckbox');
 require('./styles');
 
@@ -190,7 +190,7 @@ class Intro extends React.Component {
                         <div className={'label'}>Continue with Facebook</div>
                     </Button>
                     <div className={'facebook-statement'}>We won't post anything on your behalf</div>
-                    <CredentialsInput
+                    <CredentialsTextInput
                         ref={this.emailRef}
                         className={'text-input'}
                         type={'email'}
@@ -199,7 +199,7 @@ class Intro extends React.Component {
                         onChange={this.emailOnChange}
                         onSubmit={this.emailOnSubmit}
                     />
-                    <CredentialsInput
+                    <CredentialsTextInput
                         ref={this.passwordRef}
                         className={'text-input'}
                         type={'password'}
@@ -211,7 +211,7 @@ class Intro extends React.Component {
                     {
                         this.state.selectedForm === SIGNUP_FORM ?
                             <React.Fragment>
-                                <CredentialsInput
+                                <CredentialsTextInput
                                     ref={this.confirmPasswordRef}
                                     className={'text-input'}
                                     type={'password'}

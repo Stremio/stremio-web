@@ -2,7 +2,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
-const Input = require('../../Input');
+const Button = require('../../Button');
 const Popup = require('../../Popup');
 const styles = require('./styles');
 
@@ -34,9 +34,9 @@ const NavMenu = ({ className, email = '', avatar = '', logout }) => {
     return (
         <Popup onOpen={onPopupOpen} onClose={onPopupClose}>
             <Popup.Label>
-                <Input className={classnames(className, styles['nav-menu-button'], { 'active': active })} tabIndex={-1} type={'button'}>
+                <Button className={classnames(className, styles['nav-menu-button'], { 'active': active })} tabIndex={-1}>
                     <Icon className={styles['icon']} icon={'ic_more'} />
-                </Input>
+                </Button>
             </Popup.Label>
             <Popup.Menu className={styles['nav-menu-container']}>
                 <div className={styles['nav-menu']}>
@@ -53,45 +53,45 @@ const NavMenu = ({ className, email = '', avatar = '', logout }) => {
                         <div className={styles['email-container']}>
                             <div className={styles['user-info-label']}>{email.length === 0 ? 'Anonymous user' : email}</div>
                         </div>
-                        <Input className={styles['login-logout-button']} tabIndex={-1} type={'link'} href={'#/intro'} onClick={email.length === 0 ? null : logout}>
+                        <Button className={styles['login-logout-button']} tabIndex={-1} href={'#/intro'} onClick={email.length === 0 ? null : logout}>
                             <div className={styles['user-info-label']}>{email.length === 0 ? 'Log in / Sign up' : 'Log out'}</div>
-                        </Input>
+                        </Button>
                     </div>
                     <div className={styles['nav-menu-section']}>
-                        <Input className={classnames(styles['option'], 'focusable-with-border')} type={'button'} onClick={toggleFullscreen}>
+                        <Button className={classnames(styles['option'], 'focusable-with-border')} onClick={toggleFullscreen}>
                             <Icon className={styles['option-icon']} icon={'ic_fullscreen'} />
                             <div className={styles['option-label']}>{fullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'}</div>
-                        </Input>
+                        </Button>
                     </div>
                     <div className={styles['nav-menu-section']}>
-                        <Input className={classnames(styles['option'], 'focusable-with-border')} type={'link'} href={'#/settings'}>
+                        <Button className={classnames(styles['option'], 'focusable-with-border')} href={'#/settings'}>
                             <Icon className={styles['option-icon']} icon={'ic_settings'} />
                             <div className={styles['option-label']}>Settings</div>
-                        </Input>
-                        <Input className={classnames(styles['option'], 'focusable-with-border')} type={'link'} href={'#/addons'}>
+                        </Button>
+                        <Button className={classnames(styles['option'], 'focusable-with-border')} href={'#/addons'}>
                             <Icon className={styles['option-icon']} icon={'ic_addons'} />
                             <div className={styles['option-label']}>Addons</div>
-                        </Input>
-                        <Input className={classnames(styles['option'], 'focusable-with-border')} type={'button'}>
+                        </Button>
+                        <Button className={classnames(styles['option'], 'focusable-with-border')}>
                             <Icon className={styles['option-icon']} icon={'ic_remote'} />
                             <div className={styles['option-label']}>Remote Control</div>
-                        </Input>
-                        <Input className={classnames(styles['option'], 'focusable-with-border')} type={'button'}>
+                        </Button>
+                        <Button className={classnames(styles['option'], 'focusable-with-border')}>
                             <Icon className={styles['option-icon']} icon={'ic_magnet'} />
                             <div className={styles['option-label']}>Play Magnet Link</div>
-                        </Input>
-                        <Input className={classnames(styles['option'], 'focusable-with-border')} type={'link'} href={'https://stremio.zendesk.com/'} target={'_blank'}>
+                        </Button>
+                        <Button className={classnames(styles['option'], 'focusable-with-border')} href={'https://stremio.zendesk.com/'} target={'_blank'}>
                             <Icon className={styles['option-icon']} icon={'ic_help'} />
                             <div className={styles['option-label']}>Help & Feedback</div>
-                        </Input>
+                        </Button>
                     </div>
                     <div className={styles['nav-menu-section']}>
-                        <Input className={classnames(styles['option'], 'focusable-with-border')} type={'link'} href={'https://www.stremio.com/tos'} target={'_blank'}>
+                        <Button className={classnames(styles['option'], 'focusable-with-border')} href={'https://www.stremio.com/tos'} target={'_blank'}>
                             <div className={styles['option-label']}>Terms of Service</div>
-                        </Input>
-                        <Input className={classnames(styles['option'], 'focusable-with-border')} type={'link'} href={'https://www.stremio.com/'} target={'_blank'}>
+                        </Button>
+                        <Button className={classnames(styles['option'], 'focusable-with-border')} href={'https://www.stremio.com/'} target={'_blank'}>
                             <div className={styles['option-label']}>About Stremio</div>
-                        </Input>
+                        </Button>
                     </div>
                 </div>
             </Popup.Menu>
