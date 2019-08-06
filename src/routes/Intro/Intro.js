@@ -1,7 +1,8 @@
 const React = require('react');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
-const { Button, Input } = require('stremio/common');
+const { Button } = require('stremio/common');
+const CredentialsInput = require('./CredentialsInput');
 const ConsentCheckbox = require('./ConsentCheckbox');
 require('./styles');
 
@@ -54,15 +55,6 @@ class Intro extends React.Component {
 
         if (prevState.selectedForm !== this.state.selectedForm) {
             this.emailRef.current.focus();
-        }
-    }
-
-    textInputOnKeyDown = (event) => {
-        event.stopPropagation();
-        if (event.key === 'ArrowDown') {
-            window.navigate('down');
-        } else if (event.key === 'ArrowUp') {
-            window.navigate('up');
         }
     }
 
@@ -198,36 +190,33 @@ class Intro extends React.Component {
                         <div className={'label'}>Continue with Facebook</div>
                     </Button>
                     <div className={'facebook-statement'}>We won't post anything on your behalf</div>
-                    <Input
+                    <CredentialsInput
                         ref={this.emailRef}
                         className={'text-input'}
                         type={'email'}
                         placeholder={'Email'}
                         value={this.state.email}
-                        onKeyDown={this.textInputOnKeyDown}
                         onChange={this.emailOnChange}
                         onSubmit={this.emailOnSubmit}
                     />
-                    <Input
+                    <CredentialsInput
                         ref={this.passwordRef}
                         className={'text-input'}
                         type={'password'}
                         placeholder={'Password'}
                         value={this.state.password}
-                        onKeyDown={this.textInputOnKeyDown}
                         onChange={this.passwordOnChange}
                         onSubmit={this.passwordOnSubmit}
                     />
                     {
                         this.state.selectedForm === SIGNUP_FORM ?
                             <React.Fragment>
-                                <Input
+                                <CredentialsInput
                                     ref={this.confirmPasswordRef}
                                     className={'text-input'}
                                     type={'password'}
                                     placeholder={'Confirm Password'}
                                     value={this.state.confirmPassword}
-                                    onKeyDown={this.textInputOnKeyDown}
                                     onChange={this.confirmPasswordOnChange}
                                     onSubmit={this.confirmPasswordOnSubmit}
                                 />
