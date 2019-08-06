@@ -1,3 +1,5 @@
+@import (reference) 'common/screen-sizes.less';
+
 .board-container {
     display: flex;
     flex-direction: column;
@@ -23,11 +25,11 @@
     }
 }
 
-@media only screen and (max-width: 1000px) {
+@media only screen and (min-width: @large) {
     .board-container {
         .board-content {
             .board-row {
-                .meta-item:nth-child(n+5) {
+                .meta-item:nth-child(n+9) {
                     display: none;
                 }
             }
@@ -35,31 +37,7 @@
     }
 }
 
-@media only screen and (min-width: 1000px) and (max-width: 1200px) {
-    .board-container {
-        .board-content {
-            .board-row {
-                .meta-item:nth-child(n+6) {
-                    display: none;
-                }
-            }
-        }
-    }
-}
-
-@media only screen and (min-width: 1200px) and (max-width: 1600px) {
-    .board-container {
-        .board-content {
-            .board-row {
-                .meta-item:nth-child(n+7) {
-                    display: none;
-                }
-            }
-        }
-    }
-}
-
-@media only screen and (min-width: 1600px) and (max-width: 2000px) {
+@media only screen and (max-width: @large) {
     .board-container {
         .board-content {
             .board-row {
@@ -71,11 +49,35 @@
     }
 }
 
-@media only screen and (min-width: 2000px) {
+@media only screen and (max-width: @medium) {
     .board-container {
         .board-content {
             .board-row {
-                .meta-item:nth-child(n+9) {
+                .meta-item:nth-child(n+7) {
+                    display: none;
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: @small) {
+    .board-container {
+        .board-content {
+            .board-row {
+                .meta-item:nth-child(n+6) {
+                    display: none;
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: @xsmall) {
+    .board-container {
+        .board-content {
+            .board-row {
+                .meta-item:nth-child(n+5) {
                     display: none;
                 }
             }
