@@ -44,7 +44,8 @@ module.exports = {
                             importLoaders: 2,
                             modules: {
                                 getLocalIdent: (context, localIdentName, localName, options) => {
-                                    if (context.resourcePath.startsWith(path.resolve(__dirname, 'src/routes'))) {
+                                    if (context.resourcePath.startsWith(path.resolve(__dirname, 'src/routes')) ||
+                                        context.resourcePath.startsWith(path.resolve(__dirname, 'src/App'))) {
                                         localIdentName = '[local]';
                                     } else {
                                         localIdentName = '[local]-[hash:base64:5]';

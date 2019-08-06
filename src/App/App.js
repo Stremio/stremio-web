@@ -2,7 +2,7 @@ const React = require('react');
 const { Router } = require('stremio-router');
 const { KeyboardNavigation, ServicesProvider } = require('stremio/services');
 const routerViewsConfig = require('./routerViewsConfig');
-const styles = require('./styles');
+require('./styles');
 
 const App = () => {
     const onPathNotMatch = React.useCallback(() => {
@@ -18,7 +18,6 @@ const App = () => {
         <React.StrictMode>
             <ServicesProvider services={services}>
                 <Router
-                    className={styles['router']}
                     homePath={'/'}
                     viewsConfig={routerViewsConfig}
                     onPathNotMatch={onPathNotMatch}

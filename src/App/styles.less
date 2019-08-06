@@ -1,4 +1,5 @@
 @import (inline, once, css) 'stremio-colors/css/stremio-colors.css';
+@import (inline, once, css) 'router/styles.css';
 @import (reference) 'common/screen-sizes.less';
 
 @font-face {
@@ -70,7 +71,7 @@ html {
     --scroll-bar-width: 6px;
     --color-facebook: #4267b2;
 
-    &, body, :global(#app) {
+    &, body, #app {
         position: relative;
         z-index: 0;
         width: 100vw;
@@ -81,7 +82,7 @@ html {
         overflow: auto;
     }
 
-    .router {
+    .router-container {
         width: 100%;
         height: 100%;
     }

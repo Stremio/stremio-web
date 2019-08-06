@@ -2,11 +2,11 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const RoutesContainerContext = require('./RoutesContainerContext');
 
-const RoutesContainerProvider = ({ containerClassName, children }) => {
+const RoutesContainerProvider = ({ children }) => {
     const [container, setContainer] = React.useState(null);
     return (
         <RoutesContainerContext.Provider value={container}>
-            <div ref={setContainer} className={containerClassName}>
+            <div ref={setContainer} className={'router-container'}>
                 {container instanceof HTMLElement ? children : null}
             </div>
         </RoutesContainerContext.Provider>
@@ -14,7 +14,6 @@ const RoutesContainerProvider = ({ containerClassName, children }) => {
 };
 
 RoutesContainerProvider.propTypes = {
-    containerClassName: PropTypes.string,
     children: PropTypes.oneOfType([
         PropTypes.arrayOf(PropTypes.node),
         PropTypes.node

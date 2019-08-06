@@ -14,7 +14,7 @@ const Modal = ({ children }) => {
     }, []);
     return ReactDOM.createPortal(
         <FocusableProvider onRoutesContainerDomTreeChange={onRoutesContainerDomTreeChange} onModalsContainerDomTreeChange={onModalsContainerDomTreeChange}>
-            <div>{children}</div>
+            <div className={'modal-container'}>{children}</div>
         </FocusableProvider>,
         modalsContainer
     );

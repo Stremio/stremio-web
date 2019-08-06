@@ -1,12 +1,10 @@
 const React = require('react');
 const PropTypes = require('prop-types');
-const classnames = require('classnames');
 const UrlUtils = require('url');
 const { RoutesContainerProvider } = require('../RoutesContainerContext');
 const Route = require('./Route');
-const styles = require('./styles');
 
-const Router = ({ className, homePath, viewsConfig, onPathNotMatch }) => {
+const Router = ({ homePath, viewsConfig, onPathNotMatch }) => {
     const [views, setViews] = React.useState(() => {
         return Array(viewsConfig.length).fill({
             routeConfig: null,
@@ -92,7 +90,7 @@ const Router = ({ className, homePath, viewsConfig, onPathNotMatch }) => {
         };
     }, []);
     return (
-        <RoutesContainerProvider containerClassName={classnames(className, styles['router-container'])}>
+        <RoutesContainerProvider>
             {
                 views
                     .filter(({ routeConfig }) => routeConfig !== null)
@@ -107,7 +105,6 @@ const Router = ({ className, homePath, viewsConfig, onPathNotMatch }) => {
 };
 
 Router.propTypes = {
-    className: PropTypes.string,
     homePath: PropTypes.string,
     onPathNotMatch: PropTypes.func,
     viewsConfig: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.exact({
