@@ -23,12 +23,14 @@ const MetaItem = React.memo(({ className, menuClassName, id, type, name, posterS
             menuOpen ? menuRef.current.close() : menuRef.current.open();
         }
     }, [menuOpen]);
-    const placeholderIcon = ICON_FOR_TYPE[type] || 'ic_movies';
     return (
-        <Button className={classnames(className, styles['meta-item-container'], styles[`poster-shape-${posterShape}`], { 'active': menuOpen })} title={name} data-id={id} onClick={onClick} onContextMenu={onContextMenu}>
+        <Button className={classnames(className, styles['meta-item-container'], styles[`poster-shape-${posterShape}`], { 'active': menuOpen })} title={name} data-id={id} onContextMenu={onContextMenu} onClick={onClick}>
             <div className={styles['poster-image-container']}>
                 <div className={styles['placeholder-image-layer']}>
-                    <Icon className={styles['placeholder-image']} icon={placeholderIcon} />
+                    <Icon
+                        className={styles['placeholder-image']}
+                        icon={ICON_FOR_TYPE[type] || 'ic_movies'}
+                    />
                 </div>
                 {
                     typeof poster === 'string' && poster.length > 0 ?
