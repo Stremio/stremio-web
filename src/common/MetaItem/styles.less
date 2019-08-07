@@ -11,8 +11,10 @@
                 color: var(--color-backgrounddarker);
             }
 
-            .menu-icon {
-                fill: var(--color-backgrounddarker);
+            .menu-button-container {
+                .menu-icon {
+                    fill: var(--color-backgrounddarker);
+                }
             }
         }
     }
@@ -136,37 +138,39 @@
             }
         }
 
-        .menu-icon {
+        .menu-button-container {
             flex: none;
-            display: block;
             width: 2.5rem;
             height: 2.5rem;
             padding: 0.6rem;
-            fill: var(--color-surfacelighter);
 
             &:hover, &:global(.active) {
                 background-color: var(--color-surface80);
+            }
+
+            .menu-icon {
+                display: block;
+                width: 100%;
+                height: 100%;
+                fill: var(--color-surfacelighter);
             }
         }
     }
 }
 
-.menu-container {
-    .menu-items-container {
-        min-width: 8em;
-        max-width: 12em;
-        background-color: var(--color-surfacelighter);
+.menu-buttons-container {
+    min-width: 8rem;
+    max-width: 12rem;
+    background-color: var(--color-surfacelighter);
 
-        .menu-item {
-            width: 100%;
-            font-size: 1.2em;
-            padding: 0.5em;
-            color: var(--color-backgrounddarker);
-            cursor: pointer;
+    .menu-button {
+        font-size: 1.1rem;
+        padding: 0.5rem;
+        color: var(--color-backgrounddarker);
+        outline: none;
 
-            &:hover, &:focus {
-                background-color: var(--color-surfacelight);
-            }
+        &:hover, &:focus {
+            background-color: var(--color-surfacelight);
         }
     }
 }

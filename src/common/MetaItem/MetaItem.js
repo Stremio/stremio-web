@@ -14,7 +14,7 @@ const ICON_FOR_TYPE = Object.assign(Object.create(null), {
     'tv': 'ic_tv'
 });
 
-const MetaItem = React.memo(({ className, menuClassName, id, type, name, posterShape = 'square', poster, title, subtitle, progress, playIcon, menuOptions, onClick, menuOptionOnSelect }) => {
+const MetaItem = React.memo(({ className, id, type, name, posterShape = 'square', poster = '', title = '', subtitle = '', progress = 0, playIcon = false, menuOptions = [], onClick, menuOptionOnSelect }) => {
     const menuRef = React.useRef(null);
     const [menuOpen, onMenuOpen, onMenuClose] = useBinaryState(false);
     const onContextMenu = React.useCallback((event) => {
@@ -76,12 +76,16 @@ const MetaItem = React.memo(({ className, menuClassName, id, type, name, posterS
                                 Array.isArray(menuOptions) && menuOptions.length > 0 ?
                                     <Popup ref={menuRef} onOpen={onMenuOpen} onClose={onMenuClose}>
                                         <Popup.Label>
-                                            <Icon className={classnames(styles['menu-icon'], { 'active': menuOpen })} icon={'ic_more'} />
+                                            <Button className={classnames(styles['menu-button-container'], { 'active': menuOpen })} tabIndex={-1}>
+                                                <Icon className={styles['menu-icon']} icon={'ic_more'} />
+                                            </Button>
                                         </Popup.Label>
-                                        <Popup.Menu className={classnames(menuClassName, styles['menu-container'])} tabIndex={-1}>
-                                            <div className={styles['menu-items-container']}>
+                                        <Popup.Menu>
+                                            <div className={styles['menu-buttons-container']}>
                                                 {menuOptions.map(({ label, type }) => (
-                                                    <Button key={type} className={styles['menu-item']} data-id={id} data-type={type} onClick={menuOptionOnSelect}>{label}</Button>
+                                                    <Button key={type} className={styles['menu-button']} data-id={id} data-type={type} onClick={menuOptionOnSelect}>
+                                                        {label}
+                                                    </Button>
                                                 ))}
                                             </div>
                                         </Popup.Menu>
@@ -110,7 +114,6 @@ MetaItem.displayName = 'MetaItem';
 
 MetaItem.propTypes = {
     className: PropTypes.string,
-    menuClassName: PropTypes.string,
     id: PropTypes.string,
     type: PropTypes.string,
     name: PropTypes.string,
