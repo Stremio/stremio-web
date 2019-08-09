@@ -7,24 +7,27 @@ const Popup = ({ open = false, renderLabel, renderMenu, onCloseRequest }) => {
     const labelContainerRef = React.useRef(null);
     const menuContainerRef = React.useRef(null);
     const menuContentContainerRef = React.useRef(null);
+    const popupOnClick = React.useCallback((event) => {
+        event.nativeEvent.popupLabels = [
+            ...(event.nativeEvent.popupLabels || []),
+            labelContainerRef.current
+        ];
+    }, []);
     React.useEffect(() => {
         const windowOnClick = (event) => {
-            if ((labelContainerRef.current !== null && labelContainerRef.current.contains(event.target)) ||
-                (menuContainerRef.current !== null && menuContainerRef.current.contains(event.target))) {
-                return;
+            if (!Array.isArray(event.popupLabels) || !event.popupLabels.includes(labelContainerRef.current)) {
+                onCloseRequest(event);
             }
-
-            onCloseRequest(event);
         };
         if (open) {
-            window.addEventListener('click', windowOnClick, true);
+            window.addEventListener('click', windowOnClick);
+            window.addEventListener('resize', onCloseRequest);
             window.addEventListener('scroll', onCloseRequest, true);
-            window.addEventListener('resize', onCloseRequest, true);
         }
         return () => {
-            window.removeEventListener('click', windowOnClick, true);
+            window.removeEventListener('click', windowOnClick);
+            window.removeEventListener('resize', onCloseRequest);
             window.removeEventListener('scroll', onCloseRequest, true);
-            window.removeEventListener('resize', onCloseRequest, true);
         };
     }, [open, onCloseRequest]);
     React.useEffect(() => {
@@ -90,14 +93,18 @@ const Popup = ({ open = false, renderLabel, renderMenu, onCloseRequest }) => {
     }, [open]);
     return (
         <React.Fragment>
-            {renderLabel({ ref: labelContainerRef })}
+            {renderLabel({
+                ref: labelContainerRef,
+                onClick: popupOnClick
+            })}
             {
                 open ?
                     <Modal className={styles['popup-modal-container']}>
                         <div ref={menuContainerRef} className={styles['menu-container']}>
                             {renderMenu({
                                 ref: menuContentContainerRef,
-                                className: styles['menu-content-container']
+                                className: styles['menu-content-container'],
+                                onClick: popupOnClick
                             })}
                         </div>
                     </Modal>
