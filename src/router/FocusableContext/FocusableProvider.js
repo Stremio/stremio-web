@@ -21,10 +21,6 @@ const FocusableProvider = ({ children, onRoutesContainerDomTreeChange, onModalsC
                     modalsContainer: modalsContainer,
                     contentContainer: contentContainerRef.current
                 });
-            if (focusable) {
-                contentContainerRef.current.focus();
-            }
-
             setFocusable(focusable);
         };
         const routesContainerDomTreeObserver = new MutationObserver(onDomTreeChange);
@@ -39,7 +35,7 @@ const FocusableProvider = ({ children, onRoutesContainerDomTreeChange, onModalsC
     }, [routesContainer, modalsContainer, onRoutesContainerDomTreeChange, onModalsContainerDomTreeChange]);
     return (
         <FocusableContext.Provider value={focusable}>
-            {React.cloneElement(React.Children.only(children), { ref: contentContainerRef, tabIndex: -1 })}
+            {React.cloneElement(React.Children.only(children), { ref: contentContainerRef })}
         </FocusableContext.Provider>
     );
 };
