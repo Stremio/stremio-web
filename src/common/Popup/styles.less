@@ -1,19 +1,16 @@
-.popup-modal-layer {
-    width: 100%;
-    height: 100%;
+.popup-modal-container {
+    pointer-events: none;
 
     .menu-container {
         position: absolute;
+        pointer-events: auto;
         visibility: hidden;
-        overflow: visible;
+        overflow: auto;
+        box-shadow: 0 1.35rem 2.7rem var(--color-backgrounddarker40),
+            0 1.1rem 0.85rem var(--color-backgrounddarker20);
 
-        .menu-scroll-container {
-            box-shadow: var(--box-shadow);
-            overflow: auto;
-
-            .menu-scroll-content {
-                overflow: visible;
-            }
+        .menu-content-container {
+            overflow: visible;
         }
     }
 }
