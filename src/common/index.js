@@ -12,6 +12,7 @@ const Slider = require('./Slider');
 const TextInput = require('./TextInput');
 const routesRegexp = require('./routesRegexp');
 const useBinaryState = require('./useBinaryState');
+const useFullscreen = require('./useFullscreen');
 const useLocationHash = require('./useLocationHash');
 const useTabIndex = require('./useTabIndex');
 
@@ -30,6 +31,7 @@ module.exports = {
     TextInput,
     routesRegexp,
     useBinaryState,
+    useFullscreen,
     useLocationHash,
     useTabIndex
 };
