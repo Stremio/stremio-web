@@ -15,14 +15,17 @@ const ICON_FOR_TYPE = Object.assign(Object.create(null), {
 });
 
 const MetaItem = React.memo(({ className, id, type, name, posterShape = 'square', poster = '', title = '', subtitle = '', progress = 0, playIcon = false, menuOptions = [], onClick, menuOptionOnSelect }) => {
-    const menuRef = React.useRef(null);
-    const [menuOpen, onMenuOpen, onMenuClose] = useBinaryState(false);
+    const [menuOpen, openMenu, closeMenu, toggleMenu] = useBinaryState(false);
     const onContextMenu = React.useCallback((event) => {
-        if (!event.ctrlKey && menuRef.current !== null) {
-            event.preventDefault();
-            menuOpen ? menuRef.current.close() : menuRef.current.open();
+        if (!event.ctrlKey && Array.isArray(menuOptions) && menuOptions.length > 0) {
+            if (menuOpen) {
+                closeMenu();
+            } else {
+                openMenu();
+                event.preventDefault();
+            }
         }
-    }, [menuOpen]);
+    }, [menuOpen, menuOptions]);
     return (
         <Button className={classnames(className, styles['meta-item-container'], styles[`poster-shape-${posterShape}`], { 'active': menuOpen })} title={name} data-id={id} onContextMenu={onContextMenu} onClick={onClick}>
             <div className={styles['poster-image-container']}>
@@ -74,22 +77,34 @@ const MetaItem = React.memo(({ className, id, type, name, posterShape = 'square'
                             }
                             {
                                 Array.isArray(menuOptions) && menuOptions.length > 0 ?
-                                    <Popup ref={menuRef} onOpen={onMenuOpen} onClose={onMenuClose}>
-                                        <Popup.Label>
-                                            <Button className={classnames(styles['menu-button-container'], { 'active': menuOpen })} tabIndex={-1}>
+                                    <Popup
+                                        open={menuOpen}
+                                        onCloseRequest={closeMenu}
+                                        renderLabel={({ ref, onClick }) => (
+                                            <Button ref={ref}
+                                                className={classnames(styles['menu-button-container'], { 'active': menuOpen })}
+                                                tabIndex={-1}
+                                                onClick={(event) => {
+                                                    onClick(event);
+                                                    toggleMenu();
+                                                }}>
                                                 <Icon className={styles['menu-icon']} icon={'ic_more'} />
                                             </Button>
-                                        </Popup.Label>
-                                        <Popup.Menu>
-                                            <div className={styles['menu-buttons-container']}>
+                                        )}
+                                        renderMenu={({ ref, className, onClick }) => (
+                                            <div ref={ref} className={classnames(className, styles['menu-container'])} onClick={onClick}>
                                                 {menuOptions.map(({ label, type }) => (
-                                                    <Button key={type} className={styles['menu-button']} data-id={id} data-type={type} onClick={menuOptionOnSelect}>
+                                                    <Button key={type}
+                                                        className={styles['menu-item']}
+                                                        data-id={id}
+                                                        data-type={type}
+                                                        onClick={menuOptionOnSelect}>
                                                         {label}
                                                     </Button>
                                                 ))}
                                             </div>
-                                        </Popup.Menu>
-                                    </Popup>
+                                        )}
+                                    />
                                     :
                                     null
                             }
