@@ -20,97 +20,93 @@
     }
 }
 
-.nav-menu-container {
-    --box-shadow: -0.6rem .6rem .5rem -0.1rem var(--color-backgrounddark40);
+.nav-menu {
+    width: 20rem;
+    background-color: var(--color-background);
 
-    .nav-menu {
-        width: 20rem;
-        background-color: var(--color-background);
+    .user-info {
+        display: grid;
+        height: 6rem;
+        grid-template-columns: 6rem 1fr;
+        grid-template-rows: 50% 50%;
+        grid-template-areas:
+            "avatar-area email-area"
+            "avatar-area login-logout-button-area";
 
-        .user-info {
-            display: grid;
-            height: 6rem;
-            grid-template-columns: 6rem 1fr;
-            grid-template-rows: 50% 50%;
-            grid-template-areas:
-                "avatar-area email-area"
-                "avatar-area login-logout-button-area";
+        .avatar {
+            grid-area: avatar-area;
+            padding: 0.8rem;
+            border-radius: 50%;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-origin: content-box;
+            background-clip: content-box;
+        }
 
-            .avatar {
-                grid-area: avatar-area;
-                padding: 0.8rem;
-                border-radius: 50%;
-                background-size: cover;
-                background-repeat: no-repeat;
-                background-position: center;
-                background-origin: content-box;
-                background-clip: content-box;
-            }
+        .email-container {
+            grid-area: email-area;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 0.6rem 0.6rem 0 0;
+            color: var(--color-surfacelighter);
+        }
 
-            .email-container {
-                grid-area: email-area;
-                display: flex;
-                flex-direction: row;
-                align-items: center;
-                padding: 0.6rem 0.6rem 0 0;
+        .login-logout-button {
+            grid-area: login-logout-button-area;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 0 0.6rem 0.6rem 0;
+            color: var(--color-surface);
+            cursor: pointer;
+
+            &:hover {
                 color: var(--color-surfacelighter);
-            }
-
-            .login-logout-button {
-                grid-area: login-logout-button-area;
-                display: flex;
-                flex-direction: row;
-                align-items: center;
-                padding: 0 0.6rem 0.6rem 0;
-                color: var(--color-surface);
-                cursor: pointer;
-
-                &:hover {
-                    color: var(--color-surfacelighter);
-                    text-decoration: underline;
-                }
-            }
-
-            .email-container, .login-logout-button {
-                .user-info-label {
-                    flex: 1;
-                    max-height: 2.4em;
-                }
+                text-decoration: underline;
             }
         }
 
-        .nav-menu-section {
-            border-top: calc(0.5 * var(--focusable-border-size)) solid var(--color-surfacedark80);
+        .email-container, .login-logout-button {
+            .user-info-label {
+                flex: 1;
+                max-height: 2.4em;
+            }
+        }
+    }
 
-            .option {
-                display: flex;
-                flex-direction: row;
-                align-items: center;
+    .nav-menu-section {
+        border-top: calc(0.5 * var(--focusable-border-size)) solid var(--color-surfacedark80);
+
+        .option {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            height: 4rem;
+            cursor: pointer;
+
+            &:hover {
+                background-color: var(--color-surfacedarker60);
+            }
+
+            .option-icon {
+                flex: none;
+                width: 4rem;
                 height: 4rem;
-                cursor: pointer;
+                padding: 1.3rem;
+                fill: var(--color-secondarylight);
 
-                &:hover {
-                    background-color: var(--color-surfacedarker60);
+                &+.option-label {
+                    padding-left: 0;
                 }
+            }
 
-                .option-icon {
-                    flex: none;
-                    width: 4rem;
-                    height: 4rem;
-                    padding: 1.3rem;
-                    fill: var(--color-secondarylight);
-
-                    &+.option-label {
-                        padding-left: 0;
-                    }
-                }
-
-                .option-label {
-                    flex: 1;
-                    max-height: 2.4em;
-                    padding: 0 1.3rem;
-                    color: var(--color-surfacelighter);
-                }
+            .option-label {
+                flex: 1;
+                max-height: 2.4em;
+                padding: 0 1.3rem;
+                color: var(--color-surfacelighter);
             }
         }
     }

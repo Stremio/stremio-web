@@ -4,16 +4,11 @@ const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const Button = require('../../Button');
 const Popup = require('../../Popup');
+const useBinaryState = require('../../useBinaryState');
 const styles = require('./styles');
 
 const NavMenu = ({ className, email = '', avatar = '', logout }) => {
-    const [active, setActive] = React.useState(false);
-    const onPopupOpen = React.useCallback(() => {
-        setActive(true);
-    }, []);
-    const onPopupClose = React.useCallback(() => {
-        setActive(false);
-    }, []);
+    const [menuOpen, openMenu, closeMenu, toggleMenu] = useBinaryState(false);
     const [fullscreen, setFullscreen] = React.useState(document.fullscreenElement instanceof HTMLElement);
     const toggleFullscreen = React.useCallback(() => {
         if (fullscreen) {
@@ -32,14 +27,22 @@ const NavMenu = ({ className, email = '', avatar = '', logout }) => {
         };
     }, []);
     return (
-        <Popup onOpen={onPopupOpen} onClose={onPopupClose}>
-            <Popup.Label>
-                <Button className={classnames(className, styles['nav-menu-button'], { 'active': active })} tabIndex={-1}>
+        <Popup
+            open={menuOpen}
+            onCloseRequest={closeMenu}
+            renderLabel={({ ref, onClick }) => (
+                <Button ref={ref}
+                    className={classnames(className, styles['nav-menu-button'], { 'active': menuOpen })}
+                    tabIndex={-1}
+                    onClick={(event) => {
+                        onClick(event);
+                        toggleMenu();
+                    }}>
                     <Icon className={styles['icon']} icon={'ic_more'} />
                 </Button>
-            </Popup.Label>
-            <Popup.Menu className={styles['nav-menu-container']}>
-                <div className={styles['nav-menu']}>
+            )}
+            renderMenu={({ ref, className, onClick }) => (
+                <div ref={ref} className={classnames(className, styles['nav-menu'])} onClick={onClick}>
                     <div className={styles['user-info']}>
                         <div
                             className={styles['avatar']}
@@ -94,8 +97,8 @@ const NavMenu = ({ className, email = '', avatar = '', logout }) => {
                         </Button>
                     </div>
                 </div>
-            </Popup.Menu>
-        </Popup>
+            )}
+        />
     );
 };
 
