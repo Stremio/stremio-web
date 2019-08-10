@@ -5,27 +5,12 @@ const Icon = require('stremio-icons/dom');
 const Button = require('../../Button');
 const Popup = require('../../Popup');
 const useBinaryState = require('../../useBinaryState');
+const useFullscreen = require('../../useFullscreen');
 const styles = require('./styles');
 
 const NavMenu = ({ className, email = '', avatar = '', logout }) => {
     const [menuOpen, openMenu, closeMenu, toggleMenu] = useBinaryState(false);
-    const [fullscreen, setFullscreen] = React.useState(document.fullscreenElement instanceof HTMLElement);
-    const toggleFullscreen = React.useCallback(() => {
-        if (fullscreen) {
-            document.exitFullscreen();
-        } else {
-            document.documentElement.requestFullscreen();
-        }
-    }, [fullscreen]);
-    const onFullscreenChange = React.useCallback(() => {
-        setFullscreen(document.fullscreenElement instanceof HTMLElement);
-    }, []);
-    React.useEffect(() => {
-        document.addEventListener('fullscreenchange', onFullscreenChange);
-        return () => {
-            document.removeEventListener('fullscreenchange', onFullscreenChange);
-        };
-    }, []);
+    const [fullscreen, requestFullscreen, exitFullscreen] = useFullscreen();
     return (
         <Popup
             open={menuOpen}
@@ -56,43 +41,43 @@ const NavMenu = ({ className, email = '', avatar = '', logout }) => {
                         <div className={styles['email-container']}>
                             <div className={styles['user-info-label']}>{email.length === 0 ? 'Anonymous user' : email}</div>
                         </div>
-                        <Button className={styles['login-logout-button']} tabIndex={-1} href={'#/intro'} onClick={email.length === 0 ? null : logout}>
+                        <Button className={styles['login-logout-button']} href={'#/intro'} onClick={email.length === 0 ? null : logout}>
                             <div className={styles['user-info-label']}>{email.length === 0 ? 'Log in / Sign up' : 'Log out'}</div>
                         </Button>
                     </div>
                     <div className={styles['nav-menu-section']}>
-                        <Button className={classnames(styles['option'], 'focusable-with-border')} onClick={toggleFullscreen}>
+                        <Button className={styles['option']} onClick={fullscreen ? exitFullscreen : requestFullscreen}>
                             <Icon className={styles['option-icon']} icon={'ic_fullscreen'} />
                             <div className={styles['option-label']}>{fullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'}</div>
                         </Button>
                     </div>
                     <div className={styles['nav-menu-section']}>
-                        <Button className={classnames(styles['option'], 'focusable-with-border')} href={'#/settings'}>
+                        <Button className={styles['option']} href={'#/settings'}>
                             <Icon className={styles['option-icon']} icon={'ic_settings'} />
                             <div className={styles['option-label']}>Settings</div>
                         </Button>
-                        <Button className={classnames(styles['option'], 'focusable-with-border')} href={'#/addons'}>
+                        <Button className={styles['option']} href={'#/addons'}>
                             <Icon className={styles['option-icon']} icon={'ic_addons'} />
                             <div className={styles['option-label']}>Addons</div>
                         </Button>
-                        <Button className={classnames(styles['option'], 'focusable-with-border')}>
+                        <Button className={styles['option']}>
                             <Icon className={styles['option-icon']} icon={'ic_remote'} />
                             <div className={styles['option-label']}>Remote Control</div>
                         </Button>
-                        <Button className={classnames(styles['option'], 'focusable-with-border')}>
+                        <Button className={styles['option']}>
                             <Icon className={styles['option-icon']} icon={'ic_magnet'} />
                             <div className={styles['option-label']}>Play Magnet Link</div>
                         </Button>
-                        <Button className={classnames(styles['option'], 'focusable-with-border')} href={'https://stremio.zendesk.com/'} target={'_blank'}>
+                        <Button className={styles['option']} href={'https://stremio.zendesk.com/'} target={'_blank'}>
                             <Icon className={styles['option-icon']} icon={'ic_help'} />
                             <div className={styles['option-label']}>Help & Feedback</div>
                         </Button>
                     </div>
                     <div className={styles['nav-menu-section']}>
-                        <Button className={classnames(styles['option'], 'focusable-with-border')} href={'https://www.stremio.com/tos'} target={'_blank'}>
+                        <Button className={styles['option']} href={'https://www.stremio.com/tos'} target={'_blank'}>
                             <div className={styles['option-label']}>Terms of Service</div>
                         </Button>
-                        <Button className={classnames(styles['option'], 'focusable-with-border')} href={'https://www.stremio.com/'} target={'_blank'}>
+                        <Button className={styles['option']} href={'https://www.stremio.com/'} target={'_blank'}>
                             <div className={styles['option-label']}>About Stremio</div>
                         </Button>
                     </div>
