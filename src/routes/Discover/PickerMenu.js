@@ -6,7 +6,7 @@ const { Input, Popup, useBinaryState } = require('stremio/common');
 const styles = require('./styles');
 
 const PickerMenu = ({ name, value, options, onChange }) => {
-    const popupRef = React.useRef();
+    const popupRef = React.useRef(null);
     const [open, onOpen, onClose] = useBinaryState(false);
     const label = typeof value === 'string' ? value : name;
     const optionOnClick = React.useCallback((event) => {
