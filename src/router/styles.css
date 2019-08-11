@@ -1,9 +1,9 @@
-.router-container {
+.routes-container {
     position: relative;
     z-index: 0;
 }
 
-.router-container .route-container {
+.routes-container .route-container {
     position: absolute;
     top: 0;
     right: 0;
@@ -12,11 +12,11 @@
     z-index: 0;
 }
 
-.router-container .route-container:not(:last-child) {
+.routes-container .route-container:not(:last-child) {
     display: none;
 }
 
-.router-container .route-container .route-content {
+.routes-container .route-container .route-content {
     position: absolute;
     top: 0;
     right: 0;
@@ -26,12 +26,12 @@
     overflow: hidden;
 }
 
-.router-container .route-container .modals-container {
+.routes-container .route-container .modals-container {
     width: 0;
     height: 0;
 }
 
-.router-container .route-container .modals-container .modal-container {
+.routes-container .route-container .modals-container .modal-container {
     position: absolute;
     top: 0;
     right: 0;

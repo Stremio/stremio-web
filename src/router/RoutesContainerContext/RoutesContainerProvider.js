@@ -6,7 +6,7 @@ const RoutesContainerProvider = ({ children }) => {
     const [container, setContainer] = React.useState(null);
     return (
         <RoutesContainerContext.Provider value={container}>
-            <div ref={setContainer} className={'router-container'}>
+            <div ref={setContainer} className={'routes-container'}>
                 {container instanceof HTMLElement ? children : null}
             </div>
         </RoutesContainerContext.Provider>
