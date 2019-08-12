@@ -26,8 +26,8 @@ const NavMenu = ({ className, email = '', avatar = '', logout }) => {
                     <Icon className={styles['icon']} icon={'ic_more'} />
                 </Button>
             )}
-            renderMenu={({ ref, className, onClick }) => (
-                <div ref={ref} className={classnames(className, styles['nav-menu'])} onClick={onClick}>
+            renderMenu={({ ref, className }) => (
+                <div ref={ref} className={classnames(className, styles['nav-menu'])}>
                     <div className={styles['user-info']}>
                         <div
                             className={styles['avatar']}
