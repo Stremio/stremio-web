@@ -7,27 +7,27 @@ const Popup = ({ open = false, renderLabel, renderMenu, onCloseRequest }) => {
     const labelContainerRef = React.useRef(null);
     const menuContainerRef = React.useRef(null);
     const menuContentContainerRef = React.useRef(null);
-    const popupOnClick = React.useCallback((event) => {
+    const attachPopupLabels = React.useCallback((event) => {
         event.nativeEvent.popupLabels = [
             ...(event.nativeEvent.popupLabels || []),
             labelContainerRef.current
         ];
     }, []);
     React.useEffect(() => {
-        const windowOnClick = (event) => {
+        const checkPopupLabels = (event) => {
             if (!Array.isArray(event.popupLabels) || !event.popupLabels.includes(labelContainerRef.current)) {
                 onCloseRequest(event);
             }
         };
         if (open) {
-            window.addEventListener('click', windowOnClick);
+            window.addEventListener('click', checkPopupLabels);
+            window.addEventListener('scroll', checkPopupLabels);
             window.addEventListener('resize', onCloseRequest);
-            window.addEventListener('scroll', onCloseRequest, true);
         }
         return () => {
-            window.removeEventListener('click', windowOnClick);
+            window.removeEventListener('click', checkPopupLabels);
+            window.removeEventListener('scroll', checkPopupLabels);
             window.removeEventListener('resize', onCloseRequest);
-            window.removeEventListener('scroll', onCloseRequest, true);
         };
     }, [open, onCloseRequest]);
     React.useEffect(() => {
@@ -95,16 +95,15 @@ const Popup = ({ open = false, renderLabel, renderMenu, onCloseRequest }) => {
         <React.Fragment>
             {renderLabel({
                 ref: labelContainerRef,
-                onClick: popupOnClick
+                onClick: attachPopupLabels
             })}
             {
                 open ?
                     <Modal className={styles['popup-modal-container']}>
-                        <div ref={menuContainerRef} className={styles['menu-container']}>
+                        <div ref={menuContainerRef} className={styles['menu-container']} onScroll={attachPopupLabels} onClick={attachPopupLabels}>
                             {renderMenu({
                                 ref: menuContentContainerRef,
-                                className: styles['menu-content-container'],
-                                onClick: popupOnClick
+                                className: styles['menu-content-container']
                             })}
                         </div>
                     </Modal>
