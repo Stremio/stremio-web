@@ -15,19 +15,9 @@ const ICON_FOR_TYPE = Object.assign(Object.create(null), {
 });
 
 const MetaItem = React.memo(({ className, id, type, name, posterShape = 'square', poster = '', title = '', subtitle = '', progress = 0, playIcon = false, menuOptions = [], onClick, menuOptionOnSelect }) => {
-    const [menuOpen, openMenu, closeMenu, toggleMenu] = useBinaryState(false);
-    const onContextMenu = React.useCallback((event) => {
-        if (!event.ctrlKey && Array.isArray(menuOptions) && menuOptions.length > 0) {
-            if (menuOpen) {
-                closeMenu();
-            } else {
-                openMenu();
-                event.preventDefault();
-            }
-        }
-    }, [menuOpen, menuOptions]);
+    const [menuOpen, openMenu, closeMenu] = useBinaryState(false);
     return (
-        <Button className={classnames(className, styles['meta-item-container'], styles[`poster-shape-${posterShape}`], { 'active': menuOpen })} title={name} data-id={id} onContextMenu={onContextMenu} onClick={onClick}>
+        <Button className={classnames(className, styles['meta-item-container'], styles[`poster-shape-${posterShape}`], { 'active': menuOpen })} title={name} data-id={id} onClick={onClick}>
             <div className={styles['poster-image-container']}>
                 <div className={styles['placeholder-image-layer']}>
                     <Icon
@@ -86,7 +76,7 @@ const MetaItem = React.memo(({ className, id, type, name, posterShape = 'square'
                                                 tabIndex={-1}
                                                 onClick={(event) => {
                                                     onClick(event);
-                                                    toggleMenu();
+                                                    openMenu();
                                                 }}>
                                                 <Icon className={styles['menu-icon']} icon={'ic_more'} />
                                             </Button>
