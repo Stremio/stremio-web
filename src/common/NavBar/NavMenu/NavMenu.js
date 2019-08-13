@@ -9,25 +9,20 @@ const useFullscreen = require('../../useFullscreen');
 const styles = require('./styles');
 
 const NavMenu = ({ className, email = '', avatar = '', logout }) => {
-    const [menuOpen, openMenu, closeMenu, toggleMenu] = useBinaryState(false);
+    const [menuOpen, openMenu, closeMenu] = useBinaryState(false);
     const [fullscreen, requestFullscreen, exitFullscreen] = useFullscreen();
     return (
         <Popup
             open={menuOpen}
             onCloseRequest={closeMenu}
-            renderLabel={({ ref, onClick }) => (
-                <Button ref={ref}
-                    className={classnames(className, styles['nav-menu-button'], { 'active': menuOpen })}
-                    tabIndex={-1}
-                    onClick={(event) => {
-                        onClick(event);
-                        toggleMenu();
-                    }}>
+            renderLabel={(props) => (
+                <Button {...props} className={classnames(className, styles['nav-menu-button'], { 'active': menuOpen })} tabIndex={-1} onClick={openMenu}>
                     <Icon className={styles['icon']} icon={'ic_more'} />
+                    {props.children}
                 </Button>
             )}
-            renderMenu={({ ref, className }) => (
-                <div ref={ref} className={classnames(className, styles['nav-menu'])}>
+            renderMenu={() => (
+                <div className={styles['nav-menu']}>
                     <div className={styles['user-info']}>
                         <div
                             className={styles['avatar']}
