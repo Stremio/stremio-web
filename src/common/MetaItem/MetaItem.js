@@ -70,19 +70,14 @@ const MetaItem = React.memo(({ className, id, type, name, posterShape = 'square'
                                     <Popup
                                         open={menuOpen}
                                         onCloseRequest={closeMenu}
-                                        renderLabel={({ ref, onClick }) => (
-                                            <Button ref={ref}
-                                                className={classnames(styles['menu-button-container'], { 'active': menuOpen })}
-                                                tabIndex={-1}
-                                                onClick={(event) => {
-                                                    onClick(event);
-                                                    openMenu();
-                                                }}>
+                                        renderLabel={(props) => (
+                                            <Button {...props} className={classnames(styles['menu-button-container'], { 'active': menuOpen })} tabIndex={-1} onClick={openMenu}>
                                                 <Icon className={styles['menu-icon']} icon={'ic_more'} />
+                                                {props.children}
                                             </Button>
                                         )}
-                                        renderMenu={({ ref, className, onClick }) => (
-                                            <div ref={ref} className={classnames(className, styles['menu-container'])} onClick={onClick}>
+                                        renderMenu={() => (
+                                            <div className={styles['menu-container']}>
                                                 {menuOptions.map(({ label, type }) => (
                                                     <Button key={type}
                                                         className={styles['menu-item']}
