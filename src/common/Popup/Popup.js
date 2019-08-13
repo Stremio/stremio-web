@@ -4,28 +4,27 @@ const { Modal } = require('stremio-router');
 const styles = require('./styles');
 
 const Popup = ({ open = false, renderLabel, renderMenu, onCloseRequest }) => {
-    const labelContainerRef = React.useRef(null);
-    const menuContainerRef = React.useRef(null);
-    const menuContentContainerRef = React.useRef(null);
+    const labelRef = React.useRef(null);
+    const menuRef = React.useRef(null);
     const attachPopupLabels = React.useCallback((event) => {
         event.nativeEvent.popupLabels = [
             ...(event.nativeEvent.popupLabels || []),
-            labelContainerRef.current
+            labelRef.current
         ];
     }, []);
     React.useEffect(() => {
         const checkPopupLabels = (event) => {
-            if (!Array.isArray(event.popupLabels) || !event.popupLabels.includes(labelContainerRef.current)) {
+            if (!Array.isArray(event.popupLabels) || !event.popupLabels.includes(labelRef.current)) {
                 onCloseRequest(event);
             }
         };
         if (open) {
-            window.addEventListener('click', checkPopupLabels);
+            window.addEventListener('mousedown', checkPopupLabels);
             window.addEventListener('scroll', checkPopupLabels);
             window.addEventListener('resize', onCloseRequest);
         }
         return () => {
-            window.removeEventListener('click', checkPopupLabels);
+            window.removeEventListener('mousedown', checkPopupLabels);
             window.removeEventListener('scroll', checkPopupLabels);
             window.removeEventListener('resize', onCloseRequest);
         };
@@ -36,8 +35,8 @@ const Popup = ({ open = false, renderLabel, renderMenu, onCloseRequest }) => {
         }
 
         const documentRect = document.documentElement.getBoundingClientRect();
-        const labelRect = labelContainerRef.current.getBoundingClientRect();
-        const menuContentRect = menuContentContainerRef.current.getBoundingClientRect();
+        const labelRect = labelRef.current.getBoundingClientRect();
+        const menuRect = menuRef.current.getBoundingClientRect();
         const labelPosition = {
             left: labelRect.left - documentRect.left,
             top: labelRect.top - documentRect.top,
@@ -61,57 +60,49 @@ const Popup = ({ open = false, renderLabel, renderMenu, onCloseRequest }) => {
             maxWidth: `${labelPosition.left + labelRect.width}px`
         };
 
-        if (menuContentRect.height <= labelPosition.bottom) {
-            menuContainerRef.current.style.top = bottomMenuStyles.top;
-            menuContainerRef.current.style.maxHeight = bottomMenuStyles.maxHeight;
-        } else if (menuContentRect.height <= labelPosition.top) {
-            menuContainerRef.current.style.bottom = topMenuStyles.bottom;
-            menuContainerRef.current.style.maxHeight = topMenuStyles.maxHeight;
+        if (menuRect.height <= labelPosition.bottom) {
+            menuRef.current.style.top = bottomMenuStyles.top;
+            menuRef.current.style.maxHeight = bottomMenuStyles.maxHeight;
+        } else if (menuRect.height <= labelPosition.top) {
+            menuRef.current.style.bottom = topMenuStyles.bottom;
+            menuRef.current.style.maxHeight = topMenuStyles.maxHeight;
         } else if (labelPosition.bottom >= labelPosition.top) {
-            menuContainerRef.current.style.top = bottomMenuStyles.top;
-            menuContainerRef.current.style.maxHeight = bottomMenuStyles.maxHeight;
+            menuRef.current.style.top = bottomMenuStyles.top;
+            menuRef.current.style.maxHeight = bottomMenuStyles.maxHeight;
         } else {
-            menuContainerRef.current.style.bottom = topMenuStyles.bottom;
-            menuContainerRef.current.style.maxHeight = topMenuStyles.maxHeight;
+            menuRef.current.style.bottom = topMenuStyles.bottom;
+            menuRef.current.style.maxHeight = topMenuStyles.maxHeight;
         }
 
-        if (menuContentRect.width <= (labelPosition.right + labelRect.width)) {
-            menuContainerRef.current.style.left = rightMenuStyles.left;
-            menuContainerRef.current.style.maxWidth = rightMenuStyles.maxWidth;
-        } else if (menuContentRect.width <= (labelPosition.left + labelRect.width)) {
-            menuContainerRef.current.style.right = leftMenuStyles.right;
-            menuContainerRef.current.style.maxWidth = leftMenuStyles.maxWidth;
+        if (menuRect.width <= (labelPosition.right + labelRect.width)) {
+            menuRef.current.style.left = rightMenuStyles.left;
+            menuRef.current.style.maxWidth = rightMenuStyles.maxWidth;
+        } else if (menuRect.width <= (labelPosition.left + labelRect.width)) {
+            menuRef.current.style.right = leftMenuStyles.right;
+            menuRef.current.style.maxWidth = leftMenuStyles.maxWidth;
         } else if (labelPosition.right > labelPosition.left) {
-            menuContainerRef.current.style.left = rightMenuStyles.left;
-            menuContainerRef.current.style.maxWidth = rightMenuStyles.maxWidth;
+            menuRef.current.style.left = rightMenuStyles.left;
+            menuRef.current.style.maxWidth = rightMenuStyles.maxWidth;
         } else {
-            menuContainerRef.current.style.right = leftMenuStyles.right;
-            menuContainerRef.current.style.maxWidth = leftMenuStyles.maxWidth;
+            menuRef.current.style.right = leftMenuStyles.right;
+            menuRef.current.style.maxWidth = leftMenuStyles.maxWidth;
         }
 
-        menuContainerRef.current.style.visibility = 'visible';
+        menuRef.current.style.visibility = 'visible';
     }, [open]);
-    return (
-        <React.Fragment>
-            {renderLabel({
-                ref: labelContainerRef,
-                onClick: attachPopupLabels
-            })}
-            {
-                open ?
-                    <Modal className={styles['popup-modal-container']}>
-                        <div ref={menuContainerRef} className={styles['menu-container']} onScroll={attachPopupLabels} onClick={attachPopupLabels}>
-                            {renderMenu({
-                                ref: menuContentContainerRef,
-                                className: styles['menu-content-container']
-                            })}
-                        </div>
-                    </Modal>
-                    :
-                    null
-            }
-        </React.Fragment>
-    );
+    return renderLabel({
+        ref: labelRef,
+        onMouseDown: attachPopupLabels,
+        onScroll: attachPopupLabels,
+        children: open ?
+            <Modal className={styles['popup-modal-container']}>
+                <div ref={menuRef} className={styles['menu-container']}>
+                    {renderMenu()}
+                </div>
+            </Modal>
+            :
+            null
+    });
 }
 
 Popup.propTypes = {
