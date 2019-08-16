@@ -8,13 +8,6 @@ const App = () => {
     const onPathNotMatch = React.useCallback(() => {
         window.history.back();
     }, []);
-    const onScroll = React.useCallback((event) => {
-        const scrollEvent = new UIEvent('scroll');
-        for (const prop in event.nativeEvent) {
-            scrollEvent[prop] = event.nativeEvent[prop];
-        }
-        window.dispatchEvent(scrollEvent);
-    }, []);
     const services = React.useMemo(() => ({
         keyboardNavigation: new KeyboardNavigation()
     }), []);
@@ -24,13 +17,11 @@ const App = () => {
     return (
         <React.StrictMode>
             <ServicesProvider services={services}>
-                <div className={'app-content'} onScroll={onScroll}>
-                    <Router
-                        homePath={'/'}
-                        viewsConfig={routerViewsConfig}
-                        onPathNotMatch={onPathNotMatch}
-                    />
-                </div>
+                <Router
+                    homePath={'/'}
+                    viewsConfig={routerViewsConfig}
+                    onPathNotMatch={onPathNotMatch}
+                />
             </ServicesProvider>
         </React.StrictMode>
     );
