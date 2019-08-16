@@ -14,16 +14,29 @@ const ICON_FOR_TYPE = Object.assign(Object.create(null), {
     'tv': 'ic_tv'
 });
 
-const MetaItem = React.memo(({ className, id, type, name, posterShape = 'square', poster = '', title = '', subtitle = '', progress = 0, playIcon = false, menuOptions = [], onClick, menuOptionOnSelect }) => {
-    const [menuOpen, openMenu, closeMenu] = useBinaryState(false);
+const MetaItem = React.memo(({ className, id, type, name, posterShape = 'square', poster = '', title = '', subtitle = '', progress = 0, playIcon = false, menuOptions = [], onSelect, menuOptionOnSelect }) => {
+    const [menuOpen, openMenu, closeMenu, toggleMenu] = useBinaryState(false);
+    const metaItemOnClick = React.useCallback((event) => {
+        if (!event.nativeEvent.selectItemPrevented && typeof onSelect === 'function') {
+            onSelect(event);
+        }
+    }, [onSelect]);
+    const menuLabelOnClick = React.useCallback((event) => {
+        toggleMenu();
+        event.nativeEvent.selectItemPrevented = true;
+    }, [toggleMenu]);
+    const menuOptionOnClick = React.useCallback((event) => {
+        if (typeof menuOptionOnSelect === 'function') {
+            menuOptionOnSelect(event);
+        }
+
+        event.nativeEvent.selectItemPrevented = true;
+    }, [menuOptionOnSelect]);
     return (
-        <Button className={classnames(className, styles['meta-item-container'], styles[`poster-shape-${posterShape}`], { 'active': menuOpen })} title={name} data-id={id} onClick={onClick}>
+        <Button className={classnames(className, styles['meta-item-container'], styles[`poster-shape-${posterShape}`], { 'active': menuOpen })} title={name} data-id={id} onClick={metaItemOnClick}>
             <div className={styles['poster-image-container']}>
                 <div className={styles['placeholder-image-layer']}>
-                    <Icon
-                        className={styles['placeholder-image']}
-                        icon={ICON_FOR_TYPE[type] || 'ic_movies'}
-                    />
+                    <Icon className={styles['placeholder-image']} icon={ICON_FOR_TYPE[type] || 'ic_movies'} />
                 </div>
                 {
                     typeof poster === 'string' && poster.length > 0 ?
@@ -48,8 +61,8 @@ const MetaItem = React.memo(({ className, id, type, name, posterShape = 'square'
                 }
                 {
                     progress > 0 ?
-                        <div className={styles['progress-bar-container']}>
-                            <div className={styles['progress']} style={{ width: `${Math.min(progress, 1) * 100}%` }} />
+                        <div className={styles['progress-bar-layer']}>
+                            <div className={styles['progress-bar']} style={{ width: `${Math.min(progress, 1) * 100}%` }} />
                         </div>
                         :
                         null
@@ -70,20 +83,15 @@ const MetaItem = React.memo(({ className, id, type, name, posterShape = 'square'
                                     <Popup
                                         open={menuOpen}
                                         onCloseRequest={closeMenu}
-                                        renderLabel={(props) => (
-                                            <Button {...props} className={classnames(styles['menu-button-container'], { 'active': menuOpen })} tabIndex={-1} onClick={openMenu}>
+                                        renderLabel={(ref) => (
+                                            <Button ref={ref} className={classnames(styles['menu-label-container'], { 'active': menuOpen })} tabIndex={-1} onClick={menuLabelOnClick}>
                                                 <Icon className={styles['menu-icon']} icon={'ic_more'} />
-                                                {props.children}
                                             </Button>
                                         )}
                                         renderMenu={() => (
                                             <div className={styles['menu-container']}>
                                                 {menuOptions.map(({ label, type }) => (
-                                                    <Button key={type}
-                                                        className={styles['menu-item']}
-                                                        data-id={id}
-                                                        data-type={type}
-                                                        onClick={menuOptionOnSelect}>
+                                                    <Button key={type} className={styles['menu-item']} data-id={id} data-type={type} onClick={menuOptionOnClick}>
                                                         {label}
                                                     </Button>
                                                 ))}
@@ -114,9 +122,9 @@ MetaItem.displayName = 'MetaItem';
 
 MetaItem.propTypes = {
     className: PropTypes.string,
-    id: PropTypes.string,
-    type: PropTypes.string,
-    name: PropTypes.string,
+    id: PropTypes.string.isRequired,
+    type: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
     posterShape: PropTypes.oneOf(['poster', 'landscape', 'square']),
     poster: PropTypes.string,
     title: PropTypes.string,
@@ -127,7 +135,7 @@ MetaItem.propTypes = {
         label: PropTypes.string.isRequired,
         type: PropTypes.string.isRequired
     })),
-    onClick: PropTypes.func,
+    onSelect: PropTypes.func,
     menuOptionOnSelect: PropTypes.func
 };
 

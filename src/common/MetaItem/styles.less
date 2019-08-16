@@ -2,7 +2,7 @@
     background-color: var(--color-backgroundlight);
 
     &:hover, &:focus, &:global(.active) {
-        outline-offset: initial;
+        outline-offset: 0;
         outline: 0.2rem solid var(--color-surfacelighter);
         background-color: var(--color-surfacelight);
 
@@ -11,7 +11,7 @@
                 color: var(--color-backgrounddarker);
             }
 
-            .menu-button-container {
+            .menu-label-container {
                 .menu-icon {
                     fill: var(--color-backgrounddarker);
                 }
@@ -102,17 +102,16 @@
             }
         }
 
-        .progress-bar-container {
+        .progress-bar-layer {
             position: absolute;
             right: 0;
             bottom: 0;
             left: 0;
             z-index: 3;
-            height: 0.5rem;
             background-color: var(--color-backgroundlighter);
 
-            .progress {
-                height: 100%;
+            .progress-bar {
+                height: 0.5rem;
                 background-color: var(--color-primary);
             }
         }
@@ -128,17 +127,16 @@
         .title {
             flex: 1;
             padding-left: 0.5rem;
-            line-height: 2.4em;
-            color: var(--color-surfacelighter);
             white-space: nowrap;
             text-overflow: ellipsis;
+            color: var(--color-surfacelighter);
 
             &:only-child {
                 padding-right: 0.5rem;
             }
         }
 
-        .menu-button-container {
+        .menu-label-container {
             flex: none;
             width: 2.5rem;
             height: 2.5rem;
