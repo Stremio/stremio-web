@@ -8591,10 +8591,9 @@ space-separated-tokens@^1.0.0:
   resolved "https://registry.yarnpkg.com/space-separated-tokens/-/space-separated-tokens-1.1.4.tgz#27910835ae00d0adfcdbd0ad7e611fb9544351fa"
   integrity sha512-UyhMSmeIqZrQn2UdjYpxEkwY9JUrn8pP+7L4f91zRzOQuI8MF1FGLfYU9DKCYeLdo7LXMxwrX5zKFy7eeeVHuA==
 
-spatial-navigation-polyfill@1.2.0:
+"spatial-navigation-polyfill@git+ssh://git@github.com/NikolaBorislavovHristov/spatial-navigation.git#964d09bf2b0853e27af6c25924b595d6621a019d":
   version "1.2.0"
-  resolved "https://registry.yarnpkg.com/spatial-navigation-polyfill/-/spatial-navigation-polyfill-1.2.0.tgz#678778586809b0167aff51ebf0781c597e4897dc"
-  integrity sha512-np6ZC1vzm21+d6fmllcjB+lYIK/GoLcZ33hg2uRSCVMB9SwdW+KZAfk1GAi+WOEGWNHNjslwUm3wJkgwbPhPag==
+  resolved "git+ssh://git@github.com/NikolaBorislavovHristov/spatial-navigation.git#964d09bf2b0853e27af6c25924b595d6621a019d"
 
 spdy-transport@^3.0.0:
   version "3.0.0"
