@@ -6,6 +6,7 @@ const Icon = require('stremio-icons/dom');
 const { useFocusable } = require('stremio-router');
 const Button = require('../../Button');
 const TextInput = require('../../TextInput');
+const routesRegexp = require('../../routesRegexp');
 const useLocationHash = require('../../useLocationHash');
 const styles = require('./styles');
 
@@ -15,7 +16,7 @@ const SearchBar = ({ className }) => {
     const searchInputRef = React.useRef(null);
     const [active, query] = React.useMemo(() => {
         const { pathname: locationPathname, search: locationSearch } = UrlUtils.parse(locationHash.slice(1));
-        const active = locationPathname === '/search';
+        const active = !!routesRegexp.search.regexp.exec(locationPathname);
         const queryParams = new URLSearchParams(locationSearch);
         const query = (active && queryParams.has('q')) ? queryParams.get('q') : '';
         return [active, query];
