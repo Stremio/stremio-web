@@ -55,7 +55,7 @@ const SearchBar = ({ className }) => {
                         <div className={styles['placeholder']}>Search</div>
                     </div>
             }
-            <Button className={styles['submit-button']} tabIndex={-1} disabled={!active} onClick={queryInputOnSubmit}>
+            <Button className={styles['submit-button']} tabIndex={-1} onClick={active ? queryInputOnSubmit : null}>
                 <Icon className={styles['submit-icon']} icon={'ic_search'} />
             </Button>
         </label>
