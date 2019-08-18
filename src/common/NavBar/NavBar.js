@@ -15,9 +15,9 @@ const NavBar = React.memo(({ className, backButton = false, tabs = [], title = '
             {
                 backButton ?
                     <NavBarButton
-                        className={styles['back-button']}
+                        className={styles['nav-bar-button']}
                         icon={'ic_back_ios'}
-                        label={'back'}
+                        label={'Back'}
                         onClick={onBackButtonClick}
                     />
                     :
@@ -28,7 +28,7 @@ const NavBar = React.memo(({ className, backButton = false, tabs = [], title = '
                     tabs.slice(0, 4).map(({ href, icon, label }) => (
                         <NavBarButton
                             key={href}
-                            className={styles['nav-tab-button']}
+                            className={styles['nav-bar-button']}
                             href={href}
                             icon={icon}
                             label={label}

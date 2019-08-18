@@ -1,31 +1,14 @@
 .nav-bar-container {
-    --nav-bar-height: 3.2rem;
     display: flex;
     flex-direction: row;
     align-items: center;
-    height: var(--nav-bar-height);
+    height: 3.2rem;
     background-color: var(--color-secondarydark);
 
-    .back-button {
+    .nav-bar-button {
         flex: none;
-        max-width: calc(var(--nav-bar-height) * 5);
-        height: var(--nav-bar-height);
-    }
-
-    .nav-tabs-container {
-        flex: none;
-        display: flex;
-        flex-direction: row;
-
-        .nav-tab-button {
-            flex: none;
-            max-width: calc(var(--nav-bar-height) * 3.5);
-            height: var(--nav-bar-height);
-
-            &:nth-child(n+5) {
-                display: none;
-            }
-        }
+        max-width: 11rem;
+        height: 3.2rem;
     }
 
     .title {
@@ -50,18 +33,18 @@
     .search-bar {
         flex-grow: 0;
         flex-shrink: 1;
-        flex-basis: calc(var(--nav-bar-height) * 8);
-        min-width: calc(var(--nav-bar-height) * 3);
-        height: var(--nav-bar-height);
+        flex-basis: 25.5rem;
+        min-width: 9.5rem;
+        height: 3.2rem;
 
         &+.spacing {
-            max-width: calc(var(--nav-bar-height) * 3.5);
+            max-width: 11rem;
         }
     }
 
     .nav-menu {
         flex: none;
-        width: var(--nav-bar-height);
-        height: var(--nav-bar-height);
+        width: 3.2rem;
+        height: 3.2rem;
     }
 }
