@@ -31,16 +31,19 @@ const FocusableProvider = ({ children, onRoutesContainerDomTreeChange, onModalsC
         return () => {
             routesContainerDomTreeObserver.disconnect();
             modalsContainerDomTreeObserver.disconnect();
-        }
+        };
     }, [routesContainer, modalsContainer, onRoutesContainerDomTreeChange, onModalsContainerDomTreeChange]);
     React.useEffect(() => {
-        if (focusable) {
+        if (focusable && !contentContainerRef.current.contains(document.activeElement)) {
             contentContainerRef.current.focus();
         }
     }, [focusable]);
     return (
         <FocusableContext.Provider value={focusable}>
-            {React.cloneElement(React.Children.only(children), { ref: contentContainerRef, tabIndex: -1 })}
+            {React.cloneElement(React.Children.only(children), {
+                ref: contentContainerRef,
+                tabIndex: -1
+            })}
         </FocusableContext.Provider>
     );
 };
