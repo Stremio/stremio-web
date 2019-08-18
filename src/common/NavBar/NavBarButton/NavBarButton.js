@@ -30,7 +30,7 @@ const NavBarButton = ({ className, icon, label, href, onClick }) => {
         return false;
     }, [routeRegexp, locationHash]);
     return (
-        <Button className={classnames(className, styles['nav-bar-button-container'], { 'active': active })} tabIndex={-1} href={href} onClick={onClick}>
+        <Button className={classnames(className, styles['nav-bar-button-container'], { 'active': active })} title={label} tabIndex={-1} href={href} onClick={onClick}>
             <Icon className={styles['icon']} icon={icon} />
             <div className={styles['label']}>{label}</div>
         </Button>
