@@ -8,7 +8,7 @@ const routesRegexp = require('../../routesRegexp');
 const useLocationHash = require('../../useLocationHash');
 const styles = require('./styles');
 
-const NavBarButton = React.memo(({ className, icon, label, href, onClick }) => {
+const NavBarButton = ({ className, icon, label, href, onClick }) => {
     const locationHash = useLocationHash();
     const routeRegexp = React.useMemo(() => {
         if (typeof href === 'string') {
@@ -35,9 +35,7 @@ const NavBarButton = React.memo(({ className, icon, label, href, onClick }) => {
             <div className={styles['label']}>{label}</div>
         </Button>
     );
-});
-
-NavBarButton.displayName = 'NavBarButton';
+};
 
 NavBarButton.propTypes = {
     className: PropTypes.string,
