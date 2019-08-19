@@ -1,0 +1,38 @@
+@keyframes placeholderAnimation {
+    0% {
+        background-position-x: calc(-1 * var(--placeholder-size));
+    }
+
+    30% {
+        background-position-x: calc(100% + var(--placeholder-size));
+    }
+
+    100% {
+        background-position-x: calc(100% + var(--placeholder-size));
+    }
+}
+
+.animated-placeholder {
+    --placeholder-size: 30rem;
+    position: relative;
+    z-index: 0;
+
+    &:after {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1;
+        pointer-events: none;
+        animation-duration: 1.8s;
+        animation-fill-mode: forwards;
+        animation-iteration-count: infinite;
+        animation-timing-function: linear;
+        animation-name: placeholderAnimation;
+        background-image: linear-gradient(to right, transparent 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%);
+        background-size: var(--placeholder-size);
+        background-repeat: no-repeat;
+        content: " ";
+    }
+}
