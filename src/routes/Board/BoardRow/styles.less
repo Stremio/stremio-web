@@ -3,6 +3,7 @@
     grid-template-columns: 6fr minmax(12rem, 1fr);
     grid-template-areas:
         "title-area title-area"
+        "message-area message-area"
         "meta-items-area see-all-area";
 
     .title-container {
@@ -12,6 +13,15 @@
         font-size: 1.5rem;
         color: var(--color-surfacelighter);
         text-transform: capitalize;
+    }
+
+    .message-container {
+        grid-area: message-area;
+        max-height: 3.6em;
+        margin: 1rem 0;
+        padding: 0 1rem;
+        font-size: 1.3rem;
+        color: var(--color-surfacelighter);
     }
 
     .meta-items-container {
