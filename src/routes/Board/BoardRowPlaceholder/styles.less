@@ -1,0 +1,23 @@
+.board-row-placeholder-container {
+    .title-container {
+        width: 60%;
+        height: 2.4rem;
+        margin: 0 1rem;
+        background-color: var(--color-backgroundlighter);
+    }
+
+    .meta-items-container {
+        display: flex;
+        flex-direction: row;
+
+        .meta-item {
+            flex: 1;
+            margin: 1rem;
+            background-color: var(--color-backgroundlighter);
+
+            .meta-item-poster {
+                padding-top: calc(100% * var(--poster-shape-ratio));
+            }
+        }
+    }
+}

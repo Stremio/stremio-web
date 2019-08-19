@@ -1,6 +1,7 @@
 const React = require('react');
 const { MainNavBar } = require('stremio/common');
 const BoardRow = require('./BoardRow');
+const BoardRowPlaceholder = require('./BoardRowPlaceholder');
 const useCatalogs = require('./useCatalogs');
 require('./styles');
 
@@ -21,28 +22,38 @@ const Board = () => {
         <div className={'board-container'}>
             <MainNavBar className={'nav-bar'} />
             <div className={'board-content'}>
-                {
-                    catalogs
-                        .filter(([_, response]) => response.type === 'Ready')
-                        .map(([request, response]) => [
-                            request,
-                            {
-                                ...response,
-                                content: response.content.map((item) => ({
-                                    ...item,
-                                    posterShape: item.posterShape || 'poster'
-                                }))
-                            }
-                        ])
-                        .map(([request, response], index) => (
-                            <BoardRow
-                                key={`${index}${request.transport_url}`}
-                                className={'board-row'}
-                                title={`${request.resource_ref.id} - ${request.resource_ref.type_name}`}
-                                items={response.content}
-                            />
-                        ))
-                }
+                {catalogs.map(([request, response], index) => {
+                    switch (response.type) {
+                        case 'Ready':
+                            return (
+                                <BoardRow
+                                    key={`${index}${request.transport_url}${response.type}`}
+                                    className={'board-row'}
+                                    title={`${request.resource_ref.id} - ${request.resource_ref.type_name}`}
+                                    items={response.content.map((item) => ({
+                                        ...item,
+                                        posterShape: item.posterShape || 'poster'
+                                    }))}
+                                />
+                            );
+                        case 'Message':
+                            return (
+                                <BoardRow
+                                    key={`${index}${request.transport_url}${response.type}`}
+                                    className={'board-row'}
+                                    title={`${request.resource_ref.id} - ${request.resource_ref.type_name}`}
+                                    message={response.content}
+                                />
+                            );
+                        case 'Loading':
+                            return (
+                                <BoardRowPlaceholder
+                                    key={`${index}${request.transport_url}${response.type}`}
+                                    className={'board-row'}
+                                />
+                            );
+                    }
+                })}
             </div>
         </div>
     );
