@@ -1,4 +1,3 @@
-
 const { useFocusable } = require('stremio-router');
 
 const useTabIndex = (tabIndex, disabled) => {
