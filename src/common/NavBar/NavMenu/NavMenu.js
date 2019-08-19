@@ -16,7 +16,7 @@ const NavMenu = ({ className, email = '', avatar = '', logout }) => {
             open={menuOpen}
             onCloseRequest={closeMenu}
             renderLabel={(ref) => (
-                <Button ref={ref} className={classnames(className, styles['nav-menu-button'], { 'active': menuOpen })} tabIndex={-1} onClick={toggleMenu}>
+                <Button ref={ref} className={classnames(className, styles['nav-menu-label'], { 'active': menuOpen })} tabIndex={-1} onClick={toggleMenu}>
                     <Icon className={styles['icon']} icon={'ic_more'} />
                 </Button>
             )}
