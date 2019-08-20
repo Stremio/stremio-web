@@ -49,7 +49,7 @@ const Board = () => {
                             return (
                                 <BoardRowPlaceholder
                                     key={`${index}${request.transport_url}${response.type}`}
-                                    className={'board-row'}
+                                    className={'board-row-placeholder'}
                                 />
                             );
                     }

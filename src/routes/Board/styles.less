@@ -17,9 +17,8 @@
         align-self: stretch;
         overflow-y: auto;
 
-        .board-row {
+        .board-row, .board-row-placeholder {
             margin: 2rem 0;
-            padding: 0 1rem;
         }
     }
 }
@@ -27,7 +26,7 @@
 @media only screen and (min-width: @large) {
     .board-container {
         .board-content {
-            .board-row {
+            .board-row, .board-row-placeholder {
                 .meta-item:nth-child(n+9) {
                     display: none;
                 }
@@ -39,7 +38,7 @@
 @media only screen and (max-width: @large) {
     .board-container {
         .board-content {
-            .board-row {
+            .board-row, .board-row-placeholder {
                 .meta-item:nth-child(n+8) {
                     display: none;
                 }
@@ -51,7 +50,7 @@
 @media only screen and (max-width: @medium) {
     .board-container {
         .board-content {
-            .board-row {
+            .board-row, .board-row-placeholder {
                 .meta-item:nth-child(n+7) {
                     display: none;
                 }
@@ -63,7 +62,7 @@
 @media only screen and (max-width: @small) {
     .board-container {
         .board-content {
-            .board-row {
+            .board-row, .board-row-placeholder {
                 .meta-item:nth-child(n+6) {
                     display: none;
                 }
@@ -75,7 +74,7 @@
 @media only screen and (max-width: @xsmall) {
     .board-container {
         .board-content {
-            .board-row {
+            .board-row, .board-row-placeholder {
                 .meta-item:nth-child(n+5) {
                     display: none;
                 }
