@@ -1,39 +1,41 @@
-.consent-checkbox-container {
-    --icon-size: 1.2rem;
-    --icon-color: var(--color-surface);
-    --icon-background-color: transparent;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+.intro-container {
+    .consent-checkbox-container {
+        --icon-size: 1.2rem;
+        --icon-color: var(--color-surface);
+        --icon-background-color: transparent;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
 
-    &.checked {
-        --icon-color: var(--color-surfacelight);
-        --icon-background-color: var(--color-primary);
-    }
+        &.checked {
+            --icon-color: var(--color-surfacelight);
+            --icon-background-color: var(--color-primary);
+        }
 
-    &:focus, &:hover {
-        --icon-color: var(--color-surfacelighter);
-        background-color: var(--color-surfacedarker60);
+        &:focus, &:hover {
+            --icon-color: var(--color-surfacelighter);
+            background-color: var(--color-surfacedarker60);
 
-        .label {
-            color: var(--color-surfacelighter);
-
-            .link {
+            .label {
                 color: var(--color-surfacelighter);
+
+                .link {
+                    color: var(--color-surfacelighter);
+                }
             }
         }
-    }
 
-    .label {
-        flex: 1;
-        margin-left: 0.5rem;
-        color: var(--color-surface);
+        .label {
+            flex: 1;
+            margin-left: 0.5rem;
+            color: var(--color-surface);
 
-        .link {
-            color: var(--color-surfacelight);
+            .link {
+                color: var(--color-surfacelight);
 
-            &:hover {
-                text-decoration: underline;
+                &:hover {
+                    text-decoration: underline;
+                }
             }
         }
     }
