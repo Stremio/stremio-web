@@ -30,6 +30,10 @@ const MetaItem = React.memo(({ className, id, type, name, posterShape = 'square'
             menuOptionOnSelect(event);
         }
 
+        if (!event.nativeEvent.closeMenuPrevented) {
+            closeMenu();
+        }
+
         event.nativeEvent.selectItemPrevented = true;
     }, [menuOptionOnSelect]);
     return (
