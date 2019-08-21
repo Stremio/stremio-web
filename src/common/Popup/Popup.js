@@ -3,7 +3,7 @@ const PropTypes = require('prop-types');
 const { Modal } = require('stremio-router');
 const styles = require('./styles');
 
-const Popup = ({ open = false, renderLabel, renderMenu, onCloseRequest }) => {
+const Popup = ({ open = false, menuMatchLabelWidth = false, renderLabel, renderMenu, onCloseRequest }) => {
     const labelRef = React.useRef(null);
     const menuRef = React.useRef(null);
     React.useEffect(() => {
@@ -27,6 +27,8 @@ const Popup = ({ open = false, renderLabel, renderMenu, onCloseRequest }) => {
         if (!open) {
             return;
         }
+
+        menuRef.current.removeAttribute('style');
 
         const documentRect = document.documentElement.getBoundingClientRect();
         const labelRect = labelRef.current.getBoundingClientRect();
@@ -82,8 +84,13 @@ const Popup = ({ open = false, renderLabel, renderMenu, onCloseRequest }) => {
             menuRef.current.style.maxWidth = leftMenuStyles.maxWidth;
         }
 
+        if (menuMatchLabelWidth) {
+            menuRef.current.style.width = `${labelRect.width}px`;
+            menuRef.current.style.maxWidth = `${labelRect.width}px`;
+        }
+
         menuRef.current.style.visibility = 'visible';
-    }, [open]);
+    }, [open, menuMatchLabelWidth]);
     return (
         <React.Fragment>
             {renderLabel(labelRef)}
@@ -103,6 +110,7 @@ const Popup = ({ open = false, renderLabel, renderMenu, onCloseRequest }) => {
 
 Popup.propTypes = {
     open: PropTypes.bool,
+    menuMatchLabelWidth: PropTypes.bool,
     renderLabel: PropTypes.func.isRequired,
     renderMenu: PropTypes.func.isRequired,
     onCloseRequest: PropTypes.func.isRequired
