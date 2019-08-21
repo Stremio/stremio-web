@@ -9,18 +9,24 @@ const Popup = ({ open = false, menuMatchLabelWidth = false, renderLabel, renderM
     const [menuStyles, setMenuStyles] = React.useState({});
     React.useEffect(() => {
         const checkCloseEvent = (event) => {
-            if (!labelRef.current.contains(event.target) && !menuRef.current.contains(event.target)) {
+            if (event.type === 'keydown') {
+                if (event.key === 'Escape') {
+                    onCloseRequest(event);
+                }
+            } else if (!labelRef.current.contains(event.target) && !menuRef.current.contains(event.target)) {
                 onCloseRequest(event);
             }
         };
         if (open) {
             window.addEventListener('scroll', checkCloseEvent, true);
             window.addEventListener('mousedown', checkCloseEvent);
+            window.addEventListener('keydown', checkCloseEvent);
             window.addEventListener('resize', onCloseRequest);
         }
         return () => {
             window.removeEventListener('scroll', checkCloseEvent, true);
             window.removeEventListener('mousedown', checkCloseEvent);
+            window.removeEventListener('keydown', checkCloseEvent);
             window.removeEventListener('resize', onCloseRequest);
         };
     }, [open, onCloseRequest]);
