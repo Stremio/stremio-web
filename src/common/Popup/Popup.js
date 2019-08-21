@@ -6,6 +6,7 @@ const styles = require('./styles');
 const Popup = ({ open = false, menuMatchLabelWidth = false, renderLabel, renderMenu, onCloseRequest }) => {
     const labelRef = React.useRef(null);
     const menuRef = React.useRef(null);
+    const [menuStyles, setMenuStyles] = React.useState({});
     React.useEffect(() => {
         const checkCloseEvent = (event) => {
             if (!labelRef.current.contains(event.target) && !menuRef.current.contains(event.target)) {
@@ -24,80 +25,74 @@ const Popup = ({ open = false, menuMatchLabelWidth = false, renderLabel, renderM
         };
     }, [open, onCloseRequest]);
     React.useEffect(() => {
-        if (!open) {
-            return;
+        let menuStyles = {};
+        if (open) {
+            const documentRect = document.documentElement.getBoundingClientRect();
+            const labelRect = labelRef.current.getBoundingClientRect();
+            const menuRect = menuRef.current.getBoundingClientRect();
+            const labelPosition = {
+                left: labelRect.left - documentRect.left,
+                top: labelRect.top - documentRect.top,
+                right: (documentRect.width + documentRect.left) - (labelRect.left + labelRect.width),
+                bottom: (documentRect.height + documentRect.top) - (labelRect.top + labelRect.height)
+            };
+            const matchLabelWidthMenuStyles = {
+                width: `${labelRect.width}px`,
+                maxWidth: `${labelRect.width}px`
+            };
+            const bottomMenuStyles = {
+                top: `${labelPosition.top + labelRect.height}px`,
+                maxHeight: `${labelPosition.bottom}px`
+            };
+            const topMenuStyles = {
+                bottom: `${labelPosition.bottom + labelRect.height}px`,
+                maxHeight: `${labelPosition.top}px`
+            };
+            const rightMenuStyles = {
+                left: `${labelPosition.left}px`,
+                maxWidth: `${labelPosition.right + labelRect.width}px`
+            };
+            const leftMenuStyles = {
+                right: `${labelPosition.right}px`,
+                maxWidth: `${labelPosition.left + labelRect.width}px`
+            };
+
+            if (menuRect.height <= labelPosition.bottom) {
+                menuStyles = { ...menuStyles, ...bottomMenuStyles };
+            } else if (menuRect.height <= labelPosition.top) {
+                menuStyles = { ...menuStyles, ...topMenuStyles };
+            } else if (labelPosition.bottom >= labelPosition.top) {
+                menuStyles = { ...menuStyles, ...bottomMenuStyles };
+            } else {
+                menuStyles = { ...menuStyles, ...topMenuStyles };
+            }
+
+            if (menuRect.width <= (labelPosition.right + labelRect.width)) {
+                menuStyles = { ...menuStyles, ...rightMenuStyles };
+            } else if (menuRect.width <= (labelPosition.left + labelRect.width)) {
+                menuStyles = { ...menuStyles, ...leftMenuStyles };
+            } else if (labelPosition.right > labelPosition.left) {
+                menuStyles = { ...menuStyles, ...rightMenuStyles };
+            } else {
+                menuStyles = { ...menuStyles, ...leftMenuStyles };
+            }
+
+            if (menuMatchLabelWidth) {
+                menuStyles = { ...menuStyles, ...matchLabelWidthMenuStyles };
+            }
+
+            menuStyles = { ...menuStyles, visibility: 'visible' };
         }
 
-        menuRef.current.removeAttribute('style');
-
-        const documentRect = document.documentElement.getBoundingClientRect();
-        const labelRect = labelRef.current.getBoundingClientRect();
-        const menuRect = menuRef.current.getBoundingClientRect();
-        const labelPosition = {
-            left: labelRect.left - documentRect.left,
-            top: labelRect.top - documentRect.top,
-            right: (documentRect.width + documentRect.left) - (labelRect.left + labelRect.width),
-            bottom: (documentRect.height + documentRect.top) - (labelRect.top + labelRect.height)
-        };
-        const bottomMenuStyles = {
-            top: `${labelPosition.top + labelRect.height}px`,
-            maxHeight: `${labelPosition.bottom}px`
-        };
-        const topMenuStyles = {
-            bottom: `${labelPosition.bottom + labelRect.height}px`,
-            maxHeight: `${labelPosition.top}px`
-        };
-        const rightMenuStyles = {
-            left: `${labelPosition.left}px`,
-            maxWidth: `${labelPosition.right + labelRect.width}px`
-        };
-        const leftMenuStyles = {
-            right: `${labelPosition.right}px`,
-            maxWidth: `${labelPosition.left + labelRect.width}px`
-        };
-
-        if (menuRect.height <= labelPosition.bottom) {
-            menuRef.current.style.top = bottomMenuStyles.top;
-            menuRef.current.style.maxHeight = bottomMenuStyles.maxHeight;
-        } else if (menuRect.height <= labelPosition.top) {
-            menuRef.current.style.bottom = topMenuStyles.bottom;
-            menuRef.current.style.maxHeight = topMenuStyles.maxHeight;
-        } else if (labelPosition.bottom >= labelPosition.top) {
-            menuRef.current.style.top = bottomMenuStyles.top;
-            menuRef.current.style.maxHeight = bottomMenuStyles.maxHeight;
-        } else {
-            menuRef.current.style.bottom = topMenuStyles.bottom;
-            menuRef.current.style.maxHeight = topMenuStyles.maxHeight;
-        }
-
-        if (menuRect.width <= (labelPosition.right + labelRect.width)) {
-            menuRef.current.style.left = rightMenuStyles.left;
-            menuRef.current.style.maxWidth = rightMenuStyles.maxWidth;
-        } else if (menuRect.width <= (labelPosition.left + labelRect.width)) {
-            menuRef.current.style.right = leftMenuStyles.right;
-            menuRef.current.style.maxWidth = leftMenuStyles.maxWidth;
-        } else if (labelPosition.right > labelPosition.left) {
-            menuRef.current.style.left = rightMenuStyles.left;
-            menuRef.current.style.maxWidth = rightMenuStyles.maxWidth;
-        } else {
-            menuRef.current.style.right = leftMenuStyles.right;
-            menuRef.current.style.maxWidth = leftMenuStyles.maxWidth;
-        }
-
-        if (menuMatchLabelWidth) {
-            menuRef.current.style.width = `${labelRect.width}px`;
-            menuRef.current.style.maxWidth = `${labelRect.width}px`;
-        }
-
-        menuRef.current.style.visibility = 'visible';
-    }, [open, menuMatchLabelWidth]);
+        setMenuStyles(menuStyles);
+    }, [open]);
     return (
         <React.Fragment>
             {renderLabel(labelRef)}
             {
                 open ?
                     <Modal className={styles['popup-modal-container']}>
-                        <div ref={menuRef} className={styles['menu-container']}>
+                        <div ref={menuRef} style={menuStyles} className={styles['menu-container']}>
                             {renderMenu()}
                         </div>
                     </Modal>
