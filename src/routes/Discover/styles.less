@@ -1,3 +1,5 @@
+@import (reference) 'common/screen-sizes.less';
+
 .discover-container {
     display: flex;
     flex-direction: column;
@@ -14,8 +16,8 @@
         flex: 1;
         align-self: stretch;
         display: grid;
-        grid-template-columns: 1fr 26em;
-        grid-template-rows: auto 1fr;
+        grid-template-columns: 1fr 26rem;
+        grid-template-rows: fit-content(13rem) 1fr;
         grid-template-areas:
             "pickers-area meta-preview-area"
             "meta-items-area meta-preview-area";
@@ -25,160 +27,98 @@
             display: flex;
             flex-direction: row;
             flex-flow: wrap;
-            padding: 0.6em;
+            padding: 0.7rem;
+            overflow-y: auto;
 
-            .picker-button {
-                width: 18em;
-                height: 3em;
-                margin: 0.6em;
-                padding: 0 0.8em;
-                display: flex;
-                flex-direction: row;
-                align-items: center;
-                background-color: var(--color-backgroundlighter);
-                cursor: pointer;
-
-                &:hover {
-                    background-color: var(--color-surfacedarker60);
-                }
-
-                &:global(.active) {
-                    background-color: var(--color-surfacelight);
-
-                    .picker-label {
-                        color: var(--color-backgrounddarker);
-                    }
-
-                    .picker-icon {
-                        fill: var(--color-backgrounddarker);
-                    }
-                }
-
-                .picker-label {
-                    flex: 1;
-                    font-size: 1.1em;
-                    line-height: 1.2em;
-                    max-height: 2.4em;
-                    color: var(--color-surfacelighter);
-
-                    &.capitalized {
-                        text-transform: capitalize;
-                    }
-                }
-
-                .picker-icon {
-                    flex: none;
-                    width: 1em;
-                    height: 1em;
-                    margin-left: 0.8em;
-                    fill: var(--color-surfacelighter);
-                }
+            .picker {
+                flex-basis: 17rem;
+                height: 3rem;
+                margin: 0.7rem;
             }
         }
 
         .meta-items-container {
             grid-area: meta-items-area;
             display: grid;
-            grid-template-columns: repeat(var(--items-per-row), auto);
             grid-auto-rows: max-content;
-            grid-gap: 1.2em;
+            grid-gap: 1.4rem;
             align-items: center;
-            padding: var(--focusable-border-size) 1.2em 0;
-            overflow-x: hidden;
+            padding: 0 1.4rem;
             overflow-y: auto;
         }
 
         .meta-preview-container {
             grid-area: meta-preview-area;
-            font-size: 1.2em;
         }
     }
 }
 
-.menu-container {
-    --border-color: var(--color-backgroundlighter40);
-    --box-shadow: -0.6em 0.6em 0.5em -0.1em var(--color-backgrounddark40);
-
-    .menu-content {
-        width: 18em;
-        background-color: var(--color-backgroundlighter);
-
-        .menu-item-container {
-            padding: 0.8em;
-            cursor: pointer;
-
-            &:hover {
-                background-color: var(--color-surfacedarker60);
-            }
-
-            .menu-label {
-                line-height: 1.2em;
-                max-height: 2.4em;
-                color: var(--color-surfacelighter);
-
-                &.capitalized {
-                    text-transform: capitalize;
-                }
-            }
-        }
-    }
-}
-
-@media only screen and (max-width: 1000px) {
-    .discover-container, .menu-container {
-        font-size: 14px;
-        --items-per-row: 5;
-
+@media only screen and (min-width: @xxlarge) {
+    .discover-container {
         .discover-content {
+            .meta-items-container {
+                grid-template-columns: repeat(8, auto);
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: @xxlarge) {
+    .discover-container {
+        .discover-content {
+            .meta-items-container {
+                grid-template-columns: repeat(7, auto);
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: @normal) {
+    .discover-container {
+        .discover-content {
+            .meta-items-container {
+                grid-template-columns: repeat(6, auto);
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: @medium) {
+    .discover-container {
+        .discover-content {
+            .meta-items-container {
+                grid-template-columns: repeat(5, auto);
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: @small) {
+    .discover-container {
+        .discover-content {
+            .meta-items-container {
+                grid-template-columns: repeat(4, auto);
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: @xsmall) {
+    .discover-container {
+        .discover-content {
+            grid-template-columns: 1fr;
+            grid-template-rows: fit-content(19rem) 1fr;
             grid-template-areas:
-                "pickers-area pickers-area"
-                "meta-items-area meta-items-area";
+                "pickers-area"
+                "meta-items-area";
+
+            .meta-items-container {
+                grid-template-columns: repeat(5, auto);
+            }
 
             .meta-preview-container {
                 display: none;
             }
         }
-    }
-}
-
-@media only screen and (min-width: 1000px) and (max-width: 1200px) {
-    .discover-container, .menu-container {
-        font-size: 14px;
-        --items-per-row: 4;
-    }
-}
-
-@media only screen and (min-width: 1200px) and (max-width: 1400px) {
-    .discover-container, .menu-container {
-        font-size: 14px;
-        --items-per-row: 5;
-    }
-}
-
-@media only screen and (min-width: 1400px) and (max-width: 1600px) {
-    .discover-container, .menu-container {
-        font-size: 14px;
-        --items-per-row: 6;
-    }
-}
-
-@media only screen and (min-width: 1600px) and (max-width: 2000px) {
-    .discover-container, .menu-container {
-        font-size: 15px;
-        --items-per-row: 7;
-    }
-}
-
-@media only screen and (min-width: 2000px) and (max-width: 3000px) {
-    .discover-container, .menu-container {
-        font-size: 16px;
-        --items-per-row: 8;
-    }
-}
-
-@media only screen and (min-width: 3000px) {
-    .discover-container, .menu-container {
-        font-size: 18px;
-        --items-per-row: 10;
     }
 }

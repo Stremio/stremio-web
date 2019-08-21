@@ -19,7 +19,7 @@ const Discover = ({ urlParams, queryParams }) => {
             <div className={styles['discover-content']}>
                 <div className={styles['pickers-container']}>
                     {pickers.map((picker) => (
-                        <PickerMenu {...picker} key={picker.name} />
+                        <PickerMenu {...picker} key={picker.name} className={'picker'} />
                     ))}
                 </div>
                 <div className={styles['meta-items-container']} tabIndex={-1}>
