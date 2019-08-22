@@ -25,9 +25,9 @@ const NavBar = React.memo(({ className, backButton = false, tabs = [], title = '
             }
             {
                 Array.isArray(tabs) && tabs.length > 0 ?
-                    tabs.slice(0, 4).map(({ href, icon, label, onClick }) => (
+                    tabs.slice(0, 4).map(({ href = '', icon = '', label = '', onClick }) => (
                         <NavBarButton
-                            key={href}
+                            key={`${href}${icon}${label}`}
                             className={styles['nav-bar-button']}
                             href={href}
                             icon={icon}
