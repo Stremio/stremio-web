@@ -13,21 +13,25 @@ const Popup = ({ open = false, menuMatchLabelWidth = false, renderLabel, renderM
                 if (event.key === 'Escape') {
                     onCloseRequest(event);
                 }
-            } else if (!labelRef.current.contains(event.target) && !menuRef.current.contains(event.target)) {
+            } else if (event.target !== window &&
+                event.target !== document &&
+                event.target !== document.documentElement &&
+                !labelRef.current.contains(event.target) &&
+                !menuRef.current.contains(event.target)) {
                 onCloseRequest(event);
             }
         };
         if (open) {
             window.addEventListener('scroll', checkCloseEvent, true);
+            window.addEventListener('resize', checkCloseEvent);
             window.addEventListener('mousedown', checkCloseEvent);
             window.addEventListener('keydown', checkCloseEvent);
-            window.addEventListener('resize', onCloseRequest);
         }
         return () => {
             window.removeEventListener('scroll', checkCloseEvent, true);
+            window.removeEventListener('resize', checkCloseEvent);
             window.removeEventListener('mousedown', checkCloseEvent);
             window.removeEventListener('keydown', checkCloseEvent);
-            window.removeEventListener('resize', onCloseRequest);
         };
     }, [open, onCloseRequest]);
     React.useEffect(() => {
