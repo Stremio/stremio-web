@@ -1,9 +1,8 @@
-.nav-menu-label {
+.nav-menu-label-container {
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    cursor: pointer;
 
     &:hover {
         background-color: var(--color-secondary);
@@ -14,26 +13,28 @@
     }
 
     .icon {
+        flex: none;
         width: 1.6rem;
         height: 1.6rem;
         fill: var(--color-surfacelighter);
     }
 }
 
-.nav-menu {
-    width: 20rem;
+.nav-menu-container {
+    min-width: 20rem;
+    max-width: 30rem;
     background-color: var(--color-background);
 
-    .user-info {
+    .user-info-container {
         display: grid;
         height: 6rem;
         grid-template-columns: 6rem 1fr;
         grid-template-rows: 50% 50%;
         grid-template-areas:
             "avatar-area email-area"
-            "avatar-area login-logout-button-area";
+            "avatar-area logout-button-area";
 
-        .avatar {
+        .avatar-container {
             grid-area: avatar-area;
             padding: 0.8rem;
             border-radius: 50%;
@@ -51,16 +52,19 @@
             align-items: center;
             padding: 0.6rem 0.6rem 0 0;
             color: var(--color-surfacelighter);
+
+            .label {
+                user-select: text;
+            }
         }
 
-        .login-logout-button {
-            grid-area: login-logout-button-area;
+        .logout-button-container {
+            grid-area: logout-button-area;
             display: flex;
             flex-direction: row;
             align-items: center;
             padding: 0 0.6rem 0.6rem 0;
             color: var(--color-surface);
-            cursor: pointer;
 
             &:hover, &:focus {
                 outline: none;
@@ -69,8 +73,8 @@
             }
         }
 
-        .email-container, .login-logout-button {
-            .user-info-label {
+        .email-container, .logout-button-container {
+            .label {
                 flex: 1;
                 max-height: 2.4em;
             }
@@ -78,36 +82,35 @@
     }
 
     .nav-menu-section {
-        border-top: calc(0.5 * var(--focusable-border-size)) solid var(--color-surfacedark80);
+        border-top: thin solid var(--color-surfacedark80);
 
-        .option {
+        .nav-menu-option-container {
             display: flex;
             flex-direction: row;
             align-items: center;
             height: 4rem;
-            cursor: pointer;
 
             &:hover {
                 background-color: var(--color-surfacedarker60);
             }
 
-            .option-icon {
+            .icon {
                 flex: none;
                 width: 4rem;
                 height: 4rem;
                 padding: 1.3rem;
                 fill: var(--color-secondarylight);
-
-                &+.option-label {
-                    padding-left: 0;
-                }
             }
 
-            .option-label {
+            .label {
                 flex: 1;
                 max-height: 2.4em;
-                padding: 0 1.3rem;
+                padding-right: 1.3rem;
                 color: var(--color-surfacelighter);
+
+                &:only-child {
+                    padding-left: 1.3rem;
+                }
             }
         }
     }
