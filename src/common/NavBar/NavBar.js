@@ -50,7 +50,7 @@ const NavBar = React.memo(({ className, backButton = false, tabs = [], title = '
             }
             {
                 navMenu ?
-                    <NavMenu className={styles['nav-menu-label']} />
+                    <NavMenu className={styles['nav-menu']} />
                     :
                     null
             }
