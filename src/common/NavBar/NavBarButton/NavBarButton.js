@@ -24,7 +24,7 @@ const NavBarButton = ({ className, icon = '', label = '', href = '', onClick }) 
     const active = React.useMemo(() => {
         if (routeRegexp !== null) {
             const { pathname: locationPathname } = UrlUtils.parse(locationHash.slice(1));
-            return routeRegexp.exec(locationPathname);
+            return !!routeRegexp.exec(locationPathname);
         }
 
         return false;
