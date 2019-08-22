@@ -1,4 +1,6 @@
 .meta-item-container {
+    position: relative;
+    z-index: 0;
     background-color: var(--color-backgroundlight);
 
     &:hover, &:focus, &:global(.active) {
@@ -39,7 +41,7 @@
 
     .poster-image-container {
         position: relative;
-        z-index: 0;
+        z-index: -1;
         background-color: var(--color-backgroundlight);
 
         .placeholder-image-layer {
