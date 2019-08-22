@@ -27,7 +27,7 @@ const Button = React.forwardRef(({ children, ...props }, ref) => {
         }
     }, [props.onMouseDown]);
     return React.createElement(
-        typeof props.href === 'string' ? 'a' : 'div',
+        typeof props.href === 'string' && props.href.length > 0 ? 'a' : 'div',
         {
             ...props,
             ref,
