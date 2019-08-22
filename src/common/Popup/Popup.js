@@ -9,29 +9,37 @@ const Popup = ({ open = false, menuMatchLabelWidth = false, renderLabel, renderM
     const [menuStyles, setMenuStyles] = React.useState({});
     React.useEffect(() => {
         const checkCloseEvent = (event) => {
-            if (event.type === 'keydown') {
-                if (event.key === 'Escape') {
+            switch (event.type) {
+                case 'resize':
                     onCloseRequest(event);
-                }
-            } else if (event.target !== window &&
-                event.target !== document &&
-                event.target !== document.documentElement &&
-                !labelRef.current.contains(event.target) &&
-                !menuRef.current.contains(event.target)) {
-                onCloseRequest(event);
+                    break;
+                case 'keydown':
+                    if (event.key === 'Escape') {
+                        onCloseRequest(event);
+                    }
+                    break;
+                case 'mousedown':
+                case 'scroll':
+                    if (event.target !== document &&
+                        event.target !== document.documentElement &&
+                        !labelRef.current.contains(event.target) &&
+                        !menuRef.current.contains(event.target)) {
+                        onCloseRequest(event);
+                    }
+                    break;
             }
         };
         if (open) {
             window.addEventListener('scroll', checkCloseEvent, true);
-            window.addEventListener('resize', checkCloseEvent);
             window.addEventListener('mousedown', checkCloseEvent);
             window.addEventListener('keydown', checkCloseEvent);
+            window.addEventListener('resize', checkCloseEvent);
         }
         return () => {
             window.removeEventListener('scroll', checkCloseEvent, true);
-            window.removeEventListener('resize', checkCloseEvent);
             window.removeEventListener('mousedown', checkCloseEvent);
             window.removeEventListener('keydown', checkCloseEvent);
+            window.removeEventListener('resize', checkCloseEvent);
         };
     }, [open, onCloseRequest]);
     React.useEffect(() => {
