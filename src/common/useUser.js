@@ -4,6 +4,7 @@ const useUser = () => {
     const [user] = React.useState({
         email: '',
         avatar: '',
+        anonymous: true,
         logout: () => { }
     });
     return user;
