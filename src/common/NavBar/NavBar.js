@@ -25,13 +25,14 @@ const NavBar = React.memo(({ className, backButton = false, tabs = [], title = '
             }
             {
                 Array.isArray(tabs) && tabs.length > 0 ?
-                    tabs.slice(0, 4).map(({ href, icon, label }) => (
+                    tabs.slice(0, 4).map(({ href, icon, label, onClick }) => (
                         <NavBarButton
                             key={href}
                             className={styles['nav-bar-button']}
                             href={href}
                             icon={icon}
                             label={label}
+                            onClick={onClick}
                         />
                     ))
                     :
@@ -63,9 +64,10 @@ NavBar.propTypes = {
     className: PropTypes.string,
     backButton: PropTypes.bool,
     tabs: PropTypes.arrayOf(PropTypes.shape({
-        icon: PropTypes.string.isRequired,
-        label: PropTypes.string.isRequired,
-        href: PropTypes.string.isRequired
+        icon: PropTypes.string,
+        label: PropTypes.string,
+        href: PropTypes.string,
+        onClick: PropTypes.func
     })),
     title: PropTypes.string,
     searchBar: PropTypes.bool,
