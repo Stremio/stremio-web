@@ -1,5 +1,4 @@
 const React = require('react');
-const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const Button = require('../Button');
@@ -15,14 +14,5 @@ const Checkbox = React.forwardRef((props, ref) => {
 });
 
 Checkbox.displayName = 'Checkbox';
-
-Checkbox.propTypes = {
-    className: PropTypes.string,
-    checked: PropTypes.bool,
-    children: PropTypes.oneOfType([
-        PropTypes.arrayOf(PropTypes.node),
-        PropTypes.node
-    ])
-};
 
 module.exports = Checkbox;
