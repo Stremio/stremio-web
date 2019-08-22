@@ -15,6 +15,7 @@ const useBinaryState = require('./useBinaryState');
 const useFullscreen = require('./useFullscreen');
 const useLocationHash = require('./useLocationHash');
 const useTabIndex = require('./useTabIndex');
+const useUser = require('./useUser');
 
 module.exports = {
     Button,
@@ -33,5 +34,6 @@ module.exports = {
     useBinaryState,
     useFullscreen,
     useLocationHash,
-    useTabIndex
+    useTabIndex,
+    useUser
 };
