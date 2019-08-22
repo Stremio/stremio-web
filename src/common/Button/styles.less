@@ -3,8 +3,8 @@
     cursor: pointer;
 
     &:focus {
-        outline-offset: -2px;
-        outline: 2px solid var(--color-surfacelighter);
+        outline-offset: calc(-1 * var(--focus-outline-size));
+        outline: var(--focus-outline-size) solid var(--color-surfacelighter);
     }
 
     &:global(.disabled) {
