@@ -7,7 +7,7 @@ const NavMenu = require('./NavMenu');
 const styles = require('./styles');
 
 const NavBar = React.memo(({ className, backButton = false, tabs = [], title = '', searchBar = false, navMenu = false }) => {
-    const onBackButtonClick = React.useCallback(() => {
+    const backButtonOnClick = React.useCallback(() => {
         window.history.back();
     }, []);
     return (
@@ -18,7 +18,7 @@ const NavBar = React.memo(({ className, backButton = false, tabs = [], title = '
                         className={styles['nav-bar-button']}
                         icon={'ic_back_ios'}
                         label={'Back'}
-                        onClick={onBackButtonClick}
+                        onClick={backButtonOnClick}
                     />
                     :
                     null
