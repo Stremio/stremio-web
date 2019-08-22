@@ -95,7 +95,7 @@ const MetaItem = React.memo(({ className, id, type, name, posterShape = 'square'
                                         renderMenu={() => (
                                             <div className={styles['menu-container']}>
                                                 {menuOptions.map(({ label, type }) => (
-                                                    <Button key={type} className={styles['menu-item']} data-id={id} data-type={type} onClick={menuOptionOnClick}>
+                                                    <Button key={type} className={styles['menu-option-container']} data-id={id} data-type={type} onClick={menuOptionOnClick}>
                                                         {label}
                                                     </Button>
                                                 ))}
