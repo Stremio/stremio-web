@@ -8,10 +8,10 @@ const routesRegexp = require('../../routesRegexp');
 const useLocationHash = require('../../useLocationHash');
 const styles = require('./styles');
 
-const NavBarButton = ({ className, icon, label, href, onClick }) => {
+const NavBarButton = ({ className, icon = '', label = '', href = '', onClick }) => {
     const locationHash = useLocationHash();
     const routeRegexp = React.useMemo(() => {
-        if (typeof href === 'string') {
+        if (typeof href === 'string' && href.length > 0) {
             for (const { regexp } of Object.values(routesRegexp)) {
                 if (regexp.exec(href.slice(1))) {
                     return regexp;
@@ -31,8 +31,18 @@ const NavBarButton = ({ className, icon, label, href, onClick }) => {
     }, [routeRegexp, locationHash]);
     return (
         <Button className={classnames(className, styles['nav-bar-button-container'], { 'active': active })} title={label} tabIndex={-1} href={href} onClick={onClick}>
-            <Icon className={styles['icon']} icon={icon} />
-            <div className={styles['label']}>{label}</div>
+            {
+                typeof icon === 'string' && icon.length > 0 ?
+                    <Icon className={styles['icon']} icon={icon} />
+                    :
+                    null
+            }
+            {
+                typeof label === 'string' && label.length > 0 ?
+                    <div className={styles['label']}>{label}</div>
+                    :
+                    null
+            }
         </Button>
     );
 };
