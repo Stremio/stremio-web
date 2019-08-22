@@ -21,19 +21,23 @@ const SearchBar = ({ className }) => {
         const query = (active && queryParams.has('q')) ? queryParams.get('q') : '';
         return [active, query];
     }, [locationHash]);
-    const navigateToSearch = React.useCallback(() => {
-        window.location = '#/search';
-    }, []);
+    const searchBarOnClick = React.useCallback(() => {
+        if (!active) {
+            window.location = '#/search';
+        }
+    }, [active]);
     const queryInputOnSubmit = React.useCallback(() => {
-        window.location.replace(`#/search?q=${searchInputRef.current.value}`);
-    }, []);
+        if (active) {
+            window.location.replace(`#/search?q=${searchInputRef.current.value}`);
+        }
+    }, [active]);
     React.useEffect(() => {
         if (active && focusable) {
             searchInputRef.current.focus();
         }
     }, [active, focusable]);
     return (
-        <label className={classnames(className, styles['search-bar-container'], { 'active': active })} onClick={!active ? navigateToSearch : null}>
+        <label className={classnames(className, styles['search-bar-container'], { 'active': active })} onClick={searchBarOnClick}>
             {
                 active ?
                     <TextInput
@@ -55,8 +59,8 @@ const SearchBar = ({ className }) => {
                         <div className={styles['placeholder']}>Search</div>
                     </div>
             }
-            <Button className={styles['submit-button']} tabIndex={-1} onClick={active ? queryInputOnSubmit : null}>
-                <Icon className={styles['submit-icon']} icon={'ic_search'} />
+            <Button className={styles['submit-button']} tabIndex={-1} onClick={queryInputOnSubmit}>
+                <Icon className={styles['icon']} icon={'ic_search'} />
             </Button>
         </label>
     );
