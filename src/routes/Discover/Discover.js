@@ -27,7 +27,7 @@ const Discover = ({ urlParams, queryParams }) => {
                         <MetaItem
                             {...metaItem}
                             key={metaItem.id}
-                            className={classnames({ 'active': metaItem.id === selectedItem.id })}
+                            className={classnames('meta-item', { 'active': metaItem.id === selectedItem.id })}
                             onClick={changeMetaItem}
                         />
                     ))}
