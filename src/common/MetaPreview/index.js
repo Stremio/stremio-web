@@ -1,3 +1,3 @@
-const MetaItemPreview = require('./MetaPreview');
+const MetaPreview = require('./MetaPreview');
 
-module.exports = MetaItemPreview;
+module.exports = MetaPreview;
