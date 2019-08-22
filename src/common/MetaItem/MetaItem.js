@@ -14,7 +14,7 @@ const ICON_FOR_TYPE = Object.assign(Object.create(null), {
     'tv': 'ic_tv'
 });
 
-const MetaItem = React.memo(({ className, id, type, name, posterShape = 'square', poster = '', title = '', subtitle = '', progress = 0, playIcon = false, menuOptions = [], onSelect, menuOptionOnSelect }) => {
+const MetaItem = React.memo(({ className, id, type, name, posterShape = 'square', poster = '', title = '', subtitle = '', progress = 0, playIcon = false, menuOptions = [], onSelect, menuOptionOnSelect, ...props }) => {
     const [menuOpen, openMenu, closeMenu, toggleMenu] = useBinaryState(false);
     const metaItemOnClick = React.useCallback((event) => {
         if (!event.nativeEvent.selectItemPrevented && typeof onSelect === 'function') {
@@ -37,7 +37,7 @@ const MetaItem = React.memo(({ className, id, type, name, posterShape = 'square'
         event.nativeEvent.selectItemPrevented = true;
     }, [menuOptionOnSelect]);
     return (
-        <Button className={classnames(className, styles['meta-item-container'], styles[`poster-shape-${posterShape}`], { 'active': menuOpen })} title={name} data-id={id} onClick={metaItemOnClick}>
+        <Button {...props} className={classnames(className, styles['meta-item-container'], styles[`poster-shape-${posterShape}`], { 'active': menuOpen })} title={name} data-id={id} onClick={metaItemOnClick}>
             <div className={styles['poster-image-container']}>
                 <div className={styles['placeholder-image-layer']}>
                     <Icon className={styles['placeholder-image']} icon={ICON_FOR_TYPE[type] || 'ic_movies'} />
