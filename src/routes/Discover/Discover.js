@@ -7,10 +7,20 @@ const styles = require('./styles');
 
 const Discover = ({ urlParams, queryParams }) => {
     const [pickers, metaItems] = useCatalog(urlParams, queryParams);
-    const [selectedItem, setSelectedItem] = React.useState(metaItems[0]);
-    const changeMetaItem = React.useCallback((event) => {
-        const { id: metaItemId } = event.currentTarget.dataset;
-        const metaItem = metaItems.find(({ id }) => id === metaItemId);
+    const [selectedItem, setSelectedItem] = React.useState(null);
+    const metaItemsOnMouseDown = React.useCallback((event) => {
+        event.nativeEvent.blurPrevented = true;
+    }, []);
+    const metaItemsOnFocus = React.useCallback((event) => {
+        const metaItem = metaItems.find(({ id }) => {
+            return id === event.target.dataset.id;
+        });
+        if (metaItem) {
+            setSelectedItem(metaItem);
+        }
+    }, []);
+    React.useEffect(() => {
+        const metaItem = metaItems.length > 0 ? metaItems[0] : null;
         setSelectedItem(metaItem);
     }, [metaItems]);
     return (
@@ -22,18 +32,17 @@ const Discover = ({ urlParams, queryParams }) => {
                         <PickerMenu {...picker} key={picker.name} className={'picker'} />
                     ))}
                 </div>
-                <div className={styles['meta-items-container']} tabIndex={-1}>
+                <div className={styles['meta-items-container']} tabIndex={-1} onFocusCapture={metaItemsOnFocus} onMouseDownCapture={metaItemsOnMouseDown}>
                     {metaItems.map((metaItem) => (
                         <MetaItem
                             {...metaItem}
                             key={metaItem.id}
-                            className={classnames('meta-item', { 'active': metaItem.id === selectedItem.id })}
-                            onClick={changeMetaItem}
+                            className={classnames('meta-item', { 'active': selectedItem !== null && metaItem.id === selectedItem.id })}
                         />
                     ))}
                 </div>
                 {
-                    selectedItem ?
+                    selectedItem !== null ?
                         <MetaPreview
                             {...selectedItem}
                             className={styles['meta-preview-container']}
