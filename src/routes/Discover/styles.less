@@ -50,6 +50,11 @@
                 &:hover, &:focus, &:global(.active) {
                     outline-offset: calc(-1 * var(--focus-outline-size));
                 }
+
+                &.selected {
+                    outline: calc(1.5 * var(--focus-outline-size)) solid var(--color-surfacelighter);
+                    outline-offset: calc(-1.5 * var(--focus-outline-size));
+                }
             }
         }
 
