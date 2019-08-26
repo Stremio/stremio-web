@@ -13,7 +13,7 @@ const routesRegexp = {
     library: compilePath('/library(?:/(:type|)(?:/(:sort|))?)?'),
     calendar: compilePath('/calendar'),
     search: compilePath('/search'),
-    detail: compilePath('/detail'),
+    detail: compilePath('/detail/:type/:id/:videoId'),
     addons: compilePath('/addons'),
     settings: compilePath('/settings'),
     player: compilePath('/player')
