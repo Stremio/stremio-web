@@ -4,10 +4,10 @@ const classnames = require('classnames');
 const UrlUtils = require('url');
 const Icon = require('stremio-icons/dom');
 const { useFocusable } = require('stremio-router');
-const Button = require('../../Button');
-const TextInput = require('../../TextInput');
-const routesRegexp = require('../../routesRegexp');
-const useLocationHash = require('../../useLocationHash');
+const Button = require('stremio/common/Button');
+const TextInput = require('stremio/common/TextInput');
+const routesRegexp = require('stremio/common/routesRegexp');
+const useLocationHash = require('stremio/common/useLocationHash');
 const styles = require('./styles');
 
 const SearchBar = ({ className }) => {

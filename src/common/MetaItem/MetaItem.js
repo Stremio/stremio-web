@@ -2,9 +2,9 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
-const Button = require('../Button');
-const useBinaryState = require('../useBinaryState');
-const Popup = require('../Popup');
+const Button = require('stremio/common/Button');
+const useBinaryState = require('stremio/common/useBinaryState');
+const Popup = require('stremio/common/Popup');
 const styles = require('./styles');
 
 const ICON_FOR_TYPE = Object.assign(Object.create(null), {

@@ -1,7 +1,7 @@
 const React = require('react');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
-const Button = require('../Button');
+const Button = require('stremio/common/Button');
 const styles = require('./styles');
 
 const Checkbox = React.forwardRef((props, ref) => {

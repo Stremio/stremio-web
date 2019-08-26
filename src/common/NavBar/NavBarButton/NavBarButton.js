@@ -3,9 +3,9 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const UrlUtils = require('url');
 const Icon = require('stremio-icons/dom');
-const Button = require('../../Button');
-const routesRegexp = require('../../routesRegexp');
-const useLocationHash = require('../../useLocationHash');
+const Button = require('stremio/common/Button');
+const routesRegexp = require('stremio/common/routesRegexp');
+const useLocationHash = require('stremio/common/useLocationHash');
 const styles = require('./styles');
 
 const NavBarButton = ({ className, icon = '', label = '', href = '', onClick }) => {

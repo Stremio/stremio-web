@@ -3,8 +3,8 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const { Modal } = require('stremio-router');
-const Button = require('../Button');
-const useBinaryState = require('../useBinaryState');
+const Button = require('stremio/common/Button');
+const useBinaryState = require('stremio/common/useBinaryState');
 const styles = require('./styles');
 
 const MetaLinks = ({ label, links, href }) => {

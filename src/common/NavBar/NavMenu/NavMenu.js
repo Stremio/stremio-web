@@ -2,11 +2,11 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
-const Button = require('../../Button');
-const Popup = require('../../Popup');
-const useBinaryState = require('../../useBinaryState');
-const useFullscreen = require('../../useFullscreen');
-const useUser = require('../../useUser');
+const Button = require('stremio/common/Button');
+const Popup = require('stremio/common/Popup');
+const useBinaryState = require('stremio/common/useBinaryState');
+const useFullscreen = require('stremio/common/useFullscreen');
+const useUser = require('stremio/common/useUser');
 const styles = require('./styles');
 
 const NavMenu = ({ className }) => {

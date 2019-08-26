@@ -1,6 +1,6 @@
 const React = require('react');
 const classnames = require('classnames');
-const useTabIndex = require('../useTabIndex');
+const useTabIndex = require('stremio/common/useTabIndex');
 const styles = require('./styles');
 
 const TextInput = React.forwardRef((props, ref) => {
