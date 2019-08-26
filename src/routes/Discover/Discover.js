@@ -32,7 +32,7 @@ const Discover = ({ urlParams, queryParams }) => {
                         <PickerMenu {...picker} key={picker.name} className={'picker'} />
                     ))}
                 </div>
-                <div className={styles['meta-items-container']} tabIndex={-1} onFocusCapture={metaItemsOnFocus} onMouseDownCapture={metaItemsOnMouseDown}>
+                <div className={styles['meta-items-container']} onFocusCapture={metaItemsOnFocus} onMouseDownCapture={metaItemsOnMouseDown}>
                     {metaItems.map((metaItem) => (
                         <MetaItem
                             {...metaItem}
