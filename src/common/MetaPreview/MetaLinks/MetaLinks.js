@@ -17,7 +17,7 @@ const MetaLinks = ({ className, label = '', links = [] }) => {
                 Array.isArray(links) && links.length > 0 ?
                     <div className={styles['links-container']}>
                         {links.map(({ label, href }, index) => (
-                            <Button key={`${label}-${href}-${index}`} className={styles['link']} title={label} tabIndex={-1} href={href}>
+                            <Button key={`${label}-${href}-${index}`} className={styles['link']} title={label} href={href}>
                                 {label}
                                 {index < links.length - 1 ? ',' : null}
                             </Button>
