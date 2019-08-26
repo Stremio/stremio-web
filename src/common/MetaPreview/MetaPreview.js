@@ -1,45 +1,13 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const Icon = require('stremio-icons/dom');
 const { Modal } = require('stremio-router');
-const Button = require('stremio/common/Button');
 const useBinaryState = require('stremio/common/useBinaryState');
+const ActionButton = require('./ActionButton');
+const MetaLinks = require('./MetaLinks');
 const styles = require('./styles');
 
-const MetaLinks = ({ label, links, href }) => {
-    return (
-        <React.Fragment>
-            <div className={styles['links-label']}>{label}</div>
-            <div className={styles['links-container']}>
-                {links.map((link, index) => (
-                    <Button key={`${link}-${index}`} className={styles['link']} title={link} tabIndex={-1} href={href(link)}>
-                        {link}
-                        {index < links.length - 1 ? ',' : null}
-                    </Button>
-                ))}
-            </div>
-        </React.Fragment>
-    );
-};
-
-const ActionButton = ({ icon, label, ...props }) => {
-    return (
-        <Button className={styles['action-button']} title={label} tabIndex={-1} {...props}>
-            <Icon className={styles['icon']} icon={icon} />
-            {
-                typeof label === 'string' && label.length > 0 ?
-                    <div className={styles['label-container']}>
-                        <div className={styles['label']}>{label}</div>
-                    </div>
-                    :
-                    null
-            }
-        </Button>
-    );
-};
-
-const MetaPreview = ({ className, compact, id, type, name, logo, background, duration, releaseInfo, released, description, genres, writers, directors, cast, imdbId, imdbRating, inLibrary, trailer, share, toggleIsInLibrary }) => {
+const MetaPreview = ({ className, id, type, name, compact = false, logo = '', background = '', duration = '', releaseInfo = '', released = '', description = '', genres = [], writers = [], directors = [], cast = [], imdbId = '', imdbRating = '', inLibrary = false, trailer = '', shareUrl = '', toggleInLibrary }) => {
     const [shareModalOpen, openShareModal, closeShareModal] = useBinaryState(false);
     const releaseInfoText = React.useMemo(() => {
         const releasedDate = new Date(released);
@@ -54,15 +22,60 @@ const MetaPreview = ({ className, compact, id, type, name, logo, background, dur
     const logoOnError = React.useCallback((event) => {
         event.currentTarget.style.display = 'none';
     }, []);
-    const hrefForGenre = React.useCallback((genre) => {
-        return `#/discover/${type}//${genre}`;
-    }, [type]);
-    const hrefForCrew = React.useCallback((name) => {
-        return `#/search?q=${name}`;
+    const genresLinks = React.useMemo(() => {
+        return Array.isArray(genres) ?
+            genres.map((genre) => ({
+                label: genre,
+                href: `#/discover/${type}//${genre}`
+            }))
+            :
+            [];
+    }, [type, genres]);
+    const writersLinks = React.useMemo(() => {
+        return Array.isArray(writers) ?
+            writers.map((writer) => ({
+                label: writer,
+                href: `#/search?q=${writer}`
+            }))
+            :
+            [];
+    }, [writers]);
+    const directorsLinks = React.useMemo(() => {
+        return Array.isArray(directors) ?
+            directors.map((director) => ({
+                label: director,
+                href: `#/search?q=${director}`
+            }))
+            :
+            [];
+    }, [directors]);
+    const castLinks = React.useMemo(() => {
+        return Array.isArray(cast) ?
+            cast.map((name) => ({
+                label: name,
+                href: `#/search?q=${name}`
+            }))
+            :
+            [];
+    }, [cast]);
+    const shareModalBackgroundOnClick = React.useCallback((event) => {
+        if (!event.nativeEvent.closeShareModalPrevented) {
+            closeShareModal();
+        }
+    }, []);
+    const shareModalContentOnClick = React.useCallback((event) => {
+        event.nativeEvent.closeShareModalPrevented = true;
     }, []);
     return (
-        <div className={classnames(className, styles['meta-preview-container'], { [styles['compact']]: compact })} style={{ backgroundImage: `url(${background})` }}>
-            <div className={styles['meta-preview-content']} tabIndex={-1}>
+        <div className={classnames(className, styles['meta-preview-container'], { [styles['compact']]: compact })}>
+            <div className={styles['background-image-layer']}>
+                <img
+                    className={styles['background-image']}
+                    src={background}
+                    alt={' '}
+                />
+            </div>
+            <div className={styles['meta-info']}>
                 {
                     typeof logo === 'string' && logo.length > 0 ?
                         <img
@@ -95,53 +108,50 @@ const MetaPreview = ({ className, compact, id, type, name, logo, background, dur
                 }
                 {
                     typeof name === 'string' && name.length > 0 ?
-                        <div className={styles['name-container']}>
-                            <div className={styles['name']}>{name}</div>
-                        </div>
+                        <div className={styles['name-container']}>{name}</div>
                         :
                         null
                 }
                 {
                     typeof description === 'string' && description.length > 0 ?
-                        <div className={styles['description-container']}>
-                            <div className={styles['description']}>{description}</div>
-                        </div>
+                        <div className={styles['description-container']}>{description}</div>
                         :
                         null
                 }
                 {
-                    Array.isArray(genres) && genres.length > 0 ?
-                        <MetaLinks label={'Genres:'} links={genres} href={hrefForGenre} />
+                    genresLinks.length > 0 ?
+                        <MetaLinks className={styles['meta-links']} label={'Genres'} links={genresLinks} />
                         :
                         null
                 }
                 {
-                    Array.isArray(cast) && cast.length > 0 ?
-                        <MetaLinks label={'Cast:'} links={cast} href={hrefForCrew} />
+                    writersLinks.length > 0 ?
+                        <MetaLinks className={styles['meta-links']} label={'Writers'} links={writersLinks} />
                         :
                         null
                 }
                 {
-                    Array.isArray(writers) && writers.length > 0 && !compact ?
-                        <MetaLinks label={'Writers:'} links={writers} href={hrefForCrew} />
+                    directorsLinks.length > 0 ?
+                        <MetaLinks className={styles['meta-links']} label={'Directors'} links={directorsLinks} />
                         :
                         null
                 }
                 {
-                    Array.isArray(directors) && directors.length > 0 && !compact ?
-                        <MetaLinks label={'Directors:'} links={directors} href={hrefForCrew} />
+                    castLinks.length > 0 ?
+                        <MetaLinks className={styles['meta-links']} label={'Cast'} links={castLinks} />
                         :
                         null
                 }
             </div>
             <div className={styles['action-buttons-container']}>
                 {
-                    typeof toggleIsInLibrary === 'function' ?
+                    typeof toggleInLibrary === 'function' ?
                         <ActionButton
+                            className={styles['action-button']}
                             icon={inLibrary ? 'ic_removelib' : 'ic_addlib'}
                             label={inLibrary ? 'Remove from Library' : 'Add to library'}
-                            data-meta-item-id={id}
-                            onClick={toggleIsInLibrary}
+                            data-id={id}
+                            onClick={toggleInLibrary}
                         />
                         :
                         null
@@ -149,6 +159,7 @@ const MetaPreview = ({ className, compact, id, type, name, logo, background, dur
                 {
                     typeof trailer === 'string' && trailer.length > 0 ?
                         <ActionButton
+                            className={styles['action-button']}
                             icon={'ic_movies'}
                             label={'Trailer'}
                             href={`#/player?stream=${trailer}`}
@@ -159,6 +170,7 @@ const MetaPreview = ({ className, compact, id, type, name, logo, background, dur
                 {
                     typeof imdbId === 'string' && imdbId.length > 0 ?
                         <ActionButton
+                            className={styles['action-button']}
                             icon={'ic_imdb'}
                             label={typeof imdbRating === 'string' && imdbRating.length > 0 ? `${imdbRating} / 10` : null}
                             href={`https://imdb.com/title/${imdbId}`}
@@ -168,9 +180,10 @@ const MetaPreview = ({ className, compact, id, type, name, logo, background, dur
                         null
                 }
                 {
-                    typeof share === 'string' && share.length > 0 && !compact ?
+                    !compact && typeof shareUrl === 'string' && shareUrl.length > 0 ?
                         <React.Fragment>
                             <ActionButton
+                                className={styles['action-button']}
                                 icon={'ic_share'}
                                 label={'Share'}
                                 onClick={openShareModal}
@@ -178,17 +191,12 @@ const MetaPreview = ({ className, compact, id, type, name, logo, background, dur
                             {
                                 shareModalOpen ?
                                     <Modal>
-                                        <div
-                                            onClick={(event) => {
-                                                event.stopPropagation();
-                                                closeShareModal();
-                                            }}
-                                            style={{
-                                                width: '100%',
-                                                height: '100%',
-                                                backgroundColor: 'var(--color-surfacedarker40)'
-                                            }}
-                                        />
+                                        <div style={{ width: '100%', height: '100%' }} onClick={shareModalBackgroundOnClick}>
+                                            <div
+                                                style={{ width: '50%', height: '50%', backgroundColor: 'red' }}
+                                                onClick={shareModalContentOnClick}
+                                            />
+                                        </div>
                                     </Modal>
                                     :
                                     null
@@ -204,10 +212,10 @@ const MetaPreview = ({ className, compact, id, type, name, logo, background, dur
 
 MetaPreview.propTypes = {
     className: PropTypes.string,
+    id: PropTypes.string.isRequired,
+    type: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
     compact: PropTypes.bool,
-    id: PropTypes.string,
-    type: PropTypes.string,
-    name: PropTypes.string,
     logo: PropTypes.string,
     background: PropTypes.string,
     duration: PropTypes.string,
@@ -222,8 +230,8 @@ MetaPreview.propTypes = {
     imdbRating: PropTypes.string,
     inLibrary: PropTypes.bool,
     trailer: PropTypes.string,
-    share: PropTypes.string,
-    toggleIsInLibrary: PropTypes.func
+    shareUrl: PropTypes.string,
+    toggleInLibrary: PropTypes.func
 };
 
 module.exports = MetaPreview;

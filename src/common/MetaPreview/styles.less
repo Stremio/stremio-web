@@ -4,29 +4,9 @@
     display: flex;
     flex-direction: column;
     background-color: var(--color-backgrounddarker);
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-origin: border-box;
-
-    &::before {
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        z-index: -1;
-        display: block;
-        background-color: var(--color-backgrounddarker60);
-        content: "";
-    }
 
     &.compact {
-        min-width: 20em;
-
-        .meta-preview-content {
-            overflow-y: auto;
-
+        .meta-info {
             .logo {
                 width: 100%;
                 object-position: center;
@@ -48,88 +28,69 @@
         }
     }
 
-    .meta-preview-content {
+    .background-image-layer {
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        bottom: -10px;
+        left: -10px;
+        z-index: -1;
+
+        .background-image {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            opacity: 0.8;
+            filter: blur(5px);
+        }
+    }
+
+    .meta-info {
         flex: 1;
         align-self: stretch;
-        padding: 0.8em;
-        color: var(--color-surfacelighter);
+        padding: 0 1rem;
+        overflow-y: auto;
 
         .logo {
             display: block;
             max-width: 100%;
-            height: 7em;
-            margin-bottom: 0.8em;
+            height: 7rem;
+            margin: 1rem 0;
             object-fit: contain;
             object-position: left center;
-            background-color: var(--color-surfacedarker40)
+            background-color: var(--color-surfacedarker40);
         }
 
         .duration-release-info-container {
             display: flex;
             flex-direction: row;
-            justify-content: flex-start;
             flex-wrap: wrap;
+            margin: 1rem 0;
 
             .duration, .release-info {
                 flex-grow: 0;
                 flex-shrink: 1;
-                max-width: 100%;
-                margin-bottom: 0.8em;
-                margin-right: 0.8em;
+                margin: 1rem 0;
                 text-align: center;
-                overflow: visible;
+                color: var(--color-surfacelighter);
             }
         }
 
         .name-container {
-            margin-bottom: 0.8em;
-            overflow: visible;
-
-            .name {
-                font-size: 1.3em;
-                overflow: visible;
-            }
+            margin: 1rem 0;
+            font-size: 1.4rem;
+            color: var(--color-surfacelighter);
         }
 
         .description-container {
-            margin-bottom: 0.8em;
-            overflow: visible;
-
-            .description {
-                font-size: 0.9em;
-                overflow: visible;
-            }
+            margin: 1rem 0;
+            color: var(--color-surfacelighter);
         }
 
-        .links-label {
-            font-size: 1.1em;
-            line-height: 1.1em;
-            color: var(--color-surfacelight);
-            overflow: visible;
-        }
-
-        .links-container {
-            display: flex;
-            flex-direction: row;
-            flex-wrap: wrap;
-            margin-bottom: 0.8em;
-
-            .link {
-                flex-grow: 0;
-                flex-shrink: 1;
-                max-width: 100%;
-                margin-right: 0.4em;
-                font-size: 0.9em;
-                line-height: 1.2em;
-                overflow: hidden;
-                white-space: nowrap;
-                text-overflow: ellipsis;
-                color: var(--color-surfacelighter);
-
-                &:hover {
-                    text-decoration: underline;
-                }
-            }
+        .meta-links {
+            margin: 1rem 0;
         }
     }
 
@@ -138,46 +99,14 @@
         align-self: stretch;
         display: flex;
         flex-direction: row;
-        justify-content: flex-start;
         flex-wrap: wrap;
-        padding: 0 0.8em;
+        padding: 0 1rem;
 
         .action-button {
             flex: none;
-            width: 6em;
-            height: 6em;
-            margin: 0.8em 0;
-            cursor: pointer;
-
-            &:hover {
-                background-color: var(--color-surfacedarker60);
-            }
-
-            .icon {
-                display: block;
-                width: 100%;
-                height: 3em;
-                padding-top: 0.8em;
-                fill: var(--color-surfacelighter);
-            }
-
-            .label-container {
-                display: flex;
-                flex-direction: row;
-                align-items: center;
-                width: 100%;
-                height: 3em;
-                padding: 0 0.2em;
-
-                .label {
-                    flex: 1;
-                    max-height: 2.2em;
-                    font-size: 0.9em;
-                    line-height: 1.1em;
-                    text-align: center;
-                    color: var(--color-surfacelighter);
-                }
-            }
+            width: 6.5rem;
+            height: 6.5rem;
+            margin: 1rem 0;
         }
     }
 }

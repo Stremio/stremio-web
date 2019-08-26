@@ -27,6 +27,7 @@ const ActionButton = ({ className, icon = '', label = '', ...props }) => {
 };
 
 ActionButton.propTypes = {
+    className: PropTypes.string,
     icon: PropTypes.string,
     label: PropTypes.string
 };
