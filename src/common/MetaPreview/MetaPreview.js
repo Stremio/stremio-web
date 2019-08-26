@@ -7,7 +7,7 @@ const ActionButton = require('./ActionButton');
 const MetaLinks = require('./MetaLinks');
 const styles = require('./styles');
 
-const MetaPreview = ({ className, id, type, name, compact = false, logo = '', background = '', duration = '', releaseInfo = '', released = '', description = '', genres = [], writers = [], directors = [], cast = [], imdbId = '', imdbRating = '', inLibrary = false, trailer = '', shareUrl = '', toggleInLibrary }) => {
+const MetaPreview = ({ className, id, type, name, compact = false, logo = '', background = '', duration = '', releaseInfo = '', released = '', description = '', genres = [], writers = [], directors = [], cast = [], imdbRating = '', links = {}, inLibrary = false, toggleInLibrary }) => {
     const [shareModalOpen, openShareModal, closeShareModal] = useBinaryState(false);
     const releaseInfoText = React.useMemo(() => {
         const releasedDate = new Date(released);
@@ -157,30 +157,30 @@ const MetaPreview = ({ className, id, type, name, compact = false, logo = '', ba
                         null
                 }
                 {
-                    typeof trailer === 'string' && trailer.length > 0 ?
+                    links && typeof links.trailer === 'string' && links.trailer.length > 0 ?
                         <ActionButton
                             className={styles['action-button']}
                             icon={'ic_movies'}
                             label={'Trailer'}
-                            href={`#/player?stream=${trailer}`}
+                            href={`#/player?stream=${links.trailer}`}
                         />
                         :
                         null
                 }
                 {
-                    typeof imdbId === 'string' && imdbId.length > 0 ?
+                    links && typeof links.imdb === 'string' && links.imdb.length > 0 ?
                         <ActionButton
                             className={styles['action-button']}
                             icon={'ic_imdb'}
                             label={typeof imdbRating === 'string' && imdbRating.length > 0 ? `${imdbRating} / 10` : null}
-                            href={`https://imdb.com/title/${imdbId}`}
+                            href={`https://imdb.com/title/${links.imdb}`}
                             target={'_blank'}
                         />
                         :
                         null
                 }
                 {
-                    !compact && typeof shareUrl === 'string' && shareUrl.length > 0 ?
+                    !compact && links && typeof links.share === 'string' && links.share.length > 0 ?
                         <React.Fragment>
                             <ActionButton
                                 className={styles['action-button']}
@@ -226,11 +226,13 @@ MetaPreview.propTypes = {
     writers: PropTypes.arrayOf(PropTypes.string),
     directors: PropTypes.arrayOf(PropTypes.string),
     cast: PropTypes.arrayOf(PropTypes.string),
-    imdbId: PropTypes.string,
     imdbRating: PropTypes.string,
+    links: PropTypes.shape({
+        trailer: PropTypes.string,
+        imdb: PropTypes.string,
+        share: PropTypes.string
+    }),
     inLibrary: PropTypes.bool,
-    trailer: PropTypes.string,
-    shareUrl: PropTypes.string,
     toggleInLibrary: PropTypes.func
 };
 
