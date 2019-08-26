@@ -1,8 +1,8 @@
 .action-button-container {
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
-    align-items: center;
+    justify-content: center;
+    align-items: stretch;
 
     &:hover {
         background-color: var(--color-surfacedarker60);
@@ -10,8 +10,13 @@
 
     .icon {
         flex: none;
-        flex-basis: 35%;
+        flex-basis: 50%;
+        padding-top: 10%;
         fill: var(--color-surfacelighter);
+
+        &:only-child {
+            padding: 5% 0;
+        }
     }
 
     .label-container {
@@ -22,6 +27,7 @@
         align-items: center;
 
         .label {
+            flex: 1;
             padding: 0 0.2rem;
             max-height: 2.4em;
             text-align: center;
