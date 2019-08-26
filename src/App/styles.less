@@ -44,6 +44,14 @@
     font-style: normal;
 }
 
+:root {
+    --landscape-shape-ratio: 0.5625;
+    --poster-shape-ratio: 1.464;
+    --scroll-bar-width: 6px;
+    --focus-outline-size: 2px;
+    --color-facebook: #4267b2;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -65,39 +73,31 @@
     scrollbar-color: var(--color-secondarylighter80) var(--color-backgroundlight);
 }
 
-html {
-    --landscape-shape-ratio: 0.5625;
-    --poster-shape-ratio: 1.464;
-    --scroll-bar-width: 6px;
-    --focus-outline-size: 2px;
-    --color-facebook: #4267b2;
+::-webkit-scrollbar {
+    width: var(--scroll-bar-width);
+}
 
-    &, body, #app {
-        position: relative;
-        z-index: 0;
-        width: 100vw;
-        height: 100vh;
-        min-width: 800px;
-        min-height: 600px;
-        font-family: 'Roboto', 'sans-serif';
-        overflow: auto;
-    }
+::-webkit-scrollbar-thumb {
+    background-color: var(--color-secondarylighter80);
+}
+
+::-webkit-scrollbar-track {
+    background-color: var(--color-backgroundlight);
+}
+
+html, body, #app {
+    position: relative;
+    z-index: 0;
+    width: 100vw;
+    height: 100vh;
+    min-width: 800px;
+    min-height: 600px;
+    font-family: 'Roboto', 'sans-serif';
+    overflow: auto;
 
     .routes-container {
         width: 100%;
         height: 100%;
-    }
-
-    ::-webkit-scrollbar {
-        width: var(--scroll-bar-width);
-    }
-
-    ::-webkit-scrollbar-thumb {
-        background-color: var(--color-secondarylighter80);
-    }
-
-    ::-webkit-scrollbar-track {
-        background-color: var(--color-backgroundlight);
     }
 }
 
