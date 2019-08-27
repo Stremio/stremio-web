@@ -3,7 +3,10 @@ const PathToRegexp = require('path-to-regexp');
 const compilePath = (path, options) => {
     const keys = [];
     const regexp = PathToRegexp(path, keys, { ...options });
-    return { keys, regexp };
+    return {
+        regexp,
+        urlParamsNames: keys.map(({ name }) => name)
+    };
 };
 
 const routesRegexp = {

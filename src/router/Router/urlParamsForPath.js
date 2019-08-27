@@ -1,10 +1,10 @@
 module.exports = (routeConfig, path) => {
     const matches = path.match(routeConfig.regexp);
-    return routeConfig.keys.reduce((urlParams, key, index) => {
+    return routeConfig.urlParamsNames.reduce((urlParams, name, index) => {
         if (Array.isArray(matches) && typeof matches[index + 1] === 'string') {
-            urlParams[key.name] = matches[index + 1];
+            urlParams[name] = matches[index + 1];
         } else {
-            urlParams[key.name] = null;
+            urlParams[name] = null;
         }
 
         return urlParams;

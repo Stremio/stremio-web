@@ -81,9 +81,7 @@ Router.propTypes = {
     onPathNotMatch: PropTypes.func,
     viewsConfig: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.exact({
         regexp: PropTypes.instanceOf(RegExp).isRequired,
-        keys: PropTypes.arrayOf(PropTypes.shape({
-            name: PropTypes.string.isRequired
-        })).isRequired,
+        urlParamsNames: PropTypes.arrayOf(PropTypes.string).isRequired,
         component: PropTypes.elementType.isRequired
     }))).isRequired
 };
