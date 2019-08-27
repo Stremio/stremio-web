@@ -13,11 +13,13 @@ const Router = ({ homePath, viewsConfig, onPathNotMatch }) => {
         });
     });
     const routeConfigForPath = React.useCallback((path) => {
-        for (const viewConfig of viewsConfig) {
-            for (const routeConfig of viewConfig) {
-                const match = routeConfig.regexp.exec(path);
-                if (match) {
-                    return routeConfig;
+        if (typeof path === 'string') {
+            for (const viewConfig of viewsConfig) {
+                for (const routeConfig of viewConfig) {
+                    const match = path.match(routeConfig.regexp);
+                    if (match) {
+                        return routeConfig;
+                    }
                 }
             }
         }
@@ -36,7 +38,7 @@ const Router = ({ homePath, viewsConfig, onPathNotMatch }) => {
         }
 
         const routeViewIndex = viewsConfig.findIndex((v) => v.includes(routeConfig));
-        const match = routeConfig.regexp.exec(pathname);
+        const match = pathname.match(routeConfig.regexp);
         const queryParams = Array.from(new URLSearchParams(query !== null ? query : '').entries())
             .reduce((result, [key, value]) => {
                 result[key] = value;
@@ -108,9 +110,7 @@ Router.propTypes = {
     homePath: PropTypes.string,
     onPathNotMatch: PropTypes.func,
     viewsConfig: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.exact({
-        regexp: PropTypes.shape({
-            exec: PropTypes.func.isRequired
-        }).isRequired,
+        regexp: PropTypes.instanceOf(RegExp).isRequired,
         keys: PropTypes.arrayOf(PropTypes.shape({
             name: PropTypes.string.isRequired
         })).isRequired,
