@@ -1,5 +1,6 @@
 const React = require('react');
 const PropTypes = require('prop-types');
+const ReactIs = require('react-is');
 const UrlUtils = require('url');
 const { RoutesContainerProvider } = require('../RoutesContainerContext');
 const queryParamsForQuery = require('./queryParamsForQuery');
@@ -12,9 +13,7 @@ const Router = ({ onPathNotMatch, ...props }) => {
         homePath: props.homePath,
         viewsConfig: props.viewsConfig
     }));
-    const [views, setViews] = React.useState(() => {
-        return Array(viewsConfig.length).fill(null);
-    });
+    const [views, setViews] = React.useState([]);
     React.useEffect(() => {
         if (typeof homePath === 'string') {
             const { pathname, path } = UrlUtils.parse(window.location.hash.slice(1));
@@ -33,7 +32,15 @@ const Router = ({ onPathNotMatch, ...props }) => {
             const routeConfig = routeConfigForPath(viewsConfig, pathname);
             if (!routeConfig) {
                 if (typeof onPathNotMatch === 'function') {
-                    onPathNotMatch();
+                    const component = onPathNotMatch();
+                    if (ReactIs.isValidElementType(component)) {
+                        setViews([{
+                            key: '-1',
+                            component,
+                            urlParams: {},
+                            queryParams: {}
+                        }]);
+                    }
                 }
 
                 return;
@@ -41,17 +48,15 @@ const Router = ({ onPathNotMatch, ...props }) => {
 
             const urlParams = urlParamsForPath(routeConfig, pathname);
             const queryParams = queryParamsForQuery(typeof query === 'string' ? query : '');
-            const routeViewIndex = viewsConfig.findIndex((viewConfig) => viewConfig.includes(routeConfig));
+            const routeViewIndex = viewsConfig.findIndex((vc) => vc.includes(routeConfig));
+            const routeIndex = viewsConfig[routeViewIndex].findIndex((rc) => rc === routeConfig);
             setViews((views) => {
-                return views.map((view, index) => {
-                    if (index < routeViewIndex) {
-                        return view;
-                    } else if (index === routeViewIndex) {
-                        return { routeConfig, urlParams, queryParams };
-                    } else {
-                        return null;
-                    }
-                });
+                return views.slice(0, routeViewIndex).concat([{
+                    key: `${routeViewIndex}${routeIndex}`,
+                    component: routeConfig.component,
+                    urlParams,
+                    queryParams
+                }]);
             });
         };
         window.addEventListener('hashchange', onLocationHashChanged);
@@ -62,15 +67,11 @@ const Router = ({ onPathNotMatch, ...props }) => {
     }, [onPathNotMatch]);
     return (
         <RoutesContainerProvider>
-            {
-                views
-                    .filter((view) => view !== null)
-                    .map(({ routeConfig, urlParams, queryParams }) => (
-                        <Route key={routeConfig.component.name}>
-                            {React.createElement(routeConfig.component, { urlParams, queryParams })}
-                        </Route>
-                    ))
-            }
+            {views.map(({ key, component, urlParams, queryParams }) => (
+                <Route key={key}>
+                    {React.createElement(component, { urlParams, queryParams })}
+                </Route>
+            ))}
         </RoutesContainerProvider>
     );
 };
