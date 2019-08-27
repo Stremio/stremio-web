@@ -68,13 +68,18 @@ const MetaPreview = ({ className, compact = false, id, type, name, logo = '', ba
     }, []);
     return (
         <div className={classnames(className, styles['meta-preview-container'], { [styles['compact']]: compact })}>
-            <div className={styles['background-image-layer']}>
-                <img
-                    className={styles['background-image']}
-                    src={background}
-                    alt={' '}
-                />
-            </div>
+            {
+                typeof background === 'string' && background.length > 0 ?
+                    <div className={styles['background-image-layer']}>
+                        <img
+                            className={styles['background-image']}
+                            src={background}
+                            alt={' '}
+                        />
+                    </div>
+                    :
+                    null
+            }
             <div className={styles['meta-info']}>
                 {
                     typeof logo === 'string' && logo.length > 0 ?
