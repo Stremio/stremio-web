@@ -12,6 +12,7 @@
         "storybook": "start-storybook --ci --config-dir ./storybook --static-dir ./ --port 6060"
     },
     "dependencies": {
+        "a-color-picker": "1.1.8",
         "classnames": "2.2.6",
         "events": "1.1.1",
         "hat": "0.0.3",
