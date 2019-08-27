@@ -13,7 +13,9 @@ const Router = ({ onPathNotMatch, ...props }) => {
         homePath: props.homePath,
         viewsConfig: props.viewsConfig
     }));
-    const [views, setViews] = React.useState([]);
+    const [views, setViews] = React.useState(() => {
+        return Array(viewsConfig.length).fill(null);
+    });
     React.useEffect(() => {
         if (typeof homePath === 'string') {
             const { pathname, path } = UrlUtils.parse(window.location.hash.slice(1));
@@ -34,12 +36,15 @@ const Router = ({ onPathNotMatch, ...props }) => {
                 if (typeof onPathNotMatch === 'function') {
                     const component = onPathNotMatch();
                     if (ReactIs.isValidElementType(component)) {
-                        setViews([{
-                            key: '-1',
-                            component,
-                            urlParams: {},
-                            queryParams: {}
-                        }]);
+                        setViews([
+                            {
+                                key: '-1',
+                                component,
+                                urlParams: {},
+                                queryParams: {}
+                            },
+                            ...Array(viewsConfig.length - 1).fill(null)
+                        ]);
                     }
                 }
 
@@ -51,12 +56,20 @@ const Router = ({ onPathNotMatch, ...props }) => {
             const routeViewIndex = viewsConfig.findIndex((vc) => vc.includes(routeConfig));
             const routeIndex = viewsConfig[routeViewIndex].findIndex((rc) => rc === routeConfig);
             setViews((views) => {
-                return views.slice(0, routeViewIndex).concat([{
-                    key: `${routeViewIndex}${routeIndex}`,
-                    component: routeConfig.component,
-                    urlParams,
-                    queryParams
-                }]);
+                return views.map((view, index) => {
+                    if (index < routeViewIndex) {
+                        return view;
+                    } else if (index === routeViewIndex) {
+                        return {
+                            key: `${routeViewIndex}${routeIndex}`,
+                            component: routeConfig.component,
+                            urlParams,
+                            queryParams
+                        };
+                    } else {
+                        return null;
+                    }
+                });
             });
         };
         window.addEventListener('hashchange', onLocationHashChanged);
@@ -67,11 +80,15 @@ const Router = ({ onPathNotMatch, ...props }) => {
     }, [onPathNotMatch]);
     return (
         <RoutesContainerProvider>
-            {views.map(({ key, component, urlParams, queryParams }) => (
-                <Route key={key}>
-                    {React.createElement(component, { urlParams, queryParams })}
-                </Route>
-            ))}
+            {
+                views
+                    .filter(view => view !== null)
+                    .map(({ key, component, urlParams, queryParams }) => (
+                        <Route key={key}>
+                            {React.createElement(component, { urlParams, queryParams })}
+                        </Route>
+                    ))
+            }
         </RoutesContainerProvider>
     );
 };
