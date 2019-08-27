@@ -4,7 +4,8 @@ const UrlUtils = require('url');
 const { RoutesContainerProvider } = require('../RoutesContainerContext');
 const Route = require('./Route');
 
-const Router = ({ homePath, viewsConfig, onPathNotMatch }) => {
+const Router = ({ onPathNotMatch, ...props }) => {
+    const [{ homePath, viewsConfig }] = React.useState(props);
     const [views, setViews] = React.useState(() => {
         return Array(viewsConfig.length).fill({
             routeConfig: null,
