@@ -25,7 +25,7 @@ const routesRegexp = {
     },
     detail: {
         regexp: /^\/detail\/(?:([^\/]+?))\/(?:([^\/]+?))(?:\/([^\/]*?))?\/?$/i,
-        urlParamsNames: []
+        urlParamsNames: ['type', 'id', 'videoId']
     },
     addons: {
         regexp: /^\/addons\/?$/i,
