@@ -1,5 +1,7 @@
 const React = require('react');
 const { NavBar, MetaPreview } = require('stremio/common');
+const VideosList = require('./VideosList');
+const StreamsList = require('./StreamsList');
 const useMetaItem = require('./useMetaItem');
 const useInLibrary = require('./useInLibrary');
 require('./styles');
@@ -18,6 +20,18 @@ const Detail = ({ urlParams }) => {
                     inLibrary={inLibrary}
                     toggleInLibrary={toggleInLibrary}
                 />
+                {
+                    typeof urlParams.videoId === 'string' && urlParams.videoId.length > 0 ?
+                        <StreamsList
+                            className={'streams-list'}
+                            metaItem={metaItem}
+                        />
+                        :
+                        <VideosList
+                            className={'videos-list'}
+                            metaItem={metaItem}
+                        />
+                }
             </div>
         </div>
     );
