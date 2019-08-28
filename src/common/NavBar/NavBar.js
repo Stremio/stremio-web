@@ -3,10 +3,11 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const NavBarButton = require('./NavBarButton');
 const SearchBar = require('./SearchBar');
+const AddonsButton = require('./AddonsButton');
 const NavMenu = require('./NavMenu');
 const styles = require('./styles');
 
-const NavBar = React.memo(({ className, backButton = false, tabs = [], title = '', searchBar = false, navMenu = false }) => {
+const NavBar = React.memo(({ className, backButton = false, tabs = [], title = '', searchBar = false, addonsButton = false, navMenu = false }) => {
     const backButtonOnClick = React.useCallback(() => {
         window.history.back();
     }, []);
@@ -49,6 +50,12 @@ const NavBar = React.memo(({ className, backButton = false, tabs = [], title = '
                     null
             }
             {
+                addonsButton ?
+                    <AddonsButton className={styles['addons-button']} />
+                    :
+                    null
+            }
+            {
                 navMenu ?
                     <NavMenu className={styles['nav-menu']} />
                     :
@@ -71,6 +78,7 @@ NavBar.propTypes = {
     })),
     title: PropTypes.string,
     searchBar: PropTypes.bool,
+    addonsButton: PropTypes.bool,
     navMenu: PropTypes.bool
 };
 
