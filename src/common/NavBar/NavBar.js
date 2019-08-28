@@ -1,7 +1,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const NavBarButton = require('./NavBarButton');
+const NavTabButton = require('./NavTabButton');
 const SearchBar = require('./SearchBar');
 const AddonsButton = require('./AddonsButton');
 const NavMenu = require('./NavMenu');
@@ -15,8 +15,8 @@ const NavBar = React.memo(({ className, backButton = false, tabs = [], title = '
         <nav className={classnames(className, styles['nav-bar-container'])}>
             {
                 backButton ?
-                    <NavBarButton
-                        className={styles['nav-bar-button']}
+                    <NavTabButton
+                        className={styles['nav-tab-button']}
                         icon={'ic_back_ios'}
                         label={'Back'}
                         onClick={backButtonOnClick}
@@ -27,9 +27,9 @@ const NavBar = React.memo(({ className, backButton = false, tabs = [], title = '
             {
                 Array.isArray(tabs) && tabs.length > 0 ?
                     tabs.slice(0, 4).map(({ href = '', icon = '', label = '', onClick }) => (
-                        <NavBarButton
+                        <NavTabButton
                             key={`${href}${icon}${label}`}
-                            className={styles['nav-bar-button']}
+                            className={styles['nav-tab-button']}
                             href={href}
                             icon={icon}
                             label={label}
