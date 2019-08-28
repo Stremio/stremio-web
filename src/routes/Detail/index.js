@@ -1,3 +1,3 @@
-import Detail from './Detail';
+const Detail = require('./Detail');
 
-export default Detail;
+module.exports = Detail;
