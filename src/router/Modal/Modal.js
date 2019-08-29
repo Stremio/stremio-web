@@ -7,14 +7,14 @@ const { useModalsContainer } = require('../ModalsContainerContext');
 
 const Modal = ({ className, children }) => {
     const modalsContainer = useModalsContainer();
-    const onRoutesContainerDomTreeChange = React.useCallback(({ routesContainer, contentContainer }) => {
+    const onRoutesContainerChildrenChange = React.useCallback(({ routesContainer, contentContainer }) => {
         return routesContainer.lastElementChild === contentContainer.parentElement.parentElement;
     }, []);
-    const onModalsContainerDomTreeChange = React.useCallback(({ modalsContainer, contentContainer }) => {
+    const onModalsContainerChildrenChange = React.useCallback(({ modalsContainer, contentContainer }) => {
         return modalsContainer.lastElementChild === contentContainer;
     }, []);
     return ReactDOM.createPortal(
-        <FocusableProvider onRoutesContainerDomTreeChange={onRoutesContainerDomTreeChange} onModalsContainerDomTreeChange={onModalsContainerDomTreeChange}>
+        <FocusableProvider onRoutesContainerChildrenChange={onRoutesContainerChildrenChange} onModalsContainerChildrenChange={onModalsContainerChildrenChange}>
             <div className={classnames(className, 'modal-container')}>{children}</div>
         </FocusableProvider>,
         modalsContainer
