@@ -11,15 +11,24 @@ const Detail = ({ urlParams }) => {
     const [inLibrary, addToLibrary, removeFromLibrary, toggleInLibrary] = useInLibrary(urlParams.id);
     return (
         <div className={'detail-container'}>
-            <NavBar className={'nav-bar'} backButton={true} title={metaItem.name} />
+            <NavBar
+                className={'nav-bar'}
+                backButton={true}
+                title={metaItem !== null ? metaItem.name : null}
+            />
             <div className={'detail-content'}>
-                <MetaPreview
-                    {...metaItem}
-                    className={'meta-preview'}
-                    background={null}
-                    inLibrary={inLibrary}
-                    toggleInLibrary={toggleInLibrary}
-                />
+                {
+                    metaItem !== null ?
+                        <MetaPreview
+                            {...metaItem}
+                            className={'meta-preview'}
+                            background={null}
+                            inLibrary={inLibrary}
+                            toggleInLibrary={toggleInLibrary}
+                        />
+                        :
+                        null
+                }
                 {
                     typeof urlParams.videoId === 'string' && urlParams.videoId.length > 0 ?
                         <StreamsList
