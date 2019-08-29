@@ -4,32 +4,35 @@ const { useRoutesContainer } = require('../RoutesContainerContext');
 const { useModalsContainer } = require('../ModalsContainerContext');
 const FocusableContext = require('./FocusableContext');
 
-const FocusableProvider = ({ children, onRoutesContainerChildrenChange, onModalsContainerChildrenChange }) => {
+const FocusableProvider = ({ children, onRoutesContainerDomTreeChange, onModalsContainerDomTreeChange }) => {
     const routesContainer = useRoutesContainer();
     const modalsContainer = useModalsContainer();
     const contentContainerRef = React.useRef(null);
-    const [focusable, setFocusable] = React.useState(true);
+    const [focusable, setFocusable] = React.useState(false);
     React.useEffect(() => {
-        const onContainersChildrenChange = () => {
-            setFocusable(
-                onRoutesContainerChildrenChange({
+        const onDomTreeChange = () => {
+            const focusable =
+                onRoutesContainerDomTreeChange({
                     routesContainer: routesContainer,
                     contentContainer: contentContainerRef.current
                 })
                 &&
-                onModalsContainerChildrenChange({
+                onModalsContainerDomTreeChange({
                     modalsContainer: modalsContainer,
                     contentContainer: contentContainerRef.current
-                })
-            );
+                });
+            setFocusable(focusable);
         };
-        routesContainer.addEventListener('childrenchange', onContainersChildrenChange);
-        modalsContainer.addEventListener('childrenchange', onContainersChildrenChange);
+        const routesContainerDomTreeObserver = new MutationObserver(onDomTreeChange);
+        const modalsContainerDomTreeObserver = new MutationObserver(onDomTreeChange);
+        routesContainerDomTreeObserver.observe(routesContainer, { childList: true });
+        modalsContainerDomTreeObserver.observe(modalsContainer, { childList: true });
+        onDomTreeChange();
         return () => {
-            routesContainer.removeEventListener('childrenchange', onContainersChildrenChange);
-            modalsContainer.removeEventListener('childrenchange', onContainersChildrenChange);
+            routesContainerDomTreeObserver.disconnect();
+            modalsContainerDomTreeObserver.disconnect();
         };
-    }, [routesContainer, modalsContainer, onRoutesContainerChildrenChange, onModalsContainerChildrenChange]);
+    }, [routesContainer, modalsContainer, onRoutesContainerDomTreeChange, onModalsContainerDomTreeChange]);
     React.useEffect(() => {
         if (focusable && !contentContainerRef.current.contains(document.activeElement)) {
             contentContainerRef.current.focus();
@@ -47,8 +50,8 @@ const FocusableProvider = ({ children, onRoutesContainerChildrenChange, onModals
 
 FocusableProvider.propTypes = {
     children: PropTypes.node.isRequired,
-    onModalsContainerChildrenChange: PropTypes.func.isRequired,
-    onRoutesContainerChildrenChange: PropTypes.func.isRequired
+    onModalsContainerDomTreeChange: PropTypes.func.isRequired,
+    onRoutesContainerDomTreeChange: PropTypes.func.isRequired
 };
 
 module.exports = FocusableProvider;
