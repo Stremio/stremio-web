@@ -7,7 +7,7 @@ const ActionButton = require('./ActionButton');
 const MetaLinks = require('./MetaLinks');
 const styles = require('./styles');
 
-const MetaPreview = ({ className, compact = false, id, type, name, logo = '', background = '', duration = '', releaseInfo = '', released = '', description = '', genres = [], writers = [], directors = [], cast = [], imdbRating = '', links = {}, inLibrary = false, toggleInLibrary }) => {
+const MetaPreview = ({ className, compact = false, id, type, name = '', logo = '', background = '', duration = '', releaseInfo = '', released = '', description = '', genres = [], writers = [], directors = [], cast = [], imdbRating = '', links = {}, inLibrary = false, toggleInLibrary }) => {
     const [shareModalOpen, openShareModal, closeShareModal] = useBinaryState(false);
     const releaseInfoText = React.useMemo(() => {
         const releasedDate = new Date(released);
@@ -220,7 +220,7 @@ MetaPreview.propTypes = {
     compact: PropTypes.bool,
     id: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
+    name: PropTypes.string,
     logo: PropTypes.string,
     background: PropTypes.string,
     duration: PropTypes.string,

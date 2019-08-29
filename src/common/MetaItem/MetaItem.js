@@ -14,7 +14,7 @@ const ICON_FOR_TYPE = Object.assign(Object.create(null), {
     'tv': 'ic_tv'
 });
 
-const MetaItem = React.memo(({ className, id, type, name, posterShape = 'square', poster = '', title = '', subtitle = '', progress = 0, playIcon = false, menuOptions = [], onSelect, menuOptionOnSelect, ...props }) => {
+const MetaItem = React.memo(({ className, id, type, name = '', posterShape = 'square', poster = '', title = '', subtitle = '', progress = 0, playIcon = false, menuOptions = [], onSelect, menuOptionOnSelect, ...props }) => {
     const [menuOpen, openMenu, closeMenu, toggleMenu] = useBinaryState(false);
     const metaItemOnClick = React.useCallback((event) => {
         if (!event.nativeEvent.selectItemPrevented && typeof onSelect === 'function') {
@@ -128,7 +128,7 @@ MetaItem.propTypes = {
     className: PropTypes.string,
     id: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
+    name: PropTypes.string,
     posterShape: PropTypes.oneOf(['poster', 'landscape', 'square']),
     poster: PropTypes.string,
     title: PropTypes.string,
