@@ -3,9 +3,9 @@ const PropTypes = require('prop-types');
 const ReactIs = require('react-is');
 const UrlUtils = require('url');
 const { RoutesContainerProvider } = require('../RoutesContainerContext');
-const queryParamsForQuery = require('./queryParamsForQuery');
-const routeConfigForPath = require('./routeConfigForPath');
-const urlParamsForPath = require('./urlParamsForPath');
+const queryParamsForQuery = require('../queryParamsForQuery');
+const routeConfigForPath = require('../routeConfigForPath');
+const urlParamsForPath = require('../urlParamsForPath');
 const Route = require('./Route');
 
 const Router = ({ onPathNotMatch, ...props }) => {
