@@ -3,12 +3,12 @@ const React = require('react');
 const useLocationHash = () => {
     const [locationHash, setLocationHash] = React.useState(window.location.hash);
     React.useEffect(() => {
-        const onLocationHashChanged = () => {
+        const onLocationHashChange = () => {
             setLocationHash(window.location.hash);
         };
-        window.addEventListener('hashchange', onLocationHashChanged);
+        window.addEventListener('hashchange', onLocationHashChange);
         return () => {
-            window.removeEventListener('hashchange', onLocationHashChanged);
+            window.removeEventListener('hashchange', onLocationHashChange);
         };
     }, []);
     return locationHash;

@@ -29,7 +29,7 @@ const Router = ({ onPathNotMatch, ...props }) => {
         }
     }, []);
     React.useEffect(() => {
-        const onLocationHashChanged = () => {
+        const onLocationHashChange = () => {
             const { pathname, query } = UrlUtils.parse(window.location.hash.slice(1));
             const routeConfig = routeConfigForPath(viewsConfig, pathname);
             if (!routeConfig) {
@@ -72,10 +72,10 @@ const Router = ({ onPathNotMatch, ...props }) => {
                 });
             });
         };
-        window.addEventListener('hashchange', onLocationHashChanged);
-        onLocationHashChanged();
+        window.addEventListener('hashchange', onLocationHashChange);
+        onLocationHashChange();
         return () => {
-            window.removeEventListener('hashchange', onLocationHashChanged);
+            window.removeEventListener('hashchange', onLocationHashChange);
         };
     }, [onPathNotMatch]);
     return (
