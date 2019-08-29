@@ -6,7 +6,7 @@ const Button = require('stremio/common/Button');
 const Popup = require('stremio/common/Popup');
 const useBinaryState = require('stremio/common/useBinaryState');
 const useFullscreen = require('stremio/common/useFullscreen');
-const useUser = require('stremio/common/useUser');
+const useUser = require('./useUser');
 const styles = require('./styles');
 
 const NavMenu = ({ className }) => {
