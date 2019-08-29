@@ -28,8 +28,17 @@ const useMetaItem = (type = '', id = '', videoId = '') => {
                 description: 'This is a step-by-step tutorial on how to create your own add-on using Node.js.',
                 released: 'Mon Jul 01 2019 00:00:00 GMT+0300 (Eastern European Summer Time)',
                 poster: 'https://theme.zdassets.com/theme_assets/2160011/77a6ad5aee11a07eb9b87281070f1aadf946f2b3.png',
-                season: 0,
-                episode: 0
+                season: '1',
+                episode: '1'
+            },
+            {
+                id: '2',
+                name: 'How to create a Stremio add-on with Node.js',
+                description: 'This is a step-by-step tutorial on how to create your own add-on using Node.js.',
+                released: 'Mon Jul 02 2019 00:00:00 GMT+0300 (Eastern European Summer Time)',
+                poster: 'https://theme.zdassets.com/theme_assets/2160011/77a6ad5aee11a07eb9b87281070f1aadf946f2b3.png',
+                season: '2',
+                episode: '1'
             }
         ]
     }));
