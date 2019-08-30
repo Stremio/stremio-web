@@ -1,12 +1,12 @@
 const React = require('react');
-const PropTypes = require('prop-types');
 const ReactIs = require('react-is');
+const PropTypes = require('prop-types');
 const UrlUtils = require('url');
+const Route = require('../Route');
 const { RoutesContainerProvider } = require('../RoutesContainerContext');
-const queryParamsForQuery = require('../queryParamsForQuery');
-const routeConfigForPath = require('../routeConfigForPath');
-const urlParamsForPath = require('../urlParamsForPath');
-const Route = require('./Route');
+const queryParamsForQuery = require('./queryParamsForQuery');
+const routeConfigForPath = require('./routeConfigForPath');
+const urlParamsForPath = require('./urlParamsForPath');
 
 const Router = ({ onPathNotMatch, ...props }) => {
     const [{ homePath, viewsConfig }] = React.useState(() => ({
