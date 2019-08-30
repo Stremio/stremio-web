@@ -1,6 +1,9 @@
 @import (inline, once, css) 'stremio-colors/css/stremio-colors.css';
-@import (inline, once, css) 'router/styles.css';
 @import (reference) 'common/screen-sizes.less';
+
+:global {
+    @import (once, less) 'router/styles.css';
+}
 
 @font-face {
     font-family: 'Roboto';
@@ -85,7 +88,7 @@
     background-color: var(--color-backgroundlight);
 }
 
-html, body, #app {
+html, body, :global(#app) {
     position: relative;
     z-index: 0;
     width: 100vw;
@@ -95,7 +98,7 @@ html, body, #app {
     font-family: 'Roboto', 'sans-serif';
     overflow: auto;
 
-    .routes-container {
+    .router {
         width: 100%;
         height: 100%;
     }
