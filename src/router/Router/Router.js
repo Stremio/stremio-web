@@ -8,7 +8,7 @@ const queryParamsForQuery = require('./queryParamsForQuery');
 const routeConfigForPath = require('./routeConfigForPath');
 const urlParamsForPath = require('./urlParamsForPath');
 
-const Router = ({ onPathNotMatch, ...props }) => {
+const Router = ({ className, onPathNotMatch, ...props }) => {
     const [{ homePath, viewsConfig }] = React.useState(() => ({
         homePath: props.homePath,
         viewsConfig: props.viewsConfig
@@ -79,7 +79,7 @@ const Router = ({ onPathNotMatch, ...props }) => {
         };
     }, [onPathNotMatch]);
     return (
-        <RoutesContainerProvider>
+        <RoutesContainerProvider className={className}>
             {
                 views
                     .filter(view => view !== null)
@@ -94,6 +94,7 @@ const Router = ({ onPathNotMatch, ...props }) => {
 };
 
 Router.propTypes = {
+    className: PropTypes.string,
     homePath: PropTypes.string,
     onPathNotMatch: PropTypes.func,
     viewsConfig: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.exact({
