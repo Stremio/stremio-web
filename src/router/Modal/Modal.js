@@ -13,18 +13,6 @@ const Modal = ({ className, children }) => {
     const onModalsContainerChildrenChange = React.useCallback(({ modalsContainer, contentContainer }) => {
         return modalsContainer.lastElementChild === contentContainer;
     }, []);
-    React.useEffect(() => {
-        modalsContainer.dispatchEvent(new CustomEvent('childrenchange', {
-            bubbles: false,
-            cancelable: false
-        }));
-        return () => {
-            modalsContainer.dispatchEvent(new CustomEvent('childrenchange', {
-                bubbles: false,
-                cancelable: false
-            }));
-        };
-    }, [modalsContainer]);
     return ReactDOM.createPortal(
         <FocusableProvider onRoutesContainerChildrenChange={onRoutesContainerChildrenChange} onModalsContainerChildrenChange={onModalsContainerChildrenChange}>
             <div className={classnames(className, 'modal-container')}>{children}</div>

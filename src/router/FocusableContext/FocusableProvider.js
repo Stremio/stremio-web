@@ -23,12 +23,14 @@ const FocusableProvider = ({ children, onRoutesContainerChildrenChange, onModals
                 })
             );
         };
-        routesContainer.addEventListener('childrenchange', onContainerChildrenChange);
-        modalsContainer.addEventListener('childrenchange', onContainerChildrenChange);
+        const routesContainerChildrenObserver = new MutationObserver(onContainerChildrenChange);
+        const modalsContainerChildrenObserver = new MutationObserver(onContainerChildrenChange);
+        routesContainerChildrenObserver.observe(routesContainer, { childList: true });
+        modalsContainerChildrenObserver.observe(modalsContainer, { childList: true });
         onContainerChildrenChange();
         return () => {
-            routesContainer.removeEventListener('childrenchange', onContainerChildrenChange);
-            modalsContainer.removeEventListener('childrenchange', onContainerChildrenChange);
+            routesContainerChildrenObserver.disconnect();
+            modalsContainerChildrenObserver.disconnect();
         };
     }, [routesContainer, modalsContainer, onRoutesContainerChildrenChange, onModalsContainerChildrenChange]);
     React.useEffect(() => {
