@@ -8,7 +8,7 @@ const routesRegexp = require('stremio/common/routesRegexp');
 const useLocationHash = require('stremio/common/useLocationHash');
 const styles = require('./styles');
 
-const NavBarButton = ({ className, icon = '', label = '', href = '', onClick }) => {
+const NavTabButton = ({ className, icon = '', label = '', href = '', onClick }) => {
     const locationHash = useLocationHash();
     const routeRegexp = React.useMemo(() => {
         if (typeof href === 'string' && href.length > 0) {
@@ -30,7 +30,7 @@ const NavBarButton = ({ className, icon = '', label = '', href = '', onClick }) 
         return false;
     }, [routeRegexp, locationHash]);
     return (
-        <Button className={classnames(className, styles['nav-bar-button-container'], { 'active': active })} title={label} tabIndex={-1} href={href} onClick={onClick}>
+        <Button className={classnames(className, styles['nav-tab-button-container'], { 'active': active })} title={label} tabIndex={-1} href={href} onClick={onClick}>
             {
                 typeof icon === 'string' && icon.length > 0 ?
                     <Icon className={styles['icon']} icon={icon} />
@@ -47,7 +47,7 @@ const NavBarButton = ({ className, icon = '', label = '', href = '', onClick }) 
     );
 };
 
-NavBarButton.propTypes = {
+NavTabButton.propTypes = {
     className: PropTypes.string,
     icon: PropTypes.string,
     label: PropTypes.string,
@@ -55,4 +55,4 @@ NavBarButton.propTypes = {
     onClick: PropTypes.func
 };
 
-module.exports = NavBarButton;
+module.exports = NavTabButton;

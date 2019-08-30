@@ -1,12 +1,14 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const NavBarButton = require('./NavBarButton');
+const NavTabButton = require('./NavTabButton');
 const SearchBar = require('./SearchBar');
+const AddonsButton = require('./AddonsButton');
+const FullscreenButton = require('./FullscreenButton');
 const NavMenu = require('./NavMenu');
 const styles = require('./styles');
 
-const NavBar = React.memo(({ className, backButton = false, tabs = [], title = '', searchBar = false, navMenu = false }) => {
+const NavBar = React.memo(({ className, backButton = false, tabs = [], title = '', searchBar = false, addonsButton = false, fullscreenButton = false, navMenu = false }) => {
     const backButtonOnClick = React.useCallback(() => {
         window.history.back();
     }, []);
@@ -14,8 +16,8 @@ const NavBar = React.memo(({ className, backButton = false, tabs = [], title = '
         <nav className={classnames(className, styles['nav-bar-container'])}>
             {
                 backButton ?
-                    <NavBarButton
-                        className={styles['nav-bar-button']}
+                    <NavTabButton
+                        className={styles['nav-tab-button']}
                         icon={'ic_back_ios'}
                         label={'Back'}
                         onClick={backButtonOnClick}
@@ -26,9 +28,9 @@ const NavBar = React.memo(({ className, backButton = false, tabs = [], title = '
             {
                 Array.isArray(tabs) && tabs.length > 0 ?
                     tabs.slice(0, 4).map(({ href = '', icon = '', label = '', onClick }) => (
-                        <NavBarButton
+                        <NavTabButton
                             key={`${href}${icon}${label}`}
-                            className={styles['nav-bar-button']}
+                            className={styles['nav-tab-button']}
                             href={href}
                             icon={icon}
                             label={label}
@@ -45,6 +47,18 @@ const NavBar = React.memo(({ className, backButton = false, tabs = [], title = '
                         <SearchBar className={styles['search-bar']} />
                         <div className={styles['spacing']} />
                     </React.Fragment>
+                    :
+                    null
+            }
+            {
+                addonsButton ?
+                    <AddonsButton className={styles['addons-button']} />
+                    :
+                    null
+            }
+            {
+                fullscreenButton ?
+                    <FullscreenButton className={styles['fullscreen-button']} />
                     :
                     null
             }
@@ -71,6 +85,8 @@ NavBar.propTypes = {
     })),
     title: PropTypes.string,
     searchBar: PropTypes.bool,
+    addonsButton: PropTypes.bool,
+    fullscreenButton: PropTypes.bool,
     navMenu: PropTypes.bool
 };
 

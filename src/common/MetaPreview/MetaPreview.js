@@ -26,7 +26,7 @@ const MetaPreview = ({ className, compact = false, id, type, name, logo = '', ba
         return Array.isArray(genres) ?
             genres.map((genre) => ({
                 label: genre,
-                href: `#/discover/${type}//${genre}`
+                href: `#/discover/${type}//?genre=${genre}`
             }))
             :
             [];
