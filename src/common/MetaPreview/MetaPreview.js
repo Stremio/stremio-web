@@ -156,6 +156,7 @@ const MetaPreview = ({ className, compact = false, id, type, name = '', logo = '
                             icon={inLibrary ? 'ic_removelib' : 'ic_addlib'}
                             label={inLibrary ? 'Remove from Library' : 'Add to library'}
                             data-id={id}
+                            tabIndex={compact ? -1 : null}
                             onClick={toggleInLibrary}
                         />
                         :
@@ -167,6 +168,7 @@ const MetaPreview = ({ className, compact = false, id, type, name = '', logo = '
                             className={styles['action-button']}
                             icon={'ic_movies'}
                             label={'Trailer'}
+                            tabIndex={compact ? -1 : null}
                             href={`#/player?stream=${links.trailer}`}
                         />
                         :
@@ -178,6 +180,7 @@ const MetaPreview = ({ className, compact = false, id, type, name = '', logo = '
                             className={styles['action-button']}
                             icon={'ic_imdb'}
                             label={typeof imdbRating === 'string' && imdbRating.length > 0 ? `${imdbRating} / 10` : null}
+                            tabIndex={compact ? -1 : null}
                             href={`https://imdb.com/title/${links.imdb}`}
                             target={'_blank'}
                         />
@@ -191,6 +194,7 @@ const MetaPreview = ({ className, compact = false, id, type, name = '', logo = '
                                 className={styles['action-button']}
                                 icon={'ic_share'}
                                 label={'Share'}
+                                tabIndex={compact ? -1 : null}
                                 onClick={openShareModal}
                             />
                             {
