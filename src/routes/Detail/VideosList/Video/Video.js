@@ -1,130 +1,94 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import classnames from 'classnames';
-import Icon from 'stremio-icons/dom';
-import styles from './styles';
+const React = require('react');
+const PropTypes = require('prop-types');
+const classnames = require('classnames');
+const { Button } = require('stremio/common');
+const Icon = require('stremio-icons/dom');
+require('./styles');
 
-const MAX_TITLE_SYMBOLS = 100;
-
-const renderPoster = (poster) => {
-    if (poster.length === 0) {
-        return null;
-    }
-
+const Video = ({ className, id, name, poster, episode, released, watched = false, upcoming = false, progress = 0, onClick }) => {
+    const releasedText = React.useMemo(() => {
+        const releasedDate = new Date(released);
+        return !isNaN(releasedDate.getFullYear()) ?
+            releasedDate.toLocaleString(undefined, {
+                year: '2-digit',
+                month: 'short',
+                day: 'numeric'
+            })
+            :
+            null;
+    }, [released]);
     return (
-        <div className={styles['poster-container']}>
-            <img className={styles['poster']} src={poster} alt={''} />
-        </div>
-    );
-}
-
-const renderTitle = (episode, title) => {
-    if (title.length === 0) {
-        return null;
-    }
-
-    return (
-        <div className={styles['title']}>{episode}. {title.length > MAX_TITLE_SYMBOLS ? title.slice(0, MAX_TITLE_SYMBOLS) + '...' : title}</div>
-    );
-}
-
-const renderReleasedDate = (released) => {
-    if (isNaN(released.getTime())) {
-        return null;
-    }
-
-    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-
-    return (
-        <div className={styles['released-date']}>{released.getDate()} {months[released.getMonth()]}</div>
-    );
-}
-
-const renderUpcomingLabel = (isUpcoming) => {
-    if (!isUpcoming) {
-        return null;
-    }
-
-    return (
-        <div className={styles['upcoming-label']}>UPCOMING</div>
-    );
-}
-
-const renderWatchedLabel = (isWatched) => {
-    if (!isWatched) {
-        return null;
-    }
-
-    return (
-        <div className={styles['watched-label']}>WATCHED</div>
-    );
-}
-
-const renderLabels = (isUpcoming, isWatched) => {
-    if (!isWatched && !isUpcoming) {
-        return null;
-    }
-
-    return (
-        <div className={styles['label-container']}>
-            {renderUpcomingLabel(isUpcoming)}
-            {renderWatchedLabel(isWatched)}
-        </div>
-    );
-}
-
-const renderProgress = (progress) => {
-    if (progress <= 0) {
-        return null;
-    }
-
-    return (
-        <div className={styles['progress-container']}>
-            <div style={{ width: progress + '%' }} className={styles['progress']} />
-        </div>
-    );
-}
-
-const Video = (props) => {
-    return (
-        <div className={classnames(styles['video-container'], props.className)} data-video-id={props.id} onClick={props.onClick}>
-            <div className={styles['flex-row-container']}>
-                {renderPoster(props.poster)}
-                <div className={styles['info-container']}>
-                    {renderTitle(props.episode, props.title)}
-                    {renderReleasedDate(props.released)}
-                    {renderLabels(props.isUpcoming, props.isWatched)}
-                </div>
-                <div className={styles['arrow-container']}>
-                    <Icon className={styles['arrow']} icon={'ic_arrow_left'} />
-                </div>
+        <Button className={classnames(className, 'video-container')} data-id={id} onClick={onClick}>
+            {
+                typeof poster === 'string' && poster.length > 0 ?
+                    <div className={'poster-container'}>
+                        <img className={'poster'} src={poster} alt={' '} />
+                    </div>
+                    :
+                    null
+            }
+            <div className={'info-container'}>
+                {
+                    typeof name === 'string' && name.length > 0 ?
+                        <div className={'name-container'}>
+                            {episode !== null && !isNaN(episode) ? `${episode}. ` : null}
+                            {name}
+                        </div>
+                        :
+                        null
+                }
+                {
+                    typeof releasedText === 'string' && releasedText.length > 0 ?
+                        <div className={'released-container'}>{releasedText}</div>
+                        :
+                        null
+                }
+                {
+                    upcoming || watched ?
+                        <div className={'flags-container'}>
+                            {
+                                upcoming ?
+                                    <div className={'upcoming-container'}>Upcoming</div>
+                                    :
+                                    null
+                            }
+                            {
+                                watched ?
+                                    <div className={'watched-container'}>Watched</div>
+                                    :
+                                    null
+                            }
+                        </div>
+                        :
+                        null
+                }
             </div>
-            {renderProgress(props.progress)}
-        </div>
+            <div className={'next-icon-container'}>
+                <Icon className={'next-icon'} icon={'ic_arrow_thin_right'} />
+            </div>
+            {
+                progress !== null && !isNaN(progress) && progress > 0 ?
+                    <div className={'progress-bar-container'}>
+                        <div className={'progress-bar'} style={{ width: `${Math.min(progress, 1) * 100}%` }} />
+                    </div>
+                    :
+                    null
+            }
+        </Button>
     );
 }
 
 Video.propTypes = {
     className: PropTypes.string,
-    id: PropTypes.string.isRequired,
-    poster: PropTypes.string.isRequired,
-    episode: PropTypes.number.isRequired,
-    season: PropTypes.number.isRequired,
-    title: PropTypes.string.isRequired,
-    released: PropTypes.instanceOf(Date).isRequired,
-    isWatched: PropTypes.bool.isRequired,
-    isUpcoming: PropTypes.bool.isRequired,
-    progress: PropTypes.number.isRequired,
+    id: PropTypes.string,
+    name: PropTypes.string,
+    poster: PropTypes.string,
+    episode: PropTypes.number,
+    released: PropTypes.string,
+    watched: PropTypes.bool,
+    upcoming: PropTypes.bool,
+    progress: PropTypes.number,
     onClick: PropTypes.func
 };
-Video.defaultProps = {
-    poster: '',
-    episode: 0,
-    title: '',
-    released: new Date(''), //Invalid Date
-    isWatched: false,
-    isUpcoming: false,
-    progress: 0
-};
 
-export default Video;
+module.exports = Video;
