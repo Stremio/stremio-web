@@ -1,119 +1,77 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import classnames from 'classnames';
-import Icon from 'stremio-icons/dom';
-import { Popup } from 'stremio/common';
-import Video from './Video';
-import styles from './styles';
+const React = require('react');
+const PropTypes = require('prop-types');
+const classnames = require('classnames');
+const Icon = require('stremio-icons/dom');
+const { Button, Popup, useBinaryState } = require('stremio/common');
+const useSeasons = require('./useSeasons');
+require('./styles');
 
-class VideosList extends Component {
-    constructor(props) {
-        super(props);
+const Video = (props) => <div {...props} />
 
-        this.seasonsPopupRef = React.createRef();
-        this.seasons = this.props.videos.map((video) => video.season)
-            .filter((season, index, seasons) => seasons.indexOf(season) === index);
-
-        this.state = {
-            selectedSeason: this.seasons[0],
-            selectedVideoId: 0,
-            seasonsPopupOpen: false
-        }
-    }
-
-    changeSeason = (event) => {
-        this.setState({ selectedSeason: parseInt(event.currentTarget.dataset.season) });
-        this.seasonsPopupRef.current && this.seasonsPopupRef.current.close();
-    }
-
-    shouldComponentUpdate(nextProps, nextState) {
-        return nextState.selectedSeason !== this.state.selectedSeason ||
-            nextState.seasonsPopupOpen !== this.state.seasonsPopupOpen;
-    }
-
-    onPrevButtonClicked = () => {
-        const prevSeasonIndex = Math.max(this.seasons.indexOf(this.state.selectedSeason) - 1, 0);
-        this.setState({ selectedSeason: this.seasons[prevSeasonIndex] });
-    }
-
-    onNextButtonClicked = () => {
-        const nextSeasonIndex = Math.min(this.seasons.indexOf(this.state.selectedSeason) + 1, this.seasons.length - 1);
-        this.setState({ selectedSeason: this.seasons[nextSeasonIndex] });
-    }
-
-    onSeasonsPopupOpen = () => {
-        this.setState({ seasonsPopupOpen: true });
-    }
-
-    onSeasonsPopupClose = () => {
-        this.setState({ seasonsPopupOpen: false });
-    }
-
-    onClick = (event) => {
-        this.setState({ selectedVideoId: event.currentTarget.dataset.videoId });
-        console.log(event.currentTarget.dataset.videoId);
-    }
-
-    render() {
-        return (
-            <div className={classnames(styles['videos-list-container'], this.props.className)}>
-                <div className={styles['seasons-bar']}>
-                    <div className={styles['button-container']} onClick={this.onPrevButtonClicked}>
-                        <Icon className={styles['button-icon']} icon={'ic_arrow_left'} />
+const VideosList = ({ className, metaItem }) => {
+    const [season, seasons, setSeason, setPrevSeason, setNextSeason] = useSeasons(metaItem);
+    const [menuOpen, openMenu, closeMenu, toggleMenu] = useBinaryState(false);
+    const seasonOnClick = React.useCallback((event) => {
+        closeMenu();
+        setSeason(event.currentTarget.dataset.season);
+    }, []);
+    return (
+        <div className={classnames(className, 'videos-list-container')}>
+            {
+                seasons.length > 1 ?
+                    <div className={'seasons-bar'}>
+                        <Button className={'prev-season-button'} onClick={setPrevSeason}>
+                            <Icon className={'icon'} icon={'ic_arrow_left'} />
+                        </Button>
+                        <Popup
+                            open={menuOpen}
+                            menuMatchLabelWidth={true}
+                            onCloseRequest={closeMenu}
+                            renderLabel={(ref) => (
+                                <Button ref={ref} className={classnames('seasons-popup-label-container', { 'active': menuOpen })} onClick={toggleMenu}>
+                                    <div className={'season-label'}>Season</div>
+                                    <div className={'number-label'}>{season}</div>
+                                </Button>
+                            )}
+                            renderMenu={() => (
+                                <div className={'seasons-menu-container'}>
+                                    {seasons.map((season) => (
+                                        <Button key={season} className={'season-option-container'} data-season={season} onClick={seasonOnClick}>
+                                            <div className={'season-label'}>Season</div>
+                                            <div className={'number-label'}>{season}</div>
+                                        </Button>
+                                    ))}
+                                </div>
+                            )}
+                        />
+                        <Button className={'next-season-button'} onClick={setNextSeason}>
+                            <Icon className={'icon'} icon={'ic_arrow_right'} />
+                        </Button>
                     </div>
-                    <Popup ref={this.seasonsPopupRef} className={'detail-popup-container'} onOpen={this.onSeasonsPopupOpen} onClose={this.onSeasonsPopupClose}>
-                        <Popup.Label>
-                            <div className={classnames(styles['season-bar-button'], { 'active': this.state.seasonsPopupOpen })}>
-                                <div className={styles['season-label']}>Season</div>
-                                <div className={styles['season-number']}>{this.state.selectedSeason}</div>
-                                <Icon className={styles['icon']} icon={'ic_arrow_down'} />
-                            </div>
-                        </Popup.Label>
-                        <Popup.Menu>
-                            <div className={styles['popup-content']}>
-                                {this.seasons.map((season) =>
-                                    <div className={classnames(styles['season'], { [styles['selected-season']]: this.state.selectedSeason === season })} key={season} data-season={season} onClick={this.changeSeason}>
-                                        <div className={styles['season-label']}>Season</div>
-                                        <div className={styles['season-number']}>{season}</div>
-                                    </div>
-                                )}
-                            </div>
-                        </Popup.Menu>
-                    </Popup>
-                    <div className={styles['button-container']} onClick={this.onNextButtonClicked} >
-                        <Icon className={styles['button-icon']} icon={'ic_arrow_left'} />
-                    </div>
-                </div>
-                <div className={styles['scroll-container']}>
-                    {this.props.videos
-                        .filter((video) => video.season === this.state.selectedSeason)
-                        .map((video) =>
-                            <Video key={video.id}
-                                className={styles['video']}
-                                id={video.id}
-                                poster={video.poster}
-                                episode={video.episode}
-                                season={video.season}
-                                title={video.name}
-                                released={video.released}
-                                isWatched={video.isWatched}
-                                isUpcoming={video.isUpcoming}
-                                progress={video.progress}
-                                onClick={this.onClick}
+                    :
+                    null
+            }
+            {
+                metaItem !== null ?
+                    <div className={'videos-container'}>
+                        {metaItem.videos.map(video => (
+                            <Video
+                                {...video}
+                                key={video.id}
+                                className={'video'}
                             />
-                        )}
-                </div>
-            </div>
-        );
-    }
-}
+                        ))}
+                    </div>
+                    :
+                    null
+            }
+        </div>
+    );
+};
 
 VideosList.propTypes = {
     className: PropTypes.string,
-    videos: PropTypes.arrayOf(PropTypes.object).isRequired
-};
-VideosList.defaultProps = {
-    videos: []
+    metaItem: PropTypes.object
 };
 
-export default VideosList;
+module.exports = VideosList;

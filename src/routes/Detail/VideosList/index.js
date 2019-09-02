@@ -1,3 +1,3 @@
-import VideosList from './VideosList';
+const VideosList = require('./VideosList');
 
-export default VideosList;
+module.exports = VideosList;

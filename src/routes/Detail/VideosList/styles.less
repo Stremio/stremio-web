@@ -1,151 +1,97 @@
 .videos-list-container {
-    width: calc(var(--video-width) + var(--spacing) * 6);
     display: flex;
     flex-direction: column;
-    align-items: center;
-    background: var(--color-backgrounddarker40);
+    padding: 1rem;
+    background: var(--color-backgrounddark60);
 
     .seasons-bar {
-        height: calc(var(--video-width) * 0.14);
-        width: 100%;
+        flex: none;
+        align-self: stretch;
         display: flex;
+        flex-direction: row;
         justify-content: space-between;
-        margin-bottom: var(--spacing);
+        height: 4rem;
 
-        .season-bar-button {
-            cursor: pointer;
-            width: calc(var(--video-width) * 0.6);
+        .prev-season-button, .next-season-button {
+            flex: none;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: var(--spacing);
-            color: var(--color-surfacelight);
+            width: 4rem;
+            height: 4rem;
 
-            .season-label {
-                max-width: 8em;
-                max-height: 2.4em;
-                font-size: 1.2em;
-                line-height: 1.2em;
-                text-align: end;
-                overflow: hidden;
-            }
-
-            .season-number {
-                margin: 0 calc(var(--spacing) * 1.5) 0 var(--spacing);
-                font-size: 1.2em;
-                line-height: 1.2em;
+            &:hover {
+                background-color: var(--color-surfacedarker60);
             }
 
             .icon {
-                width: calc(var(--video-width) * 0.04);
-                height: calc(var(--video-width) * 0.04);
-                fill: var(--color-surfacelight);
-            }
-
-            &:hover {
-                color: var(--color-surfacelighter);
-                background-color: var(--color-surfacedarker60);
-
-                .icon {
-                    fill: var(--color-surfacelighter);
-                }
-            }
-
-            &:global(.active) {
-                color: var(--color-backgrounddarker);
-                background-color: var(--color-surfacelighter);
-
-                .icon {
-                    fill: var(--color-backgrounddarker);
-                }
+                width: 2rem;
+                height: 2rem;
+                fill: var(--color-surfacelighter);
             }
         }
 
-        .button-container {
-            cursor: pointer;
-            width: calc(var(--video-width) * 0.2);
+        .seasons-popup-label-container {
+            flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
+            color: var(--color-surfacelighter);
 
-            .button-icon {
-                width: 60%;
-                height: 60%;
-                fill: var(--color-surfacelight);
-            }
-
-            &:hover {
+            &:hover, &:global(.active) {
                 background-color: var(--color-surfacedarker60);
+            }
 
-                .button-icon {
-                    fill: var(--color-surfacelighter);
-                }
+            .season-label, .number-label {
+                flex: none;
+                max-width: 50%;
+                max-height: 3.6em;
+                padding: 0 0.2rem;
             }
         }
     }
 
-    .scroll-container {
+    .videos-container {
         flex: 1;
-        width: calc(var(--video-width) + var(--spacing) * 4);
-        padding: 0 calc(2 * var(--spacing));
-        margin: 0 var(--spacing);
+        align-self: stretch;
         overflow-y: auto;
-        overflow-x: hidden;
 
-        >:not(:first-child) {
-            margin-top: var(--spacing);
+        .video {
+            height: 8rem;
+            margin: 1rem;
+
+            &:first-child {
+                margin-top: 0;
+            }
+
+            &:last-child {
+                margin-bottom: 0;
+            }
         }
-    }
-
-    .scroll-container::-webkit-scrollbar {
-        width: var(--spacing) !important;
-    }
-
-    .scroll-container::-webkit-scrollbar-thumb {
-        background-color: var(--color-secondarylighter);
-    }
-
-    .scroll-container::-webkit-scrollbar-track {
-        background-color: var(--color-backgroundlighter);
     }
 }
 
-:global(.detail-popup-container) {
-    --border-color: var(--color-backgrounddarker80);
+.seasons-menu-container {
+    background-color: var(--color-surfacelighter);
 
-    .popup-content {
-        width: calc(var(--video-width) * 0.6);
-        background-color: var(--color-surfacelighter);
+    .season-option-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 4rem;
+        font-size: 1.1rem;
+        color: var(--color-backgrounddarker);
+        outline: none;
 
-        .season {
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            width: 100%;
-            padding: calc(var(--spacing) * 1.5);
-            font-size: 1.2em;
-            color: var(--color-backgrounddark);
+        &:hover, &:focus {
+            background-color: var(--color-surfacelight);
+        }
 
-            .season-label {
-                max-height: 2.4em;
-                line-height: 1.2em;
-                overflow: hidden;
-            }
-
-            .season-number {
-                margin-left: var(--spacing);
-                line-height: 1.2em;
-            }
-
-            &.selected-season {
-                color: var(--color-surfacelighter);
-                background-color: var(--color-primarydark);
-            }
-
-            &:hover {
-                color: var(--color-surfacelighter);
-                background-color: var(--color-primarylight);
-            }
+        .season-label, .number-label {
+            flex: none;
+            max-width: 50%;
+            max-height: 3.6em;
+            padding: 0 0.2rem;
         }
     }
 }
