@@ -1,5 +1,5 @@
 module.exports = (routeConfig, path) => {
-    const matches = path.match(routeConfig.regexp);
+    const matches = typeof path === 'string' ? path.match(routeConfig.regexp) : [];
     return routeConfig.urlParamsNames.reduce((urlParams, name, index) => {
         if (Array.isArray(matches) && typeof matches[index + 1] === 'string') {
             urlParams[name] = matches[index + 1];
