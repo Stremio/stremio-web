@@ -18,7 +18,7 @@ const Video = ({ className, id, name, poster, episode, released, watched = false
             null;
     }, [released]);
     return (
-        <Button className={classnames(className, 'video-container')} data-id={id} onClick={onClick}>
+        <Button className={classnames(className, 'video-container')} title={name} data-id={id} onClick={onClick}>
             {
                 typeof poster === 'string' && poster.length > 0 ?
                     <div className={'poster-container'}>
