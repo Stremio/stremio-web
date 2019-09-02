@@ -6,8 +6,8 @@ const useSeasons = (metaItem) => {
             metaItem.videos
                 .map(({ season }) => season)
                 .filter((season, index, seasons) => {
-                    return typeof season === 'string' &&
-                        season.length > 0 &&
+                    return season !== null &&
+                        !isNaN(season) &&
                         seasons.indexOf(season) === index;
                 })
             :
