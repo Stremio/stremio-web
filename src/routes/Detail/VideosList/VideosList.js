@@ -3,17 +3,19 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const { Button, Popup, useBinaryState } = require('stremio/common');
+const Video = require('./Video');
 const useSeasons = require('./useSeasons');
 require('./styles');
-
-const Video = (props) => <div {...props} />
 
 const VideosList = ({ className, metaItem }) => {
     const [season, seasons, setSeason, setPrevSeason, setNextSeason] = useSeasons(metaItem);
     const [menuOpen, openMenu, closeMenu, toggleMenu] = useBinaryState(false);
     const seasonOnClick = React.useCallback((event) => {
         closeMenu();
-        setSeason(event.currentTarget.dataset.season);
+        const season = parseInt(event.currentTarget.dataset.season);
+        if (!isNaN(season)) {
+            setSeason(season);
+        }
     }, []);
     return (
         <div className={classnames(className, 'videos-list-container')}>
