@@ -17,6 +17,13 @@ const Detail = ({ urlParams }) => {
                 title={metaItem !== null ? metaItem.name : null}
             />
             <div className={'detail-content'}>
+                <div className={'background-image-layer'}>
+                    <img
+                        className={'background-image'}
+                        src={metaItem !== null ? metaItem.background : null}
+                        alt={' '}
+                    />
+                </div>
                 {
                     metaItem !== null ?
                         <MetaPreview
