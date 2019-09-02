@@ -56,13 +56,17 @@ const VideosList = ({ className, metaItem }) => {
             {
                 metaItem !== null ?
                     <div className={'videos-container'}>
-                        {metaItem.videos.map(video => (
-                            <Video
-                                {...video}
-                                key={video.id}
-                                className={'video'}
-                            />
-                        ))}
+                        {
+                            metaItem.videos
+                                .filter(video => isNaN(season) || video.season === season)
+                                .map(video => (
+                                    <Video
+                                        {...video}
+                                        key={video.id}
+                                        className={'video'}
+                                    />
+                                ))
+                        }
                     </div>
                     :
                     null
