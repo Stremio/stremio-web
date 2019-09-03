@@ -1,24 +1,21 @@
 .streams-list-container {
-    display: flex;
-    flex-direction: column;
-    padding: 1rem;
     background: var(--color-backgrounddark60);
     overflow-y: auto;
 
     .stream {
-        flex: none;
-        align-self: stretch;
-        margin: 1rem;
+        margin: 1rem 2rem;
+
+        &:first-child {
+            margin-top: 2rem;
+        }
     }
 
     .install-addons-container {
-        flex: none;
-        align-self: stretch;
         display: flex;
         flex-direction: row;
         align-items: center;
         justify-content: center;
-        margin: 1rem;
+        margin: 1rem 2rem 2rem;
         padding: 1rem;
         background-color: var(--color-signal5);
 
