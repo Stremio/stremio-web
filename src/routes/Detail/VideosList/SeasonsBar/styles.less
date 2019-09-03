@@ -9,9 +9,10 @@
         justify-content: center;
         width: 4rem;
         height: 4rem;
+        background-color: var(--color-surfacedarker60);
 
         &:hover {
-            background-color: var(--color-surfacedarker60);
+            background-color: var(--color-surfacedarker);
         }
 
         .icon {
@@ -21,6 +22,14 @@
         }
     }
 
+    .prev-season-button {
+        margin-right: 1rem;
+    }
+
+    .next-season-button {
+        margin-left: 1rem;
+    }
+
     .seasons-popup-label-container {
         flex: 1;
         align-self: stretch;
@@ -28,9 +37,10 @@
         align-items: center;
         justify-content: center;
         color: var(--color-surfacelighter);
+        background-color: var(--color-surfacedarker60);
 
         &:hover, &:global(.active) {
-            background-color: var(--color-surfacedarker60);
+            background-color: var(--color-surfacedarker);
         }
 
         .season-label, .number-label {
