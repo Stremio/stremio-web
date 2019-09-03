@@ -2,6 +2,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const SeasonsBar = require('./SeasonsBar');
+const SeasonsBarPlaceholder = require('./SeasonsBarPlaceholder');
 const Video = require('./Video');
 const VideoPlaceholder = require('./VideoPlaceholder');
 const useSeasons = require('./useSeasons');
@@ -41,6 +42,7 @@ const VideosList = ({ className, metaItem }) => {
                     </React.Fragment>
                     :
                     <React.Fragment>
+                        <SeasonsBarPlaceholder className={'seasons-bar'} />
                         <div className={'videos-container'}>
                             <VideoPlaceholder className={'video'} />
                             <VideoPlaceholder className={'video'} />
