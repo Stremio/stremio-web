@@ -1,3 +1,3 @@
-import Stream from './Stream';
+const Stream = require('./Stream');
 
-export default Stream;
+module.exports = Stream;

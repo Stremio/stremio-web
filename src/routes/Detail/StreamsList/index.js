@@ -1,3 +1,3 @@
-import StreamsList from './StreamsList';
+const StreamsList = require('./StreamsList');
 
-export default StreamsList;
+module.exports = StreamsList;

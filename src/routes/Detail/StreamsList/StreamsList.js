@@ -1,55 +1,29 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Icon from 'stremio-icons/dom';
-import Stream from './Stream';
-import styles from './styles';
+const React = require('react');
+const PropTypes = require('prop-types');
+const classnames = require('classnames');
+const Icon = require('stremio-icons/dom');
+const Stream = require('./Stream');
+const useStreams = require('./useStreams');
+require('./styles');
 
-const renderStreamPlaceholders = () => {
-    const streamPlaceholders = [];
-    for (let placeholderNumber = 0; placeholderNumber < 20; placeholderNumber++) {
-        streamPlaceholders.push(
-            <div key={placeholderNumber} className={styles['placeholder']}>
-                <div className={styles['logo-placeholder']} />
-                <div className={styles['text-placeholder']} />
-            </div>
-        )
-    }
-
-    return streamPlaceholders;
-}
-
-const StreamsList = (props) => {
+const StreamsList = ({ className, metaItem }) => {
+    const streams = useStreams(metaItem);
     return (
-        <div className={styles['streams-list-container']}>
-            <div className={styles['scroll-container']}>
-                {props.streams.length === 0 ?
-                    renderStreamPlaceholders()
-                    :
-                    props.streams.map((stream) =>
-                        <Stream key={stream.id}
-                            className={styles['stream']}
-                            logo={stream.logo}
-                            sourceName={stream.sourceName}
-                            title={stream.title}
-                            subtitle={stream.subtitle}
-                            progress={stream.progress}
-                        />
-                    )}
-                <div className={styles['button']} onClick={props.onMoreAddonsClicked}>
-                    <Icon className={styles['button-icon']} icon={'ic_addons'} />
-                    <div className={styles['button-label']}>More Add-ons</div>
-                </div>
-            </div>
+        <div className={classnames(className, 'streams-list-container')}>
+            {streams.map((stream) => (
+                <Stream
+                    {...stream}
+                    key={stream.id}
+                    className={'stream'}
+                />
+            ))}
         </div>
     );
 }
 
 StreamsList.propTypes = {
-    streams: PropTypes.arrayOf(PropTypes.object).isRequired,
-    onMoreAddonsClicked: PropTypes.func
-};
-StreamsList.defaultProps = {
-    streams: []
+    className: PropTypes.string,
+    metaItem: PropTypes.object
 };
 
-export default StreamsList;
+module.exports = StreamsList;

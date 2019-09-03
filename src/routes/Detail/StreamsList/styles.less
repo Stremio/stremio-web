@@ -1,110 +1,13 @@
 .streams-list-container {
-    --scroll-container-width: 392px;
-    --stream-width: 360px;
-    --spacing: 8px;
-    --button-label-font-size: 18px;
-}
-
-.streams-list-container {
-    height: 100%;
-    display: inline-flex;
+    display: flex;
     flex-direction: column;
-    background: var(--color-background);
+    padding: 1rem;
+    background: var(--color-backgrounddark60);
+    overflow-y: auto;
 
-    .scroll-container {
-        flex: 1;
-        width: var(--scroll-container-width);
-        padding: 0 calc(2 * var(--spacing));
-        margin: var(--spacing);
-        overflow-y: auto;
-        overflow-x: hidden;
-
-        .placeholder {
-            margin-top: var(--spacing);
-            width: var(--stream-width);
-            display: flex;
-            flex-direction: row;
-            position: relative;
-            z-index: 0;
-            overflow: hidden;
-            background-color: var(--color-backgroundlighter);
-            
-            .logo-placeholder {
-                margin: var(--spacing) 0 var(--spacing) var(--spacing);
-                width: calc(.2 * var(--stream-width));
-                height: calc(.2 * var(--stream-width));
-                background-color: var(--color-secondarylighter20);
-            }
-
-            .text-placeholder {
-                flex: 1;
-                margin: var(--spacing);
-                background-color: var(--color-secondarylighter20);
-            }
-
-            &:after {
-                content: " ";
-                position: absolute;
-                top: 0;
-                right: 0;
-                bottom: 0;
-                left: 50%;
-                width: 800%;
-                margin-left: -400%;
-                animation: placeholderAnimation 1s linear infinite;
-                background: linear-gradient(to right, rgba(255, 255, 255, 0) 44%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0) 56%);
-            }
-
-            @keyframes placeholderAnimation {
-                0% {
-                    transform: translate3d(-30%, 0, 0);
-                }
-
-                100% {
-                    transform: translate3d(30%, 0, 0);
-                }
-            }
-
-            &:nth-child(n+8) {
-                display: none;
-            }
-        }
-
-        >:not(:first-child) {
-            margin-top: var(--spacing);
-        }
-
-        .button {
-            width: var(--stream-width);
-            height: calc(0.2 * var(--stream-width));
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--color-primary);
-            background-color: var(--color-surfacelighter);
-
-            .button-icon {
-                height: 44%;
-                margin-right: var(--spacing);
-                fill: var(--color-primary);
-            }
-
-            .button-label {
-                font-size: var(--button-label-font-size);
-            }
-        }
+    .stream {
+        margin: 1rem;
     }
 
-    .scroll-container::-webkit-scrollbar {
-        width: var(--spacing);
-    }
-
-    .scroll-container::-webkit-scrollbar-thumb {
-        background-color: var(--color-secondarylighter80);
-    }
-
-    .scroll-container::-webkit-scrollbar-track {
-        background-color: var(--color-backgroundlight);
-    }
+    .more-addons {}
 }
