@@ -5,27 +5,31 @@ const Icon = require('stremio-icons/dom');
 const { Button, Popup, useBinaryState } = require('stremio/common');
 require('./styles');
 
-const SeasonsBar = ({ className, season, seasons = [], onSeasonChange }) => {
+const SeasonsBar = ({ className, season, seasons, onSeasonChange }) => {
     const [menuOpen, openMenu, closeMenu, toggleMenu] = useBinaryState(false);
     const setPrevSeason = React.useCallback(() => {
-        const seasonIndex = seasons.indexOf(season);
-        if (seasonIndex > 0 && typeof onSeasonChange === 'function') {
-            onSeasonChange(seasons[seasonIndex - 1]);
+        if (Array.isArray(seasons)) {
+            const seasonIndex = seasons.indexOf(season);
+            if (seasonIndex > 0 && typeof onSeasonChange === 'function') {
+                onSeasonChange(seasons[seasonIndex - 1]);
+            }
         }
-    }, [seasons, season]);
+    }, [season, seasons, onSeasonChange]);
     const setNextSeason = React.useCallback(() => {
-        const seasonIndex = seasons.indexOf(season);
-        if (seasonIndex < seasons.length - 1 && typeof onSeasonChange === 'function') {
-            onSeasonChange(seasons[seasonIndex + 1]);
+        if (Array.isArray(seasons)) {
+            const seasonIndex = seasons.indexOf(season);
+            if (seasonIndex < seasons.length - 1 && typeof onSeasonChange === 'function') {
+                onSeasonChange(seasons[seasonIndex + 1]);
+            }
         }
-    }, [seasons, season]);
+    }, [season, seasons, onSeasonChange]);
     const seasonOnClick = React.useCallback((event) => {
         closeMenu();
         const season = parseInt(event.currentTarget.dataset.season);
         if (!isNaN(season) && typeof onSeasonChange === 'function') {
             onSeasonChange(season);
         }
-    }, []);
+    }, [onSeasonChange]);
     return (
         <div className={classnames(className, 'seasons-bar-container')}>
             <Button className={'prev-season-button'} onClick={setPrevSeason}>
@@ -36,19 +40,24 @@ const SeasonsBar = ({ className, season, seasons = [], onSeasonChange }) => {
                 menuMatchLabelWidth={true}
                 onCloseRequest={closeMenu}
                 renderLabel={(ref) => (
-                    <Button ref={ref} className={classnames('seasons-popup-label-container', { 'active': menuOpen })} onClick={toggleMenu}>
+                    <Button ref={ref} className={classnames('seasons-popup-label-container', { 'active': menuOpen })} title={`Season ${season}`} onClick={toggleMenu}>
                         <div className={'season-label'}>Season</div>
                         <div className={'number-label'}>{season}</div>
                     </Button>
                 )}
                 renderMenu={() => (
                     <div className={'seasons-menu-container'}>
-                        {seasons.map((season) => (
-                            <Button key={season} className={'season-option-container'} data-season={season} onClick={seasonOnClick}>
-                                <div className={'season-label'}>Season</div>
-                                <div className={'number-label'}>{season}</div>
-                            </Button>
-                        ))}
+                        {
+                            Array.isArray(seasons) ?
+                                seasons.map((season) => (
+                                    <Button key={season} className={'season-option-container'} data-season={season} title={`Season ${season}`} onClick={seasonOnClick}>
+                                        <div className={'season-label'}>Season</div>
+                                        <div className={'number-label'}>{season}</div>
+                                    </Button>
+                                ))
+                                :
+                                null
+                        }
                     </div>
                 )}
             />

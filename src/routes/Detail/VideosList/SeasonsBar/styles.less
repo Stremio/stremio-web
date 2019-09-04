@@ -4,11 +4,6 @@
 
     .prev-season-button, .next-season-button {
         flex: none;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 4rem;
-        height: 4rem;
         background-color: var(--color-surfacedarker60);
 
         &:hover {
@@ -16,18 +11,12 @@
         }
 
         .icon {
+            display: block;
             width: 2rem;
             height: 2rem;
+            margin: 1rem;
             fill: var(--color-surfacelighter);
         }
-    }
-
-    .prev-season-button {
-        margin-right: 1rem;
-    }
-
-    .next-season-button {
-        margin-left: 1rem;
     }
 
     .seasons-popup-label-container {
@@ -36,7 +25,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        color: var(--color-surfacelighter);
+        margin: 0 1rem;
         background-color: var(--color-surfacedarker60);
 
         &:hover, &:global(.active) {
@@ -48,6 +37,7 @@
             max-width: 50%;
             max-height: 3.6em;
             padding: 0 0.2rem;
+            color: var(--color-surfacelighter);
         }
     }
 }
