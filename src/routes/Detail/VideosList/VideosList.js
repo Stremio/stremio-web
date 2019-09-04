@@ -44,7 +44,7 @@ const VideosList = ({ className, metaItem }) => {
                     :
                     <React.Fragment>
                         <SeasonsBarPlaceholder className={'seasons-bar'} />
-                        <div className={'videos-container'}>
+                        <div className={'videos-scroll-container'}>
                             <VideoPlaceholder className={'video'} />
                             <VideoPlaceholder className={'video'} />
                             <VideoPlaceholder className={'video'} />
