@@ -1,0 +1,18 @@
+@keyframes placeholderAnimation {
+    from {
+        filter: brightness(1);
+    }
+
+    to {
+        filter: brightness(1.4);
+    }
+}
+
+.placeholder-container {
+    animation-name: placeholderAnimation;
+    animation-duration: 500ms;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    animation-fill-mode: none;
+    animation-timing-function: ease-out;
+}
