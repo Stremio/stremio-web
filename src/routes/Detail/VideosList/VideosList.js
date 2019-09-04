@@ -51,6 +51,8 @@ const VideosList = ({ className, metaItem }) => {
                             <VideoPlaceholder className={'video'} />
                             <VideoPlaceholder className={'video'} />
                             <VideoPlaceholder className={'video'} />
+                            <VideoPlaceholder className={'video'} />
+                            <VideoPlaceholder className={'video'} />
                         </div>
                     </React.Fragment>
             }
