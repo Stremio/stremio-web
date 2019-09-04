@@ -43,3 +43,28 @@
         }
     }
 }
+
+.seasons-menu-container {
+    background-color: var(--color-surfacelighter);
+
+    .season-option-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 4rem;
+        font-size: 1.1rem;
+        color: var(--color-backgrounddarker);
+        outline: none;
+
+        &:hover, &:focus {
+            background-color: var(--color-surfacelight);
+        }
+
+        .season-label, .number-label {
+            flex: none;
+            max-width: 50%;
+            max-height: 3.6em;
+            padding: 0 0.2rem;
+        }
+    }
+}

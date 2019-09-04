@@ -1,13 +1,13 @@
 .videos-list-container {
     display: flex;
     flex-direction: column;
-    padding: 1rem;
-    background: var(--color-backgrounddark60);
+    background: var(--color-backgrounddark80);
 
     .seasons-bar {
         flex: none;
         align-self: stretch;
-        margin: 0 1rem 1rem 1rem;
+        width: var(--item-size);
+        margin: 2rem 2rem 1rem 2rem;
     }
 
     .videos-container {
@@ -15,41 +15,25 @@
         align-self: stretch;
         overflow-y: auto;
 
+        &:first-child {
+            .video {
+                &:first-child {
+                    margin-top: 2rem;
+                }
+            }
+        }
+
         .video {
-            margin: 1rem;
+            width: var(--item-size);
+            margin: 1rem 2rem;
 
             &:first-child {
                 margin-top: 0;
             }
 
             &:last-child {
-                margin-bottom: 0;
+                margin-bottom: 2rem;
             }
-        }
-    }
-}
-
-.seasons-menu-container {
-    background-color: var(--color-surfacelighter);
-
-    .season-option-container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 4rem;
-        font-size: 1.1rem;
-        color: var(--color-backgrounddarker);
-        outline: none;
-
-        &:hover, &:focus {
-            background-color: var(--color-surfacelight);
-        }
-
-        .season-label, .number-label {
-            flex: none;
-            max-width: 50%;
-            max-height: 3.6em;
-            padding: 0 0.2rem;
         }
     }
 }
