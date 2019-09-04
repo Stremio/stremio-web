@@ -1,20 +1,50 @@
 .stream-placeholder-container {
     display: flex;
     flex-direction: row;
-    padding: 1rem;
-    background-color: var(--color-surfacedarker60);
+    background-color: var(--color-placeholderbackground);
 
-    .addon-container, .play-icon-container {
+    .addon-container {
         flex: none;
-        width: 4rem;
-        height: 4rem;
-        background-color: var(--color-surfacedarker40);
+        align-self: center;
+        padding: 0.5rem;
+
+        .addon-name {
+            width: 5rem;
+            height: 2rem;
+            background-color: var(--color-placeholdersurface);
+        }
     }
 
     .info-container {
         flex: 1;
-        align-self: stretch;
-        margin: 0 1rem;
-        background-color: var(--color-surfacedarker40);
+        align-self: center;
+        padding: 0.5rem;
+
+        .description-container {
+            height: 1.2rem;
+            background-color: var(--color-placeholdersurface);
+
+            &:nth-child(1) {
+                width: 80%;
+            }
+
+            &:nth-child(2) {
+                width: 40%;
+                margin-top: 0.5rem;
+            }
+        }
+    }
+
+    .play-icon-container {
+        flex: none;
+        align-self: center;
+        padding: 1.5rem;
+
+        .play-icon {
+            display: block;
+            width: 2rem;
+            height: 2rem;
+            fill: var(--color-placeholdersurface);
+        }
     }
 }
