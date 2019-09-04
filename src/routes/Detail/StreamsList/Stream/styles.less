@@ -1,23 +1,21 @@
 .stream-container {
     display: flex;
     flex-direction: row;
-    align-items: stretch;
+    align-items: center;
     flex-wrap: wrap;
     background-color: var(--color-surfacedarker60);
 
-    &:hover {
+    &:hover, &:focus {
         background-color: var(--color-surfacedarker);
     }
 
     .addon-container {
         flex: none;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
         padding: 0.5rem;
 
         .addon-name {
-            width: 5rem;
+            width: 6rem;
+            max-height: 3.6em;
             font-size: 1.1rem;
             text-align: center;
             color: var(--color-surfacelighter);
@@ -26,22 +24,20 @@
 
     .info-container {
         flex: 1;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
         padding: 0.5rem;
-        color: var(--color-surfacelighter);
+
+        .description-label {
+            max-height: 3.6em;
+            color: var(--color-surfacelighter);
+        }
     }
 
     .play-icon-container {
         flex: none;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
         padding: 1.5rem;
 
         .play-icon {
-            flex: none;
+            display: block;
             width: 2rem;
             height: 2rem;
             fill: var(--color-surfacelighter);
