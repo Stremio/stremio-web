@@ -7,11 +7,15 @@ require('./styles');
 
 const Stream = ({ className, id, addon, description, progress, onClick }) => {
     return (
-        <Button className={classnames(className, 'stream-container')} title={description} data-id={id} onClick={onClick}>
+        <Button className={classnames(className, 'stream-container')} title={typeof description === 'string' && description.length > 0 ? description : id} data-id={id} onClick={onClick}>
             <div className={'addon-container'}>
                 <div className={'addon-name'}>{addon}</div>
             </div>
-            <div className={'info-container'}>{description}</div>
+            <div className={'info-container'}>
+                <div className={'description-label'}>
+                    {typeof description === 'string' && description.length > 0 ? description : id}
+                </div>
+            </div>
             <div className={'play-icon-container'}>
                 <Icon className={'play-icon'} icon={'ic_play'} />
             </div>
@@ -29,9 +33,8 @@ const Stream = ({ className, id, addon, description, progress, onClick }) => {
 
 Stream.propTypes = {
     className: PropTypes.string,
-    id: PropTypes.string,
-    addon: PropTypes.string,
-    logo: PropTypes.string,
+    id: PropTypes.string.isRequired,
+    addon: PropTypes.string.isRequired,
     description: PropTypes.string,
     progress: PropTypes.number,
     onClick: PropTypes.func
