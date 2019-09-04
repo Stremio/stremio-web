@@ -1,23 +1,44 @@
 .streams-list-container {
-    background: var(--color-backgrounddark60);
-    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    background: var(--color-backgrounddark80);
 
-    .stream {
-        margin: 1rem 2rem;
+    .streams-container {
+        flex-grow: 0;
+        flex-shrink: 1;
+        flex-basis: auto;
+        align-self: stretch;
+        overflow-y: auto;
 
-        &:first-child {
-            margin-top: 2rem;
+        .stream {
+            width: var(--item-size);
+            margin: 1rem 2rem;
+
+            &:first-child {
+                margin-top: 2rem;
+            }
+
+            &:last-child {
+                margin-bottom: 0;
+            }
         }
     }
 
     .install-addons-container {
+        flex: none;
+        align-self: stretch;
         display: flex;
         flex-direction: row;
         align-items: center;
         justify-content: center;
-        margin: 1rem 2rem 2rem;
+        width: var(--item-size);
+        margin: 1rem 2rem 2rem 2rem;
         padding: 1rem;
         background-color: var(--color-signal5);
+
+        &:hover, &:focus {
+            filter: brightness(1.1);
+        }
 
         .icon {
             flex: none;
@@ -32,6 +53,7 @@
             flex-shrink: 1;
             flex-basis: auto;
             font-size: 1.5rem;
+            max-height: 3.6em;
             color: var(--color-surfacelighter);
         }
     }
