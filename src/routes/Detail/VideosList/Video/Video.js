@@ -31,13 +31,17 @@ const Video = ({ className, id, name, poster, episode, released, watched, upcomi
                 }
                 {
                     upcoming ?
-                        <div className={'upcoming-container'}>Upcoming</div>
+                        <div className={'upcoming-container'}>
+                            <div className={'flag-label'}>Upcoming</div>
+                        </div>
                         :
                         null
                 }
                 {
                     watched ?
-                        <div className={'watched-container'}>Watched</div>
+                        <div className={'watched-container'}>
+                            <div className={'flag-label'}>Watched</div>
+                        </div>
                         :
                         null
                 }
