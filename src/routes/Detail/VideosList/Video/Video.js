@@ -7,7 +7,7 @@ require('./styles');
 
 const Video = ({ className, id, name, poster, episode, released, watched, upcoming, progress, onClick }) => {
     return (
-        <Button className={classnames(className, 'video-container')} title={name} data-id={id} onClick={onClick}>
+        <Button className={classnames(className, 'video-container')} title={typeof name === 'string' && name.length > 0 ? name : id} data-id={id} onClick={onClick}>
             {
                 typeof poster === 'string' && poster.length > 0 ?
                     <div className={'poster-container'}>
