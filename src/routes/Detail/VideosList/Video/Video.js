@@ -5,18 +5,7 @@ const { Button } = require('stremio/common');
 const Icon = require('stremio-icons/dom');
 require('./styles');
 
-const Video = ({ className, id, name, poster, episode, released, watched = false, upcoming = false, progress = 0, onClick }) => {
-    const releasedText = React.useMemo(() => {
-        const releasedDate = new Date(released);
-        return !isNaN(releasedDate.getFullYear()) ?
-            releasedDate.toLocaleString(undefined, {
-                year: '2-digit',
-                month: 'short',
-                day: 'numeric'
-            })
-            :
-            null;
-    }, [released]);
+const Video = ({ className, id, name, poster, episode, released, watched, upcoming, progress, onClick }) => {
     return (
         <Button className={classnames(className, 'video-container')} title={name} data-id={id} onClick={onClick}>
             {
@@ -28,37 +17,27 @@ const Video = ({ className, id, name, poster, episode, released, watched = false
                     null
             }
             <div className={'info-container'}>
+                <div className={'name-container'}>
+                    {episode !== null && !isNaN(episode) ? `${episode}. ` : null}
+                    {typeof name === 'string' && name.length > 0 ? name : id}
+                </div>
                 {
-                    typeof name === 'string' && name.length > 0 ?
-                        <div className={'name-container'}>
-                            {episode !== null && !isNaN(episode) ? `${episode}. ` : null}
-                            {name}
+                    released instanceof Date && !isNaN(released.getFullYear()) ?
+                        <div className={'released-container'}>
+                            {released.toLocaleString(undefined, { year: '2-digit', month: 'short', day: 'numeric' })}
                         </div>
                         :
                         null
                 }
                 {
-                    typeof releasedText === 'string' && releasedText.length > 0 ?
-                        <div className={'released-container'}>{releasedText}</div>
+                    upcoming ?
+                        <div className={'upcoming-container'}>Upcoming</div>
                         :
                         null
                 }
                 {
-                    upcoming || watched ?
-                        <div className={'flags-container'}>
-                            {
-                                upcoming ?
-                                    <div className={'upcoming-container'}>Upcoming</div>
-                                    :
-                                    null
-                            }
-                            {
-                                watched ?
-                                    <div className={'watched-container'}>Watched</div>
-                                    :
-                                    null
-                            }
-                        </div>
+                    watched ?
+                        <div className={'watched-container'}>Watched</div>
                         :
                         null
                 }
@@ -84,7 +63,7 @@ Video.propTypes = {
     name: PropTypes.string,
     poster: PropTypes.string,
     episode: PropTypes.number,
-    released: PropTypes.string,
+    released: PropTypes.instanceOf(Date),
     watched: PropTypes.bool,
     upcoming: PropTypes.bool,
     progress: PropTypes.number,

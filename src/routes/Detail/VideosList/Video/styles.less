@@ -1,7 +1,6 @@
 .video-container {
     display: flex;
     flex-direction: row;
-    align-items: stretch;
     flex-wrap: wrap;
     background-color: var(--color-surfacedarker60);
 
@@ -11,6 +10,7 @@
 
     .poster-container {
         flex: none;
+        align-self: stretch;
         width: 5rem;
         padding: 0.5rem;
 
@@ -25,71 +25,66 @@
 
     .info-container {
         flex: 1;
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
+        align-self: stretch;
         padding: 0.5rem;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-content: flex-start;
+
+        &:first-child {
+            align-content: center;
+        }
 
         .name-container {
-            flex: none;
-            margin-bottom: 0.5rem;
+            flex-grow: 0;
+            flex-shrink: 0;
+            flex-basis: 100%;
             color: var(--color-surfacelighter);
-
-            &:last-child {
-                margin-bottom: 0;
-            }
         }
 
         .released-container {
-            flex: none;
-            margin-bottom: 0.5rem;
+            flex-grow: 0;
+            flex-shrink: 0;
+            flex-basis: 100%;
+            margin-top: 0.5rem;
             font-size: 0.8rem;
             color: var(--color-surfacelight);
-
-            &:last-child {
-                margin-bottom: 0;
-            }
         }
 
-        .flags-container {
+        .watched-container, .upcoming-container {
             flex: none;
-            display: flex;
-            flex-direction: row;
-            flex-wrap: wrap;
+            max-width: 100%;
+            margin-top: 0.5rem;
+            margin-right: 0.5rem;
+            padding: 0.2rem 0.4rem;
+            font-size: 0.8rem;
+            border-radius: 5%;
+            font-weight: bolder;
+            text-transform: uppercase;
+            color: var(--color-surfacelighter);
+            text-shadow: 1px 1px var(--color-surfacedarker60);
+        }
 
-            .watched-container, .upcoming-container {
-                flex: none;
-                max-width: 80%;
-                padding: 0.2rem 0.3rem;
-                font-size: 0.8rem;
-                border: thin solid;
-                text-transform: uppercase;
-                color: var(--color-surfacelight);
-            }
+        .upcoming-container {
+            background-color: var(--color-signal5);
+        }
 
-            .upcoming-container {
-                margin-right: 0.5rem;
-                border-color: var(--color-signal5);
-            }
-
-            .watched-container {
-                border-color: var(--color-primarylight);
-            }
+        .watched-container {
+            background-color: var(--color-primarylight);
         }
     }
 
     .next-icon-container {
         flex: none;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
+        align-self: stretch;
+        width: 2rem;
+        padding: 0.5rem;
 
         .next-icon {
-            flex: none;
-            width: 1.2rem;
-            height: 60%;
-            max-height: 2rem;
-            margin-right: 0.8rem;
+            display: block;
+            width: 100%;
+            height: 100%;
             fill: var(--color-surfacelighter);
         }
     }
