@@ -1,9 +1,39 @@
 .video-placeholder-container {
-    padding: 0.5rem;
-    background-color: var(--color-surfacedarker60);
+    display: flex;
+    flex-direction: row;
+    background-color: var(--color-surfacedarker80);
 
     .info-container {
-        height: 3rem;
-        background-color: var(--color-surfacedarker40);
+        flex: 1;
+        align-self: stretch;
+        padding: 0.5rem;
+
+        .name-container {
+            width: 80%;
+            height: 1.2rem;
+            background: var(--color-surfacedark20);
+        }
+
+        .released-container {
+            width: 40%;
+            height: 1.2rem;
+            margin-top: 0.5rem;
+            background: var(--color-surfacedark20);
+        }
+    }
+
+    .next-icon-container {
+        flex: none;
+        align-self: center;
+        width: 2rem;
+        height: 2.5rem;
+        padding: 0.5rem;
+
+        .next-icon {
+            display: block;
+            width: 100%;
+            height: 100%;
+            fill: var(--color-surfacedark20);
+        }
     }
 }
