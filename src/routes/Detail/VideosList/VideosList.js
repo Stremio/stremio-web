@@ -27,7 +27,7 @@ const VideosList = ({ className, metaItem }) => {
                                 :
                                 null
                         }
-                        <div className={'videos-container'}>
+                        <div className={'videos-scroll-container'}>
                             {
                                 metaItem.videos
                                     .filter((video) => isNaN(season) || video.season === season)

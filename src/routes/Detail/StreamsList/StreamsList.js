@@ -12,7 +12,7 @@ const StreamsList = ({ className, metaItem }) => {
     const streams = useStreams(metaItem);
     return (
         <div className={classnames(className, 'streams-list-container')}>
-            <div className={classnames('streams-container', { [placeholderStyles['placeholder-container']]: streams.length === 0 })}>
+            <div className={classnames('streams-scroll-container', { [placeholderStyles['placeholder-container']]: streams.length === 0 })}>
                 {
                     streams.length > 0 ?
                         streams.map((stream) => (
