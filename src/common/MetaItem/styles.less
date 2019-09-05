@@ -21,6 +21,12 @@
         }
     }
 
+    &.poster-shape-poster {
+        .poster-image-container {
+            padding-top: calc(100% * var(--poster-shape-ratio));
+        }
+    }
+
     &.poster-shape-square {
         .poster-image-container {
             padding-top: 100%;
@@ -30,12 +36,6 @@
     &.poster-shape-landscape {
         .poster-image-container {
             padding-top: calc(100% * var(--landscape-shape-ratio));
-        }
-    }
-
-    &.poster-shape-poster {
-        .poster-image-container {
-            padding-top: calc(100% * var(--poster-shape-ratio));
         }
     }
 

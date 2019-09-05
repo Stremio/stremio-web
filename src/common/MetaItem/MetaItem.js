@@ -38,7 +38,7 @@ const MetaItem = React.memo(({ className, id, type, name, posterShape = 'square'
         event.nativeEvent.selectItemPrevented = true;
     }, [menuOptionOnSelect]);
     return (
-        <Button className={classnames(className, styles['meta-item-container'], styles[`poster-shape-${posterShape}`], { 'active': menuOpen })} title={name} data-id={id} onClick={metaItemOnClick}>
+        <Button className={classnames(className, styles['meta-item-container'], styles['poster-shape-poster'], styles[`poster-shape-${posterShape}`], { 'active': menuOpen })} title={name} data-id={id} onClick={metaItemOnClick}>
             <div className={styles['poster-image-container']}>
                 <div className={styles['placeholder-image-layer']}>
                     <Icon
