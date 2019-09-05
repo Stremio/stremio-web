@@ -49,7 +49,7 @@ const MetaItem = React.memo(({ className, id, type, name, posterShape = 'square'
                 {
                     typeof poster === 'string' && poster.length > 0 ?
                         <div className={styles['poster-image-layer']}>
-                            <div className={styles['poster-image']} style={{ backgroundImage: `url('${poster}')` }} />
+                            <img className={styles['poster-image']} src={poster} alt={' '} />
                         </div>
                         :
                         null
