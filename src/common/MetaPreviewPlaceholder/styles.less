@@ -1,0 +1,161 @@
+.meta-preview-placeholder-container {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+
+    .meta-info-container {
+        flex: 1;
+        align-self: stretch;
+
+        .logo-container {
+            width: 20rem;
+            height: 7rem;
+            background-color: var(--color-placeholderbackground);
+
+            .logo {
+                width: 100%;
+                height: 100%;
+                background-color: var(--color-placeholdersurface);
+            }
+        }
+
+        .duration-release-info-container {
+            display: flex;
+            flex-direction: row;
+            margin: 1rem 0;
+
+            .duration-container {
+                width: 5rem;
+                height: 1.4rem;
+                margin-right: 1rem;
+                background-color: var(--color-placeholderbackground);
+
+                .duration-label {
+                    width: 100%;
+                    height: 100%;
+                    background-color: var(--color-placeholdersurface);
+                }
+            }
+
+            .release-info-container {
+                width: 5rem;
+                height: 1.4rem;
+                background-color: var(--color-placeholderbackground);
+
+                .release-info-label {
+                    width: 100%;
+                    height: 100%;
+                    background-color: var(--color-placeholdersurface);
+                }
+            }
+        }
+
+        .description-container {
+            margin: 1rem 0;
+
+            .description-label-container {
+                height: 1.4rem;
+                background-color: var(--color-placeholderbackground);
+
+                &:nth-child(1) {
+                    width: 26rem;
+                }
+
+                &:nth-child(2) {
+                    width: 26rem;
+                    margin-top: 0.2rem;
+                }
+
+                &:nth-child(3) {
+                    width: 23rem;
+                    margin-top: 0.2rem;
+                }
+
+                .description-label {
+                    width: 100%;
+                    height: 100%;
+                    background-color: var(--color-placeholdersurface);
+                }
+            }
+        }
+
+        .genres-container {
+            margin: 1rem 0;
+
+            .genres-header-container {
+                width: 6.5rem;
+                height: 1.6rem;
+                background-color: var(--color-placeholderbackground);
+
+                .genres-header-label {
+                    width: 100%;
+                    height: 100%;
+                    background-color: var(--color-placeholdersurface);
+                }
+            }
+
+            .genres-labels-container {
+                display: flex;
+                flex-direction: row;
+                margin-top: 0.2rem;
+
+                .genre-label-container {
+                    height: 1.2rem;
+                    background-color: var(--color-placeholderbackground);
+
+                    &:nth-child(1) {
+                        width: 6rem;
+                        margin-right: 0.2rem;
+                    }
+
+                    &:nth-child(2) {
+                        width: 4rem;
+                        margin-right: 0.2rem;
+                    }
+
+                    &:nth-child(3) {
+                        width: 7rem;
+                    }
+
+                    .genre-label {
+                        width: 100%;
+                        height: 100%;
+                        background-color: var(--color-placeholdersurface);
+                    }
+                }
+            }
+        }
+    }
+
+    .action-buttons-container {
+        display: flex;
+        flex-direction: row;
+
+        .action-button-container {
+            flex: none;
+            width: 6rem;
+            height: 6rem;
+            margin-right: 1rem;
+            border-radius: 5%;
+            background-color: var(--color-placeholderbackground);
+
+            &:last-child {
+                margin-right: 0;
+            }
+
+            .action-button-icon {
+                width: 2rem;
+                height: 2rem;
+                margin: 1rem 2rem 0 2rem;
+                background-color: var(--color-placeholdersurface);
+            }
+
+            .action-button-label {
+                width: 4rem;
+                height: 1.2rem;
+                margin: 0.9rem 1rem;
+                background-color: var(--color-placeholdersurface);
+            }
+        }
+    }
+}

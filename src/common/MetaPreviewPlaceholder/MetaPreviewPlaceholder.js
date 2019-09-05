@@ -1,0 +1,88 @@
+const React = require('react');
+const PropTypes = require('prop-types');
+const classnames = require('classnames');
+const Icon = require('stremio-icons/dom');
+const styles = require('./styles');
+
+const MetaPreviewPlaceholder = ({ className }) => {
+    return (
+        <div className={classnames(className, styles['meta-preview-placeholder-container'])}>
+            <div className={styles['meta-info-container']}>
+                <div className={styles['logo-container']}>
+                    <div className={styles['logo']} />
+                </div>
+                <div className={styles['duration-release-info-container']}>
+                    <div className={styles['duration-container']}>
+                        <div className={styles['duration-label']} />
+                    </div>
+                    <div className={styles['release-info-container']}>
+                        <div className={styles['release-info-label']} />
+                    </div>
+                </div>
+                <div className={styles['description-container']}>
+                    <div className={styles['description-label-container']}>
+                        <div className={styles['description-label']} />
+                    </div>
+                    <div className={styles['description-label-container']}>
+                        <div className={styles['description-label']} />
+                    </div>
+                    <div className={styles['description-label-container']}>
+                        <div className={styles['description-label']} />
+                    </div>
+                </div>
+                <div className={styles['genres-container']}>
+                    <div className={styles['genres-header-container']}>
+                        <div className={styles['genres-header-label']} />
+                    </div>
+                    <div className={styles['genres-labels-container']}>
+                        <div className={styles['genre-label-container']}>
+                            <div className={styles['genre-label']} />
+                        </div>
+                        <div className={styles['genre-label-container']}>
+                            <div className={styles['genre-label']} />
+                        </div>
+                        <div className={styles['genre-label-container']}>
+                            <div className={styles['genre-label']} />
+                        </div>
+                    </div>
+                </div>
+                <div className={styles['genres-container']}>
+                    <div className={styles['genres-header-container']}>
+                        <div className={styles['genres-header-label']} />
+                    </div>
+                    <div className={styles['genres-labels-container']}>
+                        <div className={styles['genre-label-container']}>
+                            <div className={styles['genre-label']} />
+                        </div>
+                        <div className={styles['genre-label-container']}>
+                            <div className={styles['genre-label']} />
+                        </div>
+                        <div className={styles['genre-label-container']}>
+                            <div className={styles['genre-label']} />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className={styles['action-buttons-container']}>
+                <div className={styles['action-button-container']}>
+                    <div className={styles['action-button-icon']} />
+                    <div className={styles['action-button-label']} />
+                </div>
+                <div className={styles['action-button-container']}>
+                    <div className={styles['action-button-icon']} />
+                    <div className={styles['action-button-label']} />
+                </div>
+                <div className={styles['action-button-container']}>
+                    <div className={styles['action-button-icon']} />
+                    <div className={styles['action-button-label']} />
+                </div>
+            </div>
+        </div>
+    );
+};
+
+MetaPreviewPlaceholder.propTypes = {
+    className: PropTypes.string
+};
+
+module.exports = MetaPreviewPlaceholder;
