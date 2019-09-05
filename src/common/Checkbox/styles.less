@@ -1,15 +1,20 @@
 .checkbox-container {
     &:global(.checked) {
-        .icon {
+        .icon-container {
             padding: calc(0.1 * var(--icon-size));
         }
     }
 
-    .icon {
-        display: block;
+    .icon-container {
         width: var(--icon-size);
         height: var(--icon-size);
-        fill: var(--icon-color);
         background-color: var(--icon-background-color);
+
+        .icon {
+            display: block;
+            width: 100%;
+            height: 100%;
+            fill: var(--icon-color);
+        }
     }
 }

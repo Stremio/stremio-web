@@ -7,7 +7,9 @@ const styles = require('./styles');
 const Checkbox = React.forwardRef((props, ref) => {
     return (
         <Button {...props} ref={ref} className={classnames(props.className, styles['checkbox-container'], { 'checked': props.checked })}>
-            <Icon className={styles['icon']} icon={props.checked ? 'ic_check' : 'ic_box_empty'} />
+            <div className={styles['icon-container']}>
+                <Icon className={styles['icon']} icon={props.checked ? 'ic_check' : 'ic_box_empty'} />
+            </div>
             {props.children}
         </Button>
     );
