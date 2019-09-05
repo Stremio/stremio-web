@@ -3,18 +3,19 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const Button = require('stremio/common/Button');
-const useBinaryState = require('stremio/common/useBinaryState');
 const Popup = require('stremio/common/Popup');
+const useBinaryState = require('stremio/common/useBinaryState');
 const styles = require('./styles');
 
 const ICON_FOR_TYPE = Object.assign(Object.create(null), {
     'movie': 'ic_movies',
     'series': 'ic_series',
     'channel': 'ic_channels',
-    'tv': 'ic_tv'
+    'tv': 'ic_tv',
+    'other': 'ic_movies'
 });
 
-const MetaItem = React.memo(({ className, id, type, name = '', posterShape = 'square', poster = '', title = '', subtitle = '', progress = 0, playIcon = false, menuOptions = [], onSelect, menuOptionOnSelect, ...props }) => {
+const MetaItem = React.memo(({ className, id, type, name, posterShape = 'square', poster, title, subtitle, progress, playIcon, menuOptions, onSelect, menuOptionOnSelect }) => {
     const [menuOpen, openMenu, closeMenu, toggleMenu] = useBinaryState(false);
     const metaItemOnClick = React.useCallback((event) => {
         if (!event.nativeEvent.selectItemPrevented && typeof onSelect === 'function') {
@@ -37,10 +38,13 @@ const MetaItem = React.memo(({ className, id, type, name = '', posterShape = 'sq
         event.nativeEvent.selectItemPrevented = true;
     }, [menuOptionOnSelect]);
     return (
-        <Button {...props} className={classnames(className, styles['meta-item-container'], styles[`poster-shape-${posterShape}`], { 'active': menuOpen })} title={name} data-id={id} onClick={metaItemOnClick}>
+        <Button className={classnames(className, styles['meta-item-container'], styles[`poster-shape-${posterShape}`], { 'active': menuOpen })} title={name} data-id={id} onClick={metaItemOnClick}>
             <div className={styles['poster-image-container']}>
                 <div className={styles['placeholder-image-layer']}>
-                    <Icon className={styles['placeholder-image']} icon={ICON_FOR_TYPE[type] || 'ic_movies'} />
+                    <Icon
+                        className={styles['placeholder-image']}
+                        icon={typeof ICON_FOR_TYPE[type] === 'string' ? ICON_FOR_TYPE[type] : ICON_FOR_TYPE['other']}
+                    />
                 </div>
                 {
                     typeof poster === 'string' && poster.length > 0 ?
@@ -127,7 +131,7 @@ MetaItem.displayName = 'MetaItem';
 MetaItem.propTypes = {
     className: PropTypes.string,
     id: PropTypes.string.isRequired,
-    type: PropTypes.string.isRequired,
+    type: PropTypes.string,
     name: PropTypes.string,
     posterShape: PropTypes.oneOf(['poster', 'landscape', 'square']),
     poster: PropTypes.string,
