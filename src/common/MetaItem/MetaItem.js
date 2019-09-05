@@ -3,6 +3,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const Button = require('stremio/common/Button');
+const PlayIconCircleCentered = require('stremio/common/PlayIconCircleCentered');
 const Popup = require('stremio/common/Popup');
 const useBinaryState = require('stremio/common/useBinaryState');
 const styles = require('./styles');
@@ -57,12 +58,7 @@ const MetaItem = React.memo(({ className, id, type, name, posterShape = 'square'
                 {
                     playIcon ?
                         <div className={styles['play-icon-layer']}>
-                            <svg className={styles['play-icon-container']} viewBox={'0 0 100 100'}>
-                                <circle className={styles['play-icon-background']} cx={'50'} cy={'50'} r={'50'} />
-                                <svg className={styles['play-icon']} x={'0'} y={'25'} width={'100'} height={'50'} viewBox={'0 0 37.14 32'}>
-                                    <path d={'M 9.14,0 37.14,16 9.14,32 Z'} />
-                                </svg>
-                            </svg>
+                            <PlayIconCircleCentered className={styles['play-icon']} />
                         </div>
                         :
                         null

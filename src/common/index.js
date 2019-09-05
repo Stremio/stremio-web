@@ -6,6 +6,7 @@ const MetaItem = require('./MetaItem');
 const MetaPreview = require('./MetaPreview');
 const MetaPreviewPlaceholder = require('./MetaPreviewPlaceholder');
 const NavBar = require('./NavBar');
+const PlayIconCircleCentered = require('./PlayIconCircleCentered');
 const Popup = require('./Popup');
 const ShareModal = require('./ShareModal');
 const Slider = require('./Slider');
@@ -26,6 +27,7 @@ module.exports = {
     MetaPreview,
     MetaPreviewPlaceholder,
     NavBar,
+    PlayIconCircleCentered,
     Popup,
     ShareModal,
     Slider,
