@@ -78,7 +78,7 @@ const MetaItem = React.memo(({ className, id, type, name, posterShape = 'square'
                         <div className={styles['title-bar-container']}>
                             {
                                 typeof title === 'string' && title.length > 0 ?
-                                    <div className={styles['title']}>{title}</div>
+                                    <div className={styles['title-label']}>{title}</div>
                                     :
                                     null
                             }
@@ -109,7 +109,7 @@ const MetaItem = React.memo(({ className, id, type, name, posterShape = 'square'
                         {
                             typeof subtitle === 'string' && subtitle.length > 0 ?
                                 <div className={styles['title-bar-container']}>
-                                    <div className={styles['title']}>{subtitle}</div>
+                                    <div className={styles['title-label']}>{subtitle}</div>
                                 </div>
                                 :
                                 null
