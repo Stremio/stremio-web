@@ -7,7 +7,7 @@ const ActionButton = require('./ActionButton');
 const MetaLinks = require('./MetaLinks');
 const styles = require('./styles');
 
-const MetaPreview = ({ className, compact = false, id, type, name = '', logo = '', background = '', duration = '', releaseInfo = '', released = '', description = '', genres = [], writers = [], directors = [], cast = [], imdbRating = '', links = {}, inLibrary = false, toggleInLibrary }) => {
+const MetaPreview = ({ className, compact, id, type, name, logo, background, duration, releaseInfo, released, description, genres, writers, directors, cast, imdbRating, links, inLibrary, toggleInLibrary }) => {
     const [shareModalOpen, openShareModal, closeShareModal] = useBinaryState(false);
     const releaseInfoText = React.useMemo(() => {
         const releasedDate = new Date(released);
@@ -19,9 +19,6 @@ const MetaPreview = ({ className, compact = false, id, type, name = '', logo = '
                 :
                 null;
     }, [releaseInfo, released]);
-    const logoOnError = React.useCallback((event) => {
-        event.currentTarget.style.display = 'none';
-    }, []);
     const genresLinks = React.useMemo(() => {
         return Array.isArray(genres) ?
             genres.map((genre) => ({
@@ -80,14 +77,14 @@ const MetaPreview = ({ className, compact = false, id, type, name = '', logo = '
                     :
                     null
             }
-            <div className={styles['meta-info']}>
+            <div className={styles['meta-info-container']}>
                 {
                     typeof logo === 'string' && logo.length > 0 ?
                         <img
                             key={logo}
                             className={styles['logo']}
                             src={logo}
-                            onError={logoOnError}
+                            alt={' '}
                         />
                         :
                         null
@@ -97,13 +94,13 @@ const MetaPreview = ({ className, compact = false, id, type, name = '', logo = '
                         <div className={styles['duration-release-info-container']}>
                             {
                                 typeof releaseInfoText === 'string' && releaseInfoText.length > 0 ?
-                                    <div className={styles['release-info']}>{releaseInfoText}</div>
+                                    <div className={styles['release-info-label']}>{releaseInfoText}</div>
                                     :
                                     null
                             }
                             {
                                 typeof duration === 'string' && duration.length > 0 ?
-                                    <div className={styles['duration']}>{duration}</div>
+                                    <div className={styles['duration-label']}>{duration}</div>
                                     :
                                     null
                             }
@@ -111,12 +108,9 @@ const MetaPreview = ({ className, compact = false, id, type, name = '', logo = '
                         :
                         null
                 }
-                {
-                    typeof name === 'string' && name.length > 0 ?
-                        <div className={styles['name-container']}>{name}</div>
-                        :
-                        null
-                }
+                <div className={styles['name-container']}>
+                    {typeof name === 'string' && name.length > 0 ? name : id}
+                </div>
                 {
                     typeof description === 'string' && description.length > 0 ?
                         <div className={styles['description-container']}>{description}</div>
@@ -222,8 +216,8 @@ const MetaPreview = ({ className, compact = false, id, type, name = '', logo = '
 MetaPreview.propTypes = {
     className: PropTypes.string,
     compact: PropTypes.bool,
-    id: PropTypes.string.isRequired,
-    type: PropTypes.string.isRequired,
+    id: PropTypes.string,
+    type: PropTypes.string,
     name: PropTypes.string,
     logo: PropTypes.string,
     background: PropTypes.string,
