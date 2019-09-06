@@ -126,7 +126,7 @@ MetaItem.displayName = 'MetaItem';
 
 MetaItem.propTypes = {
     className: PropTypes.string,
-    id: PropTypes.string.isRequired,
+    id: PropTypes.string,
     type: PropTypes.string,
     name: PropTypes.string,
     posterShape: PropTypes.oneOf(['poster', 'landscape', 'square']),
