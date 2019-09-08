@@ -5,7 +5,7 @@ const Icon = require('stremio-icons/dom');
 const Button = require('stremio/common/Button');
 const styles = require('./styles');
 
-const ActionButton = ({ className, icon = '', label = '', ...props }) => {
+const ActionButton = ({ className, icon, label, ...props }) => {
     return (
         <Button {...props} className={classnames(className, styles['action-button-container'])} title={label}>
             {
