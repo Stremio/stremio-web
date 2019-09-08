@@ -10,6 +10,7 @@
         .logo-container {
             width: 20rem;
             height: 7rem;
+            max-width: 100%;
             background-color: var(--color-placeholderbackground);
 
             .logo {
@@ -22,10 +23,11 @@
         .duration-release-info-container {
             display: flex;
             flex-direction: row;
+            flex-wrap: wrap;
             margin: 1rem 0;
 
             .duration-container {
-                width: 5rem;
+                flex-basis: 5rem;
                 height: 1.4rem;
                 margin-right: 1rem;
                 background-color: var(--color-placeholderbackground);
@@ -38,7 +40,7 @@
             }
 
             .release-info-container {
-                width: 5rem;
+                flex-basis: 5rem;
                 height: 1.4rem;
                 background-color: var(--color-placeholderbackground);
 
@@ -59,15 +61,18 @@
 
                 &:nth-child(1) {
                     width: 26rem;
+                    max-width: 80%;
                 }
 
                 &:nth-child(2) {
                     width: 26rem;
+                    max-width: 80%;
                     margin-top: 0.2rem;
                 }
 
                 &:nth-child(3) {
                     width: 23rem;
+                    max-width: 70%;
                     margin-top: 0.2rem;
                 }
 
@@ -85,6 +90,7 @@
             .genres-header-container {
                 width: 6.5rem;
                 height: 1.6rem;
+                max-width: 100%;
                 background-color: var(--color-placeholderbackground);
 
                 .genres-header-label {
@@ -104,17 +110,17 @@
                     background-color: var(--color-placeholderbackground);
 
                     &:nth-child(1) {
-                        width: 6rem;
+                        flex-basis: 6rem;
                         margin-right: 0.2rem;
                     }
 
                     &:nth-child(2) {
-                        width: 4rem;
+                        flex-basis: 4rem;
                         margin-right: 0.2rem;
                     }
 
                     &:nth-child(3) {
-                        width: 7rem;
+                        flex-basis: 7rem;
                     }
 
                     .genre-label {
@@ -130,6 +136,8 @@
     .action-buttons-container {
         display: flex;
         flex-direction: row;
+        flex-wrap: wrap;
+        max-height: 6rem;
 
         .action-button-container {
             flex: none;
