@@ -3,7 +3,7 @@ const PropTypes = require('prop-types');
 const { Modal } = require('stremio-router');
 const styles = require('./styles');
 
-const Popup = ({ open = false, menuMatchLabelWidth = false, renderLabel, renderMenu, onCloseRequest }) => {
+const Popup = ({ open, menuMatchLabelWidth, renderLabel, renderMenu, onCloseRequest }) => {
     const labelRef = React.useRef(null);
     const menuRef = React.useRef(null);
     const [menuStyles, setMenuStyles] = React.useState({});
