@@ -8,7 +8,7 @@ const FullscreenButton = require('./FullscreenButton');
 const NavMenu = require('./NavMenu');
 const styles = require('./styles');
 
-const NavBar = React.memo(({ className, backButton = false, tabs = [], title = '', searchBar = false, addonsButton = false, fullscreenButton = false, navMenu = false }) => {
+const NavBar = React.memo(({ className, backButton, tabs, title, searchBar, addonsButton, fullscreenButton, navMenu }) => {
     const backButtonOnClick = React.useCallback(() => {
         window.history.back();
     }, []);

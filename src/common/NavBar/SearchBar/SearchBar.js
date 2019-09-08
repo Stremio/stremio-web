@@ -16,7 +16,7 @@ const SearchBar = ({ className }) => {
     const searchInputRef = React.useRef(null);
     const [active, query] = React.useMemo(() => {
         const { pathname: locationPathname, search: locationSearch } = UrlUtils.parse(locationHash.slice(1));
-        const active = !!routesRegexp.search.regexp.exec(locationPathname);
+        const active = !!locationPathname.match(routesRegexp.search.regexp);
         const queryParams = new URLSearchParams(locationSearch);
         const query = (active && queryParams.has('q')) ? queryParams.get('q') : '';
         return [active, query];
@@ -56,10 +56,10 @@ const SearchBar = ({ className }) => {
                     />
                     :
                     <div className={styles['search-input']}>
-                        <div className={styles['placeholder']}>Search</div>
+                        <div className={styles['placeholder-label']}>Search</div>
                     </div>
             }
-            <Button className={styles['submit-button']} tabIndex={-1} onClick={queryInputOnSubmit}>
+            <Button className={styles['submit-button-container']} tabIndex={-1} onClick={queryInputOnSubmit}>
                 <Icon className={styles['icon']} icon={'ic_search'} />
             </Button>
         </label>

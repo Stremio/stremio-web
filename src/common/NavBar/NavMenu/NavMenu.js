@@ -35,49 +35,49 @@ const NavMenu = ({ className }) => {
                             }}
                         />
                         <div className={styles['email-container']}>
-                            <div className={styles['label']}>{user.anonymous ? 'Anonymous user' : user.email}</div>
+                            <div className={styles['email-label']}>{user.anonymous ? 'Anonymous user' : user.email}</div>
                         </div>
                         <Button className={styles['logout-button-container']} title={user.anonymous ? 'Log in / Sign up' : 'Log out'} href={'#/intro'} onClick={user.logout}>
-                            <div className={styles['label']}>{user.anonymous ? 'Log in / Sign up' : 'Log out'}</div>
+                            <div className={styles['logout-label']}>{user.anonymous ? 'Log in / Sign up' : 'Log out'}</div>
                         </Button>
                     </div>
                     <div className={styles['nav-menu-section']}>
                         <Button className={styles['nav-menu-option-container']} title={fullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'} onClick={fullscreen ? exitFullscreen : requestFullscreen}>
                             <Icon className={styles['icon']} icon={fullscreen ? 'ic_exit_fullscreen' : 'ic_fullscreen'} />
-                            <div className={styles['label']}>{fullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'}</div>
+                            <div className={styles['nav-menu-option-label']}>{fullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'}</div>
                         </Button>
                     </div>
                     <div className={styles['nav-menu-section']}>
                         <Button className={styles['nav-menu-option-container']} title={'Settings'} href={'#/settings'}>
                             <Icon className={styles['icon']} icon={'ic_settings'} />
-                            <div className={styles['label']}>Settings</div>
+                            <div className={styles['nav-menu-option-label']}>Settings</div>
                         </Button>
                         <Button className={styles['nav-menu-option-container']} title={'Addons'} href={'#/addons'}>
                             <Icon className={styles['icon']} icon={'ic_addons'} />
-                            <div className={styles['label']}>Addons</div>
+                            <div className={styles['nav-menu-option-label']}>Addons</div>
                         </Button>
                         <Button className={styles['nav-menu-option-container']} title={'Remote Control'}>
                             <Icon className={styles['icon']} icon={'ic_remote'} />
-                            <div className={styles['label']}>Remote Control</div>
+                            <div className={styles['nav-menu-option-label']}>Remote Control</div>
                         </Button>
                         <Button className={styles['nav-menu-option-container']} title={'Play Magnet Link'}>
                             <Icon className={styles['icon']} icon={'ic_magnet'} />
-                            <div className={styles['label']}>Play Magnet Link</div>
+                            <div className={styles['nav-menu-option-label']}>Play Magnet Link</div>
                         </Button>
                         <Button className={styles['nav-menu-option-container']} title={'Help & Feedback'} href={'https://stremio.zendesk.com/'} target={'_blank'}>
                             <Icon className={styles['icon']} icon={'ic_help'} />
-                            <div className={styles['label']}>Help & Feedback</div>
+                            <div className={styles['nav-menu-option-label']}>Help & Feedback</div>
                         </Button>
                     </div>
                     <div className={styles['nav-menu-section']}>
                         <Button className={styles['nav-menu-option-container']} title={'Terms of Service'} href={'https://www.stremio.com/tos'} target={'_blank'}>
-                            <div className={styles['label']}>Terms of Service</div>
+                            <div className={styles['nav-menu-option-label']}>Terms of Service</div>
                         </Button>
                         <Button className={styles['nav-menu-option-container']} title={'Privacy Policy'} href={'https://www.stremio.com/privacy'} target={'_blank'}>
-                            <div className={styles['label']}>Privacy Policy</div>
+                            <div className={styles['nav-menu-option-label']}>Privacy Policy</div>
                         </Button>
                         <Button className={styles['nav-menu-option-container']} title={'About Stremio'} href={'https://www.stremio.com/'} target={'_blank'}>
-                            <div className={styles['label']}>About Stremio</div>
+                            <div className={styles['nav-menu-option-label']}>About Stremio</div>
                         </Button>
                     </div>
                 </div>

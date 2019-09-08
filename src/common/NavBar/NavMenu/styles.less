@@ -14,8 +14,8 @@
 
     .icon {
         flex: none;
-        width: 1.6rem;
-        height: 1.6rem;
+        width: 50%;
+        height: 50%;
         fill: var(--color-surfacelighter);
     }
 }
@@ -51,9 +51,11 @@
             flex-direction: row;
             align-items: center;
             padding: 0.6rem 0.6rem 0 0;
-            color: var(--color-surfacelighter);
 
-            .label {
+            .email-label {
+                flex: 1;
+                max-height: 2.4em;
+                color: var(--color-surfacelighter);
                 user-select: text;
             }
         }
@@ -64,19 +66,20 @@
             flex-direction: row;
             align-items: center;
             padding: 0 0.6rem 0.6rem 0;
-            color: var(--color-surface);
 
             &:hover, &:focus {
                 outline: none;
-                color: var(--color-surfacelighter);
-                text-decoration: underline;
-            }
-        }
 
-        .email-container, .logout-button-container {
-            .label {
+                .logout-label {
+                    color: var(--color-surfacelighter);
+                    text-decoration: underline;
+                }
+            }
+
+            .logout-label {
                 flex: 1;
                 max-height: 2.4em;
+                color: var(--color-surface);
             }
         }
     }
@@ -96,13 +99,13 @@
 
             .icon {
                 flex: none;
-                width: 4rem;
-                height: 4rem;
-                padding: 1.3rem;
+                width: 1.4rem;
+                height: 1.4rem;
+                margin: 1.3rem;
                 fill: var(--color-secondarylight);
             }
 
-            .label {
+            .nav-menu-option-label {
                 flex: 1;
                 max-height: 2.4em;
                 padding-right: 1.3rem;

@@ -6,7 +6,7 @@
     &:hover {
         background-color: var(--color-secondary);
 
-        .submit-button {
+        .submit-button-container {
             background-color: var(--color-secondarylight);
         }
     }
@@ -14,7 +14,7 @@
     &:global(.active) {
         background-color: var(--color-background);
 
-        .submit-button {
+        .submit-button-container {
             background-color: var(--color-secondarylight);
         }
     }
@@ -29,14 +29,14 @@
         color: var(--color-surfacelighter);
         cursor: text;
 
-        &::placeholder, .placeholder {
+        &::placeholder, .placeholder-label {
             max-height: 1.2em;
             opacity: 1;
             color: var(--color-surfacelight);
         }
     }
 
-    .submit-button {
+    .submit-button-container {
         flex: none;
         display: flex;
         flex-direction: row;

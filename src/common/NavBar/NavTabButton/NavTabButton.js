@@ -8,7 +8,7 @@ const routesRegexp = require('stremio/common/routesRegexp');
 const useLocationHash = require('stremio/common/useLocationHash');
 const styles = require('./styles');
 
-const NavTabButton = ({ className, icon = '', label = '', href = '', onClick }) => {
+const NavTabButton = ({ className, icon, label, href, onClick }) => {
     const locationHash = useLocationHash();
     const routeRegexp = React.useMemo(() => {
         if (typeof href === 'string' && href.length > 0) {
@@ -24,7 +24,7 @@ const NavTabButton = ({ className, icon = '', label = '', href = '', onClick }) 
     const active = React.useMemo(() => {
         if (routeRegexp !== null) {
             const { pathname: locationPathname } = UrlUtils.parse(locationHash.slice(1));
-            return !!routeRegexp.exec(locationPathname);
+            return !!locationPathname.match(routeRegexp);
         }
 
         return false;
