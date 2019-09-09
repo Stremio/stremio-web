@@ -1,6 +1,7 @@
 .seasons-bar-placeholder-container {
     display: flex;
     flex-direction: row;
+    align-items: center;
 
     .prev-season-button, .next-season-button {
         flex: none;
@@ -17,19 +18,13 @@
 
     .seasons-popup-label-container {
         flex: 1;
-        align-self: stretch;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
         margin: 0 1rem;
         background-color: var(--color-placeholderbackground);
 
         .seasons-popup-label {
-            flex-grow: 0;
-            flex-shrink: 0;
-            flex-basis: 60%;
+            width: 60%;
             height: 1.4rem;
+            margin: 1.8rem 20%;
             background-color: var(--color-placeholdersurface);
         }
     }
