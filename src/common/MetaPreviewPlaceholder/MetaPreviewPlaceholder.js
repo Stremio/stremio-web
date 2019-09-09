@@ -7,58 +7,30 @@ const MetaPreviewPlaceholder = ({ className }) => {
     return (
         <div className={classnames(className, styles['meta-preview-placeholder-container'])}>
             <div className={styles['meta-info-container']}>
-                <div className={styles['logo-container']}>
-                    <div className={styles['logo']} />
-                </div>
+                <div className={styles['logo-container']} />
                 <div className={styles['duration-release-info-container']}>
-                    <div className={styles['duration-container']}>
-                        <div className={styles['duration-label']} />
-                    </div>
-                    <div className={styles['release-info-container']}>
-                        <div className={styles['release-info-label']} />
-                    </div>
+                    <div className={styles['duration-container']} />
+                    <div className={styles['release-info-container']} />
                 </div>
                 <div className={styles['description-container']}>
-                    <div className={styles['description-label-container']}>
-                        <div className={styles['description-label']} />
-                    </div>
-                    <div className={styles['description-label-container']}>
-                        <div className={styles['description-label']} />
-                    </div>
-                    <div className={styles['description-label-container']}>
-                        <div className={styles['description-label']} />
+                    <div className={styles['description-label-container']} />
+                    <div className={styles['description-label-container']} />
+                    <div className={styles['description-label-container']} />
+                </div>
+                <div className={styles['genres-container']}>
+                    <div className={styles['genres-header-container']} />
+                    <div className={styles['genres-labels-container']}>
+                        <div className={styles['genre-label-container']} />
+                        <div className={styles['genre-label-container']} />
+                        <div className={styles['genre-label-container']} />
                     </div>
                 </div>
                 <div className={styles['genres-container']}>
-                    <div className={styles['genres-header-container']}>
-                        <div className={styles['genres-header-label']} />
-                    </div>
+                    <div className={styles['genres-header-container']} />
                     <div className={styles['genres-labels-container']}>
-                        <div className={styles['genre-label-container']}>
-                            <div className={styles['genre-label']} />
-                        </div>
-                        <div className={styles['genre-label-container']}>
-                            <div className={styles['genre-label']} />
-                        </div>
-                        <div className={styles['genre-label-container']}>
-                            <div className={styles['genre-label']} />
-                        </div>
-                    </div>
-                </div>
-                <div className={styles['genres-container']}>
-                    <div className={styles['genres-header-container']}>
-                        <div className={styles['genres-header-label']} />
-                    </div>
-                    <div className={styles['genres-labels-container']}>
-                        <div className={styles['genre-label-container']}>
-                            <div className={styles['genre-label']} />
-                        </div>
-                        <div className={styles['genre-label-container']}>
-                            <div className={styles['genre-label']} />
-                        </div>
-                        <div className={styles['genre-label-container']}>
-                            <div className={styles['genre-label']} />
-                        </div>
+                        <div className={styles['genre-label-container']} />
+                        <div className={styles['genre-label-container']} />
+                        <div className={styles['genre-label-container']} />
                     </div>
                 </div>
             </div>
