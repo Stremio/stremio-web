@@ -4,18 +4,15 @@
     }
 
     to {
-        filter: brightness(1.4);
+        filter: brightness(1.2);
     }
 }
 
 .placeholder-container {
-    --color-placeholderbackground: var(--color-surfacedarker80);
-    --color-placeholdersurface: var(--color-surfacedark20);
-
     animation-name: placeholderAnimation;
     animation-duration: 500ms;
     animation-iteration-count: infinite;
     animation-direction: alternate;
-    animation-fill-mode: none;
+    animation-fill-mode: both;
     animation-timing-function: ease-out;
 }
