@@ -1,10 +1,12 @@
 .button-container {
     --spatial-navigation-action: focus;
     cursor: pointer;
+    outline-width: var(--focus-outline-size);
+    outline-color: var(--color-surfacelighter);
+    outline-offset: calc(-1 * var(--focus-outline-size));
 
     &:focus {
-        outline-offset: calc(-1 * var(--focus-outline-size));
-        outline: var(--focus-outline-size) solid var(--color-surfacelighter);
+        outline-style: solid;
     }
 
     &:global(.disabled) {
