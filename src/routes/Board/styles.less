@@ -4,6 +4,10 @@
     meta-item: meta-item;
 }
 
+:import('./BoardRowPlaceholder/styles.less') {
+    meta-item-placeholder: meta-item;
+}
+
 .board-container {
     display: flex;
     flex-direction: column;
@@ -39,8 +43,10 @@
     .board-container {
         .board-content {
             .board-row, .board-row-placeholder {
-                .meta-item:nth-child(n+9) {
-                    display: none;
+                .meta-item, .meta-item-placeholder {
+                    &:nth-child(n+9) {
+                        display: none;
+                    }
                 }
             }
         }
@@ -51,8 +57,10 @@
     .board-container {
         .board-content {
             .board-row, .board-row-placeholder {
-                .meta-item:nth-child(n+8) {
-                    display: none;
+                .meta-item, .meta-item-placeholder {
+                    &:nth-child(n+8) {
+                        display: none;
+                    }
                 }
             }
         }
@@ -63,8 +71,10 @@
     .board-container {
         .board-content {
             .board-row, .board-row-placeholder {
-                .meta-item:nth-child(n+7) {
-                    display: none;
+                .meta-item, .meta-item-placeholder {
+                    &:nth-child(n+7) {
+                        display: none;
+                    }
                 }
             }
         }
@@ -75,8 +85,10 @@
     .board-container {
         .board-content {
             .board-row, .board-row-placeholder {
-                .meta-item:nth-child(n+6) {
-                    display: none;
+                .meta-item, .meta-item-placeholder {
+                    &:nth-child(n+6) {
+                        display: none;
+                    }
                 }
             }
         }
@@ -87,8 +99,10 @@
     .board-container {
         .board-content {
             .board-row, .board-row-placeholder {
-                .meta-item:nth-child(n+5) {
-                    display: none;
+                .meta-item, .meta-item-placeholder {
+                    &:nth-child(n+5) {
+                        display: none;
+                    }
                 }
             }
         }
