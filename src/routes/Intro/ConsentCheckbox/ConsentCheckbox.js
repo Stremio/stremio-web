@@ -2,7 +2,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { Button, Checkbox } = require('stremio/common');
-require('./styles');
+const styles = require('./styles');
 
 const ConsentCheckbox = React.forwardRef(({ label, link, href, toggle, ...props }, ref) => {
     const checkboxOnClick = React.useCallback((event) => {
@@ -14,13 +14,13 @@ const ConsentCheckbox = React.forwardRef(({ label, link, href, toggle, ...props 
         event.nativeEvent.togglePrevented = true;
     }, []);
     return (
-        <Checkbox {...props} ref={ref} className={classnames(props.className, 'consent-checkbox-container')} onClick={checkboxOnClick}>
-            <div className={'label'}>
+        <Checkbox {...props} ref={ref} className={classnames(props.className, styles['consent-checkbox-container'])} onClick={checkboxOnClick}>
+            <div className={styles['label']}>
                 {label}
                 {
                     typeof link === 'string' && typeof href === 'string' ?
                         <Button
-                            className={'link'}
+                            className={styles['link']}
                             href={href}
                             target={'_blank'}
                             tabIndex={-1}

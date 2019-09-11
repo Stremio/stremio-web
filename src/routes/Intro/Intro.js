@@ -4,7 +4,7 @@ const Icon = require('stremio-icons/dom');
 const { Button } = require('stremio/common');
 const CredentialsTextInput = require('./CredentialsTextInput');
 const ConsentCheckbox = require('./ConsentCheckbox');
-require('./styles');
+const styles = require('./styles');
 
 const LOGIN_FORM = 'LOGIN_FORM';
 const SIGNUP_FORM = 'SIGNUP_FORM';
@@ -183,16 +183,16 @@ class Intro extends React.Component {
 
     render() {
         return (
-            <div className={'intro-container'}>
-                <div className={'form-container'}>
-                    <Button className={classnames('form-button', 'facebook-button')} onClick={this.loginWithFacebook}>
-                        <Icon className={'icon'} icon={'ic_facebook'} />
-                        <div className={'label'}>Continue with Facebook</div>
+            <div className={styles['intro-container']}>
+                <div className={styles['form-container']}>
+                    <Button className={classnames(styles['form-button'], styles['facebook-button'])} onClick={this.loginWithFacebook}>
+                        <Icon className={styles['icon']} icon={'ic_facebook'} />
+                        <div className={styles['label']}>Continue with Facebook</div>
                     </Button>
-                    <div className={'facebook-statement'}>We won't post anything on your behalf</div>
+                    <div className={styles['facebook-statement']}>We won't post anything on your behalf</div>
                     <CredentialsTextInput
                         ref={this.emailRef}
-                        className={'text-input'}
+                        className={styles['text-input']}
                         type={'email'}
                         placeholder={'Email'}
                         value={this.state.email}
@@ -201,7 +201,7 @@ class Intro extends React.Component {
                     />
                     <CredentialsTextInput
                         ref={this.passwordRef}
-                        className={'text-input'}
+                        className={styles['text-input']}
                         type={'password'}
                         placeholder={'Password'}
                         value={this.state.password}
@@ -213,7 +213,7 @@ class Intro extends React.Component {
                             <React.Fragment>
                                 <CredentialsTextInput
                                     ref={this.confirmPasswordRef}
-                                    className={'text-input'}
+                                    className={styles['text-input']}
                                     type={'password'}
                                     placeholder={'Confirm Password'}
                                     value={this.state.confirmPassword}
@@ -222,7 +222,7 @@ class Intro extends React.Component {
                                 />
                                 <ConsentCheckbox
                                     ref={this.termsRef}
-                                    className={'consent-checkbox'}
+                                    className={styles['consent-checkbox']}
                                     label={'I have read and agree with the Stremio'}
                                     link={'Terms and conditions'}
                                     href={'https://www.stremio.com/tos'}
@@ -231,7 +231,7 @@ class Intro extends React.Component {
                                 />
                                 <ConsentCheckbox
                                     ref={this.privacyPolicyRef}
-                                    className={'consent-checkbox'}
+                                    className={styles['consent-checkbox']}
                                     label={'I have read and agree with the Stremio'}
                                     link={'Privacy Policy'}
                                     href={'https://www.stremio.com/privacy'}
@@ -240,36 +240,36 @@ class Intro extends React.Component {
                                 />
                                 <ConsentCheckbox
                                     ref={this.marketingRef}
-                                    className={'consent-checkbox'}
+                                    className={styles['consent-checkbox']}
                                     label={'I agree to receive marketing communications from Stremio'}
                                     checked={this.state.marketingAccepted}
                                     toggle={this.toggleMarketingAccepted}
                                 />
                             </React.Fragment>
                             :
-                            <div className={'forgot-password-link-container'}>
-                                <Button className={'forgot-password-link'} href={'https://www.strem.io/reset-password/'} target={'_blank'}>Forgot password?</Button>
+                            <div className={styles['forgot-password-link-container']}>
+                                <Button className={styles['forgot-password-link']} href={'https://www.strem.io/reset-password/'} target={'_blank'}>Forgot password?</Button>
                             </div>
                     }
                     {
                         this.state.error.length > 0 ?
-                            <div ref={this.errorRef} className={'error-message'}>{this.state.error}</div>
+                            <div ref={this.errorRef} className={styles['error-message']}>{this.state.error}</div>
                             :
                             null
                     }
-                    <Button className={classnames('form-button', 'submit-button')} onClick={this.state.form === SIGNUP_FORM ? this.signup : this.loginWithEmail}>
-                        <div className={'label'}>{this.state.form === SIGNUP_FORM ? 'SING UP' : 'LOG IN'}</div>
+                    <Button className={classnames(styles['form-button'], styles['submit-button'])} onClick={this.state.form === SIGNUP_FORM ? this.signup : this.loginWithEmail}>
+                        <div className={styles['label']}>{this.state.form === SIGNUP_FORM ? 'SING UP' : 'LOG IN'}</div>
                     </Button>
                     {
                         this.state.form === SIGNUP_FORM ?
-                            <Button className={classnames('form-button', 'guest-login-button')} onClick={this.loginAsGuest}>
-                                <div className={'label'}>GUEST LOGIN</div>
+                            <Button className={classnames(styles['form-button'], styles['guest-login-button'])} onClick={this.loginAsGuest}>
+                                <div className={styles['label']}>GUEST LOGIN</div>
                             </Button>
                             :
                             null
                     }
-                    <Button className={classnames('form-button', 'switch-form-button')} onClick={this.switchForm}>
-                        <div className={'label'}>{this.state.form === SIGNUP_FORM ? 'LOG IN' : 'SING UP WITH EMAIL'}</div>
+                    <Button className={classnames(styles['form-button'], styles['switch-form-button'])} onClick={this.switchForm}>
+                        <div className={styles['label']}>{this.state.form === SIGNUP_FORM ? 'LOG IN' : 'SING UP WITH EMAIL'}</div>
                     </Button>
                 </div>
             </div>
