@@ -23,12 +23,12 @@ const PickerMenu = ({ className, name = '', value = '', options = [], onSelect }
             onCloseRequest={closeMenu}
             renderLabel={(ref) => (
                 <Button ref={ref} className={classnames(className, 'picker-label-container', { 'active': menuOpen })} title={name} onClick={toggleMenu}>
-                    <div className={'label'}>{typeof value === 'string' && value.length > 0 ? value : name}</div>
+                    <div className={'picker-label'}>{typeof value === 'string' && value.length > 0 ? value : name}</div>
                     <Icon className={'icon'} icon={'ic_arrow_down'} />
                 </Button>
             )}
             renderMenu={() => (
-                <div className={'discover-picker-menu-container'}>
+                <div className={'picker-menu-container'}>
                     {
                         Array.isArray(options) ?
                             options.map(({ label, value }) => (

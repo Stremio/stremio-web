@@ -17,23 +17,21 @@
         align-self: stretch;
         display: grid;
         grid-template-columns: 1fr 26rem;
-        grid-template-rows: fit-content(13rem) 1fr;
+        grid-template-rows: fit-content(15rem) 1fr;
         grid-template-areas:
             "pickers-area meta-preview-area"
             "meta-items-area meta-preview-area";
 
         .pickers-container {
             grid-area: pickers-area;
-            display: flex;
-            flex-direction: row;
-            flex-wrap: wrap;
-            padding: 0.7rem;
+            display: grid;
+            grid-gap: 1rem;
+            margin: 2rem 0;
+            padding: 0 2rem;
             overflow-y: auto;
 
             .picker {
-                flex-basis: 17rem;
                 height: 3rem;
-                margin: 0.7rem;
             }
         }
 
@@ -41,16 +39,12 @@
             grid-area: meta-items-area;
             display: grid;
             grid-auto-rows: max-content;
-            grid-gap: 1.4rem;
+            grid-gap: 1.5rem;
             align-items: center;
-            padding: 0 1.4rem;
+            padding: 0 2rem;
             overflow-y: auto;
 
             .meta-item {
-                &:hover, &:focus, &:global(.active) {
-                    outline-offset: calc(-1 * var(--focus-outline-size));
-                }
-
                 &.selected {
                     outline: calc(1.5 * var(--focus-outline-size)) solid var(--color-surfacelighter);
                     outline-offset: calc(-1.5 * var(--focus-outline-size));
@@ -68,6 +62,10 @@
 @media only screen and (min-width: @xxlarge) {
     .discover-container {
         .discover-content {
+            .pickers-container {
+                grid-template-columns: repeat(auto-fill, 17rem);
+            }
+
             .meta-items-container {
                 grid-template-columns: repeat(8, auto);
             }
@@ -78,6 +76,10 @@
 @media only screen and (max-width: @xxlarge) {
     .discover-container {
         .discover-content {
+            .pickers-container {
+                grid-template-columns: repeat(6, 1fr);
+            }
+
             .meta-items-container {
                 grid-template-columns: repeat(7, auto);
             }
@@ -88,6 +90,10 @@
 @media only screen and (max-width: @normal) {
     .discover-container {
         .discover-content {
+            .pickers-container {
+                grid-template-columns: repeat(5, 1fr);
+            }
+
             .meta-items-container {
                 grid-template-columns: repeat(6, auto);
             }
@@ -98,6 +104,10 @@
 @media only screen and (max-width: @medium) {
     .discover-container {
         .discover-content {
+            .pickers-container {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
             .meta-items-container {
                 grid-template-columns: repeat(5, auto);
             }
@@ -108,6 +118,10 @@
 @media only screen and (max-width: @small) {
     .discover-container {
         .discover-content {
+            .pickers-container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
             .meta-items-container {
                 grid-template-columns: repeat(4, auto);
             }
@@ -124,12 +138,27 @@
                 "pickers-area"
                 "meta-items-area";
 
+            .pickers-container {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
             .meta-items-container {
                 grid-template-columns: repeat(5, auto);
             }
 
             .meta-preview-container {
                 display: none;
+            }
+        }
+    }
+}
+
+
+@media only screen and (max-width: @minimum) {
+    .discover-container {
+        .discover-content {
+            .pickers-container {
+                grid-template-columns: repeat(3, 1fr);
             }
         }
     }
