@@ -1,5 +1,6 @@
 const React = require('react');
-const { MainNavBar } = require('stremio/common');
+const classnames = require('classnames');
+const { MainNavBar, placeholderStyles } = require('stremio/common');
 const BoardRow = require('./BoardRow');
 const BoardRowPlaceholder = require('./BoardRowPlaceholder');
 const useCatalogs = require('./useCatalogs');
@@ -49,7 +50,7 @@ const Board = () => {
                             return (
                                 <BoardRowPlaceholder
                                     key={`${index}${request.transport_url}${response.type}`}
-                                    className={'board-row-placeholder'}
+                                    className={classnames('board-row-placeholder', placeholderStyles['placeholder-container'])}
                                 />
                             );
                     }

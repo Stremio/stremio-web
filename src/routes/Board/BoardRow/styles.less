@@ -1,89 +1,87 @@
-.board-container {
-    .board-row-container {
-        display: grid;
-        grid-template-columns: 6fr minmax(12rem, 1fr);
-        grid-template-areas:
-            "title-area title-area"
-            "message-area message-area"
-            "meta-items-area see-all-area";
-        padding: 0 1rem;
+.board-row-container {
+    display: grid;
+    grid-template-columns: 6fr minmax(12rem, 1fr);
+    grid-template-areas:
+        "title-area title-area"
+        "message-area message-area"
+        "meta-items-area see-all-area";
 
-        .title-container {
-            grid-area: title-area;
-            max-height: 2.4em;
-            padding: 0 1rem;
-            font-size: 1.5rem;
-            color: var(--color-surfacelighter);
+    .title-container {
+        grid-area: title-area;
+        max-height: 2.4em;
+        margin-bottom: 2rem;
+        font-size: 1.5rem;
+        color: var(--color-surfacelighter);
+    }
+
+    .message-container {
+        grid-area: message-area;
+        max-height: 3.6em;
+        font-size: 1.3rem;
+        color: var(--color-surfacelighter);
+
+        &~.meta-items-container, &~.see-all-container {
+            display: none;
         }
+    }
 
-        .message-container {
-            grid-area: message-area;
-            max-height: 3.6em;
-            margin: 1rem 0;
-            padding: 0 1rem;
-            font-size: 1.3rem;
-            color: var(--color-surfacelighter);
-        }
+    .meta-items-container {
+        grid-area: meta-items-area;
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
 
-        .meta-items-container {
-            grid-area: meta-items-area;
-            display: flex;
-            flex-direction: row;
-            align-items: stretch;
+        .meta-item {
+            margin-right: 2rem;
 
-            .meta-item {
-                margin: 1rem;
-
-                &.poster-shape-square {
-                    flex: 1;
-                }
-
-                &.poster-shape-landscape {
-                    flex: calc(1 / var(--landscape-shape-ratio));
-                }
-
-                &.poster-shape-poster {
-                    flex: calc(1 / var(--poster-shape-ratio));
-                }
-            }
-        }
-
-        .see-all-container {
-            grid-area: see-all-area;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: center;
-            margin: 1rem;
-            padding: 0.5rem;
-            background-color: var(--color-backgroundlight);
-
-            &:hover, &:focus {
-                background-color: var(--color-backgroundlighter);
-
-                .label {
-                    color: var(--color-surfacelighter);
-                }
-
-                .icon {
-                    fill: var(--color-surfacelighter);
-                }
+            &.poster-shape-poster {
+                flex: calc(1 / var(--poster-shape-ratio));
             }
 
-            .label {
-                font-size: 1.2rem;
-                max-height: 2.4em;
-                color: var(--color-surfacelight);
-                text-align: center;
+            &.poster-shape-square {
+                flex: 1;
+            }
+
+            &.poster-shape-landscape {
+                flex: calc(1 / var(--landscape-shape-ratio));
+            }
+        }
+    }
+
+    .see-all-container {
+        grid-area: see-all-area;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        padding: 0.5rem;
+        background-color: var(--color-backgroundlight);
+
+        &:hover, &:focus {
+            background-color: var(--color-backgroundlighter);
+
+            .see-all-label {
+                color: var(--color-surfacelighter);
             }
 
             .icon {
-                flex: none;
-                width: 1.3rem;
-                height: 1.3rem;
-                margin-left: 0.3rem;
-                fill: var(--color-surfacelight);
+                fill: var(--color-surfacelighter);
             }
+        }
+
+        .see-all-label {
+            max-height: 2.4em;
+            font-size: 1.2rem;
+            text-align: center;
+            color: var(--color-surfacelight);
+        }
+
+        .icon {
+            flex: none;
+            width: 1.3rem;
+            height: 1.3rem;
+            margin-left: 0.3rem;
+            fill: var(--color-surfacelight);
         }
     }
 }

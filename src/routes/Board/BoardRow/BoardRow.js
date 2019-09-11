@@ -5,7 +5,7 @@ const Icon = require('stremio-icons/dom');
 const { Button, MetaItem } = require('stremio/common');
 require('./styles');
 
-const BoardRow = ({ className, title = '', message = '', items = [], itemMenuOptions = [] }) => {
+const BoardRow = ({ className, title, message, items, itemMenuOptions }) => {
     return (
         <div className={classnames(className, 'board-row-container')}>
             {
@@ -28,14 +28,24 @@ const BoardRow = ({ className, title = '', message = '', items = [], itemMenuOpt
                                 <MetaItem
                                     {...item}
                                     key={item.id}
-                                    className={classnames('meta-item', `poster-shape-${item.posterShape}`)}
+                                    className={classnames('meta-item', 'poster-shape-poster', `poster-shape-${item.posterShape}`)}
                                     title={item.name}
                                     menuOptions={itemMenuOptions}
                                 />
                             ))}
+                            <div className={classnames('meta-item', 'poster-shape-poster', `poster-shape-${items[0].posterShape}`)} />
+                            <div className={classnames('meta-item', 'poster-shape-poster', `poster-shape-${items[0].posterShape}`)} />
+                            <div className={classnames('meta-item', 'poster-shape-poster', `poster-shape-${items[0].posterShape}`)} />
+                            <div className={classnames('meta-item', 'poster-shape-poster', `poster-shape-${items[0].posterShape}`)} />
+                            <div className={classnames('meta-item', 'poster-shape-poster', `poster-shape-${items[0].posterShape}`)} />
+                            <div className={classnames('meta-item', 'poster-shape-poster', `poster-shape-${items[0].posterShape}`)} />
+                            <div className={classnames('meta-item', 'poster-shape-poster', `poster-shape-${items[0].posterShape}`)} />
+                            <div className={classnames('meta-item', 'poster-shape-poster', `poster-shape-${items[0].posterShape}`)} />
+                            <div className={classnames('meta-item', 'poster-shape-poster', `poster-shape-${items[0].posterShape}`)} />
+                            <div className={classnames('meta-item', 'poster-shape-poster', `poster-shape-${items[0].posterShape}`)} />
                         </div>
                         <Button className={'see-all-container'} title={'SEE ALL'}>
-                            <div className={'label'}>SEE ALL</div>
+                            <div className={'see-all-label'}>SEE ALL</div>
                             <Icon className={'icon'} icon={'ic_arrow_thin_right'} />
                         </Button>
                     </React.Fragment>
@@ -53,7 +63,7 @@ BoardRow.propTypes = {
     items: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.string.isRequired,
         name: PropTypes.string.isRequired,
-        posterShape: PropTypes.string.isRequired,
+        posterShape: PropTypes.string
     })),
     itemMenuOptions: PropTypes.array
 };
