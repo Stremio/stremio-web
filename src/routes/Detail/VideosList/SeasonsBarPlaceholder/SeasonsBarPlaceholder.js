@@ -2,19 +2,19 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
-require('./styles');
+const styles = require('./styles');
 
 const SeasonsBarPlaceholder = ({ className }) => {
     return (
-        <div className={classnames(className, 'seasons-bar-placeholder-container')}>
-            <div className={'prev-season-button'}>
-                <Icon className={'icon'} icon={'ic_arrow_left'} />
+        <div className={classnames(className, styles['seasons-bar-placeholder-container'])}>
+            <div className={styles['prev-season-button']}>
+                <Icon className={styles['icon']} icon={'ic_arrow_left'} />
             </div>
-            <div className={'seasons-popup-label-container'}>
-                <div className={'seasons-popup-label'} />
+            <div className={styles['seasons-popup-label-container']}>
+                <div className={styles['seasons-popup-label']} />
             </div>
-            <div className={'next-season-button'}>
-                <Icon className={'icon'} icon={'ic_arrow_right'} />
+            <div className={styles['next-season-button']}>
+                <Icon className={styles['icon']} icon={'ic_arrow_right'} />
             </div>
         </div>
     );

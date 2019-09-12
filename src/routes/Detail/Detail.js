@@ -5,51 +5,41 @@ const VideosList = require('./VideosList');
 const StreamsList = require('./StreamsList');
 const useMetaItem = require('./useMetaItem');
 const useInLibrary = require('./useInLibrary');
-require('./styles');
+const styles = require('./styles');
 
 const Detail = ({ urlParams }) => {
     const metaItem = useMetaItem(urlParams.type, urlParams.id, urlParams.videoId);
     const [inLibrary, addToLibrary, removeFromLibrary, toggleInLibrary] = useInLibrary(urlParams.id);
     return (
-        <div className={'detail-container'}>
+        <div className={styles['detail-container']}>
             <NavBar
-                className={'nav-bar'}
+                className={styles['nav-bar']}
                 backButton={true}
                 title={metaItem !== null ? metaItem.name : null}
             />
-            <div className={'detail-content'}>
-                <div className={'background-image-layer'}>
-                    <img
-                        className={'background-image'}
-                        src={metaItem !== null ? metaItem.background : null}
-                        alt={' '}
-                    />
-                </div>
+            <div className={styles['detail-content']}>
                 {
                     metaItem !== null ?
-                        <MetaPreview
-                            {...metaItem}
-                            className={'meta-preview'}
-                            background={null}
-                            inLibrary={inLibrary}
-                            toggleInLibrary={toggleInLibrary}
-                        />
+                        <React.Fragment>
+                            <div className={styles['background-image-layer']}>
+                                <img className={styles['background-image']} src={metaItem.background} alt={' '} />
+                            </div>
+                            <MetaPreview
+                                {...metaItem}
+                                className={styles['meta-preview']}
+                                background={null}
+                                inLibrary={inLibrary}
+                                toggleInLibrary={toggleInLibrary}
+                            />
+                        </React.Fragment>
                         :
-                        <MetaPreviewPlaceholder
-                            className={classnames('meta-preview', placeholderStyles['placeholder-container'])}
-                        />
+                        <MetaPreviewPlaceholder className={classnames(styles['meta-preview'], placeholderStyles['placeholder-container'])} />
                 }
                 {
                     typeof urlParams.videoId === 'string' && urlParams.videoId.length > 0 ?
-                        <StreamsList
-                            className={'streams-list'}
-                            metaItem={metaItem}
-                        />
+                        <StreamsList className={styles['streams-list']} metaItem={metaItem} />
                         :
-                        <VideosList
-                            className={'videos-list'}
-                            metaItem={metaItem}
-                        />
+                        <VideosList className={styles['videos-list']} metaItem={metaItem} />
                 }
             </div>
         </div>

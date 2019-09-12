@@ -3,22 +3,22 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const { Button, Popup, useBinaryState } = require('stremio/common');
-require('./styles');
+const styles = require('./styles');
 
 const SeasonsBar = ({ className, season, seasons, onSeasonChange }) => {
     const [menuOpen, openMenu, closeMenu, toggleMenu] = useBinaryState(false);
     const setPrevSeason = React.useCallback(() => {
-        if (Array.isArray(seasons)) {
+        if (Array.isArray(seasons) && typeof onSeasonChange === 'function') {
             const seasonIndex = seasons.indexOf(season);
-            if (seasonIndex > 0 && typeof onSeasonChange === 'function') {
+            if (seasonIndex > 0) {
                 onSeasonChange(seasons[seasonIndex - 1]);
             }
         }
     }, [season, seasons, onSeasonChange]);
     const setNextSeason = React.useCallback(() => {
-        if (Array.isArray(seasons)) {
+        if (Array.isArray(seasons) && typeof onSeasonChange === 'function') {
             const seasonIndex = seasons.indexOf(season);
-            if (seasonIndex < seasons.length - 1 && typeof onSeasonChange === 'function') {
+            if (seasonIndex < seasons.length - 1) {
                 onSeasonChange(seasons[seasonIndex + 1]);
             }
         }
@@ -31,28 +31,38 @@ const SeasonsBar = ({ className, season, seasons, onSeasonChange }) => {
         }
     }, [onSeasonChange]);
     return (
-        <div className={classnames(className, 'seasons-bar-container')}>
-            <Button className={'prev-season-button'} onClick={setPrevSeason}>
-                <Icon className={'icon'} icon={'ic_arrow_left'} />
+        <div className={classnames(className, styles['seasons-bar-container'])}>
+            <Button className={styles['prev-season-button']} onClick={setPrevSeason}>
+                <Icon className={styles['icon']} icon={'ic_arrow_left'} />
             </Button>
             <Popup
                 open={menuOpen}
                 menuMatchLabelWidth={true}
                 onCloseRequest={closeMenu}
                 renderLabel={(ref) => (
-                    <Button ref={ref} className={classnames('seasons-popup-label-container', { 'active': menuOpen })} title={`Season ${season}`} onClick={toggleMenu}>
-                        <div className={'season-label'}>Season</div>
-                        <div className={'number-label'}>{season}</div>
+                    <Button ref={ref} className={classnames(styles['seasons-popup-label-container'], { 'active': menuOpen })} title={season !== null && !isNaN(season) ? `Season ${season}` : 'Season'} onClick={toggleMenu}>
+                        <div className={styles['season-label']}>Season</div>
+                        {
+                            season !== null && !isNaN(season) ?
+                                <div className={styles['number-label']}>{season}</div>
+                                :
+                                null
+                        }
                     </Button>
                 )}
                 renderMenu={() => (
-                    <div className={'seasons-menu-container'}>
+                    <div className={styles['seasons-menu-container']}>
                         {
                             Array.isArray(seasons) ?
                                 seasons.map((season) => (
-                                    <Button key={season} className={'season-option-container'} data-season={season} title={`Season ${season}`} onClick={seasonOnClick}>
-                                        <div className={'season-label'}>Season</div>
-                                        <div className={'number-label'}>{season}</div>
+                                    <Button key={season} className={styles['season-option-container']} data-season={season} title={season !== null && !isNaN(season) ? `Season ${season}` : 'Season'} onClick={seasonOnClick}>
+                                        <div className={styles['season-label']}>Season</div>
+                                        {
+                                            season !== null && !isNaN(season) ?
+                                                <div className={styles['number-label']}>{season}</div>
+                                                :
+                                                null
+                                        }
                                     </Button>
                                 ))
                                 :
@@ -61,8 +71,8 @@ const SeasonsBar = ({ className, season, seasons, onSeasonChange }) => {
                     </div>
                 )}
             />
-            <Button className={'next-season-button'} onClick={setNextSeason}>
-                <Icon className={'icon'} icon={'ic_arrow_right'} />
+            <Button className={styles['next-season-button']} onClick={setNextSeason}>
+                <Icon className={styles['icon']} icon={'ic_arrow_right'} />
             </Button>
         </div>
     );

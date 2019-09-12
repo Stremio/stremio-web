@@ -2,17 +2,17 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
-require('./styles');
+const styles = require('./styles');
 
 const VideoPlaceholder = ({ className }) => {
     return (
-        <div className={classnames(className, 'video-placeholder-container')}>
-            <div className={'info-container'}>
-                <div className={'name-container'} />
-                <div className={'released-container'} />
+        <div className={classnames(className, styles['video-placeholder-container'])}>
+            <div className={styles['info-container']}>
+                <div className={styles['name-container']} />
+                <div className={styles['released-container']} />
             </div>
-            <div className={'next-icon-container'}>
-                <Icon className={'next-icon'} icon={'ic_arrow_thin_right'} />
+            <div className={styles['next-icon-container']}>
+                <Icon className={styles['next-icon']} icon={'ic_arrow_thin_right'} />
             </div>
         </div>
     );

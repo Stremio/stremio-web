@@ -7,19 +7,19 @@ const SeasonsBarPlaceholder = require('./SeasonsBarPlaceholder');
 const Video = require('./Video');
 const VideoPlaceholder = require('./VideoPlaceholder');
 const useSeasons = require('./useSeasons');
-require('./styles');
+const styles = require('./styles');
 
 const VideosList = ({ className, metaItem }) => {
     const [season, seasons, setSeason] = useSeasons(metaItem);
     return (
-        <div className={classnames(className, 'videos-list-container', { [placeholderStyles['placeholder-container']]: metaItem === null })}>
+        <div className={classnames(className, styles['videos-list-container'], { [placeholderStyles['placeholder-container']]: metaItem === null })}>
             {
                 metaItem !== null ?
                     <React.Fragment>
                         {
                             seasons.length > 1 ?
                                 <SeasonsBar
-                                    className={'seasons-bar'}
+                                    className={styles['seasons-bar']}
                                     season={season}
                                     seasons={seasons}
                                     onSeasonChange={setSeason}
@@ -27,7 +27,7 @@ const VideosList = ({ className, metaItem }) => {
                                 :
                                 null
                         }
-                        <div className={'videos-scroll-container'}>
+                        <div className={styles['videos-scroll-container']}>
                             {
                                 metaItem.videos
                                     .filter((video) => isNaN(season) || video.season === season)
@@ -35,7 +35,7 @@ const VideosList = ({ className, metaItem }) => {
                                         <Video
                                             {...video}
                                             key={video.id}
-                                            className={'video'}
+                                            className={styles['video']}
                                         />
                                     ))
                             }
@@ -43,16 +43,16 @@ const VideosList = ({ className, metaItem }) => {
                     </React.Fragment>
                     :
                     <React.Fragment>
-                        <SeasonsBarPlaceholder className={'seasons-bar'} />
-                        <div className={'videos-scroll-container'}>
-                            <VideoPlaceholder className={'video'} />
-                            <VideoPlaceholder className={'video'} />
-                            <VideoPlaceholder className={'video'} />
-                            <VideoPlaceholder className={'video'} />
-                            <VideoPlaceholder className={'video'} />
-                            <VideoPlaceholder className={'video'} />
-                            <VideoPlaceholder className={'video'} />
-                            <VideoPlaceholder className={'video'} />
+                        <SeasonsBarPlaceholder className={styles['seasons-bar']} />
+                        <div className={styles['videos-scroll-container']}>
+                            <VideoPlaceholder className={styles['video']} />
+                            <VideoPlaceholder className={styles['video']} />
+                            <VideoPlaceholder className={styles['video']} />
+                            <VideoPlaceholder className={styles['video']} />
+                            <VideoPlaceholder className={styles['video']} />
+                            <VideoPlaceholder className={styles['video']} />
+                            <VideoPlaceholder className={styles['video']} />
+                            <VideoPlaceholder className={styles['video']} />
                         </div>
                     </React.Fragment>
             }
