@@ -3,9 +3,9 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const { Button, Popup, useBinaryState } = require('stremio/common');
-require('./styles');
+const styles = require('./styles');
 
-const PickerMenu = ({ className, name = '', value = '', options = [], onSelect }) => {
+const PickerMenu = ({ className, name, value, options, onSelect }) => {
     const [menuOpen, openMenu, closeMenu, toggleMenu] = useBinaryState(false);
     const optionOnClick = React.useCallback((event) => {
         if (typeof onSelect === 'function') {
@@ -22,18 +22,18 @@ const PickerMenu = ({ className, name = '', value = '', options = [], onSelect }
             menuMatchLabelWidth={true}
             onCloseRequest={closeMenu}
             renderLabel={(ref) => (
-                <Button ref={ref} className={classnames(className, 'picker-label-container', { 'active': menuOpen })} title={name} onClick={toggleMenu}>
-                    <div className={'picker-label'}>{typeof value === 'string' && value.length > 0 ? value : name}</div>
-                    <Icon className={'icon'} icon={'ic_arrow_down'} />
+                <Button ref={ref} className={classnames(className, styles['picker-label-container'], { 'active': menuOpen })} title={name} onClick={toggleMenu}>
+                    <div className={styles['picker-label']}>{typeof value === 'string' && value.length > 0 ? value : name}</div>
+                    <Icon className={styles['icon']} icon={'ic_arrow_down'} />
                 </Button>
             )}
             renderMenu={() => (
-                <div className={'picker-menu-container'}>
+                <div className={styles['picker-menu-container']}>
                     {
-                        Array.isArray(options) ?
+                        Array.isArray(options) && options.length > 0 ?
                             options.map(({ label, value }) => (
-                                <Button key={value} className={'picker-option-container'} title={label} data-name={name} data-value={value} onClick={optionOnClick}>
-                                    <div className={'picker-option-label'}>{label}</div>
+                                <Button key={value} className={styles['picker-option-container']} title={typeof label === 'string' && label.length > 0 ? label : value} data-name={name} data-value={value} onClick={optionOnClick}>
+                                    <div className={styles['picker-option-label']}>{typeof label === 'string' && label.length > 0 ? label : value}</div>
                                 </Button>
                             ))
                             :
@@ -51,7 +51,7 @@ PickerMenu.propTypes = {
     value: PropTypes.string,
     options: PropTypes.arrayOf(PropTypes.shape({
         label: PropTypes.string,
-        value: PropTypes.string
+        value: PropTypes.string.isRequired
     })),
     onSelect: PropTypes.func
 };

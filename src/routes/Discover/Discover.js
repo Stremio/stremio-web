@@ -29,7 +29,7 @@ const Discover = ({ urlParams, queryParams }) => {
             <div className={styles['discover-content']}>
                 <div className={styles['pickers-container']}>
                     {pickers.map((picker) => (
-                        <PickerMenu {...picker} key={picker.name} className={'picker'} />
+                        <PickerMenu {...picker} key={picker.name} className={styles['picker']} />
                     ))}
                 </div>
                 <div className={styles['meta-items-container']} onFocusCapture={metaItemsOnFocus} onMouseDownCapture={metaItemsOnMouseDown}>
@@ -37,7 +37,7 @@ const Discover = ({ urlParams, queryParams }) => {
                         <MetaItem
                             {...metaItem}
                             key={metaItem.id}
-                            className={classnames('meta-item', { 'selected': selectedItem !== null && metaItem.id === selectedItem.id })}
+                            className={classnames(styles['meta-item'], { 'selected': selectedItem !== null && metaItem.id === selectedItem.id })}
                         />
                     ))}
                 </div>
