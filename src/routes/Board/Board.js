@@ -4,7 +4,7 @@ const { MainNavBar, placeholderStyles } = require('stremio/common');
 const BoardRow = require('./BoardRow');
 const BoardRowPlaceholder = require('./BoardRowPlaceholder');
 const useCatalogs = require('./useCatalogs');
-require('./styles');
+const styles = require('./styles');
 
 const CONTINUE_WATCHING_MENU = [
     {
@@ -20,16 +20,16 @@ const CONTINUE_WATCHING_MENU = [
 const Board = () => {
     const catalogs = useCatalogs();
     return (
-        <div className={'board-container'}>
-            <MainNavBar className={'nav-bar'} />
-            <div className={'board-content'}>
+        <div className={styles['board-container']}>
+            <MainNavBar className={styles['nav-bar']} />
+            <div className={styles['board-content']}>
                 {catalogs.map(([request, response], index) => {
                     switch (response.type) {
                         case 'Ready':
                             return (
                                 <BoardRow
                                     key={`${index}${request.transport_url}${response.type}`}
-                                    className={'board-row'}
+                                    className={styles['board-row']}
                                     title={`${request.resource_ref.id} - ${request.resource_ref.type_name}`}
                                     items={response.content.map((item) => ({
                                         ...item,
@@ -41,7 +41,7 @@ const Board = () => {
                             return (
                                 <BoardRow
                                     key={`${index}${request.transport_url}${response.type}`}
-                                    className={'board-row'}
+                                    className={styles['board-row']}
                                     title={`${request.resource_ref.id} - ${request.resource_ref.type_name}`}
                                     message={response.content}
                                 />
@@ -50,7 +50,7 @@ const Board = () => {
                             return (
                                 <BoardRowPlaceholder
                                     key={`${index}${request.transport_url}${response.type}`}
-                                    className={classnames('board-row-placeholder', placeholderStyles['placeholder-container'])}
+                                    className={classnames(styles['board-row-placeholder'], placeholderStyles['placeholder-container'])}
                                 />
                             );
                     }

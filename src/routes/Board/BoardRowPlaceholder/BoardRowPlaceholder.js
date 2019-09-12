@@ -1,44 +1,44 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-require('./styles');
+const styles = require('./styles');
 
 const BoardRowPlaceholder = ({ className }) => {
     return (
-        <div className={classnames(className, 'board-row-placeholder-container')}>
-            <div className={'title-container'}>
-                <div className={'title-label-container'} />
+        <div className={classnames(className, styles['board-row-placeholder-container'])}>
+            <div className={styles['title-container']}>
+                <div className={styles['title-label-container']} />
             </div>
-            <div className={'meta-items-container'}>
-                <div className={'meta-item'}>
-                    <div className={'poster-container'} />
+            <div className={styles['meta-items-container']}>
+                <div className={styles['meta-item']}>
+                    <div className={styles['poster-container']} />
                 </div>
-                <div className={'meta-item'}>
-                    <div className={'poster-container'} />
+                <div className={styles['meta-item']}>
+                    <div className={styles['poster-container']} />
                 </div>
-                <div className={'meta-item'}>
-                    <div className={'poster-container'} />
+                <div className={styles['meta-item']}>
+                    <div className={styles['poster-container']} />
                 </div>
-                <div className={'meta-item'}>
-                    <div className={'poster-container'} />
+                <div className={styles['meta-item']}>
+                    <div className={styles['poster-container']} />
                 </div>
-                <div className={'meta-item'}>
-                    <div className={'poster-container'} />
+                <div className={styles['meta-item']}>
+                    <div className={styles['poster-container']} />
                 </div>
-                <div className={'meta-item'}>
-                    <div className={'poster-container'} />
+                <div className={styles['meta-item']}>
+                    <div className={styles['poster-container']} />
                 </div>
-                <div className={'meta-item'}>
-                    <div className={'poster-container'} />
+                <div className={styles['meta-item']}>
+                    <div className={styles['poster-container']} />
                 </div>
-                <div className={'meta-item'}>
-                    <div className={'poster-container'} />
+                <div className={styles['meta-item']}>
+                    <div className={styles['poster-container']} />
                 </div>
-                <div className={'meta-item'}>
-                    <div className={'poster-container'} />
+                <div className={styles['meta-item']}>
+                    <div className={styles['poster-container']} />
                 </div>
-                <div className={'meta-item'}>
-                    <div className={'poster-container'} />
+                <div className={styles['meta-item']}>
+                    <div className={styles['poster-container']} />
                 </div>
             </div>
         </div>

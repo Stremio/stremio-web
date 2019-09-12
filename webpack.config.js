@@ -43,15 +43,7 @@ module.exports = {
                         options: {
                             importLoaders: 2,
                             modules: {
-                                getLocalIdent: (context, localIdentName, localName, options) => {
-                                    if (context.resourcePath.startsWith(path.resolve(__dirname, 'src/routes'))) {
-                                        localIdentName = '[local]';
-                                    } else {
-                                        localIdentName = '[local]-[hash:base64:5]';
-                                    }
-
-                                    return getLocalIdent(context, localIdentName, localName, options);
-                                }
+                                localIdentName: '[local]-[hash:base64:5]'
                             }
                         }
                     },

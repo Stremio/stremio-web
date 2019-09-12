@@ -3,50 +3,50 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const { Button, MetaItem } = require('stremio/common');
-require('./styles');
+const styles = require('./styles');
 
 const BoardRow = ({ className, title, message, items, itemMenuOptions }) => {
     return (
-        <div className={classnames(className, 'board-row-container')}>
+        <div className={classnames(className, styles['board-row-container'])}>
             {
                 typeof title === 'string' && title.length > 0 ?
-                    <div className={'title-container'}>{title}</div>
+                    <div className={styles['title-container']}>{title}</div>
                     :
                     null
             }
             {
                 typeof message === 'string' && message.length > 0 ?
-                    <div className={'message-container'}>{message}</div>
+                    <div className={styles['message-container']}>{message}</div>
                     :
                     null
             }
             {
                 Array.isArray(items) && items.length > 0 ?
                     <React.Fragment>
-                        <div className={'meta-items-container'}>
+                        <div className={styles['meta-items-container']}>
                             {items.map((item) => (
                                 <MetaItem
                                     {...item}
                                     key={item.id}
-                                    className={classnames('meta-item', 'poster-shape-poster', `poster-shape-${item.posterShape}`)}
+                                    className={classnames(styles['meta-item'], styles['poster-shape-poster'], styles[`poster-shape-${item.posterShape}`])}
                                     title={item.name}
                                     menuOptions={itemMenuOptions}
                                 />
                             ))}
-                            <div className={classnames('meta-item', 'poster-shape-poster', `poster-shape-${items[0].posterShape}`)} />
-                            <div className={classnames('meta-item', 'poster-shape-poster', `poster-shape-${items[0].posterShape}`)} />
-                            <div className={classnames('meta-item', 'poster-shape-poster', `poster-shape-${items[0].posterShape}`)} />
-                            <div className={classnames('meta-item', 'poster-shape-poster', `poster-shape-${items[0].posterShape}`)} />
-                            <div className={classnames('meta-item', 'poster-shape-poster', `poster-shape-${items[0].posterShape}`)} />
-                            <div className={classnames('meta-item', 'poster-shape-poster', `poster-shape-${items[0].posterShape}`)} />
-                            <div className={classnames('meta-item', 'poster-shape-poster', `poster-shape-${items[0].posterShape}`)} />
-                            <div className={classnames('meta-item', 'poster-shape-poster', `poster-shape-${items[0].posterShape}`)} />
-                            <div className={classnames('meta-item', 'poster-shape-poster', `poster-shape-${items[0].posterShape}`)} />
-                            <div className={classnames('meta-item', 'poster-shape-poster', `poster-shape-${items[0].posterShape}`)} />
+                            <div className={classnames(styles['meta-item'], styles['poster-shape-poster'], styles[`poster-shape-${items[0].posterShape}`])} />
+                            <div className={classnames(styles['meta-item'], styles['poster-shape-poster'], styles[`poster-shape-${items[0].posterShape}`])} />
+                            <div className={classnames(styles['meta-item'], styles['poster-shape-poster'], styles[`poster-shape-${items[0].posterShape}`])} />
+                            <div className={classnames(styles['meta-item'], styles['poster-shape-poster'], styles[`poster-shape-${items[0].posterShape}`])} />
+                            <div className={classnames(styles['meta-item'], styles['poster-shape-poster'], styles[`poster-shape-${items[0].posterShape}`])} />
+                            <div className={classnames(styles['meta-item'], styles['poster-shape-poster'], styles[`poster-shape-${items[0].posterShape}`])} />
+                            <div className={classnames(styles['meta-item'], styles['poster-shape-poster'], styles[`poster-shape-${items[0].posterShape}`])} />
+                            <div className={classnames(styles['meta-item'], styles['poster-shape-poster'], styles[`poster-shape-${items[0].posterShape}`])} />
+                            <div className={classnames(styles['meta-item'], styles['poster-shape-poster'], styles[`poster-shape-${items[0].posterShape}`])} />
+                            <div className={classnames(styles['meta-item'], styles['poster-shape-poster'], styles[`poster-shape-${items[0].posterShape}`])} />
                         </div>
-                        <Button className={'see-all-container'} title={'SEE ALL'}>
-                            <div className={'see-all-label'}>SEE ALL</div>
-                            <Icon className={'icon'} icon={'ic_arrow_thin_right'} />
+                        <Button className={styles['see-all-container']} title={'SEE ALL'}>
+                            <div className={styles['see-all-label']}>SEE ALL</div>
+                            <Icon className={styles['icon']} icon={'ic_arrow_thin_right'} />
                         </Button>
                     </React.Fragment>
                     :
