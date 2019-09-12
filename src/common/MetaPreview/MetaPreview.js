@@ -9,16 +9,6 @@ const styles = require('./styles');
 
 const MetaPreview = ({ className, compact, id, type, name, logo, background, duration, releaseInfo, released, description, genres, writers, directors, cast, imdbRating, links, inLibrary, toggleInLibrary }) => {
     const [shareModalOpen, openShareModal, closeShareModal] = useBinaryState(false);
-    const releaseInfoText = React.useMemo(() => {
-        const releasedDate = new Date(released);
-        return typeof releaseInfo === 'string' && releaseInfo.length > 0 ?
-            releaseInfo
-            :
-            !isNaN(releasedDate.getFullYear()) ?
-                releasedDate.getFullYear()
-                :
-                null;
-    }, [releaseInfo, released]);
     const genresLinks = React.useMemo(() => {
         return Array.isArray(genres) ?
             genres.map((genre) => ({
@@ -90,13 +80,16 @@ const MetaPreview = ({ className, compact, id, type, name, logo, background, dur
                         null
                 }
                 {
-                    (typeof releaseInfoText === 'string' && releaseInfoText.length > 0) || (typeof duration === 'string' && duration.length > 0) ?
+                    (typeof releaseInfo === 'string' && releaseInfo.length > 0) || (released instanceof Date && !isNaN(released.getFullYear())) || (typeof duration === 'string' && duration.length > 0) ?
                         <div className={styles['duration-release-info-container']}>
                             {
-                                typeof releaseInfoText === 'string' && releaseInfoText.length > 0 ?
-                                    <div className={styles['release-info-label']}>{releaseInfoText}</div>
+                                typeof releaseInfo === 'string' && releaseInfo.length > 0 ?
+                                    <div className={styles['release-info-label']}>{releaseInfo}</div>
                                     :
-                                    null
+                                    released instanceof Date && !isNaN(released.getFullYear()) ?
+                                        <div className={styles['release-info-label']}>{released.getFullYear()}</div>
+                                        :
+                                        null
                             }
                             {
                                 typeof duration === 'string' && duration.length > 0 ?
@@ -223,7 +216,7 @@ MetaPreview.propTypes = {
     background: PropTypes.string,
     duration: PropTypes.string,
     releaseInfo: PropTypes.string,
-    released: PropTypes.string,
+    released: PropTypes.instanceOf(Date),
     description: PropTypes.string,
     genres: PropTypes.arrayOf(PropTypes.string),
     writers: PropTypes.arrayOf(PropTypes.string),
