@@ -16,7 +16,7 @@ const ICON_FOR_TYPE = Object.assign(Object.create(null), {
     'other': 'ic_movies'
 });
 
-const MetaItem = React.memo(({ className, id, type, name, posterShape = 'square', poster, title, subtitle, progress, playIcon, menuOptions, onSelect, menuOptionOnSelect }) => {
+const MetaItem = React.memo(({ className, id, type, name, posterShape, poster, title, subtitle, progress, playIcon, menuOptions, onSelect, menuOptionOnSelect }) => {
     const [menuOpen, openMenu, closeMenu, toggleMenu] = useBinaryState(false);
     const metaItemOnClick = React.useCallback((event) => {
         if (!event.nativeEvent.selectItemPrevented && typeof onSelect === 'function') {
