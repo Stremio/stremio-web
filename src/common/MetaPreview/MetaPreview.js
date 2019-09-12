@@ -80,13 +80,13 @@ const MetaPreview = ({ className, compact, id, type, name, logo, background, dur
                         null
                 }
                 {
-                    (typeof releaseInfo === 'string' && releaseInfo.length > 0) || (released instanceof Date && !isNaN(released.getFullYear())) || (typeof duration === 'string' && duration.length > 0) ?
+                    (typeof releaseInfo === 'string' && releaseInfo.length > 0) || (released instanceof Date && !isNaN(released.getTime())) || (typeof duration === 'string' && duration.length > 0) ?
                         <div className={styles['duration-release-info-container']}>
                             {
                                 typeof releaseInfo === 'string' && releaseInfo.length > 0 ?
                                     <div className={styles['release-info-label']}>{releaseInfo}</div>
                                     :
-                                    released instanceof Date && !isNaN(released.getFullYear()) ?
+                                    released instanceof Date && !isNaN(released.getTime()) ?
                                         <div className={styles['release-info-label']}>{released.getFullYear()}</div>
                                         :
                                         null
