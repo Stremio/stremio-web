@@ -3,8 +3,7 @@ require('spatial-navigation-polyfill');
 const TABS = [
     { href: '#/', key: 'F1' },
     { href: '#/discover', key: 'F2' },
-    { href: '#/library', key: 'F3' },
-    { href: '#/calendar', key: 'F4' }
+    { href: '#/library', key: 'F3' }
 ];
 
 function KeyboardNavigation() {

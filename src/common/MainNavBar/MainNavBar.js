@@ -5,8 +5,7 @@ const NavBar = require('stremio/common/NavBar');
 const TABS = [
     { label: 'Board', icon: 'ic_board', href: '#/' },
     { label: 'Discover', icon: 'ic_discover', href: '#/discover' },
-    { label: 'Library', icon: 'ic_library', href: '#/library' },
-    { label: 'Calendar', icon: 'ic_calendar', href: '#/calendar' }
+    { label: 'Library', icon: 'ic_library', href: '#/library' }
 ];
 
 const MainNavBar = ({ className }) => {

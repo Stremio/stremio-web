@@ -15,10 +15,6 @@ const routesRegexp = {
         regexp: /^\/library(?:\/([^\/]*?))?\/?$/i,
         urlParamsNames: ['sort']
     },
-    calendar: {
-        regexp: /^\/calendar\/?$/i,
-        urlParamsNames: []
-    },
     search: {
         regexp: /^\/search\/?$/i,
         urlParamsNames: []

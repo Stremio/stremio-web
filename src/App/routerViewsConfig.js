@@ -20,10 +20,6 @@ const routerViewsConfig = [
             component: routes.Library
         },
         {
-            ...routesRegexp.calendar,
-            component: routes.Calendar
-        },
-        {
             ...routesRegexp.search,
             component: routes.Search
         }
