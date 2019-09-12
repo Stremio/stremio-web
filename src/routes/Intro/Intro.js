@@ -151,7 +151,7 @@ const Intro = () => {
                 <div className={styles['facebook-statement']}>We won't post anything on your behalf</div>
                 <CredentialsTextInput
                     ref={emailRef}
-                    className={styles['text-input']}
+                    className={styles['credentials-text-input']}
                     type={'email'}
                     placeholder={'Email'}
                     value={state.email}
@@ -160,7 +160,7 @@ const Intro = () => {
                 />
                 <CredentialsTextInput
                     ref={passwordRef}
-                    className={styles['text-input']}
+                    className={styles['credentials-text-input']}
                     type={'password'}
                     placeholder={'Password'}
                     value={state.password}
@@ -172,7 +172,7 @@ const Intro = () => {
                         <React.Fragment>
                             <CredentialsTextInput
                                 ref={confirmPasswordRef}
-                                className={styles['text-input']}
+                                className={styles['credentials-text-input']}
                                 type={'password'}
                                 placeholder={'Confirm Password'}
                                 value={state.confirmPassword}
