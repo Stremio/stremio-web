@@ -5,9 +5,9 @@ const useCatalogs = () => {
     React.useEffect(() => {
         const onNewState = () => {
             const state = window.stateContainer.getState();
-            setCatalogs(state.groups);
+            setCatalogs(state.catalogs.groups);
         };
-        window.stateContainer.on('NewState', onNewState);
+        window.stateContainer.on('NewModel', onNewState);
         window.stateContainer.dispatch({
             action: 'Load',
             args: {
@@ -16,7 +16,7 @@ const useCatalogs = () => {
             }
         });
         return () => {
-            window.stateContainer.off('NewState', onNewState);
+            window.stateContainer.off('NewModel', onNewState);
         };
     }, []);
     return catalogs;

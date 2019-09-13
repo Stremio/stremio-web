@@ -23,15 +23,15 @@ const Board = () => {
         <div className={styles['board-container']}>
             <MainNavBar className={styles['nav-bar']} />
             <div className={styles['board-content']}>
-                {catalogs.map(([request, response], index) => {
-                    switch (response.type) {
+                {catalogs.map(({ req, content }, index) => {
+                    switch (content.type) {
                         case 'Ready':
                             return (
                                 <BoardRow
-                                    key={`${index}${request.transport_url}${response.type}`}
+                                    key={`${index}${req.base}${content.type}`}
                                     className={styles['board-row']}
-                                    title={`${request.resource_ref.id} - ${request.resource_ref.type_name}`}
-                                    items={response.content.map((item) => ({
+                                    title={`${req.path.id} - ${req.path.type_name}`}
+                                    items={content.content.map((item) => ({
                                         ...item,
                                         posterShape: item.posterShape || 'poster'
                                     }))}
@@ -40,16 +40,16 @@ const Board = () => {
                         case 'Message':
                             return (
                                 <BoardRow
-                                    key={`${index}${request.transport_url}${response.type}`}
+                                    key={`${index}${req.base}${content.type}`}
                                     className={styles['board-row']}
-                                    title={`${request.resource_ref.id} - ${request.resource_ref.type_name}`}
-                                    message={response.content}
+                                    title={`${req.path.id} - ${req.path.type_name}`}
+                                    message={content.content}
                                 />
                             );
                         case 'Loading':
                             return (
                                 <BoardRowPlaceholder
-                                    key={`${index}${request.transport_url}${response.type}`}
+                                    key={`${index}${req.base}${content.type}`}
                                     className={classnames(styles['board-row-placeholder'], placeholderStyles['placeholder-container'])}
                                 />
                             );
