@@ -35,7 +35,7 @@ const SearchBar = ({ className }) => {
         if (active && focusable) {
             searchInputRef.current.focus();
         }
-    }, [active, focusable]);
+    }, [active, focusable, query]);
     return (
         <label className={classnames(className, styles['search-bar-container'], { 'active': active })} onClick={searchBarOnClick}>
             {
