@@ -19,18 +19,18 @@
         grid-template-columns: 1fr 26rem;
         grid-template-rows: fit-content(15rem) 1fr;
         grid-template-areas:
-            "pickers-area meta-preview-area"
+            "dropdowns-area meta-preview-area"
             "meta-items-area meta-preview-area";
 
-        .pickers-container {
-            grid-area: pickers-area;
+        .dropdowns-container {
+            grid-area: dropdowns-area;
             display: grid;
             grid-gap: 1rem;
             margin: 2rem 0;
             padding: 0 2rem;
             overflow-y: auto;
 
-            .picker {
+            .dropdown {
                 height: 3rem;
             }
         }
@@ -62,7 +62,7 @@
 @media only screen and (min-width: @xxlarge) {
     .discover-container {
         .discover-content {
-            .pickers-container {
+            .dropdowns-container {
                 grid-template-columns: repeat(auto-fill, 17rem);
             }
 
@@ -76,7 +76,7 @@
 @media only screen and (max-width: @xxlarge) {
     .discover-container {
         .discover-content {
-            .pickers-container {
+            .dropdowns-container {
                 grid-template-columns: repeat(6, 1fr);
             }
 
@@ -90,7 +90,7 @@
 @media only screen and (max-width: @normal) {
     .discover-container {
         .discover-content {
-            .pickers-container {
+            .dropdowns-container {
                 grid-template-columns: repeat(5, 1fr);
             }
 
@@ -104,7 +104,7 @@
 @media only screen and (max-width: @medium) {
     .discover-container {
         .discover-content {
-            .pickers-container {
+            .dropdowns-container {
                 grid-template-columns: repeat(4, 1fr);
             }
 
@@ -118,7 +118,7 @@
 @media only screen and (max-width: @small) {
     .discover-container {
         .discover-content {
-            .pickers-container {
+            .dropdowns-container {
                 grid-template-columns: repeat(3, 1fr);
             }
 
@@ -135,10 +135,10 @@
             grid-template-columns: 1fr;
             grid-template-rows: fit-content(19rem) 1fr;
             grid-template-areas:
-                "pickers-area"
+                "dropdowns-area"
                 "meta-items-area";
 
-            .pickers-container {
+            .dropdowns-container {
                 grid-template-columns: repeat(4, 1fr);
             }
 
@@ -157,7 +157,7 @@
 @media only screen and (max-width: @minimum) {
     .discover-container {
         .discover-content {
-            .pickers-container {
+            .dropdowns-container {
                 grid-template-columns: repeat(3, 1fr);
             }
         }

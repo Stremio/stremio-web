@@ -1,12 +1,11 @@
 const React = require('react');
 const classnames = require('classnames');
-const { MainNavBar, MetaItem, MetaPreview } = require('stremio/common');
-const PickerMenu = require('./PickerMenu');
+const { Dropdown, MainNavBar, MetaItem, MetaPreview } = require('stremio/common');
 const useCatalog = require('./useCatalog');
 const styles = require('./styles');
 
 const Discover = ({ urlParams, queryParams }) => {
-    const [pickers, metaItems] = useCatalog(urlParams, queryParams);
+    const [dropdowns, metaItems] = useCatalog(urlParams, queryParams);
     const [selectedItem, setSelectedItem] = React.useState(null);
     const metaItemsOnMouseDown = React.useCallback((event) => {
         event.nativeEvent.blurPrevented = true;
@@ -27,9 +26,9 @@ const Discover = ({ urlParams, queryParams }) => {
         <div className={styles['discover-container']}>
             <MainNavBar className={styles['nav-bar']} />
             <div className={styles['discover-content']}>
-                <div className={styles['pickers-container']}>
-                    {pickers.map((picker) => (
-                        <PickerMenu {...picker} key={picker.name} className={styles['picker']} />
+                <div className={styles['dropdowns-container']}>
+                    {dropdowns.map((dropdown) => (
+                        <Dropdown {...dropdown} key={dropdown.name} className={styles['dropdown']} />
                     ))}
                 </div>
                 <div className={styles['meta-items-container']} onFocusCapture={metaItemsOnFocus} onMouseDownCapture={metaItemsOnMouseDown}>

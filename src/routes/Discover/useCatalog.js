@@ -32,7 +32,7 @@ const useCatalog = (urlParams, queryParams) => {
         };
         return [addon, catalog];
     }, [urlParams.type, urlParams.catalog]);
-    const pickers = React.useMemo(() => {
+    const dropdowns = React.useMemo(() => {
         const onTypeChange = (event) => {
             const { value } = event.currentTarget.dataset;
             const query = new URLSearchParams(queryParams);
@@ -48,45 +48,45 @@ const useCatalog = (urlParams, queryParams) => {
             const query = new URLSearchParams({ ...queryParams, [name]: value });
             window.location = `#/discover/${catalog.type}/${addon.id}:${catalog.id}?${query}`;
         };
-        const requiredPickers = [
+        const requiredDropdowns = [
             {
                 name: 'type',
-                value: catalog.type,
+                selected: [catalog.type],
                 options: [
                     { value: 'movie', label: 'movie' },
                     { value: 'series', label: 'series' },
                     { value: 'channels', label: 'channels' },
                     { value: 'games', label: 'games' }
                 ],
-                onChange: onTypeChange
+                onSelect: onTypeChange
             },
             {
                 name: 'catalog',
-                value: catalog.name,
+                selected: [`${addon.id}:${catalog.id}`],
                 options: [
                     { value: 'com.linvo.cinemeta:top', label: 'Top' },
                     { value: 'com.linvo.cinemeta:year', label: 'By year' }
                 ],
-                onChange: onCatalogChange
+                onSelect: onCatalogChange
             }
         ];
-        const extraPickers = catalog.extra
+        const extraDropdowns = catalog.extra
             .filter((extra) => {
                 return extra.name !== 'skip' && extra.name !== 'search';
             })
             .map((extra) => ({
                 ...extra,
-                onChange: onQueryParamChange,
+                onSelect: onQueryParamChange,
                 options: extra.options.map((option) => ({ value: option, label: option })),
-                value: extra.options.includes(queryParams[extra.name]) ?
-                    queryParams[extra.name]
+                selected: extra.options.includes(queryParams[extra.name]) ?
+                    [queryParams[extra.name]]
                     :
                     extra.isRequired ?
-                        extra.options[0]
+                        [extra.options[0]]
                         :
-                        null
+                        []
             }));
-        return requiredPickers.concat(extraPickers);
+        return requiredDropdowns.concat(extraDropdowns);
     }, [addon, catalog, queryString]);
     const items = React.useMemo(() => {
         return Array(100).fill(null).map((_, index) => ({
@@ -98,7 +98,7 @@ const useCatalog = (urlParams, queryParams) => {
             posterShape: 'poster'
         }));
     }, []);
-    return [pickers, items];
+    return [dropdowns, items];
 };
 
 module.exports = useCatalog;
