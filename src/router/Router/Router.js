@@ -4,7 +4,6 @@ const PropTypes = require('prop-types');
 const UrlUtils = require('url');
 const Route = require('../Route');
 const { RoutesContainerProvider } = require('../RoutesContainerContext');
-const queryParamsForQuery = require('./queryParamsForQuery');
 const routeConfigForPath = require('./routeConfigForPath');
 const urlParamsForPath = require('./urlParamsForPath');
 
@@ -31,6 +30,7 @@ const Router = ({ className, onPathNotMatch, ...props }) => {
     React.useEffect(() => {
         const onLocationHashChange = () => {
             const { pathname, query } = UrlUtils.parse(window.location.hash.slice(1));
+            const queryParams = new URLSearchParams(typeof query === 'string' ? query : '');
             const routeConfig = routeConfigForPath(viewsConfig, pathname);
             if (!routeConfig) {
                 if (typeof onPathNotMatch === 'function') {
@@ -41,7 +41,7 @@ const Router = ({ className, onPathNotMatch, ...props }) => {
                                 key: '-1',
                                 component,
                                 urlParams: {},
-                                queryParams: {}
+                                queryParams
                             },
                             ...Array(viewsConfig.length - 1).fill(null)
                         ]);
@@ -52,7 +52,6 @@ const Router = ({ className, onPathNotMatch, ...props }) => {
             }
 
             const urlParams = urlParamsForPath(routeConfig, pathname);
-            const queryParams = queryParamsForQuery(typeof query === 'string' ? query : '');
             const routeViewIndex = viewsConfig.findIndex((vc) => vc.includes(routeConfig));
             const routeIndex = viewsConfig[routeViewIndex].findIndex((rc) => rc === routeConfig);
             setViews((views) => {
