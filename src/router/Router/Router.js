@@ -4,7 +4,6 @@ const PropTypes = require('prop-types');
 const UrlUtils = require('url');
 const Route = require('../Route');
 const { RoutesContainerProvider } = require('../RoutesContainerContext');
-const urlParamsForPath = require('./urlParamsForPath');
 
 const Router = ({ className, onPathNotMatch, ...props }) => {
     const [{ homePath, viewsConfig }] = React.useState(() => ({
@@ -61,7 +60,16 @@ const Router = ({ className, onPathNotMatch, ...props }) => {
                 return;
             }
 
-            const urlParams = urlParamsForPath(routeConfig, pathname);
+            const matches = pathname.match(routeConfig.regexp);
+            const urlParams = routeConfig.urlParamsNames.reduce((urlParams, name, index) => {
+                if (Array.isArray(matches) && typeof matches[index + 1] === 'string') {
+                    urlParams[name] = matches[index + 1];
+                } else {
+                    urlParams[name] = null;
+                }
+
+                return urlParams;
+            }, {});
             const routeViewIndex = viewsConfig.findIndex((vc) => vc.includes(routeConfig));
             const routeIndex = viewsConfig[routeViewIndex].findIndex((rc) => rc === routeConfig);
             setViews((views) => {
