@@ -130,7 +130,7 @@ module.exports = {
     plugins: [
         new webpack.ProgressPlugin(),
         new CopyWebpackPlugin([
-            { from: 'node_modules/stremio-state-container-web/static', to: '' },
+            { from: 'node_modules/stremio-core-web/static', to: '' },
             { from: 'images', to: 'images' },
             { from: 'fonts', to: 'fonts' }
         ]),

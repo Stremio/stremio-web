@@ -1,6 +1,6 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
-const StateContainer = require('stremio-state-container-web');
+const StateContainer = require('stremio-core-web');
 const App = require('./App');
 
 const loadShell = () => {
