@@ -5,48 +5,48 @@ const libraryItems = [
         id: '1',
         type: 'movie',
         name: 'Stremio demo item movie 1',
-        poster: 'images/intro_background.png',
-        logo: 'images/default_avatar.png',
+        poster: '/images/intro_background.jpg',
+        logo: '/images/default_avatar.png',
         posterShape: 'poster'
     },
     {
         id: '2',
         type: 'movie',
         name: 'Stremio demo item movie 2',
-        poster: 'images/intro_background.png',
-        logo: 'images/default_avatar.png',
+        poster: '/images/intro_background.jpg',
+        logo: '/images/default_avatar.png',
         posterShape: 'poster'
     },
     {
         id: '3',
         type: 'series',
         name: 'Stremio demo item series 1',
-        poster: 'images/intro_background.png',
-        logo: 'images/default_avatar.png',
+        poster: '/images/intro_background.jpg',
+        logo: '/images/default_avatar.png',
         posterShape: 'poster'
     },
     {
         id: '4',
         type: 'series',
         name: 'Stremio demo item series 2',
-        poster: 'images/intro_background.png',
-        logo: 'images/default_avatar.png',
+        poster: '/images/intro_background.jpg',
+        logo: '/images/default_avatar.png',
         posterShape: 'poster'
     },
     {
         id: '5',
         type: 'channel',
         name: 'Stremio demo item channel 1',
-        poster: 'images/intro_background.png',
-        logo: 'images/default_avatar.png',
+        poster: '/images/intro_background.jpg',
+        logo: '/images/default_avatar.png',
         posterShape: 'square'
     },
     {
         id: '6',
         type: 'channel',
         name: 'Stremio demo item channel 2',
-        poster: 'images/intro_background.png',
-        logo: 'images/default_avatar.png',
+        poster: '/images/intro_background.jpg',
+        logo: '/images/default_avatar.png',
         posterShape: 'square'
     }
 ];
