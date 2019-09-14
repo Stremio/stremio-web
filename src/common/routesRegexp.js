@@ -13,7 +13,7 @@ const routesRegexp = {
     },
     library: {
         regexp: /^\/library(?:\/([^\/]*?))?\/?$/i,
-        urlParamsNames: ['sort']
+        urlParamsNames: ['type']
     },
     search: {
         regexp: /^\/search\/?$/i,
