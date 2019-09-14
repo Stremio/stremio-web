@@ -19,7 +19,6 @@ const Library = ({ urlParams, queryParams }) => {
                         <MetaItem
                             {...metaItem}
                             key={metaItem.id}
-                            className={styles['meta-item']}
                         />
                     ))}
                 </div>
