@@ -1,11 +1,43 @@
+@import (reference) 'common/screen-sizes.less';
+
 .library-container {
-    height: 100%;
     display: flex;
     flex-direction: column;
+    width: 100%;
+    height: 100%;
     background-color: var(--color-background);
+
+    .nav-bar {
+        flex: none;
+        align-self: stretch;
+    }
 
     .library-content {
         flex: 1;
         align-self: stretch;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        grid-template-rows: auto 1fr;
+        grid-template-areas:
+            "dropdowns-area switch-view-area"
+            "meta-items-area meta-items-area";
+
+        .dropdowns-container {
+            grid-area: dropdowns-area;
+            display: flex;
+            flex-direction: row;
+            margin: 2rem;
+
+            .dropdown {
+                flex-grow: 0;
+                flex-shrink: 1;
+                flex-basis: 17rem;
+                height: 3rem;
+
+                &:not(:last-child) {
+                    margin-right: 1rem;
+                }
+            }
+        }
     }
 }

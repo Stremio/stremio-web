@@ -1,16 +1,22 @@
 const React = require('react');
-const { MainNavBar } = require('stremio/common');
+const { Dropdown, MainNavBar } = require('stremio/common');
+const useLibrary = require('./useLibrary');
 const styles = require('./styles');
 
-class Library extends React.Component {
-    render() {
-        return (
-            <div className={styles['library-container']}>
-                <MainNavBar />
-                <div className={styles['library-content']} />
+const Library = ({ urlParams, queryParams }) => {
+    const [items, dropdowns] = useLibrary(urlParams.type, queryParams.get('sort'));
+    return (
+        <div className={styles['library-container']}>
+            <MainNavBar className={styles['nav-bar']} />
+            <div className={styles['library-content']}>
+                <div className={styles['dropdowns-container']}>
+                    {dropdowns.map((dropdown) => (
+                        <Dropdown {...dropdown} key={dropdown.name} className={styles['dropdown']} />
+                    ))}
+                </div>
             </div>
-        );
-    }
+        </div>
+    );
 }
 
 module.exports = Library;
