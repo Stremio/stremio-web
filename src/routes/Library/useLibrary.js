@@ -53,7 +53,7 @@ const libraryItems = [
 
 const useLibrary = (type, sort) => {
     const items = React.useMemo(() => {
-        return libraryItems.filter(item => item.type === type);
+        return libraryItems.filter(item => typeof type === 'string' && item.type === type);
     }, [type, sort]);
     const onSelect = React.useCallback((event) => {
         const { name, value } = event.currentTarget.dataset;
