@@ -1,8 +1,6 @@
 const React = require('react');
 const classnames = require('classnames');
-const { MainNavBar, placeholderStyles } = require('stremio/common');
-const BoardRow = require('./BoardRow');
-const BoardRowPlaceholder = require('./BoardRowPlaceholder');
+const { MainNavBar, MetaRow, MetaRowPlaceholder, placeholderStyles } = require('stremio/common');
 const useCatalogs = require('./useCatalogs');
 const styles = require('./styles');
 
@@ -27,7 +25,7 @@ const Board = () => {
                     switch (content.type) {
                         case 'Ready':
                             return (
-                                <BoardRow
+                                <MetaRow
                                     key={`${index}${req.base}${content.type}`}
                                     className={styles['board-row']}
                                     title={`${req.path.id} - ${req.path.type_name}`}
@@ -39,7 +37,7 @@ const Board = () => {
                             );
                         case 'Message':
                             return (
-                                <BoardRow
+                                <MetaRow
                                     key={`${index}${req.base}${content.type}`}
                                     className={styles['board-row']}
                                     title={`${req.path.id} - ${req.path.type_name}`}
@@ -48,7 +46,7 @@ const Board = () => {
                             );
                         case 'Loading':
                             return (
-                                <BoardRowPlaceholder
+                                <MetaRowPlaceholder
                                     key={`${index}${req.base}${content.type}`}
                                     className={classnames(styles['board-row-placeholder'], placeholderStyles['placeholder-container'])}
                                 />

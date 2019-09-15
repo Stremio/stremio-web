@@ -3,9 +3,9 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const styles = require('./styles');
 
-const BoardRowPlaceholder = ({ className }) => {
+const MetaRowPlaceholder = ({ className }) => {
     return (
-        <div className={classnames(className, styles['board-row-placeholder-container'])}>
+        <div className={classnames(className, styles['meta-row-placeholder-container'])}>
             <div className={styles['title-container']}>
                 <div className={styles['title-label-container']} />
             </div>
@@ -45,8 +45,8 @@ const BoardRowPlaceholder = ({ className }) => {
     );
 };
 
-BoardRowPlaceholder.propTypes = {
+MetaRowPlaceholder.propTypes = {
     className: PropTypes.string
 };
 
-module.exports = BoardRowPlaceholder;
+module.exports = MetaRowPlaceholder;

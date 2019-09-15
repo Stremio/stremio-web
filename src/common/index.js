@@ -6,6 +6,8 @@ const MainNavBar = require('./MainNavBar');
 const MetaItem = require('./MetaItem');
 const MetaPreview = require('./MetaPreview');
 const MetaPreviewPlaceholder = require('./MetaPreviewPlaceholder');
+const MetaRow = require('./MetaRow');
+const MetaRowPlaceholder = require('./MetaRowPlaceholder');
 const NavBar = require('./NavBar');
 const PlayIconCircleCentered = require('./PlayIconCircleCentered');
 const Popup = require('./Popup');
@@ -29,6 +31,8 @@ module.exports = {
     MetaItem,
     MetaPreview,
     MetaPreviewPlaceholder,
+    MetaRow,
+    MetaRowPlaceholder,
     NavBar,
     PlayIconCircleCentered,
     Popup,

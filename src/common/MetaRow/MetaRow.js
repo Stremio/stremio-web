@@ -2,12 +2,13 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
-const { Button, MetaItem } = require('stremio/common');
+const Button = require('stremio/common/Button');
+const MetaItem = require('stremio/common/MetaItem');
 const styles = require('./styles');
 
-const BoardRow = ({ className, title, message, items, itemMenuOptions }) => {
+const MetaRow = ({ className, title, message, items, itemMenuOptions }) => {
     return (
-        <div className={classnames(className, styles['board-row-container'])}>
+        <div className={classnames(className, styles['meta-row-container'])}>
             {
                 typeof title === 'string' && title.length > 0 ?
                     <div className={styles['title-container']}>{title}</div>
@@ -56,7 +57,7 @@ const BoardRow = ({ className, title, message, items, itemMenuOptions }) => {
     );
 };
 
-BoardRow.propTypes = {
+MetaRow.propTypes = {
     className: PropTypes.string,
     title: PropTypes.string,
     message: PropTypes.string,
@@ -68,4 +69,4 @@ BoardRow.propTypes = {
     itemMenuOptions: PropTypes.array
 };
 
-module.exports = BoardRow;
+module.exports = MetaRow;
