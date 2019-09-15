@@ -5,7 +5,6 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
-const { getLocalIdent } = require('css-loader/dist/utils');
 
 module.exports = {
     entry: './src/index.js',
@@ -87,11 +86,7 @@ module.exports = {
                         loader: 'less-loader',
                         options: {
                             strictMath: true,
-                            noIeCompat: true,
-                            paths: [
-                                path.resolve(__dirname, 'src'),
-                                path.resolve(__dirname, 'node_modules')
-                            ]
+                            noIeCompat: true
                         }
                     }
                 ]
