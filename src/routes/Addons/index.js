@@ -1,3 +1,3 @@
-import Addons from './Addons';
+const Addons = require('./Addons');
 
-export default Addons;
+module.exports = Addons;

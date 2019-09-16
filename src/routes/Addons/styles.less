@@ -1,201 +1,63 @@
 .addons-container {
-    --addon-width: 960px;
-    --label-width: 196px;
-    --label-height: 44px;
-    --spacing: 8px;
-    --button-border-width: 2px;
-    font-size: 14px;
-}
-
-.addons-container {
+    display: flex;
+    flex-direction: column;
     width: 100%;
     height: 100%;
-    display: flex;
-    flex-direction: row;
+    background-color: var(--color-background);
 
-    .side-menu {
-        width: calc(var(--label-width) + var(--spacing) * 5.5);
-        display: flex;
-        flex-direction: column;
-        padding: 0 calc(var(--spacing) * 2.5 + var(--button-border-width));
-        margin: calc(var(--spacing) * 2.5 + var(--button-border-width)) calc(var(--spacing) * 4.5) calc(var(--spacing) * 2.5 + var(--button-border-width)) 0;
-        overflow-y: auto;
-        overflow-x: hidden;
-
-        .add-addon-container {
-            width: var(--label-width);
-            min-height: var(--label-height);
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-            margin-top: var(--button-border-width);
-            margin-bottom: calc(var(--spacing) * 2.5 + var(--button-border-width));
-            padding: calc(var(--spacing) * 1.5);
-            background: var(--color-signal5);
-
-            .add-addon-icon {
-                flex: 1;
-                margin-right: calc(var(--spacing) * 2);
-                fill: var(--color-surfacelighter);
-            }
-
-            .add-addon-label {
-                flex: 8;
-                font-size: 1.2em;
-                color: var(--color-surfacelighter);
-                overflow: hidden;
-                white-space: pre;
-                text-overflow: ellipsis;
-            }
-
-            &:hover {
-                background: var(--color-signal560);
-            }
-        }
-
-        .label {
-            width: var(--label-width);
-            min-height: var(--label-height);
-            cursor: pointer;
-            margin-top: var(--button-border-width);
-            padding: calc(var(--spacing) * 1.5);
-            font-size: 1.2em;
-            overflow: hidden;
-            white-space: pre;
-            text-overflow: ellipsis;
-            color: var(--color-surfacelight);
-
-            &.selected {
-                color: var(--color-surfacelighter);
-                background: var(--color-primarydark);
-
-                &:hover {
-                    background: var(--color-primarydark);
-                }
-            }
-
-            &:focus {
-                outline: var(--button-border-width) solid var(--color-surfacelighter);
-            }
-
-            &:hover {
-                color: var(--color-surfacelighter);
-                background: var(--color-backgroundlighter);
-                outline: none;
-            }
-
-            &:nth-child(4) {
-                margin-bottom: calc(var(--spacing) * 2.5 + var(--button-border-width));
-            }
-
-            &:last-child {
-                margin-bottom: var(--button-border-width);
-            }
-        }
+    .nav-bar {
+        flex: none;
+        align-self: stretch;
     }
 
-    .scroll-container {
+    .addons-content {
         flex: 1;
         align-self: stretch;
-        padding: calc(var(--spacing) * 2.5 + var(--button-border-width)) calc(var(--spacing) * 2.5 + var(--button-border-width)) calc(var(--spacing) * 2.5 + var(--button-border-width)) 0;
-        overflow-y: auto;
-        overflow-x: hidden;
 
-        .placeholder {
+        .top-bar-container {
             display: flex;
             flex-direction: row;
-            position: relative;
-            z-index: 0;
-            width: var(--addon-width);
-            padding: 1.6em;
-            overflow: hidden;
-            background-color: var(--color-backgroundlighter);
+            margin: 2rem;
 
-            .logo-placeholder {
-                flex: 1;
-                background-color: var(--color-secondarylighter20);
+            .dropdown, .add-button-container {
+                flex-grow: 0;
+                flex-shrink: 1;
+                flex-basis: 17rem;
+                height: 3rem;
 
-                .logo {
-                    width: calc(0.12 * var(--addon-width));
-                    height: calc(0.12 * var(--addon-width));
+                &:not(:last-child) {
+                    margin-right: 1rem;
                 }
             }
 
-            .text-placeholder {
-                flex: 5;
-                margin-left: 3em;
+            .add-button-container {
+                flex-basis: auto;
                 display: flex;
-                flex-direction: column;
-                justify-content: space-between;
+                flex-direction: row;
+                align-items: center;
+                max-width: 17rem;
+                padding: 0 1rem;
+                background-color: var(--color-signal5);
 
-                .header-placeholder {
-                    height: 15%;
-                    display: flex;
-                    flex-direction: row;
-                    justify-content: space-between;
-
-                    .name {
-                        flex: 2;
-                        margin-right: 3em;
-                        background-color: var(--color-secondarylighter20);
-                    }
-
-                    .version {
-                        flex: 1;
-                        background-color: var(--color-secondarylighter20);
-                    }
+                &:hover {
+                    filter: brightness(1.1);
                 }
 
-                .types-placeholder, .hostname-placeholder, .description-placeholder {
-                    height: 15%;
-                    background-color: var(--color-secondarylighter20);
-                }
-            }
-
-            .buttons-placeholder {
-                flex: 4;
-                display: flex;
-                flex-direction: column;
-                align-items: flex-end;
-                justify-content: space-between;
-
-                .button {
-                    width: 65%;
-                    height: calc(0.05 * var(--addon-width));
-                    background-color: var(--color-secondarylighter20);
-                }
-            }
-
-            &:after {
-                content: " ";
-                position: absolute;
-                top: 0;
-                right: 0;
-                bottom: 0;
-                left: 50%;
-                width: 500%;
-                margin-left: -250%;
-                animation: placeholderAnimation 1s linear infinite;
-                background: linear-gradient(to right, rgba(255, 255, 255, 0) 42%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0) 58%);
-            }
-
-            @keyframes placeholderAnimation {
-                0% {
-                    transform: translate3d(-30%, 0, 0);
+                .icon {
+                    flex: none;
+                    width: 1.5rem;
+                    height: 1.5rem;
+                    margin-right: 1rem;
+                    fill: var(--color-surfacelighter);
                 }
 
-                100% {
-                    transform: translate3d(30%, 0, 0);
+                .add-button-label {
+                    flex: 1;
+                    max-height: 2.4em;
+                    font-size: 1.1rem;
+                    color: var(--color-surfacelighter);
                 }
             }
-
-            &:nth-child(n+8) {
-                display: none;
-            }
-        }
-
-        >:not(:first-child) {
-            margin-top: calc(var(--spacing) * 2.5 + var(--button-border-width));
         }
     }
 }
