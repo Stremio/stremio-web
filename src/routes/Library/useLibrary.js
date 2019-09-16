@@ -22,7 +22,7 @@ const libraryItems = [
         id: '3',
         type: 'series',
         name: 'Stremio demo item series 1',
-        poster: '/images/intro_background.jpg',
+        poster: '/images/default_avatar.png',
         logo: '/images/default_avatar.png',
         posterShape: 'poster'
     },
@@ -30,7 +30,7 @@ const libraryItems = [
         id: '4',
         type: 'series',
         name: 'Stremio demo item series 2',
-        poster: '/images/intro_background.jpg',
+        poster: '/images/default_avatar.png',
         logo: '/images/default_avatar.png',
         posterShape: 'poster'
     },
@@ -38,7 +38,7 @@ const libraryItems = [
         id: '5',
         type: 'channel',
         name: 'Stremio demo item channel 1',
-        poster: '/images/intro_background.jpg',
+        poster: '/images/anonymous.png',
         logo: '/images/default_avatar.png',
         posterShape: 'square'
     },
@@ -46,7 +46,7 @@ const libraryItems = [
         id: '6',
         type: 'channel',
         name: 'Stremio demo item channel 2',
-        poster: '/images/intro_background.jpg',
+        poster: '/images/anonymous.png',
         logo: '/images/default_avatar.png',
         posterShape: 'square'
     }
