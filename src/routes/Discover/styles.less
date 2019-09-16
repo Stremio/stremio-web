@@ -25,6 +25,7 @@
         .dropdowns-container {
             grid-area: dropdowns-area;
             display: grid;
+            grid-template-columns: repeat(auto-fill, 15rem);
             grid-gap: 1rem;
             margin: 2rem 0;
             padding: 0 2rem;
@@ -62,10 +63,6 @@
 @media only screen and (min-width: @xxlarge) {
     .discover-container {
         .discover-content {
-            .dropdowns-container {
-                grid-template-columns: repeat(auto-fill, 17rem);
-            }
-
             .meta-items-container {
                 grid-template-columns: repeat(8, auto);
             }
@@ -76,10 +73,6 @@
 @media only screen and (max-width: @xxlarge) {
     .discover-container {
         .discover-content {
-            .dropdowns-container {
-                grid-template-columns: repeat(6, 1fr);
-            }
-
             .meta-items-container {
                 grid-template-columns: repeat(7, auto);
             }
@@ -90,10 +83,6 @@
 @media only screen and (max-width: @normal) {
     .discover-container {
         .discover-content {
-            .dropdowns-container {
-                grid-template-columns: repeat(5, 1fr);
-            }
-
             .meta-items-container {
                 grid-template-columns: repeat(6, auto);
             }
@@ -104,10 +93,6 @@
 @media only screen and (max-width: @medium) {
     .discover-container {
         .discover-content {
-            .dropdowns-container {
-                grid-template-columns: repeat(4, 1fr);
-            }
-
             .meta-items-container {
                 grid-template-columns: repeat(5, auto);
             }
@@ -118,10 +103,6 @@
 @media only screen and (max-width: @small) {
     .discover-container {
         .discover-content {
-            .dropdowns-container {
-                grid-template-columns: repeat(3, 1fr);
-            }
-
             .meta-items-container {
                 grid-template-columns: repeat(4, auto);
             }
@@ -148,17 +129,6 @@
 
             .meta-preview-container {
                 display: none;
-            }
-        }
-    }
-}
-
-
-@media only screen and (max-width: @minimum) {
-    .discover-container {
-        .discover-content {
-            .dropdowns-container {
-                grid-template-columns: repeat(3, 1fr);
             }
         }
     }

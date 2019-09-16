@@ -22,7 +22,6 @@
             .dropdown, .add-button-container {
                 flex-grow: 0;
                 flex-shrink: 1;
-                flex-basis: 17rem;
                 height: 3rem;
 
                 &:not(:last-child) {
@@ -30,12 +29,16 @@
                 }
             }
 
+            .dropdown {
+                flex-basis: 15rem;
+            }
+
             .add-button-container {
                 flex-basis: auto;
                 display: flex;
                 flex-direction: row;
                 align-items: center;
-                max-width: 17rem;
+                max-width: 15rem;
                 padding: 0 1rem;
                 background-color: var(--color-signal5);
 
