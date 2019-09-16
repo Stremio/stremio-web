@@ -1,16 +1,24 @@
 const React = require('react');
-const { MainNavBar } = require('stremio/common');
+const { MainNavBar, MetaRow } = require('stremio/common');
+const useSearch = require('./useSearch');
 const styles = require('./styles');
 
-class Search extends React.Component {
-    render() {
-        return (
-            <React.Fragment>
-                <MainNavBar />
-                <div className={styles['search-container']} />
-            </React.Fragment>
-        );
-    }
+const Search = ({ queryParams }) => {
+    const groups = useSearch(queryParams.get('q'));
+    return (
+        <div className={styles['search-container']}>
+            <MainNavBar className={styles['nav-bar']} />
+            <div className={styles['search-content']}>
+                {groups.map((group, index) => (
+                    <MetaRow
+                        {...group}
+                        key={index}
+                        className={styles['search-row']}
+                    />
+                ))}
+            </div>
+        </div>
+    );
 }
 
 module.exports = Search;

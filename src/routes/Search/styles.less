@@ -1,4 +1,40 @@
+:import('~stremio/common/MetaRow/styles.less') {
+    meta-item: meta-item;
+}
+
 .search-container {
-    background-color: var(--color-background);
+    display: flex;
+    flex-direction: column;
+    width: 100%;
     height: 100%;
+    background-color: var(--color-background);
+
+    .nav-bar {
+        flex: none;
+        align-self: stretch;
+    }
+
+    .search-content {
+        flex: 1;
+        align-self: stretch;
+        overflow-y: auto;
+
+        .search-row {
+            margin: 4rem 2rem;
+
+            &:first-child {
+                margin-top: 2rem;
+            }
+
+            &:last-child {
+                margin-bottom: 2rem;
+            }
+
+            .meta-item {
+                &:nth-child(n+6) {
+                    display: none;
+                }
+            }
+        }
+    }
 }
