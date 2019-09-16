@@ -62,11 +62,11 @@ const useLibrary = (type, sort) => {
         if (name === 'type') {
             const nextQuery = new URLSearchParams({ sort: typeof sort === 'string' ? sort : '' });
             const nextType = typeof value === 'string' ? value : '';
-            window.location = `#/library/${nextType}?${nextQuery}`;
+            window.location.replace(`#/library/${nextType}?${nextQuery}`);
         } else if (name === 'sort') {
             const nextQuery = new URLSearchParams({ sort: typeof value === 'string' ? value : '' });
             const nextType = typeof type === 'string' ? type : '';
-            window.location = `#/library/${nextType}?${nextQuery}`;
+            window.location.replace(`#/library/${nextType}?${nextQuery}`);
         }
     }, [type, sort]);
     const typeDropdown = React.useMemo(() => {
