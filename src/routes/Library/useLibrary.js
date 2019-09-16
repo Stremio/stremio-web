@@ -1,5 +1,6 @@
 const React = require('react');
 
+const DEFAULT_TYPE = 'movie';
 const libraryItems = [
     {
         id: '1',
@@ -52,8 +53,9 @@ const libraryItems = [
 ];
 
 const useLibrary = (type, sort) => {
+    type = typeof type === 'string' && type.length > 0 ? type : DEFAULT_TYPE;
     const items = React.useMemo(() => {
-        return libraryItems.filter(item => typeof type === 'string' && item.type === type);
+        return libraryItems.filter(item => item.type === type);
     }, [type, sort]);
     const onSelect = React.useCallback((event) => {
         const { name, value } = event.currentTarget.dataset;
