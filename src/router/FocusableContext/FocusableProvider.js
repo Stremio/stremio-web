@@ -35,12 +35,7 @@ const FocusableProvider = ({ children, onRoutesContainerChildrenChange, onModals
     }, [routesContainer, modalsContainer, onRoutesContainerChildrenChange, onModalsContainerChildrenChange]);
     React.useEffect(() => {
         if (focusable && !contentContainerRef.current.contains(document.activeElement)) {
-            const focusableElement = contentContainerRef.current.querySelector('[tabindex]:not([tabindex="-1"])');
-            if (focusableElement instanceof HTMLElement) {
-                focusableElement.focus();
-            } else {
-                contentContainerRef.current.focus();
-            }
+            contentContainerRef.current.focus();
         }
     }, [focusable]);
     return (
