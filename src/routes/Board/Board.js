@@ -29,10 +29,7 @@ const Board = () => {
                                     key={`${index}${req.base}${content.type}`}
                                     className={styles['board-row']}
                                     title={`${req.path.id} - ${req.path.type_name}`}
-                                    items={content.content.map((item) => ({
-                                        ...item,
-                                        posterShape: item.posterShape || 'poster'
-                                    }))}
+                                    items={content.content}
                                 />
                             );
                         case 'Message':
