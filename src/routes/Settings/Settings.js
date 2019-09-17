@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import Icon from 'stremio-icons/dom';
-import { Input, Popup, Checkbox } from 'stremio/common';
-import classnames from 'classnames';
-import styles from './styles';
+const React = require('react');
+const PropTypes = require('prop-types');
+const classnames = require('classnames');
+const { TextInput, Button, Dropdown, Checkbox, MainNavBar } = require('stremio/common');
+const styles = require('./styles');
+const Input = TextInput
 
 const SECTIONS_ORDER = {
     'General': 1,
@@ -11,7 +11,7 @@ const SECTIONS_ORDER = {
     'Streaming': 3
 };
 
-class Settings extends Component {
+class Settings extends React.Component {
     constructor(props) {
         super(props);
 
@@ -128,24 +128,6 @@ class Settings extends Component {
         });
     }
 
-    activate = (id) => {
-        this.setState(({ inputs }) => ({
-            inputs: inputs.map((input) => ({
-                ...input,
-                active: id === input.id
-            }))
-        }));
-    }
-
-    deactivate = (id) => {
-        this.setState(({ inputs }) => ({
-            inputs: inputs.map((input) => ({
-                ...input,
-                active: id === input.id ? false : input.active
-            }))
-        }));
-    }
-
     toggleCheckbox = (id) => {
         this.setState(({ inputs }) => ({
             inputs: inputs.map((input) => ({
@@ -162,41 +144,29 @@ class Settings extends Component {
             return {
                 inputs: inputs.map((input) => ({
                     ...input,
-                    value: data.id === input.id ? data.option : input.value,
-                    active: false
+                    value: data.name === input.id ? data.value : input.value,
                 }))
             }
         })
     }
 
-    renderPopup({ ref, activate, deactivate, active, value, id, options, onClick }) {
+    renderDropdown({ value, id, options, onClick}) {
+        options = options.map(o=>({value: o, label: o}))
         return (
-            <Popup ref={ref} className={'popup-container'} onOpen={activate.bind(null, id)} onClose={deactivate.bind(null, id)}>
-                <Popup.Label>
-                    <Input className={classnames(styles['bar-button'], { 'active': active })} type={'button'}>
-                        <div className={styles['value']}>{value}</div>
-                        <Icon className={styles['icon']} icon={'ic_arrow_down'} />
-                    </Input>
-                </Popup.Label>
-                <Popup.Menu>
-                    <div className={styles['popup-content']}>
-                        {options.map((option) =>
-                            <div key={option} className={classnames(styles['option'], { [styles['selected']]: value === option })} data-option={option} data-id={id} onClick={onClick}>{option}</div>
-                        )}
-                    </div>
-                </Popup.Menu>
-            </Popup>
+            <Dropdown options={options} selected={[value]} name={id} key={id} className={styles['dropdown']} onSelect={onClick} />
         );
     }
 
     render() {
         return (
+            <div className={styles['settings-parent-container']}>
+            <MainNavBar className={styles['nav-bar']} />
             <div className={styles['settings-container']}>
                 <div className={styles['side-menu']}>
                     {this.state.sections.map((section) =>
-                        <Input key={section.id} className={classnames(styles['section-label'], { [styles['selected']]: this.state.selectedSectionId === section.id })} type={'button'} data-section={section.id} onClick={this.changeSection}>
+                        <Button key={section.id} className={classnames(styles['section-label'], { [styles['selected']]: this.state.selectedSectionId === section.id })} type={'button'} data-section={section.id} onClick={this.changeSection}>
                             {section.id}
-                        </Input>
+                        </Button>
                     )}
                 </div>
                 <div ref={this.scrollContainerRef} className={styles['scroll-container']} onScroll={this.onScroll}>
@@ -223,10 +193,7 @@ class Settings extends Component {
                                         return (
                                             <div key={input.id} className={classnames(styles['input-container'], styles['select-container'])}>
                                                 {input.header ? <div className={styles['input-header']}>{input.header}</div> : null}
-                                                {this.renderPopup({
-                                                    ref: input.ref,
-                                                    activate: this.activate,
-                                                    deactivate: this.deactivate,
+                                                {this.renderDropdown({
                                                     active: input.active,
                                                     id: input.id,
                                                     value: input.value,
@@ -239,17 +206,18 @@ class Settings extends Component {
                                         return (
                                             <div key={input.id} className={classnames(styles['input-container'], styles['link-container'])}>
                                                 {input.header ? <div className={styles['input-header']}>{input.header}</div> : null}
-                                                <Input ref={input.ref} className={styles['link']} type={input.type} href={input.href} target={'_blank'}>{input.label}</Input>
+                                                <Button ref={input.ref} className={styles['link']} type={input.type} href={input.href} target={'_blank'}>
+                                                    <div className={styles['label']}>{input.label}</div>
+                                                </Button>
                                             </div>
                                         );
                                     } else if (input.type === 'button') {
                                         return (
                                             <div key={input.id} className={classnames(styles['input-container'], styles['button-container'])}>
                                                 {input.header ? <div className={styles['input-header']}>{input.header}</div> : null}
-                                                <Input ref={input.ref} className={styles['button']} type={input.type}>
-                                                    {input.icon ? <Icon className={styles['icon']} icon={input.icon} /> : null}
+                                                <Button ref={input.ref} className={styles['button']} type={input.type}>
                                                     <div className={styles['label']}>{input.label}</div>
-                                                </Input>
+                                                </Button>
                                             </div>
                                         );
                                     } else if (input.type === 'checkbox') {
@@ -266,7 +234,7 @@ class Settings extends Component {
                                             <div key={input.id} className={classnames(styles['input-container'], styles['text-container'])}>
                                                 {input.header ? <div className={styles['input-header']}>{input.header}</div> : null}
                                                 <div className={styles['text']}>
-                                                    {input.icon ? <Icon className={styles[input.icon === 'ic_x' ? 'x-icon' : 'icon']} icon={input.icon} /> : null}
+                                                    {/* {input.icon ? <Icon className={styles[input.icon === 'ic_x' ? 'x-icon' : 'icon']} icon={input.icon} /> : null} */}
                                                     <div className={styles['label']}>{input.label}</div>
                                                 </div>
                                             </div>
@@ -283,6 +251,7 @@ class Settings extends Component {
                         </div>
                     )}
                 </div>
+            </div>
             </div>
         );
     }
@@ -309,4 +278,4 @@ Settings.defaultProps = {
     settingsConfiguration: []
 }
 
-export default Settings;
+module.exports = Settings;
