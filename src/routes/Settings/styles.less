@@ -1,9 +1,3 @@
-.settings-container, :global(.popup-container) {
-    --spacing: 16px;
-    --input-width: 500px;
-    font-size: 14px;
-}
-
 .settings-parent-container {
     display: flex;
     flex-direction: column;
@@ -22,17 +16,19 @@
         display: flex;
         flex-direction: row;
         background-color: var(--color-backgroundlight);
-
+        --spacing: 1rem;
+        --input-width: 35rem;
+    
         .side-menu {
             padding: var(--spacing);
-            width: 17em;
+            width: 17rem;
             display: flex;
             flex-direction: column;
             background-color: var(--color-backgroundlighter);
 
             .section-label {
                 padding: var(--spacing);
-                font-size: 1.1em;
+                font-size: 1.1rem;
                 border: calc(var(--focusable-border-size) * 0.5) solid transparent;
                 color: var(--color-surfacelight);
                 cursor: pointer;
@@ -68,7 +64,7 @@
 
                 .section-header {
                     margin: 0 calc(var(--spacing) * 1.5) calc(var(--spacing) * 1.5) calc(var(--spacing) * 1.5);
-                    font-size: 2em;
+                    font-size: 2rem;
                     color: var(--color-surfacelighter);
                 }
 
@@ -93,8 +89,8 @@
 
                         .avatar {
                             margin: 0 var(--spacing);
-                            width: 4.2em;
-                            height: 4.2em;
+                            width: 4.2rem;
+                            height: 4.2rem;
                             border-radius: 50%;
                             border: var(--focusable-border-size) solid var(--color-primary);
                             background-size: cover;
@@ -189,14 +185,14 @@
                             cursor: pointer;
 
                             .icon {
-                                width: 1.4em;
+                                width: 1.4rem;
                                 height: 100%;
                                 margin-right: calc(var(--spacing) * 0.5);
                                 fill: var(--color-surfacelighter);
                             }
 
                             .label {
-                                max-width: 30em;
+                                max-width: 30rem;
                                 color: var(--color-surfacelighter);
                             }
 
@@ -213,7 +209,7 @@
 
                     &.checkbox-container {
                         .checkbox {
-                            --icon-size: 1.2em;
+                            --icon-size: 1.2rem;
                             --icon-color: var(--color-surface);
                             --icon-background-color: transparent;
 
@@ -224,7 +220,7 @@
 
                             .label {
                                 width: 100%;
-                                margin-left: 0.5em;
+                                margin-left: 0.5rem;
                                 color: var(--color-surfacelight);
                             }
 
@@ -295,31 +291,6 @@
 
             >:not(:last-child) {
                 border-bottom: calc(var(--focusable-border-size) * 0.5) solid var(--color-primary);
-            }
-        }
-    }
-}
-
-:global(.popup-container) {
-    .popup-content {
-        width: var(--input-width);
-        border: calc(var(--focusable-border-size) * 0.5) solid var(--color-primary);
-        background-color: var(--color-surfacelighter);
-
-        .option {
-            padding: calc(var(--spacing) * 0.5);
-            width: 100%;
-            color: var(--color-backgrounddarker);
-            cursor: pointer;
-
-            &.selected {
-                color: var(--color-surfacelighter);
-                background-color: var(--color-primarydark);
-            }
-
-            &:hover {
-                color: var(--color-surfacelighter);
-                background-color: var(--color-primary);
             }
         }
     }
