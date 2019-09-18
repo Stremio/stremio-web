@@ -7,6 +7,31 @@ const DEFAULT_TYPE = 'all';
 const useAddons = (category, type) => {
     category = CATEGORIES.includes(category) ? category : DEFAULT_CATEGORY;
     type = typeof type === 'string' && type.length > 0 ? type : DEFAULT_TYPE;
+    const addons = React.useMemo(() => {
+        return [
+            {
+                id: 'com.linvo.cinemeta',
+                name: 'Cinemeta',
+                description: 'The official add-on for movie and series catalogs',
+                types: ['movie', 'series'],
+                version: '2.12.1',
+                transportUrl: 'https://v3-cinemeta.strem.io/manifest.json',
+                installed: true,
+                official: true
+            },
+            {
+                id: 'com.linvo.cinemeta2',
+                name: 'Cinemeta2',
+                logo: '/images/intro_background.jpg',
+                description: 'The official add-on for movie and series catalogs',
+                types: ['movie', 'series'],
+                version: '2.12.2',
+                transportUrl: 'https://v2-cinemeta.strem.io/manifest.json',
+                installed: false,
+                official: false
+            }
+        ];
+    }, []);
     const onSelect = React.useCallback((event) => {
         const { name, value } = event.currentTarget.dataset;
         if (name === 'category') {
@@ -41,7 +66,7 @@ const useAddons = (category, type) => {
             onSelect
         };
     }, [type, onSelect]);
-    return [[], [categoryDropdown, typeDropdown]];
+    return [addons, [categoryDropdown, typeDropdown]];
 };
 
 module.exports = useAddons;
