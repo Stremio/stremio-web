@@ -1678,6 +1678,13 @@
   resolved "https://registry.yarnpkg.com/@xtuc/long/-/long-4.2.2.tgz#d291c6a4e97989b5c61d9acf396ae4fe133a718d"
   integrity sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==
 
+a-color-picker@1.1.8:
+  version "1.1.8"
+  resolved "https://registry.yarnpkg.com/a-color-picker/-/a-color-picker-1.1.8.tgz#5e0ef5c8d99f5d2471682e2f76fe5562e7cb74d0"
+  integrity sha512-PGKDLFV3Qp190YKVd+TF+7ib0jvaVkq6ezaCnnFUhLVmnKLCEzUAH8CumLkP+kfeBukRcJtE9RMwbiR2Z40FbA==
+  dependencies:
+    is-plain-object "^2.0.4"
+
 abbrev@1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-1.1.1.tgz#f8f2c887ad10bf67f634f005b6987fed3179aac8"
