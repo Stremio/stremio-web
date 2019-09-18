@@ -2,13 +2,17 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
-const { Button, useTabIndex } = require('stremio/common');
+const { Button } = require('stremio/common');
 const styles = require('./styles');
 
 const Addon = ({ className, id, name, logo, description, types, version, transportUrl, installed, toggle }) => {
-    const tabIndex = useTabIndex();
+    const onKeyUp = React.useCallback((event) => {
+        if (event.key === 'Enter' && typeof toggle === 'function') {
+            toggle(event);
+        }
+    }, [toggle]);
     return (
-        <div className={classnames(styles['addon-container'], className)} tabIndex={tabIndex} data-id={id}>
+        <Button className={classnames(styles['addon-container'], className)} data-id={id} onKeyUp={onKeyUp}>
             <div className={styles['logo-container']}>
                 {
                     typeof logo === 'string' && logo.length > 0 ?
@@ -56,7 +60,7 @@ const Addon = ({ className, id, name, logo, description, types, version, transpo
                     <div className={styles['label']}>Share addon</div>
                 </Button>
             </div>
-        </div>
+        </Button>
     );
 };
 
