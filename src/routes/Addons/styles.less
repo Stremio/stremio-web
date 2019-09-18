@@ -19,26 +19,14 @@
             flex-direction: row;
             margin: 2rem;
 
-            .dropdown, .add-button-container {
-                flex-grow: 0;
-                flex-shrink: 1;
-                height: 3rem;
-
-                &:not(:last-child) {
-                    margin-right: 1rem;
-                }
-            }
-
-            .dropdown {
-                flex-basis: 15rem;
-            }
-
             .add-button-container {
-                flex-basis: auto;
+                flex: none;
                 display: flex;
                 flex-direction: row;
                 align-items: center;
+                height: 3rem;
                 max-width: 15rem;
+                margin-right: 1rem;
                 padding: 0 1rem;
                 background-color: var(--color-signal5);
 
@@ -55,11 +43,28 @@
                 }
 
                 .add-button-label {
-                    flex: 1;
+                    flex-grow: 0;
+                    flex-shrink: 1;
+                    flex-basis: auto;
                     max-height: 2.4em;
                     font-size: 1.1rem;
                     color: var(--color-surfacelighter);
                 }
+            }
+
+            .dropdown {
+                flex-grow: 0;
+                flex-shrink: 1;
+                flex-basis: 15rem;
+                height: 3rem;
+                margin-right: 1rem;
+            }
+
+            .search-bar-container {
+                flex-grow: 0;
+                flex-shrink: 1;
+                flex-basis: 19rem;
+                height: 3rem;
             }
         }
 

@@ -19,6 +19,7 @@ const Addons = ({ urlParams }) => {
                     {dropdowns.map((dropdown) => (
                         <Dropdown {...dropdown} key={dropdown.name} className={styles['dropdown']} />
                     ))}
+                    <div className={styles['search-bar-container']} />
                 </div>
                 <div className={styles['addons-list-container']} >
                     {addons.map((addon) => (
