@@ -1,7 +1,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const { TextInput, Button, Dropdown, Checkbox, MainNavBar } = require('stremio/common');
+const { TextInput, Button, Dropdown, Checkbox, NavBar } = require('stremio/common');
 const styles = require('./styles');
 const Input = TextInput
 
@@ -160,7 +160,12 @@ class Settings extends React.Component {
     render() {
         return (
             <div className={styles['settings-parent-container']}>
-            <MainNavBar className={styles['nav-bar']} />
+            <NavBar
+                className={styles['nav-bar']}
+                backButton={true}
+                addonsButton={true}
+                fullscreenButton={true}
+                navMenu={true}/>
             <div className={styles['settings-container']}>
                 <div className={styles['side-menu']}>
                     {this.state.sections.map((section) =>
