@@ -38,10 +38,10 @@ const SECTIONS_ORDER = {
 };
 
 const Settings = () => {
-    const [selectedSectionId, setSelectedSectionId] = React.useState(null)
-    const [sections, setSections] = React.useState([])
-    const [inputs, setInputs] = React.useState([])
-    const scrollContainerRef = React.useRef(null)
+    const [selectedSectionId, setSelectedSectionId] = React.useState(null);
+    const [sections, setSections] = React.useState([]);
+    const [inputs, setInputs] = React.useState([]);
+    const scrollContainerRef = React.useRef(null);
 
     React.useEffect(() => {
         const theSections = settingsData.map(({ section }) => section)
@@ -61,7 +61,7 @@ const Settings = () => {
         setSections(theSections);
 
         if (theSections.length > 0 && (selectedSectionId === null || !theSections.find(({ id }) => id === selectedSectionId))) {
-            setSelectedSectionId(theSections[0].id)
+            setSelectedSectionId(theSections[0].id);
         }
 
         setInputs(settingsData.map((setting) => ({
@@ -69,8 +69,8 @@ const Settings = () => {
             id: setting.label,
             ref: React.createRef(),
             active: !!(inputs.find(({ id }) => id === setting.label) || {}).active
-        })))
-    }, [])
+        })));
+    }, []);
 
     /////////////////
 
@@ -78,29 +78,29 @@ const Settings = () => {
         setInputs(inputs.map((input) => ({
             ...input,
             value: id === input.id ? !input.value : input.value
-        })))
-    }
+        })));
+    };
 
     const updateDropdown = (event) => {
         var data = event.currentTarget.dataset;
         setInputs(inputs.map((input) => ({
             ...input,
             value: data.name === input.id ? data.value : input.value,
-        })))
-    }
+        })));
+    };
 
     const changeSection = (event) => {
         const currentSectionId = event.currentTarget.dataset.section;
         const section = sections.find((section) => section.id === currentSectionId);
-        setSelectedSectionId(currentSectionId)
+        setSelectedSectionId(currentSectionId);
         scrollContainerRef.current.scrollTo({
             top: section.ref.current.offsetTop,
             behavior: 'smooth'
         });
-    }
+    };
 
     const onScroll = (event) => {
-        const current = event.currentTarget
+        const current = event.currentTarget;
         if (sections.length <= 0) {
             return;
         }
@@ -115,17 +115,7 @@ const Settings = () => {
                 }
             }
         }
-    }
-
-    ////////////////
-
-    const renderDropdown = ({ value, id, options, onClick }) => {
-        // TODO provide proper data instead of this mapping
-        options = options.map(o => ({ value: o, label: o }))
-        return (
-            <Dropdown options={options} selected={[value]} name={id} key={id} className={styles['dropdown']} onSelect={onClick} />
-        );
-    }
+    };
 
     return (
         <div className={styles['settings-parent-container']}>
@@ -147,8 +137,7 @@ const Settings = () => {
                     {sections.map((section) =>
                         <div key={section.id} ref={section.ref} className={styles['section']} data-section={section.id}>
                             <div className={styles['section-header']}>{section.id}</div>
-                            {inputs
-                                .filter((input) => input.section === section.id)
+                            {inputs.filter((input) => input.section === section.id)
                                 .map((input) => {
                                     if (input.type === 'user') {
                                         return (
@@ -167,13 +156,8 @@ const Settings = () => {
                                         return (
                                             <div key={input.id} className={classnames(styles['input-container'], styles['select-container'])}>
                                                 {input.header ? <div className={styles['input-header']}>{input.header}</div> : null}
-                                                {renderDropdown({
-                                                    active: input.active,
-                                                    id: input.id,
-                                                    value: input.value,
-                                                    options: input.options,
-                                                    onClick: updateDropdown
-                                                })}
+                                                {/* TODO: provide proper data instead of mapping the options */}
+                                                <Dropdown options={input.options.map(o => ({ value: o, label: o }))} selected={[input.value]} name={input.id} key={input.id} className={styles['dropdown']} onSelect={updateDropdown} />
                                             </div>
                                         );
                                     } else if (input.type === 'link') {
@@ -229,6 +213,6 @@ const Settings = () => {
             </div>
         </div>
     );
-}
+};
 
 module.exports = Settings;
