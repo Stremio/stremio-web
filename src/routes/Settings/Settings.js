@@ -45,19 +45,19 @@ const Settings = () => {
 
     React.useEffect(() => {
         const theSections = settingsData.map(({ section }) => section)
-        .filter((section, index, sections) => sections.indexOf(section) === index)
-        .sort(function(a, b) {
-            const valueA = SECTIONS_ORDER[a];
-            const valueB = SECTIONS_ORDER[b];
-            if (!isNaN(valueA) && !isNaN(valueB)) return valueA - valueB;
-            if (!isNaN(valueA)) return -1;
-            if (!isNaN(valueB)) return 1;
-            return a - b;
-        })
-        .map((section) => ({
-            id: section,
-            ref: React.createRef()
-        }));
+            .filter((section, index, sections) => sections.indexOf(section) === index)
+            .sort(function(a, b) {
+                const valueA = SECTIONS_ORDER[a];
+                const valueB = SECTIONS_ORDER[b];
+                if (!isNaN(valueA) && !isNaN(valueB)) return valueA - valueB;
+                if (!isNaN(valueA)) return -1;
+                if (!isNaN(valueB)) return 1;
+                return a - b;
+            })
+            .map((section) => ({
+                id: section,
+                ref: React.createRef()
+            }));
         setSections(theSections);
 
         if (theSections.length > 0 && (selectedSectionId === null || !theSections.find(({ id }) => id === selectedSectionId))) {
@@ -90,11 +90,12 @@ const Settings = () => {
     }
 
     const changeSection = (event) => {
-        const currentSectionId = event.currentTarget.dataset.section
+        const currentSectionId = event.currentTarget.dataset.section;
         const section = sections.find((section) => section.id === currentSectionId);
         setSelectedSectionId(currentSectionId)
         scrollContainerRef.current.scrollTo({
-            top: section.ref.current.offsetTop
+            top: section.ref.current.offsetTop,
+            behavior: 'smooth'
         });
     }
 
