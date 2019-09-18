@@ -1,6 +1,7 @@
 const React = require('react');
 const classnames = require('classnames');
 const { TextInput, Button, Dropdown, Checkbox, NavBar } = require('stremio/common');
+const Icon = require('stremio-icons/dom/Icon');
 const styles = require('./styles');
 
 const settingsData = [
@@ -188,6 +189,7 @@ const Settings = () => {
                                             <div key={input.id} className={classnames(styles['input-container'], styles['button-container'])}>
                                                 {input.header ? <div className={styles['input-header']}>{input.header}</div> : null}
                                                 <Button ref={input.ref} className={styles['button']} type={input.type}>
+                                                    {input.icon ? <Icon className={styles['icon']} icon={input.icon} /> : null}
                                                     <div className={styles['label']}>{input.label}</div>
                                                 </Button>
                                             </div>
@@ -206,7 +208,7 @@ const Settings = () => {
                                             <div key={input.id} className={classnames(styles['input-container'], styles['text-container'])}>
                                                 {input.header ? <div className={styles['input-header']}>{input.header}</div> : null}
                                                 <div className={styles['text']}>
-                                                    {/* {input.icon ? <Icon className={styles[input.icon === 'ic_x' ? 'x-icon' : 'icon']} icon={input.icon} /> : null} */}
+                                                    {input.icon ? <Icon className={styles[input.icon === 'ic_x' ? 'x-icon' : 'icon']} icon={input.icon} /> : null}
                                                     <div className={styles['label']}>{input.label}</div>
                                                 </div>
                                             </div>
