@@ -4,8 +4,7 @@ const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const Button = require('stremio/common/Button');
 const PlayIconCircleCentered = require('stremio/common/PlayIconCircleCentered');
-const Popup = require('stremio/common/Popup');
-const useBinaryState = require('stremio/common/useBinaryState');
+const Dropdown = require('stremio/common/Dropdown');
 const styles = require('./styles');
 
 const ICON_FOR_TYPE = Object.assign(Object.create(null), {
@@ -17,33 +16,27 @@ const ICON_FOR_TYPE = Object.assign(Object.create(null), {
 });
 
 const MetaItem = React.memo(({ className, id, type, name, posterShape, poster, title, subtitle, progress, playIcon, menuOptions, onSelect, menuOptionOnSelect }) => {
-    const [menuOpen, openMenu, closeMenu, toggleMenu] = useBinaryState(false);
+    const [menuOpen, setMenuOpen] = React.useState(false);
+    const onOpen = React.useCallback(() => {
+        setMenuOpen(true);
+    }, []);
+    const onClose = React.useCallback(() => {
+        setMenuOpen(false);
+    }, []);
     const metaItemOnClick = React.useCallback((event) => {
-        if (!event.nativeEvent.selectItemPrevented && typeof onSelect === 'function') {
+        if (!event.nativeEvent.selectMetaItemPrevented && typeof onSelect === 'function') {
             onSelect(event);
         }
     }, [onSelect]);
-    const menuLabelOnClick = React.useCallback((event) => {
-        toggleMenu();
-        event.nativeEvent.selectItemPrevented = true;
-    }, [toggleMenu]);
-    const menuOptionOnClick = React.useCallback((event) => {
-        if (typeof menuOptionOnSelect === 'function') {
-            menuOptionOnSelect(event);
-        }
-
-        if (!event.nativeEvent.closeMenuPrevented) {
-            closeMenu();
-        }
-
-        event.nativeEvent.selectItemPrevented = true;
-    }, [menuOptionOnSelect]);
+    const menuOnClick = React.useCallback((event) => {
+        event.nativeEvent.selectMetaItemPrevented = true;
+    }, []);
     return (
         <Button className={classnames(className, styles['meta-item-container'], styles['poster-shape-poster'], styles[`poster-shape-${posterShape}`], { 'active': menuOpen })} title={name} data-id={id} onClick={metaItemOnClick}>
             <div className={styles['poster-image-container']}>
-                <div className={styles['placeholder-image-layer']}>
+                <div className={styles['placeholder-icon-layer']}>
                     <Icon
-                        className={styles['placeholder-image']}
+                        className={styles['placeholder-icon']}
                         icon={typeof ICON_FOR_TYPE[type] === 'string' ? ICON_FOR_TYPE[type] : ICON_FOR_TYPE['other']}
                     />
                 </div>
@@ -84,24 +77,21 @@ const MetaItem = React.memo(({ className, id, type, name, posterShape, poster, t
                             }
                             {
                                 Array.isArray(menuOptions) && menuOptions.length > 0 ?
-                                    <Popup
-                                        open={menuOpen}
-                                        onCloseRequest={closeMenu}
-                                        renderLabel={(ref) => (
-                                            <Button ref={ref} className={classnames(styles['menu-label-container'], { 'active': menuOpen })} tabIndex={-1} onClick={menuLabelOnClick}>
+                                    <div className={styles['dropdown-menu-container']} onClick={menuOnClick}>
+                                        <Dropdown
+                                            className={styles['menu-label-container']}
+                                            menuClassName={styles['menu-container']}
+                                            menuMatchLabelWidth={false}
+                                            renderLabel={() => (
                                                 <Icon className={styles['menu-icon']} icon={'ic_more'} />
-                                            </Button>
-                                        )}
-                                        renderMenu={() => (
-                                            <div className={styles['menu-container']}>
-                                                {menuOptions.map(({ label, type }) => (
-                                                    <Button key={type} className={styles['menu-option-container']} data-id={id} data-type={type} onClick={menuOptionOnClick}>
-                                                        {label}
-                                                    </Button>
-                                                ))}
-                                            </div>
-                                        )}
-                                    />
+                                            )}
+                                            options={menuOptions}
+                                            tabIndex={-1}
+                                            onOpen={onOpen}
+                                            onClose={onClose}
+                                            onSelect={menuOptionOnSelect}
+                                        />
+                                    </div>
                                     :
                                     null
                             }
@@ -137,7 +127,7 @@ MetaItem.propTypes = {
     playIcon: PropTypes.bool,
     menuOptions: PropTypes.arrayOf(PropTypes.shape({
         label: PropTypes.string.isRequired,
-        type: PropTypes.string.isRequired
+        value: PropTypes.string.isRequired
     })),
     onSelect: PropTypes.func,
     menuOptionOnSelect: PropTypes.func
