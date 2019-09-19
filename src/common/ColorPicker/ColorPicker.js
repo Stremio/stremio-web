@@ -4,7 +4,7 @@ const AColorPicker = require('a-color-picker');
 
 const COLOR_FORMAT = 'rgbacss';
 
-const ColorPicker = ({ className, value, onChange }) => {
+const ColorPicker = ({ className, value, onChange, pickerOpts }) => {
     value = AColorPicker.parseColor(value, COLOR_FORMAT);
     const pickerRef = React.useRef(null);
     const pickerElementRef = React.useRef(null);
@@ -14,7 +14,8 @@ const ColorPicker = ({ className, value, onChange }) => {
             showHSL: false,
             showHEX: false,
             showRGB: false,
-            showAlpha: true
+            showAlpha: true,
+            ...pickerOpts
         });
     }, []);
     React.useEffect(() => {
