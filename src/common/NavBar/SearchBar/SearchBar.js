@@ -44,14 +44,10 @@ const SearchBar = ({ className }) => {
                         key={query}
                         ref={searchInputRef}
                         className={styles['search-input']}
-                        defaultValue={query}
-                        tabIndex={-1}
-                        size={1}
                         type={'text'}
                         placeholder={'Search'}
-                        autoCorrect={'off'}
-                        autoCapitalize={'off'}
-                        spellCheck={false}
+                        defaultValue={query}
+                        tabIndex={-1}
                         onSubmit={queryInputOnSubmit}
                     />
                     :

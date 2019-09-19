@@ -16,6 +16,11 @@ const TextInput = React.forwardRef((props, ref) => {
     }, [props.onKeyUp, props.onSubmit]);
     return (
         <input
+            size={1}
+            autoCorrect={'off'}
+            autoCapitalize={'off'}
+            autoComplete={'off'}
+            spellCheck={false}
             tabIndex={focusable && !props.disabled ? 0 : -1}
             {...props}
             ref={ref}
