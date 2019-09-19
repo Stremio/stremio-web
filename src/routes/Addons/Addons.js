@@ -1,11 +1,15 @@
 const React = require('react');
 const Icon = require('stremio-icons/dom');
-const { Button, Dropdown, NavBar } = require('stremio/common');
+const { Button, Dropdown, NavBar, TextInput } = require('stremio/common');
 const Addon = require('./Addon');
 const useAddons = require('./useAddons');
 const styles = require('./styles');
 
 const Addons = ({ urlParams }) => {
+    const [query, setQuery] = React.useState('');
+    const queryOnChange = React.useCallback((event) => {
+        setQuery(event.currentTarget.value);
+    }, []);
     const [addons, dropdowns] = useAddons(urlParams.category, urlParams.type);
     return (
         <div className={styles['addons-container']}>
@@ -19,7 +23,17 @@ const Addons = ({ urlParams }) => {
                     {dropdowns.map((dropdown) => (
                         <Dropdown {...dropdown} key={dropdown.name} className={styles['dropdown']} />
                     ))}
-                    <div className={styles['search-bar-container']} />
+                    <label className={styles['search-bar-container']}>
+                        <Icon className={styles['icon']} icon={'ic_search'} />
+                        <TextInput
+                            className={styles['search-input']}
+                            tabIndex={-1}
+                            type={'text'}
+                            placeholder={'Search addons...'}
+                            value={query}
+                            onChange={queryOnChange}
+                        />
+                    </label>
                 </div>
                 <div className={styles['addons-list-container']} >
                     {addons.map((addon) => (

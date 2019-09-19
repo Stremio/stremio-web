@@ -63,8 +63,39 @@
             .search-bar-container {
                 flex-grow: 0;
                 flex-shrink: 1;
-                flex-basis: 19rem;
+                flex-basis: 15rem;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
                 height: 3rem;
+                margin-right: 1rem;
+                padding: 0 1rem;
+                background-color: var(--color-backgroundlighter);
+                cursor: text;
+
+                &:hover, &:focus-within {
+                    background-color: var(--color-surfacedarker60);
+                }
+
+                .icon {
+                    display: block;
+                    width: 1.2rem;
+                    height: 1.2rem;
+                    margin-right: 1rem;
+                    fill: var(--color-surfacelighter);
+                }
+
+                .search-input {
+                    flex: 1;
+                    align-self: stretch;
+                    color: var(--color-surfacelighter);
+
+                    &::placeholder {
+                        max-height: 1.2em;
+                        opacity: 1;
+                        color: var(--color-surfacelight);
+                    }
+                }
             }
         }
 
