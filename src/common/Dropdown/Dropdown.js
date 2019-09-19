@@ -8,7 +8,7 @@ const useBinaryState = require('stremio/common/useBinaryState');
 const styles = require('./styles');
 
 // TODO rename to multiselect
-const Dropdown = ({ className, menuClassName, name, selected, options, onSelect }) => {
+const Dropdown = ({ className, menuClassName, menuMatchLabelWidth, name, selected, options, onSelect }) => {
     const [menuOpen, openMenu, closeMenu, toggleMenu] = useBinaryState(false);
     const optionOnClick = React.useCallback((event) => {
         if (typeof onSelect === 'function') {
@@ -22,7 +22,7 @@ const Dropdown = ({ className, menuClassName, name, selected, options, onSelect 
     return (
         <Popup
             open={menuOpen}
-            menuMatchLabelWidth={true}
+            menuMatchLabelWidth={typeof menuMatchLabelWidth === 'boolean' ? menuMatchLabelWidth : true}
             onCloseRequest={closeMenu}
             renderLabel={(ref) => (
                 <Button ref={ref} className={classnames(className, styles['dropdown-label-container'], { 'active': menuOpen })} title={name} onClick={toggleMenu}>
@@ -65,6 +65,7 @@ const Dropdown = ({ className, menuClassName, name, selected, options, onSelect 
 Dropdown.propTypes = {
     className: PropTypes.string,
     menuClassName: PropTypes.string,
+    menuMatchLabelWidth: PropTypes.bool,
     name: PropTypes.string,
     selected: PropTypes.arrayOf(PropTypes.string),
     options: PropTypes.arrayOf(PropTypes.shape({
