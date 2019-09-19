@@ -1,6 +1,6 @@
 const React = require('react');
 const classnames = require('classnames');
-const { TextInput, Button, Dropdown, Checkbox, NavBar } = require('stremio/common');
+const { Button, Dropdown, Checkbox, NavBar, ColorInput } = require('stremio/common');
 const Icon = require('stremio-icons/dom/Icon');
 const styles = require('./styles');
 
@@ -78,6 +78,13 @@ const Settings = () => {
         setInputs(inputs.map((input) => ({
             ...input,
             value: id === input.id ? !input.value : input.value
+        })));
+    };
+
+    const colorChanged = (id, color) => {
+        setInputs(inputs.map((input) => ({
+            ...input,
+            value: id === input.id ? color : input.value
         })));
     };
 
@@ -183,7 +190,7 @@ const Settings = () => {
                                         return (
                                             <div key={input.id} className={classnames(styles['input-container'], styles['checkbox-container'])}>
                                                 {input.header ? <div className={styles['input-header']}>{input.header}</div> : null}
-                                                <Checkbox ref={input.ref} className={styles['checkbox']} checked={input.value} onClick={toggleCheckbox.bind(null, input.label)}>
+                                                <Checkbox ref={input.ref} className={styles['checkbox']} checked={input.value} onClick={toggleCheckbox.bind(null, input.id)}>
                                                     <div className={styles['label']}>{input.label}</div>
                                                 </Checkbox>
                                             </div>
@@ -202,7 +209,8 @@ const Settings = () => {
                                         return (
                                             <div key={input.id} className={classnames(styles['input-container'], styles['color-container'])}>
                                                 {input.header ? <div className={styles['input-header']}>{input.header}</div> : null}
-                                                <TextInput className={styles['color-picker']} type={input.type} defaultValue={input.color} tabIndex={'-1'} />
+                                                <ColorInput className={styles['color-picker']} defaultValue={input.color} tabIndex={'-1'} onChange={colorChanged.bind(null, input.id)} />
+                                                {/* <TextInput className={styles['color-picker']} type={input.type} defaultValue={input.color} tabIndex={'-1'} /> */}
                                             </div>
                                         );
                                     }
