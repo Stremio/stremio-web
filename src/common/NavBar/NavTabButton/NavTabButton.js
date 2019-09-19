@@ -9,7 +9,7 @@ const styles = require('./styles');
 
 const NavTabButton = ({ className, icon, label, href, onClick }) => {
     const routeRegexp = React.useMemo(() => {
-        if (typeof href === 'string') {
+        if (typeof href === 'string' && href.startsWith('#')) {
             for (const { regexp } of Object.values(routesRegexp)) {
                 if (href.slice(1).match(regexp)) {
                     return regexp;
