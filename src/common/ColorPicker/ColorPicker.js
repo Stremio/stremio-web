@@ -4,6 +4,7 @@ const AColorPicker = require('a-color-picker');
 
 const COLOR_FORMAT = 'rgbacss';
 
+// TODO implement custom picker which is keyboard accessible
 const ColorPicker = ({ className, value, onChange }) => {
     value = AColorPicker.parseColor(value, COLOR_FORMAT);
     const pickerRef = React.useRef(null);

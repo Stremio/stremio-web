@@ -7,9 +7,14 @@ const styles = require('./styles');
 const Checkbox = React.forwardRef((props, ref) => {
     return (
         <Button {...props} ref={ref} className={classnames(props.className, styles['checkbox-container'], { 'checked': props.checked })}>
-            <div className={styles['icon-container']}>
-                <Icon className={styles['icon']} icon={props.checked ? 'ic_check' : 'ic_box_empty'} />
-            </div>
+            {
+                props.checked ?
+                    <svg className={styles['icon']} viewBox={'0 0 100 100'}>
+                        <Icon x={'10'} y={'10'} width={'80'} height={'80'} icon={'ic_check'} />
+                    </svg>
+                    :
+                    <Icon className={styles['icon']} icon={'ic_box_empty'} />
+            }
             {props.children}
         </Button>
     );

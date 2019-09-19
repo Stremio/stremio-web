@@ -7,7 +7,8 @@ const Popup = require('stremio/common/Popup');
 const useBinaryState = require('stremio/common/useBinaryState');
 const styles = require('./styles');
 
-const Dropdown = ({ className, name, selected, options, onSelect }) => {
+// TODO rename to multiselect
+const Dropdown = ({ className, menuClassName, name, selected, options, onSelect }) => {
     const [menuOpen, openMenu, closeMenu, toggleMenu] = useBinaryState(false);
     const optionOnClick = React.useCallback((event) => {
         if (typeof onSelect === 'function') {
@@ -25,15 +26,15 @@ const Dropdown = ({ className, name, selected, options, onSelect }) => {
             onCloseRequest={closeMenu}
             renderLabel={(ref) => (
                 <Button ref={ref} className={classnames(className, styles['dropdown-label-container'], { 'active': menuOpen })} title={name} onClick={toggleMenu}>
-                    <div className={styles['dropdown-label']}>
+                    <div className={styles['label']}>
                         {
                             Array.isArray(selected) && selected.length > 0 ?
-                                options.reduce((result, { label, value }) => {
+                                options.reduce((labels, { label, value }) => {
                                     if (selected.includes(value)) {
-                                        result.push(label);
+                                        labels.push(label);
                                     }
 
-                                    return result;
+                                    return labels;
                                 }, []).join(', ')
                                 :
                                 name
@@ -43,12 +44,12 @@ const Dropdown = ({ className, name, selected, options, onSelect }) => {
                 </Button>
             )}
             renderMenu={() => (
-                <div className={styles['dropdown-menu-container']}>
+                <div className={classnames(menuClassName, styles['dropdown-menu-container'])}>
                     {
                         Array.isArray(options) && options.length > 0 ?
                             options.map(({ label, value }) => (
                                 <Button key={value} className={classnames(styles['dropdown-option-container'], { 'selected': Array.isArray(selected) && selected.includes(value) })} title={label} data-name={name} data-value={value} onClick={optionOnClick}>
-                                    <div className={styles['dropdown-option-label']}>{label}</div>
+                                    <div className={styles['label']}>{label}</div>
                                     <Icon className={styles['icon']} icon={'ic_check'} />
                                 </Button>
                             ))
@@ -63,6 +64,7 @@ const Dropdown = ({ className, name, selected, options, onSelect }) => {
 
 Dropdown.propTypes = {
     className: PropTypes.string,
+    menuClassName: PropTypes.string,
     name: PropTypes.string,
     selected: PropTypes.arrayOf(PropTypes.string),
     options: PropTypes.arrayOf(PropTypes.shape({

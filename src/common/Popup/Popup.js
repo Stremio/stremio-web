@@ -3,6 +3,7 @@ const PropTypes = require('prop-types');
 const { Modal } = require('stremio-router');
 const styles = require('./styles');
 
+// TODO rename to Popover
 const Popup = ({ open, menuMatchLabelWidth, renderLabel, renderMenu, onCloseRequest }) => {
     const labelRef = React.useRef(null);
     const menuRef = React.useRef(null);
