@@ -73,8 +73,15 @@
                 background-color: var(--color-backgroundlighter);
                 cursor: text;
 
-                &:hover, &:focus-within {
+                &:hover {
                     background-color: var(--color-surfacedarker60);
+                }
+
+                &:focus-within {
+                    outline-width: var(--focus-outline-size);
+                    outline-color: var(--color-surfacelighter);
+                    outline-offset: calc(-1 * var(--focus-outline-size));
+                    outline-style: solid;
                 }
 
                 .icon {

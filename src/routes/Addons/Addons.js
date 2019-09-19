@@ -27,7 +27,6 @@ const Addons = ({ urlParams }) => {
                         <Icon className={styles['icon']} icon={'ic_search'} />
                         <TextInput
                             className={styles['search-input']}
-                            tabIndex={-1}
                             type={'text'}
                             placeholder={'Search addons...'}
                             value={query}
