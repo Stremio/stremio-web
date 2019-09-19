@@ -11,37 +11,41 @@ const MetaPreview = ({ className, compact, id, type, name, logo, background, dur
     const [shareModalOpen, openShareModal, closeShareModal] = useBinaryState(false);
     const genresLinks = React.useMemo(() => {
         return Array.isArray(genres) ?
-            genres.map((genre) => ({
-                label: genre,
-                href: `#/discover/${type}//?genre=${genre}`
-            }))
+            genres.filter(genre => typeof genre === 'string')
+                .map((genre) => ({
+                    label: genre,
+                    href: `#/discover/${type}//?genre=${genre}`
+                }))
             :
             [];
     }, [type, genres]);
     const writersLinks = React.useMemo(() => {
         return Array.isArray(writers) ?
-            writers.map((writer) => ({
-                label: writer,
-                href: `#/search?q=${writer}`
-            }))
+            writers.filter(writer => typeof writer === 'string')
+                .map((writer) => ({
+                    label: writer,
+                    href: `#/search?q=${writer}`
+                }))
             :
             [];
     }, [writers]);
     const directorsLinks = React.useMemo(() => {
         return Array.isArray(directors) ?
-            directors.map((director) => ({
-                label: director,
-                href: `#/search?q=${director}`
-            }))
+            directors.filter(director => typeof director === 'string')
+                .map((director) => ({
+                    label: director,
+                    href: `#/search?q=${director}`
+                }))
             :
             [];
     }, [directors]);
     const castLinks = React.useMemo(() => {
         return Array.isArray(cast) ?
-            cast.map((name) => ({
-                label: name,
-                href: `#/search?q=${name}`
-            }))
+            cast.filter(name => typeof name === 'string')
+                .map((name) => ({
+                    label: name,
+                    href: `#/search?q=${name}`
+                }))
             :
             [];
     }, [cast]);
