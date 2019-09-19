@@ -1,10 +1,10 @@
 const React = require('react');
 const classnames = require('classnames');
-const { useFocusable } = require('stremio-router');
+const useTabIndex = require('stremio/common/useTabIndex');
 const styles = require('./styles');
 
 const TextInput = React.forwardRef((props, ref) => {
-    const focusable = useFocusable();
+    const tabIndex = useTabIndex(props.tabIndex, props.disabled);
     const onKeyUp = React.useCallback((event) => {
         if (typeof props.onKeyUp === 'function') {
             props.onKeyUp(event);
@@ -21,10 +21,10 @@ const TextInput = React.forwardRef((props, ref) => {
             autoCapitalize={'off'}
             autoComplete={'off'}
             spellCheck={false}
-            tabIndex={focusable && !props.disabled ? 0 : -1}
             {...props}
             ref={ref}
             className={classnames(props.className, styles['text-input-container'], { 'disabled': props.disabled })}
+            tabIndex={tabIndex}
             onKeyUp={onKeyUp}
         />
     );
