@@ -6,11 +6,11 @@ const styles = require('./styles');
 const CONTINUE_WATCHING_MENU = [
     {
         label: 'Play',
-        type: 'play'
+        value: 'play'
     },
     {
         label: 'Dismiss',
-        type: 'dismiss'
+        value: 'dismiss'
     }
 ];
 
