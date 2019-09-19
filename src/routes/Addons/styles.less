@@ -13,8 +13,11 @@
     .addons-content {
         flex: 1;
         align-self: stretch;
+        display: flex;
+        flex-direction: column;
 
         .top-bar-container {
+            flex: none;
             display: flex;
             flex-direction: row;
             margin: 2rem;
@@ -73,15 +76,8 @@
                 background-color: var(--color-backgroundlighter);
                 cursor: text;
 
-                &:hover {
+                &:hover, &:focus-within {
                     background-color: var(--color-surfacedarker60);
-                }
-
-                &:focus-within {
-                    outline-width: var(--focus-outline-size);
-                    outline-color: var(--color-surfacelighter);
-                    outline-offset: calc(-1 * var(--focus-outline-size));
-                    outline-style: solid;
                 }
 
                 .icon {
@@ -107,7 +103,8 @@
         }
 
         .addons-list-container {
-            max-height: calc(100% - 7rem);
+            flex: 1;
+            align-self: stretch;
             padding: 0 2rem;
             overflow-y: auto;
 
