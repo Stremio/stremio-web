@@ -2,7 +2,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
-const { Button, placeholderStyles } = require('stremio/common');
+const { Button } = require('stremio/common');
 const Stream = require('./Stream');
 const StreamPlaceholder = require('./StreamPlaceholder');
 const useStreams = require('./useStreams');
@@ -12,7 +12,7 @@ const StreamsList = ({ className, metaItem }) => {
     const streams = useStreams(metaItem);
     return (
         <div className={classnames(className, styles['streams-list-container'])}>
-            <div className={classnames(styles['streams-scroll-container'], { [placeholderStyles['placeholder-container']]: streams.length === 0 })}>
+            <div className={styles['streams-scroll-container']}>
                 {
                     streams.length > 0 ?
                         streams.map((stream) => (

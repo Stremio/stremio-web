@@ -1,6 +1,5 @@
 const React = require('react');
-const classnames = require('classnames');
-const { MainNavBar, MetaRow, MetaRowPlaceholder, placeholderStyles } = require('stremio/common');
+const { MainNavBar, MetaRow, MetaRowPlaceholder } = require('stremio/common');
 const useCatalogs = require('./useCatalogs');
 const styles = require('./styles');
 
@@ -45,7 +44,7 @@ const Board = () => {
                             return (
                                 <MetaRowPlaceholder
                                     key={`${index}${req.base}${content.type}`}
-                                    className={classnames(styles['board-row-placeholder'], placeholderStyles['placeholder-container'])}
+                                    className={styles['board-row-placeholder']}
                                 />
                             );
                     }
