@@ -9,7 +9,7 @@ const styles = require('./styles');
 const FullscreenButton = ({ className }) => {
     const [fullscreen, requestFullscreen, exitFullscreen] = useFullscreen();
     return (
-        <Button className={classnames(className, styles['fullscreen-button-container'])} title={fullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'} onClick={fullscreen ? exitFullscreen : requestFullscreen} tabIndex={-1}>
+        <Button className={classnames(className, styles['fullscreen-button-container'])} title={fullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'} tabIndex={-1} onClick={fullscreen ? exitFullscreen : requestFullscreen}>
             <Icon className={styles['icon']} icon={fullscreen ? 'ic_exit_fullscreen' : 'ic_fullscreen'} />
         </Button>
     );
