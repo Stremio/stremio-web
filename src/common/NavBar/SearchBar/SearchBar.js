@@ -8,19 +8,23 @@ const Button = require('stremio/common/Button');
 const TextInput = require('stremio/common/TextInput');
 const routesRegexp = require('stremio/common/routesRegexp');
 const useLocationHash = require('stremio/common/useLocationHash');
+const useRouteActive = require('stremio/common/useRouteActive');
 const styles = require('./styles');
 
 const SearchBar = ({ className }) => {
     const locationHash = useLocationHash();
     const focusable = useFocusable();
     const searchInputRef = React.useRef(null);
-    const [active, query] = React.useMemo(() => {
-        const { pathname: locationPathname, search: locationSearch } = UrlUtils.parse(locationHash.slice(1));
-        const active = !!locationPathname.match(routesRegexp.search.regexp);
-        const queryParams = new URLSearchParams(locationSearch);
-        const query = (active && queryParams.has('q')) ? queryParams.get('q') : '';
-        return [active, query];
-    }, [locationHash]);
+    const active = useRouteActive(routesRegexp.search.regexp);
+    const query = React.useMemo(() => {
+        if (active) {
+            const { search: locationSearch } = UrlUtils.parse(locationHash.slice(1));
+            const queryParams = new URLSearchParams(locationSearch);
+            return queryParams.has('q') ? queryParams.get('q') : '';
+        }
+
+        return '';
+    }, [active, locationHash]);
     const searchBarOnClick = React.useCallback(() => {
         if (!active) {
             window.location = '#/search';
