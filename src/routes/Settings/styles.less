@@ -68,11 +68,6 @@
                     color: var(--color-surfacelighter);
                 }
 
-                .dropdown {
-                    height: 3rem;
-                    width: var(--input-width);
-                }
-
                 .input-container {
                     margin: calc(var(--spacing) * 1.5);
                     display: flex;
@@ -104,54 +99,9 @@
                     }
 
                     &.select-container {
-                        .bar-button {
-                            padding: calc(var(--spacing) * 0.5);
+                        .dropdown {
+                            height: 3rem;
                             width: var(--input-width);
-                            display: flex;
-                            flex-direction: row;
-                            align-items: center;
-                            justify-content: space-between;
-                            border: calc(var(--focusable-border-size) * 0.5) solid var(--color-primary);
-                            cursor: pointer;
-
-                            .value {
-                                width: 100%;
-                                color: var(--color-surface);
-                            }
-
-                            .icon {
-                                width: var(--spacing);
-                                height: var(--spacing);
-                                fill: var(--color-surface);
-                            }
-
-                            &:focus {
-                                border-color: var(--color-surfacelighter);
-                            }
-
-                            &:hover {
-                                background-color: var(--color-backgroundlight);
-
-                                .value {
-                                    color: var(--color-surfacelighter);
-                                }
-
-                                .icon {
-                                    fill: var(--color-surfacelighter);
-                                }
-                            }
-
-                            &:global(.active) {
-                                background-color: var(--color-surfacelighter);
-
-                                .value {
-                                    color: var(--color-backgrounddarker);
-                                }
-
-                                .icon {
-                                    fill: var(--color-backgrounddarker);
-                                }
-                            }
                         }
                     }
 
@@ -181,7 +131,6 @@
                             align-items: center;
                             justify-content: center;
                             background-color: var(--color-primary);
-                            border: calc(var(--focusable-border-size) * 0.5) solid transparent;
                             cursor: pointer;
 
                             .icon {
@@ -192,7 +141,6 @@
                             }
 
                             .label {
-                                max-width: 30rem;
                                 color: var(--color-surfacelighter);
                             }
 
@@ -270,7 +218,6 @@
                         .color-picker {
                             width: var(--input-width);
                             height: calc(var(--input-width) * 0.08);
-                            border: calc(var(--focusable-border-size) * 0.5) solid transparent;
                             cursor: pointer;
 
                             &:focus {
