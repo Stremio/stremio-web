@@ -1,11 +1,40 @@
 .color-input-container {
-    display: flex;
-    padding: 10px;
-    background-color: #000;
-    flex-direction: row;
+    --spacing: 1rem;
+    padding: var(--spacing);
+    background-color: var(--color-surfacelighter);
 
-    .buttons-container {
-        padding-left: 1rem;
-        flex-grow: .5;
+    * {
+        overflow: visible;
+    }
+
+    .x-icon {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        width: .8rem;
+        height: .8rem;
+        fill: var(--color-surfacedark);
+    }
+
+    h1 {
+        font-size: 1.2rem;
+    }
+
+    .color-input {
+        margin: var(--spacing) auto 0 auto;
+        :global(.a-color-picker-stack):not(:global(.a-color-picker-row-top)) canvas, :global(.a-color-picker-circle) {
+            border: solid 1px var(--color-surfacedark);
+        }
+        :global(.a-color-picker-circle) {
+            box-shadow: 0 0 .2rem var(--color-surfacedark);
+        }
+    }
+
+    .button {
+        text-align: center;
+        color: var(--color-surfacelighter);
+        background-color: var(--color-signal5);
+        padding: 1rem;
+        margin-top: var(--spacing);
     }
 }

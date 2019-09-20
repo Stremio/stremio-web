@@ -5,28 +5,31 @@ const Popup = require('stremio/common/Popup');
 const Button = require('stremio/common/Button');
 const ColorPicker = require('stremio/common/ColorPicker');
 const useBinaryState = require('stremio/common/useBinaryState');
+const Icon = require('stremio-icons/dom/Icon');
 const styles = require('./styles');
 
 const ColorInput = React.forwardRef((props, ref) => {
     const [menuOpen, openMenu, closeMenu, toggleMenu] = useBinaryState(false);
     const [color, setColor] = React.useState(props.defaultValue);
     const [chosenColor, setChosenColor] = React.useState(props.defaultValue);
-    const updateolorsAndCloseMenu = () => { setChosenColor(color); props.onChange(color); closeMenu(); };
+    const updateColorsAndCloseMenu = () => { setChosenColor(color); props.onChange(color); closeMenu(); };
     return (
         <Popup
             open={menuOpen}
             menuMatchLabelWidth={false}
             onCloseRequest={closeMenu}
+            // onCloseRequest={(event) => event.type === 'scroll' || closeMenu()}
             renderLabel={(ref) => (
                 <Button ref={ref} title={name} onClick={toggleMenu} style={{ backgroundColor: chosenColor }} className={props.className}></Button>
             )}
             renderMenu={() => (
                 <div className={classnames(styles['color-input-container'] )}>
-                    <ColorPicker value={color} onChange={setColor}  className={classnames(styles['color-input'] )} pickerOpts={{showAlpha: false}}/>
-                    <div className={classnames(styles['buttons-container'])}>
-                        <Button onClick={updateolorsAndCloseMenu} style={{ color: '#fff', backgroundColor: 'var(--color-primary)', padding: '1rem', marginTop: '1rem' }}>OK</Button>
-                        <Button onClick={closeMenu} style={{ color: '#fff', backgroundColor: 'var(--color-secondary)', padding: '1rem', marginTop: '1rem' }}>Cancel</Button>
-                    </div>
+                    <Button onClick={closeMenu}>
+                        <Icon className={classnames(styles['x-icon'])} icon={'ic_x'} />
+                    </Button>
+                    <h1>Choose a color:</h1>
+                    <ColorPicker value={color} onChange={setColor}  className={classnames(styles['color-input'])}/>
+                    <Button  className={classnames(styles['button'])} onClick={updateColorsAndCloseMenu}>Select</Button>
                 </div>
             )}
         />
