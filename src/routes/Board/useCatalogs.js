@@ -1,14 +1,16 @@
 const React = require('react');
+const { useServices } = require('stremio/services');
 
 const useCatalogs = () => {
     const [catalogs, setCatalogs] = React.useState([]);
+    const { core } = useServices();
     React.useEffect(() => {
         const onNewState = () => {
-            const state = window.stateContainer.getState();
+            const state = core.getState();
             setCatalogs(state.catalogs.groups);
         };
-        window.stateContainer.on('NewModel', onNewState);
-        window.stateContainer.dispatch({
+        core.on('NewModel', onNewState);
+        core.dispatch({
             action: 'Load',
             args: {
                 load: 'CatalogGrouped',
@@ -16,7 +18,7 @@ const useCatalogs = () => {
             }
         });
         return () => {
-            window.stateContainer.off('NewModel', onNewState);
+            core.off('NewModel', onNewState);
         };
     }, []);
     return catalogs;

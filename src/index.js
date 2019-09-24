@@ -1,6 +1,5 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
-const StateContainer = require('stremio-core-web');
 const App = require('./App');
 
 const loadShell = () => {
@@ -15,17 +14,9 @@ const loadShell = () => {
     });
 };
 
-const loadStateContainer = () => {
-    if (window.stateContainer) {
-        return Promise.resolve();
-    }
-
-    return StateContainer.load();
-};
 
 Promise.all([
-    loadShell(),
-    loadStateContainer()
+    loadShell()
 ]).then(() => {
     if (window.shell) {
         window.shell.dispatch('mpv', 'setOption', null, 'terminal', 'yes');
