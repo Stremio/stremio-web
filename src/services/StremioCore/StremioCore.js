@@ -42,6 +42,7 @@ function StremioCore() {
     function stop() {
         active = false;
         error = null;
+        starting = false;
         containerService = null;
         onStateChanged();
     }
