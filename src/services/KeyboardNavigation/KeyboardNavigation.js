@@ -49,6 +49,4 @@ function KeyboardNavigation() {
     Object.freeze(this);
 };
 
-Object.freeze(KeyboardNavigation);
-
 module.exports = KeyboardNavigation;

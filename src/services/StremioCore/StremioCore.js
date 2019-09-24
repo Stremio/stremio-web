@@ -93,6 +93,4 @@ function StremioCore() {
     Object.freeze(this);
 };
 
-Object.freeze(StremioCore);
-
 module.exports = StremioCore;
