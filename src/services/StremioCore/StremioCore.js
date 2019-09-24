@@ -7,17 +7,17 @@ function StremioCore() {
     let starting = false;
     let containerService = null;
     let events = new EventEmitter();
+    events.on('error', () => { });
 
     function onStateChanged() {
         events.emit('stateChanged');
     }
     function start() {
-        if (active || error !== null || starting) {
+        if (active || error instanceof Error || starting) {
             return;
         }
 
         starting = true;
-        events.on('error', () => { });
         init()
             .then(() => {
                 if (starting) {
