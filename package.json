@@ -23,16 +23,16 @@
         "spatial-navigation-polyfill": "git+ssh://git@github.com/NikolaBorislavovHristov/spatial-navigation.git#964d09bf2b0853e27af6c25924b595d6621a019d",
         "stremio-colors": "git+ssh://git@github.com/Stremio/stremio-colors.git#v2.0.4",
         "stremio-icons": "git+ssh://git@github.com/Stremio/stremio-icons.git#v1.0.11",
-        "stremio-core-web": "git+ssh://git@github.com/stremio/stremio-core-web.git#v0.5.0",
+        "stremio-core-web": "git+ssh://git@github.com/stremio/stremio-core-web.git#v0.6.0",
         "vtt.js": "0.13.0"
     },
     "devDependencies": {
-        "@babel/core": "7.6.0",
+        "@babel/core": "7.6.2",
         "@babel/plugin-proposal-class-properties": "7.5.5",
-        "@babel/plugin-proposal-object-rest-spread": "7.5.5",
-        "@babel/preset-env": "7.6.0",
+        "@babel/plugin-proposal-object-rest-spread": "7.6.2",
+        "@babel/preset-env": "7.6.2",
         "@babel/preset-react": "7.0.0",
-        "@babel/runtime": "7.6.0",
+        "@babel/runtime": "7.6.2",
         "@storybook/addon-actions": "5.2.1",
         "@storybook/addon-console": "1.2.1",
         "@storybook/addons": "5.2.1",
@@ -50,7 +50,7 @@
         "postcss-loader": "3.0.0",
         "storybook-addon-jsx": "7.1.6",
         "terser-webpack-plugin": "2.1.0",
-        "webpack": "4.40.2",
+        "webpack": "4.41.0",
         "webpack-cli": "3.3.9",
         "webpack-dev-server": "3.8.1"
     }
