@@ -1,7 +1,7 @@
 const EventEmitter = require('events');
 const { default: init, ContainerService } = require('stremio-core-web');
 
-function StremioCore() {
+function Core() {
     let active = false;
     let error = null;
     let starting = false;
@@ -94,4 +94,4 @@ function StremioCore() {
     Object.freeze(this);
 };
 
-module.exports = StremioCore;
+module.exports = Core;

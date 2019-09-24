@@ -1,6 +1,6 @@
 const React = require('react');
 const { Router } = require('stremio-router');
-const { KeyboardNavigation, ServicesProvider, Shell, StremioCore } = require('stremio/services');
+const { Core, KeyboardNavigation, ServicesProvider, Shell } = require('stremio/services');
 const routerViewsConfig = require('./routerViewsConfig');
 const styles = require('./styles');
 
@@ -11,7 +11,7 @@ const App = () => {
     const services = React.useMemo(() => ({
         keyboardNavigation: new KeyboardNavigation(),
         shell: new Shell(),
-        core: new StremioCore()
+        core: new Core()
     }), []);
     const [shellStarted, setShellStarted] = React.useState(false);
     const [coreStarted, setCoreStarted] = React.useState(false);

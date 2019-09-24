@@ -1,12 +1,12 @@
+const Core = require('./Core');
 const KeyboardNavigation = require('./KeyboardNavigation');
 const { ServicesProvider, useServices } = require('./ServicesContext');
 const Shell = require('./Shell');
-const StremioCore = require('./StremioCore');
 
 module.exports = {
+    Core,
     KeyboardNavigation,
     ServicesProvider,
     useServices,
-    Shell,
-    StremioCore
+    Shell
 };
