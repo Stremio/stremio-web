@@ -1,0 +1,154 @@
+.addon-prompt-container {
+    position: relative;
+    z-index: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 3rem 0;
+    background-color: var(--color-surfacelighter);
+
+    .close-button-container {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        z-index: 1;
+        width: 2.5rem;
+        height: 2.5rem;
+        padding: 0.5rem;
+
+        &:hover {
+            background-color: var(--color-surfacelight);
+        }
+
+        .icon {
+            display: block;
+            width: 100%;
+            height: 100%;
+            fill: var(--color-backgrounddarker);
+        }
+    }
+
+    .addon-prompt-content {
+        flex-grow: 0;
+        flex-shrink: 1;
+        flex-basis: auto;
+        align-self: stretch;
+        padding: 0 3rem;
+        overflow-y: auto;
+
+        .title-container {
+            font-size: 3rem;
+            font-weight: 300;
+            word-break: break-all;
+
+            &.title-with-logo-container {
+                &::first-line {
+                    line-height: 5rem;
+                }
+            }
+
+            .logo-container {
+                width: 5rem;
+                height: 5rem;
+                margin-right: 0.5rem;
+                background-color: var(--color-surfacelight20);
+                float: left;
+
+                .logo {
+                    display: block;
+                    width: 100%;
+                    height: 100%;
+                    object-fit: contain;
+                    object-position: center;
+                }
+            }
+
+            .version-container {
+                font-size: 1.5rem;
+                font-weight: 400;
+            }
+        }
+
+        .section-container {
+            margin-top: 1rem;
+
+            .section-header {
+                font-size: 1.2rem;
+            }
+
+            .section-label {
+                font-size: 1.2rem;
+                font-weight: 300;
+
+                &.transport-url-label {
+                    user-select: text;
+                }
+
+                &.disclaimer-label {
+                    font-style: italic;
+                }
+            }
+        }
+    }
+
+    .buttons-container {
+        flex: none;
+        align-self: stretch;
+        display: flex;
+        flex-direction: row;
+        margin-top: 2rem;
+        padding: 0 3rem;
+
+        .button-container {
+            flex: 1;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            height: 4rem;
+            padding: 0 1rem;
+
+            &:first-child {
+                margin-right: 2rem;
+            }
+
+            .label {
+                flex-grow: 0;
+                flex-shrink: 1;
+                flex-basis: auto;
+                max-height: 2.4em;
+                font-size: 1.3rem;
+                font-weight: 500;
+                text-align: center;
+            }
+        }
+
+        .cancel-button, .uninstall-button {
+            outline-color: var(--color-surfacedark);
+            outline-style: solid;
+
+            &:hover, &:focus {
+                background-color: var(--color-surfacelight);
+            }
+
+            .label {
+                color: var(--color-backgrounddarker);
+            }
+        }
+
+        .install-button {
+            background-color: var(--color-signal5);
+
+            &:hover, &:focus {
+                filter: brightness(1.2);
+            }
+
+            &:focus {
+                outline-color: var(--color-surfacedarker);
+            }
+
+            .label {
+                color: var(--color-surfacelighter);
+            }
+        }
+    }
+}

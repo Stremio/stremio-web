@@ -115,3 +115,26 @@
         }
     }
 }
+
+.addon-prompt-modal-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-background60);
+
+    .addon-prompt-container {
+        flex: none;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: 50rem;
+        height: 80%;
+
+        .addon-prompt {
+            flex-grow: 0;
+            flex-shrink: 1;
+            flex-basis: auto;
+            align-self: stretch;
+        }
+    }
+}
