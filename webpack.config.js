@@ -58,8 +58,8 @@ module.exports = {
                                             autoprefixer: {
                                                 add: true,
                                                 remove: true,
-                                                flexbox: true,
-                                                grid: 'autoplace'
+                                                flexbox: false,
+                                                grid: false
                                             },
                                             calc: false,
                                             convertValues: false,
