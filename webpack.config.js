@@ -112,7 +112,7 @@ module.exports = {
                 terserOptions: {
                     ecma: 5,
                     mangle: true,
-                    warnings: true,
+                    warnings: false,
                     output: {
                         comments: false,
                         beautify: false,
