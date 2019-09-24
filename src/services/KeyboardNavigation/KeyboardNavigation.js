@@ -7,7 +7,7 @@ const TABS = [
 ];
 
 function KeyboardNavigation() {
-    var active = false;
+    let active = false;
 
     function onKeyDown(event) {
         const tab = TABS.find(({ key }) => key === event.key);
@@ -25,10 +25,6 @@ function KeyboardNavigation() {
         active = true;
     }
     function stop() {
-        if (!active) {
-            return;
-        }
-
         window.removeEventListener('keydown', onKeyDown);
         active = false;
     }
