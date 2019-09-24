@@ -47,9 +47,12 @@ const Addons = ({ urlParams, queryParams }) => {
                     </label>
                 </div>
                 <div className={styles['addons-list-container']} >
-                    {addons.map((addon) => (
-                        <Addon {...addon} key={addon.id} className={styles['addon']} />
-                    ))}
+                    {
+                        addons.filter(({ name }) => query.length === 0 || (typeof name === 'string' && name.includes(query)))
+                            .map((addon) => (
+                                <Addon {...addon} key={addon.id} className={styles['addon']} />
+                            ))
+                    }
                 </div>
                 {
                     selectedAddon !== null ?
