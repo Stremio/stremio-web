@@ -1,51 +1,11 @@
-@import (inline, once, css) '~stremio-colors/css/stremio-colors.css';
-@import (reference) '~stremio/common/screen-sizes.less';
-
 :global {
     @import (once, less) '~stremio-router/styles.css';
 }
 
-@font-face {
-    font-family: 'Roboto';
-    src: url('/fonts/Roboto-Light.ttf') format('truetype');
-    font-weight: 300;
-    font-style: normal;
-}
+@import (inline, once, css) '~stremio-colors/css/stremio-colors.css';
+@import (reference) '~stremio/common/screen-sizes.less';
+@import (inline, once, css) './roboto.css';
 
-@font-face {
-    font-family: 'Roboto';
-    src: url('/fonts/Roboto-Regular.ttf') format('truetype');
-    font-weight: 400;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Roboto';
-    src: url('/fonts/Roboto-RegularItalic.ttf') format('truetype');
-    font-weight: 400;
-    font-style: italic;
-}
-
-@font-face {
-    font-family: 'Roboto';
-    src: url('/fonts/Roboto-Medium.ttf') format('truetype');
-    font-weight: 500;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Roboto';
-    src: url('/fonts/Roboto-Bold.ttf') format('truetype');
-    font-weight: 700;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Roboto';
-    src: url('/fonts/Roboto-Black.ttf') format('truetype');
-    font-weight: 900;
-    font-style: normal;
-}
 
 :root {
     --landscape-shape-ratio: 0.5625;
