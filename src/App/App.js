@@ -1,3 +1,4 @@
+require('spatial-navigation-polyfill');
 const React = require('react');
 const { Router } = require('stremio-router');
 const { Core, KeyboardNavigation, ServicesProvider, Shell } = require('stremio/services');

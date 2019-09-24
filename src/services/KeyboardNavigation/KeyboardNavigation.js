@@ -1,5 +1,3 @@
-require('spatial-navigation-polyfill');
-
 const TABS = [
     { href: '#/', key: 'F1' },
     { href: '#/discover', key: 'F2' },
