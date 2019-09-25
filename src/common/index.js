@@ -27,7 +27,6 @@ module.exports = {
     Button,
     Checkbox,
     ColorPicker,
-    ColorInput,
     Dropdown,
     MainNavBar,
     MetaItem,
