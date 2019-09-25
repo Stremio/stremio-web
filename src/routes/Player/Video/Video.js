@@ -1,9 +1,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const hat = require('hat');
-const HTMLVideo = require('./stremio-video/HTMLVideo');
-const YouTubeVideo = require('./stremio-video/YouTubeVideo');
-const MPVVideo = require('./stremio-video/MPVVideo');
+const { HTMLVideo, YouTubeVideo, MPVVideo } = require('stremio-video');
 
 class Video extends React.Component {
     constructor(props) {
