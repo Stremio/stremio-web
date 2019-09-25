@@ -11,8 +11,8 @@ const styles = require('./styles');
 
 const NavMenu = ({ className }) => {
     const [menuOpen, openMenu, closeMenu, toggleMenu] = useBinaryState(false);
-    const user = useUser();
     const [fullscreen, requestFullscreen, exitFullscreen] = useFullscreen();
+    const user = useUser();
     return (
         <Popup
             open={menuOpen}

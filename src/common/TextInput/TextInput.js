@@ -16,6 +16,11 @@ const TextInput = React.forwardRef((props, ref) => {
     }, [props.onKeyUp, props.onSubmit]);
     return (
         <input
+            size={1}
+            autoCorrect={'off'}
+            autoCapitalize={'off'}
+            autoComplete={'off'}
+            spellCheck={false}
             {...props}
             ref={ref}
             className={classnames(props.className, styles['text-input-container'], { 'disabled': props.disabled })}

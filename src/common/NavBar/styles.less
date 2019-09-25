@@ -1,22 +1,23 @@
 .nav-bar-container {
+    --nav-bar-size: 3.2rem;
     display: flex;
     flex-direction: row;
     align-items: center;
-    height: 3.2rem;
+    height: var(--nav-bar-size);
     background-color: var(--color-secondarydark);
 
     .nav-tab-button {
         flex: none;
+        align-self: stretch;
         max-width: 11rem;
-        height: 3.2rem;
     }
 
     .title {
         flex: 1;
-        padding: 0 0.6rem;
+        padding: 0 1rem;
         font-size: 1.1rem;
         font-style: normal;
-        font-weight: normal;
+        font-weight: 400;
         white-space: nowrap;
         text-overflow: ellipsis;
         color: var(--color-surfacelighter);
@@ -33,9 +34,9 @@
     .search-bar {
         flex-grow: 0;
         flex-shrink: 1;
-        flex-basis: 25.5rem;
+        flex-basis: 25rem;
+        align-self: stretch;
         min-width: 9.5rem;
-        height: 3.2rem;
 
         &+.spacing {
             max-width: 11rem;
@@ -44,7 +45,7 @@
 
     .addons-button, .fullscreen-button, .nav-menu {
         flex: none;
-        width: 3.2rem;
-        height: 3.2rem;
+        width: var(--nav-bar-size);
+        height: var(--nav-bar-size);
     }
 }

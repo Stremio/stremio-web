@@ -13,37 +13,28 @@
     .addons-content {
         flex: 1;
         align-self: stretch;
+        display: flex;
+        flex-direction: column;
 
         .top-bar-container {
+            flex: none;
             display: flex;
             flex-direction: row;
             margin: 2rem;
 
-            .dropdown, .add-button-container {
-                flex-grow: 0;
-                flex-shrink: 1;
-                height: 3rem;
-
-                &:not(:last-child) {
-                    margin-right: 1rem;
-                }
-            }
-
-            .dropdown {
-                flex-basis: 15rem;
-            }
-
             .add-button-container {
-                flex-basis: auto;
+                flex: none;
                 display: flex;
                 flex-direction: row;
                 align-items: center;
+                height: 3rem;
                 max-width: 15rem;
+                margin-right: 1rem;
                 padding: 0 1rem;
                 background-color: var(--color-signal5);
 
                 &:hover {
-                    filter: brightness(1.1);
+                    filter: brightness(1.2);
                 }
 
                 .icon {
@@ -55,12 +46,95 @@
                 }
 
                 .add-button-label {
-                    flex: 1;
+                    flex-grow: 0;
+                    flex-shrink: 1;
+                    flex-basis: auto;
                     max-height: 2.4em;
                     font-size: 1.1rem;
                     color: var(--color-surfacelighter);
                 }
             }
+
+            .dropdown {
+                flex-grow: 0;
+                flex-shrink: 1;
+                flex-basis: 15rem;
+                height: 3rem;
+                margin-right: 1rem;
+            }
+
+            .search-bar-container {
+                flex-grow: 0;
+                flex-shrink: 1;
+                flex-basis: 15rem;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                height: 3rem;
+                margin-right: 1rem;
+                padding: 0 1rem;
+                background-color: var(--color-backgroundlighter);
+                cursor: text;
+
+                &:hover, &:focus-within {
+                    filter: brightness(1.2);
+                }
+
+                .icon {
+                    display: block;
+                    width: 1.2rem;
+                    height: 1.2rem;
+                    margin-right: 1rem;
+                    fill: var(--color-surfacelighter);
+                }
+
+                .search-input {
+                    flex: 1;
+                    align-self: stretch;
+                    color: var(--color-surfacelighter);
+
+                    &::placeholder {
+                        max-height: 1.2em;
+                        opacity: 1;
+                        color: var(--color-surfacelight);
+                    }
+                }
+            }
+        }
+
+        .addons-list-container {
+            flex: 1;
+            align-self: stretch;
+            padding: 0 2rem;
+            overflow-y: auto;
+
+            .addon {
+                width: 100%;
+                margin-bottom: 2rem;
+            }
+        }
+    }
+}
+
+.addon-prompt-modal-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-background60);
+
+    .addon-prompt-container {
+        flex: none;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: 50rem;
+        height: 80%;
+
+        .addon-prompt {
+            flex-grow: 0;
+            flex-shrink: 1;
+            flex-basis: auto;
+            align-self: stretch;
         }
     }
 }

@@ -1,11 +1,10 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
-const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { FocusableProvider } = require('../FocusableContext');
 const { useModalsContainer } = require('../ModalsContainerContext');
 
-const Modal = ({ className, children }) => {
+const Modal = (props) => {
     const modalsContainer = useModalsContainer();
     const onRoutesContainerChildrenChange = React.useCallback(({ routesContainer, contentContainer }) => {
         return routesContainer.lastElementChild.contains(contentContainer);
@@ -15,18 +14,10 @@ const Modal = ({ className, children }) => {
     }, []);
     return ReactDOM.createPortal(
         <FocusableProvider onRoutesContainerChildrenChange={onRoutesContainerChildrenChange} onModalsContainerChildrenChange={onModalsContainerChildrenChange}>
-            <div className={classnames(className, 'modal-container')}>{children}</div>
+            <div {...props} className={classnames(props.className, 'modal-container')} />
         </FocusableProvider>,
         modalsContainer
     );
-};
-
-Modal.propTypes = {
-    className: PropTypes.string,
-    children: PropTypes.oneOfType([
-        PropTypes.arrayOf(PropTypes.node),
-        PropTypes.node
-    ])
 };
 
 module.exports = Modal;

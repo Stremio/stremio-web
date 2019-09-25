@@ -1,7 +1,6 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const { placeholderStyles } = require('stremio/common');
 const SeasonsBar = require('./SeasonsBar');
 const SeasonsBarPlaceholder = require('./SeasonsBarPlaceholder');
 const Video = require('./Video');
@@ -12,7 +11,7 @@ const styles = require('./styles');
 const VideosList = ({ className, metaItem }) => {
     const [season, seasons, setSeason] = useSeasons(metaItem);
     return (
-        <div className={classnames(className, styles['videos-list-container'], { [placeholderStyles['placeholder-container']]: metaItem === null })}>
+        <div className={classnames(className, styles['videos-list-container'])}>
             {
                 metaItem !== null ?
                     <React.Fragment>

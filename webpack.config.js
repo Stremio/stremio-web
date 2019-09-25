@@ -58,8 +58,8 @@ module.exports = {
                                             autoprefixer: {
                                                 add: true,
                                                 remove: true,
-                                                flexbox: true,
-                                                grid: 'autoplace'
+                                                flexbox: false,
+                                                grid: false
                                             },
                                             calc: false,
                                             convertValues: false,
@@ -112,7 +112,7 @@ module.exports = {
                 terserOptions: {
                     ecma: 5,
                     mangle: true,
-                    warnings: true,
+                    warnings: false,
                     output: {
                         comments: false,
                         beautify: false,

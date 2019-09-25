@@ -5,14 +5,14 @@
     padding: 0 1rem;
     background-color: var(--color-backgroundlighter);
 
-    &:hover {
-        background-color: var(--color-surfacedarker60);
+    &:hover, &:focus {
+        filter: brightness(1.2);
     }
 
     &:global(.active) {
         background-color: var(--color-surfacelight);
 
-        .dropdown-label {
+        .label {
             color: var(--color-backgrounddarker);
         }
 
@@ -21,7 +21,7 @@
         }
     }
 
-    .dropdown-label {
+    .label {
         flex: 1;
         max-height: 2.4em;
         color: var(--color-surfacelighter);
@@ -37,27 +37,26 @@
 }
 
 .dropdown-menu-container {
-    background-color: var(--color-backgroundlighter);
-
     .dropdown-option-container {
         display: flex;
         flex-direction: row;
         align-items: center;
         padding: 1rem;
+        background-color: var(--color-backgroundlighter);
 
         &:global(.selected) {
-            background-color: var(--color-surfacedarker40);
+            background-color: var(--color-surfacedarker);
 
             .icon {
                 display: block;
             }
         }
 
-        &:hover {
-            background-color: var(--color-surfacedarker60);
+        &:hover, &:focus {
+            background-color: var(--color-surfacedark);
         }
 
-        .dropdown-option-label {
+        .label {
             flex: 1;
             max-height: 4.8em;
             color: var(--color-surfacelighter);

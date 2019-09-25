@@ -1,19 +1,17 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const UrlUtils = require('url');
 const Icon = require('stremio-icons/dom');
 const Button = require('stremio/common/Button');
 const routesRegexp = require('stremio/common/routesRegexp');
-const useLocationHash = require('stremio/common/useLocationHash');
+const useRouteActive = require('stremio/common/useRouteActive');
 const styles = require('./styles');
 
 const NavTabButton = ({ className, icon, label, href, onClick }) => {
-    const locationHash = useLocationHash();
     const routeRegexp = React.useMemo(() => {
-        if (typeof href === 'string' && href.length > 0) {
+        if (typeof href === 'string' && href.startsWith('#')) {
             for (const { regexp } of Object.values(routesRegexp)) {
-                if (regexp.exec(href.slice(1))) {
+                if (href.slice(1).match(regexp)) {
                     return regexp;
                 }
             }
@@ -21,14 +19,7 @@ const NavTabButton = ({ className, icon, label, href, onClick }) => {
 
         return null;
     }, [href]);
-    const active = React.useMemo(() => {
-        if (routeRegexp !== null) {
-            const { pathname: locationPathname } = UrlUtils.parse(locationHash.slice(1));
-            return !!locationPathname.match(routeRegexp);
-        }
-
-        return false;
-    }, [routeRegexp, locationHash]);
+    const active = useRouteActive(routeRegexp);
     return (
         <Button className={classnames(className, styles['nav-tab-button-container'], { 'active': active })} title={label} tabIndex={-1} href={href} onClick={onClick}>
             {

@@ -1,117 +1,80 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import classnames from 'classnames';
-import Icon from 'stremio-icons/dom';
-import styles from './styles';
+const React = require('react');
+const PropTypes = require('prop-types');
+const classnames = require('classnames');
+const Icon = require('stremio-icons/dom');
+const { Button } = require('stremio/common');
+const styles = require('./styles');
 
-const MAX_DESCRIPTION_SYMBOLS = 500;
-
-const renderName = (name) => {
-    if (name.length === 0) {
-        return null;
-    }
-
+const Addon = ({ className, id, name, logo, description, types, version, transportUrl, installed, toggle }) => {
+    const onKeyUp = React.useCallback((event) => {
+        if (event.key === 'Enter' && typeof toggle === 'function') {
+            toggle(event);
+        }
+    }, [toggle]);
     return (
-        <div className={styles['name']}>{name}</div>
-    );
-}
-
-const renderVersion = (version) => {
-    if (version.length === 0) {
-        return null;
-    }
-
-    return (
-        <div className={styles['version']}>{'v. ' + version}</div>
-    );
-}
-
-const renderType = (types) => {
-    if (types.length === 0) {
-        return null;
-    }
-
-    return (
-        <div className={styles['types-container']}>
-            <div className={styles['type']}>
-                {types.length <= 1 ? types.join('') : types.slice(0, -1).join(', ') + ' & ' + types[types.length - 1]}
-            </div>
-        </div>
-    );
-}
-
-const renderHostname = (hostname) => {
-    if (hostname.length === 0) {
-        return null;
-    }
-
-    return (
-        <div className={styles['hostname-container']}>
-            <div className={styles['hostname']}>{hostname}</div>
-        </div>
-    )
-}
-
-const renderDescription = (description) => {
-    if (description.length === 0) {
-        return null;
-    }
-
-    return (
-        <div className={styles['description']}>{description.length > MAX_DESCRIPTION_SYMBOLS ? description.slice(0, MAX_DESCRIPTION_SYMBOLS) + '...' : description}</div>
-    );
-}
-
-const Addon = (props) => {
-    return (
-        <div className={classnames(styles['addon'], props.className)}>
+        <Button className={classnames(styles['addon-container'], className)} data-id={id} onKeyUp={onKeyUp}>
             <div className={styles['logo-container']}>
-                <Icon className={styles['logo']} icon={props.logo.length === 0 ? 'ic_addons' : props.logo} />
+                {
+                    typeof logo === 'string' && logo.length > 0 ?
+                        <img className={styles['logo']} src={logo} alt={' '} />
+                        :
+                        <Icon className={styles['icon']} icon={'ic_addons'} />
+                }
             </div>
-            <div className={styles['header-container']}>
-                <div className={styles['header']}>
-                    {renderName(props.name)}
-                    {renderVersion(props.version)}
+            <div className={styles['info-container']}>
+                <div className={styles['name-container']} title={typeof name === 'string' && name.length > 0 ? name : id}>
+                    {typeof name === 'string' && name.length > 0 ? name : id}
                 </div>
+                {
+                    typeof version === 'string' && version.length > 0 ?
+                        <div className={styles['version-container']} title={`v.${version}`}>v.{version}</div>
+                        :
+                        null
+                }
+                {
+                    Array.isArray(types) ?
+                        <div className={styles['types-container']}>
+                            {
+                                types.length <= 1 ?
+                                    types.join('')
+                                    :
+                                    types.slice(0, -1).join(', ') + ' & ' + types[types.length - 1]
+                            }
+                        </div>
+                        :
+                        null
+                }
+                {
+                    typeof description === 'string' && description.length > 0 ?
+                        <div className={styles['description-container']} title={description}>{description}</div>
+                        :
+                        null
+                }
             </div>
-            {renderType(props.types)}
-            {renderHostname(props.hostname)}
-            {renderDescription(props.description)}
-            <div className={styles['buttons']}>
-                <div className={classnames(styles['button'], props.isInstalled ? styles['uninstall-button'] : styles['install-button'])} onClick={props.onToggleClicked}>
-                    <span className={styles['label']}>{props.isInstalled ? 'Uninstall' : 'Install'}</span>
-                </div>
-                <div className={classnames(styles['button'], styles['share-button'])} onClick={props.shareAddon}>
+            <div className={styles['buttons-container']}>
+                <Button className={installed ? styles['uninstall-button-container'] : styles['install-button-container']} title={installed ? 'Uninstall' : 'Install'} tabIndex={-1} data-id={id} onClick={toggle}>
+                    <div className={styles['label']}>{installed ? 'Uninstall' : 'Install'}</div>
+                </Button>
+                <Button className={styles['share-button-container']} title={'Share addon'} tabIndex={-1}>
                     <Icon className={styles['icon']} icon={'ic_share'} />
-                    <span className={styles['label']}>SHARE ADD-ON</span>
-                </div>
+                    <div className={styles['label']}>Share addon</div>
+                </Button>
             </div>
-        </div>
+        </Button>
     );
-}
+};
 
 Addon.propTypes = {
     className: PropTypes.string,
-    logo: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    version: PropTypes.string.isRequired,
-    types: PropTypes.arrayOf(PropTypes.string).isRequired,
-    hostname: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-    isOfficial: PropTypes.bool.isRequired,
-    isInstalled: PropTypes.bool.isRequired,
-    shareAddon: PropTypes.func.isRequired,
-    onToggleClicked: PropTypes.func.isRequired
-};
-Addon.defaultProps = {
-    logo: '',
-    name: '',
-    version: '',
-    types: [],
-    hostname: '',
-    description: '',
-    isOfficial: false,
-    isInstalled: false
+    id: PropTypes.string,
+    name: PropTypes.string,
+    logo: PropTypes.string,
+    description: PropTypes.string,
+    types: PropTypes.arrayOf(PropTypes.string),
+    version: PropTypes.string,
+    transportUrl: PropTypes.string,
+    installed: PropTypes.bool,
+    toggle: PropTypes.func
 };
 
-export default Addon;
+module.exports = Addon;

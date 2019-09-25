@@ -2,7 +2,7 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding: 0 1.2rem;
+    padding: 0 1rem;
 
     &:hover {
         background-color: var(--color-secondary);
@@ -16,7 +16,7 @@
         flex: none;
         width: 1.5rem;
         height: 1.2rem;
-        margin-right: 0.6rem;
+        margin-right: 0.5rem;
         fill: var(--color-surfacelighter);
 
         &:only-child {
@@ -26,8 +26,7 @@
 
     .label {
         flex: 1;
-        white-space: nowrap;
-        text-overflow: ellipsis;
+        max-height: 2.4em;
         color: var(--color-surfacelighter);
     }
 }

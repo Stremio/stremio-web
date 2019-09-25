@@ -6,7 +6,7 @@ const useRouteActive = (routeRegexp) => {
     const locationHash = useLocationHash();
     const active = React.useMemo(() => {
         const { pathname: locationPathname } = UrlUtils.parse(locationHash.slice(1));
-        return !!locationPathname.match(routeRegexp);
+        return routeRegexp instanceof RegExp && !!locationPathname.match(routeRegexp);
     }, [locationHash, routeRegexp]);
     return active;
 };

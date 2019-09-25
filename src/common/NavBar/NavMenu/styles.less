@@ -27,8 +27,8 @@
 
     .user-info-container {
         display: grid;
-        height: 6rem;
-        grid-template-columns: 6rem 1fr;
+        height: 7rem;
+        grid-template-columns: 7rem 1fr;
         grid-template-rows: 50% 50%;
         grid-template-areas:
             "avatar-area email-area"
@@ -36,7 +36,7 @@
 
         .avatar-container {
             grid-area: avatar-area;
-            padding: 0.8rem;
+            padding: 1rem;
             border-radius: 50%;
             background-size: cover;
             background-repeat: no-repeat;
@@ -50,7 +50,7 @@
             display: flex;
             flex-direction: row;
             align-items: center;
-            padding: 0.6rem 0.6rem 0 0;
+            padding: 1rem 1rem 0 0;
 
             .email-label {
                 flex: 1;
@@ -65,7 +65,7 @@
             display: flex;
             flex-direction: row;
             align-items: center;
-            padding: 0 0.6rem 0.6rem 0;
+            padding: 0 1em 1rem 0;
 
             &:hover, &:focus {
                 outline: none;

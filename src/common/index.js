@@ -14,7 +14,6 @@ const Popup = require('./Popup');
 const ShareModal = require('./ShareModal');
 const Slider = require('./Slider');
 const TextInput = require('./TextInput');
-const placeholderStyles = require('./placeholder-styles');
 const routesRegexp = require('./routesRegexp');
 const useBinaryState = require('./useBinaryState');
 const useFullscreen = require('./useFullscreen');
@@ -39,7 +38,6 @@ module.exports = {
     ShareModal,
     Slider,
     TextInput,
-    placeholderStyles,
     routesRegexp,
     useBinaryState,
     useFullscreen,
