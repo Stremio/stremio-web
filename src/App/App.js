@@ -14,14 +14,14 @@ const App = () => {
         shell: new Shell(),
         core: new Core()
     }), []);
-    const [shellStarted, setShellStarted] = React.useState(false);
-    const [coreStarted, setCoreStarted] = React.useState(false);
+    const [shellInitialized, setShellInitialized] = React.useState(false);
+    const [coreInitialized, setCoreInitialized] = React.useState(false);
     React.useEffect(() => {
         const onShellStateChanged = () => {
-            setShellStarted(services.shell.active || services.shell.error instanceof Error);
+            setShellInitialized(services.shell.active || services.shell.error instanceof Error);
         };
         const onCoreStateChanged = () => {
-            setCoreStarted(services.core.active || services.core.error instanceof Error);
+            setCoreInitialized(services.core.active || services.core.error instanceof Error);
         };
         services.shell.on('stateChanged', onShellStateChanged);
         services.core.on('stateChanged', onCoreStateChanged);
@@ -40,7 +40,7 @@ const App = () => {
         <React.StrictMode>
             <ServicesProvider services={services}>
                 {
-                    shellStarted && coreStarted ?
+                    shellInitialized && coreInitialized ?
                         <Router
                             className={styles['router']}
                             homePath={'/'}
