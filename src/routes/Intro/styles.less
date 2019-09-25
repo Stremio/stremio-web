@@ -15,8 +15,8 @@
     overflow-y: auto;
 
     .form-container {
+        flex: none;
         width: 20rem;
-        margin: auto;
         padding: 4rem 0;
 
         .form-button {
@@ -24,13 +24,12 @@
             flex-direction: row;
             align-items: center;
             justify-content: center;
-            padding: 0 1rem;
+            padding: 0.5rem 1rem;
 
             .icon {
                 flex: none;
-                align-self: stretch;
-                display: block;
-                width: 0.8rem;
+                width: 1rem;
+                height: 2rem;
                 margin-right: 1rem;
                 fill: var(--color-surfacelighter);
             }
@@ -39,9 +38,8 @@
                 flex-grow: 0;
                 flex-shrink: 1;
                 flex-basis: auto;
-                padding: 0.3rem 0;
                 font-size: 1.1rem;
-                font-weight: 600;
+                font-weight: 700;
                 color: var(--color-surfacelighter);
                 text-align: center;
             }
@@ -71,13 +69,9 @@
             display: block;
             width: 100%;
             margin: 1rem 0;
-            padding: 0.5rem 0.3rem;
+            padding: 0.5rem;
             border-bottom: thin solid var(--color-surface);
             color: var(--color-surfacelighter);
-
-            &::placeholder {
-                color: var(--color-surfacelight);
-            }
 
             &:hover, &:focus {
                 background-color: var(--color-surfacedarker60);
@@ -86,6 +80,10 @@
                 &::placeholder {
                     color: var(--color-surfacelighter);
                 }
+            }
+
+            &::placeholder {
+                color: var(--color-surfacelight);
             }
         }
 
@@ -100,7 +98,7 @@
                 flex-grow: 0;
                 flex-shrink: 1;
                 flex-basis: auto;
-                padding: 0.5rem 0.3rem;
+                padding: 0.5rem;
                 color: var(--color-surfacelight);
 
                 &:hover {
@@ -139,9 +137,9 @@
         }
 
         .guest-login-button {
-            margin-top: 1rem;
-            margin-bottom: 0.2rem;
-            padding: 0.8rem .3rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            padding: 1rem 0.5rem;
 
             &:hover, &:focus {
                 background-color: var(--color-surfacedarker60);
@@ -149,7 +147,8 @@
         }
 
         .switch-form-button {
-            padding: 0.8rem .3rem;
+            margin-top: 0.5rem;
+            padding: 1rem 0.5rem;
 
             &:hover, &:focus {
                 background-color: var(--color-surfacedarker60);
