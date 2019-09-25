@@ -1,20 +1,19 @@
+:import('~stremio/common/Checkbox/styles.less') {
+    checkbox-icon: icon;
+}
+
 .consent-checkbox-container {
-    --icon-size: 1.2rem;
-    --icon-color: var(--color-surface);
-    --icon-background-color: transparent;
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding: 0.5rem 0.3rem;
-
-    &:global(.checked) {
-        --icon-color: var(--color-surfacelight);
-        --icon-background-color: var(--color-primary);
-    }
+    padding: 0.5rem;
 
     &:focus, &:hover {
-        --icon-color: var(--color-surfacelighter);
         background-color: var(--color-surfacedarker60);
+
+        .checkbox-icon {
+            fill: var(--color-surfacelighter);
+        }
 
         .label {
             color: var(--color-surfacelighter);
@@ -23,6 +22,13 @@
                 color: var(--color-surfacelighter);
             }
         }
+    }
+
+    .checkbox-icon {
+        flex: none;
+        width: 1.2rem;
+        height: 1.2rem;
+        fill: var(--color-surfacelight);
     }
 
     .label {
