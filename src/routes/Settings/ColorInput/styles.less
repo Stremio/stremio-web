@@ -1,40 +1,50 @@
-.color-input-container {
-    --spacing: 1rem;
-    padding: var(--spacing);
-    background-color: var(--color-surfacelighter);
+.color-input-modal {
+    background-color: var(--color-backgrounddarker40);
+    display: flex;
+    flex-direction: column;
 
-    * {
-        overflow: visible;
-    }
 
-    .x-icon {
-        position: absolute;
-        top: 1rem;
-        right: 1rem;
-        width: .8rem;
-        height: .8rem;
-        fill: var(--color-surfacedark);
-    }
+    .color-input-container {
+        position: relative;
+        --spacing: 1rem;
+        padding: var(--spacing);
+        background-color: var(--color-surfacelighter);
 
-    h1 {
-        font-size: 1.2rem;
-    }
+        margin: auto;
 
-    .color-input {
-        margin: var(--spacing) auto 0 auto;
-        :global(.a-color-picker-stack):not(:global(.a-color-picker-row-top)) canvas, :global(.a-color-picker-circle) {
-            border: solid 1px var(--color-surfacedark);
+        * {
+            overflow: visible;
         }
-        :global(.a-color-picker-circle) {
-            box-shadow: 0 0 .2rem var(--color-surfacedark);
-        }
-    }
 
-    .button {
-        text-align: center;
-        color: var(--color-surfacelighter);
-        background-color: var(--color-signal5);
-        padding: 1rem;
-        margin-top: var(--spacing);
+        .x-icon {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: .8rem;
+            height: .8rem;
+            fill: var(--color-surfacedark);
+        }
+
+        h1 {
+            font-size: 1.2rem;
+        }
+
+        .color-input {
+            margin: var(--spacing) auto 0 auto;
+            :global(.a-color-picker-stack):not(:global(.a-color-picker-row-top)) canvas, :global(.a-color-picker-circle) {
+                border: solid 1px var(--color-surfacedark);
+            }
+            :global(.a-color-picker-circle) {
+                box-shadow: 0 0 .2rem var(--color-surfacedark);
+            }
+        }
+
+        .button {
+            text-align: center;
+            color: var(--color-surfacelighter);
+            background-color: var(--color-signal5);
+            padding: 1rem;
+            margin-top: var(--spacing);
+        }
     }
 }

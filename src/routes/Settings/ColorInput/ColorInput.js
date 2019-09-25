@@ -1,7 +1,7 @@
 const React = require('react');
 const classnames = require('classnames');
 const PropTypes = require('prop-types');
-const Popup = require('stremio/common/Popup');
+const { Modal } = require('stremio-router');
 const Button = require('stremio/common/Button');
 const ColorPicker = require('stremio/common/ColorPicker');
 const useBinaryState = require('stremio/common/useBinaryState');
@@ -18,15 +18,9 @@ const ColorInput = ({ className, defaultValue, onChange }) => {
         closeMenu();
     }, [color, onChange]);
     return (
-        <Popup
-            open={menuOpen}
-            menuMatchLabelWidth={false}
-            onCloseRequest={closeMenu}
-            // onCloseRequest={(event) => event.type === 'scroll' || closeMenu()}
-            renderLabel={(ref) => (
-                <Button className={className} ref={ref} title={selectedColor} onClick={toggleMenu} style={{ backgroundColor: selectedColor }}></Button>
-            )}
-            renderMenu={() => (
+        <React.Fragment>
+            <Button className={className} title={selectedColor} onClick={toggleMenu} style={{ backgroundColor: selectedColor }}></Button>
+            {menuOpen ? <Modal className={classnames(styles['color-input-modal'])}>
                 <div className={classnames(styles['color-input-container'])}>
                     <Button onClick={closeMenu}>
                         <Icon className={classnames(styles['x-icon'])} icon={'ic_x'} />
@@ -35,8 +29,8 @@ const ColorInput = ({ className, defaultValue, onChange }) => {
                     <ColorPicker className={classnames(styles['color-input'])} value={color} onChange={setColor} />
                     <Button className={classnames(styles['button'])} onClick={updateColorsAndCloseMenu}>Select</Button>
                 </div>
-            )}
-        />
+            </Modal> : null}
+        </React.Fragment>
     );
 };
 
