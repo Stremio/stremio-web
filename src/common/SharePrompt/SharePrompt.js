@@ -38,7 +38,7 @@ const renderUrl = (url) => {
 
 const SharePrompt = (props) => {
     return (
-        <div className={styles['share-modal']}>
+        <div className={classnames(props.className, styles['share-prompt'])}>
             <Button className={styles['x-container']}>
                 <Icon className={styles['icon']} icon={'ic_x'} onClick={props.onClose} />
             </Button>
