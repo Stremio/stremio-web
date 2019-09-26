@@ -6,37 +6,17 @@ const Button = require('stremio/common/Button');
 const TextInput = require('stremio/common/TextInput');
 const styles = require('./styles');
 
-const renderInput = ({ className, href, icon, label }) => {
-    return (
-        <Button className={classnames(styles['button'], className)} href={href} target={'_blank'}>
-            <Icon className={styles['icon']} icon={icon} />{label}
-        </Button>
-    );
-};
-
-const renderUrl = (url) => {
+const SharePrompt = (props) => {
     const inputRef = React.useRef(null);
     const copyToClipboard = () => {
         inputRef.current.select();
         document.execCommand('copy');
     };
 
-    if (url.length === 0) {
+    if (props.url.length === 0) {
         return null;
     }
 
-    return (
-        <div className={styles['url-container']}>
-            <TextInput ref={inputRef} className={styles['url']} type={'text'} tabIndex={'-1'} defaultValue={url} readOnly />
-            <Button className={styles['copy-button']} onClick={copyToClipboard}>
-                <Icon className={styles['icon']} icon={'ic_link'} />
-                <div className={styles['label']}>Copy</div>
-            </Button>
-        </div>
-    );
-};
-
-const SharePrompt = (props) => {
     return (
         <div className={classnames(props.className, styles['share-prompt'])}>
             <Button className={styles['x-container']}>
@@ -45,10 +25,20 @@ const SharePrompt = (props) => {
             <div className={styles['info-container']}>
                 <div className={styles['share-label']}>Share</div>
                 <div className={styles['buttons']}>
-                    {renderInput({ className: styles['facebook-button'], href: `https://www.facebook.com/sharer/sharer.php?u=${props.url}`, icon: 'ic_facebook', label: 'FACEBOOK' })}
-                    {renderInput({ className: styles['twitter-button'], href: `https://twitter.com/home?status=${props.url}`, icon: 'ic_twitter', label: 'TWITTER' })}
+                    <Button className={classnames(styles['button'], styles['facebook-button'])} href={`https://www.facebook.com/sharer/sharer.php?u=${props.url}`} target={'_blank'}>
+                        <Icon className={styles['icon']} icon={'ic_facebook'} />FACEBOOK
+                    </Button>
+                    <Button className={classnames(styles['button'], styles['twitter-button'])} href={`https://www.facebook.com/sharer/sharer.php?u=${props.url}`} target={'_blank'}>
+                        <Icon className={styles['icon']} icon={'ic_twitter'} />TWITTER
+                    </Button>
                 </div>
-                {renderUrl(props.url)}
+                <div className={styles['url-container']}>
+                    <TextInput ref={inputRef} className={styles['url']} type={'text'} tabIndex={'-1'} defaultValue={props.url} readOnly />
+                    <Button className={styles['copy-button']} onClick={copyToClipboard}>
+                        <Icon className={styles['icon']} icon={'ic_link'} />
+                        <div className={styles['label']}>Copy</div>
+                    </Button>
+                </div>
             </div>
         </div>
     );
