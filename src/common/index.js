@@ -11,7 +11,7 @@ const MetaRowPlaceholder = require('./MetaRowPlaceholder');
 const NavBar = require('./NavBar');
 const PlayIconCircleCentered = require('./PlayIconCircleCentered');
 const Popup = require('./Popup');
-const ShareModal = require('./ShareModal');
+const SharePrompt = require('./SharePrompt');
 const Slider = require('./Slider');
 const TextInput = require('./TextInput');
 const routesRegexp = require('./routesRegexp');
@@ -35,7 +35,7 @@ module.exports = {
     NavBar,
     PlayIconCircleCentered,
     Popup,
-    ShareModal,
+    SharePrompt,
     Slider,
     TextInput,
     routesRegexp,

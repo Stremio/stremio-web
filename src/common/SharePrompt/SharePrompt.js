@@ -36,7 +36,7 @@ const renderUrl = (url) => {
     );
 };
 
-const ShareModal = (props) => {
+const SharePrompt = (props) => {
     return (
         <div className={styles['share-modal']}>
             <Button className={styles['x-container']} type={'button'}>
@@ -54,12 +54,12 @@ const ShareModal = (props) => {
     );
 };
 
-ShareModal.propTypes = {
+SharePrompt.propTypes = {
     url: PropTypes.string.isRequired,
     onClose: PropTypes.func
 };
-ShareModal.defaultProps = {
+SharePrompt.defaultProps = {
     url: ''
 };
 
-module.exports = ShareModal;
+module.exports = SharePrompt;
