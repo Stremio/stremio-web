@@ -1,16 +1,16 @@
-.share-prompt {
+.share-prompt-container {
     --share-modal-width: 350px;
     --spacing: 20px;
     font-size: 14px;
 }
 
-.share-prompt {
+.share-prompt-container {
     padding: calc(var(--spacing) * 0.5);
     width: var(--share-modal-width);
     color: var(--color-surfacelighter);
     background-color: var(--color-surfacelighter);
 
-    .x-container {
+    .close-button-container {
         display: flex;
         flex-direction: row;
         justify-content: flex-end;
@@ -40,20 +40,20 @@
         }
     }
 
-    .info-container {
+    .share-prompt-content {
         padding: 0 var(--spacing) calc(var(--spacing) * 1.2) var(--spacing);
 
-        .share-label {
+        .share-prompt-label {
             font-size: 1.1em;
             color: var(--color-backgrounddarker);
         }
 
-        .buttons {
+        .buttons-container {
             padding: var(--spacing) 0;
             display: flex;
             flex-direction: row;
 
-            .button {
+            .button-container {
                 flex: 1;
                 height: 3.2em;
                 display: flex;
@@ -94,7 +94,7 @@
             flex-direction: row;
             border: calc(var(--focusable-border-size) * 0.5) solid var(--color-surface);
 
-            .url {
+            .url-content {
                 flex: 4;
                 padding: calc(var(--spacing) * 0.5);
                 font-size: 0.9em;

@@ -18,22 +18,22 @@ const SharePrompt = (props) => {
     }
 
     return (
-        <div className={classnames(props.className, styles['share-prompt'])}>
-            <Button className={styles['x-container']}>
+        <div className={classnames(props.className, styles['share-prompt-container'])}>
+            <Button className={styles['close-button-container']}>
                 <Icon className={styles['icon']} icon={'ic_x'} onClick={props.onClose} />
             </Button>
-            <div className={styles['info-container']}>
-                <div className={styles['share-label']}>Share</div>
-                <div className={styles['buttons']}>
-                    <Button className={classnames(styles['button'], styles['facebook-button'])} href={`https://www.facebook.com/sharer/sharer.php?u=${props.url}`} target={'_blank'}>
+            <div className={styles['share-prompt-content']}>
+                <div className={styles['share-prompt-label']}>Share</div>
+                <div className={styles['buttons-container']}>
+                    <Button className={classnames(styles['button-container'], styles['facebook-button'])} href={`https://www.facebook.com/sharer/sharer.php?u=${props.url}`} target={'_blank'}>
                         <Icon className={styles['icon']} icon={'ic_facebook'} />FACEBOOK
                     </Button>
-                    <Button className={classnames(styles['button'], styles['twitter-button'])} href={`https://www.facebook.com/sharer/sharer.php?u=${props.url}`} target={'_blank'}>
+                    <Button className={classnames(styles['button-container'], styles['twitter-button'])} href={`https://www.facebook.com/sharer/sharer.php?u=${props.url}`} target={'_blank'}>
                         <Icon className={styles['icon']} icon={'ic_twitter'} />TWITTER
                     </Button>
                 </div>
                 <div className={styles['url-container']}>
-                    <TextInput ref={inputRef} className={styles['url']} type={'text'} tabIndex={'-1'} defaultValue={props.url} readOnly />
+                    <TextInput ref={inputRef} className={styles['url-content']} type={'text'} tabIndex={'-1'} defaultValue={props.url} readOnly />
                     <Button className={styles['copy-button']} onClick={copyToClipboard}>
                         <Icon className={styles['icon']} icon={'ic_link'} />
                         <div className={styles['label']}>Copy</div>
