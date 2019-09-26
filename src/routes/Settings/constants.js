@@ -1,22 +1,13 @@
 const settingsSections = {
     "General": {
         "inputs": [
-            { "section": "General", "label": "Username", "type": "user", "id": "user" },
-            { "section": "General", "label": "LOG OUT", "type": "button", "id": "log_out" },
-            { "section": "General", "label": "Change password", "type": "link", "href": "", "id": "change_password" },
-            { "section": "General", "label": "Import options", "type": "static-text", "id": "import_options" },
-            { "section": "General", "label": "Import from Facebook", "type": "link", "href": "", "id": "import_from_facebook" },
-            { "section": "General", "label": "Export user data", "type": "link", "href": "", "id": "export_user_data" },
-            { "section": "General", "label": "Subscribe to calendar", "type": "link", "href": "", "id": "subscribe_to_calendar" },
-            { "section": "General", "label": "Contact support", "type": "link", "id": "contact_support" },
-            { "section": "General", "label": "Request account deletion", "type": "link", "id": "request_account_deletion" },
-            { "section": "General", "header": "Trakt Scrobbling", "label": "AUTHENTICATE", "type": "button", "icon": "ic_trackt", "id": "authenticate" },
+            { "section": "General", "type": "user" },
             { "section": "General", "header": "UI Language", "label": "UI Language", "type": "select", "options": [{ "label": "Български език", "value": "bul" }, { "label": "English", "value": "eng" }, { "label": "Deutsch", "value": "ger" }, { "label": "Español", "value": "esp" }, { "label": "Italiano", "value": "ita" }], "id": "ui_language" },
         ],
     },
     "Player": {
         "inputs": [
-            { "section": "Player", "label": "ADD-ONS", "type": "button", "icon": "ic_addons", "id": "add-ons" },
+            { "section": "Player", "label": "ADD-ONS", "type": "button", "icon": "ic_addons", "id": "add-ons", "href": "#/addons" },
             { "section": "Player", "header": "Default Subtitles Language", "label": "Default Subtitles Language", "type": "select", "options": [{ "label": "Български език", "value": "bul" }, { "label": "English", "value": "eng" }, { "label": "Deutsch", "value": "ger" }, { "label": "Español", "value": "esp" }, { "label": "Italiano", "value": "ita" }], "id": "default_subtitles_language" },
             { "section": "Player", "header": "Default Subtitles Size", "label": "Default Subtitles Size", "type": "select", "options": [{ "label": "72%", "value": "72%" }, { "label": "80%", "value": "80%" }, { "label": "100%", "value": "100%" }, { "label": "120%", "value": "120%" }, { "label": "140%", "value": "140%" }, { "label": "160%", "value": "160%" }, { "label": "180%", "value": "180%" }], "id": "default_subtitles_size" },
             { "section": "Player", "header": "Subtitles Background", "label": "Subtitles background", "type": "select", "options": [{ "label": "None", "value": "" }, { "label": "Solid", "value": "solid" }, { "label": "Transparent", "value": "transparent" }], "id": "subtitles_background" },

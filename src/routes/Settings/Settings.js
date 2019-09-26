@@ -5,10 +5,16 @@ const SectionsSelector = require('./SectionsSelector');
 const SectionsList = require('./SectionsList');
 const { settingsSections, SECTIONS_ORDER } = require('./constants');
 
+const devTestWithUser = true;
+
 const settingsValues = {
-    "user": null,
+    "user": devTestWithUser ? {
+        "_id": "neo",
+        "email": "neo@example.com",
+        "avatar": "https://www.thenational.ae/image/policy:1.891803:1566372420/AC17-Matrix-20-04.jpg?f=16x9&w=1200&$p$f$w=5867e40",
+    } : null,
     "ui_language": "eng",
-    "default_subtitles_language": "",
+    "default_subtitles_language": "bul",
     "default_subtitles_size": "100%",
     "subtitles_background": "",
     "subtitles_color": "#ffffff",
