@@ -1,3 +1,3 @@
-import ShareModal from './ShareModal';
+const ShareModal = require('./ShareModal');
 
-export default ShareModal;
+module.exports = ShareModal;
