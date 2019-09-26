@@ -1,3 +1,7 @@
+:import('~stremio/common/Checkbox/styles.less') {
+    checkbox-icon: icon;
+}
+
 .settings-parent-container {
     display: flex;
     flex-direction: column;
@@ -76,6 +80,13 @@
                     .input-header {
                         margin-bottom: calc(var(--spacing) * 0.5);
                         color: var(--color-surfacelighter);
+                    }
+
+                    .checkbox-icon {
+                        flex: none;
+                        width: 1.2rem;
+                        height: 1.2rem;
+                        fill: var(--color-surfacelight);
                     }
 
                     &.user-container {
