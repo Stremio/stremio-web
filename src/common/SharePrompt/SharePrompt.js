@@ -8,7 +8,7 @@ const styles = require('./styles');
 
 const renderInput = ({ className, href, icon, label }) => {
     return (
-        <Button className={classnames(styles['button'], className)} type={'link'} href={href} target={'_blank'}>
+        <Button className={classnames(styles['button'], className)} href={href} target={'_blank'}>
             <Icon className={styles['icon']} icon={icon} />{label}
         </Button>
     );
@@ -28,7 +28,7 @@ const renderUrl = (url) => {
     return (
         <div className={styles['url-container']}>
             <TextInput ref={inputRef} className={styles['url']} type={'text'} tabIndex={'-1'} defaultValue={url} readOnly />
-            <Button className={styles['copy-button']} type={'button'} onClick={copyToClipboard}>
+            <Button className={styles['copy-button']} onClick={copyToClipboard}>
                 <Icon className={styles['icon']} icon={'ic_link'} />
                 <div className={styles['label']}>Copy</div>
             </Button>
@@ -39,7 +39,7 @@ const renderUrl = (url) => {
 const SharePrompt = (props) => {
     return (
         <div className={styles['share-modal']}>
-            <Button className={styles['x-container']} type={'button'}>
+            <Button className={styles['x-container']}>
                 <Icon className={styles['icon']} icon={'ic_x'} onClick={props.onClose} />
             </Button>
             <div className={styles['info-container']}>
