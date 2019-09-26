@@ -55,6 +55,7 @@ const SharePrompt = (props) => {
 };
 
 SharePrompt.propTypes = {
+    className: PropTypes.string,
     url: PropTypes.string.isRequired,
     onClose: PropTypes.func
 };
