@@ -23,7 +23,7 @@ const SharePrompt = (props) => {
                 <Icon className={styles['icon']} icon={'ic_x'} onClick={props.onClose} />
             </Button>
             <div className={styles['share-prompt-content']}>
-                <div className={styles['share-prompt-label']}>Share</div>
+                <div className={styles['share-prompt-label']}>{props.label}</div>
                 <div className={styles['buttons-container']}>
                     <Button className={classnames(styles['button-container'], styles['facebook-button'])} href={`https://www.facebook.com/sharer/sharer.php?u=${props.url}`} target={'_blank'}>
                         <Icon className={styles['icon']} icon={'ic_facebook'} />FACEBOOK
@@ -46,10 +46,12 @@ const SharePrompt = (props) => {
 
 SharePrompt.propTypes = {
     className: PropTypes.string,
+    label: PropTypes.string.isRequired,
     url: PropTypes.string.isRequired,
     onClose: PropTypes.func
 };
 SharePrompt.defaultProps = {
+    label: 'Share',
     url: ''
 };
 
