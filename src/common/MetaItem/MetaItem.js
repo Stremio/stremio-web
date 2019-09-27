@@ -3,6 +3,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const Button = require('stremio/common/Button');
+const Image = require('stremio/common/Image');
 const PlayIconCircleCentered = require('stremio/common/PlayIconCircleCentered');
 const Dropdown = require('stremio/common/Dropdown');
 const styles = require('./styles');
@@ -33,21 +34,21 @@ const MetaItem = React.memo(({ className, id, type, name, posterShape, poster, t
     }, []);
     return (
         <Button className={classnames(className, styles['meta-item-container'], styles['poster-shape-poster'], styles[`poster-shape-${posterShape}`], { 'active': menuOpen })} title={name} data-id={id} onClick={metaItemOnClick}>
-            <div className={styles['poster-image-container']}>
-                <div className={styles['placeholder-icon-layer']}>
-                    <Icon
-                        className={styles['placeholder-icon']}
-                        icon={typeof ICON_FOR_TYPE[type] === 'string' ? ICON_FOR_TYPE[type] : ICON_FOR_TYPE['other']}
+            <div className={styles['poster-container']}>
+                <div className={styles['poster-image-layer']}>
+                    <Image
+                        className={styles['poster-image-container']}
+                        src={poster}
+                        alt={' '}
+                        id={id}
+                        renderFallback={() => (
+                            <Icon
+                                className={styles['placeholder-icon']}
+                                icon={typeof ICON_FOR_TYPE[type] === 'string' ? ICON_FOR_TYPE[type] : ICON_FOR_TYPE['other']}
+                            />
+                        )}
                     />
                 </div>
-                {
-                    typeof poster === 'string' && poster.length > 0 ?
-                        <div className={styles['poster-image-layer']}>
-                            <img className={styles['poster-image']} src={poster} alt={' '} />
-                        </div>
-                        :
-                        null
-                }
                 {
                     playIcon ?
                         <div className={styles['play-icon-layer']}>

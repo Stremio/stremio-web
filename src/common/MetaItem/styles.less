@@ -1,3 +1,7 @@
+:import('~stremio/common/Image/styles.less') {
+    poster-image: image;
+}
+
 :import('~stremio/common/PlayIconCircleCentered/styles.less') {
     play-icon-circle-centered-background: background;
     play-icon-circle-centered-icon: icon;
@@ -33,43 +37,27 @@
     }
 
     &.poster-shape-poster {
-        .poster-image-container {
+        .poster-container {
             padding-top: calc(100% * var(--poster-shape-ratio));
         }
     }
 
     &.poster-shape-square {
-        .poster-image-container {
+        .poster-container {
             padding-top: 100%;
         }
     }
 
     &.poster-shape-landscape {
-        .poster-image-container {
+        .poster-container {
             padding-top: calc(100% * var(--landscape-shape-ratio));
         }
     }
 
-    .poster-image-container {
+    .poster-container {
         position: relative;
         z-index: -1;
         background-color: var(--color-backgroundlight);
-
-        .placeholder-icon-layer {
-            position: absolute;
-            top: 25%;
-            right: 10%;
-            bottom: 25%;
-            left: 10%;
-            z-index: 0;
-
-            .placeholder-icon {
-                display: block;
-                width: 100%;
-                height: 100%;
-                fill: var(--color-surfacelight20);
-            }
-        }
 
         .poster-image-layer {
             position: absolute;
@@ -79,12 +67,24 @@
             left: 0;
             z-index: 1;
 
-            .poster-image {
-                display: block;
+            .poster-image-container {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
                 width: 100%;
                 height: 100%;
-                object-fit: cover;
-                object-position: center;
+
+                .poster-image {
+                    object-fit: cover;
+                }
+
+                .placeholder-icon {
+                    flex: none;
+                    height: 50%;
+                    width: 80%;
+                    fill: var(--color-surfacelight20);
+                }
             }
         }
 
