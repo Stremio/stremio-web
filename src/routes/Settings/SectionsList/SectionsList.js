@@ -55,7 +55,7 @@ const SectionsList = React.forwardRef(({ className, sections, preferences, onPre
                                     <div className={styles['email']}>{!preferences.user ? 'Anonymous user' : preferences.user.email}</div>
                                 </div>
                                 <div className={classnames(styles['input-container'], styles['button-container'])}>
-                                    <Button className={styles['button']} type={'button'}>
+                                    <Button className={styles['button']} type={'button'} href={'#/intro'}>
                                         <div className={styles['label']}>{preferences.user ? 'LOG OUT' : 'SIGN IN'}</div>
                                     </Button>
                                 </div>
