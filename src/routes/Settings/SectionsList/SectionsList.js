@@ -20,10 +20,19 @@ const SectionsList = React.forwardRef(({ className, sections, preferences, onPre
         onPreferenceChanged(data.name, data.value);
     };
 
-    // Determines whether the link should be opened in new window or in the current one.
-    const getTargetFor = url => ['//', 'http://', 'https://', 'file://', 'ftp://', 'mailto:', 'magnet:'].some(scheme => url.startsWith(scheme)) ?
-    '_blank' : '_self'
+    const checkUser = (event) => {
+        if(! preferences.user) {
+            // Here in Stremio 4 we show a toast with a message, asking the anonymous user to log in/register
+            console.log('No user found');
+            event.preventDefault();
+        }
+    }
 
+    // Determines whether the link should be opened in new window or in the current one.
+    const getTargetFor = url => ['//', 'http://', 'https://', 'file://', 'ftp://', 'mailto:', 'magnet:']
+        .some(scheme => url.startsWith(scheme)) ? '_blank' : '_self'
+
+    // TODO: If we get the user data after initialization, these should be wrapped in React.useState and set by React.useEffect
     const changePasswordUrl = preferences.user && 'https://www.strem.io/reset-password/' + preferences.user.email;
     const webCalUrl = preferences.user && 'webcal://www.strem.io/calendar/' + preferences.user._id + '.ics';
 
@@ -51,7 +60,7 @@ const SectionsList = React.forwardRef(({ className, sections, preferences, onPre
                                     </Button>
                                 </div>
                                 <div className={classnames(styles['input-container'], styles['link-container'])}>
-                                    <Button className={styles['link']} type={'link'} href={changePasswordUrl} target={'_blank'}>
+                                    <Button className={styles['link']} type={'link'} href={changePasswordUrl} target={'_blank'} onClick={checkUser}>
                                         <div className={styles['label']}>{'Change password'}</div>
                                     </Button>
                                 </div>
@@ -61,17 +70,17 @@ const SectionsList = React.forwardRef(({ className, sections, preferences, onPre
                                     </div>
                                 </div>
                                 <div className={classnames(styles['input-container'], styles['link-container'])}>
-                                    <Button className={styles['link']} type={'link'} href={'https://www.stremio.com/#TODO:install-facebook-addon'} target={'_blank'}>
+                                    <Button className={styles['link']} type={'link'} href={'https://www.stremio.com/#TODO:install-facebook-addon'} target={'_blank'} onClick={checkUser}>
                                         <div className={styles['label']}>{'Import from Facebook'}</div>
                                     </Button>
                                 </div>
                                 <div className={classnames(styles['input-container'], styles['link-container'])}>
-                                    <Button className={styles['link']} type={'link'} href={'https://www.stremio.com/#TODO:export-user-data'} target={'_blank'}>
+                                    <Button className={styles['link']} type={'link'} href={'https://www.stremio.com/#TODO:export-user-data'} target={'_blank'} onClick={checkUser}>
                                         <div className={styles['label']}>{'Export user data'}</div>
                                     </Button>
                                 </div>
                                 <div className={classnames(styles['input-container'], styles['link-container'])}>
-                                    <Button className={styles['link']} type={'link'} href={webCalUrl} target={'_blank'}>
+                                    <Button className={styles['link']} type={'link'} href={webCalUrl} target={'_blank'} onClick={checkUser}>
                                         <div className={styles['label']}>{'Subscribe to calendar'}</div>
                                     </Button>
                                 </div>
