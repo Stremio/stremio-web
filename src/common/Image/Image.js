@@ -15,7 +15,7 @@ const Image = ({ className, src, alt, fallbackSrc, renderFallback }) => {
     return (
         <div className={className}>
             {
-                broken && (typeof renderFallback === 'function' || typeof fallbackSrc === 'string') ?
+                (broken || typeof src !== 'string' || src.length === 0) && (typeof renderFallback === 'function' || typeof fallbackSrc === 'string') ?
                     typeof renderFallback === 'function' ?
                         renderFallback()
                         :
