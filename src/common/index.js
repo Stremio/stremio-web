@@ -14,6 +14,7 @@ const Popup = require('./Popup');
 const ShareModal = require('./ShareModal');
 const Slider = require('./Slider');
 const TextInput = require('./TextInput');
+const Toast = require('./Toast');
 const routesRegexp = require('./routesRegexp');
 const useBinaryState = require('./useBinaryState');
 const useFullscreen = require('./useFullscreen');
@@ -38,6 +39,7 @@ module.exports = {
     ShareModal,
     Slider,
     TextInput,
+    Toast,
     routesRegexp,
     useBinaryState,
     useFullscreen,
