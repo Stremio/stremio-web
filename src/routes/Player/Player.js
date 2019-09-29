@@ -87,10 +87,14 @@ const Player = ({ urlParams }) => {
                 onImplementationChanged={onImplementationChanged}
             />
             <div className={styles['layer']} />
-            <BufferingLoader
-                className={styles['layer']}
-                buffering={state.buffering}
-            />
+            {
+                state.buffering ?
+                    <BufferingLoader
+                        className={styles['layer']}
+                    />
+                    :
+                    null
+            }
             <ControlBar
                 className={classnames(styles['layer'], styles['control-bar-layer'])}
                 modalContainerClassName={styles['modal-container']}
