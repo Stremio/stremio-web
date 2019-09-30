@@ -110,6 +110,7 @@ module.exports = {
         minimizer: [
             new TerserPlugin({
                 test: /\.js$/,
+                extractComments: false,
                 terserOptions: {
                     ecma: 5,
                     mangle: true,
