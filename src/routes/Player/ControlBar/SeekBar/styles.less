@@ -3,8 +3,18 @@
     flex-direction: row;
     align-items: center;
 
+    &:hover, &:global(.active) {
+        .slider {
+            --track-before-color: var(--color-primarylight);
+            --thumb-color: var(--color-surfacelighter);
+        }
+    }
+
     .label {
-        color: var(--color-surfacelight);
+        flex: none;
+        max-width: 5rem;
+        max-height: 2.4em;
+        color: var(--color-surfacelighter);
     }
 
     .slider {
@@ -19,17 +29,6 @@
 
         &:global(.disabled) {
             --track-color: var(--color-surfacedark);
-        }
-    }
-
-    &:hover, &:global(.active) {
-        .label {
-            color: var(--color-surfacelighter);
-        }
-
-        .slider {
-            --track-before-color: var(--color-primarylight);
-            --thumb-color: var(--color-surfacelighter);
         }
     }
 }
