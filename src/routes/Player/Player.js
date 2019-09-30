@@ -89,15 +89,12 @@ const Player = ({ urlParams }) => {
             <div className={styles['layer']} />
             {
                 state.buffering ?
-                    <BufferingLoader
-                        className={styles['layer']}
-                    />
+                    <BufferingLoader className={styles['layer']} />
                     :
                     null
             }
             <ControlBar
                 className={classnames(styles['layer'], styles['control-bar-layer'])}
-                modalContainerClassName={styles['modal-container']}
                 paused={state.paused}
                 time={state.time}
                 duration={state.duration}
