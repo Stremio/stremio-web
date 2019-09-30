@@ -22,13 +22,9 @@ const ColorInput = ({ className, value, onChange }) => {
     }, [value, colorInputVisible]);
 
     const modalBackgroundOnClick = React.useCallback((event) => {
-        if (!event.nativeEvent.preventClose) {
+        if(event.target === event.currentTarget) {
             closeColorInput();
         }
-    }, []);
-
-    const modalContentOnClick = React.useCallback((event) => {
-        event.nativeEvent.preventClose = true;
     }, []);
 
     return (
@@ -37,8 +33,8 @@ const ColorInput = ({ className, value, onChange }) => {
             {
                 colorInputVisible
                     ?
-                    <Modal className={classnames(styles['color-input-modal'])} onClick={modalBackgroundOnClick}>
-                        <div className={classnames(styles['color-input-container'])} onClick={modalContentOnClick}>
+                    <Modal className={styles['color-input-modal']} onMouseDown={modalBackgroundOnClick}>
+                        <div className={styles['color-input-container']}>
                             <Button onClick={closeColorInput}>
                                 <Icon className={classnames(styles['x-icon'])} icon={'ic_x'} />
                             </Button>
