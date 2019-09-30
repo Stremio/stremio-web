@@ -4,19 +4,19 @@ const styles = require('./styles');
 const SectionsSelector = require('./SectionsSelector');
 const SectionsList = require('./SectionsList');
 const { settingsSections } = require('./constants');
-const settingsValues = require('./useSettings');
+const useSettings = require('./useSettings');
 
 const devTestWithUser = true;
 
 const Settings = () => {
-    const sections = React.useMemo(() => Object.keys(settingsSections)
+    const [preferences, setPreferences] = useSettings(devTestWithUser);
+    const sections = React.useMemo(()=>Object.keys(settingsSections)
         .map((section) => ({
             id: section,
             inputs: settingsSections[section],
             ref: React.createRef()
         })), []);
     const [selectedSectionId, setSelectedSectionId] = React.useState(sections[0].id);
-    const [preferences, setPreferences] = settingsValues(devTestWithUser);
     const scrollContainerRef = React.useRef(null);
 
     /////////////////
