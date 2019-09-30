@@ -9,12 +9,12 @@ const settingsValues = require('./useSettings');
 const devTestWithUser = true;
 
 const Settings = () => {
-    const sections = Object.keys(settingsSections)
+    const sections = React.useMemo(() => Object.keys(settingsSections)
         .map((section) => ({
             id: section,
             inputs: settingsSections[section],
-            ref: React.useRef(null)
-        }));
+            ref: React.createRef()
+        })), []);
     const [selectedSectionId, setSelectedSectionId] = React.useState(sections[0].id);
     const [preferences, setPreferences] = settingsValues(devTestWithUser);
     const scrollContainerRef = React.useRef(null);
