@@ -3,6 +3,7 @@ const { withConsole } = require('@storybook/addon-console');
 const { addDecorator, addParameters, configure } = require('@storybook/react');
 const { jsxDecorator } = require('storybook-addon-jsx');
 const RouterDecorator = require('./RouterDecorator');
+require('./styles');
 
 addParameters({
     jsx: {
