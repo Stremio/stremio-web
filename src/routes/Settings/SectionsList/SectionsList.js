@@ -13,18 +13,18 @@ const SectionsList = React.forwardRef(({ className, sections, preferences, onPre
         onPreferenceChanged(id, color);
     };
 
-    const updateDropdown = (event) => {
+    const updateDropdown = React.useCallback((event) => {
         var data = event.currentTarget.dataset;
         onPreferenceChanged(data.name, data.value);
-    };
+    });
 
-    const checkUser = (event) => {
+    const checkUser = React.useCallback((event) => {
         if(! preferences.user) {
             // Here in Stremio 4 we show a toast with a message, asking the anonymous user to log in/register
             console.log('No user found');
             event.preventDefault();
         }
-    }
+    });
 
     // Determines whether the link should be opened in new window or in the current one.
     const getTargetFor = url => ['//', 'http://', 'https://', 'file://', 'ftp://', 'mailto:', 'magnet:']
