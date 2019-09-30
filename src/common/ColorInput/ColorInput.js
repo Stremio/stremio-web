@@ -13,7 +13,9 @@ const ColorInput = ({ className, value, onChange }) => {
     const [selectedColor, setSelectedColor] = React.useState(value);
 
     const confirmColorInput = React.useCallback(() => {
-        onChange(selectedColor);
+        if(typeof onChange === "function") {
+            onChange(selectedColor);
+        }
         closeColorInput();
     }, [selectedColor, onChange]);
 
