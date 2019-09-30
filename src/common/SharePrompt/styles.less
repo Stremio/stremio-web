@@ -1,87 +1,84 @@
 .share-prompt-container {
-    --share-modal-width: 350px;
-    --spacing: 20px;
-    font-size: 14px;
-}
-
-.share-prompt-container {
-    padding: calc(var(--spacing) * 0.5);
-    width: var(--share-modal-width);
-    color: var(--color-surfacelighter);
+    position: relative;
+    z-index: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 2.4rem 0;
     background-color: var(--color-surfacelighter);
 
     .close-button-container {
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-end;
-
-        .icon {
-            padding: 0.2em;
-            width: 1.2em;
-            height: 1.2em;
-            fill: var(--color-surfacedark);
-            cursor: pointer;
-
-            &:hover {
-                fill: var(--color-surface);
-            }
-        }
-
-        &:focus {
-            .icon {
-                background-color: var(--color-surfacelight);
-            }
-        }
+        position: absolute;
+        top: 0.4rem;
+        right: 0.4rem;
+        z-index: 1;
+        width: 2rem;
+        height: 2rem;
+        padding: 0.4rem;
 
         &:hover {
-            .icon {
-                background-color: transparent;
-            }
+            background-color: var(--color-surfacelight);
+        }
+
+        .icon {
+            display: block;
+            width: 100%;
+            height: 100%;
+            fill: var(--color-backgrounddarker);
         }
     }
 
     .share-prompt-content {
-        padding: 0 var(--spacing) calc(var(--spacing) * 1.2) var(--spacing);
+        padding: 0 2.4rem;
 
         .share-prompt-label {
-            font-size: 1.1em;
+            font-size: 1.3rem;
             color: var(--color-backgrounddarker);
         }
 
         .buttons-container {
-            padding: var(--spacing) 0;
+            flex: none;
+            align-self: stretch;
             display: flex;
             flex-direction: row;
+            margin: 1.4rem 0;
 
             .button-container {
                 flex: 1;
-                height: 3.2em;
                 display: flex;
                 flex-direction: row;
                 align-items: center;
                 justify-content: center;
-                font-size: 0.8em;
-                color: var(--color-surfacelighter);
-                cursor: pointer;
+                padding: 0.6rem 1rem;
 
                 .icon {
-                    margin-right: 0.6em;
-                    width: 1.4em;
-                    height: 1.4em;
+                    flex: none;
+                    width: 1.4rem;
+                    height: 1.4rem;
+                    margin-right: 0.6rem;
                     fill: var(--color-surfacelighter);
                 }
 
-                &:focus, &:hover {
+                .label {
+                    flex-grow: 0;
+                    flex-shrink: 1;
+                    flex-basis: auto;
+                    font-size: 0.8rem;
+                    font-weight: 500;
+                    color: var(--color-surfacelighter);
+                    text-align: center;
+                }
+
+                &:hover, &:focus {
                     filter: brightness(1.2);
                 }
 
                 &:not(:last-child) {
-                    margin-right: 2em;
+                    margin-right: 2rem;
                 }
             }
 
             .facebook-button {
-                background-color: var(--color-secondary);
+                background-color: var(--color-facebook);
             }
 
             .twitter-button {
@@ -92,29 +89,28 @@
         .url-container {
             display: flex;
             flex-direction: row;
-            border: calc(var(--focusable-border-size) * 0.5) solid var(--color-surface);
+            border: calc(var(--focus-outline-size) * 0.5) solid var(--color-surface);
 
             .url-content {
-                flex: 4;
-                padding: calc(var(--spacing) * 0.5);
-                font-size: 0.9em;
-                text-align: center;
+                min-width: 12rem;
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
                 color: var(--color-surfacedark);
+                text-align: center;
             }
 
             .copy-button {
-                flex: 1;
-                padding: calc(var(--spacing) * 0.5);
                 display: flex;
                 flex-direction: row;
+                align-items: center;
                 justify-content: center;
+                padding: 0.6rem 1rem;
                 background-color: var(--color-surface);
-                cursor: pointer;
 
                 .icon {
-                    margin-right: 0.4em;
-                    width: 1em;
-                    height: 1em;
+                    width: 1.4rem;
+                    height: 1.4rem;
+                    margin-right: 0.6rem;
                     fill: var(--color-surfacedarker);
                 }
 
@@ -122,8 +118,8 @@
                     color: var(--color-surfacedarker);
                 }
 
-                &:focus, &:hover {
-                    background-color: var(--color-surface60);
+                &:hover, &:focus {
+                    filter: brightness(1.2);
                 }
             }
         }
