@@ -30,14 +30,6 @@ const settingsValues = {
 
 const Settings = () => {
     const sections = Object.keys(settingsSections)
-        .sort(function(a, b) {
-            const valueA = SECTIONS_ORDER[a];
-            const valueB = SECTIONS_ORDER[b];
-            if (!isNaN(valueA) && !isNaN(valueB)) return valueA - valueB;
-            if (!isNaN(valueA)) return -1;
-            if (!isNaN(valueB)) return 1;
-            return a - b;
-        })
         .map((section) => ({
             id: section,
             inputs: settingsSections[section].inputs,
