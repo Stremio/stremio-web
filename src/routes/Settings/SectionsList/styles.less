@@ -1,0 +1,181 @@
+:import('~stremio/common/Checkbox/styles.less') {
+    checkbox-icon: icon;
+}
+
+.section {
+    padding: 4rem 2rem;
+
+    .section-header {
+        margin: 0 1.5rem 1.5rem 1.5rem;
+        font-size: 2rem;
+        color: var(--color-surfacelighter);
+    }
+
+    .input-container {
+        margin: 1.5rem;
+        display: flex;
+        flex-direction: column;
+
+        .input-header {
+            margin-bottom: 0.5rem;
+            color: var(--color-surfacelighter);
+        }
+
+        .checkbox-icon {
+            flex: none;
+            width: 1.2rem;
+            height: 1.2rem;
+            fill: var(--color-surfacelight);
+        }
+
+        &.user-container {
+            flex-direction: row;
+            align-items: center;
+
+            .avatar {
+                margin: 0 1rem;
+                width: 4.2rem;
+                height: 4.2rem;
+                border-radius: 50%;
+                border: var(--focusable-border-size) solid var(--color-primary);
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+            }
+
+            .email {
+                color: var(--color-surfacelighter);
+            }
+        }
+
+        &.select-container {
+            .dropdown {
+                height: 3rem;
+                width: var(--input-width);
+            }
+        }
+
+        &.link-container {
+            margin: 1rem 1.5rem;
+
+            .link {
+                display: block;
+                color: var(--color-secondarylight);
+
+                &:focus {
+                    color: var(--color-surface);
+                }
+
+                &:hover {
+                    color: var(--color-surfacelighter);
+                }
+            }
+        }
+
+        &.button-container {
+            .button {
+                padding: 0.7rem;
+                width: var(--input-width);
+                min-height: calc(var(--input-width) * 0.09);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: var(--color-primary);
+                cursor: pointer;
+
+                .icon {
+                    width: 1.4rem;
+                    height: 100%;
+                    margin-right: 0.5rem;
+                    fill: var(--color-surfacelighter);
+                }
+
+                .label {
+                    color: var(--color-surfacelighter);
+                }
+
+                &:focus {
+                    border-color: var(--color-surfacelighter);
+                }
+
+                &:hover {
+                    border-color: transparent;
+                    background-color: var(--color-primarylight);
+                }
+            }
+        }
+
+        &.checkbox-container {
+            .checkbox {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                cursor: pointer;
+
+                .label {
+                    width: 100%;
+                    margin-left: 0.5rem;
+                    color: var(--color-surfacelight);
+                }
+
+                &:focus,
+                &:hover {
+                    .checkbox-icon {
+                        fill: var(--color-surfacelighter);
+                    }
+
+                    .label {
+                        color: var(--color-surfacelighter);
+                    }
+                }
+            }
+        }
+
+        &.text-container {
+            .text {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+
+                .icon {
+                    margin-right: 0.5rem;
+                    width: 1rem;
+                    height: 1rem;
+                    fill: var(--color-signal5);
+                }
+
+                .x-icon {
+                    margin-right: 0.5rem;
+                    width: 1rem;
+                    height: 1rem;
+                    fill: var(--color-signal2);
+                }
+
+                .label {
+                    width: 100%;
+                    color: var(--color-surfacelighter);
+                }
+            }
+        }
+
+        &.color-container {
+            .color-picker {
+                width: var(--input-width);
+                height: calc(var(--input-width) * 0.08);
+                cursor: pointer;
+
+                &:focus {
+                    border-color: var(--color-surfacelighter);
+                }
+
+                &:hover {
+                    border-color: transparent;
+                }
+            }
+        }
+    }
+
+    >:last-child {
+        margin-bottom: 0;
+    }
+}

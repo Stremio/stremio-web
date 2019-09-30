@@ -2,7 +2,7 @@ const React = require('react');
 const { Button, Dropdown, Checkbox, ColorInput } = require('stremio/common');
 const Icon = require('stremio-icons/dom/Icon');
 const classnames = require('classnames');
-const styles = require('../styles');
+const styles = require('./styles');
 
 const SectionsList = React.forwardRef(({ className, sections, preferences, onPreferenceChanged, onScroll }, ref) => {
     const scrollContainerRef = ref;

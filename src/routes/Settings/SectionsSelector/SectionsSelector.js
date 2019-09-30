@@ -2,7 +2,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const { Button } = require('stremio/common');
 const classnames = require('classnames');
-const styles = require('../styles');
+const styles = require('./styles');
 
 const SectionsSelector = ({ className, sections, selectedSectionId, onSelectedSection }) => {
     return (
