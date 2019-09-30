@@ -55,12 +55,12 @@ const SectionsList = React.forwardRef(({ className, sections, preferences, onPre
                                     <div className={styles['email']}>{!preferences.user ? 'Anonymous user' : preferences.user.email}</div>
                                 </div>
                                 <div className={classnames(styles['input-container'], styles['button-container'])}>
-                                    <Button className={styles['button']} type={'button'} href={'#/intro'}>
+                                    <Button className={styles['button']} href={'#/intro'}>
                                         <div className={styles['label']}>{preferences.user ? 'LOG OUT' : 'SIGN IN'}</div>
                                     </Button>
                                 </div>
                                 <div className={classnames(styles['input-container'], styles['link-container'])}>
-                                    <Button className={styles['link']} type={'link'} href={changePasswordUrl} target={'_blank'} onClick={checkUser}>
+                                    <Button className={styles['link']} href={changePasswordUrl} target={'_blank'} onClick={checkUser}>
                                         <div className={styles['label']}>{'Change password'}</div>
                                     </Button>
                                 </div>
@@ -70,33 +70,33 @@ const SectionsList = React.forwardRef(({ className, sections, preferences, onPre
                                     </div>
                                 </div>
                                 <div className={classnames(styles['input-container'], styles['link-container'])}>
-                                    <Button className={styles['link']} type={'link'} href={'https://www.stremio.com/#TODO:install-facebook-addon'} target={'_blank'} onClick={checkUser}>
+                                    <Button className={styles['link']} href={'https://www.stremio.com/#TODO:install-facebook-addon'} target={'_blank'} onClick={checkUser}>
                                         <div className={styles['label']}>{'Import from Facebook'}</div>
                                     </Button>
                                 </div>
                                 <div className={classnames(styles['input-container'], styles['link-container'])}>
-                                    <Button className={styles['link']} type={'link'} href={'https://www.stremio.com/#TODO:export-user-data'} target={'_blank'} onClick={checkUser}>
+                                    <Button className={styles['link']} href={'https://www.stremio.com/#TODO:export-user-data'} target={'_blank'} onClick={checkUser}>
                                         <div className={styles['label']}>{'Export user data'}</div>
                                     </Button>
                                 </div>
                                 <div className={classnames(styles['input-container'], styles['link-container'])}>
-                                    <Button className={styles['link']} type={'link'} href={webCalUrl} target={'_blank'} onClick={checkUser}>
+                                    <Button className={styles['link']} href={webCalUrl} target={'_blank'} onClick={checkUser}>
                                         <div className={styles['label']}>{'Subscribe to calendar'}</div>
                                     </Button>
                                 </div>
                                 <div className={classnames(styles['input-container'], styles['link-container'])}>
-                                    <Button className={styles['link']} type={'link'} href={'https://stremio.zendesk.com/'} target={'_blank'}>
+                                    <Button className={styles['link']} href={'https://stremio.zendesk.com/'} target={'_blank'}>
                                         <div className={styles['label']}>{'Contact support'}</div>
                                     </Button>
                                 </div>
                                 <div className={classnames(styles['input-container'], styles['link-container'])}>
-                                    <Button className={styles['link']} type={'link'} href={'https://docs.google.com/forms/d/e/1FAIpQLScubrlTpDMIPUUBlhZ5lwcXl3HxzKfunIMCX5Jnp-cDyglWjQ/viewform?usp=sf_link'} target={'_blank'}>
+                                    <Button className={styles['link']} href={'https://docs.google.com/forms/d/e/1FAIpQLScubrlTpDMIPUUBlhZ5lwcXl3HxzKfunIMCX5Jnp-cDyglWjQ/viewform?usp=sf_link'} target={'_blank'}>
                                         <div className={styles['label']}>{'Request account deletion'}</div>
                                     </Button>
                                 </div>
                                 <div className={classnames(styles['input-container'], styles['button-container'])}>
                                     <div className={styles['input-header']}>{'Trakt Scrobbling'}</div>
-                                    <Button className={styles['button']} type={'button'}>
+                                    <Button className={styles['button']}>
                                         <Icon className={styles['icon']} icon={'ic_trackt'} />
                                         <div className={styles['label']}>{preferences.user && preferences.user.trakt ? 'ALREADY UTHENTIATED' : 'AUTHENTIATE'}</div>
                                     </Button>
@@ -114,7 +114,7 @@ const SectionsList = React.forwardRef(({ className, sections, preferences, onPre
                         return (
                             <div key={input.id} className={classnames(styles['input-container'], styles['link-container'])}>
                                 {input.header ? <div className={styles['input-header']}>{input.header}</div> : null}
-                                <Button ref={input.ref} className={styles['link']} type={input.type} href={input.href} target={getTargetFor(input.href)}>
+                                <Button ref={input.ref} className={styles['link']} href={input.href} target={getTargetFor(input.href)}>
                                     <div className={styles['label']}>{input.label}</div>
                                 </Button>
                             </div>
@@ -123,7 +123,7 @@ const SectionsList = React.forwardRef(({ className, sections, preferences, onPre
                         return (
                             <div key={input.id} className={classnames(styles['input-container'], styles['button-container'])}>
                                 {input.header ? <div className={styles['input-header']}>{input.header}</div> : null}
-                                <Button ref={input.ref} className={styles['button']} type={input.type} href={input.href}>
+                                <Button ref={input.ref} className={styles['button']} href={input.href}>
                                     {input.icon ? <Icon className={styles['icon']} icon={input.icon} /> : null}
                                     <div className={styles['label']}>{input.label}</div>
                                 </Button>
@@ -153,7 +153,7 @@ const SectionsList = React.forwardRef(({ className, sections, preferences, onPre
                             <div key={input.id} className={classnames(styles['input-container'], styles['color-container'])}>
                                 {input.header ? <div className={styles['input-header']}>{input.header}</div> : null}
                                 <ColorInput className={styles['color-picker']} defaultValue={preferences[input.id]} tabIndex={'-1'} onChange={colorChanged.bind(null, input.id)} />
-                                {/* <TextInput className={styles['color-picker']} type={input.type} defaultValue={input.color} tabIndex={'-1'} /> */}
+                                {/* <TextInput className={styles['color-picker']} defaultValue={input.color} tabIndex={'-1'} /> */}
                             </div>
                         );
                     }
