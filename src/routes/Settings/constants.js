@@ -22,8 +22,6 @@ const settingsSections = {
     ]
 };
 
-const useSettings = {
-    settingsSections
-}
-
-module.exports = useSettings;
+module.exports = {
+    settingsSections,
+};
