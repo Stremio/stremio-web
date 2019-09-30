@@ -36,10 +36,12 @@ const SharePrompt = ({ className, label, url, close }) => {
                 <div className={styles['share-prompt-label']}>{label}</div>
                 <div className={styles['buttons-container']}>
                     <Button className={classnames(styles['button-container'], styles['facebook-button'])} href={`https://www.facebook.com/sharer/sharer.php?u=${url}`} target={'_blank'}>
-                        <Icon className={styles['icon']} icon={'ic_facebook'} />FACEBOOK
+                        <Icon className={styles['icon']} icon={'ic_facebook'} />
+                        <div className={styles['label']}>FACEBOOK</div>
                     </Button>
                     <Button className={classnames(styles['button-container'], styles['twitter-button'])} href={`https://www.facebook.com/sharer/sharer.php?u=${url}`} target={'_blank'}>
-                        <Icon className={styles['icon']} icon={'ic_twitter'} />TWITTER
+                        <Icon className={styles['icon']} icon={'ic_twitter'} />
+                        <div className={styles['label']}>TWITTER</div>
                     </Button>
                 </div>
                 <div className={styles['url-container']}>
