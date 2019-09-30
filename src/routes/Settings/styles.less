@@ -167,10 +167,6 @@
 
                     &.checkbox-container {
                         .checkbox {
-                            --icon-size: 1.2rem;
-                            --icon-color: var(--color-surface);
-                            --icon-background-color: transparent;
-
                             display: flex;
                             flex-direction: row;
                             align-items: center;
@@ -182,13 +178,10 @@
                                 color: var(--color-surfacelight);
                             }
 
-                            &:global(.checked) {
-                                --icon-color: var(--color-surfacelight);
-                                --icon-background-color: var(--color-primary);
-                            }
-
                             &:focus, &:hover {
-                                --icon-color: var(--color-surfacelighter);
+                                .checkbox-icon {
+                                    fill: var(--color-surfacelighter);
+                                }
 
                                 .label {
                                     color: var(--color-surfacelighter);
