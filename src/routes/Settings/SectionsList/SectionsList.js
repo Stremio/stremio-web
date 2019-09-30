@@ -5,7 +5,6 @@ const classnames = require('classnames');
 const styles = require('./styles');
 
 const SectionsList = React.forwardRef(({ className, sections, preferences, onPreferenceChanged, onScroll }, ref) => {
-    const scrollContainerRef = ref;
     const toggleCheckbox = (id) => {
         onPreferenceChanged(id, !preferences[id]);
     };
@@ -160,7 +159,7 @@ const SectionsList = React.forwardRef(({ className, sections, preferences, onPre
     );
 
     return (
-        <div ref={scrollContainerRef} className={className} onScroll={onScroll}>
+        <div ref={ref} className={className} onScroll={onScroll}>
             {sectionsElements}
         </div>
     );
