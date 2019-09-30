@@ -56,7 +56,7 @@ const Settings = () => {
             behavior: 'smooth'
         });
     });
-    const updateSection = React.useCallback((event) => {
+    const sectionListOnScorll = React.useCallback((event) => {
         const scrollContainer = event.currentTarget;
         if (scrollContainer.scrollTop + scrollContainer.clientHeight === scrollContainer.scrollHeight) {
             setSelectedSectionId(sections[sections.length - 1].id);
@@ -80,7 +80,7 @@ const Settings = () => {
                 navMenu={true} />
             <div className={styles['settings-container']}>
                 <SectionsSelector className={styles['side-menu']} sections={sections} selectedSectionId={selectedSectionId} onSelectedSection={changeSection} />
-                <SectionsList ref={scrollContainerRef} className={styles['scroll-container']} sections={sections} preferences={preferences} onPreferenceChanged={updatePreference} onScroll={updateSection} />
+                <SectionsList ref={scrollContainerRef} className={styles['scroll-container']} sections={sections} preferences={preferences} onPreferenceChanged={updatePreference} onScroll={sectionListOnScorll} />
             </div>
         </div>
     );
