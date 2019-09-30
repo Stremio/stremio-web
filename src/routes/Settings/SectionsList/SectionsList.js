@@ -1,4 +1,5 @@
 const React = require('react');
+const PropTypes = require('prop-types');
 const { Button, Dropdown, Checkbox, ColorInput } = require('stremio/common');
 const Icon = require('stremio-icons/dom/Icon');
 const classnames = require('classnames');
@@ -164,5 +165,15 @@ const SectionsList = React.forwardRef(({ className, sections, preferences, onPre
         </div>
     );
 });
+
+SectionsList.propTypes = {
+    className: PropTypes.string,
+    sections: PropTypes.arrayOf(PropTypes.shape({
+        id: PropTypes.string.isRequired,
+    })),
+    preferences: PropTypes.object,
+    onPreferenceChanged: PropTypes.func.isRequired,
+    onScroll: PropTypes.func.isRequired,
+};
 
 module.exports = SectionsList;
