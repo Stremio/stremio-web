@@ -47,7 +47,7 @@ const Settings = () => {
         setPreferences(newPrefs);
     }
 
-    const changeSection = (event) => {
+    const changeSection = React.useCallback((event) => {
         const currentSectionId = event.currentTarget.dataset.section;
         const section = sections.find((section) => section.id === currentSectionId);
         //setSelectedSectionId(currentSectionId);
@@ -55,7 +55,7 @@ const Settings = () => {
             top: section.ref.current.offsetTop,
             behavior: 'smooth'
         });
-    };
+    });
     const updateSection = React.useCallback((event) => {
         const scrollContainer = event.currentTarget;
         if (scrollContainer.scrollTop + scrollContainer.clientHeight === scrollContainer.scrollHeight) {
