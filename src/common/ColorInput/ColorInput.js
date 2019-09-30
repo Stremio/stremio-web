@@ -4,16 +4,17 @@ const { Modal } = require('stremio-router');
 const Button = require('stremio/common/Button');
 const ColorPicker = require('stremio/common/ColorPicker');
 const useBinaryState = require('stremio/common/useBinaryState');
-const Icon = require('stremio-icons/dom/Icon');
+const Icon = require('stremio-icons/dom');
 const styles = require('./styles');
 
-const ColorInput = ({ className, value, onChange }) => {
+const ColorInput = ({ className, id, value, onChange }) => {
     const [colorInputVisible, showColorInput, closeColorInput] = useBinaryState(false);
     const [selectedColor, setSelectedColor] = React.useState(value);
 
-    const confirmColorInput = React.useCallback(() => {
+    const confirmColorInput = React.useCallback((event) => {
         if(typeof onChange === "function") {
-            onChange(selectedColor);
+            event.nativeEvent.value = selectedColor;
+            onChange(event);
         }
         closeColorInput();
     }, [selectedColor, onChange]);
@@ -41,7 +42,7 @@ const ColorInput = ({ className, value, onChange }) => {
                             </Button>
                             <h1>Choose a color:</h1>
                             <ColorPicker className={styles['color-input']} value={selectedColor} onChange={setSelectedColor} />
-                            <Button className={styles['button']} onClick={confirmColorInput}>Select</Button>
+                            <Button className={styles['button']} data-id={id} onClick={confirmColorInput}>Select</Button>
                         </div>
                     </Modal>
                     :
@@ -53,6 +54,7 @@ const ColorInput = ({ className, value, onChange }) => {
 
 ColorInput.propTypes = {
     className: PropTypes.string,
+    id: PropTypes.string.isRequired,
     value: PropTypes.string,
     onChange: PropTypes.func
 };

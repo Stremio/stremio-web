@@ -10,14 +10,16 @@ const SectionsList = React.forwardRef(({ className, sections, preferences, onPre
         onPreferenceChanged(id, !preferences[id]);
     };
 
-    const colorChanged = (id, color) => {
+    const colorChanged = React.useCallback((event) => {
+        const id = event.currentTarget.dataset.id;
+        const color = event.nativeEvent.value;
         onPreferenceChanged(id, color);
-    };
+    }, [onPreferenceChanged]);
 
     const updateDropdown = React.useCallback((event) => {
         var data = event.currentTarget.dataset;
         onPreferenceChanged(data.name, data.value);
-    });
+    }, [onPreferenceChanged]);
 
     const checkUser = React.useCallback((event) => {
         if(! preferences.user) {
@@ -25,7 +27,7 @@ const SectionsList = React.forwardRef(({ className, sections, preferences, onPre
             console.log('No user found');
             event.preventDefault();
         }
-    });
+    }, []);
 
     // Determines whether the link should be opened in new window or in the current one.
     const getTargetFor = url => ['//', 'http://', 'https://', 'file://', 'ftp://', 'mailto:', 'magnet:']
@@ -151,7 +153,7 @@ const SectionsList = React.forwardRef(({ className, sections, preferences, onPre
                         return (
                             <div key={input.id} className={classnames(styles['input-container'], styles['color-container'])}>
                                 {input.header ? <div className={styles['input-header']}>{input.header}</div> : null}
-                                <ColorInput className={styles['color-picker']} value={preferences[input.id]} tabIndex={'-1'} onChange={colorChanged.bind(null, input.id)} />
+                                <ColorInput className={styles['color-picker']} id={input.id} value={preferences[input.id]} onChange={colorChanged} />
                             </div>
                         );
                     }
