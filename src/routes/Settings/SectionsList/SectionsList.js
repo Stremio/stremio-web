@@ -1,7 +1,6 @@
 const React = require('react');
-const { Button, Dropdown, Checkbox } = require('stremio/common');
+const { Button, Dropdown, Checkbox, ColorInput } = require('stremio/common');
 const Icon = require('stremio-icons/dom/Icon');
-const ColorInput = require('../ColorInput');
 const classnames = require('classnames');
 const styles = require('../styles');
 
