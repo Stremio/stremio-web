@@ -3,7 +3,7 @@ const { NavBar } = require('stremio/common');
 const styles = require('./styles');
 const SectionsSelector = require('./SectionsSelector');
 const SectionsList = require('./SectionsList');
-const { settingsSections, SECTIONS_ORDER } = require('./constants');
+const { settingsSections } = require('./constants');
 
 const devTestWithUser = true;
 
@@ -32,7 +32,7 @@ const Settings = () => {
     const sections = Object.keys(settingsSections)
         .map((section) => ({
             id: section,
-            inputs: settingsSections[section].inputs,
+            inputs: settingsSections[section],
             ref: React.useRef(null)
         }));
     const [selectedSectionId, setSelectedSectionId] = React.useState(sections[0].id);
