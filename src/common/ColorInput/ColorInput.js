@@ -1,5 +1,4 @@
 const React = require('react');
-const classnames = require('classnames');
 const PropTypes = require('prop-types');
 const { Modal } = require('stremio-router');
 const Button = require('stremio/common/Button');
@@ -38,11 +37,11 @@ const ColorInput = ({ className, value, onChange }) => {
                     <Modal className={styles['color-input-modal']} onMouseDown={modalBackgroundOnClick}>
                         <div className={styles['color-input-container']}>
                             <Button onClick={closeColorInput}>
-                                <Icon className={classnames(styles['x-icon'])} icon={'ic_x'} />
+                                <Icon className={styles['x-icon']} icon={'ic_x'} />
                             </Button>
                             <h1>Choose a color:</h1>
-                            <ColorPicker className={classnames(styles['color-input'])} value={selectedColor} onChange={setSelectedColor} />
-                            <Button className={classnames(styles['button'])} onClick={confirmColorInput}>Select</Button>
+                            <ColorPicker className={styles['color-input']} value={selectedColor} onChange={setSelectedColor} />
+                            <Button className={styles['button']} onClick={confirmColorInput}>Select</Button>
                         </div>
                     </Modal>
                     :
