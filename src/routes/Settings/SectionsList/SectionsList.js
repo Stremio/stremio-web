@@ -170,6 +170,21 @@ SectionsList.propTypes = {
     className: PropTypes.string,
     sections: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.string.isRequired,
+        ref: PropTypes.shape({
+            current: PropTypes.object,
+        }).isRequired,
+        inputs: PropTypes.arrayOf(PropTypes.shape({
+            type: PropTypes.string.isRequired,
+            id: PropTypes.string,
+            header: PropTypes.string,
+            label: PropTypes.string,
+            icon: PropTypes.string,
+            href: PropTypes.string,
+            options: PropTypes.arrayOf(PropTypes.shape({
+                label: PropTypes.string.isRequired,
+                value: PropTypes.string.isRequired,
+            })),
+        })),
     })),
     preferences: PropTypes.object,
     onPreferenceChanged: PropTypes.func.isRequired,
