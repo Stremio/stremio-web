@@ -33,7 +33,7 @@ const Settings = () => {
         .map((section) => ({
             id: section,
             inputs: settingsSections[section].inputs,
-            ref: React.createRef()
+            ref: React.useRef(null)
         }));
     const [selectedSectionId, setSelectedSectionId] = React.useState(sections[0].id);
     const [preferences, setPreferences] = React.useState(settingsValues);
