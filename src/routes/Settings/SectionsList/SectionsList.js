@@ -152,8 +152,7 @@ const SectionsList = React.forwardRef(({ className, sections, preferences, onPre
                         return (
                             <div key={input.id} className={classnames(styles['input-container'], styles['color-container'])}>
                                 {input.header ? <div className={styles['input-header']}>{input.header}</div> : null}
-                                <ColorInput className={styles['color-picker']} defaultValue={preferences[input.id]} tabIndex={'-1'} onChange={colorChanged.bind(null, input.id)} />
-                                {/* <TextInput className={styles['color-picker']} defaultValue={input.color} tabIndex={'-1'} /> */}
+                                <ColorInput className={styles['color-picker']} value={preferences[input.id]} tabIndex={'-1'} onChange={colorChanged.bind(null, input.id)} />
                             </div>
                         );
                     }
