@@ -17,7 +17,7 @@ const SharePrompt = ({ className, label, url, close }) => {
     React.useEffect(() => {
         const onKeyUp = (event) => {
             if (event.key === 'Escape') {
-                cancel();
+                close();
             }
         };
         if (focusable) {
