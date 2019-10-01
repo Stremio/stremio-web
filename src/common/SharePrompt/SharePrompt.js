@@ -62,9 +62,5 @@ SharePrompt.propTypes = {
     url: PropTypes.string.isRequired,
     close: PropTypes.func
 };
-SharePrompt.defaultProps = {
-    label: 'Share',
-    url: ''
-};
 
 module.exports = SharePrompt;
