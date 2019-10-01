@@ -21,7 +21,7 @@ const ToastItem = ({ type, title, text, icon, closeButton, onClick, onClose }) =
                     :
                     null
             }
-            <div className={classnames(styles['message-container'], {[styles.clickable]: isClickable})} onClick={toastClicked}>
+            <div className={classnames(styles['message-container'], { [styles.clickable]: isClickable })} onClick={toastClicked}>
                 {
                     title ?
                         <h1>{title}</h1>

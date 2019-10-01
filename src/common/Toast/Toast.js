@@ -16,7 +16,10 @@ const Toast = React.forwardRef(({ className }, ref) => {
 
     const show = ({ type, icon, title, text, closeButton, timeout, onClick }) => {
         timeout = timeout !== null && !isNaN(timeout) ? timeout : DEFAULT_TIMEOUT;
-        const close = () => { clearTimeout(nextItem.timerId); setToastItems(toastItemsRef.current.filter(state => state !== nextItem)) };
+        const close = () => {
+            clearTimeout(nextItem.timerId);
+            setToastItems(toastItemsRef.current.filter(state => state !== nextItem));
+        };
 
         const nextItem = { type, icon, title, text, closeButton, timeout, onClick, onClose: close };
 

@@ -5,11 +5,25 @@ const styles = require('./styles');
 
 storiesOf('Toast', module).add('SimpleToast', () => {
     const toastRef = React.useRef(null);
-    const showToast = (message) => React.useCallback(() => {
-        toastRef.current.show({ title: 'Something to take your attention', timeout: 0, type: 'info', icon: 'ic_sub', closeButton: true, ...message });
-    }, []);
 
-    const clickSuccess = showToast({ title: 'You clicked it', text: 'Congratulations! Click event handled successfully.', type: 'success', icon: 'ic_check', timeout: 2e3 });
+    const showToast = (message) => React.useCallback(() => {
+        toastRef.current.show({
+            title: 'Something to take your attention',
+            timeout: 0,
+            type: 'info',
+            icon: 'ic_sub',
+            closeButton: true,
+            ...message
+        });
+    }, [toastRef.current]);
+
+    const clickSuccess = showToast({
+        title: 'You clicked it',
+        text: 'Congratulations! Click event handled successfully.',
+        type: 'success',
+        icon: 'ic_check',
+        timeout: 2e3
+    });
 
     return (
         <div className={styles['root-container']}>
