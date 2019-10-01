@@ -1,6 +1,7 @@
 const Button = require('./Button');
 const Checkbox = require('./Checkbox');
 const ColorPicker = require('./ColorPicker');
+const ColorInput = require('./ColorInput');
 const Dropdown = require('./Dropdown');
 const MainNavBar = require('./MainNavBar');
 const MetaItem = require('./MetaItem');
@@ -27,6 +28,7 @@ module.exports = {
     Button,
     Checkbox,
     ColorPicker,
+    ColorInput,
     Dropdown,
     MainNavBar,
     MetaItem,
