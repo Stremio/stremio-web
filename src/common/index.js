@@ -18,6 +18,7 @@ const TextInput = require('./TextInput');
 const routesRegexp = require('./routesRegexp');
 const useBinaryState = require('./useBinaryState');
 const useFullscreen = require('./useFullscreen');
+const useLiveRef = require('./useLiveRef');
 const useLocationHash = require('./useLocationHash');
 const useRouteActive = require('./useRouteActive');
 const useSpreadState = require('./useSpreadState');
@@ -44,6 +45,7 @@ module.exports = {
     routesRegexp,
     useBinaryState,
     useFullscreen,
+    useLiveRef,
     useLocationHash,
     useRouteActive,
     useSpreadState,
