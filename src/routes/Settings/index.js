@@ -1,3 +1,3 @@
-import Settings from './Settings';
+const Settings = require('./Settings');
 
-export default Settings;
+module.exports = Settings;

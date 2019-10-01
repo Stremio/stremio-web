@@ -1,0 +1,26 @@
+.section-label {
+    padding: 1rem;
+    font-size: 1.1rem;
+    border: calc(var(--focusable-border-size) * 0.5) solid transparent;
+    color: var(--color-surfacelight);
+    cursor: pointer;
+
+    &.selected {
+        color: var(--color-surfacelighter);
+        background-color: var(--color-background);
+
+        &:hover {
+            background-color: var(--color-background);
+        }
+    }
+
+    &:focus {
+        border-color: var(--color-surfacelighter);
+    }
+
+    &:hover {
+        color: var(--color-surfacelighter);
+        background-color: var(--color-surface20);
+        border-color: transparent;
+    }
+}
