@@ -21,6 +21,7 @@ const useFullscreen = require('./useFullscreen');
 const useLocationHash = require('./useLocationHash');
 const useRouteActive = require('./useRouteActive');
 const useTabIndex = require('./useTabIndex');
+const useLiveRef = require('./useLiveRef');
 
 module.exports = {
     Button,
@@ -45,5 +46,6 @@ module.exports = {
     useFullscreen,
     useLocationHash,
     useRouteActive,
-    useTabIndex
+    useTabIndex,
+    useLiveRef
 };
