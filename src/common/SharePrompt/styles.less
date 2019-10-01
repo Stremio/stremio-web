@@ -43,7 +43,9 @@
             margin: 1.4rem 0;
 
             .button-container {
-                flex: 1;
+                flex-grow: 0;
+                flex-shrink: 1;
+                flex-basis: 14rem;
                 display: flex;
                 flex-direction: row;
                 align-items: center;
@@ -101,6 +103,9 @@
             }
 
             .copy-button {
+                flex-grow: 0;
+                flex-shrink: 1;
+                flex-basis: auto;
                 display: flex;
                 flex-direction: row;
                 align-items: center;
@@ -109,6 +114,7 @@
                 background-color: var(--color-surface);
 
                 .icon {
+                    flex: none;
                     width: 1.4rem;
                     height: 1.4rem;
                     margin-right: 0.6rem;
