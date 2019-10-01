@@ -16,7 +16,7 @@ const SharePrompt = ({ className, label, url, close }) => {
     }, []);
     React.useEffect(() => {
         const onKeyUp = (event) => {
-            if (event.key === 'Escape') {
+            if (event.key === 'Escape' && typeof close === 'function') {
                 close();
             }
         };
