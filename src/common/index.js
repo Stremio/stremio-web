@@ -17,6 +17,7 @@ const ShareModal = require('./ShareModal');
 const Slider = require('./Slider');
 const TextInput = require('./TextInput');
 const routesRegexp = require('./routesRegexp');
+const useAnimationFrame = require('./useAnimationFrame');
 const useBinaryState = require('./useBinaryState');
 const useFullscreen = require('./useFullscreen');
 const useLiveRef = require('./useLiveRef');
@@ -45,6 +46,7 @@ module.exports = {
     Slider,
     TextInput,
     routesRegexp,
+    useAnimationFrame,
     useBinaryState,
     useFullscreen,
     useLiveRef,
