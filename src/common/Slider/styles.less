@@ -9,7 +9,6 @@ html.active-slider-within {
 .slider-container {
     position: relative;
     z-index: 0;
-    overflow: visible;
     cursor: pointer;
 
     .layer {
@@ -37,10 +36,10 @@ html.active-slider-within {
     }
 
     .thumb {
+        flex: none;
         width: var(--thumb-size);
         height: var(--thumb-size);
-        border-radius: 50%;
         transform: translateX(-50%);
-        background-color: var(--thumb-color);
+        fill: var(--thumb-color);
     }
 }
