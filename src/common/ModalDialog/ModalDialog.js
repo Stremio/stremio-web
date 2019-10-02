@@ -16,7 +16,7 @@ const ModalDialog = ({className, children, title, buttons, onClose}) => {
                 {children}
             </div>
             <div className={styles['modal-dialog-buttons']}>
-                {buttons ? buttons.map((button, key) => (
+                {Array.isArray(buttons) && buttons.length ? buttons.map((button, key) => (
                     <Button key={key} className={styles['button']} {...button.props}>
                         {
                             button.icon
@@ -31,6 +31,20 @@ const ModalDialog = ({className, children, title, buttons, onClose}) => {
             </div>
         </div>
     )
+};
+
+ModalDialog.propTypes = {
+    className: PropTypes.string,
+    title: PropTypes.string,
+    buttons: PropTypes.arrayOf(PropTypes.shape({
+        label: PropTypes.oneOfType([
+            PropTypes.string,
+            PropTypes.object,
+        ]),
+        icon: PropTypes.string,
+        props: PropTypes.object // Button.propTypes unfortunately these are not defined
+    })),
+    onClose: PropTypes.func
 };
 
 module.exports = ModalDialog;
