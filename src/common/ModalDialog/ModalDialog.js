@@ -37,10 +37,7 @@ ModalDialog.propTypes = {
     className: PropTypes.string,
     title: PropTypes.string,
     buttons: PropTypes.arrayOf(PropTypes.shape({
-        label: PropTypes.oneOfType([
-            PropTypes.string,
-            PropTypes.object,
-        ]),
+        label: PropTypes.node,
         icon: PropTypes.string,
         props: PropTypes.object // Button.propTypes unfortunately these are not defined
     })),
