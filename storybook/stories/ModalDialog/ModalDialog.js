@@ -22,8 +22,8 @@ storiesOf('ModalDialog', module).add('ModalDialog', () => {
             }
         },
         {
-            label: 'A button with a long name', props: {
-                onClick: action('A button with a long name clicked.')
+            label: 'A disabled button with a long name', props: {
+                disabled: true,
             }
         },
         {
