@@ -11,14 +11,14 @@ storiesOf('ModalDialog', module).add('ModalDialog', () => {
     const oneButton = [
         {
             label: 'Show many buttons', icon: 'ic_ellipsis', props: {
-                onClick: React.useCallback(()=>setButtons(manyButtons))
+                onClick: React.useCallback(()=>setButtons(manyButtons), [])
             }
         },
     ]
     const manyButtons = [
         {
             label: 'One', icon: 'ic_back_ios', props: {
-                onClick: React.useCallback(()=>setButtons(oneButton))
+                onClick: React.useCallback(()=>setButtons(oneButton), [])
             }
         },
         {
