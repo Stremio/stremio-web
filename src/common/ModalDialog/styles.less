@@ -1,0 +1,57 @@
+.modal-dialog-container {
+    position: relative;
+    padding: 1rem;
+    background-color: var(--color-surfacelighter);
+    margin: auto;
+
+    * {
+        overflow: visible;
+    }
+
+    .x-icon {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        width: 1rem;
+        height: 1rem;
+        fill: var(--color-surfacedark);
+    }
+
+    h1 {
+        font-size: 1.2rem;
+    }
+
+    .modal-dialog-content {
+        margin: 1rem auto 0 auto;
+    }
+
+    .modal-dialog-buttons {
+        margin: -.5rem;
+        margin-top: 1rem;
+        display: flex;
+        flex-flow: row;
+    }
+
+    .button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 1 0 0;
+        text-align: center;
+        color: var(--color-surfacelighter);
+        background-color: var(--color-signal5);
+        padding: 1rem;
+        margin: .5rem;
+
+        &:hover {
+            background-color: var(--color-signal580);
+        }
+
+        .icon {
+            fill: var(--color-surfacelighter);
+            width: 1rem;
+            height: 1rem;
+            margin-right: .5rem;
+        }
+    }
+}

@@ -1,0 +1,40 @@
+.modal-dialog {
+    width: 45rem;
+    .content-container {
+        display: flex;
+        flex-flow: row;
+        margin: 0 -0.5rem;
+
+        .content-column {
+            flex: 1 0 0;
+            padding: 0 0.5rem;
+        }
+    }
+
+    .custom-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 1 0 0;
+        text-align: center;
+        color: var(--color-surfacelighter);
+        background-color: var(--color-signal3);
+        padding: 1rem;
+        margin: 0.5rem;
+
+        &:hover {
+            background-color: var(--color-signal380);
+            color: var(--color-backgrounddarker);
+
+            .icon {
+                fill: var(--color-backgrounddarker);
+            }
+        }
+
+        .icon {
+            fill: var(--color-surfacelighter);
+            width: 1rem;
+            height: 1rem;
+        }
+    }
+}
