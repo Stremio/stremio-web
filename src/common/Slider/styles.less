@@ -1,71 +1,46 @@
+html.active-slider-within {
+    cursor: grabbing;
+
+    body {
+        pointer-events: none;
+    }
+}
+
 .slider-container {
-    display: inline-block;
     position: relative;
     z-index: 0;
+    overflow: visible;
     cursor: pointer;
 
-    &.horizontal {
-        .track {
-            top: calc(50% - var(--track-size) * 0.5);
-            right: 0;
-            left: 0;
-            height: var(--track-size);
-        }
-
-        .track-before {
-            top: calc(50% - var(--track-size) * 0.5);
-            left: 0;
-            height: var(--track-size);
-        }
-
-        .thumb {
-            top: calc(50% - var(--thumb-size) * 0.5);
-            transform: translateX(-50%);
-        }
-    }
-
-    &.vertical {
-        .track {
-            top: 0;
-            bottom: 0;
-            left: calc(50% - var(--track-size) * 0.1);
-            width: var(--track-size);
-        }
-
-        .track-before {
-            bottom: 0;
-            left: calc(50% - var(--track-size) * 0.1);
-            width: var(--track-size);
-        }
-
-        .thumb {
-            left: calc(50% - var(--thumb-size) * 0.5);
-            transform: translateY(50%);
-        }
-    }
-
-    &:global(.disabled) {
-        pointer-events: none;
+    .layer {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 0;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
     }
 
     .track {
-        position: absolute;
-        z-index: 1;
+        flex: 1;
+        height: var(--track-size);
         background-color: var(--track-color);
     }
 
     .track-before {
-        position: absolute;
-        z-index: 2;
+        flex: none;
+        height: var(--track-size);
         background-color: var(--track-before-color);
     }
 
     .thumb {
-        position: absolute;
-        z-index: 3;
         width: var(--thumb-size);
         height: var(--thumb-size);
         border-radius: 50%;
+        transform: translateX(-50%);
         background-color: var(--thumb-color);
     }
 }
