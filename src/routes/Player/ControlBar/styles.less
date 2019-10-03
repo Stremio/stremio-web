@@ -20,47 +20,33 @@
     }
 
     .control-bar-buttons-container {
-        height: var(--control-bar-button-size);
         display: flex;
         flex-direction: row;
         align-items: center;
 
         .control-bar-button {
-            width: var(--control-bar-button-size);
-            height: var(--control-bar-button-size);
+            flex: none;
+            width: 4rem;
+            height: 4rem;
             display: flex;
             justify-content: center;
             align-items: center;
-            cursor: pointer;
-
-            :global(.icon) {
-                width: 60%;
-                height: 60%;
-                fill: var(--color-surfacelight);
-                overflow: visible;
-            }
 
             &:global(.active) {
                 background-color: var(--color-backgrounddarker);
-
-                :global(.icon) {
-                    fill: var(--color-surfacelighter);
-                }
             }
 
             &:global(.disabled) {
-                cursor: default;
-                pointer-events: none;
-
                 :global(.icon) {
                     fill: var(--color-surfacedark);
                 }
             }
 
-            &:hover:not(:global(.disabled)) {
-                :global(.icon) {
-                    fill: var(--color-surfacelighter);
-                }
+            :global(.icon) {
+                flex: none;
+                width: 2.5rem;
+                height: 2.5rem;
+                fill: var(--color-surfacelighter);
             }
         }
 
