@@ -12,6 +12,18 @@ html.active-slider-within {
     overflow: visible;
     cursor: pointer;
 
+    &:global(.disabled) {
+        pointer-events: none;
+
+        .track, .track-before {
+            background-color: var(--color-surfacedark);
+        }
+
+        .thumb {
+            fill: var(--color-surfacedark);
+        }
+    }
+
     .layer {
         position: absolute;
         top: 0;
