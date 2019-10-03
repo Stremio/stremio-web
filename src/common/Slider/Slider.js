@@ -115,11 +115,9 @@ const Slider = ({ className, value, minimumValue, maximumValue, onSlide, onCompl
                 <div className={styles['track-before']} style={{ width: `calc(100% * ${thumbPosition})` }} />
             </div>
             <div className={styles['layer']}>
-                <div className={styles['thumb-container']} style={{ marginLeft: `calc(100% * ${thumbPosition})` }}>
-                    <svg className={styles['thumb']} viewBox={'0 0 10 10'}>
-                        <circle cx={'5'} cy={'5'} r={'5'} />
-                    </svg>
-                </div>
+                <svg className={styles['thumb']} style={{ marginLeft: `calc(100% * ${thumbPosition})` }} viewBox={'0 0 10 10'}>
+                    <circle cx={'5'} cy={'5'} r={'5'} />
+                </svg>
             </div>
         </div>
     );

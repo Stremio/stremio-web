@@ -27,26 +27,21 @@ html.active-slider-within {
 
     .track {
         flex: 1;
-        height: 30%;
+        height: var(--track-size, 0.5rem);
         background-color: var(--color-backgroundlighter);
     }
 
     .track-before {
         flex: none;
-        height: 30%;
+        height: var(--track-size, 0.5rem);
         background-color: var(--color-primary);
     }
 
-    .thumb-container {
+    .thumb {
         flex: none;
-        align-self: stretch;
+        width: var(--thumb-size, 1.5rem);
+        height: var(--thumb-size, 1.5rem);
         transform: translateX(-50%);
-
-        .thumb {
-            display: block;
-            width: 100%;
-            height: 100%;
-            fill: var(--color-surfacelighter);
-        }
+        fill: var(--color-surfacelighter);
     }
 }
