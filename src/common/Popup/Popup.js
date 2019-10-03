@@ -5,7 +5,7 @@ const { Modal } = require('stremio-router');
 const styles = require('./styles');
 
 // TODO rename to Popover
-const Popup = ({ open, modalContainerClassName, menuMatchLabelWidth, renderLabel, renderMenu, onCloseRequest }) => {
+const Popup = ({ open, modalContainerClassName, menuRelativePosition, menuMatchLabelWidth, renderLabel, renderMenu, onCloseRequest }) => {
     const labelRef = React.useRef(null);
     const menuRef = React.useRef(null);
     const [menuStyles, setMenuStyles] = React.useState({});
@@ -47,58 +47,60 @@ const Popup = ({ open, modalContainerClassName, menuMatchLabelWidth, renderLabel
     React.useEffect(() => {
         let menuStyles = {};
         if (open) {
-            const documentRect = document.documentElement.getBoundingClientRect();
-            const labelRect = labelRef.current.getBoundingClientRect();
-            const menuRect = menuRef.current.getBoundingClientRect();
-            const labelPosition = {
-                left: labelRect.left - documentRect.left,
-                top: labelRect.top - documentRect.top,
-                right: (documentRect.width + documentRect.left) - (labelRect.left + labelRect.width),
-                bottom: (documentRect.height + documentRect.top) - (labelRect.top + labelRect.height)
-            };
-            const matchLabelWidthMenuStyles = {
-                width: `${labelRect.width}px`,
-                maxWidth: `${labelRect.width}px`
-            };
-            const bottomMenuStyles = {
-                top: `${labelPosition.top + labelRect.height}px`,
-                maxHeight: `${labelPosition.bottom}px`
-            };
-            const topMenuStyles = {
-                bottom: `${labelPosition.bottom + labelRect.height}px`,
-                maxHeight: `${labelPosition.top}px`
-            };
-            const rightMenuStyles = {
-                left: `${labelPosition.left}px`,
-                maxWidth: `${labelPosition.right + labelRect.width}px`
-            };
-            const leftMenuStyles = {
-                right: `${labelPosition.right}px`,
-                maxWidth: `${labelPosition.left + labelRect.width}px`
-            };
+            if (menuRelativePosition !== false) {
+                const documentRect = document.documentElement.getBoundingClientRect();
+                const labelRect = labelRef.current.getBoundingClientRect();
+                const menuRect = menuRef.current.getBoundingClientRect();
+                const labelPosition = {
+                    left: labelRect.left - documentRect.left,
+                    top: labelRect.top - documentRect.top,
+                    right: (documentRect.width + documentRect.left) - (labelRect.left + labelRect.width),
+                    bottom: (documentRect.height + documentRect.top) - (labelRect.top + labelRect.height)
+                };
+                const matchLabelWidthMenuStyles = {
+                    width: `${labelRect.width}px`,
+                    maxWidth: `${labelRect.width}px`
+                };
+                const bottomMenuStyles = {
+                    top: `${labelPosition.top + labelRect.height}px`,
+                    maxHeight: `${labelPosition.bottom}px`
+                };
+                const topMenuStyles = {
+                    bottom: `${labelPosition.bottom + labelRect.height}px`,
+                    maxHeight: `${labelPosition.top}px`
+                };
+                const rightMenuStyles = {
+                    left: `${labelPosition.left}px`,
+                    maxWidth: `${labelPosition.right + labelRect.width}px`
+                };
+                const leftMenuStyles = {
+                    right: `${labelPosition.right}px`,
+                    maxWidth: `${labelPosition.left + labelRect.width}px`
+                };
 
-            if (menuRect.height <= labelPosition.bottom) {
-                menuStyles = { ...menuStyles, ...bottomMenuStyles };
-            } else if (menuRect.height <= labelPosition.top) {
-                menuStyles = { ...menuStyles, ...topMenuStyles };
-            } else if (labelPosition.bottom >= labelPosition.top) {
-                menuStyles = { ...menuStyles, ...bottomMenuStyles };
-            } else {
-                menuStyles = { ...menuStyles, ...topMenuStyles };
-            }
+                if (menuRect.height <= labelPosition.bottom) {
+                    menuStyles = { ...menuStyles, ...bottomMenuStyles };
+                } else if (menuRect.height <= labelPosition.top) {
+                    menuStyles = { ...menuStyles, ...topMenuStyles };
+                } else if (labelPosition.bottom >= labelPosition.top) {
+                    menuStyles = { ...menuStyles, ...bottomMenuStyles };
+                } else {
+                    menuStyles = { ...menuStyles, ...topMenuStyles };
+                }
 
-            if (menuRect.width <= (labelPosition.right + labelRect.width)) {
-                menuStyles = { ...menuStyles, ...rightMenuStyles };
-            } else if (menuRect.width <= (labelPosition.left + labelRect.width)) {
-                menuStyles = { ...menuStyles, ...leftMenuStyles };
-            } else if (labelPosition.right > labelPosition.left) {
-                menuStyles = { ...menuStyles, ...rightMenuStyles };
-            } else {
-                menuStyles = { ...menuStyles, ...leftMenuStyles };
-            }
+                if (menuRect.width <= (labelPosition.right + labelRect.width)) {
+                    menuStyles = { ...menuStyles, ...rightMenuStyles };
+                } else if (menuRect.width <= (labelPosition.left + labelRect.width)) {
+                    menuStyles = { ...menuStyles, ...leftMenuStyles };
+                } else if (labelPosition.right > labelPosition.left) {
+                    menuStyles = { ...menuStyles, ...rightMenuStyles };
+                } else {
+                    menuStyles = { ...menuStyles, ...leftMenuStyles };
+                }
 
-            if (menuMatchLabelWidth) {
-                menuStyles = { ...menuStyles, ...matchLabelWidthMenuStyles };
+                if (menuMatchLabelWidth) {
+                    menuStyles = { ...menuStyles, ...matchLabelWidthMenuStyles };
+                }
             }
 
             menuStyles = { ...menuStyles, visibility: 'visible' };
@@ -126,6 +128,7 @@ const Popup = ({ open, modalContainerClassName, menuMatchLabelWidth, renderLabel
 Popup.propTypes = {
     open: PropTypes.bool,
     modalContainerClassName: PropTypes.string,
+    menuRelativePosition: PropTypes.bool,
     menuMatchLabelWidth: PropTypes.bool,
     renderLabel: PropTypes.func.isRequired,
     renderMenu: PropTypes.func.isRequired,
