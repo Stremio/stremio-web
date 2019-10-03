@@ -1,14 +1,22 @@
 .control-bar-container {
-    padding: 0 calc(var(--control-bar-button-size) * 0.4);
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
+    position: relative;
+    z-index: 0;
+    padding: 0 1.5rem;
+    overflow: visible;
+
+    &::after {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: -1;
+        box-shadow: 0 0 8rem 8rem var(--color-backgrounddarker);
+        content: "";
+    }
 
     .seek-bar {
-        --seek-bar-thumb-size: calc(var(--control-bar-button-size) * 0.40);
-        --seek-bar-track-size: calc(var(--control-bar-button-size) * 0.12);
-        height: calc(var(--control-bar-button-size) * 0.6);
-        font-size: calc(var(--control-bar-button-size) * 0.35);
+        --thumb-size: 1.5rem;
+        height: 2.5rem;
     }
 
     .control-bar-buttons-container {
@@ -67,18 +75,4 @@
             flex: 1;
         }
     }
-
-    &::after {
-        position: absolute;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        z-index: -1;
-        box-shadow: 0 0 calc(var(--control-bar-button-size) * 2) calc(var(--control-bar-button-size) * 2.3) var(--color-backgrounddarker);
-        content: "";
-    }
-}
-
-.modal-container {
-    --border-color: var(--color-surfacelighter);
 }

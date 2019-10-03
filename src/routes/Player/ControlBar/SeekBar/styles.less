@@ -1,3 +1,9 @@
+:import('~stremio/common/Slider/styles.less') {
+    slider-track: track;
+    slider-track-before: track-before;
+    slider-thumb: thumb;
+}
+
 .seek-bar-container {
     display: flex;
     flex-direction: row;
@@ -5,30 +11,33 @@
 
     &:hover, &:global(.active) {
         .slider {
-            --track-before-color: var(--color-primarylight);
-            --thumb-color: var(--color-surfacelighter);
+            .slider-track-before {
+                background-color: var(--color-primarylight);
+            }
+
+            .slider-thumb {
+                fill: var(--color-surfacelighter);
+            }
         }
     }
 
     .label {
         flex: none;
         max-width: 5rem;
-        max-height: 2.4em;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        direction: rtl;
+        text-align: left;
         color: var(--color-surfacelighter);
     }
 
     .slider {
-        --thumb-size: var(--seek-bar-thumb-size);
-        --track-size: var(--seek-bar-track-size);
-        --track-before-color: var(--color-primary);
-        --track-color: var(--color-backgroundlighter);
-        --thumb-color: transparent;
         flex: 1;
         align-self: stretch;
-        margin: 0 var(--seek-bar-thumb-size);
+        margin: 0 var(--thumb-size);
 
-        &:global(.disabled) {
-            --track-color: var(--color-surfacedark);
+        .slider-thumb {
+            fill: transparent;
         }
     }
 }
