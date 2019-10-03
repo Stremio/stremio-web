@@ -15,7 +15,7 @@ const Slider = ({ className, value, minimumValue, maximumValue, onSlide, onCompl
     const sliderContainerRef = React.useRef(null);
     const [active, setActive] = React.useState(false);
     const focusable = useFocusable();
-    const [requestAnimation, cancelAnimation] = useAnimationFrame();
+    const [requestThumbAnimation, cancelThumbAnimation] = useAnimationFrame();
     const calculateValueForMouseX = React.useCallback((mouseX) => {
         if (sliderContainerRef.current === null) {
             return 0;
@@ -48,7 +48,7 @@ const Slider = ({ className, value, minimumValue, maximumValue, onSlide, onCompl
         setActive(false);
     }, []);
     const onMouseMove = React.useCallback((event) => {
-        requestAnimation(() => {
+        requestThumbAnimation(() => {
             const value = calculateValueForMouseX(event.clientX);
             if (typeof onSlideRef.current === 'function') {
                 onSlideRef.current(value);
@@ -74,7 +74,7 @@ const Slider = ({ className, value, minimumValue, maximumValue, onSlide, onCompl
         document.documentElement.className = classnames(document.documentElement.className, styles['active-slider-within']);
     }, []);
     const releaseThumb = React.useCallback(() => {
-        cancelAnimation();
+        cancelThumbAnimation();
         window.removeEventListener('blur', onBlur);
         window.removeEventListener('mouseup', onMouseUp);
         window.removeEventListener('mousemove', onMouseMove);
