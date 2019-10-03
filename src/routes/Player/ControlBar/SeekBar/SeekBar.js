@@ -22,10 +22,6 @@ const SeekBar = ({ className, time, duration, dispatch }) => {
             dispatch({ propName: 'time', propValue: time });
         }
     }, []);
-    const onCancel = React.useCallback(() => {
-        resetTimeDebounced.cancel();
-        setSeekTime(null);
-    }, []);
     React.useEffect(() => {
         return () => {
             resetTimeDebounced.cancel();
@@ -39,10 +35,8 @@ const SeekBar = ({ className, time, duration, dispatch }) => {
                 value={seekTime !== null ? seekTime : time}
                 minimumValue={0}
                 maximumValue={duration}
-                orientation={'horizontal'}
                 onSlide={onSlide}
                 onComplete={onComplete}
-                onCancel={onCancel}
             />
             <div className={styles['label']}>{formatTime(duration)}</div>
         </div>
