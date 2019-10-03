@@ -13,7 +13,6 @@ const Slider = ({ className, value, minimumValue, maximumValue, onSlide, onCompl
     const onSlideRef = useLiveRef(onSlide, [onSlide]);
     const onCompleteRef = useLiveRef(onComplete, [onComplete]);
     const sliderContainerRef = React.useRef(null);
-    const [active, setActive] = React.useState(false);
     const focusable = useFocusable();
     const [requestThumbAnimation, cancelThumbAnimation] = useAnimationFrame();
     const calculateValueForMouseX = React.useCallback((mouseX) => {
@@ -27,45 +26,6 @@ const Slider = ({ className, value, minimumValue, maximumValue, onSlide, onCompl
         const thumbStart = Math.min(Math.max(mouseX - sliderX, 0), sliderWidth);
         const value = (thumbStart / sliderWidth) * (maximumValue - minimumValue) + minimumValue;
         return value;
-    }, []);
-    const onBlur = React.useCallback(() => {
-        const value = parseInt(sliderContainerRef.current.getAttribute('aria-valuenow'));
-        if (typeof onSlideRef.current === 'function') {
-            onSlideRef.current(value);
-        }
-        if (typeof onCompleteRef.current === 'function') {
-            onCompleteRef.current(value);
-        }
-
-        setActive(false);
-    }, []);
-    const onMouseUp = React.useCallback((event) => {
-        const value = calculateValueForMouseX(event.clientX);
-        if (typeof onCompleteRef.current === 'function') {
-            onCompleteRef.current(value);
-        }
-
-        setActive(false);
-    }, []);
-    const onMouseMove = React.useCallback((event) => {
-        requestThumbAnimation(() => {
-            const value = calculateValueForMouseX(event.clientX);
-            if (typeof onSlideRef.current === 'function') {
-                onSlideRef.current(value);
-            }
-        });
-    }, []);
-    const onMouseDown = React.useCallback((event) => {
-        if (event.button !== 0) {
-            return;
-        }
-
-        const value = calculateValueForMouseX(event.clientX);
-        if (typeof onSlideRef.current === 'function') {
-            onSlideRef.current(value);
-        }
-
-        setActive(true);
     }, []);
     const retainThumb = React.useCallback(() => {
         window.addEventListener('blur', onBlur);
@@ -86,16 +46,49 @@ const Slider = ({ className, value, minimumValue, maximumValue, onSlide, onCompl
 
         document.documentElement.className = classnames(classList);
     }, []);
-    React.useEffect(() => {
-        if (active) {
-            retainThumb();
-        } else {
-            releaseThumb();
+    const onBlur = React.useCallback(() => {
+        const value = parseInt(sliderContainerRef.current.getAttribute('aria-valuenow'));
+        if (typeof onSlideRef.current === 'function') {
+            onSlideRef.current(value);
         }
-    }, [active]);
+        if (typeof onCompleteRef.current === 'function') {
+            onCompleteRef.current(value);
+        }
+
+        releaseThumb();
+    }, []);
+    const onMouseUp = React.useCallback((event) => {
+        const value = calculateValueForMouseX(event.clientX);
+        if (typeof onCompleteRef.current === 'function') {
+            onCompleteRef.current(value);
+        }
+
+        releaseThumb();
+    }, []);
+    const onMouseMove = React.useCallback((event) => {
+        requestThumbAnimation(() => {
+            const value = calculateValueForMouseX(event.clientX);
+            if (typeof onSlideRef.current === 'function') {
+                onSlideRef.current(value);
+            }
+        });
+    }, []);
+    const onMouseDown = React.useCallback((event) => {
+        if (event.button !== 0) {
+            return;
+        }
+
+        const value = calculateValueForMouseX(event.clientX);
+        if (typeof onSlideRef.current === 'function') {
+            onSlideRef.current(value);
+        }
+
+        retainThumb();
+    }, []);
+
     React.useEffect(() => {
         if (!focusable) {
-            setActive(false);
+            releaseThumb();
         }
     }, [focusable]);
     React.useEffect(() => {
@@ -107,7 +100,7 @@ const Slider = ({ className, value, minimumValue, maximumValue, onSlide, onCompl
         return Math.max(0, Math.min(1, (value - minimumValue) / (maximumValue - minimumValue)));
     }, [value, minimumValue, maximumValue]);
     return (
-        <div ref={sliderContainerRef} className={classnames(className, styles['slider-container'], { 'active': active })} aria-valuenow={value} aria-valuemin={minimumValue} aria-valuemax={maximumValue} onMouseDown={onMouseDown}>
+        <div ref={sliderContainerRef} className={classnames(className, styles['slider-container'])} aria-valuenow={value} aria-valuemin={minimumValue} aria-valuemax={maximumValue} onMouseDown={onMouseDown}>
             <div className={styles['layer']}>
                 <div className={styles['track']} />
             </div>
