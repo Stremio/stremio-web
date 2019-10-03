@@ -1,10 +1,11 @@
 const React = require('react');
 const PropTypes = require('prop-types');
+const classnames = require('classnames');
 const { Modal } = require('stremio-router');
 const styles = require('./styles');
 
 // TODO rename to Popover
-const Popup = ({ open, menuMatchLabelWidth, renderLabel, renderMenu, onCloseRequest }) => {
+const Popup = ({ open, modalContainerClassName, menuMatchLabelWidth, renderLabel, renderMenu, onCloseRequest }) => {
     const labelRef = React.useRef(null);
     const menuRef = React.useRef(null);
     const [menuStyles, setMenuStyles] = React.useState({});
@@ -110,7 +111,7 @@ const Popup = ({ open, menuMatchLabelWidth, renderLabel, renderMenu, onCloseRequ
             {renderLabel(labelRef)}
             {
                 open ?
-                    <Modal className={styles['popup-modal-container']}>
+                    <Modal className={classnames(styles['menu-modal-container'], modalContainerClassName)}>
                         <div ref={menuRef} style={menuStyles} className={styles['menu-container']}>
                             {renderMenu()}
                         </div>
@@ -124,6 +125,7 @@ const Popup = ({ open, menuMatchLabelWidth, renderLabel, renderMenu, onCloseRequ
 
 Popup.propTypes = {
     open: PropTypes.bool,
+    modalContainerClassName: PropTypes.string,
     menuMatchLabelWidth: PropTypes.bool,
     renderLabel: PropTypes.func.isRequired,
     renderMenu: PropTypes.func.isRequired,
