@@ -9,6 +9,7 @@ html.active-slider-within {
 .slider-container {
     position: relative;
     z-index: 0;
+    overflow: visible;
     cursor: pointer;
 
     .layer {
@@ -21,25 +22,31 @@ html.active-slider-within {
         display: flex;
         flex-direction: row;
         align-items: center;
+        overflow: visible;
     }
 
     .track {
         flex: 1;
-        height: calc(var(--thumb-size) / 3);
+        height: 30%;
         background-color: var(--track-color);
     }
 
     .track-before {
         flex: none;
-        height: calc(var(--thumb-size) / 3);
+        height: 30%;
         background-color: var(--track-before-color);
     }
 
-    .thumb {
+    .thumb-container {
         flex: none;
-        width: var(--thumb-size);
-        height: var(--thumb-size);
+        align-self: stretch;
         transform: translateX(-50%);
-        fill: var(--thumb-color);
+
+        .thumb {
+            display: block;
+            width: 100%;
+            height: 100%;
+            fill: var(--thumb-color);
+        }
     }
 }
