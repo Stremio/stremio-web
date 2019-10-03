@@ -10,7 +10,7 @@
     align-items: center;
 
     &:hover, &:global(.active) {
-        .slider {
+        .slider:not(:global(.disabled)) {
             .slider-track-before {
                 background-color: var(--color-primarylight);
             }

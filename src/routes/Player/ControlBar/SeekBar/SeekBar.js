@@ -31,7 +31,7 @@ const SeekBar = ({ className, time, duration, dispatch }) => {
         <div className={classnames(className, styles['seek-bar-container'], { 'active': seekTime !== null })}>
             <div className={styles['label']}>{formatTime(seekTime !== null ? seekTime : time)}</div>
             <Slider
-                className={styles['slider']}
+                className={classnames(styles['slider'], { 'disabled': time === null || isNaN(time) })}
                 value={seekTime !== null ? seekTime : time}
                 minimumValue={0}
                 maximumValue={duration}
