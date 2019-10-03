@@ -21,6 +21,14 @@
         }
     }
 
+    &:hover {
+        .slider:not(:global(.disabled)) {
+            .slider-thumb {
+                transition-delay: 100ms;
+            }
+        }
+    }
+
     .label {
         flex: none;
         max-width: 5rem;
@@ -37,6 +45,7 @@
         margin: 0 var(--thumb-size);
 
         .slider-thumb {
+            transition: 0s fill;
             fill: transparent;
         }
     }
