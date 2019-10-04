@@ -7,7 +7,7 @@ const styles = require('./styles');
 
 const SectionsList = React.forwardRef(({ className, sections, preferences, onPreferenceChanged, onScroll }, ref) => {
     const toggleCheckbox = (id) => {
-        onPreferenceChanged(id, !preferences[id]);
+        onPreferenceChanged(id, preferences[id] === 'true' ? 'false' : 'true');
     };
 
     const colorChanged = React.useCallback((event) => {
@@ -134,7 +134,7 @@ const SectionsList = React.forwardRef(({ className, sections, preferences, onPre
                         return (
                             <div key={input.id} className={classnames(styles['input-container'], styles['checkbox-container'])}>
                                 {input.header ? <div className={styles['input-header']}>{input.header}</div> : null}
-                                <Checkbox ref={input.ref} className={styles['checkbox']} checked={preferences[input.id]} onClick={toggleCheckbox.bind(null, input.id)}>
+                                <Checkbox ref={input.ref} className={styles['checkbox']} checked={preferences[input.id] === 'true'} onClick={toggleCheckbox.bind(null, input.id)}>
                                     <div className={styles['label']}>{input.label}</div>
                                 </Checkbox>
                             </div>
@@ -154,6 +154,12 @@ const SectionsList = React.forwardRef(({ className, sections, preferences, onPre
                             <div key={input.id} className={classnames(styles['input-container'], styles['color-container'])}>
                                 {input.header ? <div className={styles['input-header']}>{input.header}</div> : null}
                                 <ColorInput className={styles['color-picker']} id={input.id} value={preferences[input.id]} onChange={colorChanged} />
+                            </div>
+                        );
+                    } else if (input.type === 'info') {
+                        return (
+                            <div key={input.id} className={classnames(styles['input-container'])}>
+                                <div className={styles['input-header']}><strong>{input.header}</strong> {preferences[input.id]}</div>
                             </div>
                         );
                     }
