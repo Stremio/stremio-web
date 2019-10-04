@@ -13,6 +13,7 @@ const MetaRowPlaceholder = require('./MetaRowPlaceholder');
 const NavBar = require('./NavBar');
 const PlayIconCircleCentered = require('./PlayIconCircleCentered');
 const Popup = require('./Popup');
+const ScrollEventEmitter = require('./ScrollEventEmitter');
 const ShareModal = require('./ShareModal');
 const Slider = require('./Slider');
 const TextInput = require('./TextInput');
@@ -42,6 +43,7 @@ module.exports = {
     NavBar,
     PlayIconCircleCentered,
     Popup,
+    ScrollEventEmitter,
     ShareModal,
     Slider,
     TextInput,
