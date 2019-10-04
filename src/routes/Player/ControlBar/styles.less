@@ -1,3 +1,11 @@
+:import('./ShareButton/styles.less') {
+    share-dialog-container: share-dialog-container;
+}
+
+:import('./SubtitlesButton/styles.less') {
+    subtitles-picker-container: subtitles-picker-container;
+}
+
 .control-bar-container {
     position: relative;
     z-index: 0;
@@ -69,4 +77,10 @@
     align-items: flex-end;
     justify-content: flex-end;
     padding: 8rem 1rem;
+
+    .share-dialog-container, .subtitles-picker-container {
+        flex: none;
+        background-color: var(--color-backgroundlighter);
+        border: thin solid var(--color-surfacelighter20);
+    }
 }

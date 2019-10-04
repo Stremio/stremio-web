@@ -6,21 +6,21 @@ const { Button, Popup, useBinaryState } = require('stremio/common');
 const styles = require('./styles');
 
 const ShareButton = ({ className, modalContainerClassName }) => {
-    const [modalOpen, openModal, closeModal, toggleModal] = useBinaryState(false);
+    const [popupOpen, openPopup, closePopup, togglePopup] = useBinaryState(false);
     return (
         <Popup
-            open={modalOpen}
+            open={popupOpen}
             menuModalClassName={classnames(modalContainerClassName, styles['share-modal-container'])}
             menuRelativePosition={false}
             renderLabel={(ref) => (
-                <Button ref={ref} className={classnames(className, { 'active': modalOpen })} tabIndex={-1} onClick={toggleModal}>
+                <Button ref={ref} className={classnames(className, { 'active': popupOpen })} tabIndex={-1} onClick={togglePopup}>
                     <Icon className={'icon'} icon={'ic_share'} />
                 </Button>
             )}
             renderMenu={() => (
                 <div className={styles['share-dialog-container']} />
             )}
-            onCloseRequest={closeModal}
+            onCloseRequest={closePopup}
         />
     );
 };

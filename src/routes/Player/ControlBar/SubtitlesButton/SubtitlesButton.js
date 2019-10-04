@@ -2,65 +2,32 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
-const { Popup } = require('stremio/common');
+const { Button, Popup, useBinaryState } = require('stremio/common');
 const SubtitlesPicker = require('./SubtitlesPicker');
 const styles = require('./styles');
 
-class SubtitlesButton extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            popupOpen: false
-        };
-    }
-
-    shouldComponentUpdate(nextProps, nextState) {
-        return nextState.popupOpen !== this.state.popupOpen ||
-            nextProps.className !== this.props.className ||
-            nextProps.modalContainerClassName !== this.props.modalContainerClassName ||
-            nextProps.subtitlesTracks !== this.props.subtitlesTracks ||
-            nextProps.selectedSubtitlesTrackId !== this.props.selectedSubtitlesTrackId ||
-            nextProps.subtitlesSize !== this.props.subtitlesSize ||
-            nextProps.subtitlesDelay !== this.props.subtitlesDelay ||
-            nextProps.subtitlesTextColor !== this.props.subtitlesTextColor ||
-            nextProps.subtitlesBackgroundColor !== this.props.subtitlesBackgroundColor ||
-            nextProps.subtitlesOutlineColor !== this.props.subtitlesOutlineColor;
-    }
-
-    onPopupOpen = () => {
-        this.setState({ popupOpen: true });
-    }
-
-    onPopupClose = () => {
-        this.setState({ popupOpen: false });
-    }
-
-    render() {
-        return (
-            <Popup onOpen={this.onPopupOpen} onClose={this.onPopupClose}>
-                <Popup.Label>
-                    <div className={classnames(this.props.className, { 'active': this.state.popupOpen }, { 'disabled': this.props.subtitlesTracks.length === 0 })}>
-                        <Icon className={'icon'} icon={'ic_sub'} />
-                    </div>
-                </Popup.Label>
-                <Popup.Menu className={this.props.modalContainerClassName}>
-                    <SubtitlesPicker
-                        className={styles['subtitles-picker-container']}
-                        subtitlesTracks={this.props.subtitlesTracks}
-                        selectedSubtitlesTrackId={this.props.selectedSubtitlesTrackId}
-                        subtitlesSize={this.props.subtitlesSize}
-                        subtitlesDelay={this.props.subtitlesDelay}
-                        subtitlesTextColor={this.props.subtitlesTextColor}
-                        subtitlesBackgroundColor={this.props.subtitlesBackgroundColor}
-                        subtitlesOutlineColor={this.props.subtitlesOutlineColor}
-                        dispatch={this.props.dispatch}
-                    />
-                </Popup.Menu>
-            </Popup>
-        );
-    }
-}
+const SubtitlesButton = (props) => {
+    const [popupOpen, openPopup, closePopup, togglePopup] = useBinaryState(false);
+    return (
+        <Popup
+            open={popupOpen}
+            menuModalClassName={classnames(props.modalContainerClassName, styles['subtitles-modal-container'])}
+            menuRelativePosition={false}
+            renderLabel={(ref) => (
+                <Button ref={ref} className={classnames(props.className, { 'active': popupOpen }, { 'disabled': !Array.isArray(props.subtitlesTracks) || props.subtitlesTracks.length === 0 })} tabIndex={-1} onClick={togglePopup}>
+                    <Icon className={'icon'} icon={'ic_sub'} />
+                </Button>
+            )}
+            renderMenu={() => (
+                <SubtitlesPicker
+                    {...props}
+                    className={styles['subtitles-picker-container']}
+                />
+            )}
+            onCloseRequest={closePopup}
+        />
+    );
+};
 
 SubtitlesButton.propTypes = {
     className: PropTypes.string,
@@ -69,7 +36,7 @@ SubtitlesButton.propTypes = {
         id: PropTypes.string.isRequired,
         label: PropTypes.string.isRequired,
         origin: PropTypes.string.isRequired
-    })).isRequired,
+    })),
     selectedSubtitlesTrackId: PropTypes.string,
     subtitlesSize: PropTypes.number,
     subtitlesDelay: PropTypes.number,
@@ -77,9 +44,6 @@ SubtitlesButton.propTypes = {
     subtitlesBackgroundColor: PropTypes.string,
     subtitlesOutlineColor: PropTypes.string,
     dispatch: PropTypes.func.isRequired
-};
-SubtitlesButton.defaultProps = {
-    subtitlesTracks: Object.freeze([])
 };
 
 module.exports = SubtitlesButton;
