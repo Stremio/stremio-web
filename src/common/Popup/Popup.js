@@ -21,29 +21,38 @@ const Popup = ({ open, menuModalClassName, menuRelativePosition, menuMatchLabelW
                     }
                     break;
                 case 'mousedown':
-                case 'scroll':
                     if (event.target !== document &&
                         event.target !== document.documentElement &&
-                        !labelRef.current.contains(event.target) &&
-                        !menuRef.current.contains(event.target)) {
+                        !event.closePopupPrevented) {
                         onCloseRequest(event);
+                    }
+                    break;
+                case 'react-scroll':
+                    if (!event.nativeEvent.closePopupPrevented) {
+                        onCloseRequest(event.nativeEvent);
                     }
                     break;
             }
         };
         if (open) {
-            window.addEventListener('scroll', checkCloseEvent, true);
+            window.addEventListener('react-scroll', checkCloseEvent);
             window.addEventListener('mousedown', checkCloseEvent);
             window.addEventListener('keydown', checkCloseEvent);
             window.addEventListener('resize', checkCloseEvent);
         }
         return () => {
-            window.removeEventListener('scroll', checkCloseEvent, true);
+            window.removeEventListener('react-scroll', checkCloseEvent);
             window.removeEventListener('mousedown', checkCloseEvent);
             window.removeEventListener('keydown', checkCloseEvent);
             window.removeEventListener('resize', checkCloseEvent);
         };
     }, [open, onCloseRequest]);
+    const menuOnMouseDown = React.useCallback((event) => {
+        event.nativeEvent.closePopupPrevented = true;
+    }, []);
+    const menuOnScroll = React.useCallback((event) => {
+        event.nativeEvent.closePopupPrevented = true;
+    }, []);
     React.useEffect(() => {
         let menuStyles = {};
         if (open) {
@@ -114,7 +123,7 @@ const Popup = ({ open, menuModalClassName, menuRelativePosition, menuMatchLabelW
             {
                 open ?
                     <Modal className={classnames(styles['menu-modal-container'], menuModalClassName)}>
-                        <div ref={menuRef} style={menuStyles} className={styles['menu-container']}>
+                        <div ref={menuRef} style={menuStyles} className={styles['menu-container']} onMouseDown={menuOnMouseDown} onScroll={menuOnScroll}>
                             {renderMenu()}
                         </div>
                     </Modal>
