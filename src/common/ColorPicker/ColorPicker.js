@@ -1,8 +1,10 @@
 const React = require('react');
 const PropTypes = require('prop-types');
+const classnames = require('classnames');
 const AColorPicker = require('a-color-picker');
+const styles = require('./styles');
 
-const COLOR_FORMAT = 'rgbacss';
+const COLOR_FORMAT = 'hexcss4';
 
 // TODO implement custom picker which is keyboard accessible
 const ColorPicker = ({ className, value, onChange }) => {
@@ -32,7 +34,7 @@ const ColorPicker = ({ className, value, onChange }) => {
         }
     }, [value]);
     return (
-        <div ref={pickerElementRef} className={className} />
+        <div ref={pickerElementRef} className={classnames(className, styles['color-picker-container'])} />
     );
 };
 
