@@ -3,8 +3,8 @@ const PropTypes = require('prop-types');
 const Icon = require('stremio-icons/dom');
 const Button = require('stremio/common/Button');
 const Popup = require('stremio/common/Popup');
-const ColorPicker = require('stremio/common/ColorPicker');
 const useBinaryState = require('stremio/common/useBinaryState');
+const ColorPicker = require('./ColorPicker');
 const styles = require('./styles');
 
 const ColorInput = ({ className, id, value, onChange, ...props }) => {
