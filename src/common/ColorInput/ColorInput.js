@@ -1,59 +1,75 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const Icon = require('stremio-icons/dom');
+const { Modal } = require('stremio-router');
 const Button = require('stremio/common/Button');
-const Popup = require('stremio/common/Popup');
 const useBinaryState = require('stremio/common/useBinaryState');
 const ColorPicker = require('./ColorPicker');
 const styles = require('./styles');
 
-const ColorInput = ({ className, id, value, onChange, ...props }) => {
-    const [popupOpen, openPopup, closePopup, togglePopup] = useBinaryState(false);
-    const [selectedColor, setSelectedColor] = React.useState(value);
+const ColorInput = ({ className, value, onChange, ...props }) => {
+    const labelRef = React.useRef(null);
+    const [modalOpen, openModal, closeModal] = useBinaryState(false);
+    const [tempValue, setTempValue] = React.useState(value);
     React.useEffect(() => {
-        setSelectedColor(value);
-    }, [value]);
-    const onSubmit = React.useCallback((event) => {
+        setTempValue(value);
+    }, [value, modalOpen]);
+    const modalContainerOnMouseDown = React.useCallback((event) => {
+        if (!event.nativeEvent.closeModalPrevented) {
+            closeModal();
+        }
+    }, []);
+    const modalContentOnMouseDown = React.useCallback((event) => {
+        event.nativeEvent.closeModalPrevented = true;
+    }, []);
+    const submitButtonOnClick = React.useCallback((event) => {
+        event.type = 'change';
+        event.currentTarget = labelRef.current;
+        event.currentTarget.value = tempValue;
         if (typeof onChange === 'function') {
-            event.nativeEvent.value = selectedColor;
             onChange(event);
         }
 
-        closePopup();
-    }, [selectedColor, onChange]);
+        event.currentTarget.value = undefined;
+        if (!event.nativeEvent.closeModalPrevented) {
+            closeModal();
+        }
+    }, [tempValue, onChange]);
     return (
-        <Popup
-            open={popupOpen}
-            menuModalClassName={styles['color-input-modal-container']}
-            menuRelativePosition={false}
-            renderLabel={(ref) => (
-                <Button
-                    {...props}
-                    ref={ref}
-                    style={{ backgroundColor: value }}
-                    className={className}
-                    title={selectedColor}
-                    onClick={togglePopup}
-                />
-            )}
-            renderMenu={() => (
-                <div className={styles['color-input-container']}>
-                    <Button className={styles['close-button-container']} onClick={closePopup}>
-                        <Icon className={styles['icon']} icon={'ic_x'} />
-                    </Button>
-                    <div className={styles['title']}>Choose a color:</div>
-                    <ColorPicker className={styles['color-picker']} value={selectedColor} onChange={setSelectedColor} />
-                    <Button className={styles['submit-button-container']} data-id={id} onClick={onSubmit}>Select</Button>
-                </div>
-            )}
-            onCloseRequest={closePopup}
-        />
+        <React.Fragment>
+            <Button
+                ref={labelRef}
+                title={value}
+                {...props}
+                className={className}
+                style={{ backgroundColor: value }}
+                onClick={openModal}
+            />
+            {
+                modalOpen ?
+                    <Modal className={styles['color-input-modal-container']} onMouseDown={modalContainerOnMouseDown}>
+                        <div className={styles['color-input-container']} onMouseDown={modalContentOnMouseDown}>
+                            <div className={styles['header-container']}>
+                                <div className={styles['title']}>Choose a color:</div>
+                                <Button className={styles['close-button-container']} title={'Close'} onClick={closeModal}>
+                                    <Icon className={styles['icon']} icon={'ic_x'} />
+                                </Button>
+                            </div>
+                            <ColorPicker className={styles['color-picker']} value={tempValue} onChange={setTempValue} />
+                            <Button className={styles['submit-button-container']} title={'Submit'} onClick={submitButtonOnClick}>
+                                <div className={styles['label']}>Select</div>
+                            </Button>
+                        </div>
+                    </Modal>
+                    :
+                    null
+            }
+        </React.Fragment>
     );
 };
 
 ColorInput.propTypes = {
     className: PropTypes.string,
-    id: PropTypes.string,
     value: PropTypes.string,
     onChange: PropTypes.func
 };
