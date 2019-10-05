@@ -7,8 +7,7 @@ const useBinaryState = require('stremio/common/useBinaryState');
 const ColorPicker = require('./ColorPicker');
 const styles = require('./styles');
 
-const ColorInput = ({ className, value, onChange, ...props }) => {
-    const labelRef = React.useRef(null);
+const ColorInput = ({ value, onChange, ...props }) => {
     const [modalOpen, openModal, closeModal] = useBinaryState(false);
     const [tempValue, setTempValue] = React.useState(value);
     React.useEffect(() => {
@@ -23,25 +22,19 @@ const ColorInput = ({ className, value, onChange, ...props }) => {
         event.nativeEvent.closeModalPrevented = true;
     }, []);
     const submitButtonOnClick = React.useCallback((event) => {
-        event.type = 'change';
-        event.currentTarget = labelRef.current;
-        event.currentTarget.value = tempValue;
         if (typeof onChange === 'function') {
             onChange(event);
         }
 
-        event.currentTarget.value = undefined;
         if (!event.nativeEvent.closeModalPrevented) {
             closeModal();
         }
-    }, [tempValue, onChange]);
+    }, [onChange]);
     return (
         <React.Fragment>
             <Button
-                ref={labelRef}
                 title={value}
                 {...props}
-                className={className}
                 style={{ backgroundColor: value }}
                 onClick={openModal}
             />
@@ -56,7 +49,7 @@ const ColorInput = ({ className, value, onChange, ...props }) => {
                                 </Button>
                             </div>
                             <ColorPicker className={styles['color-picker']} value={tempValue} onChange={setTempValue} />
-                            <Button className={styles['submit-button-container']} title={'Submit'} onClick={submitButtonOnClick}>
+                            <Button className={styles['submit-button-container']} title={'Submit'} data-value={tempValue} onClick={submitButtonOnClick}>
                                 <div className={styles['label']}>Select</div>
                             </Button>
                         </div>
@@ -69,7 +62,6 @@ const ColorInput = ({ className, value, onChange, ...props }) => {
 };
 
 ColorInput.propTypes = {
-    className: PropTypes.string,
     value: PropTypes.string,
     onChange: PropTypes.func
 };
