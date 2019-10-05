@@ -21,12 +21,14 @@ const ColorPicker = ({ className, value, onChange }) => {
         });
     }, []);
     React.useEffect(() => {
-        pickerRef.current.off('change');
         pickerRef.current.on('change', (picker, color) => {
             if (typeof onChange === 'function') {
                 onChange(AColorPicker.parseColor(color, COLOR_FORMAT));
             }
         });
+        return () => {
+            pickerRef.current.off('change');
+        };
     }, [onChange]);
     React.useEffect(() => {
         if (AColorPicker.parseColor(pickerRef.current.color, COLOR_FORMAT) !== value) {
