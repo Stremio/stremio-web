@@ -9,7 +9,7 @@ const Image = ({ className, src, alt, fallbackSrc, renderFallback }) => {
             setBroken(true);
         }
     }, [src]);
-    React.useEffect(() => {
+    React.useLayoutEffect(() => {
         setBroken(false);
     }, [src]);
     return (
