@@ -1,147 +1,78 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const { Modal } = require('stremio-router');
+const FocusLock = require('react-focus-lock').default;
 const styles = require('./styles');
 
-// TODO rename to Popover
-const Popup = ({ open, menuModalClassName, menuRelativePosition, menuMatchLabelWidth, renderLabel, renderMenu, onCloseRequest }) => {
+const Popup = ({ open, direction, renderLabel, renderMenu, onCloseRequest }) => {
     const labelRef = React.useRef(null);
-    const menuRef = React.useRef(null);
-    const [menuStyles, setMenuStyles] = React.useState({});
-    React.useEffect(() => {
-        const checkCloseEvent = (event) => {
-            switch (event.type) {
-                case 'resize':
-                    onCloseRequest(event);
-                    break;
-                case 'keydown':
-                    if (event.key === 'Escape') {
-                        onCloseRequest(event);
-                    }
-                    break;
-                case 'mousedown':
-                    if (event.target !== document &&
-                        event.target !== document.documentElement &&
-                        !event.closePopupPrevented) {
-                        onCloseRequest(event);
-                    }
-                    break;
-                case 'react-scroll':
-                    if (!event.nativeEvent.closePopupPrevented) {
-                        onCloseRequest(event.nativeEvent);
-                    }
-                    break;
-            }
-        };
-        if (open) {
-            window.addEventListener('react-scroll', checkCloseEvent);
-            window.addEventListener('mousedown', checkCloseEvent);
-            window.addEventListener('keydown', checkCloseEvent);
-            window.addEventListener('resize', checkCloseEvent);
-        }
-        return () => {
-            window.removeEventListener('react-scroll', checkCloseEvent);
-            window.removeEventListener('mousedown', checkCloseEvent);
-            window.removeEventListener('keydown', checkCloseEvent);
-            window.removeEventListener('resize', checkCloseEvent);
-        };
-    }, [open, onCloseRequest]);
+    const [autoDirection, setAutoDirection] = React.useState(null);
     const menuOnMouseDown = React.useCallback((event) => {
         event.nativeEvent.closePopupPrevented = true;
     }, []);
-    const menuOnScroll = React.useCallback((event) => {
-        event.nativeEvent.closePopupPrevented = true;
-    }, []);
     React.useEffect(() => {
-        let menuStyles = {};
+        const checkCloseEvent = (event) => {
+            if (typeof onCloseRequest === 'function') {
+                switch (event.type) {
+                    case 'resize':
+                        onCloseRequest(event);
+                        break;
+                    case 'keydown':
+                        if (event.key === 'Escape') {
+                            onCloseRequest(event);
+                        }
+                        break;
+                    case 'mousedown':
+                        if (event.target !== document.documentElement &&
+                            !labelRef.current.contains(event.target) &&
+                            !event.closePopupPrevented) {
+                            onCloseRequest(event);
+                        }
+                        break;
+                }
+            }
+        };
         if (open) {
-            if (menuRelativePosition !== false) {
-                const documentRect = document.documentElement.getBoundingClientRect();
-                const labelRect = labelRef.current.getBoundingClientRect();
-                const menuRect = menuRef.current.getBoundingClientRect();
-                const labelPosition = {
-                    left: labelRect.left - documentRect.left,
-                    top: labelRect.top - documentRect.top,
-                    right: (documentRect.width + documentRect.left) - (labelRect.left + labelRect.width),
-                    bottom: (documentRect.height + documentRect.top) - (labelRect.top + labelRect.height)
-                };
-                const matchLabelWidthMenuStyles = {
-                    width: `${labelRect.width}px`,
-                    maxWidth: `${labelRect.width}px`
-                };
-                const bottomMenuStyles = {
-                    top: `${labelPosition.top + labelRect.height}px`,
-                    maxHeight: `${labelPosition.bottom}px`
-                };
-                const topMenuStyles = {
-                    bottom: `${labelPosition.bottom + labelRect.height}px`,
-                    maxHeight: `${labelPosition.top}px`
-                };
-                const rightMenuStyles = {
-                    left: `${labelPosition.left}px`,
-                    maxWidth: `${labelPosition.right + labelRect.width}px`
-                };
-                const leftMenuStyles = {
-                    right: `${labelPosition.right}px`,
-                    maxWidth: `${labelPosition.left + labelRect.width}px`
-                };
-
-                if (menuRect.height <= labelPosition.bottom) {
-                    menuStyles = { ...menuStyles, ...bottomMenuStyles };
-                } else if (menuRect.height <= labelPosition.top) {
-                    menuStyles = { ...menuStyles, ...topMenuStyles };
-                } else if (labelPosition.bottom >= labelPosition.top) {
-                    menuStyles = { ...menuStyles, ...bottomMenuStyles };
-                } else {
-                    menuStyles = { ...menuStyles, ...topMenuStyles };
-                }
-
-                if (menuRect.width <= (labelPosition.right + labelRect.width)) {
-                    menuStyles = { ...menuStyles, ...rightMenuStyles };
-                } else if (menuRect.width <= (labelPosition.left + labelRect.width)) {
-                    menuStyles = { ...menuStyles, ...leftMenuStyles };
-                } else if (labelPosition.right > labelPosition.left) {
-                    menuStyles = { ...menuStyles, ...rightMenuStyles };
-                } else {
-                    menuStyles = { ...menuStyles, ...leftMenuStyles };
-                }
-
-                if (menuMatchLabelWidth) {
-                    menuStyles = { ...menuStyles, ...matchLabelWidthMenuStyles };
-                }
-            }
-
-            menuStyles = { ...menuStyles, visibility: 'visible' };
+            window.addEventListener('resize', checkCloseEvent);
+            window.addEventListener('keydown', checkCloseEvent);
+            window.addEventListener('mousedown', checkCloseEvent);
         }
-
-        setMenuStyles(menuStyles);
+        return () => {
+            window.removeEventListener('resize', checkCloseEvent);
+            window.removeEventListener('keydown', checkCloseEvent);
+            window.removeEventListener('mousedown', checkCloseEvent);
+        };
+    }, [open, onCloseRequest]);
+    React.useLayoutEffect(() => {
+        if (open) {
+            const documentRect = document.documentElement.getBoundingClientRect();
+            const labelRect = labelRef.current.getBoundingClientRect();
+            const labelOffsetTop = labelRect.top - documentRect.top;
+            const labelOffsetBottom = (documentRect.height + documentRect.top) - (labelRect.top + labelRect.height);
+            const autoDirection = labelOffsetBottom >= labelOffsetTop ? 'bottom' : 'top';
+            setAutoDirection(autoDirection);
+        } else {
+            setAutoDirection(null);
+        }
     }, [open]);
-    return (
-        <React.Fragment>
-            {renderLabel(labelRef)}
-            {
-                open ?
-                    <Modal className={classnames(styles['menu-modal-container'], menuModalClassName)}>
-                        <div ref={menuRef} style={menuStyles} className={styles['menu-container']} onMouseDown={menuOnMouseDown} onScroll={menuOnScroll}>
-                            {renderMenu()}
-                        </div>
-                    </Modal>
-                    :
-                    null
-            }
-        </React.Fragment>
-    );
+    return renderLabel({
+        ref: labelRef,
+        className: styles['label-container'],
+        children: open ?
+            <FocusLock className={classnames(styles['menu-container'], styles[`menu-direction-${typeof direction === 'string' ? direction : autoDirection}`])} autoFocus={false} lockProps={{ onMouseDown: menuOnMouseDown }}>
+                {renderMenu()}
+            </FocusLock>
+            :
+            null
+    });
 }
 
 Popup.propTypes = {
     open: PropTypes.bool,
-    menuModalClassName: PropTypes.string,
-    menuRelativePosition: PropTypes.bool,
-    menuMatchLabelWidth: PropTypes.bool,
+    direction: PropTypes.oneOf(['top', 'bottom']),
     renderLabel: PropTypes.func.isRequired,
     renderMenu: PropTypes.func.isRequired,
-    onCloseRequest: PropTypes.func.isRequired
+    onCloseRequest: PropTypes.func
 };
 
 module.exports = Popup;
