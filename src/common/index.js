@@ -10,7 +10,6 @@ const MetaPreviewPlaceholder = require('./MetaPreviewPlaceholder');
 const MetaRow = require('./MetaRow');
 const MetaRowPlaceholder = require('./MetaRowPlaceholder');
 const NavBar = require('./NavBar');
-const PlayIconCircleCentered = require('./PlayIconCircleCentered');
 const Popup = require('./Popup');
 const ScrollEventEmitter = require('./ScrollEventEmitter');
 const ShareModal = require('./ShareModal');
@@ -38,7 +37,6 @@ module.exports = {
     MetaRow,
     MetaRowPlaceholder,
     NavBar,
-    PlayIconCircleCentered,
     Popup,
     ScrollEventEmitter,
     ShareModal,

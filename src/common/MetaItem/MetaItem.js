@@ -4,8 +4,8 @@ const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const Button = require('stremio/common/Button');
 const Image = require('stremio/common/Image');
-const PlayIconCircleCentered = require('stremio/common/PlayIconCircleCentered');
 const Dropdown = require('stremio/common/Dropdown');
+const PlayIconCircleCentered = require('./PlayIconCircleCentered');
 const styles = require('./styles');
 
 const ICON_FOR_TYPE = Object.assign(Object.create(null), {
