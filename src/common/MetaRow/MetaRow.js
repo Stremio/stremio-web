@@ -3,7 +3,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const Button = require('stremio/common/Button');
-const MetaItem = require('stremio/common/MetaItem');
+const MetaItem = require('./MetaItem');
 const styles = require('./styles');
 
 const MetaRow = ({ className, title, message, items, itemMenuOptions }) => {
