@@ -10,14 +10,59 @@ const devTestWithUser = false;
 
 const Settings = () => {
     const [preferences, setPreferences] = useSettings(devTestWithUser);
-    const sections = React.useMemo(()=>Object.keys(settingsSections)
+    const [dynamicSections, setDynamicSections] = React.useState(settingsSections);
+    // TODO: The Streaming section should be handled separately
+    const sections = React.useMemo(()=>Object.keys(dynamicSections)
         .map((section) => ({
             id: section,
-            inputs: settingsSections[section],
+            inputs: dynamicSections[section],
             ref: React.createRef()
-        })), []);
+        })), [dynamicSections]);
+
     const [selectedSectionId, setSelectedSectionId] = React.useState(sections[0].id);
     const scrollContainerRef = React.useRef(null);
+
+    React.useEffect(() => {
+        const shouldFetch = preferences.server_url && preferences.server_url.length > 0
+            ?
+            Promise.resolve(preferences.server_url + 'settings')
+            :
+            Promise.reject();
+
+        shouldFetch
+            .then(fetch)
+            .then(response => response.json())
+            .then(serverPrefs => serverPrefs.options
+                .map(opt => ({
+                    id: opt.id,
+                    label: opt.label,
+                    header: opt.label,
+                    type: opt.type,
+                    options: opt.selections.map(sel => ({ label: sel.name, value: JSON.stringify(sel.val) }))
+                }))
+                .concat({
+                    id: 'torrent_profile',
+                    label: 'Torrent Profile',
+                    header: 'Torrent Profile',
+                    type: 'select',
+                    options: [{ 'label': 'Default', 'value': 'profile-default' }, { 'label': 'Soft', 'value': 'profile-soft' }, { 'label': 'Fast', 'value': 'profile-fast' }],
+                })
+            )
+            .catch(() => []).then(serverInputs => {
+                const additionalServerSettings = [
+                    { 'id': 'server_url', 'header': 'Streaming server URL:', 'type': 'info' },
+                    { 'id': 'streaming_server_is_available.', 'label': 'Streaming server is ' + (serverInputs.length !== 0 ? '' : 'not ') + 'available.', 'type': 'static-text', 'icon': serverInputs.length !== 0 ? 'ic_check' : 'ic_x' }
+                ];
+                setDynamicSections({
+                    ...dynamicSections,
+                    Streaming: [
+                        ...dynamicSections.Streaming,
+                        ...serverInputs,
+                        ...additionalServerSettings
+                    ]
+                });
+            });
+    }, [preferences.server_url]);
 
     /////////////////
 

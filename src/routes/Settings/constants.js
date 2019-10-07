@@ -2,6 +2,7 @@ const settingsSections = {
     'General': [
         { 'id': 'user', 'type': 'user' },
         { 'id': 'language', 'header': 'UI Language', 'label': 'UI Language', 'type': 'select', 'options': [{ 'label': 'Български език', 'value': 'bul' }, { 'label': 'English', 'value': 'eng' }, { 'label': 'Deutsch', 'value': 'ger' }, { 'label': 'Español', 'value': 'esp' }, { 'label': 'Italiano', 'value': 'ita' }] },
+        { 'id': 'show_vid_overview', 'label': 'Show videos overview', 'type': 'checkbox' },
     ],
     'Player': [
         { 'id': 'add-ons', 'label': 'ADD-ONS', 'type': 'button', 'icon': 'ic_addons', 'href': '#/addons' },
@@ -16,10 +17,6 @@ const settingsSections = {
         { 'id': 'use_external_player', 'label': 'Launch player in a separate window (advanced)', 'type': 'checkbox' },
     ],
     'Streaming': [
-        { 'id': 'caching', 'header': 'Caching', 'label': 'Caching', 'type': 'select', 'options': [{ 'label': 'No Caching', 'value': '' }, { 'label': '2GB', 'value': '2048' }, { 'label': '5GB', 'value': '5120' }, { 'label': '10GB', 'value': '10240' }] },
-        { 'header': 'Torrent Profile', 'label': 'Torrent Profile', 'type': 'select', 'options': [{ 'label': 'Default', 'value': 'profile-default' }, { 'label': 'Soft', 'value': 'profile-soft' }, { 'label': 'Fast', 'value': 'profile-fast' }], 'id': 'torrent_profile' },
-        { 'id': 'server_url', 'header': 'Streaming server URL:', 'type': 'info' },
-        { 'id': 'streaming_server_is_available.', 'label': 'Streaming server is available.', 'type': 'static-text', 'icon': 'ic_check' }
     ]
 };
 
