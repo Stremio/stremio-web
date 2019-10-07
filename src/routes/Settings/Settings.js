@@ -6,7 +6,7 @@ const SectionsList = require('./SectionsList');
 const { settingsSections } = require('./constants');
 const useSettings = require('./useSettings');
 
-const devTestWithUser = true;
+const devTestWithUser = false;
 
 const Settings = () => {
     const [preferences, setPreferences] = useSettings(devTestWithUser);
