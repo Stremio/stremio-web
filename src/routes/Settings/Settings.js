@@ -45,13 +45,17 @@ const Settings = () => {
                     label: 'Torrent Profile',
                     header: 'Torrent Profile',
                     type: 'select',
-                    options: [{ 'label': 'Default', 'value': 'profile-default' }, { 'label': 'Soft', 'value': 'profile-soft' }, { 'label': 'Fast', 'value': 'profile-fast' }],
+                    options: [
+                        { label: 'Default', value: 'profile-default' },
+                        { label: 'Soft', value: 'profile-soft' },
+                        { label: 'Fast', value: 'profile-fast' }
+                    ],
                 })
             )
             .catch(() => []).then(serverInputs => {
                 const additionalServerSettings = [
-                    { 'id': 'server_url', 'header': 'Streaming server URL:', 'type': 'info' },
-                    { 'id': 'streaming_server_is_available.', 'label': 'Streaming server is ' + (serverInputs.length !== 0 ? '' : 'not ') + 'available.', 'type': 'static-text', 'icon': serverInputs.length !== 0 ? 'ic_check' : 'ic_x' }
+                    { id: 'server_url', header: 'Streaming server URL:', type: 'info' },
+                    { id: 'streaming_server_is_available.', label: 'Streaming server is ' + (serverInputs.length !== 0 ? '' : 'not ') + 'available.', type: 'static-text', icon: serverInputs.length !== 0 ? 'ic_check' : 'ic_x' }
                 ];
                 setDynamicSections({
                     ...dynamicSections,
