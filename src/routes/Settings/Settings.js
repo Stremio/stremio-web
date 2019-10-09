@@ -6,10 +6,8 @@ const SectionsList = require('./SectionsList');
 const { settingsSections } = require('./constants');
 const useSettings = require('./useSettings');
 
-const devTestWithUser = false;
-
 const Settings = () => {
-    const [preferences, setPreferences] = useSettings(devTestWithUser);
+    const [preferences, setPreferences] = useSettings();
     const [dynamicSections, setDynamicSections] = React.useState(settingsSections);
     // TODO: The Streaming section should be handled separately
     const sections = React.useMemo(()=>Object.keys(dynamicSections)
@@ -31,27 +29,7 @@ const Settings = () => {
 
         shouldFetch
             .then(fetch)
-            .then(response => response.json())
-            .then(serverPrefs => serverPrefs.options
-                .map(opt => ({
-                    id: opt.id,
-                    label: opt.label,
-                    header: opt.label,
-                    type: opt.type,
-                    options: opt.selections.map(sel => ({ label: sel.name, value: JSON.stringify(sel.val) }))
-                }))
-                .concat({
-                    id: 'torrent_profile',
-                    label: 'Torrent Profile',
-                    header: 'Torrent Profile',
-                    type: 'select',
-                    options: [
-                        { label: 'Default', value: 'profile-default' },
-                        { label: 'Soft', value: 'profile-soft' },
-                        { label: 'Fast', value: 'profile-fast' }
-                    ],
-                })
-            )
+            .then(() => ['OK'])
             .catch(() => []).then(serverInputs => {
                 const additionalServerSettings = [
                     { id: 'server_url', header: 'Streaming server URL:', type: 'info' },
@@ -61,7 +39,6 @@ const Settings = () => {
                     ...dynamicSections,
                     Streaming: [
                         ...dynamicSections.Streaming,
-                        ...serverInputs,
                         ...additionalServerSettings
                     ]
                 });

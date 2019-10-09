@@ -17,6 +17,8 @@ const settingsSections = {
         { 'id': 'use_external_player', 'label': 'Launch player in a separate window (advanced)', 'type': 'checkbox' },
     ],
     'Streaming': [
+        { "id": "cacheSize", "label": "Caching", "header": "Caching", "type": "select", "options": [{ "label": "no caching", "value": "0" }, { "label": "2GB", "value": "2147483648" }, { "label": "5GB", "value": "5368709120" }, { "label": "10GB", "value": "10737418240" }, { "label": "∞", "value": "null" }] },
+        { "id": "torrent_profile", "label": "Torrent Profile", "header": "Torrent Profile", "type": "select", "options": [{ "label": "Default", "value": "profile-default" }, { "label": "Soft", "value": "profile-soft" }, { "label": "Fast", "value": "profile-fast" }] }
     ]
 };
 
