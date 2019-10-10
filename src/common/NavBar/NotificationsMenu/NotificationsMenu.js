@@ -4,10 +4,11 @@ const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const Button = require('stremio/common/Button');
 const Popup = require('stremio/common/Popup');
+const NotificationsList = require('./NotificationsList');
 const useBinaryState = require('stremio/common/useBinaryState');
 const styles = require('./styles');
 
-const NotificationsMenu = ({ className, metaItems }) => {
+const NotificationsMenu = ({ className, onClearButtonClicked, onSettingsButtonClicked }) => {
     const [menuOpen, openMenu, closeMenu, toggleMenu] = useBinaryState(false);
     return (
         <Popup
@@ -19,7 +20,20 @@ const NotificationsMenu = ({ className, metaItems }) => {
                 </Button>
             )}
             renderMenu={() => (
-                <div className={styles['notifications-menu-container']} />
+                <div className={styles['notifications-menu-container']}>
+                    <div className={styles['notifications-bar']}>
+                        <div className={styles['notifications-label']}>Notifications</div>
+                        <div className={styles['buttons-container']}>
+                            <Button className={styles['button-container']} onClick={onClearButtonClicked}>
+                                <Icon className={styles['icon']} icon={'ic_drawer'} />
+                            </Button>
+                            <Button className={styles['button-container']} onClick={onSettingsButtonClicked}>
+                                <Icon className={styles['icon']} icon={'ic_settings'} />
+                            </Button>
+                        </div>
+                    </div>
+                    <NotificationsList className={styles['notifications-list']} />
+                </div>
             )}
         />
     );
@@ -27,10 +41,8 @@ const NotificationsMenu = ({ className, metaItems }) => {
 
 NotificationsMenu.propTypes = {
     className: PropTypes.string,
-    metaItems: PropTypes.arrayOf(PropTypes.object).isRequired
-};
-NotificationsMenu.defaultProps = {
-    metaItems: []
+    onClearButtonClicked: PropTypes.func,
+    onSettingsButtonClicked: PropTypes.func
 };
 
 module.exports = NotificationsMenu;

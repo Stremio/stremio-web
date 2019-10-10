@@ -19,3 +19,59 @@
         fill: var(--color-surfacelighter);
     }
 }
+
+.notifications-menu-container {
+    display: flex;
+    flex-direction: column;
+
+    .notifications-bar {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.5rem;
+        border-bottom: thin solid var(--color-surfacelight);
+
+        background-color: var(--color-surfacelighter);
+
+        .notifications-label {
+            padding-left: 0.5rem;
+            color: var(--color-surfacedark);
+        }
+
+        .buttons-container {
+            display: flex;
+            flex-direction: row;
+
+            .button-container {
+                width: 2rem;
+                height: 2rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                &:hover, &:focus {
+                    background-color: var(--color-surfacelight);
+                }
+
+                .icon {
+                    width: 1.2rem;
+                    fill: var(--color-surfacedark);
+                }
+
+                &:not(:last-child) {
+                    margin-right: 0.5rem;
+                }
+            }
+        }
+    }
+
+    .notifications-list {
+        --item-size: 28rem;
+        flex-grow: 0;
+        flex-shrink: 0;
+        flex-basis: auto;
+        height: 30rem;
+        align-self: stretch;
+    }
+}
