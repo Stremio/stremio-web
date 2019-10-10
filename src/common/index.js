@@ -1,13 +1,12 @@
 const Button = require('./Button');
 const Checkbox = require('./Checkbox');
 const ColorInput = require('./ColorInput');
-const Multiselect = require('./Multiselect');
 const Image = require('./Image');
 const MainNavBar = require('./MainNavBar');
 const MetaPreview = require('./MetaPreview');
 const MetaPreviewPlaceholder = require('./MetaPreviewPlaceholder');
 const MetaRow = require('./MetaRow');
-const MetaRowPlaceholder = require('./MetaRowPlaceholder');
+const Multiselect = require('./Multiselect');
 const NavBar = require('./NavBar');
 const Popup = require('./Popup');
 const ScrollEventEmitter = require('./ScrollEventEmitter');
@@ -27,13 +26,12 @@ module.exports = {
     Button,
     Checkbox,
     ColorInput,
-    Multiselect,
     Image,
     MainNavBar,
     MetaPreview,
     MetaPreviewPlaceholder,
     MetaRow,
-    MetaRowPlaceholder,
+    Multiselect,
     NavBar,
     Popup,
     ScrollEventEmitter,

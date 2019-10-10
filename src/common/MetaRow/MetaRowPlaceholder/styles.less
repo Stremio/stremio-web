@@ -7,13 +7,14 @@
 
     .title-container {
         grid-area: title-area;
-        height: 2.4rem;
+        max-height: 2.4em;
         margin-bottom: 2rem;
+        font-size: 1.5rem;
+        color: var(--color-surface);
 
-        .title-label-container {
-            width: 60%;
-            height: 100%;
-            background-color: var(--color-placeholder);
+        &:empty {
+            height: 1.2em;
+            background: linear-gradient(to right, var(--color-placeholder) 0 40%, transparent 40% 100%);
         }
     }
 
@@ -30,6 +31,16 @@
             .poster-container {
                 padding-bottom: calc(100% * var(--poster-shape-ratio));
             }
+
+            .title-bar-container {
+                height: 2.8rem;
+                background-color: var(--color-placeholder);
+            }
         }
+    }
+
+    .see-all-container {
+        grid-area: see-all-area;
+        background-color: var(--color-placeholder);
     }
 }
