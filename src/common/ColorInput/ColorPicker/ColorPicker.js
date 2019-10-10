@@ -7,7 +7,7 @@ const styles = require('./styles');
 const COLOR_FORMAT = 'hexcss4';
 
 // TODO implement custom picker which is keyboard accessible
-const ColorPicker = ({ className, value, onChange }) => {
+const ColorPicker = ({ className, value, onInput }) => {
     value = AColorPicker.parseColor(value, COLOR_FORMAT);
     const pickerRef = React.useRef(null);
     const pickerElementRef = React.useRef(null);
@@ -19,17 +19,24 @@ const ColorPicker = ({ className, value, onChange }) => {
             showRGB: false,
             showAlpha: true
         });
+        const clipboardPicker = pickerElementRef.current.querySelector('.a-color-picker-clipbaord');
+        if (clipboardPicker instanceof HTMLElement) {
+            clipboardPicker.tabIndex = -1;
+        }
     }, []);
     React.useEffect(() => {
         pickerRef.current.on('change', (picker, color) => {
-            if (typeof onChange === 'function') {
-                onChange(AColorPicker.parseColor(color, COLOR_FORMAT));
+            if (typeof onInput === 'function') {
+                onInput({
+                    type: 'input',
+                    value: AColorPicker.parseColor(color, COLOR_FORMAT)
+                });
             }
         });
         return () => {
             pickerRef.current.off('change');
         };
-    }, [onChange]);
+    }, [onInput]);
     React.useEffect(() => {
         if (AColorPicker.parseColor(pickerRef.current.color, COLOR_FORMAT) !== value) {
             pickerRef.current.color = value;
@@ -43,7 +50,7 @@ const ColorPicker = ({ className, value, onChange }) => {
 ColorPicker.propTypes = {
     className: PropTypes.string,
     value: PropTypes.string,
-    onChange: PropTypes.func
+    onInput: PropTypes.func
 };
 
 module.exports = ColorPicker;

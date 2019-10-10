@@ -13,6 +13,20 @@ const ColorInput = ({ value, onChange, ...props }) => {
     React.useEffect(() => {
         setTempValue(value);
     }, [value, modalOpen]);
+    const colorPickerOnInput = React.useCallback((event) => {
+        setTempValue(event.value);
+    }, []);
+    const submitButtonOnClick = React.useCallback((event) => {
+        if (typeof onChange === 'function') {
+            onChange({
+                type: 'change',
+                value: tempValue,
+                nativeEvent: event.nativeEvent
+            });
+        }
+
+        closeModal();
+    }, [onChange, tempValue]);
     const modalContainerOnMouseDown = React.useCallback((event) => {
         if (!event.nativeEvent.closeModalPrevented) {
             closeModal();
@@ -21,15 +35,6 @@ const ColorInput = ({ value, onChange, ...props }) => {
     const modalContentOnMouseDown = React.useCallback((event) => {
         event.nativeEvent.closeModalPrevented = true;
     }, []);
-    const submitButtonOnClick = React.useCallback((event) => {
-        if (typeof onChange === 'function') {
-            onChange(event);
-        }
-
-        if (!event.nativeEvent.closeModalPrevented) {
-            closeModal();
-        }
-    }, [onChange]);
     return (
         <React.Fragment>
             <Button
@@ -48,8 +53,8 @@ const ColorInput = ({ value, onChange, ...props }) => {
                                     <Icon className={styles['icon']} icon={'ic_x'} />
                                 </Button>
                             </div>
-                            <ColorPicker className={styles['color-picker']} value={tempValue} onChange={setTempValue} />
-                            <Button className={styles['submit-button-container']} title={'Submit'} data-value={tempValue} onClick={submitButtonOnClick}>
+                            <ColorPicker className={styles['color-picker']} value={tempValue} onInput={colorPickerOnInput} />
+                            <Button className={styles['submit-button-container']} title={'Submit'} onClick={submitButtonOnClick}>
                                 <div className={styles['label']}>Select</div>
                             </Button>
                         </div>
