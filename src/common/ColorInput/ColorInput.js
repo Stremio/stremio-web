@@ -4,10 +4,12 @@ const Icon = require('stremio-icons/dom');
 const { Modal } = require('stremio-router');
 const Button = require('stremio/common/Button');
 const useBinaryState = require('stremio/common/useBinaryState');
+const useDataset = require('stremio/common/useDataset');
 const ColorPicker = require('./ColorPicker');
 const styles = require('./styles');
 
 const ColorInput = ({ value, onChange, ...props }) => {
+    const dataset = useDataset(props);
     const [modalOpen, openModal, closeModal] = useBinaryState(false);
     const [tempValue, setTempValue] = React.useState(value);
     React.useEffect(() => {
@@ -21,12 +23,13 @@ const ColorInput = ({ value, onChange, ...props }) => {
             onChange({
                 type: 'change',
                 value: tempValue,
+                dataset: dataset,
                 nativeEvent: event.nativeEvent
             });
         }
 
         closeModal();
-    }, [onChange, tempValue]);
+    }, [onChange, tempValue, dataset]);
     const modalContainerOnMouseDown = React.useCallback((event) => {
         if (!event.nativeEvent.closeModalPrevented) {
             closeModal();
