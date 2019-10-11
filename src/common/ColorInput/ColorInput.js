@@ -1,5 +1,6 @@
 const React = require('react');
 const PropTypes = require('prop-types');
+const AColorPicker = require('a-color-picker');
 const Icon = require('stremio-icons/dom');
 const { Modal } = require('stremio-router');
 const Button = require('stremio/common/Button');
@@ -8,7 +9,10 @@ const useDataset = require('stremio/common/useDataset');
 const ColorPicker = require('./ColorPicker');
 const styles = require('./styles');
 
+const COLOR_FORMAT = 'hexcss4';
+
 const ColorInput = ({ value, onChange, ...props }) => {
+    value = AColorPicker.parseColor(value, COLOR_FORMAT);
     const dataset = useDataset(props);
     const [modalOpen, openModal, closeModal] = useBinaryState(false);
     const [tempValue, setTempValue] = React.useState(value);
