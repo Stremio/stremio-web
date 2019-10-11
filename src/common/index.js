@@ -16,6 +16,7 @@ const TextInput = require('./TextInput');
 const routesRegexp = require('./routesRegexp');
 const useAnimationFrame = require('./useAnimationFrame');
 const useBinaryState = require('./useBinaryState');
+const useDataset = require('./useDataset');
 const useFullscreen = require('./useFullscreen');
 const useLiveRef = require('./useLiveRef');
 const useLocationHash = require('./useLocationHash');
@@ -41,6 +42,7 @@ module.exports = {
     routesRegexp,
     useAnimationFrame,
     useBinaryState,
+    useDataset,
     useFullscreen,
     useLiveRef,
     useLocationHash,
