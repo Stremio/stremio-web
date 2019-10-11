@@ -16,6 +16,7 @@ const ICON_FOR_TYPE = Object.assign(Object.create(null), {
 
 const Notification = ({ className, id, type, name, logo, poster, season, episode, released, posterThumbnail, onClick }) => {
     const [aLogo, setALogo] = React.useState(logo);
+    const daysAgo = Math.floor(Math.abs((Date.now() - released) / (24 * 60 * 60 * 1000)));
 
     return (
         <Button className={classnames(className, styles['notification-container'])} title={typeof name === 'string' && name.length > 0 ? name : id} data-id={id} onClick={onClick}>
@@ -45,7 +46,7 @@ const Notification = ({ className, id, type, name, logo, poster, season, episode
                 {
                     released instanceof Date && !isNaN(released.getTime()) ?
                         <div className={styles['released-container']}>
-                            {Math.floor(Math.abs((Date.now() - released) / (24 * 60 * 60 * 1000))) + ' days ago'}
+                            {daysAgo === 0 ? 'today' : daysAgo + ' days ago'}
                         </div>
                         :
                         null
