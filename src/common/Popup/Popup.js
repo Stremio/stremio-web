@@ -2,47 +2,53 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const FocusLock = require('react-focus-lock').default;
+const useDataset = require('stremio/common/useDataset');
 const styles = require('./styles');
 
-const Popup = ({ open, direction, renderLabel, renderMenu, onCloseRequest }) => {
+const Popup = ({ open, direction, renderLabel, renderMenu, onCloseRequest, ...props }) => {
+    direction = ['top', 'bottom'].includes(direction) ? direction : null;
+    const dataset = useDataset(props);
     const labelRef = React.useRef(null);
     const [autoDirection, setAutoDirection] = React.useState(null);
     const menuOnMouseDown = React.useCallback((event) => {
         event.nativeEvent.closePopupPrevented = true;
     }, []);
     React.useEffect(() => {
-        const checkCloseEvent = (event) => {
-            if (typeof onCloseRequest === 'function') {
+        const onCloseEvent = (event) => {
+            if (!event.closePopupPrevented && typeof onCloseRequest === 'function') {
+                const closeEvent = {
+                    type: 'close',
+                    nativeEvent: event,
+                    dataset: dataset
+                };
                 switch (event.type) {
                     case 'resize':
-                        onCloseRequest(event);
+                        onCloseRequest(closeEvent);
                         break;
                     case 'keydown':
                         if (event.key === 'Escape') {
-                            onCloseRequest(event);
+                            onCloseRequest(closeEvent);
                         }
                         break;
                     case 'mousedown':
-                        if (event.target !== document.documentElement &&
-                            !labelRef.current.contains(event.target) &&
-                            !event.closePopupPrevented) {
-                            onCloseRequest(event);
+                        if (event.target !== document.documentElement && !labelRef.current.contains(event.target)) {
+                            onCloseRequest(closeEvent);
                         }
                         break;
                 }
             }
         };
         if (open) {
-            window.addEventListener('resize', checkCloseEvent);
-            window.addEventListener('keydown', checkCloseEvent);
-            window.addEventListener('mousedown', checkCloseEvent);
+            window.addEventListener('resize', onCloseEvent);
+            window.addEventListener('keydown', onCloseEvent);
+            window.addEventListener('mousedown', onCloseEvent);
         }
         return () => {
-            window.removeEventListener('resize', checkCloseEvent);
-            window.removeEventListener('keydown', checkCloseEvent);
-            window.removeEventListener('mousedown', checkCloseEvent);
+            window.removeEventListener('resize', onCloseEvent);
+            window.removeEventListener('keydown', onCloseEvent);
+            window.removeEventListener('mousedown', onCloseEvent);
         };
-    }, [open, onCloseRequest]);
+    }, [open, onCloseRequest, dataset]);
     React.useLayoutEffect(() => {
         if (open) {
             const documentRect = document.documentElement.getBoundingClientRect();
