@@ -28,6 +28,7 @@ const ColorInput = ({ value, onChange, ...props }) => {
                 type: 'change',
                 value: tempValue,
                 dataset: dataset,
+                reactEvent: event,
                 nativeEvent: event.nativeEvent
             });
         }

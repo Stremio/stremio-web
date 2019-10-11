@@ -31,6 +31,7 @@ const Multiselect = ({ className, direction, title, renderLabelContent, options,
         if (typeof onSelect === 'function') {
             onSelect({
                 type: 'select',
+                reactEvent: event,
                 nativeEvent: event.nativeEvent,
                 dataset: dataset
             });
