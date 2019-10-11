@@ -5,6 +5,7 @@ const Icon = require('stremio-icons/dom');
 const Button = require('stremio/common/Button');
 const Popup = require('stremio/common/Popup');
 const useBinaryState = require('stremio/common/useBinaryState');
+const useDataset = require('stremio/common/useDataset');
 const styles = require('./styles');
 
 const Multiselect = ({ className, direction, title, renderLabelContent, options, selected, onOpen, onClose, onSelect, ...props }) => {
@@ -16,6 +17,7 @@ const Multiselect = ({ className, direction, title, renderLabelContent, options,
         selected.filter(value => typeof value === 'string')
         :
         [];
+    const dataset = useDataset(props);
     const [menuOpen, openMenu, closeMenu, toggleMenu] = useBinaryState(false);
     const popupLabelOnClick = React.useCallback((event) => {
         if (!event.nativeEvent.togglePopupPrevented) {
@@ -27,21 +29,31 @@ const Multiselect = ({ className, direction, title, renderLabelContent, options,
     }, []);
     const optionOnClick = React.useCallback((event) => {
         if (typeof onSelect === 'function') {
-            onSelect(event);
+            onSelect({
+                type: 'select',
+                nativeEvent: event.nativeEvent,
+                dataset: dataset
+            });
         }
 
         if (!event.nativeEvent.closeMenuPrevented) {
             closeMenu();
         }
-    }, [onSelect]);
-    React.useEffect(() => {
+    }, [onSelect, dataset]);
+    React.useLayoutEffect(() => {
         if (menuOpen) {
             if (typeof onOpen === 'function') {
-                onOpen();
+                onOpen({
+                    type: 'open',
+                    dataset: dataset
+                });
             }
         } else {
             if (typeof onClose === 'function') {
-                onClose();
+                onClose({
+                    type: 'close',
+                    dataset: dataset
+                });
             }
         }
     }, [menuOpen]);
@@ -51,7 +63,7 @@ const Multiselect = ({ className, direction, title, renderLabelContent, options,
             direction={direction}
             onCloseRequest={closeMenu}
             renderLabel={({ ref, className: popupLabelClassName, children }) => (
-                <Button {...props} ref={ref} className={classnames(className, popupLabelClassName, styles['label-container'], { 'active': menuOpen })} title={title} onClick={popupLabelOnClick}>
+                <Button ref={ref} className={classnames(className, popupLabelClassName, styles['label-container'], { 'active': menuOpen })} title={title} onClick={popupLabelOnClick}>
                     {
                         typeof renderLabelContent === 'function' ?
                             renderLabelContent()
