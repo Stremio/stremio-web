@@ -11,7 +11,7 @@ const NotificationsList = ({ className, metaItems }) => {
     return (
         <div className={classnames(className, styles['notifications-list-scroll-container'])}>
             {
-                notifications.length === 0 ?
+                notifications.length > 0 ?
                     notifications.map((notification) => (
                         notification.videos.length === 1 ?
                             <Notification
