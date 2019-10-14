@@ -1,6 +1,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
+const Icon = require('stremio-icons/dom');
 const Notification = require('./Notification');
 const useMetaItems = require('./useMetaItems');
 const styles = require('./styles');
@@ -10,7 +11,7 @@ const NotificationsList = ({ className, metaItems }) => {
     return (
         <div className={classnames(className, styles['notifications-list-scroll-container'])}>
             {
-                notifications.length > 0 ?
+                notifications.length === 0 ?
                     notifications.map((notification) => (
                         notification.videos.length === 1 ?
                             <Notification
@@ -35,8 +36,11 @@ const NotificationsList = ({ className, metaItems }) => {
                     ))
                     :
                     <React.Fragment>
-                        <div className={styles['no-notifications-label']}>
-                            No new notifications.
+                        <div className={styles['no-notifications-container']}>
+                            <Icon className={styles['icon']} icon={'ic_bell'} />
+                            <div className={styles['label']}>
+                                No new notifications
+                            </div>
                         </div>
                     </React.Fragment>
             }
