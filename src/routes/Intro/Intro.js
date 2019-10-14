@@ -36,11 +36,13 @@ const Intro = () => {
                 case 'change-credentials':
                     return {
                         ...state,
+                        error: '',
                         [action.name]: action.value
                     };
                 case 'toggle-checkbox':
                     return {
                         ...state,
+                        error: '',
                         [action.name]: !state[action.name]
                     };
                 case 'error':
