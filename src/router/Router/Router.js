@@ -3,7 +3,7 @@ const ReactIs = require('react-is');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const UrlUtils = require('url');
-const { FocusedRouteProvider } = require('../FocusedRouteContext');
+const { RouteFocusedProvider } = require('../RouteFocusedContext');
 const Route = require('../Route');
 
 const Router = ({ className, onPathNotMatch, ...props }) => {
@@ -102,11 +102,11 @@ const Router = ({ className, onPathNotMatch, ...props }) => {
                 views
                     .filter(view => view !== null)
                     .map(({ key, component, urlParams, queryParams }, index, views) => (
-                        <FocusedRouteProvider key={key} value={index === views.length - 1}>
+                        <RouteFocusedProvider key={key} value={index === views.length - 1}>
                             <Route>
                                 {React.createElement(component, { urlParams, queryParams })}
                             </Route>
-                        </FocusedRouteProvider>
+                        </RouteFocusedProvider>
                     ))
             }
         </div>

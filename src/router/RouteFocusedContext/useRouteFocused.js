@@ -1,0 +1,8 @@
+const React = require('react');
+const RouteFocusedContext = require('./RouteFocusedContext');
+
+const useRouteFocused = () => {
+    return React.useContext(RouteFocusedContext);
+};
+
+module.exports = useRouteFocused;
