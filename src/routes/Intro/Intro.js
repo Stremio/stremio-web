@@ -1,7 +1,7 @@
 const React = require('react');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
-const { useFocusable } = require('stremio-router');
+const { useRouteFocused } = require('stremio-router');
 const { Button } = require('stremio/common');
 const CredentialsTextInput = require('./CredentialsTextInput');
 const ConsentCheckbox = require('./ConsentCheckbox');
@@ -11,7 +11,7 @@ const LOGIN_FORM = 'LOGIN_FORM';
 const SIGNUP_FORM = 'SIGNUP_FORM';
 
 const Intro = () => {
-    const focusable = useFocusable();
+    const routeFocused = useRouteFocused();
     const emailRef = React.useRef();
     const passwordRef = React.useRef();
     const confirmPasswordRef = React.useRef();
@@ -137,10 +137,10 @@ const Intro = () => {
         }
     }, [state.error]);
     React.useEffect(() => {
-        if (focusable) {
+        if (routeFocused) {
             emailRef.current.focus();
         }
-    }, [state.form, focusable]);
+    }, [state.form, routeFocused]);
     return (
         <div className={styles['intro-container']}>
             <div className={styles['form-container']}>
