@@ -1,15 +1,14 @@
 const React = require('react');
 const PropTypes = require('prop-types');
-const FocusLock = require('react-focus-lock').default;
 const { ModalsContainerProvider } = require('../ModalsContainerContext');
 
 const Route = ({ children }) => {
     return (
         <div className={'route-container'}>
             <ModalsContainerProvider>
-                <FocusLock className={'route-content'} autoFocus={false}>
+                <div className={'route-content'}>
                     {children}
-                </FocusLock>
+                </div>
             </ModalsContainerProvider>
         </div>
     );
