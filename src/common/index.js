@@ -8,7 +8,7 @@ const MetaRow = require('./MetaRow');
 const Multiselect = require('./Multiselect');
 const NavBar = require('./NavBar');
 const Popup = require('./Popup');
-const ShareModal = require('./ShareModal');
+const SharePrompt = require('./SharePrompt');
 const Slider = require('./Slider');
 const TextInput = require('./TextInput');
 const routesRegexp = require('./routesRegexp');
@@ -32,7 +32,7 @@ module.exports = {
     Multiselect,
     NavBar,
     Popup,
-    ShareModal,
+    SharePrompt,
     Slider,
     TextInput,
     routesRegexp,
