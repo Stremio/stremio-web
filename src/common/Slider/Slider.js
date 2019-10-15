@@ -13,7 +13,7 @@ const Slider = ({ className, value, minimumValue, maximumValue, onSlide, onCompl
     const onSlideRef = useLiveRef(onSlide, [onSlide]);
     const onCompleteRef = useLiveRef(onComplete, [onComplete]);
     const sliderContainerRef = React.useRef(null);
-    const focusedRoute = useFocusedRoute();
+    const routeFocused = useFocusedRoute();
     const [requestThumbAnimation, cancelThumbAnimation] = useAnimationFrame();
     const calculateValueForMouseX = React.useCallback((mouseX) => {
         if (sliderContainerRef.current === null) {
@@ -87,10 +87,10 @@ const Slider = ({ className, value, minimumValue, maximumValue, onSlide, onCompl
     }, []);
 
     React.useEffect(() => {
-        if (!focusedRoute) {
+        if (!routeFocused) {
             releaseThumb();
         }
-    }, [focusedRoute]);
+    }, [routeFocused]);
     React.useEffect(() => {
         return () => {
             releaseThumb();
