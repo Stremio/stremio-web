@@ -13,17 +13,27 @@ const NavMenu = ({ className }) => {
     const [menuOpen, openMenu, closeMenu, toggleMenu] = useBinaryState(false);
     const [fullscreen, requestFullscreen, exitFullscreen] = useFullscreen();
     const user = useUser();
+    const popupLabelOnClick = React.useCallback((event) => {
+        if (!event.nativeEvent.togglePopupPrevented) {
+            toggleMenu();
+        }
+    }, [toggleMenu]);
+    const popupMenuOnClick = React.useCallback((event) => {
+        event.nativeEvent.togglePopupPrevented = true;
+    }, []);
     return (
         <Popup
             open={menuOpen}
+            direction={'bottom'}
             onCloseRequest={closeMenu}
-            renderLabel={(ref) => (
-                <Button ref={ref} className={classnames(className, styles['nav-menu-label-container'], { 'active': menuOpen })} tabIndex={-1} onClick={toggleMenu}>
+            renderLabel={({ ref, className: popupLabelClassName, children }) => (
+                <Button ref={ref} className={classnames(className, popupLabelClassName, styles['nav-menu-label-container'], { 'active': menuOpen })} tabIndex={-1} onClick={popupLabelOnClick}>
                     <Icon className={styles['icon']} icon={'ic_more'} />
+                    {children}
                 </Button>
             )}
             renderMenu={() => (
-                <div className={styles['nav-menu-container']}>
+                <div className={styles['nav-menu-container']} onClick={popupMenuOnClick}>
                     <div className={styles['user-info-container']}>
                         <div
                             className={styles['avatar-container']}
