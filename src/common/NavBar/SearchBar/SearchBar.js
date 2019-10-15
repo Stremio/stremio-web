@@ -3,7 +3,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const UrlUtils = require('url');
 const Icon = require('stremio-icons/dom');
-const { useFocusable } = require('stremio-router');
+const { useRouteFocused } = require('stremio-router');
 const Button = require('stremio/common/Button');
 const TextInput = require('stremio/common/TextInput');
 const routesRegexp = require('stremio/common/routesRegexp');
@@ -13,7 +13,7 @@ const styles = require('./styles');
 
 const SearchBar = ({ className }) => {
     const locationHash = useLocationHash();
-    const focusable = useFocusable();
+    const routeFocused = useRouteFocused();
     const searchInputRef = React.useRef(null);
     const active = useRouteActive(routesRegexp.search.regexp);
     const query = React.useMemo(() => {
@@ -36,10 +36,10 @@ const SearchBar = ({ className }) => {
         }
     }, [active]);
     React.useEffect(() => {
-        if (active && focusable) {
+        if (active && routeFocused) {
             searchInputRef.current.focus();
         }
-    }, [active, focusable, query]);
+    }, [active, routeFocused, query]);
     return (
         <label className={classnames(className, styles['search-bar-container'], { 'active': active })} onClick={searchBarOnClick}>
             {
