@@ -11,14 +11,27 @@ const styles = require('./styles');
 
 const COLOR_FORMAT = 'hexcss4';
 
-const ColorInput = ({ value, onChange, ...props }) => {
+const ColorInput = ({ className, value, onChange, ...props }) => {
     value = AColorPicker.parseColor(value, COLOR_FORMAT);
     const dataset = useDataset(props);
     const [modalOpen, openModal, closeModal] = useBinaryState(false);
     const [tempValue, setTempValue] = React.useState(value);
-    React.useEffect(() => {
-        setTempValue(value);
-    }, [value, modalOpen]);
+    const pickerLabelOnClick = React.useCallback((event) => {
+        if (!event.nativeEvent.openModalPrevented) {
+            openModal();
+        }
+    }, []);
+    const modalContainerOnClick = React.useCallback((event) => {
+        event.nativeEvent.openModalPrevented = true;
+    }, []);
+    const modalContainerOnMouseDown = React.useCallback((event) => {
+        if (!event.nativeEvent.closeModalPrevented) {
+            closeModal();
+        }
+    }, []);
+    const modalContentOnMouseDown = React.useCallback((event) => {
+        event.nativeEvent.closeModalPrevented = true;
+    }, []);
     const colorPickerOnInput = React.useCallback((event) => {
         setTempValue(event.value);
     }, []);
@@ -35,25 +48,14 @@ const ColorInput = ({ value, onChange, ...props }) => {
 
         closeModal();
     }, [onChange, tempValue, dataset]);
-    const modalContainerOnMouseDown = React.useCallback((event) => {
-        if (!event.nativeEvent.closeModalPrevented) {
-            closeModal();
-        }
-    }, []);
-    const modalContentOnMouseDown = React.useCallback((event) => {
-        event.nativeEvent.closeModalPrevented = true;
-    }, []);
+    React.useEffect(() => {
+        setTempValue(value);
+    }, [value, modalOpen]);
     return (
-        <React.Fragment>
-            <Button
-                title={value}
-                {...props}
-                style={{ backgroundColor: value }}
-                onClick={openModal}
-            />
+        <Button style={{ backgroundColor: value }} className={className} title={value} onClick={pickerLabelOnClick}>
             {
                 modalOpen ?
-                    <Modal className={styles['color-input-modal-container']} onMouseDown={modalContainerOnMouseDown}>
+                    <Modal className={styles['color-input-modal-container']} onMouseDown={modalContainerOnMouseDown} onClick={modalContainerOnClick}>
                         <div className={styles['color-input-container']} onMouseDown={modalContentOnMouseDown}>
                             <div className={styles['header-container']}>
                                 <div className={styles['title']}>Choose a color:</div>
@@ -70,7 +72,7 @@ const ColorInput = ({ value, onChange, ...props }) => {
                     :
                     null
             }
-        </React.Fragment>
+        </Button>
     );
 };
 
