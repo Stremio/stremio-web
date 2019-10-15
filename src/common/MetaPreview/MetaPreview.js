@@ -5,6 +5,7 @@ const { Modal } = require('stremio-router');
 const useBinaryState = require('stremio/common/useBinaryState');
 const ActionButton = require('./ActionButton');
 const MetaLinks = require('./MetaLinks');
+const MetaPreviewPlaceholder = require('./MetaPreviewPlaceholder');
 const styles = require('./styles');
 
 const MetaPreview = ({ className, compact, id, type, name, logo, background, duration, releaseInfo, released, description, genres, writers, directors, cast, imdbId, imdbRating, trailer, share, inLibrary, toggleInLibrary }) => {
@@ -209,6 +210,8 @@ const MetaPreview = ({ className, compact, id, type, name, logo, background, dur
         </div>
     );
 };
+
+MetaPreview.Placeholder = MetaPreviewPlaceholder;
 
 MetaPreview.propTypes = {
     className: PropTypes.string,

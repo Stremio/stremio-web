@@ -4,7 +4,6 @@ const ColorInput = require('./ColorInput');
 const Image = require('./Image');
 const MainNavBar = require('./MainNavBar');
 const MetaPreview = require('./MetaPreview');
-const MetaPreviewPlaceholder = require('./MetaPreviewPlaceholder');
 const MetaRow = require('./MetaRow');
 const Multiselect = require('./Multiselect');
 const NavBar = require('./NavBar');
@@ -29,7 +28,6 @@ module.exports = {
     Image,
     MainNavBar,
     MetaPreview,
-    MetaPreviewPlaceholder,
     MetaRow,
     Multiselect,
     NavBar,
