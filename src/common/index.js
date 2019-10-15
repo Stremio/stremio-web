@@ -9,7 +9,6 @@ const MetaRow = require('./MetaRow');
 const Multiselect = require('./Multiselect');
 const NavBar = require('./NavBar');
 const Popup = require('./Popup');
-const ScrollEventEmitter = require('./ScrollEventEmitter');
 const ShareModal = require('./ShareModal');
 const Slider = require('./Slider');
 const TextInput = require('./TextInput');
@@ -35,7 +34,6 @@ module.exports = {
     Multiselect,
     NavBar,
     Popup,
-    ScrollEventEmitter,
     ShareModal,
     Slider,
     TextInput,

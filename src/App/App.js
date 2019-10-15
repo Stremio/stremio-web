@@ -2,7 +2,6 @@ require('spatial-navigation-polyfill');
 const React = require('react');
 const { Router } = require('stremio-router');
 const { Core, KeyboardNavigation, ServicesProvider, Shell } = require('stremio/services');
-const { ScrollEventEmitter } = require('stremio/common');
 const routerViewsConfig = require('./routerViewsConfig');
 const styles = require('./styles');
 
@@ -40,19 +39,17 @@ const App = () => {
     return (
         <React.StrictMode>
             <ServicesProvider services={services}>
-                <ScrollEventEmitter className={styles['app-content']}>
-                    {
-                        shellInitialized && coreInitialized ?
-                            <Router
-                                className={styles['router']}
-                                homePath={'/'}
-                                viewsConfig={routerViewsConfig}
-                                onPathNotMatch={onPathNotMatch}
-                            />
-                            :
-                            <div className={styles['app-loader']} />
-                    }
-                </ScrollEventEmitter>
+                {
+                    shellInitialized && coreInitialized ?
+                        <Router
+                            className={styles['router']}
+                            homePath={'/'}
+                            viewsConfig={routerViewsConfig}
+                            onPathNotMatch={onPathNotMatch}
+                        />
+                        :
+                        <div className={styles['app-loader']} />
+                }
             </ServicesProvider>
         </React.StrictMode>
     );
