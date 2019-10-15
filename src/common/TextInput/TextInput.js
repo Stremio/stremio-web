@@ -22,7 +22,7 @@ const TextInput = React.forwardRef((props, ref) => {
             tabIndex={0}
             {...props}
             ref={ref}
-            className={classnames(props.className, styles['text-input-container'], { 'disabled': props.disabled })}
+            className={classnames(props.className, styles['text-input'], { 'disabled': props.disabled })}
             onKeyUp={onKeyUp}
         />
     );
