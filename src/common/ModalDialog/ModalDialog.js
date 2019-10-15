@@ -8,7 +8,7 @@ const styles = require('./styles');
 const ModalDialog = ({className, children, title, buttons, onClose}) => {
     return (
         <div className={classnames(styles['modal-dialog-container'], className)}>
-            <Button onClick={onClose}>
+            <Button className={styles['close-button']} onClick={onClose}>
                 <Icon className={styles['x-icon']} icon={'ic_x'} />
             </Button>
             <h1>{title}</h1>
