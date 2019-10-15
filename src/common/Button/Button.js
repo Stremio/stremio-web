@@ -8,7 +8,7 @@ const Button = React.forwardRef(({ children, ...props }, ref) => {
             props.onKeyUp(event);
         }
 
-        if (event.key === 'Enter' && !event.nativeEvent.clickPrevented) {
+        if (event.key === 'Enter' && !event.nativeEvent.buttonClickPrevented) {
             event.currentTarget.click();
         }
     }, [props.onKeyUp]);
@@ -17,7 +17,7 @@ const Button = React.forwardRef(({ children, ...props }, ref) => {
             props.onMouseDown(event);
         }
 
-        if (!event.nativeEvent.blurPrevented) {
+        if (!event.nativeEvent.buttonBlurPrevented) {
             event.preventDefault();
             if (document.activeElement instanceof HTMLElement) {
                 document.activeElement.blur();
