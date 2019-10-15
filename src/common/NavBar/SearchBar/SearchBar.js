@@ -14,36 +14,36 @@ const styles = require('./styles');
 const SearchBar = ({ className }) => {
     const locationHash = useLocationHash();
     const routeFocused = useRouteFocused();
+    const routeActive = useRouteActive(routesRegexp.search.regexp);
     const searchInputRef = React.useRef(null);
-    const active = useRouteActive(routesRegexp.search.regexp);
     const query = React.useMemo(() => {
-        if (active) {
+        if (routeActive) {
             const { search: locationSearch } = UrlUtils.parse(locationHash.slice(1));
             const queryParams = new URLSearchParams(locationSearch);
             return queryParams.has('q') ? queryParams.get('q') : '';
         }
 
         return '';
-    }, [active, locationHash]);
+    }, [routeActive, locationHash]);
     const searchBarOnClick = React.useCallback(() => {
-        if (!active) {
+        if (!routeActive) {
             window.location = '#/search';
         }
-    }, [active]);
+    }, [routeActive]);
     const queryInputOnSubmit = React.useCallback(() => {
-        if (active) {
+        if (routeActive) {
             window.location.replace(`#/search?q=${searchInputRef.current.value}`);
         }
-    }, [active]);
+    }, [routeActive]);
     React.useEffect(() => {
-        if (active && routeFocused) {
+        if (routeActive && routeFocused) {
             searchInputRef.current.focus();
         }
-    }, [active, routeFocused, query]);
+    }, [routeActive, routeFocused, query]);
     return (
-        <label className={classnames(className, styles['search-bar-container'], { 'active': active })} onClick={searchBarOnClick}>
+        <label className={classnames(className, styles['search-bar-container'], { 'active': routeActive })} onClick={searchBarOnClick}>
             {
-                active ?
+                routeActive ?
                     <TextInput
                         key={query}
                         ref={searchInputRef}
