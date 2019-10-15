@@ -1,7 +1,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const { useFocusable } = require('stremio-router');
+const { useFocusedRoute } = require('stremio-router');
 const useAnimationFrame = require('stremio/common/useAnimationFrame');
 const useLiveRef = require('stremio/common/useLiveRef');
 const styles = require('./styles');
@@ -13,7 +13,7 @@ const Slider = ({ className, value, minimumValue, maximumValue, onSlide, onCompl
     const onSlideRef = useLiveRef(onSlide, [onSlide]);
     const onCompleteRef = useLiveRef(onComplete, [onComplete]);
     const sliderContainerRef = React.useRef(null);
-    const focusable = useFocusable();
+    const focusedRoute = useFocusedRoute();
     const [requestThumbAnimation, cancelThumbAnimation] = useAnimationFrame();
     const calculateValueForMouseX = React.useCallback((mouseX) => {
         if (sliderContainerRef.current === null) {
@@ -87,10 +87,10 @@ const Slider = ({ className, value, minimumValue, maximumValue, onSlide, onCompl
     }, []);
 
     React.useEffect(() => {
-        if (!focusable) {
+        if (!focusedRoute) {
             releaseThumb();
         }
-    }, [focusable]);
+    }, [focusedRoute]);
     React.useEffect(() => {
         return () => {
             releaseThumb();
