@@ -148,8 +148,8 @@ const MetaPreview = ({ className, compact, id, type, name, logo, background, dur
                             icon={inLibrary ? 'ic_removelib' : 'ic_addlib'}
                             label={inLibrary ? 'Remove from Library' : 'Add to library'}
                             data-id={id}
-                            tabIndex={compact ? -1 : null}
                             onClick={toggleInLibrary}
+                            {...(!compact ? { tabIndex: -1 } : null)}
                         />
                         :
                         null
@@ -160,8 +160,8 @@ const MetaPreview = ({ className, compact, id, type, name, logo, background, dur
                             className={styles['action-button']}
                             icon={'ic_movies'}
                             label={'Trailer'}
-                            tabIndex={compact ? -1 : null}
                             href={`#/player?stream=${trailer}`}
+                            {...(compact ? { tabIndex: -1 } : null)}
                         />
                         :
                         null
@@ -172,9 +172,9 @@ const MetaPreview = ({ className, compact, id, type, name, logo, background, dur
                             className={styles['action-button']}
                             icon={'ic_imdb'}
                             label={typeof imdbRating === 'string' && imdbRating.length > 0 ? `${imdbRating} / 10` : null}
-                            tabIndex={compact ? -1 : null}
                             href={`https://imdb.com/title/${imdbId}`}
                             target={'_blank'}
+                            {...(compact ? { tabIndex: -1 } : null)}
                         />
                         :
                         null
@@ -186,8 +186,8 @@ const MetaPreview = ({ className, compact, id, type, name, logo, background, dur
                                 className={styles['action-button']}
                                 icon={'ic_share'}
                                 label={'Share'}
-                                tabIndex={compact ? -1 : null}
                                 onClick={openShareModal}
+                                {...(compact ? { tabIndex: -1 } : null)}
                             />
                             {
                                 shareModalOpen ?
