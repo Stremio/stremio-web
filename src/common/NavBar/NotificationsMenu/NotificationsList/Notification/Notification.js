@@ -3,6 +3,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const Button = require('stremio/common/Button');
+const Image = require('stremio/common/Image');
 const PlayIconCircleCentered = require('stremio/common/PlayIconCircleCentered');
 const styles = require('./styles');
 
@@ -15,25 +16,24 @@ const ICON_FOR_TYPE = Object.assign(Object.create(null), {
 });
 
 const Notification = ({ className, id, type, name, poster, thumbnail, season, episode, released, posterThumbnail, onClick }) => {
-    const [aLogo, setALogo] = React.useState(poster);
     const daysAgo = Math.floor(Math.abs((Date.now() - released) / (24 * 60 * 60 * 1000)));
 
     return (
         <Button className={classnames(className, styles['notification-container'])} title={typeof name === 'string' && name.length > 0 ? name : id} data-id={id} onClick={onClick}>
-            <div className={styles['logo-image-container']}>
-                {
-                    typeof aLogo === 'string' && aLogo.length > 0 ?
-                        <div className={styles['logo-image-layer']}>
-                            <img className={styles['logo-image']} src={poster} alt={' '} onError={() => { setALogo('') }} />
-                        </div>
-                        :
-                        <div className={styles['placeholder-icon-layer']}>
+            <div className={styles['logo-container']}>
+                <div className={styles['logo-image-layer']}>
+                    <Image
+                        className={styles['logo-image']}
+                        src={poster}
+                        alt={' '}
+                        renderFallback={() => (
                             <Icon
                                 className={styles['placeholder-icon']}
                                 icon={typeof ICON_FOR_TYPE[type] === 'string' ? ICON_FOR_TYPE[type] : ICON_FOR_TYPE['other']}
                             />
-                        </div>
-                }
+                        )}
+                    />
+                </div>
             </div>
             <div className={styles['info-container']}>
                 <div className={styles['episode-container']}>
@@ -54,21 +54,20 @@ const Notification = ({ className, id, type, name, poster, thumbnail, season, ep
             </div>
             {
                 posterThumbnail ?
-                    <div className={styles['poster-image-container']}>
-                        <div className={styles['placeholder-icon-layer']}>
-                            <Icon
-                                className={styles['placeholder-icon']}
-                                icon={typeof ICON_FOR_TYPE[type] === 'string' ? ICON_FOR_TYPE[type] : ICON_FOR_TYPE['other']}
+                    <div className={styles['poster-container']}>
+                        <div className={styles['poster-image-layer']}>
+                            <Image
+                                className={styles['poster-image']}
+                                src={thumbnail}
+                                alt={' '}
+                                renderFallback={() => (
+                                    <Icon
+                                        className={styles['placeholder-icon']}
+                                        icon={typeof ICON_FOR_TYPE[type] === 'string' ? ICON_FOR_TYPE[type] : ICON_FOR_TYPE['other']}
+                                    />
+                                )}
                             />
                         </div>
-                        {
-                            typeof thumbnail === 'string' && thumbnail.length > 0 ?
-                                <div className={styles['poster-image-layer']}>
-                                    <img className={styles['poster-image']} src={thumbnail} alt={' '} />
-                                </div>
-                                :
-                                null
-                        }
                         <div className={styles['play-icon-layer']}>
                             <PlayIconCircleCentered className={styles['play-icon']} />
                         </div>
