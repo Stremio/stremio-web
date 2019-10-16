@@ -15,7 +15,7 @@ const ICON_FOR_TYPE = Object.assign(Object.create(null), {
     'other': 'ic_movies'
 });
 
-const Notification = ({ className, id, type, name, poster, thumbnail, season, episode, released, videoThumbnail, onClick }) => {
+const Notification = ({ className, id, type, name, poster, thumbnail, season, episode, released, onClick }) => {
     const daysAgo = React.useMemo(() => {
         return Math.floor(Math.abs((Date.now() - released) / (24 * 60 * 60 * 1000)));
     }, [released]);
@@ -54,7 +54,7 @@ const Notification = ({ className, id, type, name, poster, thumbnail, season, ep
                 }
             </div>
             {
-                videoThumbnail ?
+                thumbnail !== null ?
                     <div className={styles['poster-container']}>
                         <div className={styles['poster-image-layer']}>
                             <Image
@@ -90,7 +90,6 @@ Notification.propTypes = {
     season: PropTypes.number,
     episode: PropTypes.number,
     released: PropTypes.instanceOf(Date),
-    videoThumbnail: PropTypes.bool,
     onClick: PropTypes.func
 };
 

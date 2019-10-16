@@ -15,7 +15,6 @@ storiesOf('Notification', module).add('SingleVideo', () => (
         season={1}
         episode={1}
         released={new Date()}
-        videoThumbnail={true}
         onClick={action('Demo item clicked')}
     />
 ));

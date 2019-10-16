@@ -30,7 +30,6 @@ const NotificationsList = ({ className, metaItems }) => {
                                                     {...notification}
                                                     key={`${index}${req.base}${content.type}${notification.id}`}
                                                     className={styles['notification']}
-                                                    videoThumbnail={true}
                                                     thumbnail={notification.videos[0].thumbnail}
                                                     season={notification.videos[0].season}
                                                     episode={notification.videos[0].episode}
@@ -41,8 +40,8 @@ const NotificationsList = ({ className, metaItems }) => {
                                                     {...notification}
                                                     key={`${index}${req.base}${content.type}${notification.id}`}
                                                     className={styles['notification']}
-                                                    videoThumbnail={false}
                                                     name={notification.videos.length + ' new videos for ' + notification.name}
+                                                    thumbnail={null}
                                                     released={notification.videos[notification.videos.length - 1].released}
                                                 />
                                         );

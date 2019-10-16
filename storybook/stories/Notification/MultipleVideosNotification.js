@@ -11,8 +11,8 @@ storiesOf('Notification', module).add('MultipleVideos', () => (
         type={'series'}
         name={'Demo name'}
         poster={'/images/intro_background.jpg'}
+        thumbnail={null}
         released={new Date()}
-        videoThumbnail={false}
         onClick={action('Demo item clicked')}
     />
 ));
