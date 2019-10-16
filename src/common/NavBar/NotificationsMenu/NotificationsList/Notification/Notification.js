@@ -14,8 +14,8 @@ const ICON_FOR_TYPE = Object.assign(Object.create(null), {
     'other': 'ic_movies'
 });
 
-const Notification = ({ className, id, type, name, logo, poster, season, episode, released, posterThumbnail, onClick }) => {
-    const [aLogo, setALogo] = React.useState(logo);
+const Notification = ({ className, id, type, name, poster, thumbnail, season, episode, released, posterThumbnail, onClick }) => {
+    const [aLogo, setALogo] = React.useState(poster);
     const daysAgo = Math.floor(Math.abs((Date.now() - released) / (24 * 60 * 60 * 1000)));
 
     return (
@@ -24,7 +24,7 @@ const Notification = ({ className, id, type, name, logo, poster, season, episode
                 {
                     typeof aLogo === 'string' && aLogo.length > 0 ?
                         <div className={styles['logo-image-layer']}>
-                            <img className={styles['logo-image']} src={logo} alt={' '} onError={() => { setALogo('') }} />
+                            <img className={styles['logo-image']} src={poster} alt={' '} onError={() => { setALogo('') }} />
                         </div>
                         :
                         <div className={styles['placeholder-icon-layer']}>
@@ -62,9 +62,9 @@ const Notification = ({ className, id, type, name, logo, poster, season, episode
                             />
                         </div>
                         {
-                            typeof poster === 'string' && poster.length > 0 ?
+                            typeof thumbnail === 'string' && thumbnail.length > 0 ?
                                 <div className={styles['poster-image-layer']}>
-                                    <img className={styles['poster-image']} src={poster} alt={' '} />
+                                    <img className={styles['poster-image']} src={thumbnail} alt={' '} />
                                 </div>
                                 :
                                 null
@@ -85,8 +85,8 @@ Notification.propTypes = {
     id: PropTypes.string,
     type: PropTypes.string,
     name: PropTypes.string,
-    logo: PropTypes.string,
     poster: PropTypes.string,
+    thumbnail: PropTypes.string,
     season: PropTypes.number,
     episode: PropTypes.number,
     released: PropTypes.instanceOf(Date),
