@@ -22,6 +22,7 @@ const useLiveRef = require('./useLiveRef');
 const useLocationHash = require('./useLocationHash');
 const useRouteActive = require('./useRouteActive');
 const useSpreadState = require('./useSpreadState');
+const useUser = require('./useUser');
 
 module.exports = {
     Button,
@@ -47,5 +48,6 @@ module.exports = {
     useLiveRef,
     useLocationHash,
     useRouteActive,
-    useSpreadState
+    useSpreadState,
+    useUser
 };
