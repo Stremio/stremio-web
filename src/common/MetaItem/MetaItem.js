@@ -5,9 +5,9 @@ const Icon = require('stremio-icons/dom');
 const Button = require('stremio/common/Button');
 const Image = require('stremio/common/Image');
 const Multiselect = require('stremio/common/Multiselect');
+const PlayIconCircleCentered = require('stremio/common/PlayIconCircleCentered');
 const useBinaryState = require('stremio/common/useBinaryState');
 const useDataset = require('stremio/common/useDataset');
-const PlayIconCircleCentered = require('./PlayIconCircleCentered');
 const styles = require('./styles');
 
 const ICON_FOR_TYPE = Object.assign(Object.create(null), {
