@@ -40,12 +40,10 @@ const NotificationsList = ({ className, metaItems }) => {
                                         );
                                     })
                                     :
-                                    <React.Fragment>
-                                        <div className={styles['no-notifications-container']}>
-                                            <Icon className={styles['icon']} icon={'ic_bell'} />
-                                            <div className={styles['label']}>No new notifications</div>
-                                        </div>
-                                    </React.Fragment>
+                                    <div className={styles['no-notifications-container']}>
+                                        <Icon className={styles['icon']} icon={'ic_bell'} />
+                                        <div className={styles['label']}>No new notifications</div>
+                                    </div>
                             );
                         case 'Loading':
                             return (
