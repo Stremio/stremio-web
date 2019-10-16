@@ -13,8 +13,7 @@ const useNotifications = () => {
         core.dispatch({
             action: 'Load',
             args: {
-                load: 'Notifications',
-                args: { extra: [] }
+                load: 'Notifications'
             }
         });
         return () => {
