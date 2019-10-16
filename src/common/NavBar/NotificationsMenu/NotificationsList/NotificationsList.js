@@ -18,6 +18,7 @@ const NotificationsList = ({ className, metaItems }) => {
                                     content.content.map((notification) => {
                                         //notifications videos are not available in useCatalogs, but in useNotifications hook
                                         notification.videos = notification.videos || [{
+                                            title: 'Demo title',
                                             thumbnail: 'https://www.stremio.com/website/home-testimonials.jpg',
                                             season: 1,
                                             episode: 1,
@@ -25,25 +26,17 @@ const NotificationsList = ({ className, metaItems }) => {
                                         }];
 
                                         return (
-                                            notification.videos.length === 1 ?
-                                                <Notification
-                                                    {...notification}
-                                                    key={`${index}${req.base}${content.type}${notification.id}`}
-                                                    className={styles['notification']}
-                                                    thumbnail={notification.videos[0].thumbnail}
-                                                    season={notification.videos[0].season}
-                                                    episode={notification.videos[0].episode}
-                                                    released={notification.videos[0].released}
-                                                />
-                                                :
-                                                <Notification
-                                                    {...notification}
-                                                    key={`${index}${req.base}${content.type}${notification.id}`}
-                                                    className={styles['notification']}
-                                                    name={notification.videos.length + ' new videos for ' + notification.name}
-                                                    thumbnail={null}
-                                                    released={notification.videos[notification.videos.length - 1].released}
-                                                />
+                                            <Notification
+                                                {...notification}
+                                                key={`${index}${req.base}${content.type}${notification.id}`}
+                                                className={styles['notification']}
+                                                name={notification.videos.length === 1 ? notification.videos[0].title : notification.videos.length + ' new videos for ' + notification.name}
+                                                thumbnail={notification.videos.length === 1 ? notification.videos[0].thumbnail : null}
+                                                season={notification.videos.length === 1 ? notification.videos[0].season : null}
+                                                episode={notification.videos.length === 1 ? notification.videos[0].episode : null}
+                                                released={notification.videos.length === 1 ? notification.videos[0].released : notification.videos[notification.videos.length - 1].released}
+
+                                            />
                                         );
                                     })
                                     :
