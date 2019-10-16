@@ -19,9 +19,10 @@ const NotificationsMenu = ({ className, onClearButtonClicked, onSettingsButtonCl
         <Popup
             open={menuOpen}
             onCloseRequest={closeMenu}
-            renderLabel={(ref) => (
-                <Button ref={ref} className={classnames(className, styles['notifications-menu-label-container'], { 'active': menuOpen })} tabIndex={-1} onClick={toggleMenu}>
+            renderLabel={({ref, className: popupLabelClassName, children}) => (
+                <Button ref={ref} className={classnames(className, popupLabelClassName, styles['notifications-menu-label-container'], { 'active': menuOpen })} tabIndex={-1} onClick={toggleMenu}>
                     <Icon className={styles['icon']} icon={'ic_bell'} />
+                    {children}
                 </Button>
             )}
             renderMenu={() => (
