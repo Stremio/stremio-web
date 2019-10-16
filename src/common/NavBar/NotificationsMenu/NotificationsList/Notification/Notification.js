@@ -15,11 +15,10 @@ const ICON_FOR_TYPE = Object.assign(Object.create(null), {
     'other': 'ic_movies'
 });
 
-const Notification = ({ className, id, type, name, poster, thumbnail, season, episode, released, posterThumbnail, onClick }) => {
+const Notification = ({ className, id, type, name, poster, thumbnail, season, episode, released, videoThumbnail, onClick }) => {
     const daysAgo = React.useMemo(() => {
         return Math.floor(Math.abs((Date.now() - released) / (24 * 60 * 60 * 1000)));
     }, [released]);
-
     return (
         <Button className={classnames(className, styles['notification-container'])} title={typeof name === 'string' && name.length > 0 ? name : id} data-id={id} onClick={onClick}>
             <div className={styles['logo-container']}>
@@ -55,7 +54,7 @@ const Notification = ({ className, id, type, name, poster, thumbnail, season, ep
                 }
             </div>
             {
-                posterThumbnail ?
+                videoThumbnail ?
                     <div className={styles['poster-container']}>
                         <div className={styles['poster-image-layer']}>
                             <Image
@@ -91,7 +90,7 @@ Notification.propTypes = {
     season: PropTypes.number,
     episode: PropTypes.number,
     released: PropTypes.instanceOf(Date),
-    posterThumbnail: PropTypes.bool,
+    videoThumbnail: PropTypes.bool,
     onClick: PropTypes.func
 };
 

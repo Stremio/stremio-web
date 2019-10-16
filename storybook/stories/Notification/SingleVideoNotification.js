@@ -10,12 +10,12 @@ storiesOf('Notification', module).add('SingleVideo', () => (
         id={'notification-id'}
         type={'series'}
         name={'Demo name'}
-        logo={'/images/intro_background.jpg'}
         poster={'/images/intro_background.jpg'}
+        thumbnail={'/images/intro_background.jpg'}
         season={1}
         episode={1}
         released={new Date()}
-        posterThumbnail={true}
+        videoThumbnail={true}
         onClick={action('Demo item clicked')}
     />
 ));

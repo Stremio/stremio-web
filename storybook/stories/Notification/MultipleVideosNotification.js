@@ -10,9 +10,9 @@ storiesOf('Notification', module).add('MultipleVideos', () => (
         id={'notification-id'}
         type={'series'}
         name={'Demo name'}
-        logo={'/images/intro_background.jpg'}
+        poster={'/images/intro_background.jpg'}
         released={new Date()}
-        posterThumbnail={false}
+        videoThumbnail={false}
         onClick={action('Demo item clicked')}
     />
 ));
