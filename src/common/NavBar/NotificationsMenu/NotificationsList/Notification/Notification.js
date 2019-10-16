@@ -56,7 +56,7 @@ const Notification = ({ className, id, type, name, poster, thumbnail, season, ep
                 }
             </div>
             {
-                thumbnail !== null ?
+                typeof thumbnail === 'string' && thumbnail.length > 0 ?
                     <div className={styles['poster-container']}>
                         <div className={styles['poster-image-layer']}>
                             <Image
