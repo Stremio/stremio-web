@@ -3,19 +3,25 @@
     flex-direction: column;
     justify-content: center;
 
-    &:hover {
+    &:hover, &:focus {
         background-color: var(--color-surfacedarker60);
     }
 
-    .icon {
+    .icon-container {
         flex-grow: 0;
         flex-shrink: 0;
         flex-basis: 50%;
         padding-top: 15%;
-        fill: var(--color-surfacelighter);
 
         &:only-child {
             padding: 5% 0;
+        }
+
+        .icon {
+            display: block;
+            width: 100%;
+            height: 100%;
+            fill: var(--color-surfacelighter);
         }
     }
 

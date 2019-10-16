@@ -5,6 +5,7 @@
         "title-area title-area"
         "message-area message-area"
         "meta-items-area see-all-area";
+    overflow: visible;
 
     .title-container {
         grid-area: title-area;
@@ -19,10 +20,6 @@
         max-height: 3.6em;
         font-size: 1.3rem;
         color: var(--color-surfacelighter);
-
-        &~.meta-items-container, &~.see-all-container {
-            display: none;
-        }
     }
 
     .meta-items-container {
@@ -30,6 +27,7 @@
         display: flex;
         flex-direction: row;
         align-items: stretch;
+        overflow: visible;
 
         .meta-item {
             margin-right: 2rem;
@@ -58,22 +56,18 @@
         background-color: var(--color-backgroundlight);
 
         &:hover, &:focus {
+            outline-offset: 0;
             background-color: var(--color-backgroundlighter);
-
-            .see-all-label {
-                color: var(--color-surfacelighter);
-            }
-
-            .icon {
-                fill: var(--color-surfacelighter);
-            }
         }
 
-        .see-all-label {
+        .label {
+            flex-grow: 0;
+            flex-shrink: 1;
+            flex-basis: auto;
             max-height: 2.4em;
             font-size: 1.2rem;
             text-align: center;
-            color: var(--color-surfacelight);
+            color: var(--color-surfacelighter);
         }
 
         .icon {
@@ -81,7 +75,7 @@
             width: 1.3rem;
             height: 1.3rem;
             margin-left: 0.3rem;
-            fill: var(--color-surfacelight);
+            fill: var(--color-surfacelighter);
         }
     }
 }

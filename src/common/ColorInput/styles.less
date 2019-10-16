@@ -1,49 +1,81 @@
-.color-input-modal {
-    background-color: var(--color-backgrounddarker40);
+.color-input-modal-container {
     display: flex;
-    flex-direction: column;
-
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    pointer-events: auto;
+    background-color: var(--color-backgrounddarker40);
 
     .color-input-container {
-        position: relative;
+        flex: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        max-width: 25rem;
         padding: 1rem;
         background-color: var(--color-surfacelighter);
 
-        margin: auto;
+        .header-container {
+            flex: none;
+            align-self: stretch;
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
 
-        * {
-            overflow: visible;
-        }
-
-        .x-icon {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            width: 1rem;
-            height: 1rem;
-            fill: var(--color-surfacedark);
-        }
-
-        h1 {
-            font-size: 1.2rem;
-        }
-
-        .color-input {
-            margin: 1rem auto 0 auto;
-            :global(.a-color-picker-stack):not(:global(.a-color-picker-row-top)) canvas, :global(.a-color-picker-circle) {
-                border: solid 1px var(--color-surfacedark);
+            .title {
+                flex: 1;
+                margin-right: 1rem;
+                font-size: 1.2rem;
+                max-height: 2.4em;
             }
-            :global(.a-color-picker-circle) {
-                box-shadow: 0 0 .2rem var(--color-surfacedark);
+
+            .close-button-container {
+                flex: none;
+                width: 1.5rem;
+                height: 1.5rem;
+                padding: 0.25rem;
+
+                &:hover, &:focus {
+                    background-color: var(--color-surfacedark20);
+                }
+
+                &:focus {
+                    outline-color: var(--color-surfacedarker);
+                }
+
+                .icon {
+                    display: block;
+                    width: 100%;
+                    height: 100%;
+                    fill: var(--color-surfacedarker);
+                }
             }
         }
 
-        .button {
-            text-align: center;
-            color: var(--color-surfacelighter);
-            background-color: var(--color-signal5);
+        .color-picker {
+            flex: none;
+            margin: 1rem;
+        }
+
+        .submit-button-container {
+            flex: none;
+            align-self: stretch;
             padding: 1rem;
-            margin-top: 1rem;
+            background-color: var(--color-signal5);
+
+            &:hover, &:focus {
+                filter: brightness(1.2);
+            }
+
+            &:focus {
+                outline-color: var(--color-surfacedarker);
+            }
+
+            .label {
+                max-height: 2.4em;
+                text-align: center;
+                color: var(--color-surfacelighter);
+            }
         }
     }
 }
