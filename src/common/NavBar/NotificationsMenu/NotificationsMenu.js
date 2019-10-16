@@ -29,14 +29,9 @@ const NotificationsMenu = ({ className, onClearButtonClicked, onSettingsButtonCl
                 <div className={styles['notifications-menu-container']}>
                     <div className={styles['notifications-bar']}>
                         <div className={styles['notifications-label']}>Notifications</div>
-                        <div className={styles['buttons-container']}>
-                            <Button className={styles['button-container']} onClick={onClearButtonClicked}>
-                                <Icon className={styles['icon']} icon={'ic_drawer'} />
-                            </Button>
-                            <Button className={styles['button-container']} onClick={onSettingsButtonClicked}>
-                                <Icon className={styles['icon']} icon={'ic_settings'} />
-                            </Button>
-                        </div>
+                        <Button className={styles['button-container']} onClick={onClearButtonClicked}>
+                            <Icon className={styles['icon']} icon={'ic_drawer'} />
+                        </Button>
                     </div>
                     <NotificationsList className={styles['notifications-list']} metaItems={metaItems}/>
                 </div>

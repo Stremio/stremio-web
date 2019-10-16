@@ -39,29 +39,20 @@
             color: var(--color-surfacedark);
         }
 
-        .buttons-container {
+        .button-container {
+            width: 2rem;
+            height: 2rem;
             display: flex;
-            flex-direction: row;
+            align-items: center;
+            justify-content: center;
 
-            .button-container {
-                width: 2rem;
-                height: 2rem;
-                display: flex;
-                align-items: center;
-                justify-content: center;
+            &:hover, &:focus {
+                background-color: var(--color-surfacelight);
+            }
 
-                &:hover, &:focus {
-                    background-color: var(--color-surfacelight);
-                }
-
-                .icon {
-                    width: 1.2rem;
-                    fill: var(--color-surfacedark);
-                }
-
-                &:not(:last-child) {
-                    margin-right: 0.5rem;
-                }
+            .icon {
+                width: 1.2rem;
+                fill: var(--color-surfacedark);
             }
         }
     }
