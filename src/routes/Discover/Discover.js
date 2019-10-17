@@ -1,14 +1,15 @@
 const React = require('react');
 const classnames = require('classnames');
-const { Dropdown, MainNavBar, MetaItem, MetaPreview } = require('stremio/common');
+const { MainNavBar, MetaItem, MetaPreview, Multiselect } = require('stremio/common');
 const useCatalog = require('./useCatalog');
 const styles = require('./styles');
 
+// TODO render only 4 pickers and a more button that opens a modal with all pickers
 const Discover = ({ urlParams, queryParams }) => {
     const [dropdowns, metaItems] = useCatalog(urlParams, queryParams);
     const [selectedItem, setSelectedItem] = React.useState(null);
     const metaItemsOnMouseDown = React.useCallback((event) => {
-        event.nativeEvent.blurPrevented = true;
+        event.nativeEvent.buttonBlurPrevented = true;
     }, []);
     const metaItemsOnFocus = React.useCallback((event) => {
         const metaItem = metaItems.find(({ id }) => {
@@ -27,8 +28,8 @@ const Discover = ({ urlParams, queryParams }) => {
             <MainNavBar className={styles['nav-bar']} />
             <div className={styles['discover-content']}>
                 <div className={styles['dropdowns-container']}>
-                    {dropdowns.map((dropdown) => (
-                        <Dropdown {...dropdown} key={dropdown.name} className={styles['dropdown']} />
+                    {dropdowns.map((dropdown, index) => (
+                        <Multiselect {...dropdown} key={index} className={styles['dropdown']} />
                     ))}
                 </div>
                 <div className={styles['meta-items-container']} onFocusCapture={metaItemsOnFocus} onMouseDownCapture={metaItemsOnMouseDown}>
