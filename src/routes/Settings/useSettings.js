@@ -8,12 +8,13 @@ module.exports = () => {
     const [settings, setSettings] = React.useState({ streaming: {} });
 
     React.useEffect(() => {
-        const updateState = (state) => {
-            console.log(state)
+        const onNewState = () => {
+            const state = core.getState()
             try {
                 setSettings({
-                    ...settings, ...state.ctx.content.settings,
-                    user: state.ctx.content.auth && state.ctx.content.auth.user,
+                    ...settings,
+                    ...state.ctx.content.settings,
+                    user: state.ctx.content.auth ? state.ctx.content.auth.user : null,
                     streaming: state.streaming_server_settings || {},
                 });
             } catch (e) {
@@ -21,21 +22,10 @@ module.exports = () => {
             }
         }
 
-        const state = core.getState();
-        try {
-            if (state.ctx.is_loaded) {
-                updateState(state);
-                return;
-            }
-        } catch (e) {
-            console.log('Cannot find state context', e);
-        }
-
-        const onNewState = () => {
-            updateState(core.getState());
-        };
         core.on('NewModel', onNewState);
-        core.dispatch({ action: 'LoadCtx' });
+
+        onNewState();
+
         return () => {
             // Destructor function
             core.off('NewModel', onNewState);

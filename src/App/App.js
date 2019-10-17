@@ -22,6 +22,9 @@ const App = () => {
         };
         const onCoreStateChanged = () => {
             setCoreInitialized(services.core.active || services.core.error instanceof Error);
+            if (services.core.active) {
+                services.core.dispatch({ action: 'LoadCtx' });
+            }
         };
         services.shell.on('stateChanged', onShellStateChanged);
         services.core.on('stateChanged', onCoreStateChanged);
