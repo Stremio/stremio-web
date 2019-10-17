@@ -141,7 +141,7 @@ const SectionsList = React.forwardRef(({ className, sections, preferences, onPre
                                 </div>
                                 <div key={'server_available'} className={classnames(styles['input-container'], styles['text-container'])}>
                                     <div className={styles['text']}>
-                                        <Icon className={styles['icon']} icon={preferences.streaming.isLoaded ? 'ic_check' : 'ic_x'} />
+                                        <Icon className={classnames(styles['icon'], {[styles['x-icon']]: !preferences.streaming.isLoaded})} icon={preferences.streaming.isLoaded ? 'ic_check' : 'ic_x'} />
                                         <div className={styles['label']}>{'Streaming server is ' + (preferences.streaming.isLoaded ? '' : 'not ') + 'available.'}</div>
                                     </div>
                                 </div>
