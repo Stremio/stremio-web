@@ -56,6 +56,7 @@ const Settings = () => {
                 backButton={true}
                 addonsButton={true}
                 fullscreenButton={true}
+                notificationsMenu={true}
                 navMenu={true} />
             <div className={styles['settings-container']}>
                 <SectionsSelector className={styles['side-menu']} sections={sections} selectedSectionId={selectedSectionId} onSelectedSection={changeSection} />

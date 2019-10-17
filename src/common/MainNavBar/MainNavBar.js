@@ -17,6 +17,7 @@ const MainNavBar = ({ className }) => {
             searchBar={true}
             addonsButton={true}
             fullscreenButton={true}
+            notificationsMenu={true}
             navMenu={true}
         />
     );
