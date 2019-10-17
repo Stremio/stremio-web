@@ -10,7 +10,7 @@ const useCatalogs = require('stremio/routes/Board/useCatalogs');
 const useBinaryState = require('stremio/common/useBinaryState');
 const styles = require('./styles');
 
-const NotificationsMenu = ({ className, onClearButtonClicked, onSettingsButtonClicked }) => {
+const NotificationsMenu = ({ className, onClearButtonClicked }) => {
     const [menuOpen, openMenu, closeMenu, toggleMenu] = useBinaryState(false);
     //TODO use useNotifications hook instead of useCatalogs
     const metaItems = useCatalogs();
@@ -42,8 +42,7 @@ const NotificationsMenu = ({ className, onClearButtonClicked, onSettingsButtonCl
 
 NotificationsMenu.propTypes = {
     className: PropTypes.string,
-    onClearButtonClicked: PropTypes.func,
-    onSettingsButtonClicked: PropTypes.func
+    onClearButtonClicked: PropTypes.func
 };
 
 module.exports = NotificationsMenu;
