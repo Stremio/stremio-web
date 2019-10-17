@@ -1,21 +1,20 @@
 const React = require('react');
 const { useServices } = require('stremio/services');
 
-module.exports = (devTestWithUser) => {
-    const IGNORED_SETTINGS = Object.freeze(['user']);
+module.exports = () => {
+    const IGNORED_SETTINGS = Object.freeze(['user', 'streaming']);
 
     const { core } = useServices();
-    const [settings, setSettings] = React.useState({});
+    const [settings, setSettings] = React.useState({ streaming: {} });
 
     React.useEffect(() => {
         const updateState = (state) => {
+            console.log(state)
             try {
                 setSettings({
-                    ...settings, ...state.ctx.content.settings, user: devTestWithUser ? {
-                        '_id': 'neo',
-                        'email': 'neo@example.com',
-                        'avatar': 'https://www.thenational.ae/image/policy:1.891803:1566372420/AC17-Matrix-20-04.jpg',
-                    } : state.ctx.content.auth && state.ctx.content.auth.user
+                    ...settings, ...state.ctx.content.settings,
+                    user: state.ctx.content.auth && state.ctx.content.auth.user,
+                    streaming: state.streaming_server_settings || {},
                 });
             } catch (e) {
                 console.log('Cannot update settings state', e);
@@ -44,12 +43,19 @@ module.exports = (devTestWithUser) => {
     }, []);
 
     const setTheSettings = React.useCallback(newSettings => {
-        const args = {};
-        Object.keys(newSettings)
-            .filter(prop => !IGNORED_SETTINGS.includes(prop))
-            .forEach(key => args[key] = newSettings[key].toString())
-        setSettings(newSettings);
-        core.dispatch({ action: 'Settings', args: { settings: 'Store', args } });
+        const event = { action: 'Settings', args: { args: {} } };
+        // This can be done with React.useEffect and newSettings.streaming as dependency
+        const streamingServerSettingChanged = Object.keys(newSettings.streaming)
+            .some(prop => settings.streaming[prop] !== newSettings.streaming[prop]);
+        if (streamingServerSettingChanged) {
+            event.args = { settings: 'StoreStreamingServer', args: newSettings.streaming };
+        } else {
+            event.args.settings = 'Store';
+            Object.keys(newSettings)
+                .filter(prop => !IGNORED_SETTINGS.includes(prop))
+                .forEach(key => event.args.args[key] = newSettings[key].toString());
+        }
+        core.dispatch(event);
     }, [settings])
 
     return [settings, setTheSettings];
