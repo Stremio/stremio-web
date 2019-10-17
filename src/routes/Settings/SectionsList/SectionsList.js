@@ -17,12 +17,18 @@ const SectionsList = React.forwardRef(({ className, sections, preferences, onPre
     }, [onPreferenceChanged]);
 
     const updateDropdown = React.useCallback((event) => {
-        var data = event.currentTarget.dataset;
+        const data = event.currentTarget.dataset;
         onPreferenceChanged(data.name, data.value);
     }, [onPreferenceChanged]);
 
+    const updateStreamingDropdown = React.useCallback((event) => {
+        const data = event.currentTarget.dataset;
+        const newPrefs = { ...preferences.streaming, [data.name]: data.value };
+        onPreferenceChanged('streaming', newPrefs);
+    }, [onPreferenceChanged]);
+
     const checkUser = React.useCallback((event) => {
-        if(! preferences.user) {
+        if (!preferences.user) {
             // Here in Stremio 4 we show a toast with a message, asking the anonymous user to log in/register
             console.log('No user found');
             event.preventDefault();
@@ -36,6 +42,10 @@ const SectionsList = React.forwardRef(({ className, sections, preferences, onPre
     // TODO: If we get the user data after initialization, these should be wrapped in React.useState and set by React.useEffect
     const changePasswordUrl = preferences.user && 'https://www.strem.io/reset-password/' + preferences.user.email;
     const webCalUrl = preferences.user && 'webcal://www.strem.io/calendar/' + preferences.user._id + '.ics';
+
+    // TODO: move these out of here
+    const cachingOptions = [{ "label": "no caching", "value": "0" }, { "label": "2GB", "value": "2147483648" }, { "label": "5GB", "value": "5368709120" }, { "label": "10GB", "value": "10737418240" }, { "label": "∞", "value": "null" }];
+    const streamingProfiles = [{ "label": "Default", "value": "default" }, { "label": "Soft", "value": "soft" }, { "label": "Fast", "value": "fast" }];
 
     const sectionsElements = sections.map((section) =>
         <div key={section.id} ref={section.ref} className={styles['section']} data-section={section.id}>
@@ -101,6 +111,39 @@ const SectionsList = React.forwardRef(({ className, sections, preferences, onPre
                                         <Icon className={styles['icon']} icon={'ic_trackt'} />
                                         <div className={styles['label']}>{preferences.user && preferences.user.trakt ? 'ALREADY UTHENTIATED' : 'AUTHENTIATE'}</div>
                                     </Button>
+                                </div>
+                            </React.Fragment>
+                        );
+                    } else if (input.type === 'streaming') {
+                        return (
+                            <React.Fragment key={'streaming'}>
+
+                                {
+                                    // The streaming server settings are shown only if server is available
+                                    preferences.streaming.isLoaded
+                                        ?
+                                        <React.Fragment>
+                                            <div className={classnames(styles['input-container'], styles['select-container'])}>
+                                                <div className={styles['input-header']}>Caching</div>
+                                                <Dropdown options={cachingOptions} selected={[preferences.streaming.cacheSize]} name={'cacheSize'} className={styles['dropdown']} onSelect={updateStreamingDropdown} />
+                                            </div>
+                                            <div className={classnames(styles['input-container'], styles['select-container'])}>
+                                                <div className={styles['input-header']}>Torrent Profile</div>
+                                                <Dropdown options={streamingProfiles} selected={[preferences.streaming.profile]} name={'profile'} className={styles['dropdown']} onSelect={updateStreamingDropdown} />
+                                            </div>
+                                        </React.Fragment>
+                                        :
+                                        null
+                                }
+                                {/* From here there is only presentation */}
+                                <div key={'server_url'} className={styles['input-container']}>
+                                    <div className={styles['input-header']}><strong>Streaming server URL:</strong> {preferences.server_url}</div>
+                                </div>
+                                <div key={'server_available'} className={classnames(styles['input-container'], styles['text-container'])}>
+                                    <div className={styles['text']}>
+                                        <Icon className={styles['icon']} icon={preferences.streaming.isLoaded ? 'ic_check' : 'ic_x'} />
+                                        <div className={styles['label']}>{'Streaming server is ' + (preferences.streaming.isLoaded ? '' : 'not ') + 'available.'}</div>
+                                    </div>
                                 </div>
                             </React.Fragment>
                         );
