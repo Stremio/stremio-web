@@ -1,4 +1,5 @@
 const React = require('react');
+const { useServices } = require('stremio/services');
 
 const CATEGORIES = ['official', 'community', 'my'];
 const DEFAULT_CATEGORY = 'community';
@@ -7,33 +8,25 @@ const DEFAULT_TYPE = 'all';
 const useAddons = (category, type) => {
     category = CATEGORIES.includes(category) ? category : DEFAULT_CATEGORY;
     type = typeof type === 'string' && type.length > 0 ? type : DEFAULT_TYPE;
-    const addons = React.useMemo(() => {
-        return [
-            {
-                id: 'com.linvo.cinemeta',
-                name: 'Cinemeta',
-                description: 'The official add-on for movie and series catalogs',
-                types: ['movie', 'series'],
-                version: '2.12.1',
-                transportUrl: 'https://v3-cinemeta.strem.io/manifest.json',
-                installed: true,
-                official: true
-            },
-            {
-                id: 'com.linvo.cinemeta2',
-                name: 'Cinemeta2',
-                logo: '/images/intro_background.jpg',
-                description: 'The official add-on for movie and series catalogs',
-                types: ['movie', 'series'],
-                version: '2.12.2',
-                transportUrl: 'https://v2-cinemeta.strem.io/manifest.json',
-                installed: false,
-                official: false
-            }
-        ];
+    const [addons, setAddons] = React.useState([]);
+    const { core } = useServices();
+    React.useEffect(() => {
+        const onNewState = () => {
+            const state = core.getState();
+            setAddons(state.ctx.content.addons);
+        };
+        core.on('NewModel', onNewState);
+        core.dispatch({
+            action: 'LoadCtx'
+        });
+        onNewState();
+        return () => {
+            core.off('NewModel', onNewState);
+        };
     }, []);
     const onSelect = React.useCallback((event) => {
-        const { name, value } = event.currentTarget.dataset;
+        const { value } = event.reactEvent.currentTarget.dataset;
+        const name = event.dataset.name;
         if (name === 'category') {
             const nextCategory = CATEGORIES.includes(value) ? value : '';
             window.location.replace(`#/addons/${nextCategory}/${type}`);
@@ -47,7 +40,7 @@ const useAddons = (category, type) => {
         const options = CATEGORIES
             .map((category) => ({ label: category, value: category }));
         return {
-            name: 'category',
+            'data-name': 'category',
             selected,
             options,
             onSelect
@@ -60,7 +53,7 @@ const useAddons = (category, type) => {
             .filter((type, index, types) => types.indexOf(type) === index)
             .map((type) => ({ label: type, value: type }));
         return {
-            name: 'type',
+            'data-name': 'type',
             selected,
             options,
             onSelect
