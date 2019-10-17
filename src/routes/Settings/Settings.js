@@ -20,33 +20,6 @@ const Settings = () => {
     const [selectedSectionId, setSelectedSectionId] = React.useState(sections[0].id);
     const scrollContainerRef = React.useRef(null);
 
-    React.useEffect(() => {
-        const shouldFetch = preferences.server_url && preferences.server_url.length > 0
-            ?
-            Promise.resolve(preferences.server_url + 'settings')
-            :
-            Promise.reject();
-
-        shouldFetch
-            .then(fetch)
-            .then(() => ['OK'])
-            .catch(() => []).then(serverInputs => {
-                const additionalServerSettings = [
-                    { id: 'server_url', header: 'Streaming server URL:', type: 'info' },
-                    { id: 'streaming_server_is_available.', label: 'Streaming server is ' + (serverInputs.length !== 0 ? '' : 'not ') + 'available.', type: 'static-text', icon: serverInputs.length !== 0 ? 'ic_check' : 'ic_x' }
-                ];
-                setDynamicSections({
-                    ...dynamicSections,
-                    Streaming: [
-                        ...dynamicSections.Streaming,
-                        ...additionalServerSettings
-                    ]
-                });
-            });
-    }, [preferences.server_url]);
-
-    /////////////////
-
     const updatePreference = (option, value) => {
         setPreferences({ ...preferences, [option]: value });
     }
