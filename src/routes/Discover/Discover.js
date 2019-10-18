@@ -37,6 +37,7 @@ const Discover = ({ urlParams, queryParams }) => {
                         <MetaItem
                             {...metaItem}
                             key={index}
+                            data-id={metaItem.id}
                             className={classnames(styles['meta-item'], { 'selected': selectedMetaItem !== null && metaItem.id === selectedMetaItem.id })}
                         />
                     ))}
