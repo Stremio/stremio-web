@@ -46,9 +46,12 @@ const Addons = ({ urlParams, queryParams }) => {
                         />
                     </label>
                 </div>
-                <div className={styles['addons-list-container']} >
+                <div className={styles['addons-list-container']}>
                     {
-                        addons.filter((addon) => query.length === 0 || (typeof addon.manifest.name === 'string' && addon.manifest.name.includes(query)))
+                        addons.filter((addon) => query.length === 0 ||
+                            ((typeof addon.manifest.name === 'string' && addon.manifest.name.toLowerCase().includes(query.toLowerCase())) ||
+                                (typeof addon.manifest.description === 'string' && addon.manifest.description.toLowerCase().includes(query.toLowerCase()))
+                            ))
                             .map((addon) => (
                                 <Addon {...addon.manifest} key={addon.manifest.id} className={styles['addon']} />
                             ))
