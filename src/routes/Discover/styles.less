@@ -19,11 +19,11 @@
         grid-template-columns: 1fr 26rem;
         grid-template-rows: 7rem 1fr;
         grid-template-areas:
-            "dropdowns-area meta-preview-area"
+            "multiselects-area meta-preview-area"
             "meta-items-area meta-preview-area";
 
-        .dropdowns-container {
-            grid-area: dropdowns-area;
+        .multiselects-container {
+            grid-area: multiselects-area;
             display: grid;
             grid-template-columns: repeat(auto-fill, 15rem);
             grid-gap: 1rem;
@@ -31,7 +31,7 @@
             padding: 0 2rem;
             overflow: visible;
 
-            .dropdown {
+            .multiselect {
                 height: 3rem;
             }
         }
@@ -46,7 +46,7 @@
             overflow-y: auto;
 
             .meta-item {
-                &.selected {
+                &:global(.selected) {
                     outline: calc(1.5 * var(--focus-outline-size)) solid var(--color-surfacelighter);
                     outline-offset: calc(-1.5 * var(--focus-outline-size));
                 }
@@ -116,10 +116,10 @@
             grid-template-columns: 1fr;
             grid-template-rows: fit-content(19rem) 1fr;
             grid-template-areas:
-                "dropdowns-area"
+                "multiselects-area"
                 "meta-items-area";
 
-            .dropdowns-container {
+            .multiselects-container {
                 grid-template-columns: repeat(4, 1fr);
             }
 

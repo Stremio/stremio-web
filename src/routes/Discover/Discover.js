@@ -1,50 +1,50 @@
 const React = require('react');
 const classnames = require('classnames');
 const { MainNavBar, MetaItem, MetaPreview, Multiselect } = require('stremio/common');
-const useCatalog = require('./useCatalog');
+const useDiscover = require('./useDiscover');
 const styles = require('./styles');
 
 // TODO render only 4 pickers and a more button that opens a modal with all pickers
 const Discover = ({ urlParams, queryParams }) => {
-    const [dropdowns, metaItems] = useCatalog(urlParams, queryParams);
-    const [selectedItem, setSelectedItem] = React.useState(null);
-    const metaItemsOnMouseDown = React.useCallback((event) => {
+    const [selectInputs, metaItems, error] = useDiscover(urlParams, queryParams);
+    const [selectedMetaItem, setSelectedMetaItem] = React.useState(null);
+    const metaItemsOnMouseDownCapture = React.useCallback((event) => {
         event.nativeEvent.buttonBlurPrevented = true;
     }, []);
-    const metaItemsOnFocus = React.useCallback((event) => {
+    const metaItemsOnFocusCapture = React.useCallback((event) => {
         const metaItem = metaItems.find(({ id }) => {
             return id === event.target.dataset.id;
         });
         if (metaItem) {
-            setSelectedItem(metaItem);
+            setSelectedMetaItem(metaItem);
         }
-    }, []);
+    }, [metaItems]);
     React.useEffect(() => {
         const metaItem = metaItems.length > 0 ? metaItems[0] : null;
-        setSelectedItem(metaItem);
+        setSelectedMetaItem(metaItem);
     }, [metaItems]);
     return (
         <div className={styles['discover-container']}>
             <MainNavBar className={styles['nav-bar']} />
             <div className={styles['discover-content']}>
-                <div className={styles['dropdowns-container']}>
-                    {dropdowns.map((dropdown, index) => (
-                        <Multiselect {...dropdown} key={index} className={styles['dropdown']} />
+                <div className={styles['multiselects-container']}>
+                    {selectInputs.map((selectInput, index) => (
+                        <Multiselect {...selectInput} key={index} className={styles['multiselect']} />
                     ))}
                 </div>
-                <div className={styles['meta-items-container']} onFocusCapture={metaItemsOnFocus} onMouseDownCapture={metaItemsOnMouseDown}>
-                    {metaItems.map((metaItem) => (
+                <div className={styles['meta-items-container']} onMouseDownCapture={metaItemsOnMouseDownCapture} onFocusCapture={metaItemsOnFocusCapture}>
+                    {metaItems.map((metaItem, index) => (
                         <MetaItem
                             {...metaItem}
-                            key={metaItem.id}
-                            className={classnames(styles['meta-item'], { 'selected': selectedItem !== null && metaItem.id === selectedItem.id })}
+                            key={index}
+                            className={classnames(styles['meta-item'], { 'selected': selectedMetaItem !== null && metaItem.id === selectedMetaItem.id })}
                         />
                     ))}
                 </div>
                 {
-                    selectedItem !== null ?
+                    selectedMetaItem !== null ?
                         <MetaPreview
-                            {...selectedItem}
+                            {...selectedMetaItem}
                             className={styles['meta-preview-container']}
                             compact={true}
                         />
