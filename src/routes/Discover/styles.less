@@ -47,8 +47,10 @@
 
             .meta-item {
                 &:global(.selected) {
-                    outline: calc(1.5 * var(--focus-outline-size)) solid var(--color-surfacelighter);
-                    outline-offset: calc(-1.5 * var(--focus-outline-size));
+                    &::after {
+                        outline-width: calc(1.5 * var(--focus-outline-size));
+                        outline-offset: calc(-1.5 * var(--focus-outline-size));
+                    }
                 }
             }
         }

@@ -29,7 +29,11 @@ const Discover = ({ urlParams, queryParams }) => {
             <div className={styles['discover-content']}>
                 <div className={styles['multiselects-container']}>
                     {selectInputs.map((selectInput, index) => (
-                        <Multiselect {...selectInput} key={index} className={styles['multiselect']} />
+                        <Multiselect
+                            {...selectInput}
+                            key={index}
+                            className={styles['multiselect']}
+                        />
                     ))}
                 </div>
                 <div className={styles['meta-items-container']} onMouseDownCapture={metaItemsOnMouseDownCapture} onFocusCapture={metaItemsOnFocusCapture}>
