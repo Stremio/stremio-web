@@ -7,7 +7,7 @@ const useCatalogs = () => {
     React.useEffect(() => {
         const onNewState = () => {
             const state = core.getState();
-            setCatalogs(state.catalogs.groups);
+            setCatalogs(state.board.groups);
         };
         core.on('NewModel', onNewState);
         core.dispatch({
