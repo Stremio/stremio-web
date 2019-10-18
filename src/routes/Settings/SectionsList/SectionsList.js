@@ -44,7 +44,7 @@ const SectionsList = React.forwardRef(({ className, sections, preferences, onPre
     const webCalUrl = preferences.user && 'webcal://www.strem.io/calendar/' + preferences.user._id + '.ics';
 
     // TODO: move these out of here
-    const cachingOptions = [{ "label": "no caching", "value": "0" }, { "label": "2GB", "value": "2147483648" }, { "label": "5GB", "value": "5368709120" }, { "label": "10GB", "value": "10737418240" }, { "label": "∞", "value": "null" }];
+    const cachingOptions = [{ "label": "no caching", "value": "0" }, { "label": "2GB", "value": "2147483648" }, { "label": "5GB", "value": "5368709120" }, { "label": "10GB", "value": "10737418240" }, { "label": "∞", "value": "Infinity" }];
     const streamingProfiles = [{ "label": "Default", "value": "default" }, { "label": "Soft", "value": "soft" }, { "label": "Fast", "value": "fast" }];
 
     const sectionsElements = sections.map((section) =>
