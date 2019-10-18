@@ -45,7 +45,7 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, playI
         }
     }, [menuOptionOnSelect, dataset]);
     return (
-        <Button className={classnames(className, styles['meta-item-container'], styles['poster-shape-poster'], styles[`poster-shape-${posterShape}`], { 'active': menuOpen })} title={name} onClick={metaItemOnClick}>
+        <Button {...props} className={classnames(className, styles['meta-item-container'], styles['poster-shape-poster'], styles[`poster-shape-${posterShape}`], { 'active': menuOpen })} title={name} onClick={metaItemOnClick}>
             <div className={styles['poster-container']}>
                 <div className={styles['poster-image-layer']}>
                     <Image
