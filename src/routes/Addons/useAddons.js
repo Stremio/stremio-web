@@ -16,9 +16,6 @@ const useAddons = (category, type) => {
             setAddons(state.ctx.content.addons);
         };
         core.on('NewModel', onNewState);
-        core.dispatch({
-            action: 'LoadCtx'
-        });
         onNewState();
         return () => {
             core.off('NewModel', onNewState);
@@ -29,7 +26,7 @@ const useAddons = (category, type) => {
         const name = event.dataset.name;
         if (name === 'category') {
             const nextCategory = CATEGORIES.includes(value) ? value : '';
-            window.location.replace(`#/addons/${nextCategory}/${type}`);
+            window.location.replace(`#/addons/${nextCategory}/${DEFAULT_TYPE}`);
         } else if (name === 'type') {
             const nextType = typeof value === 'string' ? value : '';
             window.location.replace(`#/addons/${category}/${nextType}`);
