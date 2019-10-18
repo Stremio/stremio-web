@@ -136,7 +136,7 @@ const SectionsList = React.forwardRef(({ className, sections, preferences, onPre
                                         null
                                 }
                                 {/* From here there is only presentation */}
-                                <div key={'server_url'} className={styles['input-container']}>
+                                <div key={'server_url'} className={classnames(styles['input-container'], styles['text-container'])}>
                                     <div className={styles['input-header']}><strong>Streaming server URL:</strong> {preferences.server_url}</div>
                                 </div>
                                 <div key={'server_available'} className={classnames(styles['input-container'], styles['text-container'])}>

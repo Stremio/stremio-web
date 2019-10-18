@@ -3,16 +3,18 @@
 }
 
 .section {
-    padding: 4rem 2rem;
+    padding: 4rem 0;
+    margin: 0 2rem;
+    width: var(--input-width);
 
     .section-header {
-        margin: 0 1.5rem 1.5rem 1.5rem;
+        margin: 1.5rem 0;
         font-size: 2rem;
         color: var(--color-surfacelighter);
     }
 
     .input-container {
-        margin: 1.5rem;
+        margin: 2rem 0;
         display: flex;
         flex-direction: column;
 
@@ -51,14 +53,14 @@
         &.select-container {
             .dropdown {
                 height: 3rem;
-                width: var(--input-width);
+                // width: var(--input-width);
             }
         }
 
         &.link-container {
-            margin: 1rem 1.5rem;
-
+            margin: 0;
             .link {
+                padding: .75rem 0;
                 display: block;
                 color: var(--color-secondarylight);
 
@@ -75,7 +77,6 @@
         &.button-container {
             .button {
                 padding: 0.7rem;
-                width: var(--input-width);
                 min-height: calc(var(--input-width) * 0.09);
                 display: flex;
                 align-items: center;
@@ -132,10 +133,12 @@
         }
 
         &.text-container {
+            margin: 0;
             .text {
                 display: flex;
                 flex-direction: row;
                 align-items: center;
+                padding: .75rem 0;
 
                 .icon {
                     margin-right: 0.5rem;
@@ -160,7 +163,7 @@
 
         &.color-container {
             .color-picker {
-                width: var(--input-width);
+                box-shadow: inset 0px 0px .2rem 0px var(--color-surfacelighter20);
                 height: calc(var(--input-width) * 0.08);
                 cursor: pointer;
 
