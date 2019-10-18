@@ -48,9 +48,9 @@ const Addons = ({ urlParams, queryParams }) => {
                 </div>
                 <div className={styles['addons-list-container']} >
                     {
-                        addons.filter(({ name }) => query.length === 0 || (typeof name === 'string' && name.includes(query)))
+                        addons.filter((addon) => query.length === 0 || (typeof addon.manifest.name === 'string' && addon.manifest.name.includes(query)))
                             .map((addon) => (
-                                <Addon {...addon} key={addon.id} className={styles['addon']} />
+                                <Addon {...addon.manifest} key={addon.manifest.id} className={styles['addon']} />
                             ))
                     }
                 </div>
