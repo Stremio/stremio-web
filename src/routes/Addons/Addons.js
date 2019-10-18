@@ -1,7 +1,7 @@
 const React = require('react');
 const Icon = require('stremio-icons/dom');
 const { Modal } = require('stremio-router');
-const { Button, Dropdown, NavBar, TextInput } = require('stremio/common');
+const { Button, Multiselect, NavBar, TextInput } = require('stremio/common');
 const Addon = require('./Addon');
 const AddonPrompt = require('./AddonPrompt');
 const useAddons = require('./useAddons');
@@ -32,8 +32,8 @@ const Addons = ({ urlParams, queryParams }) => {
                         <Icon className={styles['icon']} icon={'ic_plus'} />
                         <div className={styles['add-button-label']}>Add addon</div>
                     </Button>
-                    {dropdowns.map((dropdown) => (
-                        <Dropdown {...dropdown} key={dropdown.name} className={styles['dropdown']} />
+                    {dropdowns.map((dropdown, index) => (
+                        <Multiselect {...dropdown} key={index} className={styles['dropdown']} />
                     ))}
                     <label className={styles['search-bar-container']}>
                         <Icon className={styles['icon']} icon={'ic_search'} />
