@@ -92,12 +92,19 @@ const Multiselect = ({ className, direction, title, renderLabelContent, options,
             )}
             renderMenu={() => (
                 <div className={styles['menu-container']} onClick={popupMenuOnClick}>
-                    {options.map(({ label, value }) => (
-                        <Button key={value} className={classnames(styles['option-container'], { 'selected': selected.includes(value) })} title={typeof label === 'string' ? label : value} data-value={value} onClick={optionOnClick}>
-                            <div className={styles['label']}>{typeof label === 'string' ? label : value}</div>
-                            <Icon className={styles['icon']} icon={'ic_check'} />
-                        </Button>
-                    ))}
+                    {
+                        options.length > 0 ?
+                            options.map(({ label, value }) => (
+                                <Button key={value} className={classnames(styles['option-container'], { 'selected': selected.includes(value) })} title={typeof label === 'string' ? label : value} data-value={value} onClick={optionOnClick}>
+                                    <div className={styles['label']}>{typeof label === 'string' ? label : value}</div>
+                                    <Icon className={styles['icon']} icon={'ic_check'} />
+                                </Button>
+                            ))
+                            :
+                            <div className={styles['no-options-container']}>
+                                <div className={styles['label']}>No options available</div>
+                            </div>
+                    }
                 </div>
             )}
         />
