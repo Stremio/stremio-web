@@ -73,7 +73,7 @@ const Discover = ({ urlParams, queryParams }) => {
                             compact={true}
                         />
                         :
-                        null
+                        <div className={styles['meta-preview-container']} />
                 }
             </div>
         </div>
