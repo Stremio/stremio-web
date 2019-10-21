@@ -38,12 +38,11 @@ const useAddons = (category, type) => {
             const typeDropdown = () => {
                 const selected = typeof type === 'string' && type.length > 0 ? [type] : [];
                 const options = [...new Set(
-                    [].concat.apply([],
                         ['all'].concat(
-                            state.ctx.content.addons.map(addon => addon.manifest.types),
+                            ...state.ctx.content.addons.map(addon => addon.manifest.types),
                             selected
                         )
-                    ))]
+                    )]
                     .map((type) => ({ label: type, value: type }));
                 return {
                     'data-name': 'type',
