@@ -20,7 +20,7 @@
         grid-template-rows: 7rem 1fr;
         grid-template-areas:
             "multiselects-area meta-preview-area"
-            "meta-items-area meta-preview-area";
+            "catalog-content-area meta-preview-area";
 
         .multiselects-container {
             grid-area: multiselects-area;
@@ -36,22 +36,32 @@
             }
         }
 
-        .meta-items-container {
-            grid-area: meta-items-area;
-            display: grid;
-            grid-auto-rows: max-content;
-            grid-gap: 1.5rem;
-            align-items: center;
-            padding: 0 2rem;
-            overflow-y: auto;
+        .catalog-content-container {
+            grid-area: catalog-content-area;
 
-            .meta-item {
-                &:global(.selected) {
-                    &::after {
-                        outline-width: calc(1.5 * var(--focus-outline-size));
-                        outline-offset: calc(-1.5 * var(--focus-outline-size));
+            .meta-items-container {
+                display: grid;
+                max-height: 100%;
+                grid-auto-rows: max-content;
+                grid-gap: 1.5rem;
+                align-items: center;
+                padding: 0 2rem;
+                overflow-y: auto;
+
+                .meta-item {
+                    &:global(.selected) {
+                        &::after {
+                            outline-width: calc(1.5 * var(--focus-outline-size));
+                            outline-offset: calc(-1.5 * var(--focus-outline-size));
+                        }
                     }
                 }
+            }
+
+            .message-container {
+                padding: 0 2rem;
+                font-size: 2rem;
+                color: var(--color-surfacelighter);
             }
         }
 
@@ -65,8 +75,10 @@
 @media only screen and (min-width: @xxlarge) {
     .discover-container {
         .discover-content {
-            .meta-items-container {
-                grid-template-columns: repeat(8, auto);
+            .catalog-content-container {
+                .meta-items-container {
+                    grid-template-columns: repeat(8, auto);
+                }
             }
         }
     }
@@ -75,8 +87,10 @@
 @media only screen and (max-width: @xxlarge) {
     .discover-container {
         .discover-content {
-            .meta-items-container {
-                grid-template-columns: repeat(7, auto);
+            .catalog-content-container {
+                .meta-items-container {
+                    grid-template-columns: repeat(7, auto);
+                }
             }
         }
     }
@@ -85,8 +99,10 @@
 @media only screen and (max-width: @normal) {
     .discover-container {
         .discover-content {
-            .meta-items-container {
-                grid-template-columns: repeat(6, auto);
+            .catalog-content-container {
+                .meta-items-container {
+                    grid-template-columns: repeat(6, auto);
+                }
             }
         }
     }
@@ -95,8 +111,10 @@
 @media only screen and (max-width: @medium) {
     .discover-container {
         .discover-content {
-            .meta-items-container {
-                grid-template-columns: repeat(5, auto);
+            .catalog-content-container {
+                .meta-items-container {
+                    grid-template-columns: repeat(5, auto);
+                }
             }
         }
     }
@@ -105,8 +123,10 @@
 @media only screen and (max-width: @small) {
     .discover-container {
         .discover-content {
-            .meta-items-container {
-                grid-template-columns: repeat(4, auto);
+            .catalog-content-container {
+                .meta-items-container {
+                    grid-template-columns: repeat(4, auto);
+                }
             }
         }
     }
@@ -119,14 +139,16 @@
             grid-template-rows: fit-content(19rem) 1fr;
             grid-template-areas:
                 "multiselects-area"
-                "meta-items-area";
+                "catalog-content-area";
 
             .multiselects-container {
                 grid-template-columns: repeat(4, 1fr);
             }
 
-            .meta-items-container {
-                grid-template-columns: repeat(5, auto);
+            .catalog-content-container {
+                .meta-items-container {
+                    grid-template-columns: repeat(5, auto);
+                }
             }
 
             .meta-preview-container {

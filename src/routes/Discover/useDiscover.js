@@ -7,7 +7,7 @@ const DEFAULT_TYPE = 'movie';
 
 const useCatalog = (urlParams, queryParams) => {
     const { core } = useServices();
-    const [discover, setDiscover] = React.useState([[], [], null]);
+    const [discover, setDiscover] = React.useState([[], null, null]);
     React.useEffect(() => {
         const addonTransportUrl = typeof urlParams.addonTransportUrl === 'string' ? urlParams.addonTransportUrl : DEFAULT_ADDON_TRANSPORT_URL;
         const catalogId = typeof urlParams.catalogId === 'string' ? urlParams.catalogId : DEFAULT_CATALOG_ID;
@@ -49,7 +49,7 @@ const useCatalog = (urlParams, queryParams) => {
                     }
                 }
             ];
-            const items = state.discover.content.type === 'Ready' ? state.discover.content.content : [];
+            const items = state.discover.content.type === 'Ready' ? state.discover.content.content : null;
             const error = state.discover.content.type === 'Err' ? JSON.stringify(state.discover.content.content) : null;
             setDiscover([selectInputs, items, error]);
         };

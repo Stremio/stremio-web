@@ -20,7 +20,7 @@ const Discover = ({ urlParams, queryParams }) => {
         }
     }, [metaItems]);
     React.useEffect(() => {
-        const metaItem = metaItems.length > 0 ? metaItems[0] : null;
+        const metaItem = Array.isArray(metaItems) && metaItems.length > 0 ? metaItems[0] : null;
         setSelectedMetaItem(metaItem);
     }, [metaItems]);
     return (
@@ -36,15 +36,34 @@ const Discover = ({ urlParams, queryParams }) => {
                         />
                     ))}
                 </div>
-                <div className={styles['meta-items-container']} onMouseDownCapture={metaItemsOnMouseDownCapture} onFocusCapture={metaItemsOnFocusCapture}>
-                    {metaItems.map((metaItem, index) => (
-                        <MetaItem
-                            {...metaItem}
-                            key={index}
-                            data-id={metaItem.id}
-                            className={classnames(styles['meta-item'], { 'selected': selectedMetaItem !== null && metaItem.id === selectedMetaItem.id })}
-                        />
-                    ))}
+                <div className={styles['catalog-content-container']}>
+                    {
+                        error ?
+                            <div className={styles['message-container']}>
+                                {error}
+                            </div>
+                            :
+                            Array.isArray(metaItems) ?
+                                metaItems.length > 0 ?
+                                    <div className={styles['meta-items-container']} onMouseDownCapture={metaItemsOnMouseDownCapture} onFocusCapture={metaItemsOnFocusCapture}>
+                                        {metaItems.map((metaItem, index) => (
+                                            <MetaItem
+                                                {...metaItem}
+                                                key={index}
+                                                data-id={metaItem.id}
+                                                className={classnames(styles['meta-item'], { 'selected': selectedMetaItem !== null && metaItem.id === selectedMetaItem.id })}
+                                            />
+                                        ))}
+                                    </div>
+                                    :
+                                    <div className={styles['message-container']}>
+                                        Empty catalog
+                                    </div>
+                                :
+                                <div className={styles['message-container']}>
+                                    Loading
+                                </div>
+                    }
                 </div>
                 {
                     selectedMetaItem !== null ?
