@@ -45,7 +45,17 @@ const SectionsList = React.forwardRef(({ className, sections, preferences, onPre
 
     // TODO: move these out of here
     const cachingOptions = [{ "label": "no caching", "value": "0" }, { "label": "2GB", "value": "2147483648" }, { "label": "5GB", "value": "5368709120" }, { "label": "10GB", "value": "10737418240" }, { "label": "∞", "value": "Infinity" }];
-    const streamingProfiles = [{ "label": "Default", "value": "default" }, { "label": "Soft", "value": "soft" }, { "label": "Fast", "value": "fast" }];
+    const supportedProfiles = ['default', 'soft', 'fast'];
+    const mkProfiles = profiles => profiles.map(profile => ({
+        label: profile[0].toUpperCase() + profile.slice(1).toLowerCase(),
+        value: profile,
+    }))
+    const [streamingProfiles, setStreamingProfiles] = React.useState(mkProfiles(supportedProfiles));
+    React.useEffect(() => {
+        if (preferences.streaming.profile && !supportedProfiles.includes(preferences.streaming.profile)) {
+            setStreamingProfiles(mkProfiles(supportedProfiles.concat(preferences.streaming.profile)));
+        }
+    }, [preferences.streaming.profile]);
 
     const sectionsElements = sections.map((section) =>
         <div key={section.id} ref={section.ref} className={styles['section']} data-section={section.id}>
@@ -141,7 +151,7 @@ const SectionsList = React.forwardRef(({ className, sections, preferences, onPre
                                 </div>
                                 <div key={'server_available'} className={classnames(styles['input-container'], styles['text-container'])}>
                                     <div className={styles['text']}>
-                                        <Icon className={classnames(styles['icon'], {[styles['x-icon']]: !preferences.streaming.isLoaded})} icon={preferences.streaming.isLoaded ? 'ic_check' : 'ic_x'} />
+                                        <Icon className={classnames(styles['icon'], { [styles['x-icon']]: !preferences.streaming.isLoaded })} icon={preferences.streaming.isLoaded ? 'ic_check' : 'ic_x'} />
                                         <div className={styles['label']}>{'Streaming server is ' + (preferences.streaming.isLoaded ? '' : 'not ') + 'available.'}</div>
                                     </div>
                                 </div>
