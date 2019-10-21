@@ -17,10 +17,14 @@ const ColorInput = ({ className, value, onChange, ...props }) => {
     const [modalOpen, openModal, closeModal] = useBinaryState(false);
     const [tempValue, setTempValue] = React.useState(value);
     const pickerLabelOnClick = React.useCallback((event) => {
+        if (typeof props.onClick === 'function') {
+            props.onClick(event);
+        }
+
         if (!event.nativeEvent.openModalPrevented) {
             openModal();
         }
-    }, []);
+    }, [props.onClick]);
     const modalContainerOnClick = React.useCallback((event) => {
         event.nativeEvent.openModalPrevented = true;
     }, []);
@@ -52,7 +56,7 @@ const ColorInput = ({ className, value, onChange, ...props }) => {
         setTempValue(value);
     }, [value, modalOpen]);
     return (
-        <Button style={{ backgroundColor: value }} className={className} title={value} onClick={pickerLabelOnClick}>
+        <Button title={value} {...props} style={{ ...props.style, backgroundColor: value }} className={className} onClick={pickerLabelOnClick}>
             {
                 modalOpen ?
                     <Modal className={styles['color-input-modal-container']} onMouseDown={modalContainerOnMouseDown} onClick={modalContainerOnClick}>

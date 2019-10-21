@@ -22,6 +22,10 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, playI
     const dataset = useDataset(props);
     const [menuOpen, onMenuOpen, onMenuClose] = useBinaryState(false);
     const metaItemOnClick = React.useCallback((event) => {
+        if (typeof props.onClick === 'function') {
+            props.onClick(event);
+        }
+
         if (!event.nativeEvent.selectMetaItemPrevented && typeof onSelect === 'function') {
             onSelect({
                 type: 'select',
@@ -30,7 +34,7 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, playI
                 nativeEvent: event.nativeEvent
             });
         }
-    }, [onSelect, dataset]);
+    }, [props.onClick, onSelect, dataset]);
     const multiselectOnClick = React.useCallback((event) => {
         event.nativeEvent.selectMetaItemPrevented = true;
     }, []);
@@ -45,7 +49,7 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, playI
         }
     }, [menuOptionOnSelect, dataset]);
     return (
-        <Button {...props} className={classnames(className, styles['meta-item-container'], styles['poster-shape-poster'], styles[`poster-shape-${posterShape}`], { 'active': menuOpen })} title={name} onClick={metaItemOnClick}>
+        <Button title={name} {...props} className={classnames(className, styles['meta-item-container'], styles['poster-shape-poster'], styles[`poster-shape-${posterShape}`], { 'active': menuOpen })} onClick={metaItemOnClick}>
             <div className={styles['poster-container']}>
                 <div className={styles['poster-image-layer']}>
                     <Image
