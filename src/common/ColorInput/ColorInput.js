@@ -77,6 +77,7 @@ const ColorInput = ({ className, value, onChange, ...props }) => {
 };
 
 ColorInput.propTypes = {
+    className: PropTypes.string,
     value: PropTypes.string,
     onChange: PropTypes.func
 };
