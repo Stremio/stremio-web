@@ -10,13 +10,13 @@ const useBinaryState = require('stremio/common/useBinaryState');
 const useDataset = require('stremio/common/useDataset');
 const styles = require('./styles');
 
-const ICON_FOR_TYPE = Object.assign(Object.create(null), {
-    'movie': 'ic_movies',
-    'series': 'ic_series',
-    'channel': 'ic_channels',
-    'tv': 'ic_tv',
-    'other': 'ic_movies'
-});
+const ICON_FOR_TYPE = new Map([
+    ['movie', 'ic_movies' ],
+    ['series', 'ic_series'],
+    ['channel', 'ic_channels'],
+    ['tv', 'ic_tv'],
+    ['other', 'ic_movies']
+]);
 
 const MetaItem = React.memo(({ className, type, name, poster, posterShape, playIcon, progress, menuOptions, onSelect, menuOptionOnSelect, ...props }) => {
     const dataset = useDataset(props);
@@ -59,7 +59,7 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, playI
                         renderFallback={() => (
                             <Icon
                                 className={styles['placeholder-icon']}
-                                icon={typeof ICON_FOR_TYPE[type] === 'string' ? ICON_FOR_TYPE[type] : ICON_FOR_TYPE['other']}
+                                icon={ICON_FOR_TYPE.has(type) ? ICON_FOR_TYPE.get(type) : ICON_FOR_TYPE.get('other')}
                             />
                         )}
                     />
