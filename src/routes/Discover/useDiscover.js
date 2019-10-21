@@ -26,7 +26,7 @@ const useCatalog = (urlParams, queryParams) => {
                         .filter(({ is_selected }) => is_selected)
                         .map(({ load }) => JSON.stringify(load)),
                     onSelect: (event) => {
-                        const load = JSON.parse(event.reactEvent.currentTarget.dataset.value);
+                        const load = JSON.parse(event.value);
                         window.location = `#/discover/${encodeURIComponent(load.base)}/${encodeURIComponent(load.path.id)}/${encodeURIComponent(load.path.type_name)}`;
                     }
                 },
@@ -44,7 +44,7 @@ const useCatalog = (urlParams, queryParams) => {
                         .filter(({ is_selected }) => is_selected)
                         .map(({ load }) => JSON.stringify(load)),
                     onSelect: (event) => {
-                        const load = JSON.parse(event.reactEvent.currentTarget.dataset.value);
+                        const load = JSON.parse(event.value);
                         window.location = `#/discover/${encodeURIComponent(load.base)}/${encodeURIComponent(load.path.id)}/${encodeURIComponent(load.path.type_name)}`;
                     }
                 }
