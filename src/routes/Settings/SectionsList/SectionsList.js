@@ -43,14 +43,39 @@ const SectionsList = React.forwardRef(({ className, sections, preferences, onPre
     const changePasswordUrl = preferences.user && 'https://www.strem.io/reset-password/' + preferences.user.email;
     const webCalUrl = preferences.user && 'webcal://www.strem.io/calendar/' + preferences.user._id + '.ics';
 
-    // TODO: move these out of here
-    const cachingOptions = [{ "label": "no caching", "value": "0" }, { "label": "2GB", "value": "2147483648" }, { "label": "5GB", "value": "5368709120" }, { "label": "10GB", "value": "10737418240" }, { "label": "∞", "value": "Infinity" }];
+    const formatBytes = inBytes => {
+        if (inBytes === '0') return 'no caching';
+        if (inBytes === 'Infinity') return '∞';
+
+        const bytes = parseInt(inBytes, 10);
+    
+        const kilo = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+    
+        const power = Math.floor(Math.log(bytes) / Math.log(kilo));
+
+        // More than 1024 yotta bytes
+        if(power >= sizes.length) {
+            power = sizes.length - 1;
+        }
+        return parseFloat((bytes / Math.pow(kilo, power)).toFixed(2)) + ' ' + sizes[power];
+    }
+    const cacheSizes = ['0', '2147483648', '5368709120', '10737418240', 'Infinity'];
+    const mkCacheSizeOptions = sizes => sizes.map(size => ({
+        label: formatBytes(size), // TODO: translation
+        value: size.toString(),
+    }))
     const supportedProfiles = ['default', 'soft', 'fast'];
     const mkProfiles = profiles => profiles.map(profile => ({
-        label: profile[0].toUpperCase() + profile.slice(1).toLowerCase(),
+        label: profile[0].toUpperCase() + profile.slice(1).toLowerCase(), // TODO: translation
         value: profile,
     }))
+    const [cachingOptions, setCachingOptions] = React.useState(mkProfiles(supportedProfiles));
     const [streamingProfiles, setStreamingProfiles] = React.useState(mkProfiles(supportedProfiles));
+    React.useEffect(() => {
+        if(typeof preferences.streaming.cacheSize === 'undefined') return;
+        setCachingOptions(mkCacheSizeOptions([...new Set(cacheSizes.concat(preferences.streaming.cacheSize))]));
+    }, [preferences.streaming.cacheSize]);
     React.useEffect(() => {
         if (preferences.streaming.profile && !supportedProfiles.includes(preferences.streaming.profile)) {
             setStreamingProfiles(mkProfiles(supportedProfiles.concat(preferences.streaming.profile)));
