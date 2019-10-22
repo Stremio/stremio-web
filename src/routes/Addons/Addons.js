@@ -52,8 +52,8 @@ const Addons = ({ urlParams, queryParams }) => {
                             ((typeof addon.manifest.name === 'string' && addon.manifest.name.toLowerCase().includes(query.toLowerCase())) ||
                                 (typeof addon.manifest.description === 'string' && addon.manifest.description.toLowerCase().includes(query.toLowerCase()))
                             ))
-                            .map((addon) => (
-                                <Addon {...addon.manifest} key={addon.manifest.id} className={styles['addon']} />
+                            .map((addon, index) => (
+                                <Addon {...addon.manifest} key={index} className={styles['addon']} />
                             ))
                     }
                 </div>
