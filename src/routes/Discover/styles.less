@@ -19,11 +19,11 @@
         grid-template-columns: 1fr 26rem;
         grid-template-rows: 7rem 1fr;
         grid-template-areas:
-            "multiselects-area meta-preview-area"
+            "controls-area meta-preview-area"
             "catalog-content-area meta-preview-area";
 
-        .multiselects-container {
-            grid-area: multiselects-area;
+        .controls-container {
+            grid-area: controls-area;
             display: grid;
             grid-template-columns: repeat(auto-fill, 15rem);
             grid-gap: 1rem;
@@ -31,7 +31,7 @@
             padding: 0 2rem;
             overflow: visible;
 
-            .multiselect {
+            .select-input-container {
                 height: 3rem;
             }
         }
@@ -138,10 +138,10 @@
             grid-template-columns: 1fr;
             grid-template-rows: fit-content(19rem) 1fr;
             grid-template-areas:
-                "multiselects-area"
+                "controls-area"
                 "catalog-content-area";
 
-            .multiselects-container {
+            .controls-container {
                 grid-template-columns: repeat(4, 1fr);
             }
 

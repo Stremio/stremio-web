@@ -27,12 +27,12 @@ const Discover = ({ urlParams, queryParams }) => {
         <div className={styles['discover-container']}>
             <MainNavBar className={styles['nav-bar']} />
             <div className={styles['discover-content']}>
-                <div className={styles['multiselects-container']}>
+                <div className={styles['controls-container']}>
                     {selectInputs.map((selectInput, index) => (
                         <Multiselect
                             {...selectInput}
                             key={index}
-                            className={styles['multiselect']}
+                            className={styles['select-input-container']}
                         />
                     ))}
                 </div>
