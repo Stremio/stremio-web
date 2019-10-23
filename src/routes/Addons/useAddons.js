@@ -1,70 +1,75 @@
 const React = require('react');
 const { useServices } = require('stremio/services');
 
-const CATEGORIES = ['official', 'community', 'my'];
-const DEFAULT_CATEGORY = 'community';
-const DEFAULT_TYPE = 'all';
+const DEFAULT_TYPE = 'movie';
+const DEFAULT_CATEGORY = 'thirdparty';
 
-const useAddons = (category, type) => {
+const useAddons = (urlParams, queryParams) => {
     const { core } = useServices();
     const [addons, setAddons] = React.useState([[], []]);
     React.useEffect(() => {
-        category = CATEGORIES.includes(category) ? category : DEFAULT_CATEGORY;
-        type = typeof type === 'string' && type.length > 0 ? type : DEFAULT_TYPE;
+        const type = typeof urlParams.type === 'string' && urlParams.type.length > 0 ? urlParams.type : DEFAULT_TYPE;
+        const category = typeof urlParams.category === 'string' && urlParams.category.length > 0 ? urlParams.category : DEFAULT_CATEGORY;
         const onNewState = () => {
             const state = core.getState();
-            const onSelect = (event) => {
-                const { value } = event.reactEvent.currentTarget.dataset;
-                const name = event.dataset.name;
-                if (name === 'category') {
-                    const nextCategory = CATEGORIES.includes(value) ? value : '';
-                    window.location.replace(`#/addons/${nextCategory}/${DEFAULT_TYPE}`);
-                } else if (name === 'type') {
-                    const nextType = typeof value === 'string' ? value : '';
-                    window.location.replace(`#/addons/${category}/${nextType}`);
-                }
-            };
-            const categoryDropdown = () => {
-                const selected = CATEGORIES.includes(category) ? [category] : [];
-                const options = CATEGORIES
-                    .map((category) => ({ label: category, value: category }));
-                return {
-                    'data-name': 'category',
-                    selected,
-                    options,
-                    onSelect
-                };
-            };
-            const typeDropdown = () => {
-                const selected = typeof type === 'string' && type.length > 0 ? [type] : [];
-                const options = [...new Set(
-                        ['all'].concat(
-                            ...state.ctx.content.addons.map(addon => addon.manifest.types),
-                            selected
-                        )
-                    )]
-                    .map((type) => ({ label: type, value: type }));
-                return {
+            const selectInputs = [
+                {
                     'data-name': 'type',
-                    selected,
-                    options,
-                    onSelect
-                };
-            };
-            setAddons([
-                state.ctx.content.addons.filter((addon) => {
-                    return (categoryDropdown().selected.join('') === 'official' ? addon.flags.official : !addon.flags.official) &&
-                        (typeDropdown().selected.join('') === 'all' || addon.manifest.types.includes(typeDropdown().selected.join('')));
-                }),
-                [categoryDropdown(), typeDropdown()]
-            ]);
+                    selected: state.addons.types
+                        .filter(({ is_selected }) => is_selected)
+                        .map(({ load }) => JSON.stringify(load)),
+                    options: state.addons.types
+                        .map(({ type_name, load }) => ({
+                            value: JSON.stringify(load),
+                            label: type_name
+                        })),
+                    onSelect: (event) => {
+                        const load = JSON.parse(event.reactEvent.currentTarget.dataset.value);
+                        window.location = `#/addons/${encodeURIComponent(load.path.type_name)}/${encodeURIComponent(load.path.id)}`;
+                    }
+                },
+                {
+                    'data-name': 'category',
+                    selected: state.addons.catalogs
+                        .filter(({ is_selected }) => is_selected)
+                        .map(({ load }) => JSON.stringify(load)),
+                    options: state.addons.catalogs
+                        .filter(({ load: { path: { type_name } } }) => {
+                            return type_name === type;
+                        })
+                        .map(({ name, load }) => ({
+                            value: JSON.stringify(load),
+                            label: name
+                        })),
+                    onSelect: (event) => {
+                        const load = JSON.parse(event.reactEvent.currentTarget.dataset.value);
+                        window.location = `#/addons/${encodeURIComponent(load.path.type_name)}/${encodeURIComponent(load.path.id)}`
+                    }
+                }
+            ];
+            const addonsItems = state.addons.content.type === 'Ready' ? state.addons.content.content : [];
+            setAddons([addonsItems, selectInputs]);
         };
         core.on('NewModel', onNewState);
-        onNewState();
+        core.dispatch({
+            action: 'Load',
+            args: {
+                load: 'CatalogFiltered',
+                args: {
+                    base: 'https://v3-cinemeta.strem.io/manifest.json',
+                    path: {
+                        resource: 'addon_catalog',
+                        type_name: type,
+                        id: category,
+                        extra: [] // TODO
+                    }
+                }
+            }
+        });
         return () => {
             core.off('NewModel', onNewState);
         };
-    }, [category, type]);
+    }, [urlParams, queryParams]);
     return addons;
 };
 

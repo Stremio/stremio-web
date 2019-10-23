@@ -13,7 +13,7 @@ const Addons = ({ urlParams, queryParams }) => {
     const queryOnChange = React.useCallback((event) => {
         setQuery(event.currentTarget.value);
     }, []);
-    const [addons, dropdowns] = useAddons(urlParams.category, urlParams.type);
+    const [addons, dropdowns] = useAddons(urlParams, queryParams);
     const [selectedAddon, clearSelectedAddon] = useSelectedAddon(queryParams.get('addon'));
     const addonPromptModalBackgroundOnClick = React.useCallback((event) => {
         if (!event.nativeEvent.clearSelectedAddonPrevented) {
