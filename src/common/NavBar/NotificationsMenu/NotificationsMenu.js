@@ -13,7 +13,7 @@ const styles = require('./styles');
 const NotificationsMenu = ({ className, onClearButtonClicked }) => {
     const [menuOpen, openMenu, closeMenu, toggleMenu] = useBinaryState(false);
     //TODO use useNotifications hook instead of useCatalogs
-    const metaItems = useCatalogs();
+    const metaItems = []; //useCatalogs();
 
     return (
         <Popup
