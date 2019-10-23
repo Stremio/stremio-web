@@ -21,14 +21,21 @@ module.exports = () => {
                 console.log('Cannot update settings state', e);
             }
         }
+        const onStoreError = ({ event, args }) => {
+            if (event !== "SettingsStoreError") return;
+            // TODO: Notify with maybe a toast?
+            console.log(args)
+        }
 
         core.on('NewModel', onNewState);
+        core.on('Event', onStoreError);
 
         onNewState();
 
         return () => {
             // Destructor function
             core.off('NewModel', onNewState);
+            core.off('Event', onStoreError);
         };
     }, []);
 
@@ -36,7 +43,7 @@ module.exports = () => {
         const event = { action: 'Settings', args: { args: {} } };
         // This can be done with React.useEffect and newSettings.streaming as dependency
         const streamingServerSettingChanged = Object.keys(newSettings.streaming)
-            .some(prop => settings.streaming[prop] !== newSettings.streaming[prop]);
+            .some(prop => settings.streaming.ready[prop] !== newSettings.streaming[prop]);
         if (streamingServerSettingChanged) {
             event.args = { settings: 'StoreStreamingServer', args: newSettings.streaming };
         } else {
