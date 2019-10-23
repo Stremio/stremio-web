@@ -8790,9 +8790,9 @@ stream-shift@^1.0.0:
   version "2.0.4"
   resolved "git+ssh://git@github.com/Stremio/stremio-colors.git#6a3fb5b311adb150920a8c59344b29d5de89b489"
 
-"stremio-core-web@git+ssh://git@github.com/stremio/stremio-core-web.git#abf72aec4976ea3992cf17b5fca407fc3ee7b457":
+"stremio-core-web@git+ssh://git@github.com/stremio/stremio-core-web.git#da5b37865004d0ae140518c4f276d1ed1a1483d9":
   version "0.6.0"
-  resolved "git+ssh://git@github.com/stremio/stremio-core-web.git#abf72aec4976ea3992cf17b5fca407fc3ee7b457"
+  resolved "git+ssh://git@github.com/stremio/stremio-core-web.git#da5b37865004d0ae140518c4f276d1ed1a1483d9"
 
 "stremio-icons@git+ssh://git@github.com/Stremio/stremio-icons.git#v1.0.11":
   version "1.0.11"
