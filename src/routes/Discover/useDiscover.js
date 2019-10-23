@@ -16,7 +16,11 @@ const useCatalog = (urlParams, queryParams) => {
             const state = core.getState();
             const onSelect = (event) => {
                 const load = JSON.parse(event.value);
-                window.location = `#/discover/${encodeURIComponent(load.base)}/${encodeURIComponent(load.path.id)}/${encodeURIComponent(load.path.type_name)}`;
+                const addonTransportUrl = encodeURIComponent(load.base);
+                const catalogId = encodeURIComponent(load.path.id);
+                const type = encodeURIComponent(load.path.type_name);
+                const extra = new URLSearchParams(load.path.extra).toString();
+                window.location = `#/discover/${addonTransportUrl}/${catalogId}/${type}?${extra}`;
             };
             const selectInputs = [
                 {
