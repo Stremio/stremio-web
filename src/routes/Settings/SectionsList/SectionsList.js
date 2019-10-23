@@ -23,7 +23,7 @@ const SectionsList = React.forwardRef(({ className, sections, preferences, onPre
 
     const updateStreamingDropdown = React.useCallback((event) => {
         const data = event.currentTarget.dataset;
-        const newPrefs = { ...preferences.streaming, [data.name]: data.value };
+        const newPrefs = { ...preferences.streaming.ready, [data.name]: data.value };
         onPreferenceChanged('streaming', newPrefs);
     }, [onPreferenceChanged]);
 
@@ -73,14 +73,14 @@ const SectionsList = React.forwardRef(({ className, sections, preferences, onPre
     const [cachingOptions, setCachingOptions] = React.useState(mkProfiles(supportedProfiles));
     const [streamingProfiles, setStreamingProfiles] = React.useState(mkProfiles(supportedProfiles));
     React.useEffect(() => {
-        if(typeof preferences.streaming.cacheSize === 'undefined') return;
-        setCachingOptions(mkCacheSizeOptions([...new Set(cacheSizes.concat(preferences.streaming.cacheSize))]));
-    }, [preferences.streaming.cacheSize]);
+        if(!preferences.streaming.ready || typeof preferences.streaming.ready.cacheSize === 'undefined') return;
+        setCachingOptions(mkCacheSizeOptions([...new Set(cacheSizes.concat(preferences.streaming.ready.cacheSize))]));
+    }, [preferences.streaming.ready && preferences.streaming.ready.cacheSize]);
     React.useEffect(() => {
-        if (preferences.streaming.profile && !supportedProfiles.includes(preferences.streaming.profile)) {
+        if (preferences.streaming.ready && preferences.streaming.ready.profile && !supportedProfiles.includes(preferences.streaming.ready.profile)) {
             setStreamingProfiles(mkProfiles(supportedProfiles.concat(preferences.streaming.profile)));
         }
-    }, [preferences.streaming.profile]);
+    }, [preferences.streaming.ready && preferences.streaming.ready.profile]);
 
     const sectionsElements = sections.map((section) =>
         <div key={section.id} ref={section.ref} className={styles['section']} data-section={section.id}>
@@ -155,16 +155,16 @@ const SectionsList = React.forwardRef(({ className, sections, preferences, onPre
 
                                 {
                                     // The streaming server settings are shown only if server is available
-                                    preferences.streaming.isLoaded
+                                    preferences.streaming.ready
                                         ?
                                         <React.Fragment>
                                             <div className={classnames(styles['input-container'], styles['select-container'])}>
                                                 <div className={styles['input-header']}>Caching</div>
-                                                <Dropdown options={cachingOptions} selected={[preferences.streaming.cacheSize]} name={'cacheSize'} className={styles['dropdown']} onSelect={updateStreamingDropdown} />
+                                                <Dropdown options={cachingOptions} selected={[preferences.streaming.ready.cacheSize]} name={'cacheSize'} className={styles['dropdown']} onSelect={updateStreamingDropdown} />
                                             </div>
                                             <div className={classnames(styles['input-container'], styles['select-container'])}>
                                                 <div className={styles['input-header']}>Torrent Profile</div>
-                                                <Dropdown options={streamingProfiles} selected={[preferences.streaming.profile]} name={'profile'} className={styles['dropdown']} onSelect={updateStreamingDropdown} />
+                                                <Dropdown options={streamingProfiles} selected={[preferences.streaming.ready.profile]} name={'profile'} className={styles['dropdown']} onSelect={updateStreamingDropdown} />
                                             </div>
                                         </React.Fragment>
                                         :
@@ -176,8 +176,8 @@ const SectionsList = React.forwardRef(({ className, sections, preferences, onPre
                                 </div>
                                 <div key={'server_available'} className={classnames(styles['input-container'], styles['text-container'])}>
                                     <div className={styles['text']}>
-                                        <Icon className={classnames(styles['icon'], { [styles['x-icon']]: !preferences.streaming.isLoaded })} icon={preferences.streaming.isLoaded ? 'ic_check' : 'ic_x'} />
-                                        <div className={styles['label']}>{'Streaming server is ' + (preferences.streaming.isLoaded ? '' : 'not ') + 'available.'}</div>
+                                        <Icon className={classnames(styles['icon'], { [styles['x-icon']]: !preferences.streaming.ready })} icon={preferences.streaming.ready ? 'ic_check' : 'ic_x'} />
+                                        <div className={styles['label']}>{'Streaming server is ' + (preferences.streaming.ready ? '' : 'not ') + 'available.'}</div>
                                     </div>
                                 </div>
                             </React.Fragment>
