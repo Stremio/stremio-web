@@ -68,7 +68,7 @@ const useCatalog = (urlParams, queryParams) => {
                             resource: 'catalog',
                             type_name: type,
                             id: catalogId,
-                            extra: [] // TODO
+                            extra: Array.from(queryParams.entries())
                         }
                     }
                 }
