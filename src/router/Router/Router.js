@@ -1,9 +1,10 @@
 const React = require('react');
 const ReactIs = require('react-is');
 const PropTypes = require('prop-types');
+const classnames = require('classnames');
 const UrlUtils = require('url');
+const { RouteFocusedProvider } = require('../RouteFocusedContext');
 const Route = require('../Route');
-const { RoutesContainerProvider } = require('../RoutesContainerContext');
 
 const Router = ({ className, onPathNotMatch, ...props }) => {
     const [{ homePath, viewsConfig }] = React.useState(() => ({
@@ -96,17 +97,19 @@ const Router = ({ className, onPathNotMatch, ...props }) => {
         };
     }, [onPathNotMatch]);
     return (
-        <RoutesContainerProvider className={className}>
+        <div className={classnames(className, 'routes-container')}>
             {
                 views
                     .filter(view => view !== null)
-                    .map(({ key, component, urlParams, queryParams }) => (
-                        <Route key={key}>
-                            {React.createElement(component, { urlParams, queryParams })}
-                        </Route>
+                    .map(({ key, component, urlParams, queryParams }, index, views) => (
+                        <RouteFocusedProvider key={key} value={index === views.length - 1}>
+                            <Route>
+                                {React.createElement(component, { urlParams, queryParams })}
+                            </Route>
+                        </RouteFocusedProvider>
                     ))
             }
-        </RoutesContainerProvider>
+        </div>
     );
 };
 

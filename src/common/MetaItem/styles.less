@@ -1,30 +1,35 @@
+:import('~stremio/common/Popup/styles.less') {
+    popup-menu-container: menu-container;
+}
+
+:import('~stremio/common/Multiselect/styles.less') {
+    multiselect-menu-container: menu-container;
+    multiselect-option-container: option-container;
+    multiselect-option-label: label;
+}
+
 :import('~stremio/common/PlayIconCircleCentered/styles.less') {
     play-icon-circle-centered-background: background;
     play-icon-circle-centered-icon: icon;
 }
 
-:import('~stremio/common/Dropdown/styles.less') {
-    dropdown-option-container: dropdown-option-container;
-    dropdown-option-label: label;
-}
-
 .meta-item-container {
-    position: relative;
-    z-index: 0;
-    background-color: var(--color-backgroundlight);
+    overflow: visible;
 
     &:hover, &:focus, &:global(.active) {
         outline-style: solid;
-        background-color: var(--color-surfacelight);
+        outline-offset: 0;
 
         .title-bar-container {
+            background-color: var(--color-surfacelight);
+
             .title-label {
                 color: var(--color-backgrounddarker);
             }
 
-            .dropdown-menu-container {
-                .menu-label-container {
-                    .menu-icon {
+            .multiselect-container {
+                .multiselect-label-container {
+                    .icon {
                         fill: var(--color-backgrounddarker);
                     }
                 }
@@ -33,43 +38,27 @@
     }
 
     &.poster-shape-poster {
-        .poster-image-container {
+        .poster-container {
             padding-top: calc(100% * var(--poster-shape-ratio));
         }
     }
 
     &.poster-shape-square {
-        .poster-image-container {
+        .poster-container {
             padding-top: 100%;
         }
     }
 
     &.poster-shape-landscape {
-        .poster-image-container {
+        .poster-container {
             padding-top: calc(100% * var(--landscape-shape-ratio));
         }
     }
 
-    .poster-image-container {
+    .poster-container {
         position: relative;
-        z-index: -1;
+        z-index: 0;
         background-color: var(--color-backgroundlight);
-
-        .placeholder-icon-layer {
-            position: absolute;
-            top: 25%;
-            right: 10%;
-            bottom: 25%;
-            left: 10%;
-            z-index: 0;
-
-            .placeholder-icon {
-                display: block;
-                width: 100%;
-                height: 100%;
-                fill: var(--color-surfacelight20);
-            }
-        }
 
         .poster-image-layer {
             position: absolute;
@@ -77,14 +66,25 @@
             right: 0;
             bottom: 0;
             left: 0;
-            z-index: 1;
+            z-index: -3;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
 
             .poster-image {
-                display: block;
+                flex: none;
                 width: 100%;
                 height: 100%;
-                object-fit: cover;
                 object-position: center;
+                object-fit: cover;
+            }
+
+            .placeholder-icon {
+                flex: none;
+                width: 80%;
+                height: 50%;
+                fill: var(--color-surfacelight20);
             }
         }
 
@@ -94,7 +94,7 @@
             right: 0;
             bottom: 30%;
             left: 0;
-            z-index: 2;
+            z-index: -2;
             overflow: visible;
 
             .play-icon {
@@ -118,7 +118,7 @@
             right: 0;
             bottom: 0;
             left: 0;
-            z-index: 3;
+            z-index: -1;
             background-color: var(--color-backgroundlighter);
 
             .progress-bar {
@@ -134,6 +134,8 @@
         align-items: center;
         justify-content: flex-end;
         height: 2.8rem;
+        background-color: var(--color-backgroundlight);
+        overflow: visible;
 
         .title-label {
             flex: 1;
@@ -146,52 +148,54 @@
             }
         }
 
-        .dropdown-menu-container {
+        .multiselect-container {
             flex: none;
             width: 2.8rem;
             height: 2.8rem;
+            overflow: visible;
 
-            .menu-label-container {
+            .multiselect-label-container {
                 width: 100%;
                 height: 100%;
                 padding: 0.75rem;
                 background-color: transparent;
 
                 &:hover, &:global(.active) {
-                    filter: none;
                     background-color: var(--color-surface80);
-
-                    .menu-icon {
-                        fill: var(--color-backgrounddarker);
-                    }
                 }
 
-                .menu-icon {
+                .icon {
                     display: block;
                     width: 100%;
                     height: 100%;
                     fill: var(--color-surfacelighter);
                 }
+
+                .popup-menu-container {
+                    width: auto;
+                    right: initial;
+                    left: 0;
+
+                    .multiselect-menu-container {
+                        min-width: 8rem;
+                        max-width: 12rem;
+
+                        .multiselect-option-container {
+                            padding: 0.5rem;
+                            background-color: var(--color-surfacelighter);
+
+                            &:hover, &:focus {
+                                outline: none;
+                                background-color: var(--color-surfacelight);
+                            }
+
+                            .multiselect-option-label {
+                                color: var(--color-backgrounddarker);
+                            }
+                        }
+                    }
+                }
             }
-        }
-    }
-}
-
-.menu-container {
-    min-width: 8rem;
-    max-width: 12rem;
-
-    .dropdown-option-container {
-        padding: 0.5rem;
-        background-color: var(--color-surfacelighter);
-
-        &:hover, &:focus {
-            outline: none;
-            background-color: var(--color-surfacelight);
-        }
-
-        .dropdown-option-label {
-            color: var(--color-backgrounddarker);
         }
     }
 }

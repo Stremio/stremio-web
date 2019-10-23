@@ -1,6 +1,6 @@
 const React = require('react');
 const { storiesOf } = require('@storybook/react');
-const { ColorPicker } = require('stremio/common');
+const ColorPicker = require('stremio/common/ColorInput/ColorPicker');
 const styles = require('./styles');
 
 storiesOf('ColorPicker', module).add('ColorPicker', () => {

@@ -1,5 +1,5 @@
 const React = require('react');
-const { NavBar, MetaPreview, MetaPreviewPlaceholder } = require('stremio/common');
+const { NavBar, MetaPreview } = require('stremio/common');
 const VideosList = require('./VideosList');
 const StreamsList = require('./StreamsList');
 const useMetaItem = require('./useMetaItem');
@@ -32,7 +32,7 @@ const Detail = ({ urlParams }) => {
                             />
                         </React.Fragment>
                         :
-                        <MetaPreviewPlaceholder className={styles['meta-preview']} />
+                        <MetaPreview.Placeholder className={styles['meta-preview']} />
                 }
                 {
                     typeof urlParams.videoId === 'string' && urlParams.videoId.length > 0 ?
