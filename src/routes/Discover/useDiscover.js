@@ -14,6 +14,10 @@ const useCatalog = (urlParams, queryParams) => {
         const type = typeof urlParams.type === 'string' ? urlParams.type : DEFAULT_TYPE;
         const onNewModel = () => {
             const state = core.getState();
+            const onSelect = (event) => {
+                const load = JSON.parse(event.value);
+                window.location = `#/discover/${encodeURIComponent(load.base)}/${encodeURIComponent(load.path.id)}/${encodeURIComponent(load.path.type_name)}`;
+            };
             const selectInputs = [
                 {
                     title: 'Select type',
@@ -25,10 +29,7 @@ const useCatalog = (urlParams, queryParams) => {
                     selected: state.discover.types
                         .filter(({ is_selected }) => is_selected)
                         .map(({ load }) => JSON.stringify(load)),
-                    onSelect: (event) => {
-                        const load = JSON.parse(event.value);
-                        window.location = `#/discover/${encodeURIComponent(load.base)}/${encodeURIComponent(load.path.id)}/${encodeURIComponent(load.path.type_name)}`;
-                    }
+                    onSelect: onSelect
                 },
                 {
                     title: 'Select catalog',
@@ -43,10 +44,7 @@ const useCatalog = (urlParams, queryParams) => {
                     selected: state.discover.catalogs
                         .filter(({ is_selected }) => is_selected)
                         .map(({ load }) => JSON.stringify(load)),
-                    onSelect: (event) => {
-                        const load = JSON.parse(event.value);
-                        window.location = `#/discover/${encodeURIComponent(load.base)}/${encodeURIComponent(load.path.id)}/${encodeURIComponent(load.path.type_name)}`;
-                    }
+                    onSelect: onSelect
                 }
             ];
             const items = state.discover.content.type === 'Ready' ? state.discover.content.content : null;
