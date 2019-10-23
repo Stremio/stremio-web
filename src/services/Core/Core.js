@@ -52,12 +52,12 @@ function Core() {
     function off(name, listener) {
         events.off(name, listener);
     }
-    function dispatch({ action, args } = {}) {
+    function dispatch(action) {
         if (!active) {
             return;
         }
 
-        containerService.dispatch({ action, args });
+        containerService.dispatch(action);
     }
     function getState() {
         if (!active) {
