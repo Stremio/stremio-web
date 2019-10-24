@@ -1,5 +1,9 @@
 @import (reference) '~stremio/common/screen-sizes.less';
 
+:import('~stremio/common/Multiselect/styles.less') {
+    multiselect-menu-container: menu-container;
+}
+
 .discover-container {
     display: flex;
     flex-direction: column;
@@ -33,6 +37,11 @@
 
             .select-input-container {
                 height: 3rem;
+
+                .multiselect-menu-container {
+                    max-height: calc(3.2rem * 7);
+                    overflow: auto;
+                }
             }
         }
 
