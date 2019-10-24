@@ -29,7 +29,7 @@ const useSelectedAddon = (transportUrl) => {
             }
             setAddon(null);
         }
-    }, [active]);
+    }, [active, locationHash]);
     return [addon, clear];
 };
 
