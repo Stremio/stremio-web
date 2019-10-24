@@ -8,7 +8,7 @@ const useBinaryState = require('stremio/common/useBinaryState');
 const useDataset = require('stremio/common/useDataset');
 const styles = require('./styles');
 
-const Multiselect = ({ className, direction, title, renderLabelContent, options, selected, onOpen, onClose, onSelect, ...props }) => {
+const Multiselect = ({ className, direction, title, renderLabelContent, renderLabelText, options, selected, onOpen, onClose, onSelect, ...props }) => {
     options = Array.isArray(options) ?
         options.filter(option => option && typeof option.value === 'string')
         :
@@ -73,16 +73,19 @@ const Multiselect = ({ className, direction, title, renderLabelContent, options,
                             <React.Fragment>
                                 <div className={styles['label']}>
                                     {
-                                        selected.length > 0 ?
-                                            options.reduce((labels, { label, value }) => {
-                                                if (selected.includes(value)) {
-                                                    labels.push(typeof label === 'string' ? label : value);
-                                                }
-
-                                                return labels;
-                                            }, []).join(', ')
+                                        typeof renderLabelText === 'function' ?
+                                            renderLabelText()
                                             :
-                                            title
+                                            selected.length > 0 ?
+                                                options.reduce((labels, { label, value }) => {
+                                                    if (selected.includes(value)) {
+                                                        labels.push(typeof label === 'string' ? label : value);
+                                                    }
+
+                                                    return labels;
+                                                }, []).join(', ')
+                                                :
+                                                title
                                     }
                                 </div>
                                 <Icon className={styles['icon']} icon={'ic_arrow_down'} />
@@ -117,6 +120,7 @@ Multiselect.propTypes = {
     direction: PropTypes.any,
     title: PropTypes.string,
     renderLabelContent: PropTypes.func,
+    renderLabelText: PropTypes.func,
     options: PropTypes.arrayOf(PropTypes.shape({
         value: PropTypes.string.isRequired,
         label: PropTypes.string
