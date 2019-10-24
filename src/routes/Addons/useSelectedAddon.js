@@ -14,14 +14,20 @@ const useSelectedAddon = (transportUrl) => {
 
         fetch(transportUrl)
             .then((resp) => resp.json())
-            .then((manifest) => setAddon({ ...manifest, transportUrl }));
+            .then((manifest) => setAddon({ manifest, transportUrl, flags: {} }));
     }, [transportUrl]);
     const clear = React.useCallback(() => {
         if (active) {
             const { pathname, search } = UrlUtils.parse(locationHash.slice(1));
             const queryParams = new URLSearchParams(search);
             queryParams.delete('addon');
-            window.location.replace(`#${pathname}?${queryParams.toString()}`);
+            if (search && queryParams) {
+                window.location.replace(`#${pathname}?${queryParams.toString()}`);
+            }
+            else {
+                window.location.replace(`#${pathname}`);
+            }
+            setAddon(null);
         }
     }, [active]);
     return [addon, clear];
