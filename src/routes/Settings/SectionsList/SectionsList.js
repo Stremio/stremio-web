@@ -1,6 +1,6 @@
 const React = require('react');
 const PropTypes = require('prop-types');
-const { Button, Dropdown, Checkbox, ColorInput } = require('stremio/common');
+const { Button, Multiselect, Checkbox, ColorInput } = require('stremio/common');
 const Icon = require('stremio-icons/dom');
 const classnames = require('classnames');
 const styles = require('./styles');
@@ -11,21 +11,23 @@ const SectionsList = React.forwardRef(({ className, sections, preferences, onPre
     };
 
     const colorChanged = React.useCallback((event) => {
-        const id = event.currentTarget.dataset.id;
-        const color = event.nativeEvent.value;
+        const id = event.dataset.id;
+        const color = event.value;
         onPreferenceChanged(id, color);
     }, [onPreferenceChanged]);
 
     const updateDropdown = React.useCallback((event) => {
-        const data = event.currentTarget.dataset;
-        onPreferenceChanged(data.name, data.value);
+        const name = event.dataset.name;
+        const value = event.reactEvent.currentTarget.dataset.value;
+        onPreferenceChanged(name, value);
     }, [onPreferenceChanged]);
 
     const updateStreamingDropdown = React.useCallback((event) => {
-        const data = event.currentTarget.dataset;
-        const newPrefs = { ...preferences.streaming.ready, [data.name]: data.value };
+        const name = event.dataset.name;
+        const value = event.reactEvent.currentTarget.dataset.value;
+        const newPrefs = { ...preferences.streaming, [name]: value };
         onPreferenceChanged('streaming', newPrefs);
-    }, [onPreferenceChanged]);
+    }, [onPreferenceChanged, preferences.streaming]);
 
     const checkUser = React.useCallback((event) => {
         if (!preferences.user) {
@@ -73,14 +75,14 @@ const SectionsList = React.forwardRef(({ className, sections, preferences, onPre
     const [cachingOptions, setCachingOptions] = React.useState(mkProfiles(supportedProfiles));
     const [streamingProfiles, setStreamingProfiles] = React.useState(mkProfiles(supportedProfiles));
     React.useEffect(() => {
-        if(!preferences.streaming.ready || typeof preferences.streaming.ready.cacheSize === 'undefined') return;
-        setCachingOptions(mkCacheSizeOptions([...new Set(cacheSizes.concat(preferences.streaming.ready.cacheSize))]));
-    }, [preferences.streaming.ready && preferences.streaming.ready.cacheSize]);
+        if(!preferences.streaming || typeof preferences.streaming.cacheSize === 'undefined') return;
+        setCachingOptions(mkCacheSizeOptions([...new Set(cacheSizes.concat(preferences.streaming.cacheSize))]));
+    }, [preferences.streaming && preferences.streaming.cacheSize]);
     React.useEffect(() => {
-        if (preferences.streaming.ready && preferences.streaming.ready.profile && !supportedProfiles.includes(preferences.streaming.ready.profile)) {
+        if (preferences.streaming && preferences.streaming.profile && !supportedProfiles.includes(preferences.streaming.profile)) {
             setStreamingProfiles(mkProfiles(supportedProfiles.concat(preferences.streaming.profile)));
         }
-    }, [preferences.streaming.ready && preferences.streaming.ready.profile]);
+    }, [preferences.streaming && preferences.streaming.profile]);
 
     const sectionsElements = sections.map((section) =>
         <div key={section.id} ref={section.ref} className={styles['section']} data-section={section.id}>
@@ -155,20 +157,20 @@ const SectionsList = React.forwardRef(({ className, sections, preferences, onPre
 
                                 {
                                     // The streaming server settings are shown only if server is available
-                                    preferences.streaming.ready
+                                    preferences.streaming_error
                                         ?
+                                        null
+                                        :
                                         <React.Fragment>
                                             <div className={classnames(styles['input-container'], styles['select-container'])}>
                                                 <div className={styles['input-header']}>Caching</div>
-                                                <Dropdown options={cachingOptions} selected={[preferences.streaming.ready.cacheSize]} name={'cacheSize'} className={styles['dropdown']} onSelect={updateStreamingDropdown} />
+                                                <Multiselect options={cachingOptions} selected={[preferences.streaming.cacheSize]} data-name={'cacheSize'} className={styles['dropdown']} onSelect={updateStreamingDropdown} />
                                             </div>
                                             <div className={classnames(styles['input-container'], styles['select-container'])}>
                                                 <div className={styles['input-header']}>Torrent Profile</div>
-                                                <Dropdown options={streamingProfiles} selected={[preferences.streaming.ready.profile]} name={'profile'} className={styles['dropdown']} onSelect={updateStreamingDropdown} />
+                                                <Multiselect options={streamingProfiles} selected={[preferences.streaming.profile]} data-name={'profile'} className={styles['dropdown']} onSelect={updateStreamingDropdown} />
                                             </div>
                                         </React.Fragment>
-                                        :
-                                        null
                                 }
                                 {/* From here there is only presentation */}
                                 <div key={'server_url'} className={classnames(styles['input-container'], styles['text-container'])}>
@@ -176,8 +178,8 @@ const SectionsList = React.forwardRef(({ className, sections, preferences, onPre
                                 </div>
                                 <div key={'server_available'} className={classnames(styles['input-container'], styles['text-container'])}>
                                     <div className={styles['text']}>
-                                        <Icon className={classnames(styles['icon'], { [styles['x-icon']]: !preferences.streaming.ready })} icon={preferences.streaming.ready ? 'ic_check' : 'ic_x'} />
-                                        <div className={styles['label']}>{'Streaming server is ' + (preferences.streaming.ready ? '' : 'not ') + 'available.'}</div>
+                                        <Icon className={classnames(styles['icon'], { [styles['x-icon']]: preferences.streaming_error })} icon={preferences.streaming_error ? 'ic_x' : 'ic_check'} />
+                                        <div className={styles['label']}>{'Streaming server is ' + (preferences.streaming_error ? 'not ' : '') + 'available. Reason: '+preferences.streaming_error}</div>
                                     </div>
                                 </div>
                             </React.Fragment>
@@ -186,7 +188,7 @@ const SectionsList = React.forwardRef(({ className, sections, preferences, onPre
                         return (
                             <div key={input.id} className={classnames(styles['input-container'], styles['select-container'])}>
                                 {input.header ? <div className={styles['input-header']}>{input.header}</div> : null}
-                                <Dropdown options={input.options} selected={[preferences[input.id]]} name={input.id} key={input.id} className={styles['dropdown']} onSelect={updateDropdown} />
+                                <Multiselect options={input.options} selected={[preferences[input.id]]} data-name={input.id} key={input.id} className={styles['dropdown']} onSelect={updateDropdown} />
                             </div>
                         );
                     } else if (input.type === 'link') {
@@ -231,7 +233,7 @@ const SectionsList = React.forwardRef(({ className, sections, preferences, onPre
                         return (
                             <div key={input.id} className={classnames(styles['input-container'], styles['color-container'])}>
                                 {input.header ? <div className={styles['input-header']}>{input.header}</div> : null}
-                                <ColorInput className={styles['color-picker']} id={input.id} value={preferences[input.id]} onChange={colorChanged} />
+                                <ColorInput className={styles['color-picker']} data-id={input.id} value={preferences[input.id]} onChange={colorChanged} />
                             </div>
                         );
                     } else if (input.type === 'info') {

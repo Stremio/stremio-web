@@ -15,7 +15,8 @@ module.exports = () => {
                     ...settings,
                     ...state.ctx.content.settings,
                     user: state.ctx.content.auth ? state.ctx.content.auth.user : null,
-                    streaming: state.streaming_server_settings || {},
+                    streaming: state.streaming_server_settings && state.streaming_server_settings.ready || {},
+                    streaming_error: state.streaming_server_settings && state.streaming_server_settings.error || "",
                 });
             } catch (e) {
                 console.log('Cannot update settings state', e);
@@ -42,8 +43,8 @@ module.exports = () => {
     const setTheSettings = React.useCallback(newSettings => {
         const event = { action: 'Settings', args: { args: {} } };
         // This can be done with React.useEffect and newSettings.streaming as dependency
-        const streamingServerSettingChanged = Object.keys(newSettings.streaming)
-            .some(prop => settings.streaming.ready[prop] !== newSettings.streaming[prop]);
+        const streamingServerSettingChanged = settings.streaming && Object.keys(newSettings.streaming)
+            .some(prop => settings.streaming[prop] !== newSettings.streaming[prop]);
         if (streamingServerSettingChanged) {
             event.args = { settings: 'StoreStreamingServer', args: newSettings.streaming };
         } else {
@@ -57,4 +58,3 @@ module.exports = () => {
 
     return [settings, setTheSettings];
 };
-
