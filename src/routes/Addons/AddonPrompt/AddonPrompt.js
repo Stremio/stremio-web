@@ -2,12 +2,12 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
-const { useFocusable } = require('stremio-router');
+const { useRouteFocused } = require('stremio-router');
 const { Button } = require('stremio/common');
 const styles = require('./styles');
 
 const AddonPrompt = ({ className, id, name, logo, description, types, catalogs, version, transportUrl, installed, official, cancel }) => {
-    const focusable = useFocusable();
+    const focusable = useRouteFocused();
     React.useEffect(() => {
         const onKeyUp = (event) => {
             if (event.key === 'Escape') {
