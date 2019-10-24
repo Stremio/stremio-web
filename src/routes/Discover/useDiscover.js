@@ -55,15 +55,15 @@ const useCatalog = (urlParams, queryParams) => {
                     }
                 },
                 ...state.discover.selectable_extra
-                    .map((extra) => ({
-                        title: `Select ${extra.name}`,
-                        options: (extra.isRequired ? [] : [NONE_EXTRA_VALUE])
+                    .map((extra) => {
+                        const title = `Select ${extra.name}`;
+                        const options = (extra.isRequired ? [] : [NONE_EXTRA_VALUE])
                             .concat(extra.options)
                             .map((option) => ({
                                 value: option,
                                 label: option
-                            })),
-                        selected: state.discover.selected.path.extra
+                            }));
+                        const selected = state.discover.selected.path.extra
                             .reduce((selected, [name, value]) => {
                                 if (name === extra.name) {
                                     selected = selected.filter(value => value !== NONE_EXTRA_VALUE)
@@ -71,8 +71,12 @@ const useCatalog = (urlParams, queryParams) => {
                                 }
 
                                 return selected;
-                            }, extra.isRequired ? [] : [NONE_EXTRA_VALUE]),
-                        onSelect: (event) => {
+                            }, extra.isRequired ? [] : [NONE_EXTRA_VALUE]);
+                        const renderLabelText = selected.includes(NONE_EXTRA_VALUE) ?
+                            () => title
+                            :
+                            null;
+                        const onSelect = (event) => {
                             navigateWithLoad({
                                 base: addonTransportUrl,
                                 path: {
@@ -115,7 +119,8 @@ const useCatalog = (urlParams, queryParams) => {
                                 }
                             });
                         }
-                    }))
+                        return { title, options, selected, renderLabelText, onSelect };
+                    })
             ];
             const items = state.discover.content.type === 'Ready' ? state.discover.content.content : null;
             const error = state.discover.content.type === 'Err' ? JSON.stringify(state.discover.content.content) : null;
