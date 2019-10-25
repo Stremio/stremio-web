@@ -11,7 +11,7 @@ const useDataset = require('stremio/common/useDataset');
 const styles = require('./styles');
 
 const ICON_FOR_TYPE = new Map([
-    ['movie', 'ic_movies' ],
+    ['movie', 'ic_movies'],
     ['series', 'ic_series'],
     ['channel', 'ic_channels'],
     ['tv', 'ic_tv'],
@@ -42,6 +42,7 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, playI
         if (typeof menuOptionOnSelect === 'function') {
             menuOptionOnSelect({
                 type: 'select-option',
+                value: event.value,
                 dataset: dataset,
                 reactEvent: event.reactEvent,
                 nativeEvent: event.nativeEvent
