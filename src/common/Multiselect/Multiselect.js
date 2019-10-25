@@ -8,7 +8,7 @@ const useBinaryState = require('stremio/common/useBinaryState');
 const useDataset = require('stremio/common/useDataset');
 const styles = require('./styles');
 
-const Multiselect = ({ className, direction, title, renderLabelContent, renderLabelText, options, selected, onOpen, onClose, onSelect, ...props }) => {
+const Multiselect = ({ className, direction, title, renderLabelContent, renderLabelText, options, selected, disabled, onOpen, onClose, onSelect, ...props }) => {
     options = Array.isArray(options) ?
         options.filter(option => option && typeof option.value === 'string')
         :
@@ -65,7 +65,7 @@ const Multiselect = ({ className, direction, title, renderLabelContent, renderLa
             direction={direction}
             onCloseRequest={closeMenu}
             renderLabel={({ ref, className: popupLabelClassName, children }) => (
-                <Button ref={ref} className={classnames(className, popupLabelClassName, styles['label-container'], { 'active': menuOpen })} title={title} onClick={popupLabelOnClick}>
+                <Button ref={ref} className={classnames(className, popupLabelClassName, styles['label-container'], { 'active': menuOpen })} title={title} disabled={disabled} onClick={popupLabelOnClick}>
                     {
                         typeof renderLabelContent === 'function' ?
                             renderLabelContent()
@@ -126,6 +126,7 @@ Multiselect.propTypes = {
         label: PropTypes.string
     })),
     selected: PropTypes.arrayOf(PropTypes.string),
+    disabled: PropTypes.bool,
     onOpen: PropTypes.func,
     onClose: PropTypes.func,
     onSelect: PropTypes.func
