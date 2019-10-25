@@ -8,6 +8,7 @@ const MetaPreview = require('./MetaPreview');
 const MetaRow = require('./MetaRow');
 const Multiselect = require('./Multiselect');
 const NavBar = require('./NavBar');
+const PaginateInput = require('./PaginateInput');
 const PlayIconCircleCentered = require('./PlayIconCircleCentered');
 const Popup = require('./Popup');
 const SharePrompt = require('./SharePrompt');
@@ -35,6 +36,7 @@ module.exports = {
     MetaRow,
     Multiselect,
     NavBar,
+    PaginateInput,
     PlayIconCircleCentered,
     Popup,
     SharePrompt,
