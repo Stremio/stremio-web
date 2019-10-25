@@ -6,7 +6,7 @@ const { useRouteFocused } = require('stremio-router');
 const { Button } = require('stremio/common');
 const styles = require('./styles');
 
-const AddonPrompt = ({ className, id, name, logo, description, types, catalogs, version, transportUrl, installed, official, cancel }) => {
+const AddonPrompt = ({ className, id, name, logo, description, types, catalogs, version, transportUrl, installed, official, cancel, onClick }) => {
     const focusable = useRouteFocused();
     React.useEffect(() => {
         const onKeyUp = (event) => {
@@ -22,7 +22,7 @@ const AddonPrompt = ({ className, id, name, logo, description, types, catalogs, 
         };
     }, [cancel, focusable]);
     return (
-        <div className={classnames(className, styles['addon-prompt-container'])}>
+        <div className={classnames(className, styles['addon-prompt-container'])} onClick={onClick}>
             <Button className={styles['close-button-container']} title={'Close'} tabIndex={-1} onClick={cancel}>
                 <Icon className={styles['icon']} icon={'ic_x'} />
             </Button>
@@ -104,7 +104,7 @@ const AddonPrompt = ({ className, id, name, logo, description, types, catalogs, 
                 }
             </div>
             <div className={styles['buttons-container']}>
-                <Button className={classnames(styles['button-container'], styles['cancel-button'])} title={'cancel'} onClick={cancel}>
+                <Button className={classnames(styles['button-container'], styles['cancel-button'])} title={'Cancel'} onClick={cancel}>
                     <div className={styles['label']}>Cancel</div>
                 </Button>
                 <Button className={classnames(styles['button-container'], installed ? styles['uninstall-button'] : styles['install-button'])} title={installed ? 'Uninstall' : 'Install'}>

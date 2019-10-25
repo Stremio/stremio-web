@@ -14,7 +14,7 @@ const Addons = ({ urlParams, queryParams }) => {
         setQuery(event.currentTarget.value);
     }, []);
     const [addons, dropdowns] = useAddons(urlParams, queryParams);
-    const [selectedAddon, clearSelectedAddon] = useSelectedAddon(queryParams.get('addon'));
+    const [selectedAddon, clearSelectedAddon, setSelectedAddon] = useSelectedAddon(queryParams.get('addon'));
     const addonPromptModalBackgroundOnClick = React.useCallback((event) => {
         if (!event.nativeEvent.clearSelectedAddonPrevented) {
             clearSelectedAddon();
@@ -53,15 +53,15 @@ const Addons = ({ urlParams, queryParams }) => {
                                 (typeof addon.manifest.description === 'string' && addon.manifest.description.toLowerCase().includes(query.toLowerCase()))
                             ))
                             .map((addon, index) => (
-                                <Addon {...addon.manifest} key={index} className={styles['addon']} />
+                                <Addon {...addon.manifest} key={index} className={styles['addon']} toggle={() => setSelectedAddon(addon)} />
                             ))
                     }
                 </div>
                 {
                     selectedAddon !== null ?
                         <Modal className={styles['addon-prompt-modal-container']} onClick={addonPromptModalBackgroundOnClick}>
-                            <div className={styles['addon-prompt-container']} onClick={addonPromptOnClick}>
-                                <AddonPrompt {...selectedAddon} className={styles['addon-prompt']} cancel={clearSelectedAddon} />
+                            <div className={styles['addon-prompt-container']}>
+                                <AddonPrompt {...selectedAddon.manifest} transportUrl={selectedAddon.transportUrl} official={selectedAddon.flags.official} className={styles['addon-prompt']} cancel={clearSelectedAddon} onClick={addonPromptOnClick} />
                             </div>
                         </Modal>
                         :

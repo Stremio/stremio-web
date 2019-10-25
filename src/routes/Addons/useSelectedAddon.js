@@ -30,7 +30,7 @@ const useSelectedAddon = (transportUrl) => {
             setAddon(null);
         }
     }, [active, locationHash]);
-    return [addon, clear];
+    return [addon, clear, setAddon];
 };
 
 module.exports = useSelectedAddon;
