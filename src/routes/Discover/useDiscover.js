@@ -5,6 +5,7 @@ const DEFAULT_ADDON_TRANSPORT_URL = 'https://v3-cinemeta.strem.io/manifest.json'
 const DEFAULT_CATALOG_ID = 'top';
 const DEFAULT_TYPE = 'movie';
 const NONE_EXTRA_VALUE = 'None';
+const PAGE_SIZE = 100;
 
 const useCatalog = (urlParams, queryParams) => {
     const { core } = useServices();
@@ -122,9 +123,73 @@ const useCatalog = (urlParams, queryParams) => {
                         return { title, options, selected, renderLabelText, onSelect };
                     })
             ];
+            const paginateInput = state.discover.load_next !== null || state.discover.load_prev !== null ?
+                {
+                    selected: state.discover.load_next !== null ?
+                        state.discover.load_next.path.extra.reduce((page, [name, value]) => {
+                            if (name === 'skip') {
+                                const parsedValue = parseInt(value);
+                                if (!isNaN(parsedValue)) {
+                                    return Math.floor(parsedValue / 100);
+                                }
+                            }
+
+                            return page;
+                        }, 1)
+                        :
+                        state.discover.load_prev !== null ?
+                            state.discover.load_prev.path.extra.reduce((page, [name, value]) => {
+                                if (name === 'skip') {
+                                    const parsedValue = parseInt(value);
+                                    if (!isNaN(parsedValue)) {
+                                        return Math.floor(parsedValue / 100) + 2;
+                                    }
+                                }
+
+                                return page;
+                            }, 1)
+                            :
+                            1,
+                    onSelect: (event) => {
+                        if (event.value < 1) {
+                            return;
+                        }
+
+                        navigateWithLoad({
+                            base: addonTransportUrl,
+                            path: {
+                                resource: 'catalog',
+                                type_name: type,
+                                id: catalogId,
+                                extra: Array.from(queryParams.entries())
+                                    .concat([['skip', String((event.value - 1) * PAGE_SIZE)]])
+                                    .reduceRight((result, [name, value]) => {
+                                        if (name === 'skip') {
+                                            const optionsCount = result.reduce((optionsCount, [name]) => {
+                                                if (name === 'skip') {
+                                                    optionsCount++;
+                                                }
+
+                                                return optionsCount;
+                                            }, 0);
+                                            if (optionsCount === 0) {
+                                                result.unshift([name, value]);
+                                            }
+                                        } else {
+                                            result.unshift([name, value]);
+                                        }
+
+                                        return result;
+                                    }, [])
+                            }
+                        });
+                    }
+                }
+                :
+                null;
             const items = state.discover.content.type === 'Ready' ? state.discover.content.content : null;
             const error = state.discover.content.type === 'Err' ? JSON.stringify(state.discover.content.content) : null;
-            setDiscover([selectInputs, items, error]);
+            setDiscover([selectInputs, paginateInput, items, error]);
         };
         core.on('NewModel', onNewModel);
         core.dispatch({
