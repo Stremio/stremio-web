@@ -11,13 +11,15 @@ module.exports = () => {
         const onNewState = () => {
             const state = core.getState()
             try {
-                setSettings({
+                const newSettings = {
                     ...settings,
                     ...state.ctx.content.settings,
                     user: state.ctx.content.auth ? state.ctx.content.auth.user : null,
                     streaming: state.streaming_server_settings && state.streaming_server_settings.ready || {},
+                    streaming_loaded: state.streaming_server_settings && (state.streaming_server_settings.error || state.streaming_server_settings.ready),
                     streaming_error: state.streaming_server_settings && state.streaming_server_settings.error || "",
-                });
+                };
+                setSettings(newSettings);
             } catch (e) {
                 console.log('Cannot update settings state', e);
             }

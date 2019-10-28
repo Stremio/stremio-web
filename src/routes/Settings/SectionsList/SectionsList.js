@@ -50,14 +50,14 @@ const SectionsList = React.forwardRef(({ className, sections, preferences, onPre
         if (inBytes === 'Infinity') return '∞';
 
         const bytes = parseInt(inBytes, 10);
-    
+
         const kilo = 1024;
         const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-    
+
         const power = Math.floor(Math.log(bytes) / Math.log(kilo));
 
         // More than 1024 yotta bytes
-        if(power >= sizes.length) {
+        if (power >= sizes.length) {
             power = sizes.length - 1;
         }
         return parseFloat((bytes / Math.pow(kilo, power)).toFixed(2)) + ' ' + sizes[power];
@@ -75,7 +75,7 @@ const SectionsList = React.forwardRef(({ className, sections, preferences, onPre
     const [cachingOptions, setCachingOptions] = React.useState(mkProfiles(supportedProfiles));
     const [streamingProfiles, setStreamingProfiles] = React.useState(mkProfiles(supportedProfiles));
     React.useEffect(() => {
-        if(!preferences.streaming || typeof preferences.streaming.cacheSize === 'undefined') return;
+        if (!preferences.streaming || typeof preferences.streaming.cacheSize === 'undefined') return;
         setCachingOptions(mkCacheSizeOptions([...new Set(cacheSizes.concat(preferences.streaming.cacheSize))]));
     }, [preferences.streaming && preferences.streaming.cacheSize]);
     React.useEffect(() => {
@@ -153,36 +153,41 @@ const SectionsList = React.forwardRef(({ className, sections, preferences, onPre
                         );
                     } else if (input.type === 'streaming') {
                         return (
-                            <React.Fragment key={'streaming'}>
-
-                                {
-                                    // The streaming server settings are shown only if server is available
-                                    preferences.streaming_error
-                                        ?
-                                        null
-                                        :
-                                        <React.Fragment>
-                                            <div className={classnames(styles['input-container'], styles['select-container'])}>
-                                                <div className={styles['input-header']}>Caching</div>
-                                                <Multiselect options={cachingOptions} selected={[preferences.streaming.cacheSize]} data-name={'cacheSize'} className={styles['dropdown']} onSelect={updateStreamingDropdown} />
-                                            </div>
-                                            <div className={classnames(styles['input-container'], styles['select-container'])}>
-                                                <div className={styles['input-header']}>Torrent Profile</div>
-                                                <Multiselect options={streamingProfiles} selected={[preferences.streaming.profile]} data-name={'profile'} className={styles['dropdown']} onSelect={updateStreamingDropdown} />
-                                            </div>
-                                        </React.Fragment>
-                                }
-                                {/* From here there is only presentation */}
-                                <div key={'server_url'} className={classnames(styles['input-container'], styles['text-container'])}>
-                                    <div className={styles['input-header']}><strong>Streaming server URL:</strong> {preferences.server_url}</div>
-                                </div>
-                                <div key={'server_available'} className={classnames(styles['input-container'], styles['text-container'])}>
-                                    <div className={styles['text']}>
-                                        <Icon className={classnames(styles['icon'], { [styles['x-icon']]: preferences.streaming_error })} icon={preferences.streaming_error ? 'ic_x' : 'ic_check'} />
-                                        <div className={styles['label']}>{'Streaming server is ' + (preferences.streaming_error ? 'not ' : '') + 'available. Reason: '+preferences.streaming_error}</div>
+                            preferences.streaming_loaded
+                                ?
+                                <React.Fragment key={'streaming'}>
+                                    {
+                                        // The streaming server settings are shown only if server is available
+                                        preferences.streaming_error
+                                            ?
+                                            null
+                                            :
+                                            <React.Fragment>
+                                                <div className={classnames(styles['input-container'], styles['select-container'])}>
+                                                    <div className={styles['input-header']}>Caching</div>
+                                                    <Multiselect options={cachingOptions} selected={[preferences.streaming.cacheSize]} data-name={'cacheSize'} className={styles['dropdown']} onSelect={updateStreamingDropdown} />
+                                                </div>
+                                                <div className={classnames(styles['input-container'], styles['select-container'])}>
+                                                    <div className={styles['input-header']}>Torrent Profile</div>
+                                                    <Multiselect options={streamingProfiles} selected={[preferences.streaming.profile]} data-name={'profile'} className={styles['dropdown']} onSelect={updateStreamingDropdown} />
+                                                </div>
+                                            </React.Fragment>
+                                    }
+                                    {/* From here there is only presentation */}
+                                    <div key={'server_url'} className={classnames(styles['input-container'], styles['text-container'])}>
+                                        <div className={styles['input-header']}><strong>Streaming server URL:</strong> {preferences.server_url}</div>
                                     </div>
+                                    <div key={'server_available'} className={classnames(styles['input-container'], styles['text-container'])}>
+                                        <div className={styles['text']}>
+                                            <Icon className={classnames(styles['icon'], { [styles['x-icon']]: preferences.streaming_error })} icon={preferences.streaming_error ? 'ic_x' : 'ic_check'} />
+                                            <div className={styles['label']}>{'Streaming server is ' + (preferences.streaming_error ? 'not ' : '') + 'available. Reason: ' + preferences.streaming_error}</div>
+                                        </div>
+                                    </div>
+                                </React.Fragment>
+                                :
+                                <div key={'server_url'} className={classnames(styles['input-container'], styles['text-container'])}>
+                                    <div className={styles['input-header']}>Loading streaming settgins...</div>
                                 </div>
-                            </React.Fragment>
                         );
                     } else if (input.type === 'select') {
                         return (
