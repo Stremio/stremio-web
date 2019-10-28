@@ -7,6 +7,24 @@ const DEFAULT_CATEGORY = 'thirdparty';
 const useAddons = (urlParams, queryParams) => {
     const { core } = useServices();
     const [addons, setAddons] = React.useState([[], []]);
+    const installAddon = React.useCallback(descriptor =>
+        core.dispatch({
+            action: 'AddonOp',
+            args: {
+                addonOp: 'Install',
+                args: descriptor
+            }
+        }), []);
+    const uninstallAddon = React.useCallback(descriptor =>
+        core.dispatch({
+            action: 'AddonOp',
+            args: {
+                addonOp: 'Remove',
+                args: {
+                    transport_url: descriptor.transportUrl
+                }
+            }
+        }), []);
     React.useEffect(() => {
         const type = typeof urlParams.type === 'string' && urlParams.type.length > 0 ? urlParams.type : DEFAULT_TYPE;
         const category = typeof urlParams.category === 'string' && urlParams.category.length > 0 ? urlParams.category : DEFAULT_CATEGORY;
@@ -48,7 +66,8 @@ const useAddons = (urlParams, queryParams) => {
                 }
             ];
             const addonsItems = state.addons.content.type === 'Ready' ? state.addons.content.content : [];
-            setAddons([addonsItems, selectInputs]);
+            const installedAddons = state.ctx.is_loaded ? state.ctx.content.addons : [];
+            setAddons([addonsItems, selectInputs, installAddon, uninstallAddon, installedAddons]);
         };
         core.on('NewModel', onNewState);
         core.dispatch({

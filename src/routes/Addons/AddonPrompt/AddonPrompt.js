@@ -6,7 +6,7 @@ const { useRouteFocused } = require('stremio-router');
 const { Button } = require('stremio/common');
 const styles = require('./styles');
 
-const AddonPrompt = ({ className, id, name, logo, description, types, catalogs, version, transportUrl, installed, official, cancel, onClick }) => {
+const AddonPrompt = ({ className, id, name, logo, description, types, catalogs, version, transportUrl, installed, official, cancel, onClick, toggle }) => {
     const focusable = useRouteFocused();
     React.useEffect(() => {
         const onKeyUp = (event) => {
@@ -107,7 +107,7 @@ const AddonPrompt = ({ className, id, name, logo, description, types, catalogs, 
                 <Button className={classnames(styles['button-container'], styles['cancel-button'])} title={'Cancel'} onClick={cancel}>
                     <div className={styles['label']}>Cancel</div>
                 </Button>
-                <Button className={classnames(styles['button-container'], installed ? styles['uninstall-button'] : styles['install-button'])} title={installed ? 'Uninstall' : 'Install'}>
+                <Button className={classnames(styles['button-container'], installed ? styles['uninstall-button'] : styles['install-button'])} title={installed ? 'Uninstall' : 'Install'} onClick={() => { toggle(); cancel() }}>
                     <div className={styles['label']}>{installed ? 'Uninstall' : 'Install'}</div>
                 </Button>
             </div>
@@ -129,7 +129,9 @@ AddonPrompt.propTypes = {
     transportUrl: PropTypes.string,
     installed: PropTypes.bool,
     official: PropTypes.bool,
-    cancel: PropTypes.func
+    cancel: PropTypes.func,
+    onClick: PropTypes.func,
+    toggle: PropTypes.func
 };
 
 module.exports = AddonPrompt;
