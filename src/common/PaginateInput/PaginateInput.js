@@ -88,7 +88,7 @@ const PaginateInput = ({ className, options, selected, onSelect, ...props }) => 
         }
     }, [onSelect]);
     return (
-        <div className={classnames(className, styles['paginate-input-container'])}>
+        <div className={classnames(className, styles['paginate-input-container'])} title={selected}>
             <Button className={styles['prev-button-container']} onClick={prevButtonOnClick}>
                 <Icon className={styles['icon']} icon={'ic_arrow_left'} />
             </Button>
