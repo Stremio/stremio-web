@@ -14,6 +14,13 @@ const useCatalog = (urlParams, queryParams) => {
         const addonTransportUrl = typeof urlParams.addonTransportUrl === 'string' ? urlParams.addonTransportUrl : DEFAULT_ADDON_TRANSPORT_URL;
         const catalogId = typeof urlParams.catalogId === 'string' ? urlParams.catalogId : DEFAULT_CATALOG_ID;
         const type = typeof urlParams.type === 'string' ? urlParams.type : DEFAULT_TYPE;
+        queryParams = new URLSearchParams(queryParams);
+        if (queryParams.has('skip')) {
+            const skip = parseInt(queryParams.get('skip'));
+            if (!isNaN(skip)) {
+                queryParams.set('skip', Math.floor(skip / PAGE_SIZE) * PAGE_SIZE);
+            }
+        }
         const onNewModel = () => {
             const state = core.getState();
             const navigateWithLoad = (load) => {
