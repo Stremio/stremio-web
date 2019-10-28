@@ -1,12 +1,13 @@
 const React = require('react');
 const classnames = require('classnames');
-const { MainNavBar, MetaItem, MetaPreview, Multiselect } = require('stremio/common');
+const Icon = require('stremio-icons/dom');
+const { Button, MainNavBar, MetaItem, MetaPreview, Multiselect, PaginateInput } = require('stremio/common');
 const useDiscover = require('./useDiscover');
 const styles = require('./styles');
 
 // TODO render only 4 pickers and a more button that opens a modal with all pickers
 const Discover = ({ urlParams, queryParams }) => {
-    const [selectInputs, metaItems, error] = useDiscover(urlParams, queryParams);
+    const [selectInputs, paginateInput, metaItems, error] = useDiscover(urlParams, queryParams);
     const [selectedMetaItem, setSelectedMetaItem] = React.useState(null);
     const metaItemsOnMouseDownCapture = React.useCallback((event) => {
         event.nativeEvent.buttonBlurPrevented = true;
@@ -35,6 +36,19 @@ const Discover = ({ urlParams, queryParams }) => {
                             className={styles['select-input-container']}
                         />
                     ))}
+                    <Button className={styles['filter-container']}>
+                        <Icon className={styles['filter-icon']} icon={'ic_filter'} />
+                    </Button>
+                    <div className={styles['spacing']} />
+                    {
+                        paginateInput !== null ?
+                            <PaginateInput
+                                {...paginateInput}
+                                className={styles['paginate-input-container']}
+                            />
+                            :
+                            null
+                    }
                 </div>
                 <div className={styles['catalog-content-container']}>
                     {

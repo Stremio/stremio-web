@@ -4,6 +4,12 @@
     multiselect-menu-container: menu-container;
 }
 
+:import('~stremio/common/PaginateInput/styles.less') {
+    paginate-prev-button-container: prev-button-container;
+    paginate-next-button-container: next-button-container;
+    paginate-multiselect-label: multiselect-label;
+}
+
 .discover-container {
     display: flex;
     flex-direction: column;
@@ -28,19 +34,58 @@
 
         .controls-container {
             grid-area: controls-area;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, 15rem);
-            grid-gap: 1rem;
+            display: flex;
+            flex-direction: row;
             margin: 2rem 0;
             padding: 0 2rem;
             overflow: visible;
 
             .select-input-container {
+                flex-grow: 0;
+                flex-shrink: 1;
+                flex-basis: 15rem;
                 height: 3rem;
+                margin-right: 1rem;
 
                 .multiselect-menu-container {
                     max-height: calc(3.2rem * 7);
                     overflow: auto;
+                }
+            }
+
+            .filter-container {
+                flex: none;
+                width: 3rem;
+                height: 3rem;
+                background-color: var(--color-backgroundlighter);
+
+                .filter-icon {
+                    display: block;
+                    width: 1.2rem;
+                    height: 1.2rem;
+                    margin: 0.9rem;
+                    fill: var(--color-surfacelighter);
+                }
+            }
+
+            .spacing {
+                flex: 1;
+            }
+
+            .paginate-input-container {
+                flex: none;
+                margin-right: 1rem;
+                background-color: var(--color-backgroundlighter);
+
+                .paginate-prev-button-container, .paginate-next-button-container {
+                    width: 3rem;
+                    height: 3rem;
+                }
+
+                .paginate-multiselect-label {
+                    max-width: 3rem;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
                 }
             }
         }
@@ -149,10 +194,6 @@
             grid-template-areas:
                 "controls-area"
                 "catalog-content-area";
-
-            .controls-container {
-                grid-template-columns: repeat(4, 1fr);
-            }
 
             .catalog-content-container {
                 .meta-items-container {
