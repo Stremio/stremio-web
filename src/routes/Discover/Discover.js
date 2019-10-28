@@ -36,9 +36,9 @@ const Discover = ({ urlParams, queryParams }) => {
                             className={styles['select-input-container']}
                         />
                     ))}
-                    <Button className={styles['filter-container']}>
+                    {/* <Button className={styles['filter-container']}>
                         <Icon className={styles['filter-icon']} icon={'ic_filter'} />
-                    </Button>
+                    </Button> */}
                     <div className={styles['spacing']} />
                     {
                         paginateInput !== null ?
