@@ -47,6 +47,14 @@
                 height: 3rem;
                 margin-right: 1rem;
 
+                &:nth-child(n+4) {
+                    display: none;
+
+                    &~.filter-container {
+                        display: block;
+                    }
+                }
+
                 .multiselect-menu-container {
                     max-height: calc(3.2rem * 7);
                     overflow: auto;
@@ -54,10 +62,15 @@
             }
 
             .filter-container {
+                display: none;
                 flex: none;
                 width: 3rem;
                 height: 3rem;
                 background-color: var(--color-backgroundlighter);
+
+                &:not(:nth-last-child(2)) {
+                    margin-right: 1rem;
+                }
 
                 .filter-icon {
                     display: block;
@@ -74,7 +87,6 @@
 
             .paginate-input-container {
                 flex: none;
-                margin-right: 1rem;
                 background-color: var(--color-backgroundlighter);
 
                 .paginate-prev-button-container, .paginate-next-button-container {
