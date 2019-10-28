@@ -30,6 +30,25 @@ const useAddons = (urlParams, queryParams) => {
         const category = typeof urlParams.category === 'string' && urlParams.category.length > 0 ? urlParams.category : DEFAULT_CATEGORY;
         const onNewState = () => {
             const state = core.getState();
+            const myAddons = [...new Set(
+                [].concat(...state.ctx.content.addons.map(addon => addon.manifest.types))
+            )]
+                .map((type) => (
+                    {
+                        is_selected: urlParams.category === 'my',
+                        name: 'my',
+                        load: {
+                            base: 'https://v3-cinemeta.strem.io/manifest.json',
+                            path: {
+                                resource: 'addon_catalog',
+                                type_name: type,
+                                id: 'my',
+                                extra: []
+                            }
+                        }
+                    })
+                );
+            myAddons.forEach(addon => state.addons.catalogs.push(addon));
             const selectInputs = [
                 {
                     'data-name': 'type',
@@ -65,8 +84,11 @@ const useAddons = (urlParams, queryParams) => {
                     }
                 }
             ];
-            const addonsItems = state.addons.content.type === 'Ready' ? state.addons.content.content : [];
             const installedAddons = state.ctx.is_loaded ? state.ctx.content.addons : [];
+            const addonsItems = urlParams.category === 'my' && state.ctx.is_loaded ?
+                installedAddons.filter(addon => addon.manifest.types.includes(urlParams.type))
+                :
+                (state.addons.content.type === 'Ready' ? state.addons.content.content : []);
             setAddons([addonsItems, selectInputs, installAddon, uninstallAddon, installedAddons]);
         };
         core.on('NewModel', onNewState);
