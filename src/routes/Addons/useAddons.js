@@ -31,7 +31,7 @@ const useAddons = (urlParams, queryParams) => {
         const onNewState = () => {
             const state = core.getState();
             const myAddons = [...new Set(
-                [].concat(...state.ctx.content.addons.map(addon => addon.manifest.types))
+                ['all'].concat(...state.ctx.content.addons.map(addon => addon.manifest.types))
             )]
                 .map((type) => (
                     {
@@ -91,7 +91,7 @@ const useAddons = (urlParams, queryParams) => {
             ];
             const installedAddons = state.ctx.is_loaded ? state.ctx.content.addons : [];
             const addonsItems = urlParams.category === 'my' && state.ctx.is_loaded ?
-                installedAddons.filter(addon => addon.manifest.types.includes(urlParams.type))
+                installedAddons.filter(addon => urlParams.type === 'all' || addon.manifest.types.includes(urlParams.type))
                 :
                 (state.addons.content.type === 'Ready' ? state.addons.content.content : []);
             setAddons([addonsItems, selectInputs, installAddon, uninstallAddon, installedAddons]);
