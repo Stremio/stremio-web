@@ -5,7 +5,7 @@ const Icon = require('stremio-icons/dom');
 const { Button } = require('stremio/common');
 const styles = require('./styles');
 
-const Addon = ({ className, id, name, logo, description, types, version, transportUrl, installed, toggle }) => {
+const Addon = ({ className, id, name, logo, description, types, version, transportUrl, installed, isProtected, toggle }) => {
     const onKeyUp = React.useCallback((event) => {
         if (event.key === 'Enter' && typeof toggle === 'function') {
             toggle(event);
@@ -52,7 +52,7 @@ const Addon = ({ className, id, name, logo, description, types, version, transpo
                 }
             </div>
             <div className={styles['buttons-container']}>
-                <Button className={installed ? styles['uninstall-button-container'] : styles['install-button-container']} title={installed ? 'Uninstall' : 'Install'} tabIndex={-1} data-id={id} onClick={toggle}>
+                <Button className={installed ? styles['uninstall-button-container'] : styles['install-button-container']} title={installed ? 'Uninstall' : 'Install'} tabIndex={-1} data-id={id} disabled={isProtected} onClick={toggle}>
                     <div className={styles['label']}>{installed ? 'Uninstall' : 'Install'}</div>
                 </Button>
                 <Button className={styles['share-button-container']} title={'Share addon'} tabIndex={-1}>
@@ -74,6 +74,7 @@ Addon.propTypes = {
     version: PropTypes.string,
     transportUrl: PropTypes.string,
     installed: PropTypes.bool,
+    isProtected: PropTypes.bool,
     toggle: PropTypes.func
 };
 
