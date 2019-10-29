@@ -15,7 +15,6 @@ const settingsSections = {
         { 'id': 'subtitles_outline_color', 'header': 'Subtitles outline color', 'label': 'Subtitles outline color', 'type': 'color' },
         { 'id': 'autoplay_next_vid', 'label': 'Auto-play next episode', 'type': 'checkbox' },
         { 'id': 'pause_on_lost_focus', 'label': 'Pause playback when not in focus', 'type': 'checkbox' },
-        { 'id': 'hardware-accelerated_decoding', 'label': 'Hardware-accelerated decoding', 'type': 'checkbox' },
         { 'id': 'use_external_player', 'label': 'Launch player in a separate window (advanced)', 'type': 'checkbox' },
     ],
     'Streaming': [
