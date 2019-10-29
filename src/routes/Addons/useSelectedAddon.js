@@ -12,7 +12,7 @@ const useSelectedAddon = (transportUrl) => {
             return;
         }
 
-        fetch(transportUrl)
+        fetch(transportUrl) // todo
             .then((resp) => resp.json())
             .then((manifest) => setAddon({ manifest, transportUrl, flags: {} }));
     }, [transportUrl]);

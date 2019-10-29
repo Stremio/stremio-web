@@ -62,7 +62,7 @@ const Addons = ({ urlParams, queryParams }) => {
                     }
                 </div>
                 {
-                    selectedAddon !== null ?
+                    selectedAddon !== null && !selectedAddon.flags.protected ?
                         <Modal className={styles['addon-prompt-modal-container']} onClick={addonPromptModalBackgroundOnClick}>
                             <div className={styles['addon-prompt-container']}>
                                 <AddonPrompt {...selectedAddon.manifest} transportUrl={selectedAddon.transportUrl} installed={setInstalledAddon(selectedAddon)} official={selectedAddon.flags.official} className={styles['addon-prompt']} cancel={clearSelectedAddon} onClick={addonPromptOnClick} toggle={() => setInstalledAddon(selectedAddon) ? uninstallSelectedAddon(selectedAddon) : installSelectedAddon(selectedAddon)} />
