@@ -1,29 +1,35 @@
 const React = require('react');
 const { useServices } = require('stremio/services');
 
-module.exports = () => {
-    const IGNORED_SETTINGS = Object.freeze(['user', 'streaming']);
+const IGNORED_SETTINGS = Object.freeze(['user', 'streaming']);
 
+module.exports = () => {
     const { core } = useServices();
-    const [settings, setSettings] = React.useState({ streaming: {} });
+
+    const [settings, setSettings] = React.useState({
+        user: null,
+        streaming: {},
+        streaming_loaded: false,
+        streaming_error: ""
+    });
 
     React.useEffect(() => {
         const onNewState = () => {
-            const state = core.getState()
+            const { ctx, streaming_server_settings } = core.getState()
             try {
                 const newSettings = {
                     ...settings,
-                    ...state.ctx.content.settings,
-                    user: state.ctx.content.auth ? state.ctx.content.auth.user : null,
-                    streaming: state.streaming_server_settings && state.streaming_server_settings.ready || {},
-                    streaming_loaded: state.streaming_server_settings && (state.streaming_server_settings.error || state.streaming_server_settings.ready),
-                    streaming_error: state.streaming_server_settings && state.streaming_server_settings.error || "",
+                    ...ctx.content.settings,
+                    user: ctx.content.auth ? ctx.content.auth.user : null,
+                    streaming: streaming_server_settings && streaming_server_settings.ready || {},
+                    streaming_loaded: streaming_server_settings && !!(streaming_server_settings.error || streaming_server_settings.ready),
+                    streaming_error: streaming_server_settings && streaming_server_settings.error || "",
                 };
                 setSettings(newSettings);
             } catch (e) {
                 console.log('Cannot update settings state', e);
             }
-        }
+        };
         const onStoreError = ({ event, args }) => {
             if (event !== "SettingsStoreError") return;
             // TODO: Notify with maybe a toast?

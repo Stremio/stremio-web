@@ -180,7 +180,7 @@ const SectionsList = React.forwardRef(({ className, sections, preferences, onPre
                                     <div key={'server_available'} className={classnames(styles['input-container'], styles['text-container'])}>
                                         <div className={styles['text']}>
                                             <Icon className={classnames(styles['icon'], { [styles['x-icon']]: preferences.streaming_error })} icon={preferences.streaming_error ? 'ic_x' : 'ic_check'} />
-                                            <div className={styles['label']}>{'Streaming server is ' + (preferences.streaming_error ? 'not ' : '') + 'available. Reason: ' + preferences.streaming_error}</div>
+                                            <div className={styles['label']}>{'Streaming server is ' + (preferences.streaming_error ? 'not ' : '') + 'available.'}{preferences.streaming_error && ' Reason: ' + preferences.streaming_error}</div>
                                         </div>
                                     </div>
                                 </React.Fragment>
