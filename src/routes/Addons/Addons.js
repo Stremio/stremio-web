@@ -13,8 +13,8 @@ const Addons = ({ urlParams, queryParams }) => {
     const queryOnChange = React.useCallback((event) => {
         setQuery(event.currentTarget.value);
     }, []);
-    const [addons, dropdowns, installSelectedAddon, uninstallSelectedAddon, installedAddons] = useAddons(urlParams, queryParams);
-    const [selectedAddon, clearSelectedAddon, setSelectedAddon] = useSelectedAddon(queryParams.get('addon'));
+    const [addons, dropdowns, setSelectedAddon, installSelectedAddon, uninstallSelectedAddon, installedAddons] = useAddons(urlParams, queryParams);
+    const [selectedAddon, clearSelectedAddon] = useSelectedAddon(queryParams.get('addon'));
     const addonPromptModalBackgroundOnClick = React.useCallback((event) => {
         if (!event.nativeEvent.clearSelectedAddonPrevented) {
             clearSelectedAddon();
@@ -57,12 +57,12 @@ const Addons = ({ urlParams, queryParams }) => {
                                 (typeof addon.manifest.description === 'string' && addon.manifest.description.toLowerCase().includes(query.toLowerCase()))
                             ))
                             .map((addon, index) => (
-                                <Addon {...addon.manifest} key={index} installed={setInstalledAddon(addon)} className={styles['addon']} toggle={() => setSelectedAddon(addon)} />
+                                <Addon {...addon.manifest} key={index} installed={setInstalledAddon(addon)} isProtected={addon.flags && addon.flags.protected} className={styles['addon']} toggle={() => setSelectedAddon(addon.transportUrl)} />
                             ))
                     }
                 </div>
                 {
-                    selectedAddon !== null && !selectedAddon.flags.protected ?
+                    selectedAddon !== null ?
                         <Modal className={styles['addon-prompt-modal-container']} onClick={addonPromptModalBackgroundOnClick}>
                             <div className={styles['addon-prompt-container']}>
                                 <AddonPrompt {...selectedAddon.manifest} transportUrl={selectedAddon.transportUrl} installed={setInstalledAddon(selectedAddon)} official={selectedAddon.flags.official} className={styles['addon-prompt']} cancel={clearSelectedAddon} onClick={addonPromptOnClick} toggle={() => setInstalledAddon(selectedAddon) ? uninstallSelectedAddon(selectedAddon) : installSelectedAddon(selectedAddon)} />

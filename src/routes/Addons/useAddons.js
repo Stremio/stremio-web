@@ -7,15 +7,16 @@ const DEFAULT_CATEGORY = 'thirdparty';
 const useAddons = (urlParams, queryParams) => {
     const { core } = useServices();
     const [addons, setAddons] = React.useState([[], []]);
-    const installAddon = React.useCallback(descriptor =>
+    const installAddon = React.useCallback(descriptor => {
         core.dispatch({
             action: 'AddonOp',
             args: {
                 addonOp: 'Install',
                 args: descriptor
             }
-        }), []);
-    const uninstallAddon = React.useCallback(descriptor =>
+        })
+    }, []);
+    const uninstallAddon = React.useCallback(descriptor => {
         core.dispatch({
             action: 'AddonOp',
             args: {
@@ -24,7 +25,8 @@ const useAddons = (urlParams, queryParams) => {
                     transport_url: descriptor.transportUrl
                 }
             }
-        }), []);
+        })
+    }, []);
     React.useEffect(() => {
         const type = typeof urlParams.type === 'string' && urlParams.type.length > 0 ? urlParams.type : DEFAULT_TYPE;
         const category = typeof urlParams.category === 'string' && urlParams.category.length > 0 ? urlParams.category : DEFAULT_CATEGORY;
@@ -49,6 +51,9 @@ const useAddons = (urlParams, queryParams) => {
                     })
                 );
             myAddons.forEach(addon => state.addons.catalogs.push(addon));
+            const selectAddon = (transportUrl) => {
+                window.location = `#/addons/${category}/${type}?addon=${transportUrl}`;
+            }
             const selectInputs = [
                 {
                     'data-name': 'category',
@@ -64,9 +69,9 @@ const useAddons = (urlParams, queryParams) => {
                             label: name
                         })),
                     onSelect: (event) => {
-                        const load = (state.addons.catalogs.find(({ load: { path: { id } } }) => {
+                        const load = state.addons.catalogs.find(({ load: { path: { id } } }) => {
                             return id === event.reactEvent.currentTarget.dataset.value;
-                        }) || {}).load;
+                        }).load;
                         window.location = `#/addons/${encodeURIComponent(load.path.id)}/${encodeURIComponent(load.path.type_name)}`;
                     }
                 },
@@ -94,7 +99,7 @@ const useAddons = (urlParams, queryParams) => {
                 installedAddons.filter(addon => urlParams.type === 'all' || addon.manifest.types.includes(urlParams.type))
                 :
                 (state.addons.content.type === 'Ready' ? state.addons.content.content : []);
-            setAddons([addonsItems, selectInputs, installAddon, uninstallAddon, installedAddons]);
+            setAddons([addonsItems, selectInputs, selectAddon, installAddon, uninstallAddon, installedAddons]);
         };
         core.on('NewModel', onNewState);
         core.dispatch({
