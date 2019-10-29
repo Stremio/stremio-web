@@ -35,7 +35,7 @@ const useAddons = (urlParams, queryParams) => {
             )]
                 .map((type) => (
                     {
-                        is_selected: urlParams.category === 'my',
+                        is_selected: urlParams.type === type && urlParams.category === 'my',
                         name: 'my',
                         load: {
                             base: 'https://v3-cinemeta.strem.io/manifest.json',
@@ -51,36 +51,41 @@ const useAddons = (urlParams, queryParams) => {
             myAddons.forEach(addon => state.addons.catalogs.push(addon));
             const selectInputs = [
                 {
-                    'data-name': 'type',
-                    selected: state.addons.types
+                    'data-name': 'category',
+                    selected: state.addons.catalogs
                         .filter(({ is_selected }) => is_selected)
-                        .map(({ load }) => JSON.stringify(load)),
-                    options: state.addons.types
-                        .map(({ type_name, load }) => ({
-                            value: JSON.stringify(load),
-                            label: type_name
+                        .map(({ load }) => load.path.id),
+                    options: state.addons.catalogs
+                        .filter((catalog, index, catalogs) => {
+                            return catalogs.map(ctg => ctg.name).indexOf(catalog.name) === index;
+                        })
+                        .map(({ name, load }) => ({
+                            value: load.path.id,
+                            label: name
                         })),
                     onSelect: (event) => {
-                        const load = JSON.parse(event.reactEvent.currentTarget.dataset.value);
-                        window.location = `#/addons/${encodeURIComponent(load.path.type_name)}/${encodeURIComponent(load.path.id)}`;
+                        const load = (state.addons.catalogs.find(({ load: { path: { id } } }) => {
+                            return id === event.reactEvent.currentTarget.dataset.value;
+                        }) || {}).load;
+                        window.location = `#/addons/${encodeURIComponent(load.path.id)}/${encodeURIComponent(load.path.type_name)}`;
                     }
                 },
                 {
-                    'data-name': 'category',
+                    'data-name': 'type',
                     selected: state.addons.catalogs
                         .filter(({ is_selected }) => is_selected)
                         .map(({ load }) => JSON.stringify(load)),
                     options: state.addons.catalogs
-                        .filter(({ load: { path: { type_name } } }) => {
-                            return type_name === type;
+                        .filter(({ load: { path: { id } } }) => {
+                            return id === category;
                         })
-                        .map(({ name, load }) => ({
+                        .map(({ load }) => ({
                             value: JSON.stringify(load),
-                            label: name
+                            label: load.path.type_name
                         })),
                     onSelect: (event) => {
                         const load = JSON.parse(event.reactEvent.currentTarget.dataset.value);
-                        window.location = `#/addons/${encodeURIComponent(load.path.type_name)}/${encodeURIComponent(load.path.id)}`
+                        window.location = `#/addons/${encodeURIComponent(load.path.id)}/${encodeURIComponent(load.path.type_name)}`;
                     }
                 }
             ];

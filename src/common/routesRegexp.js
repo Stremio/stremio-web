@@ -25,7 +25,7 @@ const routesRegexp = {
     },
     addons: {
         regexp: /^\/addons(?:\/([^\/]*?))?(?:\/([^\/]*?))?\/?$/i,
-        urlParamsNames: ['type', 'category']
+        urlParamsNames: ['category', 'type']
     },
     settings: {
         regexp: /^\/settings\/?$/i,
