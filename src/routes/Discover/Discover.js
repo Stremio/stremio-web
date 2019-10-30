@@ -60,12 +60,15 @@ const Discover = ({ urlParams, queryParams }) => {
                             Array.isArray(metaItems) ?
                                 metaItems.length > 0 ?
                                     <div className={styles['meta-items-container']} onMouseDownCapture={metaItemsOnMouseDownCapture} onFocusCapture={metaItemsOnFocusCapture}>
-                                        {metaItems.map((metaItem, index) => (
+                                        {metaItems.map(({ id, type, name, poster, posterShape }, index) => (
                                             <MetaItem
-                                                {...metaItem}
                                                 key={index}
-                                                data-id={metaItem.id}
-                                                className={classnames(styles['meta-item'], { 'selected': selectedMetaItem !== null && metaItem.id === selectedMetaItem.id })}
+                                                className={classnames(styles['meta-item'], { 'selected': selectedMetaItem !== null && selectedMetaItem.id === id })}
+                                                type={type}
+                                                name={name}
+                                                poster={poster}
+                                                posterShape={posterShape}
+                                                data-id={id}
                                             />
                                         ))}
                                     </div>
