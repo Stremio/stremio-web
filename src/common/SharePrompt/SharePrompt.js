@@ -2,14 +2,14 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
-const { useFocusable } = require('stremio-router');
+const { useRouteFocused } = require('stremio-router');
 const Button = require('stremio/common/Button');
 const TextInput = require('stremio/common/TextInput');
 const styles = require('./styles');
 
-const SharePrompt = ({ className, label, url, close }) => {
+const SharePrompt = ({ className, label, url, close, onClick }) => {
     const inputRef = React.useRef(null);
-    const focusable = useFocusable();
+    const focusable = useRouteFocused();
     const copyToClipboard = React.useCallback(() => {
         inputRef.current.select();
         document.execCommand('copy');
@@ -28,9 +28,9 @@ const SharePrompt = ({ className, label, url, close }) => {
         };
     }, [close, focusable]);
     return (
-        <div className={classnames(className, styles['share-prompt-container'])}>
-            <Button className={styles['close-button-container']}>
-                <Icon className={styles['icon']} icon={'ic_x'} onClick={close} />
+        <div className={classnames(className, styles['share-prompt-container'])} onClick={onClick}>
+            <Button className={styles['close-button-container']} title={'Close'} tabIndex={-1} onClick={close}>
+                <Icon className={styles['icon']} icon={'ic_x'} />
             </Button>
             <div className={styles['share-prompt-content']}>
                 <div className={styles['share-prompt-label']}>{label}</div>
@@ -60,7 +60,8 @@ SharePrompt.propTypes = {
     className: PropTypes.string,
     label: PropTypes.string.isRequired,
     url: PropTypes.string.isRequired,
-    close: PropTypes.func
+    close: PropTypes.func,
+    onClick: PropTypes.func
 };
 
 module.exports = SharePrompt;

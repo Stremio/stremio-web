@@ -117,25 +117,32 @@
     }
 }
 
-.addon-prompt-modal-container {
+.prompt-modal-container {
     display: flex;
     align-items: center;
     justify-content: center;
     background-color: var(--color-background60);
 
-    .addon-prompt-container {
+    .prompt-container {
         flex: none;
         display: flex;
         flex-direction: column;
         justify-content: center;
-        width: 50rem;
         height: 80%;
 
-        .addon-prompt {
+        .prompt {
             flex-grow: 0;
             flex-shrink: 1;
             flex-basis: auto;
             align-self: stretch;
         }
+    }
+
+    .addon-prompt-container {
+        width: 50rem;
+    }
+
+    .share-prompt-container {
+        width: 30rem;
     }
 }

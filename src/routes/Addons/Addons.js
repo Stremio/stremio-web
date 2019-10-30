@@ -1,7 +1,8 @@
 const React = require('react');
+const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const { Modal } = require('stremio-router');
-const { Button, Multiselect, NavBar, TextInput } = require('stremio/common');
+const { Button, Multiselect, NavBar, TextInput, SharePrompt } = require('stremio/common');
 const Addon = require('./Addon');
 const AddonPrompt = require('./AddonPrompt');
 const useAddons = require('./useAddons');
@@ -15,12 +16,14 @@ const Addons = ({ urlParams, queryParams }) => {
     }, []);
     const [addons, dropdowns, setSelectedAddon, installSelectedAddon, uninstallSelectedAddon, installedAddons] = useAddons(urlParams, queryParams);
     const [selectedAddon, clearSelectedAddon] = useSelectedAddon(queryParams.get('addon'));
-    const addonPromptModalBackgroundOnClick = React.useCallback((event) => {
+    const [sharedAddon, setSharedAddon] = React.useState(null);
+    const promptModalBackgroundOnClick = React.useCallback((event) => {
         if (!event.nativeEvent.clearSelectedAddonPrevented) {
             clearSelectedAddon();
+            setSharedAddon(null);
         }
     }, []);
-    const addonPromptOnClick = React.useCallback((event) => {
+    const promptOnClick = React.useCallback((event) => {
         event.nativeEvent.clearSelectedAddonPrevented = true;
     }, []);
     const setInstalledAddon = React.useCallback((currentAddon) => {
@@ -57,15 +60,48 @@ const Addons = ({ urlParams, queryParams }) => {
                                 (typeof addon.manifest.description === 'string' && addon.manifest.description.toLowerCase().includes(query.toLowerCase()))
                             ))
                             .map((addon, index) => (
-                                <Addon {...addon.manifest} key={index} installed={setInstalledAddon(addon)} isProtected={addon.flags && addon.flags.protected} className={styles['addon']} toggle={() => setSelectedAddon(addon.transportUrl)} />
+                                <Addon
+                                    {...addon.manifest}
+                                    key={index}
+                                    installed={setInstalledAddon(addon)}
+                                    isProtected={addon.flags && addon.flags.protected}
+                                    className={styles['addon']}
+                                    toggle={() => setSelectedAddon(addon.transportUrl)}
+                                    onShareButtonClicked={() => setSharedAddon(addon)}
+                                />
                             ))
                     }
                 </div>
                 {
                     selectedAddon !== null ?
-                        <Modal className={styles['addon-prompt-modal-container']} onClick={addonPromptModalBackgroundOnClick}>
-                            <div className={styles['addon-prompt-container']}>
-                                <AddonPrompt {...selectedAddon.manifest} transportUrl={selectedAddon.transportUrl} installed={setInstalledAddon(selectedAddon)} official={selectedAddon.flags.official} className={styles['addon-prompt']} cancel={clearSelectedAddon} onClick={addonPromptOnClick} toggle={() => setInstalledAddon(selectedAddon) ? uninstallSelectedAddon(selectedAddon) : installSelectedAddon(selectedAddon)} />
+                        <Modal className={styles['prompt-modal-container']} onClick={promptModalBackgroundOnClick}>
+                            <div className={classnames(styles['prompt-container'], styles['addon-prompt-container'])}>
+                                <AddonPrompt
+                                    {...selectedAddon.manifest}
+                                    transportUrl={selectedAddon.transportUrl}
+                                    installed={setInstalledAddon(selectedAddon)}
+                                    official={selectedAddon.flags.official}
+                                    className={styles['prompt']}
+                                    cancel={clearSelectedAddon}
+                                    onClick={promptOnClick}
+                                    toggle={() => setInstalledAddon(selectedAddon) ? uninstallSelectedAddon(selectedAddon) : installSelectedAddon(selectedAddon)}
+                                />
+                            </div>
+                        </Modal>
+                        :
+                        null
+                }
+                {
+                    sharedAddon !== null ?
+                        <Modal className={styles['prompt-modal-container']} onClick={promptModalBackgroundOnClick}>
+                            <div className={classnames(styles['prompt-container'], styles['share-prompt-container'])}>
+                                <SharePrompt
+                                    label={'Share add-on'}
+                                    url={sharedAddon.transportUrl}
+                                    className={styles['prompt']}
+                                    close={() => setSharedAddon(null)}
+                                    onClick={promptOnClick}
+                                />
                             </div>
                         </Modal>
                         :
