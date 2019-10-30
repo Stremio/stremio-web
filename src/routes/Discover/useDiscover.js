@@ -130,33 +130,18 @@ const useCatalog = (urlParams, queryParams) => {
                         return { title, options, selected, renderLabelText, onSelect };
                     })
             ];
-            const paginateInput = state.discover.load_next !== null || state.discover.load_prev !== null ?
+            const paginateInput = state.discover.load_next !== null || state.discover.load_prev !== null || state.discover.selected.some(({ name }) => name === 'skip') ?
                 {
-                    selected: state.discover.load_next !== null ?
-                        state.discover.load_next.path.extra.reduce((page, [name, value]) => {
-                            if (name === 'skip') {
-                                const parsedValue = parseInt(value);
-                                if (!isNaN(parsedValue)) {
-                                    return Math.floor(parsedValue / 100);
-                                }
+                    selected: state.discover.selected.path.extra.reduce((page, [name, value]) => {
+                        if (name === 'skip') {
+                            const parsedValue = parseInt(value);
+                            if (!isNaN(parsedValue)) {
+                                return Math.floor(parsedValue / 100) + 1;
                             }
+                        }
 
-                            return page;
-                        }, 1)
-                        :
-                        state.discover.load_prev !== null ?
-                            state.discover.load_prev.path.extra.reduce((page, [name, value]) => {
-                                if (name === 'skip') {
-                                    const parsedValue = parseInt(value);
-                                    if (!isNaN(parsedValue)) {
-                                        return Math.floor(parsedValue / 100) + 2;
-                                    }
-                                }
-
-                                return page;
-                            }, 1)
-                            :
-                            1,
+                        return page;
+                    }, 1),
                     onSelect: (event) => {
                         if (event.value < 1) {
                             return;
