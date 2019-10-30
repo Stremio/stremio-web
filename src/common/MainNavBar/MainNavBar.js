@@ -8,7 +8,7 @@ const TABS = [
     { label: 'Library', icon: 'ic_library', href: '#/library' }
 ];
 
-const MainNavBar = ({ className }) => {
+const MainNavBar = React.memo(({ className }) => {
     return (
         <NavBar
             className={className}
@@ -21,7 +21,7 @@ const MainNavBar = ({ className }) => {
             navMenu={true}
         />
     );
-};
+});
 
 MainNavBar.propTypes = {
     className: PropTypes.string
