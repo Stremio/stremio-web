@@ -194,7 +194,13 @@ const useCatalog = (urlParams, queryParams) => {
                 }
                 :
                 null;
-            const items = state.discover.content.type === 'Ready' ? state.discover.content.content : null;
+            const items = state.discover.content.type === 'Ready' ?
+                state.discover.content.content.map((metaItem) => ({
+                    ...metaItem,
+                    released: new Date(metaItem.released)
+                }))
+                :
+                null;
             const error = state.discover.content.type === 'Err' ? JSON.stringify(state.discover.content.content) : null;
             setDiscover([selectInputs, paginateInput, items, error]);
         };
