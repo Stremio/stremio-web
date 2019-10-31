@@ -7,20 +7,20 @@ const { Button } = require('stremio/common');
 const styles = require('./styles');
 
 const AddonPrompt = ({ className, id, name, logo, description, types, catalogs, version, transportUrl, installed, official, cancel, onClick, toggle }) => {
-    const focusable = useRouteFocused();
+    const focusRoute = useRouteFocused();
     React.useEffect(() => {
         const onKeyUp = (event) => {
             if (event.key === 'Escape') {
                 cancel();
             }
         };
-        if (focusable) {
+        if (focusRoute) {
             window.addEventListener('keyup', onKeyUp);
         }
         return () => {
             window.removeEventListener('keyup', onKeyUp);
         };
-    }, [cancel, focusable]);
+    }, [cancel, focusRoute]);
     return (
         <div className={classnames(className, styles['addon-prompt-container'])} onClick={onClick}>
             <Button className={styles['close-button-container']} title={'Close'} tabIndex={-1} onClick={cancel}>

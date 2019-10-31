@@ -11,7 +11,7 @@ const styles = require('./styles');
 
 const Addons = ({ urlParams, queryParams }) => {
     const inputRef = React.useRef(null);
-    const focusable = useRouteFocused();
+    const focusRoute = useRouteFocused();
     const [query, setQuery] = React.useState('');
     const queryOnChange = React.useCallback((event) => {
         setQuery(event.currentTarget.value);
@@ -35,13 +35,13 @@ const Addons = ({ urlParams, queryParams }) => {
                 setAddAddonModalOpened(false);
             }
         };
-        if (focusable) {
+        if (focusRoute) {
             window.addEventListener('keyup', onKeyUp);
         }
         return () => {
             window.removeEventListener('keyup', onKeyUp);
         };
-    }, [close, focusable]);
+    }, [close, focusRoute]);
     const promptModalBackgroundOnClick = React.useCallback((event) => {
         if (!event.nativeEvent.clearSelectedAddonPrevented) {
             clearSelectedAddon();

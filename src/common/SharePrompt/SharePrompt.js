@@ -9,7 +9,7 @@ const styles = require('./styles');
 
 const SharePrompt = ({ className, label, url, close, onClick }) => {
     const inputRef = React.useRef(null);
-    const focusable = useRouteFocused();
+    const focusRoute = useRouteFocused();
     const copyToClipboard = React.useCallback(() => {
         inputRef.current.select();
         document.execCommand('copy');
@@ -20,13 +20,13 @@ const SharePrompt = ({ className, label, url, close, onClick }) => {
                 close();
             }
         };
-        if (focusable) {
+        if (focusRoute) {
             window.addEventListener('keyup', onKeyUp);
         }
         return () => {
             window.removeEventListener('keyup', onKeyUp);
         };
-    }, [close, focusable]);
+    }, [close, focusRoute]);
     return (
         <div className={classnames(className, styles['share-prompt-container'])} onClick={onClick}>
             <Button className={styles['close-button-container']} title={'Close'} tabIndex={-1} onClick={close}>
