@@ -58,24 +58,19 @@ const Discover = ({ urlParams, queryParams }) => {
                             </div>
                             :
                             Array.isArray(metaItems) ?
-                                metaItems.length > 0 ?
-                                    <div className={styles['meta-items-container']} onMouseDownCapture={metaItemsOnMouseDownCapture} onFocusCapture={metaItemsOnFocusCapture}>
-                                        {metaItems.map(({ id, type, name, poster, posterShape }, index) => (
-                                            <MetaItem
-                                                key={index}
-                                                className={classnames(styles['meta-item'], { 'selected': selectedMetaItem !== null && selectedMetaItem.id === id })}
-                                                type={type}
-                                                name={name}
-                                                poster={poster}
-                                                posterShape={posterShape}
-                                                data-id={id}
-                                            />
-                                        ))}
-                                    </div>
-                                    :
-                                    <div className={styles['message-container']}>
-                                        Empty catalog
-                                    </div>
+                                <div className={styles['meta-items-container']} onMouseDownCapture={metaItemsOnMouseDownCapture} onFocusCapture={metaItemsOnFocusCapture}>
+                                    {metaItems.map(({ id, type, name, poster, posterShape }, index) => (
+                                        <MetaItem
+                                            key={index}
+                                            className={classnames(styles['meta-item'], { 'selected': selectedMetaItem !== null && selectedMetaItem.id === id })}
+                                            type={type}
+                                            name={name}
+                                            poster={poster}
+                                            posterShape={posterShape}
+                                            data-id={id}
+                                        />
+                                    ))}
+                                </div>
                                 :
                                 <div className={styles['message-container']}>
                                     Loading
