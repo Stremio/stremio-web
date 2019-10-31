@@ -17,22 +17,22 @@ const Addons = ({ urlParams, queryParams }) => {
         setQuery(event.currentTarget.value);
     }, []);
     const [[addons, dropdowns, setSelectedAddon, installedAddons], installSelectedAddon, uninstallSelectedAddon] = useAddons(urlParams, queryParams);
-    const [addedAddon, setAddedAddon] = React.useState(false);
+    const [addAddonModalOpened, setAddAddonModalOpened] = React.useState(false);
     const [selectedAddon, clearSelectedAddon] = useSelectedAddon(queryParams.get('addon'));
     const [sharedAddon, setSharedAddon] = React.useState(null);
     const onAddAddonButtonClicked = React.useCallback(() => {
-        setAddedAddon(true);
+        setAddAddonModalOpened(true);
     }, []);
     const onAddButtonClicked = React.useCallback(() => {
         if (inputRef.current.value.length > 0) {
             setSelectedAddon(inputRef.current.value);
-            setAddedAddon(false);
+            setAddAddonModalOpened(false);
         }
     }, [setSelectedAddon]);
     React.useEffect(() => {
         const onKeyUp = (event) => {
             if (event.key === 'Escape' && typeof close === 'function') {
-                setAddedAddon(false);
+                setAddAddonModalOpened(false);
             }
         };
         if (focusable) {
@@ -45,7 +45,7 @@ const Addons = ({ urlParams, queryParams }) => {
     const promptModalBackgroundOnClick = React.useCallback((event) => {
         if (!event.nativeEvent.clearSelectedAddonPrevented) {
             clearSelectedAddon();
-            setAddedAddon(false);
+            setAddAddonModalOpened(false);
             setSharedAddon(null);
         }
     }, [clearSelectedAddon]);
@@ -97,18 +97,18 @@ const Addons = ({ urlParams, queryParams }) => {
                     }
                 </div>
                 {
-                    addedAddon ?
+                    addAddonModalOpened ?
                         <Modal className={styles['prompt-modal-container']} onClick={promptModalBackgroundOnClick}>
                             <div className={classnames(styles['prompt-container'], styles['add-addon-prompt-container'])}>
                                 <div className={classnames(styles['prompt'], styles['add-addon-prompt'])} onClick={promptOnClick}>
-                                    <Button className={styles['close-button-container']} title={'Close'} tabIndex={-1} onClick={() => setAddedAddon(false)}>
+                                    <Button className={styles['close-button-container']} title={'Close'} tabIndex={-1} onClick={() => setAddAddonModalOpened(false)}>
                                         <Icon className={styles['icon']} icon={'ic_x'} />
                                     </Button>
                                     <div className={styles['add-addon-prompt-content']}>
                                         <div className={styles['add-addon-prompt-label']}>Add add-on</div>
                                         <TextInput ref={inputRef} className={styles['url-content']} type={'text'} tabIndex={'-1'} placeholder={'Paste url...'} />
                                         <div className={styles['buttons-container']}>
-                                            <Button className={classnames(styles['button-container'], styles['cancel-button'])} title={'Cancel'} onClick={() => setAddedAddon(false)}>
+                                            <Button className={classnames(styles['button-container'], styles['cancel-button'])} title={'Cancel'} onClick={() => setAddAddonModalOpened(false)}>
                                                 <div className={styles['label']}>Cancel</div>
                                             </Button>
                                             <Button className={classnames(styles['button-container'], styles['add-button'])} title={'Add'} onClick={onAddButtonClicked}>
