@@ -10,7 +10,7 @@ const MetaLinks = require('./MetaLinks');
 const MetaPreviewPlaceholder = require('./MetaPreviewPlaceholder');
 const styles = require('./styles');
 
-const MetaPreview = ({ className, compact, id, type, name, logo, background, duration, releaseInfo, released, description, genres, writers, directors, cast, imdbId, imdbRating, trailer, share, inLibrary, toggleInLibrary }) => {
+const MetaPreview = ({ className, compact, id, type, name, logo, background, runtime, releaseInfo, released, description, genres, writers, directors, cast, imdbId, imdbRating, trailer, share, inLibrary, toggleInLibrary }) => {
     const [shareModalOpen, openShareModal, closeShareModal] = useBinaryState(false);
     const genresLinks = React.useMemo(() => {
         return Array.isArray(genres) ?
@@ -95,8 +95,8 @@ const MetaPreview = ({ className, compact, id, type, name, logo, background, dur
                         null
                 }
                 {
-                    (typeof releaseInfo === 'string' && releaseInfo.length > 0) || (released instanceof Date && !isNaN(released.getTime())) || (typeof duration === 'string' && duration.length > 0) ?
-                        <div className={styles['duration-release-info-container']}>
+                    (typeof releaseInfo === 'string' && releaseInfo.length > 0) || (released instanceof Date && !isNaN(released.getTime())) || (typeof runtime === 'string' && runtime.length > 0) ?
+                        <div className={styles['runtime-release-info-container']}>
                             {
                                 typeof releaseInfo === 'string' && releaseInfo.length > 0 ?
                                     <div className={styles['release-info-label']}>{releaseInfo}</div>
@@ -107,8 +107,8 @@ const MetaPreview = ({ className, compact, id, type, name, logo, background, dur
                                         null
                             }
                             {
-                                typeof duration === 'string' && duration.length > 0 ?
-                                    <div className={styles['duration-label']}>{duration}</div>
+                                typeof runtime === 'string' && runtime.length > 0 ?
+                                    <div className={styles['runtime-label']}>{runtime}</div>
                                     :
                                     null
                             }
@@ -231,7 +231,7 @@ MetaPreview.propTypes = {
     name: PropTypes.string,
     logo: PropTypes.string,
     background: PropTypes.string,
-    duration: PropTypes.string,
+    runtime: PropTypes.string,
     releaseInfo: PropTypes.string,
     released: PropTypes.instanceOf(Date),
     description: PropTypes.string,
