@@ -52,9 +52,9 @@ const Discover = ({ urlParams, queryParams }) => {
                 </div>
                 <div className={styles['catalog-content-container']}>
                     {
-                        error ?
+                        error !== null ?
                             <div className={styles['message-container']}>
-                                {error}
+                                {error.type}{error.type === 'Other' ? ` - ${error.content}` : null}
                             </div>
                             :
                             Array.isArray(metaItems) ?

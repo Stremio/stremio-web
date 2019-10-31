@@ -186,7 +186,7 @@ const useCatalog = (urlParams, queryParams) => {
                 }))
                 :
                 null;
-            const error = state.discover.content.type === 'Err' ? JSON.stringify(state.discover.content.content) : null;
+            const error = state.discover.content.type === 'Err' ? state.discover.content.content : null;
             setDiscover([selectInputs, paginateInput, items, error]);
         };
         core.on('NewModel', onNewModel);
