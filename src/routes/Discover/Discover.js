@@ -87,6 +87,7 @@ const Discover = ({ urlParams, queryParams }) => {
                             {...selectedMetaItem}
                             className={styles['meta-preview-container']}
                             compact={true}
+                            background={selectedMetaItem.poster}
                         />
                         :
                         <div className={styles['meta-preview-container']} />
