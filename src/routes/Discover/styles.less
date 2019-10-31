@@ -26,7 +26,7 @@
         flex: 1;
         align-self: stretch;
         display: grid;
-        grid-template-columns: 1fr 26rem;
+        grid-template-columns: 1fr 28rem;
         grid-template-rows: 7rem 1fr;
         grid-template-areas:
             "controls-area meta-preview-area"
@@ -104,6 +104,7 @@
 
         .catalog-content-container {
             grid-area: catalog-content-area;
+            margin-right: 2rem;
 
             .meta-items-container {
                 display: grid;
@@ -208,6 +209,8 @@
                 "catalog-content-area";
 
             .catalog-content-container {
+                margin-right: 0;
+
                 .meta-items-container {
                     grid-template-columns: repeat(5, 1fr);
                 }
