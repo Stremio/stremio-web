@@ -1,7 +1,7 @@
 const React = require('react');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
-const { Modal } = require('stremio-router');
+const { Modal, useRouteFocused } = require('stremio-router');
 const { Button, Multiselect, NavBar, TextInput, SharePrompt } = require('stremio/common');
 const Addon = require('./Addon');
 const AddonPrompt = require('./AddonPrompt');
@@ -10,16 +10,40 @@ const useSelectedAddon = require('./useSelectedAddon');
 const styles = require('./styles');
 
 const Addons = ({ urlParams, queryParams }) => {
+    const inputRef = React.useRef(null);
+    const focusable = useRouteFocused();
     const [query, setQuery] = React.useState('');
     const queryOnChange = React.useCallback((event) => {
         setQuery(event.currentTarget.value);
     }, []);
     const [addons, dropdowns, setSelectedAddon, installSelectedAddon, uninstallSelectedAddon, installedAddons] = useAddons(urlParams, queryParams);
+    const [addedAddon, setAddedAddon] = React.useState(false);
     const [selectedAddon, clearSelectedAddon] = useSelectedAddon(queryParams.get('addon'));
     const [sharedAddon, setSharedAddon] = React.useState(null);
+    const onAddAddonButtonClicked = React.useCallback(() => {
+        setAddedAddon(true);
+    }, []);
+    const onAddButtonClicked = React.useCallback(() => {
+        setSelectedAddon(inputRef.current.value);
+        setAddedAddon(false);
+    }, [setSelectedAddon]);
+    React.useEffect(() => {
+        const onKeyUp = (event) => {
+            if (event.key === 'Escape' && typeof close === 'function') {
+                setAddedAddon(false);
+            }
+        };
+        if (focusable) {
+            window.addEventListener('keyup', onKeyUp);
+        }
+        return () => {
+            window.removeEventListener('keyup', onKeyUp);
+        };
+    }, [close, focusable]);
     const promptModalBackgroundOnClick = React.useCallback((event) => {
         if (!event.nativeEvent.clearSelectedAddonPrevented) {
             clearSelectedAddon();
+            setAddedAddon(false);
             setSharedAddon(null);
         }
     }, []);
@@ -32,12 +56,12 @@ const Addons = ({ urlParams, queryParams }) => {
     }, [installedAddons]);
     return (
         <div className={styles['addons-container']}>
-            <NavBar className={styles['nav-bar']} backButton={true} title={'Addons'} />
+            <NavBar className={styles['nav-bar']} backButton={true} title={'Add-ons'} />
             <div className={styles['addons-content']}>
                 <div className={styles['top-bar-container']}>
-                    <Button className={styles['add-button-container']} title={'Add addon'}>
+                    <Button className={styles['add-button-container']} title={'Add add-on'} onClick={onAddAddonButtonClicked}>
                         <Icon className={styles['icon']} icon={'ic_plus'} />
-                        <div className={styles['add-button-label']}>Add addon</div>
+                        <div className={styles['add-button-label']}>Add add-on</div>
                     </Button>
                     {dropdowns.map((dropdown, index) => (
                         <Multiselect {...dropdown} key={index} className={styles['dropdown']} />
@@ -47,7 +71,7 @@ const Addons = ({ urlParams, queryParams }) => {
                         <TextInput
                             className={styles['search-input']}
                             type={'text'}
-                            placeholder={'Search addons...'}
+                            placeholder={'Search add-ons...'}
                             value={query}
                             onChange={queryOnChange}
                         />
@@ -72,6 +96,32 @@ const Addons = ({ urlParams, queryParams }) => {
                             ))
                     }
                 </div>
+                {
+                    addedAddon ?
+                        <Modal className={styles['prompt-modal-container']} onClick={promptModalBackgroundOnClick}>
+                            <div className={classnames(styles['prompt-container'], styles['add-addon-prompt-container'])}>
+                                <div className={classnames(styles['prompt'], styles['add-addon-prompt'])} onClick={promptOnClick}>
+                                    <Button className={styles['close-button-container']} title={'Close'} tabIndex={-1} onClick={() => setAddedAddon(false)}>
+                                        <Icon className={styles['icon']} icon={'ic_x'} />
+                                    </Button>
+                                    <div className={styles['add-addon-prompt-content']}>
+                                        <div className={styles['add-addon-prompt-label']}>Add add-on</div>
+                                        <TextInput ref={inputRef} className={styles['url-content']} type={'text'} tabIndex={'-1'} placeholder={'Paste url...'} />
+                                        <div className={styles['buttons-container']}>
+                                            <Button className={classnames(styles['button-container'], styles['cancel-button'])} title={'Cancel'} onClick={() => setAddedAddon(false)}>
+                                                <div className={styles['label']}>Cancel</div>
+                                            </Button>
+                                            <Button className={classnames(styles['button-container'], styles['add-button'])} title={'Add'} onClick={onAddButtonClicked}>
+                                                <div className={styles['label']}>Add</div>
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </Modal>
+                        :
+                        null
+                }
                 {
                     selectedAddon !== null ?
                         <Modal className={styles['prompt-modal-container']} onClick={promptModalBackgroundOnClick}>

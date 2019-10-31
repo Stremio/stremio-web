@@ -21,7 +21,8 @@ const useSelectedAddon = (transportUrl) => {
             const { pathname, search } = UrlUtils.parse(locationHash.slice(1));
             const queryParams = new URLSearchParams(search);
             queryParams.delete('addon');
-            if (!queryParams.values().next().done) {
+            queryParams.delete('null');
+            if ([...queryParams].length !== 0) {
                 window.location.replace(`#${pathname}?${queryParams.toString()}`);
             }
             else {
