@@ -16,7 +16,7 @@ const ToastItem = ({ type, title, text, icon, closeButton, onClick, onClose }) =
                 icon
                     ?
                     <div className={styles['icon-container']}>
-                        <Icon className={styles['icon']} icon={icon} />
+                        <Icon icon={icon} />
                     </div>
                     :
                     null
@@ -34,11 +34,9 @@ const ToastItem = ({ type, title, text, icon, closeButton, onClick, onClose }) =
             {
                 closeButton
                     ?
-                    <div className={styles['close-button-container']}>
-                        <button onClick={onClose}>
-                            <Icon className={styles['icon']} icon={'ic_x'} />
-                        </button>
-                    </div>
+                    <button onClick={onClose}>
+                        <Icon icon={'ic_x'} />
+                    </button>
                     :
                     null
             }
