@@ -1,14 +1,15 @@
 const React = require('react');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
-const { Button, MainNavBar, MetaItem, MetaPreview, Multiselect, PaginateInput } = require('stremio/common');
+const { Modal } = require('stremio-router');
+const { Button, MainNavBar, MetaItem, MetaPreview, Multiselect, PaginateInput, useBinaryState } = require('stremio/common');
 const useDiscover = require('./useDiscover');
 const styles = require('./styles');
 
-// TODO render only 4 pickers and a more button that opens a modal with all pickers
 const Discover = ({ urlParams, queryParams }) => {
     const [selectInputs, paginateInput, metaItems, error] = useDiscover(urlParams, queryParams);
     const [selectedMetaItem, setSelectedMetaItem] = React.useState(null);
+    const [filtersModalOpen, openFiltersModal, closeFiltersModal] = useBinaryState(false);
     const metaItemsOnMouseDownCapture = React.useCallback((event) => {
         event.nativeEvent.buttonBlurPrevented = true;
     }, []);
@@ -24,6 +25,9 @@ const Discover = ({ urlParams, queryParams }) => {
         const metaItem = Array.isArray(metaItems) && metaItems.length > 0 ? metaItems[0] : null;
         setSelectedMetaItem(metaItem);
     }, [metaItems]);
+    React.useEffect(() => {
+        closeFiltersModal();
+    }, [urlParams, queryParams]);
     return (
         <div className={styles['discover-container']}>
             <MainNavBar className={styles['nav-bar']} />
@@ -36,9 +40,9 @@ const Discover = ({ urlParams, queryParams }) => {
                             className={styles['select-input-container']}
                         />
                     ))}
-                    {/* <Button className={styles['filter-container']}>
+                    <Button className={styles['filter-container']} onClick={openFiltersModal}>
                         <Icon className={styles['filter-icon']} icon={'ic_filter'} />
-                    </Button> */}
+                    </Button>
                     <div className={styles['spacing']} />
                     {
                         paginateInput !== null ?
@@ -88,6 +92,14 @@ const Discover = ({ urlParams, queryParams }) => {
                         <div className={styles['meta-preview-container']} />
                 }
             </div>
+            {
+                filtersModalOpen ?
+                    <Modal>
+                        {/* TODO */}
+                    </Modal>
+                    :
+                    null
+            }
         </div>
     );
 };
