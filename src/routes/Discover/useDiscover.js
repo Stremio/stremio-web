@@ -130,7 +130,7 @@ const useCatalog = (urlParams, queryParams) => {
                         return { title, options, selected, renderLabelText, onSelect };
                     })
             ];
-            const paginateInput = state.discover.load_next !== null || state.discover.load_prev !== null || state.discover.selected.some(({ name }) => name === 'skip') ?
+            const paginateInput = state.discover.load_next !== null || state.discover.load_prev !== null || state.discover.selected.path.extra.some(([name]) => name === 'skip') ?
                 {
                     selected: state.discover.selected.path.extra.reduce((page, [name, value]) => {
                         if (name === 'skip') {
