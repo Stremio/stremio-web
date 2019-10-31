@@ -24,8 +24,12 @@ const Addons = ({ urlParams, queryParams }) => {
         setAddedAddon(true);
     }, []);
     const onAddButtonClicked = React.useCallback(() => {
-        setSelectedAddon(inputRef.current.value);
-        setAddedAddon(false);
+        if (inputRef.current.value.length > 0) {
+            setSelectedAddon(inputRef.current.value);
+            setAddedAddon(false);
+        } else {
+            alert('TODO: Error message');
+        }
     }, [setSelectedAddon]);
     React.useEffect(() => {
         const onKeyUp = (event) => {
