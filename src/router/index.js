@@ -1,9 +1,9 @@
-const { useFocusable } = require('./FocusableContext');
+const { useRouteFocused } = require('./RouteFocusedContext');
 const Modal = require('./Modal');
 const Router = require('./Router');
 
 module.exports = {
-    useFocusable,
+    useRouteFocused,
     Modal,
     Router
 };

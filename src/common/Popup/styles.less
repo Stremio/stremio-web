@@ -1,12 +1,25 @@
-.popup-modal-container {
-    pointer-events: none;
+.label-container {
+    position: relative;
+    overflow: visible;
 
     .menu-container {
         position: absolute;
-        pointer-events: auto;
+        right: 0;
+        z-index: 1;
+        overflow: visible;
         visibility: hidden;
-        overflow: auto;
         box-shadow: 0 1.35rem 2.7rem var(--color-backgrounddarker40),
             0 1.1rem 0.85rem var(--color-backgrounddarker20);
+        cursor: auto;
+
+        &.menu-direction-bottom {
+            top: 100%;
+            visibility: visible;
+        }
+
+        &.menu-direction-top {
+            bottom: 100%;
+            visibility: visible;
+        }
     }
 }

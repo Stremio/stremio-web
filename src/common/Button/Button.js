@@ -1,16 +1,14 @@
 const React = require('react');
 const classnames = require('classnames');
-const useTabIndex = require('stremio/common/useTabIndex');
 const styles = require('./styles');
 
 const Button = React.forwardRef(({ children, ...props }, ref) => {
-    const tabIndex = useTabIndex(props.tabIndex, props.disabled);
     const onKeyUp = React.useCallback((event) => {
         if (typeof props.onKeyUp === 'function') {
             props.onKeyUp(event);
         }
 
-        if (event.key === 'Enter' && !event.nativeEvent.clickPrevented) {
+        if (event.key === 'Enter' && !event.nativeEvent.buttonClickPrevented) {
             event.currentTarget.click();
         }
     }, [props.onKeyUp]);
@@ -19,7 +17,7 @@ const Button = React.forwardRef(({ children, ...props }, ref) => {
             props.onMouseDown(event);
         }
 
-        if (!event.nativeEvent.blurPrevented) {
+        if (!event.nativeEvent.buttonBlurPrevented) {
             event.preventDefault();
             if (document.activeElement instanceof HTMLElement) {
                 document.activeElement.blur();
@@ -29,10 +27,10 @@ const Button = React.forwardRef(({ children, ...props }, ref) => {
     return React.createElement(
         typeof props.href === 'string' && props.href.length > 0 ? 'a' : 'div',
         {
+            tabIndex: 0,
             ...props,
             ref,
             className: classnames(props.className, styles['button-container'], { 'disabled': props.disabled }),
-            tabIndex,
             onKeyUp,
             onMouseDown
         },

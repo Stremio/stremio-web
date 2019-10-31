@@ -20,10 +20,11 @@
         "prop-types": "15.7.2",
         "react": "16.9.0",
         "react-dom": "16.9.0",
+        "react-focus-lock": "2.1.1",
         "spatial-navigation-polyfill": "git+ssh://git@github.com/NikolaBorislavovHristov/spatial-navigation.git#964d09bf2b0853e27af6c25924b595d6621a019d",
         "stremio-colors": "git+ssh://git@github.com/Stremio/stremio-colors.git#v2.0.4",
-        "stremio-icons": "git+ssh://git@github.com/Stremio/stremio-icons.git#v1.0.11",
         "stremio-core-web": "git+ssh://git@github.com/stremio/stremio-core-web.git#v0.6.0",
+        "stremio-icons": "git+ssh://git@github.com/Stremio/stremio-icons.git#v1.0.11",
         "vtt.js": "0.13.0"
     },
     "devDependencies": {

@@ -19,9 +19,9 @@ const NavTabButton = ({ className, icon, label, href, onClick }) => {
 
         return null;
     }, [href]);
-    const active = useRouteActive(routeRegexp);
+    const routeActive = useRouteActive(routeRegexp);
     return (
-        <Button className={classnames(className, styles['nav-tab-button-container'], { 'active': active })} title={label} tabIndex={-1} href={href} onClick={onClick}>
+        <Button className={classnames(className, styles['nav-tab-button-container'], { 'active': routeActive })} title={label} tabIndex={-1} href={href} onClick={onClick}>
             {
                 typeof icon === 'string' && icon.length > 0 ?
                     <Icon className={styles['icon']} icon={icon} />

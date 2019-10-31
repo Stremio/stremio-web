@@ -1,5 +1,5 @@
 const React = require('react');
-const { MainNavBar, MetaRow, MetaRowPlaceholder } = require('stremio/common');
+const { MainNavBar, MetaRow } = require('stremio/common');
 const useCatalogs = require('./useCatalogs');
 const styles = require('./styles');
 
@@ -42,9 +42,10 @@ const Board = () => {
                             );
                         case 'Loading':
                             return (
-                                <MetaRowPlaceholder
+                                <MetaRow.Placeholder
                                     key={`${index}${req.base}${content.type}`}
                                     className={styles['board-row-placeholder']}
+                                    title={`${req.path.id} - ${req.path.type_name}`}
                                 />
                             );
                     }

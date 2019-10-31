@@ -5,10 +5,11 @@ const NavTabButton = require('./NavTabButton');
 const SearchBar = require('./SearchBar');
 const AddonsButton = require('./AddonsButton');
 const FullscreenButton = require('./FullscreenButton');
+const NotificationsMenu = require('./NotificationsMenu');
 const NavMenu = require('./NavMenu');
 const styles = require('./styles');
 
-const NavBar = React.memo(({ className, backButton, tabs, title, searchBar, addonsButton, fullscreenButton, navMenu }) => {
+const NavBar = React.memo(({ className, backButton, tabs, title, searchBar, addonsButton, fullscreenButton, notificationsMenu, navMenu }) => {
     const backButtonOnClick = React.useCallback(() => {
         window.history.back();
     }, []);
@@ -63,6 +64,12 @@ const NavBar = React.memo(({ className, backButton, tabs, title, searchBar, addo
                     null
             }
             {
+                notificationsMenu ?
+                    <NotificationsMenu className={styles['notifications-menu']} />
+                    :
+                    null
+            }
+            {
                 navMenu ?
                     <NavMenu className={styles['nav-menu']} />
                     :
@@ -87,6 +94,7 @@ NavBar.propTypes = {
     searchBar: PropTypes.bool,
     addonsButton: PropTypes.bool,
     fullscreenButton: PropTypes.bool,
+    notificationsMenu: PropTypes.bool,
     navMenu: PropTypes.bool
 };
 

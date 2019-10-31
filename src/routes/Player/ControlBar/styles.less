@@ -1,72 +1,16 @@
+:import('./ShareButton/styles.less') {
+    share-dialog-container: share-dialog-container;
+}
+
+:import('./SubtitlesButton/styles.less') {
+    subtitles-picker-container: subtitles-picker-container;
+}
+
 .control-bar-container {
-    padding: 0 calc(var(--control-bar-button-size) * 0.4);
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-
-    .seek-bar {
-        --seek-bar-thumb-size: calc(var(--control-bar-button-size) * 0.40);
-        --seek-bar-track-size: calc(var(--control-bar-button-size) * 0.12);
-        height: calc(var(--control-bar-button-size) * 0.6);
-        font-size: calc(var(--control-bar-button-size) * 0.35);
-    }
-
-    .control-bar-buttons-container {
-        height: var(--control-bar-button-size);
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-
-        .control-bar-button {
-            width: var(--control-bar-button-size);
-            height: var(--control-bar-button-size);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-
-            :global(.icon) {
-                width: 60%;
-                height: 60%;
-                fill: var(--color-surfacelight);
-                overflow: visible;
-            }
-
-            &:global(.active) {
-                background-color: var(--color-backgrounddarker);
-
-                :global(.icon) {
-                    fill: var(--color-surfacelighter);
-                }
-            }
-
-            &:global(.disabled) {
-                cursor: default;
-                pointer-events: none;
-
-                :global(.icon) {
-                    fill: var(--color-surfacedark);
-                }
-            }
-
-            &:hover:not(:global(.disabled)) {
-                :global(.icon) {
-                    fill: var(--color-surfacelighter);
-                }
-            }
-        }
-
-        .volume-slider {
-            --volume-slider-thumb-size: calc(var(--control-bar-button-size) * 0.36);
-            --volume-slider-track-size: calc(var(--control-bar-button-size) * 0.10);
-            width: calc(var(--control-bar-button-size) * 4);
-            height: var(--control-bar-button-size);
-        }
-
-        .spacing {
-            flex: 1;
-        }
-    }
+    position: relative;
+    z-index: 0;
+    padding: 0 1.5rem;
+    overflow: visible;
 
     &::after {
         position: absolute;
@@ -74,11 +18,69 @@
         bottom: 0;
         left: 0;
         z-index: -1;
-        box-shadow: 0 0 calc(var(--control-bar-button-size) * 2) calc(var(--control-bar-button-size) * 2.3) var(--color-backgrounddarker);
+        box-shadow: 0 0 8rem 8rem var(--color-backgrounddarker);
         content: "";
+    }
+
+    .seek-bar {
+        --thumb-size: 1.5rem;
+        height: 2.5rem;
+    }
+
+    .control-bar-buttons-container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        .control-bar-button {
+            flex: none;
+            width: 4rem;
+            height: 4rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            &:global(.active) {
+                background-color: var(--color-backgrounddarker);
+            }
+
+            &:global(.disabled) {
+                :global(.icon) {
+                    fill: var(--color-surfacedark);
+                }
+            }
+
+            :global(.icon) {
+                flex: none;
+                width: 2.5rem;
+                height: 2.5rem;
+                fill: var(--color-surfacelighter);
+            }
+        }
+
+        .volume-slider {
+            --thumb-size: 1.25rem;
+            flex: none;
+            width: 16rem;
+            height: 4rem;
+            margin: 0 1rem;
+        }
+
+        .spacing {
+            flex: 1;
+        }
     }
 }
 
 .modal-container {
-    --border-color: var(--color-surfacelighter);
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    padding: 8rem 1rem;
+
+    .share-dialog-container, .subtitles-picker-container {
+        flex: none;
+        background-color: var(--color-backgroundlighter);
+        border: thin solid var(--color-surfacelighter20);
+    }
 }

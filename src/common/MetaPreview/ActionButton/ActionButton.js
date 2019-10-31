@@ -10,7 +10,9 @@ const ActionButton = ({ className, icon, label, ...props }) => {
         <Button {...props} className={classnames(className, styles['action-button-container'])} title={label}>
             {
                 typeof icon === 'string' && icon.length > 0 ?
-                    <Icon className={styles['icon']} icon={icon} />
+                    <div className={styles['icon-container']}>
+                        <Icon className={styles['icon']} icon={icon} />
+                    </div>
                     :
                     null
             }
