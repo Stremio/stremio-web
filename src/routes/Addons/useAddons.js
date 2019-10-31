@@ -6,7 +6,7 @@ const DEFAULT_CATEGORY = 'thirdparty';
 
 const useAddons = (urlParams, queryParams) => {
     const { core } = useServices();
-    const [addons, setAddons] = React.useState([[], []]);
+    const [addons, setAddons] = React.useState([[], [], [], []]);
     const installAddon = React.useCallback(descriptor => {
         core.dispatch({
             action: 'AddonOp',
@@ -14,7 +14,7 @@ const useAddons = (urlParams, queryParams) => {
                 addonOp: 'Install',
                 args: descriptor
             }
-        })
+        });
     }, []);
     const uninstallAddon = React.useCallback(descriptor => {
         core.dispatch({
@@ -25,14 +25,14 @@ const useAddons = (urlParams, queryParams) => {
                     transport_url: descriptor.transportUrl
                 }
             }
-        })
+        });
     }, []);
     React.useEffect(() => {
         const type = typeof urlParams.type === 'string' && urlParams.type.length > 0 ? urlParams.type : DEFAULT_TYPE;
         const category = typeof urlParams.category === 'string' && urlParams.category.length > 0 ? urlParams.category : DEFAULT_CATEGORY;
         const onNewState = () => {
             const state = core.getState();
-            const myAddons = [...new Set(
+            [...new Set(
                 ['all'].concat(...state.ctx.content.addons.map(addon => addon.manifest.types))
             )]
                 .map((type) => (
@@ -49,14 +49,13 @@ const useAddons = (urlParams, queryParams) => {
                             }
                         }
                     })
-                );
-            myAddons.forEach(addon => state.addons.catalogs.push(addon));
+                )
+                .forEach(addon => state.addons.catalogs.push(addon));
             const selectAddon = (transportUrl) => {
                 window.location = `#/addons/${category}/${type}?addon=${transportUrl}`;
-            }
+            };
             const selectInputs = [
                 {
-                    'data-name': 'category',
                     selected: state.addons.catalogs
                         .filter(({ is_selected }) => is_selected)
                         .map(({ load }) => load.path.id),
@@ -69,6 +68,7 @@ const useAddons = (urlParams, queryParams) => {
                             label: name
                         })),
                     onSelect: (event) => {
+                        // TODO event.value
                         const load = state.addons.catalogs.find(({ load: { path: { id } } }) => {
                             return id === event.reactEvent.currentTarget.dataset.value;
                         }).load;
@@ -76,7 +76,6 @@ const useAddons = (urlParams, queryParams) => {
                     }
                 },
                 {
-                    'data-name': 'type',
                     selected: state.addons.catalogs
                         .filter(({ is_selected }) => is_selected)
                         .map(({ load }) => JSON.stringify(load)),
@@ -95,11 +94,14 @@ const useAddons = (urlParams, queryParams) => {
                 }
             ];
             const installedAddons = state.ctx.is_loaded ? state.ctx.content.addons : [];
-            const addonsItems = urlParams.category === 'my' && state.ctx.is_loaded ?
+            const addonsItems = urlParams.category === 'my' ?
                 installedAddons.filter(addon => urlParams.type === 'all' || addon.manifest.types.includes(urlParams.type))
                 :
-                (state.addons.content.type === 'Ready' ? state.addons.content.content : []);
-            setAddons([addonsItems, selectInputs, selectAddon, installAddon, uninstallAddon, installedAddons]);
+                state.addons.content.type === 'Ready' ?
+                    state.addons.content.content
+                    :
+                    [];
+            setAddons([addonsItems, selectInputs, selectAddon, installedAddons]);
         };
         core.on('NewModel', onNewState);
         core.dispatch({
@@ -112,7 +114,7 @@ const useAddons = (urlParams, queryParams) => {
                         resource: 'addon_catalog',
                         type_name: type,
                         id: category,
-                        extra: [] // TODO
+                        extra: []
                     }
                 }
             }
@@ -121,7 +123,7 @@ const useAddons = (urlParams, queryParams) => {
             core.off('NewModel', onNewState);
         };
     }, [urlParams, queryParams]);
-    return addons;
+    return [addons, installAddon, uninstallAddon];
 };
 
 module.exports = useAddons;

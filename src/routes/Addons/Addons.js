@@ -16,7 +16,7 @@ const Addons = ({ urlParams, queryParams }) => {
     const queryOnChange = React.useCallback((event) => {
         setQuery(event.currentTarget.value);
     }, []);
-    const [addons, dropdowns, setSelectedAddon, installSelectedAddon, uninstallSelectedAddon, installedAddons] = useAddons(urlParams, queryParams);
+    const [[addons, dropdowns, setSelectedAddon, installedAddons], installSelectedAddon, uninstallSelectedAddon] = useAddons(urlParams, queryParams);
     const [addedAddon, setAddedAddon] = React.useState(false);
     const [selectedAddon, clearSelectedAddon] = useSelectedAddon(queryParams.get('addon'));
     const [sharedAddon, setSharedAddon] = React.useState(null);

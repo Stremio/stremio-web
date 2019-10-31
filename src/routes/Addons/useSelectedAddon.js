@@ -23,8 +23,7 @@ const useSelectedAddon = (transportUrl) => {
             queryParams.delete('addon');
             if ([...queryParams].length !== 0) {
                 window.location.replace(`#${pathname}?${queryParams.toString()}`);
-            }
-            else {
+            } else {
                 window.location.replace(`#${pathname}`);
             }
             setAddon(null);
