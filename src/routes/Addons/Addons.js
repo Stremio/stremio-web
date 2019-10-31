@@ -27,8 +27,6 @@ const Addons = ({ urlParams, queryParams }) => {
         if (inputRef.current.value.length > 0) {
             setSelectedAddon(inputRef.current.value);
             setAddedAddon(false);
-        } else {
-            alert('TODO: Error message');
         }
     }, [setSelectedAddon]);
     React.useEffect(() => {
@@ -55,8 +53,7 @@ const Addons = ({ urlParams, queryParams }) => {
         event.nativeEvent.clearSelectedAddonPrevented = true;
     }, []);
     const setInstalledAddon = React.useCallback((currentAddon) => {
-        return installedAddons.some((installedAddon) => installedAddon.manifest.id === currentAddon.manifest.id &&
-            installedAddon.transportUrl === currentAddon.transportUrl);
+        return installedAddons.some((installedAddon) => installedAddon.transportUrl === currentAddon.transportUrl);
     }, [installedAddons]);
     return (
         <div className={styles['addons-container']}>
@@ -92,7 +89,6 @@ const Addons = ({ urlParams, queryParams }) => {
                                     {...addon.manifest}
                                     key={index}
                                     installed={setInstalledAddon(addon)}
-                                    isProtected={addon.flags && addon.flags.protected}
                                     className={styles['addon']}
                                     toggle={() => setSelectedAddon(addon.transportUrl)}
                                     onShareButtonClicked={() => setSharedAddon(addon)}
