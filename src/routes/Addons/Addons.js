@@ -48,7 +48,7 @@ const Addons = ({ urlParams, queryParams }) => {
             setAddedAddon(false);
             setSharedAddon(null);
         }
-    }, []);
+    }, [clearSelectedAddon]);
     const promptOnClick = React.useCallback((event) => {
         event.nativeEvent.clearSelectedAddonPrevented = true;
     }, []);
