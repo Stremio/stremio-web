@@ -6,8 +6,11 @@
 
     &.compact {
         .meta-info-container {
-            .logo {
+            .logo, .logo-placeholder-icon {
                 width: 100%;
+            }
+
+            .logo {
                 object-position: center;
             }
 
@@ -40,7 +43,7 @@
             height: 100%;
             object-fit: cover;
             object-position: top left;
-            filter: blur(5px) brightness(80%);
+            filter: blur(5px) brightness(50%);
         }
     }
 
@@ -50,14 +53,22 @@
         padding: 0 1rem;
         overflow-y: auto;
 
-        .logo {
+        .logo, .logo-placeholder-icon {
             display: block;
             max-width: 100%;
             height: 7rem;
             margin-top: 1rem;
+            background-color: var(--color-surfacedarker20);
+        }
+
+        .logo {
             object-fit: contain;
             object-position: left center;
-            background-color: var(--color-surfacedarker20);
+        }
+
+        .logo-placeholder-icon {
+            padding: 1rem;
+            fill: var(--color-surfacelight);
         }
 
         .duration-release-info-container {

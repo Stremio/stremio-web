@@ -2,6 +2,8 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { Modal } = require('stremio-router');
+const Icon = require('stremio-icons/dom');
+const Image = require('stremio/common/Image');
 const useBinaryState = require('stremio/common/useBinaryState');
 const ActionButton = require('./ActionButton');
 const MetaLinks = require('./MetaLinks');
@@ -75,11 +77,19 @@ const MetaPreview = ({ className, compact, id, type, name, logo, background, dur
             <div className={styles['meta-info-container']}>
                 {
                     typeof logo === 'string' && logo.length > 0 ?
-                        <img
+                        <Image
                             key={logo}
                             className={styles['logo']}
                             src={logo}
                             alt={' '}
+                            renderFallback={
+                                compact ?
+                                    () => (
+                                        <Icon className={styles['logo-placeholder-icon']} icon={'ic_broken_link'} />
+                                    )
+                                    :
+                                    null
+                            }
                         />
                         :
                         null
