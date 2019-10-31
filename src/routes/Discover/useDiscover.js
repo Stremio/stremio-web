@@ -9,7 +9,7 @@ const PAGE_SIZE = 100;
 
 const useCatalog = (urlParams, queryParams) => {
     const { core } = useServices();
-    const [discover, setDiscover] = React.useState([[], null, null]);
+    const [discover, setDiscover] = React.useState([[], null, null, null]);
     React.useEffect(() => {
         const addonTransportUrl = typeof urlParams.addonTransportUrl === 'string' ? urlParams.addonTransportUrl : DEFAULT_ADDON_TRANSPORT_URL;
         const catalogId = typeof urlParams.catalogId === 'string' ? urlParams.catalogId : DEFAULT_CATALOG_ID;
