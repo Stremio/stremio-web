@@ -6,14 +6,27 @@ const Icon = require('stremio-icons/dom');
 const { Modal } = require('stremio-router');
 const styles = require('./styles');
 
-const ModalDialog = ({ className, children, title, buttons, visible, onClose }) => {
+const ModalDialog = ({ className, children, title, buttons, onClose }) => {
+    // Close with the Escape key
+    // TODO: Maybe we should consider a global actions mapping so the 'close' key can be globbaly changed
+    React.useEffect(() => {
+        const onKeyUp = (event) => {
+            if (event.key === 'Escape' && typeof onClose === 'function') {
+                onClose();
+            }
+        };
+        window.addEventListener('keyup', onKeyUp);
+        return () => {
+            window.removeEventListener('keyup', onKeyUp);
+        };
+    }, [onClose]);
     const onModalContainerClick = React.useCallback(event => {
-        if(event.target === event.currentTarget) {
+        if (event.target === event.currentTarget && typeof onClose === 'function') {
             onClose(event);
         }
-    });
+    }, [onClose]);
     return (
-        <Modal className={classnames(styles['modal-container'], { [styles['shown']]: visible })} onMouseDown={onModalContainerClick}>
+        <Modal className={styles['modal-container']} onMouseDown={onModalContainerClick}>
             <div className={classnames(styles['modal-dialog-container'], className)}>
                 <Button className={styles['close-button']} onClick={onClose}>
                     <Icon className={styles['x-icon']} icon={'ic_x'} />
@@ -24,7 +37,7 @@ const ModalDialog = ({ className, children, title, buttons, visible, onClose }) 
                 </div>
                 <div className={styles['modal-dialog-buttons']}>
                     {Array.isArray(buttons) && buttons.length ? buttons.map((button, key) => (
-                        <Button key={key} className={styles['button']} {...button.props}>
+                        <Button key={key} className={classnames(styles['action-button'], button.className)} {...button.props}>
                             {
                                 button.icon
                                     ?
@@ -47,9 +60,9 @@ ModalDialog.propTypes = {
     buttons: PropTypes.arrayOf(PropTypes.shape({
         label: PropTypes.node,
         icon: PropTypes.string,
+        className: PropTypes.string,
         props: PropTypes.object // Button.propTypes unfortunately these are not defined
     })),
-    visible: PropTypes.boolean,
     onClose: PropTypes.func
 };
 

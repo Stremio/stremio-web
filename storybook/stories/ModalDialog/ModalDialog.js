@@ -2,16 +2,14 @@
 const React = require('react');
 const { storiesOf } = require('@storybook/react');
 const { action } = require('@storybook/addon-actions');
-const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
-const { Modal } = require('stremio-router');
 const { ModalDialog } = require('stremio/common');
 const styles = require('./styles');
 const useBinaryState = require('stremio/common/useBinaryState');
 
 storiesOf('ModalDialog', module).add('ModalDialog', () => {
-    const [modalVisible, showModal, hideModal, toggleModal] = useBinaryState(false);
-    const [modalBVisible, showModalB, hideModalB, toggleModalB] = useBinaryState(false);
+    const [modalVisible, showModal, hideModal] = useBinaryState(false);
+    const [modalBVisible, showModalB, hideModalB] = useBinaryState(true);
 
     const modalDummyContents = (
         <div className={styles['content-container']}>
@@ -26,22 +24,38 @@ storiesOf('ModalDialog', module).add('ModalDialog', () => {
         </div>
     );
 
+    /*
+
+    Every Button has the following properties:
+
+    label (String/React component) - the contents of the button.
+    icon                  (String) - icon class name. It will be shown to the left of the button's text
+    className             (String) - Custom className applied along side the  default one. Used for custom styles
+    props                 (Object) - the properties applied to the button itself. If a className is supplied here it will override all other class names  for this Button
+
+    */
+
     const oneButton = [
         {
             label: 'Show many buttons', icon: 'ic_ellipsis', props: {
-                onClick: React.useCallback(() => setButtons(manyButtons), [])
+                onClick: React.useCallback(() => setButtons(manyButtons), [setButtons])
             }
         },
     ]
     const manyButtons = [
         {
-            label: 'One', icon: 'ic_back_ios', props: {
-                onClick: React.useCallback(() => setButtons(oneButton), [])
+            label: 'One',
+            icon: 'ic_back_ios',
+            props: {
+                onClick: React.useCallback(() => setButtons(oneButton), [setButtons])
             }
         },
         {
-            label: 'A disabled button with a long name', props: {
+            label: 'A disabled button with a long name',
+            props: {
                 disabled: true,
+                tabIndex: -1, // We don't need keyboard focus on disabled elements
+                onClick: action('The onClick on disabled buttons should not be called!')
             }
         },
         {
@@ -50,8 +64,9 @@ storiesOf('ModalDialog', module).add('ModalDialog', () => {
                     <Icon className={styles['icon']} icon={'ic_actor'} />
                     {'A button with a long name, icon and custom class'}
                 </React.Fragment>
-            ), props: {
-                className: styles['custom-button'],
+            ),
+            className: styles['custom-button'],
+            props: {
                 onClick: action('A button with a long name and icon clicked')
             }
         },
@@ -60,17 +75,28 @@ storiesOf('ModalDialog', module).add('ModalDialog', () => {
     const [buttons, setButtons] = React.useState(oneButton);
 
     return (
-        <React.Fragment>
-            <button className={styles['button']} onClick={toggleModal}>Toggle dialog without buttons</button>
+        <div>
+            <button className={styles['show-modal-button']} onClick={showModal}>Show dialog without buttons</button>
+            {
+                modalVisible
+                    ?
+                    <ModalDialog className={styles['modal-dialog']} title={'Test dialog without buttons'} visible={modalVisible} onClose={hideModal}>
+                        {modalDummyContents}
+                    </ModalDialog>
+                    :
+                    null
+            }
 
-            <button className={styles['button']} onClick={toggleModalB}>Toggle dialog with buttons</button>
-
-            <ModalDialog className={styles['modal-dialog']} title={'Test dialog without buttons'} visible={modalVisible} onClose={hideModal}>
-                {modalDummyContents}
-            </ModalDialog>
-            <ModalDialog className={styles['modal-dialog']} title={'Test dialog with buttons'} buttons={buttons} visible={modalBVisible} onClose={hideModalB}>
-                {modalDummyContents}
-            </ModalDialog>
-        </React.Fragment>
+            <button className={styles['show-modal-button']} onClick={showModalB}>Show dialog with buttons</button>
+            {
+                modalBVisible
+                    ?
+                    <ModalDialog className={styles['modal-dialog']} title={'Test dialog with buttons'} buttons={buttons} visible={modalBVisible} onClose={hideModalB}>
+                        {modalDummyContents}
+                    </ModalDialog>
+                    :
+                    null
+            }
+        </div>
     );
 });

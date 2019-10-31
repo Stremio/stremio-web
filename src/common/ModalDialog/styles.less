@@ -1,8 +1,8 @@
 .modal-container {
-    display: none;
-    &.shown {
-        display: flex;
-    }
+    display: flex;
+    flex-flow: column;
+    background-color: var(--color-backgrounddark40);
+
     .modal-dialog-container {
         position: relative;
         padding: 1rem;
@@ -14,11 +14,21 @@
         }
 
         .close-button {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
             position: absolute;
-            top: 0;
-            right: 0;
-            width: 3rem;
-            height: 3rem;
+            top: .2rem;
+            right: .2rem;
+            width: 2rem;
+            height: 2rem;
+
+            .x-icon {
+                flex: 1 0 0;
+                width: 1rem;
+                height: 1rem;
+                fill: var(--color-surfacedark);
+            }
 
             &:hover {
                 background-color: var(--color-surfacelight);
@@ -27,15 +37,12 @@
                     fill: var(--color-signal2);
                 }
             }
-        }
 
-        .x-icon {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            width: 1rem;
-            height: 1rem;
-            fill: var(--color-surfacedark);
+            &:focus {
+                .x-icon {
+                    fill: var(--color-signal2);
+                }
+            }
         }
 
         h1 {
@@ -53,32 +60,39 @@
             flex-flow: row;
         }
 
-        .button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex: 1 0 0;
-            text-align: center;
-            color: var(--color-surfacelighter);
-            background-color: var(--color-signal5);
-            padding: 1rem;
-            margin: .5rem;
+    }
+}
 
-            &:hover {
-                background-color: var(--color-signal580);
-            }
+.action-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1 0 0;
+    text-align: center;
+    color: var(--color-surfacelighter);
+    background-color: var(--color-signal5);
+    padding: 1rem;
+    margin: .5rem;
 
-            &:global(.disabled) {
-                color: var(--color-surfacedarker);
-                background-color: var(--color-surfacedark);
-            }
+    &:hover {
+        background-color: var(--color-signal580);
+    }
 
-            .icon {
-                fill: var(--color-surfacelighter);
-                width: 1rem;
-                height: 1rem;
-                margin-right: .5rem;
-            }
-        }
+    &:focus {
+        outline: 3px solid var(--color-surfacelighter);
+        outline-offset: -4px;
+
+    }
+
+    &:global(.disabled) {
+        color: var(--color-surfacedarker);
+        background-color: var(--color-surfacedark);
+    }
+
+    .icon {
+        fill: var(--color-surfacelighter);
+        width: 1rem;
+        height: 1rem;
+        margin-right: .5rem;
     }
 }
