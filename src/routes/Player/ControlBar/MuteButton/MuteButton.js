@@ -2,37 +2,29 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
+const { Button } = require('stremio/common');
 
-class MuteButton extends React.Component {
-    shouldComponentUpdate(nextProps, nextState) {
-        return nextProps.className !== this.props.className ||
-            nextProps.volume !== this.props.volume ||
-            nextProps.muted !== this.props.muted;
-    }
-
-    toggleMuted = () => {
-        this.props.dispatch({ propName: 'muted', propValue: !this.props.muted });
-    }
-
-    render() {
-        const icon = this.props.muted ? 'ic_volume0' :
-            (this.props.volume === null || isNaN(this.props.volume)) ? 'ic_volume3' :
-                this.props.volume < 30 ? 'ic_volume1' :
-                    this.props.volume < 70 ? 'ic_volume2' :
-                        'ic_volume3';
-        return (
-            <div className={classnames(this.props.className, { 'disabled': this.props.muted === null })} onClick={this.toggleMuted}>
-                <Icon className={'icon'} icon={icon} />
-            </div>
-        );
-    }
+const MuteButton = ({ className, muted, volume, dispatch }) => {
+    const toggleMuted = React.useCallback(() => {
+        dispatch({ propName: 'muted', propValue: !muted });
+    }, [muted, dispatch]);
+    const icon = muted ? 'ic_volume0' :
+        (volume === null || isNaN(volume)) ? 'ic_volume3' :
+            volume < 30 ? 'ic_volume1' :
+                volume < 70 ? 'ic_volume2' :
+                    'ic_volume3';
+    return (
+        <Button className={classnames(className, { 'disabled': typeof muted !== 'boolean' })} tabIndex={-1} onClick={toggleMuted}>
+            <Icon className={'icon'} icon={icon} />
+        </Button>
+    );
 }
 
 MuteButton.propTypes = {
     className: PropTypes.string,
     muted: PropTypes.bool,
     volume: PropTypes.number,
-    dispatch: PropTypes.func.isRequired
+    dispatch: PropTypes.func
 };
 
 module.exports = MuteButton;

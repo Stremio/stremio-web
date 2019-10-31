@@ -3,7 +3,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const UrlUtils = require('url');
 const Icon = require('stremio-icons/dom');
-const { useFocusable } = require('stremio-router');
+const { useRouteFocused } = require('stremio-router');
 const Button = require('stremio/common/Button');
 const TextInput = require('stremio/common/TextInput');
 const routesRegexp = require('stremio/common/routesRegexp');
@@ -13,37 +13,37 @@ const styles = require('./styles');
 
 const SearchBar = ({ className }) => {
     const locationHash = useLocationHash();
-    const focusable = useFocusable();
+    const routeFocused = useRouteFocused();
+    const routeActive = useRouteActive(routesRegexp.search.regexp);
     const searchInputRef = React.useRef(null);
-    const active = useRouteActive(routesRegexp.search.regexp);
     const query = React.useMemo(() => {
-        if (active) {
+        if (routeActive) {
             const { search: locationSearch } = UrlUtils.parse(locationHash.slice(1));
             const queryParams = new URLSearchParams(locationSearch);
             return queryParams.has('q') ? queryParams.get('q') : '';
         }
 
         return '';
-    }, [active, locationHash]);
+    }, [routeActive, locationHash]);
     const searchBarOnClick = React.useCallback(() => {
-        if (!active) {
+        if (!routeActive) {
             window.location = '#/search';
         }
-    }, [active]);
+    }, [routeActive]);
     const queryInputOnSubmit = React.useCallback(() => {
-        if (active) {
+        if (routeActive) {
             window.location.replace(`#/search?q=${searchInputRef.current.value}`);
         }
-    }, [active]);
+    }, [routeActive]);
     React.useEffect(() => {
-        if (active && focusable) {
+        if (routeActive && routeFocused) {
             searchInputRef.current.focus();
         }
-    }, [active, focusable, query]);
+    }, [routeActive, routeFocused, query]);
     return (
-        <label className={classnames(className, styles['search-bar-container'], { 'active': active })} onClick={searchBarOnClick}>
+        <label className={classnames(className, styles['search-bar-container'], { 'active': routeActive })} onClick={searchBarOnClick}>
             {
-                active ?
+                routeActive ?
                     <TextInput
                         key={query}
                         ref={searchInputRef}

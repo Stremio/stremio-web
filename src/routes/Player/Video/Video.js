@@ -1,79 +1,67 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const hat = require('hat');
-const HTMLVideo = require('./stremio-video/HTMLVideo');
-const YouTubeVideo = require('./stremio-video/YouTubeVideo');
-const MPVVideo = require('./stremio-video/MPVVideo');
+const useVideoImplementation = require('./useVideoImplementation');
 
-class Video extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.containerRef = React.createRef();
-        this.id = `video-${hat()}`;
-        this.video = null;
-    }
-
-    shouldComponentUpdate() {
-        return false;
-    }
-
-    componentWillUnmount() {
-        this.dispatch({ commandName: 'destroy' });
-    }
-
-    selectVideoImplementation = (args) => {
-        if (args.ipc) {
-            return MPVVideo;
-        } else if (args.stream.ytId) {
-            return YouTubeVideo;
-        } else {
-            return HTMLVideo;
-        }
-    }
-
-    dispatch = (args = {}) => {
-        if (args.commandName === 'load') {
-            const { commandArgs = {} } = args;
-            const Video = this.selectVideoImplementation(commandArgs);
-            if (this.video === null || this.video.constructor !== Video) {
-                this.dispatch({ commandName: 'destroy' });
-                this.video = new Video({
-                    id: this.id,
-                    containerElement: this.containerRef.current,
-                    ipc: commandArgs.ipc
+const Video = React.forwardRef(({ className, ...props }, ref) => {
+    const [onEnded, onError, onPropValue, onPropChanged, onImplementationChanged] = React.useMemo(() => [
+        props.onEnded,
+        props.onError,
+        props.onPropValue,
+        props.onPropChanged,
+        props.onImplementationChanged
+    ], []);
+    const containerElementRef = React.useRef(null);
+    const videoRef = React.useRef(null);
+    const id = React.useMemo(() => `video-${hat()}`, []);
+    const dispatch = React.useCallback((args) => {
+        if (args && args.commandName === 'load' && args.commandArgs) {
+            const Video = useVideoImplementation(args.commandArgs.shell, args.commandArgs.stream);
+            if (typeof Video !== 'function') {
+                videoRef.current = null;
+            } else if (videoRef.current === null || videoRef.current.constructor !== Video) {
+                dispatch({ commandName: 'destroy' });
+                videoRef.current = new Video({
+                    id: id,
+                    containerElement: containerElementRef.current,
+                    shell: args.commandArgs.shell
                 });
-                this.video.on('ended', this.props.onEnded);
-                this.video.on('error', this.props.onError);
-                this.video.on('propValue', this.props.onPropValue);
-                this.video.on('propChanged', this.props.onPropChanged);
-                this.props.onImplementationChanged(this.video.constructor.manifest);
+                videoRef.current.on('ended', onEnded);
+                videoRef.current.on('error', onError);
+                videoRef.current.on('propValue', onPropValue);
+                videoRef.current.on('propChanged', onPropChanged);
+                onImplementationChanged(videoRef.current.constructor.manifest);
             }
         }
 
-        if (this.video !== null) {
+        if (videoRef.current !== null) {
             try {
-                this.video.dispatch(args);
+                videoRef.current.dispatch(args);
             } catch (e) {
-                console.error(this.video.constructor.manifest.name, e);
+                console.error(videoRef.current.constructor.manifest.name, e);
             }
         }
-    }
+    }, []);
+    React.useImperativeHandle(ref, () => ({ dispatch }));
+    React.useEffect(() => {
+        return () => {
+            dispatch({ commandName: 'destroy' });
+        };
+    }, []);
+    return (
+        <div ref={containerElementRef} id={id} className={className} />
+    );
+});
 
-    render() {
-        return (
-            <div ref={this.containerRef} id={this.id} className={this.props.className} />
-        );
-    }
-}
+Video.displayName = 'Video';
 
 Video.propTypes = {
     className: PropTypes.string,
-    onEnded: PropTypes.func.isRequired,
-    onError: PropTypes.func.isRequired,
-    onPropValue: PropTypes.func.isRequired,
-    onPropChanged: PropTypes.func.isRequired,
-    onImplementationChanged: PropTypes.func.isRequired
+    onEnded: PropTypes.func,
+    onError: PropTypes.func,
+    onPropValue: PropTypes.func,
+    onPropChanged: PropTypes.func,
+    onImplementationChanged: PropTypes.func
 };
 
 module.exports = Video;

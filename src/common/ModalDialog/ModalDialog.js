@@ -3,33 +3,41 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Button = require('stremio/common/Button');
 const Icon = require('stremio-icons/dom');
+const { Modal } = require('stremio-router');
 const styles = require('./styles');
 
-const ModalDialog = ({className, children, title, buttons, onClose}) => {
+const ModalDialog = ({ className, children, title, buttons, visible, onClose }) => {
+    const onModalContainerClick = React.useCallback(event => {
+        if(event.target === event.currentTarget) {
+            onClose(event);
+        }
+    });
     return (
-        <div className={classnames(styles['modal-dialog-container'], className)}>
-            <Button className={styles['close-button']} onClick={onClose}>
-                <Icon className={styles['x-icon']} icon={'ic_x'} />
-            </Button>
-            <h1>{title}</h1>
-            <div className={styles['modal-dialog-content']}>
-                {children}
+        <Modal className={classnames(styles['modal-container'], { [styles['shown']]: visible })} onMouseDown={onModalContainerClick}>
+            <div className={classnames(styles['modal-dialog-container'], className)}>
+                <Button className={styles['close-button']} onClick={onClose}>
+                    <Icon className={styles['x-icon']} icon={'ic_x'} />
+                </Button>
+                <h1>{title}</h1>
+                <div className={styles['modal-dialog-content']}>
+                    {children}
+                </div>
+                <div className={styles['modal-dialog-buttons']}>
+                    {Array.isArray(buttons) && buttons.length ? buttons.map((button, key) => (
+                        <Button key={key} className={styles['button']} {...button.props}>
+                            {
+                                button.icon
+                                    ?
+                                    <Icon className={styles['icon']} icon={button.icon} ></Icon>
+                                    :
+                                    null
+                            }
+                            {button.label}
+                        </Button>
+                    )) : null}
+                </div>
             </div>
-            <div className={styles['modal-dialog-buttons']}>
-                {Array.isArray(buttons) && buttons.length ? buttons.map((button, key) => (
-                    <Button key={key} className={styles['button']} {...button.props}>
-                        {
-                            button.icon
-                            ?
-                            <Icon className={styles['icon']} icon={button.icon} ></Icon>
-                            :
-                            null
-                        }
-                        {button.label}
-                    </Button>
-                )) : null}
-            </div>
-        </div>
+        </Modal>
     )
 };
 
@@ -41,6 +49,7 @@ ModalDialog.propTypes = {
         icon: PropTypes.string,
         props: PropTypes.object // Button.propTypes unfortunately these are not defined
     })),
+    visible: PropTypes.boolean,
     onClose: PropTypes.func
 };
 

@@ -32,8 +32,8 @@ const routesRegexp = {
         urlParamsNames: []
     },
     player: {
-        regexp: /^\/player\/?$/i,
-        urlParamsNames: []
+        regexp: /^\/player\/(?:([^\/]+?))\/(?:([^\/]+?))\/(?:([^\/]+?))\/(?:([^\/]+?))\/?$/i,
+        urlParamsNames: ['type', 'id', 'videoId', 'stream']
     }
 };
 
