@@ -17,7 +17,7 @@ const useUser = () => {
         return () => {
             core.off('NewModel', onNewModel);
         };
-    }, [core]);
+    }, []);
     return user;
 };
 
