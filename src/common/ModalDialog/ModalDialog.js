@@ -1,4 +1,5 @@
 const React = require('react');
+const ReactIs = require('react-is');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Button = require('stremio/common/Button');
@@ -27,27 +28,36 @@ const ModalDialog = ({ className, children, title, buttons, onClose }) => {
     }, [onClose]);
     return (
         <Modal className={styles['modal-container']} onMouseDown={onModalContainerClick}>
-            <div className={classnames(styles['modal-dialog-container'], className)}>
-                <Button className={styles['close-button']} onClick={onClose}>
-                    <Icon className={styles['x-icon']} icon={'ic_x'} />
+            <div className={classnames(className, styles['modal-dialog-container'])}>
+                <Button className={styles['close-button-container']} title={'Close'} onClick={onClose}>
+                    <Icon className={styles['icon']} icon={'ic_x'} />
                 </Button>
                 <h1>{title}</h1>
                 <div className={styles['modal-dialog-content']}>
                     {children}
                 </div>
                 <div className={styles['modal-dialog-buttons']}>
-                    {Array.isArray(buttons) && buttons.length ? buttons.map((button, key) => (
-                        <Button key={key} className={classnames(styles['action-button'], button.className)} {...button.props}>
-                            {
-                                button.icon
-                                    ?
-                                    <Icon className={styles['icon']} icon={button.icon} ></Icon>
-                                    :
-                                    null
-                            }
-                            {button.label}
-                        </Button>
-                    )) : null}
+                    {
+                        Array.isArray(buttons) && buttons.length > 0 ?
+                            buttons.map((button, key) => (
+                                <Button key={key} className={classnames(button.className, styles['action-button'])} {...button.props}>
+                                    {
+                                        typeof button.icon === 'string' && button.icon.length > 0 ?
+                                            <Icon className={styles['icon']} icon={button.icon} />
+                                            :
+                                            null
+                                    }
+                                    {
+                                        ReactIs.isValidElementType(button.label) ?
+                                            button.label
+                                            :
+                                            null
+                                    }
+                                </Button>
+                            ))
+                            :
+                            null
+                    }
                 </div>
             </div>
         </Modal>

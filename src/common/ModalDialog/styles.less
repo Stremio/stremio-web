@@ -13,33 +13,35 @@
             overflow: visible;
         }
 
-        .close-button {
+        .close-button-container {
             display: flex;
             flex-direction: row;
             align-items: center;
+            justify-content: center;
             position: absolute;
             top: .2rem;
             right: .2rem;
             width: 2rem;
             height: 2rem;
+            padding: 0.5rem;
 
-            .x-icon {
-                flex: 1 0 0;
-                width: 1rem;
-                height: 1rem;
+            .icon {
+                display: block;
+                width: 100%;
+                height: 100%;
                 fill: var(--color-surfacedark);
             }
 
             &:hover {
                 background-color: var(--color-surfacelight);
 
-                .x-icon {
+                .icon {
                     fill: var(--color-signal2);
                 }
             }
 
             &:focus {
-                .x-icon {
+                .icon {
                     fill: var(--color-signal2);
                 }
             }
@@ -81,7 +83,6 @@
     &:focus {
         outline: 3px solid var(--color-surfacelighter);
         outline-offset: -4px;
-
     }
 
     &:global(.disabled) {

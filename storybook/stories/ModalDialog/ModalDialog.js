@@ -59,12 +59,7 @@ storiesOf('ModalDialog', module).add('ModalDialog', () => {
             }
         },
         {
-            label: (
-                <React.Fragment>
-                    <Icon className={styles['icon']} icon={'ic_actor'} />
-                    {'A button with a long name, icon and custom class'}
-                </React.Fragment>
-            ),
+            label: 'A button with a long name, icon and custom class',
             className: styles['custom-button'],
             props: {
                 onClick: action('A button with a long name and icon clicked')
