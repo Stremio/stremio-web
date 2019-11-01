@@ -13,9 +13,7 @@ class EventEmitter {
         this._handlers[event] = this._handlersFor(event).concat(handler);
     }
     off(event, handler) {
-        console.log('Before off', this._handlersFor(event))
         this._handlers[event] = this._handlersFor(event).filter(event => event !== handler);
-        console.log('After off', this._handlersFor(event))
     }
     emit(event, args) {
         this._handlersFor(event).forEach(handler => {
