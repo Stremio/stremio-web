@@ -16,7 +16,7 @@ const Addons = ({ urlParams, queryParams }) => {
     const queryOnChange = React.useCallback((event) => {
         setQuery(event.currentTarget.value);
     }, []);
-    const [[addons, dropdowns, setSelectedAddon, installedAddons], installSelectedAddon, uninstallSelectedAddon] = useAddons(urlParams, queryParams);
+    const [[addons, dropdowns, setSelectedAddon, installedAddons, error], installSelectedAddon, uninstallSelectedAddon] = useAddons(urlParams, queryParams);
     const [addAddonModalOpened, setAddAddonModalOpened] = React.useState(false);
     const [selectedAddon, clearSelectedAddon] = useSelectedAddon(queryParams.get('addon'));
     const [sharedAddon, setSharedAddon] = React.useState(null);
@@ -80,20 +80,30 @@ const Addons = ({ urlParams, queryParams }) => {
                 </div>
                 <div className={styles['addons-list-container']}>
                     {
-                        addons.filter((addon) => query.length === 0 ||
-                            ((typeof addon.manifest.name === 'string' && addon.manifest.name.toLowerCase().includes(query.toLowerCase())) ||
-                                (typeof addon.manifest.description === 'string' && addon.manifest.description.toLowerCase().includes(query.toLowerCase()))
-                            ))
-                            .map((addon, index) => (
-                                <Addon
-                                    {...addon.manifest}
-                                    key={index}
-                                    installed={setInstalledAddon(addon)}
-                                    className={styles['addon']}
-                                    toggle={() => setSelectedAddon(addon.transportUrl)}
-                                    onShareButtonClicked={() => setSharedAddon(addon)}
-                                />
-                            ))
+                        error !== null ?
+                            <div className={styles['message-container']}>
+                                {error.type}{error.type === 'Other' ? ` - ${error.content}` : null}
+                            </div>
+                            :
+                            Array.isArray(addons) ?
+                                addons.filter((addon) => query.length === 0 ||
+                                    ((typeof addon.manifest.name === 'string' && addon.manifest.name.toLowerCase().includes(query.toLowerCase())) ||
+                                        (typeof addon.manifest.description === 'string' && addon.manifest.description.toLowerCase().includes(query.toLowerCase()))
+                                    ))
+                                    .map((addon, index) => (
+                                        <Addon
+                                            {...addon.manifest}
+                                            key={index}
+                                            installed={setInstalledAddon(addon)}
+                                            className={styles['addon']}
+                                            toggle={() => setSelectedAddon(addon.transportUrl)}
+                                            onShareButtonClicked={() => setSharedAddon(addon)}
+                                        />
+                                    ))
+                                :
+                                <div className={styles['message-container']}>
+                                    Loading
+                                </div>
                     }
                 </div>
                 {

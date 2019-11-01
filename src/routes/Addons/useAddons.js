@@ -6,7 +6,7 @@ const DEFAULT_CATEGORY = 'thirdparty';
 
 const useAddons = (urlParams, queryParams) => {
     const { core } = useServices();
-    const [addons, setAddons] = React.useState([[], [], [], []]);
+    const [addons, setAddons] = React.useState([[], [], [], [], null]);
     const installAddon = React.useCallback(descriptor => {
         core.dispatch({
             action: 'AddonOp',
@@ -37,7 +37,7 @@ const useAddons = (urlParams, queryParams) => {
             )]
                 .map((type) => (
                     {
-                        is_selected: urlParams.type === type && urlParams.category === 'my',
+                        is_selected: urlParams.category === 'my' && urlParams.type === type,
                         name: 'my',
                         load: {
                             base: 'https://v3-cinemeta.strem.io/manifest.json',
@@ -101,7 +101,8 @@ const useAddons = (urlParams, queryParams) => {
                     state.addons.content.content
                     :
                     [];
-            setAddons([addonsItems, selectInputs, selectAddon, installedAddons]);
+            const error = state.addons.content.type === 'Err' ? state.addons.content.content : null;
+            setAddons([addonsItems, selectInputs, selectAddon, installedAddons, error]);
         };
         core.on('NewModel', onNewState);
         core.dispatch({
