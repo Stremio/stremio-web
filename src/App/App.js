@@ -23,12 +23,7 @@ const App = () => {
         const onCoreStateChanged = () => {
             setCoreInitialized(services.core.active || services.core.error instanceof Error);
             if (services.core.active) {
-                services.core.dispatch({
-                    model: 'All',
-                    args: {
-                        action: 'LoadCtx'
-                    }
-                });
+                services.core.dispatch({ action: 'LoadCtx' });
                 window.core = services.core;
             }
         };

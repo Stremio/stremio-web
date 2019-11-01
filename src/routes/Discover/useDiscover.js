@@ -191,19 +191,16 @@ const useCatalog = (urlParams, queryParams) => {
         };
         core.on('NewModel', onNewModel);
         core.dispatch({
-            model: 'Discover',
+            action: 'Load',
             args: {
-                action: 'Load',
+                load: 'CatalogFiltered',
                 args: {
-                    load: 'CatalogFiltered',
-                    args: {
-                        base: addonTransportUrl,
-                        path: {
-                            resource: 'catalog',
-                            type_name: type,
-                            id: catalogId,
-                            extra: Array.from(queryParams.entries())
-                        }
+                    base: addonTransportUrl,
+                    path: {
+                        resource: 'catalog',
+                        type_name: type,
+                        id: catalogId,
+                        extra: Array.from(queryParams.entries())
                     }
                 }
             }
