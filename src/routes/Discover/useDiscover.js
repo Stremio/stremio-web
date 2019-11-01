@@ -204,7 +204,7 @@ const useCatalog = (urlParams, queryParams) => {
                     }
                 }
             }
-        });
+        }, 'Discover');
         return () => {
             core.off('NewModel', onNewModel);
         };
