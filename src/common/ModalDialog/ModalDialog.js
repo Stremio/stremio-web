@@ -48,7 +48,7 @@ const ModalDialog = ({ className, children, title, buttons, onClose }) => {
                                             null
                                     }
                                     {
-                                        ReactIs.isValidElementType(button.label) ?
+                                        typeof button.label === 'string' && button.label.length > 0 ?
                                             button.label
                                             :
                                             null
@@ -68,7 +68,7 @@ ModalDialog.propTypes = {
     className: PropTypes.string,
     title: PropTypes.string,
     buttons: PropTypes.arrayOf(PropTypes.shape({
-        label: PropTypes.node,
+        label: PropTypes.string,
         icon: PropTypes.string,
         className: PropTypes.string,
         props: PropTypes.object // Button.propTypes unfortunately these are not defined
