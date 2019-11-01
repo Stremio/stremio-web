@@ -7,7 +7,7 @@ const DEFAULT_TYPE = 'movie';
 const NONE_EXTRA_VALUE = 'None';
 const PAGE_SIZE = 100;
 
-const useCatalog = (urlParams, queryParams) => {
+const useDiscover = (urlParams, queryParams) => {
     const { core } = useServices();
     const [discover, setDiscover] = React.useState([[], null, null, null]);
     React.useEffect(() => {
@@ -212,4 +212,4 @@ const useCatalog = (urlParams, queryParams) => {
     return discover;
 };
 
-module.exports = useCatalog;
+module.exports = useDiscover;
