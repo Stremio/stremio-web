@@ -6,29 +6,37 @@ const Icon = require('stremio-icons/dom');
 const { Modal } = require('stremio-router');
 const styles = require('./styles');
 
-const ModalDialog = ({ className, children, title, buttons, onClose }) => {
-    // Close with the Escape key
-    // TODO: Maybe we should consider a global actions mapping so the 'close' key can be globbaly changed
+const ModalDialog = ({ className, children, title, buttons, onCloseRequest }) => {
+    const dispatchCloseRequestEvent = React.useCallback(event => {
+        if (typeof onCloseRequest === 'function') {
+            onCloseRequest({
+                type: 'closeRequest',
+                dataset: [],
+                reactEvent: event,
+                nativeEvent: event.nativeEvent
+            });
+        }
+    }, [onCloseRequest]);
     React.useEffect(() => {
-        const onKeyUp = (event) => {
-            if (event.key === 'Escape' && typeof onClose === 'function') {
-                onClose();
+        const onKeyDown = (event) => {
+            if (event.key === 'Escape') {
+                dispatchCloseRequestEvent(event);
             }
         };
-        window.addEventListener('keyup', onKeyUp);
+        window.addEventListener('keydown', onKeyDown);
         return () => {
-            window.removeEventListener('keyup', onKeyUp);
+            window.removeEventListener('keydown', onKeyDown);
         };
-    }, [onClose]);
-    const onModalContainerClick = React.useCallback(event => {
-        if (event.target === event.currentTarget && typeof onClose === 'function') {
-            onClose(event);
+    }, [dispatchCloseRequestEvent]);
+    const onModalContainerMouseDown = React.useCallback(event => {
+        if (event.target === event.currentTarget) {
+            dispatchCloseRequestEvent(event);
         }
-    }, [onClose]);
+    }, [dispatchCloseRequestEvent]);
     return (
-        <Modal className={styles['modal-container']} onMouseDown={onModalContainerClick}>
+        <Modal className={styles['modal-container']} onMouseDown={onModalContainerMouseDown}>
             <div className={classnames(className, styles['modal-dialog-container'])}>
-                <Button className={styles['close-button-container']} title={'Close'} onClick={onClose}>
+                <Button className={styles['close-button-container']} title={'Close'} onClick={dispatchCloseRequestEvent}>
                     <Icon className={styles['icon']} icon={'ic_x'} />
                 </Button>
                 <h1>{title}</h1>
@@ -40,7 +48,7 @@ const ModalDialog = ({ className, children, title, buttons, onClose }) => {
                         <div className={styles['modal-dialog-buttons']}>
                             {
                                 buttons.map((button, key) => (
-                                    <Button key={key} className={classnames(button.className, styles['action-button'])} {...button.props}>
+                                    <Button className={classnames(button.className, styles['action-button'])} {...button.props} key={key}>
                                         {
                                             typeof button.icon === 'string' && button.icon.length > 0 ?
                                                 <Icon className={styles['icon']} icon={button.icon} />
@@ -62,7 +70,7 @@ const ModalDialog = ({ className, children, title, buttons, onClose }) => {
                 }
             </div>
         </Modal>
-    )
+    );
 };
 
 ModalDialog.propTypes = {
@@ -72,9 +80,9 @@ ModalDialog.propTypes = {
         label: PropTypes.string,
         icon: PropTypes.string,
         className: PropTypes.string,
-        props: PropTypes.object // Button.propTypes unfortunately these are not defined
+        props: PropTypes.object
     })),
-    onClose: PropTypes.func
+    onCloseRequest: PropTypes.func
 };
 
 module.exports = ModalDialog;

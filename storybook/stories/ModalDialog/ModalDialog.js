@@ -2,7 +2,6 @@
 const React = require('react');
 const { storiesOf } = require('@storybook/react');
 const { action } = require('@storybook/addon-actions');
-const Icon = require('stremio-icons/dom');
 const { ModalDialog } = require('stremio/common');
 const styles = require('./styles');
 const useBinaryState = require('stremio/common/useBinaryState');
@@ -30,8 +29,8 @@ storiesOf('ModalDialog', module).add('ModalDialog', () => {
 
     label (String/React component) - the contents of the button.
     icon                  (String) - icon class name. It will be shown to the left of the button's text
-    className             (String) - Custom className applied along side the  default one. Used for custom styles
-    props                 (Object) - the properties applied to the button itself. If a className is supplied here it will override all other class names  for this Button
+    className             (String) - Custom className applied along side the default one. Used for custom styles
+    props                 (Object) - the properties applied to the button itself. If a className is supplied here it will override all other class names for this Button
 
     */
 
@@ -75,7 +74,7 @@ storiesOf('ModalDialog', module).add('ModalDialog', () => {
             {
                 modalVisible
                     ?
-                    <ModalDialog className={styles['modal-dialog']} title={'Test dialog without buttons'} visible={modalVisible} onClose={hideModal}>
+                    <ModalDialog className={styles['modal-dialog']} title={'Test dialog without buttons'} visible={modalVisible} onCloseRequest={hideModal}>
                         {modalDummyContents}
                     </ModalDialog>
                     :
@@ -86,7 +85,7 @@ storiesOf('ModalDialog', module).add('ModalDialog', () => {
             {
                 modalBVisible
                     ?
-                    <ModalDialog className={styles['modal-dialog']} title={'Test dialog with buttons'} buttons={buttons} visible={modalBVisible} onClose={hideModalB}>
+                    <ModalDialog className={styles['modal-dialog']} title={'Test dialog with buttons'} buttons={buttons} visible={modalBVisible} onCloseRequest={hideModalB}>
                         {modalDummyContents}
                     </ModalDialog>
                     :
