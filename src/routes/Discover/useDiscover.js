@@ -143,10 +143,6 @@ const useDiscover = (urlParams, queryParams) => {
                         return page;
                     }, 1),
                     onSelect: (event) => {
-                        if (event.value < 1) {
-                            return;
-                        }
-
                         navigateWithLoad({
                             base: addonTransportUrl,
                             path: {

@@ -21,53 +21,32 @@ const PaginateInput = ({ className, options, selected, onSelect, ...props }) => 
 
         return selected;
     }, [options, selected]);
-    const prevButtonOnClick = React.useCallback((event) => {
+    const prevNextButtonOnClick = React.useCallback((event) => {
         if (typeof onSelect === 'function') {
             if (Array.isArray(options) && options.length > 0) {
-                const selectedIndex = options.findIndex(({ value }) => {
+                const selectedValueIndex = options.findIndex(({ value }) => {
                     return selected === value;
                 });
-                const prevIndex = Math.max(selectedIndex - 1, 0);
-                const prevValue = options[prevIndex];
+                const nextSelectedIndex = event.currentTarget.dataset.button === 'next' ?
+                    Math.min(selectedValueIndex + 1, options.length - 1)
+                    :
+                    Math.max(selectedValueIndex - 1, 0);
+                const nextSelectedValue = options[nextSelectedIndex].value;
                 onSelect({
                     type: 'select',
-                    value: prevValue,
+                    value: nextSelectedValue,
                     dataset: dataset,
                     reactEvent: event,
                     nativeEvent: event.nativeEvent
                 });
             } else {
-                const prevValue = Math.max(selected - 1, 0);
+                const nextSelectedValue = event.currentTarget.dataset.button === 'next' ?
+                    selected + 1
+                    :
+                    Math.max(selected - 1, 1);
                 onSelect({
                     type: 'select',
-                    value: prevValue,
-                    dataset: dataset,
-                    reactEvent: event,
-                    nativeEvent: event.nativeEvent
-                });
-            }
-        }
-    }, [dataset, options, selected, onSelect]);
-    const nextButtonOnClick = React.useCallback((event) => {
-        if (typeof onSelect === 'function') {
-            if (Array.isArray(options) && options.length > 0) {
-                const selectedIndex = options.findIndex(({ value }) => {
-                    return selected === value;
-                });
-                const nextIndex = Math.max(selectedIndex + 1, options.length - 1);
-                const nextValue = options[nextIndex];
-                onSelect({
-                    type: 'select',
-                    value: nextValue,
-                    dataset: dataset,
-                    reactEvent: event,
-                    nativeEvent: event.nativeEvent
-                });
-            } else {
-                const nextValue = selected + 1;
-                onSelect({
-                    type: 'select',
-                    value: nextValue,
+                    value: nextSelectedValue,
                     dataset: dataset,
                     reactEvent: event,
                     nativeEvent: event.nativeEvent
@@ -89,7 +68,7 @@ const PaginateInput = ({ className, options, selected, onSelect, ...props }) => 
     }, [onSelect]);
     return (
         <div className={classnames(className, styles['paginate-input-container'])} title={selected}>
-            <Button className={styles['prev-button-container']} onClick={prevButtonOnClick}>
+            <Button className={styles['prev-button-container']} data-button={'prev'} onClick={prevNextButtonOnClick}>
                 <Icon className={styles['icon']} icon={'ic_arrow_left'} />
             </Button>
             <Multiselect
@@ -109,7 +88,7 @@ const PaginateInput = ({ className, options, selected, onSelect, ...props }) => 
                 disabled={!Array.isArray(options) || options.length === 0}
                 onSelect={optionOnSelect}
             />
-            <Button className={styles['next-button-container']} onClick={nextButtonOnClick}>
+            <Button className={styles['next-button-container']} data-button={'next'} onClick={prevNextButtonOnClick}>
                 <Icon className={styles['icon']} icon={'ic_arrow_right'} />
             </Button>
         </div>
