@@ -11,7 +11,6 @@ const ModalDialog = ({ className, children, title, buttons, onCloseRequest }) =>
         if (typeof onCloseRequest === 'function') {
             onCloseRequest({
                 type: 'closeRequest',
-                dataset: [],
                 reactEvent: event,
                 nativeEvent: event.nativeEvent
             });
