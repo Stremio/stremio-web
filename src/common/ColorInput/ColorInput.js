@@ -1,41 +1,32 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const AColorPicker = require('a-color-picker');
-const Icon = require('stremio-icons/dom');
-const { Modal } = require('stremio-router');
 const Button = require('stremio/common/Button');
 const useBinaryState = require('stremio/common/useBinaryState');
+const ModalDialog = require('stremio/common/ModalDialog');
 const useDataset = require('stremio/common/useDataset');
 const ColorPicker = require('./ColorPicker');
-const styles = require('./styles');
 
 const COLOR_FORMAT = 'hexcss4';
 
 const ColorInput = ({ className, value, onChange, ...props }) => {
     value = AColorPicker.parseColor(value, COLOR_FORMAT);
     const dataset = useDataset(props);
-    const [modalOpen, openModal, closeModal] = useBinaryState(false);
+    const [modalOpen, setModalOpen, setModalClsoed] = useBinaryState(false);
     const [tempValue, setTempValue] = React.useState(value);
+    const closeModal = (event) => {
+        event.nativeEvent.openModalPrevented = true;
+        setModalClsoed();
+    };
     const pickerLabelOnClick = React.useCallback((event) => {
         if (typeof props.onClick === 'function') {
             props.onClick(event);
         }
 
         if (!event.nativeEvent.openModalPrevented) {
-            openModal();
+            setModalOpen();
         }
     }, [props.onClick]);
-    const modalContainerOnClick = React.useCallback((event) => {
-        event.nativeEvent.openModalPrevented = true;
-    }, []);
-    const modalContainerOnMouseDown = React.useCallback((event) => {
-        if (!event.nativeEvent.closeModalPrevented) {
-            closeModal();
-        }
-    }, []);
-    const modalContentOnMouseDown = React.useCallback((event) => {
-        event.nativeEvent.closeModalPrevented = true;
-    }, []);
     const colorPickerOnInput = React.useCallback((event) => {
         setTempValue(event.value);
     }, []);
@@ -50,8 +41,8 @@ const ColorInput = ({ className, value, onChange, ...props }) => {
             });
         }
 
-        closeModal();
-    }, [onChange, tempValue, dataset]);
+        closeModal(event);
+    }, [onChange, tempValue, dataset, closeModal]);
     React.useEffect(() => {
         setTempValue(value);
     }, [value, modalOpen]);
@@ -59,20 +50,9 @@ const ColorInput = ({ className, value, onChange, ...props }) => {
         <Button title={value} {...props} style={{ ...props.style, backgroundColor: value }} className={className} onClick={pickerLabelOnClick}>
             {
                 modalOpen ?
-                    <Modal className={styles['color-input-modal-container']} onMouseDown={modalContainerOnMouseDown} onClick={modalContainerOnClick}>
-                        <div className={styles['color-input-container']} onMouseDown={modalContentOnMouseDown}>
-                            <div className={styles['header-container']}>
-                                <div className={styles['title']}>Choose a color:</div>
-                                <Button className={styles['close-button-container']} title={'Close'} onClick={closeModal}>
-                                    <Icon className={styles['icon']} icon={'ic_x'} />
-                                </Button>
-                            </div>
-                            <ColorPicker className={styles['color-picker']} value={tempValue} onInput={colorPickerOnInput} />
-                            <Button className={styles['submit-button-container']} title={'Submit'} onClick={submitButtonOnClick}>
-                                <div className={styles['label']}>Select</div>
-                            </Button>
-                        </div>
-                    </Modal>
+                    <ModalDialog title={'Choose a color:'} buttons={[{ label: 'Select', props: { onClick: submitButtonOnClick } }]} onCloseRequest={closeModal}>
+                        <ColorPicker value={tempValue} onInput={colorPickerOnInput} />
+                    </ModalDialog>
                     :
                     null
             }
