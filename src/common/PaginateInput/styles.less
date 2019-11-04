@@ -1,0 +1,32 @@
+.paginate-input-container {
+    display: flex;
+    flex-direction: row;
+    overflow: visible;
+
+    .prev-button-container, .next-button-container {
+        flex: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .icon {
+            display: block;
+            width: 40%;
+            height: 40%;
+            fill: var(--color-surfacelighter);
+        }
+    }
+
+    .multiselect-label-container {
+        flex: 1;
+        align-self: stretch;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .multiselect-label {
+            flex: none;
+            color: var(--color-surfacelighter);
+        }
+    }
+}

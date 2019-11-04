@@ -1,31 +1,5 @@
-// const EventEmitter = require('events');
+const EventEmitter = require('events');
 const { default: init, ContainerService } = require('stremio-core-web');
-
-// Slightly better event handling
-class EventEmitter {
-    constructor() {
-        this._handlers = {};
-    }
-    _handlersFor(event) {
-        return this._handlers[event] || [];
-    }
-    on(event, handler) {
-        this._handlers[event] = this._handlersFor(event).concat(handler);
-    }
-    off(event, handler) {
-        this._handlers[event] = this._handlersFor(event).filter(event => event !== handler);
-    }
-    emit(event, args) {
-        this._handlersFor(event).forEach(handler => {
-            try {
-                handler(args);
-            }
-            catch (e) {
-                console.log('Event error', event, args, e);
-            }
-        });
-    }
-}
 
 function Core() {
     let active = false;
@@ -49,7 +23,11 @@ function Core() {
                 if (starting) {
                     containerService = new ContainerService(({ name, args } = {}) => {
                         if (active) {
-                            events.emit(name, args);
+                            try {
+                                events.emit(name, args);
+                            } catch (e) {
+                                console.error(e);
+                            }
                         }
                     });
                     active = true;
@@ -78,12 +56,15 @@ function Core() {
     function off(name, listener) {
         events.off(name, listener);
     }
-    function dispatch(args, model = 'All') {
+    function dispatch(action, model = 'All') {
         if (!active) {
             return;
         }
 
-        containerService.dispatch({ model, args });
+        containerService.dispatch({
+            model,
+            args: action
+        });
     }
     function getState() {
         if (!active) {

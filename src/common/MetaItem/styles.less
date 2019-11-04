@@ -14,11 +14,25 @@
 }
 
 .meta-item-container {
+    position: relative;
     overflow: visible;
 
-    &:hover, &:focus, &:global(.active) {
-        outline-style: solid;
-        outline-offset: 0;
+    &:hover, &:focus, &:global(.active), &:global(.selected) {
+        outline-style: none;
+
+        &::after {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            outline-style: solid;
+            outline-width: var(--focus-outline-size);
+            outline-color: var(--color-surfacelighter);
+            outline-offset: calc(-1 * var(--focus-outline-size));
+            pointer-events: none;
+            content: "";
+        }
 
         .title-bar-container {
             background-color: var(--color-surfacelight);

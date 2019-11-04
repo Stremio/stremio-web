@@ -64,7 +64,7 @@ const Router = ({ className, onPathNotMatch, ...props }) => {
             const matches = pathname.match(routeConfig.regexp);
             const urlParams = routeConfig.urlParamsNames.reduce((urlParams, name, index) => {
                 if (Array.isArray(matches) && typeof matches[index + 1] === 'string') {
-                    urlParams[name] = matches[index + 1];
+                    urlParams[name] = decodeURIComponent(matches[index + 1]);
                 } else {
                     urlParams[name] = null;
                 }
