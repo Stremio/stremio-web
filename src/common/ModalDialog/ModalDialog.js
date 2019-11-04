@@ -1,5 +1,4 @@
 const React = require('react');
-const ReactIs = require('react-is');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Button = require('stremio/common/Button');
