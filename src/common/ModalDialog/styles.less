@@ -1,17 +1,13 @@
 .modal-container {
     display: flex;
-    flex-flow: column;
+    flex-direction: column;
     background-color: var(--color-backgrounddark40);
 
     .modal-dialog-container {
         position: relative;
+        margin: auto;
         padding: 1rem;
         background-color: var(--color-surfacelighter);
-        margin: auto;
-
-        * {
-            overflow: visible;
-        }
 
         .close-button-container {
             display: flex;
@@ -52,37 +48,35 @@
         }
 
         .modal-dialog-content {
-            margin: 1rem auto 0 auto;
+            margin-top: 1rem;
         }
 
         .modal-dialog-buttons {
-            margin: -.5rem;
             margin-top: 1rem;
             display: flex;
-            flex-flow: row;
+            flex-direction: row;
         }
-
     }
 }
 
 .action-button {
     display: flex;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
     flex: 1 0 0;
+    padding: 1rem;
     text-align: center;
     color: var(--color-surfacelighter);
     background-color: var(--color-signal5);
-    padding: 1rem;
-    margin: .5rem;
 
     &:hover {
-        background-color: var(--color-signal580);
+        filter: brightness(1.2);
     }
 
     &:focus {
-        outline: 3px solid var(--color-surfacelighter);
-        outline-offset: -4px;
+        outline: calc(1.5 * var(--focus-outline-size)) solid var(--color-surfacelighter);
+        outline-offset: calc(-2 * var(--focus-outline-size));
     }
 
     &:global(.disabled) {
@@ -91,9 +85,13 @@
     }
 
     .icon {
-        fill: var(--color-surfacelighter);
         width: 1rem;
         height: 1rem;
         margin-right: .5rem;
+        fill: var(--color-surfacelighter);
+    }
+
+    &:not(:last-child) {
+        margin-right: 1rem;
     }
 }

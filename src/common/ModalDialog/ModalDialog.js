@@ -35,29 +35,31 @@ const ModalDialog = ({ className, children, title, buttons, onClose }) => {
                 <div className={styles['modal-dialog-content']}>
                     {children}
                 </div>
-                <div className={styles['modal-dialog-buttons']}>
-                    {
-                        Array.isArray(buttons) && buttons.length > 0 ?
-                            buttons.map((button, key) => (
-                                <Button key={key} className={classnames(button.className, styles['action-button'])} {...button.props}>
-                                    {
-                                        typeof button.icon === 'string' && button.icon.length > 0 ?
-                                            <Icon className={styles['icon']} icon={button.icon} />
-                                            :
-                                            null
-                                    }
-                                    {
-                                        typeof button.label === 'string' && button.label.length > 0 ?
-                                            button.label
-                                            :
-                                            null
-                                    }
-                                </Button>
-                            ))
-                            :
-                            null
-                    }
-                </div>
+                {
+                    Array.isArray(buttons) && buttons.length > 0 ?
+                        <div className={styles['modal-dialog-buttons']}>
+                            {
+                                buttons.map((button, key) => (
+                                    <Button key={key} className={classnames(button.className, styles['action-button'])} {...button.props}>
+                                        {
+                                            typeof button.icon === 'string' && button.icon.length > 0 ?
+                                                <Icon className={styles['icon']} icon={button.icon} />
+                                                :
+                                                null
+                                        }
+                                        {
+                                            typeof button.label === 'string' && button.label.length > 0 ?
+                                                button.label
+                                                :
+                                                null
+                                        }
+                                    </Button>
+                                ))
+                            }
+                        </div>
+                        :
+                        null
+                }
             </div>
         </Modal>
     )
