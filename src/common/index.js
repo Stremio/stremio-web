@@ -6,6 +6,7 @@ const MainNavBar = require('./MainNavBar');
 const MetaItem = require('./MetaItem');
 const MetaPreview = require('./MetaPreview');
 const MetaRow = require('./MetaRow');
+const ModalDialog = require('./ModalDialog');
 const Multiselect = require('./Multiselect');
 const NavBar = require('./NavBar');
 const PaginateInput = require('./PaginateInput');
@@ -34,6 +35,7 @@ module.exports = {
     MetaItem,
     MetaPreview,
     MetaRow,
+    ModalDialog,
     Multiselect,
     NavBar,
     PaginateInput,
