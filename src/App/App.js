@@ -24,6 +24,7 @@ const App = () => {
             setCoreInitialized(services.core.active || services.core.error instanceof Error);
             if (services.core.active) {
                 services.core.dispatch({ action: 'LoadCtx' });
+                window.core = services.core;
             }
         };
         services.shell.on('stateChanged', onShellStateChanged);

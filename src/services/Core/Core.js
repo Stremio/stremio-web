@@ -23,7 +23,11 @@ function Core() {
                 if (starting) {
                     containerService = new ContainerService(({ name, args } = {}) => {
                         if (active) {
-                            events.emit(name, args);
+                            try {
+                                events.emit(name, args);
+                            } catch (e) {
+                                console.error(e);
+                            }
                         }
                     });
                     active = true;
@@ -52,12 +56,15 @@ function Core() {
     function off(name, listener) {
         events.off(name, listener);
     }
-    function dispatch({ action, args } = {}) {
+    function dispatch(action, model = 'All') {
         if (!active) {
             return;
         }
 
-        containerService.dispatch({ action, args });
+        containerService.dispatch({
+            model,
+            args: action
+        });
     }
     function getState() {
         if (!active) {

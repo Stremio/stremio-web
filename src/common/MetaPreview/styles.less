@@ -6,15 +6,18 @@
 
     &.compact {
         .meta-info-container {
-            .logo {
+            .logo, .logo-placeholder-icon {
                 width: 100%;
+            }
+
+            .logo {
                 object-position: center;
             }
 
-            .duration-release-info-container {
+            .runtime-release-info-container {
                 justify-content: space-evenly;
 
-                .duration-label, .release-info-label {
+                .runtime-label, .release-info-label {
                     margin: 1rem 0.4rem;
                 }
             }
@@ -40,7 +43,7 @@
             height: 100%;
             object-fit: cover;
             object-position: top left;
-            filter: blur(5px) brightness(80%);
+            filter: blur(5px) brightness(50%);
         }
     }
 
@@ -50,23 +53,31 @@
         padding: 0 1rem;
         overflow-y: auto;
 
-        .logo {
+        .logo, .logo-placeholder-icon {
             display: block;
             max-width: 100%;
-            height: 7rem;
+            height: 8rem;
             margin-top: 1rem;
-            object-fit: contain;
-            object-position: left center;
+            padding: 1rem;
             background-color: var(--color-surfacedarker20);
         }
 
-        .duration-release-info-container {
+        .logo {
+            object-fit: contain;
+            object-position: left center;
+        }
+
+        .logo-placeholder-icon {
+            fill: var(--color-surfacelight);
+        }
+
+        .runtime-release-info-container {
             display: flex;
             flex-direction: row;
             flex-wrap: wrap;
             margin-top: 1rem;
 
-            .duration-label, .release-info-label {
+            .runtime-label, .release-info-label {
                 flex-grow: 0;
                 flex-shrink: 1;
                 flex-basis: auto;
