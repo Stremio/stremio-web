@@ -12,11 +12,11 @@ const COLOR_FORMAT = 'hexcss4';
 const ColorInput = ({ className, value, onChange, ...props }) => {
     value = AColorPicker.parseColor(value, COLOR_FORMAT);
     const dataset = useDataset(props);
-    const [modalOpen, setModalOpen, setModalClsoed] = useBinaryState(false);
+    const [modalOpen, setModalOpen, setModalClosed] = useBinaryState(false);
     const [tempValue, setTempValue] = React.useState(value);
     const closeModal = (event) => {
         event.nativeEvent.openModalPrevented = true;
-        setModalClsoed();
+        setModalClosed();
     };
     const pickerLabelOnClick = React.useCallback((event) => {
         if (typeof props.onClick === 'function') {
