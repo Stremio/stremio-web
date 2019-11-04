@@ -9,6 +9,7 @@ const MetaRow = require('./MetaRow');
 const ModalDialog = require('./ModalDialog');
 const Multiselect = require('./Multiselect');
 const NavBar = require('./NavBar');
+const PaginateInput = require('./PaginateInput');
 const PlayIconCircleCentered = require('./PlayIconCircleCentered');
 const Popup = require('./Popup');
 const SharePrompt = require('./SharePrompt');
@@ -23,6 +24,7 @@ const useLiveRef = require('./useLiveRef');
 const useLocationHash = require('./useLocationHash');
 const useRouteActive = require('./useRouteActive');
 const useSpreadState = require('./useSpreadState');
+const useUser = require('./useUser');
 
 module.exports = {
     Button,
@@ -36,6 +38,7 @@ module.exports = {
     ModalDialog,
     Multiselect,
     NavBar,
+    PaginateInput,
     PlayIconCircleCentered,
     Popup,
     SharePrompt,
@@ -49,5 +52,6 @@ module.exports = {
     useLiveRef,
     useLocationHash,
     useRouteActive,
-    useSpreadState
+    useSpreadState,
+    useUser
 };

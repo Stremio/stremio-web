@@ -8,7 +8,7 @@ const useBinaryState = require('stremio/common/useBinaryState');
 const useDataset = require('stremio/common/useDataset');
 const styles = require('./styles');
 
-const Multiselect = ({ className, direction, title, renderLabelContent, options, selected, onOpen, onClose, onSelect, ...props }) => {
+const Multiselect = ({ className, direction, title, renderLabelContent, renderLabelText, options, selected, disabled, onOpen, onClose, onSelect, ...props }) => {
     options = Array.isArray(options) ?
         options.filter(option => option && typeof option.value === 'string')
         :
@@ -31,6 +31,7 @@ const Multiselect = ({ className, direction, title, renderLabelContent, options,
         if (typeof onSelect === 'function') {
             onSelect({
                 type: 'select',
+                value: event.currentTarget.dataset.value,
                 reactEvent: event,
                 nativeEvent: event.nativeEvent,
                 dataset: dataset
@@ -64,7 +65,7 @@ const Multiselect = ({ className, direction, title, renderLabelContent, options,
             direction={direction}
             onCloseRequest={closeMenu}
             renderLabel={({ ref, className: popupLabelClassName, children }) => (
-                <Button ref={ref} className={classnames(className, popupLabelClassName, styles['label-container'], { 'active': menuOpen })} title={title} onClick={popupLabelOnClick}>
+                <Button ref={ref} className={classnames(className, popupLabelClassName, styles['label-container'], { 'active': menuOpen })} title={title} disabled={disabled} onClick={popupLabelOnClick}>
                     {
                         typeof renderLabelContent === 'function' ?
                             renderLabelContent()
@@ -72,16 +73,19 @@ const Multiselect = ({ className, direction, title, renderLabelContent, options,
                             <React.Fragment>
                                 <div className={styles['label']}>
                                     {
-                                        selected.length > 0 ?
-                                            options.reduce((labels, { label, value }) => {
-                                                if (selected.includes(value)) {
-                                                    labels.push(typeof label === 'string' ? label : value);
-                                                }
-
-                                                return labels;
-                                            }, []).join(', ')
+                                        typeof renderLabelText === 'function' ?
+                                            renderLabelText()
                                             :
-                                            title
+                                            selected.length > 0 ?
+                                                options.reduce((labels, { label, value }) => {
+                                                    if (selected.includes(value)) {
+                                                        labels.push(typeof label === 'string' ? label : value);
+                                                    }
+
+                                                    return labels;
+                                                }, []).join(', ')
+                                                :
+                                                title
                                     }
                                 </div>
                                 <Icon className={styles['icon']} icon={'ic_arrow_down'} />
@@ -92,12 +96,19 @@ const Multiselect = ({ className, direction, title, renderLabelContent, options,
             )}
             renderMenu={() => (
                 <div className={styles['menu-container']} onClick={popupMenuOnClick}>
-                    {options.map(({ label, value }) => (
-                        <Button key={value} className={classnames(styles['option-container'], { 'selected': selected.includes(value) })} title={typeof label === 'string' ? label : value} data-value={value} onClick={optionOnClick}>
-                            <div className={styles['label']}>{typeof label === 'string' ? label : value}</div>
-                            <Icon className={styles['icon']} icon={'ic_check'} />
-                        </Button>
-                    ))}
+                    {
+                        options.length > 0 ?
+                            options.map(({ label, value }) => (
+                                <Button key={value} className={classnames(styles['option-container'], { 'selected': selected.includes(value) })} title={typeof label === 'string' ? label : value} data-value={value} onClick={optionOnClick}>
+                                    <div className={styles['label']}>{typeof label === 'string' ? label : value}</div>
+                                    <Icon className={styles['icon']} icon={'ic_check'} />
+                                </Button>
+                            ))
+                            :
+                            <div className={styles['no-options-container']}>
+                                <div className={styles['label']}>No options available</div>
+                            </div>
+                    }
                 </div>
             )}
         />
@@ -109,11 +120,13 @@ Multiselect.propTypes = {
     direction: PropTypes.any,
     title: PropTypes.string,
     renderLabelContent: PropTypes.func,
+    renderLabelText: PropTypes.func,
     options: PropTypes.arrayOf(PropTypes.shape({
         value: PropTypes.string.isRequired,
         label: PropTypes.string
     })),
     selected: PropTypes.arrayOf(PropTypes.string),
+    disabled: PropTypes.bool,
     onOpen: PropTypes.func,
     onClose: PropTypes.func,
     onSelect: PropTypes.func

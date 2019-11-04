@@ -1,56 +1,106 @@
 const React = require('react');
 const classnames = require('classnames');
-const { Dropdown, MainNavBar, MetaItem, MetaPreview } = require('stremio/common');
-const useCatalog = require('./useCatalog');
+const Icon = require('stremio-icons/dom');
+const { Modal } = require('stremio-router');
+const { Button, MainNavBar, MetaItem, MetaPreview, Multiselect, PaginateInput, useBinaryState } = require('stremio/common');
+const useDiscover = require('./useDiscover');
 const styles = require('./styles');
 
 const Discover = ({ urlParams, queryParams }) => {
-    const [dropdowns, metaItems] = useCatalog(urlParams, queryParams);
-    const [selectedItem, setSelectedItem] = React.useState(null);
-    const metaItemsOnMouseDown = React.useCallback((event) => {
-        event.nativeEvent.blurPrevented = true;
+    const [selectInputs, paginateInput, metaItems, error] = useDiscover(urlParams, queryParams);
+    const [selectedMetaItem, setSelectedMetaItem] = React.useState(null);
+    const [filtersModalOpen, openFiltersModal, closeFiltersModal] = useBinaryState(false);
+    const metaItemsOnMouseDownCapture = React.useCallback((event) => {
+        event.nativeEvent.buttonBlurPrevented = true;
     }, []);
-    const metaItemsOnFocus = React.useCallback((event) => {
+    const metaItemsOnFocusCapture = React.useCallback((event) => {
         const metaItem = metaItems.find(({ id }) => {
             return id === event.target.dataset.id;
         });
         if (metaItem) {
-            setSelectedItem(metaItem);
+            setSelectedMetaItem(metaItem);
         }
-    }, []);
-    React.useEffect(() => {
-        const metaItem = metaItems.length > 0 ? metaItems[0] : null;
-        setSelectedItem(metaItem);
     }, [metaItems]);
+    React.useEffect(() => {
+        const metaItem = Array.isArray(metaItems) && metaItems.length > 0 ? metaItems[0] : null;
+        setSelectedMetaItem(metaItem);
+    }, [metaItems]);
+    React.useEffect(() => {
+        closeFiltersModal();
+    }, [urlParams, queryParams]);
     return (
         <div className={styles['discover-container']}>
             <MainNavBar className={styles['nav-bar']} />
             <div className={styles['discover-content']}>
-                <div className={styles['dropdowns-container']}>
-                    {dropdowns.map((dropdown) => (
-                        <Dropdown {...dropdown} key={dropdown.name} className={styles['dropdown']} />
-                    ))}
-                </div>
-                <div className={styles['meta-items-container']} onFocusCapture={metaItemsOnFocus} onMouseDownCapture={metaItemsOnMouseDown}>
-                    {metaItems.map((metaItem) => (
-                        <MetaItem
-                            {...metaItem}
-                            key={metaItem.id}
-                            className={classnames(styles['meta-item'], { 'selected': selectedItem !== null && metaItem.id === selectedItem.id })}
+                <div className={styles['controls-container']}>
+                    {selectInputs.map((selectInput, index) => (
+                        <Multiselect
+                            {...selectInput}
+                            key={index}
+                            className={styles['select-input-container']}
                         />
                     ))}
+                    <Button className={styles['filter-container']} onClick={openFiltersModal}>
+                        <Icon className={styles['filter-icon']} icon={'ic_filter'} />
+                    </Button>
+                    <div className={styles['spacing']} />
+                    {
+                        paginateInput !== null ?
+                            <PaginateInput
+                                {...paginateInput}
+                                className={styles['paginate-input-container']}
+                            />
+                            :
+                            null
+                    }
+                </div>
+                <div className={styles['catalog-content-container']}>
+                    {
+                        error !== null ?
+                            <div className={styles['message-container']}>
+                                {error.type}{error.type === 'Other' ? ` - ${error.content}` : null}
+                            </div>
+                            :
+                            Array.isArray(metaItems) ?
+                                <div className={styles['meta-items-container']} onMouseDownCapture={metaItemsOnMouseDownCapture} onFocusCapture={metaItemsOnFocusCapture}>
+                                    {metaItems.map(({ id, type, name, poster, posterShape }, index) => (
+                                        <MetaItem
+                                            key={index}
+                                            className={classnames(styles['meta-item'], { 'selected': selectedMetaItem !== null && selectedMetaItem.id === id })}
+                                            type={type}
+                                            name={name}
+                                            poster={poster}
+                                            posterShape={posterShape}
+                                            data-id={id}
+                                        />
+                                    ))}
+                                </div>
+                                :
+                                <div className={styles['message-container']}>
+                                    Loading
+                                </div>
+                    }
                 </div>
                 {
-                    selectedItem !== null ?
+                    selectedMetaItem !== null ?
                         <MetaPreview
-                            {...selectedItem}
+                            {...selectedMetaItem}
                             className={styles['meta-preview-container']}
                             compact={true}
+                            background={selectedMetaItem.poster}
                         />
                         :
-                        null
+                        <div className={styles['meta-preview-container']} />
                 }
             </div>
+            {
+                filtersModalOpen ?
+                    <Modal>
+                        {/* TODO */}
+                    </Modal>
+                    :
+                    null
+            }
         </div>
     );
 };
