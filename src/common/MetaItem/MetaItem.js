@@ -10,18 +10,22 @@ const useBinaryState = require('stremio/common/useBinaryState');
 const useDataset = require('stremio/common/useDataset');
 const styles = require('./styles');
 
-const ICON_FOR_TYPE = Object.assign(Object.create(null), {
-    'movie': 'ic_movies',
-    'series': 'ic_series',
-    'channel': 'ic_channels',
-    'tv': 'ic_tv',
-    'other': 'ic_movies'
-});
+const ICON_FOR_TYPE = new Map([
+    ['movie', 'ic_movies'],
+    ['series', 'ic_series'],
+    ['channel', 'ic_channels'],
+    ['tv', 'ic_tv'],
+    ['other', 'ic_movies']
+]);
 
 const MetaItem = React.memo(({ className, type, name, poster, posterShape, playIcon, progress, menuOptions, onSelect, menuOptionOnSelect, ...props }) => {
     const dataset = useDataset(props);
     const [menuOpen, onMenuOpen, onMenuClose] = useBinaryState(false);
     const metaItemOnClick = React.useCallback((event) => {
+        if (typeof props.onClick === 'function') {
+            props.onClick(event);
+        }
+
         if (!event.nativeEvent.selectMetaItemPrevented && typeof onSelect === 'function') {
             onSelect({
                 type: 'select',
@@ -30,7 +34,7 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, playI
                 nativeEvent: event.nativeEvent
             });
         }
-    }, [onSelect, dataset]);
+    }, [props.onClick, onSelect, dataset]);
     const multiselectOnClick = React.useCallback((event) => {
         event.nativeEvent.selectMetaItemPrevented = true;
     }, []);
@@ -38,6 +42,7 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, playI
         if (typeof menuOptionOnSelect === 'function') {
             menuOptionOnSelect({
                 type: 'select-option',
+                value: event.value,
                 dataset: dataset,
                 reactEvent: event.reactEvent,
                 nativeEvent: event.nativeEvent
@@ -45,7 +50,7 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, playI
         }
     }, [menuOptionOnSelect, dataset]);
     return (
-        <Button className={classnames(className, styles['meta-item-container'], styles['poster-shape-poster'], styles[`poster-shape-${posterShape}`], { 'active': menuOpen })} title={name} onClick={metaItemOnClick}>
+        <Button title={name} {...props} className={classnames(className, styles['meta-item-container'], styles['poster-shape-poster'], styles[`poster-shape-${posterShape}`], { 'active': menuOpen })} onClick={metaItemOnClick}>
             <div className={styles['poster-container']}>
                 <div className={styles['poster-image-layer']}>
                     <Image
@@ -55,7 +60,7 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, playI
                         renderFallback={() => (
                             <Icon
                                 className={styles['placeholder-icon']}
-                                icon={typeof ICON_FOR_TYPE[type] === 'string' ? ICON_FOR_TYPE[type] : ICON_FOR_TYPE['other']}
+                                icon={ICON_FOR_TYPE.has(type) ? ICON_FOR_TYPE.get(type) : ICON_FOR_TYPE.get('other')}
                             />
                         )}
                     />
