@@ -45,15 +45,20 @@
         }
 
         h1 {
+            margin-bottom: 1rem;
             font-size: 1.2rem;
         }
 
         .modal-dialog-content {
-            margin-top: 1rem;
+            padding: 1rem;
+
+            >:not(:first-child) {
+                margin-top: 1rem;
+            }
         }
 
         .modal-dialog-buttons {
-            margin-top: 1rem;
+            margin: 1rem;
             display: flex;
             flex-direction: row;
         }
@@ -94,6 +99,6 @@
     }
 
     &:not(:last-child) {
-        margin-right: 1rem;
+        margin-right: 2rem;
     }
 }

@@ -1,8 +1,6 @@
 const React = require('react');
-const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
-const { Modal, useRouteFocused } = require('stremio-router');
-const { Button, Multiselect, NavBar, TextInput, SharePrompt } = require('stremio/common');
+const { Button, Multiselect, NavBar, TextInput, SharePrompt, ModalDialog } = require('stremio/common');
 const Addon = require('./Addon');
 const AddonPrompt = require('./AddonPrompt');
 const useAddons = require('./useAddons');
@@ -11,7 +9,6 @@ const styles = require('./styles');
 
 const Addons = ({ urlParams, queryParams }) => {
     const inputRef = React.useRef(null);
-    const focusRoute = useRouteFocused();
     const [query, setQuery] = React.useState('');
     const queryOnChange = React.useCallback((event) => {
         setQuery(event.currentTarget.value);
@@ -29,32 +26,13 @@ const Addons = ({ urlParams, queryParams }) => {
             setAddAddonModalOpened(false);
         }
     }, [setSelectedAddon]);
-    React.useEffect(() => {
-        const onKeyUp = (event) => {
-            if (event.key === 'Escape' && typeof close === 'function') {
-                setAddAddonModalOpened(false);
-            }
-        };
-        if (focusRoute) {
-            window.addEventListener('keyup', onKeyUp);
-        }
-        return () => {
-            window.removeEventListener('keyup', onKeyUp);
-        };
-    }, [close, focusRoute]);
-    const promptModalBackgroundOnClick = React.useCallback((event) => {
-        if (!event.nativeEvent.clearSelectedAddonPrevented) {
-            clearSelectedAddon();
-            setAddAddonModalOpened(false);
-            setSharedAddon(null);
-        }
-    }, [clearSelectedAddon]);
-    const promptOnClick = React.useCallback((event) => {
-        event.nativeEvent.clearSelectedAddonPrevented = true;
-    }, []);
     const setInstalledAddon = React.useCallback((currentAddon) => {
         return installedAddons.some((installedAddon) => installedAddon.transportUrl === currentAddon.transportUrl);
     }, [installedAddons]);
+    const toggleAddon = React.useCallback(() => {
+        setInstalledAddon(selectedAddon) ? uninstallSelectedAddon(selectedAddon) : installSelectedAddon(selectedAddon);
+        clearSelectedAddon();
+    });
     return (
         <div className={styles['addons-container']}>
             <NavBar className={styles['nav-bar']} backButton={true} title={'Add-ons'} />
@@ -108,62 +86,77 @@ const Addons = ({ urlParams, queryParams }) => {
                 </div>
                 {
                     addAddonModalOpened ?
-                        <Modal className={styles['prompt-modal-container']} onClick={promptModalBackgroundOnClick}>
-                            <div className={classnames(styles['prompt-container'], styles['add-addon-prompt-container'])}>
-                                <div className={classnames(styles['prompt'], styles['add-addon-prompt'])} onClick={promptOnClick}>
-                                    <Button className={styles['close-button-container']} title={'Close'} tabIndex={-1} onClick={() => setAddAddonModalOpened(false)}>
-                                        <Icon className={styles['icon']} icon={'ic_x'} />
-                                    </Button>
-                                    <div className={styles['add-addon-prompt-content']}>
-                                        <div className={styles['add-addon-prompt-label']}>Add add-on</div>
-                                        <TextInput ref={inputRef} className={styles['url-content']} type={'text'} tabIndex={'-1'} placeholder={'Paste url...'} />
-                                        <div className={styles['buttons-container']}>
-                                            <Button className={classnames(styles['button-container'], styles['cancel-button'])} title={'Cancel'} onClick={() => setAddAddonModalOpened(false)}>
-                                                <div className={styles['label']}>Cancel</div>
-                                            </Button>
-                                            <Button className={classnames(styles['button-container'], styles['add-button'])} title={'Add'} onClick={onAddButtonClicked}>
-                                                <div className={styles['label']}>Add</div>
-                                            </Button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </Modal>
+                        <ModalDialog
+                            className={styles['add-addon-prompt-container']}
+                            title={'Add add-on'}
+                            buttons={[
+                                {
+                                    label: 'Cancel',
+                                    className: styles['cancel-button'],
+                                    props: {
+                                        title: 'Cancel',
+                                        onClick: () => setAddAddonModalOpened(false)
+                                    }
+                                },
+                                {
+                                    label: 'Add',
+                                    props: {
+                                        title: 'Add',
+                                        onClick: onAddButtonClicked
+                                    }
+                                }
+                            ]}
+                            onCloseRequest={() => setAddAddonModalOpened(false)}
+                        >
+                            <TextInput ref={inputRef} className={styles['url-content']} type={'text'} tabIndex={'-1'} placeholder={'Paste url...'} />
+                        </ModalDialog>
                         :
                         null
                 }
                 {
                     selectedAddon !== null ?
-                        <Modal className={styles['prompt-modal-container']} onClick={promptModalBackgroundOnClick}>
-                            <div className={classnames(styles['prompt-container'], styles['addon-prompt-container'])}>
-                                <AddonPrompt
-                                    {...selectedAddon.manifest}
-                                    transportUrl={selectedAddon.transportUrl}
-                                    installed={setInstalledAddon(selectedAddon)}
-                                    official={selectedAddon.flags.official}
-                                    className={styles['prompt']}
-                                    cancel={clearSelectedAddon}
-                                    onClick={promptOnClick}
-                                    toggle={() => setInstalledAddon(selectedAddon) ? uninstallSelectedAddon(selectedAddon) : installSelectedAddon(selectedAddon)}
-                                />
-                            </div>
-                        </Modal>
+                        <ModalDialog
+                            className={styles['addon-prompt-container']}
+                            buttons={[
+                                {
+                                    label: 'Cancel',
+                                    className: styles['cancel-button'],
+                                    props: {
+                                        title: 'Cancel',
+                                        onClick: clearSelectedAddon
+                                    }
+                                },
+                                {
+                                    label: setInstalledAddon(selectedAddon) ? 'Uninstall' : 'Install',
+                                    props: {
+                                        title: setInstalledAddon(selectedAddon) ? 'Uninstall' : 'Install',
+                                        onClick: toggleAddon
+                                    }
+                                }
+                            ]}
+                            onCloseRequest={clearSelectedAddon}
+                        >
+                            <AddonPrompt
+                                {...selectedAddon.manifest}
+                                transportUrl={selectedAddon.transportUrl}
+                                installed={setInstalledAddon(selectedAddon)}
+                                official={selectedAddon.flags.official}
+                                className={styles['prompt']}
+                                cancel={clearSelectedAddon}
+                            />
+                        </ModalDialog>
                         :
                         null
                 }
                 {
                     sharedAddon !== null ?
-                        <Modal className={styles['prompt-modal-container']} onClick={promptModalBackgroundOnClick}>
-                            <div className={classnames(styles['prompt-container'], styles['share-prompt-container'])}>
-                                <SharePrompt
-                                    label={'Share add-on'}
-                                    url={sharedAddon.transportUrl}
-                                    className={styles['prompt']}
-                                    close={() => setSharedAddon(null)}
-                                    onClick={promptOnClick}
-                                />
-                            </div>
-                        </Modal>
+                        <ModalDialog className={styles['share-prompt-container']} title={'Share add-on'} onCloseRequest={() => setSharedAddon(null)}>
+                            <SharePrompt
+                                url={sharedAddon.transportUrl}
+                                className={styles['prompt']}
+                                close={() => setSharedAddon(null)}
+                            />
+                        </ModalDialog>
                         :
                         null
                 }
