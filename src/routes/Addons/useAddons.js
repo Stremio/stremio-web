@@ -87,7 +87,7 @@ const useAddons = (urlParams, queryParams) => {
                             label: load.path.type_name
                         })),
                     onSelect: (event) => {
-                        const load = JSON.parse(event.reactEvent.currentTarget.dataset.value);
+                        const load = JSON.parse(event.value);
                         window.location = `#/addons/${encodeURIComponent(load.path.id)}/${encodeURIComponent(load.path.type_name)}`;
                     }
                 }
@@ -100,7 +100,7 @@ const useAddons = (urlParams, queryParams) => {
                     state.addons.content.content
                     :
                     [];
-            const error = state.addons.content.type === 'Err' ? state.addons.content.content : null;
+            const error = state.addons.content.type === 'Err' && !state.ctx.is_loaded ? state.addons.content.content : null;
             setAddons([addonsItems, selectInputs, selectAddon, installedAddons, error]);
         };
         core.on('NewModel', onNewState);
