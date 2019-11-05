@@ -68,9 +68,8 @@ const useAddons = (urlParams, queryParams) => {
                             label: name
                         })),
                     onSelect: (event) => {
-                        // TODO event.value
                         const load = state.addons.catalogs.find(({ load: { path: { id } } }) => {
-                            return id === event.reactEvent.currentTarget.dataset.value;
+                            return id === event.value;
                         }).load;
                         window.location = `#/addons/${encodeURIComponent(load.path.id)}/${encodeURIComponent(load.path.type_name)}`;
                     }
