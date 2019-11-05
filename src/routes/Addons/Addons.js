@@ -1,7 +1,6 @@
 const React = require('react');
 const Icon = require('stremio-icons/dom');
-const { Modal } = require('stremio-router');
-const { Button, Dropdown, NavBar, TextInput } = require('stremio/common');
+const { Button, Multiselect, NavBar, TextInput, SharePrompt, ModalDialog } = require('stremio/common');
 const Addon = require('./Addon');
 const AddonPrompt = require('./AddonPrompt');
 const useAddons = require('./useAddons');
@@ -9,31 +8,42 @@ const useSelectedAddon = require('./useSelectedAddon');
 const styles = require('./styles');
 
 const Addons = ({ urlParams, queryParams }) => {
+    const inputRef = React.useRef(null);
     const [query, setQuery] = React.useState('');
     const queryOnChange = React.useCallback((event) => {
         setQuery(event.currentTarget.value);
     }, []);
-    const [addons, dropdowns] = useAddons(urlParams.category, urlParams.type);
+    const [[addons, dropdowns, setSelectedAddon, installedAddons, error], installSelectedAddon, uninstallSelectedAddon] = useAddons(urlParams, queryParams);
+    const [addAddonModalOpened, setAddAddonModalOpened] = React.useState(false);
     const [selectedAddon, clearSelectedAddon] = useSelectedAddon(queryParams.get('addon'));
-    const addonPromptModalBackgroundOnClick = React.useCallback((event) => {
-        if (!event.nativeEvent.clearSelectedAddonPrevented) {
-            clearSelectedAddon();
+    const [sharedAddon, setSharedAddon] = React.useState(null);
+    const onAddAddonButtonClicked = React.useCallback(() => {
+        setAddAddonModalOpened(true);
+    }, []);
+    const onAddButtonClicked = React.useCallback(() => {
+        if (inputRef.current.value.length > 0) {
+            setSelectedAddon(inputRef.current.value);
+            setAddAddonModalOpened(false);
         }
-    }, []);
-    const addonPromptOnClick = React.useCallback((event) => {
-        event.nativeEvent.clearSelectedAddonPrevented = true;
-    }, []);
+    }, [setSelectedAddon]);
+    const installedAddon = React.useCallback((currentAddon) => {
+        return installedAddons.some((installedAddon) => installedAddon.transportUrl === currentAddon.transportUrl);
+    }, [installedAddons]);
+    const toggleAddon = React.useCallback(() => {
+        installedAddon(selectedAddon) ? uninstallSelectedAddon(selectedAddon) : installSelectedAddon(selectedAddon);
+        clearSelectedAddon();
+    }, [selectedAddon]);
     return (
         <div className={styles['addons-container']}>
             <NavBar className={styles['nav-bar']} backButton={true} title={'Addons'} />
             <div className={styles['addons-content']}>
                 <div className={styles['top-bar-container']}>
-                    <Button className={styles['add-button-container']} title={'Add addon'}>
+                    <Button className={styles['add-button-container']} title={'Add addon'} onClick={onAddAddonButtonClicked}>
                         <Icon className={styles['icon']} icon={'ic_plus'} />
                         <div className={styles['add-button-label']}>Add addon</div>
                     </Button>
-                    {dropdowns.map((dropdown) => (
-                        <Dropdown {...dropdown} key={dropdown.name} className={styles['dropdown']} />
+                    {dropdowns.map((dropdown, index) => (
+                        <Multiselect {...dropdown} key={index} className={styles['dropdown']} />
                     ))}
                     <label className={styles['search-bar-container']}>
                         <Icon className={styles['icon']} icon={'ic_search'} />
@@ -46,21 +56,107 @@ const Addons = ({ urlParams, queryParams }) => {
                         />
                     </label>
                 </div>
-                <div className={styles['addons-list-container']} >
+                <div className={styles['addons-list-container']}>
                     {
-                        addons.filter(({ name }) => query.length === 0 || (typeof name === 'string' && name.includes(query)))
-                            .map((addon) => (
-                                <Addon {...addon} key={addon.id} className={styles['addon']} />
-                            ))
+                        error !== null ?
+                            <div className={styles['message-container']}>
+                                {error.type}{error.type === 'Other' ? ` - ${error.content}` : null}
+                            </div>
+                            :
+                            Array.isArray(addons) ?
+                                addons.filter((addon) => query.length === 0 ||
+                                    ((typeof addon.manifest.name === 'string' && addon.manifest.name.toLowerCase().includes(query.toLowerCase())) ||
+                                        (typeof addon.manifest.description === 'string' && addon.manifest.description.toLowerCase().includes(query.toLowerCase()))
+                                    ))
+                                    .map((addon, index) => (
+                                        <Addon
+                                            {...addon.manifest}
+                                            key={index}
+                                            installed={installedAddon(addon)}
+                                            className={styles['addon']}
+                                            toggle={() => setSelectedAddon(addon.transportUrl)}
+                                            onShareButtonClicked={() => setSharedAddon(addon)}
+                                        />
+                                    ))
+                                :
+                                <div className={styles['message-container']}>
+                                    Loading
+                                </div>
                     }
                 </div>
                 {
+                    addAddonModalOpened ?
+                        <ModalDialog
+                            className={styles['add-addon-prompt-container']}
+                            title={'Add addon'}
+                            buttons={[
+                                {
+                                    label: 'Cancel',
+                                    className: styles['cancel-button'],
+                                    props: {
+                                        title: 'Cancel',
+                                        onClick: () => setAddAddonModalOpened(false)
+                                    }
+                                },
+                                {
+                                    label: 'Add',
+                                    props: {
+                                        title: 'Add',
+                                        onClick: onAddButtonClicked
+                                    }
+                                }
+                            ]}
+                            onCloseRequest={() => setAddAddonModalOpened(false)}
+                        >
+                            <TextInput ref={inputRef} className={styles['url-content']} type={'text'} tabIndex={'-1'} placeholder={'Paste url...'} />
+                        </ModalDialog>
+                        :
+                        null
+                }
+                {
                     selectedAddon !== null ?
-                        <Modal className={styles['addon-prompt-modal-container']} onClick={addonPromptModalBackgroundOnClick}>
-                            <div className={styles['addon-prompt-container']} onClick={addonPromptOnClick}>
-                                <AddonPrompt {...selectedAddon} className={styles['addon-prompt']} cancel={clearSelectedAddon} />
-                            </div>
-                        </Modal>
+                        <ModalDialog
+                            className={styles['addon-prompt-container']}
+                            buttons={[
+                                {
+                                    label: 'Cancel',
+                                    className: styles['cancel-button'],
+                                    props: {
+                                        title: 'Cancel',
+                                        onClick: clearSelectedAddon
+                                    }
+                                },
+                                {
+                                    label: installedAddon(selectedAddon) ? 'Uninstall' : 'Install',
+                                    props: {
+                                        title: installedAddon(selectedAddon) ? 'Uninstall' : 'Install',
+                                        onClick: toggleAddon
+                                    }
+                                }
+                            ]}
+                            onCloseRequest={clearSelectedAddon}
+                        >
+                            <AddonPrompt
+                                {...selectedAddon.manifest}
+                                transportUrl={selectedAddon.transportUrl}
+                                installed={installedAddon(selectedAddon)}
+                                official={selectedAddon.flags.official}
+                                className={styles['prompt']}
+                                cancel={clearSelectedAddon}
+                            />
+                        </ModalDialog>
+                        :
+                        null
+                }
+                {
+                    sharedAddon !== null ?
+                        <ModalDialog className={styles['share-prompt-container']} title={'Share addon'} onCloseRequest={() => setSharedAddon(null)}>
+                            <SharePrompt
+                                url={sharedAddon.transportUrl}
+                                className={styles['prompt']}
+                                close={() => setSharedAddon(null)}
+                            />
+                        </ModalDialog>
                         :
                         null
                 }
