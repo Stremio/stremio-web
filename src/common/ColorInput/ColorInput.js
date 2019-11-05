@@ -14,19 +14,6 @@ const ColorInput = ({ className, value, onChange, ...props }) => {
     const dataset = useDataset(props);
     const [modalOpen, setModalOpen, setModalClosed] = useBinaryState(false);
     const [tempValue, setTempValue] = React.useState(value);
-    const closeModal = (event) => {
-        event.nativeEvent.openModalPrevented = true;
-        setModalClosed();
-    };
-    const pickerLabelOnClick = React.useCallback((event) => {
-        if (typeof props.onClick === 'function') {
-            props.onClick(event);
-        }
-
-        if (!event.nativeEvent.openModalPrevented) {
-            setModalOpen();
-        }
-    }, [props.onClick]);
     const colorPickerOnInput = React.useCallback((event) => {
         setTempValue(event.value);
     }, []);
@@ -40,23 +27,23 @@ const ColorInput = ({ className, value, onChange, ...props }) => {
                 nativeEvent: event.nativeEvent
             });
         }
-
-        closeModal(event);
-    }, [onChange, tempValue, dataset, closeModal]);
+        setModalClosed();
+    }, [onChange, tempValue, dataset]);
     React.useEffect(() => {
         setTempValue(value);
     }, [value, modalOpen]);
     return (
-        <Button title={value} {...props} style={{ ...props.style, backgroundColor: value }} className={className} onClick={pickerLabelOnClick}>
+        <React.Fragment>
+            <Button title={value} {...props} style={{ ...props.style, backgroundColor: value }} className={className} onClick={setModalOpen} />
             {
                 modalOpen ?
-                    <ModalDialog title={'Choose a color:'} buttons={[{ label: 'Select', props: { onClick: submitButtonOnClick } }]} onCloseRequest={closeModal}>
+                    <ModalDialog title={'Choose a color:'} buttons={[{ label: 'Select', props: { onClick: submitButtonOnClick, 'data-autofocus': true } }]} onCloseRequest={setModalClosed}>
                         <ColorPicker value={tempValue} onInput={colorPickerOnInput} />
                     </ModalDialog>
                     :
                     null
             }
-        </Button>
+        </React.Fragment>
     );
 };
 
