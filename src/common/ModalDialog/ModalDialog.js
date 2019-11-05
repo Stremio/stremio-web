@@ -7,39 +7,44 @@ const { Modal } = require('stremio-router');
 const styles = require('./styles');
 
 const ModalDialog = ({ className, children, title, buttons, onCloseRequest }) => {
-    const dispatchCloseRequestEvent = React.useCallback(event => {
-        if (typeof onCloseRequest === 'function') {
-            onCloseRequest({
-                type: 'closeRequest',
-                reactEvent: event,
-                nativeEvent: event.nativeEvent
-            });
-        }
-    }, [onCloseRequest]);
     React.useEffect(() => {
         const onKeyDown = (event) => {
             if (event.key === 'Escape') {
-                dispatchCloseRequestEvent(event);
+                onCloseRequest({
+                    type: 'close',
+                    nativeEvent: event
+                });
             }
         };
         window.addEventListener('keydown', onKeyDown);
         return () => {
             window.removeEventListener('keydown', onKeyDown);
         };
-    }, [dispatchCloseRequestEvent]);
-    const onModalContainerMouseDown = React.useCallback(event => {
+    }, [onCloseRequest]);
+    const closeButtonOnClick = React.useCallback((event) => {
+        onCloseRequest({
+            type: 'close',
+            reactEvent: event,
+            nativeEvent: event.nativeEvent
+        });
+    }, [onCloseRequest])
+    const onModalContainerMouseDown = React.useCallback((event) => {
         if (event.target === event.currentTarget) {
-            dispatchCloseRequestEvent(event);
+            onCloseRequest({
+                type: 'close',
+                reactEvent: event,
+                nativeEvent: event.nativeEvent
+            });
         }
-    }, [dispatchCloseRequestEvent]);
+    }, [onCloseRequest]);
     return (
         <Modal className={styles['modal-container']} onMouseDown={onModalContainerMouseDown}>
             <div className={classnames(className, styles['modal-dialog-container'])}>
-                <Button className={styles['close-button-container']} title={'Close'} onClick={dispatchCloseRequestEvent}>
+                <Button className={styles['close-button-container']} title={'Close'} onClick={closeButtonOnClick}>
                     <Icon className={styles['icon']} icon={'ic_x'} />
                 </Button>
                 {
-                    typeof title === 'string' && title.length > 0 ? 
+                    typeof title === 'string' && title.length > 0 ?
                         <h1>{title}</h1>
                         :
                         null
