@@ -5,7 +5,7 @@ const Icon = require('stremio-icons/dom');
 const { Button } = require('stremio/common');
 const styles = require('./styles');
 
-const Addon = ({ className, id, name, logo, description, types, version, transportUrl, installed, toggle }) => {
+const Addon = ({ className, id, name, logo, description, types, version, transportUrl, installed, toggle, onShareButtonClicked }) => {
     const onKeyUp = React.useCallback((event) => {
         if (event.key === 'Enter' && typeof toggle === 'function') {
             toggle(event);
@@ -55,7 +55,7 @@ const Addon = ({ className, id, name, logo, description, types, version, transpo
                 <Button className={installed ? styles['uninstall-button-container'] : styles['install-button-container']} title={installed ? 'Uninstall' : 'Install'} tabIndex={-1} data-id={id} onClick={toggle}>
                     <div className={styles['label']}>{installed ? 'Uninstall' : 'Install'}</div>
                 </Button>
-                <Button className={styles['share-button-container']} title={'Share addon'} tabIndex={-1}>
+                <Button className={styles['share-button-container']} title={'Share addon'} tabIndex={-1} onClick={onShareButtonClicked}>
                     <Icon className={styles['icon']} icon={'ic_share'} />
                     <div className={styles['label']}>Share addon</div>
                 </Button>
@@ -74,7 +74,8 @@ Addon.propTypes = {
     version: PropTypes.string,
     transportUrl: PropTypes.string,
     installed: PropTypes.bool,
-    toggle: PropTypes.func
+    toggle: PropTypes.func,
+    onShareButtonClicked: PropTypes.func
 };
 
 module.exports = Addon;

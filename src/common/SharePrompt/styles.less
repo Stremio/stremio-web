@@ -1,133 +1,107 @@
 .share-prompt-container {
-    position: relative;
-    z-index: 0;
-    display: flex;
-    flex-direction: column;
-    padding: 2.4rem 0;
-    background-color: var(--color-surfacelighter);
+    .buttons-container {
+        flex: none;
+        align-self: stretch;
+        display: flex;
+        flex-direction: row;
 
-    .close-button-container {
-        position: absolute;
-        top: 0.4rem;
-        right: 0.4rem;
-        z-index: 1;
-        width: 2rem;
-        height: 2rem;
-        padding: 0.4rem;
-
-        &:hover {
-            background-color: var(--color-surfacelight);
-        }
-
-        .icon {
-            display: block;
-            width: 100%;
-            height: 100%;
-            fill: var(--color-backgrounddarker);
-        }
-    }
-
-    .share-prompt-content {
-        padding: 0 2.4rem;
-
-        .share-prompt-label {
-            font-size: 1.3rem;
-            color: var(--color-backgrounddarker);
-        }
-
-        .buttons-container {
-            flex: none;
-            align-self: stretch;
+        .button-container {
+            flex-grow: 0;
+            flex-shrink: 1;
+            flex-basis: 14rem;
             display: flex;
             flex-direction: row;
-            margin: 1.4rem 0;
+            align-items: center;
+            justify-content: center;
+            padding: 0.6rem 1rem;
 
-            .button-container {
-                flex-grow: 0;
-                flex-shrink: 1;
-                flex-basis: 14rem;
-                display: flex;
-                flex-direction: row;
-                align-items: center;
-                justify-content: center;
-                padding: 0.6rem 1rem;
-
-                .icon {
-                    flex: none;
-                    width: 1.4rem;
-                    height: 1.4rem;
-                    margin-right: 0.6rem;
-                    fill: var(--color-surfacelighter);
-                }
-
-                .label {
-                    flex-grow: 0;
-                    flex-shrink: 1;
-                    flex-basis: auto;
-                    font-size: 0.8rem;
-                    font-weight: 500;
-                    color: var(--color-surfacelighter);
-                    text-align: center;
-                }
-
-                &:hover, &:focus {
-                    filter: brightness(1.2);
-                }
-
-                &:not(:last-child) {
-                    margin-right: 2rem;
-                }
+            .icon {
+                flex: none;
+                width: 1.4rem;
+                height: 1.4rem;
+                margin-right: 0.6rem;
+                fill: var(--color-surfacelighter);
             }
 
-            .facebook-button {
-                background-color: var(--color-facebook);
-            }
-
-            .twitter-button {
-                background-color: var(--color-twitter);
-            }
-        }
-
-        .url-container {
-            display: flex;
-            flex-direction: row;
-            border: thin solid var(--color-surface);
-
-            .url-content {
-                flex: 1;
-                min-width: 12rem;
-                padding: 0.6rem 1rem;
-                font-size: 0.9rem;
-                color: var(--color-surfacedark);
-                text-align: center;
-            }
-
-            .copy-button {
+            .label {
                 flex-grow: 0;
                 flex-shrink: 1;
                 flex-basis: auto;
-                display: flex;
-                flex-direction: row;
-                align-items: center;
-                justify-content: center;
-                padding: 0.6rem 1rem;
-                background-color: var(--color-surface);
+                font-size: 0.8rem;
+                font-weight: 500;
+                color: var(--color-surfacelighter);
+                text-align: center;
+            }
 
-                .icon {
-                    flex: none;
-                    width: 1.4rem;
-                    height: 1.4rem;
-                    margin-right: 0.6rem;
-                    fill: var(--color-surfacedarker);
-                }
+            &:hover {
+                filter: brightness(1.2);
+            }
 
-                .label {
-                    color: var(--color-surfacedarker);
-                }
+            &:focus {
+                outline: calc(1.5 * var(--focus-outline-size)) solid var(--color-surfacelighter);
+                outline-offset: calc(-2 * var(--focus-outline-size));
+            }
 
-                &:hover, &:focus {
-                    filter: brightness(1.2);
-                }
+            &:not(:last-child) {
+                margin-right: 2rem;
+            }
+        }
+
+        .facebook-button {
+            background-color: var(--color-facebook);
+        }
+
+        .twitter-button {
+            background-color: var(--color-twitter);
+        }
+    }
+
+    .url-container {
+        display: flex;
+        flex-direction: row;
+        margin-top: 2rem;
+        border: thin solid var(--color-surface);
+
+        .url-content {
+            flex: 1;
+            min-width: 12rem;
+            padding: 0.6rem 1rem;
+            font-size: 0.9rem;
+            color: var(--color-surfacedark);
+            text-align: center;
+            border-right: thin solid var(--color-surface);
+        }
+
+        .copy-button {
+            flex-grow: 0;
+            flex-shrink: 1;
+            flex-basis: auto;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            padding: 0.6rem 1rem;
+            background-color: var(--color-surface);
+
+            .icon {
+                flex: none;
+                width: 1.4rem;
+                height: 1.4rem;
+                margin-right: 0.6rem;
+                fill: var(--color-surfacedarker);
+            }
+
+            .label {
+                color: var(--color-surfacedarker);
+            }
+
+            &:hover {
+                filter: brightness(1.2);
+            }
+
+            &:focus {
+                outline: calc(1.5 * var(--focus-outline-size)) solid var(--color-surfacelighter);
+                outline-offset: calc(-1.5 * var(--focus-outline-size));
             }
         }
     }
