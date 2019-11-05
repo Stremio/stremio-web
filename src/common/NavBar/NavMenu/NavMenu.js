@@ -64,7 +64,7 @@ const NavMenu = ({ className }) => {
                         </Button>
                         <Button className={styles['nav-menu-option-container']} title={'Addons'} href={'#/addons'}>
                             <Icon className={styles['icon']} icon={'ic_addons'} />
-                            <div className={styles['nav-menu-option-label']}>Add-ons</div>
+                            <div className={styles['nav-menu-option-label']}>Addons</div>
                         </Button>
                         <Button className={styles['nav-menu-option-container']} title={'Remote Control'}>
                             <Icon className={styles['icon']} icon={'ic_remote'} />

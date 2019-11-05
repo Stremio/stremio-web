@@ -31,7 +31,7 @@ const StreamsList = ({ className, metaItem }) => {
             </div>
             <Button className={styles['install-addons-container']} title={'Install addons'} href={'#/addons'}>
                 <Icon className={styles['icon']} icon={'ic_addons'} />
-                <div className={styles['label']}>Install add-ons</div>
+                <div className={styles['label']}>Install addons</div>
             </Button>
         </div>
     );

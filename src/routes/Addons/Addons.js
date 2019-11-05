@@ -26,21 +26,21 @@ const Addons = ({ urlParams, queryParams }) => {
             setAddAddonModalOpened(false);
         }
     }, [setSelectedAddon]);
-    const setInstalledAddon = React.useCallback((currentAddon) => {
+    const installedAddon = React.useCallback((currentAddon) => {
         return installedAddons.some((installedAddon) => installedAddon.transportUrl === currentAddon.transportUrl);
     }, [installedAddons]);
     const toggleAddon = React.useCallback(() => {
-        setInstalledAddon(selectedAddon) ? uninstallSelectedAddon(selectedAddon) : installSelectedAddon(selectedAddon);
+        installedAddon(selectedAddon) ? uninstallSelectedAddon(selectedAddon) : installSelectedAddon(selectedAddon);
         clearSelectedAddon();
-    });
+    }, [selectedAddon]);
     return (
         <div className={styles['addons-container']}>
-            <NavBar className={styles['nav-bar']} backButton={true} title={'Add-ons'} />
+            <NavBar className={styles['nav-bar']} backButton={true} title={'Addons'} />
             <div className={styles['addons-content']}>
                 <div className={styles['top-bar-container']}>
-                    <Button className={styles['add-button-container']} title={'Add add-on'} onClick={onAddAddonButtonClicked}>
+                    <Button className={styles['add-button-container']} title={'Add addon'} onClick={onAddAddonButtonClicked}>
                         <Icon className={styles['icon']} icon={'ic_plus'} />
-                        <div className={styles['add-button-label']}>Add add-on</div>
+                        <div className={styles['add-button-label']}>Add addon</div>
                     </Button>
                     {dropdowns.map((dropdown, index) => (
                         <Multiselect {...dropdown} key={index} className={styles['dropdown']} />
@@ -50,7 +50,7 @@ const Addons = ({ urlParams, queryParams }) => {
                         <TextInput
                             className={styles['search-input']}
                             type={'text'}
-                            placeholder={'Search add-ons...'}
+                            placeholder={'Search addons...'}
                             value={query}
                             onChange={queryOnChange}
                         />
@@ -72,7 +72,7 @@ const Addons = ({ urlParams, queryParams }) => {
                                         <Addon
                                             {...addon.manifest}
                                             key={index}
-                                            installed={setInstalledAddon(addon)}
+                                            installed={installedAddon(addon)}
                                             className={styles['addon']}
                                             toggle={() => setSelectedAddon(addon.transportUrl)}
                                             onShareButtonClicked={() => setSharedAddon(addon)}
@@ -88,7 +88,7 @@ const Addons = ({ urlParams, queryParams }) => {
                     addAddonModalOpened ?
                         <ModalDialog
                             className={styles['add-addon-prompt-container']}
-                            title={'Add add-on'}
+                            title={'Add addon'}
                             buttons={[
                                 {
                                     label: 'Cancel',
@@ -127,9 +127,9 @@ const Addons = ({ urlParams, queryParams }) => {
                                     }
                                 },
                                 {
-                                    label: setInstalledAddon(selectedAddon) ? 'Uninstall' : 'Install',
+                                    label: installedAddon(selectedAddon) ? 'Uninstall' : 'Install',
                                     props: {
-                                        title: setInstalledAddon(selectedAddon) ? 'Uninstall' : 'Install',
+                                        title: installedAddon(selectedAddon) ? 'Uninstall' : 'Install',
                                         onClick: toggleAddon
                                     }
                                 }
@@ -139,7 +139,7 @@ const Addons = ({ urlParams, queryParams }) => {
                             <AddonPrompt
                                 {...selectedAddon.manifest}
                                 transportUrl={selectedAddon.transportUrl}
-                                installed={setInstalledAddon(selectedAddon)}
+                                installed={installedAddon(selectedAddon)}
                                 official={selectedAddon.flags.official}
                                 className={styles['prompt']}
                                 cancel={clearSelectedAddon}
@@ -150,7 +150,7 @@ const Addons = ({ urlParams, queryParams }) => {
                 }
                 {
                     sharedAddon !== null ?
-                        <ModalDialog className={styles['share-prompt-container']} title={'Share add-on'} onCloseRequest={() => setSharedAddon(null)}>
+                        <ModalDialog className={styles['share-prompt-container']} title={'Share addon'} onCloseRequest={() => setSharedAddon(null)}>
                             <SharePrompt
                                 url={sharedAddon.transportUrl}
                                 className={styles['prompt']}
