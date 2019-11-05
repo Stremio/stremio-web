@@ -38,7 +38,12 @@ const ModalDialog = ({ className, children, title, buttons, onCloseRequest }) =>
                 <Button className={styles['close-button-container']} title={'Close'} onClick={dispatchCloseRequestEvent}>
                     <Icon className={styles['icon']} icon={'ic_x'} />
                 </Button>
-                <h1>{title}</h1>
+                {
+                    typeof title === 'string' && title.length > 0 ? 
+                        <h1>{title}</h1>
+                        :
+                        null
+                }
                 <div className={styles['modal-dialog-content']}>
                     {children}
                 </div>
