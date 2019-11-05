@@ -27,7 +27,7 @@ const ModalDialog = ({ className, children, title, buttons, onCloseRequest }) =>
             reactEvent: event,
             nativeEvent: event.nativeEvent
         });
-    }, [onCloseRequest])
+    }, [onCloseRequest]);
     const onModalContainerMouseDown = React.useCallback((event) => {
         if (event.target === event.currentTarget) {
             onCloseRequest({
