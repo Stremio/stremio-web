@@ -68,7 +68,7 @@ const Popup = ({ open, direction, renderLabel, renderMenu, onCloseRequest, ...pr
         ref: labelRef,
         className: styles['label-container'],
         children: open ?
-            <FocusLock className={classnames(styles['menu-container'], styles[`menu-direction-${typeof direction === 'string' ? direction : autoDirection}`])} autoFocus={true} lockProps={{ onMouseDown: menuOnMouseDown, onKeyUp: menuOnKeyUp }}>
+            <FocusLock className={classnames(styles['menu-container'], styles[`menu-direction-${typeof direction === 'string' ? direction : autoDirection}`])} autoFocus={false} lockProps={{ onMouseDown: menuOnMouseDown, onKeyUp: menuOnKeyUp }}>
                 {renderMenu()}
             </FocusLock>
             :
