@@ -8,10 +8,9 @@ const CredentialsTextInput = require('./CredentialsTextInput');
 const ConsentCheckbox = require('./ConsentCheckbox');
 const styles = require('./styles');
 
-const LOGIN_FORM = 'LOGIN_FORM';
-const SIGNUP_FORM = 'SIGNUP_FORM';
-// TODO queryparams for signup and login
-const Intro = () => {
+const SIGNUP_FORM = 'signup';
+
+const Intro = ({ queryParams }) => {
     const { core } = useServices();
     const routeFocused = useRouteFocused();
     const emailRef = React.useRef();
@@ -21,12 +20,12 @@ const Intro = () => {
     const privacyPolicyRef = React.useRef();
     const marketingRef = React.useRef();
     const errorRef = React.useRef();
+    const [selectedForm, setSelectedForm] = React.useState(queryParams.get('form'));
     const [state, dispatch] = React.useReducer(
         (state, action) => {
             switch (action.type) {
-                case 'switch-form':
+                case 'reset-form':
                     return {
-                        form: state.form === SIGNUP_FORM ? LOGIN_FORM : SIGNUP_FORM,
                         email: '',
                         password: '',
                         confirmPassword: '',
@@ -57,7 +56,6 @@ const Intro = () => {
             }
         },
         {
-            form: SIGNUP_FORM,
             email: '',
             password: '',
             confirmPassword: '',
@@ -166,12 +164,12 @@ const Intro = () => {
         });
     }, []);
     const passwordOnSubmit = React.useCallback(() => {
-        if (state.form === SIGNUP_FORM) {
+        if (selectedForm === SIGNUP_FORM) {
             confirmPasswordRef.current.focus();
         } else {
             loginWithEmail();
         }
-    }, [state.form, loginWithEmail]);
+    }, [selectedForm, loginWithEmail]);
     const confirmPasswordOnChange = React.useCallback((event) => {
         dispatch({
             type: 'change-credentials',
@@ -191,9 +189,10 @@ const Intro = () => {
     const toggleMarketingAccepted = React.useCallback(() => {
         dispatch({ type: 'toggle-checkbox', name: 'marketingAccepted' });
     }, []);
-    const switchForm = React.useCallback(() => {
-        dispatch({ type: 'switch-form' });
-    }, []);
+    React.useEffect(() => {
+        dispatch({ type: 'reset-form' });
+        setSelectedForm(queryParams.get('form'));
+    }, [queryParams]);
     React.useEffect(() => {
         if (typeof state.error === 'string' && state.error.length > 0) {
             errorRef.current.scrollIntoView();
@@ -203,7 +202,7 @@ const Intro = () => {
         if (routeFocused) {
             emailRef.current.focus();
         }
-    }, [state.form, routeFocused]);
+    }, [selectedForm, routeFocused]);
     return (
         <div className={styles['intro-container']}>
             <div className={styles['form-container']}>
@@ -231,7 +230,7 @@ const Intro = () => {
                     onSubmit={passwordOnSubmit}
                 />
                 {
-                    state.form === SIGNUP_FORM ?
+                    selectedForm === SIGNUP_FORM ?
                         <React.Fragment>
                             <CredentialsTextInput
                                 ref={confirmPasswordRef}
@@ -279,19 +278,19 @@ const Intro = () => {
                         :
                         null
                 }
-                <Button className={classnames(styles['form-button'], styles['submit-button'])} onClick={state.form === SIGNUP_FORM ? signup : loginWithEmail}>
-                    <div className={styles['label']}>{state.form === SIGNUP_FORM ? 'SING UP' : 'LOG IN'}</div>
+                <Button className={classnames(styles['form-button'], styles['submit-button'])} onClick={selectedForm === SIGNUP_FORM ? signup : loginWithEmail}>
+                    <div className={styles['label']}>{selectedForm === SIGNUP_FORM ? 'SING UP' : 'LOG IN'}</div>
                 </Button>
                 {
-                    state.form === SIGNUP_FORM ?
+                    selectedForm === SIGNUP_FORM ?
                         <Button className={classnames(styles['form-button'], styles['guest-login-button'])} onClick={loginAsGuest}>
                             <div className={styles['label']}>GUEST LOGIN</div>
                         </Button>
                         :
                         null
                 }
-                <Button className={classnames(styles['form-button'], styles['switch-form-button'])} onClick={switchForm}>
-                    <div className={styles['label']}>{state.form === SIGNUP_FORM ? 'LOG IN' : 'SING UP WITH EMAIL'}</div>
+                <Button className={classnames(styles['form-button'], styles['switch-form-button'])} href={selectedForm === SIGNUP_FORM ? '#/intro?form=login' : '#/intro?form=signup'}>
+                    <div className={styles['label']}>{selectedForm === SIGNUP_FORM ? 'LOG IN' : 'SING UP WITH EMAIL'}</div>
                 </Button>
             </div>
         </div>
