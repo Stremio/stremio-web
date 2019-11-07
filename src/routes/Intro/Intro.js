@@ -3,14 +3,16 @@ const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const { useRouteFocused } = require('stremio-router');
 const { Button } = require('stremio/common');
+const { useServices } = require('stremio/services');
 const CredentialsTextInput = require('./CredentialsTextInput');
 const ConsentCheckbox = require('./ConsentCheckbox');
 const styles = require('./styles');
 
 const LOGIN_FORM = 'LOGIN_FORM';
 const SIGNUP_FORM = 'SIGNUP_FORM';
-
+// TODO queryparams for signup and login
 const Intro = () => {
+    const { core } = useServices();
     const routeFocused = useRouteFocused();
     const emailRef = React.useRef();
     const passwordRef = React.useRef();
@@ -65,6 +67,23 @@ const Intro = () => {
             error: ''
         }
     );
+    React.useEffect(() => {
+        const onEvent = ({ event, args }) => {
+            if (event === 'CtxActionErr') {
+                dispatch({ type: 'error', error: args[1].args.message });
+            }
+            if (event === 'CtxChanged') {
+                const state = core.getState();
+                if (state.ctx.content.auth !== null) {
+                    window.location.replace('/');
+                }
+            }
+        };
+        core.on('Event', onEvent);
+        return () => {
+            core.off('Event', onEvent);
+        };
+    }, []);
     const loginWithFacebook = React.useCallback(() => {
         alert('TODO: Facebook login');
     }, []);
@@ -73,19 +92,61 @@ const Intro = () => {
             dispatch({ type: 'error', error: 'Invalid email' });
             return;
         }
-
-        alert('TODO: Login');
+        core.dispatch({
+            action: 'UserOp',
+            args: {
+                userOp: 'Login',
+                args: {
+                    email: state.email,
+                    password: state.password
+                }
+            }
+        });
     }, [state.email, state.password]);
     const loginAsGuest = React.useCallback(() => {
         if (!state.termsAccepted) {
             dispatch({ type: 'error', error: 'You must accept the Terms of Service' });
             return;
+        } else {
+            core.dispatch({
+                action: 'UserOp',
+                args: {
+                    userOp: 'Logout'
+                }
+            });
+            location = '#/';
         }
-
-        alert('TODO: Guest login');
-    }, [state.termsAccepted, state.privacyPolicyAccepted, state.marketingAccepted]);
+    }, [state.termsAccepted]);
     const signup = React.useCallback(() => {
-        alert('TODO: Signup');
+        if (!state.termsAccepted) {
+            dispatch({ type: 'error', error: 'You must accept the Terms of Service' });
+            return;
+        }
+        if (!state.privacyPolicyAccepted) {
+            dispatch({ type: 'error', error: 'You must accept the Privacy Policy' });
+            return;
+        }
+        if (state.password !== state.confirmPassword) {
+            dispatch({ type: 'error', error: 'Passwords do not match' });
+            return;
+        }
+        core.dispatch({
+            action: 'UserOp',
+            args: {
+                userOp: 'Register',
+                args: {
+                    email: state.email,
+                    password: state.password,
+                    gdpr_consent: {
+                        tos: state.termsAccepted,
+                        privacy: state.privacyPolicyAccepted,
+                        marketing: state.marketingAccepted,
+                        time: new Date(),
+                        from: 'web'
+                    }
+                }
+            }
+        });
     }, [state.email, state.password, state.confirmPassword, state.termsAccepted, state.privacyPolicyAccepted, state.marketingAccepted]);
     const emailOnChange = React.useCallback((event) => {
         dispatch({
