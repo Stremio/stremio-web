@@ -6,20 +6,19 @@ const SectionsList = require('./SectionsList');
 const { settingsSections } = require('./constants');
 const useSettings = require('./useSettings');
 
-const devTestWithUser = true;
-
 const Settings = () => {
-    const [preferences, setPreferences] = useSettings(devTestWithUser);
-    const sections = React.useMemo(()=>Object.keys(settingsSections)
+    const [preferences, setPreferences] = useSettings();
+    const [dynamicSections, setDynamicSections] = React.useState(settingsSections);
+    // TODO: The Streaming section should be handled separately
+    const sections = React.useMemo(()=>Object.keys(dynamicSections)
         .map((section) => ({
             id: section,
-            inputs: settingsSections[section],
+            inputs: dynamicSections[section],
             ref: React.createRef()
-        })), []);
+        })), [dynamicSections]);
+
     const [selectedSectionId, setSelectedSectionId] = React.useState(sections[0].id);
     const scrollContainerRef = React.useRef(null);
-
-    /////////////////
 
     const updatePreference = (option, value) => {
         setPreferences({ ...preferences, [option]: value });
