@@ -7,26 +7,26 @@ const useMetaDetails = (urlParams) => {
     React.useEffect(() => {
         const onNewModel = () => {
             const state = core.getState();
-            const selectedMeta = state.meta_details.metas.reduce((selectedMeta, meta) => {
-                if (selectedMeta === null && meta.content.type === 'Ready') {
+            let selectedMeta = state.meta_details.metas.find((meta) => meta.content.type === 'Ready');
+            if (!selectedMeta) {
+                if (state.meta_details.metas.every((meta) => meta.content.type === 'Err')) {
                     selectedMeta = {
-                        ...meta,
                         content: {
-                            ...meta.content,
-                            content: {
-                                ...meta.content.content,
-                                released: new Date(meta.content.content.released),
-                                videos: meta.content.content.videos.map((video) => ({
-                                    ...video,
-                                    released: new Date(video.released)
-                                }))
-                            }
+                            type: 'Ready',
+                            content: {}
                         }
                     };
+                } else {
+                    selectedMeta = null;
                 }
+            } else {
+                selectedMeta.content.content.released = new Date(selectedMeta.content.content.released);
+                selectedMeta.content.content.videos = selectedMeta.content.content.videos.map((video) => ({
+                    ...video,
+                    released: new Date(video.released)
+                }));
+            }
 
-                return selectedMeta;
-            }, null);
             setMetaDetails([selectedMeta, state.meta_details.streams]);
         };
         core.on('NewModel', onNewModel);
