@@ -2,29 +2,29 @@ const React = require('react');
 const { NavBar, MetaPreview } = require('stremio/common');
 const VideosList = require('./VideosList');
 const StreamsList = require('./StreamsList');
-const useMetaItem = require('./useMetaItem');
+const useMetaDetails = require('./useMetaDetails');
 const useInLibrary = require('./useInLibrary');
 const styles = require('./styles');
 
 const Detail = ({ urlParams }) => {
-    const metaItem = useMetaItem(urlParams.type, urlParams.id, urlParams.videoId);
+    const [meta, streams] = useMetaDetails(urlParams);
     const [inLibrary, addToLibrary, removeFromLibrary, toggleInLibrary] = useInLibrary(urlParams.id);
     return (
         <div className={styles['detail-container']}>
             <NavBar
                 className={styles['nav-bar']}
                 backButton={true}
-                title={metaItem !== null ? metaItem.name : null}
+                title={meta !== null && meta.content.type === 'Ready' ? meta.content.content.name : null}
             />
             <div className={styles['detail-content']}>
                 {
-                    metaItem !== null ?
+                    meta !== null && meta.content.type === 'Ready' ?
                         <React.Fragment>
                             <div className={styles['background-image-layer']}>
-                                <img className={styles['background-image']} src={metaItem.background} alt={' '} />
+                                <img className={styles['background-image']} src={meta.content.content.background} alt={' '} />
                             </div>
                             <MetaPreview
-                                {...metaItem}
+                                {...meta.content.content}
                                 className={styles['meta-preview']}
                                 background={null}
                                 inLibrary={inLibrary}
@@ -36,9 +36,9 @@ const Detail = ({ urlParams }) => {
                 }
                 {
                     typeof urlParams.videoId === 'string' && urlParams.videoId.length > 0 ?
-                        <StreamsList className={styles['streams-list']} metaItem={metaItem} />
+                        <StreamsList className={styles['streams-list']} streams={streams} />
                         :
-                        <VideosList className={styles['videos-list']} metaItem={metaItem} />
+                        <VideosList className={styles['videos-list']} metaItem={meta !== null && meta.content.type === 'Ready' ? meta.content.content : null} />
                 }
             </div>
         </div>
