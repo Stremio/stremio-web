@@ -5,20 +5,18 @@ const Icon = require('stremio-icons/dom');
 const { Button } = require('stremio/common');
 const Stream = require('./Stream');
 const StreamPlaceholder = require('./StreamPlaceholder');
-const useStreams = require('./useStreams');
 const styles = require('./styles');
 
-const StreamsList = ({ className, metaItem }) => {
-    const streams = useStreams(metaItem);
+const StreamsList = ({ className, streams }) => {
+    const readyStreams = streams
+        .filter(stream => stream.content.type === 'Ready')
+        .map(stream => stream.content.content)
+        .flat();
     return (
         <div className={classnames(className, styles['streams-list-container'])}>
             <div className={styles['streams-scroll-container']}>
                 {
-                    streams.length > 0 ?
-                        streams.map((stream) => (
-                            <Stream {...stream} key={stream.id} className={styles['stream']} />
-                        ))
-                        :
+                    streams.length === 0 || streams.every(stream => stream.content.type === 'Loading') ?
                         <React.Fragment>
                             <StreamPlaceholder className={styles['stream']} />
                             <StreamPlaceholder className={styles['stream']} />
@@ -27,6 +25,13 @@ const StreamsList = ({ className, metaItem }) => {
                             <StreamPlaceholder className={styles['stream']} />
                             <StreamPlaceholder className={styles['stream']} />
                         </React.Fragment>
+                        :
+                        readyStreams.length === 0 ?
+                            <div className={styles['no-streams-label']}>No streams were found</div>
+                            :
+                            readyStreams.map((stream) => (
+                                <Stream {...stream} key={stream.id} className={styles['stream']} />
+                            ))
                 }
             </div>
             <Button className={styles['install-addons-container']} title={'Install addons'} href={'#/addons'}>
@@ -39,7 +44,7 @@ const StreamsList = ({ className, metaItem }) => {
 
 StreamsList.propTypes = {
     className: PropTypes.string,
-    metaItem: PropTypes.object
+    streams: PropTypes.arrayOf(PropTypes.object)
 };
 
 module.exports = StreamsList;
