@@ -82,8 +82,39 @@ const Intro = ({ queryParams }) => {
             core.off('Event', onEvent);
         };
     }, []);
+    const statusChangeCallback = React.useCallback((response) => {
+        if (response.status === 'connected') {
+            fetch(baseUrl + "/fb-login-with-token/" + encodeURIComponent(response.authResponse.accessToken), { timeout: 10 * 1000 })
+                .then((resp) => {
+                    if (resp.status < 200 || resp.status >= 300) {
+                        throw new Error('Login failed at getting token from Stremio with status ' + resp.status);
+                    } else {
+                        return resp.json();
+                    }
+                })
+                .then(function() {
+                    core.dispatch({
+                        action: 'UserOp',
+                        args: {
+                            userOp: 'Login',
+                            args: {
+                                email: state.email,
+                                password: response.authResponse.accessToken
+                            }
+                        }
+                    });
+                })
+                .catch(function(err) {
+                    console.log(err);
+                });
+        } else {
+            console.log('Please log into this app.');
+        }
+    }, [state.email, state.password]);
     const loginWithFacebook = React.useCallback(() => {
-        alert('TODO: Facebook login');
+        FB.login(function(response) {
+            statusChangeCallback(response);
+        });
     }, []);
     const loginWithEmail = React.useCallback(() => {
         if (typeof state.email !== 'string' || state.email.length === 0) {
