@@ -13,7 +13,6 @@ const useUser = () => {
             setUser(state.ctx.content.auth ? state.ctx.content.auth.user : null);
         };
         core.on('NewModel', onNewState);
-        onNewState();
         return () => {
             core.off('NewModel', onNewState);
         };

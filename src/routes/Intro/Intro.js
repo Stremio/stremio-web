@@ -9,7 +9,6 @@ const ConsentCheckbox = require('./ConsentCheckbox');
 const styles = require('./styles');
 
 const SIGNUP_FORM = 'signup';
-const baseUrl = 'https://www.strem.io';
 
 const Intro = ({ queryParams }) => {
     const { core } = useServices();
@@ -90,7 +89,7 @@ const Intro = ({ queryParams }) => {
     const loginWithFacebook = React.useCallback(() => {
         FB.login((response) => {
             if (response.status === 'connected') {
-                fetch(baseUrl + "/fb-login-with-token/" + encodeURIComponent(response.authResponse.accessToken), { timeout: 10 * 1000 })
+                fetch('https://www.strem.io/fb-login-with-token/' + encodeURIComponent(response.authResponse.accessToken), { timeout: 10 * 1000 })
                     .then((resp) => {
                         if (resp.status < 200 || resp.status >= 300) {
                             throw new Error('Login failed at getting token from Stremio with status ' + resp.status);
