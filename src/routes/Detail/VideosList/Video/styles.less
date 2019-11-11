@@ -8,17 +8,24 @@
         background-color: var(--color-surfacedarker);
     }
 
-    .poster-container {
+    .thumbnail-container {
         flex: none;
         align-self: center;
         padding: 0.5rem;
 
-        .poster {
+        .thumbnail {
             display: block;
             width: 5rem;
             max-height: 10rem;
             object-fit: contain;
             object-position: center;
+        }
+
+        .placeholder-icon {
+            display: block;
+            width: 5rem;
+            height: 5rem;
+            fill: var(--color-surfacelight20);
         }
     }
 
@@ -35,7 +42,7 @@
             align-content: center;
         }
 
-        .name-container {
+        .title-container {
             flex-grow: 0;
             flex-shrink: 0;
             flex-basis: 100%;

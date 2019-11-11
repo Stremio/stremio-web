@@ -12,10 +12,15 @@ const useMetaDetails = (urlParams) => {
                 .filter((meta) => meta.content.type === 'Ready')
                 .map((meta) => {
                     meta.content.content.released = new Date(meta.content.content.released);
-                    meta.content.content.videos = meta.content.content.videos.map((video) => ({
-                        ...video,
-                        released: new Date(video.released)
-                    }));
+                    meta.content.content.videos = meta.content.content.videos.map((video) => {
+                        video.released = new Date(video.released);
+                        video.upcoming = !isNaN(video.released.getTime()) ?
+                            video.released.getTime() > Date.now()
+                            :
+                            false;
+                        // TODO add href, watched and progress
+                        return video;
+                    });
                     return meta;
                 })
                 .shift();

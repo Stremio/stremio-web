@@ -1,25 +1,35 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const { Button } = require('stremio/common');
+const { Button, Image } = require('stremio/common');
 const Icon = require('stremio-icons/dom');
 const styles = require('./styles');
 
-const Video = ({ className, id, name, poster, episode, released, watched, upcoming, progress, onClick }) => {
+const Video = ({ className, title, thumbnail, episode, released, upcoming, watched, progress, ...props }) => {
     return (
-        <Button className={classnames(className, styles['video-container'])} title={typeof name === 'string' && name.length > 0 ? name : id} data-id={id} onClick={onClick}>
+        <Button {...props} className={classnames(className, styles['video-container'])} title={title}>
             {
-                typeof poster === 'string' && poster.length > 0 ?
-                    <div className={styles['poster-container']}>
-                        <img className={styles['poster']} src={poster} alt={' '} />
+                typeof thumbnail === 'string' && thumbnail.length > 0 ?
+                    <div className={styles['thumbnail-container']}>
+                        <Image
+                            className={styles['thumbnail']}
+                            src={thumbnail}
+                            alt={' '}
+                            renderFallback={() => (
+                                <Icon
+                                    className={styles['placeholder-icon']}
+                                    icon={'ic_broken_link'}
+                                />
+                            )}
+                        />
                     </div>
                     :
                     null
             }
             <div className={styles['info-container']}>
-                <div className={styles['name-container']}>
+                <div className={styles['title-container']}>
                     {episode !== null && !isNaN(episode) ? `${episode}. ` : null}
-                    {typeof name === 'string' && name.length > 0 ? name : id}
+                    {typeof title === 'string' && title.length > 0 ? title : id}
                 </div>
                 {
                     released instanceof Date && !isNaN(released.getTime()) ?
@@ -63,15 +73,13 @@ const Video = ({ className, id, name, poster, episode, released, watched, upcomi
 
 Video.propTypes = {
     className: PropTypes.string,
-    id: PropTypes.string,
-    name: PropTypes.string,
-    poster: PropTypes.string,
+    title: PropTypes.string,
+    thumbnail: PropTypes.string,
     episode: PropTypes.number,
     released: PropTypes.instanceOf(Date),
-    watched: PropTypes.bool,
     upcoming: PropTypes.bool,
-    progress: PropTypes.number,
-    onClick: PropTypes.func
+    watched: PropTypes.bool,
+    progress: PropTypes.number
 };
 
 module.exports = Video;
