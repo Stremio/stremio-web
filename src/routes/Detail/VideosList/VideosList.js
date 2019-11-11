@@ -8,39 +8,20 @@ const VideoPlaceholder = require('./VideoPlaceholder');
 const useSeasons = require('./useSeasons');
 const styles = require('./styles');
 
-const VideosList = ({ className, metaItem }) => {
-    const [season, seasons, setSeason] = useSeasons(metaItem);
+const VideosList = ({ className, meta }) => {
+    const [season, seasons, setSeason] = useSeasons(meta !== null && meta.content.type === 'Ready' ? meta.content.content : null);
+    const videos = React.useMemo(() => {
+        return meta !== null && meta.content.type === 'Ready' ?
+            meta.content.content.videos.filter((video) => {
+                return isNaN(season) || video.season === season;
+            })
+            :
+            [];
+    }, [meta, season]);
     return (
         <div className={classnames(className, styles['videos-list-container'])}>
             {
-                metaItem !== null ?
-                    <React.Fragment>
-                        {
-                            seasons.length > 1 ?
-                                <SeasonsBar
-                                    className={styles['seasons-bar']}
-                                    season={season}
-                                    seasons={seasons}
-                                    onSeasonChange={setSeason}
-                                />
-                                :
-                                null
-                        }
-                        <div className={styles['videos-scroll-container']}>
-                            {
-                                metaItem.videos
-                                    .filter((video) => isNaN(season) || video.season === season)
-                                    .map((video) => (
-                                        <Video
-                                            {...video}
-                                            key={video.id}
-                                            className={styles['video']}
-                                        />
-                                    ))
-                            }
-                        </div>
-                    </React.Fragment>
-                    :
+                meta === null ?
                     <React.Fragment>
                         <SeasonsBarPlaceholder className={styles['seasons-bar']} />
                         <div className={styles['videos-scroll-container']}>
@@ -54,6 +35,41 @@ const VideosList = ({ className, metaItem }) => {
                             <VideoPlaceholder className={styles['video']} />
                         </div>
                     </React.Fragment>
+                    :
+                    meta.content.type === 'Ready' ?
+                        <React.Fragment>
+                            {
+                                seasons.length > 1 ?
+                                    <SeasonsBar
+                                        className={styles['seasons-bar']}
+                                        season={season}
+                                        seasons={seasons}
+                                        onSeasonChange={setSeason}
+                                    />
+                                    :
+                                    null
+                            }
+                            {
+                                videos.length > 0 ?
+                                    <div className={styles['videos-scroll-container']}>
+                                        {videos.map((video, index) => (
+                                            <Video
+                                                {...video}
+                                                key={index}
+                                                className={styles['video']}
+                                            />
+                                        ))}
+                                    </div>
+                                    :
+                                    <div className={styles['message-label']}>
+                                        No videos
+                                    </div>
+                            }
+                        </React.Fragment>
+                        :
+                        <div className={styles['message-label']}>
+                            No videos
+                        </div>
             }
         </div>
     );
@@ -61,7 +77,7 @@ const VideosList = ({ className, metaItem }) => {
 
 VideosList.propTypes = {
     className: PropTypes.string,
-    metaItem: PropTypes.object
+    meta: PropTypes.object
 };
 
 module.exports = VideosList;
