@@ -106,10 +106,8 @@ const Intro = ({ queryParams }) => {
                     });
                 })
                 .catch(function(err) {
-                    console.log(err);
+                    console.error(err);
                 });
-        } else {
-            console.log('Please log into this app.');
         }
     }, [state.email, state.password]);
     const loginWithFacebook = React.useCallback(() => {
