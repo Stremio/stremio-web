@@ -122,6 +122,10 @@ const Intro = ({ queryParams }) => {
             dispatch({ type: 'error', error: 'Invalid email' });
             return;
         }
+        if (state.password.length === 0) {
+            dispatch({ type: 'error', error: 'Invalid password' });
+            return;
+        }
         core.dispatch({
             action: 'UserOp',
             args: {
