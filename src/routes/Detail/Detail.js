@@ -38,7 +38,7 @@ const Detail = ({ urlParams }) => {
                     typeof urlParams.videoId === 'string' && urlParams.videoId.length > 0 ?
                         <StreamsList className={styles['streams-list']} streams={streams} />
                         :
-                        <VideosList className={styles['videos-list']} metaItem={meta !== null && meta.content.type === 'Ready' ? meta.content.content : null} />
+                        <VideosList className={styles['videos-list']} meta={meta} />
                 }
             </div>
         </div>
