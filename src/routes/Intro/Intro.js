@@ -21,20 +21,23 @@ const Intro = ({ queryParams }) => {
     const privacyPolicyRef = React.useRef();
     const marketingRef = React.useRef();
     const errorRef = React.useRef();
-    const [selectedForm, setSelectedForm] = React.useState(queryParams.get('form'));
     const [state, dispatch] = React.useReducer(
         (state, action) => {
             switch (action.type) {
-                case 'reset-form':
-                    return {
-                        email: '',
-                        password: '',
-                        confirmPassword: '',
-                        termsAccepted: false,
-                        privacyPolicyAccepted: false,
-                        marketingAccepted: false,
-                        error: ''
-                    };
+                case 'set-form':
+                    if (state.form !== action.form) {
+                        return {
+                            form: action.form,
+                            email: '',
+                            password: '',
+                            confirmPassword: '',
+                            termsAccepted: false,
+                            privacyPolicyAccepted: false,
+                            marketingAccepted: false,
+                            error: ''
+                        };
+                    }
+                    return state;
                 case 'change-credentials':
                     return {
                         ...state,
@@ -57,6 +60,7 @@ const Intro = ({ queryParams }) => {
             }
         },
         {
+            form: queryParams.get('form'),
             email: '',
             password: '',
             confirmPassword: '',
@@ -194,12 +198,12 @@ const Intro = ({ queryParams }) => {
         });
     }, []);
     const passwordOnSubmit = React.useCallback(() => {
-        if (selectedForm === SIGNUP_FORM) {
+        if (state.form === SIGNUP_FORM) {
             confirmPasswordRef.current.focus();
         } else {
             loginWithEmail();
         }
-    }, [selectedForm, loginWithEmail]);
+    }, [state.form, loginWithEmail]);
     const confirmPasswordOnChange = React.useCallback((event) => {
         dispatch({
             type: 'change-credentials',
@@ -220,8 +224,7 @@ const Intro = ({ queryParams }) => {
         dispatch({ type: 'toggle-checkbox', name: 'marketingAccepted' });
     }, []);
     React.useEffect(() => {
-        dispatch({ type: 'reset-form' });
-        setSelectedForm(queryParams.get('form'));
+        dispatch({ type: 'set-form', form: queryParams.get('form') });
     }, [queryParams]);
     React.useEffect(() => {
         if (typeof state.error === 'string' && state.error.length > 0) {
@@ -232,7 +235,7 @@ const Intro = ({ queryParams }) => {
         if (routeFocused) {
             emailRef.current.focus();
         }
-    }, [selectedForm, routeFocused]);
+    }, [state.form, routeFocused]);
     return (
         <div className={styles['intro-container']}>
             <div className={styles['form-container']}>
@@ -260,7 +263,7 @@ const Intro = ({ queryParams }) => {
                     onSubmit={passwordOnSubmit}
                 />
                 {
-                    selectedForm === SIGNUP_FORM ?
+                    state.form === SIGNUP_FORM ?
                         <React.Fragment>
                             <CredentialsTextInput
                                 ref={confirmPasswordRef}
@@ -308,19 +311,19 @@ const Intro = ({ queryParams }) => {
                         :
                         null
                 }
-                <Button className={classnames(styles['form-button'], styles['submit-button'])} onClick={selectedForm === SIGNUP_FORM ? signup : loginWithEmail}>
-                    <div className={styles['label']}>{selectedForm === SIGNUP_FORM ? 'SING UP' : 'LOG IN'}</div>
+                <Button className={classnames(styles['form-button'], styles['submit-button'])} onClick={state.form === SIGNUP_FORM ? signup : loginWithEmail}>
+                    <div className={styles['label']}>{state.form === SIGNUP_FORM ? 'SING UP' : 'LOG IN'}</div>
                 </Button>
                 {
-                    selectedForm === SIGNUP_FORM ?
+                    state.form === SIGNUP_FORM ?
                         <Button className={classnames(styles['form-button'], styles['guest-login-button'])} onClick={loginAsGuest}>
                             <div className={styles['label']}>GUEST LOGIN</div>
                         </Button>
                         :
                         null
                 }
-                <Button className={classnames(styles['form-button'], styles['switch-form-button'])} href={selectedForm === SIGNUP_FORM ? '#/intro?form=login' : '#/intro?form=signup'}>
-                    <div className={styles['label']}>{selectedForm === SIGNUP_FORM ? 'LOG IN' : 'SING UP WITH EMAIL'}</div>
+                <Button className={classnames(styles['form-button'], styles['switch-form-button'])} href={state.form === SIGNUP_FORM ? '#/intro?form=login' : '#/intro?form=signup'}>
+                    <div className={styles['label']}>{state.form === SIGNUP_FORM ? 'LOG IN' : 'SING UP WITH EMAIL'}</div>
                 </Button>
             </div>
         </div>
