@@ -136,15 +136,14 @@ const Intro = ({ queryParams }) => {
         if (!state.termsAccepted) {
             dispatch({ type: 'error', error: 'You must accept the Terms of Service' });
             return;
-        } else {
-            core.dispatch({
-                action: 'UserOp',
-                args: {
-                    userOp: 'Logout'
-                }
-            });
-            location = '#/';
         }
+        core.dispatch({
+            action: 'UserOp',
+            args: {
+                userOp: 'Logout'
+            }
+        });
+        location = '#/';
     }, [state.termsAccepted]);
     const signup = React.useCallback(() => {
         if (!state.termsAccepted) {
