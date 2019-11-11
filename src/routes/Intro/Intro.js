@@ -9,6 +9,7 @@ const ConsentCheckbox = require('./ConsentCheckbox');
 const styles = require('./styles');
 
 const SIGNUP_FORM = 'signup';
+const baseUrl = 'https://www.strem.io';
 
 const Intro = ({ queryParams }) => {
     const { core } = useServices();
