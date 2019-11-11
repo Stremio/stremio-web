@@ -7,27 +7,39 @@ const useMetaDetails = (urlParams) => {
     React.useEffect(() => {
         const onNewModel = () => {
             const state = core.getState();
-            let selectedMeta = state.meta_details.metas.find((meta) => meta.content.type === 'Ready');
-            if (!selectedMeta) {
-                if (state.meta_details.metas.every((meta) => meta.content.type === 'Err')) {
-                    selectedMeta = {
+            const [metaRequest] = state.meta_details.selected;
+            const readyMeta = state.meta_details.metas
+                .filter((meta) => meta.content.type === 'Ready')
+                .map((meta) => {
+                    meta.content.content.released = new Date(meta.content.content.released);
+                    meta.content.content.videos = meta.content.content.videos.map((video) => ({
+                        ...video,
+                        released: new Date(video.released)
+                    }));
+                    return meta;
+                })
+                .shift();
+            if (metaRequest) {
+                if (readyMeta) {
+                    setMetaDetails([readyMeta, state.meta_details.streams]);
+                } else if (state.meta_details.metas.length === 0) {
+                    const errMeta = {
                         content: {
-                            type: 'Ready',
-                            content: {}
+                            type: 'Err',
+                            content: {
+                                type: 'EmptyContent'
+                            }
                         }
                     };
+                    setMetaDetails([errMeta, state.meta_details.streams]);
+                } else if (state.meta_details.metas.every((meta) => meta.content.type === 'Err')) {
+                    setMetaDetails([state.meta_details.metas[0], state.meta_details.streams]);
                 } else {
-                    selectedMeta = null;
+                    setMetaDetails([null, state.meta_details.streams]);
                 }
             } else {
-                selectedMeta.content.content.released = new Date(selectedMeta.content.content.released);
-                selectedMeta.content.content.videos = selectedMeta.content.content.videos.map((video) => ({
-                    ...video,
-                    released: new Date(video.released)
-                }));
+                setMetaDetails([null, state.meta_details.streams]);
             }
-
-            setMetaDetails([selectedMeta, state.meta_details.streams]);
         };
         core.on('NewModel', onNewModel);
         core.dispatch({
