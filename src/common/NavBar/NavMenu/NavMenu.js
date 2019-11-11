@@ -2,14 +2,16 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
+const { useServices } = require('stremio/services');
 const Button = require('stremio/common/Button');
 const Popup = require('stremio/common/Popup');
 const useBinaryState = require('stremio/common/useBinaryState');
 const useFullscreen = require('stremio/common/useFullscreen');
-const useUser = require('./useUser');
+const useUser = require('stremio/common/useUser');
 const styles = require('./styles');
 
 const NavMenu = ({ className }) => {
+    const { core } = useServices();
     const [menuOpen, openMenu, closeMenu, toggleMenu] = useBinaryState(false);
     const [fullscreen, requestFullscreen, exitFullscreen] = useFullscreen();
     const user = useUser();
@@ -20,6 +22,14 @@ const NavMenu = ({ className }) => {
     }, [toggleMenu]);
     const popupMenuOnClick = React.useCallback((event) => {
         event.nativeEvent.togglePopupPrevented = true;
+    }, []);
+    const logoutButtonOnClick = React.useCallback(() => {
+        core.dispatch({
+            action: 'UserOp',
+            args: {
+                userOp: 'Logout'
+            }
+        });
     }, []);
     return (
         <Popup
@@ -38,17 +48,17 @@ const NavMenu = ({ className }) => {
                         <div
                             className={styles['avatar-container']}
                             style={{
-                                backgroundImage: user.anonymous ?
+                                backgroundImage: !user ?
                                     `url('/images/anonymous.png')`
                                     :
                                     `url('${user.avatar}'), url('/images/default_avatar.png')`
                             }}
                         />
                         <div className={styles['email-container']}>
-                            <div className={styles['email-label']}>{user.anonymous ? 'Anonymous user' : user.email}</div>
+                            <div className={styles['email-label']}>{!user ? 'Anonymous user' : user.email}</div>
                         </div>
-                        <Button className={styles['logout-button-container']} title={user.anonymous ? 'Log in / Sign up' : 'Log out'} href={'#/intro'} onClick={user.logout}>
-                            <div className={styles['logout-label']}>{user.anonymous ? 'Log in / Sign up' : 'Log out'}</div>
+                        <Button className={styles['logout-button-container']} title={!user ? 'Log in / Sign up' : 'Log out'} href={'#/intro'} onClick={logoutButtonOnClick}>
+                            <div className={styles['logout-label']}>{!user ? 'Log in / Sign up' : 'Log out'}</div>
                         </Button>
                     </div>
                     <div className={styles['nav-menu-section']}>
