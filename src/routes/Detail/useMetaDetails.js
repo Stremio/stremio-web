@@ -3,7 +3,7 @@ const { useServices } = require('stremio/services');
 
 const useMetaDetails = (urlParams) => {
     const { core } = useServices();
-    const [metaDetails, setMetaDetails] = React.useState([[], [], null]);
+    const [metaDetails, setMetaDetails] = React.useState([[], [], [null, null]]);
     React.useEffect(() => {
         const onNewModel = () => {
             const state = core.getState();
