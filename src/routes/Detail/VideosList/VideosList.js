@@ -35,7 +35,7 @@ const VideosList = ({ className, metaGroup }) => {
                     :
                     metaGroup.content.type === 'Err' || videosForSeason.length === 0 ?
                         <div className={styles['message-label']}>
-                            No videos
+                            No videos found for this meta
                         </div>
                         :
                         <React.Fragment>
