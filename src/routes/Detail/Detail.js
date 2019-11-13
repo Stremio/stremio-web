@@ -5,54 +5,56 @@ const StreamsList = require('./StreamsList');
 const useMetaDetails = require('./useMetaDetails');
 const styles = require('./styles');
 
-const Detail = ({ urlParams }) => {
-    const [metaGroups, streamsGroups, [metaResourceRef, streamsResourceRef]] = useMetaDetails(urlParams);
-    const [metaState, metaStateDispatch] = React.useReducer(
-        (state, action) => {
-            switch (action.type) {
-                case 'groups-changed': {
-                    if (state.selectedGroup) {
-                        const selectedGroupIncluded = action.groups.some((group) => {
-                            return group.req.base === state.selectedGroup.req.base &&
-                                group.content.type === 'Ready';
-                        });
-                        if (selectedGroupIncluded) {
-                            return {
-                                ...state,
-                                resourceRef: action.resourceRef,
-                                groups: action.groups
-                            };
-                        }
-                    }
-
-                    const readyGroup = action.groups.find((group) => group.content.type === 'Ready');
-                    const selectedGroup = readyGroup ? readyGroup : null;
+const metaStateReducer = (state, action) => {
+    switch (action.type) {
+        case 'groups-changed': {
+            if (state.selectedGroup !== null) {
+                const selectedGroupIncluded = action.groups.some((group) => {
+                    return group.req.base === state.selectedGroup.req.base &&
+                        group.content.type === 'Ready';
+                });
+                if (selectedGroupIncluded) {
                     return {
                         ...state,
                         resourceRef: action.resourceRef,
-                        groups: action.groups,
-                        selectedGroup
+                        groups: action.groups
                     };
                 }
-                case 'group-selected': {
-                    const selectedGroup = state.groups.find((group) => {
-                        return group.req.base === action.base &&
-                            group.content.type === 'Ready';
-                    });
-                    if (selectedGroup) {
-                        return {
-                            ...state,
-                            selectedGroup
-                        };
-                    }
-
-                    return state;
-                }
-                default: {
-                    return state;
-                }
             }
-        },
+
+            const readyGroup = action.groups.find((group) => group.content.type === 'Ready');
+            const selectedGroup = readyGroup ? readyGroup : null;
+            return {
+                ...state,
+                resourceRef: action.resourceRef,
+                groups: action.groups,
+                selectedGroup
+            };
+        }
+        case 'group-selected': {
+            const selectedGroup = state.groups.find((group) => {
+                return group.req.base === action.base &&
+                    group.content.type === 'Ready';
+            });
+            if (selectedGroup) {
+                return {
+                    ...state,
+                    selectedGroup
+                };
+            }
+
+            return state;
+        }
+        default: {
+            return state;
+        }
+    }
+};
+
+const Detail = ({ urlParams }) => {
+    const [metaGroups, streamsGroups, [metaResourceRef, streamsResourceRef]] = useMetaDetails(urlParams);
+    const [metaState, metaStateDispatch] = React.useReducer(
+        metaStateReducer,
         [metaResourceRef, metaGroups],
         ([resourceRef, groups]) => {
             const readyGroup = groups.find((group) => group.content.type === 'Ready');
