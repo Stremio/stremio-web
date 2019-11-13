@@ -6,7 +6,6 @@ const useDataset = require('stremio/common/useDataset');
 const styles = require('./styles');
 
 const Popup = ({ open, direction, renderLabel, renderMenu, onCloseRequest, ...props }) => {
-    direction = ['top', 'bottom'].includes(direction) ? direction : null;
     const dataset = useDataset(props);
     const labelRef = React.useRef(null);
     const [autoDirection, setAutoDirection] = React.useState(null);
@@ -68,7 +67,7 @@ const Popup = ({ open, direction, renderLabel, renderMenu, onCloseRequest, ...pr
         ref: labelRef,
         className: styles['label-container'],
         children: open ?
-            <FocusLock className={classnames(styles['menu-container'], styles[`menu-direction-${typeof direction === 'string' ? direction : autoDirection}`])} autoFocus={false} lockProps={{ onMouseDown: menuOnMouseDown, onKeyUp: menuOnKeyUp }}>
+            <FocusLock className={classnames(styles['menu-container'], styles[`menu-direction-${['top', 'bottom'].includes(direction) ? direction : autoDirection}`])} autoFocus={false} lockProps={{ onMouseDown: menuOnMouseDown, onKeyUp: menuOnKeyUp }}>
                 {renderMenu()}
             </FocusLock>
             :
