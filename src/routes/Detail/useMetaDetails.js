@@ -3,29 +3,34 @@ const { useServices } = require('stremio/services');
 
 const useMetaDetails = (urlParams) => {
     const { core } = useServices();
-    const [metaDetails, setMetaDetails] = React.useState([[], [], null, null]);
+    const [metaDetails, setMetaDetails] = React.useState([
+        { resourceRef: null, groups: [] },
+        { resourceRef: null, groups: [] }
+    ]);
     React.useEffect(() => {
         const onNewModel = () => {
             const state = core.getState();
-            setMetaDetails([
-                state.meta_details.metas.map((metaGroup) => {
-                    if (metaGroup.content.type === 'Ready') {
-                        metaGroup.content.content.released = new Date(metaGroup.content.content.released);
-                        metaGroup.content.content.videos = metaGroup.content.content.videos.map((video) => {
-                            video.released = new Date(video.released);
-                            video.upcoming = !isNaN(video.released.getTime()) ?
-                                video.released.getTime() > Date.now()
-                                :
-                                false;
-                            // TODO add href, watched and progress
-                            return video;
-                        });
-                    }
+            const [metaResourceRef, streamsResourceRef] = state.meta_details.selected;
+            const metaGroups = state.meta_details.metas.map((metaGroup) => {
+                if (metaGroup.content.type === 'Ready') {
+                    metaGroup.content.content.released = new Date(metaGroup.content.content.released);
+                    metaGroup.content.content.videos = metaGroup.content.content.videos.map((video) => {
+                        video.released = new Date(video.released);
+                        video.upcoming = !isNaN(video.released.getTime()) ?
+                            video.released.getTime() > Date.now()
+                            :
+                            false;
+                        // TODO add href, watched and progress
+                        return video;
+                    });
+                }
 
-                    return metaGroup;
-                }),
-                state.meta_details.streams,
-                ...state.meta_details.selected
+                return metaGroup;
+            });
+            const streamsGroups = state.meta_details.streams;
+            setMetaDetails([
+                { resourceRef: metaResourceRef, groups: metaGroups },
+                { resourceRef: streamsResourceRef, groups: streamsGroups }
             ]);
         };
         core.on('NewModel', onNewModel);
