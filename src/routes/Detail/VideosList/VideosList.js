@@ -9,15 +9,18 @@ const useSelectableSeasons = require('./useSelectableSeasons');
 const styles = require('./styles');
 
 const VideosList = ({ className, metaGroup }) => {
-    const [seasons, selectedSeason, selectSeason] = useSelectableSeasons(metaGroup && metaGroup.content.type === 'Ready' ? metaGroup.content.content.videos : []);
-    const videosForSeason = React.useMemo(() => {
+    const videos = React.useMemo(() => {
         return metaGroup && metaGroup.content.type === 'Ready' ?
-            metaGroup.content.content.videos.filter((video) => {
-                return selectedSeason === null || video.season === selectedSeason;
-            })
+            metaGroup.content.content.videos
             :
             [];
-    }, [metaGroup, selectedSeason]);
+    }, [metaGroup]);
+    const [seasons, selectedSeason, selectSeason] = useSelectableSeasons(videos);
+    const videosForSeason = React.useMemo(() => {
+        return videos.filter((video) => {
+            return selectedSeason === null || video.season === selectedSeason;
+        });
+    }, [videos, selectedSeason]);
     return (
         <div className={classnames(className, styles['videos-list-container'])}>
             {
@@ -45,7 +48,7 @@ const VideosList = ({ className, metaGroup }) => {
                                         className={styles['seasons-bar']}
                                         season={selectedSeason}
                                         seasons={seasons}
-                                        onSeasonChange={setSeason}
+                                        onSeasonChange={selectSeason}
                                     />
                                     :
                                     null
