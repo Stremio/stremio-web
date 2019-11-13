@@ -56,14 +56,19 @@ const Detail = ({ urlParams }) => {
     const [metaState, metaStateDispatch] = React.useReducer(
         metaStateReducer,
         [metaResourceRef, metaGroups],
-        ([resourceRef, groups]) => {
-            const readyGroup = groups.find((group) => group.content.type === 'Ready');
-            const selectedGroup = readyGroup ? readyGroup : null;
-            return {
-                resourceRef,
-                groups,
-                selectedGroup
+        ([metaResourceRef, metaGroups]) => {
+            const initialState = {
+                resourceRef: null,
+                groups: [],
+                selectedGroup: null
             };
+            const initAction = {
+                type: 'groups-changed',
+                resourceRef: metaResourceRef,
+                groups: metaGroups
+            };
+
+            return metaStateReducer(initialState, initAction);
         }
     );
     React.useEffect(() => {
