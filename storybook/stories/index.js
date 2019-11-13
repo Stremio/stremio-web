@@ -4,4 +4,5 @@ require('./MetaItem');
 require('./ModalDialog');
 require('./Multiselect');
 require('./Notification');
+require('./Popup');
 require('./SharePrompt');
