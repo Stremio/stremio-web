@@ -6,6 +6,10 @@ const RouterDecorator = require('./RouterDecorator');
 require('spatial-navigation-polyfill');
 require('./styles');
 
+window.top.__spatialNavigation__ = {
+    keyMode: 'ARROW'
+};
+
 addParameters({
     jsx: {
         indent_size: 4,
