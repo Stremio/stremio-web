@@ -22,13 +22,19 @@ const Detail = ({ urlParams }) => {
                     metaResourceRef !== null ?
                         selectedMetaGroup !== null ?
                             <React.Fragment>
-                                <div className={styles['background-image-layer']}>
-                                    <img
-                                        className={styles['background-image']}
-                                        src={selectedMetaGroup.content.content.background}
-                                        alt={' '}
-                                    />
-                                </div>
+                                {
+                                    typeof selectedMetaGroup.content.content.background === 'string' &&
+                                        selectedMetaGroup.content.content.background.length > 0 ?
+                                        <div className={styles['background-image-layer']}>
+                                            <img
+                                                className={styles['background-image']}
+                                                src={selectedMetaGroup.content.content.background}
+                                                alt={' '}
+                                            />
+                                        </div>
+                                        :
+                                        null
+                                }
                                 <MetaPreview
                                     {...selectedMetaGroup.content.content}
                                     className={styles['meta-preview']}
