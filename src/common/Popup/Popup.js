@@ -2,11 +2,9 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const FocusLock = require('react-focus-lock').default;
-const useDataset = require('stremio/common/useDataset');
 const styles = require('./styles');
 
-const Popup = ({ open, direction, renderLabel, renderMenu, onCloseRequest, ...props }) => {
-    const dataset = useDataset(props);
+const Popup = ({ open, direction, renderLabel, renderMenu, dataset, onCloseRequest }) => {
     const labelRef = React.useRef(null);
     const [autoDirection, setAutoDirection] = React.useState(null);
     const menuOnMouseDown = React.useCallback((event) => {
@@ -80,6 +78,7 @@ Popup.propTypes = {
     direction: PropTypes.oneOf(['top', 'bottom']),
     renderLabel: PropTypes.func.isRequired,
     renderMenu: PropTypes.func.isRequired,
+    dataset: PropTypes.objectOf(String),
     onCloseRequest: PropTypes.func
 };
 
