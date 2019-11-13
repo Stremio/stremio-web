@@ -1,6 +1,6 @@
 const React = require('react');
 
-const seasonsReducer = (state, action) => {
+const reducer = (state, action) => {
     switch (action.type) {
         case 'videos-changed': {
             const seasons = action.videos
@@ -40,32 +40,38 @@ const seasonsReducer = (state, action) => {
     }
 };
 
-const useSeasons = (metaItem) => {
-    const [{ selectedSeason, seasons }, dispatch] = React.useReducer(
-        seasonsReducer,
-        [metaItem],
-        (metaItem) => {
-            const videos = metaItem && Array.isArray(metaItem.videos) ? metaItem.videos : [];
-            return seasonsReducer({}, {
-                type: 'videos-changed',
-                videos
-            });
-        }
+const initializer = (videos) => {
+    const initialState = {
+        seasons: [],
+        selectedSeason: null
+    };
+    const initAction = {
+        type: 'videos-changed',
+        videos
+    };
+
+    return reducer(initialState, initAction);
+};
+
+const useSelectableSeasons = (videos) => {
+    const [{ seasons, selectedSeason }, dispatch] = React.useReducer(
+        reducer,
+        videos,
+        initializer
     );
-    const setSeason = React.useCallback((season) => {
+    const selectSeason = React.useCallback((season) => {
         dispatch({
             type: 'season-changed',
             season
         });
     }, []);
     React.useEffect(() => {
-        const videos = metaItem && Array.isArray(metaItem.videos) ? metaItem.videos : [];
         dispatch({
             type: 'videos-changed',
             videos
         });
-    }, [metaItem]);
-    return [selectedSeason, seasons, setSeason];
+    }, [videos]);
+    return [seasons, selectedSeason, selectSeason];
 };
 
-module.exports = useSeasons;
+module.exports = useSelectableSeasons;
