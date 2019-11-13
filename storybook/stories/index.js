@@ -1,6 +1,7 @@
 require('./Addon');
-require('./MetaItem');
 require('./ColorPicker');
-require('./SharePrompt');
-require('./Notification');
+require('./MetaItem');
 require('./ModalDialog');
+require('./Multiselect');
+require('./Notification');
+require('./SharePrompt');
