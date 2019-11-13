@@ -1,6 +1,6 @@
 const React = require('react');
 
-const metaStateReducer = (state, action) => {
+const reducer = (state, action) => {
     switch (action.type) {
         case 'groups-changed': {
             if (state.selectedGroup !== null) {
@@ -46,7 +46,7 @@ const metaStateReducer = (state, action) => {
     }
 };
 
-const metaStateInitializer = ([metaResourceRef, metaGroups]) => {
+const initializer = ([resourceRef, groups]) => {
     const initialState = {
         resourceRef: null,
         groups: [],
@@ -54,27 +54,27 @@ const metaStateInitializer = ([metaResourceRef, metaGroups]) => {
     };
     const initAction = {
         type: 'groups-changed',
-        resourceRef: metaResourceRef,
-        groups: metaGroups
+        resourceRef,
+        groups
     };
 
-    return metaStateReducer(initialState, initAction);
+    return reducer(initialState, initAction);
 };
 
-const useMetaState = (metaResourceRef, metaGroups) => {
-    const [{ resourceRef, groups, selectedGroup }, dispatch] = React.useReducer(
-        metaStateReducer,
-        [metaResourceRef, metaGroups],
-        metaStateInitializer
+const useSelectableGroups = (resourceRef, groups) => {
+    const [state, dispatch] = React.useReducer(
+        reducer,
+        [resourceRef, groups],
+        initializer
     );
     React.useEffect(() => {
         dispatch({
             type: 'groups-changed',
-            resourceRef: metaResourceRef,
-            groups: metaGroups
+            resourceRef,
+            groups
         });
-    }, [metaGroups]);
-    return [resourceRef, groups, selectedGroup];
+    }, [groups]);
+    return [state.resourceRef, state.groups, state.selectedGroup];
 };
 
-module.exports = useMetaState;
+module.exports = useSelectableGroups;
