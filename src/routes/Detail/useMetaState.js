@@ -62,13 +62,13 @@ const metaStateInitializer = ([metaResourceRef, metaGroups]) => {
 };
 
 const useMetaState = (metaResourceRef, metaGroups) => {
-    const [{ resourceRef, groups, selectedGroup }, metaStateDispatch] = React.useReducer(
+    const [{ resourceRef, groups, selectedGroup }, dispatch] = React.useReducer(
         metaStateReducer,
         [metaResourceRef, metaGroups],
         metaStateInitializer
     );
     React.useEffect(() => {
-        metaStateDispatch({
+        dispatch({
             type: 'groups-changed',
             resourceRef: metaResourceRef,
             groups: metaGroups
