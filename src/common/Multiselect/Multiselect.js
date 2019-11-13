@@ -5,10 +5,9 @@ const Icon = require('stremio-icons/dom');
 const Button = require('stremio/common/Button');
 const Popup = require('stremio/common/Popup');
 const useBinaryState = require('stremio/common/useBinaryState');
-const useDataset = require('stremio/common/useDataset');
 const styles = require('./styles');
 
-const Multiselect = ({ className, direction, title, renderLabelContent, renderLabelText, options, selected, disabled, onOpen, onClose, onSelect, ...props }) => {
+const Multiselect = ({ className, direction, title, options, selected, disabled, dataset, renderLabelContent, renderLabelText, onOpen, onClose, onSelect }) => {
     options = Array.isArray(options) ?
         options.filter(option => option && typeof option.value === 'string')
         :
@@ -17,7 +16,6 @@ const Multiselect = ({ className, direction, title, renderLabelContent, renderLa
         selected.filter(value => typeof value === 'string')
         :
         [];
-    const dataset = useDataset(props);
     const [menuOpen, openMenu, closeMenu, toggleMenu] = useBinaryState(false);
     const popupLabelOnClick = React.useCallback((event) => {
         if (!event.nativeEvent.togglePopupPrevented) {
@@ -26,6 +24,9 @@ const Multiselect = ({ className, direction, title, renderLabelContent, renderLa
     }, [toggleMenu]);
     const popupMenuOnClick = React.useCallback((event) => {
         event.nativeEvent.togglePopupPrevented = true;
+    }, []);
+    const popupMenuOnKeyDown = React.useCallback((event) => {
+        event.nativeEvent.buttonClickPrevented = true;
     }, []);
     const optionOnClick = React.useCallback((event) => {
         if (typeof onSelect === 'function') {
@@ -95,7 +96,7 @@ const Multiselect = ({ className, direction, title, renderLabelContent, renderLa
                 </Button>
             )}
             renderMenu={() => (
-                <div className={styles['menu-container']} onClick={popupMenuOnClick}>
+                <div className={styles['menu-container']} onKeyDown={popupMenuOnKeyDown} onClick={popupMenuOnClick}>
                     {
                         options.length > 0 ?
                             options.map(({ label, value }) => (
@@ -119,14 +120,15 @@ Multiselect.propTypes = {
     className: PropTypes.string,
     direction: PropTypes.any,
     title: PropTypes.string,
-    renderLabelContent: PropTypes.func,
-    renderLabelText: PropTypes.func,
     options: PropTypes.arrayOf(PropTypes.shape({
         value: PropTypes.string.isRequired,
         label: PropTypes.string
     })),
     selected: PropTypes.arrayOf(PropTypes.string),
     disabled: PropTypes.bool,
+    dataset: PropTypes.objectOf(String),
+    renderLabelContent: PropTypes.func,
+    renderLabelText: PropTypes.func,
     onOpen: PropTypes.func,
     onClose: PropTypes.func,
     onSelect: PropTypes.func
