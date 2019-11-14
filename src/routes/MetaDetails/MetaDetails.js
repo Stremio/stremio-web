@@ -6,18 +6,18 @@ const useMetaDetails = require('./useMetaDetails');
 const useSelectableGroups = require('./useSelectableGroups');
 const styles = require('./styles');
 
-const Detail = ({ urlParams }) => {
+const MetaDetails = ({ urlParams }) => {
     const [meta, streams] = useMetaDetails(urlParams);
     const [metaResourceRef, metaGroups, selectedMetaGroup] = useSelectableGroups(meta.resourceRef, meta.groups);
     const { resourceRef: streamsResourceRef, groups: streamsGroups } = streams;
     return (
-        <div className={styles['detail-container']}>
+        <div className={styles['metadetails-container']}>
             <NavBar
                 className={styles['nav-bar']}
                 backButton={true}
                 title={selectedMetaGroup !== null ? selectedMetaGroup.content.content.name : null}
             />
-            <div className={styles['detail-content']}>
+            <div className={styles['metadetails-content']}>
                 {
                     metaResourceRef !== null ?
                         selectedMetaGroup !== null ?
@@ -80,4 +80,4 @@ const Detail = ({ urlParams }) => {
     );
 };
 
-module.exports = Detail;
+module.exports = MetaDetails;

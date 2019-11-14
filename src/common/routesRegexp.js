@@ -19,8 +19,8 @@ const routesRegexp = {
         regexp: /^\/search\/?$/i,
         urlParamsNames: []
     },
-    detail: {
-        regexp: /^\/detail\/(?:([^\/]+?))\/(?:([^\/]+?))(?:\/([^\/]*?))?\/?$/i,
+    metadetails: {
+        regexp: /^\/metadetails\/(?:([^\/]+?))\/(?:([^\/]+?))(?:\/([^\/]*?))?\/?$/i,
         urlParamsNames: ['type', 'id', 'videoId']
     },
     addons: {

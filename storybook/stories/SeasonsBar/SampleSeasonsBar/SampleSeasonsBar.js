@@ -1,7 +1,7 @@
 const React = require('react');
 const { storiesOf } = require('@storybook/react');
 const { action } = require('@storybook/addon-actions');
-const SeasonsBar = require('stremio/routes/Detail/VideosList/SeasonsBar');
+const SeasonsBar = require('stremio/routes/MetaDetails/VideosList/SeasonsBar');
 const styles = require('./styles');
 
 storiesOf('SeasonsBar', module).add('SampleSeasonsBar', () => {
