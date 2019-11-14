@@ -2,7 +2,6 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const SeasonsBar = require('./SeasonsBar');
-const SeasonsBarPlaceholder = require('./SeasonsBarPlaceholder');
 const Video = require('./Video');
 const VideoPlaceholder = require('./VideoPlaceholder');
 const useSelectableSeasons = require('./useSelectableSeasons');
@@ -26,7 +25,7 @@ const VideosList = ({ className, metaGroup }) => {
             {
                 !metaGroup || metaGroup.content.type === 'Loading' ?
                     <React.Fragment>
-                        <SeasonsBarPlaceholder className={styles['seasons-bar']} />
+                        <SeasonsBar.Placeholder className={styles['seasons-bar']} />
                         <div className={styles['videos-scroll-container']}>
                             <VideoPlaceholder className={styles['video']} />
                             <VideoPlaceholder className={styles['video']} />
