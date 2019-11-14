@@ -5,6 +5,8 @@
 
     .prev-season-button, .next-season-button {
         flex: none;
+        width: 4rem;
+        height: 4rem;
         padding: 1rem;
         background-color: var(--color-surfacedarker60);
 
@@ -14,8 +16,8 @@
 
         .icon {
             display: block;
-            width: 2rem;
-            height: 2rem;
+            width: 100%;
+            height: 100%;
             fill: var(--color-surfacelighter);
         }
     }
@@ -34,42 +36,14 @@
             background-color: var(--color-surfacedarker);
         }
 
-        .season-label, .number-label {
-            flex: none;
-            max-width: 50%;
+        .season-label {
+            flex-grow: 0;
+            flex-shrink: 1;
+            flex-basis: auto;
             max-height: 3.6em;
             padding: 0 0.2rem;
             font-size: 1.1rem;
             color: var(--color-surfacelighter);
-        }
-
-        .popup-menu-container {
-            width: 100%;
-
-            .seasons-menu-container {
-                background-color: var(--color-surfacelighter);
-
-                .season-option-container {
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    height: 4rem;
-
-                    &:hover, &:focus {
-                        outline: none;
-                        background-color: var(--color-surfacelight);
-                    }
-
-                    .season-label, .number-label {
-                        flex: none;
-                        max-width: 50%;
-                        max-height: 3.6em;
-                        padding: 0 0.2rem;
-                        font-size: 1.2rem;
-                        color: var(--color-backgrounddarker);
-                    }
-                }
-            }
         }
     }
 }

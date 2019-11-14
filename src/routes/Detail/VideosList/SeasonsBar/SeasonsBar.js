@@ -5,33 +5,29 @@ const Icon = require('stremio-icons/dom');
 const { Button, Multiselect } = require('stremio/common');
 const styles = require('./styles');
 
-const SeasonsBar = ({ className, season, seasons, onSelect }) => {
+const SeasonsBar = ({ className, seasons, season, onSelect }) => {
     const options = React.useMemo(() => {
-        return Array.isArray(seasons) ?
-            seasons.map((season) => ({
-                value: String(season),
-                label: `Season ${season}`
-            }))
-            :
-            [];
+        return seasons.map((season) => ({
+            value: String(season),
+            label: `Season ${season}`
+        }));
     }, [seasons]);
     const selected = React.useMemo(() => {
         return [String(season)];
     }, [season]);
-    const renderMultiselectLabelText = React.useMemo(() => {
-        return () => `Season ${season}`;
+    const renderMultiselectLabelContent = React.useMemo(() => {
+        return () => (
+            <div className={styles['season-label']}>Season {season}</div>
+        );
     }, [season]);
     const prevNextButtonOnClick = React.useCallback((event) => {
-        if (Array.isArray(seasons) && typeof onSelect === 'function') {
+        if (typeof onSelect === 'function') {
             const seasonIndex = seasons.indexOf(season);
             const valueIndex = event.currentTarget.dataset.action === 'next' ?
-                seasonIndex + 1
+                seasonIndex + 1 < seasons.length ? seasonIndex + 1 : seasons.length - 1
                 :
-                seasonIndex - 1;
-            const value = valueIndex >= 0 && valueIndex < seasons.length ?
-                seasons[valueIndex]
-                :
-                seasons[0];
+                seasonIndex - 1 >= 0 ? seasonIndex - 1 : 0;
+            const value = seasons[valueIndex];
             onSelect({
                 type: 'select',
                 value: value,
@@ -41,8 +37,8 @@ const SeasonsBar = ({ className, season, seasons, onSelect }) => {
         }
     }, [season, seasons, onSelect]);
     const seasonOnSelect = React.useCallback((event) => {
-        const value = parseInt(event.value);
-        if (!isNaN(value) && typeof onSelect === 'function') {
+        const value = parseFloat(event.value);
+        if (typeof onSelect === 'function') {
             onSelect({
                 type: 'select',
                 value: value,
@@ -59,15 +55,15 @@ const SeasonsBar = ({ className, season, seasons, onSelect }) => {
             <Multiselect
                 className={styles['seasons-popup-label-container']}
                 direction={'bottom'}
-                title={season !== null && !isNaN(season) ? `Season ${season}` : 'Season'}
+                title={`Season ${season}`}
                 options={options}
                 selected={selected}
                 disabled={false}
-                renderLabelText={renderMultiselectLabelText}
+                renderLabelContent={renderMultiselectLabelContent}
                 onSelect={seasonOnSelect}
             />
             <Button className={styles['next-season-button']} data-action={'next'} onClick={prevNextButtonOnClick}>
-                <Icon className={styseasonles['icon']} icon={'ic_arrow_right'} />
+                <Icon className={styles['icon']} icon={'ic_arrow_right'} />
             </Button>
         </div>
     );
@@ -75,8 +71,8 @@ const SeasonsBar = ({ className, season, seasons, onSelect }) => {
 
 SeasonsBar.propTypes = {
     className: PropTypes.string,
-    selected: PropTypes.number,
-    seasons: PropTypes.arrayOf(PropTypes.number),
+    seasons: PropTypes.arrayOf(PropTypes.number).isRequired,
+    season: PropTypes.number.isRequired,
     onSelect: PropTypes.func
 };
 
