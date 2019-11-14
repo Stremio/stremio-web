@@ -2,25 +2,41 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
-const { Button } = require('stremio/common');
+const { Button, Image } = require('stremio/common');
 const StreamPlaceholder = require('./StreamPlaceholder');
 const styles = require('./styles');
 
-const Stream = ({ className, id, addon, description, progress, onClick }) => {
+const Stream = ({ className, addonName, title, thumbnail, progress, ...props }) => {
     return (
-        <Button className={classnames(className, styles['stream-container'])} title={typeof description === 'string' && description.length > 0 ? description : id} data-id={id} onClick={onClick}>
+        <Button {...props} className={classnames(className, styles['stream-container'])} title={title}>
             {
-                typeof addon === 'string' && addon.length > 0 ?
-                    <div className={styles['addon-container']}>
-                        <div className={styles['addon-name']}>{addon}</div>
+                typeof thumbnail === 'string' && thumbnail.length > 0 ?
+                    <div className={styles['thumbnail-container']}>
+                        <Image
+                            className={styles['thumbnail']}
+                            src={thumbnail}
+                            alt={' '}
+                            renderFallback={() => (
+                                <Icon
+                                    className={styles['placeholder-icon']}
+                                    icon={'ic_broken_link'}
+                                />
+                            )}
+                        />
                     </div>
                     :
-                    null
+                    <div className={styles['addon-name-container']}>
+                        <div className={styles['addon-name']}>{addonName}</div>
+                    </div>
             }
             <div className={styles['info-container']}>
-                <div className={styles['description-label']}>
-                    {typeof description === 'string' && description.length > 0 ? description : id}
-                </div>
+                {
+                    typeof thumbnail === 'string' && thumbnail.length > 0 ?
+                        <div className={styles['addon-name-label']}>{addonName}</div>
+                        :
+                        null
+                }
+                <div className={styles['title-label']}>{title}</div>
             </div>
             <div className={styles['play-icon-container']}>
                 <Icon className={styles['play-icon']} icon={'ic_play'} />
@@ -41,11 +57,10 @@ Stream.Placeholder = StreamPlaceholder;
 
 Stream.propTypes = {
     className: PropTypes.string,
-    id: PropTypes.string,
-    addon: PropTypes.string,
-    description: PropTypes.string,
+    addonName: PropTypes.string,
+    title: PropTypes.string,
+    thumbnail: PropTypes.string,
     progress: PropTypes.number,
-    onClick: PropTypes.func
 };
 
 module.exports = Stream;

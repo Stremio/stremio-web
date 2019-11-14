@@ -3,18 +3,34 @@
     flex-direction: row;
     align-items: center;
     flex-wrap: wrap;
+    min-width: 18rem;
     background-color: var(--color-surfacedarker60);
 
     &:hover, &:focus {
         background-color: var(--color-surfacedarker);
     }
 
-    .addon-container {
+    .thumbnail-container, .addon-name-container {
         flex: none;
         padding: 0.5rem;
 
+        .thumbnail {
+            display: block;
+            width: 5rem;
+            height: 5rem;
+            object-fit: contain;
+            object-position: center;
+        }
+
+        .placeholder-icon {
+            display: block;
+            width: 5rem;
+            height: 5rem;
+            fill: var(--color-surfacelight20);
+        }
+
         .addon-name {
-            width: 6rem;
+            width: 5rem;
             max-height: 3.6em;
             font-size: 1.1rem;
             text-align: center;
@@ -26,7 +42,14 @@
         flex: 1;
         padding: 0.5rem;
 
-        .description-label {
+        .addon-name-label {
+            font-size: 1.1rem;
+            max-height: 3.6em;
+            margin-bottom: 0.5rem;
+            color: var(--color-surfacelighter);
+        }
+
+        .title-label {
             max-height: 3.6em;
             color: var(--color-surfacelighter);
         }
@@ -34,12 +57,14 @@
 
     .play-icon-container {
         flex: none;
-        padding: 1.5rem;
+        width: 6rem;
+        height: 6rem;
+        padding: 2rem;
 
         .play-icon {
             display: block;
-            width: 2rem;
-            height: 2rem;
+            width: 100%;
+            height: 100%;
             fill: var(--color-surfacelighter);
         }
     }
