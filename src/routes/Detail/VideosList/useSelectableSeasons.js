@@ -20,6 +20,7 @@ const reducer = (state, action) => {
                     null;
             return {
                 ...state,
+                videos: action.videos,
                 seasons,
                 selectedSeason
             };
@@ -42,6 +43,7 @@ const reducer = (state, action) => {
 
 const initializer = (videos) => {
     const initialState = {
+        videos: [],
         seasons: [],
         selectedSeason: null
     };
@@ -54,7 +56,7 @@ const initializer = (videos) => {
 };
 
 const useSelectableSeasons = (videos) => {
-    const [{ seasons, selectedSeason }, dispatch] = React.useReducer(
+    const [state, dispatch] = React.useReducer(
         reducer,
         videos,
         initializer
@@ -65,13 +67,18 @@ const useSelectableSeasons = (videos) => {
             season
         });
     }, []);
+    const videosForSeason = React.useMemo(() => {
+        return state.videos.filter((video) => {
+            return video.season === state.selectedSeason;
+        });
+    }, [state.videos, state.selectedSeason]);
     React.useEffect(() => {
         dispatch({
             type: 'videos-changed',
             videos
         });
     }, [videos]);
-    return [seasons, selectedSeason, selectSeason];
+    return [state.seasons, state.selectedSeason, videosForSeason, selectSeason];
 };
 
 module.exports = useSelectableSeasons;

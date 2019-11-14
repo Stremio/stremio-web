@@ -13,12 +13,7 @@ const VideosList = ({ className, metaGroup }) => {
             :
             [];
     }, [metaGroup]);
-    const [seasons, selectedSeason, selectSeason] = useSelectableSeasons(videos);
-    const videosForSeason = React.useMemo(() => {
-        return videos.filter((video) => {
-            return selectedSeason === null || video.season === selectedSeason;
-        });
-    }, [videos, selectedSeason]);
+    const [seasons, selectedSeason, videosForSeason, selectSeason] = useSelectableSeasons(videos);
     return (
         <div className={classnames(className, styles['videos-list-container'])}>
             {
