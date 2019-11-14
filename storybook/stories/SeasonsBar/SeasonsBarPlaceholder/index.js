@@ -1,2 +1,1 @@
-require('./SampleSeasonsBar');
 require('./SeasonsBarPlaceholder');

@@ -3,6 +3,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const { Button, Multiselect } = require('stremio/common');
+const SeasonsBarPlaceholder = require('./SeasonsBarPlaceholder');
 const styles = require('./styles');
 
 const SeasonsBar = ({ className, seasons, season, onSelect }) => {
@@ -68,6 +69,8 @@ const SeasonsBar = ({ className, seasons, season, onSelect }) => {
         </div>
     );
 };
+
+SeasonsBar.Placeholder = SeasonsBarPlaceholder;
 
 SeasonsBar.propTypes = {
     className: PropTypes.string,
