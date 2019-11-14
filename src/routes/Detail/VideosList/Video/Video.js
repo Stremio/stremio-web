@@ -3,6 +3,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { Button, Image } = require('stremio/common');
 const Icon = require('stremio-icons/dom');
+const VideoPlaceholder = require('./VideoPlaceholder');
 const styles = require('./styles');
 
 const Video = ({ className, title, thumbnail, episode, released, upcoming, watched, progress, ...props }) => {
@@ -69,7 +70,9 @@ const Video = ({ className, title, thumbnail, episode, released, upcoming, watch
             }
         </Button>
     );
-}
+};
+
+Video.Placeholder = VideoPlaceholder;
 
 Video.propTypes = {
     className: PropTypes.string,

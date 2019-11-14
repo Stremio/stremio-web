@@ -3,7 +3,6 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const SeasonsBar = require('./SeasonsBar');
 const Video = require('./Video');
-const VideoPlaceholder = require('./VideoPlaceholder');
 const useSelectableSeasons = require('./useSelectableSeasons');
 const styles = require('./styles');
 
@@ -27,11 +26,11 @@ const VideosList = ({ className, metaGroup }) => {
                     <React.Fragment>
                         <SeasonsBar.Placeholder className={styles['seasons-bar']} />
                         <div className={styles['videos-scroll-container']}>
-                            <VideoPlaceholder className={styles['video']} />
-                            <VideoPlaceholder className={styles['video']} />
-                            <VideoPlaceholder className={styles['video']} />
-                            <VideoPlaceholder className={styles['video']} />
-                            <VideoPlaceholder className={styles['video']} />
+                            <Video.Placeholder className={styles['video']} />
+                            <Video.Placeholder className={styles['video']} />
+                            <Video.Placeholder className={styles['video']} />
+                            <Video.Placeholder className={styles['video']} />
+                            <Video.Placeholder className={styles['video']} />
                         </div>
                     </React.Fragment>
                     :
