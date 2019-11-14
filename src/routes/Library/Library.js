@@ -1,26 +1,27 @@
 const React = require('react');
-const { Dropdown, MainNavBar, MetaItem } = require('stremio/common');
+const { Multiselect, MainNavBar, MetaItem } = require('stremio/common');
 const useLibrary = require('./useLibrary');
 const styles = require('./styles');
 
 const Library = ({ urlParams, queryParams }) => {
-    const [metaItems, dropdowns] = useLibrary(urlParams.type, queryParams.get('sort'));
+    const [metaItems, dropdowns] = useLibrary(urlParams, queryParams);
     return (
         <div className={styles['library-container']}>
             <MainNavBar className={styles['nav-bar']} />
             <div className={styles['library-content']}>
                 <div className={styles['dropdowns-container']}>
-                    {dropdowns.map((dropdown) => (
-                        <Dropdown {...dropdown} key={dropdown.name} className={styles['dropdown']} />
+                    {dropdowns.map((dropdown, index) => (
+                        <Multiselect {...dropdown} key={index} className={styles['dropdown']} />
                     ))}
                 </div>
                 <div className={styles['meta-items-container']}>
-                    {metaItems.map((metaItem) => (
-                        <MetaItem
-                            {...metaItem}
-                            key={metaItem.id}
-                        />
-                    ))}
+                    {metaItems
+                        .map((metaItem, index) => (
+                            <MetaItem
+                                {...metaItem}
+                                key={index}
+                            />
+                        ))}
                 </div>
             </div>
         </div>

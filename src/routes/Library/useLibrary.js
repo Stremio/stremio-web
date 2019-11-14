@@ -1,99 +1,69 @@
 const React = require('react');
+const { useServices } = require('stremio/services');
 
 const DEFAULT_TYPE = 'movie';
-const libraryItems = [
-    {
-        id: '1',
-        type: 'movie',
-        name: 'Stremio demo item movie 1',
-        poster: '/images/intro_background.jpg',
-        logo: '/images/default_avatar.png',
-        posterShape: 'poster'
-    },
-    {
-        id: '2',
-        type: 'movie',
-        name: 'Stremio demo item movie 2',
-        poster: '/images/intro_background.jpg',
-        logo: '/images/default_avatar.png',
-        posterShape: 'poster'
-    },
-    {
-        id: '3',
-        type: 'series',
-        name: 'Stremio demo item series 1',
-        poster: '/images/default_avatar.png',
-        logo: '/images/default_avatar.png',
-        posterShape: 'poster'
-    },
-    {
-        id: '4',
-        type: 'series',
-        name: 'Stremio demo item series 2',
-        poster: '/images/default_avatar.png',
-        logo: '/images/default_avatar.png',
-        posterShape: 'poster'
-    },
-    {
-        id: '5',
-        type: 'channel',
-        name: 'Stremio demo item channel 1',
-        poster: '/images/anonymous.png',
-        logo: '/images/default_avatar.png',
-        posterShape: 'square'
-    },
-    {
-        id: '6',
-        type: 'channel',
-        name: 'Stremio demo item channel 2',
-        poster: '/images/anonymous.png',
-        logo: '/images/default_avatar.png',
-        posterShape: 'square'
-    }
-];
+const DEFAULT_SORT = 'recent';
 
-const useLibrary = (type, sort) => {
-    type = typeof type === 'string' && type.length > 0 ? type : DEFAULT_TYPE;
-    const items = React.useMemo(() => {
-        return libraryItems.filter(item => item.type === type);
-    }, [type, sort]);
-    const onSelect = React.useCallback((event) => {
-        const { name, value } = event.currentTarget.dataset;
-        if (name === 'type') {
-            const nextQuery = new URLSearchParams({ sort: typeof sort === 'string' ? sort : '' });
-            const nextType = typeof value === 'string' ? value : '';
-            window.location.replace(`#/library/${nextType}?${nextQuery}`);
-        } else if (name === 'sort') {
-            const nextQuery = new URLSearchParams({ sort: typeof value === 'string' ? value : '' });
-            const nextType = typeof type === 'string' ? type : '';
-            window.location.replace(`#/library/${nextType}?${nextQuery}`);
+const useLibrary = (urlParams, queryParams) => {
+    const { core } = useServices();
+    const [library, setLibrary] = React.useState([[], []]);
+
+    React.useEffect(() => {
+        const type = typeof urlParams.type === 'string' && urlParams.type.length > 0 ? urlParams.type : DEFAULT_TYPE;
+        const sort = typeof queryParams.get('sort') === 'string' && queryParams.get('sort').length > 0 ? queryParams.get('sort') : DEFAULT_SORT;
+        const onNewState = () => {
+            const state = core.getState();
+            const sortItems = (items, prop) => {
+                return items
+                    .filter(item => !item.removed)
+                    .sort((a, b) => {
+                        if (a[prop] < b[prop]) return -1;
+                        if (a[prop] > b[prop]) return 1;
+                        return 0;
+                    });
+            }
+            const selectInputs = [
+                {
+                    selected: [type],
+                    options: state.library.types
+                        .map((type) => ({
+                            label: type,
+                            value: type
+                        })),
+                    onSelect: (event) => {
+                        const value = event.value;
+                        const nextQuery = new URLSearchParams({ sort: typeof sort === 'string' ? sort : '' });
+                        const nextType = typeof value === 'string' ? value : '';
+                        window.location.replace(`#/library/${nextType}?${nextQuery}`);
+                    }
+                },
+                {
+                    selected: [sort],
+                    options: [{ label: 'A-Z', value: 'a-z' }, { label: 'Recent', value: 'recent' }],
+                    onSelect: (event) => {
+                        const value = event.value;
+                        const nextQuery = new URLSearchParams({ sort: typeof value === 'string' ? value : '' });
+                        const nextType = typeof type === 'string' ? type : '';
+                        window.location.replace(`#/library/${nextType}?${nextQuery}`);
+                    }
+                }
+            ];
+            const items = sort === 'recent' ? sortItems(state.library.items, '_ctime') : sortItems(state.library.items, 'name');
+            setLibrary([items, selectInputs]);
         }
-    }, [type, sort]);
-    const typeDropdown = React.useMemo(() => {
-        const selected = typeof type === 'string' && type.length > 0 ? [type] : [];
-        const options = libraryItems
-            .map(({ type }) => type)
-            .concat(selected)
-            .filter((type, index, types) => types.indexOf(type) === index)
-            .map((type) => ({ label: type, value: type }));
-        return {
-            name: 'type',
-            selected,
-            options,
-            onSelect
+        core.on('NewModel', onNewState);
+        core.dispatch({
+            action: 'Load',
+            args: {
+                load: 'LibItemsByType',
+                args: type
+            }
+        });
+        return () => {
+            core.off('NewModel', onNewState);
         };
-    }, [type, onSelect]);
-    const sortDropdown = React.useMemo(() => {
-        const selected = typeof sort === 'string' && sort.length > 0 ? [sort] : [];
-        const options = [{ label: 'A-Z', value: 'a-z' }, { label: 'Recent', value: 'recent' }];
-        return {
-            name: 'sort',
-            selected,
-            options,
-            onSelect
-        };
-    }, [sort, onSelect]);
-    return [items, [typeDropdown, sortDropdown]];
-};
+    }, [urlParams, queryParams]);
+    return library;
+}
 
 module.exports = useLibrary;
