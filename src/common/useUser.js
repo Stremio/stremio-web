@@ -3,14 +3,18 @@ const { useServices } = require('stremio/services');
 
 const useUser = () => {
     const { core } = useServices();
-    const [user, setUser] = React.useState(state.ctx.auth ? state.ctx.auth.user : null);
+    const [user, setUser] = React.useState(() => {
+        const state = core.getState();
+        return state.ctx.content.auth ? state.ctx.content.auth.user : null;
+    });
     React.useEffect(() => {
-        const onNewModel = () => {
-            setUser(state.ctx.auth ? state.ctx.auth.user : null);
+        const onNewState = () => {
+            const state = core.getState();
+            setUser(state.ctx.content.auth ? state.ctx.content.auth.user : null);
         };
-        core.on('NewModel', onNewModel);
+        core.on('NewModel', onNewState);
         return () => {
-            core.off('NewModel', onNewModel);
+            core.off('NewModel', onNewState);
         };
     }, []);
     return user;

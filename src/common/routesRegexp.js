@@ -24,7 +24,7 @@ const routesRegexp = {
         urlParamsNames: ['type', 'id', 'videoId']
     },
     addons: {
-        regexp: /^\/addons(?:\/([^\/]*?))?(?:\/([^\/]*?))?\/?$/i,
+        regexp: /^\/addons(?:\/([^\/]*?))?(?:\/([^\/]*?))?\/?$/i, // TODO both are required or none
         urlParamsNames: ['category', 'type']
     },
     settings: {
