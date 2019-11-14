@@ -14,6 +14,9 @@ const VideosList = ({ className, metaGroup }) => {
             [];
     }, [metaGroup]);
     const [seasons, selectedSeason, videosForSeason, selectSeason] = useSelectableSeasons(videos);
+    const seasonOnSelect = React.useCallback((event) => {
+        selectSeason(event.value);
+    }, []);
     return (
         <div className={classnames(className, styles['videos-list-container'])}>
             {
@@ -41,7 +44,7 @@ const VideosList = ({ className, metaGroup }) => {
                                         className={styles['seasons-bar']}
                                         season={selectedSeason}
                                         seasons={seasons}
-                                        onSeasonChange={selectSeason}
+                                        onSelect={seasonOnSelect}
                                     />
                                     :
                                     null
