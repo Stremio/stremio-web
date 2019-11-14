@@ -7,31 +7,32 @@ const Stream = require('./Stream');
 const StreamPlaceholder = require('./StreamPlaceholder');
 const styles = require('./styles');
 
-const StreamsList = ({ className, streams }) => {
-    const readyStreams = streams
-        .filter(stream => stream.content.type === 'Ready')
-        .map(stream => stream.content.content)
-        .flat();
+const StreamsList = ({ className, streamsGroups }) => {
+    const readyStreams = React.useMemo(() => {
+        return streamsGroups
+            .filter((stream) => stream.content.type === 'Ready')
+            .map((stream) => stream.content.content)
+            .flat(1);
+    }, [streamsGroups]);
     return (
         <div className={classnames(className, styles['streams-list-container'])}>
             <div className={styles['streams-scroll-container']}>
                 {
-                    streams.length === 0 || streams.every(stream => stream.content.type === 'Loading') ?
-                        <React.Fragment>
-                            <StreamPlaceholder className={styles['stream']} />
-                            <StreamPlaceholder className={styles['stream']} />
-                            <StreamPlaceholder className={styles['stream']} />
-                            <StreamPlaceholder className={styles['stream']} />
-                            <StreamPlaceholder className={styles['stream']} />
-                            <StreamPlaceholder className={styles['stream']} />
-                        </React.Fragment>
+                    readyStreams.length > 0 ?
+                        readyStreams.map((stream, index) => (
+                            <Stream {...stream} key={index} className={styles['stream']} />
+                        ))
                         :
-                        readyStreams.length === 0 ?
-                            <div className={styles['no-streams-label']}>No streams were found</div>
+                        streamsGroups.length === 0 ?
+                            <div className={styles['message-label']}>No addons ware requested for streams</div>
                             :
-                            readyStreams.map((stream) => (
-                                <Stream {...stream} key={stream.id} className={styles['stream']} />
-                            ))
+                            streamsGroups.every((group) => group.content.type === 'Err') ?
+                                <div className={styles['message-label']}>No streams were found</div>
+                                :
+                                <React.Fragment>
+                                    <StreamPlaceholder className={styles['stream']} />
+                                    <StreamPlaceholder className={styles['stream']} />
+                                </React.Fragment>
                 }
             </div>
             <Button className={styles['install-addons-container']} title={'Install addons'} href={'#/addons'}>
@@ -44,7 +45,7 @@ const StreamsList = ({ className, streams }) => {
 
 StreamsList.propTypes = {
     className: PropTypes.string,
-    streams: PropTypes.arrayOf(PropTypes.object)
+    streamsGroups: PropTypes.arrayOf(PropTypes.object)
 };
 
 module.exports = StreamsList;
