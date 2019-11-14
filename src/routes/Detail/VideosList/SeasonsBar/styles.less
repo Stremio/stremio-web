@@ -32,8 +32,12 @@
         background-color: var(--color-surfacedarker60);
         overflow: visible;
 
-        &:hover, &:focus, &:global(.active) {
+        &:hover, &:focus {
             background-color: var(--color-surfacedarker);
+        }
+
+        &:global(.active) {
+            background-color: var(--color-surfacedark);
         }
 
         .season-label {
