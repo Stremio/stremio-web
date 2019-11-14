@@ -4,7 +4,6 @@ const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const { Button } = require('stremio/common');
 const Stream = require('./Stream');
-const StreamPlaceholder = require('./StreamPlaceholder');
 const styles = require('./styles');
 
 const StreamsList = ({ className, streamsGroups }) => {
@@ -30,8 +29,8 @@ const StreamsList = ({ className, streamsGroups }) => {
                                 <div className={styles['message-label']}>No streams were found</div>
                                 :
                                 <React.Fragment>
-                                    <StreamPlaceholder className={styles['stream']} />
-                                    <StreamPlaceholder className={styles['stream']} />
+                                    <Stream.Placeholder className={styles['stream']} />
+                                    <Stream.Placeholder className={styles['stream']} />
                                 </React.Fragment>
                 }
             </div>

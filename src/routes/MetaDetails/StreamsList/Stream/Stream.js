@@ -3,6 +3,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const { Button } = require('stremio/common');
+const StreamPlaceholder = require('./StreamPlaceholder');
 const styles = require('./styles');
 
 const Stream = ({ className, id, addon, description, progress, onClick }) => {
@@ -34,7 +35,9 @@ const Stream = ({ className, id, addon, description, progress, onClick }) => {
             }
         </Button>
     );
-}
+};
+
+Stream.Placeholder = StreamPlaceholder;
 
 Stream.propTypes = {
     className: PropTypes.string,
