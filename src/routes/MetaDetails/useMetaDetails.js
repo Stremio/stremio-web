@@ -20,6 +20,7 @@ const useMetaDetails = (urlParams) => {
                             video.released.getTime() > Date.now()
                             :
                             false;
+                        video.href = `#/metadetails/${metaGroup.content.content.type}/${metaGroup.content.content.id}/${video.id}`;
                         // TODO add href, watched and progress
                         return video;
                     });
