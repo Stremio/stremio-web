@@ -69,7 +69,7 @@ const useSelectableSeasons = (videos) => {
     }, []);
     const videosForSeason = React.useMemo(() => {
         return state.videos.filter((video) => {
-            return video.season === state.selectedSeason;
+            return state.selectedSeason === null || video.season === state.selectedSeason;
         });
     }, [state.videos, state.selectedSeason]);
     React.useEffect(() => {
