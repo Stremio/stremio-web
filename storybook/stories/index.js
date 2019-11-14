@@ -5,4 +5,5 @@ require('./ModalDialog');
 require('./Multiselect');
 require('./Notification');
 require('./Popup');
+require('./SeasonsBar');
 require('./SharePrompt');
