@@ -4,7 +4,7 @@ const { action } = require('@storybook/addon-actions');
 const SeasonsBar = require('stremio/routes/Detail/VideosList/SeasonsBar');
 const styles = require('./styles');
 
-storiesOf('SeasonsBar', module).add('SeasonsBar', () => {
+storiesOf('SeasonsBar', module).add('SampleSeasonsBar', () => {
     const [season, setSeason] = React.useState(1);
     const seasons = React.useMemo(() => {
         return [1, 2, 3, 4, 5, /*6,*/ 7];

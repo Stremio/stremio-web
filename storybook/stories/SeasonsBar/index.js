@@ -1,1 +1,1 @@
-require('./SeasonsBar');
+require('./SampleSeasonsBar');
