@@ -9,6 +9,6 @@ storiesOf('Stream', module).add('StreamWithThumbnail', () => (
         addonName={'Sample addon name'}
         title={'1080p'}
         thumbnail={'images/anonymous.png'}
-        progress={'0.6'}
+        progress={0.6}
     />
 ));
