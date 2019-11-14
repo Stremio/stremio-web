@@ -7,3 +7,4 @@ require('./Notification');
 require('./Popup');
 require('./SeasonsBar');
 require('./SharePrompt');
+require('./Stream');
