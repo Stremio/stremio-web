@@ -6,7 +6,7 @@ const DEFAULT_TYPE = 'movie';
 
 const useLibrary = (urlParams) => {
     const { core } = useServices();
-    const [library, setLibrary] = React.useState([[], []]);
+    const [library, setLibrary] = React.useState([[], null]);
     React.useEffect(() => {
         const type = typeof urlParams.type === 'string' && urlParams.type.length > 0 ? urlParams.type : DEFAULT_TYPE;
         const onNewState = () => {
