@@ -22,7 +22,7 @@ const useSort = (urlParams, queryParams) => {
         };
         const selectInput = {
             selected: [sort],
-            options: [{ label: 'A-Z', value: 'a-z' }, { label: 'Recent', value: 'recent' }, { label: 'Year', value: 'year' }],
+            options: [{ label: 'Recent', value: 'recent' }, { label: 'A-Z', value: 'a-z' }, { label: 'Year', value: 'year' }],
             onSelect: (event) => {
                 const nextQuery = new URLSearchParams({ sort: event.value });
                 window.location.replace(`#/library/${type}?${nextQuery}`);
