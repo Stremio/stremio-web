@@ -3,18 +3,18 @@ const React = require('react');
 const DEFAULT_TYPE = 'movie';
 const DEFAULT_SORT = 'recent';
 const SORTS = [DEFAULT_SORT, 'year', 'a-z'];
-const SORT_PROPS = {
-    'recent': '_ctime',
-    'a-z': 'name',
-    'year': 'year'
-};
+const SORT_PROPS = new Map([
+    ['recent', '_ctime'],
+    ['a-z', 'name'],
+    ['year', 'year']
+]);
 
 const useSort = (urlParams, queryParams) => {
     const [sort, setSort] = React.useState([null, () => { }]);
     React.useEffect(() => {
         const type = typeof type === 'string' && type.length > 0 ? urlParams.type : DEFAULT_TYPE;
         const sort = queryParams.has('sort') && SORTS.includes(queryParams.get('sort')) ? queryParams.get('sort') : DEFAULT_SORT;
-        const sortProp = SORT_PROPS[sort];
+        const sortProp = SORT_PROPS.get(sort);
         const sortItems = (a, b) => {
             if (a[sortProp] < b[sortProp]) return -1;
             if (a[sortProp] > b[sortProp]) return 1;
