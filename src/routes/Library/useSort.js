@@ -19,11 +19,11 @@ const useSort = (urlParams, queryParams) => {
             if (a[sortProp] > b[sortProp]) return 1;
             return 0;
         };
-        selectInput = {
+        const selectInput = {
             selected: [sort],
             options: [{ label: 'A-Z', value: 'a-z' }, { label: 'Recent', value: 'recent' }, { label: 'Year', value: 'year' }],
             onSelect: (event) => {
-                const nextQuery = new URLSearchParams({ sort: typeof event.value === 'string' ? event.value : '' });
+                const nextQuery = new URLSearchParams({ sort: event.value });
                 window.location.replace(`#/library/${urlParams.type || DEFAULT_TYPE}?${nextQuery}`);
             }
         };
