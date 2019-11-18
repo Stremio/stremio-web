@@ -27,13 +27,13 @@ const SharePrompt = ({ className, url }) => {
     return (
         <div className={classnames(className, styles['share-prompt-container'])}>
             <div className={styles['buttons-container']}>
-                <Button className={classnames(styles['button-container'], styles['facebook-button'])} href={`https://www.facebook.com/sharer/sharer.php?u=${url}`} target={'_blank'}>
+                <Button className={classnames(styles['button-container'], styles['facebook-button'])} title={'Facebook'} href={`https://www.facebook.com/sharer/sharer.php?u=${url}`} target={'_blank'}>
                     <Icon className={styles['icon']} icon={'ic_facebook'} />
-                    <div className={styles['label']}>FACEBOOK</div>
+                    <div className={styles['label']}>Facebook</div>
                 </Button>
-                <Button className={classnames(styles['button-container'], styles['twitter-button'])} href={`https://twitter.com/home?status=${url}`} target={'_blank'}>
+                <Button className={classnames(styles['button-container'], styles['twitter-button'])} title={'Twitter'} href={`https://twitter.com/home?status=${url}`} target={'_blank'}>
                     <Icon className={styles['icon']} icon={'ic_twitter'} />
-                    <div className={styles['label']}>TWITTER</div>
+                    <div className={styles['label']}>Twitter</div>
                 </Button>
             </div>
             <div className={styles['url-container']}>
@@ -46,7 +46,7 @@ const SharePrompt = ({ className, url }) => {
                     onClick={selectInputContent}
                     tabIndex={-1}
                 />
-                <Button className={styles['copy-button']} onClick={copyToClipboard}>
+                <Button className={styles['copy-button']} title={'Copy to clipboard'} onClick={copyToClipboard}>
                     <Icon className={styles['icon']} icon={'ic_link'} />
                     <div className={styles['label']}>Copy</div>
                 </Button>
