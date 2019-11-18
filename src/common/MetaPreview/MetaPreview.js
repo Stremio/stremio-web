@@ -200,7 +200,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                             />
                             {
                                 shareModalOpen ?
-                                    <ModalDialog>
+                                    <ModalDialog onCloseRequest={closeShareModal}>
                                         <SharePrompt
                                             url={linksGroups[SHARE_LINK_CATEGORY].href}
                                         />
