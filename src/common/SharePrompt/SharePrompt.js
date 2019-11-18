@@ -9,8 +9,10 @@ const styles = require('./styles');
 const SharePrompt = ({ className, url }) => {
     const inputRef = React.useRef(null);
     const copyToClipboard = React.useCallback(() => {
-        inputRef.current.select();
-        document.execCommand('copy');
+        if (inputRef.current !== null) {
+            inputRef.current.select();
+            document.execCommand('copy');
+        }
     }, []);
     return (
         <div className={classnames(className, styles['share-prompt-container'])}>
@@ -25,7 +27,14 @@ const SharePrompt = ({ className, url }) => {
                 </Button>
             </div>
             <div className={styles['url-container']}>
-                <TextInput ref={inputRef} className={styles['url-content']} type={'text'} tabIndex={'-1'} defaultValue={url} readOnly />
+                <TextInput
+                    ref={inputRef}
+                    className={styles['url-text-input']}
+                    type={'text'}
+                    readOnly={true}
+                    defaultValue={url}
+                    tabIndex={-1}
+                />
                 <Button className={styles['copy-button']} onClick={copyToClipboard}>
                     <Icon className={styles['icon']} icon={'ic_link'} />
                     <div className={styles['label']}>Copy</div>
@@ -37,7 +46,7 @@ const SharePrompt = ({ className, url }) => {
 
 SharePrompt.propTypes = {
     className: PropTypes.string,
-    url: PropTypes.string.isRequired
+    url: PropTypes.string
 };
 
 module.exports = SharePrompt;
