@@ -8,6 +8,11 @@ const styles = require('./styles');
 
 const SharePrompt = ({ className, url }) => {
     const inputRef = React.useRef(null);
+    const selectInputContent = React.useCallback(() => {
+        if (inputRef.current !== null) {
+            inputRef.current.select();
+        }
+    }, []);
     const copyToClipboard = React.useCallback(() => {
         if (inputRef.current !== null) {
             inputRef.current.select();
@@ -38,6 +43,7 @@ const SharePrompt = ({ className, url }) => {
                     type={'text'}
                     readOnly={true}
                     defaultValue={url}
+                    onClick={selectInputContent}
                     tabIndex={-1}
                 />
                 <Button className={styles['copy-button']} onClick={copyToClipboard}>
