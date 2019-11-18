@@ -19,11 +19,11 @@
         grid-template-columns: 1fr auto;
         grid-template-rows: auto 1fr;
         grid-template-areas:
-            "dropdowns-area switch-view-area"
-            "meta-items-area meta-items-area";
+            "controls-area switch-view-area"
+            "type-content-area type-content-area";
 
         .controls-container {
-            grid-area: dropdowns-area;
+            grid-area: controls-area;
             display: flex;
             flex-direction: row;
             margin: 2rem;
@@ -41,14 +41,24 @@
             }
         }
 
-        .meta-items-container {
-            grid-area: meta-items-area;
-            display: grid;
-            grid-auto-rows: max-content;
-            grid-gap: 1.5rem;
-            align-items: center;
-            padding: 0 2rem;
-            overflow-y: auto;
+        .type-content-container {
+            grid-area: type-content-area;
+
+            .meta-items-container {
+                display: grid;
+                max-height: 100%;
+                grid-auto-rows: max-content;
+                grid-gap: 1.5rem;
+                align-items: center;
+                padding: 0 2rem;
+                overflow-y: auto;
+            }
+
+            .message-container {
+                padding: 0 2rem;
+                font-size: 2rem;
+                color: var(--color-surfacelighter);
+            }
         }
     }
 }

@@ -4,7 +4,7 @@ const { useServices } = require('stremio/services');
 
 const useLibrary = (urlParams) => {
     const { core } = useServices();
-    const [library, setLibrary] = React.useState([[], null]);
+    const [library, setLibrary] = React.useState([[], null, null]);
     React.useEffect(() => {
         const state = core.getState();
         const type = typeof urlParams.type === 'string' && urlParams.type.length > 0 ?
@@ -28,7 +28,8 @@ const useLibrary = (urlParams) => {
                     window.location.replace(`#/library/${event.value}${search !== null ? search : ''}`);
                 }
             };
-            setLibrary([state.library.items, selectInput]);
+            const error = state.library.items === 0 ? state.library.items : null;
+            setLibrary([state.library.items, selectInput, error]);
         };
         core.on('NewModel', onNewState);
         core.dispatch({
