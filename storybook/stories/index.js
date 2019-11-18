@@ -1,4 +1,5 @@
 require('./Addon');
+require('./ColorInput');
 require('./ColorPicker');
 require('./MetaItem');
 require('./ModalDialog');
