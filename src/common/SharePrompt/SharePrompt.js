@@ -14,6 +14,11 @@ const SharePrompt = ({ className, url }) => {
             document.execCommand('copy');
         }
     }, []);
+    React.useEffect(() => {
+        if (inputRef.current !== null) {
+            inputRef.current.select();
+        }
+    }, []);
     return (
         <div className={classnames(className, styles['share-prompt-container'])}>
             <div className={styles['buttons-container']}>
