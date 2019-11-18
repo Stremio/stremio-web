@@ -6,21 +6,10 @@ const Icon = require('stremio-icons/dom');
 const { Modal } = require('stremio-router');
 const styles = require('./styles');
 
-const ModalDialog = ({ className, children, title, buttons, onCloseRequest }) => {
-    React.useEffect(() => {
-        const onKeyDown = (event) => {
-            if (event.key === 'Escape') {
-                onCloseRequest({
-                    type: 'close',
-                    nativeEvent: event
-                });
-            }
-        };
-        window.addEventListener('keydown', onKeyDown);
-        return () => {
-            window.removeEventListener('keydown', onKeyDown);
-        };
-    }, [onCloseRequest]);
+const ModalDialog = ({ className, title, buttons, children, onCloseRequest }) => {
+    const onModalDialogContainerMouseDown = React.useCallback((event) => {
+        event.nativeEvent.closeModalDialogPrevented = true;
+    }, []);
     const closeButtonOnClick = React.useCallback((event) => {
         onCloseRequest({
             type: 'close',
@@ -28,55 +17,79 @@ const ModalDialog = ({ className, children, title, buttons, onCloseRequest }) =>
             nativeEvent: event.nativeEvent
         });
     }, [onCloseRequest]);
-    const onModalContainerMouseDown = React.useCallback((event) => {
-        if (event.target === event.currentTarget) {
-            onCloseRequest({
-                type: 'close',
-                reactEvent: event,
-                nativeEvent: event.nativeEvent
-            });
-        }
+    React.useEffect(() => {
+        const onCloseEvent = (event) => {
+            if (!event.closeModalDialogPrevented && typeof onCloseRequest === 'function') {
+                const closeEvent = {
+                    type: 'close',
+                    nativeEvent: event
+                };
+                switch (event.type) {
+                    case 'resize':
+                        onCloseRequest(closeEvent);
+                        break;
+                    case 'keydown':
+                        if (event.key === 'Escape') {
+                            onCloseRequest(closeEvent);
+                        }
+                        break;
+                    case 'mousedown':
+                        if (event.target !== document.documentElement) {
+                            onCloseRequest(closeEvent);
+                        }
+                        break;
+                }
+            }
+        };
+        window.addEventListener('resize', onCloseEvent);
+        window.addEventListener('keydown', onCloseEvent);
+        window.addEventListener('mousedown', onCloseEvent);
+        return () => {
+            window.removeEventListener('resize', onCloseEvent);
+            window.removeEventListener('keydown', onCloseEvent);
+            window.removeEventListener('mousedown', onCloseEvent);
+        };
     }, [onCloseRequest]);
     return (
-        <Modal className={styles['modal-container']} onMouseDown={onModalContainerMouseDown}>
-            <div className={classnames(className, styles['modal-dialog-container'])}>
-                <Button className={styles['close-button-container']} title={'Close'} onClick={closeButtonOnClick}>
-                    <Icon className={styles['icon']} icon={'ic_x'} />
-                </Button>
-                {
-                    typeof title === 'string' && title.length > 0 ?
-                        <h1>{title}</h1>
-                        :
-                        null
-                }
+        <Modal className={classnames(className, styles['modal-container'])}>
+            <div className={styles['modal-dialog-container']} onMouseDown={onModalDialogContainerMouseDown}>
+                <div className={styles['header-container']}>
+                    {
+                        typeof title === 'string' && title.length > 0 ?
+                            <div className={styles['title-container']} title={title}>{title}</div>
+                            :
+                            null
+                    }
+                    <Button className={styles['close-button-container']} title={'Close'} onClick={closeButtonOnClick}>
+                        <Icon className={styles['icon']} icon={'ic_x'} />
+                    </Button>
+                </div>
                 <div className={styles['modal-dialog-content']}>
                     {children}
-                </div>
-                {
-                    Array.isArray(buttons) && buttons.length > 0 ?
-                        <div className={styles['modal-dialog-buttons']}>
-                            {
-                                buttons.map((button, key) => (
-                                    <Button className={classnames(button.className, styles['action-button'])} {...button.props} key={key}>
+                    {
+                        Array.isArray(buttons) && buttons.length > 0 ?
+                            <div className={styles['buttons-container']}>
+                                {buttons.map(({ className, label, icon, props }, index) => (
+                                    <Button title={label} {...props} key={index} className={classnames(className, styles['action-button'])}>
                                         {
-                                            typeof button.icon === 'string' && button.icon.length > 0 ?
-                                                <Icon className={styles['icon']} icon={button.icon} />
+                                            typeof icon === 'string' && icon.length > 0 ?
+                                                <Icon className={styles['icon']} icon={icon} />
                                                 :
                                                 null
                                         }
                                         {
-                                            typeof button.label === 'string' && button.label.length > 0 ?
-                                                button.label
+                                            typeof label === 'string' && label.length > 0 ?
+                                                <div className={styles['label']}>{label}</div>
                                                 :
                                                 null
                                         }
                                     </Button>
-                                ))
-                            }
-                        </div>
-                        :
-                        null
-                }
+                                ))}
+                            </div>
+                            :
+                            null
+                    }
+                </div>
             </div>
         </Modal>
     );
@@ -86,11 +99,15 @@ ModalDialog.propTypes = {
     className: PropTypes.string,
     title: PropTypes.string,
     buttons: PropTypes.arrayOf(PropTypes.shape({
+        className: PropTypes.string,
         label: PropTypes.string,
         icon: PropTypes.string,
-        className: PropTypes.string,
         props: PropTypes.object
     })),
+    children: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.node),
+        PropTypes.node
+    ]),
     onCloseRequest: PropTypes.func
 };
 

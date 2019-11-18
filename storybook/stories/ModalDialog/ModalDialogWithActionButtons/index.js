@@ -1,2 +1,1 @@
-require('./SampleModalDialog');
 require('./ModalDialogWithActionButtons');
