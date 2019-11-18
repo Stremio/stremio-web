@@ -4,21 +4,21 @@ const classnames = require('classnames');
 const Button = require('stremio/common/Button');
 const styles = require('./styles');
 
-const MetaLinks = ({ className, category, links }) => {
+const MetaLinks = ({ className, label, links }) => {
     return (
         <div className={classnames(className, styles['meta-links-container'])}>
             {
-                typeof category === 'string' && category.length > 0 ?
-                    <div className={styles['category-container']}>{category}:</div>
+                typeof label === 'string' && label.length > 0 ?
+                    <div className={styles['label-container']}>{label}:</div>
                     :
                     null
             }
             {
                 Array.isArray(links) && links.length > 0 ?
                     <div className={styles['links-container']}>
-                        {links.map(({ name, href }, index) => (
-                            <Button key={index} className={styles['link-container']} title={name} tabIndex={-1} href={href}>
-                                {name}
+                        {links.map(({ label, href }, index) => (
+                            <Button key={index} className={styles['link-container']} title={label} tabIndex={-1} href={href}>
+                                {label}
                                 {index < links.length - 1 ? ',' : null}
                             </Button>
                         ))}
@@ -32,9 +32,9 @@ const MetaLinks = ({ className, category, links }) => {
 
 MetaLinks.propTypes = {
     className: PropTypes.string,
-    category: PropTypes.string,
+    label: PropTypes.string,
     links: PropTypes.arrayOf(PropTypes.shape({
-        name: PropTypes.string,
+        label: PropTypes.string,
         href: PropTypes.string
     }))
 };

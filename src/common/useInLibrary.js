@@ -1,8 +1,12 @@
-const { useBinaryState } = require('stremio/common');
+const useBinaryState = require('stremio/common/useBinaryState');
 
-const useInLibrary = () => {
+const useInLibrary = (id) => {
     const [inLibrary, addToLibrary, removeFromLibrary, toggleInLibrary] = useBinaryState(false);
-    return [inLibrary, addToLibrary, removeFromLibrary, toggleInLibrary];
+    if (typeof id === 'string') {
+        return [inLibrary, addToLibrary, removeFromLibrary, toggleInLibrary];
+    } else {
+        return [false, null, null, null];
+    }
 };
 
 module.exports = useInLibrary;

@@ -1,5 +1,5 @@
 const React = require('react');
-const { NavBar, MetaPreview } = require('stremio/common');
+const { NavBar, MetaPreview, useInLibrary } = require('stremio/common');
 const VideosList = require('./VideosList');
 const StreamsList = require('./StreamsList');
 const useMetaDetails = require('./useMetaDetails');
@@ -10,6 +10,7 @@ const MetaDetails = ({ urlParams }) => {
     const [meta, streams] = useMetaDetails(urlParams);
     const [metaResourceRef, metaGroups, selectedMetaGroup] = useSelectableGroups(meta.resourceRef, meta.groups);
     const { resourceRef: streamsResourceRef, groups: streamsGroups } = streams;
+    const [inLibrary, , , toggleInLibrary] = useInLibrary(metaResourceRef ? metaResourceRef.id : null);
     return (
         <div className={styles['metadetails-container']}>
             <NavBar
@@ -39,6 +40,8 @@ const MetaDetails = ({ urlParams }) => {
                                     {...selectedMetaGroup.content.content}
                                     className={styles['meta-preview']}
                                     background={null}
+                                    inLibrary={inLibrary}
+                                    toggleInLibrary={toggleInLibrary}
                                 />
                             </React.Fragment>
                             :
@@ -46,12 +49,16 @@ const MetaDetails = ({ urlParams }) => {
                                 <MetaPreview
                                     className={styles['meta-preview']}
                                     name={'No addons ware requested for this meta'}
+                                    inLibrary={inLibrary}
+                                    toggleInLibrary={toggleInLibrary}
                                 />
                                 :
                                 metaGroups.every((group) => group.content.type === 'Err') ?
                                     <MetaPreview
                                         className={styles['meta-preview']}
                                         name={'No metadata was found'}
+                                        inLibrary={inLibrary}
+                                        toggleInLibrary={toggleInLibrary}
                                     />
                                     :
                                     <MetaPreview.Placeholder
