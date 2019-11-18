@@ -20,6 +20,7 @@ const useAnimationFrame = require('./useAnimationFrame');
 const useBinaryState = require('./useBinaryState');
 const useDataset = require('./useDataset');
 const useFullscreen = require('./useFullscreen');
+const useInLibrary = require('./useInLibrary');
 const useLiveRef = require('./useLiveRef');
 const useLocationHash = require('./useLocationHash');
 const useRouteActive = require('./useRouteActive');
@@ -49,6 +50,7 @@ module.exports = {
     useBinaryState,
     useDataset,
     useFullscreen,
+    useInLibrary,
     useLiveRef,
     useLocationHash,
     useRouteActive,
