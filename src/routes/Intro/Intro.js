@@ -77,7 +77,7 @@ const Intro = ({ queryParams }) => {
             if (event === 'CtxChanged') {
                 const state = core.getState();
                 if (state.ctx.content.auth !== null) {
-                    window.location.replace('/');
+                    window.location.replace('#/');
                 }
             }
         };
