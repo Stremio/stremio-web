@@ -7,7 +7,6 @@ const Image = require('stremio/common/Image');
 const Multiselect = require('stremio/common/Multiselect');
 const PlayIconCircleCentered = require('stremio/common/PlayIconCircleCentered');
 const useBinaryState = require('stremio/common/useBinaryState');
-const useDataset = require('stremio/common/useDataset');
 const styles = require('./styles');
 
 const ICON_FOR_TYPE = new Map([
@@ -18,8 +17,7 @@ const ICON_FOR_TYPE = new Map([
     ['other', 'ic_movies']
 ]);
 
-const MetaItem = React.memo(({ className, type, name, poster, posterShape, playIcon, progress, menuOptions, onSelect, menuOptionOnSelect, ...props }) => {
-    const dataset = useDataset(props);
+const MetaItem = React.memo(({ className, type, name, poster, posterShape, playIcon, progress, menuOptions, dataset, onSelect, menuOptionOnSelect, ...props }) => {
     const [menuOpen, onMenuOpen, onMenuClose] = useBinaryState(false);
     const metaItemOnClick = React.useCallback((event) => {
         if (typeof props.onClick === 'function') {
@@ -127,6 +125,7 @@ MetaItem.propTypes = {
     playIcon: PropTypes.bool,
     progress: PropTypes.number,
     menuOptions: PropTypes.array,
+    dataset: PropTypes.objectOf(String),
     onSelect: PropTypes.func,
     menuOptionOnSelect: PropTypes.func
 };
