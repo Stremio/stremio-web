@@ -1,10 +1,12 @@
 const React = require('react');
 const { Multiselect, MainNavBar, MetaItem } = require('stremio/common');
+const useUser = require('stremio/common/useUser');
 const useLibrary = require('./useLibrary');
 const useSort = require('./useSort');
 const styles = require('./styles');
 
 const Library = ({ urlParams, queryParams }) => {
+    const user = useUser();
     const [metaItems, selectTypeInput, error] = useLibrary(urlParams);
     const [selectSortInput, sortFunction] = useSort(urlParams, queryParams);
     return (
@@ -17,27 +19,35 @@ const Library = ({ urlParams, queryParams }) => {
                 </div>
                 <div className={styles['type-content-container']}>
                     {
-                        error !== null ?
+                        !user ?
                             <div className={styles['message-container']}>
-                                No items for type {urlParams.type !== (null && '') ? urlParams.type : '"Empty"'}
+                                Please log into this app
+                                {
+                                    window.location.replace('#/intro')
+                                }
                             </div>
                             :
-                            Array.isArray(metaItems) ?
-                                <div className={styles['meta-items-container']}>
-                                    {
-                                        metaItems
-                                            .sort(sortFunction)
-                                            .map(({ removed, temp, ...metaItem }, index) => (
-                                                <MetaItem
-                                                    {...metaItem}
-                                                    key={index}
-                                                />
-                                            ))}
+                            error !== null ?
+                                <div className={styles['message-container']}>
+                                    No items for type {urlParams.type !== (null && '') ? urlParams.type : '"Empty"'}
                                 </div>
                                 :
-                                <div className={styles['message-container']}>
-                                    Loading
-                                </div>
+                                Array.isArray(metaItems) ?
+                                    <div className={styles['meta-items-container']}>
+                                        {
+                                            metaItems
+                                                .sort(sortFunction)
+                                                .map(({ removed, temp, ...metaItem }, index) => (
+                                                    <MetaItem
+                                                        {...metaItem}
+                                                        key={index}
+                                                    />
+                                                ))}
+                                    </div>
+                                    :
+                                    <div className={styles['message-container']}>
+                                        Loading
+                                    </div>
                     }
                 </div>
             </div>
