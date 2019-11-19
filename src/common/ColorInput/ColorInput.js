@@ -8,7 +8,7 @@ const ColorPicker = require('./ColorPicker');
 
 const COLOR_FORMAT = 'hexcss4';
 
-const ColorInput = ({ className, value, onChange }) => {
+const ColorInput = ({ className, value, dataset, onChange }) => {
     const [modalOpen, openModal, closeModal] = useBinaryState(false);
     const [tempValue, setTempValue] = React.useState(() => {
         return AColorPicker.parseColor(value, COLOR_FORMAT);
@@ -21,13 +21,14 @@ const ColorInput = ({ className, value, onChange }) => {
             onChange({
                 type: 'change',
                 value: tempValue,
+                dataset: dataset,
                 reactEvent: event,
                 nativeEvent: event.nativeEvent
             });
         }
 
         closeModal();
-    }, [tempValue, onChange]);
+    }, [tempValue, dataset, onChange]);
     const buttonStyle = React.useMemo(() => ({
         backgroundColor: value
     }), [value]);
@@ -61,6 +62,7 @@ const ColorInput = ({ className, value, onChange }) => {
 ColorInput.propTypes = {
     className: PropTypes.string,
     value: PropTypes.string,
+    dataset: PropTypes.objectOf(String),
     onChange: PropTypes.func
 };
 
