@@ -5,16 +5,22 @@ const { useServices } = require('stremio/services');
 const useLibrary = (urlParams) => {
     const { core } = useServices();
     const [library, setLibrary] = React.useState([[], null, null]);
+    const [type, setType] = React.useState(null);
     React.useEffect(() => {
-        const state = core.getState();
-        const type = typeof urlParams.type === 'string' && urlParams.type.length > 0 ?
-            urlParams.type
-            :
-            state.library.types.length > 0 ?
-                state.library.types[0]
+        const updateType = () => {
+            const state = core.getState();
+            setType(typeof urlParams.type === 'string' ?
+                urlParams.type
                 :
-                '';
+                state.library.types.length > 0 ?
+                    state.library.types[0]
+                    :
+                    ''
+            );
+        };
+        updateType();
         const onNewState = () => {
+            updateType();
             const state = core.getState();
             const selectInput = {
                 selected: [state.library.selected],
@@ -32,17 +38,21 @@ const useLibrary = (urlParams) => {
             setLibrary([state.library.items, selectInput, error]);
         };
         core.on('NewModel', onNewState);
-        core.dispatch({
-            action: 'Load',
-            args: {
-                load: 'LibItemsByType',
-                args: type
-            }
-        });
         return () => {
             core.off('NewModel', onNewState);
         };
     }, [urlParams]);
+    React.useEffect(() => {
+        if (typeof type === 'string') {
+            core.dispatch({
+                action: 'Load',
+                args: {
+                    load: 'LibItemsByType',
+                    args: type
+                }
+            });
+        }
+    }, [type]);
     return library;
 }
 
