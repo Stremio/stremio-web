@@ -1,6 +1,7 @@
 require('./Addon');
 require('./ColorInput');
 require('./ColorPicker');
+require('./Image');
 require('./MetaItem');
 require('./ModalDialog');
 require('./Multiselect');
