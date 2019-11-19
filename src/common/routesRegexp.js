@@ -12,7 +12,7 @@ const routesRegexp = {
         urlParamsNames: ['addonTransportUrl', 'catalogId', 'type']
     },
     library: {
-        regexp: /^\/library(?:\/([^\/]*?))?\/?$/i,
+        regexp: /^\/library(?:\/([^\/]*)\/?)?$/i,
         urlParamsNames: ['type']
     },
     search: {
