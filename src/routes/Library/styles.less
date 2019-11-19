@@ -59,6 +59,45 @@
                 font-size: 2rem;
                 color: var(--color-surfacelighter);
             }
+
+            .anonymous-user-message-container {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                width: 100%;
+                height: 100%;
+
+                .login-button {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    width: 20rem;
+                    min-height: 4rem;
+                    margin-top: 2rem;
+                    padding: 0.5rem 1rem;
+                    background-color: var(--color-primarydark);
+
+                    .label {
+                        flex-grow: 0;
+                        flex-shrink: 1;
+                        flex-basis: auto;
+                        font-size: 1.1rem;
+                        font-weight: 700;
+                        color: var(--color-surfacelighter);
+                        text-align: center;
+                    }
+
+                    &:hover {
+                        background-color: var(--color-primary);
+                    }
+
+                    .label {
+                        font-size: 1.2rem;
+                    }
+                }
+            }
         }
     }
 }
