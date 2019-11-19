@@ -146,7 +146,7 @@ const Intro = ({ queryParams }) => {
                 userOp: 'Logout'
             }
         });
-        location = '#/';
+        window.location.replace('#/');
     }, [state.termsAccepted]);
     const signup = React.useCallback(() => {
         if (!state.termsAccepted) {
