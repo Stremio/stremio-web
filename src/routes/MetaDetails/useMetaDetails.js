@@ -10,7 +10,6 @@ const useMetaDetails = (urlParams) => {
     React.useEffect(() => {
         const onNewModel = () => {
             const state = core.getState();
-            console.log(state);
             const { meta_resource_ref = null, streams_resource_ref = null } = state.meta_details.selected !== null ?
                 state.meta_details.selected
                 :
