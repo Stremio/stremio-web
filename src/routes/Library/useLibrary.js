@@ -5,23 +5,19 @@ const { useServices } = require('stremio/services');
 const useLibrary = (urlParams) => {
     const { core } = useServices();
     const [library, setLibrary] = React.useState([[], null, null]);
-    const [type, setType] = React.useState(null);
     React.useEffect(() => {
-        const updateType = () => {
-            const state = core.getState();
-            setType(typeof urlParams.type === 'string' ?
-                urlParams.type
-                :
-                state.library.types.length > 0 ?
-                    state.library.types[0]
-                    :
-                    ''
-            );
-        };
-        updateType();
         const onNewState = () => {
-            updateType();
             const state = core.getState();
+            if (state.library.selected === null && state.library.types.length > 0) {
+                core.dispatch({
+                    action: 'Load',
+                    args: {
+                        load: 'LibItemsByType',
+                        args: state.library.types[0]
+                    }
+                });
+                return;
+            }
             const selectInput = {
                 selected: [state.library.selected],
                 options: state.library.types
@@ -38,21 +34,28 @@ const useLibrary = (urlParams) => {
             setLibrary([state.library.items, selectInput, error]);
         };
         core.on('NewModel', onNewState);
-        return () => {
-            core.off('NewModel', onNewState);
-        };
-    }, [urlParams]);
-    React.useEffect(() => {
-        if (typeof type === 'string') {
+        const state = core.getState();
+        if (typeof urlParams.type === 'string') {
             core.dispatch({
                 action: 'Load',
                 args: {
                     load: 'LibItemsByType',
-                    args: type
+                    args: urlParams.type
+                }
+            });
+        } else if (state.library.types.length > 0) {
+            core.dispatch({
+                action: 'Load',
+                args: {
+                    load: 'LibItemsByType',
+                    args: state.library.types[0]
                 }
             });
         }
-    }, [type]);
+        return () => {
+            core.off('NewModel', onNewState);
+        };
+    }, [urlParams]);
     return library;
 }
 
