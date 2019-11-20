@@ -10,28 +10,32 @@ const useMetaDetails = (urlParams) => {
     React.useEffect(() => {
         const onNewModel = () => {
             const state = core.getState();
-            const [metaResourceRef, streamsResourceRef] = state.meta_details.selected;
-            const metaGroups = state.meta_details.metas.map((metaGroup) => {
-                if (metaGroup.content.type === 'Ready') {
-                    metaGroup.content.content.released = new Date(metaGroup.content.content.released);
-                    metaGroup.content.content.videos = metaGroup.content.content.videos.map((video) => {
+            console.log(state);
+            const { meta_resource_ref = null, streams_resource_ref = null } = state.meta_details.selected !== null ?
+                state.meta_details.selected
+                :
+                {};
+            const meta_groups = state.meta_details.meta_groups.map((meta_group) => {
+                if (meta_group.content.type === 'Ready') {
+                    meta_group.content.content.released = new Date(meta_group.content.content.released);
+                    meta_group.content.content.videos = meta_group.content.content.videos.map((video) => {
                         video.released = new Date(video.released);
                         video.upcoming = !isNaN(video.released.getTime()) ?
                             video.released.getTime() > Date.now()
                             :
                             false;
-                        video.href = `#/metadetails/${metaGroup.content.content.type}/${metaGroup.content.content.id}/${video.id}`;
-                        // TODO add href, watched and progress
+                        video.href = `#/metadetails/${meta_group.content.content.type}/${meta_group.content.content.id}/${video.id}`;
+                        // TODO add watched and progress
                         return video;
                     });
                 }
 
-                return metaGroup;
+                return meta_group;
             });
-            const streamsGroups = state.meta_details.streams;
+            const streams_groups = state.meta_details.streams_groups;
             setMetaDetails([
-                { resourceRef: metaResourceRef, groups: metaGroups },
-                { resourceRef: streamsResourceRef, groups: streamsGroups }
+                { resourceRef: meta_resource_ref, groups: meta_groups },
+                { resourceRef: streams_resource_ref, groups: streams_groups }
             ]);
         };
         core.on('NewModel', onNewModel);
