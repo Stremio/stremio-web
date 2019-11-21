@@ -3,10 +3,14 @@ const { useServices } = require('stremio/services');
 
 const useMetaDetails = (urlParams) => {
     const { core } = useServices();
-    const [metaDetails, setMetaDetails] = React.useState([
-        { resourceRef: null, groups: [] },
-        { resourceRef: null, groups: [] }
-    ]);
+    const [metaDetails, setMetaDetails] = React.useState({
+        selected: {
+            meta_resource_ref: null,
+            streams_resource_ref: null
+        },
+        meta_groups: [],
+        streams_groups: []
+    });
     React.useEffect(() => {
         const onNewModel = () => {
             const state = core.getState();
@@ -32,10 +36,14 @@ const useMetaDetails = (urlParams) => {
                 return meta_group;
             });
             const streams_groups = state.meta_details.streams_groups;
-            setMetaDetails([
-                { resourceRef: meta_resource_ref, groups: meta_groups },
-                { resourceRef: streams_resource_ref, groups: streams_groups }
-            ]);
+            setMetaDetails({
+                selected: {
+                    meta_resource_ref,
+                    streams_resource_ref
+                },
+                meta_groups,
+                streams_groups
+            });
         };
         core.on('NewModel', onNewModel);
         core.dispatch({

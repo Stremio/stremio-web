@@ -7,9 +7,10 @@ const useSelectableGroups = require('./useSelectableGroups');
 const styles = require('./styles');
 
 const MetaDetails = ({ urlParams }) => {
-    const [meta, streams] = useMetaDetails(urlParams);
-    const [metaResourceRef, metaGroups, selectedMetaGroup] = useSelectableGroups(meta.resourceRef, meta.groups);
-    const { resourceRef: streamsResourceRef, groups: streamsGroups } = streams;
+    const metaDetails = useMetaDetails(urlParams);
+    const [metaResourceRef, metaGroups, selectedMetaGroup] = useSelectableGroups(metaDetails.selected.meta_resource_ref, metaDetails.meta_groups);
+    const streamsResourceRef = metaDetails.selected.streams_resource_ref;
+    const streamsGroups = metaDetails.streams_groups;
     const [inLibrary, , , toggleInLibrary] = useInLibrary(metaResourceRef ? metaResourceRef.id : null);
     return (
         <div className={styles['metadetails-container']}>
