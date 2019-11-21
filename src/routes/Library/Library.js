@@ -38,7 +38,7 @@ const Library = ({ urlParams, queryParams }) => {
                             :
                             error !== null ?
                                 <div className={styles['message-container']}>
-                                    No items for type {urlParams.type !== (null && '') ? urlParams.type : '"Empty"'}
+                                    {error}
                                 </div>
                                 :
                                 Array.isArray(metaItems) ?
