@@ -8,19 +8,21 @@ const useLibrary = (urlParams) => {
     React.useEffect(() => {
         const onNewState = () => {
             const state = core.getState();
-            if (state.library.selected === null && state.library.types.length > 0) {
+            if (state.library.selected === null && state.library.type_names.length > 0) {
                 core.dispatch({
                     action: 'Load',
                     args: {
-                        load: 'LibItemsByType',
-                        args: state.library.types[0]
+                        load: 'LibraryFiltered',
+                        args: {
+                            type_name: state.library.type_names[0]
+                        }
                     }
                 });
                 return;
             }
             const selectInput = {
                 selected: [state.library.selected],
-                options: state.library.types
+                options: state.library.type_names
                     .map((type) => ({
                         label: type === '' ? '"Empty"' : type,
                         value: type
@@ -30,7 +32,7 @@ const useLibrary = (urlParams) => {
                     window.location.replace(`#/library/${event.value}${search !== null ? search : ''}`);
                 }
             };
-            const error = state.ctx.library.Ready.type !== 'Ready' ? state.ctx.library.Ready.type : null;
+            const error = state.library.library_state.type !== 'Ready' ? state.library.library_state.type : null;
             setLibrary([state.library.items, selectInput, error]);
         };
         core.on('NewModel', onNewState);
@@ -39,16 +41,20 @@ const useLibrary = (urlParams) => {
             core.dispatch({
                 action: 'Load',
                 args: {
-                    load: 'LibItemsByType',
-                    args: urlParams.type
+                    load: 'LibraryFiltered',
+                    args: {
+                        type_name: urlParams.type
+                    }
                 }
             });
-        } else if (state.library.types.length > 0) {
+        } else if (state.library.type_names.length > 0) {
             core.dispatch({
                 action: 'Load',
                 args: {
-                    load: 'LibItemsByType',
-                    args: state.library.types[0]
+                    load: 'LibraryFiltered',
+                    args: {
+                        type_name: state.library.type_names[0]
+                    }
                 }
             });
         }
