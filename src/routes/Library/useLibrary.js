@@ -30,7 +30,7 @@ const useLibrary = (urlParams) => {
                     window.location.replace(`#/library/${event.value}${search !== null ? search : ''}`);
                 }
             };
-            const error = state.library.items === 0 ? state.library.items : null;
+            const error = state.ctx.library.Ready.type !== 'Ready' ? state.ctx.library.Ready.type : null;
             setLibrary([state.library.items, selectInput, error]);
         };
         core.on('NewModel', onNewState);
