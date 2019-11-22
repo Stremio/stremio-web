@@ -1,4 +1,3 @@
-
 const React = require('react');
 const { storiesOf } = require('@storybook/react');
 const { action } = require('@storybook/addon-actions');
