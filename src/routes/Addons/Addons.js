@@ -141,7 +141,6 @@ const Addons = ({ urlParams, queryParams }) => {
                                 transportUrl={selectedAddon.transportUrl}
                                 installed={installedAddon(selectedAddon)}
                                 official={selectedAddon.flags.official}
-                                className={styles['prompt']}
                                 cancel={clearSelectedAddon}
                             />
                         </ModalDialog>
@@ -153,7 +152,6 @@ const Addons = ({ urlParams, queryParams }) => {
                         <ModalDialog className={styles['share-prompt-container']} title={'Share addon'} onCloseRequest={() => setSharedAddon(null)}>
                             <SharePrompt
                                 url={sharedAddon.transportUrl}
-                                className={styles['prompt']}
                                 close={() => setSharedAddon(null)}
                             />
                         </ModalDialog>
