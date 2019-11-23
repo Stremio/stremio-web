@@ -14,10 +14,7 @@ const useMetaDetails = (urlParams) => {
     React.useEffect(() => {
         const onNewModel = () => {
             const state = core.getState();
-            const { meta_resource_ref = null, streams_resource_ref = null } = state.meta_details.selected !== null ?
-                state.meta_details.selected
-                :
-                {};
+            const selected = state.meta_details.selected;
             const meta_groups = state.meta_details.meta_groups.map((meta_group) => {
                 if (meta_group.content.type === 'Ready') {
                     meta_group.content.content.released = new Date(meta_group.content.content.released);
@@ -37,10 +34,7 @@ const useMetaDetails = (urlParams) => {
             });
             const streams_groups = state.meta_details.streams_groups;
             setMetaDetails({
-                selected: {
-                    meta_resource_ref,
-                    streams_resource_ref
-                },
+                selected,
                 meta_groups,
                 streams_groups
             });
