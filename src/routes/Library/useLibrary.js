@@ -8,7 +8,7 @@ const useLibrary = (urlParams) => {
     React.useEffect(() => {
         const onNewState = () => {
             const state = core.getState();
-            if (state.library.selected === null && state.library.type_names.length > 0) {
+            if (state.library.selected.type_name === null && state.library.type_names.length > 0) {
                 core.dispatch({
                     action: 'Load',
                     args: {
@@ -21,7 +21,7 @@ const useLibrary = (urlParams) => {
                 return;
             }
             const selectInput = {
-                selected: [state.library.selected],
+                selected: [state.library.selected.type_name],
                 options: state.library.type_names
                     .map((type) => ({
                         label: type === '' ? '"Empty"' : type,
@@ -33,7 +33,7 @@ const useLibrary = (urlParams) => {
                 }
             };
             const error = state.library.library_state.type !== 'Ready' ? state.library.library_state.type : null;
-            setLibrary([state.library.items, selectInput, error]);
+            setLibrary([state.library.lib_items, selectInput, error]);
         };
         core.on('NewModel', onNewState);
         const state = core.getState();

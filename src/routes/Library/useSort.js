@@ -26,7 +26,7 @@ const useSort = (urlParams, queryParams) => {
             onSelect: (event) => {
                 const nextQuery = new URLSearchParams({ sort: event.value });
                 const state = core.getState();
-                window.location.replace(`#/library/${state.library.selected !== null ? state.library.selected : ''}?${nextQuery}`);
+                window.location.replace(`#/library/${state.library.selected.type_name !== null ? state.library.selected.type_name : ''}?${nextQuery}`);
             }
         };
         setSort([selectInput, sortItems]);
