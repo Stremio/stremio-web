@@ -1,10 +1,9 @@
 const React = require('react');
-const UrlUtils = require('url');
 const { useServices } = require('stremio/services');
 
 const useLibrary = (urlParams) => {
     const { core } = useServices();
-    const [library, setLibrary] = React.useState([[], null, null]);
+    const [library, setLibrary] = React.useState([null, [], []]);
     React.useEffect(() => {
         const onNewState = () => {
             const state = core.getState();
@@ -20,20 +19,7 @@ const useLibrary = (urlParams) => {
                 });
                 return;
             }
-            const selectInput = {
-                selected: [state.library.selected.type_name],
-                options: state.library.type_names
-                    .map((type) => ({
-                        label: type === '' ? '"Empty"' : type,
-                        value: type
-                    })),
-                onSelect: (event) => {
-                    const { search } = UrlUtils.parse(window.location.hash.slice(1));
-                    window.location.replace(`#/library/${event.value}${search !== null ? search : ''}`);
-                }
-            };
-            const error = state.library.library_state.type !== 'Ready' ? state.library.library_state.type : null;
-            setLibrary([state.library.lib_items, selectInput, error]);
+            setLibrary([state.library.selected.type_name, state.library.type_names, state.library.lib_items]);
         };
         core.on('NewModel', onNewState);
         const state = core.getState();

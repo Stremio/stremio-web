@@ -1,4 +1,5 @@
 const React = require('react');
+const UrlUtils = require('url');
 const classnames = require('classnames');
 const { Button, Multiselect, MainNavBar, MetaItem } = require('stremio/common');
 const useUser = require('stremio/common/useUser');
@@ -8,11 +9,25 @@ const styles = require('./styles');
 
 const Library = ({ urlParams, queryParams }) => {
     const user = useUser();
-    const [metaItems, selectTypeInput, error] = useLibrary(urlParams);
+    const [selectedType, typeNames, libItems] = useLibrary(urlParams);
     const [selectSortInput, sortFunction] = useSort(urlParams, queryParams);
     const loginButtonOnClick = React.useCallback(() => {
         window.location.replace('#/intro');
     }, []);
+    const selectTypeInput = React.useMemo(() => {
+        return {
+            selected: [selectedType],
+            options: typeNames
+                .map((type) => ({
+                    label: type === '' ? '"Empty"' : type,
+                    value: type
+                })),
+            onSelect: (event) => {
+                const { search } = UrlUtils.parse(window.location.hash.slice(1));
+                window.location.replace(`#/library/${event.value}${search !== null ? search : ''}`);
+            }
+        }
+    }, [selectedType, typeNames]);
     return (
         <div className={styles['library-container']}>
             <MainNavBar className={styles['nav-bar']} />
@@ -36,27 +51,26 @@ const Library = ({ urlParams, queryParams }) => {
                                 </Button>
                             </div>
                             :
-                            error !== null ?
-                                <div className={styles['message-container']}>
-                                    {error}
-                                </div>
-                                :
-                                Array.isArray(metaItems) ?
+                            selectedType !== null ?
+                                libItems.length > 0 ?
                                     <div className={styles['meta-items-container']}>
-                                        {
-                                            metaItems
-                                                .sort(sortFunction)
-                                                .map(({ removed, temp, ...metaItem }, index) => (
-                                                    <MetaItem
-                                                        {...metaItem}
-                                                        key={index}
-                                                    />
-                                                ))}
+                                        {libItems
+                                            .sort(sortFunction)
+                                            .map(({ removed, temp, ...libItem }, index) => (
+                                                <MetaItem
+                                                    {...libItem}
+                                                    key={index}
+                                                />
+                                            ))}
                                     </div>
                                     :
                                     <div className={styles['message-container']}>
-                                        Loading
+                                        Empty library
                                     </div>
+                                :
+                                <div className={styles['message-container']}>
+                                    Loading
+                                </div>
                     }
                 </div>
             </div>
