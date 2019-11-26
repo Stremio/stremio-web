@@ -9,7 +9,7 @@ const styles = require('./styles');
 
 const Library = ({ urlParams, queryParams }) => {
     const user = useUser();
-    const [selectedType, typeNames, libItems] = useLibrary(urlParams);
+    const [libraryState, selectedType, typeNames, libItems] = useLibrary(urlParams);
     const [selectSortInput, sortFunction] = useSort(urlParams, queryParams);
     const loginButtonOnClick = React.useCallback(() => {
         window.location.replace('#/intro');
@@ -51,26 +51,36 @@ const Library = ({ urlParams, queryParams }) => {
                                 </Button>
                             </div>
                             :
-                            selectedType !== null ?
-                                libItems.length > 0 ?
-                                    <div className={styles['meta-items-container']}>
-                                        {libItems
-                                            .sort(sortFunction)
-                                            .map(({ removed, temp, ...libItem }, index) => (
-                                                <MetaItem
-                                                    {...libItem}
-                                                    key={index}
-                                                />
-                                            ))}
-                                    </div>
+                            libraryState != 'Ready' ?
+                                <div className={styles['message-container']}>
+                                    Loading
+                                </div>
+                                :
+                                typeNames.length > 0 ?
+                                    selectedType !== null ?
+                                        libItems.length > 0 ?
+                                            <div className={styles['meta-items-container']}>
+                                                {libItems
+                                                    .sort(sortFunction)
+                                                    .map(({ removed, temp, ...libItem }, index) => (
+                                                        <MetaItem
+                                                            {...libItem}
+                                                            key={index}
+                                                        />
+                                                    ))}
+                                            </div>
+                                            :
+                                            <div className={styles['message-container']}>
+                                                Empty library
+                                            </div>
+                                        :
+                                        <div className={styles['message-container']}>
+                                            Select a type, please
+                                        </div>
                                     :
                                     <div className={styles['message-container']}>
                                         Empty library
                                     </div>
-                                :
-                                <div className={styles['message-container']}>
-                                    Loading
-                                </div>
                     }
                 </div>
             </div>
