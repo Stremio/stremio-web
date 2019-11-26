@@ -9,15 +9,15 @@ const styles = require('./styles');
 
 const Library = ({ urlParams, queryParams }) => {
     const user = useUser();
-    const [libraryState, selectedType, typeNames, libItems] = useLibrary(urlParams);
+    const library = useLibrary(urlParams);
     const [selectSortInput, sortFunction] = useSort(urlParams, queryParams);
     const loginButtonOnClick = React.useCallback(() => {
         window.location.replace('#/intro');
     }, []);
     const selectTypeInput = React.useMemo(() => {
         return {
-            selected: [selectedType],
-            options: typeNames
+            selected: [library.selected.type_name],
+            options: library.type_names
                 .map((type) => ({
                     label: type === '' ? '"Empty"' : type,
                     value: type
@@ -27,7 +27,7 @@ const Library = ({ urlParams, queryParams }) => {
                 window.location.replace(`#/library/${event.value}${search !== null ? search : ''}`);
             }
         }
-    }, [selectedType, typeNames]);
+    }, [library.selected.type_name, library.type_names]);
     return (
         <div className={styles['library-container']}>
             <MainNavBar className={styles['nav-bar']} />
@@ -51,16 +51,16 @@ const Library = ({ urlParams, queryParams }) => {
                                 </Button>
                             </div>
                             :
-                            libraryState != 'Ready' ?
+                            library.library_state.type != 'Ready' ?
                                 <div className={styles['message-container']}>
                                     Loading
                                 </div>
                                 :
-                                typeNames.length > 0 ?
-                                    selectedType !== null ?
-                                        libItems.length > 0 ?
+                                library.type_names.length > 0 ?
+                                    library.selected.type_name !== null ?
+                                        library.lib_items.length > 0 ?
                                             <div className={styles['meta-items-container']}>
-                                                {libItems
+                                                {library.lib_items
                                                     .sort(sortFunction)
                                                     .map(({ removed, temp, ...libItem }, index) => (
                                                         <MetaItem
