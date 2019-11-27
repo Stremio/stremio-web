@@ -10,7 +10,7 @@ const Settings = () => {
     const [preferences, setPreferences] = useSettings();
     const [dynamicSections, setDynamicSections] = React.useState(settingsSections);
     // TODO: The Streaming section should be handled separately
-    const sections = React.useMemo(()=>Object.keys(dynamicSections)
+    const sections = React.useMemo(() => Object.keys(dynamicSections)
         .map((section) => ({
             id: section,
             inputs: dynamicSections[section],
@@ -39,7 +39,7 @@ const Settings = () => {
         if (scrollContainer.scrollTop + scrollContainer.clientHeight === scrollContainer.scrollHeight) {
             setSelectedSectionId(sections[sections.length - 1].id);
         } else {
-            for (let i = sections.length - 1;i >= 0;i--) {
+            for (let i = sections.length - 1; i >= 0; i--) {
                 if (sections[i].ref.current.offsetTop <= scrollContainer.scrollTop) {
                     setSelectedSectionId(sections[i].id);
                     break;

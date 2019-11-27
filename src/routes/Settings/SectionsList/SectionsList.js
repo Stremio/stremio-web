@@ -165,11 +165,11 @@ const SectionsList = React.forwardRef(({ className, sections, preferences, onPre
                                             <React.Fragment>
                                                 <div className={classnames(styles['input-container'], styles['select-container'])}>
                                                     <div className={styles['input-header']}>Caching</div>
-                                                    <Multiselect options={cachingOptions} selected={[preferences.streaming.cacheSize]} data-name={'cacheSize'} className={styles['dropdown']} onSelect={updateStreamingDropdown} />
+                                                    <Multiselect options={cachingOptions} selected={[preferences.streaming.cacheSize]} dataset={{ name: 'cacheSize' }} className={styles['dropdown']} onSelect={updateStreamingDropdown} />
                                                 </div>
                                                 <div className={classnames(styles['input-container'], styles['select-container'])}>
                                                     <div className={styles['input-header']}>Torrent Profile</div>
-                                                    <Multiselect options={streamingProfiles} selected={[preferences.streaming.profile]} data-name={'profile'} className={styles['dropdown']} onSelect={updateStreamingDropdown} />
+                                                    <Multiselect options={streamingProfiles} selected={[preferences.streaming.profile]} dataset={{ name: 'profile' }} className={styles['dropdown']} onSelect={updateStreamingDropdown} />
                                                 </div>
                                             </React.Fragment>
                                     }
@@ -193,7 +193,7 @@ const SectionsList = React.forwardRef(({ className, sections, preferences, onPre
                         return (
                             <div key={input.id} className={classnames(styles['input-container'], styles['select-container'])}>
                                 {input.header ? <div className={styles['input-header']}>{input.header}</div> : null}
-                                <Multiselect options={input.options} selected={[preferences[input.id]]} data-name={input.id} key={input.id} className={styles['dropdown']} onSelect={updateDropdown} />
+                                <Multiselect options={input.options} selected={[preferences[input.id]]} dataset={{ name: input.id }} key={input.id} className={styles['dropdown']} onSelect={updateDropdown} />
                             </div>
                         );
                     } else if (input.type === 'link') {
@@ -238,7 +238,7 @@ const SectionsList = React.forwardRef(({ className, sections, preferences, onPre
                         return (
                             <div key={input.id} className={classnames(styles['input-container'], styles['color-container'])}>
                                 {input.header ? <div className={styles['input-header']}>{input.header}</div> : null}
-                                <ColorInput className={styles['color-picker']} data-id={input.id} value={preferences[input.id]} onChange={colorChanged} />
+                                <ColorInput className={styles['color-picker']} dataset={{ id: input.id }} value={preferences[input.id]} onChange={colorChanged} />
                             </div>
                         );
                     } else if (input.type === 'info') {
