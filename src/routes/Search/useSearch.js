@@ -7,14 +7,14 @@ const useSearch = (queryParams) => {
     React.useEffect(() => {
         const onNewState = () => {
             const state = core.getState();
-            setSearch(state.search.groups);
+            setSearch(state.search.items_groups);
         };
         core.on('NewModel', onNewState);
         if (queryParams.has('q')) {
             core.dispatch({
                 action: 'Load',
                 args: {
-                    load: 'CatalogGrouped',
+                    load: 'CatalogsGrouped',
                     args: {
                         extra: [
                             ['search', queryParams.get('q')]
