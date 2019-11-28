@@ -1,5 +1,11 @@
+@import (reference) '~stremio/common/screen-sizes.less';
+
 :import('~stremio/common/MetaRow/styles.less') {
     meta-item: meta-item;
+}
+
+:import('~stremio/common/MetaRow/MetaRowPlaceholder/styles.less') {
+    meta-item-placeholder: meta-item;
 }
 
 .search-container {
@@ -19,7 +25,7 @@
         align-self: stretch;
         overflow-y: auto;
 
-        .search-row {
+        .search-row, .search-row-placeholder {
             margin: 4rem 2rem;
 
             &:first-child {
@@ -29,10 +35,74 @@
             &:last-child {
                 margin-bottom: 2rem;
             }
+        }
+    }
+}
 
-            .meta-item {
-                &:nth-child(n+6) {
-                    display: none;
+@media only screen and (min-width: @large) {
+    .board-container {
+        .board-content {
+            .board-row, .board-row-placeholder {
+                .meta-item, .meta-item-placeholder {
+                    &:nth-child(n+9) {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: @large) {
+    .search-container {
+        .search-content {
+            .search-row, .search-row-placeholder {
+                .meta-item, .meta-item-placeholder {
+                    &:nth-child(n+8) {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: @medium) {
+    .search-container {
+        .search-content {
+            .search-row, .search-row-placeholder {
+                .meta-item, .meta-item-placeholder {
+                    &:nth-child(n+7) {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: @small) {
+    .search-container {
+        .search-content {
+            .search-row, .search-row-placeholder {
+                .meta-item, .meta-item-placeholder {
+                    &:nth-child(n+6) {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: @xsmall) {
+    .search-container {
+        .search-content {
+            .search-row, .search-row-placeholder {
+                .meta-item, .meta-item-placeholder {
+                    &:nth-child(n+5) {
+                        display: none;
+                    }
                 }
             }
         }

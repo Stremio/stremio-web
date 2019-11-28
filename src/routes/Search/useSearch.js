@@ -1,32 +1,33 @@
 const React = require('react');
+const { useServices } = require('stremio/services');
 
-const useSearch = (query) => {
-    const items = React.useMemo(() => {
-        return [
-            {
-                title: 'demo addon',
-                items: [
-                    {
-                        id: '1',
-                        type: 'movie',
-                        name: 'Stremio demo item movie 1',
-                        poster: '/images/intro_background.jpg',
-                        logo: '/images/default_avatar.png',
-                        posterShape: 'poster'
-                    },
-                    {
-                        id: '2',
-                        type: 'movie',
-                        name: 'Stremio demo item movie 2',
-                        poster: '/images/intro_background.jpg',
-                        logo: '/images/default_avatar.png',
-                        posterShape: 'poster'
-                    },
-                ]
-            }
-        ];
-    }, [query]);
-    return items;
+const useSearch = (queryParams) => {
+    const { core } = useServices();
+    const [search, setSearch] = React.useState([]);
+    React.useEffect(() => {
+        const onNewState = () => {
+            const state = core.getState();
+            setSearch(state.search.groups);
+        };
+        core.on('NewModel', onNewState);
+        if (queryParams.has('q')) {
+            core.dispatch({
+                action: 'Load',
+                args: {
+                    load: 'CatalogGrouped',
+                    args: {
+                        extra: [
+                            ['search', queryParams.get('q')]
+                        ]
+                    }
+                }
+            });
+        }
+        return () => {
+            core.off('NewModel', onNewState);
+        };
+    }, [queryParams]);
+    return search;
 };
 
 module.exports = useSearch;
