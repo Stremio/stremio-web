@@ -36,6 +36,43 @@
                 margin-bottom: 2rem;
             }
         }
+
+        .message-container {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            justify-content: center;
+            margin: 5rem;
+
+            .message-content {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+
+                .icon {
+                    flex: none;
+                    width: 6rem;
+                    height: 6rem;
+                    margin-bottom: 2rem;
+                    fill: var(--color-surfacelighter40);
+                }
+
+                .label {
+                    flex-grow: 0;
+                    flex-shrink: 1;
+                    flex-basis: auto;
+                    font-size: 1.2rem;
+                    color: var(--color-surfacelighter40);
+                    text-align: center;
+                }
+
+                &:not(:last-child) {
+                    margin-right: 5rem;;
+                }
+            }
+        }
     }
 }
 
