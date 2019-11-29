@@ -26,8 +26,8 @@ const routerViewsConfig = [
     ],
     [
         {
-            ...routesRegexp.detail,
-            component: routes.Detail
+            ...routesRegexp.metadetails,
+            component: routes.MetaDetails
         },
         {
             ...routesRegexp.addons,

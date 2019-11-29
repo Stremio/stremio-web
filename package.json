@@ -17,6 +17,7 @@
         "events": "1.1.1",
         "hat": "0.0.3",
         "lodash.debounce": "4.0.8",
+        "lodash.isequal": "4.5.0",
         "prop-types": "15.7.2",
         "react": "16.11.0",
         "react-dom": "16.11.0",

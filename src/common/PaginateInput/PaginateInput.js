@@ -4,11 +4,9 @@ const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const Button = require('stremio/common/Button');
 const Multiselect = require('stremio/common/Multiselect');
-const useDataset = require('stremio/common/useDataset');
 const styles = require('./styles');
 
-const PaginateInput = ({ className, options, selected, onSelect, ...props }) => {
-    const dataset = useDataset(props);
+const PaginateInput = ({ className, options, selected, dataset, onSelect }) => {
     const selectedLabelText = React.useMemo(() => {
         if (Array.isArray(options)) {
             const selectedOption = options.find(({ value }) => {
@@ -53,7 +51,7 @@ const PaginateInput = ({ className, options, selected, onSelect, ...props }) => 
                 });
             }
         }
-    }, [dataset, options, selected, onSelect]);
+    }, [options, selected, dataset, onSelect]);
     const optionOnSelect = React.useCallback((event) => {
         const page = parseInt(event.value);
         if (!isNaN(page) && typeof onSelect === 'function') {
@@ -65,7 +63,7 @@ const PaginateInput = ({ className, options, selected, onSelect, ...props }) => 
                 nativeEvent: event.nativeEvent
             });
         }
-    }, [onSelect]);
+    }, [dataset, onSelect]);
     return (
         <div className={classnames(className, styles['paginate-input-container'])} title={selected}>
             <Button className={styles['prev-button-container']} data-button={'prev'} onClick={prevNextButtonOnClick}>

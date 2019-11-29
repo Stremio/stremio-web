@@ -3,15 +3,15 @@ const classnames = require('classnames');
 const styles = require('./styles');
 
 const Button = React.forwardRef(({ children, ...props }, ref) => {
-    const onKeyUp = React.useCallback((event) => {
-        if (typeof props.onKeyUp === 'function') {
-            props.onKeyUp(event);
+    const onKeyDown = React.useCallback((event) => {
+        if (typeof props.onKeyDown === 'function') {
+            props.onKeyDown(event);
         }
 
         if (event.key === 'Enter' && !event.nativeEvent.buttonClickPrevented) {
             event.currentTarget.click();
         }
-    }, [props.onKeyUp]);
+    }, [props.onKeyDown]);
     const onMouseDown = React.useCallback((event) => {
         if (typeof props.onMouseDown === 'function') {
             props.onMouseDown(event);
@@ -31,7 +31,7 @@ const Button = React.forwardRef(({ children, ...props }, ref) => {
             ...props,
             ref,
             className: classnames(props.className, styles['button-container'], { 'disabled': props.disabled }),
-            onKeyUp,
+            onKeyDown,
             onMouseDown
         },
         children

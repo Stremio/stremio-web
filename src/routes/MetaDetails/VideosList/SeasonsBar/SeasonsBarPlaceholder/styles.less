@@ -1,0 +1,35 @@
+.seasons-bar-placeholder-container {
+    display: flex;
+    flex-direction: row;
+
+    .prev-season-button, .next-season-button {
+        flex: none;
+        width: 4rem;
+        height: 4rem;
+        padding: 1rem;
+        background-color: var(--color-placeholder);
+
+        .icon {
+            display: block;
+            width: 100%;
+            height: 100%;
+            fill: var(--color-placeholder);
+        }
+    }
+
+    .seasons-popup-label-container {
+        flex: 1;
+        align-self: stretch;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 1rem;
+        background-color: var(--color-placeholder);
+
+        .seasons-popup-label {
+            width: 50%;
+            height: 1.2rem;
+            background-color: var(--color-placeholder);
+        }
+    }
+}

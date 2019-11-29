@@ -4,20 +4,19 @@ const AColorPicker = require('a-color-picker');
 const Button = require('stremio/common/Button');
 const useBinaryState = require('stremio/common/useBinaryState');
 const ModalDialog = require('stremio/common/ModalDialog');
-const useDataset = require('stremio/common/useDataset');
 const ColorPicker = require('./ColorPicker');
 
 const COLOR_FORMAT = 'hexcss4';
 
-const ColorInput = ({ className, value, onChange, ...props }) => {
-    value = AColorPicker.parseColor(value, COLOR_FORMAT);
-    const dataset = useDataset(props);
-    const [modalOpen, setModalOpen, setModalClosed] = useBinaryState(false);
-    const [tempValue, setTempValue] = React.useState(value);
+const ColorInput = ({ className, value, dataset, onChange }) => {
+    const [modalOpen, openModal, closeModal] = useBinaryState(false);
+    const [tempValue, setTempValue] = React.useState(() => {
+        return AColorPicker.parseColor(value, COLOR_FORMAT);
+    });
     const colorPickerOnInput = React.useCallback((event) => {
         setTempValue(event.value);
     }, []);
-    const submitButtonOnClick = React.useCallback((event) => {
+    const selectButtonOnClick = React.useCallback((event) => {
         if (typeof onChange === 'function') {
             onChange({
                 type: 'change',
@@ -27,17 +26,30 @@ const ColorInput = ({ className, value, onChange, ...props }) => {
                 nativeEvent: event.nativeEvent
             });
         }
-        setModalClosed();
-    }, [onChange, tempValue, dataset]);
+
+        closeModal();
+    }, [tempValue, dataset, onChange]);
+    const buttonStyle = React.useMemo(() => ({
+        backgroundColor: value
+    }), [value]);
+    const modalButtons = React.useMemo(() => ([
+        {
+            label: 'Select',
+            props: {
+                onClick: selectButtonOnClick,
+                'data-autofocus': true
+            }
+        }
+    ]), [selectButtonOnClick]);
     React.useEffect(() => {
-        setTempValue(value);
+        setTempValue(AColorPicker.parseColor(value, COLOR_FORMAT));
     }, [value, modalOpen]);
     return (
         <React.Fragment>
-            <Button title={value} {...props} style={{ ...props.style, backgroundColor: value }} className={className} onClick={setModalOpen} />
+            <Button title={value} style={buttonStyle} className={className} onClick={openModal} />
             {
                 modalOpen ?
-                    <ModalDialog title={'Choose a color:'} buttons={[{ label: 'Select', props: { onClick: submitButtonOnClick, 'data-autofocus': true } }]} onCloseRequest={setModalClosed}>
+                    <ModalDialog title={'Choose a color:'} buttons={modalButtons} onCloseRequest={closeModal}>
                         <ColorPicker value={tempValue} onInput={colorPickerOnInput} />
                     </ModalDialog>
                     :
@@ -50,6 +62,7 @@ const ColorInput = ({ className, value, onChange, ...props }) => {
 ColorInput.propTypes = {
     className: PropTypes.string,
     value: PropTypes.string,
+    dataset: PropTypes.objectOf(String),
     onChange: PropTypes.func
 };
 

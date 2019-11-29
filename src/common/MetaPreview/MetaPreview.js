@@ -1,65 +1,73 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const { Modal } = require('stremio-router');
+const UrlUtils = require('url');
 const Icon = require('stremio-icons/dom');
 const Image = require('stremio/common/Image');
+const ModalDialog = require('stremio/common/ModalDialog');
+const SharePrompt = require('stremio/common/SharePrompt');
+const routesRegexp = require('stremio/common/routesRegexp');
 const useBinaryState = require('stremio/common/useBinaryState');
 const ActionButton = require('./ActionButton');
 const MetaLinks = require('./MetaLinks');
 const MetaPreviewPlaceholder = require('./MetaPreviewPlaceholder');
 const styles = require('./styles');
 
-const MetaPreview = ({ className, compact, id, type, name, logo, background, runtime, releaseInfo, released, description, genres, writers, directors, cast, imdbId, imdbRating, trailer, share, inLibrary, toggleInLibrary }) => {
+const IMDB_LINK_CATEGORY = 'imdb';
+const SHARE_LINK_CATEGORY = 'share';
+const ALLOWED_LINK_REDIRECTS = [
+    routesRegexp.search.regexp,
+    routesRegexp.discover.regexp,
+    routesRegexp.metadetails.regexp
+];
+
+const MetaPreview = ({ className, compact, name, logo, background, runtime, releaseInfo, released, description, links, trailer, inLibrary, toggleInLibrary }) => {
     const [shareModalOpen, openShareModal, closeShareModal] = useBinaryState(false);
-    const genresLinks = React.useMemo(() => {
-        return Array.isArray(genres) ?
-            genres.filter(genre => typeof genre === 'string')
-                .map((genre) => ({
-                    label: genre,
-                    href: `#/discover/${type}//?genre=${genre}`
-                }))
+    const linksGroups = React.useMemo(() => {
+        return Array.isArray(links) ?
+            links
+                .filter((link) => {
+                    return link &&
+                        typeof link.category === 'string' &&
+                        typeof link.url === 'string';
+                })
+                .reduce((linksGroups, { category, name, url }) => {
+                    if (category === IMDB_LINK_CATEGORY) {
+                        linksGroups[category] = {
+                            label: name,
+                            href: `https://www.stremio.com/warning#${encodeURIComponent(`https://www.imdb.com/title/${url}`)}`
+                        };
+                    } else if (category === SHARE_LINK_CATEGORY) {
+                        linksGroups[category] = {
+                            label: name,
+                            href: url
+                        };
+                    } else {
+                        const { protocol, host, path, pathname } = UrlUtils.parse(url);
+                        if (protocol === 'stremio:') {
+                            if (ALLOWED_LINK_REDIRECTS.some((regexp) => pathname.match(regexp))) {
+                                linksGroups[category] = linksGroups[category] || [];
+                                linksGroups[category].push({
+                                    label: name,
+                                    href: `#${path}`
+                                });
+                            }
+                        } else {
+                            if (typeof host === 'string' && host.length > 0) {
+                                linksGroups[category] = linksGroups[category] || [];
+                                linksGroups[category].push({
+                                    label: name,
+                                    href: `https://www.stremio.com/warning#${encodeURIComponent(url)}`
+                                });
+                            }
+                        }
+                    }
+
+                    return linksGroups;
+                }, {})
             :
             [];
-    }, [type, genres]);
-    const writersLinks = React.useMemo(() => {
-        return Array.isArray(writers) ?
-            writers.filter(writer => typeof writer === 'string')
-                .map((writer) => ({
-                    label: writer,
-                    href: `#/search?q=${writer}`
-                }))
-            :
-            [];
-    }, [writers]);
-    const directorsLinks = React.useMemo(() => {
-        return Array.isArray(directors) ?
-            directors.filter(director => typeof director === 'string')
-                .map((director) => ({
-                    label: director,
-                    href: `#/search?q=${director}`
-                }))
-            :
-            [];
-    }, [directors]);
-    const castLinks = React.useMemo(() => {
-        return Array.isArray(cast) ?
-            cast.filter(name => typeof name === 'string')
-                .map((name) => ({
-                    label: name,
-                    href: `#/search?q=${name}`
-                }))
-            :
-            [];
-    }, [cast]);
-    const shareModalBackgroundOnClick = React.useCallback((event) => {
-        if (!event.nativeEvent.closeShareModalPrevented) {
-            closeShareModal();
-        }
-    }, []);
-    const shareModalContentOnClick = React.useCallback((event) => {
-        event.nativeEvent.closeShareModalPrevented = true;
-    }, []);
+    }, [links]);
     return (
         <div className={classnames(className, styles['meta-preview-container'], { [styles['compact']]: compact })}>
             {
@@ -78,18 +86,15 @@ const MetaPreview = ({ className, compact, id, type, name, logo, background, run
                 {
                     typeof logo === 'string' && logo.length > 0 ?
                         <Image
-                            key={logo}
                             className={styles['logo']}
                             src={logo}
                             alt={' '}
-                            renderFallback={
-                                compact ?
-                                    () => (
-                                        <Icon className={styles['logo-placeholder-icon']} icon={'ic_broken_link'} />
-                                    )
-                                    :
-                                    null
-                            }
+                            renderFallback={() => (
+                                <Icon
+                                    className={styles['logo-placeholder-icon']}
+                                    icon={'ic_broken_link'}
+                                />
+                            )}
                         />
                         :
                         null
@@ -116,9 +121,14 @@ const MetaPreview = ({ className, compact, id, type, name, logo, background, run
                         :
                         null
                 }
-                <div className={styles['name-container']}>
-                    {typeof name === 'string' && name.length > 0 ? name : id}
-                </div>
+                {
+                    typeof name === 'string' && name.length > 0 ?
+                        <div className={styles['name-container']}>
+                            {name}
+                        </div>
+                        :
+                        null
+                }
                 {
                     typeof description === 'string' && description.length > 0 ?
                         <div className={styles['description-container']}>{description}</div>
@@ -126,28 +136,19 @@ const MetaPreview = ({ className, compact, id, type, name, logo, background, run
                         null
                 }
                 {
-                    genresLinks.length > 0 ?
-                        <MetaLinks className={styles['meta-links']} label={'Genres'} links={genresLinks} />
-                        :
-                        null
-                }
-                {
-                    writersLinks.length > 0 ?
-                        <MetaLinks className={styles['meta-links']} label={'Writers'} links={writersLinks} />
-                        :
-                        null
-                }
-                {
-                    directorsLinks.length > 0 ?
-                        <MetaLinks className={styles['meta-links']} label={'Directors'} links={directorsLinks} />
-                        :
-                        null
-                }
-                {
-                    castLinks.length > 0 ?
-                        <MetaLinks className={styles['meta-links']} label={'Cast'} links={castLinks} />
-                        :
-                        null
+                    Object.keys(linksGroups)
+                        .filter((category) => {
+                            return category !== IMDB_LINK_CATEGORY &&
+                                category !== SHARE_LINK_CATEGORY;
+                        })
+                        .map((category, index) => (
+                            <MetaLinks
+                                key={index}
+                                className={styles['meta-links']}
+                                label={category}
+                                links={linksGroups[category]}
+                            />
+                        ))
                 }
             </div>
             <div className={styles['action-buttons-container']}>
@@ -157,32 +158,30 @@ const MetaPreview = ({ className, compact, id, type, name, logo, background, run
                             className={styles['action-button']}
                             icon={inLibrary ? 'ic_removelib' : 'ic_addlib'}
                             label={inLibrary ? 'Remove from Library' : 'Add to library'}
-                            data-id={id}
                             onClick={toggleInLibrary}
-                            {...(!compact ? { tabIndex: -1 } : null)}
-                        />
-                        :
-                        null
-                }
-                {
-                    typeof trailer === 'string' && trailer.length > 0 ?
-                        <ActionButton
-                            className={styles['action-button']}
-                            icon={'ic_movies'}
-                            label={'Trailer'}
-                            href={`#/player?stream=${trailer}`}
                             {...(compact ? { tabIndex: -1 } : null)}
                         />
                         :
                         null
                 }
                 {
-                    typeof imdbId === 'string' && imdbId.length > 0 ?
+                    typeof trailer === 'object' && trailer !== null ?
                         <ActionButton
                             className={styles['action-button']}
+                            icon={'ic_movies'}
+                            label={'Trailer'}
+                            href={`#/player?stream=${JSON.stringify(trailer)}`}
+                            {...(compact ? { tabIndex: -1 } : null)}
+                        />
+                        :
+                        null
+                }
+                {
+                    linksGroups.hasOwnProperty(IMDB_LINK_CATEGORY) ?
+                        <ActionButton
+                            {...linksGroups[IMDB_LINK_CATEGORY]}
+                            className={styles['action-button']}
                             icon={'ic_imdb'}
-                            label={typeof imdbRating === 'string' && imdbRating.length > 0 ? `${imdbRating} / 10` : null}
-                            href={`https://imdb.com/title/${imdbId}`}
                             target={'_blank'}
                             {...(compact ? { tabIndex: -1 } : null)}
                         />
@@ -190,7 +189,7 @@ const MetaPreview = ({ className, compact, id, type, name, logo, background, run
                         null
                 }
                 {
-                    !compact && typeof share === 'string' && share.length > 0 ?
+                    !compact && linksGroups.hasOwnProperty(SHARE_LINK_CATEGORY) ?
                         <React.Fragment>
                             <ActionButton
                                 className={styles['action-button']}
@@ -201,14 +200,12 @@ const MetaPreview = ({ className, compact, id, type, name, logo, background, run
                             />
                             {
                                 shareModalOpen ?
-                                    <Modal>
-                                        <div style={{ width: '100%', height: '100%' }} onClick={shareModalBackgroundOnClick}>
-                                            <div
-                                                style={{ width: '50%', height: '50%', backgroundColor: 'red' }}
-                                                onClick={shareModalContentOnClick}
-                                            />
-                                        </div>
-                                    </Modal>
+                                    <ModalDialog title={'Share'} onCloseRequest={closeShareModal}>
+                                        <SharePrompt
+                                            className={styles['share-prompt']}
+                                            url={linksGroups[SHARE_LINK_CATEGORY].href}
+                                        />
+                                    </ModalDialog>
                                     :
                                     null
                             }
@@ -226,8 +223,6 @@ MetaPreview.Placeholder = MetaPreviewPlaceholder;
 MetaPreview.propTypes = {
     className: PropTypes.string,
     compact: PropTypes.bool,
-    id: PropTypes.string,
-    type: PropTypes.string,
     name: PropTypes.string,
     logo: PropTypes.string,
     background: PropTypes.string,
@@ -235,14 +230,12 @@ MetaPreview.propTypes = {
     releaseInfo: PropTypes.string,
     released: PropTypes.instanceOf(Date),
     description: PropTypes.string,
-    genres: PropTypes.arrayOf(PropTypes.string),
-    writers: PropTypes.arrayOf(PropTypes.string),
-    directors: PropTypes.arrayOf(PropTypes.string),
-    cast: PropTypes.arrayOf(PropTypes.string),
-    imdbId: PropTypes.string,
-    imdbRating: PropTypes.string,
-    trailer: PropTypes.string,
-    share: PropTypes.string,
+    links: PropTypes.arrayOf(PropTypes.shape({
+        category: PropTypes.string,
+        name: PropTypes.string,
+        url: PropTypes.string
+    })),
+    trailer: PropTypes.object,
     inLibrary: PropTypes.bool,
     toggleInLibrary: PropTypes.func
 };

@@ -1,7 +1,8 @@
 .share-prompt-container {
+    min-width: 18rem;
+    background: var(--color-surfacelighter);
+
     .buttons-container {
-        flex: none;
-        align-self: stretch;
         display: flex;
         flex-direction: row;
 
@@ -13,24 +14,10 @@
             flex-direction: row;
             align-items: center;
             justify-content: center;
-            padding: 0.6rem 1rem;
+            padding: 1rem;
 
-            .icon {
-                flex: none;
-                width: 1.4rem;
-                height: 1.4rem;
-                margin-right: 0.6rem;
-                fill: var(--color-surfacelighter);
-            }
-
-            .label {
-                flex-grow: 0;
-                flex-shrink: 1;
-                flex-basis: auto;
-                font-size: 0.8rem;
-                font-weight: 500;
-                color: var(--color-surfacelighter);
-                text-align: center;
+            &:not(:last-child) {
+                margin-right: 1rem;
             }
 
             &:hover {
@@ -42,8 +29,21 @@
                 outline-offset: calc(-2 * var(--focus-outline-size));
             }
 
-            &:not(:last-child) {
-                margin-right: 2rem;
+            .icon {
+                flex: none;
+                height: 1.2rem;
+                margin-right: 1rem;
+                fill: var(--color-surfacelighter);
+            }
+
+            .label {
+                flex-grow: 0;
+                flex-shrink: 1;
+                flex-basis: auto;
+                max-height: 2.4em;
+                font-weight: 500;
+                text-align: center;
+                color: var(--color-surfacelighter);
             }
         }
 
@@ -59,41 +59,28 @@
     .url-container {
         display: flex;
         flex-direction: row;
-        margin-top: 2rem;
+        margin-top: 1rem;
         border: thin solid var(--color-surface);
 
-        .url-content {
+        .url-text-input {
             flex: 1;
-            min-width: 12rem;
-            padding: 0.6rem 1rem;
-            font-size: 0.9rem;
-            color: var(--color-surfacedark);
+            align-self: stretch;
+            padding: 1rem;
+            color: var(--color-backgroundlighter);
             text-align: center;
             border-right: thin solid var(--color-surface);
         }
 
         .copy-button {
-            flex-grow: 0;
-            flex-shrink: 1;
-            flex-basis: auto;
+            flex: none;
+            align-self: stretch;
             display: flex;
             flex-direction: row;
             align-items: center;
             justify-content: center;
-            padding: 0.6rem 1rem;
+            width: 8rem;
+            padding: 0.5rem;
             background-color: var(--color-surface);
-
-            .icon {
-                flex: none;
-                width: 1.4rem;
-                height: 1.4rem;
-                margin-right: 0.6rem;
-                fill: var(--color-surfacedarker);
-            }
-
-            .label {
-                color: var(--color-surfacedarker);
-            }
 
             &:hover {
                 filter: brightness(1.2);
@@ -102,6 +89,22 @@
             &:focus {
                 outline: calc(1.5 * var(--focus-outline-size)) solid var(--color-surfacelighter);
                 outline-offset: calc(-1.5 * var(--focus-outline-size));
+            }
+
+            .icon {
+                flex: none;
+                width: 1.2rem;
+                height: 1.2rem;
+                margin-right: 0.5rem;
+                fill: var(--color-surfacedarker);
+            }
+
+            .label {
+                flex-grow: 0;
+                flex-shrink: 1;
+                flex-basis: auto;
+                max-height: 2.4em;
+                color: var(--color-surfacedarker);
             }
         }
     }

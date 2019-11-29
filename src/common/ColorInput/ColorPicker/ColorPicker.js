@@ -8,12 +8,11 @@ const COLOR_FORMAT = 'hexcss4';
 
 // TODO implement custom picker which is keyboard accessible
 const ColorPicker = ({ className, value, onInput }) => {
-    value = AColorPicker.parseColor(value, COLOR_FORMAT);
     const pickerRef = React.useRef(null);
     const pickerElementRef = React.useRef(null);
     React.useEffect(() => {
         pickerRef.current = AColorPicker.createPicker(pickerElementRef.current, {
-            color: value,
+            color: AColorPicker.parseColor(value, COLOR_FORMAT),
             showHSL: false,
             showHEX: false,
             showRGB: false,
@@ -25,11 +24,11 @@ const ColorPicker = ({ className, value, onInput }) => {
         }
     }, []);
     React.useEffect(() => {
-        pickerRef.current.on('change', (picker, color) => {
+        pickerRef.current.on('change', (picker, value) => {
             if (typeof onInput === 'function') {
                 onInput({
                     type: 'input',
-                    value: AColorPicker.parseColor(color, COLOR_FORMAT)
+                    value: AColorPicker.parseColor(value, COLOR_FORMAT)
                 });
             }
         });
@@ -38,8 +37,9 @@ const ColorPicker = ({ className, value, onInput }) => {
         };
     }, [onInput]);
     React.useEffect(() => {
-        if (AColorPicker.parseColor(pickerRef.current.color, COLOR_FORMAT) !== value) {
-            pickerRef.current.color = value;
+        const nextValue = AColorPicker.parseColor(value, COLOR_FORMAT);
+        if (AColorPicker.parseColor(pickerRef.current.color, COLOR_FORMAT) !== nextValue) {
+            pickerRef.current.color = nextValue;
         }
     }, [value]);
     return (
