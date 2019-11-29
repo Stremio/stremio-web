@@ -7,7 +7,7 @@ const useSearch = (queryParams) => {
     React.useEffect(() => {
         const onNewState = () => {
             const state = core.getState();
-            setSearch(state.search.items_groups);
+            setSearch(state.search);
         };
         core.on('NewModel', onNewState);
         if (queryParams.has('q')) {
