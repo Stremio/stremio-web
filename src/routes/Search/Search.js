@@ -11,18 +11,7 @@ const Search = ({ queryParams }) => {
             <MainNavBar className={styles['nav-bar']} />
             <div className={styles['search-content']}>
                 {
-                    !queryParams.has('q') || queryParams.get('q').length === 0 ?
-                        <div className={styles['message-container']}>
-                            <div className={styles['message-content']}>
-                                <Icon className={styles['icon']} icon={'ic_movies'} />
-                                <div className={styles['label']}>Search for movies, series, YouTube and TV channels</div>
-                            </div>
-                            <div className={styles['message-content']}>
-                                <Icon className={styles['icon']} icon={'ic_actor'} />
-                                <div className={styles['label']}>Search for actors, directors and writers</div>
-                            </div>
-                        </div>
-                        :
+                    search.selected && search.selected[0][1].length > 0 ?
                         search.items_groups && search.items_groups.length > 0 && search.items_groups.some(group => group.content.type !== 'Err') ?
                             search.items_groups.map(({ request, content }, index) => {
                                 switch (content.type) {
@@ -60,6 +49,17 @@ const Search = ({ queryParams }) => {
                                     <div className={styles['label']}>No metadata was found</div>
                                 </div>
                             </div>
+                        :
+                        <div className={styles['message-container']}>
+                            <div className={styles['message-content']}>
+                                <Icon className={styles['icon']} icon={'ic_movies'} />
+                                <div className={styles['label']}>Search for movies, series, YouTube and TV channels</div>
+                            </div>
+                            <div className={styles['message-content']}>
+                                <Icon className={styles['icon']} icon={'ic_actor'} />
+                                <div className={styles['label']}>Search for actors, directors and writers</div>
+                            </div>
+                        </div>
                 }
             </div>
         </div>
