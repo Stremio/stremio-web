@@ -1,8 +1,6 @@
 const React = require('react');
 const { useServices } = require('stremio/services');
 
-const CATALOG_PAGE_SIZE = 100;
-
 const mapDiscoverState = (state) => {
     const selectable = state.discover.selectable;
     const catalog_resource = state.discover.catalog_resource !== null && state.discover.catalog_resource.content.type === 'Ready' ?
@@ -21,17 +19,6 @@ const mapDiscoverState = (state) => {
     return { selectable, catalog_resource };
 };
 
-const queryParamsWithValidExtra = (queryParams) => {
-    queryParams = new URLSearchParams(queryParams);
-    if (queryParams.has('skip')) {
-        const skip = parseInt(queryParams.getAll('skip')[0]);
-        if (isFinite(skip)) {
-            queryParams.set('skip', Math.floor(skip / CATALOG_PAGE_SIZE) * CATALOG_PAGE_SIZE);
-        }
-    }
-    return queryParams;
-};
-
 const useDiscover = (urlParams, queryParams) => {
     const { core } = useServices();
     const [discover, setDiscover] = React.useState(() => ({
@@ -45,7 +32,6 @@ const useDiscover = (urlParams, queryParams) => {
         catalog_resource: null
     }));
     React.useLayoutEffect(() => {
-        queryParams = queryParamsWithValidExtra(queryParams);
         const onNewModel = () => {
             const state = core.getState();
             if (state.discover.catalog_resource === null && state.discover.selectable.types.length > 0) {
