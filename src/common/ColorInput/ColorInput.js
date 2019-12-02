@@ -8,59 +8,73 @@ const ColorPicker = require('./ColorPicker');
 
 const COLOR_FORMAT = 'hexcss4';
 
-const ColorInput = ({ className, value, dataset, onChange }) => {
+const ColorInput = ({ className, value, dataset, onChange, ...props }) => {
     const [modalOpen, openModal, closeModal] = useBinaryState(false);
     const [tempValue, setTempValue] = React.useState(() => {
         return AColorPicker.parseColor(value, COLOR_FORMAT);
     });
-    const colorPickerOnInput = React.useCallback((event) => {
-        setTempValue(event.value);
-    }, []);
-    const selectButtonOnClick = React.useCallback((event) => {
-        if (typeof onChange === 'function') {
-            onChange({
-                type: 'change',
-                value: tempValue,
-                dataset: dataset,
-                reactEvent: event,
-                nativeEvent: event.nativeEvent
-            });
+    const labelButtonStyle = React.useMemo(() => ({
+        ...props.style,
+        backgroundColor: value
+    }), [props.style, value]);
+    const labelButtonOnClick = React.useCallback((event) => {
+        if (typeof props.onClick === 'function') {
+            props.onClick(event);
         }
 
-        closeModal();
-    }, [tempValue, dataset, onChange]);
-    const buttonStyle = React.useMemo(() => ({
-        backgroundColor: value
-    }), [value]);
-    const modalButtons = React.useMemo(() => ([
-        {
-            label: 'Select',
-            props: {
-                onClick: selectButtonOnClick,
-                'data-autofocus': true
-            }
+        if (!event.nativeEvent.openModalPrevented) {
+            openModal();
         }
-    ]), [selectButtonOnClick]);
+    }, [props.onClick]);
+    const modalDialogOnClick = React.useCallback((event) => {
+        event.nativeEvent.openModalPrevented = true;
+    }, []);
+    const modalButtons = React.useMemo(() => {
+        const selectButtonOnClick = (event) => {
+            if (typeof onChange === 'function') {
+                onChange({
+                    type: 'change',
+                    value: tempValue,
+                    dataset: dataset,
+                    reactEvent: event,
+                    nativeEvent: event.nativeEvent
+                });
+            }
+
+            closeModal();
+        };
+
+        return [
+            {
+                label: 'Select',
+                props: {
+                    onClick: selectButtonOnClick,
+                    'data-autofocus': true
+                }
+            }
+        ];
+    }, [tempValue, dataset, onChange]);
+    const colorPickerOnInput = React.useCallback((event) => {
+        setTempValue(AColorPicker.parseColor(event.value, COLOR_FORMAT));
+    }, []);
     React.useEffect(() => {
         setTempValue(AColorPicker.parseColor(value, COLOR_FORMAT));
     }, [value, modalOpen]);
     return (
-        <React.Fragment>
-            <Button title={value} style={buttonStyle} className={className} onClick={openModal} />
+        <Button title={value} {...props} style={labelButtonStyle} className={className} onClick={labelButtonOnClick}>
             {
                 modalOpen ?
-                    <ModalDialog title={'Choose a color:'} buttons={modalButtons} onCloseRequest={closeModal}>
+                    <ModalDialog title={'Choose a color:'} buttons={modalButtons} onCloseRequest={closeModal} onClick={modalDialogOnClick}>
                         <ColorPicker value={tempValue} onInput={colorPickerOnInput} />
                     </ModalDialog>
                     :
                     null
             }
-        </React.Fragment>
+        </Button>
     );
 };
 
 ColorInput.propTypes = {
-    className: PropTypes.string,
     value: PropTypes.string,
     dataset: PropTypes.objectOf(String),
     onChange: PropTypes.func

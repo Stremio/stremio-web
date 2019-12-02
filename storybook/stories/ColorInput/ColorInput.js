@@ -10,10 +10,16 @@ storiesOf('ColorInput', module).add('ColorInput', () => {
         setValue(event.value);
         action('onChange')(event);
     }, []);
+    const domEventHandler = React.useCallback((event) => {
+        action('domEventHandler')(event.currentTarget.dataset);
+    }, []);
     return (
         <ColorInput
             className={styles['color-input']}
             value={value}
+            dataset={{ 'dataset-prop': 'dataset-value' }}
+            data-prop={'data-value'}
+            onClick={domEventHandler}
             onChange={onChange}
         />
     );
