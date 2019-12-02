@@ -7,7 +7,7 @@ const MetaItem = require('stremio/common/MetaItem');
 const MetaRowPlaceholder = require('./MetaRowPlaceholder');
 const styles = require('./styles');
 
-const MetaRow = ({ className, title, message, items, maximumItemsCount, itemMenuOptions, onSeeAllButtonClicked }) => {
+const MetaRow = ({ className, title, message, items, maximumItemsCount, itemMenuOptions, catalogHref }) => {
     maximumItemsCount = maximumItemsCount !== null && isFinite(maximumItemsCount) ? maximumItemsCount : 20;
     items = Array.isArray(items) ? items.slice(0, maximumItemsCount) : [];
     return (
@@ -38,7 +38,7 @@ const MetaRow = ({ className, title, message, items, maximumItemsCount, itemMenu
                                 <div key={index} className={classnames(styles['meta-item'], styles['poster-shape-poster'])} />
                             ))}
                         </div>
-                        <Button className={styles['see-all-container']} title={'SEE ALL'} onClick={onSeeAllButtonClicked}>
+                        <Button className={styles['see-all-container']} title={'SEE ALL'} href={catalogHref}>
                             <div className={styles['label']}>SEE ALL</div>
                             <Icon className={styles['icon']} icon={'ic_arrow_thin_right'} />
                         </Button>
@@ -59,7 +59,7 @@ MetaRow.propTypes = {
     })),
     maximumItemsCount: PropTypes.number,
     itemMenuOptions: PropTypes.any,
-    onSeeAllButtonClicked: PropTypes.func
+    catalogHref: PropTypes.string
 };
 
 module.exports = MetaRow;
