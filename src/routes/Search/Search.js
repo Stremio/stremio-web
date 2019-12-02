@@ -6,12 +6,15 @@ const styles = require('./styles');
 
 const Search = ({ queryParams }) => {
     const search = useSearch(queryParams);
+    const searchSelected = React.useMemo(() => {
+        return search.selected.some(([name, value]) => name === 'search' && value.length > 0)
+    }, [search.selected]);
     return (
         <div className={styles['search-container']}>
             <MainNavBar className={styles['nav-bar']} />
             <div className={styles['search-content']}>
                 {
-                    search.selected ?
+                    searchSelected ?
                         search.items_groups && search.items_groups.length > 0 ?
                             search.items_groups.some(group => group.content.type !== 'Err') ?
                                 search.items_groups.map(({ href, request, content }, index) => {
