@@ -11,12 +11,14 @@ const ModalDialog = ({ className, title, buttons, children, dataset, onCloseRequ
         event.nativeEvent.closeModalDialogPrevented = true;
     }, []);
     const closeButtonOnClick = React.useCallback((event) => {
-        onCloseRequest({
-            type: 'close',
-            dataset: dataset,
-            reactEvent: event,
-            nativeEvent: event.nativeEvent
-        });
+        if (typeof onCloseRequest === 'function') {
+            onCloseRequest({
+                type: 'close',
+                dataset: dataset,
+                reactEvent: event,
+                nativeEvent: event.nativeEvent
+            });
+        }
     }, [dataset, onCloseRequest]);
     React.useEffect(() => {
         const onCloseEvent = (event) => {
