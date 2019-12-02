@@ -24,14 +24,14 @@ const useSearch = (queryParams) => {
             setSearch(search);
         };
         core.on('NewModel', onNewState);
-        if (queryParams.has('q')) {
+        if (queryParams.has('search')) {
             core.dispatch({
                 action: 'Load',
                 args: {
                     load: 'CatalogsGrouped',
                     args: {
                         extra: [
-                            ['search', queryParams.get('q')]
+                            ['search', queryParams.get('search')]
                         ]
                     }
                 }
