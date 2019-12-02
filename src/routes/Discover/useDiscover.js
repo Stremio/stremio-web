@@ -34,11 +34,16 @@ const queryParamsWithValidExtra = (queryParams) => {
 
 const useDiscover = (urlParams, queryParams) => {
     const { core } = useServices();
-    const [discover, setDiscover] = React.useState(() => {
-        const state = core.getState();
-        const discover = mapDiscoverState(state);
-        return discover;
-    });
+    const [discover, setDiscover] = React.useState(() => ({
+        selectable: {
+            types: [],
+            catalogs: [],
+            extra: [],
+            has_next_page: false,
+            has_prev_page: false
+        },
+        catalog_resource: null
+    }));
     React.useLayoutEffect(() => {
         queryParams = queryParamsWithValidExtra(queryParams);
         const onNewModel = () => {
