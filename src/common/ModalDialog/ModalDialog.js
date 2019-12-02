@@ -6,22 +6,24 @@ const Icon = require('stremio-icons/dom');
 const { Modal } = require('stremio-router');
 const styles = require('./styles');
 
-const ModalDialog = ({ className, title, buttons, children, onCloseRequest }) => {
+const ModalDialog = ({ className, title, buttons, children, dataset, onCloseRequest, ...props }) => {
     const onModalDialogContainerMouseDown = React.useCallback((event) => {
         event.nativeEvent.closeModalDialogPrevented = true;
     }, []);
     const closeButtonOnClick = React.useCallback((event) => {
         onCloseRequest({
             type: 'close',
+            dataset: dataset,
             reactEvent: event,
             nativeEvent: event.nativeEvent
         });
-    }, [onCloseRequest]);
+    }, [dataset, onCloseRequest]);
     React.useEffect(() => {
         const onCloseEvent = (event) => {
             if (!event.closeModalDialogPrevented && typeof onCloseRequest === 'function') {
                 const closeEvent = {
                     type: 'close',
+                    dataset: dataset,
                     nativeEvent: event
                 };
                 switch (event.type) {
@@ -49,9 +51,9 @@ const ModalDialog = ({ className, title, buttons, children, onCloseRequest }) =>
             window.removeEventListener('keydown', onCloseEvent);
             window.removeEventListener('mousedown', onCloseEvent);
         };
-    }, [onCloseRequest]);
+    }, [dataset, onCloseRequest]);
     return (
-        <Modal className={classnames(className, styles['modal-container'])}>
+        <Modal {...props} className={classnames(className, styles['modal-container'])}>
             <div className={styles['modal-dialog-container']} onMouseDown={onModalDialogContainerMouseDown}>
                 <div className={styles['header-container']}>
                     {
@@ -108,6 +110,7 @@ ModalDialog.propTypes = {
         PropTypes.arrayOf(PropTypes.node),
         PropTypes.node
     ]),
+    dataset: PropTypes.objectOf(String),
     onCloseRequest: PropTypes.func
 };
 
