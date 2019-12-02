@@ -3,90 +3,29 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const Button = require('stremio/common/Button');
-const Multiselect = require('stremio/common/Multiselect');
 const styles = require('./styles');
 
-const PaginateInput = ({ className, options, selected, dataset, onSelect }) => {
-    const selectedLabelText = React.useMemo(() => {
-        if (Array.isArray(options)) {
-            const selectedOption = options.find(({ value }) => {
-                return selected === value;
-            });
-            if (selectedOption && typeof selectedOption.label === 'string') {
-                return selectedOption.label;
-            }
-        }
-
-        return selected;
-    }, [options, selected]);
+const PaginateInput = ({ className, label, dataset, onSelect, ...props }) => {
     const prevNextButtonOnClick = React.useCallback((event) => {
         if (typeof onSelect === 'function') {
-            if (Array.isArray(options) && options.length > 0) {
-                const selectedValueIndex = options.findIndex(({ value }) => {
-                    return selected === value;
-                });
-                const nextSelectedIndex = event.currentTarget.dataset.button === 'next' ?
-                    Math.min(selectedValueIndex + 1, options.length - 1)
-                    :
-                    Math.max(selectedValueIndex - 1, 0);
-                const nextSelectedValue = options[nextSelectedIndex].value;
-                onSelect({
-                    type: 'select',
-                    value: nextSelectedValue,
-                    dataset: dataset,
-                    reactEvent: event,
-                    nativeEvent: event.nativeEvent
-                });
-            } else {
-                const nextSelectedValue = event.currentTarget.dataset.button === 'next' ?
-                    selected + 1
-                    :
-                    Math.max(selected - 1, 1);
-                onSelect({
-                    type: 'select',
-                    value: nextSelectedValue,
-                    dataset: dataset,
-                    reactEvent: event,
-                    nativeEvent: event.nativeEvent
-                });
-            }
-        }
-    }, [options, selected, dataset, onSelect]);
-    const optionOnSelect = React.useCallback((event) => {
-        const page = parseInt(event.value);
-        if (!isNaN(page) && typeof onSelect === 'function') {
             onSelect({
-                type: 'select',
-                value: page,
+                type: 'change-page',
+                value: event.currentTarget.dataset.value,
                 dataset: dataset,
-                reactEvent: event.reactEvent,
+                reactEvent: event,
                 nativeEvent: event.nativeEvent
             });
         }
     }, [dataset, onSelect]);
     return (
-        <div className={classnames(className, styles['paginate-input-container'])} title={selected}>
-            <Button className={styles['prev-button-container']} data-button={'prev'} onClick={prevNextButtonOnClick}>
+        <div {...props} className={classnames(className, styles['paginate-input-container'])} >
+            <Button className={styles['prev-button-container']} title={'Previous page'} data-value={'prev'} onClick={prevNextButtonOnClick}>
                 <Icon className={styles['icon']} icon={'ic_arrow_left'} />
             </Button>
-            <Multiselect
-                className={styles['multiselect-label-container']}
-                renderLabelContent={() => (
-                    <div className={styles['multiselect-label']}>{selectedLabelText}</div>
-                )}
-                options={
-                    Array.isArray(options) ?
-                        options.map(({ value, label }) => ({
-                            value: String(value),
-                            label
-                        }))
-                        :
-                        null
-                }
-                disabled={!Array.isArray(options) || options.length === 0}
-                onSelect={optionOnSelect}
-            />
-            <Button className={styles['next-button-container']} data-button={'next'} onClick={prevNextButtonOnClick}>
+            <div className={styles['label-container']} title={label}>
+                <div className={styles['label']}>{label}</div>
+            </div>
+            <Button className={styles['next-button-container']} title={'Next page'} data-value={'next'} onClick={prevNextButtonOnClick}>
                 <Icon className={styles['icon']} icon={'ic_arrow_right'} />
             </Button>
         </div>
@@ -95,11 +34,7 @@ const PaginateInput = ({ className, options, selected, dataset, onSelect }) => {
 
 PaginateInput.propTypes = {
     className: PropTypes.string,
-    options: PropTypes.arrayOf(PropTypes.shape({
-        value: PropTypes.number.isRequired,
-        label: PropTypes.string
-    })),
-    selected: PropTypes.number.isRequired,
+    label: PropTypes.string,
     onSelect: PropTypes.func
 };
 

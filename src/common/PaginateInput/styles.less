@@ -1,7 +1,6 @@
 .paginate-input-container {
     display: flex;
     flex-direction: row;
-    overflow: visible;
 
     .prev-button-container, .next-button-container {
         flex: none;
@@ -17,15 +16,18 @@
         }
     }
 
-    .multiselect-label-container {
+    .label-container {
         flex: 1;
         align-self: stretch;
         display: flex;
         align-items: center;
         justify-content: center;
 
-        .multiselect-label {
+        .label {
             flex: none;
+            max-width: 3rem;
+            white-space: nowrap;
+            text-overflow: ellipsis;
             color: var(--color-surfacelighter);
         }
     }
