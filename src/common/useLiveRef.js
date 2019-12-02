@@ -2,7 +2,7 @@ const React = require('react');
 
 const useLiveRef = (value, dependencies) => {
     const ref = React.useRef(value);
-    React.useEffect(() => {
+    React.useLayoutEffect(() => {
         ref.current = value;
     }, dependencies);
     return ref;
