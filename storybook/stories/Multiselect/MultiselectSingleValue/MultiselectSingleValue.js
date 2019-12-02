@@ -10,6 +10,9 @@ storiesOf('Multiselect', module).add('MultiselectSingleValue', () => {
         action('onSelect')(event);
         setSelected([event.value]);
     }, []);
+    const domEventHandler = React.useCallback((event) => {
+        action('domEventHandler')(event.currentTarget.dataset);
+    }, []);
     return (
         <Multiselect
             className={styles['label-container']}
@@ -28,6 +31,8 @@ storiesOf('Multiselect', module).add('MultiselectSingleValue', () => {
             onOpen={action('onOpen')}
             onClose={action('onClose')}
             onSelect={onSelect}
+            data-prop={'data-value'}
+            onClick={domEventHandler}
         />
     );
 });
