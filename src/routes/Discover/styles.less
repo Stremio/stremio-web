@@ -4,10 +4,9 @@
     multiselect-menu-container: menu-container;
 }
 
-:import('~stremio/common/PaginateInput/styles.less') {
-    paginate-prev-button-container: prev-button-container;
-    paginate-next-button-container: next-button-container;
-    paginate-multiselect-label: multiselect-label;
+:import('~stremio/common/PaginationInput/styles.less') {
+    pagination-prev-button-container: prev-button-container;
+    pagination-next-button-container: next-button-container;
 }
 
 .discover-container {
@@ -27,31 +26,31 @@
         align-self: stretch;
         display: grid;
         grid-template-columns: 1fr 28rem;
-        grid-template-rows: 7rem 1fr;
+        grid-template-rows: auto 1fr;
         grid-template-areas:
-            "controls-area meta-preview-area"
+            "selectable-inputs-area meta-preview-area"
             "catalog-content-area meta-preview-area";
 
-        .controls-container {
-            grid-area: controls-area;
+        .selectable-inputs-container {
+            --selectable-input-height: 3rem;
+            grid-area: selectable-inputs-area;
             display: flex;
             flex-direction: row;
-            margin: 2rem 0;
-            padding: 0 2rem;
+            padding: 2rem;
             overflow: visible;
 
             .select-input-container {
                 flex-grow: 0;
                 flex-shrink: 1;
                 flex-basis: 15rem;
-                height: 3rem;
-                margin-right: 1rem;
+                height: var(--selectable-input-height);
+                margin-right: 2rem;
 
                 &:nth-child(n+4) {
                     display: none;
 
                     &~.filter-container {
-                        display: block;
+                        display: flex;
                     }
                 }
 
@@ -62,21 +61,22 @@
             }
 
             .filter-container {
-                display: none;
                 flex: none;
-                width: 3rem;
-                height: 3rem;
+                display: none;
+                align-items: center;
+                justify-content: center;
+                width: var(--selectable-input-height);
+                height: var(--selectable-input-height);
                 background-color: var(--color-backgroundlighter);
 
                 &:not(:nth-last-child(2)) {
-                    margin-right: 1rem;
+                    margin-right: 2rem;
                 }
 
                 .filter-icon {
-                    display: block;
+                    flex: none;
                     width: 1.2rem;
                     height: 1.2rem;
-                    margin: 0.9rem;
                     fill: var(--color-surfacelighter);
                 }
             }
@@ -85,33 +85,28 @@
                 flex: 1;
             }
 
-            .paginate-input-container {
+            .pagination-input-container {
                 flex: none;
+                height: var(--selectable-input-height);
                 background-color: var(--color-backgroundlighter);
 
-                .paginate-prev-button-container, .paginate-next-button-container {
-                    width: 3rem;
-                    height: 3rem;
-                }
-
-                .paginate-multiselect-label {
-                    max-width: 3rem;
-                    white-space: nowrap;
-                    text-overflow: ellipsis;
+                .pagination-prev-button-container, .pagination-next-button-container {
+                    width: var(--selectable-input-height);
+                    height: var(--selectable-input-height);
                 }
             }
         }
 
         .catalog-content-container {
             grid-area: catalog-content-area;
-            margin-right: 2rem;
 
             .meta-items-container {
                 display: grid;
                 max-height: 100%;
                 grid-auto-rows: max-content;
-                grid-gap: 1.5rem;
                 align-items: center;
+                grid-gap: 2rem;
+                margin-right: 2rem;
                 padding: 0 2rem;
                 overflow-y: auto;
 
@@ -205,7 +200,7 @@
             grid-template-columns: 1fr;
             grid-template-rows: fit-content(19rem) 1fr;
             grid-template-areas:
-                "controls-area"
+                "selectable-inputs-area"
                 "catalog-content-area";
 
             .catalog-content-container {

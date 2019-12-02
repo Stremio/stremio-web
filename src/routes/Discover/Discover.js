@@ -2,37 +2,47 @@ const React = require('react');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const { Modal } = require('stremio-router');
-const { Button, MainNavBar, MetaItem, MetaPreview, Multiselect, PaginateInput, useBinaryState } = require('stremio/common');
+const { Button, MainNavBar, MetaItem, MetaPreview, Multiselect, PaginationInput, useBinaryState } = require('stremio/common');
 const useDiscover = require('./useDiscover');
+const useSelectableInputs = require('./useSelectableInputs');
 const styles = require('./styles');
 
+const getMetaItemAtIndex = (catalog_resource, index) => {
+    return isFinite(index) &&
+        catalog_resource !== null &&
+        catalog_resource.content.type === 'Ready' &&
+        catalog_resource.content.content[index] ?
+        catalog_resource.content.content[index]
+        :
+        null;
+};
+
 const Discover = ({ urlParams, queryParams }) => {
-    const [selectInputs, paginateInput, metaItems, error] = useDiscover(urlParams, queryParams);
-    const [selectedMetaItem, setSelectedMetaItem] = React.useState(null);
-    const [filtersModalOpen, openFiltersModal, closeFiltersModal] = useBinaryState(false);
+    const discover = useDiscover(urlParams, queryParams);
+    const [selectInputs, paginationInput] = useSelectableInputs(discover);
+    const [inputsModalOpen, openInputsModal, closeInputsModal] = useBinaryState(false);
+    const [selectedMetaItem, setSelectedMetaItem] = React.useState(() => {
+        return getMetaItemAtIndex(discover.catalog_resource, 0);
+    });
     const metaItemsOnMouseDownCapture = React.useCallback((event) => {
         event.nativeEvent.buttonBlurPrevented = true;
     }, []);
     const metaItemsOnFocusCapture = React.useCallback((event) => {
-        const metaItem = metaItems.find(({ id }) => {
-            return id === event.target.dataset.id;
-        });
-        if (metaItem) {
-            setSelectedMetaItem(metaItem);
-        }
-    }, [metaItems]);
-    React.useEffect(() => {
-        const metaItem = Array.isArray(metaItems) && metaItems.length > 0 ? metaItems[0] : null;
+        const metaItem = getMetaItemAtIndex(discover.catalog_resource, event.target.dataset.index);
         setSelectedMetaItem(metaItem);
-    }, [metaItems]);
-    React.useEffect(() => {
-        closeFiltersModal();
+    }, [discover.catalog_resource]);
+    React.useLayoutEffect(() => {
+        const metaItem = getMetaItemAtIndex(discover.catalog_resource, 0);
+        setSelectedMetaItem(metaItem);
+    }, [discover.catalog_resource]);
+    React.useLayoutEffect(() => {
+        closeInputsModal();
     }, [urlParams, queryParams]);
     return (
         <div className={styles['discover-container']}>
             <MainNavBar className={styles['nav-bar']} />
             <div className={styles['discover-content']}>
-                <div className={styles['controls-container']}>
+                <div className={styles['selectable-inputs-container']}>
                     {selectInputs.map((selectInput, index) => (
                         <Multiselect
                             {...selectInput}
@@ -40,15 +50,15 @@ const Discover = ({ urlParams, queryParams }) => {
                             className={styles['select-input-container']}
                         />
                     ))}
-                    <Button className={styles['filter-container']} onClick={openFiltersModal}>
+                    <Button className={styles['filter-container']} title={'More filters'} onClick={openInputsModal}>
                         <Icon className={styles['filter-icon']} icon={'ic_filter'} />
                     </Button>
                     <div className={styles['spacing']} />
                     {
-                        paginateInput !== null ?
-                            <PaginateInput
-                                {...paginateInput}
-                                className={styles['paginate-input-container']}
+                        paginationInput !== null ?
+                            <PaginationInput
+                                {...paginationInput}
+                                className={styles['pagination-input-container']}
                             />
                             :
                             null
@@ -56,29 +66,39 @@ const Discover = ({ urlParams, queryParams }) => {
                 </div>
                 <div className={styles['catalog-content-container']}>
                     {
-                        error !== null ?
+                        discover.selectable.types.length === 0 && discover.catalog_resource === null ?
                             <div className={styles['message-container']}>
-                                {error.type}{error.type === 'Other' ? ` - ${error.content}` : null}
+                                No catalogs
                             </div>
                             :
-                            Array.isArray(metaItems) ?
-                                <div className={styles['meta-items-container']} onMouseDownCapture={metaItemsOnMouseDownCapture} onFocusCapture={metaItemsOnFocusCapture}>
-                                    {metaItems.map(({ id, type, name, poster, posterShape }, index) => (
-                                        <MetaItem
-                                            key={index}
-                                            className={classnames(styles['meta-item'], { 'selected': selectedMetaItem !== null && selectedMetaItem.id === id })}
-                                            type={type}
-                                            name={name}
-                                            poster={poster}
-                                            posterShape={posterShape}
-                                            data-id={id}
-                                        />
-                                    ))}
+                            discover.catalog_resource === null ?
+                                <div className={styles['message-container']}>
+                                    No select
                                 </div>
                                 :
-                                <div className={styles['message-container']}>
-                                    Loading
-                                </div>
+                                discover.catalog_resource.content.type === 'Err' ?
+                                    <div className={styles['message-container']}>
+                                        Catalog Error
+                                    </div>
+                                    :
+                                    discover.catalog_resource.content.type === 'Loading' ?
+                                        <div className={styles['message-container']}>
+                                            Loading
+                                        </div>
+                                        :
+                                        <div className={styles['meta-items-container']} onMouseDownCapture={metaItemsOnMouseDownCapture} onFocusCapture={metaItemsOnFocusCapture}>
+                                            {discover.catalog_resource.content.content.map((metaItem, index) => (
+                                                <MetaItem
+                                                    key={index}
+                                                    className={classnames(styles['meta-item'], { 'selected': selectedMetaItem === metaItem })}
+                                                    type={metaItem.type}
+                                                    name={metaItem.name}
+                                                    poster={metaItem.poster}
+                                                    posterShape={metaItem.posterShape}
+                                                    data-index={index}
+                                                />
+                                            ))}
+                                        </div>
                     }
                 </div>
                 {
@@ -93,14 +113,12 @@ const Discover = ({ urlParams, queryParams }) => {
                         <div className={styles['meta-preview-container']} />
                 }
             </div>
-            {
-                filtersModalOpen ?
-                    <Modal>
-                        {/* TODO */}
-                    </Modal>
+            {/* {
+                inputsModalOpen ?
+                    <Modal />
                     :
                     null
-            }
+            } */}
         </div>
     );
 };

@@ -52,7 +52,7 @@ const getNextExtra = (prevExtra, extraProp, extraValue) => {
         }, []);
 };
 
-const mapSelectableControls = (discover) => {
+const mapSelectableInputs = (discover) => {
     const selectedTransportUrl = discover.catalog_resource !== null ?
         discover.catalog_resource.request.base
         :
@@ -175,11 +175,11 @@ const mapSelectableControls = (discover) => {
     return [[typeSelect, catalogSelect, ...extraSelects], paginationInput];
 };
 
-const useSelectableControls = (discover) => {
-    const selectableControls = React.useMemo(() => {
-        return mapSelectableControls(discover);
+const useSelectableInputs = (discover) => {
+    const selectableInputs = React.useMemo(() => {
+        return mapSelectableInputs(discover);
     }, [discover]);
-    return selectableControls;
+    return selectableInputs;
 };
 
-module.exports = useSelectableControls;
+module.exports = useSelectableInputs;
