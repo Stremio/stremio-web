@@ -15,18 +15,25 @@ const CONTINUE_WATCHING_MENU = [
     }
 ];
 
-storiesOf('MetaItem', module).add('SаmpleMetaItem', () => (
-    <MetaItem
-        className={styles['meta-item']}
-        type={'movie'}
-        name={'Sample meta item'}
-        poster={'/images/intro_background.jpg'}
-        posterShape={'poster'}
-        playIcon={true}
-        progress={0.4}
-        menuOptions={CONTINUE_WATCHING_MENU}
-        dataset={{ id: 'pt1' }}
-        onSelect={action('onSelect')}
-        menuOptionOnSelect={action('menuOptionOnSelect')}
-    />
-));
+storiesOf('MetaItem', module).add('SаmpleMetaItem', () => {
+    const domEventHandler = React.useCallback((event) => {
+        action('domEventHandler')(event.currentTarget.dataset);
+    }, []);
+    return (
+        <MetaItem
+            className={styles['meta-item']}
+            type={'movie'}
+            name={'Sample meta item'}
+            poster={'/images/intro_background.jpg'}
+            posterShape={'poster'}
+            playIcon={true}
+            progress={0.4}
+            menuOptions={CONTINUE_WATCHING_MENU}
+            dataset={{ id: 'pt1' }}
+            onSelect={action('onSelect')}
+            menuOptionOnSelect={action('menuOptionOnSelect')}
+            data-id={'meta-item-id'}
+            onClick={domEventHandler}
+        />
+    );
+});

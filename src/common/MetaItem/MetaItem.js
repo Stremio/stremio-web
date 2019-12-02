@@ -19,15 +19,6 @@ const ICON_FOR_TYPE = new Map([
 
 const MetaItem = React.memo(({ className, type, name, poster, posterShape, playIcon, progress, menuOptions, dataset, onSelect, menuOptionOnSelect, ...props }) => {
     const [menuOpen, onMenuOpen, onMenuClose] = useBinaryState(false);
-    const renderPosterFallback = React.useMemo(() => () => (
-        <Icon
-            className={styles['placeholder-icon']}
-            icon={ICON_FOR_TYPE.has(type) ? ICON_FOR_TYPE.get(type) : ICON_FOR_TYPE.get('other')}
-        />
-    ), [type]);
-    const renderMenuOptionsLabelContent = React.useMemo(() => () => (
-        <Icon className={styles['icon']} icon={'ic_more'} />
-    ), []);
     const metaItemOnClick = React.useCallback((event) => {
         if (typeof props.onClick === 'function') {
             props.onClick(event);
@@ -56,6 +47,15 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, playI
             });
         }
     }, [menuOptionOnSelect, dataset]);
+    const renderPosterFallback = React.useMemo(() => () => (
+        <Icon
+            className={styles['placeholder-icon']}
+            icon={ICON_FOR_TYPE.has(type) ? ICON_FOR_TYPE.get(type) : ICON_FOR_TYPE.get('other')}
+        />
+    ), [type]);
+    const renderMenuOptionsLabelContent = React.useMemo(() => () => (
+        <Icon className={styles['icon']} icon={'ic_more'} />
+    ), []);
     return (
         <Button title={name} {...props} className={classnames(className, styles['meta-item-container'], styles['poster-shape-poster'], styles[`poster-shape-${posterShape}`], { 'active': menuOpen })} onClick={metaItemOnClick}>
             <div className={styles['poster-container']}>
