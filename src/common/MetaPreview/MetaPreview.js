@@ -74,6 +74,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                 typeof background === 'string' && background.length > 0 ?
                     <div className={styles['background-image-layer']}>
                         <img
+                            key={background}
                             className={styles['background-image']}
                             src={background}
                             alt={' '}
@@ -86,6 +87,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                 {
                     typeof logo === 'string' && logo.length > 0 ?
                         <Image
+                            key={logo}
                             className={styles['logo']}
                             src={logo}
                             alt={' '}
