@@ -1,206 +1,92 @@
 const React = require('react');
 const { useServices } = require('stremio/services');
 
-const DEFAULT_ADDON_TRANSPORT_URL = 'https://v3-cinemeta.strem.io/manifest.json';
-const DEFAULT_CATALOG_ID = 'top';
-const DEFAULT_TYPE = 'movie';
-const NONE_EXTRA_VALUE = 'None';
-const PAGE_SIZE = 100;
+const CATALOG_PAGE_SIZE = 100;
+
+const mapDiscoverState = (state) => {
+    const selectable = state.discover.selectable;
+    const catalog_resource = state.discover.catalog_resource !== null && state.discover.catalog_resource.content.type === 'Ready' ?
+        {
+            ...state.discover.catalog_resource,
+            content: {
+                ...state.discover.catalog_resource.content,
+                content: state.discover.catalog_resource.content.content.map((metaItem) => {
+                    metaItem.released = new Date(metaItem.released);
+                    return metaItem;
+                })
+            }
+        }
+        :
+        state.discover.catalog_resource;
+    return { selectable, catalog_resource };
+};
+
+const queryParamsWithValidExtra = (queryParams) => {
+    queryParams = new URLSearchParams(queryParams);
+    if (queryParams.has('skip')) {
+        const skip = parseInt(queryParams.getAll('skip')[0]);
+        if (isFinite(skip)) {
+            queryParams.set('skip', Math.floor(skip / CATALOG_PAGE_SIZE) * CATALOG_PAGE_SIZE);
+        }
+    }
+    return queryParams;
+};
 
 const useDiscover = (urlParams, queryParams) => {
     const { core } = useServices();
-    const [discover, setDiscover] = React.useState([[], null, null, null]);
-    React.useEffect(() => {
-        const addonTransportUrl = typeof urlParams.addonTransportUrl === 'string' ? urlParams.addonTransportUrl : DEFAULT_ADDON_TRANSPORT_URL;
-        const catalogId = typeof urlParams.catalogId === 'string' ? urlParams.catalogId : DEFAULT_CATALOG_ID;
-        const type = typeof urlParams.type === 'string' ? urlParams.type : DEFAULT_TYPE;
-        queryParams = new URLSearchParams(queryParams);
-        if (queryParams.has('skip')) {
-            const skip = parseInt(queryParams.get('skip'));
-            if (!isNaN(skip)) {
-                queryParams.set('skip', Math.floor(skip / PAGE_SIZE) * PAGE_SIZE);
-            }
-        }
+    const [discover, setDiscover] = React.useState(() => {
+        const state = core.getState();
+        const discover = mapDiscoverState(state);
+        return discover;
+    });
+    React.useLayoutEffect(() => {
+        queryParams = queryParamsWithValidExtra(queryParams);
         const onNewModel = () => {
             const state = core.getState();
-            const navigateWithLoad = (load) => {
-                const addonTransportUrl = encodeURIComponent(load.base);
-                const catalogId = encodeURIComponent(load.path.id);
-                const type = encodeURIComponent(load.path.type_name);
-                const extra = new URLSearchParams(load.path.extra).toString();
-                window.location = `#/discover/${addonTransportUrl}/${catalogId}/${type}?${extra}`;
-            };
-            const selectInputs = [
-                {
-                    title: 'Select type',
-                    options: state.discover.types
-                        .map(({ type_name, load }) => ({
-                            value: JSON.stringify(load),
-                            label: type_name
-                        })),
-                    selected: state.discover.types
-                        .filter(({ is_selected }) => is_selected)
-                        .map(({ load }) => JSON.stringify(load)),
-                    onSelect: (event) => {
-                        navigateWithLoad(JSON.parse(event.value));
+            if (state.discover.catalog_resource === null && state.discover.selectable.types.length > 0) {
+                const load_request = state.discover.selectable.types[0].load_request;
+                core.dispatch({
+                    action: 'Load',
+                    args: {
+                        load: 'CatalogFiltered',
+                        args: load_request
                     }
-                },
-                {
-                    title: 'Select catalog',
-                    options: state.discover.catalogs
-                        .filter(({ load: { path: { type_name } } }) => {
-                            return type_name === type;
-                        })
-                        .map(({ name, load }) => ({
-                            value: JSON.stringify(load),
-                            label: name
-                        })),
-                    selected: state.discover.catalogs
-                        .filter(({ is_selected }) => is_selected)
-                        .map(({ load }) => JSON.stringify(load)),
-                    onSelect: (event) => {
-                        navigateWithLoad(JSON.parse(event.value));
-                    }
-                },
-                ...state.discover.selectable_extra
-                    .map((extra) => {
-                        const title = `Select ${extra.name}`;
-                        const options = (extra.isRequired ? [] : [NONE_EXTRA_VALUE])
-                            .concat(extra.options)
-                            .map((option) => ({
-                                value: option,
-                                label: option
-                            }));
-                        const selected = state.discover.selected.path.extra
-                            .reduce((selected, [name, value]) => {
-                                if (name === extra.name) {
-                                    selected = selected.filter(value => value !== NONE_EXTRA_VALUE)
-                                        .concat([value]);
-                                }
-
-                                return selected;
-                            }, extra.isRequired ? [] : [NONE_EXTRA_VALUE]);
-                        const renderLabelText = selected.includes(NONE_EXTRA_VALUE) ?
-                            () => title
-                            :
-                            null;
-                        const onSelect = (event) => {
-                            navigateWithLoad({
-                                base: addonTransportUrl,
-                                path: {
-                                    resource: 'catalog',
-                                    type_name: type,
-                                    id: catalogId,
-                                    extra: Array.from(queryParams.entries())
-                                        .concat([[extra.name, event.value]])
-                                        .reduceRight((result, [name, value]) => {
-                                            if (extra.name === name) {
-                                                if (event.value !== NONE_EXTRA_VALUE) {
-                                                    const optionsCount = result.reduce((optionsCount, [name]) => {
-                                                        if (extra.name === name) {
-                                                            optionsCount++;
-                                                        }
-
-                                                        return optionsCount;
-                                                    }, 0);
-                                                    if (extra.optionsLimit === 1) {
-                                                        if (optionsCount === 0) {
-                                                            result.unshift([name, value]);
-                                                        }
-                                                    } else if (extra.optionsLimit > 1) {
-                                                        const valueIndex = result.findIndex(([_name, _value]) => {
-                                                            return _name === name && _value === value;
-                                                        });
-                                                        if (valueIndex !== -1) {
-                                                            result.splice(valueIndex, 1);
-                                                        } else if (extra.optionsLimit > optionsCount) {
-                                                            result.unshift([name, value]);
-                                                        }
-                                                    }
-                                                }
-                                            } else {
-                                                result.unshift([name, value]);
-                                            }
-
-                                            return result;
-                                        }, [])
-                                }
-                            });
-                        }
-                        return { title, options, selected, renderLabelText, onSelect };
-                    })
-            ];
-            const paginateInput = state.discover.load_next !== null || state.discover.load_prev !== null || state.discover.selected.path.extra.some(([name]) => name === 'skip') ?
-                {
-                    selected: state.discover.selected.path.extra.reduce((page, [name, value]) => {
-                        if (name === 'skip') {
-                            const parsedValue = parseInt(value);
-                            if (!isNaN(parsedValue)) {
-                                return Math.floor(parsedValue / 100) + 1;
-                            }
-                        }
-
-                        return page;
-                    }, 1),
-                    onSelect: (event) => {
-                        navigateWithLoad({
-                            base: addonTransportUrl,
-                            path: {
-                                resource: 'catalog',
-                                type_name: type,
-                                id: catalogId,
-                                extra: Array.from(queryParams.entries())
-                                    .concat([['skip', String((event.value - 1) * PAGE_SIZE)]])
-                                    .reduceRight((result, [name, value]) => {
-                                        if (name === 'skip') {
-                                            const optionsCount = result.reduce((optionsCount, [name]) => {
-                                                if (name === 'skip') {
-                                                    optionsCount++;
-                                                }
-
-                                                return optionsCount;
-                                            }, 0);
-                                            if (optionsCount === 0) {
-                                                result.unshift([name, value]);
-                                            }
-                                        } else {
-                                            result.unshift([name, value]);
-                                        }
-
-                                        return result;
-                                    }, [])
-                            }
-                        });
-                    }
-                }
-                :
-                null;
-            const items = state.discover.content.type === 'Ready' ?
-                state.discover.content.content.map((metaItem) => ({
-                    ...metaItem,
-                    released: new Date(metaItem.released)
-                }))
-                :
-                null;
-            const error = state.discover.content.type === 'Err' ? state.discover.content.content : null;
-            setDiscover([selectInputs, paginateInput, items, error]);
+                }, 'Discover');
+                return;
+            }
+            const discover = mapDiscoverState(state);
+            setDiscover(discover);
         };
         core.on('NewModel', onNewModel);
-        core.dispatch({
-            action: 'Load',
-            args: {
-                load: 'CatalogFiltered',
+        if (typeof urlParams.addonTransportUrl === 'string' && typeof urlParams.catalogId === 'string' && typeof urlParams.type === 'string') {
+            core.dispatch({
+                action: 'Load',
                 args: {
-                    base: addonTransportUrl,
-                    path: {
-                        resource: 'catalog',
-                        type_name: type,
-                        id: catalogId,
-                        extra: Array.from(queryParams.entries())
+                    load: 'CatalogFiltered',
+                    args: {
+                        base: urlParams.addonTransportUrl,
+                        path: {
+                            resource: 'catalog',
+                            type_name: urlParams.type,
+                            id: urlParams.catalogId,
+                            extra: Array.from(queryParams.entries())
+                        }
                     }
                 }
+            }, 'Discover');
+        } else {
+            const state = core.getState();
+            if (state.discover.selectable.types.length > 0) {
+                const load_request = state.discover.selectable.types[0].load_request;
+                core.dispatch({
+                    action: 'Load',
+                    args: {
+                        load: 'CatalogFiltered',
+                        args: load_request
+                    }
+                }, 'Discover');
             }
-        }, 'Discover');
+        }
         return () => {
             core.off('NewModel', onNewModel);
         };
