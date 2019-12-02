@@ -9,7 +9,7 @@ const routesRegexp = {
     },
     discover: {
         regexp: /^\/discover(?:\/([^\/]+?)\/([^\/]+?)\/([^\/]+?))?\/?$/i,
-        urlParamsNames: ['addonTransportUrl', 'catalogId', 'type']
+        urlParamsNames: ['addonTransportUrl', 'type', 'catalogId']
     },
     library: {
         regexp: /^\/library(?:\/([^\/]*?))?\/?$/i,
