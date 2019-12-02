@@ -4,7 +4,7 @@ const classnames = require('classnames');
 const FocusLock = require('react-focus-lock').default;
 const styles = require('./styles');
 
-const Popup = ({ open, direction, renderLabel, renderMenu, dataset, onCloseRequest }) => {
+const Popup = ({ open, direction, renderLabel, renderMenu, dataset, onCloseRequest, ...props }) => {
     const labelRef = React.useRef(null);
     const [autoDirection, setAutoDirection] = React.useState(null);
     const menuOnMouseDown = React.useCallback((event) => {
@@ -59,6 +59,7 @@ const Popup = ({ open, direction, renderLabel, renderMenu, dataset, onCloseReque
         }
     }, [open]);
     return renderLabel({
+        ...props,
         ref: labelRef,
         className: styles['label-container'],
         children: open ?

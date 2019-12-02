@@ -22,12 +22,15 @@ storiesOf('Popup', module).add('Popup', () => {
         action('onCloseRequest')(event);
         closeMenu();
     }, []);
+    const domEventHandler = React.useCallback((event) => {
+        action('domEventHandler')(event.currentTarget.dataset);
+    }, []);
     return (
         <Popup
             open={menuOpen}
             direction={'bottom'}
-            renderLabel={({ ref, className, children }) => (
-                <Button ref={ref} className={classnames(className, styles['popup-label-container'])} onClick={popupLabelOnClick}>
+            renderLabel={({ className, children, ...props }) => (
+                <Button {...props} className={classnames(className, styles['popup-label-container'])} onClick={popupLabelOnClick}>
                     POPUP LABEL
                     {children}
                 </Button>
@@ -41,6 +44,8 @@ storiesOf('Popup', module).add('Popup', () => {
             )}
             dataset={{ prop: 'value' }}
             onCloseRequest={onCloseRequest}
+            data-prop={'data-value'}
+            onMouseEnter={domEventHandler}
         />
     );
 });
