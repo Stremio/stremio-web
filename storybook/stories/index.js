@@ -6,7 +6,7 @@ require('./MetaItem');
 require('./ModalDialog');
 require('./Multiselect');
 require('./Notification');
-require('./PaginateInput');
+require('./PaginationInput');
 require('./Popup');
 require('./SeasonsBar');
 require('./SharePrompt');

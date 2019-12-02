@@ -5,7 +5,7 @@ const Icon = require('stremio-icons/dom');
 const Button = require('stremio/common/Button');
 const styles = require('./styles');
 
-const PaginateInput = ({ className, label, dataset, onSelect, ...props }) => {
+const PaginationInput = ({ className, label, dataset, onSelect, ...props }) => {
     const prevNextButtonOnClick = React.useCallback((event) => {
         if (typeof onSelect === 'function') {
             onSelect({
@@ -18,7 +18,7 @@ const PaginateInput = ({ className, label, dataset, onSelect, ...props }) => {
         }
     }, [dataset, onSelect]);
     return (
-        <div {...props} className={classnames(className, styles['paginate-input-container'])} >
+        <div {...props} className={classnames(className, styles['pagination-input-container'])} >
             <Button className={styles['prev-button-container']} title={'Previous page'} data-value={'prev'} onClick={prevNextButtonOnClick}>
                 <Icon className={styles['icon']} icon={'ic_arrow_left'} />
             </Button>
@@ -32,10 +32,10 @@ const PaginateInput = ({ className, label, dataset, onSelect, ...props }) => {
     );
 };
 
-PaginateInput.propTypes = {
+PaginationInput.propTypes = {
     className: PropTypes.string,
     label: PropTypes.string,
     onSelect: PropTypes.func
 };
 
-module.exports = PaginateInput;
+module.exports = PaginationInput;
