@@ -41,22 +41,27 @@ const Multiselect = ({ className, direction, title, options, selected, disabled,
             closeMenu();
         }
     }, [dataset, onSelect]);
+    const mountedRef = React.useRef(false);
     React.useLayoutEffect(() => {
-        if (menuOpen) {
-            if (typeof onOpen === 'function') {
-                onOpen({
-                    type: 'open',
-                    dataset: dataset
-                });
-            }
-        } else {
-            if (typeof onClose === 'function') {
-                onClose({
-                    type: 'close',
-                    dataset: dataset
-                });
+        if (mountedRef.current) {
+            if (menuOpen) {
+                if (typeof onOpen === 'function') {
+                    onOpen({
+                        type: 'open',
+                        dataset: dataset
+                    });
+                }
+            } else {
+                if (typeof onClose === 'function') {
+                    onClose({
+                        type: 'close',
+                        dataset: dataset
+                    });
+                }
             }
         }
+
+        mountedRef.current = true;
     }, [menuOpen]);
     return (
         <Popup
