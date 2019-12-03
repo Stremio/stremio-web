@@ -8,7 +8,8 @@ const useSelectableInputs = require('./useSelectableInputs');
 const styles = require('./styles');
 
 const getMetaItemAtIndex = (catalog_resource, index) => {
-    return isFinite(index) &&
+    return index !== null &&
+        isFinite(index) &&
         catalog_resource !== null &&
         catalog_resource.content.type === 'Ready' &&
         catalog_resource.content.content[index] ?
