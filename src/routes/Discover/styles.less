@@ -7,6 +7,7 @@
 :import('~stremio/common/PaginationInput/styles.less') {
     pagination-prev-button-container: prev-button-container;
     pagination-next-button-container: next-button-container;
+    pagination-button-icon: icon;
 }
 
 .discover-container {
@@ -32,19 +33,18 @@
             "catalog-content-area meta-preview-area";
 
         .selectable-inputs-container {
-            --selectable-input-height: 3rem;
             grid-area: selectable-inputs-area;
             display: flex;
             flex-direction: row;
-            padding: 2rem;
+            padding: 1.5rem;
             overflow: visible;
 
             .select-input-container {
                 flex-grow: 0;
                 flex-shrink: 1;
                 flex-basis: 15rem;
-                height: var(--selectable-input-height);
-                margin-right: 2rem;
+                height: 3rem;
+                margin-right: 1.5rem;
 
                 &:nth-child(n+4) {
                     display: none;
@@ -65,12 +65,12 @@
                 display: none;
                 align-items: center;
                 justify-content: center;
-                width: var(--selectable-input-height);
-                height: var(--selectable-input-height);
+                width: 3rem;
+                height: 3rem;
                 background-color: var(--color-backgroundlighter);
 
                 &:not(:nth-last-child(2)) {
-                    margin-right: 2rem;
+                    margin-right: 1.5rem;
                 }
 
                 .filter-icon {
@@ -87,12 +87,17 @@
 
             .pagination-input-container {
                 flex: none;
-                height: var(--selectable-input-height);
+                height: 3rem;
                 background-color: var(--color-backgroundlighter);
 
                 .pagination-prev-button-container, .pagination-next-button-container {
-                    width: var(--selectable-input-height);
-                    height: var(--selectable-input-height);
+                    width: 3rem;
+                    height: 3rem;
+
+                    .pagination-button-icon {
+                        width: 1rem;
+                        height: 1rem;
+                    }
                 }
             }
         }
@@ -105,9 +110,9 @@
                 max-height: 100%;
                 grid-auto-rows: max-content;
                 align-items: center;
-                grid-gap: 2rem;
-                margin-right: 2rem;
-                padding: 0 2rem;
+                grid-gap: 1.5rem;
+                margin-right: 1.5rem;
+                padding: 0 1.5rem;
                 overflow-y: auto;
 
                 .meta-item {
@@ -121,7 +126,7 @@
             }
 
             .message-container {
-                padding: 0 2rem;
+                padding: 0 1.5rem;
                 font-size: 2rem;
                 color: var(--color-surfacelighter);
             }
