@@ -90,8 +90,8 @@ const mapSelectableInputs = (discover) => {
                 label: name
             })),
         selected: discover.selectable.types
-            .filter(({ load_request }) => {
-                return equalWithouExtra(load_request, selectedCatalogRequest);
+            .filter(({ load_request: { path: { type_name } } }) => {
+                return type_name === selectedCatalogRequest.path.type_name;
             })
             .map(({ load_request }) => JSON.stringify(load_request)),
         onSelect: (event) => {
