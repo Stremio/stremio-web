@@ -52,24 +52,27 @@ const getNextExtra = (prevExtra, extraProp, extraValue) => {
         }, []);
 };
 
+const equalWithouExtra = (request1, request2) => {
+    return request1.base === request2.base &&
+        request1.path.resource === request2.path.resource &&
+        request1.path.type_name === request2.path.type_name &&
+        request1.path.id === request2.path.id;
+};
+
 const mapSelectableInputs = (discover) => {
-    const selectedTransportUrl = discover.catalog_resource !== null ?
-        discover.catalog_resource.request.base
+    const selectedCatalogRequest = discover.catalog_resource !== null ?
+        discover.catalog_resource.request
         :
-        null;
-    const selectedTypeName = discover.catalog_resource !== null ?
-        discover.catalog_resource.request.path.type_name
-        :
-        null;
-    const selectedCatalogId = discover.catalog_resource !== null ?
-        discover.catalog_resource.request.path.id
-        :
-        null;
-    const selectedExtra = discover.catalog_resource !== null ?
-        discover.catalog_resource.request.path.extra
-        :
-        [];
-    const selectedPage = selectedExtra.reduce((selectedPage, [name, value]) => {
+        {
+            base: null,
+            path: {
+                resource: 'catalog',
+                id: null,
+                type_name: null,
+                extra: []
+            }
+        };
+    const requestedPage = selectedCatalogRequest.path.extra.reduce((requestedPage, [name, value]) => {
         if (name === SKIP_EXTRA.name) {
             const skip = parseInt(value);
             if (isFinite(skip)) {
@@ -77,7 +80,7 @@ const mapSelectableInputs = (discover) => {
             }
         }
 
-        return selectedPage;
+        return requestedPage;
     }, 1);
     const typeSelect = {
         title: 'Select type',
@@ -87,8 +90,8 @@ const mapSelectableInputs = (discover) => {
                 label: name
             })),
         selected: discover.selectable.types
-            .filter(({ load_request: { path: { type_name } } }) => {
-                return type_name === selectedTypeName;
+            .filter(({ load_request }) => {
+                return equalWithouExtra(load_request, selectedCatalogRequest);
             })
             .map(({ load_request }) => JSON.stringify(load_request)),
         onSelect: (event) => {
@@ -103,8 +106,8 @@ const mapSelectableInputs = (discover) => {
                 label: name
             })),
         selected: discover.selectable.catalogs
-            .filter(({ load_request: { path: { id } } }) => {
-                return id === selectedCatalogId;
+            .filter(({ load_request }) => {
+                return equalWithouExtra(load_request, selectedCatalogRequest);
             })
             .map(({ load_request }) => JSON.stringify(load_request)),
         onSelect: (event) => {
@@ -119,7 +122,7 @@ const mapSelectableInputs = (discover) => {
                 value: option,
                 label: option
             }));
-        const selected = selectedExtra
+        const selected = selectedCatalogRequest.path.extra
             .reduce((selected, [name, value]) => {
                 if (name === extra.name) {
                     selected = selected
@@ -135,20 +138,20 @@ const mapSelectableInputs = (discover) => {
             null;
         const onSelect = (event) => {
             navigateWithLoadRequest({
-                base: selectedTransportUrl,
+                base: selectedCatalogRequest.base,
                 path: {
                     resource: 'catalog',
-                    type_name: selectedTypeName,
-                    id: selectedCatalogId,
-                    extra: getNextExtra(selectedExtra, extra, event.value)
+                    type_name: selectedCatalogRequest.path.type_name,
+                    id: selectedCatalogRequest.path.id,
+                    extra: getNextExtra(selectedCatalogRequest.path.extra, extra, event.value)
                 }
             });
         };
         return { title, options, selected, renderLabelText, onSelect };
     });
-    const paginationInput = discover.selectable.has_prev_page || discover.selectable.has_next_page || selectedExtra.some(([name]) => name === 'skip') ?
+    const paginationInput = discover.selectable.has_prev_page || discover.selectable.has_next_page || selectedCatalogRequest.path.extra.some(([name]) => name === 'skip') ?
         {
-            label: String(selectedPage),
+            label: String(requestedPage),
             onSelect: (event) => {
                 if (event.value === 'prev' && !discover.selectable.has_prev_page ||
                     event.value === 'next' && !discover.selectable.has_next_page) {
@@ -156,16 +159,16 @@ const mapSelectableInputs = (discover) => {
                 }
 
                 const nextValue = event.value === 'next' ?
-                    String(selectedPage * CATALOG_PAGE_SIZE)
+                    String(requestedPage * CATALOG_PAGE_SIZE)
                     :
-                    String((selectedPage - 2) * CATALOG_PAGE_SIZE);
+                    String((requestedPage - 2) * CATALOG_PAGE_SIZE);
                 navigateWithLoadRequest({
-                    base: selectedTransportUrl,
+                    base: selectedCatalogRequest.base,
                     path: {
                         resource: 'catalog',
-                        type_name: selectedTypeName,
-                        id: selectedCatalogId,
-                        extra: getNextExtra(selectedExtra, SKIP_EXTRA, nextValue)
+                        type_name: selectedCatalogRequest.path.type_name,
+                        id: selectedCatalogRequest.path.id,
+                        extra: getNextExtra(selectedCatalogRequest.path.extra, SKIP_EXTRA, nextValue)
                     }
                 });
             }
