@@ -20,7 +20,7 @@ const SearchBar = ({ className }) => {
         if (routeActive) {
             const { search: locationSearch } = UrlUtils.parse(locationHash.slice(1));
             const queryParams = new URLSearchParams(locationSearch);
-            return queryParams.has('q') ? queryParams.get('q') : '';
+            return queryParams.has('search') ? queryParams.get('search') : '';
         }
 
         return '';
@@ -32,7 +32,7 @@ const SearchBar = ({ className }) => {
     }, [routeActive]);
     const queryInputOnSubmit = React.useCallback(() => {
         if (routeActive) {
-            window.location.replace(`#/search?q=${searchInputRef.current.value}`);
+            window.location.replace(`#/search?search=${searchInputRef.current.value}`);
         }
     }, [routeActive]);
     React.useEffect(() => {

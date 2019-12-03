@@ -20,32 +20,32 @@ const Board = () => {
         <div className={styles['board-container']}>
             <MainNavBar className={styles['nav-bar']} />
             <div className={styles['board-content']}>
-                {catalogs.map(({ req, content }, index) => {
+                {catalogs.map(({ request, content }, index) => {
                     switch (content.type) {
                         case 'Ready':
                             return (
                                 <MetaRow
-                                    key={`${index}${req.base}${content.type}`}
+                                    key={`${index}${request.base}${content.type}`}
                                     className={styles['board-row']}
-                                    title={`${req.path.id} - ${req.path.type_name}`}
+                                    title={`${request.path.id} - ${request.path.type_name}`}
                                     items={content.content}
                                 />
                             );
                         case 'Message':
                             return (
                                 <MetaRow
-                                    key={`${index}${req.base}${content.type}`}
+                                    key={`${index}${request.base}${content.type}`}
                                     className={styles['board-row']}
-                                    title={`${req.path.id} - ${req.path.type_name}`}
+                                    title={`${request.path.id} - ${request.path.type_name}`}
                                     message={content.content}
                                 />
                             );
                         case 'Loading':
                             return (
                                 <MetaRow.Placeholder
-                                    key={`${index}${req.base}${content.type}`}
+                                    key={`${index}${request.base}${content.type}`}
                                     className={styles['board-row-placeholder']}
-                                    title={`${req.path.id} - ${req.path.type_name}`}
+                                    title={`${request.path.id} - ${request.path.type_name}`}
                                 />
                             );
                     }

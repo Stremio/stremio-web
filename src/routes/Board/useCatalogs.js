@@ -7,13 +7,13 @@ const useCatalogs = () => {
     React.useEffect(() => {
         const onNewState = () => {
             const state = core.getState();
-            setCatalogs(state.board.groups);
+            setCatalogs(state.board.items_groups);
         };
         core.on('NewModel', onNewState);
         core.dispatch({
             action: 'Load',
             args: {
-                load: 'CatalogGrouped',
+                load: 'CatalogsGrouped',
                 args: { extra: [] }
             }
         });

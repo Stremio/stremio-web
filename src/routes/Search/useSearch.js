@@ -1,32 +1,53 @@
 const React = require('react');
+const { useServices } = require('stremio/services');
 
-const useSearch = (query) => {
-    const items = React.useMemo(() => {
-        return [
-            {
-                title: 'demo addon',
-                items: [
-                    {
-                        id: '1',
-                        type: 'movie',
-                        name: 'Stremio demo item movie 1',
-                        poster: '/images/intro_background.jpg',
-                        logo: '/images/default_avatar.png',
-                        posterShape: 'poster'
-                    },
-                    {
-                        id: '2',
-                        type: 'movie',
-                        name: 'Stremio demo item movie 2',
-                        poster: '/images/intro_background.jpg',
-                        logo: '/images/default_avatar.png',
-                        posterShape: 'poster'
-                    },
-                ]
-            }
-        ];
-    }, [query]);
-    return items;
+const mapSearchState = (state) => {
+    const query = state.search.selected.reduceRight((query, [name, value]) => {
+        if (name === 'search') {
+            return value;
+        }
+        return query;
+    }, '');
+    const selected = state.search.selected;
+    const items_groups = state.search.items_groups.map((group) => {
+        group.href = `#/discover/${encodeURIComponent(group.request.base)}/${encodeURIComponent(group.request.path.id)}/${encodeURIComponent(group.request.path.type_name)}?search=${query}`;
+        return group;
+    });
+    return { selected, items_groups };
+};
+
+const useSearch = (queryParams) => {
+    const { core } = useServices();
+    const [search, setSearch] = React.useState(() => {
+        const state = core.getState();
+        const search = mapSearchState(state);
+        return search;
+    });
+    React.useEffect(() => {
+        const onNewState = () => {
+            const state = core.getState();
+            const search = mapSearchState(state);
+            setSearch(search);
+        };
+        core.on('NewModel', onNewState);
+        if (queryParams.has('search')) {
+            core.dispatch({
+                action: 'Load',
+                args: {
+                    load: 'CatalogsGrouped',
+                    args: {
+                        extra: [
+                            ['search', queryParams.get('search')]
+                        ]
+                    }
+                }
+            });
+        }
+        return () => {
+            core.off('NewModel', onNewState);
+        };
+    }, [queryParams]);
+    return search;
 };
 
 module.exports = useSearch;
