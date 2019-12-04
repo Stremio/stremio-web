@@ -16,10 +16,11 @@ const mapSearchState = (state) => {
 
 const useSearch = (queryParams) => {
     const { core } = useServices();
-    const [search, setSearch] = React.useState(() => ({
-        selected: null,
-        catalog_resources: []
-    }));
+    const [search, setSearch] = React.useState(() => {
+        const state = core.getState();
+        const search = mapSearchState(state);
+        return search;
+    });
     React.useLayoutEffect(() => {
         const onNewState = () => {
             const state = core.getState();
