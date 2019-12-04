@@ -6,7 +6,7 @@ const Button = require('stremio/common/Button');
 const Popup = require('stremio/common/Popup');
 const NotificationsList = require('./NotificationsList');
 const useNotifications = require('./useNotifications');
-const useCatalogs = require('stremio/routes/Board/useCatalogs');
+// const useCatalogs = require('stremio/routes/Board/useCatalogs');
 const useBinaryState = require('stremio/common/useBinaryState');
 const styles = require('./styles');
 

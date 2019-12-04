@@ -1,6 +1,6 @@
 const React = require('react');
 const { MainNavBar, MetaRow } = require('stremio/common');
-const useCatalogs = require('./useCatalogs');
+const useBoard = require('./useBoard');
 const styles = require('./styles');
 
 const CONTINUE_WATCHING_MENU = [
@@ -15,37 +15,43 @@ const CONTINUE_WATCHING_MENU = [
 ];
 
 const Board = () => {
-    const catalogs = useCatalogs();
+    const { catalog_resources } = useBoard();
     return (
         <div className={styles['board-container']}>
             <MainNavBar className={styles['nav-bar']} />
             <div className={styles['board-content']}>
-                {catalogs.map(({ request, content }, index) => {
-                    switch (content.type) {
+                {catalog_resources.map((catalog_resource, index) => {
+                    const title = `${catalog_resource.addon_name} - ${catalog_resource.request.path.id} ${catalog_resource.request.path.type_name}`;
+                    switch (catalog_resource.content.type) {
                         case 'Ready':
                             return (
                                 <MetaRow
-                                    key={`${index}${request.base}${content.type}`}
+                                    key={index}
                                     className={styles['board-row']}
-                                    title={`${request.path.id} - ${request.path.type_name}`}
-                                    items={content.content}
+                                    title={title}
+                                    items={catalog_resource.content.content}
+                                    href={catalog_resource.href}
+                                    limit={10}
                                 />
                             );
-                        case 'Message':
+                        case 'Err':
+                            const message = `Error(${catalog_resource.content.content.type})${typeof catalog_resource.content.content.content === 'string' ? ` - ${catalog_resource.content.content.content}` : ''}`;
                             return (
                                 <MetaRow
-                                    key={`${index}${request.base}${content.type}`}
+                                    key={index}
                                     className={styles['board-row']}
-                                    title={`${request.path.id} - ${request.path.type_name}`}
-                                    message={content.content}
+                                    title={title}
+                                    message={message}
+                                    limit={10}
                                 />
                             );
                         case 'Loading':
                             return (
                                 <MetaRow.Placeholder
-                                    key={`${index}${request.base}${content.type}`}
+                                    key={index}
                                     className={styles['board-row-placeholder']}
-                                    title={`${request.path.id} - ${request.path.type_name}`}
+                                    title={title}
+                                    limit={10}
                                 />
                             );
                     }
