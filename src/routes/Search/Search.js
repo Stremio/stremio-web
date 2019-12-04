@@ -5,62 +5,13 @@ const useSearch = require('./useSearch');
 const styles = require('./styles');
 
 const Search = ({ queryParams }) => {
-    const search = useSearch(queryParams);
-    const searchSelected = React.useMemo(() => {
-        return search.selected.some(([name, value]) => name === 'search' && value.length > 0)
-    }, [search.selected]);
+    const { selected, catalog_resources } = useSearch(queryParams);
     return (
         <div className={styles['search-container']}>
             <MainNavBar className={styles['nav-bar']} />
             <div className={styles['search-content']}>
                 {
-                    searchSelected ?
-                        search.items_groups && search.items_groups.length > 0 ?
-                            search.items_groups.some(group => group.content.type !== 'Err') ?
-                                search.items_groups.map(({ href, request, content }, index) => {
-                                    switch (content.type) {
-                                        case 'Ready':
-                                            return (
-                                                <MetaRow
-                                                    key={`${index}${request.base}${content.type} Ready`}
-                                                    className={styles['search-row']}
-                                                    title={`${request.path.id} - ${request.path.type_name}`}
-                                                    items={content.content}
-                                                    catalogHref={href}
-                                                />
-                                            );
-                                        case 'Err':
-                                            return (
-                                                <MetaRow
-                                                    key={`${index}${request.base}${content.type}`}
-                                                    className={styles['search-row']}
-                                                    title={`${request.path.id} - ${request.path.type_name} Err`}
-                                                    message={`${content.content.type} ${typeof content.content.content === 'string' ? content.content.content : ''}`}
-                                                />
-                                            );
-                                        case 'Loading':
-                                            return (
-                                                <MetaRow.Placeholder
-                                                    key={`${index}${request.base}${content.type} Loading`}
-                                                    className={styles['search-row-placeholder']}
-                                                    title={`${request.path.id} - ${request.path.type_name}`}
-                                                />
-                                            );
-                                    }
-                                })
-                                :
-                                <div className={styles['message-container']}>
-                                    <div className={styles['message-content']}>
-                                        <div className={styles['label']}>No metadata was found</div>
-                                    </div>
-                                </div>
-                            :
-                            <div className={styles['message-container']}>
-                                <div className={styles['message-content']}>
-                                    <div className={styles['label']}> No addons were requested for metadata</div>
-                                </div>
-                            </div>
-                        :
+                    selected === null || selected.extra.every(([name]) => name !== 'search') ?
                         <div className={styles['message-container']}>
                             <div className={styles['message-content']}>
                                 <Icon className={styles['icon']} icon={'ic_movies'} />
@@ -71,6 +22,48 @@ const Search = ({ queryParams }) => {
                                 <div className={styles['label']}>Search for actors, directors and writers</div>
                             </div>
                         </div>
+                        :
+                        catalog_resources.length === 0 ?
+                            <div className={styles['message-container']}>
+                                <div className={styles['message-content']}>
+                                    <div className={styles['label']}> No addons were requested for catalogs</div>
+                                </div>
+                            </div>
+                            :
+                            catalog_resources.map((catalog, index) => {
+                                switch (catalog.content.type) {
+                                    case 'Ready':
+                                        return (
+                                            <MetaRow
+                                                key={index}
+                                                className={styles['search-row']}
+                                                title={catalog.addon_name}
+                                                items={catalog.content.content}
+                                                href={catalog.href}
+                                                limit={10}
+                                            />
+                                        );
+                                    case 'Err':
+                                        return (
+                                            <MetaRow
+                                                key={index}
+                                                className={styles['search-row']}
+                                                title={catalog.addon_name}
+                                                message={`Error(${catalog.content.content.type})${typeof catalog.content.content.content === 'string' ? ` - ${catalog.content.content.content}` : ''}`}
+                                                limit={10}
+                                            />
+                                        );
+                                    case 'Loading':
+                                        return (
+                                            <MetaRow.Placeholder
+                                                key={index}
+                                                className={styles['search-row-placeholder']}
+                                                title={catalog.addon_name}
+                                                limit={10}
+                                            />
+                                        );
+                                }
+                            })
                 }
             </div>
         </div>

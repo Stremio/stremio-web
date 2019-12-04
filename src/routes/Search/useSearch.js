@@ -2,46 +2,43 @@ const React = require('react');
 const { useServices } = require('stremio/services');
 
 const mapSearchState = (state) => {
-    const query = state.search.selected.reduceRight((query, [name, value]) => {
-        if (name === 'search') {
-            return value;
-        }
-        return query;
-    }, '');
+    const queryString = state.search.selected !== null ?
+        new URLSearchParams(state.search.selected.extra).toString()
+        :
+        '';
     const selected = state.search.selected;
-    const items_groups = state.search.items_groups.map((group) => {
-        group.href = `#/discover/${encodeURIComponent(group.request.base)}/${encodeURIComponent(group.request.path.id)}/${encodeURIComponent(group.request.path.type_name)}?search=${query}`;
-        return group;
+    const catalog_resources = state.search.catalog_resources.map((catalog_resource) => {
+        catalog_resource.href = `#/discover/${encodeURIComponent(catalog_resource.request.base)}/${encodeURIComponent(catalog_resource.request.path.type_name)}/${encodeURIComponent(catalog_resource.request.path.id)}?${queryString}`;
+        return catalog_resource;
     });
-    return { selected, items_groups };
+    return { selected, catalog_resources };
 };
 
 const useSearch = (queryParams) => {
     const { core } = useServices();
-    const [search, setSearch] = React.useState(() => {
-        const state = core.getState();
-        const search = mapSearchState(state);
-        return search;
-    });
-    React.useEffect(() => {
+    const [search, setSearch] = React.useState(() => ({
+        selected: null,
+        catalog_resources: []
+    }));
+    React.useLayoutEffect(() => {
         const onNewState = () => {
             const state = core.getState();
             const search = mapSearchState(state);
             setSearch(search);
         };
         core.on('NewModel', onNewState);
-        if (queryParams.has('search')) {
+        if (queryParams.has('search') && queryParams.get('search').length > 0) {
             core.dispatch({
                 action: 'Load',
                 args: {
-                    load: 'CatalogsGrouped',
+                    load: 'CatalogsWithExtra',
                     args: {
                         extra: [
                             ['search', queryParams.get('search')]
                         ]
                     }
                 }
-            });
+            }, 'Search');
         }
         return () => {
             core.off('NewModel', onNewState);
