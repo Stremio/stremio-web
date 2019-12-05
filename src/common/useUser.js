@@ -20,7 +20,6 @@ const useUser = () => {
     }, []);
     const user = useModelState({
         model: 'ctx',
-        action: null,
         map: mapUserState,
         init: initUserState
     });
