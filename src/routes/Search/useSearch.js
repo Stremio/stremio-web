@@ -33,6 +33,10 @@ const useSearch = (queryParams) => {
                     }
                 }
             };
+        } else {
+            return {
+                action: 'Unload'
+            };
         }
     }, [queryParams]);
     return useModelState({
