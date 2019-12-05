@@ -1,23 +1,30 @@
 const React = require('react');
 const { useServices } = require('stremio/services');
+const useModelState = require('stremio/common/useModelState');
+
+const initUserState = () => null;
+
+const mapUserState = (ctx) => {
+    return ctx.content.auth ? ctx.content.auth.user : null;
+};
 
 const useUser = () => {
     const { core } = useServices();
-    const [user, setUser] = React.useState(() => {
-        const state = core.getState();
-        return state.ctx.content.auth ? state.ctx.content.auth.user : null;
-    });
-    React.useEffect(() => {
-        const onNewState = () => {
-            const state = core.getState();
-            setUser(state.ctx.content.auth ? state.ctx.content.auth.user : null);
-        };
-        core.on('NewModel', onNewState);
-        return () => {
-            core.off('NewModel', onNewState);
-        };
+    const logout = React.useCallback(() => {
+        core.dispatch({
+            action: 'UserOp',
+            args: {
+                userOp: 'Logout'
+            }
+        });
     }, []);
-    return user;
+    const user = useModelState({
+        model: 'ctx',
+        action: null,
+        map: mapUserState,
+        init: initUserState
+    });
+    return [user, logout];
 };
 
 module.exports = useUser;
