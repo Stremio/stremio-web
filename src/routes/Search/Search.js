@@ -5,13 +5,13 @@ const useSearch = require('./useSearch');
 const styles = require('./styles');
 
 const Search = ({ queryParams }) => {
-    const { selected, catalog_resources } = useSearch(queryParams);
+    const search = useSearch(queryParams);
     return (
         <div className={styles['search-container']}>
             <MainNavBar className={styles['nav-bar']} />
             <div className={styles['search-content']}>
                 {
-                    selected === null || selected.extra.every(([name]) => name !== 'search') ?
+                    search.selected === null || search.selected.extra.every(([name]) => name !== 'search') ?
                         <div className={styles['message-container']}>
                             <div className={styles['message-content']}>
                                 <Icon className={styles['icon']} icon={'ic_movies'} />
@@ -23,23 +23,23 @@ const Search = ({ queryParams }) => {
                             </div>
                         </div>
                         :
-                        catalog_resources.length === 0 ?
+                        search.catalog_resources.length === 0 ?
                             <div className={styles['message-container']}>
                                 <div className={styles['message-content']}>
                                     <div className={styles['label']}> No addons were requested for catalogs</div>
                                 </div>
                             </div>
                             :
-                            catalog_resources.map((catalog, index) => {
-                                switch (catalog.content.type) {
+                            search.catalog_resources.map((catalog_resource, index) => {
+                                switch (catalog_resource.content.type) {
                                     case 'Ready':
                                         return (
                                             <MetaRow
                                                 key={index}
                                                 className={styles['search-row']}
-                                                title={catalog.addon_name}
-                                                items={catalog.content.content}
-                                                href={catalog.href}
+                                                title={catalog_resource.addon_name}
+                                                items={catalog_resource.content.content}
+                                                href={catalog_resource.href}
                                                 limit={10}
                                             />
                                         );
@@ -48,8 +48,8 @@ const Search = ({ queryParams }) => {
                                             <MetaRow
                                                 key={index}
                                                 className={styles['search-row']}
-                                                title={catalog.addon_name}
-                                                message={`Error(${catalog.content.content.type})${typeof catalog.content.content.content === 'string' ? ` - ${catalog.content.content.content}` : ''}`}
+                                                title={catalog_resource.addon_name}
+                                                message={`Error(${catalog_resource.content.content.type})${typeof catalog_resource.content.content.content === 'string' ? ` - ${catalog_resource.content.content.content}` : ''}`}
                                                 limit={10}
                                             />
                                         );
@@ -58,7 +58,7 @@ const Search = ({ queryParams }) => {
                                             <MetaRow.Placeholder
                                                 key={index}
                                                 className={styles['search-row-placeholder']}
-                                                title={catalog.addon_name}
+                                                title={catalog_resource.addon_name}
                                                 limit={10}
                                             />
                                         );
