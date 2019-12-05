@@ -7,6 +7,7 @@ const deepEqual = require('deep-equal');
 const { RouteFocusedProvider } = require('../RouteFocusedContext');
 const Route = require('../Route');
 const routeConfigForPath = require('./routeConfigForPath');
+const urlParamsForPath = require('./urlParamsForPath');
 
 const Router = ({ className, onPathNotMatch, ...props }) => {
     const { homePath, viewsConfig } = React.useMemo(() => ({
@@ -52,16 +53,7 @@ const Router = ({ className, onPathNotMatch, ...props }) => {
                 return;
             }
 
-            const matches = pathname.match(routeConfig.regexp);
-            const urlParams = routeConfig.urlParamsNames.reduce((urlParams, name, index) => {
-                if (Array.isArray(matches) && typeof matches[index + 1] === 'string') {
-                    urlParams[name] = decodeURIComponent(matches[index + 1]);
-                } else {
-                    urlParams[name] = null;
-                }
-
-                return urlParams;
-            }, {});
+            const urlParams = urlParamsForPath(routeConfig, pathname);
             const routeViewIndex = viewsConfig.findIndex((vc) => vc.includes(routeConfig));
             const routeIndex = viewsConfig[routeViewIndex].findIndex((rc) => rc === routeConfig);
             setViews((views) => {
