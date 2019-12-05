@@ -23,20 +23,11 @@ const MetaRow = ({ className, title, message, items, limit, href }) => {
                     :
                     <div className={styles['content-container']}>
                         <div className={styles['meta-items-container']}>
-                            {items.map(({ type, name, poster, posterShape, playIcon, progress, menuOptions, dataset, onSelect, menuOptionOnSelect }, index) => (
+                            {items.map((item, index) => (
                                 <MetaItem
+                                    {...item}
                                     key={index}
-                                    className={classnames(styles['meta-item'], styles['poster-shape-poster'], styles[`poster-shape-${posterShape}`])}
-                                    type={type}
-                                    name={name}
-                                    poster={poster}
-                                    posterShape={posterShape}
-                                    playIcon={playIcon}
-                                    progress={progress}
-                                    menuOptions={menuOptions}
-                                    dataset={dataset}
-                                    onSelect={onSelect}
-                                    menuOptionOnSelect={menuOptionOnSelect}
+                                    className={classnames(styles['meta-item'], styles['poster-shape-poster'], styles[`poster-shape-${item.posterShape}`])}
                                 />
                             ))}
                             {Array(limit - items.length).fill(null).map((_, index) => (
