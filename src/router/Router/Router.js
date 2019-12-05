@@ -33,7 +33,10 @@ const Router = ({ className, onPathNotMatch, ...props }) => {
         const onLocationHashChange = () => {
             const { pathname, query } = UrlUtils.parse(window.location.hash.slice(1));
             const queryParams = new URLSearchParams(typeof query === 'string' ? query : '');
-            const routeConfig = routeConfigForPath(viewsConfig, pathname);
+            const routeConfig = typeof pathname === 'string' ?
+                routeConfigForPath(viewsConfig, pathname)
+                :
+                null;
             if (!routeConfig) {
                 if (typeof onPathNotMatch === 'function') {
                     const component = onPathNotMatch();
