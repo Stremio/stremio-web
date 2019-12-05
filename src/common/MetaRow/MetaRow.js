@@ -21,7 +21,7 @@ const MetaRow = ({ className, title, message, items, limit, href }) => {
                 typeof message === 'string' && message.length > 0 ?
                     <div className={styles['message-container']} title={message}>{message}</div>
                     :
-                    <React.Fragment>
+                    <div className={styles['content-container']}>
                         <div className={styles['meta-items-container']}>
                             {items.map((item, index) => (
                                 <MetaItem
@@ -34,11 +34,16 @@ const MetaRow = ({ className, title, message, items, limit, href }) => {
                                 <div key={index} className={classnames(styles['meta-item'], styles['poster-shape-poster'])} />
                             ))}
                         </div>
-                        <Button className={styles['see-all-container']} title={'SEE ALL'} href={href}>
-                            <div className={styles['label']}>SEE ALL</div>
-                            <Icon className={styles['icon']} icon={'ic_arrow_thin_right'} />
-                        </Button>
-                    </React.Fragment>
+                        {
+                            typeof href === 'string' && href.length > 0 ?
+                                <Button className={styles['see-all-container']} title={'SEE ALL'} href={href}>
+                                    <div className={styles['label']}>SEE ALL</div>
+                                    <Icon className={styles['icon']} icon={'ic_arrow_thin_right'} />
+                                </Button>
+                                :
+                                null
+                        }
+                    </div>
             }
         </div>
     );
