@@ -6,23 +6,13 @@ const UrlUtils = require('url');
 const deepEqual = require('deep-equal');
 const { RouteFocusedProvider } = require('../RouteFocusedContext');
 const Route = require('../Route');
+const routeConfigForPath = require('./routeConfigForPath');
 
 const Router = ({ className, onPathNotMatch, ...props }) => {
-    const [{ homePath, viewsConfig }] = React.useState(() => ({
+    const { homePath, viewsConfig } = React.useMemo(() => ({
         homePath: props.homePath,
         viewsConfig: props.viewsConfig
-    }));
-    const routeConfigForPath = React.useCallback((path) => {
-        for (const viewConfig of viewsConfig) {
-            for (const routeConfig of viewConfig) {
-                if (typeof path === 'string' && path.match(routeConfig.regexp)) {
-                    return routeConfig;
-                }
-            }
-        }
-
-        return null;
-    }, []);
+    }), []);
     const [views, setViews] = React.useState(() => {
         return Array(viewsConfig.length).fill(null);
     });
@@ -31,7 +21,7 @@ const Router = ({ className, onPathNotMatch, ...props }) => {
             const { pathname, path } = UrlUtils.parse(window.location.hash.slice(1));
             if (homePath !== path) {
                 window.location.replace(`#${homePath}`);
-                const routeConfig = routeConfigForPath(pathname);
+                const routeConfig = routeConfigForPath(viewsConfig, pathname);
                 if (routeConfig) {
                     window.location = `#${path}`;
                 }
@@ -42,7 +32,7 @@ const Router = ({ className, onPathNotMatch, ...props }) => {
         const onLocationHashChange = () => {
             const { pathname, query } = UrlUtils.parse(window.location.hash.slice(1));
             const queryParams = new URLSearchParams(typeof query === 'string' ? query : '');
-            const routeConfig = routeConfigForPath(pathname);
+            const routeConfig = routeConfigForPath(viewsConfig, pathname);
             if (!routeConfig) {
                 if (typeof onPathNotMatch === 'function') {
                     const component = onPathNotMatch();
