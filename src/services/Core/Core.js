@@ -56,22 +56,19 @@ function Core() {
     function off(name, listener) {
         events.off(name, listener);
     }
-    function dispatch(action, model = 'All') {
+    function dispatch(action, model) {
         if (!active) {
             return;
         }
 
-        stremio_core.dispatch({
-            model,
-            args: action
-        });
+        stremio_core.dispatch(action, model);
     }
-    function getState(...args) {
+    function getState(model) {
         if (!active) {
             return {};
         }
 
-        return stremio_core.get_state(...args);
+        return stremio_core.get_state(model);
     }
 
     Object.defineProperties(this, {
