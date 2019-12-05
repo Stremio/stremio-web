@@ -66,12 +66,12 @@ function Core() {
             args: action
         });
     }
-    function getState() {
+    function getState(...args) {
         if (!active) {
             return {};
         }
 
-        return containerService.get_state();
+        return containerService.get_state(...args);
     }
 
     Object.defineProperties(this, {
