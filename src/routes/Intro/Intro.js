@@ -9,6 +9,7 @@ const ConsentCheckbox = require('./ConsentCheckbox');
 const styles = require('./styles');
 
 const SIGNUP_FORM = 'signup';
+const LOGIN_FORM = 'login';
 
 const Intro = ({ queryParams }) => {
     const { core } = useServices();
@@ -59,7 +60,7 @@ const Intro = ({ queryParams }) => {
             }
         },
         {
-            form: queryParams.get('form'),
+            form: [LOGIN_FORM, SIGNUP_FORM].includes(queryParams.get('form')) ? queryParams.get('form') : SIGNUP_FORM,
             email: '',
             password: '',
             confirmPassword: '',
@@ -71,21 +72,24 @@ const Intro = ({ queryParams }) => {
     );
     React.useEffect(() => {
         const onEvent = ({ event, args }) => {
-            if (event === 'CtxActionErr') {
-                dispatch({ type: 'error', error: args[1].args.message });
-            }
-            if (event === 'CtxChanged') {
-                const state = core.getState();
-                if (state.ctx.content.auth !== null) {
-                    window.location.replace('/');
-                }
+            switch (event) {
+                case 'CtxActionErr':
+                    const [_action, error] = args;
+                    dispatch({ type: 'error', error: error.args.message });
+                case 'CtxChanged':
+                    const state = core.getState();
+                    if (state.ctx.content.auth !== null) {
+                        window.location.replace('#/');
+                    }
             }
         };
-        core.on('Event', onEvent);
+        if (routeFocused) {
+            core.on('Event', onEvent);
+        }
         return () => {
             core.off('Event', onEvent);
         };
-    }, []);
+    }, [routeFocused]);
     const loginWithFacebook = React.useCallback(() => {
         FB.login((response) => {
             if (response.status === 'connected') {
@@ -120,7 +124,7 @@ const Intro = ({ queryParams }) => {
             dispatch({ type: 'error', error: 'Invalid email' });
             return;
         }
-        if (state.password.length === 0) {
+        if (typeof state.password !== 'string' || state.password.length === 0) {
             dispatch({ type: 'error', error: 'Invalid password' });
             return;
         }
@@ -146,19 +150,27 @@ const Intro = ({ queryParams }) => {
                 userOp: 'Logout'
             }
         });
-        location = '#/';
+        window.location.replace('#/');
     }, [state.termsAccepted]);
     const signup = React.useCallback(() => {
+        if (typeof state.email !== 'string' || state.email.length === 0) {
+            dispatch({ type: 'error', error: 'Invalid email' });
+            return;
+        }
+        if (typeof state.password !== 'string' || state.password.length === 0) {
+            dispatch({ type: 'error', error: 'Invalid password' });
+            return;
+        }
+        if (state.password !== state.confirmPassword) {
+            dispatch({ type: 'error', error: 'Passwords do not match' });
+            return;
+        }
         if (!state.termsAccepted) {
             dispatch({ type: 'error', error: 'You must accept the Terms of Service' });
             return;
         }
         if (!state.privacyPolicyAccepted) {
             dispatch({ type: 'error', error: 'You must accept the Privacy Policy' });
-            return;
-        }
-        if (state.password !== state.confirmPassword) {
-            dispatch({ type: 'error', error: 'Passwords do not match' });
             return;
         }
         core.dispatch({
@@ -223,7 +235,9 @@ const Intro = ({ queryParams }) => {
         dispatch({ type: 'toggle-checkbox', name: 'marketingAccepted' });
     }, []);
     React.useEffect(() => {
-        dispatch({ type: 'set-form', form: queryParams.get('form') });
+        if ([LOGIN_FORM, SIGNUP_FORM].includes(queryParams.get('form'))) {
+            dispatch({ type: 'set-form', form: queryParams.get('form') });
+        }
     }, [queryParams]);
     React.useEffect(() => {
         if (typeof state.error === 'string' && state.error.length > 0) {

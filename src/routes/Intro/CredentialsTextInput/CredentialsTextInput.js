@@ -1,5 +1,4 @@
 const React = require('react');
-const PropTypes = require('prop-types');
 const { TextInput } = require('stremio/common');
 
 const CredentialsTextInput = React.forwardRef((props, ref) => {
@@ -23,9 +22,5 @@ const CredentialsTextInput = React.forwardRef((props, ref) => {
 });
 
 CredentialsTextInput.displayName = 'CredentialsTextInput';
-
-CredentialsTextInput.propTYpes = {
-    onKeyDown: PropTypes.func
-};
 
 module.exports = CredentialsTextInput;

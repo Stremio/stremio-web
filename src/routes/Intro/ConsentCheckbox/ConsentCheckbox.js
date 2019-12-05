@@ -6,6 +6,10 @@ const styles = require('./styles');
 
 const ConsentCheckbox = React.forwardRef(({ className, checked, label, link, href, toggle, ...props }, ref) => {
     const checkboxOnClick = React.useCallback((event) => {
+        if (typeof props.onClick === 'function') {
+            props.onClick(event);
+        }
+
         if (!event.nativeEvent.togglePrevented && typeof toggle === 'function') {
             toggle(event);
         }
