@@ -30,7 +30,7 @@ const useBoard = () => {
                 load: 'CatalogsWithExtra',
                 args: { extra: [] }
             }
-        }, 'Board');
+        }, 'board');
         return () => {
             core.off('NewModel', onNewState);
         };
