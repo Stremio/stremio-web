@@ -1,8 +1,11 @@
-const React = require('react');
-const { useServices } = require('stremio/services');
+const { useModelState } = require('stremio/common');
 
-const mapContinueWatchingState = (state) => {
-    const lib_items = state.continue_watching.lib_items.map((lib_item) => {
+const initContinueWatchingState = () => ({
+    lib_items: []
+});
+
+const mapContinueWatchingState = (continue_watching) => {
+    const lib_items = continue_watching.lib_items.map((lib_item) => {
         lib_item.href = `#/metadetails/${lib_item.type}/${lib_item._id}${lib_item.state.video_id !== null ? `/${lib_item.state.video_id}` : ''}`;
         return lib_item;
     });
@@ -10,24 +13,13 @@ const mapContinueWatchingState = (state) => {
 };
 
 const useContinueWatching = () => {
-    const { core } = useServices();
-    const [continueWatching, setContinueWatching] = React.useState(() => {
-        const state = core.getState();
-        const continueWatching = mapContinueWatchingState(state);
-        return continueWatching;
+    return useModelState({
+        model: 'continue_watching',
+        action: null,
+        timeout: 5000,
+        map: mapContinueWatchingState,
+        init: initContinueWatchingState
     });
-    React.useLayoutEffect(() => {
-        const onNewState = () => {
-            const state = core.getState();
-            const continueWatching = mapContinueWatchingState(state);
-            setContinueWatching(continueWatching);
-        };
-        core.on('NewModel', onNewState);
-        return () => {
-            core.off('NewModel', onNewState);
-        };
-    }, []);
-    return continueWatching;
 };
 
 module.exports = useContinueWatching;
