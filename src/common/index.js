@@ -18,6 +18,7 @@ const TextInput = require('./TextInput');
 const routesRegexp = require('./routesRegexp');
 const useAnimationFrame = require('./useAnimationFrame');
 const useBinaryState = require('./useBinaryState');
+const useDeepEqualState = require('./useDeepEqualState');
 const useFullscreen = require('./useFullscreen');
 const useInLibrary = require('./useInLibrary');
 const useLiveRef = require('./useLiveRef');
@@ -47,6 +48,7 @@ module.exports = {
     routesRegexp,
     useAnimationFrame,
     useBinaryState,
+    useDeepEqualState,
     useFullscreen,
     useInLibrary,
     useLiveRef,
