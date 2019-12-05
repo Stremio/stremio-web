@@ -1,11 +1,11 @@
 const EventEmitter = require('events');
-const { default: init, ContainerService } = require('stremio-core-web');
+const { default: init, StremioCoreWeb } = require('stremio-core-web');
 
 function Core() {
     let active = false;
     let error = null;
     let starting = false;
-    let containerService = null;
+    let stremio_core = null;
     let events = new EventEmitter();
     events.on('error', () => { });
 
@@ -21,7 +21,7 @@ function Core() {
         init()
             .then(() => {
                 if (starting) {
-                    containerService = new ContainerService(({ name, args } = {}) => {
+                    stremio_core = new StremioCoreWeb(({ name, args } = {}) => {
                         if (active) {
                             try {
                                 events.emit(name, args);
@@ -47,7 +47,7 @@ function Core() {
         active = false;
         error = null;
         starting = false;
-        containerService = null;
+        stremio_core = null;
         onStateChanged();
     }
     function on(name, listener) {
@@ -61,7 +61,7 @@ function Core() {
             return;
         }
 
-        containerService.dispatch({
+        stremio_core.dispatch({
             model,
             args: action
         });
@@ -71,7 +71,7 @@ function Core() {
             return {};
         }
 
-        return containerService.get_state(...args);
+        return stremio_core.get_state(...args);
     }
 
     Object.defineProperties(this, {
