@@ -1,13 +1,18 @@
 const React = require('react');
-const { useServices } = require('stremio/services');
+const { useModelState } = require('stremio/common');
 
-const mapSearchState = (state) => {
-    const queryString = state.search.selected !== null ?
-        new URLSearchParams(state.search.selected.extra).toString()
+const initSearchState = () => ({
+    selected: null,
+    catalog_resources: []
+});
+
+const mapSearchState = (search) => {
+    const queryString = search.selected !== null ?
+        new URLSearchParams(search.selected.extra).toString()
         :
         '';
-    const selected = state.search.selected;
-    const catalog_resources = state.search.catalog_resources.map((catalog_resource) => {
+    const selected = search.selected;
+    const catalog_resources = search.catalog_resources.map((catalog_resource) => {
         catalog_resource.href = `#/discover/${encodeURIComponent(catalog_resource.request.base)}/${encodeURIComponent(catalog_resource.request.path.type_name)}/${encodeURIComponent(catalog_resource.request.path.id)}?${queryString}`;
         return catalog_resource;
     });
@@ -15,21 +20,9 @@ const mapSearchState = (state) => {
 };
 
 const useSearch = (queryParams) => {
-    const { core } = useServices();
-    const [search, setSearch] = React.useState(() => {
-        const state = core.getState();
-        const search = mapSearchState(state);
-        return search;
-    });
-    React.useLayoutEffect(() => {
-        const onNewState = () => {
-            const state = core.getState();
-            const search = mapSearchState(state);
-            setSearch(search);
-        };
-        core.on('NewModel', onNewState);
+    const loadSearchAction = React.useMemo(() => {
         if (queryParams.has('search') && queryParams.get('search').length > 0) {
-            core.dispatch({
+            return {
                 action: 'Load',
                 args: {
                     load: 'CatalogsWithExtra',
@@ -39,13 +32,15 @@ const useSearch = (queryParams) => {
                         ]
                     }
                 }
-            }, 'Search');
+            };
         }
-        return () => {
-            core.off('NewModel', onNewState);
-        };
     }, [queryParams]);
-    return search;
+    return useModelState({
+        model: 'search',
+        action: loadSearchAction,
+        map: mapSearchState,
+        init: initSearchState
+    });
 };
 
 module.exports = useSearch;
