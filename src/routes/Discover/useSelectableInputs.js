@@ -149,7 +149,7 @@ const mapSelectableInputs = (discover) => {
         };
         return { title, options, selected, renderLabelText, onSelect };
     });
-    const paginationInput = discover.selectable.has_prev_page || discover.selectable.has_next_page || selectedCatalogRequest.path.extra.some(([name]) => name === 'skip') ?
+    const paginationInput = discover.selectable.has_prev_page || discover.selectable.has_next_page ?
         {
             label: String(requestedPage),
             onSelect: (event) => {
