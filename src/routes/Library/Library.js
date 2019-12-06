@@ -1,14 +1,13 @@
 const React = require('react');
 const UrlUtils = require('url');
 const classnames = require('classnames');
-const { Button, Multiselect, MainNavBar, MetaItem } = require('stremio/common');
-const useUser = require('stremio/common/useUser');
+const { Button, Multiselect, MainNavBar, MetaItem, useUser } = require('stremio/common');
 const useLibrary = require('./useLibrary');
 const useSort = require('./useSort');
 const styles = require('./styles');
 
 const Library = ({ urlParams, queryParams }) => {
-    const user = useUser();
+    const [user] = useUser();
     const library = useLibrary(urlParams);
     const [selectSortInput, sortFunction] = useSort(urlParams, queryParams);
     const loginButtonOnClick = React.useCallback(() => {
