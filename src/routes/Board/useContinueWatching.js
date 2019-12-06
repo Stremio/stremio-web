@@ -6,7 +6,7 @@ const initContinueWatchingState = () => ({
 
 const mapContinueWatchingState = (continue_watching) => {
     const lib_items = continue_watching.lib_items.map((lib_item) => {
-        lib_item.href = `#/metadetails/${lib_item.type}/${lib_item._id}${lib_item.state.video_id !== null ? `/${lib_item.state.video_id}` : ''}`;
+        lib_item.href = `#/metadetails/${encodeURIComponent(lib_item.type)}/${encodeURIComponent(lib_item._id)}${lib_item.state.video_id !== null ? `/${encodeURIComponent(lib_item.state.video_id)}` : ''}`;
         return lib_item;
     });
     return { lib_items };

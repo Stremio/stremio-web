@@ -12,7 +12,7 @@ const mapBoardState = (board) => {
         catalog_resource.href = `#/discover/${encodeURIComponent(catalog_resource.request.base)}/${encodeURIComponent(catalog_resource.request.path.type_name)}/${encodeURIComponent(catalog_resource.request.path.id)}`;
         if (catalog_resource.content.type === 'Ready') {
             catalog_resource.content.content.map((metaItem) => {
-                metaItem.href = `#/metadetails/${metaItem.type}/${metaItem.id}`;
+                metaItem.href = `#/metadetails/${encodeURIComponent(metaItem.type)}/${encodeURIComponent(metaItem.id)}`;
                 return metaItem;
             });
         }
