@@ -2,8 +2,6 @@ const React = require('react');
 const { useServices } = require('stremio/services');
 const useModelState = require('stremio/common/useModelState');
 
-const initUserState = () => null;
-
 const mapUserState = (ctx) => {
     return ctx.content.auth ? ctx.content.auth.user : null;
 };
@@ -17,6 +15,10 @@ const useUser = () => {
                 userOp: 'Logout'
             }
         });
+    }, []);
+    const initUserState = React.useCallback(() => {
+        const ctx = core.getState('ctx');
+        return mapUserState(ctx);
     }, []);
     const user = useModelState({
         model: 'ctx',
