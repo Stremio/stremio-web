@@ -13,7 +13,7 @@ const navigateWithLoadRequest = (load_request) => {
     const type = encodeURIComponent(load_request.path.type_name);
     const catalogId = encodeURIComponent(load_request.path.id);
     const extra = new URLSearchParams(load_request.path.extra).toString();
-    window.location = `#/discover/${addonTransportUrl}/${type}/${catalogId}?${extra}`;
+    window.location.replace(`#/discover/${addonTransportUrl}/${type}/${catalogId}?${extra}`);
 };
 
 const getNextExtra = (prevExtra, extraProp, extraValue) => {
