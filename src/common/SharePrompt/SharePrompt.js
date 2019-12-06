@@ -2,12 +2,14 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
+const { useRouteFocused } = require('stremio-router');
 const Button = require('stremio/common/Button');
 const TextInput = require('stremio/common/TextInput');
 const styles = require('./styles');
 
 const SharePrompt = ({ className, url }) => {
     const inputRef = React.useRef(null);
+    const routeFocused = useRouteFocused();
     const selectInputContent = React.useCallback(() => {
         if (inputRef.current !== null) {
             inputRef.current.select();
@@ -20,7 +22,7 @@ const SharePrompt = ({ className, url }) => {
         }
     }, []);
     React.useEffect(() => {
-        if (inputRef.current !== null) {
+        if (routeFocused && inputRef.current !== null) {
             inputRef.current.select();
         }
     }, []);
