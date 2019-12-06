@@ -1,8 +1,7 @@
 const React = require('react');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
-const { Modal } = require('stremio-router');
-const { Button, MainNavBar, MetaItem, MetaPreview, Multiselect, PaginationInput, useBinaryState } = require('stremio/common');
+const { Button, MainNavBar, MetaItem, MetaPreview, Multiselect, ModalDialog, PaginationInput, useBinaryState } = require('stremio/common');
 const useDiscover = require('./useDiscover');
 const useSelectableInputs = require('./useSelectableInputs');
 const styles = require('./styles');
@@ -111,12 +110,12 @@ const Discover = ({ urlParams, queryParams }) => {
                         <div className={styles['meta-preview-container']} />
                 }
             </div>
-            {/* {
+            {
                 inputsModalOpen ?
-                    <Modal />
+                    <ModalDialog onCloseRequest={closeInputsModal} />
                     :
                     null
-            } */}
+            }
         </div>
     );
 };
