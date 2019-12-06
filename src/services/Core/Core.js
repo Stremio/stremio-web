@@ -58,14 +58,14 @@ function Core() {
     }
     function dispatch(action, model) {
         if (!active) {
-            return;
+            return false;
         }
 
-        stremio_core.dispatch(action, model);
+        return stremio_core.dispatch(action, model);
     }
     function getState(model) {
         if (!active) {
-            return {};
+            return null;
         }
 
         return stremio_core.get_state(model);
