@@ -31,6 +31,7 @@ const Button = React.forwardRef(({ className, href, disabled, children, ...props
             ...props,
             ref,
             className: classnames(className, styles['button-container'], { 'disabled': disabled }),
+            href,
             onKeyDown,
             onMouseDown
         },
