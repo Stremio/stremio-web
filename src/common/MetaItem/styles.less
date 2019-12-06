@@ -41,11 +41,9 @@
                 color: var(--color-backgrounddarker);
             }
 
-            .multiselect-container {
-                .multiselect-label-container {
-                    .icon {
-                        fill: var(--color-backgrounddarker);
-                    }
+            .menu-label-container {
+                .icon {
+                    fill: var(--color-backgrounddarker);
                 }
             }
         }
@@ -162,50 +160,45 @@
             }
         }
 
-        .multiselect-container {
+
+        .menu-label-container {
             flex: none;
             width: 2.8rem;
             height: 2.8rem;
-            overflow: visible;
+            padding: 0.75rem;
+            background-color: transparent;
 
-            .multiselect-label-container {
+            &:hover, &:global(.active) {
+                background-color: var(--color-surface80);
+            }
+
+            .icon {
+                display: block;
                 width: 100%;
                 height: 100%;
-                padding: 0.75rem;
-                background-color: transparent;
+                fill: var(--color-surfacelighter);
+            }
 
-                &:hover, &:global(.active) {
-                    background-color: var(--color-surface80);
-                }
+            .popup-menu-container {
+                width: auto;
+                right: initial;
+                left: 0;
 
-                .icon {
-                    display: block;
-                    width: 100%;
-                    height: 100%;
-                    fill: var(--color-surfacelighter);
-                }
+                .multiselect-menu-container {
+                    min-width: 8rem;
+                    max-width: 12rem;
 
-                .popup-menu-container {
-                    width: auto;
-                    right: initial;
-                    left: 0;
+                    .multiselect-option-container {
+                        padding: 0.5rem;
+                        background-color: var(--color-surfacelighter);
 
-                    .multiselect-menu-container {
-                        min-width: 8rem;
-                        max-width: 12rem;
+                        &:hover, &:focus {
+                            outline: none;
+                            background-color: var(--color-surfacelight);
+                        }
 
-                        .multiselect-option-container {
-                            padding: 0.5rem;
-                            background-color: var(--color-surfacelighter);
-
-                            &:hover, &:focus {
-                                outline: none;
-                                background-color: var(--color-surfacelight);
-                            }
-
-                            .multiselect-option-label {
-                                color: var(--color-backgrounddarker);
-                            }
+                        .multiselect-option-label {
+                            color: var(--color-backgrounddarker);
                         }
                     }
                 }

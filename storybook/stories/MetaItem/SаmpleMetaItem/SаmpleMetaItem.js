@@ -28,10 +28,9 @@ storiesOf('MetaItem', module).add('SаmpleMetaItem', () => {
             posterShape={'poster'}
             playIcon={true}
             progress={0.4}
-            menuOptions={CONTINUE_WATCHING_MENU}
+            options={CONTINUE_WATCHING_MENU}
             dataset={{ id: 'pt1' }}
-            onSelect={action('onSelect')}
-            menuOptionOnSelect={action('menuOptionOnSelect')}
+            optionOnSelect={action('optionOnSelect')}
             data-id={'meta-item-id'}
             onClick={domEventHandler}
         />

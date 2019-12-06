@@ -17,28 +17,11 @@ const ICON_FOR_TYPE = new Map([
     ['other', 'ic_movies']
 ]);
 
-const MetaItem = React.memo(({ className, type, name, poster, posterShape, playIcon, progress, menuOptions, dataset, onSelect, menuOptionOnSelect, ...props }) => {
+const MetaItem = React.memo(({ className, type, name, poster, posterShape, playIcon, progress, options, dataset, ...props }) => {
     const [menuOpen, onMenuOpen, onMenuClose] = useBinaryState(false);
-    const metaItemOnClick = React.useCallback((event) => {
-        if (typeof props.onClick === 'function') {
-            props.onClick(event);
-        }
-
-        if (!event.nativeEvent.selectMetaItemPrevented && typeof onSelect === 'function') {
-            onSelect({
-                type: 'select',
-                dataset: dataset,
-                reactEvent: event,
-                nativeEvent: event.nativeEvent
-            });
-        }
-    }, [props.onClick, onSelect, dataset]);
-    const multiselectOnClick = React.useCallback((event) => {
-        event.nativeEvent.selectMetaItemPrevented = true;
-    }, []);
-    const multiselectOnSelect = React.useCallback((event) => {
-        if (typeof menuOptionOnSelect === 'function') {
-            menuOptionOnSelect({
+    const optionOnSelect = React.useCallback((event) => {
+        if (typeof props.optionOnSelect === 'function') {
+            props.optionOnSelect({
                 type: 'select-option',
                 value: event.value,
                 dataset: dataset,
@@ -46,18 +29,18 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, playI
                 nativeEvent: event.nativeEvent
             });
         }
-    }, [menuOptionOnSelect, dataset]);
+    }, [dataset, props.optionOnSelect]);
     const renderPosterFallback = React.useMemo(() => () => (
         <Icon
             className={styles['placeholder-icon']}
             icon={ICON_FOR_TYPE.has(type) ? ICON_FOR_TYPE.get(type) : ICON_FOR_TYPE.get('other')}
         />
     ), [type]);
-    const renderMenuOptionsLabelContent = React.useMemo(() => () => (
+    const renderMenuLabelContent = React.useMemo(() => () => (
         <Icon className={styles['icon']} icon={'ic_more'} />
     ), []);
     return (
-        <Button title={name} {...props} className={classnames(className, styles['meta-item-container'], styles['poster-shape-poster'], styles[`poster-shape-${posterShape}`], { 'active': menuOpen })} onClick={metaItemOnClick}>
+        <Button title={name} {...props} className={classnames(className, styles['meta-item-container'], styles['poster-shape-poster'], styles[`poster-shape-${posterShape}`], { 'active': menuOpen })}>
             <div className={styles['poster-container']}>
                 <div className={styles['poster-image-layer']}>
                     <Image
@@ -85,7 +68,7 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, playI
                 }
             </div>
             {
-                (typeof name === 'string' && name.length > 0) || (Array.isArray(menuOptions) && menuOptions.length > 0) ?
+                (typeof name === 'string' && name.length > 0) || (Array.isArray(options) && options.length > 0) ?
                     <div className={styles['title-bar-container']}>
                         {
                             typeof name === 'string' && name.length > 0 ?
@@ -94,17 +77,15 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, playI
                                 null
                         }
                         {
-                            Array.isArray(menuOptions) && menuOptions.length > 0 ?
-                                <div className={styles['multiselect-container']} onClick={multiselectOnClick}>
-                                    <Multiselect
-                                        className={styles['multiselect-label-container']}
-                                        renderLabelContent={renderMenuOptionsLabelContent}
-                                        options={menuOptions}
-                                        onOpen={onMenuOpen}
-                                        onClose={onMenuClose}
-                                        onSelect={multiselectOnSelect}
-                                    />
-                                </div>
+                            Array.isArray(options) && options.length > 0 ?
+                                <Multiselect
+                                    className={styles['menu-label-container']}
+                                    renderLabelContent={renderMenuLabelContent}
+                                    options={options}
+                                    onOpen={onMenuOpen}
+                                    onClose={onMenuClose}
+                                    onSelect={optionOnSelect}
+                                />
                                 :
                                 null
                         }
@@ -126,10 +107,9 @@ MetaItem.propTypes = {
     posterShape: PropTypes.oneOf(['poster', 'landscape', 'square']),
     playIcon: PropTypes.bool,
     progress: PropTypes.number,
-    menuOptions: PropTypes.array,
+    options: PropTypes.array,
     dataset: PropTypes.objectOf(String),
-    onSelect: PropTypes.func,
-    menuOptionOnSelect: PropTypes.func
+    optionOnSelect: PropTypes.func
 };
 
 module.exports = MetaItem;
