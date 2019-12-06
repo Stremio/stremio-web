@@ -7,10 +7,24 @@ const Popup = require('stremio/common/Popup');
 const useBinaryState = require('stremio/common/useBinaryState');
 const styles = require('./styles');
 
-const Multiselect = ({ className, direction, title, options, selected, disabled, dataset, renderLabelContent, renderLabelText, onOpen, onClose, onSelect, ...props }) => {
-    options = Array.isArray(options) ? options.filter((option) => option && typeof option.value === 'string') : [];
-    selected = Array.isArray(selected) ? selected.filter((value) => typeof value === 'string') : [];
+const Multiselect = ({ className, direction, title, disabled, dataset, renderLabelContent, renderLabelText, onOpen, onClose, onSelect, ...props }) => {
     const [menuOpen, openMenu, closeMenu, toggleMenu] = useBinaryState(false);
+    const options = React.useMemo(() => {
+        return Array.isArray(props.options) ?
+            props.options.filter((option) => {
+                return option && typeof option.value === 'string';
+            })
+            :
+            [];
+    }, [props.options]);
+    const selected = React.useMemo(() => {
+        return Array.isArray(props.selected) ?
+            props.selected.filter((value) => {
+                return typeof value === 'string';
+            })
+            :
+            [];
+    }, [props.selected]);
     const popupLabelOnClick = React.useCallback((event) => {
         if (typeof props.onClick === 'function') {
             props.onClick(event);
@@ -68,8 +82,8 @@ const Multiselect = ({ className, direction, title, options, selected, disabled,
             open={menuOpen}
             direction={direction}
             onCloseRequest={closeMenu}
-            renderLabel={(popupProps) => (
-                <Button {...popupProps} {...props} className={classnames(className, popupProps.className, styles['label-container'], { 'active': menuOpen })} title={title} disabled={disabled} onClick={popupLabelOnClick}>
+            renderLabel={({ children, ...labelProps }) => (
+                <Button {...labelProps} {...props} className={classnames(className, labelProps.className, styles['label-container'], { 'active': menuOpen })} title={title} disabled={disabled} onClick={popupLabelOnClick}>
                     {
                         typeof renderLabelContent === 'function' ?
                             renderLabelContent()
@@ -95,23 +109,19 @@ const Multiselect = ({ className, direction, title, options, selected, disabled,
                                 <Icon className={styles['icon']} icon={'ic_arrow_down'} />
                             </React.Fragment>
                     }
-                    {popupProps.children}
+                    {children}
                 </Button>
             )}
             renderMenu={() => (
                 <div className={styles['menu-container']} onKeyDown={popupMenuOnKeyDown} onClick={popupMenuOnClick}>
                     {
                         options.length > 0 ?
-                            options.map(({ label, value }) => {
-                                const isSelected = selected.includes(value);
-                                const title = typeof label === 'string' ? label : value;
-                                return (
-                                    <Button key={value} className={classnames(styles['option-container'], { 'selected': isSelected })} title={title} data-value={value} data-autofocus={isSelected ? true : null} onClick={optionOnClick}>
-                                        <div className={styles['label']}>{title}</div>
-                                        <Icon className={styles['icon']} icon={'ic_check'} />
-                                    </Button>
-                                )
-                            })
+                            options.map(({ label, value }) => (
+                                <Button key={value} className={classnames(styles['option-container'], { 'selected': selected.includes(value) })} title={typeof label === 'string' ? label : value} data-value={value} onClick={optionOnClick}>
+                                    <div className={styles['label']}>{typeof label === 'string' ? label : value}</div>
+                                    <Icon className={styles['icon']} icon={'ic_check'} />
+                                </Button>
+                            ))
                             :
                             <div className={styles['no-options-container']}>
                                 <div className={styles['label']}>No options available</div>
