@@ -1,46 +1,50 @@
 const React = require('react');
 const { useServices } = require('stremio/services');
+const { useModelState } = require('stremio/common');
 
-const mapLibraryState = (state) => {
-    const library_state = state.library.library_state;
-    const selected = state.library.selected;
-    const lib_items = state.library.lib_items.map((lib_item) => {
+const initLibraryState = () => ({
+    library_state: {
+        type: 'NotLoaded'
+    },
+    selected: {
+        type_name: null
+    },
+    type_names: [],
+    lib_items: []
+});
+
+const mapLibraryState = (library) => {
+    const library_state = library.library_state;
+    const selected = library.selected;
+    const type_names = library.type_names;
+    const lib_items = library.lib_items.map((lib_item) => {
+        // TODO what else
         lib_item._ctime = new Date(lib_item._ctime);
+        lib_item.href = `#/metadetails/${encodeURIComponent(lib_item.type)}/${encodeURIComponent(lib_item._id)}${lib_item.state.video_id !== null ? `/${encodeURIComponent(lib_item.state.video_id)}` : ''}`;
         return lib_item;
     });
-    const type_names = state.library.type_names;
-    return { library_state, selected, lib_items, type_names };
+    return { library_state, selected, type_names, lib_items };
+};
+
+const onNewLibraryState = (library) => {
+    if (library.selected.type_name === null && library.type_names.length > 0) {
+        return {
+            action: 'Load',
+            args: {
+                load: 'LibraryFiltered',
+                args: {
+                    type_name: library.type_names[0]
+                }
+            }
+        };
+    }
 };
 
 const useLibrary = (urlParams) => {
     const { core } = useServices();
-    const [library, setLibrary] = React.useState(() => {
-        const state = core.getState();
-        const library = mapLibraryState(state);
-        return library;
-    });
-    React.useEffect(() => {
-        const onNewState = () => {
-            const state = core.getState();
-            if (state.library.selected.type_name === null && state.library.type_names.length > 0) {
-                core.dispatch({
-                    action: 'Load',
-                    args: {
-                        load: 'LibraryFiltered',
-                        args: {
-                            type_name: state.library.type_names[0]
-                        }
-                    }
-                });
-                return;
-            }
-            const library = mapLibraryState(state);
-            setLibrary(library);
-        };
-        core.on('NewModel', onNewState);
-        const state = core.getState();
+    const loadLibraryAction = React.useMemo(() => {
         if (typeof urlParams.type === 'string') {
-            core.dispatch({
+            return {
                 action: 'Load',
                 args: {
                     load: 'LibraryFiltered',
@@ -48,23 +52,29 @@ const useLibrary = (urlParams) => {
                         type_name: urlParams.type
                     }
                 }
-            });
-        } else if (state.library.type_names.length > 0) {
-            core.dispatch({
-                action: 'Load',
-                args: {
-                    load: 'LibraryFiltered',
+            };
+        } else {
+            const library = core.getState('library');
+            if (library.type_names.length > 0) {
+                return {
+                    action: 'Load',
                     args: {
-                        type_name: state.library.type_names[0]
+                        load: 'LibraryFiltered',
+                        args: {
+                            type_name: library.type_names[0]
+                        }
                     }
-                }
-            });
+                };
+            }
         }
-        return () => {
-            core.off('NewModel', onNewState);
-        };
     }, [urlParams]);
-    return library;
+    return useModelState({
+        model: 'library',
+        action: loadLibraryAction,
+        map: mapLibraryState,
+        init: initLibraryState,
+        onNewState: onNewLibraryState
+    });
 }
 
 module.exports = useLibrary;
