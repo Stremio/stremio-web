@@ -2,16 +2,18 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const AColorPicker = require('a-color-picker');
 const Button = require('stremio/common/Button');
-const useBinaryState = require('stremio/common/useBinaryState');
 const ModalDialog = require('stremio/common/ModalDialog');
+const useBinaryState = require('stremio/common/useBinaryState');
 const ColorPicker = require('./ColorPicker');
 
-const COLOR_FORMAT = 'hexcss4';
+const parseColor = (value) => {
+    return AColorPicker.parseColor(value, 'hexcss4');
+};
 
 const ColorInput = ({ className, value, dataset, onChange, ...props }) => {
     const [modalOpen, openModal, closeModal] = useBinaryState(false);
     const [tempValue, setTempValue] = React.useState(() => {
-        return AColorPicker.parseColor(value, COLOR_FORMAT);
+        return parseColor(value);
     });
     const labelButtonStyle = React.useMemo(() => ({
         ...props.style,
@@ -43,22 +45,21 @@ const ColorInput = ({ className, value, dataset, onChange, ...props }) => {
 
             closeModal();
         };
-
         return [
             {
                 label: 'Select',
                 props: {
-                    onClick: selectButtonOnClick,
-                    'data-autofocus': true
+                    'data-autofocus': true,
+                    onClick: selectButtonOnClick
                 }
             }
         ];
     }, [tempValue, dataset, onChange]);
     const colorPickerOnInput = React.useCallback((event) => {
-        setTempValue(AColorPicker.parseColor(event.value, COLOR_FORMAT));
+        setTempValue(parseColor(event.value));
     }, []);
-    React.useEffect(() => {
-        setTempValue(AColorPicker.parseColor(value, COLOR_FORMAT));
+    React.useLayoutEffect(() => {
+        setTempValue(parseColor(value));
     }, [value, modalOpen]);
     return (
         <Button title={value} {...props} style={labelButtonStyle} className={className} onClick={labelButtonOnClick}>
