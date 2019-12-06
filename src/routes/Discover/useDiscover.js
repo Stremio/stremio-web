@@ -32,6 +32,18 @@ const mapDiscoverState = (discover) => {
     return { selectable, catalog_resource };
 };
 
+const onNewDiscoverState = (discover) => {
+    if (discover.catalog_resource === null && discover.selectable.types.length > 0) {
+        return {
+            action: 'Load',
+            args: {
+                load: 'CatalogFiltered',
+                args: discover.selectable.types[0].load_request
+            }
+        };
+    }
+};
+
 const useDiscover = (urlParams, queryParams) => {
     const { core } = useServices();
     const loadDiscoverAction = React.useMemo(() => {
@@ -54,28 +66,16 @@ const useDiscover = (urlParams, queryParams) => {
         } else {
             const discover = core.getState('discover');
             if (discover.selectable.types.length > 0) {
-                const load_request = discover.selectable.types[0].load_request;
                 return {
                     action: 'Load',
                     args: {
                         load: 'CatalogFiltered',
-                        args: load_request
+                        args: discover.selectable.types[0].load_request
                     }
                 };
             }
         }
     }, [urlParams, queryParams]);
-    const onNewDiscoverState = React.useCallback((discover) => {
-        if (discover.catalog_resource === null && discover.selectable.types.length > 0) {
-            return {
-                action: 'Load',
-                args: {
-                    load: 'CatalogFiltered',
-                    args: discover.selectable.types[0].load_request
-                }
-            };
-        }
-    }, []);
     return useModelState({
         model: 'discover',
         action: loadDiscoverAction,
