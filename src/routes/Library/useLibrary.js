@@ -1,99 +1,70 @@
 const React = require('react');
+const { useServices } = require('stremio/services');
 
-const DEFAULT_TYPE = 'movie';
-const libraryItems = [
-    {
-        id: '1',
-        type: 'movie',
-        name: 'Stremio demo item movie 1',
-        poster: '/images/intro_background.jpg',
-        logo: '/images/default_avatar.png',
-        posterShape: 'poster'
-    },
-    {
-        id: '2',
-        type: 'movie',
-        name: 'Stremio demo item movie 2',
-        poster: '/images/intro_background.jpg',
-        logo: '/images/default_avatar.png',
-        posterShape: 'poster'
-    },
-    {
-        id: '3',
-        type: 'series',
-        name: 'Stremio demo item series 1',
-        poster: '/images/default_avatar.png',
-        logo: '/images/default_avatar.png',
-        posterShape: 'poster'
-    },
-    {
-        id: '4',
-        type: 'series',
-        name: 'Stremio demo item series 2',
-        poster: '/images/default_avatar.png',
-        logo: '/images/default_avatar.png',
-        posterShape: 'poster'
-    },
-    {
-        id: '5',
-        type: 'channel',
-        name: 'Stremio demo item channel 1',
-        poster: '/images/anonymous.png',
-        logo: '/images/default_avatar.png',
-        posterShape: 'square'
-    },
-    {
-        id: '6',
-        type: 'channel',
-        name: 'Stremio demo item channel 2',
-        poster: '/images/anonymous.png',
-        logo: '/images/default_avatar.png',
-        posterShape: 'square'
-    }
-];
-
-const useLibrary = (type, sort) => {
-    type = typeof type === 'string' && type.length > 0 ? type : DEFAULT_TYPE;
-    const items = React.useMemo(() => {
-        return libraryItems.filter(item => item.type === type);
-    }, [type, sort]);
-    const onSelect = React.useCallback((event) => {
-        const { name, value } = event.currentTarget.dataset;
-        if (name === 'type') {
-            const nextQuery = new URLSearchParams({ sort: typeof sort === 'string' ? sort : '' });
-            const nextType = typeof value === 'string' ? value : '';
-            window.location.replace(`#/library/${nextType}?${nextQuery}`);
-        } else if (name === 'sort') {
-            const nextQuery = new URLSearchParams({ sort: typeof value === 'string' ? value : '' });
-            const nextType = typeof type === 'string' ? type : '';
-            window.location.replace(`#/library/${nextType}?${nextQuery}`);
-        }
-    }, [type, sort]);
-    const typeDropdown = React.useMemo(() => {
-        const selected = typeof type === 'string' && type.length > 0 ? [type] : [];
-        const options = libraryItems
-            .map(({ type }) => type)
-            .concat(selected)
-            .filter((type, index, types) => types.indexOf(type) === index)
-            .map((type) => ({ label: type, value: type }));
-        return {
-            name: 'type',
-            selected,
-            options,
-            onSelect
-        };
-    }, [type, onSelect]);
-    const sortDropdown = React.useMemo(() => {
-        const selected = typeof sort === 'string' && sort.length > 0 ? [sort] : [];
-        const options = [{ label: 'A-Z', value: 'a-z' }, { label: 'Recent', value: 'recent' }];
-        return {
-            name: 'sort',
-            selected,
-            options,
-            onSelect
-        };
-    }, [sort, onSelect]);
-    return [items, [typeDropdown, sortDropdown]];
+const mapLibraryState = (state) => {
+    const library_state = state.library.library_state;
+    const selected = state.library.selected;
+    const lib_items = state.library.lib_items.map((lib_item) => {
+        lib_item._ctime = new Date(lib_item._ctime);
+        return lib_item;
+    });
+    const type_names = state.library.type_names;
+    return { library_state, selected, lib_items, type_names };
 };
+
+const useLibrary = (urlParams) => {
+    const { core } = useServices();
+    const [library, setLibrary] = React.useState(() => {
+        const state = core.getState();
+        const library = mapLibraryState(state);
+        return library;
+    });
+    React.useEffect(() => {
+        const onNewState = () => {
+            const state = core.getState();
+            if (state.library.selected.type_name === null && state.library.type_names.length > 0) {
+                core.dispatch({
+                    action: 'Load',
+                    args: {
+                        load: 'LibraryFiltered',
+                        args: {
+                            type_name: state.library.type_names[0]
+                        }
+                    }
+                });
+                return;
+            }
+            const library = mapLibraryState(state);
+            setLibrary(library);
+        };
+        core.on('NewModel', onNewState);
+        const state = core.getState();
+        if (typeof urlParams.type === 'string') {
+            core.dispatch({
+                action: 'Load',
+                args: {
+                    load: 'LibraryFiltered',
+                    args: {
+                        type_name: urlParams.type
+                    }
+                }
+            });
+        } else if (state.library.type_names.length > 0) {
+            core.dispatch({
+                action: 'Load',
+                args: {
+                    load: 'LibraryFiltered',
+                    args: {
+                        type_name: state.library.type_names[0]
+                    }
+                }
+            });
+        }
+        return () => {
+            core.off('NewModel', onNewState);
+        };
+    }, [urlParams]);
+    return library;
+}
 
 module.exports = useLibrary;

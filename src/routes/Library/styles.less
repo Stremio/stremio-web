@@ -19,16 +19,17 @@
         grid-template-columns: 1fr auto;
         grid-template-rows: auto 1fr;
         grid-template-areas:
-            "dropdowns-area switch-view-area"
-            "meta-items-area meta-items-area";
+            "controls-area switch-view-area"
+            "type-content-area type-content-area";
 
-        .dropdowns-container {
-            grid-area: dropdowns-area;
+        .controls-container {
+            grid-area: controls-area;
             display: flex;
             flex-direction: row;
             margin: 2rem;
+            overflow: visible;
 
-            .dropdown {
+            .select-input-container {
                 flex-grow: 0;
                 flex-shrink: 1;
                 flex-basis: 15rem;
@@ -40,14 +41,63 @@
             }
         }
 
-        .meta-items-container {
-            grid-area: meta-items-area;
-            display: grid;
-            grid-auto-rows: max-content;
-            grid-gap: 1.5rem;
-            align-items: center;
-            padding: 0 2rem;
-            overflow-y: auto;
+        .type-content-container {
+            grid-area: type-content-area;
+
+            .meta-items-container {
+                display: grid;
+                max-height: 100%;
+                grid-auto-rows: max-content;
+                grid-gap: 1.5rem;
+                align-items: center;
+                padding: 0 2rem;
+                overflow-y: auto;
+            }
+
+            .message-container {
+                padding: 0 2rem;
+                font-size: 2rem;
+                color: var(--color-surfacelighter);
+            }
+
+            .anonymous-user-message-container {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                width: 100%;
+                height: 100%;
+
+                .login-button {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    width: 20rem;
+                    min-height: 4rem;
+                    margin-top: 2rem;
+                    padding: 0.5rem 1rem;
+                    background-color: var(--color-primarydark);
+
+                    .label {
+                        flex-grow: 0;
+                        flex-shrink: 1;
+                        flex-basis: auto;
+                        font-size: 1.1rem;
+                        font-weight: 700;
+                        color: var(--color-surfacelighter);
+                        text-align: center;
+                    }
+
+                    &:hover {
+                        background-color: var(--color-primary);
+                    }
+
+                    .label {
+                        font-size: 1.2rem;
+                    }
+                }
+            }
         }
     }
 }
@@ -56,7 +106,7 @@
     .library-container {
         .library-content {
             .meta-items-container {
-                grid-template-columns: repeat(10, auto);
+                grid-template-columns: repeat(10, 1fr);
             }
         }
     }
@@ -66,7 +116,7 @@
     .library-container {
         .library-content {
             .meta-items-container {
-                grid-template-columns: repeat(9, auto);
+                grid-template-columns: repeat(9, 1fr);
             }
         }
     }
@@ -76,7 +126,7 @@
     .library-container {
         .library-content {
             .meta-items-container {
-                grid-template-columns: repeat(8, auto);
+                grid-template-columns: repeat(8, 1fr);
             }
         }
     }
@@ -86,7 +136,7 @@
     .library-container {
         .library-content {
             .meta-items-container {
-                grid-template-columns: repeat(7, auto);
+                grid-template-columns: repeat(7, 1fr);
             }
         }
     }
@@ -96,7 +146,7 @@
     .library-container {
         .library-content {
             .meta-items-container {
-                grid-template-columns: repeat(6, auto);
+                grid-template-columns: repeat(6, 1fr);
             }
         }
     }
@@ -106,7 +156,7 @@
     .library-container {
         .library-content {
             .meta-items-container {
-                grid-template-columns: repeat(5, auto);
+                grid-template-columns: repeat(5, 1fr);
             }
         }
     }
