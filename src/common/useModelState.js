@@ -8,8 +8,9 @@ const UNLOAD_ACTION = {
     action: 'Unload',
 };
 
-const useModelState = ({ model, action, timeout, map, mapWithCtx, init }) => {
+const useModelState = ({ model, action, timeout, onNewState, map, mapWithCtx, init }) => {
     const modelRef = React.useRef(model);
+    const mountedRef = React.useRef(false);
     const { core } = useServices();
     const routeFocused = useRouteFocused();
     const [state, setState] = useDeepEqualState(init);
@@ -22,8 +23,16 @@ const useModelState = ({ model, action, timeout, map, mapWithCtx, init }) => {
         };
     }, []);
     React.useLayoutEffect(() => {
-        const onNewState = throttle(() => {
+        const onNewStateThrottled = throttle(() => {
             const state = core.getState(modelRef.current);
+            if (typeof onNewState === 'function') {
+                const action = onNewState(state);
+                const handled = core.dispatch(action, modelRef.current);
+                if (handled) {
+                    return;
+                }
+            }
+
             if (typeof mapWithCtx === 'function') {
                 const ctx = core.getState('ctx');
                 setState(mapWithCtx(state, ctx));
@@ -34,14 +43,19 @@ const useModelState = ({ model, action, timeout, map, mapWithCtx, init }) => {
             }
         }, timeout);
         if (routeFocused) {
-            core.on('NewState', onNewState);
-            onNewState.call();
+            core.on('NewState', onNewStateThrottled);
+            if (mountedRef.current) {
+                onNewStateThrottled.call();
+            }
         }
         return () => {
-            onNewState.cancel();
-            core.off('NewState', onNewState);
+            onNewStateThrottled.cancel();
+            core.off('NewState', onNewStateThrottled);
         };
     }, [routeFocused]);
+    React.useLayoutEffect(() => {
+        mountedRef.current = true;
+    }, []);
     return state;
 };
 
