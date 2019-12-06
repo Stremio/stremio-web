@@ -2,7 +2,7 @@ const React = require('react');
 const classnames = require('classnames');
 const styles = require('./styles');
 
-const Button = React.forwardRef(({ children, ...props }, ref) => {
+const Button = React.forwardRef(({ className, href, disabled, children, ...props }, ref) => {
     const onKeyDown = React.useCallback((event) => {
         if (typeof props.onKeyDown === 'function') {
             props.onKeyDown(event);
@@ -25,12 +25,12 @@ const Button = React.forwardRef(({ children, ...props }, ref) => {
         }
     }, [props.onMouseDown]);
     return React.createElement(
-        typeof props.href === 'string' && props.href.length > 0 ? 'a' : 'div',
+        typeof href === 'string' && href.length > 0 ? 'a' : 'div',
         {
             tabIndex: 0,
             ...props,
             ref,
-            className: classnames(props.className, styles['button-container'], { 'disabled': props.disabled }),
+            className: classnames(className, styles['button-container'], { 'disabled': disabled }),
             onKeyDown,
             onMouseDown
         },
