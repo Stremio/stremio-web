@@ -14,6 +14,13 @@ const mapSearchState = (search) => {
     const selected = search.selected;
     const catalog_resources = search.catalog_resources.map((catalog_resource) => {
         catalog_resource.href = `#/discover/${encodeURIComponent(catalog_resource.request.base)}/${encodeURIComponent(catalog_resource.request.path.type_name)}/${encodeURIComponent(catalog_resource.request.path.id)}?${queryString}`;
+        if (catalog_resource.content.type === 'Ready') {
+            catalog_resource.content.content.map((metaItem) => {
+                metaItem.href = `#/metadetails/${encodeURIComponent(metaItem.type)}/${encodeURIComponent(metaItem.id)}`;
+                return metaItem;
+            });
+        }
+
         return catalog_resource;
     });
     return { selected, catalog_resources };
