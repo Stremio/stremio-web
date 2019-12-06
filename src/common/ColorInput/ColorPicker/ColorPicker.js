@@ -4,41 +4,42 @@ const classnames = require('classnames');
 const AColorPicker = require('a-color-picker');
 const styles = require('./styles');
 
-const COLOR_FORMAT = 'hexcss4';
+const parseColor = (value) => {
+    return AColorPicker.parseColor(value, 'hexcss4');
+};
 
-// TODO implement custom picker which is keyboard accessible
 const ColorPicker = ({ className, value, onInput }) => {
     const pickerRef = React.useRef(null);
     const pickerElementRef = React.useRef(null);
-    React.useEffect(() => {
+    React.useLayoutEffect(() => {
         pickerRef.current = AColorPicker.createPicker(pickerElementRef.current, {
-            color: AColorPicker.parseColor(value, COLOR_FORMAT),
+            color: parseColor(value),
             showHSL: false,
             showHEX: false,
             showRGB: false,
             showAlpha: true
         });
-        const clipboardPicker = pickerElementRef.current.querySelector('.a-color-picker-clipbaord');
-        if (clipboardPicker instanceof HTMLElement) {
-            clipboardPicker.tabIndex = -1;
+        const pickerClipboard = pickerElementRef.current.querySelector('.a-color-picker-clipbaord');
+        if (pickerClipboard instanceof HTMLElement) {
+            pickerClipboard.tabIndex = -1;
         }
     }, []);
-    React.useEffect(() => {
-        pickerRef.current.on('change', (picker, value) => {
-            if (typeof onInput === 'function') {
+    React.useLayoutEffect(() => {
+        if (typeof onInput === 'function') {
+            pickerRef.current.on('change', (picker, value) => {
                 onInput({
                     type: 'input',
-                    value: AColorPicker.parseColor(value, COLOR_FORMAT)
+                    value: parseColor(value)
                 });
-            }
-        });
+            });
+        }
         return () => {
             pickerRef.current.off('change');
         };
     }, [onInput]);
-    React.useEffect(() => {
-        const nextValue = AColorPicker.parseColor(value, COLOR_FORMAT);
-        if (AColorPicker.parseColor(pickerRef.current.color, COLOR_FORMAT) !== nextValue) {
+    React.useLayoutEffect(() => {
+        const nextValue = parseColor(value);
+        if (nextValue !== parseColor(pickerRef.current.color)) {
             pickerRef.current.color = nextValue;
         }
     }, [value]);
