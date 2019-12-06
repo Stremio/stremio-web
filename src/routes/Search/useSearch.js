@@ -6,13 +6,20 @@ const initSearchState = () => ({
     catalog_resources: []
 });
 
-const mapSearchState = (search) => {
+const mapSearchState = (search, ctx) => {
     const queryString = search.selected !== null ?
         new URLSearchParams(search.selected.extra).toString()
         :
         '';
     const selected = search.selected;
     const catalog_resources = search.catalog_resources.map((catalog_resource) => {
+        catalog_resource.addon_name = ctx.content.addons.reduce((addon_name, addon) => {
+            if (addon.transportUrl === catalog_resource.request.base) {
+                return addon.manifest.name;
+            }
+
+            return addon_name;
+        }, catalog_resource.request.base);
         catalog_resource.href = `#/discover/${encodeURIComponent(catalog_resource.request.base)}/${encodeURIComponent(catalog_resource.request.path.type_name)}/${encodeURIComponent(catalog_resource.request.path.id)}?${queryString}`;
         if (catalog_resource.content.type === 'Ready') {
             catalog_resource.content.content.map((metaItem) => {
@@ -49,7 +56,7 @@ const useSearch = (queryParams) => {
     return useModelState({
         model: 'search',
         action: loadSearchAction,
-        map: mapSearchState,
+        mapWithCtx: mapSearchState,
         init: initSearchState
     });
 };
