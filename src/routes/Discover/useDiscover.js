@@ -1,56 +1,42 @@
 const React = require('react');
 const { useServices } = require('stremio/services');
+const { useModelState } = require('stremio/common');
 
-const mapDiscoverState = (state) => {
-    const selectable = state.discover.selectable;
-    const catalog_resource = state.discover.catalog_resource !== null && state.discover.catalog_resource.content.type === 'Ready' ?
+const initDiscoverState = () => ({
+    selectable: {
+        types: [],
+        catalogs: [],
+        extra: [],
+        has_next_page: false,
+        has_prev_page: false
+    },
+    catalog_resource: null
+});
+
+const mapDiscoverState = (discover) => {
+    const selectable = discover.selectable;
+    const catalog_resource = discover.catalog_resource !== null && discover.catalog_resource.content.type === 'Ready' ?
         {
-            ...state.discover.catalog_resource,
+            ...discover.catalog_resource,
             content: {
-                ...state.discover.catalog_resource.content,
-                content: state.discover.catalog_resource.content.content.map((metaItem) => {
+                ...discover.catalog_resource.content,
+                content: discover.catalog_resource.content.content.map((metaItem) => {
                     metaItem.released = new Date(metaItem.released);
+                    metaItem.href = `#/metadetails/${encodeURIComponent(metaItem.type)}/${encodeURIComponent(metaItem.id)}`;
                     return metaItem;
                 })
             }
         }
         :
-        state.discover.catalog_resource;
+        discover.catalog_resource;
     return { selectable, catalog_resource };
 };
 
 const useDiscover = (urlParams, queryParams) => {
     const { core } = useServices();
-    const [discover, setDiscover] = React.useState(() => ({
-        selectable: {
-            types: [],
-            catalogs: [],
-            extra: [],
-            has_next_page: false,
-            has_prev_page: false
-        },
-        catalog_resource: null
-    }));
-    React.useLayoutEffect(() => {
-        const onNewModel = () => {
-            const state = core.getState();
-            if (state.discover.catalog_resource === null && state.discover.selectable.types.length > 0) {
-                const load_request = state.discover.selectable.types[0].load_request;
-                core.dispatch({
-                    action: 'Load',
-                    args: {
-                        load: 'CatalogFiltered',
-                        args: load_request
-                    }
-                }, 'Discover');
-                return;
-            }
-            const discover = mapDiscoverState(state);
-            setDiscover(discover);
-        };
-        core.on('NewModel', onNewModel);
-        if (typeof urlParams.addonTransportUrl === 'string' && typeof urlParams.catalogId === 'string' && typeof urlParams.type === 'string') {
-            core.dispatch({
+    const loadDiscoverAction = React.useMemo(() => {
+        if (typeof urlParams.addonTransportUrl === 'string' && typeof urlParams.type === 'string' && typeof urlParams.catalogId === 'string') {
+            return {
                 action: 'Load',
                 args: {
                     load: 'CatalogFiltered',
@@ -64,25 +50,39 @@ const useDiscover = (urlParams, queryParams) => {
                         }
                     }
                 }
-            }, 'Discover');
+            };
         } else {
-            const state = core.getState();
-            if (state.discover.selectable.types.length > 0) {
-                const load_request = state.discover.selectable.types[0].load_request;
-                core.dispatch({
+            const discover = core.getState('discover');
+            if (discover.selectable.types.length > 0) {
+                const load_request = discover.selectable.types[0].load_request;
+                return {
                     action: 'Load',
                     args: {
                         load: 'CatalogFiltered',
                         args: load_request
                     }
-                }, 'Discover');
+                };
             }
         }
-        return () => {
-            core.off('NewModel', onNewModel);
-        };
     }, [urlParams, queryParams]);
-    return discover;
+    const onNewDiscoverState = React.useCallback((discover) => {
+        if (discover.catalog_resource === null && discover.selectable.types.length > 0) {
+            return {
+                action: 'Load',
+                args: {
+                    load: 'CatalogFiltered',
+                    args: discover.selectable.types[0].load_request
+                }
+            };
+        }
+    }, []);
+    return useModelState({
+        model: 'discover',
+        action: loadDiscoverAction,
+        map: mapDiscoverState,
+        init: initDiscoverState,
+        onNewState: onNewDiscoverState
+    });
 };
 
 module.exports = useDiscover;
