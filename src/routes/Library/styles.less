@@ -47,19 +47,15 @@
             }
         }
 
-        .message-container, .meta-items-container {
+        .message-container {
             flex-grow: 0;
             flex-shrink: 1;
             flex-basis: auto;
-            padding: 0 1.5rem;
-            overflow-y: auto;
-        }
-
-        .message-container {
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
             align-items: center;
+            padding: 0 1.5rem;
 
             &:first-child {
                 .message-label {
@@ -109,10 +105,13 @@
         }
 
         .meta-items-container {
+            flex: 1;
             display: grid;
             grid-auto-rows: max-content;
             align-items: center;
             grid-gap: 1.5rem;
+            padding: 0 1.5rem;
+            overflow-y: auto;
         }
     }
 }

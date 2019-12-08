@@ -2,8 +2,8 @@ const React = require('react');
 const classnames = require('classnames');
 const { Button, Multiselect, MainNavBar, MetaItem } = require('stremio/common');
 const useLibrary = require('./useLibrary');
-const useItemOptions = require('./useItemOptions');
 const useSelectableInputs = require('./useSelectableInputs');
+const useItemOptions = require('./useItemOptions');
 const styles = require('./styles');
 
 const Library = ({ urlParams, queryParams }) => {
