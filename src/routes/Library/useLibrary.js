@@ -16,6 +16,7 @@ const mapLibraryState = (library) => {
     const selected = library.selected;
     const type_names = library.type_names;
     const lib_items = library.lib_items.map((lib_item) => ({
+        id: lib_item._id,
         type: lib_item.type,
         name: lib_item.name,
         poster: lib_item.poster,
@@ -24,6 +25,7 @@ const mapLibraryState = (library) => {
             lib_item.state.timeOffset / lib_item.state.duration
             :
             null,
+        videoId: lib_item.state.video_id,
         href: `#/metadetails/${encodeURIComponent(lib_item.type)}/${encodeURIComponent(lib_item._id)}${lib_item.state.video_id !== null ? `/${encodeURIComponent(lib_item.state.video_id)}` : ''}`
     }));
     return { library_state, selected, type_names, lib_items };
