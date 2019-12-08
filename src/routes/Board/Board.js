@@ -2,22 +2,13 @@ const React = require('react');
 const { MainNavBar, MetaRow } = require('stremio/common');
 const useBoard = require('./useBoard');
 const useContinueWatching = require('./useContinueWatching');
+const useItemOptions = require('./useItemOptions');
 const styles = require('./styles');
-
-const CONTINUE_WATCHING_MENU = [
-    {
-        label: 'Play',
-        value: 'play'
-    },
-    {
-        label: 'Dismiss',
-        value: 'dismiss'
-    }
-];
 
 const Board = () => {
     const board = useBoard();
     const continueWatching = useContinueWatching();
+    const [options, optionOnSelect] = useItemOptions();
     return (
         <div className={styles['board-container']}>
             <MainNavBar className={styles['nav-bar']} />
@@ -27,7 +18,12 @@ const Board = () => {
                         <MetaRow
                             className={styles['board-row']}
                             title={'Continue Watching'}
-                            items={continueWatching.lib_items}
+                            items={continueWatching.lib_items.map(({ id, videoId, ...libItem }) => ({
+                                ...libItem,
+                                dataset: { id, videoId, type: libItem.type },
+                                options,
+                                optionOnSelect
+                            }))}
                             limit={10}
                         />
                         :
