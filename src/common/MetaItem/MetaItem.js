@@ -17,7 +17,7 @@ const ICON_FOR_TYPE = new Map([
     ['other', 'ic_movies']
 ]);
 
-const MetaItem = React.memo(({ className, type, name, poster, posterShape, playIcon, progress, options, dataset, ...props }) => {
+const MetaItem = React.memo(({ className, type, name, poster, posterShape, playIcon, progress, options, dataset, optionOnSelect, ...props }) => {
     const [menuOpen, onMenuOpen, onMenuClose] = useBinaryState(false);
     const metaItemOnClick = React.useCallback((event) => {
         if (event.nativeEvent.selectPrevented) {
@@ -27,9 +27,9 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, playI
     const menuOnClick = React.useCallback((event) => {
         event.nativeEvent.selectPrevented = true;
     }, []);
-    const optionOnSelect = React.useCallback((event) => {
-        if (typeof props.optionOnSelect === 'function') {
-            props.optionOnSelect({
+    const menuOnSelect = React.useCallback((event) => {
+        if (typeof optionOnSelect === 'function') {
+            optionOnSelect({
                 type: 'select-option',
                 value: event.value,
                 dataset: dataset,
@@ -37,7 +37,7 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, playI
                 nativeEvent: event.nativeEvent
             });
         }
-    }, [dataset, props.optionOnSelect]);
+    }, [dataset, optionOnSelect]);
     const renderPosterFallback = React.useMemo(() => () => (
         <Icon
             className={styles['placeholder-icon']}
@@ -92,7 +92,7 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, playI
                                     options={options}
                                     onOpen={onMenuOpen}
                                     onClose={onMenuClose}
-                                    onSelect={optionOnSelect}
+                                    onSelect={menuOnSelect}
                                     onClick={menuOnClick}
                                 />
                                 :
