@@ -49,7 +49,10 @@ const useLibrary = (urlParams, queryParams) => {
                     load: 'LibraryFiltered',
                     args: {
                         type_name: urlParams.type,
-                        sort_prop: queryParams.get('sort_prop')
+                        sort_prop: queryParams.has('sort_prop') ?
+                            queryParams.get('sort_prop')
+                            :
+                            null
                     }
                 }
             };
