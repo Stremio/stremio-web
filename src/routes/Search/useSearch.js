@@ -6,7 +6,7 @@ const initSearchState = () => ({
     catalog_resources: []
 });
 
-const mapSearchState = (search, ctx) => {
+const mapSearchStateWithCtx = (search, ctx) => {
     const queryString = search.selected !== null ?
         new URLSearchParams(search.selected.extra).toString()
         :
@@ -20,14 +20,16 @@ const mapSearchState = (search, ctx) => {
 
             return addon_name;
         }, catalog_resource.request.base);
-        catalog_resource.href = `#/discover/${encodeURIComponent(catalog_resource.request.base)}/${encodeURIComponent(catalog_resource.request.path.type_name)}/${encodeURIComponent(catalog_resource.request.path.id)}?${queryString}`;
         if (catalog_resource.content.type === 'Ready') {
-            catalog_resource.content.content.map((metaItem) => {
-                metaItem.href = `#/metadetails/${encodeURIComponent(metaItem.type)}/${encodeURIComponent(metaItem.id)}`;
-                return metaItem;
-            });
+            catalog_resource.content.content = catalog_resource.content.content.map((metaItem) => ({
+                type: metaItem.type,
+                name: metaItem.name,
+                poster: metaItem.poster,
+                posterShape: metaItem.posterShape,
+                href: `#/metadetails/${encodeURIComponent(metaItem.type)}/${encodeURIComponent(metaItem.id)}` // TODO this should redirect with videoId at some cases
+            }));
         }
-
+        catalog_resource.href = `#/discover/${encodeURIComponent(catalog_resource.request.base)}/${encodeURIComponent(catalog_resource.request.path.type_name)}/${encodeURIComponent(catalog_resource.request.path.id)}?${queryString}`;
         return catalog_resource;
     });
     return { selected, catalog_resources };
@@ -56,7 +58,7 @@ const useSearch = (queryParams) => {
     return useModelState({
         model: 'search',
         action: loadSearchAction,
-        mapWithCtx: mapSearchState,
+        mapWithCtx: mapSearchStateWithCtx,
         init: initSearchState
     });
 };
