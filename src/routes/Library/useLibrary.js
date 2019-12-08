@@ -15,12 +15,17 @@ const mapLibraryState = (library) => {
     const library_state = library.library_state;
     const selected = library.selected;
     const type_names = library.type_names;
-    const lib_items = library.lib_items.map((lib_item) => {
-        lib_item._ctime = new Date(lib_item._ctime);
-        lib_item._mtime = new Date(lib_item._mtime);
-        lib_item.href = `#/metadetails/${encodeURIComponent(lib_item.type)}/${encodeURIComponent(lib_item._id)}${lib_item.state.video_id !== null ? `/${encodeURIComponent(lib_item.state.video_id)}` : ''}`;
-        return lib_item;
-    });
+    const lib_items = library.lib_items.map((lib_item) => ({
+        type: lib_item.type,
+        name: lib_item.name,
+        poster: lib_item.poster,
+        posterShape: lib_item.posterShape,
+        progress: lib_item.state.timeOffset > 0 && lib_item.state.duration > 0 ?
+            lib_item.state.timeOffset / lib_item.state.duration
+            :
+            null,
+        href: `#/metadetails/${encodeURIComponent(lib_item.type)}/${encodeURIComponent(lib_item._id)}${lib_item.state.video_id !== null ? `/${encodeURIComponent(lib_item.state.video_id)}` : ''}`
+    }));
     return { library_state, selected, type_names, lib_items };
 };
 
