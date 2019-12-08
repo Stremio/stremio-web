@@ -20,10 +20,14 @@ const ICON_FOR_TYPE = new Map([
 const MetaItem = React.memo(({ className, type, name, poster, posterShape, playIcon, progress, options, dataset, optionOnSelect, ...props }) => {
     const [menuOpen, onMenuOpen, onMenuClose] = useBinaryState(false);
     const metaItemOnClick = React.useCallback((event) => {
+        if (typeof props.onClick === 'function') {
+            props.onClick(event);
+        }
+
         if (event.nativeEvent.selectPrevented) {
             event.preventDefault();
         }
-    }, []);
+    }, [props.onClick]);
     const menuOnClick = React.useCallback((event) => {
         event.nativeEvent.selectPrevented = true;
     }, []);
