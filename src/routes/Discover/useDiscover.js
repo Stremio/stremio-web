@@ -73,6 +73,10 @@ const useDiscover = (urlParams, queryParams) => {
                         args: discover.selectable.types[0].load_request
                     }
                 };
+            } else {
+                return {
+                    action: 'Unload'
+                };
             }
         }
     }, [urlParams, queryParams]);
