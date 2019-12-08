@@ -2,12 +2,14 @@ const React = require('react');
 const classnames = require('classnames');
 const { Button, Multiselect, MainNavBar, MetaItem } = require('stremio/common');
 const useLibrary = require('./useLibrary');
+const useItemOptions = require('./useItemOptions');
 const useSelectableInputs = require('./useSelectableInputs');
 const styles = require('./styles');
 
 const Library = ({ urlParams, queryParams }) => {
     const library = useLibrary(urlParams, queryParams);
     const [typeSelect, sortPropSelect] = useSelectableInputs(library);
+    const [options, optionOnSelect] = useItemOptions();
     return (
         <div className={styles['library-container']}>
             <MainNavBar className={styles['nav-bar']} />
@@ -51,8 +53,14 @@ const Library = ({ urlParams, queryParams }) => {
                                         </div>
                                         :
                                         <div className={styles['meta-items-container']}>
-                                            {library.lib_items.map((libItem, index) => (
-                                                <MetaItem {...libItem} key={index} />
+                                            {library.lib_items.map(({ id, videoId, ...libItem }, index) => (
+                                                <MetaItem
+                                                    {...libItem}
+                                                    key={index}
+                                                    dataset={{ id, videoId, type: libItem.type }}
+                                                    options={options}
+                                                    optionOnSelect={optionOnSelect}
+                                                />
                                             ))}
                                         </div>
                 }
