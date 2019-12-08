@@ -27,7 +27,6 @@ const NavMenu = ({ className }) => {
     return (
         <Popup
             open={menuOpen}
-            direction={'bottom'}
             onCloseRequest={closeMenu}
             renderLabel={({ ref, className: popupLabelClassName, children }) => (
                 <Button ref={ref} className={classnames(className, popupLabelClassName, styles['nav-menu-label-container'], { 'active': menuOpen })} tabIndex={-1} onClick={popupLabelOnClick}>

@@ -55,7 +55,6 @@ const SeasonsBar = ({ className, seasons, season, onSelect }) => {
             </Button>
             <Multiselect
                 className={styles['seasons-popup-label-container']}
-                direction={'bottom'}
                 title={`Season ${season}`}
                 options={options}
                 selected={selected}

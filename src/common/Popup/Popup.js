@@ -6,6 +6,7 @@ const styles = require('./styles');
 
 const Popup = ({ open, direction, renderLabel, renderMenu, dataset, onCloseRequest, ...props }) => {
     const labelRef = React.useRef(null);
+    const menuRef = React.useRef(null);
     const [autoDirection, setAutoDirection] = React.useState(null);
     const menuOnMouseDown = React.useCallback((event) => {
         event.nativeEvent.closePopupPrevented = true;
@@ -48,12 +49,38 @@ const Popup = ({ open, direction, renderLabel, renderMenu, dataset, onCloseReque
     }, [open, onCloseRequest, dataset]);
     React.useLayoutEffect(() => {
         if (open) {
+            const autoDirection = [];
             const documentRect = document.documentElement.getBoundingClientRect();
             const labelRect = labelRef.current.getBoundingClientRect();
-            const labelOffsetTop = labelRect.top - documentRect.top;
-            const labelOffsetBottom = (documentRect.height + documentRect.top) - (labelRect.top + labelRect.height);
-            const autoDirection = labelOffsetBottom >= labelOffsetTop ? 'bottom' : 'top';
-            setAutoDirection(autoDirection);
+            const menuRect = menuRef.current.getBoundingClientRect();
+            const labelPosition = {
+                left: labelRect.left - documentRect.left,
+                top: labelRect.top - documentRect.top,
+                right: (documentRect.width + documentRect.left) - (labelRect.left + labelRect.width),
+                bottom: (documentRect.height + documentRect.top) - (labelRect.top + labelRect.height)
+            };
+
+            if (menuRect.height <= labelPosition.bottom) {
+                autoDirection.push('bottom');
+            } else if (menuRect.height <= labelPosition.top) {
+                autoDirection.push('top');
+            } else if (labelPosition.bottom >= labelPosition.top) {
+                autoDirection.push('bottom');
+            } else {
+                autoDirection.push('top');
+            }
+
+            if (menuRect.width <= (labelPosition.right + labelRect.width)) {
+                autoDirection.push('right');
+            } else if (menuRect.width <= (labelPosition.left + labelRect.width)) {
+                autoDirection.push('left');
+            } else if (labelPosition.right > labelPosition.left) {
+                autoDirection.push('right');
+            } else {
+                autoDirection.push('left');
+            }
+
+            setAutoDirection(autoDirection.join('-'));
         } else {
             setAutoDirection(null);
         }
@@ -63,7 +90,7 @@ const Popup = ({ open, direction, renderLabel, renderMenu, dataset, onCloseReque
         ref: labelRef,
         className: styles['label-container'],
         children: open ?
-            <FocusLock className={classnames(styles['menu-container'], styles[`menu-direction-${['top', 'bottom'].includes(direction) ? direction : autoDirection}`])} autoFocus={false} lockProps={{ onMouseDown: menuOnMouseDown }}>
+            <FocusLock ref={menuRef} className={classnames(styles['menu-container'], styles[`menu-direction-${autoDirection}`], styles[`menu-direction-${direction}`])} autoFocus={false} lockProps={{ onMouseDown: menuOnMouseDown }}>
                 {renderMenu()}
             </FocusLock>
             :
@@ -73,7 +100,7 @@ const Popup = ({ open, direction, renderLabel, renderMenu, dataset, onCloseReque
 
 Popup.propTypes = {
     open: PropTypes.bool,
-    direction: PropTypes.oneOf(['top', 'bottom']),
+    direction: PropTypes.oneOf(['top-left', 'bottom-left', 'top-right', 'bottom-right']),
     renderLabel: PropTypes.func.isRequired,
     renderMenu: PropTypes.func.isRequired,
     dataset: PropTypes.objectOf(String),
