@@ -89,9 +89,13 @@ const Discover = ({ urlParams, queryParams }) => {
                                         <div className={styles['meta-items-container']} onMouseDownCapture={metaItemsOnMouseDownCapture} onFocusCapture={metaItemsOnFocusCapture}>
                                             {discover.catalog_resource.content.content.map((metaItem, index) => (
                                                 <MetaItem
-                                                    {...metaItem}
                                                     key={index}
                                                     className={classnames(styles['meta-item'], { 'selected': selectedMetaItem === metaItem })}
+                                                    type={metaItem.type}
+                                                    name={metaItem.name}
+                                                    poster={metaItem.poster}
+                                                    posterShape={metaItem.posterShape}
+                                                    href={metaItem.href}
                                                     data-index={index}
                                                 />
                                             ))}
