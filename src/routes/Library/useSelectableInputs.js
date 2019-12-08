@@ -8,6 +8,7 @@ const SORT_PROP_OPTIONS = [
 
 const mapSelectableInputs = (library) => {
     const typeSelect = {
+        title: 'Select type',
         selected: library.selected !== null ?
             [library.selected.type_name]
             :
@@ -25,6 +26,7 @@ const mapSelectableInputs = (library) => {
         }
     };
     const sortPropSelect = {
+        title: 'Select sort',
         selected: library.selected !== null ?
             [library.selected.sort_prop]
             :
