@@ -19,6 +19,14 @@ const ICON_FOR_TYPE = new Map([
 
 const MetaItem = React.memo(({ className, type, name, poster, posterShape, playIcon, progress, options, dataset, ...props }) => {
     const [menuOpen, onMenuOpen, onMenuClose] = useBinaryState(false);
+    const metaItemOnClick = React.useCallback((event) => {
+        if (event.nativeEvent.selectPrevented) {
+            event.preventDefault();
+        }
+    }, []);
+    const menuOnClick = React.useCallback((event) => {
+        event.nativeEvent.selectPrevented = true;
+    }, []);
     const optionOnSelect = React.useCallback((event) => {
         if (typeof props.optionOnSelect === 'function') {
             props.optionOnSelect({
@@ -40,7 +48,7 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, playI
         <Icon className={styles['icon']} icon={'ic_more'} />
     ), []);
     return (
-        <Button title={name} {...props} className={classnames(className, styles['meta-item-container'], styles['poster-shape-poster'], styles[`poster-shape-${posterShape}`], { 'active': menuOpen })}>
+        <Button title={name} {...props} className={classnames(className, styles['meta-item-container'], styles['poster-shape-poster'], styles[`poster-shape-${posterShape}`], { 'active': menuOpen })} onClick={metaItemOnClick}>
             <div className={styles['poster-container']}>
                 <div className={styles['poster-image-layer']}>
                     <Image
@@ -85,6 +93,7 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, playI
                                     onOpen={onMenuOpen}
                                     onClose={onMenuClose}
                                     onSelect={optionOnSelect}
+                                    onClick={menuOnClick}
                                 />
                                 :
                                 null
