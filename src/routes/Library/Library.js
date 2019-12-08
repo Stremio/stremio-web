@@ -1,87 +1,61 @@
 const React = require('react');
-const UrlUtils = require('url');
 const classnames = require('classnames');
-const { Button, Multiselect, MainNavBar, MetaItem, useUser } = require('stremio/common');
+const { Button, Multiselect, MainNavBar, MetaItem } = require('stremio/common');
 const useLibrary = require('./useLibrary');
-const useSort = require('./useSort');
+const useSelectableInputs = require('./useSelectableInputs');
 const styles = require('./styles');
 
 const Library = ({ urlParams, queryParams }) => {
-    const [user] = useUser();
-    const library = useLibrary(urlParams);
-    const [selectSortInput, sortFunction] = useSort(urlParams, queryParams);
-    const loginButtonOnClick = React.useCallback(() => {
-        window.location.replace('#/intro');
-    }, []);
-    const selectTypeInput = React.useMemo(() => {
-        return {
-            selected: [library.selected.type_name],
-            options: library.type_names
-                .map((type) => ({
-                    label: type === '' ? '"Empty"' : type,
-                    value: type
-                })),
-            onSelect: (event) => {
-                const { search } = UrlUtils.parse(window.location.hash.slice(1));
-                window.location.replace(`#/library/${event.value}${search !== null ? search : ''}`);
-            }
-        }
-    }, [library.selected.type_name, library.type_names]);
+    const library = useLibrary(urlParams, queryParams);
+    const [typeSelect, sortPropSelect] = useSelectableInputs(library);
     return (
         <div className={styles['library-container']}>
             <MainNavBar className={styles['nav-bar']} />
             <div className={styles['library-content']}>
                 {
-                    user ?
-                        <div className={styles['controls-container']}>
-                            <Multiselect {...selectTypeInput} className={styles['select-input-container']} />
-                            <Multiselect {...selectSortInput} className={styles['select-input-container']} />
+                    library.library_state.type === 'Ready' && library.library_state.content.uid !== null && library.type_names.length > 0 ?
+                        <div className={styles['selectable-inputs-container']}>
+                            <Multiselect {...typeSelect} className={styles['select-input-container']} />
+                            <Multiselect {...sortPropSelect} className={styles['select-input-container']} />
                         </div>
                         :
                         null
                 }
-                <div className={styles['type-content-container']}>
-                    {
-                        !user ?
-                            <div className={classnames(styles['message-container'], styles['anonymous-user-message-container'])}>
-                                Please log into this app
-                                <Button className={styles['login-button']} onClick={loginButtonOnClick}>
-                                    <div className={styles['label']}>LOG IN</div>
-                                </Button>
+                {
+                    library.library_state.type === 'Ready' && library.library_state.content.uid === null ?
+                        <div className={classnames(styles['message-container'], styles['no-user-message-container'])}>
+                            <div className={styles['message-label']}>Library is only availavle for logged in users</div>
+                            <Button className={styles['login-button-container']} href={'#/intro'}>
+                                <div className={styles['label']}>LOG IN</div>
+                            </Button>
+                        </div>
+                        :
+                        library.library_state.type !== 'Ready' ?
+                            <div className={styles['message-container']}>
+                                <div className={styles['message-label']}>Loading</div>
                             </div>
                             :
-                            library.library_state.type != 'Ready' ?
+                            library.type_names.length === 0 ?
                                 <div className={styles['message-container']}>
-                                    Loading
+                                    <div className={styles['message-label']}>Empty library</div>
                                 </div>
                                 :
-                                library.type_names.length > 0 ?
-                                    library.selected.type_name !== null ?
-                                        library.lib_items.length > 0 ?
-                                            <div className={styles['meta-items-container']}>
-                                                {library.lib_items
-                                                    .sort(sortFunction)
-                                                    .map(({ removed, temp, ...libItem }, index) => (
-                                                        <MetaItem
-                                                            {...libItem}
-                                                            key={index}
-                                                        />
-                                                    ))}
-                                            </div>
-                                            :
-                                            <div className={styles['message-container']}>
-                                                Empty library
-                                            </div>
-                                        :
-                                        <div className={styles['message-container']}>
-                                            Select a type, please
-                                        </div>
-                                    :
+                                library.selected === null ?
                                     <div className={styles['message-container']}>
-                                        Empty library
+                                        <div className={styles['message-label']}>Please select a type</div>
                                     </div>
-                    }
-                </div>
+                                    :
+                                    library.lib_items.length === 0 ?
+                                        <div className={styles['message-container']}>
+                                            <div className={styles['message-label']}>There are no items for the selected type</div>
+                                        </div>
+                                        :
+                                        <div className={styles['meta-items-container']}>
+                                            {library.lib_items.map((libItem, index) => (
+                                                <MetaItem {...libItem} key={index} />
+                                            ))}
+                                        </div>
+                }
             </div>
         </div>
     );
