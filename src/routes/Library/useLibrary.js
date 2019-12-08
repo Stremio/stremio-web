@@ -6,9 +6,7 @@ const initLibraryState = () => ({
     library_state: {
         type: 'NotLoaded'
     },
-    selected: {
-        type_name: null
-    },
+    selected: null,
     type_names: [],
     lib_items: []
 });
@@ -18,8 +16,8 @@ const mapLibraryState = (library) => {
     const selected = library.selected;
     const type_names = library.type_names;
     const lib_items = library.lib_items.map((lib_item) => {
-        // TODO what else
         lib_item._ctime = new Date(lib_item._ctime);
+        lib_item._mtime = new Date(lib_item._mtime);
         lib_item.href = `#/metadetails/${encodeURIComponent(lib_item.type)}/${encodeURIComponent(lib_item._id)}${lib_item.state.video_id !== null ? `/${encodeURIComponent(lib_item.state.video_id)}` : ''}`;
         return lib_item;
     });
@@ -27,20 +25,21 @@ const mapLibraryState = (library) => {
 };
 
 const onNewLibraryState = (library) => {
-    if (library.selected.type_name === null && library.type_names.length > 0) {
+    if (library.selected === null && library.type_names.length > 0) {
         return {
             action: 'Load',
             args: {
                 load: 'LibraryFiltered',
                 args: {
-                    type_name: library.type_names[0]
+                    type_name: library.type_names[0],
+                    sort_prop: null
                 }
             }
         };
     }
 };
 
-const useLibrary = (urlParams) => {
+const useLibrary = (urlParams, queryParams) => {
     const { core } = useServices();
     const loadLibraryAction = React.useMemo(() => {
         if (typeof urlParams.type === 'string') {
@@ -49,7 +48,8 @@ const useLibrary = (urlParams) => {
                 args: {
                     load: 'LibraryFiltered',
                     args: {
-                        type_name: urlParams.type
+                        type_name: urlParams.type,
+                        sort_prop: queryParams.get('sort_prop')
                     }
                 }
             };
@@ -61,13 +61,14 @@ const useLibrary = (urlParams) => {
                     args: {
                         load: 'LibraryFiltered',
                         args: {
-                            type_name: library.type_names[0]
+                            type_name: library.type_names[0],
+                            sort_prop: null
                         }
                     }
                 };
             }
         }
-    }, [urlParams]);
+    }, [urlParams, queryParams]);
     return useModelState({
         model: 'library',
         action: loadLibraryAction,
