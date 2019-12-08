@@ -76,6 +76,10 @@ const useLibrary = (urlParams, queryParams) => {
                         }
                     }
                 };
+            } else {
+                return {
+                    action: 'Unload'
+                };
             }
         }
     }, [urlParams, queryParams]);
