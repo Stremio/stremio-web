@@ -17,7 +17,7 @@ const Router = ({ className, onPathNotMatch, ...props }) => {
     const [views, setViews] = React.useState(() => {
         return Array(viewsConfig.length).fill(null);
     });
-    React.useEffect(() => {
+    React.useLayoutEffect(() => {
         if (typeof homePath === 'string') {
             const { pathname, path } = UrlUtils.parse(window.location.hash.slice(1));
             if (homePath !== path) {
@@ -29,7 +29,7 @@ const Router = ({ className, onPathNotMatch, ...props }) => {
             }
         }
     }, []);
-    React.useEffect(() => {
+    React.useLayoutEffect(() => {
         const onLocationHashChange = () => {
             const { pathname, query } = UrlUtils.parse(window.location.hash.slice(1));
             const queryParams = new URLSearchParams(typeof query === 'string' ? query : '');
