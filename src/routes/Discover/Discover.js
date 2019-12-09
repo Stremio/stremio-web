@@ -24,13 +24,17 @@ const Discover = ({ urlParams, queryParams }) => {
     const [selectedMetaItem, setSelectedMetaItem] = React.useState(() => {
         return getMetaItemAtIndex(discover.catalog_resource, 0);
     });
-    const metaItemsOnMouseDownCapture = React.useCallback((event) => {
-        event.nativeEvent.buttonBlurPrevented = true;
-    }, []);
     const metaItemsOnFocusCapture = React.useCallback((event) => {
         const metaItem = getMetaItemAtIndex(discover.catalog_resource, event.target.dataset.index);
         setSelectedMetaItem(metaItem);
     }, [discover.catalog_resource]);
+    const metaItemOnClick = React.useCallback((event) => {
+        const metaItem = getMetaItemAtIndex(discover.catalog_resource, event.currentTarget.dataset.index);
+        if (metaItem !== selectedMetaItem) {
+            event.preventDefault();
+            event.currentTarget.focus();
+        }
+    }, [discover.catalog_resource, selectedMetaItem]);
     React.useLayoutEffect(() => {
         const metaItem = getMetaItemAtIndex(discover.catalog_resource, 0);
         setSelectedMetaItem(metaItem);
@@ -86,7 +90,7 @@ const Discover = ({ urlParams, queryParams }) => {
                                             Loading
                                         </div>
                                         :
-                                        <div className={styles['meta-items-container']} onMouseDownCapture={metaItemsOnMouseDownCapture} onFocusCapture={metaItemsOnFocusCapture}>
+                                        <div className={styles['meta-items-container']} onFocusCapture={metaItemsOnFocusCapture}>
                                             {discover.catalog_resource.content.content.map((metaItem, index) => (
                                                 <MetaItem
                                                     key={index}
@@ -97,6 +101,7 @@ const Discover = ({ urlParams, queryParams }) => {
                                                     posterShape={metaItem.posterShape}
                                                     href={metaItem.href}
                                                     data-index={index}
+                                                    onClick={metaItemOnClick}
                                                 />
                                             ))}
                                         </div>
