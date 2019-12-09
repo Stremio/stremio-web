@@ -22,7 +22,10 @@ const Router = ({ className, onPathNotMatch, ...props }) => {
             const { pathname, path } = UrlUtils.parse(window.location.hash.slice(1));
             if (homePath !== path) {
                 window.location.replace(`#${homePath}`);
-                const routeConfig = routeConfigForPath(viewsConfig, pathname);
+                const routeConfig = typeof pathname === 'string' ?
+                    routeConfigForPath(viewsConfig, pathname)
+                    :
+                    null;
                 if (routeConfig) {
                     window.location = `#${path}`;
                 }
