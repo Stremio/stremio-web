@@ -1,38 +1,38 @@
 const routesRegexp = {
     intro: {
-        regexp: /^\/intro\/?$/i,
+        regexp: /^\/intro$/,
         urlParamsNames: []
     },
     board: {
-        regexp: /^\/?$/i,
+        regexp: /^\/$/,
         urlParamsNames: []
     },
     discover: {
-        regexp: /^\/discover(?:\/([^\/]*)\/([^\/]*)\/([^\/]*))?\/?$/i,
+        regexp: /^\/discover(?:\/([^\/]*)\/([^\/]*)\/([^\/]*))?$/,
         urlParamsNames: ['addonTransportUrl', 'type', 'catalogId']
     },
     library: {
-        regexp: /^\/library(?:\/([^\/]*))?\/?$/i,
+        regexp: /^\/library(?:\/([^\/]*))?$/,
         urlParamsNames: ['type']
     },
     search: {
-        regexp: /^\/search\/?$/i,
+        regexp: /^\/search$/,
         urlParamsNames: []
     },
     metadetails: {
-        regexp: /^\/metadetails\/(?:([^\/]*))\/(?:([^\/]*))(?:\/([^\/]*)\/?)?$/i,
+        regexp: /^\/metadetails\/([^\/]*)\/([^\/]*)(?:\/([^\/]*))?$/,
         urlParamsNames: ['type', 'id', 'videoId']
     },
     addons: {
-        regexp: /^\/addons(?:\/([^\/]*?))?(?:\/([^\/]*?))?\/?$/i, // TODO both are required or none
+        regexp: /^\/addons(?:\/([^\/]*)\/([^\/]*))?$/,
         urlParamsNames: ['category', 'type']
     },
     settings: {
-        regexp: /^\/settings\/?$/i,
+        regexp: /^\/settings$/,
         urlParamsNames: []
     },
     player: {
-        regexp: /^\/player\/(?:([^\/]+?))\/(?:([^\/]+?))\/(?:([^\/]+?))\/(?:([^\/]+?))\/?$/i,
+        regexp: /^\/player\/([^\/]*)\/([^\/]*)\/([^\/]*)\/([^\/]*)$/,
         urlParamsNames: ['type', 'id', 'videoId', 'stream']
     }
 };
