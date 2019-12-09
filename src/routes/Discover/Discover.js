@@ -110,10 +110,16 @@ const Discover = ({ urlParams, queryParams }) => {
                 {
                     selectedMetaItem !== null ?
                         <MetaPreview
-                            {...selectedMetaItem}
                             className={styles['meta-preview-container']}
                             compact={true}
+                            name={selectedMetaItem.name}
+                            logo={selectedMetaItem.logo}
                             background={selectedMetaItem.poster}
+                            runtime={selectedMetaItem.runtime}
+                            releaseInfo={selectedMetaItem.releaseInfo}
+                            released={selectedMetaItem.released}
+                            description={selectedMetaItem.description}
+                            trailer={selectedMetaItem.trailer}
                         />
                         :
                         <div className={styles['meta-preview-container']} />
