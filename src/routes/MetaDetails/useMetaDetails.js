@@ -1,44 +1,41 @@
 const React = require('react');
-const { useServices } = require('stremio/services');
+const { useModelState } = require('stremio/common');
 
-const mapMetaDetailsState = (state) => {
-    const selected = state.meta_details.selected;
-    const meta_groups = state.meta_details.meta_groups.map((meta_group) => {
-        if (meta_group.content.type === 'Ready') {
-            meta_group.content.content.released = new Date(meta_group.content.content.released);
-            meta_group.content.content.videos = meta_group.content.content.videos.map((video) => {
+const initMetaDetailsState = () => ({
+    selected: {
+        meta_resource_ref: null,
+        streams_resource_ref: null,
+    },
+    meta_resources: [],
+    streams_resources: []
+});
+
+const mapMetaDetailsState = (meta_details) => {
+    const selected = meta_details.selected;
+    const meta_resources = meta_details.meta_resources.map((meta_resource) => {
+        if (meta_resource.content.type === 'Ready') {
+            meta_resource.content.content.released = new Date(meta_resource.content.content.released);
+            meta_resource.content.content.videos = meta_resource.content.content.videos.map((video) => {
                 video.released = new Date(video.released);
                 video.upcoming = !isNaN(video.released.getTime()) ?
                     video.released.getTime() > Date.now()
                     :
                     false;
-                video.href = `#/metadetails/${meta_group.content.content.type}/${meta_group.content.content.id}/${video.id}`;
+                video.href = `#/metadetails/${meta_resource.content.content.type}/${meta_resource.content.content.id}/${video.id}`;
                 // TODO add watched and progress
                 return video;
             });
         }
 
-        return meta_group;
+        return meta_resource;
     });
-    const streams_groups = state.meta_details.streams_groups;
-    return { selected, meta_groups, streams_groups };
+    const streams_resources = meta_details.streams_resources;
+    return { selected, meta_resources, streams_resources };
 };
 
 const useMetaDetails = (urlParams) => {
-    const { core } = useServices();
-    const [metaDetails, setMetaDetails] = React.useState(() => {
-        const state = core.getState();
-        const metaDetails = mapMetaDetailsState(state);
-        return metaDetails;
-    });
-    React.useEffect(() => {
-        const onNewModel = () => {
-            const state = core.getState();
-            const metaDetails = mapMetaDetailsState(state);
-            setMetaDetails(metaDetails);
-        };
-        core.on('NewModel', onNewModel);
-        core.dispatch({
+    const loadMetaDetailsAction = React.useMemo(() => {
+        return {
             action: 'Load',
             args: {
                 load: 'MetaDetails',
@@ -48,12 +45,14 @@ const useMetaDetails = (urlParams) => {
                     video_id: urlParams.videoId
                 }
             }
-        });
-        return () => {
-            core.off('NewModel', onNewModel);
         };
     }, [urlParams]);
-    return metaDetails;
+    return useModelState({
+        model: 'meta_details',
+        action: loadMetaDetailsAction,
+        map: mapMetaDetailsState,
+        init: initMetaDetailsState
+    });
 };
 
 module.exports = useMetaDetails;
