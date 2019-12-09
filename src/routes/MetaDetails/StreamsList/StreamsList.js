@@ -6,27 +6,31 @@ const { Button } = require('stremio/common');
 const Stream = require('./Stream');
 const styles = require('./styles');
 
-const StreamsList = ({ className, streamsGroups }) => {
-    const readyStreams = React.useMemo(() => {
-        return streamsGroups
-            .filter((stream) => stream.content.type === 'Ready')
-            .map((stream) => stream.content.content)
+const StreamsList = ({ className, streamsResources }) => {
+    const streams = React.useMemo(() => {
+        return streamsResources
+            .filter((streamsResource) => streamsResource.content.type === 'Ready')
+            .map((streamsResource) => streamsResource.content.content)
             .flat(1);
-    }, [streamsGroups]);
+    }, [streamsResources]);
     return (
         <div className={classnames(className, styles['streams-list-container'])}>
             <div className={styles['streams-scroll-container']}>
                 {
-                    readyStreams.length > 0 ?
-                        readyStreams.map((stream, index) => (
-                            <Stream {...stream} key={index} className={styles['stream']} />
-                        ))
+                    streamsResources.length === 0 ?
+                        <div className={styles['message-label']}>No addons ware requested for streams</div>
                         :
-                        streamsGroups.length === 0 ?
-                            <div className={styles['message-label']}>No addons ware requested for streams</div>
+                        streamsResources.every((streamsResource) => streamsResource.content.type === 'Err') ?
+                            <div className={styles['message-label']}>No streams were found</div>
                             :
-                            streamsGroups.every((group) => group.content.type === 'Err') ?
-                                <div className={styles['message-label']}>No streams were found</div>
+                            streams.length > 0 ?
+                                streams.map((stream, index) => (
+                                    <Stream
+                                        {...stream}
+                                        key={index}
+                                        className={styles['stream']}
+                                    />
+                                ))
                                 :
                                 <React.Fragment>
                                     <Stream.Placeholder className={styles['stream']} />
@@ -44,7 +48,7 @@ const StreamsList = ({ className, streamsGroups }) => {
 
 StreamsList.propTypes = {
     className: PropTypes.string,
-    streamsGroups: PropTypes.arrayOf(PropTypes.object)
+    streamsResources: PropTypes.arrayOf(PropTypes.object)
 };
 
 module.exports = StreamsList;

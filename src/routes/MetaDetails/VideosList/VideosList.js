@@ -6,13 +6,13 @@ const Video = require('./Video');
 const useSelectableSeasons = require('./useSelectableSeasons');
 const styles = require('./styles');
 
-const VideosList = ({ className, metaGroup }) => {
+const VideosList = ({ className, metaResource }) => {
     const videos = React.useMemo(() => {
-        return metaGroup && metaGroup.content.type === 'Ready' ?
-            metaGroup.content.content.videos
+        return metaResource && metaResource.content.type === 'Ready' ?
+            metaResource.content.content.videos
             :
             [];
-    }, [metaGroup]);
+    }, [metaResource]);
     const [seasons, selectedSeason, videosForSeason, selectSeason] = useSelectableSeasons(videos);
     const seasonOnSelect = React.useCallback((event) => {
         selectSeason(event.value);
@@ -20,7 +20,7 @@ const VideosList = ({ className, metaGroup }) => {
     return (
         <div className={classnames(className, styles['videos-list-container'])}>
             {
-                !metaGroup || metaGroup.content.type === 'Loading' ?
+                !metaResource || metaResource.content.type === 'Loading' ?
                     <React.Fragment>
                         <SeasonsBar.Placeholder className={styles['seasons-bar']} />
                         <div className={styles['videos-scroll-container']}>
@@ -32,7 +32,7 @@ const VideosList = ({ className, metaGroup }) => {
                         </div>
                     </React.Fragment>
                     :
-                    metaGroup.content.type === 'Err' || videosForSeason.length === 0 ?
+                    metaResource.content.type === 'Err' || videosForSeason.length === 0 ?
                         <div className={styles['message-label']}>
                             No videos found for this meta
                         </div>
@@ -66,7 +66,7 @@ const VideosList = ({ className, metaGroup }) => {
 
 VideosList.propTypes = {
     className: PropTypes.string,
-    metaGroup: PropTypes.object
+    metaResource: PropTypes.object
 };
 
 module.exports = VideosList;
