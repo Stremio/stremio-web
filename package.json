@@ -10,11 +10,14 @@
         "start": "webpack-dev-server --mode development",
         "build": "webpack --mode production",
         "storybook": "start-storybook --ci --config-dir ./storybook --static-dir ./ --port 6060",
-        "test": "jest"
+        "test": "jest",
+        "lint": "eslint src"
     },
     "dependencies": {
         "a-color-picker": "1.2.1",
         "classnames": "2.2.6",
+        "eslint": "^6.7.2",
+        "eslint-plugin-react": "^7.17.0",
         "events": "1.1.1",
         "hat": "0.0.3",
         "lodash.debounce": "4.0.8",
