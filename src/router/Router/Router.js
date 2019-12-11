@@ -17,19 +17,22 @@ const Router = ({ className, onPathNotMatch, ...props }) => {
     const [views, setViews] = React.useState(() => {
         return Array(viewsConfig.length).fill(null);
     });
-    React.useEffect(() => {
+    React.useLayoutEffect(() => {
         if (typeof homePath === 'string') {
             const { pathname, path } = UrlUtils.parse(window.location.hash.slice(1));
             if (homePath !== path) {
                 window.location.replace(`#${homePath}`);
-                const routeConfig = routeConfigForPath(viewsConfig, pathname);
+                const routeConfig = typeof pathname === 'string' ?
+                    routeConfigForPath(viewsConfig, pathname)
+                    :
+                    null;
                 if (routeConfig) {
                     window.location = `#${path}`;
                 }
             }
         }
     }, []);
-    React.useEffect(() => {
+    React.useLayoutEffect(() => {
         const onLocationHashChange = () => {
             const { pathname, query } = UrlUtils.parse(window.location.hash.slice(1));
             const queryParams = new URLSearchParams(typeof query === 'string' ? query : '');
