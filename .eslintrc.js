@@ -52,11 +52,13 @@ module.exports = {
         "no-trailing-spaces": "error",
         "no-useless-concat": "error",
         "no-unreachable": "error",
+        "no-unused-vars": "error",
         "prefer-const": "error",
         "quotes": [
             "warn",
             "single"
         ],
+        "react/prop-types": 0,
         "semi": [
             "error",
             "always"
