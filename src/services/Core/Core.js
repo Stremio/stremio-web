@@ -96,6 +96,6 @@ function Core() {
     this.getState = getState;
 
     Object.freeze(this);
-};
+}
 
 module.exports = Core;

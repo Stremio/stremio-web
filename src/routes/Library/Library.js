@@ -1,4 +1,5 @@
 const React = require('react');
+const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { Button, Multiselect, MainNavBar, MetaItem } = require('stremio/common');
 const useLibrary = require('./useLibrary');
@@ -67,6 +68,11 @@ const Library = ({ urlParams, queryParams }) => {
             </div>
         </div>
     );
-}
+};
+
+Library.propTypes = {
+    urlParams: PropTypes.instanceOf(URLSearchParams),
+    queryParams: PropTypes.instanceOf(URLSearchParams)
+};
 
 module.exports = Library;

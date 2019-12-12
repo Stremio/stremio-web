@@ -80,7 +80,7 @@ const Notification = ({ className, id, type, name, poster, thumbnail, season, ep
             }
         </Button>
     );
-}
+};
 
 Notification.propTypes = {
     className: PropTypes.string,

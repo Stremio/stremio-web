@@ -1,4 +1,5 @@
 const React = require('react');
+const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const { Button, MainNavBar, MetaItem, MetaPreview, Multiselect, ModalDialog, PaginationInput, useBinaryState } = require('stremio/common');
@@ -133,6 +134,11 @@ const Discover = ({ urlParams, queryParams }) => {
             }
         </div>
     );
+};
+
+Discover.propTypes = {
+    urlParams: PropTypes.instanceOf(URLSearchParams),
+    queryParams: PropTypes.instanceOf(URLSearchParams)
 };
 
 module.exports = Discover;

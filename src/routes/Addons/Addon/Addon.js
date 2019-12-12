@@ -5,7 +5,7 @@ const Icon = require('stremio-icons/dom');
 const { Button } = require('stremio/common');
 const styles = require('./styles');
 
-const Addon = ({ className, id, name, logo, description, types, version, transportUrl, installed, toggle, onShareButtonClicked }) => {
+const Addon = ({ className, id, name, logo, description, types, version, installed, toggle, onShareButtonClicked }) => {
     const onKeyUp = React.useCallback((event) => {
         if (event.key === 'Enter' && typeof toggle === 'function') {
             toggle(event);
@@ -72,7 +72,6 @@ Addon.propTypes = {
     description: PropTypes.string,
     types: PropTypes.arrayOf(PropTypes.string),
     version: PropTypes.string,
-    transportUrl: PropTypes.string,
     installed: PropTypes.bool,
     toggle: PropTypes.func,
     onShareButtonClicked: PropTypes.func

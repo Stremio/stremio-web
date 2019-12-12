@@ -96,7 +96,7 @@ const Popup = ({ open, direction, renderLabel, renderMenu, dataset, onCloseReque
             :
             null
     });
-}
+};
 
 Popup.propTypes = {
     open: PropTypes.bool,

@@ -66,6 +66,6 @@ function Shell() {
     this.dispatch = dispatch;
 
     Object.freeze(this);
-};
+}
 
 module.exports = Shell;

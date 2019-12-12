@@ -1,4 +1,5 @@
 const React = require('react');
+const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const { useRouteFocused } = require('stremio-router');
@@ -73,14 +74,17 @@ const Intro = ({ queryParams }) => {
     React.useEffect(() => {
         const onEvent = ({ event, args }) => {
             switch (event) {
-                case 'CtxActionErr':
+                case 'CtxActionErr': {
                     const [_action, error] = args;
                     dispatch({ type: 'error', error: error.args.message });
-                case 'CtxChanged':
+                    break;
+                }
+                case 'CtxChanged': {
                     const state = core.getState();
                     if (state.ctx.content.auth !== null) {
                         window.location.replace('#/');
                     }
+                }
             }
         };
         if (routeFocused) {
@@ -341,6 +345,10 @@ const Intro = ({ queryParams }) => {
             </div>
         </div>
     );
+};
+
+Intro.propTypes = {
+    queryParams: PropTypes.instanceOf(URLSearchParams)
 };
 
 module.exports = Intro;

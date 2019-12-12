@@ -23,6 +23,8 @@ const MainNavBar = React.memo(({ className }) => {
     );
 });
 
+MainNavBar.displayName = 'MainNavBar';
+
 MainNavBar.propTypes = {
     className: PropTypes.string
 };
