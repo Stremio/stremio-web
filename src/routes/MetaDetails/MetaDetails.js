@@ -11,7 +11,20 @@ const MetaDetails = ({ urlParams }) => {
     const [metaResourceRef, metaResources, selectedMetaResource] = useSelectableResource(metaDetails.selected.meta_resource_ref, metaDetails.meta_resources);
     const streamsResourceRef = metaDetails.selected.streams_resource_ref;
     const streamsResources = metaDetails.streams_resources;
-    const [inLibrary, , , toggleInLibrary] = useInLibrary(metaResourceRef !== null ? metaResourceRef.id : null);
+    const metaItem = React.useMemo(() => {
+        return selectedMetaResource !== null ?
+            selectedMetaResource.content.content
+            :
+            metaResourceRef !== null ?
+                {
+                    id: metaResourceRef.id,
+                    type: metaResourceRef.type_name,
+                    name: ''
+                }
+                :
+                null;
+    }, [metaResourceRef, selectedMetaResource]);
+    const [inLibrary, toggleInLibrary] = useInLibrary(metaItem);
     return (
         <div className={styles['metadetails-container']}>
             <NavBar
