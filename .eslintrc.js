@@ -3,6 +3,11 @@ module.exports = {
         "eslint:recommended",
         "plugin:react/recommended"
     ],
+    "globals": {
+        "YT": "readonly",
+        "FB": "readonly"
+    },
+    "ignorePatterns": ["src/routes/Settings/**", "src/routes/Player/**", "src/video/**"],
     "rules": {
         "arrow-parens": "error",
         "arrow-spacing": "error",
@@ -58,7 +63,6 @@ module.exports = {
             "warn",
             "single"
         ],
-        "react/prop-types": 0,
         "semi": [
             "error",
             "always"
@@ -71,7 +75,8 @@ module.exports = {
             }
         ],
         "space-before-blocks": "error",
-        "valid-typeof": "error"
+        "valid-typeof": "error",
+        "react/no-unescaped-entities": 0
     },
     "env": {
         "node": true,
@@ -83,5 +88,55 @@ module.exports = {
         "ecmaFeatures": {
             "experimentalObjectRestSpread": true
         }
-    }
+    },
+    "overrides": [
+        {
+            "files": [
+                "src/common/Button/Button.js",
+                "src/common/Checkbox/Checkbox.js",
+                "src/common/ColorInput/ColorInput.js",
+                "src/common/Image/Image.js",
+                "src/common/MetaItem/MetaItem.js",
+                "src/common/Multiselect/Multiselect.js",
+                "src/common/TextInput/TextInput.js",
+                "src/routes/Intro/CredentialsTextInput/CredentialsTextInput.js",
+                "src/routes/Intro/ConsentCheckbox/ConsentCheckbox.js",
+                "src/common/PaginationInput/PaginationInput.js"
+            ],
+            "rules": {
+                "react/prop-types": 0,
+            }
+        },
+        {
+            "files": [
+                "src/routes/Intro/Intro.js",
+                "src/routes/Addons/useAddons.js",
+                "src/routes/Board/useItemOptions.js",
+                "src/common/NavBar/NavMenu/NavMenu.js",
+                "src/routes/Library/useItemOptions.js",
+                "src/common/Multiselect/Multiselect.js",
+                "src/common/NavBar/NotificationsMenu/NotificationsMenu.js"
+            ],
+            "rules": {
+                "no-unused-vars": "off"
+            }
+        },
+        {
+            "files": [
+                "src/common/NavBar/NavMenu/NavMenu.js"
+            ],
+            "rules": {
+                "quotes": "off"
+            }
+        },
+        {
+            "files": [
+                "src/services/Shell/Shell.js",
+                "src/services/Core/Core.js"
+            ],
+            "rules": {
+                "prefer-const": "off"
+            }
+        }
+    ]
 }
