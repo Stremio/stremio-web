@@ -13,9 +13,17 @@ const Addons = ({ urlParams, queryParams }) => {
     const addAddonUrlInputRef = React.useRef(null);
     const addAddonOnSubmit = React.useCallback(() => {
         if (addAddonUrlInputRef.current !== null) {
-            // TODO install addon
+            const queryParams = new URLSearchParams([['addon', addAddonUrlInputRef.current.value]]);
+            if (typeof urlParams.addonTransportUrl === 'string' && typeof urlParams.catalogId === 'string' && typeof urlParams.type === 'string') {
+                const addonTransportUrl = encodeURIComponent(urlParams.addonTransportUrl);
+                const catalogId = encodeURIComponent(urlParams.catalogId);
+                const type = encodeURIComponent(urlParams.type);
+                window.location.replace(`#/addons/${addonTransportUrl}/${catalogId}/${type}?${queryParams}`);
+            } else {
+                window.location.replace(`#/addons?${queryParams}`);
+            }
         }
-    }, []);
+    }, [urlParams]);
     const addAddonModalButtons = React.useMemo(() => {
         return [
             {
@@ -32,7 +40,7 @@ const Addons = ({ urlParams, queryParams }) => {
                 }
             }
         ];
-    }, []);
+    }, [addAddonOnSubmit]);
     const [search, setSearch] = React.useState('');
     const searchInputOnChange = React.useCallback((event) => {
         setSearch(event.currentTarget.value);
