@@ -111,7 +111,7 @@ const Addons = ({ urlParams, queryParams }) => {
                                         Loading
                                     </div>
                                     :
-                                    <div className={styles['addons-container']}>
+                                    <div className={styles['addons-list-container']}>
                                         {
                                             addons.catalog_resource.content.content
                                                 .filter((addon) => {
