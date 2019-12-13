@@ -7,23 +7,26 @@ const useSelectableInputs = require('./useSelectableInputs');
 const styles = require('./styles');
 
 const Addons = ({ urlParams, queryParams }) => {
+    const navigateToAddonDetails = React.useCallback((transportUrl) => {
+        const queryParams = new URLSearchParams([['addon', transportUrl]]);
+        if (typeof urlParams.addonTransportUrl === 'string' && typeof urlParams.catalogId === 'string' && typeof urlParams.type === 'string') {
+            const addonTransportUrl = encodeURIComponent(urlParams.addonTransportUrl);
+            const catalogId = encodeURIComponent(urlParams.catalogId);
+            const type = encodeURIComponent(urlParams.type);
+            window.location.replace(`#/addons/${addonTransportUrl}/${catalogId}/${type}?${queryParams}`);
+        } else {
+            window.location.replace(`#/addons?${queryParams}`);
+        }
+    }, [urlParams]);
     const addons = useAddons(urlParams);
     const selectInputs = useSelectableInputs(addons);
     const [addAddonModalOpen, openAddAddonModal, closeAddAddonModal] = useBinaryState(false);
     const addAddonUrlInputRef = React.useRef(null);
     const addAddonOnSubmit = React.useCallback(() => {
         if (addAddonUrlInputRef.current !== null) {
-            const queryParams = new URLSearchParams([['addon', addAddonUrlInputRef.current.value]]);
-            if (typeof urlParams.addonTransportUrl === 'string' && typeof urlParams.catalogId === 'string' && typeof urlParams.type === 'string') {
-                const addonTransportUrl = encodeURIComponent(urlParams.addonTransportUrl);
-                const catalogId = encodeURIComponent(urlParams.catalogId);
-                const type = encodeURIComponent(urlParams.type);
-                window.location.replace(`#/addons/${addonTransportUrl}/${catalogId}/${type}?${queryParams}`);
-            } else {
-                window.location.replace(`#/addons?${queryParams}`);
-            }
+            navigateToAddonDetails(addAddonUrlInputRef.current.value);
         }
-    }, [urlParams]);
+    }, [navigateToAddonDetails]);
     const addAddonModalButtons = React.useMemo(() => {
         return [
             {
