@@ -1,3 +1,7 @@
+:import('~stremio/common/Multiselect/styles.less') {
+    multiselect-menu-container: menu-container;
+}
+
 .addons-container {
     display: flex;
     flex-direction: column;
@@ -16,11 +20,12 @@
         display: flex;
         flex-direction: column;
 
-        .top-bar-container {
+        .selectable-inputs-container {
             flex: none;
+            align-self: stretch;
             display: flex;
             flex-direction: row;
-            margin: 2rem;
+            padding: 1.5rem;
             overflow: visible;
 
             .add-button-container {
@@ -30,7 +35,7 @@
                 align-items: center;
                 height: 3rem;
                 max-width: 15rem;
-                margin-right: 1rem;
+                margin-right: 1.5rem;
                 padding: 0 1rem;
                 background-color: var(--color-signal5);
 
@@ -40,8 +45,8 @@
 
                 .icon {
                     flex: none;
-                    width: 1.5rem;
-                    height: 1.5rem;
+                    width: 1.2rem;
+                    height: 1.2rem;
                     margin-right: 1rem;
                     fill: var(--color-surfacelighter);
                 }
@@ -56,12 +61,17 @@
                 }
             }
 
-            .dropdown {
+            .select-input-container {
                 flex-grow: 0;
                 flex-shrink: 1;
                 flex-basis: 15rem;
                 height: 3rem;
-                margin-right: 1rem;
+                margin-right: 1.5rem;
+
+                .multiselect-menu-container {
+                    max-height: calc(3.2rem * 7);
+                    overflow: auto;
+                }
             }
 
             .search-bar-container {
@@ -72,7 +82,6 @@
                 flex-direction: row;
                 align-items: center;
                 height: 3rem;
-                margin-right: 1rem;
                 padding: 0 1rem;
                 background-color: var(--color-backgroundlighter);
                 cursor: text;
@@ -82,7 +91,7 @@
                 }
 
                 .icon {
-                    display: block;
+                    flex: none;
                     width: 1.2rem;
                     height: 1.2rem;
                     margin-right: 1rem;
@@ -91,7 +100,6 @@
 
                 .search-input {
                     flex: 1;
-                    align-self: stretch;
                     color: var(--color-surfacelighter);
 
                     &::placeholder {
@@ -103,32 +111,31 @@
             }
         }
 
-        .addons-list-container {
+        .message-container {
             flex: 1;
             align-self: stretch;
-            padding: 0 2rem;
+            padding: 0 1.5rem;
+            font-size: 2rem;
+            color: var(--color-surfacelighter);
+        }
+
+        .addons-container {
+            flex: 1;
+            align-self: stretch;
+            padding: 0 1.5rem;
             overflow-y: auto;
 
             .addon {
-                width: 100%;
-                margin-bottom: 2rem;
-            }
-
-            .message-container {
-                padding: 0 2rem;
-                font-size: 2rem;
-                color: var(--color-surfacelighter);
+                margin-bottom: 1.5rem;
             }
         }
     }
 }
 
-.add-addon-prompt-container {
-    .url-content {
-        flex: 1;
-        width: 100%;
-        padding: 0.5rem;
-        font-size: 0.9rem;
+.add-addon-modal-container {
+    .addon-url-input {
+        width: 25rem;
+        padding: 0.5rem 1rem;
         color: var(--color-surfacedark);
         border: thin solid var(--color-surface);
     }
@@ -138,8 +145,8 @@
     }
 }
 
-.addon-prompt-container {
-    .cancel-button {
-        background-color: var(--color-surfacedark);
+.share-modal-container {
+    .share-prompt-container {
+        width: 25rem;
     }
 }
