@@ -55,6 +55,9 @@ const Addons = ({ urlParams, queryParams }) => {
     const onAddonShare = React.useCallback((event) => {
         setSharedTransportUrl(event.dataset.transportUrl);
     }, []);
+    const onAddonToggle = React.useCallback((event) => {
+        navigateToAddonDetails(event.dataset.transportUrl);
+    }, []);
     React.useLayoutEffect(() => {
         closeAddAddonModal(null);
         setSearch('');
@@ -128,8 +131,8 @@ const Addons = ({ urlParams, queryParams }) => {
                                                         description={addon.manifest.description}
                                                         types={addon.manifest.types}
                                                         version={addon.manifest.version}
-                                                        transportUrl={addon.transportUrl}
                                                         onShare={onAddonShare}
+                                                        onToggle={onAddonToggle}
                                                         dataset={{ transportUrl: addon.transportUrl }}
                                                     />
                                                 ))
