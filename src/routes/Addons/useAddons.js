@@ -30,8 +30,7 @@ const mapAddonsStateWithCtx = (addons, ctx) => {
                         version: descriptor.manifest.version,
                         logo: descriptor.manifest.logo,
                         description: descriptor.manifest.description,
-                        types: descriptor.manifest.types,
-                        catalogs: descriptor.manifest.catalogs,
+                        types: descriptor.manifest.types
                     }
                 }))
             }

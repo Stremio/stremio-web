@@ -6,27 +6,32 @@ const useAddons = require('./useAddons');
 const useSelectableInputs = require('./useSelectableInputs');
 const styles = require('./styles');
 
+const navigateToAddonDetails = (addonsCatalogRequest, transportUrl) => {
+    const queryParams = new URLSearchParams([['addon', transportUrl]]);
+    if (addonsCatalogRequest !== null) {
+        const addonTransportUrl = encodeURIComponent(addonsCatalogRequest.base);
+        const catalogId = encodeURIComponent(addonsCatalogRequest.path.id);
+        const type = encodeURIComponent(addonsCatalogRequest.path.type_name);
+        window.location.replace(`#/addons/${addonTransportUrl}/${catalogId}/${type}?${queryParams}`);
+    } else {
+        window.location.replace(`#/addons?${queryParams}`);
+    }
+};
+
 const Addons = ({ urlParams, queryParams }) => {
-    const navigateToAddonDetails = React.useCallback((transportUrl) => {
-        const queryParams = new URLSearchParams([['addon', transportUrl]]);
-        if (typeof urlParams.addonTransportUrl === 'string' && typeof urlParams.catalogId === 'string' && typeof urlParams.type === 'string') {
-            const addonTransportUrl = encodeURIComponent(urlParams.addonTransportUrl);
-            const catalogId = encodeURIComponent(urlParams.catalogId);
-            const type = encodeURIComponent(urlParams.type);
-            window.location.replace(`#/addons/${addonTransportUrl}/${catalogId}/${type}?${queryParams}`);
-        } else {
-            window.location.replace(`#/addons?${queryParams}`);
-        }
-    }, [urlParams]);
     const addons = useAddons(urlParams);
     const selectInputs = useSelectableInputs(addons);
     const [addAddonModalOpen, openAddAddonModal, closeAddAddonModal] = useBinaryState(false);
     const addAddonUrlInputRef = React.useRef(null);
     const addAddonOnSubmit = React.useCallback(() => {
         if (addAddonUrlInputRef.current !== null) {
-            navigateToAddonDetails(addAddonUrlInputRef.current.value);
+            const addonsCatalogRequest = addons.catalog_resource !== null ?
+                addons.catalog_resource.request
+                :
+                null;
+            navigateToAddonDetails(addonsCatalogRequest, addAddonUrlInputRef.current.value);
         }
-    }, [navigateToAddonDetails]);
+    }, [addons]);
     const addAddonModalButtons = React.useMemo(() => {
         return [
             {
@@ -49,19 +54,23 @@ const Addons = ({ urlParams, queryParams }) => {
         setSearch(event.currentTarget.value);
     }, []);
     const [sharedTransportUrl, setSharedTransportUrl] = React.useState(null);
-    const shareModalOnClose = React.useCallback(() => {
+    const clearSharedTransportUrl = React.useCallback(() => {
         setSharedTransportUrl(null);
     }, []);
     const onAddonShare = React.useCallback((event) => {
         setSharedTransportUrl(event.dataset.transportUrl);
     }, []);
     const onAddonToggle = React.useCallback((event) => {
-        navigateToAddonDetails(event.dataset.transportUrl);
-    }, []);
+        const addonsCatalogRequest = addons.catalog_resource !== null ?
+            addons.catalog_resource.request
+            :
+            null;
+        navigateToAddonDetails(addonsCatalogRequest, event.dataset.transportUrl);
+    }, [addons]);
     React.useLayoutEffect(() => {
-        closeAddAddonModal(null);
+        closeAddAddonModal();
         setSearch('');
-        setSharedTransportUrl(null);
+        clearSharedTransportUrl();
     }, [urlParams, queryParams]);
     return (
         <div className={styles['addons-container']}>
@@ -127,12 +136,13 @@ const Addons = ({ urlParams, queryParams }) => {
                                                         className={styles['addon']}
                                                         id={addon.manifest.id}
                                                         name={addon.manifest.name}
+                                                        version={addon.manifest.version}
                                                         logo={addon.manifest.logo}
                                                         description={addon.manifest.description}
                                                         types={addon.manifest.types}
-                                                        version={addon.manifest.version}
-                                                        onShare={onAddonShare}
+                                                        installed={addon.installed}
                                                         onToggle={onAddonToggle}
+                                                        onShare={onAddonShare}
                                                         dataset={{ transportUrl: addon.transportUrl }}
                                                     />
                                                 ))
@@ -163,8 +173,11 @@ const Addons = ({ urlParams, queryParams }) => {
                     <ModalDialog
                         className={styles['share-modal-container']}
                         title={'Share addon'}
-                        onCloseRequest={shareModalOnClose}>
-                        <SharePrompt className={styles['share-prompt-container']} url={sharedTransportUrl} />
+                        onCloseRequest={clearSharedTransportUrl}>
+                        <SharePrompt
+                            className={styles['share-prompt-container']}
+                            url={sharedTransportUrl}
+                        />
                     </ModalDialog>
                     :
                     null
