@@ -24,9 +24,11 @@
         }
     },
     "ignorePatterns": [
-        "src/routes/Settings/**",
-        "src/routes/Player/**",
-        "src/video/**"
+        "/*",
+        "!/src",
+        "src/routes/Settings",
+        "src/routes/Player",
+        "src/video"
     ],
     "rules": {
         "arrow-parens": "error",
