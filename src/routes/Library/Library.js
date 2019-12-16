@@ -7,8 +7,8 @@ const useSelectableInputs = require('./useSelectableInputs');
 const useItemOptions = require('./useItemOptions');
 const styles = require('./styles');
 
-const Library = ({ urlParams, queryParams }) => {
-    const library = useLibrary(urlParams, queryParams);
+const Library = ({ urlParams }) => {
+    const library = useLibrary(urlParams);
     const [typeSelect, sortPropSelect] = useSelectableInputs(library);
     const [options, optionOnSelect] = useItemOptions();
     return (
@@ -73,8 +73,8 @@ const Library = ({ urlParams, queryParams }) => {
 Library.propTypes = {
     urlParams: PropTypes.exact({
         type: PropTypes.string,
-    }),
-    queryParams: PropTypes.instanceOf(URLSearchParams)
+        sort: PropTypes.string
+    })
 };
 
 module.exports = Library;
