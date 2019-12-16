@@ -1,4 +1,4 @@
-module.exports = {
+{
     "extends": [
         "eslint:recommended",
         "plugin:react/recommended"
@@ -7,7 +7,11 @@ module.exports = {
         "YT": "readonly",
         "FB": "readonly"
     },
-    "ignorePatterns": ["src/routes/Settings/**", "src/routes/Player/**", "src/video/**"],
+    "ignorePatterns": [
+        "src/routes/Settings/**",
+        "src/routes/Player/**",
+        "src/video/**"
+    ],
     "rules": {
         "arrow-parens": "error",
         "arrow-spacing": "error",
@@ -41,7 +45,9 @@ module.exports = {
         "no-console": [
             "error",
             {
-                allow: ["error"]
+                "allow": [
+                    "error"
+                ]
             }
         ],
         "no-extra-semi": "error",
@@ -104,7 +110,7 @@ module.exports = {
                 "src/common/PaginationInput/PaginationInput.js"
             ],
             "rules": {
-                "react/prop-types": 0,
+                "react/prop-types": 0
             }
         },
         {
