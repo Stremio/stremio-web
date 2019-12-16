@@ -12,6 +12,17 @@
         "YT": "readonly",
         "FB": "readonly"
     },
+    "env": {
+        "commonjs": true,
+        "browser": true,
+        "es6": true
+    },
+    "parserOptions": {
+        "ecmaVersion": 9,
+        "ecmaFeatures": {
+            "jsx": true
+        }
+    },
     "ignorePatterns": [
         "src/routes/Settings/**",
         "src/routes/Player/**",
@@ -21,25 +32,10 @@
         "arrow-parens": "error",
         "arrow-spacing": "error",
         "block-spacing": "error",
-        "comma-spacing": [
-            "error",
-            {
-                "before": false,
-                "after": true
-            }
-        ],
-        "eol-last": [
-            "error",
-            "always"
-        ],
-        "eqeqeq": [
-            "error",
-            "always"
-        ],
-        "func-call-spacing": [
-            "error",
-            "never"
-        ],
+        "comma-spacing": "error",
+        "eol-last": "error",
+        "eqeqeq": "error",
+        "func-call-spacing": "error",
         "indent": [
             "error",
             4,
@@ -47,21 +43,14 @@
                 "SwitchCase": 1
             }
         ],
-        "no-console": [
-            "error",
-            {
-                "allow": [
-                    "error"
-                ]
-            }
-        ],
+        "no-console": "error",
         "no-extra-semi": "error",
         "no-eq-null": "error",
         "no-multi-spaces": "error",
         "no-multiple-empty-lines": [
             "error",
             {
-                "max": 2
+                "max": 1
             }
         ],
         "no-template-curly-in-string": "error",
@@ -71,34 +60,25 @@
         "no-unused-vars": "error",
         "prefer-const": "error",
         "quotes": [
-            "warn",
+            "error",
             "single"
         ],
-        "semi": [
+        "quote-props": [
             "error",
-            "always"
-        ],
-        "semi-spacing": [
-            "error",
+            "as-needed",
             {
-                "before": false,
-                "after": true
+                "unnecessary": false
             }
         ],
+        "semi": "error",
+        "semi-spacing": "error",
         "space-before-blocks": "error",
-        "valid-typeof": "error",
-        "react/no-unescaped-entities": 0
-    },
-    "env": {
-        "node": true,
-        "browser": true,
-        "es6": true
-    },
-    "parserOptions": {
-        "ecmaVersion": 9,
-        "ecmaFeatures": {
-            "experimentalObjectRestSpread": true
-        }
+        "valid-typeof": [
+            "error",
+            {
+                "requireStringLiterals": true
+            }
+        ]
     },
     "overrides": [
         {
