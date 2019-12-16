@@ -96,15 +96,6 @@
             "rules": {
                 "no-unused-vars": "off"
             }
-        },
-        {
-            "files": [
-                "src/services/Shell/Shell.js",
-                "src/services/Core/Core.js"
-            ],
-            "rules": {
-                "prefer-const": "off"
-            }
         }
     ]
 }

@@ -6,7 +6,7 @@ function Core() {
     let error = null;
     let starting = false;
     let stremio_core = null;
-    let events = new EventEmitter();
+    const events = new EventEmitter();
     events.on('error', () => { });
 
     function onStateChanged() {
