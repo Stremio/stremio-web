@@ -25,7 +25,7 @@
         "react": "16.12.0",
         "react-dom": "16.12.0",
         "react-focus-lock": "2.2.1",
-        "spatial-navigation-polyfill": "git+ssh://git@github.com/NikolaBorislavovHristov/spatial-navigation.git#964d09bf2b0853e27af6c25924b595d6621a019d",
+        "spatial-navigation-polyfill": "git+ssh://git@github.com/Stremio/spatial-navigation.git#381b4f37d138e66ae8ea025e240af3704245e5dc",
         "stremio-colors": "git+ssh://git@github.com/Stremio/stremio-colors.git#v2.0.4",
         "stremio-core-web": "git+ssh://git@github.com/stremio/stremio-core-web.git#da5b37865004d0ae140518c4f276d1ed1a1483d9",
         "stremio-icons": "git+ssh://git@github.com/Stremio/stremio-icons.git#v1.0.11",
