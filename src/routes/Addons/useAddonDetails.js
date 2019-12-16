@@ -11,7 +11,13 @@ const mapAddonDetailsStateWithCtx = (addonDetails, ctx) => {
             ...addonDetails.descriptor,
             content: {
                 ...addonDetails.descriptor.content,
-                installed: ctx.content.addons.some((addon) => addon.transportUrl === addonDetails.descriptor.transport_url),
+                content: {
+                    ...addonDetails.descriptor.content.content,
+                    flags: {
+                        ...addonDetails.descriptor.content.content.flags,
+                        installed: ctx.content.addons.some((addon) => addon.transportUrl === addonDetails.descriptor.transport_url),
+                    }
+                }
             }
         }
         :
