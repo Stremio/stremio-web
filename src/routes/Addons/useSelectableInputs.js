@@ -15,18 +15,6 @@ const equalWithouExtra = (request1, request2) => {
 };
 
 const mapSelectableInputs = (addons) => {
-    const selectedCatalogRequest = addons.catalog_resource !== null ?
-        addons.catalog_resource.request
-        :
-        {
-            base: null,
-            path: {
-                resource: 'addon_catalog',
-                id: null,
-                type_name: null,
-                extra: []
-            }
-        };
     const catalogSelect = {
         title: 'Select catalog',
         options: addons.selectable.catalogs
@@ -36,7 +24,8 @@ const mapSelectableInputs = (addons) => {
             })),
         selected: addons.selectable.catalogs
             .filter(({ load_request: { path: { id } } }) => {
-                return id === selectedCatalogRequest.path.id;
+                return addons.catalog_resource !== null &&
+                    addons.catalog_resource.request.path.id === id;
             })
             .map(({ load_request }) => JSON.stringify(load_request)),
         onSelect: (event) => {
@@ -52,7 +41,8 @@ const mapSelectableInputs = (addons) => {
             })),
         selected: addons.selectable.types
             .filter(({ load_request }) => {
-                return equalWithouExtra(load_request, selectedCatalogRequest);
+                return addons.catalog_resource !== null &&
+                    equalWithouExtra(addons.catalog_resource.request, load_request);
             })
             .map(({ load_request }) => JSON.stringify(load_request)),
         onSelect: (event) => {
