@@ -8,7 +8,7 @@ const useBinaryState = require('stremio/common/useBinaryState');
 const styles = require('./styles');
 
 const Multiselect = ({ className, direction, title, disabled, dataset, renderLabelContent, renderLabelText, onOpen, onClose, onSelect, ...props }) => {
-    const [menuOpen, openMenu, closeMenu, toggleMenu] = useBinaryState(false);
+    const [menuOpen, , closeMenu, toggleMenu] = useBinaryState(false);
     const options = React.useMemo(() => {
         return Array.isArray(props.options) ?
             props.options.filter((option) => {

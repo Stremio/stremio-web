@@ -10,7 +10,7 @@ const DISMISS_OPTION = {
     value: 'dismiss'
 };
 
-const onSelect = (_event) => {
+const onSelect = () => {
     // TODO {{event.value}} {{event.dataset}}
 };
 

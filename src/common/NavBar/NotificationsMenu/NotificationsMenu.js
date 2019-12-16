@@ -5,13 +5,13 @@ const Icon = require('stremio-icons/dom');
 const Button = require('stremio/common/Button');
 const Popup = require('stremio/common/Popup');
 const NotificationsList = require('./NotificationsList');
-const useNotifications = require('./useNotifications');
+// const useNotifications = require('./useNotifications');
 // const useCatalogs = require('stremio/routes/Board/useCatalogs');
 const useBinaryState = require('stremio/common/useBinaryState');
 const styles = require('./styles');
 
 const NotificationsMenu = ({ className, onClearButtonClicked }) => {
-    const [menuOpen, openMenu, closeMenu, toggleMenu] = useBinaryState(false);
+    const [menuOpen, , closeMenu, toggleMenu] = useBinaryState(false);
     //TODO use useNotifications hook instead of useCatalogs
     const metaItems = []; //useCatalogs();
 

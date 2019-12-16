@@ -81,21 +81,5 @@
                 "requireStringLiterals": true
             }
         ]
-    },
-    "overrides": [
-        {
-            "files": [
-                "src/routes/Intro/Intro.js",
-                "src/routes/Addons/useAddons.js",
-                "src/routes/Board/useItemOptions.js",
-                "src/common/NavBar/NavMenu/NavMenu.js",
-                "src/routes/Library/useItemOptions.js",
-                "src/common/Multiselect/Multiselect.js",
-                "src/common/NavBar/NotificationsMenu/NotificationsMenu.js"
-            ],
-            "rules": {
-                "no-unused-vars": "off"
-            }
-        }
-    ]
+    }
 }

@@ -75,7 +75,7 @@ const Intro = ({ queryParams }) => {
         const onEvent = ({ event, args }) => {
             switch (event) {
                 case 'CtxActionErr': {
-                    const [_action, error] = args;
+                    const [, error] = args;
                     dispatch({ type: 'error', error: error.args.message });
                     break;
                 }
@@ -117,7 +117,7 @@ const Intro = ({ queryParams }) => {
                             }
                         });
                     })
-                    .catch((err) => { });
+                    .catch(() => { });
             }
         });
     }, [state.email, state.password]);

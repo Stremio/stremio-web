@@ -10,7 +10,7 @@ const useUser = require('stremio/common/useUser');
 const styles = require('./styles');
 
 const NavMenu = ({ className }) => {
-    const [menuOpen, openMenu, closeMenu, toggleMenu] = useBinaryState(false);
+    const [menuOpen, , closeMenu, toggleMenu] = useBinaryState(false);
     const [fullscreen, requestFullscreen, exitFullscreen] = useFullscreen();
     const [user, logout] = useUser();
     const popupLabelOnClick = React.useCallback((event) => {
