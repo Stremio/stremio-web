@@ -99,14 +99,6 @@
         },
         {
             "files": [
-                "src/common/NavBar/NavMenu/NavMenu.js"
-            ],
-            "rules": {
-                "quotes": "off"
-            }
-        },
-        {
-            "files": [
                 "src/services/Shell/Shell.js",
                 "src/services/Core/Core.js"
             ],

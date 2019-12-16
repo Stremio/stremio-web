@@ -41,7 +41,7 @@ const NavMenu = ({ className }) => {
                             className={styles['avatar-container']}
                             style={{
                                 backgroundImage: user === null ?
-                                    `url('/images/anonymous.png')`
+                                    'url(\'/images/anonymous.png\')'
                                     :
                                     `url('${user.avatar}'), url('/images/default_avatar.png')`
                             }}
