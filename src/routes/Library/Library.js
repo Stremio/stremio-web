@@ -71,7 +71,9 @@ const Library = ({ urlParams, queryParams }) => {
 };
 
 Library.propTypes = {
-    urlParams: PropTypes.instanceOf(URLSearchParams),
+    urlParams: PropTypes.exact({
+        type: PropTypes.string,
+    }),
     queryParams: PropTypes.instanceOf(URLSearchParams)
 };
 

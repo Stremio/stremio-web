@@ -188,7 +188,11 @@ const Addons = ({ urlParams, queryParams }) => {
 };
 
 Addons.propTypes = {
-    urlParams: PropTypes.instanceOf(URLSearchParams),
+    urlParams: PropTypes.exact({
+        addonTransportUrl: PropTypes.string,
+        catalogId: PropTypes.string,
+        type: PropTypes.string
+    }),
     queryParams: PropTypes.instanceOf(URLSearchParams)
 };
 

@@ -113,7 +113,11 @@ const MetaDetails = ({ urlParams }) => {
 };
 
 MetaDetails.propTypes = {
-    urlParams: PropTypes.instanceOf(URLSearchParams)
+    urlParams: PropTypes.exact({
+        type: PropTypes.string,
+        id: PropTypes.string,
+        videoId: PropTypes.string
+    })
 };
 
 module.exports = MetaDetails;
