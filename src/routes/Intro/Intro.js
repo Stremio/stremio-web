@@ -296,7 +296,7 @@ const Intro = ({ queryParams }) => {
                                 link={'Terms and conditions'}
                                 href={'https://www.stremio.com/tos'}
                                 checked={state.termsAccepted}
-                                toggle={toggleTermsAccepted}
+                                onToggle={toggleTermsAccepted}
                             />
                             <ConsentCheckbox
                                 ref={privacyPolicyRef}
@@ -305,14 +305,14 @@ const Intro = ({ queryParams }) => {
                                 link={'Privacy Policy'}
                                 href={'https://www.stremio.com/privacy'}
                                 checked={state.privacyPolicyAccepted}
-                                toggle={togglePrivacyPolicyAccepted}
+                                onToggle={togglePrivacyPolicyAccepted}
                             />
                             <ConsentCheckbox
                                 ref={marketingRef}
                                 className={styles['consent-checkbox']}
                                 label={'I agree to receive marketing communications from Stremio'}
                                 checked={state.marketingAccepted}
-                                toggle={toggleMarketingAccepted}
+                                onToggle={toggleMarketingAccepted}
                             />
                         </React.Fragment>
                         :

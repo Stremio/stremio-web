@@ -143,12 +143,13 @@ Multiselect.propTypes = {
     })),
     selected: PropTypes.arrayOf(PropTypes.string),
     disabled: PropTypes.bool,
-    dataset: PropTypes.objectOf(String),
+    dataset: PropTypes.objectOf(PropTypes.string),
     renderLabelContent: PropTypes.func,
     renderLabelText: PropTypes.func,
     onOpen: PropTypes.func,
     onClose: PropTypes.func,
-    onSelect: PropTypes.func
+    onSelect: PropTypes.func,
+    onClick: PropTypes.func
 };
 
 module.exports = Multiselect;

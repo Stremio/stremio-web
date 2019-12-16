@@ -83,23 +83,6 @@
     "overrides": [
         {
             "files": [
-                "src/common/Button/Button.js",
-                "src/common/Checkbox/Checkbox.js",
-                "src/common/ColorInput/ColorInput.js",
-                "src/common/Image/Image.js",
-                "src/common/MetaItem/MetaItem.js",
-                "src/common/Multiselect/Multiselect.js",
-                "src/common/TextInput/TextInput.js",
-                "src/routes/Intro/CredentialsTextInput/CredentialsTextInput.js",
-                "src/routes/Intro/ConsentCheckbox/ConsentCheckbox.js",
-                "src/common/PaginationInput/PaginationInput.js"
-            ],
-            "rules": {
-                "react/prop-types": 0
-            }
-        },
-        {
-            "files": [
                 "src/routes/Intro/Intro.js",
                 "src/routes/Addons/useAddons.js",
                 "src/routes/Board/useItemOptions.js",

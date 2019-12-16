@@ -121,8 +121,9 @@ MetaItem.propTypes = {
     playIcon: PropTypes.bool,
     progress: PropTypes.number,
     options: PropTypes.array,
-    dataset: PropTypes.objectOf(String),
-    optionOnSelect: PropTypes.func
+    dataset: PropTypes.objectOf(PropTypes.string),
+    optionOnSelect: PropTypes.func,
+    onClick: PropTypes.func
 };
 
 module.exports = MetaItem;

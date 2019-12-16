@@ -16,9 +16,8 @@ const ColorInput = ({ className, value, dataset, onChange, ...props }) => {
         return parseColor(value);
     });
     const labelButtonStyle = React.useMemo(() => ({
-        ...props.style,
         backgroundColor: value
-    }), [props.style, value]);
+    }), [value]);
     const labelButtonOnClick = React.useCallback((event) => {
         if (typeof props.onClick === 'function') {
             props.onClick(event);
@@ -76,9 +75,11 @@ const ColorInput = ({ className, value, dataset, onChange, ...props }) => {
 };
 
 ColorInput.propTypes = {
+    className: PropTypes.string,
     value: PropTypes.string,
-    dataset: PropTypes.objectOf(String),
-    onChange: PropTypes.func
+    dataset: PropTypes.objectOf(PropTypes.string),
+    onChange: PropTypes.func,
+    onClick: PropTypes.func
 };
 
 module.exports = ColorInput;
