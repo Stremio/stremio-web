@@ -44,7 +44,7 @@ const StreamsList = ({ className, streamsResources }) => {
             </Button>
         </div>
     );
-}
+};
 
 StreamsList.propTypes = {
     className: PropTypes.string,

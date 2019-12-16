@@ -95,7 +95,7 @@ const Router = ({ className, onPathNotMatch, ...props }) => {
         <div className={classnames(className, 'routes-container')}>
             {
                 views
-                    .filter(view => view !== null)
+                    .filter((view) => view !== null)
                     .map(({ key, component, urlParams, queryParams }, index, views) => (
                         <RouteFocusedProvider key={key} value={index === views.length - 1}>
                             <Route>

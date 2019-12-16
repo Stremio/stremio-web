@@ -1,4 +1,5 @@
 const React = require('react');
+const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const styles = require('./styles');
 
@@ -29,5 +30,12 @@ const TextInput = React.forwardRef((props, ref) => {
 });
 
 TextInput.displayName = 'TextInput';
+
+TextInput.propTypes = {
+    className: PropTypes.string,
+    disabled: PropTypes.bool,
+    onKeyDown: PropTypes.func,
+    onSubmit: PropTypes.func
+};
 
 module.exports = TextInput;

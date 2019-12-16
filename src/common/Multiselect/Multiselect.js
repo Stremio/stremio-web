@@ -8,7 +8,7 @@ const useBinaryState = require('stremio/common/useBinaryState');
 const styles = require('./styles');
 
 const Multiselect = ({ className, direction, title, disabled, dataset, renderLabelContent, renderLabelText, onOpen, onClose, onSelect, ...props }) => {
-    const [menuOpen, openMenu, closeMenu, toggleMenu] = useBinaryState(false);
+    const [menuOpen, , closeMenu, toggleMenu] = useBinaryState(false);
     const options = React.useMemo(() => {
         return Array.isArray(props.options) ?
             props.options.filter((option) => {
@@ -143,12 +143,13 @@ Multiselect.propTypes = {
     })),
     selected: PropTypes.arrayOf(PropTypes.string),
     disabled: PropTypes.bool,
-    dataset: PropTypes.objectOf(String),
+    dataset: PropTypes.objectOf(PropTypes.string),
     renderLabelContent: PropTypes.func,
     renderLabelText: PropTypes.func,
     onOpen: PropTypes.func,
     onClose: PropTypes.func,
-    onSelect: PropTypes.func
+    onSelect: PropTypes.func,
+    onClick: PropTypes.func
 };
 
 module.exports = Multiselect;

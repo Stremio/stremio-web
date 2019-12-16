@@ -32,7 +32,7 @@ const Board = () => {
                 {board.catalog_resources.map((catalog_resource, index) => {
                     const title = `${catalog_resource.addon_name} - ${catalog_resource.request.path.id} ${catalog_resource.request.path.type_name}`;
                     switch (catalog_resource.content.type) {
-                        case 'Ready':
+                        case 'Ready': {
                             return (
                                 <MetaRow
                                     key={index}
@@ -43,7 +43,8 @@ const Board = () => {
                                     limit={10}
                                 />
                             );
-                        case 'Err':
+                        }
+                        case 'Err': {
                             const message = `Error(${catalog_resource.content.content.type})${typeof catalog_resource.content.content.content === 'string' ? ` - ${catalog_resource.content.content.content}` : ''}`;
                             return (
                                 <MetaRow
@@ -54,7 +55,8 @@ const Board = () => {
                                     limit={10}
                                 />
                             );
-                        case 'Loading':
+                        }
+                        case 'Loading': {
                             return (
                                 <MetaRow.Placeholder
                                     key={index}
@@ -63,6 +65,7 @@ const Board = () => {
                                     limit={10}
                                 />
                             );
+                        }
                     }
                 })}
             </div>

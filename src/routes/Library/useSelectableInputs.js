@@ -16,13 +16,7 @@ const mapSelectableInputs = (library) => {
         options: library.type_names
             .map((type) => ({ label: type, value: type })),
         onSelect: (event) => {
-            const queryParams = new URLSearchParams(
-                library.selected !== null ?
-                    [['sort_prop', library.selected.sort_prop]]
-                    :
-                    []
-            );
-            window.location.replace(`#/library/${encodeURIComponent(event.value)}?${queryParams.toString()}`);
+            window.location.replace(`#/library/${encodeURIComponent(event.value)}/${encodeURIComponent(library.selected.sort_prop)}`);
         }
     };
     const sortPropSelect = {
@@ -33,9 +27,8 @@ const mapSelectableInputs = (library) => {
             [],
         options: SORT_PROP_OPTIONS,
         onSelect: (event) => {
-            const queryParams = new URLSearchParams([['sort_prop', event.value]]);
             if (library.selected !== null) {
-                window.location.replace(`#/library/${encodeURIComponent(library.selected.type_name)}?${queryParams.toString()}`);
+                window.location.replace(`#/library/${encodeURIComponent(library.selected.type_name)}/${encodeURIComponent(event.value)}`);
             }
         }
     };

@@ -16,11 +16,9 @@ const SeasonsBar = ({ className, seasons, season, onSelect }) => {
     const selected = React.useMemo(() => {
         return [String(season)];
     }, [season]);
-    const renderMultiselectLabelContent = React.useMemo(() => {
-        return () => (
-            <div className={styles['season-label']}>Season {season}</div>
-        );
-    }, [season]);
+    const renderMultiselectLabelContent = React.useMemo(() => () => (
+        <div className={styles['season-label']}>Season {season}</div>
+    ), [season]);
     const prevNextButtonOnClick = React.useCallback((event) => {
         if (typeof onSelect === 'function') {
             const seasonIndex = seasons.indexOf(season);

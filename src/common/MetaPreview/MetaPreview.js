@@ -179,7 +179,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                         null
                 }
                 {
-                    linksGroups.hasOwnProperty(IMDB_LINK_CATEGORY) ?
+                    typeof linksGroups[IMDB_LINK_CATEGORY] === 'object' ?
                         <ActionButton
                             {...linksGroups[IMDB_LINK_CATEGORY]}
                             className={styles['action-button']}
@@ -191,7 +191,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                         null
                 }
                 {
-                    !compact && linksGroups.hasOwnProperty(SHARE_LINK_CATEGORY) ?
+                    !compact && typeof linksGroups[SHARE_LINK_CATEGORY] === 'object' ?
                         <React.Fragment>
                             <ActionButton
                                 className={styles['action-button']}

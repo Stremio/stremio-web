@@ -46,20 +46,17 @@ const onNewLibraryState = (library) => {
     }
 };
 
-const useLibrary = (urlParams, queryParams) => {
+const useLibrary = (urlParams) => {
     const { core } = useServices();
     const loadLibraryAction = React.useMemo(() => {
-        if (typeof urlParams.type === 'string') {
+        if (typeof urlParams.type === 'string' && typeof urlParams.sort === 'string') {
             return {
                 action: 'Load',
                 args: {
                     load: 'LibraryFiltered',
                     args: {
                         type_name: urlParams.type,
-                        sort_prop: queryParams.has('sort_prop') ?
-                            queryParams.get('sort_prop')
-                            :
-                            null
+                        sort_prop: urlParams.sort
                     }
                 }
             };
@@ -82,7 +79,7 @@ const useLibrary = (urlParams, queryParams) => {
                 };
             }
         }
-    }, [urlParams, queryParams]);
+    }, [urlParams]);
     return useModelState({
         model: 'library',
         action: loadLibraryAction,
@@ -90,6 +87,6 @@ const useLibrary = (urlParams, queryParams) => {
         init: initLibraryState,
         onNewState: onNewLibraryState
     });
-}
+};
 
 module.exports = useLibrary;

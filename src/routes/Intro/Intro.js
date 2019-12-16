@@ -1,4 +1,5 @@
 const React = require('react');
+const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const { useRouteFocused } = require('stremio-router');
@@ -73,14 +74,17 @@ const Intro = ({ queryParams }) => {
     React.useEffect(() => {
         const onEvent = ({ event, args }) => {
             switch (event) {
-                case 'CtxActionErr':
-                    const [_action, error] = args;
+                case 'CtxActionErr': {
+                    const [, error] = args;
                     dispatch({ type: 'error', error: error.args.message });
-                case 'CtxChanged':
+                    break;
+                }
+                case 'CtxChanged': {
                     const state = core.getState();
                     if (state.ctx.content.auth !== null) {
                         window.location.replace('#/');
                     }
+                }
             }
         };
         if (routeFocused) {
@@ -113,9 +117,7 @@ const Intro = ({ queryParams }) => {
                             }
                         });
                     })
-                    .catch((err) => {
-                        console.error(err);
-                    });
+                    .catch(() => { });
             }
         });
     }, [state.email, state.password]);
@@ -256,7 +258,7 @@ const Intro = ({ queryParams }) => {
                     <Icon className={styles['icon']} icon={'ic_facebook'} />
                     <div className={styles['label']}>Continue with Facebook</div>
                 </Button>
-                <div className={styles['facebook-statement']}>We won't post anything on your behalf</div>
+                <div className={styles['facebook-statement']}>We won&#39;t post anything on your behalf</div>
                 <CredentialsTextInput
                     ref={emailRef}
                     className={styles['credentials-text-input']}
@@ -294,7 +296,7 @@ const Intro = ({ queryParams }) => {
                                 link={'Terms and conditions'}
                                 href={'https://www.stremio.com/tos'}
                                 checked={state.termsAccepted}
-                                toggle={toggleTermsAccepted}
+                                onToggle={toggleTermsAccepted}
                             />
                             <ConsentCheckbox
                                 ref={privacyPolicyRef}
@@ -303,14 +305,14 @@ const Intro = ({ queryParams }) => {
                                 link={'Privacy Policy'}
                                 href={'https://www.stremio.com/privacy'}
                                 checked={state.privacyPolicyAccepted}
-                                toggle={togglePrivacyPolicyAccepted}
+                                onToggle={togglePrivacyPolicyAccepted}
                             />
                             <ConsentCheckbox
                                 ref={marketingRef}
                                 className={styles['consent-checkbox']}
                                 label={'I agree to receive marketing communications from Stremio'}
                                 checked={state.marketingAccepted}
-                                toggle={toggleMarketingAccepted}
+                                onToggle={toggleMarketingAccepted}
                             />
                         </React.Fragment>
                         :
@@ -341,6 +343,10 @@ const Intro = ({ queryParams }) => {
             </div>
         </div>
     );
+};
+
+Intro.propTypes = {
+    queryParams: PropTypes.instanceOf(URLSearchParams)
 };
 
 module.exports = Intro;

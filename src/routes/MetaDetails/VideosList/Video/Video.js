@@ -6,7 +6,7 @@ const Icon = require('stremio-icons/dom');
 const VideoPlaceholder = require('./VideoPlaceholder');
 const styles = require('./styles');
 
-const Video = ({ className, title, thumbnail, episode, released, upcoming, watched, progress, ...props }) => {
+const Video = ({ className, id, title, thumbnail, episode, released, upcoming, watched, progress, ...props }) => {
     return (
         <Button {...props} className={classnames(className, styles['video-container'])} title={title}>
             {
@@ -76,6 +76,7 @@ Video.Placeholder = VideoPlaceholder;
 
 Video.propTypes = {
     className: PropTypes.string,
+    id: PropTypes.string,
     title: PropTypes.string,
     thumbnail: PropTypes.string,
     episode: PropTypes.number,

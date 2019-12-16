@@ -1,4 +1,5 @@
 const React = require('react');
+const PropTypes = require('prop-types');
 const Icon = require('stremio-icons/dom');
 const { MainNavBar, MetaRow } = require('stremio/common');
 const useSearch = require('./useSearch');
@@ -68,6 +69,10 @@ const Search = ({ queryParams }) => {
             </div>
         </div>
     );
-}
+};
+
+Search.propTypes = {
+    queryParams: PropTypes.instanceOf(URLSearchParams)
+};
 
 module.exports = Search;

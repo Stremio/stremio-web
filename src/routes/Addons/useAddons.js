@@ -15,8 +15,28 @@ const initAddonsState = () => ({
 
 const mapAddonsStateWithCtx = (addons, ctx) => {
     const selectable = addons.selectable;
-    const catalog_resource = addons.catalog_resource;
-    // TODO add MY catalogId replace catalog content if resource catalog id is MY
+    // TODO replace catalog content if resource catalog id is MY
+    const catalog_resource = addons.catalog_resource !== null && addons.catalog_resource.content.type === 'Ready' ?
+        {
+            ...addons.catalog_resource,
+            content: {
+                ...addons.catalog_resource.content,
+                content: addons.catalog_resource.content.content.map((descriptor) => ({
+                    transportUrl: descriptor.transportUrl,
+                    installed: ctx.content.addons.some((addon) => addon.transportUrl === descriptor.transportUrl),
+                    manifest: {
+                        id: descriptor.manifest.id,
+                        name: descriptor.manifest.name,
+                        version: descriptor.manifest.version,
+                        logo: descriptor.manifest.logo,
+                        description: descriptor.manifest.description,
+                        types: descriptor.manifest.types
+                    }
+                }))
+            }
+        }
+        :
+        addons.catalog_resource;
     return { selectable, catalog_resource };
 };
 
