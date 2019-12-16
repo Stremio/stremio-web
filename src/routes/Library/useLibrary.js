@@ -90,6 +90,6 @@ const useLibrary = (urlParams, queryParams) => {
         init: initLibraryState,
         onNewState: onNewLibraryState
     });
-}
+};
 
 module.exports = useLibrary;

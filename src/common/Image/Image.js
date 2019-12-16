@@ -27,7 +27,8 @@ Image.propTypes = {
     src: PropTypes.string,
     alt: PropTypes.string,
     fallbackSrc: PropTypes.string,
-    renderFallback: PropTypes.func
+    renderFallback: PropTypes.func,
+    onError: PropTypes.func
 };
 
 module.exports = Image;

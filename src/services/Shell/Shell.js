@@ -4,7 +4,7 @@ function Shell() {
     let active = false;
     let error = null;
     let starting = false;
-    let events = new EventEmitter();
+    const events = new EventEmitter();
     events.on('error', () => { });
 
     function onStateChanged() {
@@ -66,6 +66,6 @@ function Shell() {
     this.dispatch = dispatch;
 
     Object.freeze(this);
-};
+}
 
 module.exports = Shell;

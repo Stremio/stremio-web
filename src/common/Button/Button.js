@@ -1,4 +1,5 @@
 const React = require('react');
+const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const styles = require('./styles');
 
@@ -40,5 +41,14 @@ const Button = React.forwardRef(({ className, href, disabled, children, ...props
 });
 
 Button.displayName = 'Button';
+
+Button.propTypes = {
+    className: PropTypes.string,
+    href: PropTypes.string,
+    disabled: PropTypes.bool,
+    children: PropTypes.node,
+    onKeyDown: PropTypes.func,
+    onMouseDown: PropTypes.func
+};
 
 module.exports = Button;

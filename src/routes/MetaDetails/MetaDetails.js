@@ -1,4 +1,5 @@
 const React = require('react');
+const PropTypes = require('prop-types');
 const { NavBar, MetaPreview, useInLibrary } = require('stremio/common');
 const VideosList = require('./VideosList');
 const StreamsList = require('./StreamsList');
@@ -109,6 +110,14 @@ const MetaDetails = ({ urlParams }) => {
             </div>
         </div>
     );
+};
+
+MetaDetails.propTypes = {
+    urlParams: PropTypes.exact({
+        type: PropTypes.string,
+        id: PropTypes.string,
+        videoId: PropTypes.string
+    })
 };
 
 module.exports = MetaDetails;

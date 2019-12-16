@@ -1,7 +1,6 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const Icon = require('stremio-icons/dom');
 const styles = require('./styles');
 
 const NotificationPlaceholder = ({ className }) => {
@@ -20,6 +19,6 @@ const NotificationPlaceholder = ({ className }) => {
 
 NotificationPlaceholder.propTypes = {
     className: PropTypes.string
-}
+};
 
 module.exports = NotificationPlaceholder;

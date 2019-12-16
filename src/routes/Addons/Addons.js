@@ -1,4 +1,5 @@
 const React = require('react');
+const PropTypes = require('prop-types');
 const Icon = require('stremio-icons/dom');
 const { Button, Multiselect, NavBar, TextInput, SharePrompt, ModalDialog, useBinaryState } = require('stremio/common');
 const Addon = require('./Addon');
@@ -184,6 +185,15 @@ const Addons = ({ urlParams, queryParams }) => {
             }
         </div>
     );
+};
+
+Addons.propTypes = {
+    urlParams: PropTypes.exact({
+        addonTransportUrl: PropTypes.string,
+        catalogId: PropTypes.string,
+        type: PropTypes.string
+    }),
+    queryParams: PropTypes.instanceOf(URLSearchParams)
 };
 
 module.exports = Addons;

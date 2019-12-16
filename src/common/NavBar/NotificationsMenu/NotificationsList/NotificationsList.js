@@ -57,7 +57,7 @@ const NotificationsList = ({ className, metaItems }) => {
             }
         </div>
     );
-}
+};
 
 NotificationsList.propTypes = {
     className: PropTypes.string,

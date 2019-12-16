@@ -6,7 +6,7 @@ function Core() {
     let error = null;
     let starting = false;
     let stremio_core = null;
-    let events = new EventEmitter();
+    const events = new EventEmitter();
     events.on('error', () => { });
 
     function onStateChanged() {
@@ -26,6 +26,7 @@ function Core() {
                             try {
                                 events.emit(name, args);
                             } catch (e) {
+                                /* eslint-disable-next-line no-console */
                                 console.error(e);
                             }
                         }
@@ -96,6 +97,6 @@ function Core() {
     this.getState = getState;
 
     Object.freeze(this);
-};
+}
 
 module.exports = Core;
