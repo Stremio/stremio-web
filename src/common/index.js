@@ -25,7 +25,6 @@ const useInLibrary = require('./useInLibrary');
 const useLiveRef = require('./useLiveRef');
 const useLocationHash = require('./useLocationHash');
 const useModelState = require('./useModelState');
-const useRouteActive = require('./useRouteActive');
 const useSpreadState = require('./useSpreadState');
 const useUser = require('./useUser');
 
@@ -57,7 +56,6 @@ module.exports = {
     useLiveRef,
     useLocationHash,
     useModelState,
-    useRouteActive,
     useSpreadState,
     useUser
 };

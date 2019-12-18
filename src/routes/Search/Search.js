@@ -9,7 +9,7 @@ const Search = ({ queryParams }) => {
     const search = useSearch(queryParams);
     return (
         <div className={styles['search-container']}>
-            <MainNavBar className={styles['nav-bar']} />
+            <MainNavBar className={styles['nav-bar']} route={'search'} />
             <div className={styles['search-content']}>
                 {
                     search.selected === null || search.selected.extra.every(([name]) => name !== 'search') ?

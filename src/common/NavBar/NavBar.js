@@ -9,7 +9,7 @@ const NotificationsMenu = require('./NotificationsMenu');
 const NavMenu = require('./NavMenu');
 const styles = require('./styles');
 
-const NavBar = React.memo(({ className, backButton, tabs, title, searchBar, addonsButton, fullscreenButton, notificationsMenu, navMenu }) => {
+const NavBar = React.memo(({ className, route, backButton, tabs, title, searchBar, addonsButton, fullscreenButton, notificationsMenu, navMenu }) => {
     const backButtonOnClick = React.useCallback(() => {
         window.history.back();
     }, []);
@@ -28,15 +28,15 @@ const NavBar = React.memo(({ className, backButton, tabs, title, searchBar, addo
             }
             {
                 Array.isArray(tabs) && tabs.length > 0 ?
-                    tabs.slice(0, 4).map(({ href, icon, label, selected, onClick }, index) => (
+                    tabs.slice(0, 4).map((tab, index) => (
                         <NavTabButton
                             key={index}
                             className={styles['nav-tab-button']}
-                            href={href}
-                            icon={icon}
-                            label={label}
-                            selected={selected}
-                            onClick={onClick}
+                            selected={tab.route === route}
+                            href={tab.href}
+                            icon={tab.icon}
+                            label={tab.label}
+                            onClick={tab.onClick}
                         />
                     ))
                     :
@@ -46,7 +46,7 @@ const NavBar = React.memo(({ className, backButton, tabs, title, searchBar, addo
                 searchBar ?
                     <React.Fragment>
                         <div className={styles['spacing']} />
-                        <SearchBar className={styles['search-bar']} />
+                        <SearchBar className={styles['search-bar']} active={route === 'search'} />
                         <div className={styles['spacing']} />
                     </React.Fragment>
                     :
@@ -84,12 +84,13 @@ NavBar.displayName = 'NavBar';
 
 NavBar.propTypes = {
     className: PropTypes.string,
+    route: PropTypes.string,
     backButton: PropTypes.bool,
     tabs: PropTypes.arrayOf(PropTypes.shape({
-        icon: PropTypes.string,
+        route: PropTypes.string,
         label: PropTypes.string,
+        icon: PropTypes.string,
         href: PropTypes.string,
-        selected: PropTypes.bool,
         onClick: PropTypes.func
     })),
     title: PropTypes.string,
