@@ -45,7 +45,7 @@ const Discover = ({ urlParams, queryParams }) => {
     }, [urlParams, queryParams]);
     return (
         <div className={styles['discover-container']}>
-            <MainNavBar className={styles['nav-bar']} />
+            <MainNavBar className={styles['nav-bar']} selected={'discover'} />
             <div className={styles['discover-content']}>
                 <div className={styles['selectable-inputs-container']}>
                     {selectInputs.map((selectInput, index) => (

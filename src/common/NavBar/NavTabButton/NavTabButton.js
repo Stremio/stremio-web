@@ -3,25 +3,11 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const Button = require('stremio/common/Button');
-const routesRegexp = require('stremio/common/routesRegexp');
-const useRouteActive = require('stremio/common/useRouteActive');
 const styles = require('./styles');
 
-const NavTabButton = ({ className, icon, label, href, onClick }) => {
-    const routeRegexp = React.useMemo(() => {
-        if (typeof href === 'string' && href.startsWith('#')) {
-            for (const { regexp } of Object.values(routesRegexp)) {
-                if (href.slice(1).match(regexp)) {
-                    return regexp;
-                }
-            }
-        }
-
-        return null;
-    }, [href]);
-    const routeActive = useRouteActive(routeRegexp);
+const NavTabButton = ({ className, icon, label, href, selected, onClick }) => {
     return (
-        <Button className={classnames(className, styles['nav-tab-button-container'], { 'active': routeActive })} title={label} tabIndex={-1} href={href} onClick={onClick}>
+        <Button className={classnames(className, styles['nav-tab-button-container'], { 'selected': selected })} title={label} tabIndex={-1} href={href} onClick={onClick}>
             {
                 typeof icon === 'string' && icon.length > 0 ?
                     <Icon className={styles['icon']} icon={icon} />
@@ -43,6 +29,7 @@ NavTabButton.propTypes = {
     icon: PropTypes.string,
     label: PropTypes.string,
     href: PropTypes.string,
+    selected: PropTypes.bool,
     onClick: PropTypes.func
 };
 

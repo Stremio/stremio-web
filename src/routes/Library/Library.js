@@ -13,7 +13,7 @@ const Library = ({ urlParams }) => {
     const [options, optionOnSelect] = useItemOptions();
     return (
         <div className={styles['library-container']}>
-            <MainNavBar className={styles['nav-bar']} />
+            <MainNavBar className={styles['nav-bar']} selected={'library'} />
             <div className={styles['library-content']}>
                 {
                     library.library_state.type === 'Ready' && library.library_state.content.uid !== null && library.type_names.length > 0 ?
