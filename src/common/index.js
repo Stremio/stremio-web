@@ -1,3 +1,4 @@
+const AddonDetailsModal = require('./AddonDetailsModal');
 const Button = require('./Button');
 const Checkbox = require('./Checkbox');
 const ColorInput = require('./ColorInput');
@@ -29,6 +30,7 @@ const useSpreadState = require('./useSpreadState');
 const useUser = require('./useUser');
 
 module.exports = {
+    AddonDetailsModal,
     Button,
     Checkbox,
     ColorInput,
