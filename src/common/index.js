@@ -23,7 +23,6 @@ const useDeepEqualState = require('./useDeepEqualState');
 const useFullscreen = require('./useFullscreen');
 const useInLibrary = require('./useInLibrary');
 const useLiveRef = require('./useLiveRef');
-const useLocationHash = require('./useLocationHash');
 const useModelState = require('./useModelState');
 const useSpreadState = require('./useSpreadState');
 const useUser = require('./useUser');
@@ -54,7 +53,6 @@ module.exports = {
     useFullscreen,
     useInLibrary,
     useLiveRef,
-    useLocationHash,
     useModelState,
     useSpreadState,
     useUser
