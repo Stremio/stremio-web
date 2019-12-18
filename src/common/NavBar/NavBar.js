@@ -9,7 +9,7 @@ const NotificationsMenu = require('./NotificationsMenu');
 const NavMenu = require('./NavMenu');
 const styles = require('./styles');
 
-const NavBar = React.memo(({ className, route, backButton, tabs, title, searchBar, addonsButton, fullscreenButton, notificationsMenu, navMenu }) => {
+const NavBar = React.memo(({ className, route, query, backButton, tabs, title, searchBar, addonsButton, fullscreenButton, notificationsMenu, navMenu }) => {
     const backButtonOnClick = React.useCallback(() => {
         window.history.back();
     }, []);
@@ -46,7 +46,7 @@ const NavBar = React.memo(({ className, route, backButton, tabs, title, searchBa
                 searchBar ?
                     <React.Fragment>
                         <div className={styles['spacing']} />
-                        <SearchBar className={styles['search-bar']} active={route === 'search'} />
+                        <SearchBar className={styles['search-bar']} query={query} active={route === 'search'} />
                         <div className={styles['spacing']} />
                     </React.Fragment>
                     :
@@ -85,6 +85,7 @@ NavBar.displayName = 'NavBar';
 NavBar.propTypes = {
     className: PropTypes.string,
     route: PropTypes.string,
+    query: PropTypes.string,
     backButton: PropTypes.bool,
     tabs: PropTypes.arrayOf(PropTypes.shape({
         route: PropTypes.string,

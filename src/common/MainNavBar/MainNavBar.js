@@ -8,11 +8,12 @@ const TABS = [
     { route: 'library', label: 'Library', icon: 'ic_library', href: '#/library' }
 ];
 
-const MainNavBar = React.memo(({ className, route }) => {
+const MainNavBar = React.memo(({ className, route, query }) => {
     return (
         <NavBar
             className={className}
             route={route}
+            query={query}
             backButton={false}
             tabs={TABS}
             searchBar={true}
@@ -28,7 +29,8 @@ MainNavBar.displayName = 'MainNavBar';
 
 MainNavBar.propTypes = {
     className: PropTypes.string,
-    route: PropTypes.string
+    route: PropTypes.string,
+    query: PropTypes.string
 };
 
 module.exports = MainNavBar;
