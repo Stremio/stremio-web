@@ -5,13 +5,16 @@ const Icon = require('stremio-icons/dom');
 const { Image } = require('stremio/common');
 const styles = require('./styles');
 
-storiesOf('Image', module).add('ImageWithFallback', () => (
-    <Image
-        className={styles['image']}
-        src={'/images/non_existing.png'}
-        onError={action('onError')}
-        renderFallback={() => (
-            <Icon className={styles['icon']} icon={'ic_broken_link'} />
-        )}
-    />
-));
+storiesOf('Image', module).add('ImageWithFallback', () => {
+    const renderFallback = React.useMemo(() => () => (
+        <Icon className={styles['icon']} icon={'ic_broken_link'} />
+    ));
+    return (
+        <Image
+            className={styles['image']}
+            src={'/images/non_existing.png'}
+            onError={action('onError')}
+            renderFallback={renderFallback}
+        />
+    );
+});
