@@ -1,0 +1,23 @@
+.nav-bar-container {
+    --nav-bar-size: 4.4rem;
+    width: var(--nav-bar-size);
+    padding: 1rem 0;
+    background-color: var(--color-backgroundlighter);
+
+    .nav-tab-button {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: var(--nav-bar-size);
+        padding: 0.5rem;
+
+        > :first-child {
+            margin: 0 0 0.5rem 0;
+        }
+
+        > :last-child {
+            max-height: 1.2em;
+            font-size: 0.75rem;
+        }
+    }
+}
