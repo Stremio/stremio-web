@@ -32,12 +32,12 @@
         "vtt.js": "0.13.0"
     },
     "devDependencies": {
-        "@babel/core": "7.7.5",
+        "@babel/core": "7.7.7",
         "@babel/plugin-proposal-class-properties": "7.7.4",
-        "@babel/plugin-proposal-object-rest-spread": "7.7.4",
-        "@babel/preset-env": "7.7.6",
+        "@babel/plugin-proposal-object-rest-spread": "7.7.7",
+        "@babel/preset-env": "7.7.7",
         "@babel/preset-react": "7.7.4",
-        "@babel/runtime": "7.7.6",
+        "@babel/runtime": "7.7.7",
         "@storybook/addon-actions": "5.2.8",
         "@storybook/addon-console": "1.2.1",
         "@storybook/addons": "5.2.8",
@@ -47,7 +47,7 @@
         "babel-loader": "8.0.6",
         "clean-webpack-plugin": "3.0.0",
         "copy-webpack-plugin": "5.1.1",
-        "css-loader": "3.3.2",
+        "css-loader": "3.4.0",
         "cssnano": "4.1.10",
         "cssnano-preset-advanced": "4.0.7",
         "eslint": "6.7.2",
@@ -56,13 +56,13 @@
         "jest": "24.9.0",
         "less": "3.10.3",
         "less-loader": "5.0.0",
-        "mini-css-extract-plugin": "0.8.0",
+        "mini-css-extract-plugin": "0.8.2",
         "postcss-loader": "3.0.0",
         "react-test-renderer": "16.12.0",
         "storybook-addon-jsx": "7.1.13",
-        "terser-webpack-plugin": "2.3.0",
-        "webpack": "4.41.3",
+        "terser-webpack-plugin": "2.3.1",
+        "webpack": "4.41.4",
         "webpack-cli": "3.3.10",
-        "webpack-dev-server": "3.9.0"
+        "webpack-dev-server": "3.10.0"
     }
 }
