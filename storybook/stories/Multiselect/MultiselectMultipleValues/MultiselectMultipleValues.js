@@ -17,7 +17,7 @@ storiesOf('Multiselect', module).add('MultiselectMultipleValues', () => {
     return (
         <Multiselect
             className={styles['label-container']}
-            direction={'bottom'}
+            direction={'bottom-right'}
             title={'MultiselectMultipleValues'}
             options={[
                 { value: 'a', label: 'A' },

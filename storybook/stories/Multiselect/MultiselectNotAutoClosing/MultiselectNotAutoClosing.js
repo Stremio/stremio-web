@@ -19,7 +19,7 @@ storiesOf('Multiselect', module).add('MultiselectNotAutoClosing', () => {
     return (
         <Multiselect
             className={styles['label-container']}
-            direction={'bottom'}
+            direction={'bottom-right'}
             title={'MultiselectNotAutoClosing'}
             options={[
                 { value: 'a', label: 'A' },
