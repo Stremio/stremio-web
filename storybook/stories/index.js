@@ -5,6 +5,7 @@ require('./Image');
 require('./MetaItem');
 require('./ModalDialog');
 require('./Multiselect');
+require('./NavBar');
 require('./Notification');
 require('./PaginationInput');
 require('./Popup');
