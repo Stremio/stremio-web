@@ -1,0 +1,51 @@
+.nav-bar-container {
+    --nav-bar-size: 3.2rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: var(--nav-bar-size);
+    background-color: var(--color-secondarydark);
+    overflow: visible;
+
+    .logo-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 3.2rem;
+        height: 3.2rem;
+
+        .logo {
+            flex: none;
+            width: 2rem;
+            height: 2rem;
+        }
+    }
+
+    .nav-tab-button {
+        flex: none;
+        align-self: stretch;
+        max-width: 11rem;
+    }
+
+    .spacing {
+        flex: 1;
+    }
+
+    .search-bar {
+        flex-grow: 0;
+        flex-shrink: 1;
+        flex-basis: 25rem;
+        align-self: stretch;
+        min-width: 9.5rem;
+
+        &+.spacing {
+            max-width: 11rem;
+        }
+    }
+
+    .addons-button, .fullscreen-button, .notifications-menu, .nav-menu {
+        flex: none;
+        width: var(--nav-bar-size);
+        height: var(--nav-bar-size);
+    }
+}
