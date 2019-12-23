@@ -1,1 +1,2 @@
 require('./HorizontalNavBar');
+require('./VerticalNavBar');
