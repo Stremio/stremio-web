@@ -2,9 +2,9 @@ const React = require('react');
 const { storiesOf } = require('@storybook/react');
 const HorizontalNavBar = require('stremio/common/HorizontalNavBar');
 
-storiesOf('NavBar', module).add('HorizontalNavBar', () => (
+storiesOf('NavBar', module).add('HorizontalNavBarWithBackButton', () => (
     <HorizontalNavBar
-        backButton={false}
+        backButton={true}
         searchBar={true}
         addonsButton={true}
         fullscreenButton={true}
