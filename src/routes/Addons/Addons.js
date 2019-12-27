@@ -10,10 +10,10 @@ const styles = require('./styles');
 const navigateToAddonDetails = (addonsCatalogRequest, transportUrl) => {
     const queryParams = new URLSearchParams([['addon', transportUrl]]);
     if (addonsCatalogRequest !== null) {
-        const addonTransportUrl = encodeURIComponent(addonsCatalogRequest.base);
+        const transportUrl = encodeURIComponent(addonsCatalogRequest.base);
         const catalogId = encodeURIComponent(addonsCatalogRequest.path.id);
         const type = encodeURIComponent(addonsCatalogRequest.path.type_name);
-        window.location.replace(`#/addons/${addonTransportUrl}/${catalogId}/${type}?${queryParams}`);
+        window.location.replace(`#/addons/${transportUrl}/${catalogId}/${type}?${queryParams}`);
     } else {
         window.location.replace(`#/addons?${queryParams}`);
     }
@@ -21,10 +21,10 @@ const navigateToAddonDetails = (addonsCatalogRequest, transportUrl) => {
 
 const clearAddonDetails = (addonsCatalogRequest) => {
     if (addonsCatalogRequest !== null) {
-        const addonTransportUrl = encodeURIComponent(addonsCatalogRequest.base);
+        const transportUrl = encodeURIComponent(addonsCatalogRequest.base);
         const catalogId = encodeURIComponent(addonsCatalogRequest.path.id);
         const type = encodeURIComponent(addonsCatalogRequest.path.type_name);
-        window.location.replace(`#/addons/${addonTransportUrl}/${catalogId}/${type}`);
+        window.location.replace(`#/addons/${transportUrl}/${catalogId}/${type}`);
     } else {
         window.location.replace('#/addons');
     }
@@ -217,7 +217,7 @@ const Addons = ({ urlParams, queryParams }) => {
 
 Addons.propTypes = {
     urlParams: PropTypes.exact({
-        addonTransportUrl: PropTypes.string,
+        transportUrl: PropTypes.string,
         catalogId: PropTypes.string,
         type: PropTypes.string
     }),

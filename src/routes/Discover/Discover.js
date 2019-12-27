@@ -138,7 +138,7 @@ const Discover = ({ urlParams, queryParams }) => {
 
 Discover.propTypes = {
     urlParams: PropTypes.exact({
-        addonTransportUrl: PropTypes.string,
+        transportUrl: PropTypes.string,
         type: PropTypes.string,
         catalogId: PropTypes.string
     }),

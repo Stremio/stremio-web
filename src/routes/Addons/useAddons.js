@@ -55,13 +55,13 @@ const onNewAddonsState = (addons) => {
 const useAddons = (urlParams) => {
     const { core } = useServices();
     const loadAddonsAction = React.useMemo(() => {
-        if (typeof urlParams.addonTransportUrl === 'string' && typeof urlParams.catalogId === 'string' && typeof urlParams.type === 'string') {
+        if (typeof urlParams.transportUrl === 'string' && typeof urlParams.catalogId === 'string' && typeof urlParams.type === 'string') {
             return {
                 action: 'Load',
                 args: {
                     load: 'CatalogFiltered',
                     args: {
-                        base: urlParams.addonTransportUrl,
+                        base: urlParams.transportUrl,
                         path: {
                             resource: 'addon_catalog',
                             type_name: urlParams.type,

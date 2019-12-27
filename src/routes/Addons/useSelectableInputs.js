@@ -1,10 +1,10 @@
 const React = require('react');
 
 const navigateWithLoadRequest = (load_request) => {
-    const addonTransportUrl = encodeURIComponent(load_request.base);
+    const transportUrl = encodeURIComponent(load_request.base);
     const catalogId = encodeURIComponent(load_request.path.id);
     const type = encodeURIComponent(load_request.path.type_name);
-    window.location.replace(`#/addons/${addonTransportUrl}/${catalogId}/${type}`);
+    window.location.replace(`#/addons/${transportUrl}/${catalogId}/${type}`);
 };
 
 const equalWithouExtra = (request1, request2) => {
