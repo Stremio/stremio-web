@@ -24,7 +24,6 @@ const useFullscreen = require('./useFullscreen');
 const useInLibrary = require('./useInLibrary');
 const useLiveRef = require('./useLiveRef');
 const useModelState = require('./useModelState');
-const useSpreadState = require('./useSpreadState');
 const useUser = require('./useUser');
 
 module.exports = {
@@ -54,6 +53,5 @@ module.exports = {
     useInLibrary,
     useLiveRef,
     useModelState,
-    useSpreadState,
     useUser
 };
