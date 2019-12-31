@@ -10,18 +10,26 @@ const initPlayer = () => ({
 
 const usePlayer = (urlParams) => {
     const loadPlayerAction = React.useMemo(() => {
-        return {
-            action: 'Load',
-            args: {
-                load: 'Player',
+        try {
+            const stream = JSON.parse(urlParams.stream);
+            return {
+                action: 'Load',
                 args: {
-                    transport_url: urlParams.transportUrl,
-                    type_name: urlParams.type,
-                    id: urlParams.id,
-                    video_id: urlParams.videoId
+                    load: 'Player',
+                    args: {
+                        transport_url: urlParams.transportUrl,
+                        type_name: urlParams.type,
+                        id: urlParams.id,
+                        video_id: urlParams.videoId,
+                        stream: stream
+                    }
                 }
-            }
-        };
+            };
+        } catch {
+            return {
+                action: 'Unload'
+            };
+        }
     }, [urlParams]);
     return useModelState({
         model: 'player',
