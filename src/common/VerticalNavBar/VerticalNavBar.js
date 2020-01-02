@@ -9,9 +9,9 @@ const VerticalNavBar = React.memo(({ className, tabs }) => {
         <nav className={classnames(className, styles['nav-bar-container'])}>
             {
                 Array.isArray(tabs) && tabs.length > 0 ?
-                    tabs.map(({ href = '', icon = '', label = '', onClick }) => (
+                    tabs.map(({ href = '', icon = '', label = '', onClick }, index) => (
                         <NavTabButton
-                            key={`${href}${icon}${label}`}
+                            key={index}
                             className={styles['nav-tab-button']}
                             href={href}
                             icon={icon}
