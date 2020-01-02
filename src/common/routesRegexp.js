@@ -9,7 +9,7 @@ const routesRegexp = {
     },
     discover: {
         regexp: /^\/discover(?:\/([^/]*)\/([^/]*)\/([^/]*))?$/,
-        urlParamsNames: ['addonTransportUrl', 'type', 'catalogId']
+        urlParamsNames: ['transportUrl', 'type', 'catalogId']
     },
     library: {
         regexp: /^\/library(?:\/([^/]*)\/([^/]*))?$/,
@@ -25,15 +25,15 @@ const routesRegexp = {
     },
     addons: {
         regexp: /^\/addons(?:\/([^/]*)\/([^/]*)\/([^/]*))?$/,
-        urlParamsNames: ['addonTransportUrl', 'catalogId', 'type']
+        urlParamsNames: ['transportUrl', 'catalogId', 'type']
     },
     settings: {
         regexp: /^\/settings$/,
         urlParamsNames: []
     },
     player: {
-        regexp: /^\/player\/([^/]*)\/([^/]*)\/([^/]*)\/([^/]*)$/,
-        urlParamsNames: ['type', 'id', 'videoId', 'stream']
+        regexp: /^\/player\/([^/]*)\/([^/]*)\/([^/]*)\/([^/]*)\/([^/]*)$/,
+        urlParamsNames: ['transportUrl', 'type', 'id', 'videoId', 'stream']
     }
 };
 

@@ -9,11 +9,11 @@ const SKIP_EXTRA = {
 };
 
 const navigateWithLoadRequest = (load_request) => {
-    const addonTransportUrl = encodeURIComponent(load_request.base);
+    const transportUrl = encodeURIComponent(load_request.base);
     const type = encodeURIComponent(load_request.path.type_name);
     const catalogId = encodeURIComponent(load_request.path.id);
     const extra = new URLSearchParams(load_request.path.extra).toString();
-    window.location.replace(`#/discover/${addonTransportUrl}/${type}/${catalogId}?${extra}`);
+    window.location.replace(`#/discover/${transportUrl}/${type}/${catalogId}?${extra}`);
 };
 
 const getNextExtra = (prevExtra, extraProp, extraValue) => {

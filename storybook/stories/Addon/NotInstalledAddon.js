@@ -6,15 +6,16 @@ const styles = require('./styles');
 
 storiesOf('Addon', module).add('NotInstalled', () => (
     <Addon
-        className={styles['not-installed-addon-container']}
-        id={'addon-id'}
-        name={'Demo name'}
-        logo={'/images/intro_background.jpg'}
-        description={'Demo description'}
-        types={['Demo type']}
+        className={styles['installed-addon-container']}
+        id={'addon.id'}
+        name={'Addon name'}
         version={'1.0.0'}
-        transportUrl={'Demo url'}
+        logo={'/images/intro_background.jpg'}
+        description={'Addon description ...'}
+        types={['movie', 'series']}
         installed={false}
-        toggle={action('Demo item install button clicked')}
+        onToggle={action('Toggle')}
+        onShare={action('Share')}
+        dataset={{ transportUrl: 'http://www.com' }}
     />
 ));

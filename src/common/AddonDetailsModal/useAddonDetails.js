@@ -1,5 +1,5 @@
 const React = require('react');
-const { useModelState } = require('stremio/common');
+const useModelState = require('stremio/common/useModelState');
 
 const initAddonDetailsState = () => ({
     descriptor: null
@@ -11,7 +11,10 @@ const mapAddonDetailsStateWithCtx = (addonDetails, ctx) => {
             ...addonDetails.descriptor,
             content: {
                 ...addonDetails.descriptor.content,
-                installed: ctx.content.addons.some((addon) => addon.transportUrl === addonDetails.descriptor.transport_url),
+                content: {
+                    ...addonDetails.descriptor.content.content,
+                    installed: ctx.content.addons.some((addon) => addon.transportUrl === addonDetails.descriptor.transportUrl),
+                }
             }
         }
         :
@@ -19,15 +22,15 @@ const mapAddonDetailsStateWithCtx = (addonDetails, ctx) => {
     return { descriptor };
 };
 
-const useAddonDetails = (queryParams) => {
+const useAddonDetails = (transportUrl) => {
     const loadAddonDetailsAction = React.useMemo(() => {
-        if (queryParams.has('addon')) {
+        if (typeof transportUrl === 'string') {
             return {
                 action: 'Load',
                 args: {
                     load: 'AddonDetails',
                     args: {
-                        transport_url: queryParams.get('addon')
+                        transport_url: transportUrl
                     }
                 }
             };
@@ -36,7 +39,7 @@ const useAddonDetails = (queryParams) => {
                 action: 'Unload'
             };
         }
-    }, [queryParams]);
+    }, [transportUrl]);
     return useModelState({
         model: 'addon_details',
         action: loadAddonDetailsAction,

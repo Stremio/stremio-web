@@ -10,7 +10,8 @@ const reducer = (state, action) => {
                         !isNaN(season) &&
                         typeof season === 'number' &&
                         seasons.indexOf(season) === index;
-                });
+                })
+                .sort((a, b) => a - b);
             const selectedSeason = seasons.includes(state.selectedSeason) ?
                 state.selectedSeason
                 :
@@ -68,9 +69,13 @@ const useSelectableSeasons = (videos) => {
         });
     }, []);
     const videosForSeason = React.useMemo(() => {
-        return state.videos.filter((video) => {
-            return state.selectedSeason === null || video.season === state.selectedSeason;
-        });
+        return state.videos
+            .filter((video) => {
+                return state.selectedSeason === null || video.season === state.selectedSeason;
+            })
+            .sort((a, b) => {
+                return a.episode - b.episode;
+            });
     }, [state.videos, state.selectedSeason]);
     React.useEffect(() => {
         dispatch({

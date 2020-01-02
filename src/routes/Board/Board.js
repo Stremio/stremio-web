@@ -11,7 +11,7 @@ const Board = () => {
     const [options, optionOnSelect] = useItemOptions();
     return (
         <div className={styles['board-container']}>
-            <MainNavBar className={styles['nav-bar']} />
+            <MainNavBar className={styles['nav-bar']} route={'board'} />
             <div className={styles['board-content']}>
                 {
                     continueWatching.lib_items.length > 0 ?

@@ -57,13 +57,13 @@ const onNewDiscoverState = (discover) => {
 const useDiscover = (urlParams, queryParams) => {
     const { core } = useServices();
     const loadDiscoverAction = React.useMemo(() => {
-        if (typeof urlParams.addonTransportUrl === 'string' && typeof urlParams.type === 'string' && typeof urlParams.catalogId === 'string') {
+        if (typeof urlParams.transportUrl === 'string' && typeof urlParams.type === 'string' && typeof urlParams.catalogId === 'string') {
             return {
                 action: 'Load',
                 args: {
                     load: 'CatalogFiltered',
                     args: {
-                        base: urlParams.addonTransportUrl,
+                        base: urlParams.transportUrl,
                         path: {
                             resource: 'catalog',
                             type_name: urlParams.type,
