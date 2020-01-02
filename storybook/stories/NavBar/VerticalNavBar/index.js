@@ -1,1 +1,2 @@
 require('./VerticalNavBar');
+require('./LongVerticalNavBar');
