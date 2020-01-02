@@ -10,7 +10,7 @@ const NotificationsMenu = require('stremio/common/NavBar/NotificationsMenu');
 const NavMenu = require('stremio/common/NavBar/NavMenu');
 const styles = require('./styles');
 
-const HorizontalNavBar = React.memo(({ className, backButton, searchBar, addonsButton, fullscreenButton, notificationsMenu, navMenu }) => {
+const HorizontalNavBar = React.memo(({ className, route, query, backButton, searchBar, addonsButton, fullscreenButton, notificationsMenu, navMenu }) => {
     const backButtonOnClick = React.useCallback(() => {
         window.history.back();
     }, []);
@@ -39,7 +39,7 @@ const HorizontalNavBar = React.memo(({ className, backButton, searchBar, addonsB
                 searchBar ?
                     <React.Fragment>
                         <div className={styles['spacing']} />
-                        <SearchBar className={styles['search-bar']} />
+                        <SearchBar className={styles['search-bar']} query={query} active={route === 'search'} />
                         <div className={styles['spacing']} />
                     </React.Fragment>
                     :
@@ -77,6 +77,8 @@ HorizontalNavBar.displayName = 'HorizontalNavBar';
 
 HorizontalNavBar.propTypes = {
     className: PropTypes.string,
+    route: PropTypes.string,
+    query: PropTypes.string,
     backButton: PropTypes.bool,
     searchBar: PropTypes.bool,
     addonsButton: PropTypes.bool,

@@ -3,18 +3,18 @@ const { storiesOf } = require('@storybook/react');
 const VerticalNavBar = require('stremio/common/VerticalNavBar');
 
 const TABS = [
-    { label: 'Board', icon: 'ic_board' },
-    { label: 'Discover', icon: 'ic_discover' },
-    { label: 'Library', icon: 'ic_library' },
-    { label: 'Calendar', icon: 'ic_calendar' },
-    { label: 'Addons', icon: 'ic_addons' },
-    { label: 'Settings', icon: 'ic_settings' },
-    { label: 'Board', icon: 'ic_board' },
-    { label: 'Discover', icon: 'ic_discover' },
-    { label: 'Library', icon: 'ic_library' },
-    { label: 'Calendar', icon: 'ic_calendar' },
-    { label: 'Addons', icon: 'ic_addons' },
-    { label: 'Settings', icon: 'ic_settings' }
+    { route: 'board', label: 'Board', icon: 'ic_board' },
+    { route: 'discover', label: 'Discover', icon: 'ic_discover' },
+    { route: 'library', label: 'Library', icon: 'ic_library' },
+    { route: 'calendar', label: 'Calendar', icon: 'ic_calendar' },
+    { route: 'addons', label: 'Addons', icon: 'ic_addons' },
+    { route: 'settings', label: 'Settings', icon: 'ic_settings' },
+    { route: 'board', label: 'Board', icon: 'ic_board' },
+    { route: 'discover', label: 'Discover', icon: 'ic_discover' },
+    { route: 'library', label: 'Library', icon: 'ic_library' },
+    { route: 'calendar', label: 'Calendar', icon: 'ic_calendar' },
+    { route: 'addons', label: 'Addons', icon: 'ic_addons' },
+    { route: 'settings', label: 'Settings', icon: 'ic_settings' }
 ];
 
 storiesOf('NavBar', module).add('LongVerticalNavBar', () => (

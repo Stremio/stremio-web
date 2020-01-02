@@ -4,20 +4,22 @@ const classnames = require('classnames');
 const NavTabButton = require('stremio/common/NavBar/NavTabButton');
 const styles = require('./styles');
 
-const VerticalNavBar = React.memo(({ className, tabs }) => {
+const VerticalNavBar = React.memo(({ className, route, tabs }) => {
     return (
         <nav className={classnames(className, styles['nav-bar-container'])}>
             {
                 Array.isArray(tabs) && tabs.length > 0 ?
-                    tabs.map(({ href = '', icon = '', label = '', onClick }, index) => (
+                    tabs.map((tab, index) => (
                         <NavTabButton
                             key={index}
                             className={styles['nav-tab-button']}
-                            href={href}
-                            icon={icon}
-                            label={label}
+                            selected={tab.route === route}
+                            href={tab.href}
+                            icon={tab.icon}
+                            label={tab.label}
+                            route={tab.route}
                             direction={'vertical'}
-                            onClick={onClick}
+                            onClick={tab.onClick}
                         />
                     ))
                     :

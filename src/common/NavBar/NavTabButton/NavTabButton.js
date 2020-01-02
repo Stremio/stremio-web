@@ -5,9 +5,9 @@ const Icon = require('stremio-icons/dom');
 const Button = require('stremio/common/Button');
 const styles = require('./styles');
 
-const NavTabButton = ({ className, icon, label, href, selected, direction, onClick }) => {
+const NavTabButton = ({ className, icon, label, href, selected, route, direction, onClick }) => {
     return (
-        <Button className={classnames(className, styles['nav-tab-button-container'], styles[`nav-tab-button-${direction}`], { 'selected': selected })} title={label} tabIndex={-1} href={href} direction={direction} onClick={onClick}>
+        <Button className={classnames(className, styles['nav-tab-button-container'], styles[`nav-tab-button-${direction}`], { 'selected': selected })} title={label} tabIndex={-1} href={href} route={route} direction={direction} onClick={onClick}>
             {
                 typeof icon === 'string' && icon.length > 0 ?
                     <Icon className={styles['icon']} icon={icon} />
@@ -30,6 +30,7 @@ NavTabButton.propTypes = {
     label: PropTypes.string,
     href: PropTypes.string,
     selected: PropTypes.bool,
+    route: PropTypes.string,
     direction: PropTypes.oneOf(['horizontal', 'vertical']),
     onClick: PropTypes.func
 };
