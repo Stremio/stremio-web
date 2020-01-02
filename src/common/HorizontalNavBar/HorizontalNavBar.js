@@ -29,6 +29,7 @@ const HorizontalNavBar = React.memo(({ className, backButton, searchBar, addonsB
                         className={styles['nav-tab-button']}
                         icon={'ic_back_ios'}
                         label={'Back'}
+                        direction={'horizontal'}
                         onClick={backButtonOnClick}
                     />
                     :

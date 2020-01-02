@@ -16,6 +16,7 @@ const VerticalNavBar = React.memo(({ className, tabs }) => {
                             href={href}
                             icon={icon}
                             label={label}
+                            direction={'vertical'}
                             onClick={onClick}
                         />
                     ))

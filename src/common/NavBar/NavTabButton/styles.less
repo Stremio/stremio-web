@@ -1,8 +1,6 @@
 .nav-tab-button-container {
     display: flex;
-    flex-direction: row;
     align-items: center;
-    padding: 0 1rem;
 
     &:hover {
         background-color: var(--color-secondary);
@@ -10,6 +8,31 @@
 
     &:global(.selected) {
         background-color: var(--color-background);
+    }
+
+    &.nav-tab-button-horizontal {
+        flex-direction: row;
+        padding: 0 1rem;
+
+        .label {
+            max-height: 2.4em;
+        }
+    }
+
+    &.nav-tab-button-vertical {
+        flex-direction: column;
+        justify-content: center;
+        height: var(--nav-bar-size);
+        padding: 0.5rem;
+
+        .icon {
+            margin: 0 0 0.5rem 0;
+        }
+
+        .label {
+            max-height: 1.2em;
+            font-size: 0.75rem;
+        }
     }
 
     .icon {
@@ -26,7 +49,6 @@
 
     .label {
         flex: 1;
-        max-height: 2.4em;
         color: var(--color-surfacelighter);
     }
 }
