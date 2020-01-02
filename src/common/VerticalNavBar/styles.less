@@ -6,6 +6,10 @@
     overflow-y: auto;
     scrollbar-width: none;
 
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
     .nav-tab-button {
         display: flex;
         flex-direction: column;
@@ -21,9 +25,5 @@
             max-height: 1.2em;
             font-size: 0.75rem;
         }
-    }
-
-    &::-webkit-scrollbar {
-        display: none;
     }
 }
