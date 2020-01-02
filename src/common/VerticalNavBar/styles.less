@@ -3,6 +3,8 @@
     width: var(--nav-bar-size);
     padding: 1rem 0;
     background-color: var(--color-backgroundlighter);
+    overflow-y: auto;
+    scrollbar-width: none;
 
     .nav-tab-button {
         display: flex;
@@ -19,5 +21,9 @@
             max-height: 1.2em;
             font-size: 0.75rem;
         }
+    }
+
+    &::-webkit-scrollbar {
+        display: none;
     }
 }
