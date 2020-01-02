@@ -1,7 +1,6 @@
 const React = require('react');
 const { storiesOf } = require('@storybook/react');
 const VerticalNavBar = require('stremio/common/VerticalNavBar');
-const styles = require('./styles');
 
 const TABS = [
     { label: 'Board', icon: 'ic_board' },
@@ -20,7 +19,6 @@ const TABS = [
 
 storiesOf('NavBar', module).add('LongVerticalNavBar', () => (
     <VerticalNavBar
-        className={styles['long-vertical-nav-bar']}
         tabs={TABS}
     />
 ));
