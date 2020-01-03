@@ -1,5 +1,6 @@
 const React = require('react');
 const { useModelState } = require('stremio/common');
+const { useServices } = require('stremio/services');
 
 const mapSubtitlesSettings = (ctx) => ({
     size: ctx.content.settings.subtitles_size,
@@ -9,6 +10,7 @@ const mapSubtitlesSettings = (ctx) => ({
 });
 
 const useSubtitlesSettings = () => {
+    const { core } = useServices();
     const initSubtitlesSettings = React.useCallback(() => {
         const ctx = core.getState('ctx');
         return mapSubtitlesSettings(ctx);
