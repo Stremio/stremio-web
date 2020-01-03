@@ -2,7 +2,13 @@ const React = require('react');
 const { useModelState } = require('stremio/common');
 
 const initPlayerState = () => ({
-    selected: null,
+    selected: {
+        transport_url: null,
+        type_name: null,
+        id: null,
+        video_id: null,
+        stream: null,
+    },
     meta_resource: null,
     subtitles_resources: [],
     next_video: null
