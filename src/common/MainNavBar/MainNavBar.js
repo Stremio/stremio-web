@@ -1,6 +1,6 @@
 const React = require('react');
 const PropTypes = require('prop-types');
-const NavBar = require('stremio/common/NavBar');
+const VerticalNavBar = require('stremio/common/VerticalNavBar');
 
 const TABS = [
     { route: 'board', label: 'Board', icon: 'ic_board', href: '#/' },
@@ -8,19 +8,12 @@ const TABS = [
     { route: 'library', label: 'Library', icon: 'ic_library', href: '#/library' }
 ];
 
-const MainNavBar = React.memo(({ className, route, query }) => {
+const MainNavBar = React.memo(({ className, route }) => {
     return (
-        <NavBar
+        <VerticalNavBar
             className={className}
             route={route}
-            query={query}
-            backButton={false}
             tabs={TABS}
-            searchBar={true}
-            addonsButton={true}
-            fullscreenButton={true}
-            notificationsMenu={true}
-            navMenu={true}
         />
     );
 });
