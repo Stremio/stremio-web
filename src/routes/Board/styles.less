@@ -17,29 +17,34 @@
     height: 100%;
     background-color: var(--color-background);
 
-    .nav-bar {
+    .horizontal-nav-bar {
         flex: none;
         align-self: stretch;
     }
 
-    .board-content {
-        flex: 1;
-        align-self: stretch;
-        overflow-y: auto;
+    .board-content-container {
+        display: flex;
+        flex-direction: row;
 
-        .board-row, .board-row-placeholder {
-            margin: 4rem 2rem;
+        .board-content {
+            flex: 1;
+            align-self: stretch;
+            overflow-y: auto;
 
-            &:first-child {
-                margin-top: 2rem;
-            }
+            .board-row, .board-row-placeholder {
+                margin: 4rem 2rem;
 
-            &:last-child {
-                margin-bottom: 2rem;
-            }
+                &:first-child {
+                    margin-top: 2rem;
+                }
 
-            .see-all-container, .see-all-container-placeholder {
-                width: 12rem;
+                &:last-child {
+                    margin-bottom: 2rem;
+                }
+
+                .see-all-container, .see-all-container-placeholder {
+                    width: 12rem;
+                }
             }
         }
     }
@@ -47,11 +52,13 @@
 
 @media only screen and (min-width: @large) {
     .board-container {
-        .board-content {
-            .board-row, .board-row-placeholder {
-                .meta-item, .meta-item-placeholder {
-                    &:nth-child(n+9) {
-                        display: none;
+        .board-content-container {
+            .board-content {
+                .board-row, .board-row-placeholder {
+                    .meta-item, .meta-item-placeholder {
+                        &:nth-child(n+9) {
+                            display: none;
+                        }
                     }
                 }
             }
@@ -61,11 +68,13 @@
 
 @media only screen and (max-width: @large) {
     .board-container {
-        .board-content {
-            .board-row, .board-row-placeholder {
-                .meta-item, .meta-item-placeholder {
-                    &:nth-child(n+8) {
-                        display: none;
+        .board-content-container {
+            .board-content {
+                .board-row, .board-row-placeholder {
+                    .meta-item, .meta-item-placeholder {
+                        &:nth-child(n+8) {
+                            display: none;
+                        }
                     }
                 }
             }
@@ -75,11 +84,13 @@
 
 @media only screen and (max-width: @medium) {
     .board-container {
-        .board-content {
-            .board-row, .board-row-placeholder {
-                .meta-item, .meta-item-placeholder {
-                    &:nth-child(n+7) {
-                        display: none;
+        .board-content-container {
+            .board-content {
+                .board-row, .board-row-placeholder {
+                    .meta-item, .meta-item-placeholder {
+                        &:nth-child(n+7) {
+                            display: none;
+                        }
                     }
                 }
             }
@@ -89,11 +100,13 @@
 
 @media only screen and (max-width: @small) {
     .board-container {
-        .board-content {
-            .board-row, .board-row-placeholder {
-                .meta-item, .meta-item-placeholder {
-                    &:nth-child(n+6) {
-                        display: none;
+        .board-content-container {
+            .board-content {
+                .board-row, .board-row-placeholder {
+                    .meta-item, .meta-item-placeholder {
+                        &:nth-child(n+6) {
+                            display: none;
+                        }
                     }
                 }
             }
@@ -103,11 +116,13 @@
 
 @media only screen and (max-width: @xsmall) {
     .board-container {
-        .board-content {
-            .board-row, .board-row-placeholder {
-                .meta-item, .meta-item-placeholder {
-                    &:nth-child(n+5) {
-                        display: none;
+        .board-content-container {
+            .board-content {
+                .board-row, .board-row-placeholder {
+                    .meta-item, .meta-item-placeholder {
+                        &:nth-child(n+5) {
+                            display: none;
+                        }
                     }
                 }
             }

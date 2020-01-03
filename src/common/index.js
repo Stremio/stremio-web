@@ -3,6 +3,7 @@ const Button = require('./Button');
 const Checkbox = require('./Checkbox');
 const ColorInput = require('./ColorInput');
 const Image = require('./Image');
+const HorizontalNavBar = require('./HorizontalNavBar');
 const MainVerticalNavBar = require('./MainVerticalNavBar');
 const MetaItem = require('./MetaItem');
 const MetaPreview = require('./MetaPreview');
@@ -32,6 +33,7 @@ module.exports = {
     Checkbox,
     ColorInput,
     Image,
+    HorizontalNavBar,
     MainVerticalNavBar,
     MetaItem,
     MetaPreview,
