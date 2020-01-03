@@ -8,7 +8,7 @@ const TABS = [
     { route: 'library', label: 'Library', icon: 'ic_library', href: '#/library' }
 ];
 
-const MainNavBar = React.memo(({ className, route }) => {
+const MainVerticalNavBar = React.memo(({ className, route }) => {
     return (
         <VerticalNavBar
             className={className}
@@ -18,12 +18,11 @@ const MainNavBar = React.memo(({ className, route }) => {
     );
 });
 
-MainNavBar.displayName = 'MainNavBar';
+MainVerticalNavBar.displayName = 'MainVerticalNavBar';
 
-MainNavBar.propTypes = {
+MainVerticalNavBar.propTypes = {
     className: PropTypes.string,
-    route: PropTypes.string,
-    query: PropTypes.string
+    route: PropTypes.string
 };
 
-module.exports = MainNavBar;
+module.exports = MainVerticalNavBar;
