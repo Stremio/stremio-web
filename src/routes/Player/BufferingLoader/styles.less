@@ -8,4 +8,22 @@
         width: 17rem;
         height: 17rem;
     }
+
+    .loader-animation {
+        @keyframes flash {
+            0% {
+                opacity: 0.3;
+            }
+
+            50% {
+                opacity: 0.8;
+            }
+
+            100% {
+                opacity: 0.3;
+            }
+        }
+
+        animation: flash ease-in 1.8s infinite;
+    }
 }
