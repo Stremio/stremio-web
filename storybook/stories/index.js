@@ -11,3 +11,4 @@ require('./Popup');
 require('./SeasonsBar');
 require('./SharePrompt');
 require('./Stream');
+require('./Toast');

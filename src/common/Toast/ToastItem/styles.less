@@ -1,14 +1,14 @@
 .toast-item {
-    pointer-events: all;
-    border: 1px solid;
-    border-radius: 3px;
-    background-color: var(--color-surfacelighter);
+    display: flex;
+    flex-direction: row;
+    min-height: 6rem;
+    margin-bottom: 1rem;
+    border: thin solid;
     color: var(--color-backgrounddarker);
     fill: var(--color-backgrounddarker);
-    margin-bottom: 1rem;
+    background-color: var(--color-surfacelighter);
     overflow: visible;
-    display: flex;
-    flex-flow: row;
+    pointer-events: all;
 
     &.success {
         color: var(--color-signal5);
@@ -26,16 +26,20 @@
     }
 
     .icon-container {
-        width: 5rem;
+        flex: 1;
         padding: 1rem;
         padding-right: 0;
-        display: flex;
-        flex-flow: row;
-        flex-shrink: 0;
+        overflow: visible;
+
+        .icon {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
     }
 
     .message-container {
-        flex-grow: 1;
+        flex: 5;
         padding: 1rem;
 
         &.clickable {
@@ -47,11 +51,18 @@
         }
     }
 
-    button {
+    .close-button-container {
+        flex: none;
+        width: 3rem;
         height: 3rem;
         padding: 1rem;
-        flex: 0 0 3rem;
-        cursor: pointer;
+
+        .icon {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
         &:hover {
             background-color: var(--color-surfacelight);
         }
