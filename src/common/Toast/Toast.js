@@ -1,7 +1,9 @@
 const React = require('react');
+const classnames = require('classnames');
 const useLiveRef = require('stremio/common/useLiveRef');
 const { Modal } = require('stremio-router');
 const ToastItem = require('./ToastItem');
+const styles = require('./styles');
 
 const DEFAULT_TIMEOUT = 2000;
 
@@ -33,7 +35,7 @@ const Toast = React.forwardRef(({ className }, ref) => {
     React.useImperativeHandle(ref, () => ({ show, hideAll }));
 
     return toastItems.length === 0 ? null : (
-        <Modal className={className}>
+        <Modal className={classnames(className, styles['toast-container'])}>
             {toastItems.map((item, index) => (<ToastItem {...item} key={index} />))}
         </Modal>
     );
