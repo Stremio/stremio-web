@@ -4,7 +4,6 @@
 
     .menu-container {
         position: absolute;
-        right: 0;
         z-index: 1;
         overflow: visible;
         visibility: hidden;
@@ -12,13 +11,35 @@
             0 1.1rem 0.85rem var(--color-backgrounddarker20);
         cursor: auto;
 
-        &.menu-direction-bottom {
-            top: 100%;
+        &.menu-direction-top-left {
+            top: initial;
+            right: 0;
+            bottom: 100%;
+            left: initial;
             visibility: visible;
         }
 
-        &.menu-direction-top {
+        &.menu-direction-bottom-left {
+            top: 100%;
+            right: 0;
+            bottom: initial;
+            left: initial;
+            visibility: visible;
+        }
+
+        &.menu-direction-top-right {
+            top: initial;
+            right: initial;
             bottom: 100%;
+            left: 0;
+            visibility: visible;
+        }
+
+        &.menu-direction-bottom-right {
+            top: 100%;
+            right: initial;
+            bottom: initial;
+            left: 0;
             visibility: visible;
         }
     }

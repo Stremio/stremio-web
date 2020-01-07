@@ -6,8 +6,10 @@ const MainNavBar = require('./MainNavBar');
 const MetaItem = require('./MetaItem');
 const MetaPreview = require('./MetaPreview');
 const MetaRow = require('./MetaRow');
+const ModalDialog = require('./ModalDialog');
 const Multiselect = require('./Multiselect');
 const NavBar = require('./NavBar');
+const PaginationInput = require('./PaginationInput');
 const PlayIconCircleCentered = require('./PlayIconCircleCentered');
 const Popup = require('./Popup');
 const SharePrompt = require('./SharePrompt');
@@ -17,12 +19,15 @@ const Toast = require('./Toast');
 const routesRegexp = require('./routesRegexp');
 const useAnimationFrame = require('./useAnimationFrame');
 const useBinaryState = require('./useBinaryState');
-const useDataset = require('./useDataset');
+const useDeepEqualState = require('./useDeepEqualState');
 const useFullscreen = require('./useFullscreen');
+const useInLibrary = require('./useInLibrary');
 const useLiveRef = require('./useLiveRef');
 const useLocationHash = require('./useLocationHash');
+const useModelState = require('./useModelState');
 const useRouteActive = require('./useRouteActive');
 const useSpreadState = require('./useSpreadState');
+const useUser = require('./useUser');
 
 module.exports = {
     Button,
@@ -33,8 +38,10 @@ module.exports = {
     MetaItem,
     MetaPreview,
     MetaRow,
+    ModalDialog,
     Multiselect,
     NavBar,
+    PaginationInput,
     PlayIconCircleCentered,
     Popup,
     SharePrompt,
@@ -44,11 +51,13 @@ module.exports = {
     routesRegexp,
     useAnimationFrame,
     useBinaryState,
-    useDataset,
+    useDeepEqualState,
     useFullscreen,
+    useInLibrary,
     useLiveRef,
     useLocationHash,
+    useModelState,
     useRouteActive,
-    useLiveRef,
-    useSpreadState
+    useSpreadState,
+    useUser
 };

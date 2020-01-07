@@ -1,72 +1,100 @@
 const React = require('react');
+const { useServices } = require('stremio/services');
+const { useModelState } = require('stremio/common');
 
-const CATEGORIES = ['official', 'community', 'my'];
-const DEFAULT_CATEGORY = 'community';
-const DEFAULT_TYPE = 'all';
+const initAddonsState = () => ({
+    selectable: {
+        types: [],
+        catalogs: [],
+        extra: [],
+        has_next_page: false,
+        has_prev_page: false
+    },
+    catalog_resource: null
+});
 
-const useAddons = (category, type) => {
-    category = CATEGORIES.includes(category) ? category : DEFAULT_CATEGORY;
-    type = typeof type === 'string' && type.length > 0 ? type : DEFAULT_TYPE;
-    const addons = React.useMemo(() => {
-        return [
-            {
-                id: 'com.linvo.cinemeta',
-                name: 'Cinemeta',
-                description: 'The official add-on for movie and series catalogs',
-                types: ['movie', 'series'],
-                version: '2.12.1',
-                transportUrl: 'https://v3-cinemeta.strem.io/manifest.json',
-                installed: true,
-                official: true
-            },
-            {
-                id: 'com.linvo.cinemeta2',
-                name: 'Cinemeta2',
-                logo: '/images/intro_background.jpg',
-                description: 'The official add-on for movie and series catalogs',
-                types: ['movie', 'series'],
-                version: '2.12.2',
-                transportUrl: 'https://v2-cinemeta.strem.io/manifest.json',
-                installed: false,
-                official: false
+const mapAddonsStateWithCtx = (addons, ctx) => {
+    const selectable = addons.selectable;
+    // TODO replace catalog content if resource catalog id is MY
+    const catalog_resource = addons.catalog_resource !== null && addons.catalog_resource.content.type === 'Ready' ?
+        {
+            ...addons.catalog_resource,
+            content: {
+                ...addons.catalog_resource.content,
+                content: addons.catalog_resource.content.content.map((descriptor) => ({
+                    transportUrl: descriptor.transportUrl,
+                    installed: ctx.content.addons.some((addon) => addon.transportUrl === descriptor.transportUrl),
+                    manifest: {
+                        id: descriptor.manifest.id,
+                        name: descriptor.manifest.name,
+                        version: descriptor.manifest.version,
+                        logo: descriptor.manifest.logo,
+                        description: descriptor.manifest.description,
+                        types: descriptor.manifest.types
+                    }
+                }))
             }
-        ];
-    }, []);
-    const onSelect = React.useCallback((event) => {
-        const { name, value } = event.currentTarget.dataset;
-        if (name === 'category') {
-            const nextCategory = CATEGORIES.includes(value) ? value : '';
-            window.location.replace(`#/addons/${nextCategory}/${type}`);
-        } else if (name === 'type') {
-            const nextType = typeof value === 'string' ? value : '';
-            window.location.replace(`#/addons/${category}/${nextType}`);
         }
-    }, [category, type]);
-    const categoryDropdown = React.useMemo(() => {
-        const selected = CATEGORIES.includes(category) ? [category] : [];
-        const options = CATEGORIES
-            .map((category) => ({ label: category, value: category }));
+        :
+        addons.catalog_resource;
+    return { selectable, catalog_resource };
+};
+
+const onNewAddonsState = (addons) => {
+    if (addons.catalog_resource === null && addons.selectable.catalogs.length > 0) {
         return {
-            name: 'category',
-            selected,
-            options,
-            onSelect
+            action: 'Load',
+            args: {
+                load: 'CatalogFiltered',
+                args: addons.selectable.catalogs[0].load_request
+            }
         };
-    }, [category, onSelect]);
-    const typeDropdown = React.useMemo(() => {
-        const selected = typeof type === 'string' && type.length > 0 ? [type] : [];
-        const options = ['all', 'movie', 'series', 'channel']
-            .concat(selected)
-            .filter((type, index, types) => types.indexOf(type) === index)
-            .map((type) => ({ label: type, value: type }));
-        return {
-            name: 'type',
-            selected,
-            options,
-            onSelect
-        };
-    }, [type, onSelect]);
-    return [addons, [categoryDropdown, typeDropdown]];
+    }
+};
+
+const useAddons = (urlParams) => {
+    const { core } = useServices();
+    const loadAddonsAction = React.useMemo(() => {
+        if (typeof urlParams.addonTransportUrl === 'string' && typeof urlParams.catalogId === 'string' && typeof urlParams.type === 'string') {
+            return {
+                action: 'Load',
+                args: {
+                    load: 'CatalogFiltered',
+                    args: {
+                        base: urlParams.addonTransportUrl,
+                        path: {
+                            resource: 'addon_catalog',
+                            type_name: urlParams.type,
+                            id: urlParams.catalogId,
+                            extra: []
+                        }
+                    }
+                }
+            };
+        } else {
+            const addons = core.getState('addons');
+            if (addons.selectable.catalogs.length > 0) {
+                return {
+                    action: 'Load',
+                    args: {
+                        load: 'CatalogFiltered',
+                        args: addons.selectable.catalogs[0].load_request
+                    }
+                };
+            } else {
+                return {
+                    action: 'Unload'
+                };
+            }
+        }
+    }, [urlParams]);
+    return useModelState({
+        model: 'addons',
+        action: loadAddonsAction,
+        mapWithCtx: mapAddonsStateWithCtx,
+        init: initAddonsState,
+        onNewState: onNewAddonsState
+    });
 };
 
 module.exports = useAddons;

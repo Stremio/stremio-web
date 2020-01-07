@@ -1,17 +1,18 @@
 const React = require('react');
+const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const styles = require('./styles');
 
 const TextInput = React.forwardRef((props, ref) => {
-    const onKeyUp = React.useCallback((event) => {
-        if (typeof props.onKeyUp === 'function') {
-            props.onKeyUp(event);
+    const onKeyDown = React.useCallback((event) => {
+        if (typeof props.onKeyDown === 'function') {
+            props.onKeyDown(event);
         }
 
         if (event.key === 'Enter' && !event.nativeEvent.submitPrevented && typeof props.onSubmit === 'function') {
             props.onSubmit(event);
         }
-    }, [props.onKeyUp, props.onSubmit]);
+    }, [props.onKeyDown, props.onSubmit]);
     return (
         <input
             size={1}
@@ -23,11 +24,18 @@ const TextInput = React.forwardRef((props, ref) => {
             {...props}
             ref={ref}
             className={classnames(props.className, styles['text-input'], { 'disabled': props.disabled })}
-            onKeyUp={onKeyUp}
+            onKeyDown={onKeyDown}
         />
     );
 });
 
 TextInput.displayName = 'TextInput';
+
+TextInput.propTypes = {
+    className: PropTypes.string,
+    disabled: PropTypes.bool,
+    onKeyDown: PropTypes.func,
+    onSubmit: PropTypes.func
+};
 
 module.exports = TextInput;

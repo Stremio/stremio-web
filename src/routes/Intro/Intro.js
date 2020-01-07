@@ -1,16 +1,19 @@
 const React = require('react');
+const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const { useRouteFocused } = require('stremio-router');
 const { Button } = require('stremio/common');
+const { useServices } = require('stremio/services');
 const CredentialsTextInput = require('./CredentialsTextInput');
 const ConsentCheckbox = require('./ConsentCheckbox');
 const styles = require('./styles');
 
-const LOGIN_FORM = 'LOGIN_FORM';
-const SIGNUP_FORM = 'SIGNUP_FORM';
+const SIGNUP_FORM = 'signup';
+const LOGIN_FORM = 'login';
 
-const Intro = () => {
+const Intro = ({ queryParams }) => {
+    const { core } = useServices();
     const routeFocused = useRouteFocused();
     const emailRef = React.useRef();
     const passwordRef = React.useRef();
@@ -22,17 +25,20 @@ const Intro = () => {
     const [state, dispatch] = React.useReducer(
         (state, action) => {
             switch (action.type) {
-                case 'switch-form':
-                    return {
-                        form: state.form === SIGNUP_FORM ? LOGIN_FORM : SIGNUP_FORM,
-                        email: '',
-                        password: '',
-                        confirmPassword: '',
-                        termsAccepted: false,
-                        privacyPolicyAccepted: false,
-                        marketingAccepted: false,
-                        error: ''
-                    };
+                case 'set-form':
+                    if (state.form !== action.form) {
+                        return {
+                            form: action.form,
+                            email: '',
+                            password: '',
+                            confirmPassword: '',
+                            termsAccepted: false,
+                            privacyPolicyAccepted: false,
+                            marketingAccepted: false,
+                            error: ''
+                        };
+                    }
+                    return state;
                 case 'change-credentials':
                     return {
                         ...state,
@@ -55,7 +61,7 @@ const Intro = () => {
             }
         },
         {
-            form: SIGNUP_FORM,
+            form: [LOGIN_FORM, SIGNUP_FORM].includes(queryParams.get('form')) ? queryParams.get('form') : SIGNUP_FORM,
             email: '',
             password: '',
             confirmPassword: '',
@@ -65,27 +71,127 @@ const Intro = () => {
             error: ''
         }
     );
+    React.useEffect(() => {
+        const onEvent = ({ event, args }) => {
+            switch (event) {
+                case 'CtxActionErr': {
+                    const [, error] = args;
+                    dispatch({ type: 'error', error: error.args.message });
+                    break;
+                }
+                case 'CtxChanged': {
+                    const state = core.getState();
+                    if (state.ctx.content.auth !== null) {
+                        window.location.replace('#/');
+                    }
+                }
+            }
+        };
+        if (routeFocused) {
+            core.on('Event', onEvent);
+        }
+        return () => {
+            core.off('Event', onEvent);
+        };
+    }, [routeFocused]);
     const loginWithFacebook = React.useCallback(() => {
-        alert('TODO: Facebook login');
-    }, []);
+        FB.login((response) => {
+            if (response.status === 'connected') {
+                fetch('https://www.strem.io/fb-login-with-token/' + encodeURIComponent(response.authResponse.accessToken), { timeout: 10 * 1000 })
+                    .then((resp) => {
+                        if (resp.status < 200 || resp.status >= 300) {
+                            throw new Error('Login failed at getting token from Stremio with status ' + resp.status);
+                        } else {
+                            return resp.json();
+                        }
+                    })
+                    .then(() => {
+                        core.dispatch({
+                            action: 'UserOp',
+                            args: {
+                                userOp: 'Login',
+                                args: {
+                                    email: state.email,
+                                    password: response.authResponse.accessToken
+                                }
+                            }
+                        });
+                    })
+                    .catch(() => { });
+            }
+        });
+    }, [state.email, state.password]);
     const loginWithEmail = React.useCallback(() => {
         if (typeof state.email !== 'string' || state.email.length === 0) {
             dispatch({ type: 'error', error: 'Invalid email' });
             return;
         }
-
-        alert('TODO: Login');
+        if (typeof state.password !== 'string' || state.password.length === 0) {
+            dispatch({ type: 'error', error: 'Invalid password' });
+            return;
+        }
+        core.dispatch({
+            action: 'UserOp',
+            args: {
+                userOp: 'Login',
+                args: {
+                    email: state.email,
+                    password: state.password
+                }
+            }
+        });
     }, [state.email, state.password]);
     const loginAsGuest = React.useCallback(() => {
         if (!state.termsAccepted) {
             dispatch({ type: 'error', error: 'You must accept the Terms of Service' });
             return;
         }
-
-        alert('TODO: Guest login');
-    }, [state.termsAccepted, state.privacyPolicyAccepted, state.marketingAccepted]);
+        core.dispatch({
+            action: 'UserOp',
+            args: {
+                userOp: 'Logout'
+            }
+        });
+        window.location.replace('#/');
+    }, [state.termsAccepted]);
     const signup = React.useCallback(() => {
-        alert('TODO: Signup');
+        if (typeof state.email !== 'string' || state.email.length === 0) {
+            dispatch({ type: 'error', error: 'Invalid email' });
+            return;
+        }
+        if (typeof state.password !== 'string' || state.password.length === 0) {
+            dispatch({ type: 'error', error: 'Invalid password' });
+            return;
+        }
+        if (state.password !== state.confirmPassword) {
+            dispatch({ type: 'error', error: 'Passwords do not match' });
+            return;
+        }
+        if (!state.termsAccepted) {
+            dispatch({ type: 'error', error: 'You must accept the Terms of Service' });
+            return;
+        }
+        if (!state.privacyPolicyAccepted) {
+            dispatch({ type: 'error', error: 'You must accept the Privacy Policy' });
+            return;
+        }
+        core.dispatch({
+            action: 'UserOp',
+            args: {
+                userOp: 'Register',
+                args: {
+                    email: state.email,
+                    password: state.password,
+                    gdpr_consent: {
+                        tos: state.termsAccepted,
+                        privacy: state.privacyPolicyAccepted,
+                        marketing: state.marketingAccepted,
+                        time: new Date(),
+                        from: 'web'
+                    }
+                }
+            }
+        });
     }, [state.email, state.password, state.confirmPassword, state.termsAccepted, state.privacyPolicyAccepted, state.marketingAccepted]);
     const emailOnChange = React.useCallback((event) => {
         dispatch({
@@ -130,9 +236,11 @@ const Intro = () => {
     const toggleMarketingAccepted = React.useCallback(() => {
         dispatch({ type: 'toggle-checkbox', name: 'marketingAccepted' });
     }, []);
-    const switchForm = React.useCallback(() => {
-        dispatch({ type: 'switch-form' });
-    }, []);
+    React.useEffect(() => {
+        if ([LOGIN_FORM, SIGNUP_FORM].includes(queryParams.get('form'))) {
+            dispatch({ type: 'set-form', form: queryParams.get('form') });
+        }
+    }, [queryParams]);
     React.useEffect(() => {
         if (typeof state.error === 'string' && state.error.length > 0) {
             errorRef.current.scrollIntoView();
@@ -150,7 +258,7 @@ const Intro = () => {
                     <Icon className={styles['icon']} icon={'ic_facebook'} />
                     <div className={styles['label']}>Continue with Facebook</div>
                 </Button>
-                <div className={styles['facebook-statement']}>We won't post anything on your behalf</div>
+                <div className={styles['facebook-statement']}>We won&#39;t post anything on your behalf</div>
                 <CredentialsTextInput
                     ref={emailRef}
                     className={styles['credentials-text-input']}
@@ -188,7 +296,7 @@ const Intro = () => {
                                 link={'Terms and conditions'}
                                 href={'https://www.stremio.com/tos'}
                                 checked={state.termsAccepted}
-                                toggle={toggleTermsAccepted}
+                                onToggle={toggleTermsAccepted}
                             />
                             <ConsentCheckbox
                                 ref={privacyPolicyRef}
@@ -197,14 +305,14 @@ const Intro = () => {
                                 link={'Privacy Policy'}
                                 href={'https://www.stremio.com/privacy'}
                                 checked={state.privacyPolicyAccepted}
-                                toggle={togglePrivacyPolicyAccepted}
+                                onToggle={togglePrivacyPolicyAccepted}
                             />
                             <ConsentCheckbox
                                 ref={marketingRef}
                                 className={styles['consent-checkbox']}
                                 label={'I agree to receive marketing communications from Stremio'}
                                 checked={state.marketingAccepted}
-                                toggle={toggleMarketingAccepted}
+                                onToggle={toggleMarketingAccepted}
                             />
                         </React.Fragment>
                         :
@@ -229,12 +337,16 @@ const Intro = () => {
                         :
                         null
                 }
-                <Button className={classnames(styles['form-button'], styles['switch-form-button'])} onClick={switchForm}>
+                <Button className={classnames(styles['form-button'], styles['switch-form-button'])} href={state.form === SIGNUP_FORM ? '#/intro?form=login' : '#/intro?form=signup'}>
                     <div className={styles['label']}>{state.form === SIGNUP_FORM ? 'LOG IN' : 'SING UP WITH EMAIL'}</div>
                 </Button>
             </div>
         </div>
     );
+};
+
+Intro.propTypes = {
+    queryParams: PropTypes.instanceOf(URLSearchParams)
 };
 
 module.exports = Intro;

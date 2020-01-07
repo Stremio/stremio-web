@@ -1,0 +1,31 @@
+:import('~stremio/common/ModalDialog/styles.less') {
+    modal-dialog-icon: icon;
+    modal-dialog-label: label;
+}
+
+.addons-button-container {
+    background-color: transparent;
+    border: 2px solid gray;
+
+    .modal-dialog-icon {
+        fill: gray;
+    }
+
+    .modal-dialog-label {
+        color: gray;
+    }
+
+    &:hover, &:focus {
+        filter: none;
+        outline: none;
+        border-color: black;
+
+        .modal-dialog-icon {
+            fill: black;
+        }
+
+        .modal-dialog-label {
+            color: black;
+        }
+    }
+}

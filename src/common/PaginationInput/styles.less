@@ -1,0 +1,34 @@
+.pagination-input-container {
+    display: flex;
+    flex-direction: row;
+
+    .prev-button-container, .next-button-container {
+        flex: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .icon {
+            display: block;
+            fill: var(--color-surfacelighter);
+        }
+    }
+
+    .label-container {
+        flex: 1;
+        align-self: stretch;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .label {
+            flex: none;
+            min-width: 1.2rem;
+            max-width: 3rem;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            text-align: center;
+            color: var(--color-surfacelighter);
+        }
+    }
+}

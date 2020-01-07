@@ -8,7 +8,7 @@ const CredentialsTextInput = React.forwardRef((props, ref) => {
             props.onKeyDown(event);
         }
 
-        if (!event.navigationPrevented) {
+        if (!event.nativeEvent.navigationPrevented) {
             event.stopPropagation();
             if (event.key === 'ArrowDown') {
                 window.navigate('down');
@@ -24,7 +24,7 @@ const CredentialsTextInput = React.forwardRef((props, ref) => {
 
 CredentialsTextInput.displayName = 'CredentialsTextInput';
 
-CredentialsTextInput.propTYpes = {
+CredentialsTextInput.propTypes = {
     onKeyDown: PropTypes.func
 };
 

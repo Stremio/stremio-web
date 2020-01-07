@@ -4,12 +4,14 @@ const { routesRegexp } = require('stremio/common');
 const routerViewsConfig = [
     [
         {
-            ...routesRegexp.intro,
-            component: routes.Intro
-        },
-        {
             ...routesRegexp.board,
             component: routes.Board
+        }
+    ],
+    [
+        {
+            ...routesRegexp.intro,
+            component: routes.Intro
         },
         {
             ...routesRegexp.discover,
@@ -26,9 +28,11 @@ const routerViewsConfig = [
     ],
     [
         {
-            ...routesRegexp.detail,
-            component: routes.Detail
-        },
+            ...routesRegexp.metadetails,
+            component: routes.MetaDetails
+        }
+    ],
+    [
         {
             ...routesRegexp.addons,
             component: routes.Addons

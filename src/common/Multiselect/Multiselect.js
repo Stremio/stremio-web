@@ -5,32 +5,46 @@ const Icon = require('stremio-icons/dom');
 const Button = require('stremio/common/Button');
 const Popup = require('stremio/common/Popup');
 const useBinaryState = require('stremio/common/useBinaryState');
-const useDataset = require('stremio/common/useDataset');
 const styles = require('./styles');
 
-const Multiselect = ({ className, direction, title, renderLabelContent, options, selected, onOpen, onClose, onSelect, ...props }) => {
-    options = Array.isArray(options) ?
-        options.filter(option => option && typeof option.value === 'string')
-        :
-        [];
-    selected = Array.isArray(selected) ?
-        selected.filter(value => typeof value === 'string')
-        :
-        [];
-    const dataset = useDataset(props);
-    const [menuOpen, openMenu, closeMenu, toggleMenu] = useBinaryState(false);
+const Multiselect = ({ className, direction, title, disabled, dataset, renderLabelContent, renderLabelText, onOpen, onClose, onSelect, ...props }) => {
+    const [menuOpen, , closeMenu, toggleMenu] = useBinaryState(false);
+    const options = React.useMemo(() => {
+        return Array.isArray(props.options) ?
+            props.options.filter((option) => {
+                return option && typeof option.value === 'string';
+            })
+            :
+            [];
+    }, [props.options]);
+    const selected = React.useMemo(() => {
+        return Array.isArray(props.selected) ?
+            props.selected.filter((value) => {
+                return typeof value === 'string';
+            })
+            :
+            [];
+    }, [props.selected]);
     const popupLabelOnClick = React.useCallback((event) => {
+        if (typeof props.onClick === 'function') {
+            props.onClick(event);
+        }
+
         if (!event.nativeEvent.togglePopupPrevented) {
             toggleMenu();
         }
-    }, [toggleMenu]);
+    }, [props.onClick, toggleMenu]);
     const popupMenuOnClick = React.useCallback((event) => {
         event.nativeEvent.togglePopupPrevented = true;
+    }, []);
+    const popupMenuOnKeyDown = React.useCallback((event) => {
+        event.nativeEvent.buttonClickPrevented = true;
     }, []);
     const optionOnClick = React.useCallback((event) => {
         if (typeof onSelect === 'function') {
             onSelect({
                 type: 'select',
+                value: event.currentTarget.dataset.value,
                 reactEvent: event,
                 nativeEvent: event.nativeEvent,
                 dataset: dataset
@@ -40,31 +54,36 @@ const Multiselect = ({ className, direction, title, renderLabelContent, options,
         if (!event.nativeEvent.closeMenuPrevented) {
             closeMenu();
         }
-    }, [onSelect, dataset]);
+    }, [dataset, onSelect]);
+    const mountedRef = React.useRef(false);
     React.useLayoutEffect(() => {
-        if (menuOpen) {
-            if (typeof onOpen === 'function') {
-                onOpen({
-                    type: 'open',
-                    dataset: dataset
-                });
-            }
-        } else {
-            if (typeof onClose === 'function') {
-                onClose({
-                    type: 'close',
-                    dataset: dataset
-                });
+        if (mountedRef.current) {
+            if (menuOpen) {
+                if (typeof onOpen === 'function') {
+                    onOpen({
+                        type: 'open',
+                        dataset: dataset
+                    });
+                }
+            } else {
+                if (typeof onClose === 'function') {
+                    onClose({
+                        type: 'close',
+                        dataset: dataset
+                    });
+                }
             }
         }
+
+        mountedRef.current = true;
     }, [menuOpen]);
     return (
         <Popup
             open={menuOpen}
             direction={direction}
             onCloseRequest={closeMenu}
-            renderLabel={({ ref, className: popupLabelClassName, children }) => (
-                <Button ref={ref} className={classnames(className, popupLabelClassName, styles['label-container'], { 'active': menuOpen })} title={title} onClick={popupLabelOnClick}>
+            renderLabel={({ children, ...labelProps }) => (
+                <Button {...labelProps} {...props} className={classnames(className, labelProps.className, styles['label-container'], { 'active': menuOpen })} title={title} disabled={disabled} onClick={popupLabelOnClick}>
                     {
                         typeof renderLabelContent === 'function' ?
                             renderLabelContent()
@@ -72,16 +91,19 @@ const Multiselect = ({ className, direction, title, renderLabelContent, options,
                             <React.Fragment>
                                 <div className={styles['label']}>
                                     {
-                                        selected.length > 0 ?
-                                            options.reduce((labels, { label, value }) => {
-                                                if (selected.includes(value)) {
-                                                    labels.push(typeof label === 'string' ? label : value);
-                                                }
-
-                                                return labels;
-                                            }, []).join(', ')
+                                        typeof renderLabelText === 'function' ?
+                                            renderLabelText()
                                             :
-                                            title
+                                            selected.length > 0 ?
+                                                options.reduce((labels, { label, value }) => {
+                                                    if (selected.includes(value)) {
+                                                        labels.push(typeof label === 'string' ? label : value);
+                                                    }
+
+                                                    return labels;
+                                                }, []).join(', ')
+                                                :
+                                                title
                                     }
                                 </div>
                                 <Icon className={styles['icon']} icon={'ic_arrow_down'} />
@@ -91,13 +113,20 @@ const Multiselect = ({ className, direction, title, renderLabelContent, options,
                 </Button>
             )}
             renderMenu={() => (
-                <div className={styles['menu-container']} onClick={popupMenuOnClick}>
-                    {options.map(({ label, value }) => (
-                        <Button key={value} className={classnames(styles['option-container'], { 'selected': selected.includes(value) })} title={typeof label === 'string' ? label : value} data-value={value} onClick={optionOnClick}>
-                            <div className={styles['label']}>{typeof label === 'string' ? label : value}</div>
-                            <Icon className={styles['icon']} icon={'ic_check'} />
-                        </Button>
-                    ))}
+                <div className={styles['menu-container']} onKeyDown={popupMenuOnKeyDown} onClick={popupMenuOnClick}>
+                    {
+                        options.length > 0 ?
+                            options.map(({ label, value }) => (
+                                <Button key={value} className={classnames(styles['option-container'], { 'selected': selected.includes(value) })} title={typeof label === 'string' ? label : value} data-value={value} onClick={optionOnClick}>
+                                    <div className={styles['label']}>{typeof label === 'string' ? label : value}</div>
+                                    <Icon className={styles['icon']} icon={'ic_check'} />
+                                </Button>
+                            ))
+                            :
+                            <div className={styles['no-options-container']}>
+                                <div className={styles['label']}>No options available</div>
+                            </div>
+                    }
                 </div>
             )}
         />
@@ -108,15 +137,19 @@ Multiselect.propTypes = {
     className: PropTypes.string,
     direction: PropTypes.any,
     title: PropTypes.string,
-    renderLabelContent: PropTypes.func,
     options: PropTypes.arrayOf(PropTypes.shape({
         value: PropTypes.string.isRequired,
         label: PropTypes.string
     })),
     selected: PropTypes.arrayOf(PropTypes.string),
+    disabled: PropTypes.bool,
+    dataset: PropTypes.objectOf(PropTypes.string),
+    renderLabelContent: PropTypes.func,
+    renderLabelText: PropTypes.func,
     onOpen: PropTypes.func,
     onClose: PropTypes.func,
-    onSelect: PropTypes.func
+    onSelect: PropTypes.func,
+    onClick: PropTypes.func
 };
 
 module.exports = Multiselect;

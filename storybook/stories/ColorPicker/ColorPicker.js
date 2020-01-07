@@ -4,10 +4,13 @@ const ColorPicker = require('stremio/common/ColorInput/ColorPicker');
 const styles = require('./styles');
 
 storiesOf('ColorPicker', module).add('ColorPicker', () => {
-    const [color, setColor] = React.useState('rgba(166, 196, 213, 0.97)');
+    const [color, setColor] = React.useState('#f00000ff');
+    const colorPickerOnInput = React.useCallback((event) => {
+        setColor(event.value);
+    }, []);
     return (
         <div className={styles['color-picker-container']}>
-            <ColorPicker value={color} onChange={setColor} />
+            <ColorPicker value={color} onInput={colorPickerOnInput} />
             <div className={styles['color-output-label']}>Current color is {color}</div>
         </div>
     );

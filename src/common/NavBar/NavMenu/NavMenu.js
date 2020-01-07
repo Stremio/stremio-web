@@ -6,13 +6,13 @@ const Button = require('stremio/common/Button');
 const Popup = require('stremio/common/Popup');
 const useBinaryState = require('stremio/common/useBinaryState');
 const useFullscreen = require('stremio/common/useFullscreen');
-const useUser = require('./useUser');
+const useUser = require('stremio/common/useUser');
 const styles = require('./styles');
 
 const NavMenu = ({ className }) => {
-    const [menuOpen, openMenu, closeMenu, toggleMenu] = useBinaryState(false);
+    const [menuOpen, , closeMenu, toggleMenu] = useBinaryState(false);
     const [fullscreen, requestFullscreen, exitFullscreen] = useFullscreen();
-    const user = useUser();
+    const [user, logout] = useUser();
     const popupLabelOnClick = React.useCallback((event) => {
         if (!event.nativeEvent.togglePopupPrevented) {
             toggleMenu();
@@ -21,10 +21,12 @@ const NavMenu = ({ className }) => {
     const popupMenuOnClick = React.useCallback((event) => {
         event.nativeEvent.togglePopupPrevented = true;
     }, []);
+    const logoutButtonOnClick = React.useCallback(() => {
+        logout();
+    }, []);
     return (
         <Popup
             open={menuOpen}
-            direction={'bottom'}
             onCloseRequest={closeMenu}
             renderLabel={({ ref, className: popupLabelClassName, children }) => (
                 <Button ref={ref} className={classnames(className, popupLabelClassName, styles['nav-menu-label-container'], { 'active': menuOpen })} tabIndex={-1} onClick={popupLabelOnClick}>
@@ -38,17 +40,17 @@ const NavMenu = ({ className }) => {
                         <div
                             className={styles['avatar-container']}
                             style={{
-                                backgroundImage: user.anonymous ?
-                                    `url('/images/anonymous.png')`
+                                backgroundImage: user === null ?
+                                    'url(\'/images/anonymous.png\')'
                                     :
                                     `url('${user.avatar}'), url('/images/default_avatar.png')`
                             }}
                         />
                         <div className={styles['email-container']}>
-                            <div className={styles['email-label']}>{user.anonymous ? 'Anonymous user' : user.email}</div>
+                            <div className={styles['email-label']}>{user === null ? 'Anonymous user' : user.email}</div>
                         </div>
-                        <Button className={styles['logout-button-container']} title={user.anonymous ? 'Log in / Sign up' : 'Log out'} href={'#/intro'} onClick={user.logout}>
-                            <div className={styles['logout-label']}>{user.anonymous ? 'Log in / Sign up' : 'Log out'}</div>
+                        <Button className={styles['logout-button-container']} title={user === null ? 'Log in / Sign up' : 'Log out'} href={'#/intro'} onClick={logoutButtonOnClick}>
+                            <div className={styles['logout-label']}>{user === null ? 'Log in / Sign up' : 'Log out'}</div>
                         </Button>
                     </div>
                     <div className={styles['nav-menu-section']}>

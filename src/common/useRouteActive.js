@@ -5,8 +5,8 @@ const useLocationHash = require('stremio/common/useLocationHash');
 const useRouteActive = (routeRegexp) => {
     const locationHash = useLocationHash();
     const active = React.useMemo(() => {
-        const { pathname: locationPathname } = UrlUtils.parse(locationHash.slice(1));
-        return routeRegexp instanceof RegExp && !!locationPathname.match(routeRegexp);
+        const { pathname } = UrlUtils.parse(locationHash.slice(1));
+        return typeof pathname === 'string' && routeRegexp instanceof RegExp && !!pathname.match(routeRegexp);
     }, [locationHash, routeRegexp]);
     return active;
 };

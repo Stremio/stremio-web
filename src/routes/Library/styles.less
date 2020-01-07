@@ -1,5 +1,9 @@
 @import (reference) '~stremio/common/screen-sizes.less';
 
+:import('~stremio/common/Multiselect/styles.less') {
+    multiselect-menu-container: menu-container;
+}
+
 .library-container {
     display: flex;
     flex-direction: column;
@@ -15,38 +19,98 @@
     .library-content {
         flex: 1;
         align-self: stretch;
-        display: grid;
-        grid-template-columns: 1fr auto;
-        grid-template-rows: auto 1fr;
-        grid-template-areas:
-            "dropdowns-area switch-view-area"
-            "meta-items-area meta-items-area";
+        display: flex;
+        flex-direction: column;
 
-        .dropdowns-container {
-            grid-area: dropdowns-area;
+        .selectable-inputs-container {
+            flex: none;
+            align-self: stretch;
             display: flex;
             flex-direction: row;
-            margin: 2rem;
+            margin: 1.5rem;
+            overflow: visible;
 
-            .dropdown {
+            .select-input-container {
                 flex-grow: 0;
                 flex-shrink: 1;
                 flex-basis: 15rem;
                 height: 3rem;
 
                 &:not(:last-child) {
-                    margin-right: 1rem;
+                    margin-right: 1.5rem;
+                }
+
+                .multiselect-menu-container {
+                    max-height: calc(3.2rem * 7);
+                    overflow: auto;
                 }
             }
         }
 
+        .message-container {
+            flex-grow: 0;
+            flex-shrink: 1;
+            flex-basis: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 0 1.5rem;
+
+            &:first-child {
+                .message-label {
+                    margin: 1.5rem 0;
+                }
+            }
+
+            &.no-user-message-container {
+                flex: 1;
+                justify-content: center;
+
+                .login-button-container {
+                    flex: none;
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: center;
+                    width: 20rem;
+                    min-height: 4rem;
+                    padding: 0.5rem 1rem;
+                    background-color: var(--color-primarydark);
+
+                    &:hover {
+                        background-color: var(--color-primary);
+                    }
+
+                    .label {
+                        flex-grow: 0;
+                        flex-shrink: 1;
+                        flex-basis: auto;
+                        max-height: 4.8em;
+                        font-size: 1.2rem;
+                        font-weight: 700;
+                        color: var(--color-surfacelighter);
+                        text-align: center;
+                    }
+                }
+            }
+
+            .message-label {
+                flex: none;
+                max-height: 4.8em;
+                font-size: 2rem;
+                color: var(--color-surfacelighter);
+                text-align: center;
+            }
+        }
+
         .meta-items-container {
-            grid-area: meta-items-area;
+            flex: 1;
             display: grid;
             grid-auto-rows: max-content;
-            grid-gap: 1.5rem;
             align-items: center;
-            padding: 0 2rem;
+            grid-gap: 1.5rem;
+            padding: 0 1.5rem;
             overflow-y: auto;
         }
     }
@@ -56,7 +120,7 @@
     .library-container {
         .library-content {
             .meta-items-container {
-                grid-template-columns: repeat(10, auto);
+                grid-template-columns: repeat(10, 1fr);
             }
         }
     }
@@ -66,7 +130,7 @@
     .library-container {
         .library-content {
             .meta-items-container {
-                grid-template-columns: repeat(9, auto);
+                grid-template-columns: repeat(9, 1fr);
             }
         }
     }
@@ -76,7 +140,7 @@
     .library-container {
         .library-content {
             .meta-items-container {
-                grid-template-columns: repeat(8, auto);
+                grid-template-columns: repeat(8, 1fr);
             }
         }
     }
@@ -86,7 +150,7 @@
     .library-container {
         .library-content {
             .meta-items-container {
-                grid-template-columns: repeat(7, auto);
+                grid-template-columns: repeat(7, 1fr);
             }
         }
     }
@@ -96,7 +160,7 @@
     .library-container {
         .library-content {
             .meta-items-container {
-                grid-template-columns: repeat(6, auto);
+                grid-template-columns: repeat(6, 1fr);
             }
         }
     }
@@ -106,7 +170,7 @@
     .library-container {
         .library-content {
             .meta-items-container {
-                grid-template-columns: repeat(5, auto);
+                grid-template-columns: repeat(5, 1fr);
             }
         }
     }

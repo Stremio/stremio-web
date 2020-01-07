@@ -2,24 +2,54 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
-const { Button } = require('stremio/common');
+const { Button, Image } = require('stremio/common');
 const styles = require('./styles');
 
-const Addon = ({ className, id, name, logo, description, types, version, transportUrl, installed, toggle }) => {
-    const onKeyUp = React.useCallback((event) => {
-        if (event.key === 'Enter' && typeof toggle === 'function') {
-            toggle(event);
+const Addon = ({ className, id, name, version, logo, description, types, installed, onToggle, onShare, dataset }) => {
+    const toggleButtonOnClick = React.useCallback((event) => {
+        if (typeof onToggle === 'function') {
+            onToggle({
+                type: 'toggle',
+                nativeEvent: event.nativeEvent,
+                reactEvent: event,
+                dataset: dataset
+            });
         }
-    }, [toggle]);
+    }, [onToggle, dataset]);
+    const shareButtonOnClick = React.useCallback((event) => {
+        if (typeof onShare === 'function') {
+            onShare({
+                type: 'share',
+                nativeEvent: event.nativeEvent,
+                reactEvent: event,
+                dataset: dataset
+            });
+        }
+    }, [onShare, dataset]);
+    const onKeyDown = React.useCallback((event) => {
+        if (event.key === 'Enter' && typeof onToggle === 'function') {
+            onToggle({
+                type: 'toggle',
+                nativeEvent: event.nativeEvent,
+                reactEvent: event,
+                dataset: dataset
+            });
+        }
+    }, [onToggle, dataset]);
+    const renderLogoFallback = React.useMemo(() => () => {
+        return (
+            <Icon className={styles['icon']} icon={'ic_addons'} />
+        );
+    }, []);
     return (
-        <Button className={classnames(styles['addon-container'], className)} data-id={id} onKeyUp={onKeyUp}>
+        <Button className={classnames(className, styles['addon-container'])} onKeyDown={onKeyDown}>
             <div className={styles['logo-container']}>
-                {
-                    typeof logo === 'string' && logo.length > 0 ?
-                        <img className={styles['logo']} src={logo} alt={' '} />
-                        :
-                        <Icon className={styles['icon']} icon={'ic_addons'} />
-                }
+                <Image
+                    className={styles['logo']}
+                    src={logo}
+                    alt={' '}
+                    renderFallback={renderLogoFallback}
+                />
             </div>
             <div className={styles['info-container']}>
                 <div className={styles['name-container']} title={typeof name === 'string' && name.length > 0 ? name : id}>
@@ -32,10 +62,10 @@ const Addon = ({ className, id, name, logo, description, types, version, transpo
                         null
                 }
                 {
-                    Array.isArray(types) ?
+                    Array.isArray(types) && types.length > 0 ?
                         <div className={styles['types-container']}>
                             {
-                                types.length <= 1 ?
+                                types.length === 1 ?
                                     types.join('')
                                     :
                                     types.slice(0, -1).join(', ') + ' & ' + types[types.length - 1]
@@ -52,10 +82,10 @@ const Addon = ({ className, id, name, logo, description, types, version, transpo
                 }
             </div>
             <div className={styles['buttons-container']}>
-                <Button className={installed ? styles['uninstall-button-container'] : styles['install-button-container']} title={installed ? 'Uninstall' : 'Install'} tabIndex={-1} data-id={id} onClick={toggle}>
+                <Button className={installed ? styles['uninstall-button-container'] : styles['install-button-container']} title={installed ? 'Uninstall' : 'Install'} tabIndex={-1} onClick={toggleButtonOnClick}>
                     <div className={styles['label']}>{installed ? 'Uninstall' : 'Install'}</div>
                 </Button>
-                <Button className={styles['share-button-container']} title={'Share addon'} tabIndex={-1}>
+                <Button className={styles['share-button-container']} title={'Share addon'} tabIndex={-1} onClick={shareButtonOnClick}>
                     <Icon className={styles['icon']} icon={'ic_share'} />
                     <div className={styles['label']}>Share addon</div>
                 </Button>
@@ -68,13 +98,14 @@ Addon.propTypes = {
     className: PropTypes.string,
     id: PropTypes.string,
     name: PropTypes.string,
+    version: PropTypes.string,
     logo: PropTypes.string,
     description: PropTypes.string,
     types: PropTypes.arrayOf(PropTypes.string),
-    version: PropTypes.string,
-    transportUrl: PropTypes.string,
     installed: PropTypes.bool,
-    toggle: PropTypes.func
+    onToggle: PropTypes.func,
+    onShare: PropTypes.func,
+    dataset: PropTypes.objectOf(PropTypes.string)
 };
 
 module.exports = Addon;

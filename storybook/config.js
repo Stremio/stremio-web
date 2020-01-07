@@ -3,7 +3,12 @@ const { withConsole } = require('@storybook/addon-console');
 const { addDecorator, addParameters, configure } = require('@storybook/react');
 const { jsxDecorator } = require('storybook-addon-jsx');
 const RouterDecorator = require('./RouterDecorator');
+require('spatial-navigation-polyfill');
 require('./styles');
+
+window.top.__spatialNavigation__ = {
+    keyMode: 'ARROW'
+};
 
 addParameters({
     jsx: {

@@ -1,11 +1,15 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 
-const Image = ({ className, src, alt, fallbackSrc, renderFallback }) => {
+const Image = ({ className, src, alt, fallbackSrc, renderFallback, ...props }) => {
     const [broken, setBroken] = React.useState(false);
-    const onError = React.useCallback(() => {
+    const onError = React.useCallback((event) => {
+        if (typeof props.onError === 'function') {
+            props.onError(event);
+        }
+
         setBroken(true);
-    }, []);
+    }, [props.onError]);
     React.useLayoutEffect(() => {
         setBroken(false);
     }, [src]);
@@ -13,9 +17,9 @@ const Image = ({ className, src, alt, fallbackSrc, renderFallback }) => {
         typeof renderFallback === 'function' ?
             renderFallback()
             :
-            <img className={className} src={fallbackSrc} alt={alt} />
+            <img {...props} className={className} src={fallbackSrc} alt={alt} />
         :
-        <img className={className} src={src} alt={alt} onError={onError} />;
+        <img {...props} className={className} src={src} alt={alt} onError={onError} />;
 };
 
 Image.propTypes = {
@@ -23,7 +27,8 @@ Image.propTypes = {
     src: PropTypes.string,
     alt: PropTypes.string,
     fallbackSrc: PropTypes.string,
-    renderFallback: PropTypes.func
+    renderFallback: PropTypes.func,
+    onError: PropTypes.func
 };
 
 module.exports = Image;

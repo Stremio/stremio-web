@@ -1,6 +1,13 @@
 require('./Addon');
-require('./MetaItem');
+require('./ColorInput');
 require('./ColorPicker');
-require('./Toast');
-require('./SharePrompt');
+require('./Image');
+require('./MetaItem');
+require('./ModalDialog');
+require('./Multiselect');
 require('./Notification');
+require('./PaginationInput');
+require('./Popup');
+require('./SeasonsBar');
+require('./SharePrompt');
+require('./Stream');

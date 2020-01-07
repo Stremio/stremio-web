@@ -3,45 +3,43 @@ const ReactIs = require('react-is');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const UrlUtils = require('url');
+const isEqual = require('lodash.isequal');
 const { RouteFocusedProvider } = require('../RouteFocusedContext');
 const Route = require('../Route');
+const routeConfigForPath = require('./routeConfigForPath');
+const urlParamsForPath = require('./urlParamsForPath');
 
 const Router = ({ className, onPathNotMatch, ...props }) => {
-    const [{ homePath, viewsConfig }] = React.useState(() => ({
+    const { homePath, viewsConfig } = React.useMemo(() => ({
         homePath: props.homePath,
         viewsConfig: props.viewsConfig
-    }));
-    const routeConfigForPath = React.useCallback((path) => {
-        for (const viewConfig of viewsConfig) {
-            for (const routeConfig of viewConfig) {
-                if (typeof path === 'string' && path.match(routeConfig.regexp)) {
-                    return routeConfig;
-                }
-            }
-        }
-
-        return null;
-    }, []);
+    }), []);
     const [views, setViews] = React.useState(() => {
         return Array(viewsConfig.length).fill(null);
     });
-    React.useEffect(() => {
+    React.useLayoutEffect(() => {
         if (typeof homePath === 'string') {
             const { pathname, path } = UrlUtils.parse(window.location.hash.slice(1));
             if (homePath !== path) {
                 window.location.replace(`#${homePath}`);
-                const routeConfig = routeConfigForPath(pathname);
+                const routeConfig = typeof pathname === 'string' ?
+                    routeConfigForPath(viewsConfig, pathname)
+                    :
+                    null;
                 if (routeConfig) {
                     window.location = `#${path}`;
                 }
             }
         }
     }, []);
-    React.useEffect(() => {
+    React.useLayoutEffect(() => {
         const onLocationHashChange = () => {
             const { pathname, query } = UrlUtils.parse(window.location.hash.slice(1));
             const queryParams = new URLSearchParams(typeof query === 'string' ? query : '');
-            const routeConfig = routeConfigForPath(pathname);
+            const routeConfig = typeof pathname === 'string' ?
+                routeConfigForPath(viewsConfig, pathname)
+                :
+                null;
             if (!routeConfig) {
                 if (typeof onPathNotMatch === 'function') {
                     const component = onPathNotMatch();
@@ -61,16 +59,7 @@ const Router = ({ className, onPathNotMatch, ...props }) => {
                 return;
             }
 
-            const matches = pathname.match(routeConfig.regexp);
-            const urlParams = routeConfig.urlParamsNames.reduce((urlParams, name, index) => {
-                if (Array.isArray(matches) && typeof matches[index + 1] === 'string') {
-                    urlParams[name] = matches[index + 1];
-                } else {
-                    urlParams[name] = null;
-                }
-
-                return urlParams;
-            }, {});
+            const urlParams = urlParamsForPath(routeConfig, pathname);
             const routeViewIndex = viewsConfig.findIndex((vc) => vc.includes(routeConfig));
             const routeIndex = viewsConfig[routeViewIndex].findIndex((rc) => rc === routeConfig);
             setViews((views) => {
@@ -81,8 +70,14 @@ const Router = ({ className, onPathNotMatch, ...props }) => {
                         return {
                             key: `${routeViewIndex}${routeIndex}`,
                             component: routeConfig.component,
-                            urlParams,
-                            queryParams
+                            urlParams: view !== null && isEqual(view.urlParams, urlParams) ?
+                                view.urlParams
+                                :
+                                urlParams,
+                            queryParams: view !== null && isEqual(Array.from(view.queryParams.entries()), Array.from(queryParams.entries())) ?
+                                view.queryParams
+                                :
+                                queryParams
                         };
                     } else {
                         return null;
@@ -100,7 +95,7 @@ const Router = ({ className, onPathNotMatch, ...props }) => {
         <div className={classnames(className, 'routes-container')}>
             {
                 views
-                    .filter(view => view !== null)
+                    .filter((view) => view !== null)
                     .map(({ key, component, urlParams, queryParams }, index, views) => (
                         <RouteFocusedProvider key={key} value={index === views.length - 1}>
                             <Route>

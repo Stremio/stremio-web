@@ -1,17 +1,18 @@
 const React = require('react');
+const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const styles = require('./styles');
 
-const Button = React.forwardRef(({ children, ...props }, ref) => {
-    const onKeyUp = React.useCallback((event) => {
-        if (typeof props.onKeyUp === 'function') {
-            props.onKeyUp(event);
+const Button = React.forwardRef(({ className, href, disabled, children, ...props }, ref) => {
+    const onKeyDown = React.useCallback((event) => {
+        if (typeof props.onKeyDown === 'function') {
+            props.onKeyDown(event);
         }
 
         if (event.key === 'Enter' && !event.nativeEvent.buttonClickPrevented) {
             event.currentTarget.click();
         }
-    }, [props.onKeyUp]);
+    }, [props.onKeyDown]);
     const onMouseDown = React.useCallback((event) => {
         if (typeof props.onMouseDown === 'function') {
             props.onMouseDown(event);
@@ -25,13 +26,14 @@ const Button = React.forwardRef(({ children, ...props }, ref) => {
         }
     }, [props.onMouseDown]);
     return React.createElement(
-        typeof props.href === 'string' && props.href.length > 0 ? 'a' : 'div',
+        typeof href === 'string' && href.length > 0 ? 'a' : 'div',
         {
             tabIndex: 0,
             ...props,
             ref,
-            className: classnames(props.className, styles['button-container'], { 'disabled': props.disabled }),
-            onKeyUp,
+            className: classnames(className, styles['button-container'], { 'disabled': disabled }),
+            href,
+            onKeyDown,
             onMouseDown
         },
         children
@@ -39,5 +41,14 @@ const Button = React.forwardRef(({ children, ...props }, ref) => {
 });
 
 Button.displayName = 'Button';
+
+Button.propTypes = {
+    className: PropTypes.string,
+    href: PropTypes.string,
+    disabled: PropTypes.bool,
+    children: PropTypes.node,
+    onKeyDown: PropTypes.func,
+    onMouseDown: PropTypes.func
+};
 
 module.exports = Button;

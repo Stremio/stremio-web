@@ -1,12 +1,12 @@
 const EventEmitter = require('events');
-const { default: init, ContainerService } = require('stremio-core-web');
+const { default: init, StremioCoreWeb } = require('stremio-core-web');
 
 function Core() {
     let active = false;
     let error = null;
     let starting = false;
-    let containerService = null;
-    let events = new EventEmitter();
+    let stremio_core = null;
+    const events = new EventEmitter();
     events.on('error', () => { });
 
     function onStateChanged() {
@@ -21,9 +21,14 @@ function Core() {
         init()
             .then(() => {
                 if (starting) {
-                    containerService = new ContainerService(({ name, args } = {}) => {
+                    stremio_core = new StremioCoreWeb(({ name, args } = {}) => {
                         if (active) {
-                            events.emit(name, args);
+                            try {
+                                events.emit(name, args);
+                            } catch (e) {
+                                /* eslint-disable-next-line no-console */
+                                console.error(e);
+                            }
                         }
                     });
                     active = true;
@@ -43,7 +48,7 @@ function Core() {
         active = false;
         error = null;
         starting = false;
-        containerService = null;
+        stremio_core = null;
         onStateChanged();
     }
     function on(name, listener) {
@@ -52,19 +57,19 @@ function Core() {
     function off(name, listener) {
         events.off(name, listener);
     }
-    function dispatch({ action, args } = {}) {
+    function dispatch(action, model) {
         if (!active) {
-            return;
+            return false;
         }
 
-        containerService.dispatch({ action, args });
+        return stremio_core.dispatch(action, model);
     }
-    function getState() {
+    function getState(model) {
         if (!active) {
-            return {};
+            return null;
         }
 
-        return containerService.get_state();
+        return stremio_core.get_state(model);
     }
 
     Object.defineProperties(this, {
@@ -92,6 +97,6 @@ function Core() {
     this.getState = getState;
 
     Object.freeze(this);
-};
+}
 
 module.exports = Core;

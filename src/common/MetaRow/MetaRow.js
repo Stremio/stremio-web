@@ -7,9 +7,8 @@ const MetaItem = require('stremio/common/MetaItem');
 const MetaRowPlaceholder = require('./MetaRowPlaceholder');
 const styles = require('./styles');
 
-const MetaRow = ({ className, title, message, items, maximumItemsCount, itemMenuOptions }) => {
-    maximumItemsCount = maximumItemsCount !== null && isFinite(maximumItemsCount) ? maximumItemsCount : 20;
-    items = Array.isArray(items) ? items.slice(0, maximumItemsCount) : [];
+const MetaRow = ({ className, title, message, items, limit, href }) => {
+    items = Array.isArray(items) ? items.slice(0, limit) : [];
     return (
         <div className={classnames(className, styles['meta-row-container'])}>
             {
@@ -22,27 +21,29 @@ const MetaRow = ({ className, title, message, items, maximumItemsCount, itemMenu
                 typeof message === 'string' && message.length > 0 ?
                     <div className={styles['message-container']} title={message}>{message}</div>
                     :
-                    <React.Fragment>
+                    <div className={styles['content-container']}>
                         <div className={styles['meta-items-container']}>
                             {items.map((item, index) => (
                                 <MetaItem
                                     {...item}
                                     key={index}
-                                    data-id={item.id}
-                                    data-type={item.type}
                                     className={classnames(styles['meta-item'], styles['poster-shape-poster'], styles[`poster-shape-${item.posterShape}`])}
-                                    menuOptions={itemMenuOptions}
                                 />
                             ))}
-                            {Array(Math.max(maximumItemsCount - items.length, 0)).fill(null).map((_, index) => (
+                            {Array(limit - items.length).fill(null).map((_, index) => (
                                 <div key={index} className={classnames(styles['meta-item'], styles['poster-shape-poster'])} />
                             ))}
                         </div>
-                        <Button className={styles['see-all-container']} title={'SEE ALL'}>
-                            <div className={styles['label']}>SEE ALL</div>
-                            <Icon className={styles['icon']} icon={'ic_arrow_thin_right'} />
-                        </Button>
-                    </React.Fragment>
+                        {
+                            typeof href === 'string' && href.length > 0 ?
+                                <Button className={styles['see-all-container']} title={'SEE ALL'} href={href}>
+                                    <div className={styles['label']}>SEE ALL</div>
+                                    <Icon className={styles['icon']} icon={'ic_arrow_thin_right'} />
+                                </Button>
+                                :
+                                null
+                        }
+                    </div>
             }
         </div>
     );
@@ -57,8 +58,8 @@ MetaRow.propTypes = {
     items: PropTypes.arrayOf(PropTypes.shape({
         posterShape: PropTypes.string
     })),
-    maximumItemsCount: PropTypes.number,
-    itemMenuOptions: PropTypes.any
+    limit: PropTypes.number.isRequired,
+    href: PropTypes.string
 };
 
 module.exports = MetaRow;
