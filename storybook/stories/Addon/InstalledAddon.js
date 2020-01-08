@@ -5,16 +5,17 @@ const Addon = require('stremio/routes/Addons/Addon');
 const styles = require('./styles');
 
 storiesOf('Addon', module).add('Installed', () => (
-    <Addon 
+    <Addon
         className={styles['installed-addon-container']}
-        id={'addon-id'}
-        name={'Demo name'}
-        logo={'/images/intro_background.jpg'}
-        description={'Demo description'}
-        types={['Demo type']}
+        id={'addon.id'}
+        name={'Addon name'}
         version={'1.0.0'}
-        transportUrl={'Demo url'}
+        logo={'/images/intro_background.jpg'}
+        description={'Addon description ...'}
+        types={['movie', 'series']}
         installed={true}
-        toggle={action('Demo item uninstall button clicked')}
+        onToggle={action('Toggle')}
+        onShare={action('Share')}
+        dataset={{ transportUrl: 'http://www.com' }}
     />
 ));

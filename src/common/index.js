@@ -1,3 +1,4 @@
+const AddonDetailsModal = require('./AddonDetailsModal');
 const Button = require('./Button');
 const Checkbox = require('./Checkbox');
 const ColorInput = require('./ColorInput');
@@ -23,13 +24,11 @@ const useDeepEqualState = require('./useDeepEqualState');
 const useFullscreen = require('./useFullscreen');
 const useInLibrary = require('./useInLibrary');
 const useLiveRef = require('./useLiveRef');
-const useLocationHash = require('./useLocationHash');
 const useModelState = require('./useModelState');
-const useRouteActive = require('./useRouteActive');
-const useSpreadState = require('./useSpreadState');
 const useUser = require('./useUser');
 
 module.exports = {
+    AddonDetailsModal,
     Button,
     Checkbox,
     ColorInput,
@@ -55,9 +54,6 @@ module.exports = {
     useFullscreen,
     useInLibrary,
     useLiveRef,
-    useLocationHash,
     useModelState,
-    useRouteActive,
-    useSpreadState,
     useUser
 };

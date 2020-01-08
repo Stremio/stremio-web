@@ -7,13 +7,13 @@ const useSelectableInputs = require('./useSelectableInputs');
 const useItemOptions = require('./useItemOptions');
 const styles = require('./styles');
 
-const Library = ({ urlParams, queryParams }) => {
-    const library = useLibrary(urlParams, queryParams);
+const Library = ({ urlParams }) => {
+    const library = useLibrary(urlParams);
     const [typeSelect, sortPropSelect] = useSelectableInputs(library);
     const [options, optionOnSelect] = useItemOptions();
     return (
         <div className={styles['library-container']}>
-            <MainNavBar className={styles['nav-bar']} />
+            <MainNavBar className={styles['nav-bar']} route={'library'} />
             <div className={styles['library-content']}>
                 {
                     library.library_state.type === 'Ready' && library.library_state.content.uid !== null && library.type_names.length > 0 ?
@@ -73,8 +73,8 @@ const Library = ({ urlParams, queryParams }) => {
 Library.propTypes = {
     urlParams: PropTypes.exact({
         type: PropTypes.string,
-    }),
-    queryParams: PropTypes.instanceOf(URLSearchParams)
+        sort: PropTypes.string
+    })
 };
 
 module.exports = Library;

@@ -1,0 +1,48 @@
+.addon-details-container {
+    .title-container {
+        .logo, .icon {
+            float: left;
+            width: 5rem;
+            height: 5rem;
+            margin-right: 1rem;
+            padding: 0.5rem;
+            background-color: var(--color-backgrounddarker);
+        }
+
+        .logo {
+            object-fit: contain;
+            object-position: center;
+        }
+
+        .icon {
+            fill: var(--color-surfacelighter);
+        }
+
+        .name {
+            font-size: 2.4rem;
+            font-weight: 300;
+            line-height: 5rem;
+        }
+    }
+
+    .section-container {
+        margin-top: 1rem;
+
+        .section-header {
+            font-size: 1.2rem;
+        }
+
+        .section-label {
+            font-size: 1.2rem;
+            font-weight: 300;
+
+            &.transport-url-label {
+                user-select: text;
+            }
+
+            &.disclaimer-label {
+                font-style: italic;
+            }
+        }
+    }
+}

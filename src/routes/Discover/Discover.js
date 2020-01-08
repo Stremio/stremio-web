@@ -45,7 +45,7 @@ const Discover = ({ urlParams, queryParams }) => {
     }, [urlParams, queryParams]);
     return (
         <div className={styles['discover-container']}>
-            <MainNavBar className={styles['nav-bar']} />
+            <MainNavBar className={styles['nav-bar']} route={'discover'} />
             <div className={styles['discover-content']}>
                 <div className={styles['selectable-inputs-container']}>
                     {selectInputs.map((selectInput, index) => (
@@ -138,7 +138,7 @@ const Discover = ({ urlParams, queryParams }) => {
 
 Discover.propTypes = {
     urlParams: PropTypes.exact({
-        addonTransportUrl: PropTypes.string,
+        transportUrl: PropTypes.string,
         type: PropTypes.string,
         catalogId: PropTypes.string
     }),

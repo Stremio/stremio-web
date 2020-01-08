@@ -1,7 +1,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const Icon = require('stremio-icons/dom');
-const { Button, Multiselect, NavBar, TextInput, SharePrompt, ModalDialog, useBinaryState } = require('stremio/common');
+const { AddonDetailsModal, Button, Multiselect, NavBar, TextInput, SharePrompt, ModalDialog, useBinaryState } = require('stremio/common');
 const Addon = require('./Addon');
 const useAddons = require('./useAddons');
 const useSelectableInputs = require('./useSelectableInputs');
@@ -10,17 +10,29 @@ const styles = require('./styles');
 const navigateToAddonDetails = (addonsCatalogRequest, transportUrl) => {
     const queryParams = new URLSearchParams([['addon', transportUrl]]);
     if (addonsCatalogRequest !== null) {
-        const addonTransportUrl = encodeURIComponent(addonsCatalogRequest.base);
+        const transportUrl = encodeURIComponent(addonsCatalogRequest.base);
         const catalogId = encodeURIComponent(addonsCatalogRequest.path.id);
         const type = encodeURIComponent(addonsCatalogRequest.path.type_name);
-        window.location.replace(`#/addons/${addonTransportUrl}/${catalogId}/${type}?${queryParams}`);
+        window.location.replace(`#/addons/${transportUrl}/${catalogId}/${type}?${queryParams}`);
     } else {
         window.location.replace(`#/addons?${queryParams}`);
     }
 };
 
+const clearAddonDetails = (addonsCatalogRequest) => {
+    if (addonsCatalogRequest !== null) {
+        const transportUrl = encodeURIComponent(addonsCatalogRequest.base);
+        const catalogId = encodeURIComponent(addonsCatalogRequest.path.id);
+        const type = encodeURIComponent(addonsCatalogRequest.path.type_name);
+        window.location.replace(`#/addons/${transportUrl}/${catalogId}/${type}`);
+    } else {
+        window.location.replace('#/addons');
+    }
+};
+
 const Addons = ({ urlParams, queryParams }) => {
     const addons = useAddons(urlParams);
+    const detailsTransportUrl = queryParams.get('addon');
     const selectInputs = useSelectableInputs(addons);
     const [addAddonModalOpen, openAddAddonModal, closeAddAddonModal] = useBinaryState(false);
     const addAddonUrlInputRef = React.useRef(null);
@@ -67,6 +79,13 @@ const Addons = ({ urlParams, queryParams }) => {
             :
             null;
         navigateToAddonDetails(addonsCatalogRequest, event.dataset.transportUrl);
+    }, [addons]);
+    const closeAddonDetails = React.useCallback(() => {
+        const addonsCatalogRequest = addons.catalog_resource !== null ?
+            addons.catalog_resource.request
+            :
+            null;
+        clearAddonDetails(addonsCatalogRequest);
     }, [addons]);
     React.useLayoutEffect(() => {
         closeAddAddonModal();
@@ -183,13 +202,22 @@ const Addons = ({ urlParams, queryParams }) => {
                     :
                     null
             }
+            {
+                typeof detailsTransportUrl === 'string' ?
+                    <AddonDetailsModal
+                        transportUrl={detailsTransportUrl}
+                        onCloseRequest={closeAddonDetails}
+                    />
+                    :
+                    null
+            }
         </div>
     );
 };
 
 Addons.propTypes = {
     urlParams: PropTypes.exact({
-        addonTransportUrl: PropTypes.string,
+        transportUrl: PropTypes.string,
         catalogId: PropTypes.string,
         type: PropTypes.string
     }),

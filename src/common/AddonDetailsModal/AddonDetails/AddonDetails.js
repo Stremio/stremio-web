@@ -1,33 +1,40 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
+const Icon = require('stremio-icons/dom');
+const Image = require('stremio/common/Image');
 const styles = require('./styles');
 
-const AddonPrompt = ({ className, id, name, logo, description, types, catalogs, version, transportUrl, official }) => {
+const AddonDetails = ({ className, id, name, version, logo, description, types, transportUrl, official }) => {
+    const renderLogoFallback = React.useMemo(() => () => {
+        return (
+            <Icon className={styles['icon']} icon={'ic_addons'} />
+        );
+    }, []);
     return (
-        <div className={classnames(className, styles['addon-prompt-container'])}>
-            <div className={classnames(styles['title-container'], { [styles['title-with-logo-container']]: typeof logo === 'string' && logo.length > 0 })}>
-                {
-                    typeof logo === 'string' && logo.length > 0 ?
-                        <div className={styles['logo-container']}>
-                            <img className={styles['logo']} src={logo} alt={' '} />
-                        </div>
-                        :
-                        null
-                }
-                {typeof name === 'string' && name.length > 0 ? name : id}
-                {' '}
-                {
-                    typeof version === 'string' && version.length > 0 ?
-                        <span className={styles['version-container']}>v.{version}</span>
-                        :
-                        null
-                }
+        <div className={classnames(className, styles['addon-details-container'])}>
+            <div className={styles['title-container']}>
+                <Image
+                    className={styles['logo']}
+                    src={logo}
+                    alt={' '}
+                    renderFallback={renderLogoFallback}
+                />
+                <span className={styles['name']}>{typeof name === 'string' && name.length > 0 ? name : id}</span>
             </div>
             {
                 typeof description === 'string' && description.length > 0 ?
                     <div className={styles['section-container']}>
                         <span className={styles['section-header']}>{description}</span>
+                    </div>
+                    :
+                    null
+            }
+            {
+                typeof version === 'string' && version.length > 0 ?
+                    <div className={styles['section-container']}>
+                        <span className={styles['section-header']}>Version: </span>
+                        <span className={styles['section-label']}>{version}</span>
                     </div>
                     :
                     null
@@ -58,22 +65,6 @@ const AddonPrompt = ({ className, id, name, logo, description, types, catalogs, 
                     null
             }
             {
-                Array.isArray(catalogs) && catalogs.length > 0 ?
-                    <div className={styles['section-container']}>
-                        <span className={styles['section-header']}>Supported catalogs: </span>
-                        <span className={styles['section-label']}>
-                            {
-                                catalogs.length === 1 ?
-                                    catalogs[0].name
-                                    :
-                                    catalogs.slice(0, -1).map(({ name }) => name).join(', ') + ' & ' + catalogs[catalogs.length - 1].name
-                            }
-                        </span>
-                    </div>
-                    :
-                    null
-            }
-            {
                 !official ?
                     <div className={styles['section-container']}>
                         <div className={classnames(styles['section-label'], styles['disclaimer-label'])}>Using third-party add-ons will always be subject to your responsibility and the governing law of the jurisdiction you are located.</div>
@@ -85,19 +76,16 @@ const AddonPrompt = ({ className, id, name, logo, description, types, catalogs, 
     );
 };
 
-AddonPrompt.propTypes = {
+AddonDetails.propTypes = {
     className: PropTypes.string,
     id: PropTypes.string,
     name: PropTypes.string,
+    version: PropTypes.string,
     logo: PropTypes.string,
     description: PropTypes.string,
     types: PropTypes.arrayOf(PropTypes.string),
-    catalogs: PropTypes.arrayOf(PropTypes.shape({
-        name: PropTypes.string
-    })),
-    version: PropTypes.string,
     transportUrl: PropTypes.string,
-    official: PropTypes.bool
+    official: PropTypes.bool,
 };
 
-module.exports = AddonPrompt;
+module.exports = AddonDetails;

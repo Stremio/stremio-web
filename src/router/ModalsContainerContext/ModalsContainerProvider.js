@@ -13,10 +13,7 @@ const ModalsContainerProvider = ({ children }) => {
 };
 
 ModalsContainerProvider.propTypes = {
-    children: PropTypes.oneOfType([
-        PropTypes.arrayOf(PropTypes.node),
-        PropTypes.node
-    ])
+    children: PropTypes.node
 };
 
 module.exports = ModalsContainerProvider;

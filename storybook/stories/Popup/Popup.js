@@ -28,7 +28,7 @@ storiesOf('Popup', module).add('Popup', () => {
     return (
         <Popup
             open={menuOpen}
-            direction={'bottom'}
+            direction={'bottom-right'}
             renderLabel={({ className, children, ...props }) => (
                 <Button {...props} className={classnames(className, styles['popup-label-container'])} onClick={popupLabelOnClick}>
                     POPUP LABEL

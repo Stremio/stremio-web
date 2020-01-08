@@ -1,0 +1,34 @@
+:import('~stremio/common/ModalDialog/styles.less') {
+    label: label;
+}
+
+.addon-details-modal-container {
+    .addon-details-container, .addon-details-message-container {
+        width: 60rem;
+        max-width: 100%;
+    }
+
+    .install-button, .uninstall-button, .cancel-button {
+        .label {
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+    }
+
+    .cancel-button, .uninstall-button {
+        background-color: transparent;
+        outline-width: var(--focus-outline-size);
+        outline-offset: calc(-1 * var(--focus-outline-size));
+        outline-color: var(--color-surfacedarker);
+        outline-style: solid;
+
+        &:hover, &:focus {
+            filter: none;
+            background: var(--color-surfacelight);
+        }
+
+        .label {
+            color: var(--color-surfacedarker);
+        }
+    }
+}
