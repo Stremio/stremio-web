@@ -1,6 +1,5 @@
 const React = require('react');
 const classnames = require('classnames');
-const useLiveRef = require('stremio/common/useLiveRef');
 const { Modal } = require('stremio-router');
 const ToastItem = require('./ToastItem');
 const styles = require('./styles');
@@ -8,32 +7,43 @@ const styles = require('./styles');
 const DEFAULT_TIMEOUT = 2000;
 
 const Toast = React.forwardRef(({ className }, ref) => {
-    const [toastItems, setToastItems] = React.useState([]);
-    const toastItemsRef = useLiveRef(toastItems, [toastItems]);
+    const [toastItems, dispatch] = React.useReducer(
+        (state, action) => {
+            switch (action.type) {
+                case 'add':
+                    return state.concat([action.item]);
+                case 'remove':
+                    return state.filter(item => item !== action.item);
+                case 'removeAll':
+                    state.forEach(item => clearTimeout(item.timerId));
+                    return [];
+                default:
+                    return state;
+            }
+        }, []
+    );
 
-    const hideAll = () => {
-        toastItemsRef.current.forEach(item => clearTimeout(item.timerId));
-        setToastItems([]);
-    };
+    const hideAll = React.useCallback(() => {
+        dispatch({ type: 'removeAll' });
+    }, []);
 
-    const show = ({ type, icon, title, text, closeButton, timeout, onClick }) => {
+    const show = React.useCallback(({ type, icon, title, text, closeButton, timeout, onClick }) => {
         timeout = timeout !== null && !isNaN(timeout) ? timeout : DEFAULT_TIMEOUT;
         const close = () => {
-            clearTimeout(nextItem.timerId);
-            setToastItems(toastItemsRef.current.filter(state => state !== nextItem));
+            clearTimeout(newItem.timerId);
+            dispatch({ type: 'remove', item: newItem });
         };
 
-        const nextItem = { type, icon, title, text, closeButton, timeout, onClick, onClose: close };
+        const newItem = { type, icon, title, text, closeButton, timeout, onClick, onClose: close };
 
         if (timeout !== 0) {
-            nextItem.timerId = setTimeout(close, timeout);
+            newItem.timerId = setTimeout(close, timeout);
         }
-        setToastItems(toastItemsRef.current.concat([nextItem]));
+        dispatch({ type: 'add', item: newItem });
         return close;
-    };
+    }, []);
 
     React.useImperativeHandle(ref, () => ({ show, hideAll }));
-
     return toastItems.length === 0 ? null : (
         <Modal className={classnames(className, styles['toast-container'])}>
             {toastItems.map((item, index) => (<ToastItem {...item} key={index} />))}
