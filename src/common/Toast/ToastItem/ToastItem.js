@@ -7,7 +7,7 @@ const styles = require('./styles');
 
 const ToastItem = ({ type, title, text, icon, closeButton, onClick, onClose }) => {
     const isClickable = typeof onClick === 'function';
-    const toastClicked = React.useCallback(() => {
+    const toastOnClick = React.useCallback(() => {
         if (isClickable) {
             onClick();
         }
@@ -23,7 +23,7 @@ const ToastItem = ({ type, title, text, icon, closeButton, onClick, onClose }) =
                     :
                     null
             }
-            <div className={classnames(styles['message-container'], { [styles.clickable]: isClickable })} onClick={toastClicked}>
+            <div className={classnames(styles['message-container'], { [styles.clickable]: isClickable })} onClick={toastOnClick}>
                 {
                     typeof title === 'string' && title.length > 0 ?
                         <h1>{title}</h1>

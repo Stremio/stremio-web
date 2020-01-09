@@ -2,7 +2,7 @@ require('spatial-navigation-polyfill');
 const React = require('react');
 const { Router } = require('stremio-router');
 const { Core, KeyboardNavigation, ServicesProvider, Shell } = require('stremio/services');
-const ToastsContainerProvider = require('stremio/common/ToastsContainerContext/ToastsContainerProvider');
+const { ToastsContainerProvider } = require('stremio/common/ToastsContainerContext');
 const routerViewsConfig = require('./routerViewsConfig');
 const styles = require('./styles');
 
