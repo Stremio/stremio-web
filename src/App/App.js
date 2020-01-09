@@ -2,6 +2,7 @@ require('spatial-navigation-polyfill');
 const React = require('react');
 const { Router } = require('stremio-router');
 const { Core, KeyboardNavigation, ServicesProvider, Shell } = require('stremio/services');
+const ToastsContainerProvider = require('../common/ToastsContainerContext/ToastsContainerProvider');
 const routerViewsConfig = require('./routerViewsConfig');
 const styles = require('./styles');
 
@@ -45,12 +46,14 @@ const App = () => {
             <ServicesProvider services={services}>
                 {
                     shellInitialized && coreInitialized ?
-                        <Router
-                            className={styles['router']}
-                            homePath={'/'}
-                            viewsConfig={routerViewsConfig}
-                            onPathNotMatch={onPathNotMatch}
-                        />
+                        <ToastsContainerProvider>
+                            <Router
+                                className={styles['router']}
+                                homePath={'/'}
+                                viewsConfig={routerViewsConfig}
+                                onPathNotMatch={onPathNotMatch}
+                            />
+                        </ToastsContainerProvider>
                         :
                         <div className={styles['app-loader']} />
                 }
