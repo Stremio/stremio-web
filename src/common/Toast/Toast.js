@@ -45,7 +45,7 @@ const Toast = React.forwardRef(({ className }, ref) => {
 
     React.useImperativeHandle(ref, () => ({ show, hideAll }));
     return toastItems.length === 0 ? null : (
-        <Modal className={classnames(className, styles['toast-container'])}>
+        <Modal className={classnames(className, styles['toast-container'])} disabled={true}>
             {toastItems.map((item, index) => (<ToastItem {...item} key={index} />))}
         </Modal>
     );
