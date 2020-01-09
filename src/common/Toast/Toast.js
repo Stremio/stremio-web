@@ -1,12 +1,15 @@
 const React = require('react');
 const classnames = require('classnames');
 const { Modal } = require('stremio-router');
+const ModalsContainerContext = require('stremio-router/ModalsContainerContext/ModalsContainerContext');
+const { useToastsContainer } = require('../ToastsContainerContext');
 const ToastItem = require('./ToastItem');
 const styles = require('./styles');
 
 const DEFAULT_TIMEOUT = 2000;
 
 const Toast = React.forwardRef(({ className }, ref) => {
+    const toastsContainer = useToastsContainer();
     const [toastItems, dispatch] = React.useReducer(
         (state, action) => {
             switch (action.type) {
@@ -45,9 +48,11 @@ const Toast = React.forwardRef(({ className }, ref) => {
 
     React.useImperativeHandle(ref, () => ({ show, hideAll }));
     return toastItems.length === 0 ? null : (
-        <Modal className={classnames(className, styles['toast-container'])} disabled={true}>
-            {toastItems.map((item, index) => (<ToastItem {...item} key={index} />))}
-        </Modal>
+        <ModalsContainerContext.Provider value={toastsContainer}>
+            <Modal className={classnames(className, styles['toast-container'])} disabled={true}>
+                {toastItems.map((item, index) => (<ToastItem {...item} key={index} />))}
+            </Modal>
+        </ModalsContainerContext.Provider>
     );
 });
 
