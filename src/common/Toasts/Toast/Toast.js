@@ -5,7 +5,7 @@ const Icon = require('stremio-icons/dom');
 const Button = require('stremio/common/Button');
 const styles = require('./styles');
 
-const ToastItem = ({ type, title, text, icon, closeButton, onClick, onClose }) => {
+const Toast = ({ type, title, text, icon, closeButton, onClick, onClose }) => {
     const isClickable = typeof onClick === 'function';
     const toastOnClick = React.useCallback(() => {
         if (isClickable) {
@@ -14,7 +14,7 @@ const ToastItem = ({ type, title, text, icon, closeButton, onClick, onClose }) =
     }, [onClick]);
 
     return (
-        <div className={classnames(styles['toast-item'], styles[type])}>
+        <div className={classnames(styles['toast-container'], styles[type])}>
             {
                 typeof icon === 'string' && icon.length > 0 ?
                     <div className={styles['icon-container']}>
@@ -44,7 +44,7 @@ const ToastItem = ({ type, title, text, icon, closeButton, onClick, onClose }) =
     );
 };
 
-ToastItem.propTypes = {
+Toast.propTypes = {
     type: PropTypes.string,
     title: PropTypes.string,
     text: PropTypes.string,
@@ -54,4 +54,4 @@ ToastItem.propTypes = {
     onClose: PropTypes.func
 };
 
-module.exports = ToastItem;
+module.exports = Toast;
