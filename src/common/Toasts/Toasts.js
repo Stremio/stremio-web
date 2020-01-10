@@ -8,7 +8,7 @@ const styles = require('./styles');
 
 const DEFAULT_TIMEOUT = 2000;
 
-const Toast = React.forwardRef(({ className }, ref) => {
+const Toasts = React.forwardRef(({ className }, ref) => {
     const toastsContainer = useToastsContainer();
     const [toastItems, dispatch] = React.useReducer(
         (state, action) => {
@@ -47,11 +47,11 @@ const Toast = React.forwardRef(({ className }, ref) => {
 
     return toastItems.length === 0 ? null : (
         <ModalsContainerContext.Provider value={toastsContainer}>
-            <Modal className={classnames(className, styles['toast-container'])} disabled={true}>
+            <Modal className={classnames(className, styles['toasts-container'])} disabled={true}>
                 {toastItems.map((item, index) => (<ToastItem {...item} key={index} />))}
             </Modal>
         </ModalsContainerContext.Provider>
     );
 });
 
-module.exports = Toast;
+module.exports = Toasts;
