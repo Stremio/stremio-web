@@ -2,7 +2,7 @@ const React = require('react');
 const classnames = require('classnames');
 const { Modal } = require('stremio-router');
 const ModalsContainerContext = require('stremio-router/ModalsContainerContext/ModalsContainerContext');
-const { useToastsContainer } = require('stremio/common/ToastsContainerContext');
+const { useToastsContainer } = require('./ToastsContainerContext');
 const Toast = require('./Toast');
 const styles = require('./styles');
 
