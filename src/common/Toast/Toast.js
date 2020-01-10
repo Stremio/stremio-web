@@ -25,11 +25,9 @@ const Toast = React.forwardRef(({ className }, ref) => {
             }
         }, []
     );
-
     const hideAll = React.useCallback(() => {
         dispatch({ type: 'removeAll' });
     }, []);
-
     const show = React.useCallback(({ type, icon, title, text, closeButton, timeout, onClick }) => {
         timeout = timeout !== null && !isNaN(timeout) ? timeout : DEFAULT_TIMEOUT;
         const close = () => {
@@ -45,8 +43,8 @@ const Toast = React.forwardRef(({ className }, ref) => {
         dispatch({ type: 'add', item: newItem });
         return close;
     }, []);
-
     React.useImperativeHandle(ref, () => ({ show, hideAll }));
+
     return toastItems.length === 0 ? null : (
         <ModalsContainerContext.Provider value={toastsContainer}>
             <Modal className={classnames(className, styles['toast-container'])} disabled={true}>
