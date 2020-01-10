@@ -1,10 +1,8 @@
 const React = require('react');
-const classnames = require('classnames');
 const { Modal } = require('stremio-router');
 const ModalsContainerContext = require('stremio-router/ModalsContainerContext/ModalsContainerContext');
 const { useToastsContainer } = require('./ToastsContainerContext');
 const Toast = require('./Toast');
-const styles = require('./styles');
 
 const DEFAULT_TIMEOUT = 2000;
 
@@ -47,7 +45,7 @@ const Toasts = React.forwardRef(({ className }, ref) => {
 
     return toasts.length === 0 ? null : (
         <ModalsContainerContext.Provider value={toastsContainer}>
-            <Modal className={classnames(className, styles['toasts-container'])} disabled={true}>
+            <Modal className={className} disabled={true}>
                 {toasts.map((toast, index) => (<Toast {...toast} key={index} />))}
             </Modal>
         </ModalsContainerContext.Provider>

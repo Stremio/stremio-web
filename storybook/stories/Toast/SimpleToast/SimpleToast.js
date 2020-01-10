@@ -2,7 +2,6 @@ const React = require('react');
 const { storiesOf } = require('@storybook/react');
 const { Toasts } = require('stremio/common');
 const styles = require('./styles');
-const { ToastsContainerProvider } = require('stremio/common/ToastsContainerContext');
 
 storiesOf('Toast', module).add('SimpleToast', () => {
     const toastRef = React.useRef(null);
@@ -37,9 +36,7 @@ storiesOf('Toast', module).add('SimpleToast', () => {
             <button onClick={() => showToast({ text: 'No title', type: 'info', title: null, icon: null })}>No title</button>
             <button onClick={() => toastRef.current.show({})}>Empty</button>
             <button onClick={() => toastRef.current.hideAll()}>Close all</button>
-            <ToastsContainerProvider>
-                <Toasts ref={toastRef} className={styles['toasts-container']} />
-            </ToastsContainerProvider>
+            <Toasts ref={toastRef} className={styles['toasts-container']} />
         </div>
     );
 });
