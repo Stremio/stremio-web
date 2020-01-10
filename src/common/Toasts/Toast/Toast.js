@@ -6,13 +6,6 @@ const Button = require('stremio/common/Button');
 const styles = require('./styles');
 
 const Toast = ({ type, title, text, icon, closeButton, onClick, onClose }) => {
-    const isClickable = typeof onClick === 'function';
-    const toastOnClick = React.useCallback(() => {
-        if (isClickable) {
-            onClick();
-        }
-    }, [onClick]);
-
     return (
         <div className={classnames(styles['toast-container'], styles[type])}>
             {
@@ -23,7 +16,7 @@ const Toast = ({ type, title, text, icon, closeButton, onClick, onClose }) => {
                     :
                     null
             }
-            <div className={classnames(styles['message-container'], { [styles.clickable]: isClickable })} onClick={toastOnClick}>
+            <div className={classnames(styles['message-container'], { [styles.clickable]: typeof onClick === 'function' })} onClick={onClick}>
                 {
                     typeof title === 'string' && title.length > 0 ?
                         <h1>{title}</h1>
