@@ -1,0 +1,16 @@
+name: Build
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build
+      run: yarn build
+    - uses: actions/upload-artifact@v1
+      with:
+        name: stremio-web
+        path: stremio-web/dist
