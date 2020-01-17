@@ -11,7 +11,7 @@ jobs:
     - name: Build
       run: |
         echo -e "[url \"https://github.com/\"]\n\tinsteadOf = ssh://git@github.com/" > ~/.gitconfig
-        yarn add webpack --dev && yarn build
+        yarn install && yarn build
     - uses: actions/upload-artifact@v1
       with:
         name: stremio-web
