@@ -9,7 +9,9 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Build
-      run: yarn install && yarn build
+      run: |
+        echo -e "[url \"https://github.com/\"]\n\tinsteadOf = ssh://git@github.com/" > ~/.gitconfig
+        yarn build
     - uses: actions/upload-artifact@v1
       with:
         name: stremio-web
