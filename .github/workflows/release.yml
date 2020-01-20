@@ -1,6 +1,11 @@
-name: Build
+name: Release
 
-on: [push]
+on:
+  push:
+    branches-ignore:
+      - '*'
+    tags:
+      - '*'
 
 jobs:
   build:
