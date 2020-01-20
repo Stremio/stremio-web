@@ -43,7 +43,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         GITHUB_REF: ${{ github.ref }}
       with:
-        upload_url: "https://uploads.github.com/repos/Stremio/stremio-web/releases/$GITHUB_REF/assets{?name,label}"
+        upload_url: https://uploads.github.com/repos/Stremio/stremio-web/releases/$GITHUB_REF/assets{?name,label}
         asset_path: ./stremio-web.zip
         asset_name: stremio-web.zip
         asset_content_type: application/zip
