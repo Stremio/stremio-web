@@ -24,12 +24,14 @@ jobs:
     - uses: actions/download-artifact@v1
       with:
         name: stremio-web
-    # - run: cat stremio-web
+    - run: ls -l
     - name: Create Release
       id: create-release
       uses: actions/create-release@v1.0.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        ACTIONS_RUNNER_DEBUG: true
+        ACTIONS_STEP_DEBUG: true
       with:
         tag_name: ${{ github.ref }}
         release_name: Release ${{ github.ref }}
@@ -43,5 +45,5 @@ jobs:
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./stremio-web.zip
-        asset_name: stremi-web.zip
+        asset_name: stremio-web.zip
         asset_content_type: application/zip
