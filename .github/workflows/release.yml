@@ -26,7 +26,7 @@ jobs:
         name: stremio-web
     - run: zip -r stremio-web.zip ./stremio-web
     - name: Create Release
-      id: create-release
+      id: create_release
       uses: actions/create-release@v1.0.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
