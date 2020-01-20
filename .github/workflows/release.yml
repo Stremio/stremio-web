@@ -24,7 +24,7 @@ jobs:
     - uses: actions/download-artifact@v1
       with:
         name: stremio-web
-    - run: cat stremio-web
+    # - run: cat stremio-web
     - name: Create Release
       id: create-release
       uses: actions/create-release@v1.0.0
