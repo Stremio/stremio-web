@@ -17,10 +17,6 @@ jobs:
       run: |
         echo -e "[url \"https://github.com/\"]\n\tinsteadOf = ssh://git@github.com/" > ~/.gitconfig
         yarn install && yarn build
-    - uses: actions/upload-artifact@v1
-      with:
-        name: stremio-web
-        path: dist
     - uses: actions/download-artifact@v1
       with:
         name: stremio-web
