@@ -25,6 +25,15 @@ jobs:
       with:
         name: stremio-web
     - run: zip -r stremio-web.zip ./stremio-web
+    - name: Upload binaries to release
+      uses: svenstaro/upload-release-action@v1-release
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: target/release/stremio-web
+        asset_name: stremio-web
+        tag: ${{ github.ref }}
+        overwrite: true
+
 #     - name: Create Release
 #       id: create_release
 #       uses: actions/create-release@v1.0.0
@@ -36,14 +45,14 @@ jobs:
 #         draft: false
 #         prerelease: false
 #     - run: echo ${{ steps.create_release.outputs.upload_url }}
-    - name: Upload Release Asset
-      id: upload-release-asset 
-      uses: actions/upload-release-asset@v1.0.1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        GITHUB_REF: ${{ github.ref }}
-      with:
-        upload_url: https://uploads.github.com/repos/Stremio/stremio-web/releases/$GITHUB_REF/assets{?name,label}
-        asset_path: ./stremio-web.zip
-        asset_name: stremio-web.zip
-        asset_content_type: application/zip
+#     - name: Upload Release Asset
+#       id: upload-release-asset 
+#       uses: actions/upload-release-asset@v1.0.1
+#       env:
+#         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#         GITHUB_REF: ${{ github.ref }}
+#       with:
+#         upload_url: https://uploads.github.com/repos/Stremio/stremio-web/releases/$GITHUB_REF/assets{?name,label}
+#         asset_path: ./stremio-web.zip
+#         asset_name: stremio-web.zip
+#         asset_content_type: application/zip
