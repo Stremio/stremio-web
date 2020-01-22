@@ -23,7 +23,7 @@ jobs:
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: stremio-web.zip
-        asset_name: stremio-web
+        asset_name: stremio-web.zip
         tag: ${{ github.ref }}
         overwrite: true
     - run: |
