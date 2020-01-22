@@ -17,14 +17,14 @@ jobs:
       run: |
         echo -e "[url \"https://github.com/\"]\n\tinsteadOf = ssh://git@github.com/" > ~/.gitconfig
         yarn install && yarn build
-    - uses: actions/upload-artifact@v1
-      with:
-        name: stremio-web
-        path: dist
+#     - uses: actions/upload-artifact@v1
+#       with:
+#         name: stremio-web
+#         path: dist
 #     - uses: actions/download-artifact@v1
 #       with:
 #         name: stremio-web
-    - run: zip -r stremio-web.zip ./stremio-web
+    - run: zip -r stremio-web.zip ./dist
     - name: Upload binaries to release
       uses: svenstaro/upload-release-action@v1-release
       with:
