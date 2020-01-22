@@ -21,9 +21,9 @@ jobs:
       with:
         name: stremio-web
         path: dist
-    - uses: actions/download-artifact@v1
-      with:
-        name: stremio-web
+#     - uses: actions/download-artifact@v1
+#       with:
+#         name: stremio-web
     - run: zip -r stremio-web.zip ./stremio-web
     - name: Upload binaries to release
       uses: svenstaro/upload-release-action@v1-release
