@@ -17,7 +17,7 @@ jobs:
       run: |
         echo -e "[url \"https://github.com/\"]\n\tinsteadOf = ssh://git@github.com/" > ~/.gitconfig
         yarn install && yarn build
-    - run: zip -r stremio-web.zip ./dist
+    - run: zip -r stremio-web.zip ./build
     - name: Upload binaries to release
       uses: svenstaro/upload-release-action@v1-release
       with:

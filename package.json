@@ -8,7 +8,7 @@
     "license": "GPLv3",
     "scripts": {
         "start": "webpack-dev-server --mode development",
-        "build": "webpack --mode production",
+        "build": "webpack --mode production --output-path build",
         "storybook": "start-storybook --ci --config-dir ./storybook --static-dir ./ --port 6060",
         "test": "jest",
         "lint": "eslint src"

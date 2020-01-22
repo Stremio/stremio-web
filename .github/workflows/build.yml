@@ -20,4 +20,4 @@ jobs:
     - uses: actions/upload-artifact@v1
       with:
         name: stremio-web
-        path: dist
+        path: build
