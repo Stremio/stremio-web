@@ -26,3 +26,9 @@ jobs:
         asset_name: stremio-web
         tag: ${{ github.ref }}
         overwrite: true
+    - run: |
+        curl -H "Content-Type: application/zip" \
+             -H "Authorization: Bearer ${{ secrets.netlify_access_token }}" \
+             --data-binary "@stremio-web.zip" \
+             https://api.netlify.com/api/v1/sites/mysite.netlify.com/deploys
+    
