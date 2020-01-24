@@ -6,6 +6,9 @@
     "website": "www.stremio.com",
     "private": true,
     "license": "GPLv3",
+    "Sentry": {
+        "dsn": "https://e47a6d214ae4478b81136c29612003a7@sentry.io/1911455"
+    },
     "scripts": {
         "start": "webpack-dev-server --mode development",
         "build": "webpack --mode production",
@@ -14,7 +17,7 @@
         "lint": "eslint src"
     },
     "dependencies": {
-        "@sentry/browser": "^5.11.1",
+        "@sentry/browser": "5.11.1",
         "a-color-picker": "1.2.1",
         "classnames": "2.2.6",
         "events": "1.1.1",
