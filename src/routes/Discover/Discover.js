@@ -25,7 +25,7 @@ const Discover = ({ urlParams, queryParams }) => {
     const discover = useDiscover(urlParams, queryParams);
     const [selectInputs, paginationInput] = useSelectableInputs(discover);
     const [inputsModalOpen, openInputsModal, closeInputsModal] = useBinaryState(false);
-    const [onInstallButtonClicked, openAddonModal, closeAddonModal] = useBinaryState(false);
+    const [addonModalOpen, openAddonModal, closeAddonModal] = useBinaryState(false);
     const [selectedMetaItem, setSelectedMetaItem] = React.useState(() => {
         return getMetaItemAtIndex(discover.catalog_resource, 0);
     });
@@ -148,7 +148,7 @@ const Discover = ({ urlParams, queryParams }) => {
                     null
             }
             {
-                onInstallButtonClicked ?
+                addonModalOpen ?
                     <AddonDetailsModal
                         transportUrl={discover.catalog_resource.request.base}
                         onCloseRequest={closeAddonModal}
