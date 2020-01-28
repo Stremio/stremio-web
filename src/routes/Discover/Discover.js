@@ -2,7 +2,8 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
-const { Button, MainNavBar, MetaItem, MetaPreview, Multiselect, ModalDialog, PaginationInput, useBinaryState } = require('stremio/common');
+const { AddonDetailsModal, Button, MainNavBar, MetaItem, MetaPreview, Multiselect, ModalDialog, PaginationInput, useBinaryState } = require('stremio/common');
+const { useServices } = require('stremio/services');
 const useDiscover = require('./useDiscover');
 const useSelectableInputs = require('./useSelectableInputs');
 const styles = require('./styles');
@@ -19,9 +20,12 @@ const getMetaItemAtIndex = (catalog_resource, index) => {
 };
 
 const Discover = ({ urlParams, queryParams }) => {
+    const { core } = useServices();
+    const state = core.getState();
     const discover = useDiscover(urlParams, queryParams);
     const [selectInputs, paginationInput] = useSelectableInputs(discover);
     const [inputsModalOpen, openInputsModal, closeInputsModal] = useBinaryState(false);
+    const [onInstallButtonClicked, openAddonModal, closeAddonModal] = useBinaryState(false);
     const [selectedMetaItem, setSelectedMetaItem] = React.useState(() => {
         return getMetaItemAtIndex(discover.catalog_resource, 0);
     });
@@ -69,6 +73,17 @@ const Discover = ({ urlParams, queryParams }) => {
                             null
                     }
                 </div>
+                {
+                    discover.catalog_resource != null && !state.ctx.content.addons.some((addon) => addon.transportUrl === discover.catalog_resource.request.base) ?
+                        <div className={styles['warning-container']}>
+                            <div className={styles['warning-info']}>This addon is not installed. Install now?</div>
+                            <Button className={styles['install-button']} title={'Install addon'} onClick={openAddonModal}>
+                                <div className={styles['label']}>Install</div>
+                            </Button>
+                        </div>
+                        :
+                        null
+                }
                 <div className={styles['catalog-content-container']}>
                     {
                         discover.selectable.types.length === 0 && discover.catalog_resource === null ?
@@ -129,6 +144,15 @@ const Discover = ({ urlParams, queryParams }) => {
             {
                 inputsModalOpen ?
                     <ModalDialog onCloseRequest={closeInputsModal} />
+                    :
+                    null
+            }
+            {
+                onInstallButtonClicked ?
+                    <AddonDetailsModal
+                        transportUrl={discover.catalog_resource.request.base}
+                        onCloseRequest={closeAddonModal}
+                    />
                     :
                     null
             }
