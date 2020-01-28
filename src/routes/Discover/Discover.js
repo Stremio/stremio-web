@@ -75,7 +75,7 @@ const Discover = ({ urlParams, queryParams }) => {
                 </div>
                 {
                     discover.catalog_resource != null && !state.ctx.content.addons.some((addon) => addon.transportUrl === discover.catalog_resource.request.base) ?
-                        <div className={styles['warning-container']}>
+                        <div className={styles['missing-addon-warning-container']}>
                             <div className={styles['warning-info']}>This addon is not installed. Install now?</div>
                             <Button className={styles['install-button']} title={'Install addon'} onClick={openAddonModal}>
                                 <div className={styles['label']}>Install</div>

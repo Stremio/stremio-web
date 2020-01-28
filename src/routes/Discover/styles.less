@@ -30,7 +30,7 @@
         grid-template-rows: auto auto 1fr;
         grid-template-areas:
             "selectable-inputs-area meta-preview-area"
-            "warning meta-preview-area"
+            "missing-addon-warning-container meta-preview-area"
             "catalog-content-area meta-preview-area";
 
         .selectable-inputs-container {
@@ -103,8 +103,8 @@
             }
         }
 
-        .warning-container {
-            grid-area: warning;
+        .missing-addon-warning-container {
+            grid-area: missing-addon-warning-container;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -239,7 +239,7 @@
             grid-template-rows: auto auto 1fr;
             grid-template-areas:
                 "selectable-inputs-area"
-                "warning"
+                "missing-addon-warning-container"
                 "catalog-content-area";
 
             .catalog-content-container {
