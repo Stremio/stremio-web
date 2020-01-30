@@ -7,7 +7,7 @@ const navigateWithLoadRequest = (load_request) => {
     window.location.replace(`#/addons/${transportUrl}/${catalogId}/${type}`);
 };
 
-const equalWithouExtra = (request1, request2) => {
+const equalWithoutExtra = (request1, request2) => {
     return request1.base === request2.base &&
         request1.path.resource === request2.path.resource &&
         request1.path.type_name === request2.path.type_name &&
@@ -42,7 +42,7 @@ const mapSelectableInputs = (addons) => {
         selected: addons.selectable.types
             .filter(({ load_request }) => {
                 return addons.catalog_resource !== null &&
-                    equalWithouExtra(addons.catalog_resource.request, load_request);
+                    equalWithoutExtra(addons.catalog_resource.request, load_request);
             })
             .map(({ load_request }) => JSON.stringify(load_request)),
         onSelect: (event) => {
