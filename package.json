@@ -6,7 +6,7 @@
     "website": "www.stremio.com",
     "private": true,
     "license": "GPLv3",
-    "Sentry": {
+    "sentry": {
         "dsn": "https://e47a6d214ae4478b81136c29612003a7@sentry.io/1911455"
     },
     "scripts": {
