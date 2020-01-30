@@ -6,9 +6,6 @@
     "website": "www.stremio.com",
     "private": true,
     "license": "GPLv3",
-    "sentry": {
-        "dsn": "https://e47a6d214ae4478b81136c29612003a7@sentry.io/1911455"
-    },
     "scripts": {
         "start": "webpack-dev-server --mode development",
         "build": "webpack --mode production",
@@ -54,6 +51,7 @@
         "css-loader": "3.4.0",
         "cssnano": "4.1.10",
         "cssnano-preset-advanced": "4.0.7",
+        "dotenv": "8.2.0",
         "eslint": "6.7.2",
         "eslint-plugin-react": "7.17.0",
         "html-webpack-plugin": "3.2.0",
