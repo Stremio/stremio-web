@@ -1,7 +1,7 @@
 const React = require('react');
 const { Modal } = require('stremio-router');
 const { ModalsContainerContext } = require('stremio-router');
-const { useToastsContainer } = require('./ToastsContainerContext');
+const { useToastsContainer, ToastsContainerProvider } = require('./ToastsContainerContext');
 const Toast = require('./Toast');
 
 const DEFAULT_TIMEOUT = 2000;
@@ -51,5 +51,7 @@ const Toasts = React.forwardRef(({ className }, ref) => {
         </ModalsContainerContext.Provider>
     );
 });
+
+Toasts.ContainerProvider = ToastsContainerProvider;
 
 module.exports = Toasts;
