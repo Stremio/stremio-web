@@ -72,6 +72,22 @@ html {
             width: 100%;
             height: 100%;
 
+            .toasts-container {
+                position: absolute;
+                top: calc(1.2 * var(--nav-bar-size));
+                right: var(--nav-bar-size);
+                bottom: calc(1.2 * var(--nav-bar-size));
+                left: auto;
+                z-index: 0;
+                overflow-y: auto;
+                scrollbar-width: none;
+                pointer-events: none;
+
+                &::-webkit-scrollbar {
+                    width: var(--scroll-bar-width);
+                }
+            }
+
             .router {
                 width: 100%;
                 height: 100%;

@@ -1,19 +1,19 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const ToastsContainerContext = require('./ToastsContainerContext');
-const styles = require('./styles');
 
-const ToastsContainerProvider = ({ children }) => {
+const ToastsContainerProvider = ({ className, children }) => {
     const [container, setContainer] = React.useState(null);
     return (
         <ToastsContainerContext.Provider value={container}>
             {container instanceof HTMLElement ? children : null}
-            <div ref={setContainer} className={styles['toasts-container']} />
+            <div ref={setContainer} className={className} />
         </ToastsContainerContext.Provider>
     );
 };
 
 ToastsContainerProvider.propTypes = {
+    className: PropTypes.string,
     children: PropTypes.node
 };
 

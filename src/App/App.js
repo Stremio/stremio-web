@@ -51,7 +51,7 @@ const App = () => {
             <ServicesProvider services={services}>
                 {
                     shellInitialized && coreInitialized ?
-                        <ToastsContainerProvider>
+                        <ToastsContainerProvider className={styles['toasts-container']}>
                             <Router
                                 className={styles['router']}
                                 homePath={'/'}
