@@ -5,9 +5,30 @@ const Icon = require('stremio-icons/dom');
 const Button = require('stremio/common/Button');
 const styles = require('./styles');
 
-const Toast = ({ type, title, text, icon, closeButton, onClick, onClose }) => {
+const Toast = ({ type, title, message, icon, dataset, onSelect, onClose }) => {
+    const toastOnClick = React.useCallback((event) => {
+        if (!event.nativeEvent.selectPrevented && typeof onSelect === 'function') {
+            onSelect({
+                type: 'select',
+                dataset: dataset,
+                reactEvent: event,
+                nativeEvent: event.nativeEvent
+            });
+        }
+    }, [dataset, onSelect]);
+    const closeButtonOnClick = React.useCallback((event) => {
+        event.nativeEvent.selectPrevented = true;
+        if (typeof onClose === 'function') {
+            onClose({
+                type: 'close',
+                dataset: dataset,
+                reactEvent: event,
+                nativeEvent: event.nativeEvent
+            });
+        }
+    }, [dataset, onClose]);
     return (
-        <div className={classnames(styles['toast-container'], styles[type])}>
+        <Button className={classnames(styles['toast-container'], styles['alert'], styles[type])} tabIndex={-1} onClick={toastOnClick}>
             {
                 typeof icon === 'string' && icon.length > 0 ?
                     <div className={styles['icon-container']}>
@@ -16,34 +37,29 @@ const Toast = ({ type, title, text, icon, closeButton, onClick, onClose }) => {
                     :
                     null
             }
-            <div className={classnames(styles['message-container'], { [styles.clickable]: typeof onClick === 'function' })} onClick={onClick}>
+            <div className={styles['info-container']}>
                 {
                     typeof title === 'string' && title.length > 0 ?
-                        <h1>{title}</h1>
+                        <div className={styles['title-container']}>{title}</div>
                         :
                         null
                 }
-                {text}
+                <div className={styles['message-container']}>{message}</div>
             </div>
-            {
-                closeButton ?
-                    <Button className={styles['close-button-container']} title={'Close'} onClick={onClose}>
-                        <Icon className={styles['icon']} icon={'ic_x'} />
-                    </Button>
-                    :
-                    null
-            }
-        </div>
+            <Button className={styles['close-button-container']} title={'Close'} tabIndex={-1} onClick={closeButtonOnClick}>
+                <Icon className={styles['icon']} icon={'ic_x'} />
+            </Button>
+        </Button>
     );
 };
 
 Toast.propTypes = {
-    type: PropTypes.string,
+    type: PropTypes.oneOf(['success', 'alert', 'error']),
     title: PropTypes.string,
-    text: PropTypes.string,
+    message: PropTypes.string,
     icon: PropTypes.string,
-    closeButton: PropTypes.bool,
-    onClick: PropTypes.func,
+    dataset: PropTypes.objectOf(PropTypes.string),
+    onSelect: PropTypes.func,
     onClose: PropTypes.func
 };
 
