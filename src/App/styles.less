@@ -75,10 +75,11 @@ html {
             .toasts-container {
                 position: absolute;
                 top: calc(1.2 * var(--nav-bar-size));
-                right: var(--nav-bar-size);
+                right: 0;
                 bottom: calc(1.2 * var(--nav-bar-size));
                 left: auto;
-                z-index: 0;
+                z-index: 1;
+                padding: 0 calc(1.2 * var(--nav-bar-size));
                 overflow-y: auto;
                 scrollbar-width: none;
                 pointer-events: none;
