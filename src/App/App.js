@@ -22,11 +22,16 @@ const App = () => {
             setShellInitialized(services.shell.active || services.shell.error instanceof Error);
         };
         const onCoreStateChanged = () => {
-            setCoreInitialized(services.core.active || services.core.error instanceof Error);
             if (services.core.active) {
-                services.core.dispatch({ action: 'LoadCtx' });
+                services.core.dispatch({
+                    action: 'Load',
+                    args: {
+                        model: 'Ctx'
+                    }
+                });
                 window.core = services.core;
             }
+            setCoreInitialized(services.core.active || services.core.error instanceof Error);
         };
         services.shell.on('stateChanged', onShellStateChanged);
         services.core.on('stateChanged', onCoreStateChanged);
