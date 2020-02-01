@@ -77,7 +77,7 @@ const ColorInput = ({ className, value, dataset, onChange, ...props }) => {
 ColorInput.propTypes = {
     className: PropTypes.string,
     value: PropTypes.string,
-    dataset: PropTypes.objectOf(PropTypes.string),
+    dataset: PropTypes.object,
     onChange: PropTypes.func,
     onClick: PropTypes.func
 };

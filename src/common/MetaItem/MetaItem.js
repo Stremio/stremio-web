@@ -121,7 +121,7 @@ MetaItem.propTypes = {
     playIcon: PropTypes.bool,
     progress: PropTypes.number,
     options: PropTypes.array,
-    dataset: PropTypes.objectOf(PropTypes.string),
+    dataset: PropTypes.object,
     optionOnSelect: PropTypes.func,
     onClick: PropTypes.func
 };
