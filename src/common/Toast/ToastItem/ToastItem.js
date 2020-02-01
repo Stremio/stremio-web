@@ -5,7 +5,7 @@ const Icon = require('stremio-icons/dom');
 const Button = require('stremio/common/Button');
 const styles = require('./styles');
 
-const Toast = ({ type, title, message, icon, dataset, onSelect, onClose }) => {
+const ToastItem = ({ type, title, message, icon, dataset, onSelect, onClose }) => {
     const toastOnClick = React.useCallback((event) => {
         if (!event.nativeEvent.selectPrevented && typeof onSelect === 'function') {
             onSelect({
@@ -28,7 +28,7 @@ const Toast = ({ type, title, message, icon, dataset, onSelect, onClose }) => {
         }
     }, [dataset, onClose]);
     return (
-        <Button className={classnames(styles['toast-container'], styles['alert'], styles[type])} tabIndex={-1} onClick={toastOnClick}>
+        <Button className={classnames(styles['toast-item-container'], styles['success'], styles[type])} tabIndex={-1} onClick={toastOnClick}>
             {
                 typeof icon === 'string' && icon.length > 0 ?
                     <div className={styles['icon-container']}>
@@ -44,7 +44,12 @@ const Toast = ({ type, title, message, icon, dataset, onSelect, onClose }) => {
                         :
                         null
                 }
-                <div className={styles['message-container']}>{message}</div>
+                {
+                    typeof message === 'string' && message.length > 0 ?
+                        <div className={styles['message-container']}>{message}</div>
+                        :
+                        null
+                }
             </div>
             <Button className={styles['close-button-container']} title={'Close'} tabIndex={-1} onClick={closeButtonOnClick}>
                 <Icon className={styles['icon']} icon={'ic_x'} />
@@ -53,14 +58,14 @@ const Toast = ({ type, title, message, icon, dataset, onSelect, onClose }) => {
     );
 };
 
-Toast.propTypes = {
+ToastItem.propTypes = {
     type: PropTypes.oneOf(['success', 'alert', 'error']),
     title: PropTypes.string,
     message: PropTypes.string,
     icon: PropTypes.string,
-    dataset: PropTypes.objectOf(PropTypes.string),
+    dataset: PropTypes.object,
     onSelect: PropTypes.func,
     onClose: PropTypes.func
 };
 
-module.exports = Toast;
+module.exports = ToastItem;

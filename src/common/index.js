@@ -16,7 +16,7 @@ const Popup = require('./Popup');
 const SharePrompt = require('./SharePrompt');
 const Slider = require('./Slider');
 const TextInput = require('./TextInput');
-const Toasts = require('./Toasts');
+const { ToastProvider, useToast } = require('./Toast');
 const routesRegexp = require('./routesRegexp');
 const useAnimationFrame = require('./useAnimationFrame');
 const useBinaryState = require('./useBinaryState');
@@ -47,7 +47,8 @@ module.exports = {
     SharePrompt,
     Slider,
     TextInput,
-    Toasts,
+    ToastProvider,
+    useToast,
     routesRegexp,
     useAnimationFrame,
     useBinaryState,
