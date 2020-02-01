@@ -35,7 +35,7 @@ const PaginationInput = ({ className, label, dataset, onSelect, ...props }) => {
 PaginationInput.propTypes = {
     className: PropTypes.string,
     label: PropTypes.string,
-    dataset: PropTypes.objectOf(PropTypes.string),
+    dataset: PropTypes.object,
     onSelect: PropTypes.func
 };
 
