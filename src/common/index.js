@@ -20,6 +20,7 @@ const { ToastProvider, useToast } = require('./Toast');
 const routesRegexp = require('./routesRegexp');
 const useAnimationFrame = require('./useAnimationFrame');
 const useBinaryState = require('./useBinaryState');
+const useCoreEvent = require('./useCoreEvent');
 const useDeepEqualEffect = require('./useDeepEqualEffect');
 const useDeepEqualState = require('./useDeepEqualState');
 const useFullscreen = require('./useFullscreen');
@@ -52,6 +53,7 @@ module.exports = {
     routesRegexp,
     useAnimationFrame,
     useBinaryState,
+    useCoreEvent,
     useDeepEqualEffect,
     useDeepEqualState,
     useFullscreen,
