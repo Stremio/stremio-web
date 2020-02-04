@@ -3,7 +3,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const { useRouteFocused } = require('stremio-router');
-const { Button } = require('stremio/common');
+const { Button, useCoreEvent } = require('stremio/common');
 const { useServices } = require('stremio/services');
 const CredentialsTextInput = require('./CredentialsTextInput');
 const ConsentCheckbox = require('./ConsentCheckbox');
@@ -71,29 +71,21 @@ const Intro = ({ queryParams }) => {
             error: ''
         }
     );
-    React.useEffect(() => {
-        const onEvent = ({ event, args }) => {
-            switch (event) {
-                case 'CtxActionErr': {
-                    const [, error] = args;
-                    dispatch({ type: 'error', error: error.args.message });
-                    break;
-                }
-                case 'CtxChanged': {
-                    const state = core.getState();
-                    if (state.ctx.content.auth !== null) {
-                        window.location.replace('#/');
-                    }
-                }
+    useCoreEvent(React.useCallback(({ event, args }) => {
+        switch (event) {
+            case 'UserAuthenticated': {
+                window.location.replace('#/');
+                break;
             }
-        };
-        if (routeFocused) {
-            core.on('Event', onEvent);
+            case 'Error': {
+                if (args.source.event === 'UserAuthenticated') {
+                    // TODO use error.code to match translated message;
+                    dispatch({ type: 'error', error: args.error.message });
+                }
+                break;
+            }
         }
-        return () => {
-            core.off('Event', onEvent);
-        };
-    }, [routeFocused]);
+    }, []));
     const loginWithFacebook = React.useCallback(() => {
         FB.login((response) => {
             if (response.status === 'connected') {
@@ -131,10 +123,11 @@ const Intro = ({ queryParams }) => {
             return;
         }
         core.dispatch({
-            action: 'UserOp',
+            action: 'Ctx',
             args: {
-                userOp: 'Login',
+                action: 'Authenticate',
                 args: {
+                    type: 'Login',
                     email: state.email,
                     password: state.password
                 }
@@ -147,9 +140,9 @@ const Intro = ({ queryParams }) => {
             return;
         }
         core.dispatch({
-            action: 'UserOp',
+            action: 'Ctx',
             args: {
-                userOp: 'Logout'
+                action: 'Logout'
             }
         });
         window.location.replace('#/');
@@ -176,10 +169,11 @@ const Intro = ({ queryParams }) => {
             return;
         }
         core.dispatch({
-            action: 'UserOp',
+            action: 'Ctx',
             args: {
-                userOp: 'Register',
+                action: 'Authenticate',
                 args: {
+                    type: 'Register',
                     email: state.email,
                     password: state.password,
                     gdpr_consent: {
