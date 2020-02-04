@@ -3,6 +3,7 @@ const React = require('react');
 const { Router } = require('stremio-router');
 const { Core, KeyboardNavigation, ServicesProvider, Shell } = require('stremio/services');
 const { ToastProvider } = require('stremio/common');
+const CoreEventsToaster = require('./CoreEventsToaster');
 const routerViewsConfig = require('./routerViewsConfig');
 const styles = require('./styles');
 
@@ -23,13 +24,13 @@ const App = () => {
         };
         const onCoreStateChanged = () => {
             if (services.core.active) {
+                window.core = services.core;
                 services.core.dispatch({
                     action: 'Load',
                     args: {
                         model: 'Ctx'
                     }
                 });
-                window.core = services.core;
             }
             setCoreInitialized(services.core.active || services.core.error instanceof Error);
         };
@@ -52,6 +53,7 @@ const App = () => {
                 {
                     shellInitialized && coreInitialized ?
                         <ToastProvider className={styles['toasts-container']}>
+                            <CoreEventsToaster />
                             <Router
                                 className={styles['router']}
                                 homePath={'/'}
