@@ -27,7 +27,6 @@ const useFullscreen = require('./useFullscreen');
 const useInLibrary = require('./useInLibrary');
 const useLiveRef = require('./useLiveRef');
 const useModelState = require('./useModelState');
-const useUser = require('./useUser');
 
 module.exports = {
     AddonDetailsModal,
@@ -59,6 +58,5 @@ module.exports = {
     useFullscreen,
     useInLibrary,
     useLiveRef,
-    useModelState,
-    useUser
+    useModelState
 };

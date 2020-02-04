@@ -2,17 +2,19 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
+const { useServices } = require('stremio/services');
 const Button = require('stremio/common/Button');
 const Popup = require('stremio/common/Popup');
 const useBinaryState = require('stremio/common/useBinaryState');
 const useFullscreen = require('stremio/common/useFullscreen');
-const useUser = require('stremio/common/useUser');
+const useProfile = require('./useProfile');
 const styles = require('./styles');
 
 const NavMenu = ({ className }) => {
+    const { core } = useServices();
+    const profile = useProfile();
     const [menuOpen, , closeMenu, toggleMenu] = useBinaryState(false);
     const [fullscreen, requestFullscreen, exitFullscreen] = useFullscreen();
-    const [user, logout] = useUser();
     const popupLabelOnClick = React.useCallback((event) => {
         if (!event.nativeEvent.togglePopupPrevented) {
             toggleMenu();
@@ -22,7 +24,12 @@ const NavMenu = ({ className }) => {
         event.nativeEvent.togglePopupPrevented = true;
     }, []);
     const logoutButtonOnClick = React.useCallback(() => {
-        logout();
+        core.dispatch({
+            action: 'Ctx',
+            args: {
+                action: 'Logout'
+            }
+        });
     }, []);
     return (
         <Popup
@@ -40,17 +47,17 @@ const NavMenu = ({ className }) => {
                         <div
                             className={styles['avatar-container']}
                             style={{
-                                backgroundImage: user === null ?
+                                backgroundImage: profile.auth === null ?
                                     'url(\'/images/anonymous.png\')'
                                     :
-                                    `url('${user.avatar}'), url('/images/default_avatar.png')`
+                                    `url('${profile.auth.user.avatar}'), url('/images/default_avatar.png')`
                             }}
                         />
                         <div className={styles['email-container']}>
-                            <div className={styles['email-label']}>{user === null ? 'Anonymous user' : user.email}</div>
+                            <div className={styles['email-label']}>{profile.auth === null ? 'Anonymous user' : profile.auth.user.email}</div>
                         </div>
-                        <Button className={styles['logout-button-container']} title={user === null ? 'Log in / Sign up' : 'Log out'} href={'#/intro'} onClick={logoutButtonOnClick}>
-                            <div className={styles['logout-label']}>{user === null ? 'Log in / Sign up' : 'Log out'}</div>
+                        <Button className={styles['logout-button-container']} title={profile.auth === null ? 'Log in / Sign up' : 'Log out'} href={'#/intro'} onClick={logoutButtonOnClick}>
+                            <div className={styles['logout-label']}>{profile.auth === null ? 'Log in / Sign up' : 'Log out'}</div>
                         </Button>
                     </div>
                     <div className={styles['nav-menu-section']}>
