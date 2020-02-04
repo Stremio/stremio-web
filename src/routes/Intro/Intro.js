@@ -257,7 +257,6 @@ const Intro = ({ queryParams }) => {
                     <Icon className={styles['icon']} icon={'ic_facebook'} />
                     <div className={styles['label']}>Continue with Facebook</div>
                 </Button>
-                <div className={styles['facebook-statement']}>We won&#39;t post anything on your behalf</div>
                 <CredentialsTextInput
                     ref={emailRef}
                     className={styles['credentials-text-input']}
