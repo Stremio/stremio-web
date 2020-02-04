@@ -230,6 +230,11 @@ const Intro = ({ queryParams }) => {
     const toggleMarketingAccepted = React.useCallback(() => {
         dispatch({ type: 'toggle-checkbox', name: 'marketingAccepted' });
     }, []);
+    const switchFormOnClick = React.useCallback(() => {
+        const nextQueryParams = new URLSearchParams(queryParams);
+        nextQueryParams.set('form', state.form === SIGNUP_FORM ? LOGIN_FORM : SIGNUP_FORM);
+        window.location.replace(`#/intro?${nextQueryParams}`);
+    }, [queryParams, state.form]);
     React.useEffect(() => {
         if ([LOGIN_FORM, SIGNUP_FORM].includes(queryParams.get('form'))) {
             dispatch({ type: 'set-form', form: queryParams.get('form') });
@@ -331,7 +336,7 @@ const Intro = ({ queryParams }) => {
                         :
                         null
                 }
-                <Button className={classnames(styles['form-button'], styles['switch-form-button'])} href={state.form === SIGNUP_FORM ? '#/intro?form=login' : '#/intro?form=signup'}>
+                <Button className={classnames(styles['form-button'], styles['switch-form-button'])} onClick={switchFormOnClick}>
                     <div className={styles['label']}>{state.form === SIGNUP_FORM ? 'LOG IN' : 'SING UP WITH EMAIL'}</div>
                 </Button>
             </div>
