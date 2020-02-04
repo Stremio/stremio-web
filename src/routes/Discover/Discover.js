@@ -52,6 +52,7 @@ const Discover = ({ urlParams, queryParams }) => {
                         <Multiselect
                             {...selectInput}
                             key={index}
+                            modalSelects={false}
                             className={styles['select-input-container']}
                         />
                     ))}
@@ -128,7 +129,17 @@ const Discover = ({ urlParams, queryParams }) => {
             </div>
             {
                 inputsModalOpen ?
-                    <ModalDialog onCloseRequest={closeInputsModal} />
+                    <ModalDialog title={'Select inputs'} className={styles['selectable-inputs-modal-container']} onCloseRequest={() => closeInputsModal()}>
+                        {
+                            selectInputs.map((selectInput, index) => (
+                                <Multiselect
+                                    {...selectInput}
+                                    key={index}
+                                    modalSelects={true}
+                                />
+                            ))
+                        }
+                    </ModalDialog>
                     :
                     null
             }

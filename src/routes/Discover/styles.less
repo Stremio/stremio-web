@@ -1,6 +1,9 @@
 @import (reference) '~stremio/common/screen-sizes.less';
 
 :import('~stremio/common/Multiselect/styles.less') {
+    label-container: label-container;
+    label-container-label: label;
+    label-container-icon: icon;
     multiselect-menu-container: menu-container;
 }
 
@@ -135,6 +138,29 @@
         .meta-preview-container {
             grid-area: meta-preview-area;
             background-color: var(--color-backgrounddarker);
+        }
+    }
+}
+
+.selectable-inputs-modal-container {
+    .label-container {
+        width: 15rem;
+        height: 3rem;
+
+        &:not(:last-child) {
+            margin-bottom: 1rem;
+        }
+
+        &:hover {
+            background-color: var(--color-surfacelight);
+
+            .label-container-label {
+                color: var(--color-backgrounddarker);
+            }
+
+            .label-container-icon {
+                fill: var(--color-backgrounddarker);
+            }
         }
     }
 }
