@@ -130,15 +130,13 @@ const Discover = ({ urlParams, queryParams }) => {
             {
                 inputsModalOpen ?
                     <ModalDialog title={'Select inputs'} className={styles['selectable-inputs-modal-container']} onCloseRequest={() => closeInputsModal()}>
-                        {
-                            selectInputs.map((selectInput, index) => (
-                                <Multiselect
-                                    {...selectInput}
-                                    key={index}
-                                    modalSelects={true}
-                                />
-                            ))
-                        }
+                        {selectInputs.map((selectInput, index) => (
+                            <Multiselect
+                                {...selectInput}
+                                key={index}
+                                modalSelects={true}
+                            />
+                        ))}
                     </ModalDialog>
                     :
                     null
