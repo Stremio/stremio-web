@@ -21,16 +21,16 @@ const mapAddonsStateWithCtx = (addons, ctx) => {
             ...addons.catalog_resource,
             content: {
                 ...addons.catalog_resource.content,
-                content: addons.catalog_resource.content.content.map((descriptor) => ({
-                    transportUrl: descriptor.transportUrl,
-                    installed: ctx.content.addons.some((addon) => addon.transportUrl === descriptor.transportUrl),
+                content: addons.catalog_resource.content.content.map((addon) => ({
+                    transportUrl: addon.transportUrl,
+                    installed: ctx.profile.addons.some(({ transportUrl }) => transportUrl === addon.transportUrl),
                     manifest: {
-                        id: descriptor.manifest.id,
-                        name: descriptor.manifest.name,
-                        version: descriptor.manifest.version,
-                        logo: descriptor.manifest.logo,
-                        description: descriptor.manifest.description,
-                        types: descriptor.manifest.types
+                        id: addon.manifest.id,
+                        name: addon.manifest.name,
+                        version: addon.manifest.version,
+                        logo: addon.manifest.logo,
+                        description: addon.manifest.description,
+                        types: addon.manifest.types
                     }
                 }))
             }
@@ -45,8 +45,10 @@ const onNewAddonsState = (addons) => {
         return {
             action: 'Load',
             args: {
-                load: 'CatalogFiltered',
-                args: addons.selectable.catalogs[0].load_request
+                model: 'CatalogFiltered',
+                args: {
+                    request: addons.selectable.catalogs[0].request
+                }
             }
         };
     }
@@ -59,14 +61,16 @@ const useAddons = (urlParams) => {
             return {
                 action: 'Load',
                 args: {
-                    load: 'CatalogFiltered',
+                    model: 'CatalogFiltered',
                     args: {
-                        base: urlParams.transportUrl,
-                        path: {
-                            resource: 'addon_catalog',
-                            type_name: urlParams.type,
-                            id: urlParams.catalogId,
-                            extra: []
+                        request: {
+                            base: urlParams.transportUrl,
+                            path: {
+                                resource: 'addon_catalog',
+                                type_name: urlParams.type,
+                                id: urlParams.catalogId,
+                                extra: []
+                            }
                         }
                     }
                 }
@@ -77,8 +81,10 @@ const useAddons = (urlParams) => {
                 return {
                     action: 'Load',
                     args: {
-                        load: 'CatalogFiltered',
-                        args: addons.selectable.catalogs[0].load_request
+                        model: 'CatalogFiltered',
+                        args: {
+                            request: addons.selectable.catalogs[0].request
+                        }
                     }
                 };
             } else {

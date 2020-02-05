@@ -143,7 +143,7 @@ Multiselect.propTypes = {
     })),
     selected: PropTypes.arrayOf(PropTypes.string),
     disabled: PropTypes.bool,
-    dataset: PropTypes.objectOf(PropTypes.string),
+    dataset: PropTypes.object,
     renderLabelContent: PropTypes.func,
     renderLabelText: PropTypes.func,
     onOpen: PropTypes.func,

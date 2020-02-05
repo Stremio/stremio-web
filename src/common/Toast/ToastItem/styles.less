@@ -1,0 +1,73 @@
+.toast-item-container {
+    display: flex;
+    flex-direction: row;
+    width: 25rem;
+    min-height: 6rem;
+    margin-bottom: 1rem;
+    border: thin solid;
+    background-color: var(--color-surfacelighter);
+    overflow: visible;
+    box-shadow: 0 0.3rem 0.5rem var(--color-backgrounddarker40),
+        0 0.6rem 1rem var(--color-backgrounddarker20);
+    pointer-events: auto;
+
+    &.success {
+        color: var(--color-signal5);
+        fill: var(--color-signal5);
+    }
+
+    &.alert {
+        color: var(--color-signal3);
+        fill: var(--color-signal3);
+    }
+
+    &.error {
+        color: var(--color-signal2);
+        fill: var(--color-signal2);
+    }
+
+    .icon-container {
+        flex: none;
+        align-self: stretch;
+        width: 4.5rem;
+        padding: 1.2rem 0 1.2rem 1.2rem;
+
+        .icon {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+    }
+
+    .info-container {
+        flex: 1;
+        align-self: stretch;
+        padding: 1rem;
+
+        .title-container {
+            font-size: 1.2rem;
+        }
+
+        .message-container {
+            font-size: 1.1rem;
+        }
+    }
+
+    .close-button-container {
+        flex: none;
+        align-self: flex-start;
+        width: 3rem;
+        height: 3rem;
+        padding: 1rem;
+
+        &:hover {
+            background-color: var(--color-surfacelight);
+        }
+
+        .icon {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+    }
+}

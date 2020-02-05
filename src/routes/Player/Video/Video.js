@@ -1,7 +1,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const hat = require('hat');
-const useVideoImplementation = require('./useVideoImplementation');
+const selectVideoImplementation = require('./selectVideoImplementation');
 
 const Video = React.forwardRef(({ className, ...props }, ref) => {
     const [onEnded, onError, onPropValue, onPropChanged, onImplementationChanged] = React.useMemo(() => [
@@ -16,7 +16,7 @@ const Video = React.forwardRef(({ className, ...props }, ref) => {
     const id = React.useMemo(() => `video-${hat()}`, []);
     const dispatch = React.useCallback((args) => {
         if (args && args.commandName === 'load' && args.commandArgs) {
-            const Video = useVideoImplementation(args.commandArgs.shell, args.commandArgs.stream);
+            const Video = selectVideoImplementation(args.commandArgs.shell, args.commandArgs.stream);
             if (typeof Video !== 'function') {
                 videoRef.current = null;
             } else if (videoRef.current === null || videoRef.current.constructor !== Video) {

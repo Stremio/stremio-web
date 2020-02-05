@@ -112,7 +112,7 @@ ModalDialog.propTypes = {
         PropTypes.arrayOf(PropTypes.node),
         PropTypes.node
     ]),
-    dataset: PropTypes.objectOf(PropTypes.string),
+    dataset: PropTypes.object,
     onCloseRequest: PropTypes.func
 };
 

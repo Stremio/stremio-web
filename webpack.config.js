@@ -6,8 +6,11 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
-module.exports = {
+module.exports = (env, argv) => ({
     entry: './src/index.js',
+    output: {
+        path: path.join(__dirname, 'build')
+    },
     module: {
         rules: [
             {
@@ -125,6 +128,10 @@ module.exports = {
         ]
     },
     plugins: [
+        new webpack.EnvironmentPlugin({
+            DEBUG: argv.mode !== 'production',
+            ...env
+        }),
         new webpack.ProgressPlugin(),
         new CopyWebpackPlugin([
             { from: 'node_modules/stremio-core-web/static', to: '' },
@@ -142,4 +149,4 @@ module.exports = {
             cleanAfterEveryBuildPatterns: ['./main.js', './main.css']
         })
     ]
-};
+});

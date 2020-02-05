@@ -17,15 +17,17 @@ const Popup = require('./Popup');
 const SharePrompt = require('./SharePrompt');
 const Slider = require('./Slider');
 const TextInput = require('./TextInput');
+const { ToastProvider, useToast } = require('./Toast');
 const routesRegexp = require('./routesRegexp');
 const useAnimationFrame = require('./useAnimationFrame');
 const useBinaryState = require('./useBinaryState');
+const useCoreEvent = require('./useCoreEvent');
+const useDeepEqualEffect = require('./useDeepEqualEffect');
 const useDeepEqualState = require('./useDeepEqualState');
 const useFullscreen = require('./useFullscreen');
 const useInLibrary = require('./useInLibrary');
 const useLiveRef = require('./useLiveRef');
 const useModelState = require('./useModelState');
-const useUser = require('./useUser');
 
 module.exports = {
     AddonDetailsModal,
@@ -47,13 +49,16 @@ module.exports = {
     SharePrompt,
     Slider,
     TextInput,
+    ToastProvider,
+    useToast,
     routesRegexp,
     useAnimationFrame,
     useBinaryState,
+    useCoreEvent,
+    useDeepEqualEffect,
     useDeepEqualState,
     useFullscreen,
     useInLibrary,
     useLiveRef,
-    useModelState,
-    useUser
+    useModelState
 };

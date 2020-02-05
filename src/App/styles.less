@@ -10,6 +10,7 @@
     --landscape-shape-ratio: 0.5625;
     --poster-shape-ratio: 1.464;
     --scroll-bar-width: 6px;
+    --nav-bar-size: 3.2rem;
     --focus-outline-size: 2px;
     --color-facebook: #4267b2;
     --color-twitter: #1DA1F2;
@@ -70,6 +71,23 @@ html {
             z-index: 0;
             width: 100%;
             height: 100%;
+
+            .toasts-container {
+                position: absolute;
+                top: calc(1.2 * var(--nav-bar-size));
+                right: 0;
+                bottom: calc(1.2 * var(--nav-bar-size));
+                left: auto;
+                z-index: 1;
+                padding: 0 calc(1.2 * var(--nav-bar-size));
+                overflow-y: auto;
+                scrollbar-width: none;
+                pointer-events: none;
+
+                &::-webkit-scrollbar {
+                    width: var(--scroll-bar-width);
+                }
+            }
 
             .router {
                 width: 100%;
