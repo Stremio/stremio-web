@@ -1,9 +1,9 @@
 const React = require('react');
 
-const navigateWithLoadRequest = (load_request) => {
-    const transportUrl = encodeURIComponent(load_request.base);
-    const catalogId = encodeURIComponent(load_request.path.id);
-    const type = encodeURIComponent(load_request.path.type_name);
+const navigateWithRequest = (request) => {
+    const transportUrl = encodeURIComponent(request.base);
+    const catalogId = encodeURIComponent(request.path.id);
+    const type = encodeURIComponent(request.path.type_name);
     window.location.replace(`#/addons/${transportUrl}/${catalogId}/${type}`);
 };
 
@@ -18,35 +18,35 @@ const mapSelectableInputs = (addons) => {
     const catalogSelect = {
         title: 'Select catalog',
         options: addons.selectable.catalogs
-            .map(({ name, load_request }) => ({
-                value: JSON.stringify(load_request),
+            .map(({ name, request }) => ({
+                value: JSON.stringify(request),
                 label: name
             })),
         selected: addons.selectable.catalogs
-            .filter(({ load_request: { path: { id } } }) => {
+            .filter(({ request: { path: { id } } }) => {
                 return addons.catalog_resource !== null &&
                     addons.catalog_resource.request.path.id === id;
             })
-            .map(({ load_request }) => JSON.stringify(load_request)),
+            .map(({ request }) => JSON.stringify(request)),
         onSelect: (event) => {
-            navigateWithLoadRequest(JSON.parse(event.value));
+            navigateWithRequest(JSON.parse(event.value));
         }
     };
     const typeSelect = {
         title: 'Select type',
         options: addons.selectable.types
-            .map(({ name, load_request }) => ({
-                value: JSON.stringify(load_request),
+            .map(({ name, request }) => ({
+                value: JSON.stringify(request),
                 label: name
             })),
         selected: addons.selectable.types
-            .filter(({ load_request }) => {
+            .filter(({ request }) => {
                 return addons.catalog_resource !== null &&
-                    equalWithoutExtra(addons.catalog_resource.request, load_request);
+                    equalWithouExtra(addons.catalog_resource.request, request);
             })
-            .map(({ load_request }) => JSON.stringify(load_request)),
+            .map(({ request }) => JSON.stringify(request)),
         onSelect: (event) => {
-            navigateWithLoadRequest(JSON.parse(event.value));
+            navigateWithRequest(JSON.parse(event.value));
         }
     };
     return [catalogSelect, typeSelect];
