@@ -1,5 +1,5 @@
 /node_modules
-/dist
+/build
 /package-lock.json
 /npm-debug.log
 .DS_Store

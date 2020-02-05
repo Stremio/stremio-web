@@ -514,8 +514,8 @@ describe('routesRegexp', () => {
         });
 
         it('not match /player/', async () => {
-            expect('/player/'.match(routesRegexp.player.regexp))
-                .toBe(null);
+            expect(Array.from('/player/'.match(routesRegexp.player.regexp)))
+                .toEqual(['/player/', '', undefined, undefined, undefined, undefined]);
         });
 
         it('not match /player//', async () => {
@@ -534,8 +534,8 @@ describe('routesRegexp', () => {
         });
 
         it('not match /player/1', async () => {
-            expect('/player/1'.match(routesRegexp.player.regexp))
-                .toBe(null);
+            expect(Array.from('/player/1'.match(routesRegexp.player.regexp)))
+                .toEqual(['/player/1', '1', undefined, undefined, undefined, undefined]);
         });
 
         it('not match /player/1/', async () => {

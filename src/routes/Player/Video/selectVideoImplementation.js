@@ -1,6 +1,6 @@
 const { HTMLVideo, YouTubeVideo, MPVVideo } = require('stremio-video');
 
-const useVideoImplementation = (shell, stream) => {
+const selectVideoImplementation = (shell, stream) => {
     if (shell) {
         return MPVVideo;
     }
@@ -16,4 +16,4 @@ const useVideoImplementation = (shell, stream) => {
     return null;
 };
 
-module.exports = useVideoImplementation;
+module.exports = selectVideoImplementation;

@@ -105,7 +105,7 @@ Addon.propTypes = {
     installed: PropTypes.bool,
     onToggle: PropTypes.func,
     onShare: PropTypes.func,
-    dataset: PropTypes.objectOf(PropTypes.string)
+    dataset: PropTypes.object
 };
 
 module.exports = Addon;

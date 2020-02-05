@@ -103,7 +103,7 @@ Popup.propTypes = {
     direction: PropTypes.oneOf(['top-left', 'bottom-left', 'top-right', 'bottom-right']),
     renderLabel: PropTypes.func.isRequired,
     renderMenu: PropTypes.func.isRequired,
-    dataset: PropTypes.objectOf(PropTypes.string),
+    dataset: PropTypes.object,
     onCloseRequest: PropTypes.func
 };
 
