@@ -2,6 +2,8 @@ require('spatial-navigation-polyfill');
 const React = require('react');
 const { Router } = require('stremio-router');
 const { Core, KeyboardNavigation, ServicesProvider, Shell } = require('stremio/services');
+const { ToastProvider } = require('stremio/common');
+const CoreEventsToaster = require('./CoreEventsToaster');
 const routerViewsConfig = require('./routerViewsConfig');
 const styles = require('./styles');
 
@@ -21,11 +23,16 @@ const App = () => {
             setShellInitialized(services.shell.active || services.shell.error instanceof Error);
         };
         const onCoreStateChanged = () => {
-            setCoreInitialized(services.core.active || services.core.error instanceof Error);
             if (services.core.active) {
-                services.core.dispatch({ action: 'LoadCtx' });
                 window.core = services.core;
+                services.core.dispatch({
+                    action: 'Load',
+                    args: {
+                        model: 'Ctx'
+                    }
+                });
             }
+            setCoreInitialized(services.core.active || services.core.error instanceof Error);
         };
         services.shell.on('stateChanged', onShellStateChanged);
         services.core.on('stateChanged', onCoreStateChanged);
@@ -45,12 +52,15 @@ const App = () => {
             <ServicesProvider services={services}>
                 {
                     shellInitialized && coreInitialized ?
-                        <Router
-                            className={styles['router']}
-                            homePath={'/'}
-                            viewsConfig={routerViewsConfig}
-                            onPathNotMatch={onPathNotMatch}
-                        />
+                        <ToastProvider className={styles['toasts-container']}>
+                            <CoreEventsToaster />
+                            <Router
+                                className={styles['router']}
+                                homePath={'/'}
+                                viewsConfig={routerViewsConfig}
+                                onPathNotMatch={onPathNotMatch}
+                            />
+                        </ToastProvider>
                         :
                         <div className={styles['app-loader']} />
                 }

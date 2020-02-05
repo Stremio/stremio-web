@@ -8,7 +8,7 @@ const UNLOAD_ACTION = {
     action: 'Unload',
 };
 
-const useModelState = ({ model, action, timeout, onNewState, map, mapWithCtx, init }) => {
+const useModelState = ({ model, init, action, timeout, onNewState, map, mapWithCtx }) => {
     const modelRef = React.useRef(model);
     const mountedRef = React.useRef(false);
     const { core } = useServices();
@@ -52,7 +52,7 @@ const useModelState = ({ model, action, timeout, onNewState, map, mapWithCtx, in
             onNewStateThrottled.cancel();
             core.off('NewState', onNewStateThrottled);
         };
-    }, [routeFocused]);
+    }, [routeFocused, timeout, onNewState, map, mapWithCtx]);
     React.useLayoutEffect(() => {
         mountedRef.current = true;
     }, []);
