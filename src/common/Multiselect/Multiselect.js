@@ -108,6 +108,21 @@ const Multiselect = ({ className, direction, title, disabled, dataset, modalSele
             {children}
         </Button>
     ));
+    const renderOptions = React.useCallback((options) => {
+        return (
+            options.length > 0 ?
+                options.map(({ label, value }) => (
+                    <Button key={value} className={classnames(styles['option-container'], { 'selected': selected.includes(value) })} title={typeof label === 'string' ? label : value} data-value={value} onClick={optionOnClick}>
+                        <div className={styles['label']}>{typeof label === 'string' ? label : value}</div>
+                        <Icon className={styles['icon']} icon={'ic_check'} />
+                    </Button>
+                ))
+                :
+                <div className={styles['no-options-container']}>
+                    <div className={styles['label']}>No options available</div>
+                </div>
+        );
+    }, [options]);
     return (
         <React.Fragment>
             {
@@ -125,19 +140,7 @@ const Multiselect = ({ className, direction, title, disabled, dataset, modalSele
                         }}
                         renderMenu={() => (
                             <div className={styles['menu-container']} onKeyDown={popupMenuOnKeyDown} onClick={popupMenuOnClick}>
-                                {
-                                    options.length > 0 ?
-                                        options.map(({ label, value }) => (
-                                            <Button key={value} className={classnames(styles['option-container'], { 'selected': selected.includes(value) })} title={typeof label === 'string' ? label : value} data-value={value} onClick={optionOnClick}>
-                                                <div className={styles['label']}>{typeof label === 'string' ? label : value}</div>
-                                                <Icon className={styles['icon']} icon={'ic_check'} />
-                                            </Button>
-                                        ))
-                                        :
-                                        <div className={styles['no-options-container']}>
-                                            <div className={styles['label']}>No options available</div>
-                                        </div>
-                                }
+                                {renderOptions(options)}
                             </div>
                         )}
                     />
@@ -151,19 +154,7 @@ const Multiselect = ({ className, direction, title, disabled, dataset, modalSele
                             menuOpen ?
                                 <ModalDialog title={title} onCloseRequest={() => closeMenu()}>
                                     <div className={classnames(styles['menu-container'], { 'modal': modalSelects })}>
-                                        {
-                                            options.length > 0 ?
-                                                options.map(({ label, value }) => (
-                                                    <Button key={value} className={classnames(styles['option-container'], { 'selected': selected.includes(value) })} title={typeof label === 'string' ? label : value} data-value={value} onClick={optionOnClick}>
-                                                        <div className={styles['label']}>{typeof label === 'string' ? label : value}</div>
-                                                        <Icon className={styles['icon']} icon={'ic_check'} />
-                                                    </Button>
-                                                ))
-                                                :
-                                                <div className={styles['no-options-container']}>
-                                                    <div className={styles['label']}>No options available</div>
-                                                </div>
-                                        }
+                                        {renderOptions(options)}
                                     </div>
                                 </ModalDialog>
                                 :
