@@ -8,7 +8,7 @@ const ModalDialog = require('stremio/common/ModalDialog');
 const useBinaryState = require('stremio/common/useBinaryState');
 const styles = require('./styles');
 
-const Multiselect = ({ className, direction, title, disabled, dataset, modalSelects, renderLabelContent, renderLabelText, onOpen, onClose, onSelect, ...props }) => {
+const Multiselect = ({ className, direction, title, disabled, dataset, modalOptions, renderLabelContent, renderLabelText, onOpen, onClose, onSelect, ...props }) => {
     const [menuOpen, , closeMenu, toggleMenu] = useBinaryState(false);
     const options = React.useMemo(() => {
         return Array.isArray(props.options) ?
@@ -126,7 +126,7 @@ const Multiselect = ({ className, direction, title, disabled, dataset, modalSele
     return (
         <React.Fragment>
             {
-                !modalSelects ?
+                !modalOptions ?
                     <Popup
                         open={menuOpen}
                         direction={direction}
@@ -153,7 +153,7 @@ const Multiselect = ({ className, direction, title, disabled, dataset, modalSele
                         {
                             menuOpen ?
                                 <ModalDialog title={title} onCloseRequest={() => closeMenu()}>
-                                    <div className={classnames(styles['menu-container'], { 'modal': modalSelects })}>
+                                    <div className={classnames(styles['menu-container'], { 'modal': modalOptions })}>
                                         {renderOptions(options)}
                                     </div>
                                 </ModalDialog>
@@ -177,7 +177,7 @@ Multiselect.propTypes = {
     selected: PropTypes.arrayOf(PropTypes.string),
     disabled: PropTypes.bool,
     dataset: PropTypes.object,
-    modalSelects: PropTypes.bool,
+    modalOptions: PropTypes.bool,
     renderLabelContent: PropTypes.func,
     renderLabelText: PropTypes.func,
     onOpen: PropTypes.func,
