@@ -45,7 +45,7 @@ const onNewAddonsState = (addons) => {
         return {
             action: 'Load',
             args: {
-                model: 'CatalogFiltered',
+                model: 'CatalogWithFilters',
                 args: {
                     request: addons.selectable.catalogs[0].request
                 }
@@ -61,7 +61,7 @@ const useAddons = (urlParams) => {
             return {
                 action: 'Load',
                 args: {
-                    model: 'CatalogFiltered',
+                    model: 'CatalogWithFilters',
                     args: {
                         request: {
                             base: urlParams.transportUrl,
@@ -81,7 +81,7 @@ const useAddons = (urlParams) => {
                 return {
                     action: 'Load',
                     args: {
-                        model: 'CatalogFiltered',
+                        model: 'CatalogWithFilters',
                         args: {
                             request: addons.selectable.catalogs[0].request
                         }
