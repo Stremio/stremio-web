@@ -27,7 +27,7 @@ const Addons = ({ urlParams, queryParams }) => {
             if (args.detailsTransportUrl === null) {
                 nextQueryParams.delete('addon');
             } else {
-                nextQueryParams.set('addon', detailsTransportUrl);
+                nextQueryParams.set('addon', args.detailsTransportUrl);
             }
         }
 
