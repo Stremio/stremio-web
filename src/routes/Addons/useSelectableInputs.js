@@ -42,7 +42,7 @@ const mapSelectableInputs = (addons) => {
         selected: addons.selectable.types
             .filter(({ request }) => {
                 return addons.catalog_resource !== null &&
-                    equalWithouExtra(addons.catalog_resource.request, request);
+                    equalWithoutExtra(addons.catalog_resource.request, request);
             })
             .map(({ request }) => JSON.stringify(request)),
         onSelect: (event) => {
