@@ -3,7 +3,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const { useRouteFocused } = require('stremio-router');
-const { Button, useCoreEvent, useToast } = require('stremio/common');
+const { Button, useCoreEvent } = require('stremio/common');
 const { useServices } = require('stremio/services');
 const CredentialsTextInput = require('./CredentialsTextInput');
 const ConsentCheckbox = require('./ConsentCheckbox');
@@ -14,7 +14,6 @@ const LOGIN_FORM = 'login';
 
 const Intro = ({ queryParams }) => {
     const { core } = useServices();
-    const toast = useToast();
     const routeFocused = useRouteFocused();
     const emailRef = React.useRef();
     const passwordRef = React.useRef();
