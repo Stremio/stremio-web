@@ -152,7 +152,7 @@ const Multiselect = ({ className, direction, title, disabled, dataset, modalOpti
                         })}
                         {
                             menuOpen ?
-                                <ModalDialog title={title} onCloseRequest={() => closeMenu()}>
+                                <ModalDialog title={title} onCloseRequest={closeMenu}>
                                     <div className={classnames(styles['menu-container'], { 'modal': modalOptions })}>
                                         {renderOptions(options)}
                                     </div>
