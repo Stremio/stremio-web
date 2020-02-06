@@ -119,7 +119,7 @@ const Intro = ({ queryParams }) => {
                         dispatch({ type: 'error', error: err });
                     });
             } else {
-                dispatch({ type: 'error', error: response.status });
+                dispatch({ type: 'error', error: 'Login failed at getting token from Facebook' });
             }
         });
     }, [state.email, state.password]);
