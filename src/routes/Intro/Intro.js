@@ -3,7 +3,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const { useRouteFocused } = require('stremio-router');
-const { Button, useCoreEvent } = require('stremio/common');
+const { Button, useCoreEvent, useToast } = require('stremio/common');
 const { useServices } = require('stremio/services');
 const CredentialsTextInput = require('./CredentialsTextInput');
 const ConsentCheckbox = require('./ConsentCheckbox');
@@ -14,6 +14,7 @@ const LOGIN_FORM = 'login';
 
 const Intro = ({ queryParams }) => {
     const { core } = useServices();
+    const toast = useToast();
     const routeFocused = useRouteFocused();
     const emailRef = React.useRef();
     const passwordRef = React.useRef();
@@ -89,7 +90,7 @@ const Intro = ({ queryParams }) => {
     const loginWithFacebook = React.useCallback(() => {
         FB.login((response) => {
             if (response.status === 'connected') {
-                fetch('https://www.strem.io/fb-login-with-token/' + encodeURIComponent(response.authResponse.accessToken), { timeout: 10 * 1000 })
+                fetch('https://www.strem.io/fb-login-with-token/' + encodeURIComponent(response.authResponse.accessToken), { timeout: 10 * 60 * 1000 })
                     .then((resp) => {
                         if (resp.status < 200 || resp.status >= 300) {
                             throw new Error('Login failed at getting token from Stremio with status ' + resp.status);
@@ -97,19 +98,32 @@ const Intro = ({ queryParams }) => {
                             return resp.json();
                         }
                     })
-                    .then(() => {
-                        core.dispatch({
-                            action: 'UserOp',
-                            args: {
-                                userOp: 'Login',
+                    .then(({ user }) => {
+                        if (!user || typeof user.fbLoginToken !== 'string' || typeof user.email !== 'string') {
+                            throw new Error('Login failed at getting token from Stremio');
+                        } else {
+                            core.dispatch({
+                                action: 'Ctx',
                                 args: {
-                                    email: state.email,
-                                    password: response.authResponse.accessToken
+                                    action: 'Authenticate',
+                                    args: {
+                                        type: 'Login',
+                                        email: user.email,
+                                        password: user.fbLoginToken
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        }
                     })
-                    .catch(() => { });
+                    .catch(() => {
+                        toast.show({
+                            type: 'error',
+                            title: 'Facebook login',
+                            message: 'Login failed',
+                            icon: 'ic_warning',
+                            timeout: 10000
+                        });
+                    });
             }
         });
     }, [state.email, state.password]);
