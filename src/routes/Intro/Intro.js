@@ -101,19 +101,18 @@ const Intro = ({ queryParams }) => {
                     .then(({ user }) => {
                         if (!user || typeof user.fbLoginToken !== 'string' || typeof user.email !== 'string') {
                             throw new Error('Login failed at getting token from Stremio');
-                        } else {
-                            core.dispatch({
-                                action: 'Ctx',
-                                args: {
-                                    action: 'Authenticate',
-                                    args: {
-                                        type: 'Login',
-                                        email: user.email,
-                                        password: user.fbLoginToken
-                                    }
-                                }
-                            });
                         }
+                        core.dispatch({
+                            action: 'Ctx',
+                            args: {
+                                action: 'Authenticate',
+                                args: {
+                                    type: 'Login',
+                                    email: user.email,
+                                    password: user.fbLoginToken
+                                }
+                            }
+                        });
                     })
                     .catch((err) => {
                         dispatch({ type: 'error', error: err });
