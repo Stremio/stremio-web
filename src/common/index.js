@@ -28,6 +28,7 @@ const useInLibrary = require('./useInLibrary');
 const useLiveRef = require('./useLiveRef');
 const useModelState = require('./useModelState');
 const useProfile = require('./useProfile');
+const useStreamingServer = require('./useStreamingServer');
 
 module.exports = {
     AddonDetailsModal,
@@ -60,5 +61,6 @@ module.exports = {
     useInLibrary,
     useLiveRef,
     useModelState,
-    useProfile
+    useProfile,
+    useStreamingServer
 };
