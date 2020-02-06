@@ -113,8 +113,8 @@ const Intro = ({ queryParams }) => {
                             }
                         });
                     })
-                    .catch((err) => {
-                        dispatch({ type: 'error', error: err });
+                    .catch((err = {}) => {
+                        dispatch({ type: 'error', error: err.message || JSON.stringify(err) });
                     });
             } else {
                 dispatch({ type: 'error', error: 'Login failed at getting token from Facebook' });
