@@ -89,7 +89,7 @@ const Intro = ({ queryParams }) => {
     const loginWithFacebook = React.useCallback(() => {
         FB.login((response) => {
             if (response.status === 'connected') {
-                fetch('https://www.strem.io/fb-login-with-token/' + encodeURIComponent(response.authResponse.accessToken), { timeout: 10 * 1000 })
+                fetch('https://www.strem.io/fb-login-with-token/' + encodeURIComponent(response.authResponse.accessToken), { timeout: 10 * 60 * 1000 })
                     .then((resp) => {
                         if (resp.status < 200 || resp.status >= 300) {
                             throw new Error('Login failed at getting token from Stremio with status ' + resp.status);
@@ -97,22 +97,30 @@ const Intro = ({ queryParams }) => {
                             return resp.json();
                         }
                     })
-                    .then(() => {
+                    .then(({ user }) => {
+                        if (!user || typeof user.fbLoginToken !== 'string' || typeof user.email !== 'string') {
+                            throw new Error('Login failed at getting token from Stremio');
+                        }
                         core.dispatch({
-                            action: 'UserOp',
+                            action: 'Ctx',
                             args: {
-                                userOp: 'Login',
+                                action: 'Authenticate',
                                 args: {
-                                    email: state.email,
-                                    password: response.authResponse.accessToken
+                                    type: 'Login',
+                                    email: user.email,
+                                    password: user.fbLoginToken
                                 }
                             }
                         });
                     })
-                    .catch(() => { });
+                    .catch((err = {}) => {
+                        dispatch({ type: 'error', error: err.message || JSON.stringify(err) });
+                    });
+            } else {
+                dispatch({ type: 'error', error: 'Login failed at getting token from Facebook' });
             }
         });
-    }, [state.email, state.password]);
+    }, []);
     const loginWithEmail = React.useCallback(() => {
         if (typeof state.email !== 'string' || state.email.length === 0) {
             dispatch({ type: 'error', error: 'Invalid email' });
