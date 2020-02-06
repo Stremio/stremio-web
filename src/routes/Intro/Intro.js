@@ -120,7 +120,7 @@ const Intro = ({ queryParams }) => {
                 dispatch({ type: 'error', error: 'Login failed at getting token from Facebook' });
             }
         });
-    }, [state.email, state.password]);
+    }, []);
     const loginWithEmail = React.useCallback(() => {
         if (typeof state.email !== 'string' || state.email.length === 0) {
             dispatch({ type: 'error', error: 'Invalid email' });
