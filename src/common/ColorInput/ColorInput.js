@@ -1,10 +1,12 @@
 const React = require('react');
 const PropTypes = require('prop-types');
+const classnames = require('classnames');
 const AColorPicker = require('a-color-picker');
 const Button = require('stremio/common/Button');
 const ModalDialog = require('stremio/common/ModalDialog');
 const useBinaryState = require('stremio/common/useBinaryState');
 const ColorPicker = require('./ColorPicker');
+const styles = require('./styles');
 
 const parseColor = (value) => {
     return AColorPicker.parseColor(value, 'hexcss4');
@@ -18,6 +20,9 @@ const ColorInput = ({ className, value, dataset, onChange, ...props }) => {
     const labelButtonStyle = React.useMemo(() => ({
         backgroundColor: value
     }), [value]);
+    const isTransparent = React.useMemo(() => {
+        return parseColor(value).endsWith('00');
+    }, [value]);
     const labelButtonOnClick = React.useCallback((event) => {
         if (typeof props.onClick === 'function') {
             props.onClick(event);
@@ -61,7 +66,15 @@ const ColorInput = ({ className, value, dataset, onChange, ...props }) => {
         setTempValue(parseColor(value));
     }, [value, modalOpen]);
     return (
-        <Button title={value} {...props} style={labelButtonStyle} className={className} onClick={labelButtonOnClick}>
+        <Button title={isTransparent ? 'Transparent' : value} {...props} style={labelButtonStyle} className={classnames(className, styles['color-input-container'])} onClick={labelButtonOnClick}>
+            {
+                isTransparent ?
+                    <div className={styles['transparent-label-container']}>
+                        <div className={styles['transparent-label']}>Transparent</div>
+                    </div>
+                    :
+                    null
+            }
             {
                 modalOpen ?
                     <ModalDialog title={'Choose a color:'} buttons={modalButtons} onCloseRequest={closeModal} onClick={modalDialogOnClick}>
