@@ -115,15 +115,11 @@ const Intro = ({ queryParams }) => {
                             });
                         }
                     })
-                    .catch(() => {
-                        toast.show({
-                            type: 'error',
-                            title: 'Facebook login',
-                            message: 'Login failed',
-                            icon: 'ic_warning',
-                            timeout: 10000
-                        });
+                    .catch((err) => {
+                        dispatch({ type: 'error', error: err });
                     });
+            } else {
+                dispatch({ type: 'error', error: response.status });
             }
         });
     }, [state.email, state.password]);
