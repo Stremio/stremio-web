@@ -8,7 +8,7 @@ const PasswordResetModal = ({ email, onCloseRequest }) => {
     const routeFocused = useRouteFocused();
     const [error, setError] = React.useState('');
     const [modalEmail, setModalEmail] = React.useState(typeof email === 'string' ? email : '');
-    const modalEmailRef = React.useRef();
+    const modalEmailRef = React.useRef(null);
     const passwordResetOnClick = React.useCallback(() => {
         modalEmail.length > 0 && modalEmailRef.current.validity.valid ?
             window.open('https://www.strem.io/reset-password/' + modalEmail, '_blank')
