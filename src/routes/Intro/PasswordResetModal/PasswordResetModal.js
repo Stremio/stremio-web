@@ -35,7 +35,7 @@ const PasswordResetModal = ({ email, onCloseRequest }) => {
     const emailOnChange = React.useCallback((event) => {
         setError('');
         setModalEmail(event.currentTarget.value);
-    }, [modalEmail]);
+    }, []);
     const emailOnSubmit = React.useCallback(() => {
         passwordResetClicked();
     }, [passwordResetClicked]);
