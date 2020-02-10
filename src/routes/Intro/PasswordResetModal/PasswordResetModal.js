@@ -9,7 +9,7 @@ const PasswordResetModal = ({ email, onCloseRequest }) => {
     const [error, setError] = React.useState('');
     const [modalEmail, setModalEmail] = React.useState(typeof email === 'string' ? email : '');
     const modalEmailRef = React.useRef();
-    const passwordResetClicked = React.useCallback(() => {
+    const passwordResetOnClick = React.useCallback(() => {
         modalEmail.length > 0 && modalEmailRef.current.validity.valid ?
             window.open('https://www.strem.io/reset-password/' + modalEmail, '_blank')
             :
@@ -27,18 +27,18 @@ const PasswordResetModal = ({ email, onCloseRequest }) => {
             {
                 label: 'Send',
                 props: {
-                    onClick: passwordResetClicked
+                    onClick: passwordResetOnClick
                 }
             }
         ];
-    }, [onCloseRequest, passwordResetClicked]);
+    }, [onCloseRequest, passwordResetOnClick]);
     const emailOnChange = React.useCallback((event) => {
         setError('');
         setModalEmail(event.currentTarget.value);
     }, []);
     const emailOnSubmit = React.useCallback(() => {
-        passwordResetClicked();
-    }, [passwordResetClicked]);
+        passwordResetOnClick();
+    }, [passwordResetOnClick]);
     React.useEffect(() => {
         if (routeFocused) {
             modalEmailRef.current.focus();
