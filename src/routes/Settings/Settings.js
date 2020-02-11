@@ -1,5 +1,6 @@
 const React = require('react');
 const classnames = require('classnames');
+const throttle = require('lodash.throttle');
 const Icon = require('stremio-icons/dom');
 const { useServices } = require('stremio/services');
 const { Button, Checkbox, NavBar, Multiselect, ColorInput, useProfile, useStreamingServer } = require('stremio/common');
@@ -31,12 +32,6 @@ const Settings = () => {
         cacheSizeSelect,
         torrentProfileSelect
     } = useStreamingServerSettingsInputs();
-    const [section, setSection] = React.useState(GENERAL_SECTION);
-    const sectionsContainerRef = React.useRef(null);
-    const sectionsContainerOnScorll = React.useCallback((event) => {
-    }, []);
-    const sideMenuButtonOnClick = React.useCallback((event) => {
-    }, []);
     const logoutButtonOnClick = React.useCallback(() => {
         core.dispatch({
             action: 'Ctx',
@@ -65,6 +60,43 @@ const Settings = () => {
             }
         });
     }, []);
+    const sectionsContainerRef = React.useRef(null);
+    const generalSectionRef = React.useRef(null);
+    const playerSectionRef = React.useRef(null);
+    const streamingServerSectionRef = React.useRef(null);
+    const sections = React.useMemo(() => ([
+        { ref: generalSectionRef, id: GENERAL_SECTION },
+        { ref: playerSectionRef, id: PLAYER_SECTION },
+        { ref: streamingServerSectionRef, id: STREAMING_SECTION },
+    ]), []);
+    const [selectedSectionId, setSelectedSectionId] = React.useState(sections[0].id);
+    const updateSelectedSectionId = React.useCallback(() => {
+        if (sectionsContainerRef.current.scrollTop + sectionsContainerRef.current.clientHeight === sectionsContainerRef.current.scrollHeight) {
+            setSelectedSectionId(sections[sections.length - 1].id);
+        } else {
+            for (let i = sections.length - 1; i >= 0; i--) {
+                if (sections[i].ref.current.offsetTop - sectionsContainerRef.current.offsetTop <= sectionsContainerRef.current.scrollTop) {
+                    setSelectedSectionId(sections[i].id);
+                    break;
+                }
+            }
+        }
+    }, []);
+    const sideMenuButtonOnClick = React.useCallback((event) => {
+        const section = sections.find((section) => {
+            return section.id === event.currentTarget.dataset.section;
+        });
+        sectionsContainerRef.current.scrollTo({
+            top: section.ref.current.offsetTop - sectionsContainerRef.current.offsetTop,
+            behavior: 'smooth'
+        });
+    }, []);
+    const sectionsContainerOnScorll = React.useCallback(throttle(() => {
+        updateSelectedSectionId();
+    }, 50), []);
+    React.useEffect(() => {
+        updateSelectedSectionId();
+    }, []);
     return (
         <div className={styles['settings-container']}>
             <NavBar
@@ -77,18 +109,18 @@ const Settings = () => {
             />
             <div className={styles['settings-content']}>
                 <div className={styles['side-menu-container']}>
-                    <Button className={classnames(styles['side-menu-button'], { [styles['selected']]: section === GENERAL_SECTION })} data-section={GENERAL_SECTION} onClick={sideMenuButtonOnClick}>
+                    <Button className={classnames(styles['side-menu-button'], { [styles['selected']]: selectedSectionId === GENERAL_SECTION })} data-section={GENERAL_SECTION} onClick={sideMenuButtonOnClick}>
                         General
                     </Button>
-                    <Button className={classnames(styles['side-menu-button'], { [styles['selected']]: section === PLAYER_SECTION })} data-section={PLAYER_SECTION} onClick={sideMenuButtonOnClick}>
+                    <Button className={classnames(styles['side-menu-button'], { [styles['selected']]: selectedSectionId === PLAYER_SECTION })} data-section={PLAYER_SECTION} onClick={sideMenuButtonOnClick}>
                         Player
                     </Button>
-                    <Button className={classnames(styles['side-menu-button'], { [styles['selected']]: section === STREAMING_SECTION })} data-section={STREAMING_SECTION} onClick={sideMenuButtonOnClick}>
+                    <Button className={classnames(styles['side-menu-button'], { [styles['selected']]: selectedSectionId === STREAMING_SECTION })} data-section={STREAMING_SECTION} onClick={sideMenuButtonOnClick}>
                         Streaming server
                     </Button>
                 </div>
                 <div ref={sectionsContainerRef} className={styles['sections-container']} onScroll={sectionsContainerOnScorll}>
-                    <div className={styles['section-container']}>
+                    <div ref={generalSectionRef} className={styles['section-container']}>
                         <div className={styles['section-title']}>General</div>
                         <div className={classnames(styles['option-container'], styles['user-info-option-container'])}>
                             <div
@@ -194,7 +226,7 @@ const Settings = () => {
                             </Button>
                         </div>
                     </div>
-                    <div className={styles['section-container']}>
+                    <div ref={playerSectionRef} className={styles['section-container']}>
                         <div className={styles['section-title']}>Player</div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
@@ -278,7 +310,7 @@ const Settings = () => {
                             />
                         </div>
                     </div>
-                    <div className={styles['section-container']}>
+                    <div ref={streamingServerSectionRef} className={styles['section-container']}>
                         <div className={styles['section-title']}>Streaming Server</div>
                         <div className={styles['option-container']}>
                             <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Reload'} onClick={reloadStreamingServer}>
