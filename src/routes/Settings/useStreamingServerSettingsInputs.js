@@ -1,5 +1,6 @@
 const React = require('react');
 const isEqual = require('lodash.isequal');
+const { useServices } = require('stremio/services');
 const { useStreamingServer } = require('stremio/common');
 
 const CACHE_SIZES = [0, 2147483648, 5368709120, 10737418240, null];
@@ -42,6 +43,7 @@ const TORRENT_PROFILES = {
 };
 
 const useStreaminServerSettingsInputs = () => {
+    const { core } = useServices();
     const streaminServer = useStreamingServer();
     const cacheSizeSelect = React.useMemo(() => {
         if (streaminServer.type !== 'Ready') {
@@ -56,9 +58,21 @@ const useStreaminServerSettingsInputs = () => {
             selected: [JSON.stringify(streaminServer.settings.cacheSize)],
             renderLabelText: () => {
                 return cacheSizeToString(streaminServer.settings.cacheSize);
+            },
+            onSelect: (event) => {
+                core.dispatch({
+                    action: 'Ctx',
+                    args: {
+                        action: 'UpdateSettings',
+                        args: {
+                            ...streaminServer.settings,
+                            cacheSize: JSON.parse(event.value)
+                        }
+                    }
+                });
             }
         };
-    }, [streaminServer.type, streaminServer.settings && streaminServer.settings.cacheSize]);
+    }, [streaminServer.type, streaminServer.settings]);
     const torrentProfileSelect = React.useMemo(() => {
         if (streaminServer.type !== 'Ready') {
             return null;
