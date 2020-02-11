@@ -2,7 +2,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const { useRouteFocused } = require('stremio-router');
 const { ModalDialog } = require('stremio/common');
-const CredentialsTextInput = require('stremio/routes/Intro/CredentialsTextInput');
+const CredentialsTextInput = require('../CredentialsTextInput');
 const styles = require('./styles');
 
 const PasswordResetModal = ({ email, onCloseRequest }) => {
