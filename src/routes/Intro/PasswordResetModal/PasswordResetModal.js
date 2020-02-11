@@ -14,7 +14,7 @@ const PasswordResetModal = ({ email, onCloseRequest }) => {
             window.open('https://www.strem.io/reset-password/' + modalEmailRef.current.value, '_blank')
             :
             setError('Invalid email');
-    }, [modalEmailRef.current]); 
+    }, [modalEmailRef.current]);
     const passwordResetModalButtons = React.useMemo(() => {
         return [
             {
@@ -32,7 +32,7 @@ const PasswordResetModal = ({ email, onCloseRequest }) => {
             }
         ];
     }, [onCloseRequest, passwordResetOnClick]);
-    const emailOnChange = React.useCallback((event) => {
+    const emailOnChange = React.useCallback(() => {
         setError('');
     }, []);
     const emailOnSubmit = React.useCallback(() => {
