@@ -24,7 +24,8 @@ const Settings = () => {
         subtitlesOutlineColorInput,
         bingeWatchingCheckbox,
         playInBackgroundCheckbox,
-        playInExternalPlayerCheckbox
+        playInExternalPlayerCheckbox,
+        hardwareDecodingCheckbox
     } = useProfileSettingsInputs();
     const {
         cacheSizeSelect,
@@ -246,11 +247,20 @@ const Settings = () => {
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
+                                <div className={styles['label']}>Play in external player</div>
+                            </div>
+                            <Checkbox
+                                className={classnames(styles['option-input-container'], styles['checkbox-container'])}
+                                {...playInExternalPlayerCheckbox}
+                            />
+                        </div>
+                        <div className={styles['option-container']}>
+                            <div className={styles['option-name-container']}>
                                 <div className={styles['label']}>Hardware-accelerated decoding</div>
                             </div>
                             <Checkbox
                                 className={classnames(styles['option-input-container'], styles['checkbox-container'])}
-                                checked={false}
+                                {...hardwareDecodingCheckbox}
                             />
                         </div>
                     </div>

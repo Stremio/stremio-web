@@ -127,22 +127,64 @@ const useProfileSettingsInputs = () => {
     }), [profile.settings]);
     const bingeWatchingCheckbox = React.useMemo(() => ({
         checked: profile.settings.binge_watching,
-        onClick: (event) => {
-            console.log(event);
+        onClick: () => {
+            core.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'UpdateSettings',
+                    args: {
+                        ...profile.settings,
+                        binge_watching: !profile.settings.binge_watching
+                    }
+                }
+            });
         }
-    }), [profile.settings.binge_watching]);
+    }), [profile.settings]);
     const playInBackgroundCheckbox = React.useMemo(() => ({
         checked: profile.settings.play_in_background,
-        onClick: (event) => {
-            console.log(event);
+        onClick: () => {
+            core.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'UpdateSettings',
+                    args: {
+                        ...profile.settings,
+                        play_in_background: !profile.settings.play_in_background
+                    }
+                }
+            });
         }
-    }), [profile.settings.play_in_background]);
+    }), [profile.settings]);
     const playInExternalPlayerCheckbox = React.useMemo(() => ({
         checked: profile.settings.play_in_external_player,
-        onClick: (event) => {
-            console.log(event);
+        onClick: () => {
+            core.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'UpdateSettings',
+                    args: {
+                        ...profile.settings,
+                        play_in_external_player: !profile.settings.play_in_external_player
+                    }
+                }
+            });
         }
-    }), [profile.settings.play_in_external_player]);
+    }), [profile.settings]);
+    const hardwareDecodingCheckbox = React.useMemo(() => ({
+        checked: profile.settings.hardware_decoding,
+        onClick: () => {
+            core.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'UpdateSettings',
+                    args: {
+                        ...profile.settings,
+                        hardware_decoding: !profile.settings.hardware_decoding
+                    }
+                }
+            });
+        }
+    }), [profile.settings]);
     return {
         interfaceLanguageSelect,
         subtitlesLanguageSelect,
@@ -152,7 +194,8 @@ const useProfileSettingsInputs = () => {
         subtitlesOutlineColorInput,
         bingeWatchingCheckbox,
         playInBackgroundCheckbox,
-        playInExternalPlayerCheckbox
+        playInExternalPlayerCheckbox,
+        hardwareDecodingCheckbox
     };
 };
 
