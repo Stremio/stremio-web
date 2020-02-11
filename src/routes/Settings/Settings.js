@@ -118,6 +118,7 @@ const Settings = () => {
                     <Button className={classnames(styles['side-menu-button'], { [styles['selected']]: selectedSectionId === STREAMING_SECTION })} data-section={STREAMING_SECTION} onClick={sideMenuButtonOnClick}>
                         Streaming server
                     </Button>
+                    {process.env.version}
                 </div>
                 <div ref={sectionsContainerRef} className={styles['sections-container']} onScroll={sectionsContainerOnScorll}>
                     <div ref={generalSectionRef} className={styles['section-container']}>
