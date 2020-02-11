@@ -46,9 +46,18 @@ const useProfileSettingsInputs = () => {
                 profile.settings.subtitles_language;
         },
         onSelect: (event) => {
-            console.log(event);
+            core.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'UpdateSettings',
+                    args: {
+                        ...profile.settings,
+                        subtitles_language: event.value
+                    }
+                }
+            });
         }
-    }), [profile.settings.subtitles_language]);
+    }), [profile.settings]);
     const subtitlesSizeSelect = React.useMemo(() => ({
         options: SUBTITLES_SIZES.map((size) => ({
             value: `${size}`,
