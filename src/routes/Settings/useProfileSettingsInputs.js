@@ -83,21 +83,48 @@ const useProfileSettingsInputs = () => {
     const subtitlesTextColorInput = React.useMemo(() => ({
         value: profile.settings.subtitles_text_color,
         onChange: (event) => {
-            console.log(event);
+            core.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'UpdateSettings',
+                    args: {
+                        ...profile.settings,
+                        subtitles_text_color: event.value
+                    }
+                }
+            });
         }
-    }), [profile.settings.subtitles_text_color]);
+    }), [profile.settings]);
     const subtitlesBackgroundColorInput = React.useMemo(() => ({
         value: profile.settings.subtitles_background_color,
         onChange: (event) => {
-            console.log(event);
+            core.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'UpdateSettings',
+                    args: {
+                        ...profile.settings,
+                        subtitles_background_color: event.value
+                    }
+                }
+            });
         }
-    }), [profile.settings.subtitles_background_color]);
+    }), [profile.settings]);
     const subtitlesOutlineColorInput = React.useMemo(() => ({
         value: profile.settings.subtitles_outline_color,
         onChange: (event) => {
-            console.log(event);
+            core.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'UpdateSettings',
+                    args: {
+                        ...profile.settings,
+                        subtitles_outline_color: event.value
+                    }
+                }
+            });
         }
-    }), [profile.settings.subtitles_outline_color]);
+    }), [profile.settings]);
     const bingeWatchingCheckbox = React.useMemo(() => ({
         checked: profile.settings.binge_watching,
         onClick: (event) => {
