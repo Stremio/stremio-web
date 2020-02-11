@@ -78,7 +78,7 @@ const ColorInput = ({ className, value, dataset, onChange, ...props }) => {
             {
                 modalOpen ?
                     <ModalDialog title={'Choose a color:'} buttons={modalButtons} onCloseRequest={closeModal} onClick={modalDialogOnClick}>
-                        <ColorPicker value={tempValue} onInput={colorPickerOnInput} />
+                        <ColorPicker className={styles['color-picker-container']} value={tempValue} onInput={colorPickerOnInput} />
                     </ModalDialog>
                     :
                     null
