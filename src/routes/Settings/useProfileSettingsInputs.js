@@ -1,10 +1,12 @@
 const React = require('react');
+const { useServices } = require('stremio/services');
 const { useProfile } = require('stremio/common');
 const languages = require('./languages');
 
 const SUBTITLES_SIZES = [75, 100, 125, 150, 175, 200, 250];
 
 const useProfileSettingsInputs = () => {
+    const { core } = useServices();
     const profile = useProfile();
     const interfaceLanguageSelect = React.useMemo(() => ({
         options: Object.keys(languages).map((code) => ({
@@ -19,9 +21,18 @@ const useProfileSettingsInputs = () => {
                 profile.settings.interface_language;
         },
         onSelect: (event) => {
-            console.log(event);
+            core.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'UpdateSettings',
+                    args: {
+                        ...profile.settings,
+                        interface_language: event.value
+                    }
+                }
+            });
         }
-    }), [profile.settings.interface_language]);
+    }), [profile.settings]);
     const subtitlesLanguageSelect = React.useMemo(() => ({
         options: Object.keys(languages).map((code) => ({
             value: code,
