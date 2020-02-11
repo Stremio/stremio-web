@@ -17,7 +17,7 @@ const PasswordResetModal = ({ email, onCloseRequest }) => {
     }, []);
     const passwordResetOnClick = React.useCallback(() => {
         goToPasswordReset();
-    }, [goToPasswordReset]);
+    }, []);
     const passwordResetModalButtons = React.useMemo(() => {
         return [
             {
@@ -40,7 +40,7 @@ const PasswordResetModal = ({ email, onCloseRequest }) => {
     }, []);
     const emailOnSubmit = React.useCallback(() => {
         goToPasswordReset();
-    }, [goToPasswordReset]);
+    }, []);
     React.useEffect(() => {
         if (routeFocused) {
             еmailRef.current.focus();
