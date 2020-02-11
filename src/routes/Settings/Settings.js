@@ -88,22 +88,34 @@ const Settings = () => {
                                         `url('${profile.auth.user.avatar}'), url('/images/default_avatar.png')`
                                 }}
                             />
-                            <div className={styles['email-label']} title={profile.auth === null ? 'Anonymous user' : profile.auth.user.email}>
-                                {profile.auth === null ? 'Anonymous user' : profile.auth.user.email}
+                            <div className={styles['email-logout-container']}>
+                                <div className={styles['email-label-container']} title={profile.auth === null ? 'Anonymous user' : profile.auth.user.email}>
+                                    <div className={styles['email-label']}>
+                                        {profile.auth === null ? 'Anonymous user' : profile.auth.user.email}
+                                    </div>
+                                </div>
+                                {
+                                    profile.auth !== null ?
+                                        <Button className={styles['logout-button-container']} title={'Log out'} href={'#/intro'} onClick={logoutButtonOnClick}>
+                                            <div className={styles['logout-label']}>Log out</div>
+                                        </Button>
+                                        :
+                                        null
+                                }
                             </div>
                         </div>
                         {
                             profile.auth === null ?
                                 <div className={styles['option-container']}>
                                     <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Log in / Sign up'} href={'#/intro'} onClick={logoutButtonOnClick}>
-                                        <div className={styles['label']}>{'Log in / Sign up'}</div>
+                                        <div className={styles['label']}>Log in / Sign up</div>
                                     </Button>
                                 </div>
                                 :
                                 <div className={styles['option-container']}>
                                     <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'User panel'} target={'_blank'} href={'https://www.stremio.com/acc-settings'}>
                                         <Icon className={styles['icon']} icon={'ic_user'} />
-                                        <div className={styles['label']}>{'User panel'}</div>
+                                        <div className={styles['label']}>User panel</div>
                                     </Button>
                                 </div>
                         }
@@ -169,16 +181,6 @@ const Settings = () => {
                                 <div className={styles['label']}>Privacy Policy</div>
                             </Button>
                         </div>
-                        {
-                            profile.auth !== null ?
-                                <div className={styles['option-container']}>
-                                    <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={'Log out'} href={'#/intro'} onClick={logoutButtonOnClick}>
-                                        <div className={styles['label']}>Log out</div>
-                                    </Button>
-                                </div>
-                                :
-                                null
-                        }
                     </div>
                     <div className={styles['section-container']}>
                         <div className={styles['section-title']}>Player</div>
