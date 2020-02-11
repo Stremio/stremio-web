@@ -118,7 +118,14 @@ const Settings = () => {
                     <Button className={classnames(styles['side-menu-button'], { [styles['selected']]: selectedSectionId === STREAMING_SECTION })} data-section={STREAMING_SECTION} onClick={sideMenuButtonOnClick}>
                         Streaming server
                     </Button>
-                    {process.env.version}
+                    <div className={styles['spacing']} />
+                    <div className={styles['version-info-label']}>App Version: {process.env.version}</div>
+                    {
+                        streaminServer.type === 'Ready' ?
+                            <div className={styles['version-info-label']}>Server Version: {streaminServer.settings.serverVersion}</div>
+                            :
+                            null
+                    }
                 </div>
                 <div ref={sectionsContainerRef} className={styles['sections-container']} onScroll={sectionsContainerOnScorll}>
                     <div ref={generalSectionRef} className={styles['section-container']}>
@@ -172,15 +179,6 @@ const Settings = () => {
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Interface language</div>
-                            </div>
-                            <Multiselect
-                                className={classnames(styles['option-input-container'], styles['multiselect-container'])}
-                                {...interfaceLanguageSelect}
-                            />
-                        </div>
-                        <div className={styles['option-container']}>
-                            <div className={styles['option-name-container']}>
                                 <div className={styles['label']}>Trakt Scrobbling</div>
                             </div>
                             <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Authenticate'} onClick={authenticateTraktOnClick}>
@@ -205,6 +203,15 @@ const Settings = () => {
                                 <Icon className={styles['icon']} icon={'ic_calendar'} />
                                 <div className={styles['label']}>Subscribe</div>
                             </Button>
+                        </div>
+                        <div className={styles['option-container']}>
+                            <div className={styles['option-name-container']}>
+                                <div className={styles['label']}>Interface language</div>
+                            </div>
+                            <Multiselect
+                                className={classnames(styles['option-input-container'], styles['multiselect-container'])}
+                                {...interfaceLanguageSelect}
+                            />
                         </div>
                         <div className={styles['option-container']}>
                             <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={'Export user data'} onClick={exportDataOnClick}>
