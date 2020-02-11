@@ -8,10 +8,10 @@ const styles = require('./styles');
 const PasswordResetModal = ({ email, onCloseRequest }) => {
     const routeFocused = useRouteFocused();
     const [error, setError] = React.useState('');
-    const modalEmailRef = React.useRef(null);
+    const еmailRef = React.useRef(null);
     const goToPasswordReset = React.useCallback(() => {
-        modalEmailRef.current.value.length > 0 && modalEmailRef.current.validity.valid ?
-            window.open('https://www.strem.io/reset-password/' + modalEmailRef.current.value, '_blank')
+        еmailRef.current.value.length > 0 && еmailRef.current.validity.valid ?
+            window.open('https://www.strem.io/reset-password/' + еmailRef.current.value, '_blank')
             :
             setError('Invalid email');
     }, []);
@@ -43,14 +43,14 @@ const PasswordResetModal = ({ email, onCloseRequest }) => {
     }, [goToPasswordReset]);
     React.useEffect(() => {
         if (routeFocused) {
-            modalEmailRef.current.focus();
+            еmailRef.current.focus();
         }
     }, [routeFocused]);
     return (
         <ModalDialog className={styles['password-reset-modal-container']} title={'Password reset'} buttons={passwordResetModalButtons} onCloseRequest={onCloseRequest}>
             <div className={styles['message']}>Enter your email</div>
             <CredentialsTextInput
-                ref={modalEmailRef}
+                ref={еmailRef}
                 className={styles['credentials-text-input']}
                 type={'email'}
                 placeholder={'Email'}
