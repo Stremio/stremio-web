@@ -68,9 +68,18 @@ const useProfileSettingsInputs = () => {
             return `${profile.settings.subtitles_size}%`;
         },
         onSelect: (event) => {
-            console.log(event);
+            core.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'UpdateSettings',
+                    args: {
+                        ...profile.settings,
+                        subtitles_size: parseInt(event.value)
+                    }
+                }
+            });
         }
-    }), [profile.settings.subtitles_size]);
+    }), [profile.settings]);
     const subtitlesTextColorInput = React.useMemo(() => ({
         value: profile.settings.subtitles_text_color,
         onChange: (event) => {
