@@ -45,6 +45,18 @@ const Settings = () => {
             }
         });
     }, []);
+    const authenticateTraktOnClick = React.useCallback(() => {
+        // TODO
+    }, []);
+    const importFacebookOnClick = React.useCallback(() => {
+        // TODO
+    }, []);
+    const subscribeCalendarOnClick = React.useCallback(() => {
+        // TODO
+    }, []);
+    const exportDataOnClick = React.useCallback(() => {
+        // TODO
+    }, []);
     const reloadStreamingServer = React.useCallback(() => {
         core.dispatch({
             action: 'Ctx',
@@ -120,7 +132,7 @@ const Settings = () => {
                                 </div>
                         }
                         <div className={styles['option-container']}>
-                            <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Addons'}>
+                            <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Addons'} href={'#/addons'}>
                                 <Icon className={styles['icon']} icon={'ic_addons'} />
                                 <div className={styles['label']}>Addons</div>
                             </Button>
@@ -138,46 +150,46 @@ const Settings = () => {
                             <div className={styles['option-name-container']}>
                                 <div className={styles['label']}>Trakt Scrobbling</div>
                             </div>
-                            <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Authenticate'}>
+                            <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Authenticate'} onClick={authenticateTraktOnClick}>
                                 <Icon className={styles['icon']} icon={'ic_trackt'} />
                                 <div className={styles['label']}>Authenticate</div>
                             </Button>
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Facebook import</div>
+                                <div className={styles['label']}>Facebook</div>
                             </div>
-                            <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Authenticate'}>
+                            <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Import'} onClick={importFacebookOnClick}>
                                 <Icon className={styles['icon']} icon={'ic_facebook'} />
-                                <div className={styles['label']}>Authenticate</div>
+                                <div className={styles['label']}>Import</div>
                             </Button>
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
                                 <div className={styles['label']}>Calendar</div>
                             </div>
-                            <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Subscribe'}>
+                            <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Subscribe'} onClick={subscribeCalendarOnClick}>
                                 <Icon className={styles['icon']} icon={'ic_calendar'} />
                                 <div className={styles['label']}>Subscribe</div>
                             </Button>
                         </div>
                         <div className={styles['option-container']}>
-                            <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={'Export user data'}>
+                            <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={'Export user data'} onClick={exportDataOnClick}>
                                 <div className={styles['label']}>Export user data</div>
                             </Button>
                         </div>
                         <div className={styles['option-container']}>
-                            <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={'Contact support'}>
+                            <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={'Contact support'} target={'_blank'} href={'https://stremio.zendesk.com/hc/en-us'}>
                                 <div className={styles['label']}>Contact support</div>
                             </Button>
                         </div>
                         <div className={styles['option-container']}>
-                            <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={'Terms of Service'}>
+                            <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={'Terms of Service'} target={'_blank'} href={'https://www.stremio.com/tos'}>
                                 <div className={styles['label']}>Terms of Service</div>
                             </Button>
                         </div>
                         <div className={styles['option-container']}>
-                            <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={'Privacy Policy'}>
+                            <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={'Privacy Policy'} target={'_blank'} href={'https://www.stremio.com/privacy'}>
                                 <div className={styles['label']}>Privacy Policy</div>
                             </Button>
                         </div>
