@@ -2,7 +2,7 @@ const React = require('react');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const { useServices } = require('stremio/services');
-const { Button, Checkbox, NavBar, Multiselect, ColorInput, useProfile, useStreamingServer } = require('stremio/common');
+const { Button, Checkbox, NavBar, Multiselect, TextInput, ColorInput, useProfile, useStreamingServer } = require('stremio/common');
 const useProfileSettingsInputs = require('./useProfileSettingsInputs');
 const useStreamingServerSettingsInputs = require('./useStreamingServerSettingsInputs');
 const styles = require('./styles');
@@ -41,6 +41,14 @@ const Settings = () => {
             action: 'Ctx',
             args: {
                 action: 'Logout'
+            }
+        });
+    }, []);
+    const reloadStreamingServer = React.useCallback(() => {
+        core.dispatch({
+            action: 'Ctx',
+            args: {
+                action: 'ReloadStreamingServer'
             }
         });
     }, []);
@@ -249,21 +257,43 @@ const Settings = () => {
                     <div className={styles['section-container']}>
                         <div className={styles['section-title']}>Streaming Server</div>
                         <div className={styles['option-container']}>
+                            <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Reload'} onClick={reloadStreamingServer}>
+                                <div className={styles['label']}>Reload</div>
+                            </Button>
+                        </div>
+                        <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
                                 <div className={styles['label']}>Status</div>
                             </div>
                             <div className={classnames(styles['option-input-container'], styles['info-container'])}>
-                                <div className={styles['label']}>Online</div>
+                                <div className={styles['label']}>
+                                    {
+                                        streaminServer.type === 'Ready' ?
+                                            'Online'
+                                            :
+                                            streaminServer.type === 'Error' ?
+                                                `Error: (${streaminServer.error})`
+                                                :
+                                                streaminServer.type
+                                    }
+                                </div>
                             </div>
                         </div>
-                        <div className={styles['option-container']}>
-                            <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Base Url</div>
-                            </div>
-                            <div className={classnames(styles['option-input-container'], styles['info-container'])}>
-                                <div className={styles['label']}>http://</div>
-                            </div>
-                        </div>
+                        {
+                            streaminServer.type === 'Ready' ?
+                                <div className={styles['option-container']}>
+                                    <div className={styles['option-name-container']}>
+                                        <div className={styles['label']}>Base Url</div>
+                                    </div>
+                                    <div className={classnames(styles['option-input-container'], styles['info-container'], styles['selectable'])}>
+                                        <div className={styles['label']}>
+                                            {streaminServer.base_url}
+                                        </div>
+                                    </div>
+                                </div>
+                                :
+                                null
+                        }
                         {
                             cacheSizeSelect !== null ?
                                 <div className={styles['option-container']}>
@@ -291,7 +321,6 @@ const Settings = () => {
                                 </div>
                                 :
                                 null
-
                         }
                     </div>
                 </div>
