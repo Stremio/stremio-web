@@ -113,6 +113,18 @@ const useStreaminServerSettingsInputs = () => {
 
                     return result;
                 }, 'custom');
+            },
+            onSelect: (event) => {
+                core.dispatch({
+                    action: 'Ctx',
+                    args: {
+                        action: 'UpdateSettings',
+                        args: {
+                            ...streaminServer.settings,
+                            ...JSON.parse(event.value)
+                        }
+                    }
+                });
             }
         };
     }, [streaminServer.type, streaminServer.settings]);
