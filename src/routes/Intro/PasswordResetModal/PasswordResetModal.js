@@ -1,20 +1,20 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const { useRouteFocused } = require('stremio-router');
-const { ModalDialog, TextInput } = require('stremio/common');
+const { ModalDialog } = require('stremio/common');
+const CredentialsTextInput = require('stremio/routes/Intro/CredentialsTextInput');
 const styles = require('./styles');
 
 const PasswordResetModal = ({ email, onCloseRequest }) => {
     const routeFocused = useRouteFocused();
     const [error, setError] = React.useState('');
-    const [modalEmail, setModalEmail] = React.useState(typeof email === 'string' ? email : '');
     const modalEmailRef = React.useRef(null);
     const passwordResetOnClick = React.useCallback(() => {
-        modalEmail.length > 0 && modalEmailRef.current.validity.valid ?
-            window.open('https://www.strem.io/reset-password/' + modalEmail, '_blank')
+        modalEmailRef.current.value.length > 0 && modalEmailRef.current.validity.valid ?
+            window.open('https://www.strem.io/reset-password/' + modalEmailRef.current.value, '_blank')
             :
             setError('Invalid email');
-    }, [modalEmail]);
+    }, [modalEmailRef.current]); 
     const passwordResetModalButtons = React.useMemo(() => {
         return [
             {
@@ -34,7 +34,6 @@ const PasswordResetModal = ({ email, onCloseRequest }) => {
     }, [onCloseRequest, passwordResetOnClick]);
     const emailOnChange = React.useCallback((event) => {
         setError('');
-        setModalEmail(event.currentTarget.value);
     }, []);
     const emailOnSubmit = React.useCallback(() => {
         passwordResetOnClick();
@@ -47,12 +46,12 @@ const PasswordResetModal = ({ email, onCloseRequest }) => {
     return (
         <ModalDialog className={styles['password-reset-modal-container']} title={'Password reset'} buttons={passwordResetModalButtons} onCloseRequest={onCloseRequest}>
             <div className={styles['message']}>Enter your email</div>
-            <TextInput
+            <CredentialsTextInput
                 ref={modalEmailRef}
-                className={styles['text-input']}
+                className={styles['credentials-text-input']}
                 type={'email'}
                 placeholder={'Email'}
-                value={modalEmail}
+                defaultValue={typeof email === 'string' ? email : ''}
                 onChange={emailOnChange}
                 onSubmit={emailOnSubmit}
             />
