@@ -325,7 +325,7 @@ const Intro = ({ queryParams }) => {
                         </React.Fragment>
                         :
                         <div className={styles['forgot-password-link-container']}>
-                            <Button className={styles['forgot-password-link']} target={'_blank'} onClick={openPasswordRestModal}>Forgot password?</Button>
+                            <Button className={styles['forgot-password-link']} onClick={openPasswordRestModal}>Forgot password?</Button>
                         </div>
                 }
                 {
