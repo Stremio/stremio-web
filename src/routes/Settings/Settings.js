@@ -224,6 +224,11 @@ const Settings = () => {
                             </Button>
                         </div>
                         <div className={styles['option-container']}>
+                            <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={'Source code'} target={'_blank'} href={'https://github.com/stremio/stremio-web'}>
+                                <div className={styles['label']}>Source code</div>
+                            </Button>
+                        </div>
+                        <div className={styles['option-container']}>
                             <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={'Terms of Service'} target={'_blank'} href={'https://www.stremio.com/tos'}>
                                 <div className={styles['label']}>Terms of Service</div>
                             </Button>
