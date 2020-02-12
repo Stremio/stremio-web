@@ -13,7 +13,7 @@ const mapSearchStateWithCtx = (search, ctx) => {
         '';
     const selected = search.selected;
     const catalog_resources = search.catalog_resources.map((catalog_resource) => {
-        catalog_resource.addon_name = ctx.content.addons.reduce((addon_name, addon) => {
+        catalog_resource.addon_name = ctx.profile.addons.reduce((addon_name, addon) => {
             if (addon.transportUrl === catalog_resource.request.base) {
                 return addon.manifest.name;
             }
@@ -41,7 +41,7 @@ const useSearch = (queryParams) => {
             return {
                 action: 'Load',
                 args: {
-                    load: 'CatalogsWithExtra',
+                    model: 'CatalogsWithExtra',
                     args: {
                         extra: [
                             ['search', queryParams.get('search')]
