@@ -48,7 +48,6 @@ const PasswordResetModal = ({ email, onCloseRequest }) => {
     }, [routeFocused]);
     return (
         <ModalDialog className={styles['password-reset-modal-container']} title={'Password reset'} buttons={passwordResetModalButtons} onCloseRequest={onCloseRequest}>
-            <div className={styles['message']}>Enter your email</div>
             <CredentialsTextInput
                 ref={еmailRef}
                 className={styles['credentials-text-input']}
