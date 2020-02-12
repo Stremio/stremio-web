@@ -224,7 +224,7 @@ const Settings = () => {
                             </Button>
                         </div>
                         <div className={styles['option-container']}>
-                            <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={'Source code'} target={'_blank'} href={'https://github.com/stremio/stremio-web'}>
+                            <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={'Source code'} target={'_blank'} href={`https://github.com/stremio/stremio-web/commit/${process.env.COMMIT_HASH}`}>
                                 <div className={styles['label']}>Source code</div>
                             </Button>
                         </div>

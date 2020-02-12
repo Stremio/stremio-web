@@ -1,4 +1,5 @@
 const path = require('path');
+const child_process = require('child_process');
 const webpack = require('webpack');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -132,6 +133,7 @@ module.exports = (env, argv) => ({
         new webpack.EnvironmentPlugin({
             DEBUG: argv.mode !== 'production',
             VERSION: pachageJson.version,
+            COMMIT_HASH: child_process.execSync('git rev-parse HEAD').toString(),
             ...env
         }),
         new webpack.ProgressPlugin(),
