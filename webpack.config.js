@@ -131,7 +131,7 @@ module.exports = (env, argv) => ({
     plugins: [
         new webpack.EnvironmentPlugin({
             DEBUG: argv.mode !== 'production',
-            version: pachageJson.version,
+            VERSION: pachageJson.version,
             ...env
         }),
         new webpack.ProgressPlugin(),

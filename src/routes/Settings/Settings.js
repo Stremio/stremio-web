@@ -119,7 +119,7 @@ const Settings = () => {
                         Streaming server
                     </Button>
                     <div className={styles['spacing']} />
-                    <div className={styles['version-info-label']}>App Version: {process.env.version}</div>
+                    <div className={styles['version-info-label']}>App Version: {process.env.VERSION}</div>
                     {
                         streaminServer.type === 'Ready' ?
                             <div className={styles['version-info-label']}>Server Version: {streaminServer.settings.serverVersion}</div>
