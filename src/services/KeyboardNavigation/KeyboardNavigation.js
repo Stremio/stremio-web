@@ -15,7 +15,7 @@ function KeyboardNavigation() {
             return;
         }
 
-        if (event.target.tag !== 'INPUT') {
+        if (event.target.tagName !== 'INPUT') {
             if (event.key === 'Backspace') {
                 window.history.back();
                 return;
