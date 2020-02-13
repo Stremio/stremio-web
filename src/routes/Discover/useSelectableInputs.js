@@ -8,11 +8,11 @@ const SKIP_EXTRA = {
     isRequired: false
 };
 
-const navigateWithLoadRequest = (load_request) => {
-    const transportUrl = encodeURIComponent(load_request.base);
-    const type = encodeURIComponent(load_request.path.type_name);
-    const catalogId = encodeURIComponent(load_request.path.id);
-    const extra = new URLSearchParams(load_request.path.extra).toString();
+const navigateWithLoadRequest = (request) => {
+    const transportUrl = encodeURIComponent(request.base);
+    const type = encodeURIComponent(request.path.type_name);
+    const catalogId = encodeURIComponent(request.path.id);
+    const extra = new URLSearchParams(request.path.extra).toString();
     window.location.replace(`#/discover/${transportUrl}/${type}/${catalogId}?${extra}`);
 };
 
@@ -52,13 +52,6 @@ const getNextExtra = (prevExtra, extraProp, extraValue) => {
         }, []);
 };
 
-const equalWithouExtra = (request1, request2) => {
-    return request1.base === request2.base &&
-        request1.path.resource === request2.path.resource &&
-        request1.path.type_name === request2.path.type_name &&
-        request1.path.id === request2.path.id;
-};
-
 const mapSelectableInputs = (discover) => {
     const selectedCatalogRequest = discover.catalog_resource !== null ?
         discover.catalog_resource.request
@@ -85,15 +78,15 @@ const mapSelectableInputs = (discover) => {
     const typeSelect = {
         title: 'Select type',
         options: discover.selectable.types
-            .map(({ name, load_request }) => ({
-                value: JSON.stringify(load_request),
+            .map(({ name, request }) => ({
+                value: JSON.stringify(request),
                 label: name
             })),
         selected: discover.selectable.types
-            .filter(({ load_request: { path: { type_name } } }) => {
-                return type_name === selectedCatalogRequest.path.type_name;
+            .filter(({ request }) => {
+                return selectedCatalogRequest.path.type_name === request.path.type_name;
             })
-            .map(({ load_request }) => JSON.stringify(load_request)),
+            .map(({ request }) => JSON.stringify(request)),
         onSelect: (event) => {
             navigateWithLoadRequest(JSON.parse(event.value));
         }
@@ -101,15 +94,16 @@ const mapSelectableInputs = (discover) => {
     const catalogSelect = {
         title: 'Select catalog',
         options: discover.selectable.catalogs
-            .map(({ name, load_request }) => ({
-                value: JSON.stringify(load_request),
+            .map(({ name, request }) => ({
+                value: JSON.stringify(request),
                 label: name
             })),
         selected: discover.selectable.catalogs
-            .filter(({ load_request }) => {
-                return equalWithouExtra(load_request, selectedCatalogRequest);
+            .filter(({ request }) => {
+                return selectedCatalogRequest.base === request.base &&
+                    selectedCatalogRequest.path.id === request.path.id;
             })
-            .map(({ load_request }) => JSON.stringify(load_request)),
+            .map(({ request }) => JSON.stringify(request)),
         onSelect: (event) => {
             navigateWithLoadRequest(JSON.parse(event.value));
         }
