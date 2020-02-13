@@ -38,11 +38,23 @@ const useMetaDetails = (urlParams) => {
         return {
             action: 'Load',
             args: {
-                load: 'MetaDetails',
+                model: 'MetaDetails',
                 args: {
-                    id: urlParams.id,
-                    type_name: urlParams.type,
-                    video_id: urlParams.videoId
+                    meta_resource_ref: {
+                        resource: 'meta',
+                        type_name: urlParams.type,
+                        id: urlParams.id,
+                        extra: []
+                    },
+                    streams_resource_ref: typeof urlParams.videoId === 'string' ?
+                        {
+                            resource: 'stream',
+                            type_name: urlParams.type,
+                            id: urlParams.videoId,
+                            extra: []
+                        }
+                        :
+                        null
                 }
             }
         };
