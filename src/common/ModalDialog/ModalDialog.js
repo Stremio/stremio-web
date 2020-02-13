@@ -1,15 +1,15 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
+const { useModalsContainer } = require('stremio/router');
 const Button = require('stremio/common/Button');
 const Icon = require('stremio-icons/dom');
 const { Modal } = require('stremio-router');
 const styles = require('./styles');
 
 const ModalDialog = ({ className, title, buttons, children, dataset, onCloseRequest, ...props }) => {
-    const onModalDialogContainerMouseDown = React.useCallback((event) => {
-        event.nativeEvent.closeModalDialogPrevented = true;
-    }, []);
+    const modalContainerRef = React.useRef(null);
+    const modalsContainer = useModalsContainer();
     const closeButtonOnClick = React.useCallback((event) => {
         if (typeof onCloseRequest === 'function') {
             onCloseRequest({
@@ -20,42 +20,50 @@ const ModalDialog = ({ className, title, buttons, children, dataset, onCloseRequ
             });
         }
     }, [dataset, onCloseRequest]);
+    const onModalContainerMouseDown = React.useCallback((event) => {
+        if (!event.nativeEvent.closeModalDialogPrevented && typeof onCloseRequest === 'function') {
+            onCloseRequest({
+                type: 'close',
+                dataset: dataset,
+                reactEvent: event,
+                nativeEvent: event.nativeEvent
+            });
+        }
+    }, [dataset, onCloseRequest]);
+    const onModalDialogContainerMouseDown = React.useCallback((event) => {
+        event.nativeEvent.closeModalDialogPrevented = true;
+    }, []);
     React.useEffect(() => {
-        const onCloseEvent = (event) => {
-            if (!event.closeModalDialogPrevented && typeof onCloseRequest === 'function') {
-                const closeEvent = {
+        const onWindowResize = (event) => {
+            if (typeof onCloseRequest === 'function') {
+                onCloseRequest({
                     type: 'close',
                     dataset: dataset,
                     nativeEvent: event
-                };
-                switch (event.type) {
-                    case 'resize':
-                        onCloseRequest(closeEvent);
-                        break;
-                    case 'keydown':
-                        if (event.key === 'Escape') {
-                            onCloseRequest(closeEvent);
-                        }
-                        break;
-                    case 'mousedown':
-                        if (event.target !== document.documentElement) {
-                            onCloseRequest(closeEvent);
-                        }
-                        break;
+                });
+            }
+        };
+        const onWindowKeyDown = (event) => {
+            // its `-2` because focus lock render locking divs around its content
+            if (modalsContainer.childNodes[modalsContainer.childElementCount - 2] === modalContainerRef.current) {
+                if (typeof onCloseRequest === 'function') {
+                    onCloseRequest({
+                        type: 'close',
+                        dataset: dataset,
+                        nativeEvent: event
+                    });
                 }
             }
         };
-        window.addEventListener('resize', onCloseEvent);
-        window.addEventListener('keydown', onCloseEvent);
-        window.addEventListener('mousedown', onCloseEvent);
+        window.addEventListener('resize', onWindowResize);
+        window.addEventListener('keydown', onWindowKeyDown);
         return () => {
-            window.removeEventListener('resize', onCloseEvent);
-            window.removeEventListener('keydown', onCloseEvent);
-            window.removeEventListener('mousedown', onCloseEvent);
+            window.removeEventListener('resize', onWindowResize);
+            window.removeEventListener('keydown', onWindowKeyDown);
         };
     }, [dataset, onCloseRequest]);
     return (
-        <Modal {...props} className={classnames(className, styles['modal-container'])}>
+        <Modal ref={modalContainerRef} {...props} className={classnames(className, styles['modal-container'])} onMouseDown={onModalContainerMouseDown}>
             <div className={styles['modal-dialog-container']} onMouseDown={onModalDialogContainerMouseDown}>
                 <div className={styles['header-container']}>
                     {
