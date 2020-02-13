@@ -52,11 +52,15 @@ const Discover = ({ urlParams, queryParams }) => {
             <MainNavBar className={styles['nav-bar']} route={'discover'} />
             <div className={styles['discover-content']}>
                 <div className={styles['selectable-inputs-container']}>
-                    {selectInputs.map((selectInput, index) => (
+                    {selectInputs.map(({ title, options, selected, renderLabelText, onSelect }, index) => (
                         <Multiselect
-                            {...selectInput}
                             key={index}
                             className={styles['select-input-container']}
+                            title={title}
+                            options={options}
+                            selected={selected}
+                            renderLabelText={renderLabelText}
+                            onSelect={onSelect}
                         />
                     ))}
                     <Button className={styles['filter-container']} title={'More filters'} onClick={openInputsModal}>
@@ -144,16 +148,20 @@ const Discover = ({ urlParams, queryParams }) => {
             {
                 inputsModalOpen ?
                     <ModalDialog title={'Catalog filters'} className={styles['selectable-inputs-modal-container']} onCloseRequest={closeInputsModal}>
-                        {selectInputs.slice(2).map((selectInput, index) => (
+                        {selectInputs.slice(2).map(({ title, isRequired, options, selected, renderLabelText, onSelect }, index) => (
                             <div key={index} className={styles['selectable-inputs-container']}>
-                                <div className={styles['select-input-label-container']} title={selectInput.title}>
-                                    {selectInput.title}
-                                    {selectInput.isRequired ? '*' : null}
+                                <div className={styles['select-input-label-container']} title={title}>
+                                    {title}
+                                    {isRequired ? '*' : null}
                                 </div>
                                 <Multiselect
-                                    {...selectInput}
-                                    mode={'modal'}
                                     className={styles['select-input-container']}
+                                    mode={'modal'}
+                                    title={title}
+                                    options={options}
+                                    selected={selected}
+                                    renderLabelText={renderLabelText}
+                                    onSelect={onSelect}
                                 />
                             </div>
                         ))}
