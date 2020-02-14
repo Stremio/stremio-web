@@ -5,6 +5,7 @@
     label-container-label: label;
     label-container-icon: icon;
     multiselect-menu-container: menu-container;
+    multiselect-modal-container: modal-container;
 }
 
 :import('~stremio/common/PaginationInput/styles.less') {
@@ -176,25 +177,36 @@
 }
 
 .selectable-inputs-modal-container {
-    .multiselect-label-container {
-        width: 15rem;
-        height: 3rem;
+    .selectable-inputs-container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
 
         &:not(:last-child) {
             margin-bottom: 1rem;
         }
 
-        &:hover {
-            background-color: var(--color-surfacelight);
-
-            .label-container-label {
-                color: var(--color-backgrounddarker);
-            }
-
-            .label-container-icon {
-                fill: var(--color-backgrounddarker);
-            }
+        .select-input-label-container {
+            flex: none;
+            width: 10rem;
+            max-height: 2.4em;
+            padding-right: 0.5rem;
+            color: var(--color-backgrounddarker);
         }
+
+        .select-input-container {
+            flex: none;
+            width: 15rem;
+            height: 3rem;
+        }
+    }
+}
+
+.multiselect-modal-container {
+    .multiselect-menu-container {
+        width: 15rem;
+        max-height: calc(3.2rem * 7);
+        overflow-y: auto;
     }
 }
 

@@ -8,7 +8,7 @@ const ModalDialog = require('stremio/common/ModalDialog');
 const useBinaryState = require('stremio/common/useBinaryState');
 const styles = require('./styles');
 
-const Multiselect = ({ className, direction, title, disabled, dataset, modalOptions, renderLabelContent, renderLabelText, onOpen, onClose, onSelect, ...props }) => {
+const Multiselect = ({ className, mode, direction, title, disabled, dataset, renderLabelContent, renderLabelText, onOpen, onClose, onSelect, ...props }) => {
     const [menuOpen, , closeMenu, toggleMenu] = useBinaryState(false);
     const options = React.useMemo(() => {
         return Array.isArray(props.options) ?
@@ -26,19 +26,19 @@ const Multiselect = ({ className, direction, title, disabled, dataset, modalOpti
             :
             [];
     }, [props.selected]);
-    const popupLabelOnClick = React.useCallback((event) => {
+    const labelOnClick = React.useCallback((event) => {
         if (typeof props.onClick === 'function') {
             props.onClick(event);
         }
 
-        if (!event.nativeEvent.togglePopupPrevented) {
+        if (!event.nativeEvent.toggleMenuPrevented) {
             toggleMenu();
         }
     }, [props.onClick, toggleMenu]);
-    const popupMenuOnClick = React.useCallback((event) => {
-        event.nativeEvent.togglePopupPrevented = true;
+    const menuOnClick = React.useCallback((event) => {
+        event.nativeEvent.toggleMenuPrevented = true;
     }, []);
-    const popupMenuOnKeyDown = React.useCallback((event) => {
+    const menuOnKeyDown = React.useCallback((event) => {
         event.nativeEvent.buttonClickPrevented = true;
     }, []);
     const optionOnClick = React.useCallback((event) => {
@@ -78,8 +78,8 @@ const Multiselect = ({ className, direction, title, disabled, dataset, modalOpti
 
         mountedRef.current = true;
     }, [menuOpen]);
-    const renderLabel = React.useCallback(({ children, className, ...props }) => (
-        <Button {...props} className={classnames(className, styles['label-container'], { 'active': menuOpen })} title={title} disabled={disabled} onClick={popupLabelOnClick}>
+    const renderLabel = React.useMemo(() => ({ children, className, ...props }) => (
+        <Button {...props} className={classnames(className, styles['label-container'], { 'active': menuOpen })} title={title} disabled={disabled} onClick={labelOnClick}>
             {
                 typeof renderLabelContent === 'function' ?
                     renderLabelContent()
@@ -107,67 +107,55 @@ const Multiselect = ({ className, direction, title, disabled, dataset, modalOpti
             }
             {children}
         </Button>
-    ));
-    const renderOptions = React.useCallback((options) => {
-        return (
-            options.length > 0 ?
-                options.map(({ label, value }) => (
-                    <Button key={value} className={classnames(styles['option-container'], { 'selected': selected.includes(value) })} title={typeof label === 'string' ? label : value} data-value={value} onClick={optionOnClick}>
-                        <div className={styles['label']}>{typeof label === 'string' ? label : value}</div>
-                        <Icon className={styles['icon']} icon={'ic_check'} />
-                    </Button>
-                ))
-                :
-                <div className={styles['no-options-container']}>
-                    <div className={styles['label']}>No options available</div>
-                </div>
-        );
-    }, [options]);
-    return (
-        <React.Fragment>
+    ), [menuOpen, title, disabled, options, selected, labelOnClick, renderLabelContent, renderLabelText]);
+    const renderMenu = React.useMemo(() => () => (
+        <div className={styles['menu-container']} onKeyDown={menuOnKeyDown} onClick={menuOnClick}>
             {
-                !modalOptions ?
-                    <Popup
-                        open={menuOpen}
-                        direction={direction}
-                        onCloseRequest={closeMenu}
-                        renderLabel={(labelProps) => {
-                            return renderLabel({
-                                ...labelProps,
-                                ...props,
-                                className: classnames(className, labelProps.className)
-                            });
-                        }}
-                        renderMenu={() => (
-                            <div className={styles['menu-container']} onKeyDown={popupMenuOnKeyDown} onClick={popupMenuOnClick}>
-                                {renderOptions(options)}
-                            </div>
-                        )}
-                    />
+                options.length > 0 ?
+                    options.map(({ label, value }) => (
+                        <Button key={value} className={classnames(styles['option-container'], { 'selected': selected.includes(value) })} title={typeof label === 'string' ? label : value} data-value={value} onClick={optionOnClick}>
+                            <div className={styles['label']}>{typeof label === 'string' ? label : value}</div>
+                            <Icon className={styles['icon']} icon={'ic_check'} />
+                        </Button>
+                    ))
                     :
-                    <React.Fragment>
-                        {renderLabel({
-                            ...props,
-                            className
-                        })}
-                        {
-                            menuOpen ?
-                                <ModalDialog title={title} onCloseRequest={closeMenu}>
-                                    <div className={classnames(styles['menu-container'], { 'modal': modalOptions })}>
-                                        {renderOptions(options)}
-                                    </div>
-                                </ModalDialog>
-                                :
-                                null
-                        }
-                    </React.Fragment>
+                    <div className={styles['no-options-container']}>
+                        <div className={styles['label']}>No options available</div>
+                    </div>
             }
-        </React.Fragment>
-    );
+        </div>
+    ), [options, selected, menuOnKeyDown, menuOnClick, optionOnClick]);
+    const renderPopupLabel = React.useMemo(() => (labelProps) => {
+        return renderLabel({
+            ...labelProps,
+            ...props,
+            className: classnames(className, labelProps.className)
+        });
+    }, [props, className, renderLabel]);
+    return mode === 'modal' ?
+        renderLabel({
+            ...props,
+            className,
+            children: menuOpen ?
+                <ModalDialog className={styles['modal-container']} title={title} onCloseRequest={closeMenu} onKeyDown={menuOnKeyDown} onClick={menuOnClick}>
+                    {renderMenu()}
+                </ModalDialog>
+                :
+                null
+        })
+        :
+        <Popup
+            open={menuOpen}
+            direction={direction}
+            onCloseRequest={closeMenu}
+            renderLabel={renderPopupLabel}
+            renderMenu={renderMenu}
+        />;
 };
 
 Multiselect.propTypes = {
     className: PropTypes.string,
+    mode: PropTypes.oneOf(['popup', 'modal']),
     direction: PropTypes.any,
     title: PropTypes.string,
     options: PropTypes.arrayOf(PropTypes.shape({

@@ -110,6 +110,7 @@ const mapSelectableInputs = (discover) => {
     };
     const extraSelects = discover.selectable.extra.map((extra) => {
         const title = `Select ${extra.name}`;
+        const isRequired = extra.isRequired;
         const options = (extra.isRequired ? [] : [NONE_EXTRA_VALUE])
             .concat(extra.options)
             .map((option) => ({
@@ -141,7 +142,7 @@ const mapSelectableInputs = (discover) => {
                 }
             });
         };
-        return { title, options, selected, renderLabelText, onSelect };
+        return { title, isRequired, options, selected, renderLabelText, onSelect };
     });
     const paginationInput = discover.selectable.has_prev_page || discover.selectable.has_next_page ?
         {
