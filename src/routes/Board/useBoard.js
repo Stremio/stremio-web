@@ -9,7 +9,7 @@ const initBoardState = () => ({
 const mapBoardStateWithCtx = (board, ctx) => {
     const selected = board.selected;
     const catalog_resources = board.catalog_resources.map((catalog_resource) => {
-        catalog_resource.addon_name = ctx.content.addons.reduce((addon_name, addon) => {
+        catalog_resource.addon_name = ctx.profile.addons.reduce((addon_name, addon) => {
             if (addon.transportUrl === catalog_resource.request.base) {
                 return addon.manifest.name;
             }
@@ -35,7 +35,7 @@ const useBoard = () => {
     const loadBoardAction = React.useMemo(() => ({
         action: 'Load',
         args: {
-            load: 'CatalogsWithExtra',
+            model: 'CatalogsWithExtra',
             args: { extra: [] }
         }
     }), []);

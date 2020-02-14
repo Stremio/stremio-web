@@ -42,7 +42,7 @@ const Search = ({ queryParams }) => {
                         search.catalog_resources.length === 0 ?
                             <div className={styles['message-container']}>
                                 <div className={styles['message-content']}>
-                                    <div className={styles['label']}> No addons were requested for catalogs</div>
+                                    <div className={styles['label']}>No addons were requested for catalogs</div>
                                 </div>
                             </div>
                             :

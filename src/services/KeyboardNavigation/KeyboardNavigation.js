@@ -12,6 +12,14 @@ function KeyboardNavigation() {
         if (tab) {
             event.preventDefault();
             window.location = tab.href;
+            return;
+        }
+
+        if (event.target.tagName !== 'INPUT') {
+            if (event.key === 'Backspace') {
+                window.history.back();
+                return;
+            }
         }
     }
     function start() {

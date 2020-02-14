@@ -8,7 +8,7 @@ const { useModalsContainer } = require('../ModalsContainerContext');
 const Modal = ({ className, autoFocus, disabled, children, ...props }) => {
     const modalsContainer = useModalsContainer();
     return ReactDOM.createPortal(
-        <FocusLock className={classnames(className, 'modal-container')} autoFocus={autoFocus} disabled={disabled} lockProps={props}>
+        <FocusLock className={classnames(className, 'modal-container')} autoFocus={!!autoFocus} disabled={!!disabled} lockProps={props}>
             {children}
         </FocusLock>,
         modalsContainer

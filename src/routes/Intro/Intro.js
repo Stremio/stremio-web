@@ -3,10 +3,11 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const { useRouteFocused } = require('stremio-router');
-const { Button, useCoreEvent } = require('stremio/common');
+const { Button, useBinaryState, useCoreEvent } = require('stremio/common');
 const { useServices } = require('stremio/services');
 const CredentialsTextInput = require('./CredentialsTextInput');
 const ConsentCheckbox = require('./ConsentCheckbox');
+const PasswordResetModal = require('./PasswordResetModal');
 const styles = require('./styles');
 
 const SIGNUP_FORM = 'signup';
@@ -22,6 +23,7 @@ const Intro = ({ queryParams }) => {
     const privacyPolicyRef = React.useRef();
     const marketingRef = React.useRef();
     const errorRef = React.useRef();
+    const [passwordRestModalOpen, openPasswordRestModal, closePasswordResetModal] = useBinaryState(false);
     const [state, dispatch] = React.useReducer(
         (state, action) => {
             switch (action.type) {
@@ -89,7 +91,7 @@ const Intro = ({ queryParams }) => {
     const loginWithFacebook = React.useCallback(() => {
         FB.login((response) => {
             if (response.status === 'connected') {
-                fetch('https://www.strem.io/fb-login-with-token/' + encodeURIComponent(response.authResponse.accessToken), { timeout: 10 * 1000 })
+                fetch('https://www.strem.io/fb-login-with-token/' + encodeURIComponent(response.authResponse.accessToken), { timeout: 10 * 60 * 1000 })
                     .then((resp) => {
                         if (resp.status < 200 || resp.status >= 300) {
                             throw new Error('Login failed at getting token from Stremio with status ' + resp.status);
@@ -97,22 +99,30 @@ const Intro = ({ queryParams }) => {
                             return resp.json();
                         }
                     })
-                    .then(() => {
+                    .then(({ user }) => {
+                        if (!user || typeof user.fbLoginToken !== 'string' || typeof user.email !== 'string') {
+                            throw new Error('Login failed at getting token from Stremio');
+                        }
                         core.dispatch({
-                            action: 'UserOp',
+                            action: 'Ctx',
                             args: {
-                                userOp: 'Login',
+                                action: 'Authenticate',
                                 args: {
-                                    email: state.email,
-                                    password: response.authResponse.accessToken
+                                    type: 'Login',
+                                    email: user.email,
+                                    password: user.fbLoginToken
                                 }
                             }
                         });
                     })
-                    .catch(() => { });
+                    .catch((err = {}) => {
+                        dispatch({ type: 'error', error: err.message || JSON.stringify(err) });
+                    });
+            } else {
+                dispatch({ type: 'error', error: 'Login failed at getting token from Facebook' });
             }
         });
-    }, [state.email, state.password]);
+    }, []);
     const loginWithEmail = React.useCallback(() => {
         if (typeof state.email !== 'string' || state.email.length === 0) {
             dispatch({ type: 'error', error: 'Invalid email' });
@@ -315,7 +325,7 @@ const Intro = ({ queryParams }) => {
                         </React.Fragment>
                         :
                         <div className={styles['forgot-password-link-container']}>
-                            <Button className={styles['forgot-password-link']} href={'https://www.strem.io/reset-password/'} target={'_blank'}>Forgot password?</Button>
+                            <Button className={styles['forgot-password-link']} onClick={openPasswordRestModal}>Forgot password?</Button>
                         </div>
                 }
                 {
@@ -339,6 +349,12 @@ const Intro = ({ queryParams }) => {
                     <div className={styles['label']}>{state.form === SIGNUP_FORM ? 'LOG IN' : 'SING UP WITH EMAIL'}</div>
                 </Button>
             </div>
+            {
+                passwordRestModalOpen ?
+                    <PasswordResetModal email={state.email} onCloseRequest={closePasswordResetModal} />
+                    :
+                    null
+            }
         </div>
     );
 };

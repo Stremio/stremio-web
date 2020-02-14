@@ -2,24 +2,26 @@ const React = require('react');
 const useModelState = require('stremio/common/useModelState');
 
 const initAddonDetailsState = () => ({
-    descriptor: null
+    selected: null,
+    addon: null
 });
 
 const mapAddonDetailsStateWithCtx = (addonDetails, ctx) => {
-    const descriptor = addonDetails.descriptor !== null && addonDetails.descriptor.content.type === 'Ready' ?
+    const selected = addonDetails.selected;
+    const addon = addonDetails.addon !== null && addonDetails.addon.content.type === 'Ready' ?
         {
-            ...addonDetails.descriptor,
+            transport_url: addonDetails.addon.transport_url,
             content: {
-                ...addonDetails.descriptor.content,
+                type: addonDetails.addon.content.type,
                 content: {
-                    ...addonDetails.descriptor.content.content,
-                    installed: ctx.content.addons.some((addon) => addon.transportUrl === addonDetails.descriptor.transportUrl),
+                    ...addonDetails.addon.content.content,
+                    installed: ctx.profile.addons.some(({ transportUrl }) => transportUrl === addonDetails.addon.transport_url),
                 }
             }
         }
         :
-        addonDetails.descriptor;
-    return { descriptor };
+        addonDetails.addon;
+    return { selected, addon };
 };
 
 const useAddonDetails = (transportUrl) => {
@@ -28,7 +30,7 @@ const useAddonDetails = (transportUrl) => {
             return {
                 action: 'Load',
                 args: {
-                    load: 'AddonDetails',
+                    model: 'AddonDetails',
                     args: {
                         transport_url: transportUrl
                     }
