@@ -36,7 +36,7 @@ const ModalDialog = ({ className, title, buttons, children, dataset, onCloseRequ
     React.useEffect(() => {
         const onWindowKeyDown = (event) => {
             // its `-2` because focus lock render locking divs around its content
-            if (modalsContainer.childNodes[modalsContainer.childElementCount - 2] === modalContainerRef.current) {
+            if (event.key === 'Escape' && modalsContainer.childNodes[modalsContainer.childElementCount - 2] === modalContainerRef.current) {
                 if (typeof onCloseRequest === 'function') {
                     onCloseRequest({
                         type: 'close',
