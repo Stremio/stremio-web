@@ -55,7 +55,6 @@ const Discover = ({ urlParams, queryParams }) => {
                     {selectInputs.map(({ title, options, selected, renderLabelText, onSelect }, index) => (
                         <Multiselect
                             key={index}
-                            modalSelects={false}
                             className={styles['select-input-container']}
                             title={title}
                             options={options}
