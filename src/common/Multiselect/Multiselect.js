@@ -165,7 +165,6 @@ Multiselect.propTypes = {
     selected: PropTypes.arrayOf(PropTypes.string),
     disabled: PropTypes.bool,
     dataset: PropTypes.object,
-    modalOptions: PropTypes.bool,
     renderLabelContent: PropTypes.func,
     renderLabelText: PropTypes.func,
     onOpen: PropTypes.func,
