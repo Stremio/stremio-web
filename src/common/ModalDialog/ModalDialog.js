@@ -34,15 +34,6 @@ const ModalDialog = ({ className, title, buttons, children, dataset, onCloseRequ
         event.nativeEvent.closeModalDialogPrevented = true;
     }, []);
     React.useEffect(() => {
-        const onWindowResize = (event) => {
-            if (typeof onCloseRequest === 'function') {
-                onCloseRequest({
-                    type: 'close',
-                    dataset: dataset,
-                    nativeEvent: event
-                });
-            }
-        };
         const onWindowKeyDown = (event) => {
             // its `-2` because focus lock render locking divs around its content
             if (modalsContainer.childNodes[modalsContainer.childElementCount - 2] === modalContainerRef.current) {
@@ -55,10 +46,8 @@ const ModalDialog = ({ className, title, buttons, children, dataset, onCloseRequ
                 }
             }
         };
-        window.addEventListener('resize', onWindowResize);
         window.addEventListener('keydown', onWindowKeyDown);
         return () => {
-            window.removeEventListener('resize', onWindowResize);
             window.removeEventListener('keydown', onWindowKeyDown);
         };
     }, [dataset, onCloseRequest]);
