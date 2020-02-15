@@ -1,13 +1,11 @@
 const React = require('react');
 const { useServices } = require('stremio/services');
-const { useProfile } = require('stremio/common');
 const languages = require('./languages');
 
 const SUBTITLES_SIZES = [75, 100, 125, 150, 175, 200, 250];
 
-const useProfileSettingsInputs = () => {
+const useProfileSettingsInputs = (profile) => {
     const { core } = useServices();
-    const profile = useProfile();
     const interfaceLanguageSelect = React.useMemo(() => ({
         options: Object.keys(languages).map((code) => ({
             value: code,

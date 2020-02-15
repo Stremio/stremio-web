@@ -3,7 +3,8 @@ const classnames = require('classnames');
 const throttle = require('lodash.throttle');
 const Icon = require('stremio-icons/dom');
 const { useServices } = require('stremio/services');
-const { Button, Checkbox, NavBar, Multiselect, ColorInput, useProfile, useStreamingServer } = require('stremio/common');
+const { Button, Checkbox, NavBar, Multiselect, ColorInput, useProfile } = require('stremio/common');
+const useStreamingServer = require('./useStreamingServer');
 const useProfileSettingsInputs = require('./useProfileSettingsInputs');
 const useStreamingServerSettingsInputs = require('./useStreamingServerSettingsInputs');
 const styles = require('./styles');
@@ -15,7 +16,7 @@ const STREAMING_SECTION = 'streaming';
 const Settings = () => {
     const { core } = useServices();
     const profile = useProfile();
-    const streaminServer = useStreamingServer();
+    const streamingServer = useStreamingServer();
     const {
         interfaceLanguageSelect,
         subtitlesLanguageSelect,
@@ -27,11 +28,11 @@ const Settings = () => {
         playInBackgroundCheckbox,
         playInExternalPlayerCheckbox,
         hardwareDecodingCheckbox
-    } = useProfileSettingsInputs();
+    } = useProfileSettingsInputs(profile);
     const {
         cacheSizeSelect,
         torrentProfileSelect
-    } = useStreamingServerSettingsInputs();
+    } = useStreamingServerSettingsInputs(streamingServer);
     const logoutButtonOnClick = React.useCallback(() => {
         core.dispatch({
             action: 'Ctx',
@@ -54,9 +55,9 @@ const Settings = () => {
     }, []);
     const reloadStreamingServer = React.useCallback(() => {
         core.dispatch({
-            action: 'Ctx',
+            action: 'StreamingServer',
             args: {
-                action: 'ReloadStreamingServer'
+                action: 'Reload'
             }
         });
     }, []);
@@ -121,8 +122,8 @@ const Settings = () => {
                     <div className={styles['spacing']} />
                     <div className={styles['version-info-label']}>App Version: {process.env.VERSION}</div>
                     {
-                        streaminServer.type === 'Ready' ?
-                            <div className={styles['version-info-label']}>Server Version: {streaminServer.settings.serverVersion}</div>
+                        streamingServer.settings !== null && streamingServer.settings.type === 'Ready' ?
+                            <div className={styles['version-info-label']}>Server Version: {streamingServer.settings.content.serverVersion}</div>
                             :
                             null
                     }
@@ -337,32 +338,30 @@ const Settings = () => {
                             <div className={classnames(styles['option-input-container'], styles['info-container'])}>
                                 <div className={styles['label']}>
                                     {
-                                        streaminServer.type === 'Ready' ?
-                                            'Online'
+                                        streamingServer.settings === null ?
+                                            'NotLoaded'
                                             :
-                                            streaminServer.type === 'Error' ?
-                                                `Error: (${streaminServer.error})`
+                                            streamingServer.settings.type === 'Ready' ?
+                                                'Online'
                                                 :
-                                                streaminServer.type
+                                                streamingServer.settings.type === 'Error' ?
+                                                    `Error: (${streamingServer.settings.content})`
+                                                    :
+                                                    streamingServer.settings.type
                                     }
                                 </div>
                             </div>
                         </div>
-                        {
-                            streaminServer.type === 'Ready' ?
-                                <div className={styles['option-container']}>
-                                    <div className={styles['option-name-container']}>
-                                        <div className={styles['label']}>Base Url</div>
-                                    </div>
-                                    <div className={classnames(styles['option-input-container'], styles['info-container'], styles['selectable'])}>
-                                        <div className={styles['label']}>
-                                            {streaminServer.base_url}
-                                        </div>
-                                    </div>
+                        <div className={styles['option-container']}>
+                            <div className={styles['option-name-container']}>
+                                <div className={styles['label']}>Url</div>
+                            </div>
+                            <div className={classnames(styles['option-input-container'], styles['info-container'], styles['selectable'])}>
+                                <div className={styles['label']}>
+                                    {profile.settings.streaming_server_url}
                                 </div>
-                                :
-                                null
-                        }
+                            </div>
+                        </div>
                         {
                             cacheSizeSelect !== null ?
                                 <div className={styles['option-container']}>

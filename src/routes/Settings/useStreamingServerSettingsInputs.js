@@ -1,7 +1,6 @@
 const React = require('react');
 const isEqual = require('lodash.isequal');
 const { useServices } = require('stremio/services');
-const { useStreamingServer } = require('stremio/common');
 
 const CACHE_SIZES = [0, 2147483648, 5368709120, 10737418240, null];
 
@@ -42,11 +41,10 @@ const TORRENT_PROFILES = {
     }
 };
 
-const useStreaminServerSettingsInputs = () => {
+const useStreaminServerSettingsInputs = (streaminServer) => {
     const { core } = useServices();
-    const streaminServer = useStreamingServer();
     const cacheSizeSelect = React.useMemo(() => {
-        if (streaminServer.type !== 'Ready') {
+        if (streaminServer.settings === null || streaminServer.settings.type !== 'Ready') {
             return null;
         }
 
@@ -55,36 +53,36 @@ const useStreaminServerSettingsInputs = () => {
                 label: cacheSizeToString(size),
                 value: JSON.stringify(size)
             })),
-            selected: [JSON.stringify(streaminServer.settings.cacheSize)],
+            selected: [JSON.stringify(streaminServer.settings.content.cacheSize)],
             renderLabelText: () => {
-                return cacheSizeToString(streaminServer.settings.cacheSize);
+                return cacheSizeToString(streaminServer.settings.content.cacheSize);
             },
             onSelect: (event) => {
                 core.dispatch({
-                    action: 'Ctx',
+                    action: 'StreamingServer',
                     args: {
                         action: 'UpdateSettings',
                         args: {
-                            ...streaminServer.settings,
+                            ...streaminServer.settings.content,
                             cacheSize: JSON.parse(event.value)
                         }
                     }
                 });
             }
         };
-    }, [streaminServer.type, streaminServer.settings]);
+    }, [streaminServer.settings]);
     const torrentProfileSelect = React.useMemo(() => {
-        if (streaminServer.type !== 'Ready') {
+        if (streaminServer.settings === null || streaminServer.settings.type !== 'Ready') {
             return null;
         }
 
         const selectedTorrentProfile = {
-            btDownloadSpeedHardLimit: streaminServer.settings.btDownloadSpeedHardLimit,
-            btDownloadSpeedSoftLimit: streaminServer.settings.btDownloadSpeedSoftLimit,
-            btHandshakeTimeout: streaminServer.settings.btHandshakeTimeout,
-            btMaxConnections: streaminServer.settings.btMaxConnections,
-            btMinPeersForStable: streaminServer.settings.btMinPeersForStable,
-            btRequestTimeout: streaminServer.settings.btRequestTimeout
+            btDownloadSpeedHardLimit: streaminServer.settings.content.btDownloadSpeedHardLimit,
+            btDownloadSpeedSoftLimit: streaminServer.settings.content.btDownloadSpeedSoftLimit,
+            btHandshakeTimeout: streaminServer.settings.content.btHandshakeTimeout,
+            btMaxConnections: streaminServer.settings.content.btMaxConnections,
+            btMinPeersForStable: streaminServer.settings.content.btMinPeersForStable,
+            btRequestTimeout: streaminServer.settings.content.btRequestTimeout
         };
         const isCustomTorrentProfileSelected = Object.values(TORRENT_PROFILES).every((torrentProfile) => {
             return !isEqual(torrentProfile, selectedTorrentProfile);
@@ -116,18 +114,18 @@ const useStreaminServerSettingsInputs = () => {
             },
             onSelect: (event) => {
                 core.dispatch({
-                    action: 'Ctx',
+                    action: 'StreamingServer',
                     args: {
                         action: 'UpdateSettings',
                         args: {
-                            ...streaminServer.settings,
+                            ...streaminServer.settings.content,
                             ...JSON.parse(event.value)
                         }
                     }
                 });
             }
         };
-    }, [streaminServer.type, streaminServer.settings]);
+    }, [streaminServer.settings]);
     return { cacheSizeSelect, torrentProfileSelect };
 };
 
