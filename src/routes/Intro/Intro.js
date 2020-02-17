@@ -257,7 +257,6 @@ const Intro = ({ queryParams }) => {
     }, [queryParams]);
     React.useEffect(() => {
         if (typeof state.error === 'string' && state.error.length > 0) {
-            closeLoaderModal();
             errorRef.current.scrollIntoView();
         }
     }, [state.error]);
