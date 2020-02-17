@@ -77,12 +77,14 @@ const Intro = ({ queryParams }) => {
     useCoreEvent(React.useCallback(({ event, args }) => {
         switch (event) {
             case 'UserAuthenticated': {
+                closeLoaderModal();
                 window.location.replace('#/');
                 break;
             }
             case 'Error': {
                 if (args.source.event === 'UserAuthenticated') {
                     // TODO use error.code to match translated message;
+                    closeLoaderModal();
                     dispatch({ type: 'error', error: args.error.message });
                 }
                 break;
@@ -133,7 +135,6 @@ const Intro = ({ queryParams }) => {
             dispatch({ type: 'error', error: 'Invalid password' });
             return;
         }
-        dispatch({ type: 'error', error: '' });
         openLoaderModal();
         core.dispatch({
             action: 'Ctx',
