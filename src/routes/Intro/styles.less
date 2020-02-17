@@ -150,3 +150,36 @@
         }
     }
 }
+
+.modal-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-background80);
+
+    .label {
+        margin-bottom: 1rem;
+        font-size: 2rem;
+        color: var(--color-surfacelighter);
+        animation: 1s linear infinite alternate flash;
+    }
+
+    .icon {
+        flex: none;
+        width: 5rem;
+        height: 5rem;
+        fill: var(--color-surfacelighter);
+        animation: 1s linear infinite alternate flash;
+    }
+
+    @keyframes flash {
+        0% {
+            opacity: 0.4;
+        }
+
+        100% {
+            opacity: 1.0;
+        }
+    }
+}

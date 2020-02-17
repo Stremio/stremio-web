@@ -2,7 +2,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
-const { useRouteFocused } = require('stremio-router');
+const { Modal, useRouteFocused } = require('stremio-router');
 const { Button, useBinaryState, useCoreEvent } = require('stremio/common');
 const { useServices } = require('stremio/services');
 const CredentialsTextInput = require('./CredentialsTextInput');
@@ -24,6 +24,7 @@ const Intro = ({ queryParams }) => {
     const marketingRef = React.useRef();
     const errorRef = React.useRef();
     const [passwordRestModalOpen, openPasswordRestModal, closePasswordResetModal] = useBinaryState(false);
+    const [loaderModalOpen, openLoaderModal, closeLoaderModal] = useBinaryState(false);
     const [state, dispatch] = React.useReducer(
         (state, action) => {
             switch (action.type) {
@@ -76,12 +77,14 @@ const Intro = ({ queryParams }) => {
     useCoreEvent(React.useCallback(({ event, args }) => {
         switch (event) {
             case 'UserAuthenticated': {
+                closeLoaderModal();
                 window.location.replace('#/');
                 break;
             }
             case 'Error': {
                 if (args.source.event === 'UserAuthenticated') {
                     // TODO use error.code to match translated message;
+                    closeLoaderModal();
                     dispatch({ type: 'error', error: args.error.message });
                 }
                 break;
@@ -132,6 +135,7 @@ const Intro = ({ queryParams }) => {
             dispatch({ type: 'error', error: 'Invalid password' });
             return;
         }
+        openLoaderModal();
         core.dispatch({
             action: 'Ctx',
             args: {
@@ -178,6 +182,7 @@ const Intro = ({ queryParams }) => {
             dispatch({ type: 'error', error: 'You must accept the Privacy Policy' });
             return;
         }
+        openLoaderModal();
         core.dispatch({
             action: 'Ctx',
             args: {
@@ -352,6 +357,15 @@ const Intro = ({ queryParams }) => {
             {
                 passwordRestModalOpen ?
                     <PasswordResetModal email={state.email} onCloseRequest={closePasswordResetModal} />
+                    :
+                    null
+            }
+            {
+                loaderModalOpen ?
+                    <Modal className={styles['modal-container']}>
+                        <div className={styles['label']}>Authenticating...</div>
+                        <Icon className={styles['icon']} icon={'ic_user'} />
+                    </Modal>
                     :
                     null
             }
