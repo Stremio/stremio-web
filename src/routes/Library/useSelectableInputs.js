@@ -1,7 +1,7 @@
 const React = require('react');
 
 const SORT_PROP_OPTIONS = [
-    { label: 'Recent', value: '_ctime' },
+    { label: 'Recent', value: 'ctime' },
     { label: 'A-Z', value: 'name' },
     { label: 'Year', value: 'year' },
 ];
@@ -16,7 +16,7 @@ const mapSelectableInputs = (library) => {
         options: library.type_names
             .map((type) => ({ label: type, value: type })),
         onSelect: (event) => {
-            window.location.replace(`#/library/${encodeURIComponent(event.value)}/${encodeURIComponent(library.selected.sort_prop)}`);
+            window.location.replace(`#/library/${encodeURIComponent(event.value)}`);
         }
     };
     const sortPropSelect = {
@@ -29,6 +29,8 @@ const mapSelectableInputs = (library) => {
         onSelect: (event) => {
             if (library.selected !== null) {
                 window.location.replace(`#/library/${encodeURIComponent(library.selected.type_name)}/${encodeURIComponent(event.value)}`);
+            } else if (library.type_names.length > 0) {
+                window.location.replace(`#/library/${encodeURIComponent(library.type_names[0])}/${encodeURIComponent(event.value)}`);
             }
         }
     };
