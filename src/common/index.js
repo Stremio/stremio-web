@@ -3,14 +3,13 @@ const Button = require('./Button');
 const Checkbox = require('./Checkbox');
 const ColorInput = require('./ColorInput');
 const Image = require('./Image');
-const HorizontalNavBar = require('./HorizontalNavBar');
 const MainVerticalNavBar = require('./MainVerticalNavBar');
 const MetaItem = require('./MetaItem');
 const MetaPreview = require('./MetaPreview');
 const MetaRow = require('./MetaRow');
 const ModalDialog = require('./ModalDialog');
 const Multiselect = require('./Multiselect');
-const { VerticalNavBar } = require('./NavBar');
+const { HorizontalNavBar, VerticalNavBar } = require('./NavBar');
 const PaginationInput = require('./PaginationInput');
 const PlayIconCircleCentered = require('./PlayIconCircleCentered');
 const Popup = require('./Popup');
@@ -36,13 +35,13 @@ module.exports = {
     Checkbox,
     ColorInput,
     Image,
-    HorizontalNavBar,
     MainVerticalNavBar,
     MetaItem,
     MetaPreview,
     MetaRow,
     ModalDialog,
     Multiselect,
+    HorizontalNavBar,
     VerticalNavBar,
     PaginationInput,
     PlayIconCircleCentered,
