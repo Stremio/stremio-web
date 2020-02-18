@@ -33,9 +33,11 @@ VerticalNavBar.displayName = 'VerticalNavBar';
 
 VerticalNavBar.propTypes = {
     className: PropTypes.string,
+    route: PropTypes.string,
     tabs: PropTypes.arrayOf(PropTypes.shape({
-        icon: PropTypes.string,
+        route: PropTypes.string,
         label: PropTypes.string,
+        icon: PropTypes.string,
         href: PropTypes.string,
         onClick: PropTypes.func
     }))
