@@ -12,7 +12,7 @@ const routesRegexp = {
         urlParamsNames: ['transportUrl', 'type', 'catalogId']
     },
     library: {
-        regexp: /^\/library(?:\/([^/]*)\/([^/]*))?$/,
+        regexp: /^\/library(?:\/([^/]*))?(?:\/([^/]*))?$/,
         urlParamsNames: ['type', 'sort']
     },
     search: {
