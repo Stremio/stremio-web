@@ -1,12 +1,12 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const NavTabButton = require('stremio/common/NavBar/NavTabButton');
+const NavTabButton = require('../NavTabButton');
 const styles = require('./styles');
 
 const VerticalNavBar = React.memo(({ className, route, tabs }) => {
     return (
-        <nav className={classnames(className, styles['nav-bar-container'])}>
+        <nav className={classnames(className, styles['vertical-nav-bar-container'])}>
             {
                 Array.isArray(tabs) && tabs.length > 0 ?
                     tabs.map((tab, index) => (
