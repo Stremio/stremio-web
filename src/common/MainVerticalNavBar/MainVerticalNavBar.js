@@ -1,6 +1,6 @@
 const React = require('react');
 const PropTypes = require('prop-types');
-const VerticalNavBar = require('stremio/common/VerticalNavBar');
+const { VerticalNavBar } = require('stremio/common/NavBar');
 
 const TABS = [
     { route: 'board', label: 'Board', icon: 'ic_board', href: '#/' },

@@ -10,7 +10,7 @@ const MetaPreview = require('./MetaPreview');
 const MetaRow = require('./MetaRow');
 const ModalDialog = require('./ModalDialog');
 const Multiselect = require('./Multiselect');
-const NavBar = require('./NavBar');
+const { VerticalNavBar } = require('./NavBar');
 const PaginationInput = require('./PaginationInput');
 const PlayIconCircleCentered = require('./PlayIconCircleCentered');
 const Popup = require('./Popup');
@@ -43,7 +43,7 @@ module.exports = {
     MetaRow,
     ModalDialog,
     Multiselect,
-    NavBar,
+    VerticalNavBar,
     PaginationInput,
     PlayIconCircleCentered,
     Popup,

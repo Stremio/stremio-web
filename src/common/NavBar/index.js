@@ -1,3 +1,5 @@
-const NavBar = require('./NavBar');
+const VerticalNavBar = require('./VerticalNavBar');
 
-module.exports = NavBar;
+module.exports = {
+    VerticalNavBar
+};
