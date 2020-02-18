@@ -14,7 +14,12 @@
         flex-direction: row;
         padding: 0 1rem;
 
+        .icon {
+            margin: 0 0.5rem 0 0;
+        }
+
         .label {
+            flex: 1;
             max-height: 2.4em;
         }
     }
@@ -22,7 +27,6 @@
     &.nav-tab-button-vertical {
         flex-direction: column;
         justify-content: center;
-        height: var(--nav-bar-size);
         padding: 0.5rem;
 
         .icon {
@@ -30,6 +34,7 @@
         }
 
         .label {
+            flex: none;
             max-height: 1.2em;
             font-size: 0.75rem;
         }
@@ -39,16 +44,10 @@
         flex: none;
         width: 1.5rem;
         height: 1.2rem;
-        margin-right: 0.5rem;
         fill: var(--color-surfacelighter);
-
-        &:only-child {
-            margin-right: 0;
-        }
     }
 
     .label {
-        flex: 1;
         color: var(--color-surfacelighter);
     }
 }

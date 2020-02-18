@@ -7,7 +7,7 @@ const styles = require('./styles');
 
 const NavTabButton = ({ className, icon, label, href, selected, direction, onClick }) => {
     return (
-        <Button className={classnames(className, styles['nav-tab-button-container'], styles[`nav-tab-button-${direction}`], { 'selected': selected })} title={label} tabIndex={-1} href={href} onClick={onClick}>
+        <Button className={classnames(className, styles['nav-tab-button-container'], styles['nav-tab-button-horizontal'], styles[`nav-tab-button-${direction}`], { 'selected': selected })} title={label} tabIndex={-1} href={href} onClick={onClick}>
             {
                 typeof icon === 'string' && icon.length > 0 ?
                     <Icon className={styles['icon']} icon={icon} />
