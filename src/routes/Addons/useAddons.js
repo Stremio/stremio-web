@@ -5,22 +5,22 @@ const { useModelState } = require('stremio/common');
 const initAddonsState = () => ({
     selectable: {
         types: [],
-        catalogs: [],
-        extra: [],
-        has_next_page: false,
-        has_prev_page: false
+        catalogs: []
     },
     catalog_resource: null
 });
 
 const mapAddonsStateWithCtx = (addons, ctx) => {
-    const selectable = addons.selectable;
+    const selectable = {
+        types: addons.selectable.types,
+        catalogs: addons.selectable.catalogs
+    };
     // TODO replace catalog content if resource catalog id is MY
     const catalog_resource = addons.catalog_resource !== null && addons.catalog_resource.content.type === 'Ready' ?
         {
-            ...addons.catalog_resource,
+            request: addons.catalog_resource.request,
             content: {
-                ...addons.catalog_resource.content,
+                type: addons.catalog_resource.content.type,
                 content: addons.catalog_resource.content.content.map((addon) => ({
                     transportUrl: addon.transportUrl,
                     installed: ctx.profile.addons.some(({ transportUrl }) => transportUrl === addon.transportUrl),
@@ -45,7 +45,7 @@ const onNewAddonsState = (addons) => {
         return {
             action: 'Load',
             args: {
-                model: 'CatalogFiltered',
+                model: 'CatalogWithFilters',
                 args: {
                     request: addons.selectable.catalogs[0].request
                 }
@@ -61,7 +61,7 @@ const useAddons = (urlParams) => {
             return {
                 action: 'Load',
                 args: {
-                    model: 'CatalogFiltered',
+                    model: 'CatalogWithFilters',
                     args: {
                         request: {
                             base: urlParams.transportUrl,
@@ -81,7 +81,7 @@ const useAddons = (urlParams) => {
                 return {
                     action: 'Load',
                     args: {
-                        model: 'CatalogFiltered',
+                        model: 'CatalogWithFilters',
                         args: {
                             request: addons.selectable.catalogs[0].request
                         }

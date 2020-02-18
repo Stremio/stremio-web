@@ -1,4 +1,13 @@
-.settings-parent-container {
+:import('~stremio/common/Checkbox/styles.less') {
+    checkbox-icon: icon;
+}
+
+:import('~stremio/common/Multiselect/styles.less') {
+    multiselect-menu-container: menu-container;
+    multiselect-label: label;
+}
+
+.settings-container {
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -10,31 +19,241 @@
         align-self: stretch;
     }
 
-    .settings-container {
-        width: 100%;
-        height: 100%;
+    .settings-content {
+        flex: 1;
+        align-self: stretch;
         display: flex;
         flex-direction: row;
-        background-color: var(--color-backgroundlight);
-        --input-width: 35rem;
-    
-        .side-menu {
-            padding: 1rem;
-            width: 17rem;
+
+        .side-menu-container {
+            flex: none;
+            align-self: stretch;
             display: flex;
             flex-direction: column;
+            width: 17rem;
+            padding: 1rem;
             background-color: var(--color-backgroundlighter);
 
+            .side-menu-button {
+                flex: none;
+                align-self: stretch;
+                padding: 1rem;
+                font-size: 1.1rem;
+                color: var(--color-surfacelighter);
 
+                &.selected {
+                    background-color: var(--color-background);
+                }
+
+                &:hover {
+                    background-color: var(--color-surface20);
+                }
+            }
+
+            .spacing {
+                flex: 1;
+            }
+
+            .version-info-label {
+                margin: 0.5rem 0;
+                color: var(--color-surfacelight);
+            }
         }
 
-        .scroll-container {
-            padding: 0 2rem;
+        .sections-container {
             flex: 1;
+            align-self: stretch;
+            padding: 0 2rem;
             overflow-y: auto;
 
-            >:not(:last-child) {
-                border-bottom: calc(var(--focusable-border-size) * 0.5) solid var(--color-primary);
+            .section-container {
+                display: flex;
+                flex-direction: column;
+                padding: 2rem 0;
+                overflow: visible;
+
+                &:first-child {
+                    padding-top: 1rem;
+                }
+
+                &:not(:last-child) {
+                    border-bottom: thin solid var(--color-primary40);
+                }
+
+                .section-title {
+                    flex: none;
+                    align-self: stretch;
+                    font-size: 1.8rem;
+                    line-height: 3.4rem;
+                    margin-bottom: 1rem;
+                    color: var(--color-surfacelighter);
+                }
+
+                .option-container {
+                    flex: none;
+                    align-self: stretch;
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    max-width: 35rem;
+                    margin-bottom: 2rem;
+                    overflow: visible;
+
+                    &:last-child {
+                        margin-bottom: 0;
+                    }
+
+                    &.user-info-option-container {
+                        height: 7rem;
+
+                        .avatar-container {
+                            flex: none;
+                            align-self: stretch;
+                            width: 7rem;
+                            margin-right: 1rem;
+                            border-radius: 50%;
+                            background-size: cover;
+                            background-repeat: no-repeat;
+                            background-position: center;
+                            background-origin: content-box;
+                            background-clip: content-box;
+                        }
+
+                        .email-logout-container {
+                            flex: 1;
+                            align-self: stretch;
+                            display: flex;
+                            flex-direction: column;
+                            padding: 1rem 0;
+
+                            .email-label-container, .logout-button-container {
+                                display: flex;
+                                flex-direction: row;
+                                align-items: center;
+                            }
+
+                            .email-label-container {
+                                flex: 1 0 auto;
+
+                                .email-label {
+                                    flex: 1;
+                                    font-size: 1.4rem;
+                                    max-height: 2.4em;
+                                    color: var(--color-surfacelighter);
+                                }
+                            }
+
+                            .logout-button-container {
+                                flex: 0 1 50%;
+
+                                &:hover, &:focus {
+                                    outline: none;
+
+                                    .logout-label {
+                                        color: var(--color-surfacelighter);
+                                        text-decoration: underline;
+                                    }
+                                }
+
+                                .logout-label {
+                                    flex: 1;
+                                    max-height: 1.2em;
+                                    color: var(--color-surface);
+                                }
+                            }
+                        }
+                    }
+
+                    .option-name-container, .option-input-container {
+                        flex: 1 1 50%;
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+
+                        .icon {
+                            flex: none;
+                            width: 1.5rem;
+                            height: 1.5rem;
+                            margin-right: 0.5rem;
+                            fill: var(--color-surfacelighter);
+                        }
+
+                        .label {
+                            flex-grow: 0;
+                            flex-shrink: 1;
+                            flex-basis: auto;
+                            line-height: 1.5rem;
+                            color: var(--color-surfacelighter);
+                        }
+                    }
+
+                    .option-name-container {
+                        justify-content: flex-start;
+                        padding: 1rem 1rem 1rem 0;
+                        margin-right: 2rem;
+                    }
+
+                    .option-input-container {
+                        padding: 1rem;
+
+                        &.button-container {
+                            justify-content: center;
+                            background-color: var(--color-primary);
+
+                            &:hover {
+                                background-color: var(--color-primarylight);
+                            }
+                        }
+
+                        &.multiselect-container {
+                            >.multiselect-label {
+                                line-height: 1.5rem;
+                                max-height: 1.5rem;
+                            }
+
+                            .multiselect-menu-container {
+                                max-height: calc(3.2rem * 7);
+                                overflow: auto;
+                            }
+                        }
+
+                        &.link-container {
+                            flex: 0 1 auto;
+                            padding: 1rem 0;
+
+                            &:hover {
+                                .label {
+                                    text-decoration: underline;
+                                }
+                            }
+                        }
+
+                        &.checkbox-container {
+                            justify-content: center;
+
+                            .checkbox-icon {
+                                width: 1.5rem;
+                                height: 1.5rem;
+                            }
+                        }
+
+                        &.color-input-container {
+                            padding: 1.75rem 1rem;
+                        }
+
+                        &.info-container {
+                            justify-content: center;
+
+                            &.selectable {
+                                user-select: text;
+
+                                .label {
+                                    user-select: text;
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }

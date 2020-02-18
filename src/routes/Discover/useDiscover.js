@@ -17,9 +17,9 @@ const mapDiscoverState = (discover) => {
     const selectable = discover.selectable;
     const catalog_resource = discover.catalog_resource !== null && discover.catalog_resource.content.type === 'Ready' ?
         {
-            ...discover.catalog_resource,
+            request: discover.catalog_resource.request,
             content: {
-                ...discover.catalog_resource.content,
+                type: discover.catalog_resource.content.type,
                 content: discover.catalog_resource.content.content.map((metaItem) => ({
                     type: metaItem.type,
                     name: metaItem.name,
@@ -47,8 +47,10 @@ const onNewDiscoverState = (discover) => {
         return {
             action: 'Load',
             args: {
-                load: 'CatalogFiltered',
-                args: discover.selectable.types[0].load_request
+                model: 'CatalogWithFilters',
+                args: {
+                    request: discover.selectable.types[0].request
+                }
             }
         };
     }
@@ -61,14 +63,16 @@ const useDiscover = (urlParams, queryParams) => {
             return {
                 action: 'Load',
                 args: {
-                    load: 'CatalogFiltered',
+                    model: 'CatalogWithFilters',
                     args: {
-                        base: urlParams.transportUrl,
-                        path: {
-                            resource: 'catalog',
-                            type_name: urlParams.type,
-                            id: urlParams.catalogId,
-                            extra: Array.from(queryParams.entries())
+                        request: {
+                            base: urlParams.transportUrl,
+                            path: {
+                                resource: 'catalog',
+                                type_name: urlParams.type,
+                                id: urlParams.catalogId,
+                                extra: Array.from(queryParams.entries())
+                            }
                         }
                     }
                 }
@@ -79,8 +83,10 @@ const useDiscover = (urlParams, queryParams) => {
                 return {
                     action: 'Load',
                     args: {
-                        load: 'CatalogFiltered',
-                        args: discover.selectable.types[0].load_request
+                        model: 'CatalogWithFilters',
+                        args: {
+                            request: discover.selectable.types[0].request
+                        }
                     }
                 };
             } else {
