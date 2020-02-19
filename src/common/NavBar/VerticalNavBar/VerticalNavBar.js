@@ -1,7 +1,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const NavTabButton = require('../NavTabButton');
+const NavTabButton = require('./NavTabButton');
 const styles = require('./styles');
 
 const VerticalNavBar = React.memo(({ className, route, tabs }) => {

@@ -4,11 +4,11 @@ const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const Button = require('stremio/common/Button');
 const Image = require('stremio/common/Image');
-const SearchBar = require('../SearchBar');
-const AddonsButton = require('../AddonsButton');
-const FullscreenButton = require('../FullscreenButton');
-const NotificationsMenu = require('../NotificationsMenu');
-const NavMenu = require('../NavMenu');
+const SearchBar = require('./SearchBar');
+const AddonsButton = require('./AddonsButton');
+const FullscreenButton = require('./FullscreenButton');
+const NotificationsMenu = require('./NotificationsMenu');
+const NavMenu = require('./NavMenu');
 const styles = require('./styles');
 
 const HorizontalNavBar = React.memo(({ className, route, query, title, backButton, searchBar, addonsButton, fullscreenButton, notificationsMenu, navMenu }) => {
