@@ -3,16 +3,12 @@ const { useServices } = require('stremio/services');
 const { useModelState } = require('stremio/common');
 
 const initLibraryState = () => ({
-    library_state: {
-        type: 'NotLoaded'
-    },
     selected: null,
     type_names: [],
     lib_items: []
 });
 
 const mapLibraryState = (library) => {
-    const library_state = library.library_state;
     const selected = library.selected;
     const type_names = library.type_names;
     const lib_items = library.lib_items.map((lib_item) => ({
@@ -28,7 +24,7 @@ const mapLibraryState = (library) => {
         videoId: lib_item.state.video_id,
         href: `#/metadetails/${encodeURIComponent(lib_item.type)}/${encodeURIComponent(lib_item._id)}${lib_item.state.video_id !== null ? `/${encodeURIComponent(lib_item.state.video_id)}` : ''}`
     }));
-    return { library_state, selected, type_names, lib_items };
+    return { selected, type_names, lib_items };
 };
 
 const onNewLibraryState = (library) => {
@@ -36,10 +32,9 @@ const onNewLibraryState = (library) => {
         return {
             action: 'Load',
             args: {
-                load: 'LibraryFiltered',
+                model: 'LibraryWithFilters',
                 args: {
-                    type_name: library.type_names[0],
-                    sort_prop: null
+                    type_name: library.type_names[0]
                 }
             }
         };
@@ -53,10 +48,20 @@ const useLibrary = (urlParams) => {
             return {
                 action: 'Load',
                 args: {
-                    load: 'LibraryFiltered',
+                    model: 'LibraryWithFilters',
                     args: {
                         type_name: urlParams.type,
                         sort_prop: urlParams.sort
+                    }
+                }
+            };
+        } else if (typeof urlParams.type === 'string') {
+            return {
+                action: 'Load',
+                args: {
+                    model: 'LibraryWithFilters',
+                    args: {
+                        type_name: urlParams.type
                     }
                 }
             };
@@ -66,10 +71,9 @@ const useLibrary = (urlParams) => {
                 return {
                     action: 'Load',
                     args: {
-                        load: 'LibraryFiltered',
+                        model: 'LibraryWithFilters',
                         args: {
-                            type_name: library.type_names[0],
-                            sort_prop: null
+                            type_name: library.type_names[0]
                         }
                     }
                 };

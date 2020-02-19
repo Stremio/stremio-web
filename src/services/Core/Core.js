@@ -58,7 +58,7 @@ function Core() {
         events.off(name, listener);
     }
     function dispatch(action, model) {
-        if (!active) {
+        if (!active || typeof action === 'undefined') {
             return false;
         }
 
