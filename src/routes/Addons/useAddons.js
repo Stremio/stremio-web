@@ -11,28 +11,59 @@ const initAddonsState = () => ({
 });
 
 const mapAddonsStateWithCtx = (addons, ctx) => {
+    const installedTypes = [...new Set([].concat(...ctx.profile.addons.map(addon => addon.manifest.types)))].map((type) => (
+        {
+            name: type,
+            request: {
+                base: 'https://v3-cinemeta.strem.io/manifest.json',
+                path: {
+                    resource: 'addon_catalog',
+                    type_name: type,
+                    id: 'INSTALLED',
+                    extra: []
+                }
+            }
+        }
+    ));
     const selectable = {
-        types: addons.selectable.types,
-        catalogs: addons.selectable.catalogs
+        types: addons.selected.request.path.id === 'INSTALLED' ? installedTypes : addons.selectable.types,
+        catalogs: [
+            ...addons.selectable.catalogs,
+            {
+                name: 'Installed',
+                addon_name: '',
+                request: {
+                    base: 'https://v3-cinemeta.strem.io/manifest.json',
+                    path: {
+                        resource: 'addon_catalog',
+                        type_name: ctx.profile.addons[0].manifest.types[0],
+                        id: 'INSTALLED',
+                        extra: []
+                    }
+                }
+            }
+        ]
     };
-    // TODO replace catalog content if resource catalog id is MY
     const catalog_resource = addons.catalog_resource !== null && addons.catalog_resource.content.type === 'Ready' ?
         {
             request: addons.catalog_resource.request,
             content: {
                 type: addons.catalog_resource.content.type,
-                content: addons.catalog_resource.content.content.map((addon) => ({
-                    transportUrl: addon.transportUrl,
-                    installed: ctx.profile.addons.some(({ transportUrl }) => transportUrl === addon.transportUrl),
-                    manifest: {
-                        id: addon.manifest.id,
-                        name: addon.manifest.name,
-                        version: addon.manifest.version,
-                        logo: addon.manifest.logo,
-                        description: addon.manifest.description,
-                        types: addon.manifest.types
-                    }
-                }))
+                content: (addons.selected.request.path.id === 'INSTALLED' ?
+                    ctx.profile.addons.filter((addon) => addon.manifest.types.includes(addons.selected.request.path.type_name))
+                    :
+                    addons.catalog_resource.content.content).map((addon) => ({
+                        transportUrl: addon.transportUrl,
+                        installed: ctx.profile.addons.some(({ transportUrl }) => transportUrl === addon.transportUrl),
+                        manifest: {
+                            id: addon.manifest.id,
+                            name: addon.manifest.name,
+                            version: addon.manifest.version,
+                            logo: addon.manifest.logo,
+                            description: addon.manifest.description,
+                            types: addon.manifest.types
+                        }
+                    }))
             }
         }
         :
