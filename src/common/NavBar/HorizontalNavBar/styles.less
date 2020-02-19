@@ -37,10 +37,19 @@
         }
     }
 
-    .nav-tab-button {
-        flex: none;
-        align-self: stretch;
-        max-width: 11rem;
+    .title {
+        flex: 1;
+        padding: 0 1rem;
+        font-size: 1.1rem;
+        font-style: normal;
+        font-weight: 400;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        color: var(--color-surfacelighter);
+
+        &+.spacing {
+            display: none;
+        }
     }
 
     .spacing {

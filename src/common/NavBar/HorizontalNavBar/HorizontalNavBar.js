@@ -11,7 +11,7 @@ const NotificationsMenu = require('../NotificationsMenu');
 const NavMenu = require('../NavMenu');
 const styles = require('./styles');
 
-const HorizontalNavBar = React.memo(({ className, route, query, backButton, searchBar, addonsButton, fullscreenButton, notificationsMenu, navMenu }) => {
+const HorizontalNavBar = React.memo(({ className, route, query, title, backButton, searchBar, addonsButton, fullscreenButton, notificationsMenu, navMenu }) => {
     const backButtonOnClick = React.useCallback(() => {
         window.history.back();
     }, []);
@@ -32,15 +32,23 @@ const HorizontalNavBar = React.memo(({ className, route, query, backButton, sear
                     </div>
             }
             {
-                searchBar ?
-                    <React.Fragment>
-                        <div className={styles['spacing']} />
-                        <SearchBar className={styles['search-bar']} query={query} active={route === 'search'} />
-                        <div className={styles['spacing']} />
-                    </React.Fragment>
+                typeof title === 'string' && title.length > 0 ?
+                    <h2 className={styles['title']}>{title}</h2>
                     :
                     null
             }
+            <div className={styles['spacing']} />
+            {
+                searchBar ?
+                    <SearchBar
+                        className={styles['search-bar']}
+                        query={query}
+                        active={route === 'search'}
+                    />
+                    :
+                    null
+            }
+            <div className={styles['spacing']} />
             {
                 addonsButton ?
                     <AddonsButton className={styles['addons-button']} />
@@ -75,6 +83,7 @@ HorizontalNavBar.propTypes = {
     className: PropTypes.string,
     route: PropTypes.string,
     query: PropTypes.string,
+    title: PropTypes.string,
     backButton: PropTypes.bool,
     searchBar: PropTypes.bool,
     addonsButton: PropTypes.bool,
