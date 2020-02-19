@@ -12,7 +12,7 @@ const VerticalNavBar = React.memo(({ className, route, tabs }) => {
                     tabs.map((tab, index) => (
                         <NavTabButton
                             key={index}
-                            direction={'vertical'}
+                            className={styles['nav-tab-button']}
                             selected={tab.route === route}
                             href={tab.href}
                             icon={tab.icon}
