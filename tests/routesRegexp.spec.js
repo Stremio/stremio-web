@@ -121,7 +121,7 @@ describe('routesRegexp', () => {
         it('match /library/', async () => {
             expect(Array.from('/library/'.match(routesRegexp.library.regexp)))
                 .toEqual(['/library/', '', undefined]);
-        })
+        });
 
         it('match /library//', async () => {
             expect(Array.from('/library//'.match(routesRegexp.library.regexp)))
@@ -131,7 +131,7 @@ describe('routesRegexp', () => {
         it('match /library/1', async () => {
             expect(Array.from('/library/1'.match(routesRegexp.library.regexp)))
                 .toEqual(['/library/1', '1', undefined]);
-        })
+        });
 
         it('match /library/1/', async () => {
             expect(Array.from('/library/1/'.match(routesRegexp.library.regexp)))
