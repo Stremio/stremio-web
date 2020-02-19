@@ -1,6 +1,6 @@
-@import (inline, once, css) '~stremio-colors/css/stremio-colors.css';
 @import (inline, once, css) '~stremio/common/roboto.css';
 @import (reference) '~stremio/common/screen-sizes.less';
+@import (reference) '~stremio-colors/dist/less/stremio-colors.less';
 
 :global {
     @import (once, less) '~stremio-router/styles.css';
@@ -36,7 +36,7 @@
     overflow: hidden;
     word-break: break-word;
     scrollbar-width: thin;
-    scrollbar-color: var(--color-secondarylighter80) var(--color-backgroundlight);
+    scrollbar-color: @color-secondary-light5-80 @color-background;
 }
 
 ::-webkit-scrollbar {
