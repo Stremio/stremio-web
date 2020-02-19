@@ -1,6 +1,9 @@
 .nav-tab-button-container {
     display: flex;
+    flex-direction: column;
     align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
 
     &:hover {
         background-color: var(--color-secondary);
@@ -10,48 +13,18 @@
         background-color: var(--color-background);
     }
 
-    &.nav-tab-button-horizontal {
-        flex-direction: row;
-        padding: 0 1rem;
-
-        .icon {
-            width: 1.5rem;
-            height: 1.2rem;
-            margin: 0 0.5rem 0 0;
-        }
-
-        .label {
-            flex: 1;
-            max-height: 2.4em;
-        }
-    }
-
-    &.nav-tab-button-vertical {
-        flex-direction: column;
-        justify-content: center;
-        width: var(--vertical-nav-bar-size);
-        height: var(--vertical-nav-bar-size);
-        padding: 0.5rem;
-
-        .icon {
-            width: 1.5rem;
-            height: 1.5rem;
-            margin: 0 0 0.5rem 0;
-        }
-
-        .label {
-            flex: none;
-            max-height: 1.2em;
-            font-size: 0.85rem;
-        }
-    }
-
     .icon {
         flex: none;
+        width: 1.5rem;
+        height: 1.5rem;
+        margin-bottom: 0.5rem;
         fill: var(--color-surfacelighter);
     }
 
     .label {
+        flex: none;
+        max-height: 1.2em;
+        font-size: 0.85rem;
         color: var(--color-surfacelighter);
     }
 }
