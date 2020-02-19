@@ -1,8 +1,9 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
+const Icon = require('stremio-icons/dom');
+const Button = require('stremio/common/Button');
 const Image = require('stremio/common/Image');
-const NavTabButton = require('../NavTabButton');
 const SearchBar = require('../SearchBar');
 const AddonsButton = require('../AddonsButton');
 const FullscreenButton = require('../FullscreenButton');
@@ -15,25 +16,20 @@ const HorizontalNavBar = React.memo(({ className, route, query, backButton, sear
         window.history.back();
     }, []);
     return (
-        <nav className={classnames(className, styles['nav-bar-container'])}>
-            <div className={styles['logo-container']}>
-                <Image
-                    className={styles['logo']}
-                    src={'/images/stremio_symbol.png'}
-                    alt={' '}
-                />
-            </div>
+        <nav className={classnames(className, styles['horizontal-nav-bar-container'])}>
             {
                 backButton ?
-                    <NavTabButton
-                        className={styles['nav-tab-button']}
-                        icon={'ic_back_ios'}
-                        label={'Back'}
-                        direction={'horizontal'}
-                        onClick={backButtonOnClick}
-                    />
+                    <Button className={styles['back-button-container']} tabIndex={-1} onClick={backButtonOnClick}>
+                        <Icon className={styles['icon']} icon={'ic_back_ios'} />
+                    </Button>
                     :
-                    null
+                    <div className={styles['logo-container']}>
+                        <Image
+                            className={styles['logo']}
+                            src={'/images/stremio_symbol.png'}
+                            alt={' '}
+                        />
+                    </div>
             }
             {
                 searchBar ?
