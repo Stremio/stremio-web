@@ -7,11 +7,10 @@ const Image = require('stremio/common/Image');
 const SearchBar = require('./SearchBar');
 const AddonsButton = require('./AddonsButton');
 const FullscreenButton = require('./FullscreenButton');
-const NotificationsMenu = require('./NotificationsMenu');
 const NavMenu = require('./NavMenu');
 const styles = require('./styles');
 
-const HorizontalNavBar = React.memo(({ className, route, query, title, backButton, searchBar, addonsButton, fullscreenButton, notificationsMenu, navMenu }) => {
+const HorizontalNavBar = React.memo(({ className, route, query, title, backButton, searchBar, addonsButton, fullscreenButton, navMenu }) => {
     const backButtonOnClick = React.useCallback(() => {
         window.history.back();
     }, []);
@@ -62,12 +61,6 @@ const HorizontalNavBar = React.memo(({ className, route, query, title, backButto
                     null
             }
             {
-                notificationsMenu ?
-                    <NotificationsMenu className={styles['notifications-menu']} />
-                    :
-                    null
-            }
-            {
                 navMenu ?
                     <NavMenu className={styles['nav-menu']} />
                     :
@@ -88,7 +81,6 @@ HorizontalNavBar.propTypes = {
     searchBar: PropTypes.bool,
     addonsButton: PropTypes.bool,
     fullscreenButton: PropTypes.bool,
-    notificationsMenu: PropTypes.bool,
     navMenu: PropTypes.bool
 };
 
