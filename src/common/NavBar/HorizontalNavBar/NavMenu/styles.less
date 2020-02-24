@@ -1,116 +1,96 @@
-.nav-menu-label-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
+@import (reference) '~stremio-colors/dist/less/stremio-colors.less';
 
-    &:hover {
-        background-color: var(--color-secondary);
-    }
+.nav-menu-container {
+    width: 20rem;
+    background-color: @color-background-dark2;
 
-    &:global(.active) {
-        background-color: var(--color-background);
-    }
+    .user-info-container {
+        display: grid;
+        height: 7rem;
+        grid-template-columns: 7rem 1fr;
+        grid-template-rows: 50% 50%;
+        grid-template-areas:
+            "avatar-area email-area"
+            "avatar-area logout-button-area";
 
-    .icon {
-        flex: none;
-        width: 50%;
-        height: 50%;
-        fill: var(--color-surfacelighter);
-    }
+        .avatar-container {
+            grid-area: avatar-area;
+            padding: 1rem;
+            border-radius: 50%;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-origin: content-box;
+            background-clip: content-box;
+        }
 
-    .nav-menu-container {
-        width: 20rem;
-        background-color: var(--color-background);
+        .email-container {
+            grid-area: email-area;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 1rem 1rem 0 0;
 
-        .user-info-container {
-            display: grid;
-            height: 7rem;
-            grid-template-columns: 7rem 1fr;
-            grid-template-rows: 50% 50%;
-            grid-template-areas:
-                "avatar-area email-area"
-                "avatar-area logout-button-area";
-
-            .avatar-container {
-                grid-area: avatar-area;
-                padding: 1rem;
-                border-radius: 50%;
-                background-size: cover;
-                background-repeat: no-repeat;
-                background-position: center;
-                background-origin: content-box;
-                background-clip: content-box;
-            }
-
-            .email-container {
-                grid-area: email-area;
-                display: flex;
-                flex-direction: row;
-                align-items: center;
-                padding: 1rem 1rem 0 0;
-
-                .email-label {
-                    flex: 1;
-                    max-height: 2.4em;
-                    color: var(--color-surfacelighter);
-                }
-            }
-
-            .logout-button-container {
-                grid-area: logout-button-area;
-                display: flex;
-                flex-direction: row;
-                align-items: center;
-                padding: 0 1rem 1rem 0;
-
-                &:hover, &:focus {
-                    outline: none;
-
-                    .logout-label {
-                        color: var(--color-surfacelighter);
-                        text-decoration: underline;
-                    }
-                }
-
-                .logout-label {
-                    flex: 1;
-                    max-height: 2.4em;
-                    color: var(--color-surface);
-                }
+            .email-label {
+                flex: 1;
+                max-height: 2.4em;
+                color: @color-surface-light5;
             }
         }
 
-        .nav-menu-section {
-            border-top: thin solid var(--color-surfacedark80);
+        .logout-button-container {
+            grid-area: logout-button-area;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 0 1rem 1rem 0;
 
-            .nav-menu-option-container {
-                display: flex;
-                flex-direction: row;
-                align-items: center;
-                height: 4rem;
+            &:hover, &:focus {
+                outline: none;
 
-                &:hover {
-                    background-color: var(--color-surfacedarker60);
+                .logout-label {
+                    color: @color-surface-light5;
+                    text-decoration: underline;
                 }
+            }
 
-                .icon {
-                    flex: none;
-                    width: 1.4rem;
-                    height: 1.4rem;
-                    margin: 1.3rem;
-                    fill: var(--color-secondarylight);
-                }
+            .logout-label {
+                flex: 1;
+                max-height: 2.4em;
+                color: @color-surface-light3;
+            }
+        }
+    }
 
-                .nav-menu-option-label {
-                    flex: 1;
-                    max-height: 2.4em;
-                    padding-right: 1.3rem;
-                    color: var(--color-surfacelighter);
+    .nav-menu-section {
+        border-top: thin solid @color-surface-dark5;
 
-                    &:only-child {
-                        padding-left: 1.3rem;
-                    }
+        .nav-menu-option-container {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            height: 4rem;
+
+            &:hover {
+                background-color: @color-background-dark1;
+            }
+
+            .icon {
+                flex: none;
+                width: 1.4rem;
+                height: 1.4rem;
+                margin: 1.3rem;
+                fill: @color-secondaryvariant2-light1;
+            }
+
+            .nav-menu-option-label {
+                flex: 1;
+                max-height: 2.4em;
+                padding-right: 1.3rem;
+                color: @color-surface-light5;
+
+                &:only-child {
+                    padding-left: 1.3rem;
                 }
             }
         }

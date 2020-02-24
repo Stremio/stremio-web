@@ -6,12 +6,24 @@
     align-items: center;
     justify-content: center;
 
-    &:global(.selected) {
-        background-color: @color-secondary-dark4;
+    &:hover {
+        background-color: @color-background-dark1;
     }
 
-    &:hover {
-        background-color: @color-secondary-dark3;
+    &:global(.selected) {
+        background-color: @color-secondaryvariant1-dark5;
+
+        &:hover {
+            background-color: @color-secondary-dark3;
+        }
+
+        .icon {
+            fill: @color-surface-light5;
+        }
+
+        .label {
+            color: @color-surface-light5;
+        }
     }
 
     .icon {
@@ -19,7 +31,7 @@
         width: 1.5rem;
         height: 1.5rem;
         margin-bottom: 0.5rem;
-        fill: @color-secondaryvariant2-light2;
+        fill: @color-secondary-light2;
     }
 
     .label {
@@ -29,6 +41,6 @@
         font-size: 0.9rem;
         font-weight: 500;
         text-align: center;
-        color: @color-surface-light5;
+        color: @color-secondary-light2;
     }
 }

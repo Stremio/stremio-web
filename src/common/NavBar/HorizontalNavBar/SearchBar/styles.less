@@ -1,23 +1,11 @@
+@import (reference) '~stremio-colors/dist/less/stremio-colors.less';
+
 .search-bar-container {
     display: flex;
     flex-direction: row;
-    background-color: var(--color-secondary60);
-
-    &:hover {
-        background-color: var(--color-secondary);
-
-        .submit-button-container {
-            background-color: var(--color-secondarylight);
-        }
-    }
-
-    &:global(.active) {
-        background-color: var(--color-background);
-
-        .submit-button-container {
-            background-color: var(--color-secondarylight);
-        }
-    }
+    height: calc(var(--horizontal-nav-bar-size) * 0.7);
+    border-radius: calc(var(--horizontal-nav-bar-size) * 0.7);
+    background-color: @color-background-dark3;
 
     .search-input {
         flex: 1;
@@ -26,13 +14,13 @@
         flex-direction: row;
         align-items: center;
         padding: 0 1rem;
-        color: var(--color-surfacelighter);
+        color: @color-secondaryvariant2-light1;
         cursor: text;
 
         &::placeholder, .placeholder-label {
             max-height: 1.2em;
             opacity: 1;
-            color: var(--color-surfacelight);
+            color: @color-secondaryvariant2-light1;
         }
     }
 
@@ -42,15 +30,14 @@
         flex-direction: row;
         justify-content: center;
         align-items: center;
-        width: var(--horizontal-nav-bar-size);
-        height: var(--horizontal-nav-bar-size);
-        background-color: var(--color-secondarylight60);
+        width: calc(var(--horizontal-nav-bar-size) * 0.7);
+        height: calc(var(--horizontal-nav-bar-size) * 0.7);
 
         .icon {
             flex: none;
-            width: 1.2rem;
-            height: 1.2rem;
-            fill: var(--color-surfacelighter);
+            width: 1.5rem;
+            height: 1.5rem;
+            fill: @color-secondaryvariant2-light1;
         }
     }
 }

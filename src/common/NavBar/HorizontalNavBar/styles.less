@@ -1,20 +1,21 @@
+@import (reference) '~stremio-colors/dist/less/stremio-colors.less';
+
 .horizontal-nav-bar-container {
     display: flex;
     flex-direction: row;
     align-items: center;
     height: var(--horizontal-nav-bar-size);
-    background-color: var(--color-secondarydark);
+    background-color: @color-background-dark1;
     overflow: visible;
 
-    .logo-container, .back-button-container {
+    .logo-container {
+        flex: none;
         display: flex;
         align-items: center;
         justify-content: center;
         width: var(--vertical-nav-bar-size);
         height: var(--horizontal-nav-bar-size);
-    }
 
-    .logo-container {
         .logo {
             flex: none;
             width: 70%;
@@ -24,28 +25,15 @@
         }
     }
 
-    .back-button-container {
-        &:hover {
-            background-color: var(--color-secondary);
-        }
-
-        .icon {
-            flex: none;
-            width: 50%;
-            height: 50%;
-            fill: var(--color-surfacelighter);
-        }
-    }
-
     .title {
         flex: 1;
         padding: 0 1rem;
         font-size: 1.1rem;
         font-style: normal;
-        font-weight: 400;
+        font-weight: 500;
         white-space: nowrap;
         text-overflow: ellipsis;
-        color: var(--color-surfacelighter);
+        color: @color-secondaryvariant2-light1;
 
         &+.spacing {
             display: none;
@@ -60,7 +48,6 @@
         flex-grow: 0;
         flex-shrink: 1;
         flex-basis: 25rem;
-        align-self: stretch;
         min-width: 9.5rem;
 
         &+.spacing {
@@ -68,9 +55,32 @@
         }
     }
 
-    .addons-button, .fullscreen-button, .notifications-menu, .nav-menu {
+    .button-container {
         flex: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         width: var(--horizontal-nav-bar-size);
         height: var(--horizontal-nav-bar-size);
+
+        &.back-button-container {
+            width: var(--vertical-nav-bar-size);
+            height: var(--horizontal-nav-bar-size);
+        }
+
+        &:hover {
+            background-color: @color-background;
+        }
+
+        &:global(.active) {
+            background-color: @color-background-dark2;
+        }
+
+        .icon {
+            flex: none;
+            width: 1.8rem;
+            height: 1.8rem;
+            fill: @color-secondaryvariant2-light1;
+        }
     }
 }
