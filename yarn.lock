@@ -10444,7 +10444,7 @@ stream-shift@^1.0.0:
 
 "stremio-colors@git+ssh://git@github.com/Stremio/stremio-colors.git#v3.0.0":
   version "2.0.4"
-  resolved "git+ssh://git@github.com/Stremio/stremio-colors.git#2c6f71aabca93e3c6113f5fc843ab1ec1684fce7"
+  resolved "git+ssh://git@github.com/Stremio/stremio-colors.git#0fd22b41b4246dd92182727b49ef9e4a67413202"
 
 "stremio-core-web@git+ssh://git@github.com/stremio/stremio-core-web.git#da5b37865004d0ae140518c4f276d1ed1a1483d9":
   version "0.6.0"
