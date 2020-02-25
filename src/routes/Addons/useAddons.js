@@ -48,7 +48,7 @@ const mapAddonsStateWithCtx = (addons, ctx) => {
             request: addons.catalog_resource.request,
             content: {
                 type: addons.catalog_resource.content.type,
-                content: (addons.selected.request.path.id === 'INSTALLED' ?
+                content: (addons.catalog_resource.request.path.id === 'INSTALLED' ?
                     ctx.profile.addons.filter((addon) => addon.manifest.types.includes(addons.selected.request.path.type_name))
                     :
                     addons.catalog_resource.content.content).map((addon) => ({
