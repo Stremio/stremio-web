@@ -36,7 +36,7 @@ const mapAddonsStateWithCtx = (addons, ctx) => {
                     base: 'https://v3-cinemeta.strem.io/manifest.json',
                     path: {
                         resource: 'addon_catalog',
-                        type_name: ctx.profile.addons[0].manifest.types[0],
+                        type_name: installedTypes[0].name,
                         id: 'INSTALLED',
                         extra: []
                     }
