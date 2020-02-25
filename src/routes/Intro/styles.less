@@ -1,12 +1,10 @@
 .intro-container {
     display: flex;
     flex-direction: row;
-    justify-content: center;
-    align-items: center;
     width: 100%;
     height: 100%;
     background:
-        linear-gradient(var(--color-backgrounddark80), var(--color-backgrounddark80)),
+        linear-gradient(var(--color-background-dark3-80), var(--color-background-dark3-80)),
         url('/images/intro_background.jpg');
     background-size: cover;
     background-repeat: no-repeat;
@@ -16,8 +14,29 @@
 
     .form-container {
         flex: none;
-        width: 20rem;
-        padding: 4rem 0;
+        width: 27rem;
+        margin: auto;
+        padding: 2rem 0;
+
+        .logo-container {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 3rem;
+
+            .logo {
+                width: 4rem;
+                height: 4rem;
+                margin-right: 1rem;
+            }
+
+            .icon {
+                width: 8rem;
+                height: 4rem;
+                fill: var(--color-surface-dark4);
+            }
+        }
 
         .form-button {
             display: flex;
@@ -31,7 +50,7 @@
                 width: 1rem;
                 height: 2rem;
                 margin-right: 1rem;
-                fill: var(--color-surfacelighter);
+                fill: var(--color-surface-light5);
             }
 
             .label {
@@ -39,19 +58,24 @@
                 flex-shrink: 1;
                 flex-basis: auto;
                 font-size: 1.1rem;
-                font-weight: 700;
-                color: var(--color-surfacelighter);
+                font-weight: 500;
+                color: var(--color-surface-light5);
                 text-align: center;
             }
         }
 
         .facebook-button {
             min-height: 4.5rem;
-            margin-bottom: 2rem;
-            background: var(--color-facebook);
+            margin-top: 2rem;
+            margin-bottom: 0.5rem;
+            background: var(--color-secondaryvariant1-dark5);
 
-            &:hover, &:focus {
-                filter: brightness(1.2);
+            &:hover {
+                background: var(--color-secondary-dark4);
+            }
+
+            &:focus {
+                outline-color: var(--color-surface-light5);
             }
 
             .label {
@@ -63,21 +87,24 @@
             display: block;
             width: 100%;
             margin: 1rem 0;
-            padding: 0.5rem;
+            padding: 1rem;
             border-bottom: thin solid var(--color-surface);
-            color: var(--color-surfacelighter);
+            color: var(--color-surface-light5);
 
-            &:hover, &:focus {
-                background-color: var(--color-surfacedarker60);
-                border-bottom-color: var(--color-surfacelighter);
+            &:hover {
+                background-color: var(--color-surface-light5-20);
+            }
+
+            &:focus {
+                border-bottom-color: var(--color-secondaryvariant2-light1);
 
                 &::placeholder {
-                    color: var(--color-surfacelighter);
+                    color: var(--color-secondaryvariant2-light1);
                 }
             }
 
             &::placeholder {
-                color: var(--color-surfacelight);
+                color: var(--color-surface-dark2);
             }
         }
 
@@ -93,36 +120,37 @@
                 flex-shrink: 1;
                 flex-basis: auto;
                 padding: 0.5rem;
-                color: var(--color-surfacelight);
+                color: var(--color-surface-light3);
 
-                &:hover {
+                &:hover, &:focus {
                     text-decoration: underline;
-                    color: var(--color-surfacelighter);
+                    color: var(--color-secondaryvariant2-light1);
                 }
 
                 &:focus {
-                    color: var(--color-surfacelighter);
+                    outline: none;
+                    background-color: var(--color-surface-light5-20);
                 }
             }
-        }
-
-        .consent-checkbox {
-            margin: 1rem 0;
         }
 
         .error-message {
             margin: 1rem 0;
             text-align: center;
-            color: var(--color-signal1);
+            color: var(--color-accent5);
         }
 
         .submit-button {
             min-height: 4rem;
             margin: 1rem 0;
-            background-color: var(--color-primarydark);
+            background-color: var(--color-accent3);
 
             &:hover {
-                background-color: var(--color-primary);
+                background-color: var(--color-accent3-dark1);
+            }
+
+            &:focus {
+                outline-color: var(--color-surface-light5);
             }
 
             .label {
@@ -131,12 +159,18 @@
         }
 
         .guest-login-button {
-            margin-top: 1.5rem;
-            margin-bottom: 0.5rem;
+            margin-top: 1rem;
             padding: 1rem 0.5rem;
 
-            &:hover, &:focus {
-                background-color: var(--color-surfacedarker60);
+            &:hover {
+                .label {
+                    text-decoration: underline;
+                }
+            }
+
+            &:focus {
+                outline: none;
+                background-color: var(--color-surface-light5-20);
             }
         }
 
@@ -145,8 +179,36 @@
             padding: 1rem 0.5rem;
 
             &:hover, &:focus {
-                background-color: var(--color-surfacedarker60);
+                .label-container {
+                    .label {
+                        text-decoration: underline;
+                    }
+                }
             }
+
+            &:focus {
+                outline: none;
+                background-color: var(--color-surface-light5-20);
+            }
+
+            .label-container {
+                display: flex;
+                flex-direction: row;
+                align-items: baseline;
+
+                .account-label {
+                    margin-right: 0.5rem;
+                    color: var(--color-surface-dark2);
+                }
+
+                .label {
+                    color: var(--color-accent4-light1);
+                }
+            }
+        }
+
+        .switch-form-login-button {
+            margin-bottom: 0.5rem;
         }
     }
 }
@@ -161,7 +223,7 @@
     .label {
         margin-bottom: 1rem;
         font-size: 2rem;
-        color: var(--color-surfacelighter);
+        color: var(--color-surface-light5);
         animation: 1s linear infinite alternate flash;
     }
 
@@ -169,7 +231,7 @@
         flex: none;
         width: 5rem;
         height: 5rem;
-        fill: var(--color-surfacelighter);
+        fill: var(--color-surface-light5);
         animation: 1s linear infinite alternate flash;
     }
 
