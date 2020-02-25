@@ -2,7 +2,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
-const { AddonDetailsModal, Button, MainNavBar, MetaItem, MetaPreview, Multiselect, ModalDialog, PaginationInput, useBinaryState } = require('stremio/common');
+const { AddonDetailsModal, Button, MainNavBars, MetaItem, MetaPreview, Multiselect, ModalDialog, PaginationInput, useBinaryState } = require('stremio/common');
 const { useServices } = require('stremio/services');
 const useDiscover = require('./useDiscover');
 const useSelectableInputs = require('./useSelectableInputs');
@@ -48,8 +48,7 @@ const Discover = ({ urlParams, queryParams }) => {
         closeInputsModal();
     }, [urlParams, queryParams]);
     return (
-        <div className={styles['discover-container']}>
-            <MainNavBar className={styles['nav-bar']} route={'discover'} />
+        <MainNavBars className={styles['discover-container']} route={'discover'}>
             <div className={styles['discover-content']}>
                 <div className={styles['selectable-inputs-container']}>
                     {selectInputs.map(({ title, options, selected, renderLabelText, onSelect }, index) => (
@@ -178,7 +177,7 @@ const Discover = ({ urlParams, queryParams }) => {
                     :
                     null
             }
-        </div>
+        </MainNavBars>
     );
 };
 
