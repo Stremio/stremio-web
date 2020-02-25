@@ -45,7 +45,7 @@ const SearchBar = ({ className, query, active }) => {
                     </div>
             }
             <Button className={styles['submit-button-container']} tabIndex={-1} onClick={queryInputOnSubmit}>
-                <Icon className={styles['icon']} icon={'ic_search'} />
+                <Icon className={styles['icon']} icon={'ic_search_link'} />
             </Button>
         </label>
     );
