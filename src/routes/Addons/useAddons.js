@@ -27,8 +27,7 @@ const mapAddonsStateWithCtx = (addons, ctx) => {
     ));
     const selectable = {
         types: addons.selected.request.path.id === 'INSTALLED' ? installedTypes : addons.selectable.types,
-        catalogs: [
-            ...addons.selectable.catalogs,
+        catalogs: addons.selectable.catalogs.concat(
             {
                 name: 'Installed',
                 addon_name: '',
@@ -42,7 +41,7 @@ const mapAddonsStateWithCtx = (addons, ctx) => {
                     }
                 }
             }
-        ]
+        )
     };
     const catalog_resource = addons.catalog_resource !== null && addons.catalog_resource.content.type === 'Ready' ?
         {
