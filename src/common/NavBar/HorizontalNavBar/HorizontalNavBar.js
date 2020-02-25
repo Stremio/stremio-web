@@ -14,7 +14,7 @@ const HorizontalNavBar = React.memo(({ className, route, query, title, backButto
         window.history.back();
     }, []);
     const [fullscreen, requestFullscreen, exitFullscreen] = useFullscreen();
-    const renderNavBarLabel = React.useMemo(() => ({ ref, className, onClick, children, }) => (
+    const renderNavMenuLabel = React.useMemo(() => ({ ref, className, onClick, children, }) => (
         <Button ref={ref} className={classnames(className, styles['button-container'])} tabIndex={-1} onClick={onClick}>
             <Icon className={styles['icon']} icon={'ic_more'} />
             {children}
@@ -45,18 +45,14 @@ const HorizontalNavBar = React.memo(({ className, route, query, title, backButto
             <div className={styles['spacing']} />
             {
                 searchBar ?
-                    <SearchBar
-                        className={styles['search-bar']}
-                        query={query}
-                        active={route === 'search'}
-                    />
+                    <SearchBar className={styles['search-bar']} query={query} active={route === 'search'} />
                     :
                     null
             }
             <div className={styles['spacing']} />
             {
                 addonsButton ?
-                    <Button className={styles['button-container']} href={'#/addons'} tabIndex={-1}>
+                    <Button className={styles['button-container']} href={'#/addons'} title={'Addons'} tabIndex={-1}>
                         <Icon className={styles['icon']} icon={'ic_addons'} />
                     </Button>
                     :
@@ -72,7 +68,7 @@ const HorizontalNavBar = React.memo(({ className, route, query, title, backButto
             }
             {
                 navMenu ?
-                    <NavMenu renderLabel={renderNavBarLabel} />
+                    <NavMenu renderLabel={renderNavMenuLabel} />
                     :
                     null
             }
