@@ -118,9 +118,19 @@ describe('routesRegexp', () => {
                 .toEqual(['/library', undefined, undefined]);
         });
 
+        it('match /library/', async () => {
+            expect(Array.from('/library/'.match(routesRegexp.library.regexp)))
+                .toEqual(['/library/', '', undefined]);
+        });
+
         it('match /library//', async () => {
             expect(Array.from('/library//'.match(routesRegexp.library.regexp)))
                 .toEqual(['/library//', '', '']);
+        });
+
+        it('match /library/1', async () => {
+            expect(Array.from('/library/1'.match(routesRegexp.library.regexp)))
+                .toEqual(['/library/1', '1', undefined]);
         });
 
         it('match /library/1/', async () => {
@@ -138,18 +148,8 @@ describe('routesRegexp', () => {
                 .toEqual(['/library/1/2', '1', '2']);
         });
 
-        it('not match /library/', async () => {
-            expect('/library/'.match(routesRegexp.library.regexp))
-                .toBe(null);
-        });
-
         it('not match /library///', async () => {
             expect('/library///'.match(routesRegexp.library.regexp))
-                .toBe(null);
-        });
-
-        it('not match /library/1', async () => {
-            expect('/library/1'.match(routesRegexp.library.regexp))
                 .toBe(null);
         });
 
