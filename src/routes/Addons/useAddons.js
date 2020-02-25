@@ -51,7 +51,8 @@ const mapAddonsStateWithCtx = (addons, ctx) => {
                 content: (addons.catalog_resource.request.path.id === 'INSTALLED' ?
                     ctx.profile.addons.filter((addon) => addon.manifest.types.includes(addons.selected.request.path.type_name))
                     :
-                    addons.catalog_resource.content.content).map((addon) => ({
+                    addons.catalog_resource.content.content)
+                    .map((addon) => ({
                         transportUrl: addon.transportUrl,
                         installed: ctx.profile.addons.some(({ transportUrl }) => transportUrl === addon.transportUrl),
                         manifest: {
