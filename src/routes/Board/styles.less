@@ -15,8 +15,8 @@
     display: grid;
     width: 100%;
     height: 100%;
-    grid-template-columns: auto 1fr;
-    grid-template-rows: auto 1fr;
+    grid-template-columns: var(--vertical-nav-bar-size) calc(100% - var(--vertical-nav-bar-size));
+    grid-template-rows: var(--horizontal-nav-bar-size) calc(100% - var(--horizontal-nav-bar-size));
     grid-template-areas:
         "horizontal-nav-bar horizontal-nav-bar"
         "vertical-nav-bar board-content";

@@ -5,16 +5,17 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    background-color: @color-background;
 
     &:hover {
-        background-color: @color-background-dark1;
+        background-color: @color-background-light2;
     }
 
     &:global(.selected) {
         background-color: @color-secondaryvariant1-dark5;
 
         &:hover {
-            background-color: @color-secondary-dark3;
+            background-color: @color-secondaryvariant1-dark4;
         }
 
         .icon {
@@ -22,25 +23,26 @@
         }
 
         .label {
-            color: @color-surface-light5;
+            color: @color-surface-light5-90;
         }
     }
 
     .icon {
         flex: none;
-        width: 1.5rem;
-        height: 1.5rem;
+        width: 1.7rem;
+        height: 1.7rem;
         margin-bottom: 0.5rem;
-        fill: @color-secondary-light2;
+        fill: @color-secondary-light5;
     }
 
     .label {
         flex: none;
         max-height: 2.4em;
-        padding: 0 0.5rem;
-        font-size: 0.9rem;
+        padding: 0 0.2rem;
+        font-size: 0.85rem;
         font-weight: 500;
+        letter-spacing: 0.01rem;
         text-align: center;
-        color: @color-secondary-light2;
+        color: @color-secondaryvariant1-90;
     }
 }

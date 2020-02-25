@@ -5,7 +5,8 @@
     flex-direction: row;
     align-items: center;
     height: var(--horizontal-nav-bar-size);
-    background-color: @color-background-dark1;
+    padding-right: 1rem;
+    background-color: @color-background;
     overflow: visible;
 
     .logo-container {
@@ -18,19 +19,24 @@
 
         .logo {
             flex: none;
-            width: 70%;
-            height: 70%;
+            width: 2.5rem;
+            height: 2.5rem;
             object-position: center;
             object-fit: contain;
         }
     }
 
+    .spacing {
+        flex: 1 0 0;
+    }
+
     .title {
-        flex: 1;
+        flex: 4 0 0;
         padding: 0 1rem;
-        font-size: 1.1rem;
+        font-size: 1.2rem;
         font-style: normal;
         font-weight: 500;
+        letter-spacing: 0.01rem;
         white-space: nowrap;
         text-overflow: ellipsis;
         color: @color-secondaryvariant2-light1;
@@ -40,15 +46,9 @@
         }
     }
 
-    .spacing {
-        flex: 1;
-    }
-
     .search-bar {
-        flex-grow: 0;
-        flex-shrink: 1;
-        flex-basis: 25rem;
-        min-width: 9.5rem;
+        flex: 2 0 9.5rem;
+        max-width: 30rem;
 
         &+.spacing {
             max-width: 11rem;
@@ -69,17 +69,17 @@
         }
 
         &:hover {
-            background-color: @color-background;
+            background-color: @color-background-light2;
         }
 
         &:global(.active) {
-            background-color: @color-background-dark2;
+            background-color: @color-background-light1;
         }
 
         .icon {
             flex: none;
-            width: 1.8rem;
-            height: 1.8rem;
+            width: 1.7rem;
+            height: 1.7rem;
             fill: @color-secondaryvariant2-light1;
         }
     }
