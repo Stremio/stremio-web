@@ -10450,9 +10450,9 @@ stream-shift@^1.0.0:
   version "0.6.0"
   resolved "git+ssh://git@github.com/stremio/stremio-core-web.git#da5b37865004d0ae140518c4f276d1ed1a1483d9"
 
-"stremio-icons@git+ssh://git@github.com/Stremio/stremio-icons.git#fcfd714b39056ae0e8b7f903696e13c97f15b59a":
-  version "1.0.11"
-  resolved "git+ssh://git@github.com/Stremio/stremio-icons.git#fcfd714b39056ae0e8b7f903696e13c97f15b59a"
+"stremio-icons@git+ssh://git@github.com/Stremio/stremio-icons.git#v2.0.0":
+  version "2.0.0"
+  resolved "git+ssh://git@github.com/Stremio/stremio-icons.git#f8333a6254e303c213781491393808f10fd4ea29"
 
 strict-uri-encode@^1.0.0:
   version "1.1.0"
