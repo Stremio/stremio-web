@@ -12,27 +12,13 @@
 }
 
 .search-container {
-    display: grid;
     width: 100%;
     height: 100%;
-    grid-template-columns: auto 1fr;
-    grid-template-rows: auto 1fr;
-    grid-template-areas:
-        "horizontal-nav-bar horizontal-nav-bar"
-        "vertical-nav-bar search-content";
     background-color: @color-background-dark2;
 
-
-    .horizontal-nav-bar {
-        grid-area: horizontal-nav-bar;
-    }
-
-    .vertical-nav-bar {
-        grid-area: vertical-nav-bar;
-    }
-
     .search-content {
-        grid-area: search-content;
+        width: 100%;
+        height: 100%;
         overflow-y: auto;
 
         .search-row, .search-row-placeholder {

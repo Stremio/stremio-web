@@ -1,37 +1,26 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const Icon = require('stremio-icons/dom');
-const { HorizontalNavBar, MainVerticalNavBar, MetaRow } = require('stremio/common');
+const { MainNavBars, MetaRow } = require('stremio/common');
 const useSearch = require('./useSearch');
 const styles = require('./styles');
 
 const Search = ({ queryParams }) => {
     const search = useSearch(queryParams);
-    return (
-        <div className={styles['search-container']}>
-            <HorizontalNavBar
-                className={styles['horizontal-nav-bar']}
-                route={'search'}
-                query={
-                    search.selected !== null ?
-                        search.selected.extra.reduce((query, [name, value]) => {
-                            if (name === 'search') {
-                                return value;
-                            }
-
-                            return query;
-                        }, null)
-                        :
-                        null
+    const query = React.useMemo(() => {
+        return search.selected !== null ?
+            search.selected.extra.reduce((query, [name, value]) => {
+                if (name === 'search') {
+                    return value;
                 }
-                backButton={false}
-                searchBar={true}
-                addonsButton={true}
-                fullscreenButton={true}
-                notificationsMenu={true}
-                navMenu={true}
-            />
-            <MainVerticalNavBar className={styles['vertical-nav-bar']} route={'search'} />
+
+                return query;
+            }, null)
+            :
+            null;
+    }, [search.selected]);
+    return (
+        <MainNavBars className={styles['search-container']} route={'search'} query={query}>
             <div className={styles['search-content']}>
                 {
                     search.selected === null || search.selected.extra.every(([name]) => name !== 'search') ?
@@ -89,7 +78,7 @@ const Search = ({ queryParams }) => {
                             })
                 }
             </div>
-        </div>
+        </MainNavBars>
     );
 };
 

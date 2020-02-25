@@ -10,12 +10,13 @@ const TABS = [
     { id: 'library', label: 'Library', icon: 'ic_library', href: '#/library' }
 ];
 
-const MainNavBars = React.memo(({ className, route, children }) => {
+const MainNavBars = React.memo(({ className, route, query, children }) => {
     return (
         <div className={classnames(className, styles['main-nav-bars-container'])}>
             <HorizontalNavBar
                 className={styles['horizontal-nav-bar']}
                 route={route}
+                query={query}
                 backButton={false}
                 searchBar={true}
                 addonsButton={true}
@@ -37,6 +38,7 @@ MainNavBars.displayName = 'MainNavBars';
 MainNavBars.propTypes = {
     className: PropTypes.string,
     route: PropTypes.string,
+    query: PropTypes.string,
     children: PropTypes.node
 };
 
