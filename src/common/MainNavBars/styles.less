@@ -1,0 +1,29 @@
+.main-nav-bars-container {
+    position: relative;
+    z-index: 0;
+
+    .horizontal-nav-bar {
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+        z-index: 1;
+    }
+
+    .vertical-nav-bar {
+        position: absolute;
+        top: var(--horizontal-nav-bar-size);
+        bottom: 0;
+        left: 0;
+        z-index: 1;
+    }
+
+    .nav-content-container {
+        position: absolute;
+        top: var(--horizontal-nav-bar-size);
+        right: 0;
+        bottom: 0;
+        left: var(--vertical-nav-bar-size);
+        z-index: 0;
+    }
+}

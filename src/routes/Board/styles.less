@@ -12,26 +12,13 @@
 }
 
 .board-container {
-    display: grid;
     width: 100%;
     height: 100%;
-    grid-template-columns: var(--vertical-nav-bar-size) calc(100% - var(--vertical-nav-bar-size));
-    grid-template-rows: var(--horizontal-nav-bar-size) calc(100% - var(--horizontal-nav-bar-size));
-    grid-template-areas:
-        "horizontal-nav-bar horizontal-nav-bar"
-        "vertical-nav-bar board-content";
     background-color: @color-background-dark2;
 
-    .horizontal-nav-bar {
-        grid-area: horizontal-nav-bar;
-    }
-
-    .vertical-nav-bar {
-        grid-area: vertical-nav-bar;
-    }
-
     .board-content {
-        grid-area: board-content;
+        width: 100%;
+        height: 100%;
         overflow-y: auto;
 
         .board-row, .board-row-placeholder {
