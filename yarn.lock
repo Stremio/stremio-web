@@ -10442,9 +10442,9 @@ stream-shift@^1.0.0:
   resolved "https://registry.yarnpkg.com/stream-shift/-/stream-shift-1.0.1.tgz#d7088281559ab2778424279b0877da3c392d5a3d"
   integrity sha512-AiisoFqQ0vbGcZgQPY1cdP2I76glaVA/RauYR4G4thNFgkTqr90yXTo4LYX60Jl+sIlPNHHdGSwo01AvbKUSVQ==
 
-"stremio-colors@git+ssh://git@github.com/Stremio/stremio-colors.git#8d3e92374088b0ba2e378c7f04fa6b1493bdf5bc":
-  version "2.0.4"
-  resolved "git+ssh://git@github.com/Stremio/stremio-colors.git#8d3e92374088b0ba2e378c7f04fa6b1493bdf5bc"
+"stremio-colors@git+ssh://git@github.com/Stremio/stremio-colors.git#v3.0.0":
+  version "3.0.0"
+  resolved "git+ssh://git@github.com/Stremio/stremio-colors.git#897c9569a167b9f881af9f4b5433ae9644408be3"
 
 "stremio-core-web@git+ssh://git@github.com/stremio/stremio-core-web.git#da5b37865004d0ae140518c4f276d1ed1a1483d9":
   version "0.6.0"
