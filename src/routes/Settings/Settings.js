@@ -3,7 +3,7 @@ const classnames = require('classnames');
 const throttle = require('lodash.throttle');
 const Icon = require('stremio-icons/dom');
 const { useServices } = require('stremio/services');
-const { Button, Checkbox, NavBar, Multiselect, ColorInput, useProfile } = require('stremio/common');
+const { Button, Checkbox, MainNavBars, Multiselect, ColorInput, useProfile } = require('stremio/common');
 const useStreamingServer = require('./useStreamingServer');
 const useProfileSettingsInputs = require('./useProfileSettingsInputs');
 const useStreamingServerSettingsInputs = require('./useStreamingServerSettingsInputs');
@@ -99,15 +99,7 @@ const Settings = () => {
         updateSelectedSectionId();
     }, []);
     return (
-        <div className={styles['settings-container']}>
-            <NavBar
-                className={styles['nav-bar']}
-                backButton={true}
-                addonsButton={true}
-                fullscreenButton={true}
-                notificationsMenu={true}
-                navMenu={true}
-            />
+        <MainNavBars className={styles['settings-container']} route={'settings'}>
             <div className={styles['settings-content']}>
                 <div className={styles['side-menu-container']}>
                     <Button className={classnames(styles['side-menu-button'], { [styles['selected']]: selectedSectionId === GENERAL_SECTION })} data-section={GENERAL_SECTION} onClick={sideMenuButtonOnClick}>
@@ -393,7 +385,7 @@ const Settings = () => {
                     </div>
                 </div>
             </div>
-        </div>
+        </MainNavBars>
     );
 };
 
