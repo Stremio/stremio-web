@@ -8,36 +8,27 @@
     align-items: center;
     padding: 0.5rem;
 
-    &:focus, &:hover {
-        background-color: var(--color-surfacedarker60);
-
-        .checkbox-icon {
-            fill: var(--color-surfacelighter);
-        }
-
-        .label {
-            color: var(--color-surfacelighter);
-
-            .link {
-                color: var(--color-surfacelighter);
-            }
-        }
+    &:focus {
+        outline: none;
+        background-color: var(--color-surface-light5-20);
     }
 
     .checkbox-icon {
         flex: none;
         width: 1.2rem;
         height: 1.2rem;
-        fill: var(--color-surfacelight);
+        fill: var(--color-surface-dark5);
     }
 
     .label {
         flex: 1;
         margin-left: 0.5rem;
+        font-size: 0.9rem;
         color: var(--color-surface);
 
         .link {
-            color: var(--color-surfacelight);
+            font-size: 0.9rem;
+            color: var(--color-surface-light5);
 
             &:hover {
                 text-decoration: underline;
