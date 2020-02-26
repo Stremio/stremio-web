@@ -15,7 +15,7 @@ const initAddonsState = () => ({
 
 const mapAddonsStateWithCtx = (addons, ctx) => {
     const installedSelectableTypes = ctx.profile.addons.map(addon => addon.manifest.types)
-        .reduce((uniqueTypes, types) => uniqueTypes.concat(types.filter((type) => !uniqueTypes.includes(type))), [])
+        .flat(2).filter((type, index, types) => types.indexOf(type) === index)
         .map((type) => ({
             name: type,
             request: {
