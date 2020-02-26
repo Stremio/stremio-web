@@ -14,18 +14,20 @@ const initAddonsState = () => ({
 });
 
 const mapAddonsStateWithCtx = (addons, ctx) => {
-    const installedSelectableTypes = [...new Set([].concat(...ctx.profile.addons.map(addon => addon.manifest.types)))].map((type) => ({
-        name: type,
-        request: {
-            base: INSTALLED_CATALOG_BASE,
-            path: {
-                resource: 'addon_catalog',
-                type_name: type,
-                id: INSTALLED_CATALOG_ID,
-                extra: []
+    const installedSelectableTypes = ctx.profile.addons.map(addon => addon.manifest.types)
+        .reduce((uniqueTypes, types) => uniqueTypes.concat(types.filter((type) => !uniqueTypes.includes(type))), [])
+        .map((type) => ({
+            name: type,
+            request: {
+                base: INSTALLED_CATALOG_BASE,
+                path: {
+                    resource: 'addon_catalog',
+                    type_name: type,
+                    id: INSTALLED_CATALOG_ID,
+                    extra: []
+                }
             }
-        }
-    }));
+        }));
     const selectable = {
         types: addons.selected !== null && addons.selected.request.path.id === INSTALLED_CATALOG_ID ? installedSelectableTypes : addons.selectable.types,
         catalogs: addons.selectable.catalogs.concat({
