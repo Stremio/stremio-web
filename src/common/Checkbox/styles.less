@@ -1,8 +1,10 @@
+@import (reference) '~stremio-colors/dist/less/stremio-colors.less';
+
 .checkbox-container {
     &:global(.checked) {
         .icon {
-            fill: var(--color-surface-light5);
-            background-color: var(--color-primaryvariant1);
+            fill: @color-surface-light5;
+            background-color: @color-primaryvariant1;
         }
     }
 
@@ -10,6 +12,6 @@
         display: block;
         width: 1rem;
         height: 1rem;
-        fill: var(--color-surface-light5);
+        fill: @color-surface-light5;
     }
 }

@@ -1,3 +1,5 @@
+@import (reference) '~stremio-colors/dist/less/stremio-colors.less';
+
 :import('~stremio/common/Checkbox/styles.less') {
     checkbox-icon: icon;
 }
@@ -10,25 +12,25 @@
 
     &:focus {
         outline: none;
-        background-color: var(--color-surface-light5-20);
+        background-color: @color-surface-light5-20;
     }
 
     .checkbox-icon {
         flex: none;
         width: 1.2rem;
         height: 1.2rem;
-        fill: var(--color-surface-dark5);
+        fill: @color-surface-dark5;
     }
 
     .label {
         flex: 1;
         margin-left: 0.5rem;
         font-size: 0.9rem;
-        color: var(--color-surface);
+        color: @color-surface;
 
         .link {
             font-size: 0.9rem;
-            color: var(--color-surface-light5);
+            color: @color-surface-light5;
 
             &:hover {
                 text-decoration: underline;

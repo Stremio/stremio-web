@@ -1,10 +1,12 @@
+@import (reference) '~stremio-colors/dist/less/stremio-colors.less';
+
 .intro-container {
     display: flex;
     flex-direction: row;
     width: 100%;
     height: 100%;
     background:
-        linear-gradient(var(--color-background-dark3-80), var(--color-background-dark3-80)),
+        linear-gradient(@color-background-dark3-80, @color-background-dark3-80),
         url('/images/intro_background.jpg');
     background-size: cover;
     background-repeat: no-repeat;
@@ -34,7 +36,7 @@
             .icon {
                 width: 8rem;
                 height: 4rem;
-                fill: var(--color-surface-dark4);
+                fill: @color-surface-dark4;
             }
         }
 
@@ -50,7 +52,7 @@
                 width: 1rem;
                 height: 2rem;
                 margin-right: 1rem;
-                fill: var(--color-surface-light5);
+                fill: @color-surface-light5;
             }
 
             .label {
@@ -59,7 +61,7 @@
                 flex-basis: auto;
                 font-size: 1.1rem;
                 font-weight: 500;
-                color: var(--color-surface-light5);
+                color: @color-surface-light5;
                 text-align: center;
             }
         }
@@ -68,14 +70,14 @@
             min-height: 4.5rem;
             margin-top: 2rem;
             margin-bottom: 0.5rem;
-            background: var(--color-secondaryvariant1-dark5);
+            background: @color-secondaryvariant1-dark5;
 
             &:hover {
-                background: var(--color-secondary-dark4);
+                background: @color-secondary-dark4;
             }
 
             &:focus {
-                outline-color: var(--color-surface-light5);
+                outline-color: @color-surface-light5;
             }
 
             .label {
@@ -88,23 +90,23 @@
             width: 100%;
             margin: 1rem 0;
             padding: 1rem;
-            border-bottom: thin solid var(--color-surface);
-            color: var(--color-surface-light5);
+            border-bottom: thin solid @color-surface;
+            color: @color-surface-light5;
 
             &:hover {
-                background-color: var(--color-surface-light5-20);
+                background-color: @color-surface-light5-20;
             }
 
             &:focus {
-                border-bottom-color: var(--color-secondaryvariant2-light1);
+                border-bottom-color: @color-secondaryvariant2-light1;
 
                 &::placeholder {
-                    color: var(--color-secondaryvariant2-light1);
+                    color: @color-secondaryvariant2-light1;
                 }
             }
 
             &::placeholder {
-                color: var(--color-surface-dark2);
+                color: @color-surface-dark2;
             }
         }
 
@@ -120,16 +122,16 @@
                 flex-shrink: 1;
                 flex-basis: auto;
                 padding: 0.5rem;
-                color: var(--color-surface-light3);
+                color: @color-surface-light3;
 
                 &:hover, &:focus {
                     text-decoration: underline;
-                    color: var(--color-secondaryvariant2-light1);
+                    color: @color-secondaryvariant2-light1;
                 }
 
                 &:focus {
                     outline: none;
-                    background-color: var(--color-surface-light5-20);
+                    background-color: @color-surface-light5-20;
                 }
             }
         }
@@ -137,20 +139,20 @@
         .error-message {
             margin: 1rem 0;
             text-align: center;
-            color: var(--color-accent5);
+            color: @color-accent5;
         }
 
         .submit-button {
             min-height: 4rem;
             margin: 1rem 0;
-            background-color: var(--color-accent3);
+            background-color: @color-accent3;
 
             &:hover {
-                background-color: var(--color-accent3-dark1);
+                background-color: @color-accent3-dark1;
             }
 
             &:focus {
-                outline-color: var(--color-surface-light5);
+                outline-color: @color-surface-light5;
             }
 
             .label {
@@ -170,7 +172,7 @@
 
             &:focus {
                 outline: none;
-                background-color: var(--color-surface-light5-20);
+                background-color: @color-surface-light5-20;
             }
         }
 
@@ -188,7 +190,7 @@
 
             &:focus {
                 outline: none;
-                background-color: var(--color-surface-light5-20);
+                background-color: @color-surface-light5-20;
             }
 
             .label-container {
@@ -198,11 +200,11 @@
 
                 .account-label {
                     margin-right: 0.5rem;
-                    color: var(--color-surface-dark2);
+                    color: @color-surface-dark2;
                 }
 
                 .label {
-                    color: var(--color-accent4-light1);
+                    color: @color-accent4-light1;
                 }
             }
         }
@@ -223,7 +225,7 @@
     .label {
         margin-bottom: 1rem;
         font-size: 2rem;
-        color: var(--color-surface-light5);
+        color: @color-surface-light5;
         animation: 1s linear infinite alternate flash;
     }
 
@@ -231,7 +233,7 @@
         flex: none;
         width: 5rem;
         height: 5rem;
-        fill: var(--color-surface-light5);
+        fill: @color-surface-light5;
         animation: 1s linear infinite alternate flash;
     }
 
