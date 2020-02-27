@@ -29,7 +29,7 @@ const mapAddonsStateWithCtx = (addons, ctx) => {
             }
         }));
     const selectable = {
-        types: addons.selected !== null && addons.selected.request.path.id === INSTALLED_CATALOG_ID ? installedSelectableTypes : addons.selectable.types,
+        types: addons.selected !== null && addons.selected.request.base === INSTALLED_CATALOG_BASE && addons.selected.request.path.id === INSTALLED_CATALOG_ID ? installedSelectableTypes : addons.selectable.types,
         catalogs: addons.selectable.catalogs.concat({
             name: 'Installed',
             addon_name: '',
