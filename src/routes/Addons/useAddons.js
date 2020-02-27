@@ -2,6 +2,9 @@ const React = require('react');
 const { useServices } = require('stremio/services');
 const { useModelState } = require('stremio/common');
 
+const INSTALLED_CATALOG_ID = 'INSTALLED';
+const INSTALLED_CATALOG_BASE = '';
+
 const initAddonsState = () => ({
     selectable: {
         types: [],
@@ -11,19 +14,44 @@ const initAddonsState = () => ({
 });
 
 const mapAddonsStateWithCtx = (addons, ctx) => {
+    const installedSelectableTypes = ctx.profile.addons.map(addon => addon.manifest.types)
+        .flat(2).filter((type, index, types) => types.indexOf(type) === index)
+        .map((type) => ({
+            name: type,
+            request: {
+                base: INSTALLED_CATALOG_BASE,
+                path: {
+                    resource: 'addon_catalog',
+                    type_name: type,
+                    id: INSTALLED_CATALOG_ID,
+                    extra: []
+                }
+            }
+        }));
     const selectable = {
-        types: addons.selectable.types,
-        catalogs: addons.selectable.catalogs
+        types: addons.selected !== null && addons.selected.request.base === INSTALLED_CATALOG_BASE && addons.selected.request.path.id === INSTALLED_CATALOG_ID ? installedSelectableTypes : addons.selectable.types,
+        catalogs: addons.selectable.catalogs.concat({
+            name: 'Installed',
+            addon_name: '',
+            request: {
+                base: INSTALLED_CATALOG_BASE,
+                path: {
+                    resource: 'addon_catalog',
+                    type_name: installedSelectableTypes[0].request.path.type_name,
+                    id: INSTALLED_CATALOG_ID,
+                    extra: []
+                }
+            }
+        })
     };
-    // TODO replace catalog content if resource catalog id is MY
-    const catalog_resource = addons.catalog_resource !== null && addons.catalog_resource.content.type === 'Ready' ?
+    const catalog_resource = addons.selected !== null && addons.selected.request.base === INSTALLED_CATALOG_BASE && addons.selected.request.path.id === INSTALLED_CATALOG_ID ?
         {
-            request: addons.catalog_resource.request,
+            request: addons.selected.request,
             content: {
-                type: addons.catalog_resource.content.type,
-                content: addons.catalog_resource.content.content.map((addon) => ({
+                type: 'Ready',
+                content: ctx.profile.addons.filter((addon) => addon.manifest.types.includes(addons.selected.request.path.type_name)).map((addon) => ({
                     transportUrl: addon.transportUrl,
-                    installed: ctx.profile.addons.some(({ transportUrl }) => transportUrl === addon.transportUrl),
+                    installed: true,
                     manifest: {
                         id: addon.manifest.id,
                         name: addon.manifest.name,
@@ -36,7 +64,27 @@ const mapAddonsStateWithCtx = (addons, ctx) => {
             }
         }
         :
-        addons.catalog_resource;
+        addons.catalog_resource !== null && addons.catalog_resource.content.type === 'Ready' ?
+            {
+                request: addons.catalog_resource.request,
+                content: {
+                    type: addons.catalog_resource.content.type,
+                    content: addons.catalog_resource.content.content.map((addon) => ({
+                        transportUrl: addon.transportUrl,
+                        installed: ctx.profile.addons.some(({ transportUrl }) => transportUrl === addon.transportUrl),
+                        manifest: {
+                            id: addon.manifest.id,
+                            name: addon.manifest.name,
+                            version: addon.manifest.version,
+                            logo: addon.manifest.logo,
+                            description: addon.manifest.description,
+                            types: addon.manifest.types
+                        }
+                    }))
+                }
+            }
+            :
+            addons.catalog_resource;
     return { selectable, catalog_resource };
 };
 
