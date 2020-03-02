@@ -3,7 +3,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const { Modal, useRouteFocused } = require('stremio-router');
-const { Button, useBinaryState, useCoreEvent } = require('stremio/common');
+const { Button, Image, useBinaryState, useCoreEvent } = require('stremio/common');
 const { useServices } = require('stremio/services');
 const CredentialsTextInput = require('./CredentialsTextInput');
 const ConsentCheckbox = require('./ConsentCheckbox');
@@ -268,10 +268,25 @@ const Intro = ({ queryParams }) => {
     return (
         <div className={styles['intro-container']}>
             <div className={styles['form-container']}>
+                <div className={styles['logo-container']}>
+                    <Image className={styles['logo']} src={'/images/stremio_symbol.png'} />
+                    <Icon className={styles['icon']} icon={'ic_stremio'} />
+                </div>
                 <Button className={classnames(styles['form-button'], styles['facebook-button'])} onClick={loginWithFacebook}>
                     <Icon className={styles['icon']} icon={'ic_facebook'} />
                     <div className={styles['label']}>Continue with Facebook</div>
                 </Button>
+                {
+                    state.form === SIGNUP_FORM ?
+                        <Button className={classnames(styles['form-button'], styles['switch-form-button'], styles['switch-form-login-button'])} onClick={switchFormOnClick}>
+                            <div className={styles['label-container']}>
+                                <div className={styles['account-label']}>Already have an account?</div>
+                                <div className={styles['label']}>LOG IN</div>
+                            </div>
+                        </Button>
+                        :
+                        null
+                }
                 <CredentialsTextInput
                     ref={emailRef}
                     className={styles['credentials-text-input']}
@@ -340,7 +355,7 @@ const Intro = ({ queryParams }) => {
                         null
                 }
                 <Button className={classnames(styles['form-button'], styles['submit-button'])} onClick={state.form === SIGNUP_FORM ? signup : loginWithEmail}>
-                    <div className={styles['label']}>{state.form === SIGNUP_FORM ? 'SING UP' : 'LOG IN'}</div>
+                    <div className={styles['label']}>{state.form === SIGNUP_FORM ? 'Sign up' : 'Log in'}</div>
                 </Button>
                 {
                     state.form === SIGNUP_FORM ?
@@ -350,9 +365,14 @@ const Intro = ({ queryParams }) => {
                         :
                         null
                 }
-                <Button className={classnames(styles['form-button'], styles['switch-form-button'])} onClick={switchFormOnClick}>
-                    <div className={styles['label']}>{state.form === SIGNUP_FORM ? 'LOG IN' : 'SING UP WITH EMAIL'}</div>
-                </Button>
+                {
+                    state.form === LOGIN_FORM ?
+                        <Button className={classnames(styles['form-button'], styles['switch-form-button'])} onClick={switchFormOnClick}>
+                            <div className={styles['label']}>SIGN UP WITH EMAIL</div>
+                        </Button>
+                        :
+                        null
+                }
             </div>
             {
                 passwordRestModalOpen ?

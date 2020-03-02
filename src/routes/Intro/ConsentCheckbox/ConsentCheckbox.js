@@ -24,11 +24,11 @@ const ConsentCheckbox = React.forwardRef(({ className, checked, label, link, hre
     return (
         <Checkbox {...props} ref={ref} className={classnames(className, styles['consent-checkbox-container'])} checked={checked} onClick={checkboxOnClick}>
             <div className={styles['label']}>
-                {label}
+                {label}{' '}
                 {
                     typeof link === 'string' && typeof href === 'string' ?
                         <Button className={styles['link']} href={href} target={'_blank'} tabIndex={-1} onClick={linkOnClick}>
-                            {' '}{link}
+                            {link}
                         </Button>
                         :
                         null
