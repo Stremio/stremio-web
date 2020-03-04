@@ -1,3 +1,4 @@
+@import (reference) '~stremio-colors/dist/less/stremio-colors.less';
 @import (reference) '~stremio/common/screen-sizes.less';
 
 :import('~stremio/common/Multiselect/styles.less') {
@@ -7,7 +8,7 @@
 .library-container {
     width: 100%;
     height: 100%;
-    background-color: var(--color-background);
+    background-color: @color-background-dark2;
 
     .library-content {
         width: 100%;
@@ -69,10 +70,10 @@
                     width: 20rem;
                     min-height: 4rem;
                     padding: 0.5rem 1rem;
-                    background-color: var(--color-primarydark);
+                    background-color: @color-accent3;
 
                     &:hover {
-                        background-color: var(--color-primary);
+                        background-color: @color-accent3-light1;
                     }
 
                     .label {
@@ -82,7 +83,7 @@
                         max-height: 4.8em;
                         font-size: 1.2rem;
                         font-weight: 700;
-                        color: var(--color-surfacelighter);
+                        color: @color-surface-light5;
                         text-align: center;
                     }
                 }
@@ -92,7 +93,7 @@
                 flex: none;
                 max-height: 4.8em;
                 font-size: 2rem;
-                color: var(--color-surfacelighter);
+                color: @color-surface-light5;
                 text-align: center;
             }
         }
