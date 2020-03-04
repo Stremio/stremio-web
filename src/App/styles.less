@@ -43,11 +43,15 @@
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: var(--color-secondarylighter80);
+    background-color: @color-secondaryvariant2-light1;
+
+    &:hover {
+        background-color: @color-secondaryvariant2-light2;
+    }
 }
 
 ::-webkit-scrollbar-track {
-    background-color: var(--color-backgroundlight);
+    background-color: @color-background-dark2;
 }
 
 svg {
