@@ -1,5 +1,6 @@
 const React = require('react');
 const PropTypes = require('prop-types');
+const classnames = require('classnames');
 const { useRouteFocused } = require('stremio-router');
 const Icon = require('stremio-icons/dom');
 const { AddonDetailsModal, Button, Multiselect, NavBar, TextInput, SharePrompt, ModalDialog, useBinaryState } = require('stremio/common');
@@ -86,27 +87,40 @@ const Addons = ({ urlParams, queryParams }) => {
         <div className={styles['addons-container']}>
             <NavBar className={styles['nav-bar']} backButton={true} title={'Addons'} />
             <div className={styles['addons-content']}>
-                <div className={styles['selectable-inputs-container']}>
-                    <Button className={styles['add-button-container']} title={'Add addon'} onClick={openAddAddonModal}>
-                        <Icon className={styles['icon']} icon={'ic_plus'} />
-                        <div className={styles['add-button-label']}>Add addon</div>
+                <div className={styles['notice-container']}>
+                    <Button className={styles['close-button-container']} title={'dismiss'}>
+                        <div className={styles['label']}>dismiss</div>
+                        <Icon className={styles['icon']} icon={'ic_x'} />
                     </Button>
-                    {selectInputs.map((selectInput, index) => (
-                        <Multiselect
-                            {...selectInput}
-                            key={index}
-                            className={styles['select-input-container']}
-                        />
-                    ))}
+                    <div className={styles['notice']}>
+                        <Icon className={styles['icon']} icon={'ic_addons'} />
+                        <div className={styles['label']}>This is your addon catalogue - here you can search and install addons to improve your watching experience.</div>
+                    </div>
+                </div>
+                <div className={styles['selectable-inputs-container']}>
+                    <div className={styles['selectable-inputs']}>
+                        <Button className={styles['add-button-container']} title={'Add addon'} onClick={openAddAddonModal}>
+                            <Icon className={styles['icon']} icon={'ic_plus'} />
+                            <div className={styles['add-button-label']}>Add addon</div>
+                        </Button>
+                        <Multiselect {...selectInputs[1]} className={styles['select-input-container']} />
+                        <div className={styles['select-input-options']}>
+                            {selectInputs[0].options.map((option, index) => (
+                                <Button key={index} className={classnames(styles['option-container'], { 'selected': selectInputs[0].selected.includes(option.value) })} onClick={() => selectInputs[0].onSelect(option)}>
+                                    {option.label} addons
+                                </Button>
+                            ))}
+                        </div>
+                    </div>
                     <label className={styles['search-bar-container']}>
-                        <Icon className={styles['icon']} icon={'ic_search'} />
                         <TextInput
                             className={styles['search-input']}
                             type={'text'}
-                            placeholder={'Search addons...'}
+                            placeholder={'Search addons'}
                             value={search}
                             onChange={searchInputOnChange}
                         />
+                        <Icon className={styles['icon']} icon={'ic_search'} />
                     </label>
                 </div>
                 {
