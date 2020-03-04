@@ -148,6 +148,9 @@ const Settings = () => {
                                         null
                                 }
                             </div>
+                            <Button className={styles['user-panel-container']} title={'User panel'} target={'_blank'} href={'https://www.stremio.com/acc-settings'}>
+                                <div className={styles['user-panel-label']}>User Panel</div>
+                            </Button>
                         </div>
                         {
                             profile.auth === null ?
@@ -157,18 +160,16 @@ const Settings = () => {
                                     </Button>
                                 </div>
                                 :
-                                <div className={styles['option-container']}>
-                                    <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'User panel'} target={'_blank'} href={'https://www.stremio.com/acc-settings'}>
-                                        <Icon className={styles['icon']} icon={'ic_user'} />
-                                        <div className={styles['label']}>User panel</div>
-                                    </Button>
-                                </div>
+                                null
                         }
                         <div className={styles['option-container']}>
-                            <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Addons'} href={'#/addons'}>
-                                <Icon className={styles['icon']} icon={'ic_addons'} />
-                                <div className={styles['label']}>Addons</div>
-                            </Button>
+                            <div className={styles['option-name-container']}>
+                                <div className={styles['label']}>Interface language</div>
+                            </div>
+                            <Multiselect
+                                className={classnames(styles['option-input-container'], styles['multiselect-container'])}
+                                {...interfaceLanguageSelect}
+                            />
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
@@ -196,15 +197,6 @@ const Settings = () => {
                                 <Icon className={styles['icon']} icon={'ic_calendar'} />
                                 <div className={styles['label']}>Subscribe</div>
                             </Button>
-                        </div>
-                        <div className={styles['option-container']}>
-                            <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Interface language</div>
-                            </div>
-                            <Multiselect
-                                className={classnames(styles['option-input-container'], styles['multiselect-container'])}
-                                {...interfaceLanguageSelect}
-                            />
                         </div>
                         <div className={styles['option-container']}>
                             <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={'Export user data'} onClick={exportDataOnClick}>
