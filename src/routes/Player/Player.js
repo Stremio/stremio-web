@@ -1,34 +1,37 @@
 const React = require('react');
+const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const { useSpreadState } = require('stremio/common');
-const Video = require('./Video');
+const { useDeepEqualEffect } = require('stremio/common');
 const BufferingLoader = require('./BufferingLoader');
 const ControlBar = require('./ControlBar');
+const Video = require('./Video');
+const usePlayer = require('./usePlayer');
 const styles = require('./styles');
 
 const Player = ({ urlParams }) => {
+    const player = usePlayer(urlParams);
+    const [state, setState] = React.useReducer(
+        (state, nextState) => ({
+            ...state,
+            ...nextState
+        }),
+        {
+            paused: null,
+            time: null,
+            duration: null,
+            buffering: null,
+            volume: null,
+            muted: null,
+            subtitlesTracks: [],
+            selectedSubtitlesTrackId: null,
+            subtitlesSize: null,
+            subtitlesDelay: null,
+            subtitlesTextColor: null,
+            subtitlesBackgroundColor: null,
+            subtitlesOutlineColor: null
+        }
+    );
     const videoRef = React.useRef(null);
-    const stream = React.useMemo(() => {
-        return {
-            // ytId: 'E4A0bcCQke0',
-            url: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
-        };
-    }, [urlParams.stream]);
-    const [state, setState] = useSpreadState({
-        paused: null,
-        time: null,
-        duration: null,
-        buffering: null,
-        volume: null,
-        muted: null,
-        subtitlesTracks: [],
-        selectedSubtitlesTrackId: null,
-        subtitlesSize: null,
-        subtitlesDelay: null,
-        subtitlesTextColor: null,
-        subtitlesBackgroundColor: null,
-        subtitlesOutlineColor: null
-    });
     const dispatch = React.useCallback((args) => {
         if (videoRef.current !== null) {
             videoRef.current.dispatch(args);
@@ -39,42 +42,27 @@ const Player = ({ urlParams }) => {
             dispatch({ observedPropName: propName });
         });
     }, []);
-    const onEnded = React.useCallback(() => {
-        alert('ended');
-    }, []);
-    const onError = React.useCallback((error) => {
-        alert(error.message);
-        console.error(error);
-    }, []);
     const onPropChanged = React.useCallback((propName, propValue) => {
         setState({ [propName]: propValue });
     }, []);
-    React.useEffect(() => {
-        dispatch({
-            commandName: 'load',
-            commandArgs: { stream }
-        });
-        dispatch({
-            propName: 'subtitlesOffset',
-            propValue: 18
-        });
-        dispatch({
-            commandName: 'addSubtitlesTracks',
-            commandArgs: {
-                tracks: [
-                    {
-                        url: 'https://raw.githubusercontent.com/caitp/ng-media/master/example/assets/captions/bunny-en.vtt',
-                        origin: 'Github',
-                        label: 'English'
-                    }
-                ]
-            }
-        });
-        dispatch({
-            propName: 'selectedSubtitlesTrackId',
-            propValue: 'https://raw.githubusercontent.com/caitp/ng-media/master/example/assets/captions/bunny-en.vtt'
-        });
-    }, [stream]);
+    const onEnded = React.useCallback(() => {
+        console.log('ended');
+    }, []);
+    const onError = React.useCallback((error) => {
+        console.error(error);
+    }, []);
+    useDeepEqualEffect(() => {
+        if (player.selected === null || player.selected.stream === null) {
+            dispatch({ commandName: 'stop' });
+        } else {
+            dispatch({
+                commandName: 'load',
+                commandArgs: {
+                    stream: player.selected.stream
+                }
+            });
+        }
+    }, [player.selected && player.selected.stream]);
     return (
         <div className={styles['player-container']}>
             <Video
@@ -111,6 +99,16 @@ const Player = ({ urlParams }) => {
             />
         </div>
     );
+};
+
+Player.propTypes = {
+    urlParams: PropTypes.exact({
+        stream: PropTypes.string,
+        transportUrl: PropTypes.string,
+        type: PropTypes.string,
+        id: PropTypes.string,
+        videoId: PropTypes.string
+    })
 };
 
 module.exports = Player;
