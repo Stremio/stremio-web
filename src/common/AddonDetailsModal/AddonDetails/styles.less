@@ -1,12 +1,19 @@
+@import (reference) '~stremio-colors/dist/less/stremio-colors.less';
+
 .addon-details-container {
     .title-container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
         .logo, .icon {
+            flex: none;
             float: left;
             width: 5rem;
             height: 5rem;
             margin-right: 1rem;
             padding: 0.5rem;
-            background-color: var(--color-backgrounddarker);
+            background-color: @color-background-dark5;
         }
 
         .logo {
@@ -15,13 +22,33 @@
         }
 
         .icon {
-            fill: var(--color-surfacelighter);
+            fill: @color-secondaryvariant1-light3;
         }
 
-        .name {
-            font-size: 2.4rem;
-            font-weight: 300;
-            line-height: 5rem;
+        .name-container {
+            display: flex;
+            flex-direction: row;
+            align-items: baseline;
+            width: 100%;
+
+            .name {
+                margin-right: 1rem;
+                max-width: 80%;
+                max-height: 1.2em;
+                white-space: pre;
+                text-overflow: ellipsis;
+                font-size: 2rem;
+                font-weight: 300;
+                opacity: 0.9;
+            }
+
+            .version {
+                max-width: 20%;
+                max-height: 1.2em;
+                white-space: pre;
+                text-overflow: ellipsis;
+                opacity: 0.6;
+            }
         }
     }
 
@@ -29,12 +56,14 @@
         margin-top: 1rem;
 
         .section-header {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
+            opacity: 0.9;
         }
 
         .section-label {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 300;
+            opacity: 0.9;
 
             &.transport-url-label {
                 user-select: text;
