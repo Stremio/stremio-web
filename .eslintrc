@@ -27,8 +27,6 @@
     "ignorePatterns": [
         "/*",
         "!/src",
-        "src/routes/Settings",
-        "src/routes/Player",
         "src/video"
     ],
     "rules": {
