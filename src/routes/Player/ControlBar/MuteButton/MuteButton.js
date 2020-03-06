@@ -6,9 +6,11 @@ const { Button } = require('stremio/common');
 
 const MuteButton = ({ className, muted, volume, dispatch }) => {
     const toggleMuted = React.useCallback(() => {
-        dispatch({ propName: 'muted', propValue: !muted });
+        if (typeof dispatch === 'function') {
+            dispatch({ propName: 'muted', propValue: !muted });
+        }
     }, [muted, dispatch]);
-    const icon = muted ? 'ic_volume0' :
+    const icon = (typeof muted === 'boolean' && muted) ? 'ic_volume0' :
         (volume === null || isNaN(volume)) ? 'ic_volume3' :
             volume < 30 ? 'ic_volume1' :
                 volume < 70 ? 'ic_volume2' :
@@ -18,7 +20,7 @@ const MuteButton = ({ className, muted, volume, dispatch }) => {
             <Icon className={'icon'} icon={icon} />
         </Button>
     );
-}
+};
 
 MuteButton.propTypes = {
     className: PropTypes.string,
