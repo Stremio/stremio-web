@@ -23,7 +23,7 @@ const SeekBar = ({ className, time, duration, dispatch }) => {
         if (typeof dispatch === 'function') {
             dispatch({ propName: 'time', propValue: time });
         }
-    }, []);
+    }, [dispatch]);
     const disabled = React.useMemo(() => {
         return time === null ||
             isNaN(time) ||
