@@ -7,11 +7,11 @@ const useLiveRef = require('stremio/common/useLiveRef');
 const styles = require('./styles');
 
 const Slider = ({ className, value, minimumValue, maximumValue, disabled, onSlide, onComplete }) => {
-    const minimumValueRef = useLiveRef(minimumValue !== null && !isNaN(minimumValue) ? minimumValue : 0, [minimumValue]);
-    const maximumValueRef = useLiveRef(maximumValue !== null && !isNaN(maximumValue) ? maximumValue : 100, [maximumValue]);
-    const valueRef = useLiveRef(value !== null && !isNaN(value) ? Math.min(maximumValueRef.current, Math.max(minimumValueRef.current, value)) : 0, [minimumValue, maximumValue, value]);
-    const onSlideRef = useLiveRef(onSlide, [onSlide]);
-    const onCompleteRef = useLiveRef(onComplete, [onComplete]);
+    const minimumValueRef = useLiveRef(minimumValue !== null && !isNaN(minimumValue) ? minimumValue : 0);
+    const maximumValueRef = useLiveRef(maximumValue !== null && !isNaN(maximumValue) ? maximumValue : 100);
+    const valueRef = useLiveRef(value !== null && !isNaN(value) ? Math.min(maximumValueRef.current, Math.max(minimumValueRef.current, value)) : 0);
+    const onSlideRef = useLiveRef(onSlide);
+    const onCompleteRef = useLiveRef(onComplete);
     const sliderContainerRef = React.useRef(null);
     const routeFocused = useRouteFocused();
     const [requestThumbAnimation, cancelThumbAnimation] = useAnimationFrame();
