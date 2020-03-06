@@ -16,7 +16,7 @@ const MuteButton = ({ className, muted, volume, dispatch }) => {
                 volume < 70 ? 'ic_volume2' :
                     'ic_volume3';
     return (
-        <Button className={classnames(className, { 'disabled': typeof muted !== 'boolean' })} tabIndex={-1} onClick={toggleMuted}>
+        <Button className={classnames(className, { 'disabled': typeof muted !== 'boolean' })} title={muted ? 'Unmute' : 'Mute'} tabIndex={-1} onClick={toggleMuted}>
             <Icon className={'icon'} icon={icon} />
         </Button>
     );
