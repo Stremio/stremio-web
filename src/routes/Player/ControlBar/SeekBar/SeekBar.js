@@ -2,11 +2,13 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const debounce = require('lodash.debounce');
+const { useRouteFocused } = require('stremio-router');
 const { Slider } = require('stremio/common');
 const formatTime = require('./formatTime');
 const styles = require('./styles');
 
 const SeekBar = ({ className, time, duration, dispatch }) => {
+    const routeFocused = useRouteFocused();
     const [seekTime, setSeekTime] = React.useState(null);
     const resetTimeDebounced = React.useCallback(debounce(() => {
         setSeekTime(null);
@@ -22,6 +24,18 @@ const SeekBar = ({ className, time, duration, dispatch }) => {
             dispatch({ propName: 'time', propValue: time });
         }
     }, []);
+    const disabled = React.useMemo(() => {
+        return time === null ||
+            isNaN(time) ||
+            duration === null ||
+            isNaN(duration);
+    }, [time, duration]);
+    React.useLayoutEffect(() => {
+        if (!routeFocused || disabled) {
+            resetTimeDebounced.cancel();
+            setSeekTime(null);
+        }
+    }, [routeFocused, disabled]);
     React.useEffect(() => {
         return () => {
             resetTimeDebounced.cancel();
@@ -31,10 +45,16 @@ const SeekBar = ({ className, time, duration, dispatch }) => {
         <div className={classnames(className, styles['seek-bar-container'], { 'active': seekTime !== null })}>
             <div className={styles['label']}>{formatTime(seekTime !== null ? seekTime : time)}</div>
             <Slider
-                className={classnames(styles['slider'], { 'disabled': time === null || isNaN(time) })}
-                value={seekTime !== null ? seekTime : time}
+                className={classnames(styles['slider'], { 'active': seekTime !== null })}
+                value={
+                    !disabled ?
+                        seekTime !== null ? seekTime : time
+                        :
+                        null
+                }
                 minimumValue={0}
                 maximumValue={duration}
+                disabled={disabled}
                 onSlide={onSlide}
                 onComplete={onComplete}
             />
