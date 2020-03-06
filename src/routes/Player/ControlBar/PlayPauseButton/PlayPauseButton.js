@@ -11,7 +11,7 @@ const PlayPauseButton = ({ className, paused, dispatch }) => {
         }
     }, [paused, dispatch]);
     return (
-        <Button className={classnames(className, { 'disabled': typeof paused !== 'boolean' })} tabIndex={-1} onClick={togglePaused}>
+        <Button className={classnames(className, { 'disabled': typeof paused !== 'boolean' })} title={paused ? 'Play' : 'Pause'} tabIndex={-1} onClick={togglePaused}>
             <Icon
                 className={'icon'}
                 icon={typeof paused !== 'boolean' || paused ? 'ic_play' : 'ic_pause'}
