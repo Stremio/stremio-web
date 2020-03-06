@@ -8,6 +8,7 @@ const formatTime = require('./formatTime');
 const styles = require('./styles');
 
 const SeekBar = ({ className, time, duration, dispatch }) => {
+    const disabled = time === null || isNaN(time) || duration === null || isNaN(duration);
     const routeFocused = useRouteFocused();
     const [seekTime, setSeekTime] = React.useState(null);
     const resetTimeDebounced = React.useCallback(debounce(() => {
@@ -24,12 +25,6 @@ const SeekBar = ({ className, time, duration, dispatch }) => {
             dispatch({ propName: 'time', propValue: time });
         }
     }, [dispatch]);
-    const disabled = React.useMemo(() => {
-        return time === null ||
-            isNaN(time) ||
-            duration === null ||
-            isNaN(duration);
-    }, [time, duration]);
     React.useLayoutEffect(() => {
         if (!routeFocused || disabled) {
             resetTimeDebounced.cancel();
@@ -50,7 +45,7 @@ const SeekBar = ({ className, time, duration, dispatch }) => {
                     !disabled ?
                         seekTime !== null ? seekTime : time
                         :
-                        null
+                        0
                 }
                 minimumValue={0}
                 maximumValue={duration}
