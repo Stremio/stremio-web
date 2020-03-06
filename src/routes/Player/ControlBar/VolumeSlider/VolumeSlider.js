@@ -2,10 +2,13 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const debounce = require('lodash.debounce');
+const { useRouteFocused } = require('stremio-router');
 const { Slider } = require('stremio/common');
 const styles = require('./styles');
 
 const VolumeSlider = ({ className, volume, dispatch }) => {
+    const disabled = volume === null || isNaN(volume);
+    const routeFocused = useRouteFocused();
     const [slidingVolume, setSlidingVolume] = React.useState(null);
     const resetVolumeDebounced = React.useCallback(debounce(() => {
         setSlidingVolume(null);
@@ -20,7 +23,13 @@ const VolumeSlider = ({ className, volume, dispatch }) => {
         if (typeof dispatch === 'function') {
             dispatch({ propName: 'volume', propValue: volume });
         }
-    }, []);
+    }, [dispatch]);
+    React.useLayoutEffect(() => {
+        if (!routeFocused || disabled) {
+            resetVolumeDebounced.cancel();
+            setSlidingVolume(null);
+        }
+    }, [routeFocused, disabled]);
     React.useEffect(() => {
         return () => {
             resetVolumeDebounced.cancel();
@@ -28,10 +37,16 @@ const VolumeSlider = ({ className, volume, dispatch }) => {
     }, []);
     return (
         <Slider
-            className={classnames(className, styles['volume-slider'], { 'active': slidingVolume !== null }, { 'disabled': volume === null || isNaN(volume) })}
-            value={slidingVolume !== null ? slidingVolume : volume !== null ? volume : 100}
+            className={classnames(className, styles['volume-slider'], { 'active': slidingVolume !== null })}
+            value={
+                !disabled ?
+                    slidingVolume !== null ? slidingVolume : volume
+                    :
+                    100
+            }
             minimumValue={0}
             maximumValue={100}
+            disabled={disabled}
             onSlide={onSlide}
             onComplete={onComplete}
         />
