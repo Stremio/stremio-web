@@ -3,7 +3,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { useRouteFocused } = require('stremio-router');
 const Icon = require('stremio-icons/dom');
-const { AddonDetailsModal, Button, Multiselect, NavBar, TextInput, SharePrompt, ModalDialog, useBinaryState } = require('stremio/common');
+const { AddonDetailsModal, Button, Image, Multiselect, NavBar, TextInput, SharePrompt, ModalDialog, useBinaryState } = require('stremio/common');
 const Addon = require('./Addon');
 const useAddons = require('./useAddons');
 const useSelectableInputs = require('./useSelectableInputs');
@@ -65,12 +65,17 @@ const Addons = ({ urlParams, queryParams }) => {
     const searchInputOnChange = React.useCallback((event) => {
         setSearch(event.currentTarget.value);
     }, []);
-    const [sharedTransportUrl, setSharedTransportUrl] = React.useState(null);
-    const clearSharedTransportUrl = React.useCallback(() => {
-        setSharedTransportUrl(null);
+    const [sharedAddon, setSharedAddon] = React.useState(null);
+    const renderLogoFallback = React.useMemo(() => () => {
+        return (
+            <Icon className={styles['icon']} icon={'ic_addons'} />
+        );
+    }, []);
+    const clearSharedAddon = React.useCallback(() => {
+        setSharedAddon(null);
     }, []);
     const onAddonShare = React.useCallback((event) => {
-        setSharedTransportUrl(event.dataset.transportUrl);
+        setSharedAddon(event.dataset);
     }, []);
     const onAddonToggle = React.useCallback((event) => {
         navigate({ detailsTransportUrl: event.dataset.transportUrl });
@@ -81,7 +86,7 @@ const Addons = ({ urlParams, queryParams }) => {
     React.useLayoutEffect(() => {
         closeAddAddonModal();
         setSearch('');
-        clearSharedTransportUrl();
+        clearSharedAddon();
     }, [urlParams, queryParams]);
     return (
         <div className={styles['addons-container']}>
@@ -167,7 +172,7 @@ const Addons = ({ urlParams, queryParams }) => {
                                                         installed={addon.installed}
                                                         onToggle={onAddonToggle}
                                                         onShare={onAddonShare}
-                                                        dataset={{ transportUrl: addon.transportUrl }}
+                                                        dataset={{ id: addon.manifest.id, name: addon.manifest.name, version: addon.manifest.version, logo: addon.manifest.logo, transportUrl: addon.transportUrl }}
                                                     />
                                                 ))
                                         }
@@ -181,11 +186,12 @@ const Addons = ({ urlParams, queryParams }) => {
                         title={'Add addon'}
                         buttons={addAddonModalButtons}
                         onCloseRequest={closeAddAddonModal}>
+                        <div className={styles['notice']}>You can add an addon via an external link, which will appear under Installed addons.</div>
                         <TextInput
                             ref={addAddonUrlInputRef}
                             className={styles['addon-url-input']}
                             type={'text'}
-                            placeholder={'Paste url...'}
+                            placeholder={'Paste addon URL'}
                             onSubmit={addAddonOnSubmit}
                         />
                     </ModalDialog>
@@ -193,14 +199,31 @@ const Addons = ({ urlParams, queryParams }) => {
                     null
             }
             {
-                typeof sharedTransportUrl === 'string' ?
+                sharedAddon !== null && typeof sharedAddon.transportUrl === 'string' ?
                     <ModalDialog
                         className={styles['share-modal-container']}
-                        title={'Share addon'}
-                        onCloseRequest={clearSharedTransportUrl}>
+                        title={'Share Addon'}
+                        onCloseRequest={clearSharedAddon}>
+                        <div className={styles['title-container']}>
+                            <Image
+                                className={styles['logo']}
+                                src={sharedAddon.logo}
+                                alt={' '}
+                                renderFallback={renderLogoFallback}
+                            />
+                            <div className={styles['name-container']}>
+                                <span className={styles['name']}>{typeof sharedAddon.name === 'string' && sharedAddon.name.length > 0 ? sharedAddon.name : sharedAddon.id}</span>
+                                {
+                                    typeof sharedAddon.version === 'string' && sharedAddon.version.length > 0 ?
+                                        <span className={styles['version']}>v. {sharedAddon.version}</span>
+                                        :
+                                        null
+                                }
+                            </div>
+                        </div>
                         <SharePrompt
                             className={styles['share-prompt-container']}
-                            url={sharedTransportUrl}
+                            url={sharedAddon.transportUrl}
                         />
                     </ModalDialog>
                     :
