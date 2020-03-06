@@ -1,10 +1,11 @@
+@import (reference) '~stremio-colors/dist/less/stremio-colors.less';
+
 :import('~stremio/common/ModalDialog/styles.less') {
     label: label;
 }
 
 .addon-details-modal-container {
     .addon-details-container, .addon-details-message-container {
-        width: 60rem;
         max-width: 100%;
     }
 
@@ -15,20 +16,29 @@
         }
     }
 
-    .cancel-button, .uninstall-button {
-        background-color: transparent;
-        outline-width: var(--focus-outline-size);
-        outline-offset: calc(-1 * var(--focus-outline-size));
-        outline-color: var(--color-surfacedarker);
-        outline-style: solid;
+    .uninstall-button, .cancel-button {
+        &:focus {
+            outline-color: @color-background-dark5;
+        }
+    }
 
-        &:hover, &:focus {
-            filter: none;
-            background: var(--color-surfacelight);
+    .cancel-button {
+        background-color: transparent;
+
+        &:hover {
+            background-color: @color-surface-light3;
         }
 
         .label {
-            color: var(--color-surfacedarker);
+            color: @color-surface-dark2;
+        }
+    }
+
+    .uninstall-button {
+        background-color: @color-accent2;
+
+        &:hover {
+            background-color: @color-accent2-light2;
         }
     }
 }
