@@ -6,7 +6,7 @@ const useAnimationFrame = require('stremio/common/useAnimationFrame');
 const useLiveRef = require('stremio/common/useLiveRef');
 const styles = require('./styles');
 
-const Slider = ({ className, value, minimumValue, maximumValue, onSlide, onComplete }) => {
+const Slider = ({ className, value, minimumValue, maximumValue, disabled, onSlide, onComplete }) => {
     const minimumValueRef = useLiveRef(minimumValue !== null && !isNaN(minimumValue) ? minimumValue : 0, [minimumValue]);
     const maximumValueRef = useLiveRef(maximumValue !== null && !isNaN(maximumValue) ? maximumValue : 100, [maximumValue]);
     const valueRef = useLiveRef(value !== null && !isNaN(value) ? Math.min(maximumValueRef.current, Math.max(minimumValueRef.current, value)) : 0, [minimumValue, maximumValue, value]);
@@ -83,10 +83,10 @@ const Slider = ({ className, value, minimumValue, maximumValue, onSlide, onCompl
         retainThumb();
     }, []);
     React.useLayoutEffect(() => {
-        if (!routeFocused) {
+        if (!routeFocused || disabled) {
             releaseThumb();
         }
-    }, [routeFocused]);
+    }, [routeFocused, disabled]);
     React.useLayoutEffect(() => {
         return () => {
             releaseThumb();
@@ -94,7 +94,7 @@ const Slider = ({ className, value, minimumValue, maximumValue, onSlide, onCompl
     }, []);
     const thumbPosition = Math.max(0, Math.min(1, (valueRef.current - minimumValueRef.current) / (maximumValueRef.current - minimumValueRef.current)));
     return (
-        <div ref={sliderContainerRef} className={classnames(className, styles['slider-container'])} onMouseDown={onMouseDown}>
+        <div ref={sliderContainerRef} className={classnames(className, styles['slider-container'], { 'disabled': disabled })} onMouseDown={onMouseDown}>
             <div className={styles['layer']}>
                 <div className={styles['track']} />
             </div>
@@ -115,6 +115,7 @@ Slider.propTypes = {
     value: PropTypes.number,
     minimumValue: PropTypes.number,
     maximumValue: PropTypes.number,
+    disabled: PropTypes.bool,
     onSlide: PropTypes.func,
     onComplete: PropTypes.func
 };
