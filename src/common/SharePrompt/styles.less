@@ -37,25 +37,21 @@
         }
 
         .facebook-button, .twitter-button {
+            &:hover {
+                filter: brightness(1.2);
+            }
+
             &:focus {
                 outline-color: @color-background-dark5;
             }
         }
 
         .facebook-button {
-            background-color: @color-secondary;
-
-            &:hover {
-                background-color: @color-secondary-light2;
-            }
+            background-color: var(--color-facebook);
         }
 
         .twitter-button {
-            background-color: @color-secondaryvariant2-light1;
-
-            &:hover {
-                background-color: @color-secondaryvariant2-light2;
-            }
+            background-color: var(--color-twitter);
         }
     }
 
