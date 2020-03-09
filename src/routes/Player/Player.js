@@ -63,6 +63,18 @@ const Player = ({ urlParams }) => {
             });
         }
     }, [player.selected && player.selected.stream]);
+    useDeepEqualEffect(() => {
+        dispatch({
+            commandName: 'addSubtitlesTracks',
+            commandArgs: {
+                tracks: player.subtitles_resources
+                    .filter((subtitles_resource) => subtitles_resource.content.type === 'Ready')
+                    .reduce((tracks, subtitles_resource) => {
+                        return tracks.concat(subtitles_resource.content.content);
+                    }, [])
+            }
+        });
+    }, [player.subtitles_resources]);
     return (
         <div className={styles['player-container']}>
             <Video
