@@ -1,7 +1,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const { useDeepEqualEffect } = require('stremio/common');
+const { useDeepEqualEffect, useBinaryState } = require('stremio/common');
 const BufferingLoader = require('./BufferingLoader');
 const ControlBar = require('./ControlBar');
 const Video = require('./Video');
@@ -10,6 +10,7 @@ const styles = require('./styles');
 
 const Player = ({ urlParams }) => {
     const player = usePlayer(urlParams);
+    const [subtitlesPickerOpen, , , toggleSubtitlesPicker] = useBinaryState(false);
     const [state, setState] = React.useReducer(
         (state, nextState) => ({
             ...state,
@@ -131,7 +132,14 @@ const Player = ({ urlParams }) => {
                 onUnmuteRequested={onUnmuteRequested}
                 onVolumeChangeRequested={onVolumeChangeRequested}
                 onSeekRequested={onSeekRequested}
+                onToggleSubtitlesPicker={toggleSubtitlesPicker}
             />
+            {
+                subtitlesPickerOpen ?
+                    <div className={styles['layer']} />
+                    :
+                    null
+            }
         </div>
     );
 };

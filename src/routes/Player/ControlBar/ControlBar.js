@@ -38,18 +38,11 @@ const ControlBar = (props) => {
                     onVolumeChangeRequested={props.onVolumeChangeRequested}
                 />
                 <div className={styles['spacing']} />
-                {/* <SubtitlesButton
+                <SubtitlesButton
                     className={styles['control-bar-button']}
-                    modalContainerClassName={styles['modal-container']}
                     subtitlesTracks={props.subtitlesTracks}
-                    selectedSubtitlesTrackId={props.selectedSubtitlesTrackId}
-                    subtitlesSize={props.subtitlesSize}
-                    subtitlesDelay={props.subtitlesDelay}
-                    subtitlesTextColor={props.subtitlesTextColor}
-                    subtitlesBackgroundColor={props.subtitlesBackgroundColor}
-                    subtitlesOutlineColor={props.subtitlesOutlineColor}
-                    dispatch={props.dispatch}
-                /> */}
+                    onToggleSubtitlesPicker={props.onToggleSubtitlesPicker}
+                />
                 <ShareButton className={styles['control-bar-button']} />
             </div>
         </div>
@@ -64,18 +57,13 @@ ControlBar.propTypes = {
     volume: PropTypes.any,
     muted: PropTypes.any,
     subtitlesTracks: PropTypes.any,
-    selectedSubtitlesTrackId: PropTypes.any,
-    subtitlesSize: PropTypes.any,
-    subtitlesDelay: PropTypes.any,
-    subtitlesTextColor: PropTypes.any,
-    subtitlesBackgroundColor: PropTypes.any,
-    subtitlesOutlineColor: PropTypes.any,
-    onPlayRequested: PropTypes.func,
-    onPauseRequested: PropTypes.func,
-    onMuteRequested: PropTypes.func,
-    onUnmuteRequested: PropTypes.func,
-    onVolumeChangeRequested: PropTypes.func,
-    onSeekRequested: PropTypes.func
+    onPlayRequested: PropTypes.any,
+    onPauseRequested: PropTypes.any,
+    onMuteRequested: PropTypes.any,
+    onUnmuteRequested: PropTypes.any,
+    onVolumeChangeRequested: PropTypes.any,
+    onSeekRequested: PropTypes.any,
+    onToggleSubtitlesPicker: PropTypes.any
 };
 
 module.exports = ControlBar;

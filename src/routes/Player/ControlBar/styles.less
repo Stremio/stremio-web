@@ -1,13 +1,5 @@
 @import (reference) '~stremio-colors/dist/less/stremio-colors.less';
 
-:import('./ShareButton/styles.less') {
-    share-dialog-container: share-dialog-container;
-}
-
-:import('./SubtitlesButton/styles.less') {
-    subtitles-picker-container: subtitles-picker-container;
-}
-
 .control-bar-container {
     padding: 0 1.5rem;
 
@@ -55,18 +47,5 @@
         .spacing {
             flex: 1;
         }
-    }
-}
-
-.modal-container {
-    display: flex;
-    align-items: flex-end;
-    justify-content: flex-end;
-    padding: 8rem 1rem;
-
-    .share-dialog-container, .subtitles-picker-container {
-        flex: none;
-        background-color: var(--color-backgroundlighter);
-        border: thin solid var(--color-surfacelighter20);
     }
 }
