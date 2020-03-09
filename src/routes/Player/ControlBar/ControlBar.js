@@ -36,7 +36,7 @@ const ControlBar = (props) => {
                     dispatch={props.dispatch}
                 />
                 <div className={styles['spacing']} />
-                {/* <SubtitlesButton
+                <SubtitlesButton
                     className={styles['control-bar-button']}
                     modalContainerClassName={styles['modal-container']}
                     subtitlesTracks={props.subtitlesTracks}
@@ -47,7 +47,7 @@ const ControlBar = (props) => {
                     subtitlesBackgroundColor={props.subtitlesBackgroundColor}
                     subtitlesOutlineColor={props.subtitlesOutlineColor}
                     dispatch={props.dispatch}
-                /> */}
+                />
                 <ShareButton className={styles['control-bar-button']} />
             </div>
         </div>
