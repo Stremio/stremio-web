@@ -1,12 +1,12 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const SeekBar = require('./SeekBar');
-const PlayPauseButton = require('./PlayPauseButton');
 const MuteButton = require('./MuteButton');
-const VolumeSlider = require('./VolumeSlider');
-const SubtitlesButton = require('./SubtitlesButton');
+const PlayPauseButton = require('./PlayPauseButton');
+const SeekBar = require('./SeekBar');
 const ShareButton = require('./ShareButton');
+const SubtitlesButton = require('./SubtitlesButton');
+const VolumeSlider = require('./VolumeSlider');
 const styles = require('./styles');
 
 const ControlBar = (props) => {
@@ -36,7 +36,7 @@ const ControlBar = (props) => {
                     dispatch={props.dispatch}
                 />
                 <div className={styles['spacing']} />
-                <SubtitlesButton
+                {/* <SubtitlesButton
                     className={styles['control-bar-button']}
                     modalContainerClassName={styles['modal-container']}
                     subtitlesTracks={props.subtitlesTracks}
@@ -47,11 +47,8 @@ const ControlBar = (props) => {
                     subtitlesBackgroundColor={props.subtitlesBackgroundColor}
                     subtitlesOutlineColor={props.subtitlesOutlineColor}
                     dispatch={props.dispatch}
-                />
-                <ShareButton
-                    className={styles['control-bar-button']}
-                    modalContainerClassName={styles['modal-container']}
-                />
+                /> */}
+                <ShareButton className={styles['control-bar-button']} />
             </div>
         </div>
     );
@@ -59,23 +56,19 @@ const ControlBar = (props) => {
 
 ControlBar.propTypes = {
     className: PropTypes.string,
-    paused: PropTypes.bool,
-    time: PropTypes.number,
-    duration: PropTypes.number,
-    volume: PropTypes.number,
-    muted: PropTypes.bool,
-    subtitlesTracks: PropTypes.arrayOf(PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        label: PropTypes.string.isRequired,
-        origin: PropTypes.string.isRequired
-    })),
-    selectedSubtitlesTrackId: PropTypes.string,
-    subtitlesSize: PropTypes.number,
-    subtitlesDelay: PropTypes.number,
-    subtitlesTextColor: PropTypes.string,
-    subtitlesBackgroundColor: PropTypes.string,
-    subtitlesOutlineColor: PropTypes.string,
-    dispatch: PropTypes.func
+    paused: PropTypes.any,
+    time: PropTypes.any,
+    duration: PropTypes.any,
+    volume: PropTypes.any,
+    muted: PropTypes.any,
+    subtitlesTracks: PropTypes.any,
+    selectedSubtitlesTrackId: PropTypes.any,
+    subtitlesSize: PropTypes.any,
+    subtitlesDelay: PropTypes.any,
+    subtitlesTextColor: PropTypes.any,
+    subtitlesBackgroundColor: PropTypes.any,
+    subtitlesOutlineColor: PropTypes.any,
+    dispatch: PropTypes.any
 };
 
 module.exports = ControlBar;

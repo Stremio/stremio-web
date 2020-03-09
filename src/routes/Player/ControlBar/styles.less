@@ -1,3 +1,5 @@
+@import (reference) '~stremio-colors/dist/less/stremio-colors.less';
+
 :import('./ShareButton/styles.less') {
     share-dialog-container: share-dialog-container;
 }
@@ -7,23 +9,9 @@
 }
 
 .control-bar-container {
-    position: relative;
-    z-index: 0;
     padding: 0 1.5rem;
-    overflow: visible;
-
-    &::after {
-        position: absolute;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        z-index: -1;
-        box-shadow: 0 0 8rem 8rem var(--color-backgrounddarker);
-        content: "";
-    }
 
     .seek-bar {
-        --thumb-size: 1.5rem;
         height: 2.5rem;
     }
 
@@ -40,26 +28,24 @@
             justify-content: center;
             align-items: center;
 
-            &:global(.active) {
-                background-color: var(--color-backgrounddarker);
-            }
-
             &:global(.disabled) {
                 :global(.icon) {
-                    fill: var(--color-surfacedark);
+                    fill: @color-surface;
                 }
             }
 
             :global(.icon) {
                 flex: none;
-                width: 2.5rem;
-                height: 2.5rem;
-                fill: var(--color-surfacelighter);
+                width: 2.2rem;
+                height: 2.2rem;
+                fill: @color-surface-light5;
             }
         }
 
         .volume-slider {
-            --thumb-size: 1.25rem;
+            --track-size: 0.4rem;
+            --thumb-size: 1.3rem;
+
             flex: none;
             width: 16rem;
             height: 4rem;
