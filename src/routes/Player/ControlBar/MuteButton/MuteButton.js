@@ -4,12 +4,18 @@ const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const { Button } = require('stremio/common');
 
-const MuteButton = ({ className, muted, volume, dispatch }) => {
+const MuteButton = ({ className, muted, volume, onMuteRequested, onUnmuteRequested }) => {
     const toggleMuted = React.useCallback(() => {
-        if (typeof dispatch === 'function') {
-            dispatch({ propName: 'muted', propValue: !muted });
+        if (muted) {
+            if (typeof onUnmuteRequested === 'function') {
+                onUnmuteRequested();
+            }
+        } else {
+            if (typeof onMuteRequested === 'function') {
+                onMuteRequested();
+            }
         }
-    }, [muted, dispatch]);
+    }, [muted, onMuteRequested, onUnmuteRequested]);
     const icon = (typeof muted === 'boolean' && muted) ? 'ic_volume0' :
         (volume === null || isNaN(volume)) ? 'ic_volume3' :
             volume < 30 ? 'ic_volume1' :
@@ -26,7 +32,8 @@ MuteButton.propTypes = {
     className: PropTypes.string,
     muted: PropTypes.bool,
     volume: PropTypes.number,
-    dispatch: PropTypes.func
+    onMuteRequested: PropTypes.func,
+    onUnmuteRequested: PropTypes.func
 };
 
 module.exports = MuteButton;

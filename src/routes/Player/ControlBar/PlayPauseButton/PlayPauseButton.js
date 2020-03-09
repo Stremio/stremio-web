@@ -4,12 +4,18 @@ const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const { Button } = require('stremio/common');
 
-const PlayPauseButton = ({ className, paused, dispatch }) => {
+const PlayPauseButton = ({ className, paused, onPlayRequested, onPauseRequested }) => {
     const togglePaused = React.useCallback(() => {
-        if (typeof dispatch === 'function') {
-            dispatch({ propName: 'paused', propValue: !paused });
+        if (paused) {
+            if (typeof onPlayRequested === 'function') {
+                onPlayRequested();
+            }
+        } else {
+            if (typeof onPauseRequested === 'function') {
+                onPauseRequested();
+            }
         }
-    }, [paused, dispatch]);
+    }, [paused, onPlayRequested, onPauseRequested]);
     return (
         <Button className={classnames(className, { 'disabled': typeof paused !== 'boolean' })} title={paused ? 'Play' : 'Pause'} tabIndex={-1} onClick={togglePaused}>
             <Icon
@@ -23,7 +29,8 @@ const PlayPauseButton = ({ className, paused, dispatch }) => {
 PlayPauseButton.propTypes = {
     className: PropTypes.string,
     paused: PropTypes.bool,
-    dispatch: PropTypes.func
+    onPlayRequested: PropTypes.func,
+    onPauseRequested: PropTypes.func
 };
 
 module.exports = PlayPauseButton;

@@ -7,7 +7,7 @@ const { Slider } = require('stremio/common');
 const formatTime = require('./formatTime');
 const styles = require('./styles');
 
-const SeekBar = ({ className, time, duration, dispatch }) => {
+const SeekBar = ({ className, time, duration, onSeekRequested }) => {
     const disabled = time === null || isNaN(time) || duration === null || isNaN(duration);
     const routeFocused = useRouteFocused();
     const [seekTime, setSeekTime] = React.useState(null);
@@ -21,10 +21,10 @@ const SeekBar = ({ className, time, duration, dispatch }) => {
     const onComplete = React.useCallback((time) => {
         resetTimeDebounced();
         setSeekTime(time);
-        if (typeof dispatch === 'function') {
-            dispatch({ propName: 'time', propValue: time });
+        if (typeof onSeekRequested === 'function') {
+            onSeekRequested(time);
         }
-    }, [dispatch]);
+    }, [onSeekRequested]);
     React.useLayoutEffect(() => {
         if (!routeFocused || disabled) {
             resetTimeDebounced.cancel();
@@ -62,7 +62,7 @@ SeekBar.propTypes = {
     className: PropTypes.string,
     time: PropTypes.number,
     duration: PropTypes.number,
-    dispatch: PropTypes.func
+    onSeekRequested: PropTypes.func
 };
 
 module.exports = SeekBar;

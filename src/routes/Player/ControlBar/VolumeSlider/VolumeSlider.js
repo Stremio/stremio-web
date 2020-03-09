@@ -6,7 +6,7 @@ const { useRouteFocused } = require('stremio-router');
 const { Slider } = require('stremio/common');
 const styles = require('./styles');
 
-const VolumeSlider = ({ className, volume, dispatch }) => {
+const VolumeSlider = ({ className, volume, onVolumeChangeRequested }) => {
     const disabled = volume === null || isNaN(volume);
     const routeFocused = useRouteFocused();
     const [slidingVolume, setSlidingVolume] = React.useState(null);
@@ -20,10 +20,10 @@ const VolumeSlider = ({ className, volume, dispatch }) => {
     const onComplete = React.useCallback((volume) => {
         resetVolumeDebounced();
         setSlidingVolume(volume);
-        if (typeof dispatch === 'function') {
-            dispatch({ propName: 'volume', propValue: volume });
+        if (typeof onVolumeChangeRequested === 'function') {
+            onVolumeChangeRequested(volume);
         }
-    }, [dispatch]);
+    }, [onVolumeChangeRequested]);
     React.useLayoutEffect(() => {
         if (!routeFocused || disabled) {
             resetVolumeDebounced.cancel();
@@ -56,7 +56,7 @@ const VolumeSlider = ({ className, volume, dispatch }) => {
 VolumeSlider.propTypes = {
     className: PropTypes.string,
     volume: PropTypes.number,
-    dispatch: PropTypes.func
+    onVolumeChangeRequested: PropTypes.func
 };
 
 module.exports = VolumeSlider;

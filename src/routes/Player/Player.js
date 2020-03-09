@@ -51,6 +51,24 @@ const Player = ({ urlParams }) => {
     const onError = React.useCallback((error) => {
         console.error(error);
     }, []);
+    const onPlayRequested = React.useCallback(() => {
+        dispatch({ propName: 'paused', propValue: false });
+    }, []);
+    const onPauseRequested = React.useCallback(() => {
+        dispatch({ propName: 'paused', propValue: true });
+    }, []);
+    const onMuteRequested = React.useCallback(() => {
+        dispatch({ propName: 'muted', propValue: true });
+    }, []);
+    const onUnmuteRequested = React.useCallback(() => {
+        dispatch({ propName: 'muted', propValue: false });
+    }, []);
+    const onVolumeChangeRequested = React.useCallback((volume) => {
+        dispatch({ propName: 'volume', propValue: volume });
+    }, []);
+    const onSeekRequested = React.useCallback((time) => {
+        dispatch({ propName: 'time', propValue: time });
+    }, []);
     useDeepEqualEffect(() => {
         if (player.selected === null || player.selected.stream === null) {
             dispatch({ commandName: 'stop' });
@@ -107,7 +125,12 @@ const Player = ({ urlParams }) => {
                 subtitlesTextColor={state.subtitlesTextColor}
                 subtitlesBackgroundColor={state.subtitlesBackgroundColor}
                 subtitlesOutlineColor={state.subtitlesOutlineColor}
-                dispatch={dispatch}
+                onPlayRequested={onPlayRequested}
+                onPauseRequested={onPauseRequested}
+                onMuteRequested={onMuteRequested}
+                onUnmuteRequested={onUnmuteRequested}
+                onVolumeChangeRequested={onVolumeChangeRequested}
+                onSeekRequested={onSeekRequested}
             />
         </div>
     );

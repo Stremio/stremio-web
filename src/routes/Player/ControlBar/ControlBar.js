@@ -16,27 +16,29 @@ const ControlBar = (props) => {
                 className={styles['seek-bar']}
                 time={props.time}
                 duration={props.duration}
-                dispatch={props.dispatch}
+                onSeekRequested={props.onSeekRequested}
             />
             <div className={styles['control-bar-buttons-container']}>
                 <PlayPauseButton
                     className={styles['control-bar-button']}
                     paused={props.paused}
-                    dispatch={props.dispatch}
+                    onPlayRequested={props.onPlayRequested}
+                    onPauseRequested={props.onPauseRequested}
                 />
                 <MuteButton
                     className={styles['control-bar-button']}
                     volume={props.volume}
                     muted={props.muted}
-                    dispatch={props.dispatch}
+                    onMuteRequested={props.onMuteRequested}
+                    onUnmuteRequested={props.onUnmuteRequested}
                 />
                 <VolumeSlider
                     className={styles['volume-slider']}
                     volume={props.volume}
-                    dispatch={props.dispatch}
+                    onVolumeChangeRequested={props.onVolumeChangeRequested}
                 />
                 <div className={styles['spacing']} />
-                <SubtitlesButton
+                {/* <SubtitlesButton
                     className={styles['control-bar-button']}
                     modalContainerClassName={styles['modal-container']}
                     subtitlesTracks={props.subtitlesTracks}
@@ -47,7 +49,7 @@ const ControlBar = (props) => {
                     subtitlesBackgroundColor={props.subtitlesBackgroundColor}
                     subtitlesOutlineColor={props.subtitlesOutlineColor}
                     dispatch={props.dispatch}
-                />
+                /> */}
                 <ShareButton className={styles['control-bar-button']} />
             </div>
         </div>
@@ -68,7 +70,12 @@ ControlBar.propTypes = {
     subtitlesTextColor: PropTypes.any,
     subtitlesBackgroundColor: PropTypes.any,
     subtitlesOutlineColor: PropTypes.any,
-    dispatch: PropTypes.any
+    onPlayRequested: PropTypes.func,
+    onPauseRequested: PropTypes.func,
+    onMuteRequested: PropTypes.func,
+    onUnmuteRequested: PropTypes.func,
+    onVolumeChangeRequested: PropTypes.func,
+    onSeekRequested: PropTypes.func
 };
 
 module.exports = ControlBar;
