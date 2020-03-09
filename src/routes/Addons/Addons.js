@@ -75,10 +75,10 @@ const Addons = ({ urlParams, queryParams }) => {
         setSharedAddon(null);
     }, []);
     const onAddonShare = React.useCallback((event) => {
-        setSharedAddon(event.dataset);
+        setSharedAddon(event.dataset.addon);
     }, []);
     const onAddonToggle = React.useCallback((event) => {
-        navigate({ detailsTransportUrl: event.dataset.transportUrl });
+        navigate({ detailsTransportUrl: event.dataset.addon.transportUrl });
     }, [navigate]);
     const closeAddonDetails = React.useCallback(() => {
         navigate({ detailsTransportUrl: null });
@@ -161,7 +161,7 @@ const Addons = ({ urlParams, queryParams }) => {
                                                         installed={addon.installed}
                                                         onToggle={onAddonToggle}
                                                         onShare={onAddonShare}
-                                                        dataset={{ id: addon.manifest.id, name: addon.manifest.name, version: addon.manifest.version, logo: addon.manifest.logo, transportUrl: addon.transportUrl }}
+                                                        dataset={{ addon }}
                                                     />
                                                 ))
                                         }
@@ -196,15 +196,15 @@ const Addons = ({ urlParams, queryParams }) => {
                         <div className={styles['title-container']}>
                             <Image
                                 className={styles['logo']}
-                                src={sharedAddon.logo}
+                                src={sharedAddon.manifest.logo}
                                 alt={' '}
                                 renderFallback={renderLogoFallback}
                             />
                             <div className={styles['name-container']}>
-                                <span className={styles['name']}>{typeof sharedAddon.name === 'string' && sharedAddon.name.length > 0 ? sharedAddon.name : sharedAddon.id}</span>
+                                <span className={styles['name']}>{typeof sharedAddon.manifest.name === 'string' && sharedAddon.manifest.name.length > 0 ? sharedAddon.manifest.name : sharedAddon.manifest.id}</span>
                                 {
-                                    typeof sharedAddon.version === 'string' && sharedAddon.version.length > 0 ?
-                                        <span className={styles['version']}>v. {sharedAddon.version}</span>
+                                    typeof sharedAddon.manifest.version === 'string' && sharedAddon.manifest.version.length > 0 ?
+                                        <span className={styles['version']}>v. {sharedAddon.manifest.version}</span>
                                         :
                                         null
                                 }
