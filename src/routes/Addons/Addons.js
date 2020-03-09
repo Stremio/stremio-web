@@ -92,16 +92,6 @@ const Addons = ({ urlParams, queryParams }) => {
         <div className={styles['addons-container']}>
             <NavBar className={styles['nav-bar']} backButton={true} title={'Addons'} />
             <div className={styles['addons-content']}>
-                <div className={styles['notice-container']}>
-                    <Button className={styles['close-button-container']} title={'dismiss'}>
-                        <div className={styles['label']}>dismiss</div>
-                        <Icon className={styles['icon']} icon={'ic_x'} />
-                    </Button>
-                    <div className={styles['notice']}>
-                        <Icon className={styles['icon']} icon={'ic_addons'} />
-                        <div className={styles['label']}>This is your addon catalogue - here you can search and install addons to improve your watching experience.</div>
-                    </div>
-                </div>
                 <div className={styles['selectable-inputs-container']}>
                     <div className={styles['selectable-inputs']}>
                         <Button className={styles['add-button-container']} title={'Add addon'} onClick={openAddAddonModal}>
