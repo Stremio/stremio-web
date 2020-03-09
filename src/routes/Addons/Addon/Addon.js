@@ -42,7 +42,7 @@ const Addon = ({ className, id, name, version, logo, description, types, install
         );
     }, []);
     return (
-        <Button className={classnames(className, styles['addon-container'])} tabIndex={-1} onKeyDown={onKeyDown}>
+        <Button className={classnames(className, styles['addon-container'])} onKeyDown={onKeyDown}>
             <div className={styles['logo-container']}>
                 <Image
                     className={styles['logo']}
@@ -82,10 +82,10 @@ const Addon = ({ className, id, name, version, logo, description, types, install
                 }
             </div>
             <div className={styles['buttons-container']}>
-                <Button className={installed ? styles['uninstall-button-container'] : styles['install-button-container']} title={installed ? 'Uninstall' : 'Install'} onClick={toggleButtonOnClick}>
+                <Button className={installed ? styles['uninstall-button-container'] : styles['install-button-container']} title={installed ? 'Uninstall' : 'Install'} tabIndex={-1} onClick={toggleButtonOnClick}>
                     <div className={styles['label']}>{installed ? 'Uninstall' : 'Install'}</div>
                 </Button>
-                <Button className={styles['share-button-container']} title={'SHARE ADDON'} onClick={shareButtonOnClick}>
+                <Button className={styles['share-button-container']} title={'SHARE ADDON'} tabIndex={-1} onClick={shareButtonOnClick}>
                     <Icon className={styles['icon']} icon={'ic_share'} />
                     <div className={styles['label']}>SHARE ADDON</div>
                 </Button>
