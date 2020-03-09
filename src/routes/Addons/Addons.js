@@ -98,14 +98,13 @@ const Addons = ({ urlParams, queryParams }) => {
                             <Icon className={styles['icon']} icon={'ic_plus'} />
                             <div className={styles['add-button-label']}>Add addon</div>
                         </Button>
-                        <Multiselect {...selectInputs[1]} className={styles['select-input-container']} />
-                        <div className={styles['select-input-options']}>
-                            {selectInputs[0].options.map((option, index) => (
-                                <Button key={index} className={classnames(styles['option-container'], { 'selected': selectInputs[0].selected.includes(option.value) })} onClick={() => selectInputs[0].onSelect(option)}>
-                                    {option.label} addons
-                                </Button>
-                            ))}
-                        </div>
+                        {selectInputs.map((selectInput, index) => (
+                            <Multiselect
+                                {...selectInput}
+                                key={index}
+                                className={styles['select-input-container']}
+                            />
+                        ))}
                     </div>
                     <label className={styles['search-bar-container']}>
                         <TextInput

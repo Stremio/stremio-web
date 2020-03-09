@@ -92,41 +92,6 @@
                         overflow: auto;
                     }
                 }
-
-                .select-input-options {
-                    display: flex;
-                    flex-direction: row;
-                    align-items: center;
-
-                    .option-container {
-                        padding: 0.5rem;
-                        opacity: 0.9;
-                        color: @color-primary-light2;
-
-                        &:hover, &:focus {
-                            color: @color-primary-light4;
-                        }
-
-                        &:focus {
-                            outline: none;
-                            background-color: @color-surface-light5-20;
-                        }
-
-                        &:global(.selected) {
-                            opacity: 0.9;
-                            text-decoration: underline;
-                            color: @color-primaryvariant1;
-
-                            &:hover, &:focus {
-                                color: @color-primaryvariant1-light2;
-                            }
-                        }
-
-                        &:not(:last-child) {
-                            margin-right: 1rem;
-                        }
-                    }
-                }
             }
 
             .search-bar-container {
