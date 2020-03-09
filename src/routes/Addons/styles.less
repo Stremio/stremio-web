@@ -5,6 +5,7 @@
 }
 
 :import('~stremio/common/ModalDialog/styles.less') {
+    add-addon-modal-content: modal-dialog-content;
     cancel-button-label: label;
 }
 
@@ -160,27 +161,31 @@
 }
 
 .add-addon-modal-container {
-    .notice {
-        margin-bottom: 1.5rem;
-        font-size: 1rem;
-        color: @color-background-dark5-90;
-    }
+    .add-addon-modal-content {
+        width: 30rem;
 
-    .addon-url-input {
-        width: 100%;
-        padding: 0.8rem;
-        color: @color-surface-dark5;
-        border: var(--focus-outline-size) solid @color-surface-light2;
-
-        &:hover, &:focus {
-            outline-style: solid;
-            outline-width: var(--focus-outline-size);
-            outline-color: @color-surface-light4;
-            outline-offset: calc(-1 * var(--focus-outline-size));
+        .notice {
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+            color: @color-background-dark5-90;
         }
 
-        &:focus {
-            outline-color: @color-background-dark5;
+        .addon-url-input {
+            width: 100%;
+            padding: 0.8rem;
+            color: @color-surface-dark5;
+            border: var(--focus-outline-size) solid @color-surface-light2;
+
+            &:hover, &:focus {
+                outline-style: solid;
+                outline-width: var(--focus-outline-size);
+                outline-color: @color-surface-light4;
+                outline-offset: calc(-1 * var(--focus-outline-size));
+            }
+
+            &:focus {
+                outline-color: @color-background-dark5;
+            }
         }
     }
 
