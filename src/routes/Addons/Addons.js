@@ -187,7 +187,7 @@ const Addons = ({ urlParams, queryParams }) => {
                     null
             }
             {
-                sharedAddon !== null && typeof sharedAddon.transportUrl === 'string' ?
+                sharedAddon !== null ?
                     <ModalDialog
                         className={styles['share-modal-container']}
                         title={'Share Addon'}
