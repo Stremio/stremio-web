@@ -5,7 +5,7 @@
 }
 
 :import('~stremio/common/ModalDialog/styles.less') {
-    add-addon-modal-content: modal-dialog-content;
+    addon-modal-content: modal-dialog-content;
     cancel-button-label: label;
 }
 
@@ -161,7 +161,7 @@
 }
 
 .add-addon-modal-container {
-    .add-addon-modal-content {
+    .addon-modal-content {
         width: 30rem;
 
         .notice {
@@ -207,59 +207,62 @@
 }
 
 .share-modal-container {
-    .title-container {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
+    .addon-modal-content {
         width: 30rem;
 
-        .logo, .icon {
-            flex: none;
-            float: left;
-            width: 5rem;
-            height: 5rem;
-            margin-right: 1.5rem;
-            padding: 0.5rem;
-        }
-
-        .logo {
-            object-fit: contain;
-            object-position: center;
-        }
-
-        .icon {
-            fill: @color-secondaryvariant1-light3;
-        }
-
-        .name-container {
-            flex-grow: 1;
-            flex-shrink: 1;
-            flex-basis: 0;
+        .title-container {
             display: flex;
             flex-direction: row;
-            flex-wrap: wrap;
-            align-items: baseline;
-    
-            .name {
-                flex-grow: 0;
-                flex-shrink: 1;
-                flex-basis: auto;
-                margin-right: 0.5rem;
-                font-size: 1.6rem;
-                color: @color-background-dark5-90;
+            align-items: center;
+
+            .logo, .icon {
+                flex: none;
+                float: left;
+                width: 5rem;
+                height: 5rem;
+                margin-right: 1.5rem;
+                padding: 0.5rem;
             }
-    
-            .version {
+
+            .logo {
+                object-fit: contain;
+                object-position: center;
+            }
+
+            .icon {
+                fill: @color-secondaryvariant1-light3;
+            }
+
+            .name-container {
                 flex-grow: 1;
                 flex-shrink: 1;
-                flex-basis: auto;
-                margin-top: 0.5rem;
-                color: @color-background-dark5-60;
+                flex-basis: 0;
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                align-items: baseline;
+
+                .name {
+                    flex-grow: 0;
+                    flex-shrink: 1;
+                    flex-basis: auto;
+                    margin-right: 0.5rem;
+                    font-size: 1.6rem;
+                    color: @color-background-dark5-90;
+                }
+
+                .version {
+                    flex-grow: 1;
+                    flex-shrink: 1;
+                    flex-basis: auto;
+                    margin-top: 0.5rem;
+                    color: @color-background-dark5-60;
+                }
             }
         }
-    }
 
-    .share-prompt-container {
-        margin-top: 1rem;
+        .share-prompt-container {
+            margin-top: 1rem;
+        }
     }
 }
