@@ -50,13 +50,16 @@ const SubtitlesPicker = (props) => {
             null;
     }, [props.subtitlesTracks, props.selectedSubtitlesTrackId]);
     const tracksForLanguage = React.useMemo(() => {
-        return Array.isArray(props.subtitlesTracks) && selectedLanguage !== null ?
+        return Array.isArray(props.subtitlesTracks) && typeof selectedLanguage === 'string' ?
             props.subtitlesTracks.filter(({ lang }) => {
                 return lang === selectedLanguage;
             })
             :
             [];
     }, [props.subtitlesTracks, selectedLanguage]);
+    const subtitlesOffsetDisabled = React.useMemo(() => {
+        return props.subtitlesOffset === null || isNaN(props.subtitlesOffset);
+    }, [props.subtitlesOffset]);
     const onMouseDown = React.useCallback((event) => {
         event.nativeEvent.subtitlesPickerClosePrevented = true;
     }, []);
@@ -76,6 +79,14 @@ const SubtitlesPicker = (props) => {
     const trackOnClick = React.useCallback((event) => {
         props.onSubtitlesTrackSelected(event.currentTarget.dataset.trackId);
     }, [props.onSubtitlesTrackSelected]);
+    const onOffsetButtonClicked = React.useCallback((event) => {
+        if (props.subtitlesOffset !== null && !isNaN(props.subtitlesOffset)) {
+            const offset = props.subtitlesOffset + parseInt(event.currentTarget.dataset.offset);
+            if (typeof props.onSubtitlesOffsetChanged === 'function') {
+                props.onSubtitlesOffsetChanged(offset);
+            }
+        }
+    }, [props.subtitlesOffset, props.onSubtitlesOffsetChanged]);
     return (
         <div className={classnames(props.className, styles['subtitles-picker-container'])} onMouseDown={onMouseDown}>
             <div className={styles['languages-container']}>
@@ -84,7 +95,7 @@ const SubtitlesPicker = (props) => {
                     <Button title={'Off'} className={classnames(styles['language-option'], { 'selected': selectedLanguage === null })} onClick={languageOnClick}>
                         <div className={styles['language-label']}>Off</div>
                         {
-                            selectedLanguage === null ?
+                            typeof selectedLanguage !== 'string' ?
                                 <div className={styles['icon']} />
                                 :
                                 null
@@ -151,12 +162,14 @@ const SubtitlesPicker = (props) => {
                     </Button>
                 </div>
                 <div className={styles['option-header']}>Vertical position</div>
-                <div className={styles['option-container']}>
-                    <Button className={styles['button-container']}>
+                <div className={classnames(styles['option-container'], { 'disabled': subtitlesOffsetDisabled })} title={subtitlesOffsetDisabled ? 'Vertical position is not configurable' : null}>
+                    <Button className={classnames(styles['button-container'], { 'disabled': subtitlesOffsetDisabled })} data-offset={-1} onClick={onOffsetButtonClicked}>
                         <Icon className={styles['icon']} icon={'ic_minus'} />
                     </Button>
-                    <div className={styles['option-label']} title={'18%'}>18%</div>
-                    <Button className={styles['button-container']}>
+                    <div className={styles['option-label']} title={!subtitlesOffsetDisabled ? `${props.subtitlesOffset}%` : null}>
+                        {!subtitlesOffsetDisabled ? `${props.subtitlesOffset}%` : '--'}
+                    </div>
+                    <Button className={classnames(styles['button-container'], { 'disabled': subtitlesOffsetDisabled })} data-offset={1} onClick={onOffsetButtonClicked}>
                         <Icon className={styles['icon']} icon={'ic_plus'} />
                     </Button>
                 </div>
@@ -175,12 +188,14 @@ SubtitlesPicker.propTypes = {
         origin: PropTypes.string.isRequired
     })),
     selectedSubtitlesTrackId: PropTypes.string,
+    subtitlesOffset: PropTypes.number,
     subtitlesSize: PropTypes.number,
     subtitlesDelay: PropTypes.number,
     subtitlesTextColor: PropTypes.string,
     subtitlesBackgroundColor: PropTypes.string,
     subtitlesOutlineColor: PropTypes.string,
-    onSubtitlesTrackSelected: PropTypes.func
+    onSubtitlesTrackSelected: PropTypes.func,
+    onSubtitlesOffsetChanged: PropTypes.func
 };
 
 module.exports = SubtitlesPicker;

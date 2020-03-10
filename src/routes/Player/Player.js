@@ -28,6 +28,7 @@ const Player = ({ urlParams }) => {
             selectedSubtitlesTrackId: null,
             subtitlesSize: null,
             subtitlesDelay: null,
+            subtitlesOffset: null,
             subtitlesTextColor: null,
             subtitlesBackgroundColor: null,
             subtitlesOutlineColor: null
@@ -73,6 +74,9 @@ const Player = ({ urlParams }) => {
     }, []);
     const onSubtitlesTrackSelected = React.useCallback((trackId) => {
         dispatch({ propName: 'selectedSubtitlesTrackId', propValue: trackId });
+    }, []);
+    const onSubtitlesOffsetChanged = React.useCallback((offset) => {
+        dispatch({ propName: 'subtitlesOffset', propValue: offset });
     }, []);
     const onContainerMouseDown = React.useCallback((event) => {
         if (!event.nativeEvent.subtitlesPickerClosePrevented) {
@@ -129,12 +133,6 @@ const Player = ({ urlParams }) => {
                 volume={state.volume}
                 muted={state.muted}
                 subtitlesTracks={state.subtitlesTracks}
-                selectedSubtitlesTrackId={state.selectedSubtitlesTrackId}
-                subtitlesSize={state.subtitlesSize}
-                subtitlesDelay={state.subtitlesDelay}
-                subtitlesTextColor={state.subtitlesTextColor}
-                subtitlesBackgroundColor={state.subtitlesBackgroundColor}
-                subtitlesOutlineColor={state.subtitlesOutlineColor}
                 onPlayRequested={onPlayRequested}
                 onPauseRequested={onPauseRequested}
                 onMuteRequested={onMuteRequested}
@@ -149,12 +147,14 @@ const Player = ({ urlParams }) => {
                         className={classnames(styles['layer'], styles['menu-layer'])}
                         subtitlesTracks={state.subtitlesTracks}
                         selectedSubtitlesTrackId={state.selectedSubtitlesTrackId}
+                        subtitlesOffset={state.subtitlesOffset}
                         subtitlesSize={state.subtitlesSize}
                         subtitlesDelay={state.subtitlesDelay}
                         subtitlesTextColor={state.subtitlesTextColor}
                         subtitlesBackgroundColor={state.subtitlesBackgroundColor}
                         subtitlesOutlineColor={state.subtitlesOutlineColor}
                         onSubtitlesTrackSelected={onSubtitlesTrackSelected}
+                        onSubtitlesOffsetChanged={onSubtitlesOffsetChanged}
                     />
                     :
                     null
