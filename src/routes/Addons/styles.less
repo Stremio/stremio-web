@@ -168,15 +168,13 @@
 
         .addon-url-input {
             width: 100%;
-            padding: 0.8rem;
+            padding: 1rem;
             color: @color-surface-dark5;
-            border: var(--focus-outline-size) solid @color-surface-light2;
+            outline: var(--focus-outline-size) solid @color-surface-light2;
+            outline-offset: calc(-1 * var(--focus-outline-size));
 
-            &:hover, &:focus {
-                outline-style: solid;
-                outline-width: var(--focus-outline-size);
+            &:hover {
                 outline-color: @color-surface-light4;
-                outline-offset: calc(-1 * var(--focus-outline-size));
             }
 
             &:focus {
