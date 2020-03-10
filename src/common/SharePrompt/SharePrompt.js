@@ -15,18 +15,17 @@ const SharePrompt = ({ className, url }) => {
             inputRef.current.select();
         }
     }, []);
-    const copyToClipboard = React.useCallback((event) => {
+    const copyToClipboard = React.useCallback(() => {
         if (inputRef.current !== null) {
             inputRef.current.select();
             document.execCommand('copy');
-            event.target.focus();
         }
     }, []);
     React.useEffect(() => {
         if (routeFocused && inputRef.current !== null) {
             inputRef.current.select();
         }
-    }, []);
+    }, [routeFocused]);
     return (
         <div className={classnames(className, styles['share-prompt-container'])}>
             <div className={styles['buttons-container']}>

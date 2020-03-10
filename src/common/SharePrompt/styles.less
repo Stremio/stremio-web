@@ -61,16 +61,6 @@
         margin-top: 1rem;
         background-color: @color-surface-light2;
 
-        &:hover {
-            .url-text-input {
-                background-color: @color-surface-light4;
-            }
-
-            .copy-button {
-                background-color: @color-accent3-light2;
-            }
-        }
-
         .url-text-input {
             flex: 1;
             align-self: stretch;
@@ -90,6 +80,10 @@
             width: 8rem;
             padding: 1rem;
             background-color: @color-accent3;
+
+            &:hover {
+                background-color: @color-accent3-light2;
+            }
 
             &:focus {
                 outline-color: @color-background-dark5;
