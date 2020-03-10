@@ -36,7 +36,7 @@
     overflow: hidden;
     word-break: break-word;
     scrollbar-width: thin;
-    scrollbar-color: @color-secondary-light4-80 @color-background-dark3;
+    scrollbar-color: @color-secondaryvariant2-light1 @color-background-dark2;
 }
 
 ::-webkit-scrollbar {
@@ -44,11 +44,15 @@
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: @color-secondary-light4-80;
+    background-color: @color-secondaryvariant2-light1;
+
+    &:hover {
+        background-color: @color-secondaryvariant2-light2;
+    }
 }
 
 ::-webkit-scrollbar-track {
-    background-color: @color-background-dark3;
+    background-color: @color-background-dark2;
 }
 
 svg {

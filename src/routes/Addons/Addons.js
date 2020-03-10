@@ -2,7 +2,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const { useRouteFocused } = require('stremio-router');
 const Icon = require('stremio-icons/dom');
-const { AddonDetailsModal, Button, Multiselect, MainNavBars, TextInput, SharePrompt, ModalDialog, useBinaryState } = require('stremio/common');
+const { AddonDetailsModal, Button, Image, Multiselect, MainNavBars, TextInput, SharePrompt, ModalDialog, useBinaryState } = require('stremio/common');
 const Addon = require('./Addon');
 const useAddons = require('./useAddons');
 const useSelectableInputs = require('./useSelectableInputs');
@@ -64,15 +64,20 @@ const Addons = ({ urlParams, queryParams }) => {
     const searchInputOnChange = React.useCallback((event) => {
         setSearch(event.currentTarget.value);
     }, []);
-    const [sharedTransportUrl, setSharedTransportUrl] = React.useState(null);
-    const clearSharedTransportUrl = React.useCallback(() => {
-        setSharedTransportUrl(null);
+    const [sharedAddon, setSharedAddon] = React.useState(null);
+    const renderLogoFallback = React.useMemo(() => () => {
+        return (
+            <Icon className={styles['icon']} icon={'ic_addons'} />
+        );
+    }, []);
+    const clearSharedAddon = React.useCallback(() => {
+        setSharedAddon(null);
     }, []);
     const onAddonShare = React.useCallback((event) => {
-        setSharedTransportUrl(event.dataset.transportUrl);
+        setSharedAddon(event.dataset.addon);
     }, []);
     const onAddonToggle = React.useCallback((event) => {
-        navigate({ detailsTransportUrl: event.dataset.transportUrl });
+        navigate({ detailsTransportUrl: event.dataset.addon.transportUrl });
     }, [navigate]);
     const closeAddonDetails = React.useCallback(() => {
         navigate({ detailsTransportUrl: null });
@@ -80,7 +85,7 @@ const Addons = ({ urlParams, queryParams }) => {
     React.useLayoutEffect(() => {
         closeAddAddonModal();
         setSearch('');
-        clearSharedTransportUrl();
+        clearSharedAddon();
     }, [urlParams, queryParams]);
     return (
         <MainNavBars className={styles['addons-container']} route={'addons'}>
@@ -97,15 +102,16 @@ const Addons = ({ urlParams, queryParams }) => {
                             className={styles['select-input-container']}
                         />
                     ))}
+                    <div className={styles['spacing']} />
                     <label className={styles['search-bar-container']}>
-                        <Icon className={styles['icon']} icon={'ic_search'} />
                         <TextInput
                             className={styles['search-input']}
                             type={'text'}
-                            placeholder={'Search addons...'}
+                            placeholder={'Search addons'}
                             value={search}
                             onChange={searchInputOnChange}
                         />
+                        <Icon className={styles['icon']} icon={'ic_search'} />
                     </label>
                 </div>
                 {
@@ -152,7 +158,7 @@ const Addons = ({ urlParams, queryParams }) => {
                                                         installed={addon.installed}
                                                         onToggle={onAddonToggle}
                                                         onShare={onAddonShare}
-                                                        dataset={{ transportUrl: addon.transportUrl }}
+                                                        dataset={{ addon }}
                                                     />
                                                 ))
                                         }
@@ -166,11 +172,12 @@ const Addons = ({ urlParams, queryParams }) => {
                         title={'Add addon'}
                         buttons={addAddonModalButtons}
                         onCloseRequest={closeAddAddonModal}>
+                        <div className={styles['notice']}>You can add an addon via an external link, which will appear under Installed addons.</div>
                         <TextInput
                             ref={addAddonUrlInputRef}
                             className={styles['addon-url-input']}
                             type={'text'}
-                            placeholder={'Paste url...'}
+                            placeholder={'Paste addon URL'}
                             onSubmit={addAddonOnSubmit}
                         />
                     </ModalDialog>
@@ -178,14 +185,31 @@ const Addons = ({ urlParams, queryParams }) => {
                     null
             }
             {
-                typeof sharedTransportUrl === 'string' ?
+                sharedAddon !== null ?
                     <ModalDialog
                         className={styles['share-modal-container']}
-                        title={'Share addon'}
-                        onCloseRequest={clearSharedTransportUrl}>
+                        title={'Share Addon'}
+                        onCloseRequest={clearSharedAddon}>
+                        <div className={styles['title-container']}>
+                            <Image
+                                className={styles['logo']}
+                                src={sharedAddon.manifest.logo}
+                                alt={' '}
+                                renderFallback={renderLogoFallback}
+                            />
+                            <div className={styles['name-container']}>
+                                <span className={styles['name']}>{typeof sharedAddon.manifest.name === 'string' && sharedAddon.manifest.name.length > 0 ? sharedAddon.manifest.name : sharedAddon.manifest.id}</span>
+                                {
+                                    typeof sharedAddon.manifest.version === 'string' && sharedAddon.manifest.version.length > 0 ?
+                                        <span className={styles['version']}>v. {sharedAddon.manifest.version}</span>
+                                        :
+                                        null
+                                }
+                            </div>
+                        </div>
                         <SharePrompt
                             className={styles['share-prompt-container']}
-                            url={sharedTransportUrl}
+                            url={sharedAddon.transportUrl}
                         />
                     </ModalDialog>
                     :
