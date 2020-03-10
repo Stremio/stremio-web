@@ -248,7 +248,7 @@ const Intro = ({ queryParams }) => {
     const switchFormOnClick = React.useCallback(() => {
         const nextQueryParams = new URLSearchParams(queryParams);
         nextQueryParams.set('form', state.form === SIGNUP_FORM ? LOGIN_FORM : SIGNUP_FORM);
-        window.location.replace(`#/intro?${nextQueryParams}`);
+        window.location = `#/intro?${nextQueryParams}`;
     }, [queryParams, state.form]);
     React.useEffect(() => {
         if ([LOGIN_FORM, SIGNUP_FORM].includes(queryParams.get('form'))) {

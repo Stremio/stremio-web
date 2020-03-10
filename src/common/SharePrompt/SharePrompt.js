@@ -25,7 +25,7 @@ const SharePrompt = ({ className, url }) => {
         if (routeFocused && inputRef.current !== null) {
             inputRef.current.select();
         }
-    }, []);
+    }, [routeFocused]);
     return (
         <div className={classnames(className, styles['share-prompt-container'])}>
             <div className={styles['buttons-container']}>

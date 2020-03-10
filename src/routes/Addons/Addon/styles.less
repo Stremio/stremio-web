@@ -1,16 +1,18 @@
+@import (reference) '~stremio-colors/dist/less/stremio-colors.less';
+
 .addon-container {
     display: flex;
     flex-direction: row;
     align-items: flex-start;
-    padding: 1rem;
-    background-color: var(--color-backgroundlighter);
+    padding: 1.5rem;
+    background-color: @color-background;
     cursor: inherit;
 
     .logo-container {
         flex: none;
-        width: 8rem;
-        height: 8rem;
-        background-color: var(--color-backgrounddarker);
+        width: 6rem;
+        height: 6rem;
+        background-color: @color-surface-light5;
 
         .logo {
             display: block;
@@ -26,7 +28,7 @@
             width: 100%;
             height: 100%;
             padding: 1rem;
-            fill: var(--color-surfacelighter);
+            fill: @color-secondaryvariant1-light3;
         }
     }
 
@@ -47,7 +49,7 @@
             padding: 0 0.5rem;
             max-height: 3.6em;
             font-size: 1.6rem;
-            color: var(--color-surfacelighter);
+            color: @color-surface-light5-90;
         }
 
         .version-container {
@@ -57,7 +59,7 @@
             margin-top: 0.5rem;
             padding: 0 0.5rem;
             max-height: 2.4em;
-            color: var(--color-surfacelight);
+            color: @color-surface-light5-60;
         }
 
         .types-container {
@@ -67,7 +69,7 @@
             margin-top: 0.5rem;
             padding: 0 0.5rem;
             max-height: 2.4em;
-            color: var(--color-surfacelight);
+            color: @color-surface-light5-40;
             text-transform: capitalize;
         }
 
@@ -78,7 +80,7 @@
             margin-top: 0.5rem;
             padding: 0 0.5rem;
             max-height: 4.8em;
-            color: var(--color-surfacelight);
+            color: @color-surface-light5-90;
         }
     }
 
@@ -91,7 +93,7 @@
             flex-direction: row;
             align-items: center;
             justify-content: center;
-            height: 3.5rem;
+            height: 4rem;
             padding: 0 1rem;
 
             &:not(:first-child) {
@@ -100,8 +102,8 @@
 
             .icon {
                 flex: none;
-                width: 1.5rem;
-                height: 1.5rem;
+                width: 2rem;
+                height: 2rem;
                 margin-right: 1rem;
             }
 
@@ -117,57 +119,48 @@
         }
 
         .install-button-container {
-            background-color: var(--color-signal5);
+            background-color: @color-accent3;
 
             &:hover {
-                filter: brightness(1.2);
+                background-color: @color-accent3-light2;
             }
 
             .label {
-                color: var(--color-surfacelighter);
+                color: @color-surface-light5;
             }
         }
 
         .uninstall-button-container {
-            outline-color: var(--color-surfacedark);
+            outline-color: @color-background-light3;
             outline-style: solid;
 
             &:hover {
-                outline-color: var(--color-surfacelight);
-
-                .label {
-                    color: var(--color-surfacelight);
-                }
+                background-color: @color-background-light2;
             }
 
             .label {
-                color: var(--color-surfacedark);
+                color: @color-surface-light5-90;
             }
         }
 
         .share-button-container {
-            outline-color: var(--color-secondarylighter);
-            outline-style: solid;
-
             &:hover {
-                outline: none;
-                background: var(--color-secondarylight);
-
                 .icon {
-                    fill: var(--color-surfacelighter);
+                    fill: @color-secondaryvariant1-light1;
                 }
 
                 .label {
-                    color: var(--color-surfacelighter);
+                    text-decoration: underline;
+                    color: @color-secondaryvariant1-light2;
                 }
             }
 
             .icon {
-                fill: var(--color-secondarylighter);
+                fill: @color-secondaryvariant1-dark1-60;
             }
 
             .label {
-                color: var(--color-secondarylighter);
+                color: @color-secondaryvariant1-90;
             }
         }
     }

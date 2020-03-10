@@ -54,17 +54,15 @@ const ModalDialog = ({ className, title, buttons, children, dataset, onCloseRequ
     return (
         <Modal ref={modalContainerRef} {...props} className={classnames(className, styles['modal-container'])} onMouseDown={onModalContainerMouseDown}>
             <div className={styles['modal-dialog-container']} onMouseDown={onModalDialogContainerMouseDown}>
-                <div className={styles['header-container']}>
-                    {
-                        typeof title === 'string' && title.length > 0 ?
-                            <div className={styles['title-container']} title={title}>{title}</div>
-                            :
-                            null
-                    }
-                    <Button className={styles['close-button-container']} title={'Close'} onClick={closeButtonOnClick}>
-                        <Icon className={styles['icon']} icon={'ic_x'} />
-                    </Button>
-                </div>
+                <Button className={styles['close-button-container']} title={'Close'} onClick={closeButtonOnClick}>
+                    <Icon className={styles['icon']} icon={'ic_x'} />
+                </Button>
+                {
+                    typeof title === 'string' && title.length > 0 ?
+                        <div className={styles['title-container']} title={title}>{title}</div>
+                        :
+                        null
+                }
                 <div className={styles['modal-dialog-content']}>
                     {children}
                 </div>
