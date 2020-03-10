@@ -71,13 +71,6 @@
             }
         }
 
-        &:focus-within {
-            outline-style: solid;
-            outline-width: var(--focus-outline-size);
-            outline-color: @color-background-dark5;
-            outline-offset: calc(-1 * var(--focus-outline-size));
-        }
-
         .url-text-input {
             flex: 1;
             align-self: stretch;
@@ -99,7 +92,7 @@
             background-color: @color-accent3;
 
             &:focus {
-                outline: none;
+                outline-color: @color-background-dark5;
             }
 
             .icon {

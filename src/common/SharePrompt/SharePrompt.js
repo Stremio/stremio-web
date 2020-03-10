@@ -15,10 +15,11 @@ const SharePrompt = ({ className, url }) => {
             inputRef.current.select();
         }
     }, []);
-    const copyToClipboard = React.useCallback(() => {
+    const copyToClipboard = React.useCallback((event) => {
         if (inputRef.current !== null) {
             inputRef.current.select();
             document.execCommand('copy');
+            event.target.focus();
         }
     }, []);
     React.useEffect(() => {
