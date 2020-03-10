@@ -163,7 +163,7 @@ const SubtitlesPicker = (props) => {
                         <Icon className={styles['icon']} icon={'ic_plus'} />
                     </Button>
                 </div>
-                <div className={styles['option-header']}>Vertical position</div>
+                <div className={classnames(styles['option-header'], { 'disabled': subtitlesOffsetDisabled })}>Vertical position</div>
                 <div className={classnames(styles['option-container'], { 'disabled': subtitlesOffsetDisabled })} title={subtitlesOffsetDisabled ? 'Vertical position is not configurable' : null}>
                     <Button className={classnames(styles['button-container'], { 'disabled': subtitlesOffsetDisabled })} data-offset={-1} onClick={onOffsetButtonClicked}>
                         <Icon className={styles['icon']} icon={'ic_minus'} />

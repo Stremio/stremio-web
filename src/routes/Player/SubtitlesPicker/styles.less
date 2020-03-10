@@ -92,12 +92,16 @@
             flex: 1;
         }
 
-        .option-header, .advanced-label {
+        .option-header {
             flex: none;
             align-self: stretch;
             max-height: 2.4em;
             margin: 0 3rem;
             color: @color-surface-light5-90;
+
+            &:global(.disabled) {
+                color: @color-surface-90;
+            }
         }
 
         .option-container {
