@@ -51,7 +51,7 @@ const SubtitlesPicker = (props) => {
             null;
     }, [props.tracks, props.selectedTrackId]);
     const tracksForLanguage = React.useMemo(() => {
-        return Array.isArray(props.tracks) && typeof selectedLanguage === 'string' ?
+        return Array.isArray(props.tracks) ?
             props.tracks.filter(({ lang }) => {
                 return lang === selectedLanguage;
             })
@@ -113,7 +113,7 @@ const SubtitlesPicker = (props) => {
                     <Button title={'Off'} className={classnames(styles['language-option'], { 'selected': selectedLanguage === null })} onClick={languageOnClick}>
                         <div className={styles['language-label']}>Off</div>
                         {
-                            typeof selectedLanguage !== 'string' ?
+                            selectedLanguage === null ?
                                 <div className={styles['icon']} />
                                 :
                                 null
@@ -138,7 +138,7 @@ const SubtitlesPicker = (props) => {
                     tracksForLanguage.length > 0 ?
                         <div className={styles['variants-list']}>
                             {tracksForLanguage.map((track, index) => (
-                                <Button key={index} title={track.origin} className={classnames(styles['variant-option'], { 'selected': track.id === props.selectedTrackId })} data-track-id={track.id} onClick={trackOnClick}>
+                                <Button key={index} title={track.origin} className={classnames(styles['variant-option'], { 'selected': props.selectedTrackId === track.id })} data-track-id={track.id} onClick={trackOnClick}>
                                     <div className={styles['variant-label']}>{track.origin}</div>
                                     {
                                         props.selectedTrackId === track.id ?
@@ -163,25 +163,25 @@ const SubtitlesPicker = (props) => {
                     className={styles['discrete-input']}
                     label={'Delay'}
                     value={props.delay !== null && !isNaN(props.delay) ? `${(props.delay / 1000).toFixed(2)}s` : '--'}
-                    disabled={typeof selectedLanguage !== 'string' || props.delay === null || isNaN(props.delay)}
+                    disabled={tracksForLanguage.length === 0 || props.delay === null || isNaN(props.delay)}
                     onChange={onDelayChanged}
                 />
                 <DiscreteSelectInput
                     className={styles['discrete-input']}
                     label={'Size'}
                     value={props.size !== null && !isNaN(props.size) ? `${props.size}%` : '--'}
-                    disabled={typeof selectedLanguage !== 'string' || props.size === null || isNaN(props.size)}
+                    disabled={tracksForLanguage.length === 0 || props.size === null || isNaN(props.size)}
                     onChange={onSizeChanged}
                 />
                 <DiscreteSelectInput
                     className={styles['discrete-input']}
                     label={'Vertical position'}
                     value={props.offset !== null && !isNaN(props.offset) ? `${props.offset}%` : '--'}
-                    disabled={typeof selectedLanguage !== 'string' || props.offset === null || isNaN(props.offset)}
+                    disabled={tracksForLanguage.length === 0 || props.offset === null || isNaN(props.offset)}
                     onChange={onOffsetChange}
                 />
                 <div className={styles['spacing']} />
-                <Button className={styles['advanced-button']}>Advanced</Button>
+                <Button className={classnames(styles['advanced-button'], { 'disabled': tracksForLanguage.length === 0 })}>Advanced</Button>
             </div>
         </div>
     );
