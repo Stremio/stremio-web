@@ -3,6 +3,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const { Button, ColorInput } = require('stremio/common');
+const DiscreteSelectInput = require('./DiscreteSelectInput');
 const styles = require('./styles');
 
 const SUBTITLES_SIZES = [75, 100, 125, 150, 175, 200, 250];
@@ -57,11 +58,6 @@ const SubtitlesPicker = (props) => {
             :
             [];
     }, [props.tracks, selectedLanguage]);
-    const offsetDisabled = React.useMemo(() => {
-        return typeof selectedLanguage !== 'string' ||
-            props.offset === null ||
-            isNaN(props.offset);
-    }, [selectedLanguage, props.offset]);
     const onMouseDown = React.useCallback((event) => {
         event.nativeEvent.subtitlesPickerClosePrevented = true;
     }, []);
@@ -81,9 +77,10 @@ const SubtitlesPicker = (props) => {
     const trackOnClick = React.useCallback((event) => {
         props.onTrackSelected(event.currentTarget.dataset.trackId);
     }, [props.onTrackSelected]);
-    const onOffsetButtonClicked = React.useCallback((event) => {
+    const onOffsetChange = React.useCallback((event) => {
         if (props.offset !== null && !isNaN(props.offset)) {
-            const offset = props.offset + parseInt(event.currentTarget.dataset.offset);
+            const delta = event.value === 'increment' ? 1 : -1;
+            const offset = props.offset + delta;
             if (typeof props.onOffsetChanged === 'function') {
                 props.onOffsetChanged(offset);
             }
@@ -143,38 +140,25 @@ const SubtitlesPicker = (props) => {
             </div>
             <div className={styles['subtitles-settings-container']}>
                 <div className={styles['settings-header']}>Settings</div>
-                <div className={styles['option-header']}>Delay</div>
-                <div className={styles['option-container']}>
-                    <Button className={styles['button-container']}>
-                        <Icon className={styles['icon']} icon={'ic_minus'} />
-                    </Button>
-                    <div className={styles['option-label']} title={'150s'}>150s</div>
-                    <Button className={styles['button-container']}>
-                        <Icon className={styles['icon']} icon={'ic_plus'} />
-                    </Button>
-                </div>
-                <div className={styles['option-header']}>Size</div>
-                <div className={styles['option-container']}>
-                    <Button className={styles['button-container']}>
-                        <Icon className={styles['icon']} icon={'ic_minus'} />
-                    </Button>
-                    <div className={styles['option-label']} title={'100%'}>100%</div>
-                    <Button className={styles['button-container']}>
-                        <Icon className={styles['icon']} icon={'ic_plus'} />
-                    </Button>
-                </div>
-                <div className={classnames(styles['option-header'], { 'disabled': offsetDisabled })}>Vertical position</div>
-                <div className={classnames(styles['option-container'], { 'disabled': offsetDisabled })} title={offsetDisabled ? 'Vertical position is not configurable' : null}>
-                    <Button className={classnames(styles['button-container'], { 'disabled': offsetDisabled })} data-offset={-1} onClick={onOffsetButtonClicked}>
-                        <Icon className={styles['icon']} icon={'ic_minus'} />
-                    </Button>
-                    <div className={styles['option-label']} title={props.offset !== null && !isNaN(props.offset) ? `${props.offset}%` : null}>
-                        {props.offset !== null && !isNaN(props.offset) ? `${props.offset}%` : '--'}
-                    </div>
-                    <Button className={classnames(styles['button-container'], { 'disabled': offsetDisabled })} data-offset={1} onClick={onOffsetButtonClicked}>
-                        <Icon className={styles['icon']} icon={'ic_plus'} />
-                    </Button>
-                </div>
+                <DiscreteSelectInput
+                    className={styles['discrete-input']}
+                    label={'Delay'}
+                    value={props.delay !== null && !isNaN(props.delay) ? `${props.delay}ms` : '--'}
+                    disabled={typeof selectedLanguage !== 'string' || props.delay === null || isNaN(props.delay)}
+                />
+                <DiscreteSelectInput
+                    className={styles['discrete-input']}
+                    label={'Size'}
+                    value={props.size !== null && !isNaN(props.size) ? `${props.size}ms` : '--'}
+                    disabled={typeof selectedLanguage !== 'string' || props.size === null || isNaN(props.size)}
+                />
+                <DiscreteSelectInput
+                    className={styles['discrete-input']}
+                    label={'Vertical position'}
+                    value={props.offset !== null && !isNaN(props.offset) ? `${props.offset}%` : '--'}
+                    disabled={typeof selectedLanguage !== 'string' || props.offset === null || isNaN(props.offset)}
+                    onChange={onOffsetChange}
+                />
                 <div className={styles['spacing']} />
                 <Button className={styles['advanced-button']}>Advanced</Button>
             </div>
@@ -192,7 +176,7 @@ SubtitlesPicker.propTypes = {
     selectedTrackId: PropTypes.string,
     offset: PropTypes.number,
     size: PropTypes.number,
-    felay: PropTypes.number,
+    delay: PropTypes.number,
     textColor: PropTypes.string,
     backgroundColor: PropTypes.string,
     outlineColor: PropTypes.string,
