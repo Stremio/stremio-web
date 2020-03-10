@@ -38,7 +38,7 @@ const SharePrompt = ({ className, url }) => {
                     <div className={styles['label']}>Twitter</div>
                 </Button>
             </div>
-            <div className={styles['url-container']} tabIndex={0}>
+            <div className={styles['url-container']}>
                 <TextInput
                     ref={inputRef}
                     className={styles['url-text-input']}
