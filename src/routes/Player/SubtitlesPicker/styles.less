@@ -1,7 +1,7 @@
 @import (reference) '~stremio-colors/dist/less/stremio-colors.less';
 
 .subtitles-picker-container {
-    height: 24rem;
+    height: 23rem;
     display: flex;
     flex-direction: row;
 
@@ -85,7 +85,7 @@
     }
 
     .subtitles-settings-container {
-        width: 20rem;
+        width: 16rem;
         background-color: @color-background-light1;
 
         .spacing {
@@ -93,17 +93,17 @@
         }
 
         .discrete-input {
-            margin: 0 3rem 1rem;
-
+            margin: 0 1.5rem 1rem;
         }
 
         .advanced-button {
             flex: none;
             align-self: flex-end;
-            max-height: 2.4em;
-            margin: 1rem 3rem;
+            max-width: calc(100% - 3rem);
+            margin: 0 1.5rem 1rem;
+            white-space: nowrap;
+            text-overflow: ellipsis;
             color: @color-surface-light5-90;
-            text-align: right;
 
             &:hover {
                 text-decoration: underline;
