@@ -145,16 +145,16 @@ const Player = ({ urlParams }) => {
                 subtitlesPickerOpen ?
                     <SubtitlesPicker
                         className={classnames(styles['layer'], styles['menu-layer'])}
-                        subtitlesTracks={state.subtitlesTracks}
-                        selectedSubtitlesTrackId={state.selectedSubtitlesTrackId}
-                        subtitlesOffset={state.subtitlesOffset}
-                        subtitlesSize={state.subtitlesSize}
-                        subtitlesDelay={state.subtitlesDelay}
-                        subtitlesTextColor={state.subtitlesTextColor}
-                        subtitlesBackgroundColor={state.subtitlesBackgroundColor}
-                        subtitlesOutlineColor={state.subtitlesOutlineColor}
-                        onSubtitlesTrackSelected={onSubtitlesTrackSelected}
-                        onSubtitlesOffsetChanged={onSubtitlesOffsetChanged}
+                        tracks={state.subtitlesTracks}
+                        selectedTrackId={state.selectedSubtitlesTrackId}
+                        offset={state.subtitlesOffset}
+                        size={state.subtitlesSize}
+                        delay={state.subtitlesDelay}
+                        textColor={state.subtitlesTextColor}
+                        backgroundColor={state.subtitlesBackgroundColor}
+                        outlineColor={state.subtitlesOutlineColor}
+                        onTrackSelected={onSubtitlesTrackSelected}
+                        onOffsetChanged={onSubtitlesOffsetChanged}
                     />
                     :
                     null
