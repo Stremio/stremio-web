@@ -1,16 +1,15 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const hat = require('hat');
+const { useLiveRef } = require('stremio/common');
 const selectVideoImplementation = require('./selectVideoImplementation');
 
 const Video = React.forwardRef(({ className, ...props }, ref) => {
-    const [onEnded, onError, onPropValue, onPropChanged, onImplementationChanged] = React.useMemo(() => [
-        props.onEnded,
-        props.onError,
-        props.onPropValue,
-        props.onPropChanged,
-        props.onImplementationChanged
-    ], []);
+    const onEndedRef = useLiveRef(props.onEnded);
+    const onErrorRef = useLiveRef(props.onError);
+    const onPropValueRef = useLiveRef(props.onPropValue);
+    const onPropChangedRef = useLiveRef(props.onPropChanged);
+    const onImplementationChangedRef = useLiveRef(props.onImplementationChanged);
     const containerElementRef = React.useRef(null);
     const videoRef = React.useRef(null);
     const id = React.useMemo(() => `video-${hat()}`, []);
@@ -26,11 +25,13 @@ const Video = React.forwardRef(({ className, ...props }, ref) => {
                     containerElement: containerElementRef.current,
                     shell: args.commandArgs.shell
                 });
-                videoRef.current.on('ended', onEnded);
-                videoRef.current.on('error', onError);
-                videoRef.current.on('propValue', onPropValue);
-                videoRef.current.on('propChanged', onPropChanged);
-                onImplementationChanged(videoRef.current.constructor.manifest);
+                videoRef.current.on('ended', onEndedRef.current);
+                videoRef.current.on('error', onErrorRef.current);
+                videoRef.current.on('propValue', onPropValueRef.current);
+                videoRef.current.on('propChanged', onPropChangedRef.current);
+                if (typeof onImplementationChangedRef.current === 'function') {
+                    onImplementationChangedRef.current(videoRef.current.constructor.manifest);
+                }
             }
         }
 
@@ -42,7 +43,7 @@ const Video = React.forwardRef(({ className, ...props }, ref) => {
             }
         }
     }, []);
-    React.useImperativeHandle(ref, () => ({ dispatch }));
+    React.useImperativeHandle(ref, () => ({ dispatch }), []);
     React.useEffect(() => {
         return () => {
             dispatch({ commandName: 'destroy' });

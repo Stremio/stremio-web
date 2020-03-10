@@ -3,10 +3,10 @@ const { useModelState } = require('stremio/common');
 const { useServices } = require('stremio/services');
 
 const mapSubtitlesSettings = (ctx) => ({
-    size: ctx.content.settings.subtitles_size,
-    text_color: ctx.content.settings.subtitles_text_color,
-    background_color: ctx.content.settings.subtitles_background_color,
-    outline_color: ctx.content.settings.subtitles_outline_color,
+    size: ctx.profile.settings.subtitles_size,
+    text_color: ctx.profile.settings.subtitles_text_color,
+    background_color: ctx.profile.settings.subtitles_background_color,
+    outline_color: ctx.profile.settings.subtitles_outline_color,
 });
 
 const useSubtitlesSettings = () => {
@@ -15,11 +15,25 @@ const useSubtitlesSettings = () => {
         const ctx = core.getState('ctx');
         return mapSubtitlesSettings(ctx);
     }, []);
-    return useModelState({
+    const subtitlesSettings = useModelState({
         model: 'ctx',
         map: mapSubtitlesSettings,
         init: initSubtitlesSettings
     });
+    const updateSubtitlesSettings = React.useCallback((settings) => {
+        const ctx = core.getState('ctx');
+        core.dispatch({
+            action: 'Ctx',
+            args: {
+                action: 'UpdateSettings',
+                args: {
+                    ...ctx.profile.settings,
+                    ...settings
+                }
+            }
+        });
+    }, []);
+    return [subtitlesSettings, updateSubtitlesSettings];
 };
 
 module.exports = useSubtitlesSettings;
