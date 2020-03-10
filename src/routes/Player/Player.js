@@ -75,6 +75,12 @@ const Player = ({ urlParams }) => {
     const onSubtitlesTrackSelected = React.useCallback((trackId) => {
         dispatch({ propName: 'selectedSubtitlesTrackId', propValue: trackId });
     }, []);
+    const onSubtitlesDelayChanged = React.useCallback((delay) => {
+        dispatch({ propName: 'subtitlesDelay', propValue: delay });
+    }, []);
+    const onSubtitlesSizeChanged = React.useCallback((size) => {
+        dispatch({ propName: 'subtitlesSize', propValue: size });
+    }, []);
     const onSubtitlesOffsetChanged = React.useCallback((offset) => {
         dispatch({ propName: 'subtitlesOffset', propValue: offset });
     }, []);
@@ -154,6 +160,8 @@ const Player = ({ urlParams }) => {
                         backgroundColor={state.subtitlesBackgroundColor}
                         outlineColor={state.subtitlesOutlineColor}
                         onTrackSelected={onSubtitlesTrackSelected}
+                        onDelayChanged={onSubtitlesDelayChanged}
+                        onSizeChanged={onSubtitlesSizeChanged}
                         onOffsetChanged={onSubtitlesOffsetChanged}
                     />
                     :

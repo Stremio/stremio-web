@@ -77,6 +77,25 @@ const SubtitlesPicker = (props) => {
     const trackOnClick = React.useCallback((event) => {
         props.onTrackSelected(event.currentTarget.dataset.trackId);
     }, [props.onTrackSelected]);
+    const onDelayChanged = React.useCallback((event) => {
+        if (props.delay !== null && !isNaN(props.delay)) {
+            const delta = event.value === 'increment' ? 250 : -250;
+            const delay = props.delay + delta;
+            if (typeof props.onDelayChanged === 'function') {
+                props.onDelayChanged(delay);
+            }
+        }
+    }, [props.delay, props.onDelayChanged]);
+    const onSizeChanged = React.useCallback((event) => {
+        if (props.size !== null && !isNaN(props.size)) {
+            const sizeIndex = SUBTITLES_SIZES.indexOf(props.size);
+            const delta = event.value === 'increment' ? 1 : -1;
+            const size = SUBTITLES_SIZES[Math.max(0, Math.min(SUBTITLES_SIZES.length, sizeIndex + delta))];
+            if (typeof props.onSizeChanged === 'function') {
+                props.onSizeChanged(size);
+            }
+        }
+    }, [props.size, props.onSizeChanged]);
     const onOffsetChange = React.useCallback((event) => {
         if (props.offset !== null && !isNaN(props.offset)) {
             const delta = event.value === 'increment' ? 1 : -1;
@@ -143,14 +162,16 @@ const SubtitlesPicker = (props) => {
                 <DiscreteSelectInput
                     className={styles['discrete-input']}
                     label={'Delay'}
-                    value={props.delay !== null && !isNaN(props.delay) ? `${props.delay}ms` : '--'}
+                    value={props.delay !== null && !isNaN(props.delay) ? `${(props.delay / 1000).toFixed(2)}s` : '--'}
                     disabled={typeof selectedLanguage !== 'string' || props.delay === null || isNaN(props.delay)}
+                    onChange={onDelayChanged}
                 />
                 <DiscreteSelectInput
                     className={styles['discrete-input']}
                     label={'Size'}
-                    value={props.size !== null && !isNaN(props.size) ? `${props.size}ms` : '--'}
+                    value={props.size !== null && !isNaN(props.size) ? `${props.size}%` : '--'}
                     disabled={typeof selectedLanguage !== 'string' || props.size === null || isNaN(props.size)}
+                    onChange={onSizeChanged}
                 />
                 <DiscreteSelectInput
                     className={styles['discrete-input']}
@@ -181,6 +202,8 @@ SubtitlesPicker.propTypes = {
     backgroundColor: PropTypes.string,
     outlineColor: PropTypes.string,
     onTrackSelected: PropTypes.func,
+    onDelayChanged: PropTypes.func,
+    onSizeChanged: PropTypes.func,
     onOffsetChanged: PropTypes.func
 };
 
