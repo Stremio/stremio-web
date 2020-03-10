@@ -58,8 +58,10 @@ const SubtitlesPicker = (props) => {
             [];
     }, [props.subtitlesTracks, selectedLanguage]);
     const subtitlesOffsetDisabled = React.useMemo(() => {
-        return props.subtitlesOffset === null || isNaN(props.subtitlesOffset);
-    }, [props.subtitlesOffset]);
+        return typeof selectedLanguage !== 'string' ||
+            props.subtitlesOffset === null ||
+            isNaN(props.subtitlesOffset);
+    }, [selectedLanguage, props.subtitlesOffset]);
     const onMouseDown = React.useCallback((event) => {
         event.nativeEvent.subtitlesPickerClosePrevented = true;
     }, []);
@@ -166,8 +168,8 @@ const SubtitlesPicker = (props) => {
                     <Button className={classnames(styles['button-container'], { 'disabled': subtitlesOffsetDisabled })} data-offset={-1} onClick={onOffsetButtonClicked}>
                         <Icon className={styles['icon']} icon={'ic_minus'} />
                     </Button>
-                    <div className={styles['option-label']} title={!subtitlesOffsetDisabled ? `${props.subtitlesOffset}%` : null}>
-                        {!subtitlesOffsetDisabled ? `${props.subtitlesOffset}%` : '--'}
+                    <div className={styles['option-label']} title={props.subtitlesOffset !== null && !isNaN(props.subtitlesOffset) ? `${props.subtitlesOffset}%` : null}>
+                        {props.subtitlesOffset !== null && !isNaN(props.subtitlesOffset) ? `${props.subtitlesOffset}%` : '--'}
                     </div>
                     <Button className={classnames(styles['button-container'], { 'disabled': subtitlesOffsetDisabled })} data-offset={1} onClick={onOffsetButtonClicked}>
                         <Icon className={styles['icon']} icon={'ic_plus'} />
