@@ -36,63 +36,59 @@
             padding: 1.5rem 3rem;
             overflow: visible;
 
-            .selectable-inputs {
-                flex: 1;
+            .add-button-container {
+                flex: none;
                 display: flex;
                 flex-direction: row;
+                align-items: center;
+                justify-content: center;
+                width: 10rem;
+                height: 3.5rem;
                 margin-right: 1.5rem;
-                overflow: visible;
+                padding: 0 1rem;
+                background-color: @color-accent3;
 
-                .add-button-container {
-                    flex: none;
-                    display: flex;
-                    flex-direction: row;
-                    align-items: center;
-                    justify-content: center;
-                    width: 10rem;
-                    height: 3.5rem;
-                    margin-right: 1.5rem;
-                    padding: 0 1rem;
-                    background-color: @color-accent3;
-
-                    &:hover {
-                        background-color: @color-accent3-light2;
-                    }
-
-                    &:focus {
-                        outline-color: @color-surface-light5;
-                    }
-
-                    .icon {
-                        flex: none;
-                        width: 1.2rem;
-                        height: 1.2rem;
-                        margin-right: 1rem;
-                        fill: @color-surface-light5;
-                    }
-
-                    .add-button-label {
-                        flex-grow: 0;
-                        flex-shrink: 1;
-                        flex-basis: auto;
-                        max-height: 2.4em;
-                        font-size: 1.1rem;
-                        color: @color-surface-light5;
-                    }
+                &:hover {
+                    background-color: @color-accent3-light2;
                 }
 
-                .select-input-container {
+                &:focus {
+                    outline-color: @color-surface-light5;
+                }
+
+                .icon {
+                    flex: none;
+                    width: 1.2rem;
+                    height: 1.2rem;
+                    margin-right: 1rem;
+                    fill: @color-surface-light5;
+                }
+
+                .add-button-label {
                     flex-grow: 0;
                     flex-shrink: 1;
-                    flex-basis: 15rem;
-                    height: 3.5rem;
-                    margin-right: 1.5rem;
-
-                    .multiselect-menu-container {
-                        max-height: calc(3.2rem * 7);
-                        overflow: auto;
-                    }
+                    flex-basis: auto;
+                    max-height: 2.4em;
+                    font-size: 1.1rem;
+                    color: @color-surface-light5;
                 }
+            }
+
+            .select-input-container {
+                flex-grow: 0;
+                flex-shrink: 1;
+                flex-basis: 15rem;
+                height: 3.5rem;
+                margin-right: 1.5rem;
+
+                .multiselect-menu-container {
+                    max-height: calc(3.2rem * 7);
+                    overflow: auto;
+                }
+            }
+
+            .spacing {
+                flex: 1;
             }
 
             .search-bar-container {

@@ -93,19 +93,18 @@ const Addons = ({ urlParams, queryParams }) => {
             <NavBar className={styles['nav-bar']} backButton={true} title={'Addons'} />
             <div className={styles['addons-content']}>
                 <div className={styles['selectable-inputs-container']}>
-                    <div className={styles['selectable-inputs']}>
-                        <Button className={styles['add-button-container']} title={'Add addon'} onClick={openAddAddonModal}>
-                            <Icon className={styles['icon']} icon={'ic_plus'} />
-                            <div className={styles['add-button-label']}>Add addon</div>
-                        </Button>
-                        {selectInputs.map((selectInput, index) => (
-                            <Multiselect
-                                {...selectInput}
-                                key={index}
-                                className={styles['select-input-container']}
-                            />
-                        ))}
-                    </div>
+                    <Button className={styles['add-button-container']} title={'Add addon'} onClick={openAddAddonModal}>
+                        <Icon className={styles['icon']} icon={'ic_plus'} />
+                        <div className={styles['add-button-label']}>Add addon</div>
+                    </Button>
+                    {selectInputs.map((selectInput, index) => (
+                        <Multiselect
+                            {...selectInput}
+                            key={index}
+                            className={styles['select-input-container']}
+                        />
+                    ))}
+                    <div className={styles['spacing']} />
                     <label className={styles['search-bar-container']}>
                         <TextInput
                             className={styles['search-input']}
