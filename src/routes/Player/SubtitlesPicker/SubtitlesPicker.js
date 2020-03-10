@@ -181,7 +181,7 @@ const SubtitlesPicker = (props) => {
                     onChange={onOffsetChange}
                 />
                 <div className={styles['spacing']} />
-                <Button className={classnames(styles['advanced-button'], { 'disabled': tracksForLanguage.length === 0 })}>Advanced</Button>
+                <Button className={classnames(styles['advanced-button'], 'disabled')} title={'Advanced'}>Advanced</Button>
             </div>
         </div>
     );
