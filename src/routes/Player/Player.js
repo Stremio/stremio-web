@@ -4,13 +4,14 @@ const classnames = require('classnames');
 const { useDeepEqualEffect, useBinaryState } = require('stremio/common');
 const BufferingLoader = require('./BufferingLoader');
 const ControlBar = require('./ControlBar');
+const SubtitlesPicker = require('./SubtitlesPicker');
 const Video = require('./Video');
 const usePlayer = require('./usePlayer');
 const styles = require('./styles');
 
 const Player = ({ urlParams }) => {
     const player = usePlayer(urlParams);
-    const [subtitlesPickerOpen, , , toggleSubtitlesPicker] = useBinaryState(false);
+    const [subtitlesPickerOpen, , closeSubtitlesPicker, toggleSubtitlesPicker] = useBinaryState(true);
     const [state, setState] = React.useReducer(
         (state, nextState) => ({
             ...state,
@@ -70,6 +71,14 @@ const Player = ({ urlParams }) => {
     const onSeekRequested = React.useCallback((time) => {
         dispatch({ propName: 'time', propValue: time });
     }, []);
+    const onSubtitlesTrackSelected = React.useCallback((trackId) => {
+        dispatch({ propName: 'selectedSubtitlesTrackId', propValue: trackId });
+    }, []);
+    const onContainerMouseDown = React.useCallback((event) => {
+        if (!event.nativeEvent.subtitlesPickerClosePrevented) {
+            closeSubtitlesPicker();
+        }
+    }, []);
     useDeepEqualEffect(() => {
         if (player.selected === null || player.selected.stream === null) {
             dispatch({ commandName: 'stop' });
@@ -95,7 +104,7 @@ const Player = ({ urlParams }) => {
         });
     }, [player.subtitles_resources]);
     return (
-        <div className={styles['player-container']}>
+        <div className={styles['player-container']} onMouseDown={onContainerMouseDown}>
             <Video
                 ref={videoRef}
                 className={styles['layer']}
@@ -136,7 +145,17 @@ const Player = ({ urlParams }) => {
             />
             {
                 subtitlesPickerOpen ?
-                    <div className={styles['layer']} />
+                    <SubtitlesPicker
+                        className={classnames(styles['layer'], styles['menu-layer'])}
+                        subtitlesTracks={state.subtitlesTracks}
+                        selectedSubtitlesTrackId={state.selectedSubtitlesTrackId}
+                        subtitlesSize={state.subtitlesSize}
+                        subtitlesDelay={state.subtitlesDelay}
+                        subtitlesTextColor={state.subtitlesTextColor}
+                        subtitlesBackgroundColor={state.subtitlesBackgroundColor}
+                        subtitlesOutlineColor={state.subtitlesOutlineColor}
+                        onSubtitlesTrackSelected={onSubtitlesTrackSelected}
+                    />
                     :
                     null
             }

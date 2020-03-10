@@ -5,13 +5,16 @@ const Icon = require('stremio-icons/dom');
 const { Button } = require('stremio/common');
 
 const SubtitlesButton = ({ className, subtitlesTracks, onToggleSubtitlesPicker }) => {
+    const onMouseDown = React.useCallback((event) => {
+        event.nativeEvent.subtitlesPickerClosePrevented = true;
+    }, []);
     const onClick = React.useCallback(() => {
         if (typeof onToggleSubtitlesPicker === 'function') {
             onToggleSubtitlesPicker();
         }
     }, [onToggleSubtitlesPicker]);
     return (
-        <Button className={classnames(className, { 'disabled': !Array.isArray(subtitlesTracks) || subtitlesTracks.length === 0 })} tabIndex={-1} onClick={onClick}>
+        <Button className={classnames(className, { 'disabled': !Array.isArray(subtitlesTracks) || subtitlesTracks.length === 0 })} tabIndex={-1} onMouseDown={onMouseDown} onClick={onClick}>
             <Icon className={'icon'} icon={'ic_sub'} />
         </Button>
     );
