@@ -10,32 +10,31 @@ const usePlayer = require('./usePlayer');
 const useSubtitlesSettings = require('./useSubtitlesSettings');
 const styles = require('./styles');
 
+const INITIAL_VIDEO_STATE = {
+    paused: null,
+    time: null,
+    duration: null,
+    buffering: null,
+    volume: null,
+    muted: null,
+    subtitlesTracks: [],
+    selectedSubtitlesTrackId: null,
+    subtitlesSize: null,
+    subtitlesDelay: null,
+    subtitlesOffset: null,
+    subtitlesTextColor: null,
+    subtitlesBackgroundColor: null,
+    subtitlesOutlineColor: null
+};
+
 const Player = ({ urlParams }) => {
     const player = usePlayer(urlParams);
     const [subtitlesSettings, updateSubtitlesSettings] = useSubtitlesSettings();
     const [subtitlesPickerOpen, , closeSubtitlesPicker, toggleSubtitlesPicker] = useBinaryState(true);
-    const [videoState, setVideoState] = React.useReducer(
-        (videoState, nextVideoState) => ({
-            ...videoState,
-            ...nextVideoState
-        }),
-        {
-            paused: null,
-            time: null,
-            duration: null,
-            buffering: null,
-            volume: null,
-            muted: null,
-            subtitlesTracks: [],
-            selectedSubtitlesTrackId: null,
-            subtitlesSize: null,
-            subtitlesDelay: null,
-            subtitlesOffset: null,
-            subtitlesTextColor: null,
-            subtitlesBackgroundColor: null,
-            subtitlesOutlineColor: null
-        }
-    );
+    const [videoState, setVideoState] = React.useReducer((videoState, nextVideoState) => ({
+        ...videoState,
+        ...nextVideoState
+    }), INITIAL_VIDEO_STATE);
     const videoRef = React.useRef(null);
     const dispatch = React.useCallback((args) => {
         if (videoRef.current !== null) {
