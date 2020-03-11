@@ -14,10 +14,10 @@ const Player = ({ urlParams }) => {
     const player = usePlayer(urlParams);
     const [subtitlesSettings, updateSubtitlesSettings] = useSubtitlesSettings();
     const [subtitlesPickerOpen, , closeSubtitlesPicker, toggleSubtitlesPicker] = useBinaryState(true);
-    const [state, setState] = React.useReducer(
-        (state, nextState) => ({
-            ...state,
-            ...nextState
+    const [videoState, setVideoState] = React.useReducer(
+        (videoState, nextVideoState) => ({
+            ...videoState,
+            ...nextVideoState
         }),
         {
             paused: null,
@@ -53,13 +53,13 @@ const Player = ({ urlParams }) => {
         dispatch({ propName: 'subtitlesOffset', propValue: subtitlesSettings.offset });
     }, [subtitlesSettings.size, subtitlesSettings.text_color, subtitlesSettings.background_color, subtitlesSettings.outline_color]);
     const onPropChanged = React.useCallback((propName, propValue) => {
-        setState({ [propName]: propValue });
+        setVideoState({ [propName]: propValue });
     }, []);
     const onEnded = React.useCallback(() => {
-        console.log('ended');
+        // console.log('ended');
     }, []);
-    const onError = React.useCallback((error) => {
-        console.error(error);
+    const onError = React.useCallback(() => {
+        // console.error(error);
     }, []);
     const onPlayRequested = React.useCallback(() => {
         dispatch({ propName: 'paused', propValue: false });
@@ -148,7 +148,7 @@ const Player = ({ urlParams }) => {
             />
             <div className={styles['layer']} />
             {
-                state.buffering ?
+                videoState.buffering ?
                     <BufferingLoader className={styles['layer']} />
                     :
                     null
@@ -166,12 +166,12 @@ const Player = ({ urlParams }) => {
             />
             <ControlBar
                 className={classnames(styles['layer'], styles['control-bar-layer'])}
-                paused={state.paused}
-                time={state.time}
-                duration={state.duration}
-                volume={state.volume}
-                muted={state.muted}
-                subtitlesTracks={state.subtitlesTracks}
+                paused={videoState.paused}
+                time={videoState.time}
+                duration={videoState.duration}
+                volume={videoState.volume}
+                muted={videoState.muted}
+                subtitlesTracks={videoState.subtitlesTracks}
                 onPlayRequested={onPlayRequested}
                 onPauseRequested={onPauseRequested}
                 onMuteRequested={onMuteRequested}
@@ -184,14 +184,14 @@ const Player = ({ urlParams }) => {
                 subtitlesPickerOpen ?
                     <SubtitlesPicker
                         className={classnames(styles['layer'], styles['menu-layer'])}
-                        tracks={state.subtitlesTracks}
-                        selectedTrackId={state.selectedSubtitlesTrackId}
-                        offset={state.subtitlesOffset}
-                        size={state.subtitlesSize}
-                        delay={state.subtitlesDelay}
-                        textColor={state.subtitlesTextColor}
-                        backgroundColor={state.subtitlesBackgroundColor}
-                        outlineColor={state.subtitlesOutlineColor}
+                        tracks={videoState.subtitlesTracks}
+                        selectedTrackId={videoState.selectedSubtitlesTrackId}
+                        offset={videoState.subtitlesOffset}
+                        size={videoState.subtitlesSize}
+                        delay={videoState.subtitlesDelay}
+                        textColor={videoState.subtitlesTextColor}
+                        backgroundColor={videoState.subtitlesBackgroundColor}
+                        outlineColor={videoState.subtitlesOutlineColor}
                         onTrackSelected={onSubtitlesTrackSelected}
                         onDelayChanged={onSubtitlesDelayChanged}
                         onSizeChanged={onSubtitlesSizeChanged}
