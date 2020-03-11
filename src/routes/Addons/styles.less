@@ -1,24 +1,33 @@
+@import (reference) '~stremio-colors/dist/less/stremio-colors.less';
+
 :import('~stremio/common/Multiselect/styles.less') {
     multiselect-menu-container: menu-container;
+}
+
+:import('~stremio/common/ModalDialog/styles.less') {
+    addon-modal-content: modal-dialog-content;
+    cancel-button-label: label;
 }
 
 .addons-container {
     width: 100%;
     height: 100%;
-    background-color: var(--color-background);
+    background-color: @color-background-dark2;
 
     .addons-content {
         width: 100%;
         height: 100%;
         display: flex;
         flex-direction: column;
+        align-self: stretch;
 
         .selectable-inputs-container {
             flex: none;
             align-self: stretch;
             display: flex;
             flex-direction: row;
-            padding: 1.5rem;
+            justify-content: space-between;
+            padding: 1.5rem 3rem;
             overflow: visible;
 
             .add-button-container {
@@ -26,14 +35,19 @@
                 display: flex;
                 flex-direction: row;
                 align-items: center;
-                height: 3rem;
-                max-width: 15rem;
+                justify-content: center;
+                width: 10rem;
+                height: 3.5rem;
                 margin-right: 1.5rem;
                 padding: 0 1rem;
-                background-color: var(--color-signal5);
+                background-color: @color-accent3;
 
                 &:hover {
-                    filter: brightness(1.2);
+                    background-color: @color-accent3-light2;
+                }
+
+                &:focus {
+                    outline-color: @color-surface-light5;
                 }
 
                 .icon {
@@ -41,7 +55,7 @@
                     width: 1.2rem;
                     height: 1.2rem;
                     margin-right: 1rem;
-                    fill: var(--color-surfacelighter);
+                    fill: @color-surface-light5;
                 }
 
                 .add-button-label {
@@ -50,7 +64,7 @@
                     flex-basis: auto;
                     max-height: 2.4em;
                     font-size: 1.1rem;
-                    color: var(--color-surfacelighter);
+                    color: @color-surface-light5;
                 }
             }
 
@@ -58,7 +72,7 @@
                 flex-grow: 0;
                 flex-shrink: 1;
                 flex-basis: 15rem;
-                height: 3rem;
+                height: 3.5rem;
                 margin-right: 1.5rem;
 
                 .multiselect-menu-container {
@@ -67,40 +81,52 @@
                 }
             }
 
+            .spacing {
+                flex: 1;
+            }
+
             .search-bar-container {
                 flex-grow: 0;
                 flex-shrink: 1;
-                flex-basis: 15rem;
+                flex-basis: 18rem;
                 display: flex;
                 flex-direction: row;
                 align-items: center;
-                height: 3rem;
+                height: 3.5rem;
                 padding: 0 1rem;
-                background-color: var(--color-backgroundlighter);
+                border-radius: 2.3rem;
+                border: var(--focus-outline-size) solid transparent;
+                background-color: @color-background;
                 cursor: text;
 
                 &:hover, &:focus-within {
-                    filter: brightness(1.2);
+                    background-color: @color-background-light2;
                 }
 
-                .icon {
-                    flex: none;
-                    width: 1.2rem;
-                    height: 1.2rem;
-                    margin-right: 1rem;
-                    fill: var(--color-surfacelighter);
+                &:focus-within {
+                    border: var(--focus-outline-size) solid @color-surface-light5;
                 }
 
                 .search-input {
                     flex: 1;
-                    color: var(--color-surfacelighter);
+                    margin-right: 1rem;
+                    font-size: 1.1rem;
+                    color: @color-surface-light5;
 
                     &::placeholder {
                         max-height: 1.2em;
                         opacity: 1;
-                        color: var(--color-surfacelight);
+                        color: @color-secondaryvariant1-light1-90;
                     }
                 }
+
+                .icon {
+                    flex: none;
+                    width: 1.5rem;
+                    height: 1.5rem;
+                    fill: @color-secondaryvariant1;
+                }
+
             }
         }
 
@@ -109,13 +135,13 @@
             align-self: stretch;
             padding: 0 1.5rem;
             font-size: 2rem;
-            color: var(--color-surfacelighter);
+            color: @color-surface-light5;
         }
 
         .addons-list-container {
             flex: 1;
             align-self: stretch;
-            padding: 0 1.5rem;
+            padding: 0 3rem;
             overflow-y: auto;
 
             .addon {
@@ -126,20 +152,105 @@
 }
 
 .add-addon-modal-container {
-    .addon-url-input {
-        width: 25rem;
-        padding: 0.5rem 1rem;
-        color: var(--color-surfacedark);
-        border: thin solid var(--color-surface);
+    .addon-modal-content {
+        width: 30rem;
+
+        .notice {
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+            color: @color-background-dark5-90;
+        }
+
+        .addon-url-input {
+            width: 100%;
+            padding: 1rem;
+            color: @color-surface-dark5;
+            outline: var(--focus-outline-size) solid @color-surface-light2;
+            outline-offset: calc(-1 * var(--focus-outline-size));
+
+            &:hover {
+                outline-color: @color-surface-light4;
+            }
+
+            &:focus {
+                outline-color: @color-background-dark5;
+            }
+        }
     }
 
     .cancel-button {
-        background-color: var(--color-surfacedark);
+        background-color: transparent;
+
+        &:hover {
+            background-color: @color-surface-light3;
+        }
+
+        &:focus {
+            outline-color: @color-background-dark5;
+        }
+
+        .cancel-button-label {
+            color: @color-surface-dark2;
+        }
     }
 }
 
 .share-modal-container {
-    .share-prompt-container {
-        width: 25rem;
+    .addon-modal-content {
+        width: 30rem;
+
+        .title-container {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+
+            .logo, .icon {
+                float: left;
+                width: 5rem;
+                height: 5rem;
+                margin-right: 1.5rem;
+                padding: 0.5rem;
+            }
+
+            .logo {
+                object-fit: contain;
+                object-position: center;
+            }
+
+            .icon {
+                fill: @color-secondaryvariant1-light3;
+            }
+
+            .name-container {
+                flex-grow: 1;
+                flex-shrink: 1;
+                flex-basis: 0;
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                align-items: baseline;
+
+                .name {
+                    flex-grow: 0;
+                    flex-shrink: 1;
+                    flex-basis: auto;
+                    margin-right: 0.5rem;
+                    font-size: 1.6rem;
+                    color: @color-background-dark5-90;
+                }
+
+                .version {
+                    flex-grow: 1;
+                    flex-shrink: 1;
+                    flex-basis: auto;
+                    margin-top: 0.5rem;
+                    color: @color-background-dark5-60;
+                }
+            }
+        }
+
+        .share-prompt-container {
+            margin-top: 1rem;
+        }
     }
 }
