@@ -7,6 +7,7 @@ const mapSubtitlesSettings = (ctx) => ({
     text_color: ctx.profile.settings.subtitles_text_color,
     background_color: ctx.profile.settings.subtitles_background_color,
     outline_color: ctx.profile.settings.subtitles_outline_color,
+    offset: ctx.profile.settings.subtitles_offset
 });
 
 const useSubtitlesSettings = () => {

@@ -50,6 +50,7 @@ const Player = ({ urlParams }) => {
         dispatch({ propName: 'subtitlesTextColor', propValue: subtitlesSettings.text_color });
         dispatch({ propName: 'subtitlesBackgroundColor', propValue: subtitlesSettings.background_color });
         dispatch({ propName: 'subtitlesOutlineColor', propValue: subtitlesSettings.outline_color });
+        dispatch({ propName: 'subtitlesOffset', propValue: subtitlesSettings.offset });
     }, [subtitlesSettings.size, subtitlesSettings.text_color, subtitlesSettings.background_color, subtitlesSettings.outline_color]);
     const onPropChanged = React.useCallback((propName, propValue) => {
         setState({ [propName]: propValue });
@@ -88,7 +89,7 @@ const Player = ({ urlParams }) => {
         updateSubtitlesSettings({ subtitles_size: size });
     }, []);
     const onSubtitlesOffsetChanged = React.useCallback((offset) => {
-        dispatch({ propName: 'subtitlesOffset', propValue: offset });
+        updateSubtitlesSettings({ subtitles_offset: offset });
     }, []);
     const onContainerMouseDown = React.useCallback((event) => {
         if (!event.nativeEvent.subtitlesPickerClosePrevented) {
@@ -131,6 +132,9 @@ const Player = ({ urlParams }) => {
     React.useEffect(() => {
         dispatch({ propName: 'subtitlesOutlineColor', propValue: subtitlesSettings.outline_color });
     }, [subtitlesSettings.outline_color]);
+    React.useEffect(() => {
+        dispatch({ propName: 'subtitlesOffset', propValue: subtitlesSettings.offset });
+    }, [subtitlesSettings.offset]);
     return (
         <div className={styles['player-container']} onMouseDown={onContainerMouseDown}>
             <Video
