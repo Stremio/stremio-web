@@ -1,6 +1,5 @@
 const React = require('react');
 const PropTypes = require('prop-types');
-const classnames = require('classnames');
 const { useRouteFocused } = require('stremio-router');
 const Icon = require('stremio-icons/dom');
 const { AddonDetailsModal, Button, Image, Multiselect, MainNavBars, TextInput, SharePrompt, ModalDialog, useBinaryState } = require('stremio/common');
