@@ -1,7 +1,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const { useDeepEqualEffect, useBinaryState } = require('stremio/common');
+const { HorizontalNavBar, useDeepEqualEffect, useBinaryState } = require('stremio/common');
 const BufferingLoader = require('./BufferingLoader');
 const ControlBar = require('./ControlBar');
 const SubtitlesPicker = require('./SubtitlesPicker');
@@ -153,6 +153,17 @@ const Player = ({ urlParams }) => {
                     :
                     null
             }
+            <HorizontalNavBar
+                className={classnames(styles['layer'], styles['nav-bar-layer'])}
+                title={
+                    player.meta_resource !== null && player.meta_resource.content.type === 'Ready' ?
+                        player.meta_resource.content.content.name
+                        :
+                        null
+                }
+                backButton={true}
+                fullscreenButton={true}
+            />
             <ControlBar
                 className={classnames(styles['layer'], styles['control-bar-layer'])}
                 paused={state.paused}

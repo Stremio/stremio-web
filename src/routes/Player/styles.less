@@ -1,5 +1,11 @@
 @import (reference) '~stremio-colors/dist/less/stremio-colors.less';
 
+:import('~stremio/common/NavBar/HorizontalNavBar/styles.less') {
+    nav-bar-button-container: button-container;
+    nav-bar-title: title;
+    nav-bar-icon: icon;
+}
+
 .player-container {
     position: relative;
     z-index: 0;
@@ -14,6 +20,35 @@
         right: 0;
         bottom: 0;
         z-index: 0;
+
+        &.nav-bar-layer {
+            bottom: initial;
+            background: transparent;
+
+            &::before {
+                position: absolute;
+                right: 0;
+                top: 0;
+                left: 0;
+                z-index: -1;
+                box-shadow: 0 0 8rem 6rem @color-background-dark5;
+                content: "";
+            }
+
+            .nav-bar-button-container {
+                &:hover {
+                    background: transparent;
+                }
+
+                .nav-bar-icon {
+                    fill: @color-surface-light5;
+                }
+            }
+
+            .nav-bar-title {
+                color: @color-surface-light5;
+            }
+        }
 
         &.control-bar-layer {
             top: initial;
