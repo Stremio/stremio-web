@@ -82,12 +82,9 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, playI
             {
                 (typeof name === 'string' && name.length > 0) || (Array.isArray(options) && options.length > 0) ?
                     <div className={styles['title-bar-container']}>
-                        {
-                            typeof name === 'string' && name.length > 0 ?
-                                <div className={styles['title-label']}>{name}</div>
-                                :
-                                null
-                        }
+                        <div className={styles['title-label']}>
+                            {typeof name === 'string' && name.length > 0 ? name : ''}
+                        </div>
                         {
                             Array.isArray(options) && options.length > 0 ?
                                 <Multiselect
@@ -97,6 +94,7 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, playI
                                     onOpen={onMenuOpen}
                                     onClose={onMenuClose}
                                     onSelect={menuOnSelect}
+                                    tabIndex={-1}
                                     onClick={menuOnClick}
                                 />
                                 :

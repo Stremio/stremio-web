@@ -66,7 +66,9 @@ module.exports = (env, argv) => ({
                                                 flexbox: false,
                                                 grid: false
                                             },
+                                            cssDeclarationSorter: true,
                                             calc: false,
+                                            colormin: false,
                                             convertValues: false,
                                             discardComments: {
                                                 removeAll: true,

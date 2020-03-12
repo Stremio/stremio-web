@@ -1,9 +1,12 @@
+@import (reference) '~stremio-colors/dist/less/stremio-colors.less';
+
 .meta-row-placeholder-container {
     .title-container {
         max-height: 2.4em;
+        padding: 0 1rem;
         margin-bottom: 2rem;
         font-size: 1.5rem;
-        color: var(--color-surface);
+        color: @color-surface;
 
         &:empty {
             height: 1.2em;
@@ -24,7 +27,7 @@
 
             .meta-item {
                 flex: 1;
-                margin-right: 2rem;
+                margin: 1rem 3rem 1rem 1rem;
                 background-color: var(--color-placeholder);
 
                 .poster-container {
@@ -40,6 +43,7 @@
 
         .see-all-container {
             flex: none;
+            margin: 1rem;
             background-color: var(--color-placeholder);
         }
     }

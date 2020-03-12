@@ -1,3 +1,5 @@
+@import (reference) '~stremio-colors/dist/less/stremio-colors.less';
+
 .pagination-input-container {
     display: flex;
     flex-direction: row;
@@ -7,10 +9,11 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        background-color: @color-background;
 
         .icon {
             display: block;
-            fill: var(--color-surfacelighter);
+            fill: @color-secondaryvariant1;
         }
     }
 
@@ -20,6 +23,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        background-color: @color-background-dark1;
 
         .label {
             flex: none;
@@ -28,7 +32,8 @@
             white-space: nowrap;
             text-overflow: ellipsis;
             text-align: center;
-            color: var(--color-surfacelighter);
+            font-weight: 600;
+            color: @color-secondaryvariant1;
         }
     }
 }

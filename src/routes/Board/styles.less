@@ -1,3 +1,4 @@
+@import (reference) '~stremio-colors/dist/less/stremio-colors.less';
 @import (reference) '~stremio/common/screen-sizes.less';
 
 :import('~stremio/common/MetaRow/styles.less') {
@@ -11,20 +12,13 @@
 }
 
 .board-container {
-    display: flex;
-    flex-direction: column;
     width: 100%;
     height: 100%;
-    background-color: var(--color-background);
-
-    .nav-bar {
-        flex: none;
-        align-self: stretch;
-    }
+    background-color: @color-background-dark2;
 
     .board-content {
-        flex: 1;
-        align-self: stretch;
+        width: 100%;
+        height: 100%;
         overflow-y: auto;
 
         .board-row, .board-row-placeholder {

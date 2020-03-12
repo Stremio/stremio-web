@@ -115,7 +115,7 @@ const Multiselect = ({ className, mode, direction, title, disabled, dataset, ren
                     options.map(({ label, value }) => (
                         <Button key={value} className={classnames(styles['option-container'], { 'selected': selected.includes(value) })} title={typeof label === 'string' ? label : value} data-value={value} onClick={optionOnClick}>
                             <div className={styles['label']}>{typeof label === 'string' ? label : value}</div>
-                            <Icon className={styles['icon']} icon={'ic_check'} />
+                            <div className={styles['icon']} />
                         </Button>
                     ))
                     :

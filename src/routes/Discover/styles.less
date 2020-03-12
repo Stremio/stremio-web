@@ -1,3 +1,4 @@
+@import (reference) '~stremio-colors/dist/less/stremio-colors.less';
 @import (reference) '~stremio/common/screen-sizes.less';
 
 :import('~stremio/common/Multiselect/styles.less') {
@@ -9,23 +10,17 @@
     pagination-prev-button-container: prev-button-container;
     pagination-next-button-container: next-button-container;
     pagination-button-icon: icon;
+    pagination-label: label;
 }
 
 .discover-container {
-    display: flex;
-    flex-direction: column;
     width: 100%;
     height: 100%;
-    background-color: var(--color-background);
-
-    .nav-bar {
-        flex: none;
-        align-self: stretch;
-    }
+    background-color: @color-background-dark2;
 
     .discover-content {
-        flex: 1;
-        align-self: stretch;
+        width: 100%;
+        height: 100%;
         display: grid;
         grid-template-columns: 1fr 28rem;
         grid-template-rows: auto auto 1fr;
@@ -45,7 +40,7 @@
                 flex-grow: 0;
                 flex-shrink: 1;
                 flex-basis: 15rem;
-                height: 3rem;
+                height: 3.5rem;
                 margin-right: 1.5rem;
 
                 &:nth-child(n+4) {
@@ -67,9 +62,9 @@
                 display: none;
                 align-items: center;
                 justify-content: center;
-                width: 3rem;
-                height: 3rem;
-                background-color: var(--color-backgroundlighter);
+                width: 3.5rem;
+                height: 3.5rem;
+                background-color: @color-background;
 
                 &:not(:nth-last-child(2)) {
                     margin-right: 1.5rem;
@@ -77,9 +72,9 @@
 
                 .filter-icon {
                     flex: none;
-                    width: 1.2rem;
-                    height: 1.2rem;
-                    fill: var(--color-surfacelighter);
+                    width: 1.4rem;
+                    height: 1.4rem;
+                    fill: @color-secondaryvariant1;
                 }
             }
 
@@ -89,17 +84,20 @@
 
             .pagination-input-container {
                 flex: none;
-                height: 3rem;
-                background-color: var(--color-backgroundlighter);
+                height: 3.5rem;
 
                 .pagination-prev-button-container, .pagination-next-button-container {
-                    width: 3rem;
-                    height: 3rem;
+                    width: 3.5rem;
+                    height: 3.5rem;
 
                     .pagination-button-icon {
                         width: 1rem;
                         height: 1rem;
                     }
+                }
+
+                .pagination-label {
+                    width: 3rem;
                 }
             }
         }
@@ -114,7 +112,7 @@
             .warning-info {
                 margin-bottom: 1rem;
                 font-size: 1.2rem;
-                color: var(--color-surfacelighter);
+                color: @color-surface-light5;
             }
 
             .install-button {
@@ -124,14 +122,14 @@
                 justify-content: center;
                 width: 10rem;
                 padding: 1rem;
-                background-color: var(--color-signal5);
+                background-color: @color-accent3;
 
                 &:hover {
-                    filter: brightness(1.2);
+                    background-color: @color-accent3-light1;
                 }
 
                 .label {
-                    color: var(--color-surfacelighter);
+                    color: @color-surface-light5;
                 }
             }
         }
@@ -148,27 +146,18 @@
                 margin-right: 1.5rem;
                 padding: 0 1.5rem;
                 overflow-y: auto;
-
-                .meta-item {
-                    &:global(.selected) {
-                        &::after {
-                            outline-width: calc(1.5 * var(--focus-outline-size));
-                            outline-offset: calc(-1.5 * var(--focus-outline-size));
-                        }
-                    }
-                }
             }
 
             .message-container {
                 padding: 0 1.5rem;
                 font-size: 2rem;
-                color: var(--color-surfacelighter);
+                color: @color-surface-light5;
             }
         }
 
         .meta-preview-container {
             grid-area: meta-preview-area;
-            background-color: var(--color-backgrounddarker);
+            background-color: @color-background-dark5;
         }
     }
 }
@@ -188,7 +177,7 @@
             width: 10rem;
             max-height: 2.4em;
             padding-right: 0.5rem;
-            color: var(--color-backgrounddarker);
+            color: @color-background-dark5;
         }
 
         .select-input-container {
@@ -278,10 +267,9 @@
                 "catalog-content-area";
 
             .catalog-content-container {
-                margin-right: 0;
-
                 .meta-items-container {
                     grid-template-columns: repeat(5, 1fr);
+                    margin-right: 0;
                 }
             }
 

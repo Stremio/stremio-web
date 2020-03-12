@@ -1,3 +1,5 @@
+@import (reference) '~stremio-colors/dist/less/stremio-colors.less';
+
 .color-input-container {
     position: relative;
     z-index: 0;
@@ -13,13 +15,13 @@
         align-items: center;
         justify-content: center;
         padding: 0 0.5rem;
-        border: thin solid var(--color-surfacelighter20);
+        border: thin solid @color-surface-light5-20;
         pointer-events: none;
 
         .transparent-label {
             flex: 1;
             text-align: center;
-            color: var(--color-surfacelighter);
+            color: @color-surface-light5;
             white-space: nowrap;
             text-overflow: ellipsis;
         }

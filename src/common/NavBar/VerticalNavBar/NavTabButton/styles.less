@@ -1,0 +1,48 @@
+@import (reference) '~stremio-colors/dist/less/stremio-colors.less';
+
+.nav-tab-button-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: @color-background-dark1;
+
+    &:hover {
+        background-color: @color-background-light2;
+    }
+
+    &:global(.selected) {
+        background-color: @color-secondaryvariant1-dark5;
+
+        &:hover {
+            background-color: @color-secondaryvariant1-dark4;
+        }
+
+        .icon {
+            fill: @color-surface-light5;
+        }
+
+        .label {
+            color: @color-surface-light5-90;
+        }
+    }
+
+    .icon {
+        flex: none;
+        width: 1.7rem;
+        height: 1.7rem;
+        margin-bottom: 0.5rem;
+        fill: @color-secondary-light5;
+    }
+
+    .label {
+        flex: none;
+        max-height: 2.4em;
+        padding: 0 0.2rem;
+        font-size: 0.9rem;
+        font-weight: 500;
+        letter-spacing: 0.01rem;
+        text-align: center;
+        color: @color-secondaryvariant1-90;
+    }
+}

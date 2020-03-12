@@ -1,30 +1,26 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const Icon = require('stremio-icons/dom');
-const { MainNavBar, MetaRow } = require('stremio/common');
+const { MainNavBars, MetaRow } = require('stremio/common');
 const useSearch = require('./useSearch');
 const styles = require('./styles');
 
 const Search = ({ queryParams }) => {
     const search = useSearch(queryParams);
-    return (
-        <div className={styles['search-container']}>
-            <MainNavBar
-                className={styles['nav-bar']}
-                query={
-                    search.selected !== null ?
-                        search.selected.extra.reduce((query, [name, value]) => {
-                            if (name === 'search') {
-                                return value;
-                            }
-
-                            return query;
-                        }, null)
-                        :
-                        null
+    const query = React.useMemo(() => {
+        return search.selected !== null ?
+            search.selected.extra.reduce((query, [name, value]) => {
+                if (name === 'search') {
+                    return value;
                 }
-                route={'search'}
-            />
+
+                return query;
+            }, null)
+            :
+            null;
+    }, [search.selected]);
+    return (
+        <MainNavBars className={styles['search-container']} route={'search'} query={query}>
             <div className={styles['search-content']}>
                 {
                     search.selected === null || search.selected.extra.every(([name]) => name !== 'search') ?
@@ -42,7 +38,7 @@ const Search = ({ queryParams }) => {
                         search.catalog_resources.length === 0 ?
                             <div className={styles['message-container']}>
                                 <div className={styles['message-content']}>
-                                    <div className={styles['label']}>No addons were requested for catalogs</div>
+                                    <div className={styles['label']}> No addons were requested for catalogs</div>
                                 </div>
                             </div>
                             :
@@ -82,7 +78,7 @@ const Search = ({ queryParams }) => {
                             })
                 }
             </div>
-        </div>
+        </MainNavBars>
     );
 };
 

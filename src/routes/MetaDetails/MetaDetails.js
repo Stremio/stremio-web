@@ -1,6 +1,6 @@
 const React = require('react');
 const PropTypes = require('prop-types');
-const { NavBar, MetaPreview, useInLibrary } = require('stremio/common');
+const { HorizontalNavBar, MetaPreview, useInLibrary } = require('stremio/common');
 const VideosList = require('./VideosList');
 const StreamsList = require('./StreamsList');
 const useMetaDetails = require('./useMetaDetails');
@@ -28,7 +28,7 @@ const MetaDetails = ({ urlParams }) => {
     const [inLibrary, toggleInLibrary] = useInLibrary(metaItem);
     return (
         <div className={styles['metadetails-container']}>
-            <NavBar
+            <HorizontalNavBar
                 className={styles['nav-bar']}
                 backButton={true}
                 title={selectedMetaResource !== null ? selectedMetaResource.content.content.name : null}

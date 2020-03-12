@@ -1,7 +1,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const { Button, Multiselect, MainNavBar, MetaItem, useProfile } = require('stremio/common');
+const { Button, Multiselect, MainNavBars, MetaItem, useProfile } = require('stremio/common');
 const useLibrary = require('./useLibrary');
 const useSelectableInputs = require('./useSelectableInputs');
 const useItemOptions = require('./useItemOptions');
@@ -13,8 +13,7 @@ const Library = ({ urlParams }) => {
     const [typeSelect, sortPropSelect] = useSelectableInputs(library);
     const [options, optionOnSelect] = useItemOptions();
     return (
-        <div className={styles['library-container']}>
-            <MainNavBar className={styles['nav-bar']} route={'library'} />
+        <MainNavBars className={styles['library-container']} route={'library'}>
             <div className={styles['library-content']}>
                 {
                     profile.auth !== null && library.type_names.length > 0 ?
@@ -62,7 +61,7 @@ const Library = ({ urlParams }) => {
                                     </div>
                 }
             </div>
-        </div>
+        </MainNavBars>
     );
 };
 

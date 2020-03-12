@@ -1,5 +1,5 @@
 const React = require('react');
-const { MainNavBar, MetaRow } = require('stremio/common');
+const { MainNavBars, MetaRow } = require('stremio/common');
 const useBoard = require('./useBoard');
 const useContinueWatching = require('./useContinueWatching');
 const useItemOptions = require('./useItemOptions');
@@ -10,8 +10,7 @@ const Board = () => {
     const continueWatching = useContinueWatching();
     const [options, optionOnSelect] = useItemOptions();
     return (
-        <div className={styles['board-container']}>
-            <MainNavBar className={styles['nav-bar']} route={'board'} />
+        <MainNavBars className={styles['board-container']} route={'board'}>
             <div className={styles['board-content']}>
                 {
                     continueWatching.lib_items.length > 0 ?
@@ -69,7 +68,7 @@ const Board = () => {
                     }
                 })}
             </div>
-        </div>
+        </MainNavBars>
     );
 };
 

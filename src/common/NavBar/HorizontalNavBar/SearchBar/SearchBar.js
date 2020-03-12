@@ -34,18 +34,18 @@ const SearchBar = ({ className, query, active }) => {
                         ref={searchInputRef}
                         className={styles['search-input']}
                         type={'text'}
-                        placeholder={'Search'}
+                        placeholder={'Search or paste link'}
                         defaultValue={query}
                         tabIndex={-1}
                         onSubmit={queryInputOnSubmit}
                     />
                     :
                     <div className={styles['search-input']}>
-                        <div className={styles['placeholder-label']}>Search</div>
+                        <div className={styles['placeholder-label']}>Search or paste link</div>
                     </div>
             }
             <Button className={styles['submit-button-container']} tabIndex={-1} onClick={queryInputOnSubmit}>
-                <Icon className={styles['icon']} icon={'ic_search'} />
+                <Icon className={styles['icon']} icon={'ic_search_link'} />
             </Button>
         </label>
     );

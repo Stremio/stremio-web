@@ -1,9 +1,8 @@
 const React = require('react');
 const PropTypes = require('prop-types');
-const classnames = require('classnames');
 const { useRouteFocused } = require('stremio-router');
 const Icon = require('stremio-icons/dom');
-const { AddonDetailsModal, Button, Image, Multiselect, NavBar, TextInput, SharePrompt, ModalDialog, useBinaryState } = require('stremio/common');
+const { AddonDetailsModal, Button, Image, Multiselect, MainNavBars, TextInput, SharePrompt, ModalDialog, useBinaryState } = require('stremio/common');
 const Addon = require('./Addon');
 const useAddons = require('./useAddons');
 const useSelectableInputs = require('./useSelectableInputs');
@@ -89,8 +88,7 @@ const Addons = ({ urlParams, queryParams }) => {
         clearSharedAddon();
     }, [urlParams, queryParams]);
     return (
-        <div className={styles['addons-container']}>
-            <NavBar className={styles['nav-bar']} backButton={true} title={'Addons'} />
+        <MainNavBars className={styles['addons-container']} route={'addons'}>
             <div className={styles['addons-content']}>
                 <div className={styles['selectable-inputs-container']}>
                     <Button className={styles['add-button-container']} title={'Add addon'} onClick={openAddAddonModal}>
@@ -226,7 +224,7 @@ const Addons = ({ urlParams, queryParams }) => {
                     :
                     null
             }
-        </div>
+        </MainNavBars>
     );
 };
 

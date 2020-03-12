@@ -1,17 +1,21 @@
+@import (reference) '~stremio-colors/dist/less/stremio-colors.less';
+
 .meta-row-container {
     overflow: visible;
 
     .title-container {
         max-height: 2.4em;
+        padding: 0 1rem;
         margin-bottom: 2rem;
         font-size: 1.5rem;
-        color: var(--color-surfacelighter);
+        color: @color-secondaryvariant2-light1;
     }
 
     .message-container {
         max-height: 3.6em;
+        padding: 0 1rem;
         font-size: 1.3rem;
-        color: var(--color-surfacelighter);
+        color: @color-secondaryvariant2-light1;
     }
 
     .content-container {
@@ -50,11 +54,11 @@
             flex-direction: row;
             align-items: center;
             justify-content: center;
-            padding: 1rem;
-            background-color: var(--color-backgroundlight);
+            margin: 1rem;
+            background-color: @color-background-light1;
 
             &:hover, &:focus {
-                background-color: var(--color-backgroundlighter);
+                background-color: @color-background-light3;
             }
 
             .label {
@@ -64,7 +68,7 @@
                 max-height: 2.4em;
                 font-size: 1.2rem;
                 text-align: center;
-                color: var(--color-surfacelighter);
+                color: @color-surface-light5;
             }
 
             .icon {
@@ -72,7 +76,7 @@
                 width: 1.3rem;
                 height: 1.3rem;
                 margin-left: 0.3rem;
-                fill: var(--color-surfacelighter);
+                fill: @color-surface-light5;
             }
         }
     }

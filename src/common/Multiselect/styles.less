@@ -1,3 +1,5 @@
+@import (reference) '~stremio-colors/dist/less/stremio-colors.less';
+
 :import('~stremio/common/Popup/styles.less') {
     popup-menu-container: menu-container;
 }
@@ -7,24 +9,22 @@
     flex-direction: row;
     align-items: center;
     padding: 0 1rem;
-    background-color: var(--color-backgroundlighter);
+    background-color: @color-background;
 
     &:global(.active) {
-        background-color: var(--color-surfacelight);
-
         .label {
-            color: var(--color-backgrounddarker);
+            color: @color-surface-light5;
         }
 
         .icon {
-            fill: var(--color-backgrounddarker);
+            fill: @color-surface-light5;
         }
     }
 
     .label {
         flex: 1;
         max-height: 2.4em;
-        color: var(--color-surfacelighter);
+        color: @color-secondaryvariant1;
     }
 
     .icon {
@@ -32,7 +32,7 @@
         width: 1rem;
         height: 1rem;
         margin-left: 1rem;
-        fill: var(--color-surfacelighter);
+        fill: @color-secondaryvariant1;
     }
 
     .popup-menu-container {
@@ -47,33 +47,36 @@
             flex-direction: row;
             align-items: center;
             padding: 1rem;
-            background-color: var(--color-backgroundlighter);
+            background-color: @color-background;
 
             &:global(.selected) {
-                background-color: var(--color-surfacedarker);
-
                 .icon {
                     display: block;
                 }
             }
 
             &:hover, &:focus {
-                background-color: var(--color-surfacedark);
+                background-color: @color-background-light2;
+            }
+
+            &:not(:last-child) {
+                border-bottom: thin solid @color-primary-light4;
             }
 
             .label {
                 flex: 1;
                 max-height: 4.8em;
-                color: var(--color-surfacelighter);
+                color: @color-surface-light5;
             }
 
             .icon {
                 flex: none;
                 display: none;
-                width: 1rem;
-                height: 1rem;
+                width: 0.5rem;
+                height: 0.5rem;
+                border-radius: 100%;
                 margin-left: 1rem;
-                fill: var(--color-surfacelighter);
+                background-color: @color-accent3;
             }
         }
 
@@ -83,7 +86,7 @@
             align-items: center;
             justify-content: center;
             padding: 1rem;
-            background-color: var(--color-backgroundlighter);
+            background-color: @color-background;
 
             .label {
                 flex-grow: 0;
@@ -91,7 +94,7 @@
                 flex-basis: auto;
                 font-size: 1.2rem;
                 text-align: center;
-                color: var(--color-surfacelighter);
+                color: @color-surface-light5;
             }
         }
     }

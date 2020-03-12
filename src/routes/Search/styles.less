@@ -1,3 +1,4 @@
+@import (reference) '~stremio-colors/dist/less/stremio-colors.less';
 @import (reference) '~stremio/common/screen-sizes.less';
 
 :import('~stremio/common/MetaRow/styles.less') {
@@ -11,20 +12,13 @@
 }
 
 .search-container {
-    display: flex;
-    flex-direction: column;
     width: 100%;
     height: 100%;
-    background-color: var(--color-background);
-
-    .nav-bar {
-        flex: none;
-        align-self: stretch;
-    }
+    background-color: @color-background-dark2;
 
     .search-content {
-        flex: 1;
-        align-self: stretch;
+        width: 100%;
+        height: 100%;
         overflow-y: auto;
 
         .search-row, .search-row-placeholder {
@@ -48,6 +42,7 @@
             flex-direction: row;
             align-items: flex-start;
             justify-content: center;
+            max-height: calc(100% - 10rem);
             margin: 5rem;
 
             .message-content {
@@ -66,7 +61,7 @@
                     width: 6rem;
                     height: 6rem;
                     margin-bottom: 2rem;
-                    fill: var(--color-surfacelighter80);
+                    fill: @color-surface-light5-90;
                 }
 
                 .label {
@@ -74,7 +69,7 @@
                     flex-shrink: 1;
                     flex-basis: auto;
                     font-size: 1.2rem;
-                    color: var(--color-surfacelighter80);
+                    color: @color-surface-light5-90;
                     text-align: center;
                 }
             }
