@@ -1,9 +1,24 @@
 @import (reference) '~stremio-colors/dist/less/stremio-colors.less';
 
+:import('~stremio/common/Slider/styles.less') {
+    active-slider-within: active-slider-within;
+}
+
 :import('~stremio/common/NavBar/HorizontalNavBar/styles.less') {
     nav-bar-button-container: button-container;
     nav-bar-title: title;
     nav-bar-icon: icon;
+}
+
+html:not(.active-slider-within) {
+    .player-container.immersed {
+        cursor: none;
+
+        .nav-bar-layer, .control-bar-layer, .menu-layer {
+            opacity: 0;
+            transition: opacity 200ms;
+        }
+    }
 }
 
 .player-container {
@@ -12,15 +27,6 @@
     width: 100%;
     height: 100%;
     background-color: @color-background-dark2;
-
-    &.immersed {
-        cursor: none;
-
-        .nav-bar-layer, .control-bar-layer, .menu-layer {
-            opacity: 0;
-            transition: opacity 200ms;
-        }
-    }
 
     .layer {
         position: absolute;
