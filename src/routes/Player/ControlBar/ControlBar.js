@@ -9,39 +9,55 @@ const SubtitlesButton = require('./SubtitlesButton');
 const VolumeSlider = require('./VolumeSlider');
 const styles = require('./styles');
 
-const ControlBar = (props) => {
+const ControlBar = ({
+    className,
+    paused,
+    time,
+    duration,
+    volume,
+    muted,
+    subtitlesTracks,
+    onPlayRequested,
+    onPauseRequested,
+    onMuteRequested,
+    onUnmuteRequested,
+    onVolumeChangeRequested,
+    onSeekRequested,
+    onToggleSubtitlesPicker,
+    ...props
+}) => {
     return (
-        <div className={classnames(props.className, styles['control-bar-container'])}>
+        <div {...props} className={classnames(className, styles['control-bar-container'])}>
             <SeekBar
                 className={styles['seek-bar']}
-                time={props.time}
-                duration={props.duration}
-                onSeekRequested={props.onSeekRequested}
+                time={time}
+                duration={duration}
+                onSeekRequested={onSeekRequested}
             />
             <div className={styles['control-bar-buttons-container']}>
                 <PlayPauseButton
                     className={styles['control-bar-button']}
-                    paused={props.paused}
-                    onPlayRequested={props.onPlayRequested}
-                    onPauseRequested={props.onPauseRequested}
+                    paused={paused}
+                    onPlayRequested={onPlayRequested}
+                    onPauseRequested={onPauseRequested}
                 />
                 <MuteButton
                     className={styles['control-bar-button']}
-                    volume={props.volume}
-                    muted={props.muted}
-                    onMuteRequested={props.onMuteRequested}
-                    onUnmuteRequested={props.onUnmuteRequested}
+                    volume={volume}
+                    muted={muted}
+                    onMuteRequested={onMuteRequested}
+                    onUnmuteRequested={onUnmuteRequested}
                 />
                 <VolumeSlider
                     className={styles['volume-slider']}
-                    volume={props.volume}
-                    onVolumeChangeRequested={props.onVolumeChangeRequested}
+                    volume={volume}
+                    onVolumeChangeRequested={onVolumeChangeRequested}
                 />
                 <div className={styles['spacing']} />
                 <SubtitlesButton
                     className={styles['control-bar-button']}
-                    subtitlesTracks={props.subtitlesTracks}
-                    onToggleSubtitlesPicker={props.onToggleSubtitlesPicker}
+                    subtitlesTracks={subtitlesTracks}
+                    onToggleSubtitlesPicker={onToggleSubtitlesPicker}
                 />
                 <ShareButton className={styles['control-bar-button']} />
             </div>
