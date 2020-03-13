@@ -2,6 +2,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const debounce = require('lodash.debounce');
+const { useRouteFocused } = require('stremio-router');
 const { HorizontalNavBar, useDeepEqualEffect, useBinaryState } = require('stremio/common');
 const BufferingLoader = require('./BufferingLoader');
 const ControlBar = require('./ControlBar');
@@ -31,6 +32,7 @@ const INITIAL_VIDEO_STATE = {
 const Player = ({ urlParams }) => {
     const player = usePlayer(urlParams);
     const [subtitlesSettings, updateSubtitlesSettings] = useSubtitlesSettings();
+    const routeFocused = useRouteFocused();
     const [immersed, setImmersed] = React.useState(true);
     const setImmersedDebounced = React.useCallback(debounce(setImmersed, 3000), []);
     const [subtitlesPickerOpen, , closeSubtitlesPicker, toggleSubtitlesPicker] = useBinaryState(false);
@@ -157,6 +159,57 @@ const Player = ({ urlParams }) => {
     React.useEffect(() => {
         dispatch({ propName: 'subtitlesOffset', propValue: subtitlesSettings.offset });
     }, [subtitlesSettings.offset]);
+    React.useEffect(() => {
+        const onKeyDown = (event) => {
+            switch (event.key) {
+                case ' ': {
+                    if (videoState.paused !== null) {
+                        if (videoState.paused) {
+                            onPlayRequested();
+                        } else {
+                            onPauseRequested();
+                        }
+                    }
+
+                    break;
+                }
+                case 'ArrowRight': {
+                    if (videoState.time !== null) {
+                        onSeekRequested(videoState.time + 15000);
+                    }
+
+                    break;
+                }
+                case 'ArrowLeft': {
+                    if (videoState.time !== null) {
+                        onSeekRequested(videoState.time - 15000);
+                    }
+
+                    break;
+                }
+                case 'ArrowUp': {
+                    if (videoState.volume !== null) {
+                        onVolumeChangeRequested(videoState.volume + 5);
+                    }
+
+                    break;
+                }
+                case 'ArrowDown': {
+                    if (videoState.volume !== null) {
+                        onVolumeChangeRequested(videoState.volume - 5);
+                    }
+
+                    break;
+                }
+            }
+        };
+        if (routeFocused && !subtitlesPickerOpen) {
+            window.addEventListener('keydown', onKeyDown);
+        }
+        return () => {
+            window.removeEventListener('keydown', onKeyDown);
+        };
+    }, [routeFocused, subtitlesPickerOpen, videoState.paused, videoState.time, videoState.volume]);
     return (
         <div className={classnames(styles['player-container'], { [styles['immersed']]: immersed && videoState.paused !== null && !videoState.paused && !subtitlesPickerOpen })}
             onMouseDown={onContainerMouseDown}
