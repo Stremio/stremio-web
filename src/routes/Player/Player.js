@@ -109,6 +109,15 @@ const Player = ({ urlParams }) => {
     const onBarMouseMove = React.useCallback((event) => {
         event.nativeEvent.immersePrevented = true;
     }, []);
+    const onVideoClick = React.useCallback(() => {
+        if (videoState.paused !== null) {
+            if (videoState.paused) {
+                onPlayRequested();
+            } else {
+                onPauseRequested();
+            }
+        }
+    }, [videoState.paused]);
     useDeepEqualEffect(() => {
         if (player.selected === null || player.selected.stream === null) {
             dispatch({ commandName: 'stop' });
@@ -163,7 +172,7 @@ const Player = ({ urlParams }) => {
                 onPropChanged={onPropChanged}
                 onImplementationChanged={onImplementationChanged}
             />
-            <div className={styles['layer']} />
+            <div className={styles['layer']} onClick={onVideoClick} />
             {
                 videoState.buffering ?
                     <BufferingLoader className={styles['layer']} />
