@@ -210,6 +210,11 @@ const Player = ({ urlParams }) => {
             window.removeEventListener('keydown', onKeyDown);
         };
     }, [routeFocused, subtitlesPickerOpen, videoState.paused, videoState.time, videoState.volume]);
+    React.useEffect(() => {
+        return () => {
+            setImmersedDebounced.cancel();
+        };
+    }, []);
     return (
         <div className={classnames(styles['player-container'], { [styles['immersed']]: immersed && videoState.paused !== null && !videoState.paused && !subtitlesPickerOpen })}
             onMouseDown={onContainerMouseDown}
