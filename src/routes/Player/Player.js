@@ -1,6 +1,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
+const debounce = require('lodash.debounce');
 const { HorizontalNavBar, useDeepEqualEffect, useBinaryState } = require('stremio/common');
 const BufferingLoader = require('./BufferingLoader');
 const ControlBar = require('./ControlBar');
@@ -30,7 +31,9 @@ const INITIAL_VIDEO_STATE = {
 const Player = ({ urlParams }) => {
     const player = usePlayer(urlParams);
     const [subtitlesSettings, updateSubtitlesSettings] = useSubtitlesSettings();
-    const [subtitlesPickerOpen, , closeSubtitlesPicker, toggleSubtitlesPicker] = useBinaryState(true);
+    const [immersed, setImmersed] = React.useState(true);
+    const setImmersedDebounced = React.useCallback(debounce(setImmersed, 3000), []);
+    const [subtitlesPickerOpen, , closeSubtitlesPicker, toggleSubtitlesPicker] = useBinaryState(false);
     const [videoState, setVideoState] = React.useReducer((videoState, nextVideoState) => ({
         ...videoState,
         ...nextVideoState
@@ -95,6 +98,17 @@ const Player = ({ urlParams }) => {
             closeSubtitlesPicker();
         }
     }, []);
+    const onContainerMouseMove = React.useCallback((event) => {
+        setImmersed(false);
+        if (!event.nativeEvent.immersePrevented) {
+            setImmersedDebounced(true);
+        } else {
+            setImmersedDebounced.cancel();
+        }
+    }, []);
+    const onBarMouseMove = React.useCallback((event) => {
+        event.nativeEvent.immersePrevented = true;
+    }, []);
     useDeepEqualEffect(() => {
         if (player.selected === null || player.selected.stream === null) {
             dispatch({ commandName: 'stop' });
@@ -135,7 +149,11 @@ const Player = ({ urlParams }) => {
         dispatch({ propName: 'subtitlesOffset', propValue: subtitlesSettings.offset });
     }, [subtitlesSettings.offset]);
     return (
-        <div className={styles['player-container']} onMouseDown={onContainerMouseDown}>
+        <div className={classnames(styles['player-container'], { [styles['immersed']]: immersed && videoState.paused !== null && !videoState.paused && !subtitlesPickerOpen })}
+            onMouseDown={onContainerMouseDown}
+            onMouseMove={onContainerMouseMove}
+            onMouseOver={onContainerMouseMove}
+            onMouseLeave={onContainerMouseMove}>
             <Video
                 ref={videoRef}
                 className={styles['layer']}
@@ -178,6 +196,8 @@ const Player = ({ urlParams }) => {
                 onVolumeChangeRequested={onVolumeChangeRequested}
                 onSeekRequested={onSeekRequested}
                 onToggleSubtitlesPicker={toggleSubtitlesPicker}
+                onMouseMove={onBarMouseMove}
+                onMouseOver={onBarMouseMove}
             />
             {
                 subtitlesPickerOpen ?

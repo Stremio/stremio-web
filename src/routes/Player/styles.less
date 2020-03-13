@@ -13,6 +13,15 @@
     height: 100%;
     background-color: @color-background-dark2;
 
+    &.immersed {
+        cursor: none;
+
+        .nav-bar-layer, .control-bar-layer, .menu-layer {
+            opacity: 0;
+            transition: opacity 200ms;
+        }
+    }
+
     .layer {
         position: absolute;
         top: 0;
@@ -24,6 +33,7 @@
         &.nav-bar-layer {
             bottom: initial;
             background: transparent;
+            overflow: visible;
 
             &::before {
                 position: absolute;
