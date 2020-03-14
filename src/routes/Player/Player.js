@@ -286,7 +286,7 @@ const Player = ({ urlParams }) => {
                 volume={videoState.volume}
                 muted={videoState.muted}
                 subtitlesTracks={videoState.subtitlesTracks}
-                metaResource={player.meta_resource}
+                metaResource={null}
                 onPlayRequested={onPlayRequested}
                 onPauseRequested={onPauseRequested}
                 onMuteRequested={onMuteRequested}
@@ -318,14 +318,14 @@ const Player = ({ urlParams }) => {
                     :
                     null
             }
-            {
+            {/* {
                 metaPreviewOpen ?
                     <div className={classnames(styles['layer'], styles['menu-layer'])} onMouseDown={(event) => event.nativeEvent.metaPreviewClosePrevented = true}>
                         <div style={{ width: 300, height: 800, background: 'red' }} />
                     </div>
                     :
                     null
-            }
+            } */}
         </div>
     );
 };
