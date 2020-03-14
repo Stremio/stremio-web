@@ -1,20 +1,20 @@
 const React = require('react');
 const { useServices } = require('stremio/services');
-const languages = require('./languages');
+const { languageNames } = require('stremio/common');
 
 const SUBTITLES_SIZES = [75, 100, 125, 150, 175, 200, 250];
 
 const useProfileSettingsInputs = (profile) => {
     const { core } = useServices();
     const interfaceLanguageSelect = React.useMemo(() => ({
-        options: Object.keys(languages).map((code) => ({
+        options: Object.keys(languageNames).map((code) => ({
             value: code,
-            label: languages[code]
+            label: languageNames[code]
         })),
         selected: [profile.settings.interface_language],
         renderLabelText: () => {
-            return typeof languages[profile.settings.interface_language] === 'string' ?
-                languages[profile.settings.interface_language]
+            return typeof languageNames[profile.settings.interface_language] === 'string' ?
+                languageNames[profile.settings.interface_language]
                 :
                 profile.settings.interface_language;
         },
@@ -32,14 +32,14 @@ const useProfileSettingsInputs = (profile) => {
         }
     }), [profile.settings]);
     const subtitlesLanguageSelect = React.useMemo(() => ({
-        options: Object.keys(languages).map((code) => ({
+        options: Object.keys(languageNames).map((code) => ({
             value: code,
-            label: languages[code]
+            label: languageNames[code]
         })),
         selected: [profile.settings.subtitles_language],
         renderLabelText: () => {
-            return typeof languages[profile.settings.subtitles_language] === 'string' ?
-                languages[profile.settings.subtitles_language]
+            return typeof languageNames[profile.settings.subtitles_language] === 'string' ?
+                languageNames[profile.settings.subtitles_language]
                 :
                 profile.settings.subtitles_language;
         },

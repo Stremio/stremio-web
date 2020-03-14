@@ -2,7 +2,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
-const { Button, ColorInput } = require('stremio/common');
+const { Button, ColorInput, languageNames } = require('stremio/common');
 const DiscreteSelectInput = require('./DiscreteSelectInput');
 const styles = require('./styles');
 
@@ -120,8 +120,8 @@ const SubtitlesPicker = (props) => {
                         }
                     </Button>
                     {languages.map((lang, index) => (
-                        <Button key={index} title={lang} className={classnames(styles['language-option'], { 'selected': selectedLanguage === lang })} data-lang={lang} onClick={languageOnClick}>
-                            <div className={styles['language-label']}>{lang}</div>
+                        <Button key={index} title={typeof languageNames[lang] === 'string' ? languageNames[lang] : lang} className={classnames(styles['language-option'], { 'selected': selectedLanguage === lang })} data-lang={lang} onClick={languageOnClick}>
+                            <div className={styles['language-label']}>{typeof languageNames[lang] === 'string' ? languageNames[lang] : lang}</div>
                             {
                                 selectedLanguage === lang ?
                                     <div className={styles['icon']} />
