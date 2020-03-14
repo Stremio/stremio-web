@@ -101,7 +101,6 @@ const Player = ({ urlParams }) => {
         if (!event.nativeEvent.subtitlesPickerClosePrevented) {
             closeSubtitlesPicker();
         }
-
         if (!event.nativeEvent.metaPreviewClosePrevented) {
             closeMetaPreview();
         }
@@ -276,6 +275,8 @@ const Player = ({ urlParams }) => {
                 }
                 backButton={true}
                 fullscreenButton={true}
+                onMouseMove={onBarMouseMove}
+                onMouseOver={onBarMouseMove}
             />
             <ControlBar
                 className={classnames(styles['layer'], styles['control-bar-layer'])}

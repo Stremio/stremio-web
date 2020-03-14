@@ -9,7 +9,7 @@ const SearchBar = require('./SearchBar');
 const NavMenu = require('./NavMenu');
 const styles = require('./styles');
 
-const HorizontalNavBar = React.memo(({ className, route, query, title, backButton, searchBar, addonsButton, fullscreenButton, navMenu }) => {
+const HorizontalNavBar = React.memo(({ className, route, query, title, backButton, searchBar, addonsButton, fullscreenButton, navMenu, ...props }) => {
     const backButtonOnClick = React.useCallback(() => {
         window.history.back();
     }, []);
@@ -21,7 +21,7 @@ const HorizontalNavBar = React.memo(({ className, route, query, title, backButto
         </Button>
     ), []);
     return (
-        <nav className={classnames(className, styles['horizontal-nav-bar-container'])}>
+        <nav {...props} className={classnames(className, styles['horizontal-nav-bar-container'])}>
             {
                 backButton ?
                     <Button className={classnames(styles['button-container'], styles['back-button-container'])} tabIndex={-1} onClick={backButtonOnClick}>
