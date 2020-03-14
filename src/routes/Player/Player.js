@@ -33,7 +33,7 @@ const Player = ({ urlParams }) => {
     const player = usePlayer(urlParams);
     const [subtitlesSettings, updateSubtitlesSettings] = useSubtitlesSettings();
     const routeFocused = useRouteFocused();
-    const [fullscreen, requestFullscreen, exitFullscreen] = useFullscreen();
+    const [, , , toggleFullscreen] = useFullscreen();
     const [immersed, setImmersed] = React.useState(true);
     const setImmersedDebounced = React.useCallback(debounce(setImmersed, 3000), []);
     const [subtitlesPickerOpen, , closeSubtitlesPicker, toggleSubtitlesPicker] = useBinaryState(false);
@@ -169,7 +169,7 @@ const Player = ({ urlParams }) => {
         const onKeyDown = (event) => {
             switch (event.key) {
                 case ' ': {
-                    if (videoState.paused !== null) {
+                    if (!subtitlesPickerOpen && !metaPreviewOpen && videoState.paused !== null) {
                         if (videoState.paused) {
                             onPlayRequested();
                         } else {
@@ -180,42 +180,61 @@ const Player = ({ urlParams }) => {
                     break;
                 }
                 case 'ArrowRight': {
-                    if (videoState.time !== null) {
+                    if (!subtitlesPickerOpen && !metaPreviewOpen && videoState.time !== null) {
                         onSeekRequested(videoState.time + 15000);
                     }
 
                     break;
                 }
                 case 'ArrowLeft': {
-                    if (videoState.time !== null) {
+                    if (!subtitlesPickerOpen && !metaPreviewOpen && videoState.time !== null) {
                         onSeekRequested(videoState.time - 15000);
                     }
 
                     break;
                 }
                 case 'ArrowUp': {
-                    if (videoState.volume !== null) {
+                    if (!subtitlesPickerOpen && !metaPreviewOpen && videoState.volume !== null) {
                         onVolumeChangeRequested(videoState.volume + 5);
                     }
 
                     break;
                 }
                 case 'ArrowDown': {
-                    if (videoState.volume !== null) {
+                    if (!subtitlesPickerOpen && !metaPreviewOpen && videoState.volume !== null) {
                         onVolumeChangeRequested(videoState.volume - 5);
                     }
 
                     break;
                 }
+                case 's': {
+                    closeMetaPreview();
+                    toggleSubtitlesPicker();
+                    break;
+                }
+                case 'm': {
+                    closeSubtitlesPicker();
+                    toggleMetaPreview();
+                    break;
+                }
+                case 'f': {
+                    toggleFullscreen();
+                    break;
+                }
+                case 'Escape': {
+                    closeSubtitlesPicker();
+                    closeMetaPreview();
+                    break;
+                }
             }
         };
-        if (routeFocused && !subtitlesPickerOpen && !metaPreviewOpen) {
+        if (routeFocused) {
             window.addEventListener('keydown', onKeyDown);
         }
         return () => {
             window.removeEventListener('keydown', onKeyDown);
         };
-    }, [routeFocused, subtitlesPickerOpen, metaPreviewOpen, videoState.paused, videoState.time, videoState.volume]);
+    }, [routeFocused, subtitlesPickerOpen, metaPreviewOpen, videoState.paused, videoState.time, videoState.volume, toggleSubtitlesPicker, toggleMetaPreview, toggleFullscreen]);
     React.useEffect(() => {
         return () => {
             setImmersedDebounced.cancel();
@@ -239,7 +258,7 @@ const Player = ({ urlParams }) => {
             <div
                 className={styles['layer']}
                 onClick={onVideoClick}
-                onDoubleClick={fullscreen ? exitFullscreen : requestFullscreen}
+                onDoubleClick={toggleFullscreen}
             />
             {
                 videoState.buffering ?
