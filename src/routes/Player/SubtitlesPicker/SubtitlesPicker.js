@@ -54,9 +54,11 @@ const SubtitlesPicker = (props) => {
     }, [props.tracks, props.selectedTrackId]);
     const tracksForLanguage = React.useMemo(() => {
         return Array.isArray(props.tracks) ?
-            props.tracks.filter(({ lang }) => {
-                return lang === selectedLanguage;
-            })
+            props.tracks
+                .filter(({ lang }) => {
+                    return lang === selectedLanguage;
+                })
+                .sort((t1, t2) => comparatorWithPriorities(ORIGIN_PRIORITIES)(t1.origin, t2.origin))
             :
             [];
     }, [props.tracks, selectedLanguage]);
