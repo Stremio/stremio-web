@@ -1,8 +1,6 @@
 const React = require('react');
 const { useServices } = require('stremio/services');
-const { languageNames } = require('stremio/common');
-
-const SUBTITLES_SIZES = [75, 100, 125, 150, 175, 200, 250];
+const { CONSTANTS, languageNames } = require('stremio/common');
 
 const useProfileSettingsInputs = (profile) => {
     const { core } = useServices();
@@ -57,7 +55,7 @@ const useProfileSettingsInputs = (profile) => {
         }
     }), [profile.settings]);
     const subtitlesSizeSelect = React.useMemo(() => ({
-        options: SUBTITLES_SIZES.map((size) => ({
+        options: CONSTANTS.SUBTITLES_SIZES.map((size) => ({
             value: `${size}`,
             label: `${size}%`
         })),

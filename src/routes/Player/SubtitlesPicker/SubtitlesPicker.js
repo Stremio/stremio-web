@@ -1,12 +1,10 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const Icon = require('stremio-icons/dom');
-const { Button, ColorInput, languageNames } = require('stremio/common');
+const { Button, CONSTANTS, languageNames } = require('stremio/common');
 const DiscreteSelectInput = require('./DiscreteSelectInput');
 const styles = require('./styles');
 
-const SUBTITLES_SIZES = [75, 100, 125, 150, 175, 200, 250];
 const ORIGIN_PRIORITIES = {
     'EMBEDDED': 1
 };
@@ -92,9 +90,9 @@ const SubtitlesPicker = (props) => {
     }, [props.delay, props.onDelayChanged]);
     const onSizeChanged = React.useCallback((event) => {
         if (props.size !== null && !isNaN(props.size)) {
-            const sizeIndex = SUBTITLES_SIZES.indexOf(props.size);
+            const sizeIndex = CONSTANTS.SUBTITLES_SIZES.indexOf(props.size);
             const delta = event.value === 'increment' ? 1 : -1;
-            const size = SUBTITLES_SIZES[Math.max(0, Math.min(SUBTITLES_SIZES.length, sizeIndex + delta))];
+            const size = CONSTANTS.SUBTITLES_SIZES[Math.max(0, Math.min(CONSTANTS.SUBTITLES_SIZES.length, sizeIndex + delta))];
             if (typeof props.onSizeChanged === 'function') {
                 props.onSizeChanged(size);
             }
