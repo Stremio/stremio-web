@@ -3,7 +3,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const debounce = require('lodash.debounce');
 const { useRouteFocused } = require('stremio-router');
-const { HorizontalNavBar, useDeepEqualEffect, useBinaryState } = require('stremio/common');
+const { HorizontalNavBar, useDeepEqualEffect, useFullscreen, useBinaryState } = require('stremio/common');
 const BufferingLoader = require('./BufferingLoader');
 const ControlBar = require('./ControlBar');
 const SubtitlesPicker = require('./SubtitlesPicker');
@@ -33,6 +33,7 @@ const Player = ({ urlParams }) => {
     const player = usePlayer(urlParams);
     const [subtitlesSettings, updateSubtitlesSettings] = useSubtitlesSettings();
     const routeFocused = useRouteFocused();
+    const [fullscreen, requestFullscreen, exitFullscreen] = useFullscreen();
     const [immersed, setImmersed] = React.useState(true);
     const setImmersedDebounced = React.useCallback(debounce(setImmersed, 3000), []);
     const [subtitlesPickerOpen, , closeSubtitlesPicker, toggleSubtitlesPicker] = useBinaryState(false);
@@ -230,7 +231,11 @@ const Player = ({ urlParams }) => {
                 onPropChanged={onPropChanged}
                 onImplementationChanged={onImplementationChanged}
             />
-            <div className={styles['layer']} onClick={onVideoClick} />
+            <div
+                className={styles['layer']}
+                onClick={onVideoClick}
+                onDoubleClick={fullscreen ? exitFullscreen : requestFullscreen}
+            />
             {
                 videoState.buffering ?
                     <BufferingLoader className={styles['layer']} />
