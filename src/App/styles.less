@@ -9,7 +9,7 @@
 :root {
     --landscape-shape-ratio: 0.5625;
     --poster-shape-ratio: 1.464;
-    --scroll-bar-width: 6px;
+    --scroll-bar-size: 6px;
     --horizontal-nav-bar-size: 4rem;
     --vertical-nav-bar-size: 5.2rem;
     --focus-outline-size: 2px;
@@ -40,7 +40,8 @@
 }
 
 ::-webkit-scrollbar {
-    width: var(--scroll-bar-width);
+    width: var(--scroll-bar-size);
+    height: var(--scroll-bar-size);
 }
 
 ::-webkit-scrollbar-thumb {
@@ -90,7 +91,7 @@ html {
                 pointer-events: none;
 
                 &::-webkit-scrollbar {
-                    width: var(--scroll-bar-width);
+                    width: var(--scroll-bar-size);
                 }
             }
 
