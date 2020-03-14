@@ -8,6 +8,13 @@ const useFullscreen = () => {
     const exitFullscreen = React.useCallback(() => {
         document.exitFullscreen();
     }, []);
+    const toggleFullscreen = React.useCallback(() => {
+        if (fullscreen) {
+            exitFullscreen();
+        } else {
+            requestFullscreen();
+        }
+    }, [fullscreen]);
     React.useEffect(() => {
         const onFullscreenChange = () => {
             setFullscreen(document.fullscreenElement instanceof HTMLElement);
@@ -17,7 +24,7 @@ const useFullscreen = () => {
             document.removeEventListener('fullscreenchange', onFullscreenChange);
         };
     }, []);
-    return [fullscreen, requestFullscreen, exitFullscreen];
+    return [fullscreen, requestFullscreen, exitFullscreen, toggleFullscreen];
 };
 
 module.exports = useFullscreen;
