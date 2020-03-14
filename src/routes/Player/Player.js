@@ -57,7 +57,7 @@ const Player = ({ urlParams }) => {
         dispatch({ propName: 'subtitlesBackgroundColor', propValue: subtitlesSettings.background_color });
         dispatch({ propName: 'subtitlesOutlineColor', propValue: subtitlesSettings.outline_color });
         dispatch({ propName: 'subtitlesOffset', propValue: subtitlesSettings.offset });
-    }, [subtitlesSettings.size, subtitlesSettings.text_color, subtitlesSettings.background_color, subtitlesSettings.outline_color]);
+    }, [subtitlesSettings.size, subtitlesSettings.text_color, subtitlesSettings.background_color, subtitlesSettings.outline_color, subtitlesSettings.offset]);
     const onPropChanged = React.useCallback((propName, propValue) => {
         setVideoState({ [propName]: propValue });
     }, []);
