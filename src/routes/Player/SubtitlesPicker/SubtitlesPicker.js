@@ -11,7 +11,7 @@ const ORIGIN_PRIORITIES = {
     'EMBEDDED': 1
 };
 const LANGUAGE_PRIORITIES = {
-    'English': 1
+    'eng': 1
 };
 
 const comparatorWithPriorities = (priorities) => {
