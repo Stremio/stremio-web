@@ -1,7 +1,7 @@
 const React = require('react');
 
 const useFullscreen = () => {
-    const [fullscreen, setFullscreen] = React.useState(document.fullscreenElement instanceof HTMLElement);
+    const [fullscreen, setFullscreen] = React.useState(document.fullscreenElement === document.documentElement);
     const requestFullscreen = React.useCallback(() => {
         document.documentElement.requestFullscreen();
     }, []);
@@ -17,7 +17,7 @@ const useFullscreen = () => {
     }, [fullscreen]);
     React.useEffect(() => {
         const onFullscreenChange = () => {
-            setFullscreen(document.fullscreenElement instanceof HTMLElement);
+            setFullscreen(document.fullscreenElement === document.documentElement);
         };
         document.addEventListener('fullscreenchange', onFullscreenChange);
         return () => {
