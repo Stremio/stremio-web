@@ -28,13 +28,15 @@ const comparatorWithPriorities = (priorities) => {
 const SubtitlesPicker = (props) => {
     const languages = React.useMemo(() => {
         return Array.isArray(props.tracks) ?
-            props.tracks.reduce((languages, { lang }) => {
-                if (!languages.includes(lang)) {
-                    languages.push(lang);
-                }
+            props.tracks
+                .reduce((languages, { lang }) => {
+                    if (!languages.includes(lang)) {
+                        languages.push(lang);
+                    }
 
-                return languages;
-            }, [])
+                    return languages;
+                }, [])
+                .sort(comparatorWithPriorities(LANGUAGE_PRIORITIES))
             :
             [];
     }, [props.tracks]);
