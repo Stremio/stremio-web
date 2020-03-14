@@ -1,6 +1,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
+const MetaPreviewButton = require('./MetaPreviewButton');
 const MuteButton = require('./MuteButton');
 const PlayPauseButton = require('./PlayPauseButton');
 const SeekBar = require('./SeekBar');
@@ -17,6 +18,7 @@ const ControlBar = ({
     volume,
     muted,
     subtitlesTracks,
+    metaResource,
     onPlayRequested,
     onPauseRequested,
     onMuteRequested,
@@ -24,6 +26,7 @@ const ControlBar = ({
     onVolumeChangeRequested,
     onSeekRequested,
     onToggleSubtitlesPicker,
+    onToggleMetaPreview,
     ...props
 }) => {
     return (
@@ -59,6 +62,11 @@ const ControlBar = ({
                     subtitlesTracks={subtitlesTracks}
                     onToggleSubtitlesPicker={onToggleSubtitlesPicker}
                 />
+                <MetaPreviewButton
+                    className={styles['control-bar-button']}
+                    metaResource={metaResource}
+                    onToggleMetaPreview={onToggleMetaPreview}
+                />
                 <ShareButton className={styles['control-bar-button']} />
             </div>
         </div>
@@ -73,13 +81,15 @@ ControlBar.propTypes = {
     volume: PropTypes.any,
     muted: PropTypes.any,
     subtitlesTracks: PropTypes.any,
+    metaResource: PropTypes.any,
     onPlayRequested: PropTypes.any,
     onPauseRequested: PropTypes.any,
     onMuteRequested: PropTypes.any,
     onUnmuteRequested: PropTypes.any,
     onVolumeChangeRequested: PropTypes.any,
     onSeekRequested: PropTypes.any,
-    onToggleSubtitlesPicker: PropTypes.any
+    onToggleSubtitlesPicker: PropTypes.any,
+    onToggleMetaPreview: PropTypes.any
 };
 
 module.exports = ControlBar;

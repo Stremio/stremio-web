@@ -37,6 +37,7 @@ const Player = ({ urlParams }) => {
     const [immersed, setImmersed] = React.useState(true);
     const setImmersedDebounced = React.useCallback(debounce(setImmersed, 3000), []);
     const [subtitlesPickerOpen, , closeSubtitlesPicker, toggleSubtitlesPicker] = useBinaryState(false);
+    const [metaPreviewOpen, , closeMetaPreview, toggleMetaPreview] = useBinaryState(false);
     const [videoState, setVideoState] = React.useReducer((videoState, nextVideoState) => ({
         ...videoState,
         ...nextVideoState
@@ -99,6 +100,10 @@ const Player = ({ urlParams }) => {
     const onContainerMouseDown = React.useCallback((event) => {
         if (!event.nativeEvent.subtitlesPickerClosePrevented) {
             closeSubtitlesPicker();
+        }
+
+        if (!event.nativeEvent.metaPreviewClosePrevented) {
+            closeMetaPreview();
         }
     }, []);
     const onContainerMouseMove = React.useCallback((event) => {
@@ -204,20 +209,20 @@ const Player = ({ urlParams }) => {
                 }
             }
         };
-        if (routeFocused && !subtitlesPickerOpen) {
+        if (routeFocused && !subtitlesPickerOpen && !metaPreviewOpen) {
             window.addEventListener('keydown', onKeyDown);
         }
         return () => {
             window.removeEventListener('keydown', onKeyDown);
         };
-    }, [routeFocused, subtitlesPickerOpen, videoState.paused, videoState.time, videoState.volume]);
+    }, [routeFocused, subtitlesPickerOpen, metaPreviewOpen, videoState.paused, videoState.time, videoState.volume]);
     React.useEffect(() => {
         return () => {
             setImmersedDebounced.cancel();
         };
     }, []);
     return (
-        <div className={classnames(styles['player-container'], { [styles['immersed']]: immersed && videoState.paused !== null && !videoState.paused && !subtitlesPickerOpen })}
+        <div className={classnames(styles['player-container'], { [styles['immersed']]: immersed && videoState.paused !== null && !videoState.paused && !subtitlesPickerOpen && !metaPreviewOpen })}
             onMouseDown={onContainerMouseDown}
             onMouseMove={onContainerMouseMove}
             onMouseOver={onContainerMouseMove}
@@ -261,6 +266,7 @@ const Player = ({ urlParams }) => {
                 volume={videoState.volume}
                 muted={videoState.muted}
                 subtitlesTracks={videoState.subtitlesTracks}
+                metaResource={player.meta_resource}
                 onPlayRequested={onPlayRequested}
                 onPauseRequested={onPauseRequested}
                 onMuteRequested={onMuteRequested}
@@ -268,6 +274,7 @@ const Player = ({ urlParams }) => {
                 onVolumeChangeRequested={onVolumeChangeRequested}
                 onSeekRequested={onSeekRequested}
                 onToggleSubtitlesPicker={toggleSubtitlesPicker}
+                onToggleMetaPreview={toggleMetaPreview}
                 onMouseMove={onBarMouseMove}
                 onMouseOver={onBarMouseMove}
             />
@@ -288,6 +295,14 @@ const Player = ({ urlParams }) => {
                         onSizeChanged={onSubtitlesSizeChanged}
                         onOffsetChanged={onSubtitlesOffsetChanged}
                     />
+                    :
+                    null
+            }
+            {
+                metaPreviewOpen ?
+                    <div className={classnames(styles['layer'], styles['menu-layer'])} onMouseDown={(event) => event.nativeEvent.metaPreviewClosePrevented = true}>
+                        <div style={{ width: 300, height: 800, background: 'red' }} />
+                    </div>
                     :
                     null
             }
