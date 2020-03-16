@@ -114,6 +114,10 @@ const Player = ({ urlParams }) => {
             setImmersedDebounced.cancel();
         }
     }, []);
+    const onContainerMouseLeave = React.useCallback(() => {
+        setImmersedDebounced.cancel();
+        setImmersed(true);
+    }, []);
     const onBarMouseMove = React.useCallback((event) => {
         event.nativeEvent.immersePrevented = true;
     }, []);
@@ -246,7 +250,7 @@ const Player = ({ urlParams }) => {
             onMouseDown={onContainerMouseDown}
             onMouseMove={onContainerMouseMove}
             onMouseOver={onContainerMouseMove}
-            onMouseLeave={onContainerMouseMove}>
+            onMouseLeave={onContainerMouseLeave}>
             <Video
                 ref={videoRef}
                 className={styles['layer']}
