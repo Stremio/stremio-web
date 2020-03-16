@@ -254,17 +254,17 @@ const Player = ({ urlParams }) => {
                 onPropChanged={onPropChanged}
                 onImplementationChanged={onImplementationChanged}
             />
-            <div
-                className={styles['layer']}
-                onClick={onVideoClick}
-                onDoubleClick={toggleFullscreen}
-            />
             {
                 videoState.buffering ?
                     <BufferingLoader className={styles['layer']} />
                     :
                     null
             }
+            <div
+                className={styles['layer']}
+                onClick={onVideoClick}
+                onDoubleClick={toggleFullscreen}
+            />
             <HorizontalNavBar
                 className={classnames(styles['layer'], styles['nav-bar-layer'])}
                 title={
