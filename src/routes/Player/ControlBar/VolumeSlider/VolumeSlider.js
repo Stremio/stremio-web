@@ -16,7 +16,10 @@ const VolumeSlider = ({ className, volume, onVolumeChangeRequested }) => {
     const onSlide = React.useCallback((volume) => {
         resetVolumeDebounced.cancel();
         setSlidingVolume(volume);
-    }, []);
+        if (typeof onVolumeChangeRequested === 'function') {
+            onVolumeChangeRequested(volume);
+        }
+    }, [onVolumeChangeRequested]);
     const onComplete = React.useCallback((volume) => {
         resetVolumeDebounced();
         setSlidingVolume(volume);
