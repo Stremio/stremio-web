@@ -1,24 +1,54 @@
+@import (reference) '~stremio-colors/dist/less/stremio-colors.less';
+
+:import('~stremio/common/Multiselect/styles.less') {
+    season-label: label;
+    season-icon: icon;
+}
+
 .seasons-bar-container {
     display: flex;
     flex-direction: row;
     overflow: visible;
+    background: @color-background-dark3-80;
 
     .prev-season-button, .next-season-button {
         flex: none;
-        width: 4rem;
-        height: 4rem;
-        padding: 1rem;
-        background-color: var(--color-surfacedarker60);
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        width: 6.5rem;
+        padding: 0.5rem;
 
-        &:hover, &:focus {
-            background-color: var(--color-surfacedarker);
+        &:hover {
+            .label {
+                color: @color-surface-dark1;
+            }
+
+            .icon {
+                fill: @color-surface-dark3;
+            }
+        }
+
+        &:focus {
+            outline: none;
+            background-color: @color-surface-light5-10;
+        }
+
+        &>:first-child {
+            margin-right: 1rem;
+        }
+
+        .label {
+            max-height: 1.2em;
+            color: @color-surface-dark3-90;
         }
 
         .icon {
             display: block;
-            width: 100%;
-            height: 100%;
-            fill: var(--color-surfacelighter);
+            width: 1.5rem;
+            height: 1.5rem;
+            fill: @color-surface-dark5;
         }
     }
 
@@ -28,26 +58,29 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        margin: 0 1rem;
-        background-color: var(--color-surfacedarker60);
+        margin: 0 2rem;
+        background-color: unset;
         overflow: visible;
 
         &:hover, &:focus {
-            background-color: var(--color-surfacedarker);
+            background-color: @color-background-dark1;
+
+            .season-icon {
+                fill: @color-surface-dark3;
+            }
         }
 
         &:global(.active) {
-            background-color: var(--color-surfacedark);
+            background-color: @color-background;
         }
 
         .season-label {
-            flex-grow: 0;
-            flex-shrink: 1;
-            flex-basis: auto;
-            max-height: 3.6em;
-            padding: 0 0.2rem;
-            font-size: 1.1rem;
-            color: var(--color-surfacelighter);
+            flex: none;
+            color: @color-surface-light5-90;
+        }
+
+        .season-icon {
+            fill: @color-surface-dark5;
         }
     }
 }
