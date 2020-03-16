@@ -353,7 +353,7 @@ function HTMLVideo(options) {
     function command(commandName, commandArgs) {
         switch (commandName) {
             case 'addSubtitlesTracks': {
-                if (loaded) {
+                if (loaded && commandArgs) {
                     subtitles.addTracks(commandArgs.tracks);
                 }
 
@@ -372,15 +372,18 @@ function HTMLVideo(options) {
                 break;
             }
             case 'load': {
-                command('stop');
-                videoElement.autoplay = commandArgs.autoplay !== false;
-                videoElement.currentTime = !isNaN(commandArgs.time) && commandArgs.time !== null ? parseInt(commandArgs.time) / 1000 : 0;
-                videoElement.src = commandArgs.stream.url;
-                loaded = true;
-                onVideoPropChanged('paused');
-                onVideoPropChanged('currentTime');
-                onVideoPropChanged('duration');
-                onVideoPropChanged('readyState');
+                if (commandArgs && commandArgs.stream && typeof commandArgs.stream.url === 'string') {
+                    command('stop');
+                    videoElement.autoplay = commandArgs.autoplay !== false;
+                    videoElement.currentTime = !isNaN(commandArgs.time) && commandArgs.time !== null ? parseInt(commandArgs.time) / 1000 : 0;
+                    videoElement.src = commandArgs.stream.url;
+                    loaded = true;
+                    onVideoPropChanged('paused');
+                    onVideoPropChanged('currentTime');
+                    onVideoPropChanged('duration');
+                    onVideoPropChanged('readyState');
+                }
+
                 break;
             }
             case 'destroy': {
@@ -424,7 +427,7 @@ function HTMLVideo(options) {
 
         if (args) {
             if (typeof args.commandName === 'string') {
-                command(args.commandName, args.commandArgs || {});
+                command(args.commandName, args.commandArgs);
                 return;
             } else if (typeof args.propName === 'string') {
                 setProp(args.propName, args.propValue);
