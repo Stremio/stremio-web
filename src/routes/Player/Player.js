@@ -3,7 +3,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const debounce = require('lodash.debounce');
 const { useRouteFocused } = require('stremio-router');
-const { HorizontalNavBar, useDeepEqualEffect, useFullscreen, useBinaryState } = require('stremio/common');
+const { HorizontalNavBar, useDeepEqualEffect, useFullscreen, useBinaryState, useProfile } = require('stremio/common');
 const BufferingLoader = require('./BufferingLoader');
 const ControlBar = require('./ControlBar');
 const SubtitlesPicker = require('./SubtitlesPicker');
@@ -32,6 +32,7 @@ const INITIAL_VIDEO_STATE = {
 const Player = ({ urlParams }) => {
     const player = usePlayer(urlParams);
     const [subtitlesSettings, updateSubtitlesSettings] = useSubtitlesSettings();
+    const profile = useProfile();
     const routeFocused = useRouteFocused();
     const [, , , toggleFullscreen] = useFullscreen();
     const [immersed, setImmersed] = React.useState(true);
@@ -132,7 +133,8 @@ const Player = ({ urlParams }) => {
             dispatch({
                 commandName: 'load',
                 commandArgs: {
-                    stream: player.selected.stream
+                    stream: player.selected.stream,
+                    streamingServerUrl: profile.settings.streaming_server_url
                 }
             });
         }
