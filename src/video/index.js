@@ -1,9 +1,11 @@
-const HTMLVideo = require('./HTMLVideo');
-const MPVVideo = require('./MPVVideo');
-const YouTubeVideo = require('./YouTubeVideo');
+var HTMLVideo = require('./HTMLVideo');
+var MPVVideo = require('./MPVVideo');
+var YouTubeVideo = require('./YouTubeVideo');
+var withStreamingServer = require('./withStreamingServer');
 
 module.exports = {
     HTMLVideo,
     MPVVideo,
-    YouTubeVideo
+    YouTubeVideo,
+    withStreamingServer
 };
