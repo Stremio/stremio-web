@@ -2,9 +2,11 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const FocusLock = require('react-focus-lock').default;
+const { useRouteFocused } = require('stremio-router');
 const styles = require('./styles');
 
 const Popup = ({ open, direction, renderLabel, renderMenu, dataset, onCloseRequest, ...props }) => {
+    const routeFocused = useRouteFocused();
     const labelRef = React.useRef(null);
     const menuRef = React.useRef(null);
     const [autoDirection, setAutoDirection] = React.useState(null);
@@ -36,7 +38,7 @@ const Popup = ({ open, direction, renderLabel, renderMenu, dataset, onCloseReque
                 }
             }
         };
-        if (open) {
+        if (routeFocused && open) {
             window.addEventListener('resize', onCloseEvent);
             window.addEventListener('keydown', onCloseEvent);
             window.addEventListener('mousedown', onCloseEvent);
@@ -46,7 +48,7 @@ const Popup = ({ open, direction, renderLabel, renderMenu, dataset, onCloseReque
             window.removeEventListener('keydown', onCloseEvent);
             window.removeEventListener('mousedown', onCloseEvent);
         };
-    }, [open, onCloseRequest, dataset]);
+    }, [routeFocused, open, onCloseRequest, dataset]);
     React.useLayoutEffect(() => {
         if (open) {
             const autoDirection = [];
