@@ -3,13 +3,13 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const debounce = require('lodash.debounce');
 const { useRouteFocused } = require('stremio-router');
-const { HorizontalNavBar, useDeepEqualEffect, useFullscreen, useBinaryState, useProfile } = require('stremio/common');
+const { HorizontalNavBar, useDeepEqualEffect, useFullscreen, useBinaryState } = require('stremio/common');
 const BufferingLoader = require('./BufferingLoader');
 const ControlBar = require('./ControlBar');
 const SubtitlesPicker = require('./SubtitlesPicker');
 const Video = require('./Video');
 const usePlayer = require('./usePlayer');
-const useSubtitlesSettings = require('./useSubtitlesSettings');
+const useSettings = require('./useSettings');
 const styles = require('./styles');
 
 const INITIAL_VIDEO_STATE = {
@@ -31,8 +31,7 @@ const INITIAL_VIDEO_STATE = {
 
 const Player = ({ urlParams }) => {
     const player = usePlayer(urlParams);
-    const [subtitlesSettings, updateSubtitlesSettings] = useSubtitlesSettings();
-    const profile = useProfile();
+    const [settings, updateSettings] = useSettings();
     const routeFocused = useRouteFocused();
     const [, , , toggleFullscreen] = useFullscreen();
     const [immersed, setImmersed] = React.useState(true);
@@ -53,12 +52,12 @@ const Player = ({ urlParams }) => {
         manifest.props.forEach((propName) => {
             dispatch({ observedPropName: propName });
         });
-        dispatch({ propName: 'subtitlesSize', propValue: subtitlesSettings.size });
-        dispatch({ propName: 'subtitlesTextColor', propValue: subtitlesSettings.text_color });
-        dispatch({ propName: 'subtitlesBackgroundColor', propValue: subtitlesSettings.background_color });
-        dispatch({ propName: 'subtitlesOutlineColor', propValue: subtitlesSettings.outline_color });
-        dispatch({ propName: 'subtitlesOffset', propValue: subtitlesSettings.offset });
-    }, [subtitlesSettings.size, subtitlesSettings.text_color, subtitlesSettings.background_color, subtitlesSettings.outline_color, subtitlesSettings.offset]);
+        dispatch({ propName: 'subtitlesSize', propValue: settings.subtitles_size });
+        dispatch({ propName: 'subtitlesTextColor', propValue: settings.subtitles_text_color });
+        dispatch({ propName: 'subtitlesBackgroundColor', propValue: settings.subtitles_background_color });
+        dispatch({ propName: 'subtitlesOutlineColor', propValue: settings.subtitles_outline_color });
+        dispatch({ propName: 'subtitlesOffset', propValue: settings.subtitles_offset });
+    }, [settings.subtitles_size, settings.subtitles_text_color, settings.subtitles_background_color, settings.subtitles_outline_color, settings.subtitles_offset]);
     const onPropChanged = React.useCallback((propName, propValue) => {
         setVideoState({ [propName]: propValue });
     }, []);
@@ -93,11 +92,11 @@ const Player = ({ urlParams }) => {
         dispatch({ propName: 'subtitlesDelay', propValue: delay });
     }, []);
     const onSubtitlesSizeChanged = React.useCallback((size) => {
-        updateSubtitlesSettings({ subtitles_size: size });
-    }, []);
+        updateSettings({ subtitles_size: size });
+    }, [updateSettings]);
     const onSubtitlesOffsetChanged = React.useCallback((offset) => {
-        updateSubtitlesSettings({ subtitles_offset: offset });
-    }, []);
+        updateSettings({ subtitles_offset: offset });
+    }, [updateSettings]);
     const onContainerMouseDown = React.useCallback((event) => {
         if (!event.nativeEvent.subtitlesPickerClosePrevented) {
             closeSubtitlesPicker();
@@ -138,7 +137,7 @@ const Player = ({ urlParams }) => {
                 commandName: 'load',
                 commandArgs: {
                     stream: player.selected.stream,
-                    streamingServerUrl: profile.settings.streaming_server_url
+                    streamingServerUrl: settings.streaming_server_url
                 }
             });
         }
@@ -156,20 +155,20 @@ const Player = ({ urlParams }) => {
         });
     }, [player.subtitles_resources]);
     React.useEffect(() => {
-        dispatch({ propName: 'subtitlesSize', propValue: subtitlesSettings.size });
-    }, [subtitlesSettings.size]);
+        dispatch({ propName: 'subtitlesSize', propValue: settings.subtitles_size });
+    }, [settings.subtitles_size]);
     React.useEffect(() => {
-        dispatch({ propName: 'subtitlesTextColor', propValue: subtitlesSettings.text_color });
-    }, [subtitlesSettings.text_color]);
+        dispatch({ propName: 'subtitlesTextColor', propValue: settings.subtitles_text_color });
+    }, [settings.subtitles_text_color]);
     React.useEffect(() => {
-        dispatch({ propName: 'subtitlesBackgroundColor', propValue: subtitlesSettings.background_color });
-    }, [subtitlesSettings.background_color]);
+        dispatch({ propName: 'subtitlesBackgroundColor', propValue: settings.subtitles_background_color });
+    }, [settings.subtitles_background_color]);
     React.useEffect(() => {
-        dispatch({ propName: 'subtitlesOutlineColor', propValue: subtitlesSettings.outline_color });
-    }, [subtitlesSettings.outline_color]);
+        dispatch({ propName: 'subtitlesOutlineColor', propValue: settings.subtitles_outline_color });
+    }, [settings.subtitles_outline_color]);
     React.useEffect(() => {
-        dispatch({ propName: 'subtitlesOffset', propValue: subtitlesSettings.offset });
-    }, [subtitlesSettings.offset]);
+        dispatch({ propName: 'subtitlesOffset', propValue: settings.subtitles_offset });
+    }, [settings.subtitles_offset]);
     React.useEffect(() => {
         const onKeyDown = (event) => {
             switch (event.key) {
