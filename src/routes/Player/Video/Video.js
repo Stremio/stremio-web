@@ -39,6 +39,7 @@ const Video = React.forwardRef(({ className, ...props }, ref) => {
             try {
                 videoRef.current.dispatch(args);
             } catch (e) {
+                // eslint-disable-next-line no-console
                 console.error(videoRef.current.constructor.manifest.name, e);
             }
         }
