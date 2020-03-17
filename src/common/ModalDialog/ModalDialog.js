@@ -1,15 +1,16 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const { useModalsContainer } = require('stremio/router');
+const { useRouteFocused, useModalsContainer } = require('stremio-router');
 const Button = require('stremio/common/Button');
 const Icon = require('stremio-icons/dom');
 const { Modal } = require('stremio-router');
 const styles = require('./styles');
 
 const ModalDialog = ({ className, title, buttons, children, dataset, onCloseRequest, ...props }) => {
-    const modalContainerRef = React.useRef(null);
+    const routeFocused = useRouteFocused();
     const modalsContainer = useModalsContainer();
+    const modalContainerRef = React.useRef(null);
     const closeButtonOnClick = React.useCallback((event) => {
         if (typeof onCloseRequest === 'function') {
             onCloseRequest({
@@ -46,11 +47,13 @@ const ModalDialog = ({ className, title, buttons, children, dataset, onCloseRequ
                 }
             }
         };
-        window.addEventListener('keydown', onKeyDown);
+        if (routeFocused) {
+            window.addEventListener('keydown', onKeyDown);
+        }
         return () => {
             window.removeEventListener('keydown', onKeyDown);
         };
-    }, [dataset, onCloseRequest]);
+    }, [routeFocused, dataset, onCloseRequest]);
     return (
         <Modal ref={modalContainerRef} {...props} className={classnames(className, styles['modal-container'])} onMouseDown={onModalContainerMouseDown}>
             <div className={styles['modal-dialog-container']} onMouseDown={onModalDialogContainerMouseDown}>
