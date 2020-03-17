@@ -6,7 +6,8 @@ const DiscreteSelectInput = require('./DiscreteSelectInput');
 const styles = require('./styles');
 
 const ORIGIN_PRIORITIES = {
-    'EMBEDDED': 1
+    'EMBEDDED': 1,
+    'Stream': 2
 };
 const LANGUAGE_PRIORITIES = {
     'eng': 1
@@ -65,13 +66,16 @@ const SubtitlesPicker = (props) => {
     }, []);
     const languageOnClick = React.useCallback((event) => {
         const trackId = Array.isArray(props.tracks) ?
-            props.tracks.reduceRight((trackId, track) => {
-                if (track.lang === event.currentTarget.dataset.lang) {
-                    return track.id;
-                }
+            props.tracks
+                .slice()
+                .sort((t1, t2) => comparatorWithPriorities(ORIGIN_PRIORITIES)(t1.origin, t2.origin))
+                .reduceRight((trackId, track) => {
+                    if (track.lang === event.currentTarget.dataset.lang) {
+                        return track.id;
+                    }
 
-                return trackId;
-            }, null)
+                    return trackId;
+                }, null)
             :
             null;
         props.onTrackSelected(trackId);
