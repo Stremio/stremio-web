@@ -169,7 +169,7 @@ const Player = ({ urlParams }) => {
     React.useEffect(() => {
         dispatch({ propName: 'subtitlesOffset', propValue: settings.subtitles_offset });
     }, [settings.subtitles_offset]);
-    React.useEffect(() => {
+    React.useLayoutEffect(() => {
         const onKeyDown = (event) => {
             switch (event.code) {
                 case 'Space': {
@@ -235,7 +235,7 @@ const Player = ({ urlParams }) => {
             window.removeEventListener('keydown', onKeyDown);
         };
     }, [routeFocused, subtitlesPickerOpen, metaPreviewOpen, videoState.paused, videoState.time, videoState.volume, toggleSubtitlesPicker, toggleMetaPreview]);
-    React.useEffect(() => {
+    React.useLayoutEffect(() => {
         return () => {
             setImmersedDebounced.cancel();
         };
