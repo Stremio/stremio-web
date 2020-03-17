@@ -32,6 +32,7 @@ function HTMLSubtitles(options) {
     containerElement.appendChild(stylesElement);
     var subtitlesContainerStylesIndex = stylesElement.sheet.insertRule('#' + containerElement.id + ' .subtitles { position: absolute; right: 0; bottom: 0; left: 0; z-index: 0; text-align: center; }', stylesElement.sheet.cssRules.length);
     var subtitlesCueStylesIndex = stylesElement.sheet.insertRule('#' + containerElement.id + ' .subtitles .cue { display: inline-block; padding: 0.2em; text-shadow: 0 0 0.03em #222222ff, 0 0 0.03em #222222ff, 0 0 0.03em #222222ff, 0 0 0.03em #222222ff, 0 0 0.03em #222222ff; background-color: #00000000; color: #ffffffff; font-size: 4vmin; }', stylesElement.sheet.cssRules.length);
+    stylesElement.sheet.insertRule('#' + containerElement.id + ' .subtitles .cue * { font-size: inherit; }', stylesElement.sheet.cssRules.length);
     containerElement.appendChild(subtitlesElement);
     subtitlesElement.classList.add('subtitles');
 
