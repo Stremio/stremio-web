@@ -2,11 +2,15 @@ function KeyboardNavigation() {
     let active = false;
 
     function onKeyDown(event) {
-        if (event.keyboardNavigationPrevented) {
+        if (event.keyboardNavigationPrevented || event.target.tagName === 'INPUT') {
             return;
         }
 
         switch (event.code) {
+            case 'Digit0': {
+                window.location = '#/search';
+                break;
+            }
             case 'Digit1': {
                 window.location = '#/';
                 break;
@@ -28,12 +32,10 @@ function KeyboardNavigation() {
                 break;
             }
             case 'Backspace': {
-                if (event.target.tagName !== 'INPUT') {
-                    if (event.ctrlKey) {
-                        window.history.forward();
-                    } else {
-                        window.history.back();
-                    }
+                if (event.ctrlKey) {
+                    window.history.forward();
+                } else {
+                    window.history.back();
                 }
 
                 break;
