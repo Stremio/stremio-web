@@ -21,6 +21,14 @@ function KeyboardNavigation() {
                 return;
             }
         }
+
+        if (event.code === 'KeyF') {
+            if (document.fullscreenElement === document.documentElement) {
+                document.exitFullscreen();
+            } else {
+                document.documentElement.requestFullscreen();
+            }
+        }
     }
     function start() {
         if (active) {

@@ -221,10 +221,6 @@ const Player = ({ urlParams }) => {
                     toggleMetaPreview();
                     break;
                 }
-                case 'KeyF': {
-                    toggleFullscreen();
-                    break;
-                }
                 case 'Escape': {
                     closeSubtitlesPicker();
                     closeMetaPreview();
@@ -238,7 +234,7 @@ const Player = ({ urlParams }) => {
         return () => {
             window.removeEventListener('keydown', onKeyDown);
         };
-    }, [routeFocused, subtitlesPickerOpen, metaPreviewOpen, videoState.paused, videoState.time, videoState.volume, toggleSubtitlesPicker, toggleMetaPreview, toggleFullscreen]);
+    }, [routeFocused, subtitlesPickerOpen, metaPreviewOpen, videoState.paused, videoState.time, videoState.volume, toggleSubtitlesPicker, toggleMetaPreview]);
     React.useEffect(() => {
         return () => {
             setImmersedDebounced.cancel();
