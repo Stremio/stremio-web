@@ -140,6 +140,14 @@ const Player = ({ urlParams }) => {
                     streamingServerUrl: settings.streaming_server_url
                 }
             });
+            if (Array.isArray(player.selected.stream.subtitles)) {
+                dispatch({
+                    commandName: 'addSubtitlesTracks',
+                    commandArgs: {
+                        tracks: player.selected.stream.subtitles
+                    }
+                });
+            }
         }
     }, [player.selected && player.selected.stream]);
     useDeepEqualEffect(() => {

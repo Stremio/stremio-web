@@ -9,7 +9,25 @@ const initPlayerState = () => ({
 });
 
 const mapPlayerStateWithCtx = (player, ctx) => {
-    const selected = player.selected;
+    const selected = player.selected !== null ?
+        {
+            stream: {
+                ...player.selected.stream,
+                subtitles: Array.isArray(player.selected.stream.subtitles) ?
+                    player.selected.stream.subtitles.map(({ url, lang }) => ({
+                        url,
+                        lang,
+                        origin: 'Stream'
+                    }))
+                    :
+                    []
+            },
+            meta_resource_request: player.selected.meta_resource_request,
+            subtitles_resource_ref: player.selected.subtitles_resource_ref,
+            video_id: player.selected.video_id
+        }
+        :
+        null;
     const meta_resource = player.meta_resource;
     const subtitles_resources = player.subtitles_resources.map((subtitles_resource) => {
         const request = subtitles_resource.request;
