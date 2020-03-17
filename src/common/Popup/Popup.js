@@ -24,7 +24,7 @@ const Popup = ({ open, direction, renderLabel, renderMenu, dataset, onCloseReque
                         onCloseRequest(closeEvent);
                         break;
                     case 'keydown':
-                        if (event.key === 'Escape') {
+                        if (event.code === 'Escape') {
                             onCloseRequest(closeEvent);
                         }
                         break;
