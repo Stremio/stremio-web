@@ -22,9 +22,6 @@ const Popup = ({ open, direction, renderLabel, renderMenu, dataset, onCloseReque
                     dataset: dataset
                 };
                 switch (event.type) {
-                    case 'resize':
-                        onCloseRequest(closeEvent);
-                        break;
                     case 'keydown':
                         if (event.code === 'Escape') {
                             onCloseRequest(closeEvent);
@@ -39,12 +36,10 @@ const Popup = ({ open, direction, renderLabel, renderMenu, dataset, onCloseReque
             }
         };
         if (routeFocused && open) {
-            window.addEventListener('resize', onCloseEvent);
             window.addEventListener('keydown', onCloseEvent);
             window.addEventListener('mousedown', onCloseEvent);
         }
         return () => {
-            window.removeEventListener('resize', onCloseEvent);
             window.removeEventListener('keydown', onCloseEvent);
             window.removeEventListener('mousedown', onCloseEvent);
         };
