@@ -1,32 +1,51 @@
-const TABS = [
-    { href: '#/', key: 'F1' },
-    { href: '#/discover', key: 'F2' },
-    { href: '#/library', key: 'F3' }
-];
-
 function KeyboardNavigation() {
     let active = false;
 
     function onKeyDown(event) {
-        const tab = TABS.find(({ key }) => key === event.key);
-        if (tab) {
-            event.preventDefault();
-            window.location = tab.href;
+        if (event.keyboardNavigationPrevented) {
             return;
         }
 
-        if (event.target.tagName !== 'INPUT') {
-            if (event.key === 'Backspace') {
-                window.history.back();
-                return;
+        switch (event.code) {
+            case 'Digit1': {
+                window.location = '#/';
+                break;
             }
-        }
+            case 'Digit2': {
+                window.location = '#/discover';
+                break;
+            }
+            case 'Digit3': {
+                window.location = '#/library';
+                break;
+            }
+            case 'Digit4': {
+                window.location = '#/settings';
+                break;
+            }
+            case 'Digit5': {
+                window.location = '#/addons';
+                break;
+            }
+            case 'Backspace': {
+                if (event.target.tagName !== 'INPUT') {
+                    if (event.ctrlKey) {
+                        window.history.forward();
+                    } else {
+                        window.history.back();
+                    }
+                }
 
-        if (event.code === 'KeyF') {
-            if (document.fullscreenElement === document.documentElement) {
-                document.exitFullscreen();
-            } else {
-                document.documentElement.requestFullscreen();
+                break;
+            }
+            case 'KeyF': {
+                if (document.fullscreenElement === document.documentElement) {
+                    document.exitFullscreen();
+                } else {
+                    document.documentElement.requestFullscreen();
+                }
+
+                break;
             }
         }
     }
