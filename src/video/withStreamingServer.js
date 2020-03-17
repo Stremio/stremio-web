@@ -32,9 +32,9 @@ function withStreamingServer(Video) {
         function dispatch(args) {
             if (args && args.commandName === 'load') {
                 stream = null;
+                video.dispatch({ commandName: 'stop' });
                 if (args.commandArgs && args.commandArgs.stream && typeof args.commandArgs.stream.infoHash === 'string' && typeof args.commandArgs.streamingServerUrl === 'string') {
                     stream = args.commandArgs.stream;
-                    video.dispatch({ commandName: 'stop' });
                     if (stream.fileIdx !== null && !isNaN(stream.fileIdx)) {
                         video.dispatch({
                             commandName: 'load',
@@ -85,7 +85,7 @@ function withStreamingServer(Video) {
                                     autoplay: args.commandArgs.autoplay,
                                     time: args.commandArgs.time,
                                     stream: {
-                                        url: UrlUtils.resolve(args.commandArgs.streamingServerUrl, stream.infoHash + '/' + fileIdx)
+                                        url: UrlUtils.resolve(args.commandArgs.streamingServerUrl, stream.infoHash + '/' + String(fileIdx))
                                     }
                                 }
                             });
