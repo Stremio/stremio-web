@@ -171,8 +171,8 @@ const Player = ({ urlParams }) => {
     }, [settings.subtitles_offset]);
     React.useEffect(() => {
         const onKeyDown = (event) => {
-            switch (event.key) {
-                case ' ': {
+            switch (event.code) {
+                case 'Space': {
                     if (!subtitlesPickerOpen && !metaPreviewOpen && videoState.paused !== null) {
                         if (videoState.paused) {
                             onPlayRequested();
@@ -211,17 +211,17 @@ const Player = ({ urlParams }) => {
 
                     break;
                 }
-                case 's': {
+                case 'KeyS': {
                     closeMetaPreview();
                     toggleSubtitlesPicker();
                     break;
                 }
-                case 'm': {
+                case 'KeyM': {
                     closeSubtitlesPicker();
                     toggleMetaPreview();
                     break;
                 }
-                case 'f': {
+                case 'KeyF': {
                     toggleFullscreen();
                     break;
                 }
