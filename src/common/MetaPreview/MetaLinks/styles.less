@@ -1,8 +1,10 @@
+@import (reference) '~stremio-colors/dist/less/stremio-colors.less';
+
 .meta-links-container {
     .label-container {
         margin-bottom: 0.2rem;
-        font-size: 1.2rem;
-        color: var(--color-surfacelighter);
+        text-transform: uppercase;
+        color: @color-surface-dark3-90;
     }
 
     .links-container {
@@ -16,12 +18,21 @@
             flex-basis: auto;
             margin-right: 0.5rem;
             margin-bottom: 0.2rem;
+            padding: 0.3rem 0.5rem;
             white-space: nowrap;
             text-overflow: ellipsis;
-            color: var(--color-surfacelighter);
+            border-radius: 2rem;
+            border: var(--focus-outline-size) solid transparent;
+            color: @color-surface-light2-90;
+            background-color: @color-surface-light5-20;
 
-            &:hover {
-                text-decoration: underline;
+            &:hover, &:focus {
+                background-color: @color-surface-light5-30;
+            }
+
+            &:focus {
+                outline: none;
+                border-color: @color-surface-light5;
             }
         }
     }
