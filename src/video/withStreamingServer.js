@@ -105,6 +105,7 @@ function withStreamingServer(Video) {
             } else {
                 if (args && args.commandName === 'destroy') {
                     destroyed = true;
+                    stream = null;
                     events.removeAllListeners();
                     events.on('error', function() { });
                 }
