@@ -1,4 +1,5 @@
 const React = require('react');
+const pako = require('pako');
 const { useModelState } = require('stremio/common');
 
 const initPlayerState = () => ({
@@ -75,7 +76,7 @@ const usePlayer = (urlParams) => {
                 args: {
                     model: 'Player',
                     args: {
-                        stream: JSON.parse(urlParams.stream),
+                        stream: JSON.parse(pako.inflate(atob(urlParams.stream), { to: 'string' })),
                         meta_resource_request: typeof urlParams.transportUrl === 'string' && typeof urlParams.type === 'string' && typeof urlParams.id === 'string' ?
                             {
                                 base: urlParams.transportUrl,
