@@ -30,7 +30,7 @@ function withStreamingServer(Video) {
             video.on(eventName, listener);
         }
         function dispatch(args) {
-            if (args && args.commandName === 'load') {
+            if (!destroyed && args && args.commandName === 'load') {
                 stream = null;
                 video.dispatch({ commandName: 'stop' });
                 if (args.commandArgs && args.commandArgs.stream && typeof args.commandArgs.stream.infoHash === 'string' && typeof args.commandArgs.streamingServerUrl === 'string') {
