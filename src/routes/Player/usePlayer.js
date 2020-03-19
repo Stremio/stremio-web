@@ -77,9 +77,21 @@ const usePlayer = (urlParams) => {
                     model: 'Player',
                     args: {
                         stream: JSON.parse(pako.inflate(atob(urlParams.stream), { to: 'string' })),
-                        meta_resource_request: typeof urlParams.transportUrl === 'string' && typeof urlParams.type === 'string' && typeof urlParams.id === 'string' ?
+                        stream_resource_request: typeof urlParams.streamTransportUrl === 'string' && typeof urlParams.type === 'string' && typeof urlParams.videoId === 'string' ?
                             {
-                                base: urlParams.transportUrl,
+                                base: urlParams.streamTransportUrl,
+                                path: {
+                                    resource: 'stream',
+                                    type_name: urlParams.type,
+                                    id: urlParams.videoId,
+                                    extra: []
+                                }
+                            }
+                            :
+                            null,
+                        meta_resource_request: typeof urlParams.metaTransportUrl === 'string' && typeof urlParams.type === 'string' && typeof urlParams.id === 'string' ?
+                            {
+                                base: urlParams.metaTransportUrl,
                                 path: {
                                     resource: 'meta',
                                     type_name: urlParams.type,

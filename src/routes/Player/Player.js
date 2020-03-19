@@ -342,7 +342,8 @@ const Player = ({ urlParams }) => {
 Player.propTypes = {
     urlParams: PropTypes.exact({
         stream: PropTypes.string,
-        transportUrl: PropTypes.string,
+        streamTransportUrl: PropTypes.string,
+        metaTransportUrl: PropTypes.string,
         type: PropTypes.string,
         id: PropTypes.string,
         videoId: PropTypes.string
