@@ -6,7 +6,8 @@ const initPlayerState = () => ({
     selected: null,
     meta_resource: null,
     subtitles_resources: [],
-    next_video: null
+    next_video: null,
+    lib_item: null
 });
 
 const mapPlayerStateWithCtx = (player, ctx) => {
@@ -60,11 +61,13 @@ const mapPlayerStateWithCtx = (player, ctx) => {
         };
     });
     const next_video = player.next_video;
+    const lib_item = player.lib_item;
     return {
         selected,
         meta_resource,
         subtitles_resources,
-        next_video
+        next_video,
+        lib_item
     };
 };
 
