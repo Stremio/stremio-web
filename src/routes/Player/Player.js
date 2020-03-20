@@ -137,7 +137,8 @@ const Player = ({ urlParams }) => {
                 commandName: 'load',
                 commandArgs: {
                     stream: player.selected.stream,
-                    streamingServerUrl: settings.streaming_server_url
+                    streamingServerUrl: settings.streaming_server_url,
+                    autoplay: true
                 }
             });
             if (Array.isArray(player.selected.stream.subtitles)) {
