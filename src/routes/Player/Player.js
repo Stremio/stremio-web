@@ -138,7 +138,11 @@ const Player = ({ urlParams }) => {
                 commandArgs: {
                     stream: player.selected.stream,
                     streamingServerUrl: settings.streaming_server_url,
-                    autoplay: true
+                    autoplay: true,
+                    time: player.lib_item !== null && player.selected.video_id !== null && player.lib_item.state.video_id === player.selected.video_id ?
+                        player.lib_item.state.timeOffset
+                        :
+                        0
                 }
             });
             if (Array.isArray(player.selected.stream.subtitles)) {
