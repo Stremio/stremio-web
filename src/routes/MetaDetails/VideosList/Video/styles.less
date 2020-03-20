@@ -1,11 +1,13 @@
+@import (reference) '~stremio-colors/dist/less/stremio-colors.less';
+
 .video-container {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    background-color: var(--color-surfacedarker60);
+    background-color: @color-background-dark3-80;
 
     &:hover, &:focus {
-        background-color: var(--color-surfacedarker);
+        background-color: @color-background;
     }
 
     .thumbnail-container {
@@ -16,7 +18,7 @@
         .thumbnail {
             display: block;
             width: 5rem;
-            max-height: 10rem;
+            height: 5rem;
             object-fit: contain;
             object-position: center;
         }
@@ -25,7 +27,7 @@
             display: block;
             width: 5rem;
             height: 5rem;
-            fill: var(--color-surfacelight20);
+            fill: @color-secondaryvariant1-light3;
         }
     }
 
@@ -33,69 +35,73 @@
         flex: 1;
         align-self: stretch;
         display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        align-content: flex-start;
+        flex-direction: column;
+        justify-content: space-between;
         padding: 0.5rem;
 
         &:first-child {
-            align-content: center;
-        }
+            height: 4rem;
 
-        .title-container {
-            flex-grow: 0;
-            flex-shrink: 0;
-            flex-basis: 100%;
-            max-height: 4.8em;
-            color: var(--color-surfacelighter);
-        }
-
-        .released-container {
-            flex-grow: 0;
-            flex-shrink: 0;
-            flex-basis: 100%;
-            margin-top: 0.5rem;
-            font-size: 0.8rem;
-            max-height: 2.4em;
-            color: var(--color-surfacelight);
-        }
-
-        .watched-container, .upcoming-container {
-            flex: none;
-            max-width: 100%;
-            margin-top: 0.5rem;
-            margin-right: 0.5rem;
-            padding: 0.2rem 0.4rem;
-
-            .flag-label {
-                max-height: 2.4em;
-                font-size: 0.8rem;
-                font-weight: 700;
-                text-transform: uppercase;
-                color: var(--color-surfacelighter);
-                text-shadow: 1px 1px var(--color-surfacedarker60);
+            .title-container {
+                max-height: 1.2em;
             }
         }
 
-        .upcoming-container {
-            background-color: var(--color-signal5);
+        .title-container {
+            max-height: 2.4em;
+            color: @color-surface-light5-90;
         }
 
-        .watched-container {
-            background-color: var(--color-primarylight);
-        }
-    }
+        .released-info-container {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            margin-top: 0.5rem;
 
-    .next-icon-container {
-        flex: none;
-        align-self: center;
-        padding: 0.5rem;
+            .released-container {
+                flex: 1;
+                margin-right: 0.5rem;
+                font-size: 0.8rem;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                text-transform: uppercase;
+                color: @color-surface-dark5;
+            }
 
-        .next-icon {
-            display: block;
-            width: 1rem;
-            height: 1.5rem;
-            fill: var(--color-surfacelighter);
+            .upcoming-watched-container {
+                display: flex;
+                flex-direction: row;
+
+                &>:nth-child(2) {
+                    margin-left: 0.5rem;
+                }
+
+                .upcoming-container, .watched-container {
+                    padding: 0.2rem 0.4rem;
+                    max-width: 10rem;
+
+                    &:not(:only-child) {
+                        max-width: 5rem;
+                    }
+
+                    .flag-label {
+                        font-size: 0.8rem;
+                        font-weight: 500;
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
+                        text-transform: uppercase;
+                        color: @color-background;
+                    }
+                }
+
+                .upcoming-container {
+                    background-color: @color-accent4;
+                }
+
+                .watched-container {
+                    background-color: @color-accent5;
+                }
+            }
         }
     }
 
@@ -103,11 +109,11 @@
         flex-grow: 0;
         flex-shrink: 0;
         flex-basis: 100%;
-        background-color: var(--color-backgroundlighter);
+        background-color: @color-background-light2;
 
         .progress-bar {
             height: 0.5rem;
-            background-color: var(--color-primary);
+            background-color: @color-primaryvariant1;
         }
     }
 }

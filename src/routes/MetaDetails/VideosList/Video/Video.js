@@ -34,31 +34,32 @@ const Video = ({ className, id, title, thumbnail, episode, released, upcoming, w
                 </div>
                 {
                     released instanceof Date && !isNaN(released.getTime()) ?
-                        <div className={styles['released-container']}>
-                            {released.toLocaleString(undefined, { year: '2-digit', month: 'short', day: 'numeric' })}
+                        <div className={styles['released-info-container']}>
+                            <div className={styles['released-container']}>
+                                {released.toLocaleString(undefined, { year: '2-digit', month: 'short', day: 'numeric' })}
+                            </div>
+                            <div className={styles['upcoming-watched-container']}>
+                                {
+                                    upcoming ?
+                                        <div className={styles['upcoming-container']}>
+                                            <div className={styles['flag-label']}>Upcoming</div>
+                                        </div>
+                                        :
+                                        null
+                                }
+                                {
+                                    watched ?
+                                        <div className={styles['watched-container']}>
+                                            <div className={styles['flag-label']}>Watched</div>
+                                        </div>
+                                        :
+                                        null
+                                }
+                            </div>
                         </div>
                         :
                         null
                 }
-                {
-                    upcoming ?
-                        <div className={styles['upcoming-container']}>
-                            <div className={styles['flag-label']}>Upcoming</div>
-                        </div>
-                        :
-                        null
-                }
-                {
-                    watched ?
-                        <div className={styles['watched-container']}>
-                            <div className={styles['flag-label']}>Watched</div>
-                        </div>
-                        :
-                        null
-                }
-            </div>
-            <div className={styles['next-icon-container']}>
-                <Icon className={styles['next-icon']} icon={'ic_arrow_thin_right'} />
             </div>
             {
                 progress !== null && !isNaN(progress) && progress > 0 ?
