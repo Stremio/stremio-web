@@ -374,7 +374,7 @@ function HTMLVideo(options) {
             case 'load': {
                 if (commandArgs && commandArgs.stream && typeof commandArgs.stream.url === 'string') {
                     command('stop');
-                    videoElement.autoplay = commandArgs.autoplay !== false;
+                    videoElement.autoplay = typeof commandArgs.autoplay === 'boolean' ? commandArgs.autoplay : true;
                     videoElement.currentTime = !isNaN(commandArgs.time) && commandArgs.time !== null ? parseInt(commandArgs.time) / 1000 : 0;
                     videoElement.src = commandArgs.stream.url;
                     loaded = true;
