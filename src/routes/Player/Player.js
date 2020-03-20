@@ -277,6 +277,7 @@ const Player = ({ urlParams }) => {
             <HorizontalNavBar
                 className={classnames(styles['layer'], styles['nav-bar-layer'])}
                 title={
+                    // TODO consider use video.title and fallback to stream.title
                     player.meta_resource !== null && player.meta_resource.content.type === 'Ready' ?
                         player.meta_resource.content.content.name
                         :
