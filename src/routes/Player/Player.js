@@ -3,6 +3,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const debounce = require('lodash.debounce');
 const { useRouteFocused } = require('stremio-router');
+const { useServices } = require('stremio/services');
 const { HorizontalNavBar, useDeepEqualEffect, useFullscreen, useBinaryState } = require('stremio/common');
 const BufferingLoader = require('./BufferingLoader');
 const ControlBar = require('./ControlBar');
@@ -13,6 +14,7 @@ const useSettings = require('./useSettings');
 const styles = require('./styles');
 
 const Player = ({ urlParams }) => {
+    const { core } = useServices();
     const player = usePlayer(urlParams);
     const [settings, updateSettings] = useSettings();
     const routeFocused = useRouteFocused();
@@ -178,6 +180,20 @@ const Player = ({ urlParams }) => {
     React.useEffect(() => {
         dispatch({ propName: 'subtitlesOffset', propValue: settings.subtitles_offset });
     }, [settings.subtitles_offset]);
+    React.useEffect(() => {
+        if (videoState.time !== null && !isNaN(videoState.time) && videoState.duration !== null && !isNaN(videoState.duration)) {
+            core.dispatch({
+                action: 'Player',
+                args: {
+                    action: 'UpdateLibraryItemState',
+                    args: {
+                        time: videoState.time,
+                        duration: videoState.duration
+                    }
+                }
+            });
+        }
+    }, [videoState.time, videoState.duration]);
     React.useLayoutEffect(() => {
         const onKeyDown = (event) => {
             switch (event.code) {
