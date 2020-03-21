@@ -25,10 +25,26 @@ const Video = React.forwardRef(({ className, ...props }, ref) => {
                     containerElement: containerElementRef.current,
                     shell: args.commandArgs.shell
                 });
-                videoRef.current.on('ended', onEndedRef.current);
-                videoRef.current.on('error', onErrorRef.current);
-                videoRef.current.on('propValue', onPropValueRef.current);
-                videoRef.current.on('propChanged', onPropChangedRef.current);
+                videoRef.current.on('ended', () => {
+                    if (typeof onEndedRef.current === 'function') {
+                        onEndedRef.current();
+                    }
+                });
+                videoRef.current.on('error', (args) => {
+                    if (typeof onErrorRef.current === 'function') {
+                        onErrorRef.current(args);
+                    }
+                });
+                videoRef.current.on('propValue', (propName, propValue) => {
+                    if (typeof onPropValueRef.current === 'function') {
+                        onPropValueRef.current(propName, propValue);
+                    }
+                });
+                videoRef.current.on('propChanged', (propName, propValue) => {
+                    if (typeof onPropChangedRef.current === 'function') {
+                        onPropChangedRef.current(propName, propValue);
+                    }
+                });
                 if (typeof onImplementationChangedRef.current === 'function') {
                     onImplementationChangedRef.current(videoRef.current.constructor.manifest);
                 }
