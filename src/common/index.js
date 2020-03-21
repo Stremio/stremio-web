@@ -24,6 +24,7 @@ const useAnimationFrame = require('./useAnimationFrame');
 const useBinaryState = require('./useBinaryState');
 const useCoreEvent = require('./useCoreEvent');
 const useDeepEqualEffect = require('./useDeepEqualEffect');
+const useDeepEqualMemo = require('./useDeepEqualMemo');
 const useDeepEqualState = require('./useDeepEqualState');
 const useFullscreen = require('./useFullscreen');
 const useInLibrary = require('./useInLibrary');
@@ -60,6 +61,7 @@ module.exports = {
     useBinaryState,
     useCoreEvent,
     useDeepEqualEffect,
+    useDeepEqualMemo,
     useDeepEqualState,
     useFullscreen,
     useInLibrary,
