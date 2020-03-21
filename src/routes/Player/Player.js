@@ -12,23 +12,6 @@ const usePlayer = require('./usePlayer');
 const useSettings = require('./useSettings');
 const styles = require('./styles');
 
-const INITIAL_VIDEO_STATE = {
-    paused: null,
-    time: null,
-    duration: null,
-    buffering: null,
-    volume: null,
-    muted: null,
-    subtitlesTracks: [],
-    selectedSubtitlesTrackId: null,
-    subtitlesSize: null,
-    subtitlesDelay: null,
-    subtitlesOffset: null,
-    subtitlesTextColor: null,
-    subtitlesBackgroundColor: null,
-    subtitlesOutlineColor: null
-};
-
 const Player = ({ urlParams }) => {
     const player = usePlayer(urlParams);
     const [settings, updateSettings] = useSettings();
@@ -38,10 +21,25 @@ const Player = ({ urlParams }) => {
     const setImmersedDebounced = React.useCallback(debounce(setImmersed, 3000), []);
     const [subtitlesPickerOpen, , closeSubtitlesPicker, toggleSubtitlesPicker] = useBinaryState(false);
     const [metaPreviewOpen, , closeMetaPreview, toggleMetaPreview] = useBinaryState(false);
-    const [videoState, setVideoState] = React.useReducer((videoState, nextVideoState) => ({
-        ...videoState,
-        ...nextVideoState
-    }), INITIAL_VIDEO_STATE);
+    const [videoState, setVideoState] = React.useReducer(
+        (videoState, nextVideoState) => ({ ...videoState, ...nextVideoState }),
+        {
+            paused: null,
+            time: null,
+            duration: null,
+            buffering: null,
+            volume: null,
+            muted: null,
+            subtitlesTracks: [],
+            selectedSubtitlesTrackId: null,
+            subtitlesSize: null,
+            subtitlesDelay: null,
+            subtitlesOffset: null,
+            subtitlesTextColor: null,
+            subtitlesBackgroundColor: null,
+            subtitlesOutlineColor: null
+        }
+    );
     const videoRef = React.useRef(null);
     const dispatch = React.useCallback((args) => {
         if (videoRef.current !== null) {
@@ -97,6 +95,15 @@ const Player = ({ urlParams }) => {
     const onSubtitlesOffsetChanged = React.useCallback((offset) => {
         updateSettings({ subtitles_offset: offset });
     }, [updateSettings]);
+    const onVideoClick = React.useCallback(() => {
+        if (videoState.paused !== null) {
+            if (videoState.paused) {
+                onPlayRequested();
+            } else {
+                onPauseRequested();
+            }
+        }
+    }, [videoState.paused]);
     const onContainerMouseDown = React.useCallback((event) => {
         if (!event.nativeEvent.subtitlesPickerClosePrevented) {
             closeSubtitlesPicker();
@@ -120,17 +127,8 @@ const Player = ({ urlParams }) => {
     const onBarMouseMove = React.useCallback((event) => {
         event.nativeEvent.immersePrevented = true;
     }, []);
-    const onVideoClick = React.useCallback(() => {
-        if (videoState.paused !== null) {
-            if (videoState.paused) {
-                onPlayRequested();
-            } else {
-                onPauseRequested();
-            }
-        }
-    }, [videoState.paused]);
     useDeepEqualEffect(() => {
-        if (player.selected === null || player.selected.stream === null) {
+        if (player.selected === null) {
             dispatch({ commandName: 'stop' });
         } else {
             dispatch({
@@ -145,16 +143,14 @@ const Player = ({ urlParams }) => {
                         0
                 }
             });
-            if (Array.isArray(player.selected.stream.subtitles)) {
-                dispatch({
-                    commandName: 'addSubtitlesTracks',
-                    commandArgs: {
-                        tracks: player.selected.stream.subtitles
-                    }
-                });
-            }
+            dispatch({
+                commandName: 'addSubtitlesTracks',
+                commandArgs: {
+                    tracks: player.selected.stream.subtitles
+                }
+            });
         }
-    }, [player.selected && player.selected.stream]);
+    }, [player.selected]);
     useDeepEqualEffect(() => {
         dispatch({
             commandName: 'addSubtitlesTracks',
