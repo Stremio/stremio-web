@@ -62,8 +62,17 @@ const Player = ({ urlParams }) => {
         setVideoState({ [propName]: propValue });
     }, []);
     const onEnded = React.useCallback(() => {
-        // console.log('ended');
-    }, []);
+        core.dispatch({ action: 'Unload' }, 'Player');
+        if (player.lib_item !== null) {
+            core.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'RewindLibraryItem',
+                    args: player.lib_item._id
+                }
+            });
+        }
+    }, [player.lib_item && player.lib_item._id]);
     const onError = React.useCallback(() => {
         // console.error(error);
     }, []);
