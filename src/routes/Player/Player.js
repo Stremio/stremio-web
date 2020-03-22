@@ -4,7 +4,7 @@ const classnames = require('classnames');
 const debounce = require('lodash.debounce');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
-const { HorizontalNavBar, useDeepEqualEffect, useFullscreen, useBinaryState } = require('stremio/common');
+const { HorizontalNavBar, useDeepEqualEffect, useDeepEqualMemo, useFullscreen, useBinaryState } = require('stremio/common');
 const BufferingLoader = require('./BufferingLoader');
 const ControlBar = require('./ControlBar');
 const SubtitlesPicker = require('./SubtitlesPicker');
@@ -61,7 +61,7 @@ const Player = ({ urlParams }) => {
     const onPropChanged = React.useCallback((propName, propValue) => {
         setVideoState({ [propName]: propValue });
     }, []);
-    const onEnded = React.useCallback(() => {
+    const onEnded = useDeepEqualMemo(() => () => {
         core.dispatch({ action: 'Unload' }, 'Player');
         if (player.lib_item !== null) {
             core.dispatch({
@@ -72,7 +72,10 @@ const Player = ({ urlParams }) => {
                 }
             });
         }
-    }, [player.lib_item && player.lib_item._id]);
+        if (player.next_video !== null) {
+            // TODO go to next video
+        }
+    }, [player.next_video, player.lib_item]);
     const onError = React.useCallback(() => {
         // console.error(error);
     }, []);
