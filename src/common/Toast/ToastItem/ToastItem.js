@@ -5,7 +5,19 @@ const Icon = require('stremio-icons/dom');
 const Button = require('stremio/common/Button');
 const styles = require('./styles');
 
-const ToastItem = ({ type, title, message, icon, dataset, onSelect, onClose }) => {
+const ToastItem = ({ title, message, dataset, onSelect, onClose, ...props }) => {
+    const type = React.useMemo(() => {
+        return ['success', 'alert', 'error'].includes(props.type) ?
+            props.type
+            :
+            'success';
+    }, [props.type]);
+    const icon = React.useMemo(() => {
+        return typeof props.icon === 'string' ? props.icon :
+            type === 'success' ? 'ic_check' :
+                type === 'error' ? 'ic_warning' :
+                    null;
+    }, [type, props.icon]);
     const toastOnClick = React.useCallback((event) => {
         if (!event.nativeEvent.selectPrevented && typeof onSelect === 'function') {
             onSelect({
