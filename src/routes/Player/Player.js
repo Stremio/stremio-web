@@ -220,6 +220,19 @@ const Player = ({ urlParams }) => {
             }, 'player');
         }
     }, [videoState.time, videoState.duration]);
+    React.useEffect(() => {
+        const interval = setInterval(() => {
+            core.dispatch({
+                action: 'Player',
+                args: {
+                    action: 'PushToLibrary'
+                }
+            }, 'player');
+        }, 30000);
+        return () => {
+            clearInterval(interval);
+        };
+    }, []);
     React.useLayoutEffect(() => {
         const onKeyDown = (event) => {
             switch (event.code) {
