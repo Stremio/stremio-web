@@ -1,18 +1,70 @@
+@import (reference) '~stremio-colors/dist/less/stremio-colors.less';
+
 .videos-list-container {
     display: flex;
     flex-direction: column;
-    background: var(--color-backgrounddark80);
 
     .seasons-bar, .message-label {
         flex: none;
         width: var(--item-size);
-        margin: 2rem 2rem 1rem 2rem;
+        padding: 1rem 0;
     }
 
     .message-label {
         font-size: 1.4rem;
         text-align: center;
-        color: var(--color-surfacelighter);
+        color: @color-surface-light5;
+    }
+
+    .search-container {
+        padding: 0 1.5rem 1rem 1.5rem;
+        background-color: @color-background-dark3-80;
+
+        &:first-child {
+            padding-top: 1rem;
+        }
+
+        .search-bar-container {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            width: calc(var(--item-size) - 3rem);
+            height: 3.5rem;
+            padding: 0 1rem;
+            border-radius: 2.3rem;
+            border: var(--focus-outline-size) solid transparent;
+            background-color: @color-background-dark1;
+            cursor: text;
+
+            &:hover, &:focus-within {
+                background-color: @color-background;
+            }
+
+            &:focus-within {
+                border: var(--focus-outline-size) solid @color-surface-light5;
+            }
+
+            .search-input {
+                flex: 1;
+                margin-right: 1rem;
+                font-size: 1.1rem;
+                color: @color-surface-light5;
+
+                &::placeholder {
+                    max-height: 1.2em;
+                    opacity: 1;
+                    color: @color-secondaryvariant1-light1-90;
+                }
+            }
+
+            .icon {
+                flex: none;
+                width: 1.5rem;
+                height: 1.5rem;
+                fill: @color-secondaryvariant1;
+            }
+
+        }
     }
 
     .videos-scroll-container {
@@ -20,25 +72,8 @@
         align-self: stretch;
         overflow-y: auto;
 
-        &:first-child {
-            .video {
-                &:first-child {
-                    margin-top: 2rem;
-                }
-            }
-        }
-
         .video {
             width: var(--item-size);
-            margin: 1rem 2rem;
-
-            &:first-child {
-                margin-top: 0;
-            }
-
-            &:last-child {
-                margin-bottom: 2rem;
-            }
         }
     }
 }
