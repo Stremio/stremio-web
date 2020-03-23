@@ -13,7 +13,6 @@ const CoreEventsToaster = () => {
                     type: 'error',
                     title: args.source.event,
                     message: args.error.message,
-                    icon: 'ic_warning',
                     timeout: 10000
                 });
             }
