@@ -19,7 +19,7 @@ const ToastItem = ({ title, message, dataset, onSelect, onClose, ...props }) => 
                     null;
     }, [type, props.icon]);
     const toastOnClick = React.useCallback((event) => {
-        if (!event.nativeEvent.selectPrevented && typeof onSelect === 'function') {
+        if (!event.nativeEvent.selectToastPrevented && typeof onSelect === 'function') {
             onSelect({
                 type: 'select',
                 dataset: dataset,
@@ -27,9 +27,17 @@ const ToastItem = ({ title, message, dataset, onSelect, onClose, ...props }) => 
                 nativeEvent: event.nativeEvent
             });
         }
-    }, [dataset, onSelect]);
+        if (!event.nativeEvent.closeToastPrevented && typeof onClose === 'function') {
+            onClose({
+                type: 'close',
+                dataset: dataset,
+                reactEvent: event,
+                nativeEvent: event.nativeEvent
+            });
+        }
+    }, [dataset, onSelect, onClose]);
     const closeButtonOnClick = React.useCallback((event) => {
-        event.nativeEvent.selectPrevented = true;
+        event.nativeEvent.selectToastPrevented = true;
         if (typeof onClose === 'function') {
             onClose({
                 type: 'close',
