@@ -30,7 +30,7 @@
         "spatial-navigation-polyfill": "git+ssh://git@github.com/Stremio/spatial-navigation.git#381b4f37d138e66ae8ea025e240af3704245e5dc",
         "stremio-colors": "git+ssh://git@github.com/Stremio/stremio-colors.git#v3.0.0",
         "stremio-core-web": "git+ssh://git@github.com/stremio/stremio-core-web.git#da5b37865004d0ae140518c4f276d1ed1a1483d9",
-        "stremio-icons": "git+ssh://git@github.com/Stremio/stremio-icons.git#v2.0.0",
+        "stremio-icons": "git+ssh://git@github.com/Stremio/stremio-icons.git#v2.0.1",
         "vtt.js": "0.13.0"
     },
     "devDependencies": {
