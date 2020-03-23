@@ -4,7 +4,7 @@ const classnames = require('classnames');
 const debounce = require('lodash.debounce');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
-const { HorizontalNavBar, useDeepEqualEffect, useDeepEqualMemo, useFullscreen, useBinaryState } = require('stremio/common');
+const { HorizontalNavBar, useDeepEqualEffect, useDeepEqualMemo, useFullscreen, useBinaryState, useToast } = require('stremio/common');
 const BufferingLoader = require('./BufferingLoader');
 const ControlBar = require('./ControlBar');
 const SubtitlesPicker = require('./SubtitlesPicker');
@@ -18,11 +18,13 @@ const Player = ({ urlParams }) => {
     const player = usePlayer(urlParams);
     const [settings, updateSettings] = useSettings();
     const routeFocused = useRouteFocused();
+    const toast = useToast();
     const [, , , toggleFullscreen] = useFullscreen();
     const [immersed, setImmersed] = React.useState(true);
     const setImmersedDebounced = React.useCallback(debounce(setImmersed, 3000), []);
     const [subtitlesPickerOpen, , closeSubtitlesPicker, toggleSubtitlesPicker] = useBinaryState(false);
     const [metaPreviewOpen, , closeMetaPreview, toggleMetaPreview] = useBinaryState(false);
+    const [error, setError] = React.useState(null);
     const [videoState, setVideoState] = React.useReducer(
         (videoState, nextVideoState) => ({ ...videoState, ...nextVideoState }),
         {
@@ -76,8 +78,18 @@ const Player = ({ urlParams }) => {
             // TODO go to next video
         }
     }, [player.next_video, player.lib_item]);
-    const onError = React.useCallback(() => {
-        // console.error(error);
+    const onError = React.useCallback((error) => {
+        if (error.critical) {
+            setError(error);
+        } else {
+            toast.show({
+                type: 'error',
+                title: 'Error',
+                message: error.message,
+                icon: 'ic_warning',
+                timeout: 10000
+            });
+        }
     }, []);
     const onPlayRequested = React.useCallback(() => {
         dispatch({ propName: 'paused', propValue: false });
@@ -142,6 +154,7 @@ const Player = ({ urlParams }) => {
         event.nativeEvent.immersePrevented = true;
     }, []);
     useDeepEqualEffect(() => {
+        setError(null);
         if (player.selected === null) {
             dispatch({ commandName: 'stop' });
         } else {
@@ -296,7 +309,12 @@ const Player = ({ urlParams }) => {
                 videoState.buffering ?
                     <BufferingLoader className={styles['layer']} />
                     :
-                    null
+                    error !== null ?
+                        <div className={classnames(styles['layer'], styles['error-layer'])}>
+                            <div className={styles['error-label']}>{error.message}</div>
+                        </div>
+                        :
+                        null
             }
             <div
                 className={styles['layer']}

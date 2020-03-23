@@ -36,6 +36,22 @@ html:not(.active-slider-within) {
         bottom: 0;
         z-index: 0;
 
+        &.error-layer {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+
+            .error-label {
+                flex: 0 1 auto;
+                padding: 0 8rem;
+                max-height: 4.8em;
+                font-size: 2rem;
+                color: @color-surface-light5-90;
+                text-align: center;
+            }
+        }
+
         &.nav-bar-layer {
             bottom: initial;
             background: transparent;
