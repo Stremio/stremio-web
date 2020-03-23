@@ -40,7 +40,7 @@ const ToastItem = ({ title, message, dataset, onSelect, onClose, ...props }) => 
         }
     }, [dataset, onClose]);
     return (
-        <Button className={classnames(styles['toast-item-container'], styles['success'], styles[type])} tabIndex={-1} onClick={toastOnClick}>
+        <Button className={classnames(styles['toast-item-container'], styles[type])} tabIndex={-1} onClick={toastOnClick}>
             {
                 typeof icon === 'string' && icon.length > 0 ?
                     <div className={styles['icon-container']}>
