@@ -4,6 +4,7 @@
     height: 23rem;
     display: flex;
     flex-direction: row;
+    background-color: @color-background-dark1;
 
     .languages-container, .variants-container, .subtitles-settings-container {
         flex: none;
@@ -31,6 +32,10 @@
                 align-items: center;
                 padding: 1rem 1.5rem;
 
+                &:global(.selected), &:hover {
+                    background-color: @color-background;
+                }
+
                 .language-label, .variant-label {
                     flex: 1;
                     max-height: 2.4em;
@@ -52,24 +57,10 @@
 
     .languages-container {
         width: 12rem;
-        background-color: @color-background-dark1;
-
-        .language-option {
-            &:global(.selected), &:hover {
-                background-color: @color-background;
-            }
-        }
     }
 
     .variants-container {
         width: 12rem;
-        background-color: @color-background;
-
-        .variant-option {
-            &:global(.selected), &:hover {
-                background-color: @color-background-light1;
-            }
-        }
 
         .no-variants-container {
             flex: 1;
@@ -86,7 +77,6 @@
 
     .subtitles-settings-container {
         width: 16rem;
-        background-color: @color-background-light1;
 
         .spacing {
             flex: 1;
