@@ -77,6 +77,7 @@ const Player = ({ urlParams }) => {
         if (player.next_video !== null) {
             // TODO go to next video
         }
+        window.history.back();
     }, [player.next_video, player.lib_item]);
     const onError = React.useCallback((error) => {
         if (error.critical) {
