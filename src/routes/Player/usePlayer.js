@@ -19,11 +19,21 @@ const mapPlayerStateWithCtx = (player, ctx) => {
                     player.selected.stream.subtitles.map(({ url, lang }) => ({
                         url,
                         lang,
-                        origin: 'Stream'
+                        origin: ctx.profile.addons.reduce((origin, addon) => {
+                            if (player.selected.stream_resource_request !== null && addon.transportUrl === player.selected.stream_resource_request.base) {
+                                return typeof addon.manifest.name === 'string' && addon.manifest.name.length > 0 ?
+                                    addon.manifest.name
+                                    :
+                                    addon.manifest.id;
+                            }
+
+                            return origin;
+                        }, player.selected.stream_resource_request !== null ? player.selected.stream_resource_request.base : 'Stream')
                     }))
                     :
                     []
             },
+            stream_resource_request: player.selected.stream_resource_request,
             meta_resource_request: player.selected.meta_resource_request,
             subtitles_resource_ref: player.selected.subtitles_resource_ref,
             video_id: player.selected.video_id
