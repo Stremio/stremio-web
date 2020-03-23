@@ -64,7 +64,7 @@ const Player = ({ urlParams }) => {
         setVideoState({ [propName]: propValue });
     }, []);
     const onEnded = useDeepEqualMemo(() => () => {
-        core.dispatch({ action: 'Unload' }, 'Player');
+        core.dispatch({ action: 'Unload' }, 'player');
         if (player.lib_item !== null) {
             core.dispatch({
                 action: 'Ctx',
@@ -217,7 +217,7 @@ const Player = ({ urlParams }) => {
                         duration: videoState.duration
                     }
                 }
-            });
+            }, 'player');
         }
     }, [videoState.time, videoState.duration]);
     React.useLayoutEffect(() => {
