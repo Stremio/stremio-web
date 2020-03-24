@@ -15,12 +15,14 @@ jobs:
     - uses: actions/checkout@v1
       name: Checkout
     - uses: actions/setup-node@v1
+      name: Setup Node
       with:
         registry-url: 'https://npm.pkg.github.com'
     - run: yarn install && yarn build
       env:
         NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - uses: actions/upload-artifact@v1
+      name: Upload build
       with:
         name: stremio-web
         path: build
