@@ -19,6 +19,6 @@ jobs:
       with:
         registry-url: 'https://npm.pkg.github.com'
     - name: Test
-      run: yarn install && yarn test
+      run: yarn install && yarn test && yarn lint
       env:
         NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
