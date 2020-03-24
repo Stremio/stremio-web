@@ -13,10 +13,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
+    - uses: actions/setup-node@v1
     - name: Build
-      run: |
-       echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ~/.npmrc
-       yarn install && yarn build
+      with:
+        registry-url: 'https://npm.pkg.github.com'
+    - run: yarn install && yarn build
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - uses: actions/upload-artifact@v1
       with:
         name: stremio-web
