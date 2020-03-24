@@ -92,6 +92,14 @@ const Player = ({ urlParams }) => {
             });
         }
     }, []);
+    const onSubtitlesTrackLoaded = React.useCallback((track) => {
+        toast.show({
+            type: 'success',
+            title: 'Subtitles loaded',
+            message: `Subtitles from ${track.origin} loaded`,
+            timeout: 4000
+        });
+    }, []);
     const onPlayRequested = React.useCallback(() => {
         dispatch({ propName: 'paused', propValue: false });
     }, []);
@@ -317,6 +325,7 @@ const Player = ({ urlParams }) => {
                 onError={onError}
                 onPropValue={onPropChanged}
                 onPropChanged={onPropChanged}
+                onSubtitlesTrackLoaded={onSubtitlesTrackLoaded}
                 onImplementationChanged={onImplementationChanged}
             />
             {

@@ -9,6 +9,7 @@ const Video = React.forwardRef(({ className, ...props }, ref) => {
     const onErrorRef = useLiveRef(props.onError);
     const onPropValueRef = useLiveRef(props.onPropValue);
     const onPropChangedRef = useLiveRef(props.onPropChanged);
+    const onSubtitlesTrackLoadedRef = useLiveRef(props.onSubtitlesTrackLoaded);
     const onImplementationChangedRef = useLiveRef(props.onImplementationChanged);
     const containerElementRef = React.useRef(null);
     const videoRef = React.useRef(null);
@@ -45,6 +46,11 @@ const Video = React.forwardRef(({ className, ...props }, ref) => {
                         onPropChangedRef.current(propName, propValue);
                     }
                 });
+                videoRef.current.on('subtitlesTrackLoaded', (track) => {
+                    if (typeof onSubtitlesTrackLoadedRef.current === 'function') {
+                        onSubtitlesTrackLoadedRef.current(track);
+                    }
+                });
                 if (typeof onImplementationChangedRef.current === 'function') {
                     onImplementationChangedRef.current(videoRef.current.constructor.manifest);
                 }
@@ -79,6 +85,7 @@ Video.propTypes = {
     onError: PropTypes.func,
     onPropValue: PropTypes.func,
     onPropChanged: PropTypes.func,
+    onSubtitlesTrackLoaded: PropTypes.func,
     onImplementationChanged: PropTypes.func
 };
 
