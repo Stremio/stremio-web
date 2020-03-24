@@ -15,7 +15,7 @@ const MetaPreviewButton = ({ className, metaResource, onToggleMetaPreview }) => 
     }, [onToggleMetaPreview]);
     return (
         <Button className={classnames(className, { 'disabled': metaResource === null || metaResource.content.type !== 'Ready' })} tabIndex={-1} onMouseDown={onMouseDown} onClick={onClick}>
-            <Icon className={'icon'} icon={'ic_report'} />
+            <Icon className={'icon'} icon={'ic_info'} />
         </Button>
     );
 };
