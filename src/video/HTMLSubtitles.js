@@ -159,6 +159,10 @@ function HTMLSubtitles(options) {
                         .then(function(text) {
                             if (typeof text === 'string' && selectedTrackId === selecterdTrack.id) {
                                 cuesByTime = subtitlesParser.parse(text);
+                                if (cuesByTime.times.length === 0) {
+                                    throw new Error('parse failed');
+                                }
+
                                 events.emit('trackLoaded', selecterdTrack);
                             }
                         })
