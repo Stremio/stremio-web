@@ -87,8 +87,7 @@ const Player = ({ urlParams }) => {
                 type: 'error',
                 title: 'Error',
                 message: error.message,
-                icon: 'ic_warning',
-                timeout: 10000
+                timeout: 3000
             });
         }
     }, []);
@@ -97,7 +96,7 @@ const Player = ({ urlParams }) => {
             type: 'success',
             title: 'Subtitles loaded',
             message: `Subtitles from ${track.origin} loaded`,
-            timeout: 4000
+            timeout: 3000
         });
     }, []);
     const onPlayRequested = React.useCallback(() => {
