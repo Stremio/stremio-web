@@ -13,7 +13,7 @@ const CoreEventsToaster = () => {
                     type: 'error',
                     title: args.source.event,
                     message: args.error.message,
-                    timeout: 10000
+                    timeout: 4000
                 });
             }
         };
