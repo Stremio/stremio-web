@@ -1,6 +1,8 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
+const Icon = require('stremio-icons/dom');
+const { Button } = require('stremio/common');
 const MetaPreviewButton = require('./MetaPreviewButton');
 const MuteButton = require('./MuteButton');
 const PlayPauseButton = require('./PlayPauseButton');
@@ -67,6 +69,9 @@ const ControlBar = ({
                     metaResource={metaResource}
                     onToggleMetaPreview={onToggleMetaPreview}
                 />
+                <Button className={classnames(styles['control-bar-button'], 'disabled')} tabIndex={-1}>
+                    <Icon className={'icon'} icon={'ic_videos'} />
+                </Button>
                 <ShareButton className={styles['control-bar-button']} />
             </div>
         </div>
