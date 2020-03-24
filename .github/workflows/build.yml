@@ -13,6 +13,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
+    - name: Checkout
     - uses: actions/setup-node@v1
       with:
         registry-url: 'https://npm.pkg.github.com'
