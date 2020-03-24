@@ -1782,6 +1782,13 @@
     telejson "^3.0.2"
     util-deprecate "^1.0.2"
 
+"@stremio/stremio-core-web@0.7.0":
+  version "0.7.0"
+  resolved "https://npm.pkg.github.com/download/@stremio/stremio-core-web/0.7.0/e10e27197f239318b81f318bec9a4c87e28fc1431b0254d4fe751f9737cf2782#653e8859c01c88dd45f617669c70c13bf6be0339"
+  integrity sha512-fy5IVFRcpF873qKhRfH9E9I5CF9qPm6eerPDCZ8m3KUwowz8jCKUrJD7p4li5xHzavAxgG8xgEC4XiY2aoy+PQ==
+  dependencies:
+    "@babel/runtime" "7.8.7"
+
 "@svgr/babel-plugin-add-jsx-attribute@^4.2.0":
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/@svgr/babel-plugin-add-jsx-attribute/-/babel-plugin-add-jsx-attribute-4.2.0.tgz#dadcb6218503532d6884b210e7f3c502caaa44b1"
@@ -10730,10 +10737,6 @@ stream-shift@^1.0.0:
 "stremio-colors@git+ssh://git@github.com/Stremio/stremio-colors.git#v3.0.0":
   version "3.0.0"
   resolved "git+ssh://git@github.com/Stremio/stremio-colors.git#897c9569a167b9f881af9f4b5433ae9644408be3"
-
-"stremio-core-web@git+ssh://git@github.com/stremio/stremio-core-web.git#da5b37865004d0ae140518c4f276d1ed1a1483d9":
-  version "0.6.0"
-  resolved "git+ssh://git@github.com/stremio/stremio-core-web.git#da5b37865004d0ae140518c4f276d1ed1a1483d9"
 
 "stremio-icons@git+ssh://git@github.com/Stremio/stremio-icons.git#v2.0.1":
   version "2.0.1"

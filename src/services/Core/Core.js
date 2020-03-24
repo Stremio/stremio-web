@@ -1,5 +1,5 @@
 const EventEmitter = require('events');
-const { default: init, StremioCoreWeb } = require('stremio-core-web');
+const { default: init, StremioCoreWeb } = require('@stremio/stremio-core-web');
 
 function Core() {
     let active = false;
