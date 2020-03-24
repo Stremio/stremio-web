@@ -7,7 +7,6 @@ const MetaPreviewButton = require('./MetaPreviewButton');
 const MuteButton = require('./MuteButton');
 const PlayPauseButton = require('./PlayPauseButton');
 const SeekBar = require('./SeekBar');
-const ShareButton = require('./ShareButton');
 const SubtitlesButton = require('./SubtitlesButton');
 const VolumeSlider = require('./VolumeSlider');
 const styles = require('./styles');
@@ -72,7 +71,6 @@ const ControlBar = ({
                 <Button className={classnames(styles['control-bar-button'], 'disabled')} tabIndex={-1}>
                     <Icon className={'icon'} icon={'ic_videos'} />
                 </Button>
-                <ShareButton className={styles['control-bar-button']} />
             </div>
         </div>
     );
