@@ -10564,9 +10564,9 @@ space-separated-tokens@^1.0.0:
   resolved "https://registry.yarnpkg.com/space-separated-tokens/-/space-separated-tokens-1.1.5.tgz#85f32c3d10d9682007e917414ddc5c26d1aa6899"
   integrity sha512-q/JSVd1Lptzhf5bkYm4ob4iWPjx0KiRe3sRFBNrVqbJkFaBm5vbbowy1mymoPNLRa52+oadOhJ+K49wsSeSjTA==
 
-"spatial-navigation-polyfill@git+ssh://git@github.com/Stremio/spatial-navigation.git#381b4f37d138e66ae8ea025e240af3704245e5dc":
+"spatial-navigation-polyfill@git+https://git@github.com/Stremio/spatial-navigation.git#381b4f37d138e66ae8ea025e240af3704245e5dc":
   version "1.2.0"
-  resolved "git+ssh://git@github.com/Stremio/spatial-navigation.git#381b4f37d138e66ae8ea025e240af3704245e5dc"
+  resolved "git+https://git@github.com/Stremio/spatial-navigation.git#381b4f37d138e66ae8ea025e240af3704245e5dc"
 
 spdx-correct@^3.0.0:
   version "3.1.0"
@@ -10734,13 +10734,13 @@ stream-shift@^1.0.0:
   resolved "https://registry.yarnpkg.com/stream-shift/-/stream-shift-1.0.1.tgz#d7088281559ab2778424279b0877da3c392d5a3d"
   integrity sha512-AiisoFqQ0vbGcZgQPY1cdP2I76glaVA/RauYR4G4thNFgkTqr90yXTo4LYX60Jl+sIlPNHHdGSwo01AvbKUSVQ==
 
-"stremio-colors@git+ssh://git@github.com/Stremio/stremio-colors.git#v3.0.0":
+"stremio-colors@git+https://git@github.com/Stremio/stremio-colors.git#v3.0.0":
   version "3.0.0"
-  resolved "git+ssh://git@github.com/Stremio/stremio-colors.git#897c9569a167b9f881af9f4b5433ae9644408be3"
+  resolved "git+https://git@github.com/Stremio/stremio-colors.git#897c9569a167b9f881af9f4b5433ae9644408be3"
 
-"stremio-icons@git+ssh://git@github.com/Stremio/stremio-icons.git#v2.0.1":
+"stremio-icons@git+https://git@github.com/Stremio/stremio-icons.git#v2.0.1":
   version "2.0.1"
-  resolved "git+ssh://git@github.com/Stremio/stremio-icons.git#ec47f5c1a83e4adc352ec218a4c5159e2f03c8f3"
+  resolved "git+https://git@github.com/Stremio/stremio-icons.git#ec47f5c1a83e4adc352ec218a4c5159e2f03c8f3"
 
 strict-uri-encode@^1.0.0:
   version "1.1.0"
