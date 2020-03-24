@@ -22,7 +22,6 @@ const languageNames = require('./languageNames');
 const routesRegexp = require('./routesRegexp');
 const useAnimationFrame = require('./useAnimationFrame');
 const useBinaryState = require('./useBinaryState');
-const useCoreEvent = require('./useCoreEvent');
 const useDeepEqualEffect = require('./useDeepEqualEffect');
 const useDeepEqualMemo = require('./useDeepEqualMemo');
 const useDeepEqualState = require('./useDeepEqualState');
@@ -59,7 +58,6 @@ module.exports = {
     routesRegexp,
     useAnimationFrame,
     useBinaryState,
-    useCoreEvent,
     useDeepEqualEffect,
     useDeepEqualMemo,
     useDeepEqualState,

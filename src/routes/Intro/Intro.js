@@ -3,7 +3,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const { Modal, useRouteFocused } = require('stremio-router');
-const { Button, Image, useBinaryState, useCoreEvent } = require('stremio/common');
+const { Button, Image, useBinaryState } = require('stremio/common');
 const { useServices } = require('stremio/services');
 const CredentialsTextInput = require('./CredentialsTextInput');
 const ConsentCheckbox = require('./ConsentCheckbox');
@@ -74,23 +74,6 @@ const Intro = ({ queryParams }) => {
             error: ''
         }
     );
-    useCoreEvent(React.useCallback(({ event, args }) => {
-        switch (event) {
-            case 'UserAuthenticated': {
-                closeLoaderModal();
-                window.location.replace('#/');
-                break;
-            }
-            case 'Error': {
-                if (args.source.event === 'UserAuthenticated') {
-                    // TODO use error.code to match translated message;
-                    closeLoaderModal();
-                    dispatch({ type: 'error', error: args.error.message });
-                }
-                break;
-            }
-        }
-    }, []));
     const loginWithFacebook = React.useCallback(() => {
         FB.login((response) => {
             if (response.status === 'connected') {
@@ -265,6 +248,31 @@ const Intro = ({ queryParams }) => {
             emailRef.current.focus();
         }
     }, [state.form, routeFocused]);
+    React.useEffect(() => {
+        const onEvent = ({ event, args }) => {
+            switch (event) {
+                case 'UserAuthenticated': {
+                    closeLoaderModal();
+                    window.location.replace('#/');
+                    break;
+                }
+                case 'Error': {
+                    if (args.source.event === 'UserAuthenticated') {
+                        closeLoaderModal();
+                        dispatch({ type: 'error', error: args.error.message });
+                    }
+
+                    break;
+                }
+            }
+        };
+        if (routeFocused) {
+            core.on('Event', onEvent);
+        }
+        return () => {
+            core.off('Event', onEvent);
+        };
+    }, [routeFocused]);
     return (
         <div className={styles['intro-container']}>
             <div className={styles['form-container']}>
