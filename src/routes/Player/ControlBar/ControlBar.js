@@ -58,15 +58,21 @@ const ControlBar = ({
                     onVolumeChangeRequested={onVolumeChangeRequested}
                 />
                 <div className={styles['spacing']} />
-                <SubtitlesButton
-                    className={styles['control-bar-button']}
-                    subtitlesTracks={subtitlesTracks}
-                    onToggleSubtitlesPicker={onToggleSubtitlesPicker}
-                />
+                <Button className={classnames(styles['control-bar-button'], 'disabled')} tabIndex={-1}>
+                    <Icon className={'icon'} icon={'ic_network'} />
+                </Button>
                 <MetaPreviewButton
                     className={styles['control-bar-button']}
                     metaResource={metaResource}
                     onToggleMetaPreview={onToggleMetaPreview}
+                />
+                <Button className={classnames(styles['control-bar-button'], 'disabled')} tabIndex={-1}>
+                    <Icon className={'icon'} icon={'ic_cast'} />
+                </Button>
+                <SubtitlesButton
+                    className={styles['control-bar-button']}
+                    subtitlesTracks={subtitlesTracks}
+                    onToggleSubtitlesPicker={onToggleSubtitlesPicker}
                 />
                 <Button className={classnames(styles['control-bar-button'], 'disabled')} tabIndex={-1}>
                     <Icon className={'icon'} icon={'ic_videos'} />
