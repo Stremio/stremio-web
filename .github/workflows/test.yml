@@ -13,8 +13,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
+      name: Checkout
+    - uses: actions/setup-node@v1
+      name: Setup Node
+      with:
+        registry-url: 'https://npm.pkg.github.com'
     - name: Test
-      run: |
-        echo -e "[url \"https://github.com/\"]\n\tinsteadOf = ssh://git@github.com/" > ~/.gitconfig
-        yarn install && yarn test
-        
+      run: yarn install && yarn test
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
