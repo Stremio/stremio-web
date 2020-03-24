@@ -18,7 +18,8 @@ jobs:
       name: Setup Node
       with:
         registry-url: 'https://npm.pkg.github.com'
-    - run: yarn install && yarn build
+    - name: Build
+      run: yarn install && yarn build
       env:
         NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - uses: actions/upload-artifact@v1
