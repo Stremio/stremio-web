@@ -278,7 +278,7 @@ const Intro = ({ queryParams }) => {
             <div className={styles['form-container']}>
                 <div className={styles['logo-container']}>
                     <Image className={styles['logo']} src={'/images/stremio_symbol.png'} />
-                    <Icon className={styles['icon']} icon={'ic_stremio'} />
+                    <Icon className={styles['name']} icon={'ic_stremio'} />
                 </div>
                 <Button className={classnames(styles['form-button'], styles['facebook-button'])} onClick={loginWithFacebook}>
                     <Icon className={styles['icon']} icon={'ic_facebook'} />
@@ -286,11 +286,10 @@ const Intro = ({ queryParams }) => {
                 </Button>
                 {
                     state.form === SIGNUP_FORM ?
-                        <Button className={classnames(styles['form-button'], styles['switch-form-button'], styles['switch-form-login-button'])} onClick={switchFormOnClick}>
-                            <div className={styles['label-container']}>
-                                <div className={styles['account-label']}>Already have an account?</div>
-                                <div className={styles['label']}>LOG IN</div>
-                            </div>
+                        <Button className={classnames(styles['form-button'], styles['login-form-button'])} onClick={switchFormOnClick}>
+                            Already have an account?
+                            {' '}
+                            <span className={styles['login-label']}>LOG IN</span>
                         </Button>
                         :
                         null
@@ -375,7 +374,7 @@ const Intro = ({ queryParams }) => {
                 }
                 {
                     state.form === LOGIN_FORM ?
-                        <Button className={classnames(styles['form-button'], styles['switch-form-button'])} onClick={switchFormOnClick}>
+                        <Button className={classnames(styles['form-button'], styles['signup-form-button'])} onClick={switchFormOnClick}>
                             <div className={styles['label']}>SIGN UP WITH EMAIL</div>
                         </Button>
                         :
@@ -390,9 +389,11 @@ const Intro = ({ queryParams }) => {
             }
             {
                 loaderModalOpen ?
-                    <Modal className={styles['modal-container']}>
-                        <div className={styles['label']}>Authenticating...</div>
-                        <Icon className={styles['icon']} icon={'ic_user'} />
+                    <Modal className={styles['loading-modal-container']}>
+                        <div className={styles['loader-container']}>
+                            <Icon className={styles['icon']} icon={'ic_user'} />
+                            <div className={styles['label']}>Authenticating...</div>
+                        </div>
                     </Modal>
                     :
                     null

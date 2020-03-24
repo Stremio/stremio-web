@@ -15,9 +15,6 @@ const PasswordResetModal = ({ email, onCloseRequest }) => {
             :
             setError('Invalid email');
     }, []);
-    const passwordResetOnClick = React.useCallback(() => {
-        goToPasswordReset();
-    }, []);
     const passwordResetModalButtons = React.useMemo(() => {
         return [
             {
@@ -30,16 +27,13 @@ const PasswordResetModal = ({ email, onCloseRequest }) => {
             {
                 label: 'Send',
                 props: {
-                    onClick: passwordResetOnClick
+                    onClick: goToPasswordReset
                 }
             }
         ];
-    }, [onCloseRequest, passwordResetOnClick]);
+    }, [onCloseRequest]);
     const emailOnChange = React.useCallback(() => {
         setError('');
-    }, []);
-    const emailOnSubmit = React.useCallback(() => {
-        goToPasswordReset();
     }, []);
     React.useEffect(() => {
         if (routeFocused) {
@@ -55,7 +49,7 @@ const PasswordResetModal = ({ email, onCloseRequest }) => {
                 placeholder={'Email'}
                 defaultValue={typeof email === 'string' ? email : ''}
                 onChange={emailOnChange}
-                onSubmit={emailOnSubmit}
+                onSubmit={goToPasswordReset}
             />
             {
                 error.length > 0 ?

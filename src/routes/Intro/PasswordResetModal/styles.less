@@ -1,17 +1,24 @@
+@import (reference) '~stremio-colors/dist/less/stremio-colors.less';
+
 .password-reset-modal-container {
     .credentials-text-input {
-        width: 20rem;
-        padding: 0.5rem;
-        border: thin solid var(--color-surfacedark);
+        width: 25rem;
+        padding: 1rem;
+        border: thin solid @color-surface-dark1-90;
     }
 
     .error-message {
-        margin: 1rem 0;
+        font-size: 1.1rem;
+        margin-top: 2rem;
         text-align: center;
-        color: var(--color-signal2);
+        color: @color-accent2-90;
     }
 
     .cancel-button {
-        background-color: var(--color-surfacedark);
+        background-color: @color-surface-dark1;
+
+        &:hover {
+            background-color: @color-surface;
+        }
     }
 }
