@@ -2,6 +2,7 @@ const React = require('react');
 const classnames = require('classnames');
 const throttle = require('lodash.throttle');
 const Icon = require('stremio-icons/dom');
+const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
 const { Button, Checkbox, MainNavBars, Multiselect, ColorInput, useProfile } = require('stremio/common');
 const useStreamingServer = require('./useStreamingServer');
@@ -15,6 +16,7 @@ const STREAMING_SECTION = 'streaming';
 
 const Settings = () => {
     const { core } = useServices();
+    const { routeFocused } = useRouteFocused();
     const profile = useProfile();
     const streamingServer = useStreamingServer();
     const {
@@ -95,9 +97,11 @@ const Settings = () => {
     const sectionsContainerOnScorll = React.useCallback(throttle(() => {
         updateSelectedSectionId();
     }, 50), []);
-    React.useEffect(() => {
-        updateSelectedSectionId();
-    }, []);
+    React.useLayoutEffect(() => {
+        if (routeFocused) {
+            updateSelectedSectionId();
+        }
+    }, [routeFocused]);
     return (
         <MainNavBars className={styles['settings-container']} route={'settings'}>
             <div className={styles['settings-content']}>
