@@ -106,20 +106,20 @@ const Settings = () => {
         <MainNavBars className={styles['settings-container']} route={'settings'}>
             <div className={styles['settings-content']}>
                 <div className={styles['side-menu-container']}>
-                    <Button className={classnames(styles['side-menu-button'], { [styles['selected']]: selectedSectionId === GENERAL_SECTION })} data-section={GENERAL_SECTION} onClick={sideMenuButtonOnClick}>
+                    <Button className={classnames(styles['side-menu-button'], { [styles['selected']]: selectedSectionId === GENERAL_SECTION })} title={'General'} data-section={GENERAL_SECTION} onClick={sideMenuButtonOnClick}>
                         General
                     </Button>
-                    <Button className={classnames(styles['side-menu-button'], { [styles['selected']]: selectedSectionId === PLAYER_SECTION })} data-section={PLAYER_SECTION} onClick={sideMenuButtonOnClick}>
+                    <Button className={classnames(styles['side-menu-button'], { [styles['selected']]: selectedSectionId === PLAYER_SECTION })} title={'Player'} data-section={PLAYER_SECTION} onClick={sideMenuButtonOnClick}>
                         Player
                     </Button>
-                    <Button className={classnames(styles['side-menu-button'], { [styles['selected']]: selectedSectionId === STREAMING_SECTION })} data-section={STREAMING_SECTION} onClick={sideMenuButtonOnClick}>
+                    <Button className={classnames(styles['side-menu-button'], { [styles['selected']]: selectedSectionId === STREAMING_SECTION })} title={'Streaming server'} data-section={STREAMING_SECTION} onClick={sideMenuButtonOnClick}>
                         Streaming server
                     </Button>
                     <div className={styles['spacing']} />
-                    <div className={styles['version-info-label']}>App Version: {process.env.VERSION}</div>
+                    <div className={styles['version-info-label']} title={process.env.VERSION}>App Version: {process.env.VERSION}</div>
                     {
                         streamingServer.settings !== null && streamingServer.settings.type === 'Ready' ?
-                            <div className={styles['version-info-label']}>Server Version: {streamingServer.settings.content.serverVersion}</div>
+                            <div className={styles['version-info-label']} title={streamingServer.settings.content.serverVersion}>Server Version: {streamingServer.settings.content.serverVersion}</div>
                             :
                             null
                     }
