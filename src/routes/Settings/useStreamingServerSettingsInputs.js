@@ -11,7 +11,7 @@ const cacheSizeToString = (size) => {
         size === 0 ?
             'No caching'
             :
-            `${size / 1024 / 1024 / 1024}GiB`;
+            `${Math.ceil(((size / 1024 / 1024 / 1024) + Number.EPSILON) * 100) / 100}GiB`;
 };
 
 const TORRENT_PROFILES = {
