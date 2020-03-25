@@ -3,6 +3,7 @@ const Board = require('./Board');
 const Discover = require('./Discover');
 const Library = require('./Library');
 const MetaDetails = require('./MetaDetails');
+const NotFound = require('./NotFound');
 const Search = require('./Search');
 const Settings = require('./Settings');
 const Player = require('./Player');
@@ -14,6 +15,7 @@ module.exports = {
     Discover,
     Library,
     MetaDetails,
+    NotFound,
     Search,
     Settings,
     Player,
