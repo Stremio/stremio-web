@@ -4,9 +4,8 @@ const { useModelState } = require('stremio/common');
 
 const useStreamingServer = () => {
     const { core } = useServices();
-    const initStreamingServer = React.useMemo(() => {
-        const streamingServer = core.getState('streaming_server');
-        return streamingServer;
+    const initStreamingServer = React.useCallback(() => {
+        return core.getState('streaming_server');
     }, []);
     const loadStreamingServerAction = React.useMemo(() => {
         const streamingServer = core.getState('streaming_server');
@@ -21,12 +20,11 @@ const useStreamingServer = () => {
             return null;
         }
     }, []);
-    const streamingServer = useModelState({
+    return useModelState({
         model: 'streaming_server',
         init: initStreamingServer,
         action: loadStreamingServerAction
     });
-    return streamingServer;
 };
 
 module.exports = useStreamingServer;
