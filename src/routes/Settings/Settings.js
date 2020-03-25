@@ -72,7 +72,7 @@ const Settings = () => {
         { ref: playerSectionRef, id: PLAYER_SECTION },
         { ref: streamingServerSectionRef, id: STREAMING_SECTION },
     ]), []);
-    const [selectedSectionId, setSelectedSectionId] = React.useState(sections[0].id);
+    const [selectedSectionId, setSelectedSectionId] = React.useState(GENERAL_SECTION);
     const updateSelectedSectionId = React.useCallback(() => {
         if (sectionsContainerRef.current.scrollTop + sectionsContainerRef.current.clientHeight === sectionsContainerRef.current.scrollHeight) {
             setSelectedSectionId(sections[sections.length - 1].id);
