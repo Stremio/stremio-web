@@ -181,7 +181,7 @@ const Settings = () => {
                                 <div className={styles['label']}>Trakt Scrobbling</div>
                             </div>
                             <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Authenticate'} disabled={true} onClick={authenticateTraktOnClick}>
-                                <Icon className={styles['icon']} icon={'ic_trackt'} />
+                                <Icon className={styles['icon']} icon={'ic_trakt'} />
                                 <div className={styles['label']}>Authenticate</div>
                             </Button>
                         </div>
