@@ -44,15 +44,14 @@ const Router = ({ className, onPathNotMatch, ...props }) => {
                 if (typeof onPathNotMatch === 'function') {
                     const component = onPathNotMatch();
                     if (ReactIs.isValidElementType(component)) {
-                        setViews([
-                            {
-                                key: '-1',
-                                component,
-                                urlParams: {},
-                                queryParams
-                            },
-                            ...Array(viewsConfig.length - 1).fill(null)
-                        ]);
+                        setViews((views) => {
+                            return views
+                                .slice(0, viewsConfig.length)
+                                .concat({
+                                    key: '-1',
+                                    component
+                                });
+                        });
                     }
                 }
 
@@ -63,26 +62,28 @@ const Router = ({ className, onPathNotMatch, ...props }) => {
             const routeViewIndex = viewsConfig.findIndex((vc) => vc.includes(routeConfig));
             const routeIndex = viewsConfig[routeViewIndex].findIndex((rc) => rc === routeConfig);
             setViews((views) => {
-                return views.map((view, index) => {
-                    if (index < routeViewIndex) {
-                        return view;
-                    } else if (index === routeViewIndex) {
-                        return {
-                            key: `${routeViewIndex}${routeIndex}`,
-                            component: routeConfig.component,
-                            urlParams: view !== null && isEqual(view.urlParams, urlParams) ?
-                                view.urlParams
-                                :
-                                urlParams,
-                            queryParams: view !== null && isEqual(Array.from(view.queryParams.entries()), Array.from(queryParams.entries())) ?
-                                view.queryParams
-                                :
-                                queryParams
-                        };
-                    } else {
-                        return null;
-                    }
-                });
+                return views
+                    .slice(0, viewsConfig.length)
+                    .map((view, index) => {
+                        if (index < routeViewIndex) {
+                            return view;
+                        } else if (index === routeViewIndex) {
+                            return {
+                                key: `${routeViewIndex}${routeIndex}`,
+                                component: routeConfig.component,
+                                urlParams: view !== null && isEqual(view.urlParams, urlParams) ?
+                                    view.urlParams
+                                    :
+                                    urlParams,
+                                queryParams: view !== null && isEqual(Array.from(view.queryParams.entries()), Array.from(queryParams.entries())) ?
+                                    view.queryParams
+                                    :
+                                    queryParams
+                            };
+                        } else {
+                            return null;
+                        }
+                    });
             });
         };
         window.addEventListener('hashchange', onLocationHashChange);
