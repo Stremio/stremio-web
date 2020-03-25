@@ -24,7 +24,6 @@ const App = () => {
         };
         const onCoreStateChanged = () => {
             if (services.core.active) {
-                window.core = services.core;
                 services.core.dispatch({
                     action: 'Load',
                     args: {
@@ -39,6 +38,8 @@ const App = () => {
         services.keyboardNavigation.start();
         services.shell.start();
         services.core.start();
+        window.shell = services.shell;
+        window.core = services.core;
         return () => {
             services.keyboardNavigation.stop();
             services.shell.stop();
