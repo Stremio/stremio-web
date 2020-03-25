@@ -25,8 +25,7 @@ const useContinueWatching = () => {
     return useModelState({
         model: 'continue_watching',
         map: mapContinueWatchingState,
-        init: initContinueWatchingState,
-        timeout: 5000
+        init: initContinueWatchingState
     });
 };
 
