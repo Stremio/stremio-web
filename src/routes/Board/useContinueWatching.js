@@ -15,7 +15,6 @@ const mapContinueWatchingState = (continue_watching) => {
             lib_item.state.timeOffset / lib_item.state.duration
             :
             null,
-        videoId: lib_item.state.video_id,
         href: `#/metadetails/${encodeURIComponent(lib_item.type)}/${encodeURIComponent(lib_item._id)}${lib_item.state.video_id !== null ? `/${encodeURIComponent(lib_item.state.video_id)}` : ''}`
     }));
     return { lib_items };
