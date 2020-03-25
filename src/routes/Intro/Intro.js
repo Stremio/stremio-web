@@ -110,7 +110,7 @@ const Intro = ({ queryParams }) => {
         });
     }, []);
     const loginWithEmail = React.useCallback(() => {
-        if (typeof state.email !== 'string' || state.email.length === 0) {
+        if (typeof state.email !== 'string' || state.email.length === 0 || !emailRef.current.validity.valid) {
             dispatch({ type: 'error', error: 'Invalid email' });
             return;
         }
@@ -145,7 +145,7 @@ const Intro = ({ queryParams }) => {
         window.location.replace('#/');
     }, [state.termsAccepted]);
     const signup = React.useCallback(() => {
-        if (typeof state.email !== 'string' || state.email.length === 0) {
+        if (typeof state.email !== 'string' || state.email.length === 0 || !emailRef.current.validity.valid) {
             dispatch({ type: 'error', error: 'Invalid email' });
             return;
         }
