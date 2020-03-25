@@ -4,6 +4,10 @@
     display: flex;
     flex-direction: column;
 
+    &:global(.streams-list-message) {
+        background-color: @color-background-dark3-80;
+    }
+
     .streams-scroll-container {
         flex-grow: 0;
         flex-shrink: 1;
@@ -11,11 +15,32 @@
         align-self: stretch;
         overflow-y: auto;
 
-        .message-label {
-            padding: 2rem 0;
-            font-size: 2rem;
-            text-align: center;
-            color: @color-surface-light5;
+        .message-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: var(--item-size);
+            height: 100%;
+            padding: 2rem;
+    
+            &>:not(:last-child) {
+                margin-bottom: 1rem;
+            }
+    
+            .image, .label, .description {
+                flex: none;
+            }
+    
+            .label {
+                font-size: 1.4rem;
+                text-align: center;
+                color: @color-surface-light5;
+            }
+    
+            .description {
+                text-align: center;
+                color: @color-surface-dark1;
+            }
         }
 
         .stream {
