@@ -18,12 +18,14 @@ jobs:
       name: Setup Node
       with:
         registry-url: 'https://npm.pkg.github.com'
-    - name: Build
-      run: yarn install && yarn build
+    - name: Install dependencies
+      run: yarn install
       env:
         NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Build
+      run: yarn build
     - uses: actions/upload-artifact@v1
-      name: Upload build
+      name: Upload build artifact
       with:
         name: stremio-web
         path: build
