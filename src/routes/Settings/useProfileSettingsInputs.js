@@ -1,10 +1,9 @@
-const React = require('react');
 const { useServices } = require('stremio/services');
-const { CONSTANTS, languageNames } = require('stremio/common');
+const { CONSTANTS, languageNames, useDeepEqualMemo } = require('stremio/common');
 
 const useProfileSettingsInputs = (profile) => {
     const { core } = useServices();
-    const interfaceLanguageSelect = React.useMemo(() => ({
+    const interfaceLanguageSelect = useDeepEqualMemo(() => ({
         options: Object.keys(languageNames).map((code) => ({
             value: code,
             label: languageNames[code]
@@ -29,7 +28,7 @@ const useProfileSettingsInputs = (profile) => {
             });
         }
     }), [profile.settings]);
-    const subtitlesLanguageSelect = React.useMemo(() => ({
+    const subtitlesLanguageSelect = useDeepEqualMemo(() => ({
         options: Object.keys(languageNames).map((code) => ({
             value: code,
             label: languageNames[code]
@@ -54,7 +53,7 @@ const useProfileSettingsInputs = (profile) => {
             });
         }
     }), [profile.settings]);
-    const subtitlesSizeSelect = React.useMemo(() => ({
+    const subtitlesSizeSelect = useDeepEqualMemo(() => ({
         options: CONSTANTS.SUBTITLES_SIZES.map((size) => ({
             value: `${size}`,
             label: `${size}%`
@@ -76,7 +75,7 @@ const useProfileSettingsInputs = (profile) => {
             });
         }
     }), [profile.settings]);
-    const subtitlesTextColorInput = React.useMemo(() => ({
+    const subtitlesTextColorInput = useDeepEqualMemo(() => ({
         value: profile.settings.subtitles_text_color,
         onChange: (event) => {
             core.dispatch({
@@ -91,7 +90,7 @@ const useProfileSettingsInputs = (profile) => {
             });
         }
     }), [profile.settings]);
-    const subtitlesBackgroundColorInput = React.useMemo(() => ({
+    const subtitlesBackgroundColorInput = useDeepEqualMemo(() => ({
         value: profile.settings.subtitles_background_color,
         onChange: (event) => {
             core.dispatch({
@@ -106,7 +105,7 @@ const useProfileSettingsInputs = (profile) => {
             });
         }
     }), [profile.settings]);
-    const subtitlesOutlineColorInput = React.useMemo(() => ({
+    const subtitlesOutlineColorInput = useDeepEqualMemo(() => ({
         value: profile.settings.subtitles_outline_color,
         onChange: (event) => {
             core.dispatch({
@@ -121,7 +120,7 @@ const useProfileSettingsInputs = (profile) => {
             });
         }
     }), [profile.settings]);
-    const bingeWatchingCheckbox = React.useMemo(() => ({
+    const bingeWatchingCheckbox = useDeepEqualMemo(() => ({
         checked: profile.settings.binge_watching,
         onClick: () => {
             core.dispatch({
@@ -136,7 +135,7 @@ const useProfileSettingsInputs = (profile) => {
             });
         }
     }), [profile.settings]);
-    const playInBackgroundCheckbox = React.useMemo(() => ({
+    const playInBackgroundCheckbox = useDeepEqualMemo(() => ({
         checked: profile.settings.play_in_background,
         onClick: () => {
             core.dispatch({
@@ -151,7 +150,7 @@ const useProfileSettingsInputs = (profile) => {
             });
         }
     }), [profile.settings]);
-    const playInExternalPlayerCheckbox = React.useMemo(() => ({
+    const playInExternalPlayerCheckbox = useDeepEqualMemo(() => ({
         checked: profile.settings.play_in_external_player,
         onClick: () => {
             core.dispatch({
@@ -166,7 +165,7 @@ const useProfileSettingsInputs = (profile) => {
             });
         }
     }), [profile.settings]);
-    const hardwareDecodingCheckbox = React.useMemo(() => ({
+    const hardwareDecodingCheckbox = useDeepEqualMemo(() => ({
         checked: profile.settings.hardware_decoding,
         onClick: () => {
             core.dispatch({
