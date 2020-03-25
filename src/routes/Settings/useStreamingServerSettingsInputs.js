@@ -1,6 +1,6 @@
-const React = require('react');
 const isEqual = require('lodash.isequal');
 const { useServices } = require('stremio/services');
+const { useDeepEqualMemo } = require('stremio/common');
 
 const CACHE_SIZES = [0, 2147483648, 5368709120, 10737418240, null];
 
@@ -43,7 +43,7 @@ const TORRENT_PROFILES = {
 
 const useStreaminServerSettingsInputs = (streaminServer) => {
     const { core } = useServices();
-    const cacheSizeSelect = React.useMemo(() => {
+    const cacheSizeSelect = useDeepEqualMemo(() => {
         if (streaminServer.settings === null || streaminServer.settings.type !== 'Ready') {
             return null;
         }
@@ -71,7 +71,7 @@ const useStreaminServerSettingsInputs = (streaminServer) => {
             }
         };
     }, [streaminServer.settings]);
-    const torrentProfileSelect = React.useMemo(() => {
+    const torrentProfileSelect = useDeepEqualMemo(() => {
         if (streaminServer.settings === null || streaminServer.settings.type !== 'Ready') {
             return null;
         }
