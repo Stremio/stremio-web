@@ -31,7 +31,7 @@ const App = () => {
                     }
                 });
             }
-            setCoreInitialized(services.core.active || services.core.error instanceof Error);
+            setCoreInitialized(services.core.active);
         };
         services.shell.on('stateChanged', onShellStateChanged);
         services.core.on('stateChanged', onCoreStateChanged);
