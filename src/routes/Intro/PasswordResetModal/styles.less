@@ -1,24 +1,51 @@
 @import (reference) '~stremio-colors/dist/less/stremio-colors.less';
 
+:import('~stremio/common/ModalDialog/styles.less') {
+    password-reset-modal-content: modal-dialog-content;
+    cancel-button-label: label;
+}
+
 .password-reset-modal-container {
-    .credentials-text-input {
-        width: 25rem;
-        padding: 1rem;
-        border: thin solid @color-surface-dark1-90;
+    .password-reset-modal-content {
+        width: 30rem;
+
+        .credentials-text-input {
+            width: 100%;
+            padding: 1rem;
+            color: @color-surface-dark5;
+            outline: var(--focus-outline-size) solid @color-surface-light2;
+            outline-offset: calc(-1 * var(--focus-outline-size));
+
+            &:hover {
+                outline-color: @color-surface-light4;
+            }
+
+            &:focus {
+                outline-color: @color-background-dark5;
+            }
+        }
     }
 
     .error-message {
         font-size: 1.1rem;
         margin-top: 2rem;
         text-align: center;
-        color: @color-accent2-90;
+        color: @color-accent5-90;
     }
 
     .cancel-button {
-        background-color: @color-surface-dark1;
+        background-color: transparent;
 
         &:hover {
-            background-color: @color-surface;
+            background-color: @color-surface-light3;
+        }
+
+        &:focus {
+            outline-color: @color-background-dark5;
+        }
+
+        .cancel-button-label {
+            color: @color-surface-dark2;
         }
     }
 }
