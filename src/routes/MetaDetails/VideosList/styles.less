@@ -4,16 +4,33 @@
     display: flex;
     flex-direction: column;
 
-    .seasons-bar, .message-label {
+    .seasons-bar, .message-container {
         flex: none;
         width: var(--item-size);
+    }
+
+    .seasons-bar {
         padding: 1rem 0;
     }
 
-    .message-label {
-        font-size: 1.4rem;
-        text-align: center;
-        color: @color-surface-light5;
+    .message-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 100%;
+        padding: 2rem;
+        background-color: @color-background-dark3-80;
+
+        .image {
+            flex: none;
+            margin-bottom: 1rem;
+        }
+
+        .label {
+            font-size: 1.4rem;
+            text-align: center;
+            color: @color-surface-light5;
+        }
     }
 
     .search-container {

@@ -2,6 +2,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
+const Image = require('stremio/common/Image');
 const TextInput = require('stremio/common/TextInput');
 const SeasonsBar = require('./SeasonsBar');
 const Video = require('./Video');
@@ -39,8 +40,9 @@ const VideosList = ({ className, metaResource }) => {
                     </React.Fragment>
                     :
                     metaResource.content.type === 'Err' || videosForSeason.length === 0 ?
-                        <div className={styles['message-label']}>
-                            No videos found for this meta
+                        <div className={styles['message-container']}>
+                            <Image className={styles['image']} src={'/images/meta_details_cat.png'} />
+                            <div className={styles['label']}>No videos found for this meta</div>
                         </div>
                         :
                         <React.Fragment>
