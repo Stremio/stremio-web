@@ -1,5 +1,9 @@
 @import (reference) '~stremio-colors/dist/less/stremio-colors.less';
 
+:import('~stremio/common/MetaPreview/styles.less') {
+    meta-info-container: meta-info-container;
+}
+
 .metadetails-container {
     display: flex;
     flex-direction: column;
@@ -41,6 +45,10 @@
         .meta-preview {
             flex: 1;
             align-self: stretch;
+
+            .meta-info-container {
+                width: 32.5rem;
+            }
         }
 
         .videos-list, .streams-list {
