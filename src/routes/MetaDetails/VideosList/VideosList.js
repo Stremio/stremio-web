@@ -72,11 +72,7 @@ const VideosList = ({ className, metaResource }) => {
                             <div className={styles['videos-scroll-container']}>
                                 {videosForSeason
                                     .filter((video) => {
-                                        return search.length === 0 ||
-                                            (
-                                                (typeof video.title === 'string' && video.title.toLowerCase().includes(search.toLowerCase())) ||
-                                                (video.released.toLocaleString(undefined, { year: '2-digit', month: 'short', day: 'numeric' }).toLowerCase().includes(search.toLowerCase()))
-                                            );
+                                        return search.length === 0 || (typeof video.title === 'string' && video.title.toLowerCase().includes(search.toLowerCase()));
                                     })
                                     .map((video, index) => (
                                         <Video
