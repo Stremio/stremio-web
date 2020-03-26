@@ -1,13 +1,13 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const Icon = require('stremio-icons/dom');
-const { MainNavBars, MetaRow } = require('stremio/common');
+const { MainNavBars, MetaRow, useDeepEqualMemo } = require('stremio/common');
 const useSearch = require('./useSearch');
 const styles = require('./styles');
 
 const Search = ({ queryParams }) => {
     const search = useSearch(queryParams);
-    const query = React.useMemo(() => {
+    const query = useDeepEqualMemo(() => {
         return search.selected !== null ?
             search.selected.extra.reduce((query, [name, value]) => {
                 if (name === 'search') {
