@@ -110,17 +110,17 @@
             padding: 0 1.5rem 1.5rem 1.5rem;
 
             .warning-info {
+                flex: none;
+                max-height: 2.4em;
                 margin-bottom: 1rem;
                 font-size: 1.2rem;
-                color: @color-surface-light5;
+                color: @color-surface-light5-90;
             }
 
             .install-button {
-                display: flex;
-                flex-direction: row;
-                align-items: center;
-                justify-content: center;
-                width: 10rem;
+                flex: none;
+                min-width: 10rem;
+                max-width: 15rem;
                 padding: 1rem;
                 background-color: @color-accent3;
 
@@ -129,7 +129,10 @@
                 }
 
                 .label {
-                    color: @color-surface-light5;
+                    max-height: 2.4em;
+                    font-weight: 500;
+                    text-align: center;
+                    color: @color-surface-light5-90;
                 }
             }
         }
