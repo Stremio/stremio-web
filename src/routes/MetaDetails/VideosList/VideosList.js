@@ -62,7 +62,7 @@ const VideosList = ({ className, metaResource }) => {
                                     <TextInput
                                         className={styles['search-input']}
                                         type={'text'}
-                                        placeholder={'Search addons'}
+                                        placeholder={'Search videos'}
                                         value={search}
                                         onChange={searchInputOnChange}
                                     />
