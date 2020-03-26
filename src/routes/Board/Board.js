@@ -20,6 +20,7 @@ const Board = () => {
             switch (event.value) {
                 case 'play': {
                     // TODO check streams storage
+                    // TODO add videos page to the history stack if needed
                     window.location = `#/metadetails/${encodeURIComponent(event.dataset.type)}/${encodeURIComponent(event.dataset.id)}${event.dataset.videoId !== null ? `/${encodeURIComponent(event.dataset.videoId)}` : ''}`;
                     break;
                 }
