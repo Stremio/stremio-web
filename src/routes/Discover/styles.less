@@ -41,7 +41,10 @@
                 flex-shrink: 1;
                 flex-basis: 15rem;
                 height: 3.5rem;
-                margin-right: 1.5rem;
+
+                &:not(:first-child) {
+                    margin-left: 1.5rem;
+                }
 
                 &:nth-child(n+4) {
                     display: none;
@@ -64,6 +67,7 @@
                 justify-content: center;
                 width: 3.5rem;
                 height: 3.5rem;
+                margin-left: 1.5rem;
                 background-color: @color-background;
 
                 &:not(:nth-last-child(2)) {
