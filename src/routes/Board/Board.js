@@ -1,4 +1,5 @@
 const React = require('react');
+const { useServices } = require('stremio/services');
 const { MainNavBars, MetaRow, useDeepEqualMemo } = require('stremio/common');
 const useBoard = require('./useBoard');
 const useContinueWatching = require('./useContinueWatching');
@@ -6,15 +7,34 @@ const styles = require('./styles');
 
 const CONTINUE_WATCHING_OPTIONS = [
     { label: 'Play', value: 'play' },
+    { label: 'Details', value: 'details' },
     { label: 'Dismiss', value: 'dismiss' }
 ];
 
 const Board = () => {
+    const { core } = useServices();
     const board = useBoard();
     const continueWatching = useContinueWatching();
     const continueWatchingItems = useDeepEqualMemo(() => {
         const onSelect = (event) => {
-            // TODO {{event.value}} {{event.dataset}}
+            switch (event.value) {
+                case 'play': {
+                    break;
+                }
+                case 'details': {
+                    break;
+                }
+                case 'dismiss': {
+                    core.dispatch({
+                        action: 'Ctx',
+                        args: {
+                            action: 'RewindLibraryItem',
+                            args: event.dataset.id
+                        }
+                    });
+                    break;
+                }
+            }
         };
         return continueWatching.lib_items.map(({ id, ...libItem }) => ({
             ...libItem,
