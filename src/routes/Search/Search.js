@@ -9,7 +9,7 @@ const Search = ({ queryParams }) => {
     const search = useSearch(queryParams);
     const query = useDeepEqualMemo(() => {
         return search.selected !== null ?
-            search.selected.extra.reduce((query, [name, value]) => {
+            search.selected.extra.reduceRight((query, [name, value]) => {
                 if (name === 'search') {
                     return value;
                 }
