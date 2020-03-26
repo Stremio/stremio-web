@@ -3,12 +3,10 @@
 
 :import('~stremio/common/MetaRow/styles.less') {
     meta-item: meta-item;
-    see-all-container: see-all-container;
 }
 
 :import('~stremio/common/MetaRow/MetaRowPlaceholder/styles.less') {
     meta-item-placeholder: meta-item;
-    see-all-container-placeholder: see-all-container;
 }
 
 .board-container {
@@ -21,7 +19,7 @@
         height: 100%;
         overflow-y: auto;
 
-        .board-row, .board-row-placeholder {
+        .board-row {
             margin: 4rem 2rem;
 
             &:first-child {
@@ -31,10 +29,6 @@
             &:last-child {
                 margin-bottom: 2rem;
             }
-
-            .see-all-container, .see-all-container-placeholder {
-                width: 12rem;
-            }
         }
     }
 }
@@ -42,7 +36,7 @@
 @media only screen and (min-width: @large) {
     .board-container {
         .board-content {
-            .board-row, .board-row-placeholder {
+            .board-row {
                 .meta-item, .meta-item-placeholder {
                     &:nth-child(n+9) {
                         display: none;
@@ -56,7 +50,7 @@
 @media only screen and (max-width: @large) {
     .board-container {
         .board-content {
-            .board-row, .board-row-placeholder {
+            .board-row {
                 .meta-item, .meta-item-placeholder {
                     &:nth-child(n+8) {
                         display: none;
@@ -70,7 +64,7 @@
 @media only screen and (max-width: @medium) {
     .board-container {
         .board-content {
-            .board-row, .board-row-placeholder {
+            .board-row {
                 .meta-item, .meta-item-placeholder {
                     &:nth-child(n+7) {
                         display: none;
@@ -84,7 +78,7 @@
 @media only screen and (max-width: @small) {
     .board-container {
         .board-content {
-            .board-row, .board-row-placeholder {
+            .board-row {
                 .meta-item, .meta-item-placeholder {
                     &:nth-child(n+6) {
                         display: none;
@@ -98,7 +92,7 @@
 @media only screen and (max-width: @xsmall) {
     .board-container {
         .board-content {
-            .board-row, .board-row-placeholder {
+            .board-row {
                 .meta-item, .meta-item-placeholder {
                     &:nth-child(n+5) {
                         display: none;

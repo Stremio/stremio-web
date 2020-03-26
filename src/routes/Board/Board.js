@@ -1,35 +1,43 @@
 const React = require('react');
-const { MainNavBars, MetaRow } = require('stremio/common');
+const { MainNavBars, MetaRow, useDeepEqualMemo } = require('stremio/common');
 const useBoard = require('./useBoard');
 const useContinueWatching = require('./useContinueWatching');
-const useItemOptions = require('./useItemOptions');
 const styles = require('./styles');
+
+const CONTINUE_WATCHING_OPTIONS = [
+    { label: 'Play', value: 'play' },
+    { label: 'Dismiss', value: 'dismiss' }
+];
 
 const Board = () => {
     const board = useBoard();
     const continueWatching = useContinueWatching();
-    const [options, optionOnSelect] = useItemOptions();
+    const continueWatchingItems = useDeepEqualMemo(() => {
+        const onSelect = (event) => {
+            // TODO {{event.value}} {{event.dataset}}
+        };
+        return continueWatching.lib_items.map(({ id, ...libItem }) => ({
+            ...libItem,
+            dataset: { id },
+            options: CONTINUE_WATCHING_OPTIONS,
+            optionOnSelect: onSelect
+        }));
+    }, [continueWatching.lib_items]);
     return (
         <MainNavBars className={styles['board-container']} route={'board'}>
             <div className={styles['board-content']}>
                 {
-                    continueWatching.lib_items.length > 0 ?
+                    continueWatchingItems.length > 0 ?
                         <MetaRow
                             className={styles['board-row']}
                             title={'Continue Watching'}
-                            items={continueWatching.lib_items.map(({ id, videoId, ...libItem }) => ({
-                                ...libItem,
-                                dataset: { id, videoId, type: libItem.type },
-                                options,
-                                optionOnSelect
-                            }))}
-                            limit={10}
+                            items={continueWatchingItems}
                         />
                         :
                         null
                 }
                 {board.catalog_resources.map((catalog_resource, index) => {
-                    const title = `${catalog_resource.addon_name} - ${catalog_resource.request.path.id} ${catalog_resource.request.path.type_name}`;
+                    const title = `${catalog_resource.origin} - ${catalog_resource.request.path.id} ${catalog_resource.request.path.type_name}`;
                     switch (catalog_resource.content.type) {
                         case 'Ready': {
                             return (
@@ -39,7 +47,6 @@ const Board = () => {
                                     title={title}
                                     items={catalog_resource.content.content}
                                     href={catalog_resource.href}
-                                    limit={10}
                                 />
                             );
                         }
@@ -51,7 +58,7 @@ const Board = () => {
                                     className={styles['board-row']}
                                     title={title}
                                     message={message}
-                                    limit={10}
+                                    href={catalog_resource.href}
                                 />
                             );
                         }
@@ -59,9 +66,9 @@ const Board = () => {
                             return (
                                 <MetaRow.Placeholder
                                     key={index}
-                                    className={styles['board-row-placeholder']}
+                                    className={styles['board-row']}
                                     title={title}
-                                    limit={10}
+                                    href={catalog_resource.href}
                                 />
                             );
                         }
