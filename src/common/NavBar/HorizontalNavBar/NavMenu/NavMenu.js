@@ -73,11 +73,11 @@ const NavMenu = (props) => {
                     <Icon className={styles['icon']} icon={'ic_addons'} />
                     <div className={styles['nav-menu-option-label']}>Addons</div>
                 </Button>
-                <Button className={styles['nav-menu-option-container']} title={'Remote Control'}>
+                <Button className={styles['nav-menu-option-container']} title={'Remote Control'} disabled={true}>
                     <Icon className={styles['icon']} icon={'ic_remote'} />
                     <div className={styles['nav-menu-option-label']}>Remote Control</div>
                 </Button>
-                <Button className={styles['nav-menu-option-container']} title={'Play Magnet Link'}>
+                <Button className={styles['nav-menu-option-container']} title={'Play Magnet Link'} disabled={true}>
                     <Icon className={styles['icon']} icon={'ic_magnet'} />
                     <div className={styles['nav-menu-option-label']}>Play Magnet Link</div>
                 </Button>
