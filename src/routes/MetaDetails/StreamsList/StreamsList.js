@@ -19,13 +19,13 @@ const StreamsList = ({ className, streamsResources }) => {
                 {
                     streamsResources.length === 0 ?
                         <div className={styles['message-container']}>
-                            <Image className={styles['image']} src={'/images/meta_details_cat.png'} />
+                            <Image className={styles['image']} src={'/images/empty.png'} />
                             <div className={styles['label']}>No addons were requested for streams</div>
                         </div>
                         :
                         streamsResources.every((streamsResource) => streamsResource.content.type === 'Err') ?
                             <div className={styles['message-container']}>
-                                <Image className={styles['image']} src={'/images/meta_details_cat.png'} />
+                                <Image className={styles['image']} src={'/images/empty.png'} />
                                 <div className={styles['label']}>No streams were found!</div>
                                 <div className={styles['description']}>Please install some addons to find more streams</div>
                             </div>
