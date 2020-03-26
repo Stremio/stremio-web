@@ -42,6 +42,7 @@ const Board = () => {
         };
         return continueWatching.lib_items.map(({ id, videoId, ...libItem }) => ({
             ...libItem,
+            playIcon: true,
             dataset: { id, videoId, type: libItem.type },
             options: CONTINUE_WATCHING_OPTIONS,
             optionOnSelect: onSelect
