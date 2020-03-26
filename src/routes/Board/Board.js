@@ -19,9 +19,12 @@ const Board = () => {
         const onSelect = (event) => {
             switch (event.value) {
                 case 'play': {
+                    // TODO check streams storage
+                    window.location = `#/metadetails/${encodeURIComponent(event.dataset.type)}/${encodeURIComponent(event.dataset.id)}${event.dataset.videoId !== null ? `/${encodeURIComponent(event.dataset.videoId)}` : ''}`;
                     break;
                 }
                 case 'details': {
+                    window.location = `#/metadetails/${encodeURIComponent(event.dataset.type)}/${encodeURIComponent(event.dataset.id)}${event.dataset.videoId !== null ? `/${encodeURIComponent(event.dataset.videoId)}` : ''}`;
                     break;
                 }
                 case 'dismiss': {
@@ -36,9 +39,9 @@ const Board = () => {
                 }
             }
         };
-        return continueWatching.lib_items.map(({ id, ...libItem }) => ({
+        return continueWatching.lib_items.map(({ id, videoId, ...libItem }) => ({
             ...libItem,
-            dataset: { id },
+            dataset: { id, videoId, type: libItem.type },
             options: CONTINUE_WATCHING_OPTIONS,
             optionOnSelect: onSelect
         }));

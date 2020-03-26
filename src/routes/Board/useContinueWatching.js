@@ -11,6 +11,7 @@ const mapContinueWatchingState = (continue_watching) => {
         name: lib_item.name,
         poster: lib_item.poster,
         posterShape: lib_item.posterShape,
+        videoId: lib_item.state.video_id,
         progress: lib_item.state.timeOffset > 0 && lib_item.state.duration > 0 ?
             lib_item.state.timeOffset / lib_item.state.duration
             :
