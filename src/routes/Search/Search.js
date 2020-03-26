@@ -24,12 +24,12 @@ const Search = ({ queryParams }) => {
             <div className={styles['search-content']}>
                 {
                     search.selected === null || search.selected.extra.every(([name]) => name !== 'search') ?
-                        <div className={styles['message-container']}>
-                            <div className={styles['message-content']}>
+                        <div className={styles['search-hints-container']}>
+                            <div className={styles['search-hint-container']}>
                                 <Icon className={styles['icon']} icon={'ic_movies'} />
                                 <div className={styles['label']}>Search for movies, series, YouTube and TV channels</div>
                             </div>
-                            <div className={styles['message-content']}>
+                            <div className={styles['search-hint-container']}>
                                 <Icon className={styles['icon']} icon={'ic_actor'} />
                                 <div className={styles['label']}>Search for actors, directors and writers</div>
                             </div>
