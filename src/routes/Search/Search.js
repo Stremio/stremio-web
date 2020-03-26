@@ -1,7 +1,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const Icon = require('stremio-icons/dom');
-const { MainNavBars, MetaRow, useDeepEqualMemo } = require('stremio/common');
+const { Image, MainNavBars, MetaRow, useDeepEqualMemo } = require('stremio/common');
 const useSearch = require('./useSearch');
 const styles = require('./styles');
 
@@ -37,9 +37,12 @@ const Search = ({ queryParams }) => {
                         :
                         search.catalog_resources.length === 0 ?
                             <div className={styles['message-container']}>
-                                <div className={styles['message-content']}>
-                                    <div className={styles['label']}> No addons were requested for catalogs</div>
-                                </div>
+                                <Image
+                                    className={styles['image']}
+                                    src={'/images/empty.png'}
+                                    alt={' '}
+                                />
+                                <div className={styles['message-label']}>No addons were requested for catalogs!</div>
                             </div>
                             :
                             search.catalog_resources.map((catalog_resource, index) => {
