@@ -22,6 +22,7 @@
     &:hover, &:focus, &:global(.active), &:global(.selected) {
         outline-style: none;
         background-color: @color-background-light3;
+        transition: background-color 100ms ease-out;
     }
 
     &.poster-shape-poster {
@@ -65,13 +66,14 @@
                 height: 100%;
                 object-position: center;
                 object-fit: cover;
+                opacity: 0.9;
             }
 
             .placeholder-icon {
                 flex: none;
                 width: 80%;
                 height: 50%;
-                fill: @color-background-light3;
+                fill: @color-background-light3-90;
             }
         }
 
@@ -91,11 +93,11 @@
                 filter: drop-shadow(0 0 0.5rem @color-background);
 
                 .play-icon-circle-centered-background {
-                    fill: @color-accent4;
+                    fill: @color-accent4-90;
                 }
 
                 .play-icon-circle-centered-icon {
-                    fill: @color-surface-light5;
+                    fill: @color-surface-light5-90;
                 }
             }
         }
@@ -144,14 +146,14 @@
                 display: block;
                 width: 100%;
                 height: 100%;
-                fill: @color-surface-light1;
+                fill: @color-surface-light1-90;
             }
 
             .popup-menu-container {
                 width: auto;
 
                 .multiselect-menu-container {
-                    min-width: 8rem;
+                    min-width: 6rem;
                     max-width: 12rem;
 
                     .multiselect-option-container {
@@ -160,11 +162,11 @@
 
                         &:hover, &:focus {
                             outline: none;
-                            background-color: @color-surface;
+                            background-color: @color-surface-light2;
                         }
 
                         .multiselect-option-label {
-                            color: @color-background-dark5;
+                            color: @color-background-dark5-90;
                         }
                     }
                 }
