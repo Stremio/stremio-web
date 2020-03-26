@@ -46,37 +46,41 @@ const Search = ({ queryParams }) => {
                             </div>
                             :
                             search.catalog_resources.map((catalog_resource, index) => {
+                                const title = `${catalog_resource.origin} - ${catalog_resource.request.path.id} ${catalog_resource.request.path.type_name}`;
                                 switch (catalog_resource.content.type) {
-                                    case 'Ready':
+                                    case 'Ready': {
                                         return (
                                             <MetaRow
                                                 key={index}
                                                 className={styles['search-row']}
-                                                title={catalog_resource.addon_name}
+                                                title={title}
                                                 items={catalog_resource.content.content}
                                                 href={catalog_resource.href}
-                                                limit={10}
                                             />
                                         );
-                                    case 'Err':
+                                    }
+                                    case 'Err': {
+                                        const message = `Error(${catalog_resource.content.content.type})${typeof catalog_resource.content.content.content === 'string' ? ` - ${catalog_resource.content.content.content}` : ''}`;
                                         return (
                                             <MetaRow
                                                 key={index}
                                                 className={styles['search-row']}
-                                                title={catalog_resource.addon_name}
-                                                message={`Error(${catalog_resource.content.content.type})${typeof catalog_resource.content.content.content === 'string' ? ` - ${catalog_resource.content.content.content}` : ''}`}
-                                                limit={10}
+                                                title={title}
+                                                message={message}
+                                                href={catalog_resource.href}
                                             />
                                         );
-                                    case 'Loading':
+                                    }
+                                    case 'Loading': {
                                         return (
                                             <MetaRow.Placeholder
                                                 key={index}
-                                                className={styles['search-row-placeholder']}
-                                                title={catalog_resource.addon_name}
-                                                limit={10}
+                                                className={styles['search-row']}
+                                                title={title}
+                                                href={catalog_resource.href}
                                             />
                                         );
+                                    }
                                 }
                             })
                 }
