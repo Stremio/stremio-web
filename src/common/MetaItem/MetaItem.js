@@ -14,7 +14,13 @@ const ICON_FOR_TYPE = new Map([
     ['series', 'ic_series'],
     ['channel', 'ic_channels'],
     ['tv', 'ic_tv'],
-    ['other', 'ic_movies']
+    ['book', 'ic_book'],
+    ['game', 'ic_games'],
+    ['music', 'ic_music'],
+    ['adult', 'ic_adult'],
+    ['radio', 'ic_radio'],
+    ['podcast', 'ic_podcast'],
+    ['other', 'ic_movies'],
 ]);
 
 const MetaItem = React.memo(({ className, type, name, poster, posterShape, playIcon, progress, options, dataset, optionOnSelect, ...props }) => {
