@@ -13,24 +13,32 @@ const mapSearchStateWithCtx = (search, ctx) => {
         '';
     const selected = search.selected;
     const catalog_resources = search.catalog_resources.map((catalog_resource) => {
-        catalog_resource.addon_name = ctx.profile.addons.reduce((addon_name, addon) => {
+        const request = catalog_resource.request;
+        const content = catalog_resource.content.type === 'Ready' ?
+            {
+                type: 'Ready',
+                content: catalog_resource.content.content.map((metaItem) => ({
+                    type: metaItem.type,
+                    name: metaItem.name,
+                    poster: metaItem.poster,
+                    posterShape: metaItem.posterShape,
+                    href: `#/metadetails/${encodeURIComponent(metaItem.type)}/${encodeURIComponent(metaItem.id)}` // TODO this should redirect with videoId at some cases
+                }))
+            }
+            :
+            catalog_resource.content;
+        const origin = catalog_resource.origin = ctx.profile.addons.reduce((origin, addon) => {
             if (addon.transportUrl === catalog_resource.request.base) {
-                return addon.manifest.name;
+                return typeof addon.manifest.name === 'string' && addon.manifest.name.length > 0 ?
+                    addon.manifest.name
+                    :
+                    addon.manifest.id;
             }
 
-            return addon_name;
+            return origin;
         }, catalog_resource.request.base);
-        if (catalog_resource.content.type === 'Ready') {
-            catalog_resource.content.content = catalog_resource.content.content.map((metaItem) => ({
-                type: metaItem.type,
-                name: metaItem.name,
-                poster: metaItem.poster,
-                posterShape: metaItem.posterShape,
-                href: `#/metadetails/${encodeURIComponent(metaItem.type)}/${encodeURIComponent(metaItem.id)}` // TODO this should redirect with videoId at some cases
-            }));
-        }
-        catalog_resource.href = `#/discover/${encodeURIComponent(catalog_resource.request.base)}/${encodeURIComponent(catalog_resource.request.path.type_name)}/${encodeURIComponent(catalog_resource.request.path.id)}?${queryString}`;
-        return catalog_resource;
+        const href = `#/discover/${encodeURIComponent(catalog_resource.request.base)}/${encodeURIComponent(catalog_resource.request.path.type_name)}/${encodeURIComponent(catalog_resource.request.path.id)}?${queryString}`;
+        return { request, content, origin, href };
     });
     return { selected, catalog_resources };
 };
