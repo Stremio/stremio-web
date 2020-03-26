@@ -41,20 +41,19 @@
             display: flex;
             flex-direction: row;
             align-items: flex-start;
-            justify-content: center;
-            max-height: calc(100% - 10rem);
-            margin: 5rem;
+            justify-content: flex-start;
+            align-content: flex-start;
+            flex-wrap: wrap;
+            padding: 4rem;
 
             .message-content {
-                flex: 1;
+                flex: 0 0 50%;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
                 justify-content: center;
-
-                &:not(:first-child) {
-                    margin-left: 5rem;
-                }
+                padding: 0 2rem;
+                margin-bottom: 4rem;
 
                 .icon {
                     flex: none;
