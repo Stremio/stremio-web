@@ -154,6 +154,29 @@
                 margin-right: 1.5rem;
                 padding: 0 1.5rem;
                 overflow-y: auto;
+
+                .meta-item-placeholder {
+                    padding: 1rem;
+
+                    .poster-container {
+                        padding-bottom: calc(100% * var(--poster-shape-ratio));
+                        background-color: var(--color-placeholder-background);
+                    }
+
+                    .title-bar-container {
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+                        height: 2.8rem;
+
+                        .title-label {
+                            flex: none;
+                            width: 60%;
+                            height: 1.2rem;
+                            background-color: var(--color-placeholder-background);
+                        }
+                    }
+                }
             }
 
             .message-container {

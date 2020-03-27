@@ -2,7 +2,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
-const { AddonDetailsModal, Button, MainNavBars, MetaItem, Image, MetaPreview, Multiselect, ModalDialog, PaginationInput, useBinaryState } = require('stremio/common');
+const { AddonDetailsModal, Button, MainNavBars, MetaItem, Image, MetaPreview, Multiselect, ModalDialog, PaginationInput, CONSTANTS, useBinaryState } = require('stremio/common');
 const { useServices } = require('stremio/services');
 const useDiscover = require('./useDiscover');
 const useSelectableInputs = require('./useSelectableInputs');
@@ -122,15 +122,22 @@ const Discover = ({ urlParams, queryParams }) => {
                                     </div>
                                     :
                                     discover.catalog_resource.content.type === 'Loading' ?
-                                        <div className={styles['message-container']}>
-                                            Loading
+                                        <div className={styles['meta-items-container']}>
+                                            {Array(CONSTANTS.CATALOG_PAGE_SIZE).fill(null).map((_, index) => (
+                                                <div key={index} className={styles['meta-item-placeholder']}>
+                                                    <div className={styles['poster-container']} />
+                                                    <div className={styles['title-bar-container']}>
+                                                        <div className={styles['title-label']} />
+                                                    </div>
+                                                </div>
+                                            ))}
                                         </div>
                                         :
                                         <div className={styles['meta-items-container']} onFocusCapture={metaItemsOnFocusCapture}>
                                             {discover.catalog_resource.content.content.map((metaItem, index) => (
                                                 <MetaItem
                                                     key={index}
-                                                    className={classnames(styles['meta-item'], { 'selected': selectedMetaItem === metaItem })}
+                                                    className={classnames({ 'selected': selectedMetaItem === metaItem })}
                                                     type={metaItem.type}
                                                     name={metaItem.name}
                                                     poster={metaItem.poster}
