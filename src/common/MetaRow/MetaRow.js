@@ -1,14 +1,14 @@
 const React = require('react');
+const ReactIs = require('react-is');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const Button = require('stremio/common/Button');
-const MetaItem = require('stremio/common/MetaItem');
 const CONSTANTS = require('stremio/common/CONSTANTS');
 const MetaRowPlaceholder = require('./MetaRowPlaceholder');
 const styles = require('./styles');
 
-const MetaRow = ({ className, title, message, items, href }) => {
+const MetaRow = ({ className, title, message, items, itemComponent, href }) => {
     return (
         <div className={classnames(className, styles['meta-row-container'])}>
             {
@@ -38,13 +38,18 @@ const MetaRow = ({ className, title, message, items, href }) => {
                     <div className={styles['message-container']} title={message}>{message}</div>
                     :
                     <div className={styles['meta-items-container']}>
-                        {items.slice(0, CONSTANTS.CATALOG_PREVIEW_SIZE).map((item, index) => (
-                            <MetaItem
-                                {...item}
-                                key={index}
-                                className={classnames(styles['meta-item'], styles['poster-shape-poster'], styles[`poster-shape-${item.posterShape}`])}
-                            />
-                        ))}
+                        {
+                            ReactIs.isValidElementType(itemComponent) ?
+                                items.slice(0, CONSTANTS.CATALOG_PREVIEW_SIZE).map((item, index) => {
+                                    return React.createElement(itemComponent, {
+                                        ...item,
+                                        key: index,
+                                        className: classnames(styles['meta-item'], styles['poster-shape-poster'], styles[`poster-shape-${item.posterShape}`])
+                                    });
+                                })
+                                :
+                                null
+                        }
                         {Array(Math.max(0, CONSTANTS.CATALOG_PREVIEW_SIZE - items.length)).fill(null).map((_, index) => (
                             <div key={index} className={classnames(styles['meta-item'], styles['poster-shape-poster'])} />
                         ))}
@@ -63,6 +68,7 @@ MetaRow.propTypes = {
     items: PropTypes.arrayOf(PropTypes.shape({
         posterShape: PropTypes.string
     })),
+    itemComponent: PropTypes.elementType,
     href: PropTypes.string
 };
 
