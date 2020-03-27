@@ -51,6 +51,8 @@ const onNewDiscoverState = (discover) => {
                 }
             }
         };
+    } else {
+        return null;
     }
 };
 
