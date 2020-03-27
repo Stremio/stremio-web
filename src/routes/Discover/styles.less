@@ -250,7 +250,7 @@
         .discover-content {
             .catalog-content-container {
                 .meta-items-container {
-                    grid-template-columns: repeat(8, 1fr);
+                    grid-template-columns: repeat(10, 1fr);
                 }
             }
         }
@@ -258,6 +258,30 @@
 }
 
 @media only screen and (max-width: @xxlarge) {
+    .discover-container {
+        .discover-content {
+            .catalog-content-container {
+                .meta-items-container {
+                    grid-template-columns: repeat(9, 1fr);
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: @xlarge) {
+    .discover-container {
+        .discover-content {
+            .catalog-content-container {
+                .meta-items-container {
+                    grid-template-columns: repeat(8, 1fr);
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: @large) {
     .discover-container {
         .discover-content {
             .catalog-content-container {
