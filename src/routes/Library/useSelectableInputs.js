@@ -17,15 +17,7 @@ const mapSelectableInputs = (library) => {
             .concat(library.type_names.map((type) => ({ label: type, value: JSON.stringify(type) }))),
         onSelect: (event) => {
             const type = JSON.parse(event.value);
-            const queryParams = new URLSearchParams(
-                library.selected !== null ?
-                    [
-                        ['sort', library.selected.sort],
-                        ['cw', library.selected.continue_watching ? '1' : '0']
-                    ]
-                    :
-                    []
-            );
+            const queryParams = new URLSearchParams(library.selected !== null ? [['sort', library.selected.sort]] : []);
             window.location.replace(`#/library${type !== null ? `/${encodeURIComponent(type)}` : ''}?${queryParams.toString()}`);
         }
     };
@@ -38,12 +30,7 @@ const mapSelectableInputs = (library) => {
         options: SORT_OPTIONS,
         onSelect: (event) => {
             const type = library.selected !== null ? library.selected.type_name : null;
-            const queryParams = new URLSearchParams(
-                [
-                    ['sort', event.value],
-                    ['cw', library.selected !== null && library.selected.continue_watching ? '1' : '0']
-                ]
-            );
+            const queryParams = new URLSearchParams([['sort', event.value]]);
             window.location.replace(`#/library${type !== null ? `/${encodeURIComponent(type)}` : ''}?${queryParams.toString()}`);
         }
     };

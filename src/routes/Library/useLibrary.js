@@ -1,8 +1,6 @@
 const React = require('react');
 const { useModelState } = require('stremio/common');
 
-const DEFAULT_SORT = 'lastwatched';
-
 const initLibraryState = () => ({
     selected: null,
     type_names: [],
@@ -28,44 +26,22 @@ const mapLibraryState = (library) => {
     return { selected, type_names, lib_items };
 };
 
-const onNewLibraryState = (library) => {
-    if (library.selected === null) {
-        return {
-            action: 'Load',
-            args: {
-                model: 'LibraryWithFilters',
-                args: {
-                    type_name: null,
-                    sort: DEFAULT_SORT,
-                    continue_watching: false
-                }
-            }
-        };
-    } else {
-        return null;
-    }
-};
-
 const useLibrary = (urlParams, queryParams) => {
-    const loadLibraryAction = React.useMemo(() => {
-        return {
-            action: 'Load',
+    const loadLibraryAction = React.useMemo(() => ({
+        action: 'Load',
+        args: {
+            model: 'LibraryWithFilters',
             args: {
-                model: 'LibraryWithFilters',
-                args: {
-                    type_name: typeof urlParams.type === 'string' ? urlParams.type : null,
-                    sort: queryParams.has('sort') ? queryParams.get('sort') : DEFAULT_SORT,
-                    continue_watching: queryParams.get('cw') === '1'
-                }
+                type_name: typeof urlParams.type === 'string' ? urlParams.type : null,
+                sort: queryParams.has('sort') ? queryParams.get('sort') : 'lastwatched'
             }
-        };
-    }, [urlParams, queryParams]);
+        }
+    }), [urlParams, queryParams]);
     return useModelState({
         model: 'library',
         action: loadLibraryAction,
         map: mapLibraryState,
-        init: initLibraryState,
-        onNewState: onNewLibraryState
+        init: initLibraryState
     });
 };
 
