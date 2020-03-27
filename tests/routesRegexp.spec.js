@@ -115,46 +115,16 @@ describe('routesRegexp', () => {
     describe('library route regexp', () => {
         it('match /library', async () => {
             expect(Array.from('/library'.match(routesRegexp.library.regexp)))
-                .toEqual(['/library', undefined, undefined]);
+                .toEqual(['/library', undefined]);
         });
 
-        it('match /library/', async () => {
-            expect(Array.from('/library/'.match(routesRegexp.library.regexp)))
-                .toEqual(['/library/', '', undefined]);
+        it('match /library/type', async () => {
+            expect(Array.from('/library/type'.match(routesRegexp.library.regexp)))
+                .toEqual(['/library/type', 'type']);
         });
 
-        it('match /library//', async () => {
-            expect(Array.from('/library//'.match(routesRegexp.library.regexp)))
-                .toEqual(['/library//', '', '']);
-        });
-
-        it('match /library/1', async () => {
-            expect(Array.from('/library/1'.match(routesRegexp.library.regexp)))
-                .toEqual(['/library/1', '1', undefined]);
-        });
-
-        it('match /library/1/', async () => {
-            expect(Array.from('/library/1/'.match(routesRegexp.library.regexp)))
-                .toEqual(['/library/1/', '1', '']);
-        });
-
-        it('match /library//2', async () => {
-            expect(Array.from('/library//2'.match(routesRegexp.library.regexp)))
-                .toEqual(['/library//2', '', '2']);
-        });
-
-        it('match /library/1/2', async () => {
-            expect(Array.from('/library/1/2'.match(routesRegexp.library.regexp)))
-                .toEqual(['/library/1/2', '1', '2']);
-        });
-
-        it('not match /library///', async () => {
-            expect('/library///'.match(routesRegexp.library.regexp))
-                .toBe(null);
-        });
-
-        it('not match /library/1/2/', async () => {
-            expect('/library/1/2/'.match(routesRegexp.library.regexp))
+        it('match /library/type/', async () => {
+            expect('/library/type/'.match(routesRegexp.library.regexp))
                 .toBe(null);
         });
     });
