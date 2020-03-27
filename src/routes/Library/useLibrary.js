@@ -1,6 +1,7 @@
 const React = require('react');
-const { useServices } = require('stremio/services');
 const { useModelState } = require('stremio/common');
+
+const DEFAULT_SORT = 'lastwatched';
 
 const initLibraryState = () => ({
     selected: null,
@@ -28,62 +29,37 @@ const mapLibraryState = (library) => {
 };
 
 const onNewLibraryState = (library) => {
-    if (library.selected === null && library.type_names.length > 0) {
+    if (library.selected === null) {
         return {
             action: 'Load',
             args: {
                 model: 'LibraryWithFilters',
                 args: {
-                    type_name: library.type_names[0]
+                    type_name: null,
+                    sort: DEFAULT_SORT,
+                    continue_watching: false
                 }
             }
         };
+    } else {
+        return null;
     }
 };
 
-const useLibrary = (urlParams) => {
-    const { core } = useServices();
+const useLibrary = (urlParams, queryParams) => {
     const loadLibraryAction = React.useMemo(() => {
-        if (typeof urlParams.type === 'string' && typeof urlParams.sort === 'string') {
-            return {
-                action: 'Load',
+        return {
+            action: 'Load',
+            args: {
+                model: 'LibraryWithFilters',
                 args: {
-                    model: 'LibraryWithFilters',
-                    args: {
-                        type_name: urlParams.type,
-                        sort_prop: urlParams.sort
-                    }
+                    type_name: typeof urlParams.type === 'string' ? urlParams.type : null,
+                    sort: queryParams.has('sort') ? queryParams.get('sort') : DEFAULT_SORT,
+                    continue_watching: queryParams.get('cw') === '1'
                 }
-            };
-        } else if (typeof urlParams.type === 'string') {
-            return {
-                action: 'Load',
-                args: {
-                    model: 'LibraryWithFilters',
-                    args: {
-                        type_name: urlParams.type
-                    }
-                }
-            };
-        } else {
-            const library = core.getState('library');
-            if (library.type_names.length > 0) {
-                return {
-                    action: 'Load',
-                    args: {
-                        model: 'LibraryWithFilters',
-                        args: {
-                            type_name: library.type_names[0]
-                        }
-                    }
-                };
-            } else {
-                return {
-                    action: 'Unload'
-                };
             }
-        }
-    }, [urlParams]);
+        };
+    }, [urlParams, queryParams]);
     return useModelState({
         model: 'library',
         action: loadLibraryAction,

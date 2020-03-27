@@ -7,10 +7,10 @@ const useSelectableInputs = require('./useSelectableInputs');
 const useItemOptions = require('./useItemOptions');
 const styles = require('./styles');
 
-const Library = ({ urlParams }) => {
-    const library = useLibrary(urlParams);
+const Library = ({ urlParams, queryParams }) => {
+    const library = useLibrary(urlParams, queryParams);
     const profile = useProfile();
-    const [typeSelect, sortPropSelect] = useSelectableInputs(library);
+    const [typeSelect, sortSelect] = useSelectableInputs(library);
     const [options, optionOnSelect] = useItemOptions();
     return (
         <MainNavBars className={styles['library-container']} route={'library'}>
@@ -19,7 +19,7 @@ const Library = ({ urlParams }) => {
                     profile.auth !== null && library.type_names.length > 0 ?
                         <div className={styles['selectable-inputs-container']}>
                             <Multiselect {...typeSelect} className={styles['select-input-container']} />
-                            <Multiselect {...sortPropSelect} className={styles['select-input-container']} />
+                            <Multiselect {...sortSelect} className={styles['select-input-container']} />
                         </div>
                         :
                         null
@@ -67,9 +67,9 @@ const Library = ({ urlParams }) => {
 
 Library.propTypes = {
     urlParams: PropTypes.exact({
-        type: PropTypes.string,
-        sort: PropTypes.string
-    })
+        type: PropTypes.string
+    }),
+    queryParams: PropTypes.instanceOf(URLSearchParams)
 };
 
 module.exports = Library;

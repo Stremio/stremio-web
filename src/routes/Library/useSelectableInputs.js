@@ -1,40 +1,53 @@
 const React = require('react');
 
-const SORT_PROP_OPTIONS = [
-    { label: 'Recent', value: 'ctime' },
+const SORT_OPTIONS = [
+    { label: 'Recent', value: 'lastwatched' },
     { label: 'A-Z', value: 'name' },
-    { label: 'Year', value: 'year' },
+    { label: 'Watched', value: 'timeswatched' },
 ];
 
 const mapSelectableInputs = (library) => {
     const typeSelect = {
         title: 'Select type',
         selected: library.selected !== null ?
-            [library.selected.type_name]
+            [JSON.stringify(library.selected.type_name)]
             :
             [],
-        options: library.type_names
-            .map((type) => ({ label: type, value: type })),
+        options: [{ label: 'All', value: JSON.stringify(null) }]
+            .concat(library.type_names.map((type) => ({ label: type, value: JSON.stringify(type) }))),
         onSelect: (event) => {
-            window.location.replace(`#/library/${encodeURIComponent(event.value)}`);
+            const type = JSON.parse(event.value);
+            const queryParams = new URLSearchParams(
+                library.selected !== null ?
+                    [
+                        ['sort', library.selected.sort],
+                        ['cw', library.selected.continue_watching ? '1' : '0']
+                    ]
+                    :
+                    []
+            );
+            window.location.replace(`#/library${type !== null ? `/${encodeURIComponent(type)}` : ''}?${queryParams.toString()}`);
         }
     };
-    const sortPropSelect = {
+    const sortSelect = {
         title: 'Select sort',
         selected: library.selected !== null ?
-            [library.selected.sort_prop]
+            [library.selected.sort]
             :
             [],
-        options: SORT_PROP_OPTIONS,
+        options: SORT_OPTIONS,
         onSelect: (event) => {
-            if (library.selected !== null) {
-                window.location.replace(`#/library/${encodeURIComponent(library.selected.type_name)}/${encodeURIComponent(event.value)}`);
-            } else if (library.type_names.length > 0) {
-                window.location.replace(`#/library/${encodeURIComponent(library.type_names[0])}/${encodeURIComponent(event.value)}`);
-            }
+            const type = library.selected !== null ? library.selected.type_name : null;
+            const queryParams = new URLSearchParams(
+                [
+                    ['sort', event.value],
+                    ['cw', library.selected !== null && library.selected.continue_watching ? '1' : '0']
+                ]
+            );
+            window.location.replace(`#/library${type !== null ? `/${encodeURIComponent(type)}` : ''}?${queryParams.toString()}`);
         }
     };
-    return [typeSelect, sortPropSelect];
+    return [typeSelect, sortSelect];
 };
 
 const useSelectableInputs = (library) => {
