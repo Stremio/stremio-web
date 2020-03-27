@@ -7,7 +7,7 @@ const SKIP_EXTRA = {
     isRequired: false
 };
 
-const navigateWithLoadRequest = (request) => {
+const navigateWithRequest = (request) => {
     const transportUrl = encodeURIComponent(request.base);
     const type = encodeURIComponent(request.path.type_name);
     const catalogId = encodeURIComponent(request.path.id);
@@ -87,7 +87,7 @@ const mapSelectableInputs = (discover) => {
             })
             .map(({ request }) => JSON.stringify(request)),
         onSelect: (event) => {
-            navigateWithLoadRequest(JSON.parse(event.value));
+            navigateWithRequest(JSON.parse(event.value));
         }
     };
     const catalogSelect = {
@@ -104,7 +104,7 @@ const mapSelectableInputs = (discover) => {
             })
             .map(({ request }) => JSON.stringify(request)),
         onSelect: (event) => {
-            navigateWithLoadRequest(JSON.parse(event.value));
+            navigateWithRequest(JSON.parse(event.value));
         }
     };
     const extraSelects = discover.selectable.extra.map((extra) => {
@@ -131,7 +131,7 @@ const mapSelectableInputs = (discover) => {
             :
             null;
         const onSelect = (event) => {
-            navigateWithLoadRequest({
+            navigateWithRequest({
                 base: selectedCatalogRequest.base,
                 path: {
                     resource: 'catalog',
@@ -156,7 +156,7 @@ const mapSelectableInputs = (discover) => {
                     String(requestedPage * CONSTANTS.CATALOG_PAGE_SIZE)
                     :
                     String((requestedPage - 2) * CONSTANTS.CATALOG_PAGE_SIZE);
-                navigateWithLoadRequest({
+                navigateWithRequest({
                     base: selectedCatalogRequest.base,
                     path: {
                         resource: 'catalog',
