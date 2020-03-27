@@ -1,7 +1,6 @@
 const React = require('react');
+const { CONSTANTS } = require('stremio/common');
 
-const NONE_EXTRA_VALUE = 'None';
-const CATALOG_PAGE_SIZE = 100;
 const SKIP_EXTRA = {
     name: 'skip',
     optionsLimit: 1,
@@ -21,7 +20,7 @@ const getNextExtra = (prevExtra, extraProp, extraValue) => {
         .concat([[extraProp.name, extraValue]])
         .reduceRight((result, [name, value]) => {
             if (extraProp.name === name) {
-                if (extraValue !== NONE_EXTRA_VALUE) {
+                if (extraValue !== CONSTANTS.NONE_EXTRA_VALUE) {
                     const optionsCount = result.reduce((optionsCount, [name]) => {
                         if (extraProp.name === name) {
                             optionsCount++;
@@ -69,7 +68,7 @@ const mapSelectableInputs = (discover) => {
         if (name === SKIP_EXTRA.name) {
             const skip = parseInt(value);
             if (isFinite(skip)) {
-                return Math.floor(skip / CATALOG_PAGE_SIZE) + 1;
+                return Math.floor(skip / CONSTANTS.CATALOG_PAGE_SIZE) + 1;
             }
         }
 
@@ -111,7 +110,7 @@ const mapSelectableInputs = (discover) => {
     const extraSelects = discover.selectable.extra.map((extra) => {
         const title = `Select ${extra.name}`;
         const isRequired = extra.isRequired;
-        const options = (extra.isRequired ? [] : [NONE_EXTRA_VALUE])
+        const options = (extra.isRequired ? [] : [CONSTANTS.NONE_EXTRA_VALUE])
             .concat(extra.options)
             .map((option) => ({
                 value: option,
@@ -121,13 +120,13 @@ const mapSelectableInputs = (discover) => {
             .reduce((selected, [name, value]) => {
                 if (name === extra.name) {
                     selected = selected
-                        .filter((value) => value !== NONE_EXTRA_VALUE)
+                        .filter((value) => value !== CONSTANTS.NONE_EXTRA_VALUE)
                         .concat([value]);
                 }
 
                 return selected;
-            }, extra.isRequired ? [] : [NONE_EXTRA_VALUE]);
-        const renderLabelText = selected.includes(NONE_EXTRA_VALUE) ?
+            }, extra.isRequired ? [] : [CONSTANTS.NONE_EXTRA_VALUE]);
+        const renderLabelText = selected.includes(CONSTANTS.NONE_EXTRA_VALUE) ?
             () => title
             :
             null;
@@ -154,9 +153,9 @@ const mapSelectableInputs = (discover) => {
                 }
 
                 const nextValue = event.value === 'next' ?
-                    String(requestedPage * CATALOG_PAGE_SIZE)
+                    String(requestedPage * CONSTANTS.CATALOG_PAGE_SIZE)
                     :
-                    String((requestedPage - 2) * CATALOG_PAGE_SIZE);
+                    String((requestedPage - 2) * CONSTANTS.CATALOG_PAGE_SIZE);
                 navigateWithLoadRequest({
                     base: selectedCatalogRequest.base,
                     path: {
