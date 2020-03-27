@@ -5,12 +5,9 @@
     flex-direction: column;
     background-color: @color-background-dark3-80;
 
-    .seasons-bar, .message-container {
-        flex: none;
-        width: var(--item-size);
-    }
-
     .seasons-bar {
+        flex: none;
+        align-self: stretch;
         padding: 1rem 0;
     }
 
@@ -19,6 +16,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        width: var(--item-size);
         padding: 2rem;
         background-color: @color-background-dark3-80;
 
@@ -36,6 +34,8 @@
     }
 
     .search-container {
+        flex: none;
+        align-self: stretch;
         padding: 0 1.5rem 1rem 1.5rem;
         background-color: @color-background-dark3-80;
 
