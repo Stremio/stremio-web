@@ -15,7 +15,7 @@ const navigateWithRequest = (request) => {
     window.location.replace(`#/discover/${transportUrl}/${type}/${catalogId}?${extra}`);
 };
 
-const getNextExtra = (prevExtra, extraProp, extraValue) => {
+const nextExtra = (prevExtra, extraProp, extraValue) => {
     return prevExtra
         .concat([[extraProp.name, extraValue]])
         .reduceRight((result, [name, value]) => {
@@ -137,7 +137,7 @@ const mapSelectableInputs = (discover) => {
                     resource: 'catalog',
                     type_name: selectedCatalogRequest.path.type_name,
                     id: selectedCatalogRequest.path.id,
-                    extra: getNextExtra(selectedCatalogRequest.path.extra, extra, event.value)
+                    extra: nextExtra(selectedCatalogRequest.path.extra, extra, event.value)
                 }
             });
         };
@@ -162,7 +162,7 @@ const mapSelectableInputs = (discover) => {
                         resource: 'catalog',
                         type_name: selectedCatalogRequest.path.type_name,
                         id: selectedCatalogRequest.path.id,
-                        extra: getNextExtra(selectedCatalogRequest.path.extra, SKIP_EXTRA_PROP, nextValue)
+                        extra: nextExtra(selectedCatalogRequest.path.extra, SKIP_EXTRA_PROP, nextValue)
                     }
                 });
             }
