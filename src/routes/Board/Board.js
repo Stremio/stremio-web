@@ -2,7 +2,7 @@ const React = require('react');
 const { useServices } = require('stremio/services');
 const { MainNavBars, MetaRow, useDeepEqualMemo } = require('stremio/common');
 const useBoard = require('./useBoard');
-const useContinueWatching = require('./useContinueWatching');
+const useContinueWatchingPreview = require('./useContinueWatchingPreview');
 const styles = require('./styles');
 
 const CONTINUE_WATCHING_OPTIONS = [
@@ -14,7 +14,7 @@ const CONTINUE_WATCHING_OPTIONS = [
 const Board = () => {
     const { core } = useServices();
     const board = useBoard();
-    const continueWatching = useContinueWatching();
+    const continueWatching = useContinueWatchingPreview();
     const continueWatchingItems = useDeepEqualMemo(() => {
         const onSelect = (event) => {
             switch (event.value) {

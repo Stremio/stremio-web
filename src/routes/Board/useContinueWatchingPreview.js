@@ -1,11 +1,11 @@
 const { useModelState } = require('stremio/common');
 
-const initContinueWatchingState = () => ({
+const initContinueWatchingPreviewState = () => ({
     lib_items: []
 });
 
-const mapContinueWatchingState = (continue_watching) => {
-    const lib_items = continue_watching.lib_items.map((lib_item) => ({
+const mapContinueWatchingPreviewState = (continue_watching_preview) => {
+    const lib_items = continue_watching_preview.lib_items.map((lib_item) => ({
         id: lib_item._id,
         type: lib_item.type,
         name: lib_item.name,
@@ -21,12 +21,12 @@ const mapContinueWatchingState = (continue_watching) => {
     return { lib_items };
 };
 
-const useContinueWatching = () => {
+const useContinueWatchingPreview = () => {
     return useModelState({
-        model: 'continue_watching',
-        map: mapContinueWatchingState,
-        init: initContinueWatchingState
+        model: 'continue_watching_preview',
+        map: mapContinueWatchingPreviewState,
+        init: initContinueWatchingPreviewState
     });
 };
 
-module.exports = useContinueWatching;
+module.exports = useContinueWatchingPreview;
