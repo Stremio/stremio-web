@@ -1,8 +1,6 @@
+const React = require('react');
+const { useServices } = require('stremio/services');
 const { useModelState } = require('stremio/common');
-
-const initContinueWatchingPreviewState = () => ({
-    lib_items: []
-});
 
 const mapContinueWatchingPreviewState = (continue_watching_preview) => {
     const lib_items = continue_watching_preview.lib_items.map((lib_item) => ({
@@ -22,6 +20,10 @@ const mapContinueWatchingPreviewState = (continue_watching_preview) => {
 };
 
 const useContinueWatchingPreview = () => {
+    const { core } = useServices();
+    const initContinueWatchingPreviewState = React.useMemo(() => {
+        return mapContinueWatchingPreviewState(core.getState('continue_watching_preview'));
+    }, []);
     return useModelState({
         model: 'continue_watching_preview',
         map: mapContinueWatchingPreviewState,
