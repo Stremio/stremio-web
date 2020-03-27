@@ -24,14 +24,12 @@ const mapDiscoverState = (discover) => {
                     type: metaItem.type,
                     name: metaItem.name,
                     logo: metaItem.logo,
-                    background: metaItem.background,
                     poster: metaItem.poster,
                     posterShape: metaItem.posterShape,
                     runtime: metaItem.runtime,
                     releaseInfo: metaItem.releaseInfo,
                     released: new Date(metaItem.released),
                     description: metaItem.description,
-                    links: metaItem.links,
                     trailer: metaItem.trailer,
                     href: `#/metadetails/${encodeURIComponent(metaItem.type)}/${encodeURIComponent(metaItem.id)}` // TODO this should redirect with videoId at some cases
                 }))
