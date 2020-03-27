@@ -1,17 +1,15 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const { Button, Multiselect, MainNavBars, MetaItem, useProfile } = require('stremio/common');
+const { Button, Multiselect, MainNavBars, LibItem, useProfile } = require('stremio/common');
 const useLibrary = require('./useLibrary');
 const useSelectableInputs = require('./useSelectableInputs');
-const useItemOptions = require('./useItemOptions');
 const styles = require('./styles');
 
 const Library = ({ urlParams, queryParams }) => {
-    const library = useLibrary(urlParams, queryParams);
     const profile = useProfile();
+    const library = useLibrary(urlParams, queryParams);
     const [typeSelect, sortSelect] = useSelectableInputs(library);
-    const [options, optionOnSelect] = useItemOptions();
     return (
         <MainNavBars className={styles['library-container']} route={'library'}>
             <div className={styles['library-content']}>
@@ -49,14 +47,8 @@ const Library = ({ urlParams, queryParams }) => {
                                     </div>
                                     :
                                     <div className={styles['meta-items-container']}>
-                                        {library.lib_items.map(({ id, videoId, ...libItem }, index) => (
-                                            <MetaItem
-                                                {...libItem}
-                                                key={index}
-                                                dataset={{ id, videoId, type: libItem.type }}
-                                                options={options}
-                                                optionOnSelect={optionOnSelect}
-                                            />
+                                        {library.lib_items.map((libItem, index) => (
+                                            <LibItem {...libItem} key={index} />
                                         ))}
                                     </div>
                 }
