@@ -1,8 +1,8 @@
 const React = require('react');
 const { CONSTANTS } = require('stremio/common');
 
-const SKIP_EXTRA = {
-    name: 'skip',
+const SKIP_EXTRA_PROP = {
+    name: CONSTANTS.SKIP_EXTRA_NAME,
     optionsLimit: 1,
     isRequired: false
 };
@@ -65,7 +65,7 @@ const mapSelectableInputs = (discover) => {
             }
         };
     const requestedPage = selectedCatalogRequest.path.extra.reduce((requestedPage, [name, value]) => {
-        if (name === SKIP_EXTRA.name) {
+        if (name === CONSTANTS.SKIP_EXTRA_NAME) {
             const skip = parseInt(value);
             if (isFinite(skip)) {
                 return Math.floor(skip / CONSTANTS.CATALOG_PAGE_SIZE) + 1;
@@ -162,7 +162,7 @@ const mapSelectableInputs = (discover) => {
                         resource: 'catalog',
                         type_name: selectedCatalogRequest.path.type_name,
                         id: selectedCatalogRequest.path.id,
-                        extra: getNextExtra(selectedCatalogRequest.path.extra, SKIP_EXTRA, nextValue)
+                        extra: getNextExtra(selectedCatalogRequest.path.extra, SKIP_EXTRA_PROP, nextValue)
                     }
                 });
             }

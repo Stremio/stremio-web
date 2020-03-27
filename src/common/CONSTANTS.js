@@ -3,11 +3,13 @@ const SUBTITLES_FONTS = ['Roboto', 'Arial', 'Halvetica', 'Times New Roman', 'Ver
 const CATALOG_PREVIEW_SIZE = 10;
 const CATALOG_PAGE_SIZE = 100;
 const NONE_EXTRA_VALUE = 'None';
+const SKIP_EXTRA_NAME = 'skip';
 
 module.exports = {
     SUBTITLES_SIZES,
     SUBTITLES_FONTS,
     CATALOG_PREVIEW_SIZE,
     CATALOG_PAGE_SIZE,
-    NONE_EXTRA_VALUE
+    NONE_EXTRA_VALUE,
+    SKIP_EXTRA_NAME
 };
