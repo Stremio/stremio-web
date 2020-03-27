@@ -1,62 +1,22 @@
 const React = require('react');
-const { useServices } = require('stremio/services');
-const { MainNavBars, MetaRow, useDeepEqualMemo } = require('stremio/common');
+const { MainNavBars, MetaRow, LibItem, MetaItem } = require('stremio/common');
 const useBoard = require('./useBoard');
 const useContinueWatchingPreview = require('./useContinueWatchingPreview');
 const styles = require('./styles');
 
-const CONTINUE_WATCHING_OPTIONS = [
-    { label: 'Play', value: 'play' },
-    { label: 'Details', value: 'details' },
-    { label: 'Dismiss', value: 'dismiss' }
-];
-
 const Board = () => {
-    const { core } = useServices();
     const board = useBoard();
-    const continueWatching = useContinueWatchingPreview();
-    const continueWatchingItems = useDeepEqualMemo(() => {
-        const onSelect = (event) => {
-            switch (event.value) {
-                case 'play': {
-                    // TODO check streams storage
-                    // TODO add videos page to the history stack if needed
-                    window.location = `#/metadetails/${encodeURIComponent(event.dataset.type)}/${encodeURIComponent(event.dataset.id)}${event.dataset.videoId !== null ? `/${encodeURIComponent(event.dataset.videoId)}` : ''}`;
-                    break;
-                }
-                case 'details': {
-                    window.location = `#/metadetails/${encodeURIComponent(event.dataset.type)}/${encodeURIComponent(event.dataset.id)}${event.dataset.videoId !== null ? `/${encodeURIComponent(event.dataset.videoId)}` : ''}`;
-                    break;
-                }
-                case 'dismiss': {
-                    core.dispatch({
-                        action: 'Ctx',
-                        args: {
-                            action: 'RewindLibraryItem',
-                            args: event.dataset.id
-                        }
-                    });
-                    break;
-                }
-            }
-        };
-        return continueWatching.lib_items.map(({ id, videoId, ...libItem }) => ({
-            ...libItem,
-            playIcon: true,
-            dataset: { id, videoId, type: libItem.type },
-            options: CONTINUE_WATCHING_OPTIONS,
-            optionOnSelect: onSelect
-        }));
-    }, [continueWatching.lib_items]);
+    const continueWatchingPreview = useContinueWatchingPreview();
     return (
         <MainNavBars className={styles['board-container']} route={'board'}>
             <div className={styles['board-content']}>
                 {
-                    continueWatchingItems.length > 0 ?
+                    continueWatchingPreview.lib_items.length > 0 ?
                         <MetaRow
                             className={styles['board-row']}
                             title={'Continue Watching'}
-                            items={continueWatchingItems}
+                            items={continueWatchingPreview.lib_items}
+                            itemComponent={LibItem}
                         />
                         :
                         null
@@ -71,6 +31,7 @@ const Board = () => {
                                     className={styles['board-row']}
                                     title={title}
                                     items={catalog_resource.content.content}
+                                    itemComponent={MetaItem}
                                     href={catalog_resource.href}
                                 />
                             );
