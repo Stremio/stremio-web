@@ -2,7 +2,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
-const { AddonDetailsModal, Button, MainNavBars, MetaItem, MetaPreview, Multiselect, ModalDialog, PaginationInput, useBinaryState } = require('stremio/common');
+const { AddonDetailsModal, Button, MainNavBars, MetaItem, Image, MetaPreview, Multiselect, ModalDialog, PaginationInput, useBinaryState } = require('stremio/common');
 const { useServices } = require('stremio/services');
 const useDiscover = require('./useDiscover');
 const useSelectableInputs = require('./useSelectableInputs');
@@ -91,17 +91,34 @@ const Discover = ({ urlParams, queryParams }) => {
                     {
                         discover.selectable.types.length === 0 && discover.catalog_resource === null ?
                             <div className={styles['message-container']}>
-                                No catalogs
+                                <Image
+                                    className={styles['image']}
+                                    src={'/images/empty.png'}
+                                    alt={' '}
+                                />
+                                <div className={styles['message-label']}>No catalogs avaliable.</div>
                             </div>
                             :
                             discover.catalog_resource === null ?
                                 <div className={styles['message-container']}>
-                                    No select
+                                    <Image
+                                        className={styles['image']}
+                                        src={'/images/empty.png'}
+                                        alt={' '}
+                                    />
+                                    <div className={styles['message-label']}>No catalog selected</div>
                                 </div>
                                 :
                                 discover.catalog_resource.content.type === 'Err' ?
                                     <div className={styles['message-container']}>
-                                        Catalog Error
+                                        <Image
+                                            className={styles['image']}
+                                            src={'/images/empty.png'}
+                                            alt={' '}
+                                        />
+                                        <div className={styles['message-label']}>
+                                            {`Error(${discover.catalog_resource.content.content.type})${typeof discover.catalog_resource.content.content.content === 'string' ? ` - ${discover.catalog_resource.content.content.content}` : ''}`}
+                                        </div>
                                     </div>
                                     :
                                     discover.catalog_resource.content.type === 'Loading' ?

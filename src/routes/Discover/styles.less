@@ -157,9 +157,27 @@
             }
 
             .message-container {
-                padding: 0 1.5rem;
-                font-size: 2rem;
-                color: @color-surface-light5;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 4rem;
+
+                .image {
+                    flex: none;
+                    width: 12rem;
+                    height: 12rem;
+                    margin-bottom: 1rem;
+                    object-fit: contain;
+                    object-position: center;
+                    opacity: 0.9;
+                }
+
+                .message-label {
+                    flex: 0 1 auto;
+                    font-size: 2.5rem;
+                    text-align: center;
+                    color: @color-secondaryvariant2-light1-90;
+                }
             }
         }
 
