@@ -18,6 +18,7 @@ const VideosList = ({ className, metaResource }) => {
     }, [metaResource]);
     const [seasons, selectedSeason, videosForSeason, selectSeason] = useSelectableSeasons(videos);
     const seasonOnSelect = React.useCallback((event) => {
+        setSearch('');
         selectSeason(event.value);
     }, []);
     const [search, setSearch] = React.useState('');
