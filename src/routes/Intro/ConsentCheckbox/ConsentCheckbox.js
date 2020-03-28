@@ -4,7 +4,7 @@ const classnames = require('classnames');
 const { Button, Checkbox } = require('stremio/common');
 const styles = require('./styles');
 
-const ConsentCheckbox = React.forwardRef(({ className, checked, label, link, href, onToggle, ...props }, ref) => {
+const ConsentCheckbox = React.forwardRef(({ className, label, link, href, onToggle, ...props }, ref) => {
     const checkboxOnClick = React.useCallback((event) => {
         if (typeof props.onClick === 'function') {
             props.onClick(event);
@@ -22,7 +22,7 @@ const ConsentCheckbox = React.forwardRef(({ className, checked, label, link, hre
         event.nativeEvent.togglePrevented = true;
     }, []);
     return (
-        <Checkbox {...props} ref={ref} className={classnames(className, styles['consent-checkbox-container'])} checked={checked} onClick={checkboxOnClick}>
+        <Checkbox {...props} ref={ref} className={classnames(className, styles['consent-checkbox-container'])} onClick={checkboxOnClick}>
             <div className={styles['label']}>
                 {label}
                 {' '}
