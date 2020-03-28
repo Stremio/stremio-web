@@ -17,7 +17,7 @@ const ConsentCheckbox = React.forwardRef(({ className, checked, label, link, hre
                 nativeEvent: event.nativeEvent
             });
         }
-    }, [onToggle]);
+    }, [onToggle, props.onClick]);
     const linkOnClick = React.useCallback((event) => {
         event.nativeEvent.togglePrevented = true;
     }, []);
