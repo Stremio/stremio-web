@@ -15,10 +15,9 @@ const initDiscoverState = () => ({
 
 const mapDiscoverState = (discover) => {
     const selectable = {
-        types: discover.selectable.types
-            .sort((t1, t2) => {
-                return comparatorWithPriorities(CONSTANTS.TYPE_PRIORITIES)(t1.name, t2.name);
-            }),
+        types: discover.selectable.types.sort((t1, t2) => {
+            return comparatorWithPriorities(CONSTANTS.TYPE_PRIORITIES)(t1.name, t2.name);
+        }),
         catalogs: discover.selectable.catalogs,
         extra: discover.selectable.extra,
         has_next_page: discover.selectable.has_next_page,
@@ -28,13 +27,13 @@ const mapDiscoverState = (discover) => {
         {
             request: discover.catalog_resource.request,
             content: {
-                type: discover.catalog_resource.content.type,
+                type: 'Ready',
                 content: discover.catalog_resource.content.content.map((metaItem) => ({
                     type: metaItem.type,
                     name: metaItem.name,
                     logo: metaItem.logo,
                     poster: metaItem.poster,
-                    posterShape: metaItem.posterShape,
+                    posterShape: metaItem.posterShape === 'landscape' ? 'square' : metaItem.posterShape,
                     runtime: metaItem.runtime,
                     releaseInfo: metaItem.releaseInfo,
                     released: new Date(metaItem.released),
