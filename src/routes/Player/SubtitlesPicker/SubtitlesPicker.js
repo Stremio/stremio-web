@@ -1,7 +1,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const { Button, CONSTANTS, languageNames } = require('stremio/common');
+const { Button, CONSTANTS, comparatorWithPriorities, languageNames } = require('stremio/common');
 const DiscreteSelectInput = require('./DiscreteSelectInput');
 const styles = require('./styles');
 
@@ -11,17 +11,6 @@ const ORIGIN_PRIORITIES = {
 };
 const LANGUAGE_PRIORITIES = {
     'eng': 1
-};
-
-const comparatorWithPriorities = (priorities) => {
-    return (a, b) => {
-        const valueA = priorities[a];
-        const valueB = priorities[b];
-        if (!isNaN(valueA) && !isNaN(valueB)) return valueA - valueB;
-        if (!isNaN(valueA)) return -1;
-        if (!isNaN(valueB)) return 1;
-        return a - b;
-    };
 };
 
 const SubtitlesPicker = (props) => {
