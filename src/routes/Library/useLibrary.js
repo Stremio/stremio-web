@@ -1,5 +1,5 @@
 const React = require('react');
-const { useModelState } = require('stremio/common');
+const { CONSTANTS, useModelState, comparatorWithPriorities } = require('stremio/common');
 
 const initLibraryState = () => ({
     selected: null,
@@ -9,7 +9,7 @@ const initLibraryState = () => ({
 
 const mapLibraryState = (library) => {
     const selected = library.selected;
-    const type_names = library.type_names;
+    const type_names = library.type_names.sort(comparatorWithPriorities(CONSTANTS.TYPE_PRIORITIES));
     const lib_items = library.lib_items.map((lib_item) => ({
         id: lib_item._id,
         type: lib_item.type,
