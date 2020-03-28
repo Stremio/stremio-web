@@ -2,8 +2,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
-const { AddonDetailsModal, Button, MainNavBars, MetaItem, Image, MetaPreview, Multiselect, ModalDialog, PaginationInput, CONSTANTS, useBinaryState } = require('stremio/common');
-const { useServices } = require('stremio/services');
+const { AddonDetailsModal, Button, MainNavBars, MetaItem, Image, MetaPreview, Multiselect, ModalDialog, PaginationInput, CONSTANTS, useBinaryState, useProfile } = require('stremio/common');
 const useDiscover = require('./useDiscover');
 const useSelectableInputs = require('./useSelectableInputs');
 const styles = require('./styles');
@@ -20,10 +19,9 @@ const getMetaItemAtIndex = (catalog_resource, index) => {
 };
 
 const Discover = ({ urlParams, queryParams }) => {
-    const { core } = useServices();
-    const state = core.getState();
     const discover = useDiscover(urlParams, queryParams);
     const [selectInputs, paginationInput] = useSelectableInputs(discover);
+    const profile = useProfile();
     const [inputsModalOpen, openInputsModal, closeInputsModal] = useBinaryState(false);
     const [addonModalOpen, openAddonModal, closeAddonModal] = useBinaryState(false);
     const [selectedMetaItem, setSelectedMetaItem] = React.useState(() => {
@@ -77,7 +75,7 @@ const Discover = ({ urlParams, queryParams }) => {
                     }
                 </div>
                 {
-                    discover.catalog_resource !== null && !state.ctx.profile.addons.some((addon) => addon.transportUrl === discover.catalog_resource.request.base) ?
+                    discover.catalog_resource !== null && !profile.addons.some((addon) => addon.transportUrl === discover.catalog_resource.request.base) ?
                         <div className={styles['missing-addon-warning-container']}>
                             <div className={styles['warning-info']}>This addon is not installed. Install now?</div>
                             <Button className={styles['install-button']} title={'Install addon'} onClick={openAddonModal}>
