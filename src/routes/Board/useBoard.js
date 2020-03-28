@@ -33,8 +33,7 @@ const mapBoardStateWithCtx = (board, ctx) => {
 
             return origin;
         }, catalog_resource.request.base);
-        const href = `#/discover/${encodeURIComponent(catalog_resource.request.base)}/${encodeURIComponent(catalog_resource.request.path.type_name)}/${encodeURIComponent(catalog_resource.request.path.id)}`;
-        return { request, content, origin, href };
+        return { request, content, origin };
     });
     return { selected, catalog_resources };
 };
