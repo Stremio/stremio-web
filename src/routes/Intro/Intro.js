@@ -3,8 +3,8 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const { Modal, useRouteFocused } = require('stremio-router');
-const { Button, Image, useBinaryState } = require('stremio/common');
 const { useServices } = require('stremio/services');
+const { Button, Image, useBinaryState } = require('stremio/common');
 const CredentialsTextInput = require('./CredentialsTextInput');
 const ConsentCheckbox = require('./ConsentCheckbox');
 const PasswordResetModal = require('./PasswordResetModal');
@@ -229,10 +229,9 @@ const Intro = ({ queryParams }) => {
         dispatch({ type: 'toggle-checkbox', name: 'marketingAccepted' });
     }, []);
     const switchFormOnClick = React.useCallback(() => {
-        const nextQueryParams = new URLSearchParams(queryParams);
-        nextQueryParams.set('form', state.form === SIGNUP_FORM ? LOGIN_FORM : SIGNUP_FORM);
-        window.location = `#/intro?${nextQueryParams}`;
-    }, [queryParams, state.form]);
+        const queryParams = new URLSearchParams([['form', state.form === SIGNUP_FORM ? LOGIN_FORM : SIGNUP_FORM]]);
+        window.location = `#/intro?${queryParams.toString()}`;
+    }, [state.form]);
     React.useEffect(() => {
         if ([LOGIN_FORM, SIGNUP_FORM].includes(queryParams.get('form'))) {
             dispatch({ type: 'set-form', form: queryParams.get('form') });
