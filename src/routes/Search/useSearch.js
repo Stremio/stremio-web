@@ -13,11 +13,11 @@ const mapSearchStateWithCtx = (search, ctx) => {
         const content = catalog_resource.content.type === 'Ready' ?
             {
                 type: 'Ready',
-                content: catalog_resource.content.content.map((metaItem) => ({
+                content: catalog_resource.content.content.map((metaItem, _, metaItems) => ({
                     type: metaItem.type,
                     name: metaItem.name,
                     poster: metaItem.poster,
-                    posterShape: metaItem.posterShape,
+                    posterShape: metaItems[0].posterShape,
                     href: `#/metadetails/${encodeURIComponent(metaItem.type)}/${encodeURIComponent(metaItem.id)}` // TODO this should redirect with videoId at some cases
                 }))
             }
