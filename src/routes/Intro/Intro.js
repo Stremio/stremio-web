@@ -238,7 +238,7 @@ const Intro = ({ queryParams }) => {
         }
     }, [queryParams]);
     React.useEffect(() => {
-        if (typeof state.error === 'string' && state.error.length > 0) {
+        if (routeFocused && typeof state.error === 'string' && state.error.length > 0) {
             errorRef.current.scrollIntoView();
         }
     }, [state.error]);
