@@ -18,6 +18,7 @@ const SharePrompt = require('./SharePrompt');
 const Slider = require('./Slider');
 const TextInput = require('./TextInput');
 const { ToastProvider, useToast } = require('./Toast');
+const comparatorWithPriorities = require('./comparatorWithPriorities');
 const CONSTANTS = require('./CONSTANTS');
 const languageNames = require('./languageNames');
 const routesRegexp = require('./routesRegexp');
@@ -55,6 +56,7 @@ module.exports = {
     TextInput,
     ToastProvider,
     useToast,
+    comparatorWithPriorities,
     CONSTANTS,
     languageNames,
     routesRegexp,
