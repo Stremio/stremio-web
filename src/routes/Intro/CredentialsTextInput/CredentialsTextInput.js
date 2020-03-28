@@ -10,7 +10,7 @@ const CredentialsTextInput = React.forwardRef((props, ref) => {
 
         if (!event.nativeEvent.navigationPrevented) {
             if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
-                event.stopPropagation();
+                event.nativeEvent.spatialNavigationPrevented = true;
             }
 
             if (event.key === 'ArrowDown') {
