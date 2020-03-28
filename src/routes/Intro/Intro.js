@@ -142,7 +142,7 @@ const Intro = ({ queryParams }) => {
                 action: 'Logout'
             }
         });
-        window.location.replace('#/');
+        window.location = '#/';
     }, [state.termsAccepted]);
     const signup = React.useCallback(() => {
         if (typeof state.email !== 'string' || state.email.length === 0 || !emailRef.current.validity.valid) {
@@ -252,7 +252,7 @@ const Intro = ({ queryParams }) => {
             switch (event) {
                 case 'UserAuthenticated': {
                     closeLoaderModal();
-                    window.location.replace('#/');
+                    window.location = '#/';
                     break;
                 }
                 case 'Error': {
