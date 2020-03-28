@@ -207,7 +207,7 @@ const Discover = ({ urlParams, queryParams }) => {
 };
 
 Discover.propTypes = {
-    urlParams: PropTypes.exact({
+    urlParams: PropTypes.shape({
         transportUrl: PropTypes.string,
         type: PropTypes.string,
         catalogId: PropTypes.string

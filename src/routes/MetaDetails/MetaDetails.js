@@ -113,7 +113,7 @@ const MetaDetails = ({ urlParams }) => {
 };
 
 MetaDetails.propTypes = {
-    urlParams: PropTypes.exact({
+    urlParams: PropTypes.shape({
         type: PropTypes.string,
         id: PropTypes.string,
         videoId: PropTypes.string

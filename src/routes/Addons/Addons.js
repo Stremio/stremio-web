@@ -229,7 +229,7 @@ const Addons = ({ urlParams, queryParams }) => {
 };
 
 Addons.propTypes = {
-    urlParams: PropTypes.exact({
+    urlParams: PropTypes.shape({
         transportUrl: PropTypes.string,
         catalogId: PropTypes.string,
         type: PropTypes.string
