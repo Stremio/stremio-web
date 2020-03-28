@@ -17,6 +17,7 @@ const Board = () => {
                             title={'Continue Watching'}
                             items={continueWatchingPreview.lib_items}
                             itemComponent={LibItem}
+                            href={continueWatchingPreview.href}
                         />
                         :
                         null

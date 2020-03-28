@@ -16,7 +16,8 @@ const mapContinueWatchingPreviewState = (continue_watching_preview) => {
             null,
         href: `#/metadetails/${encodeURIComponent(lib_item.type)}/${encodeURIComponent(lib_item._id)}${lib_item.state.video_id !== null ? `/${encodeURIComponent(lib_item.state.video_id)}` : ''}`
     }));
-    return { lib_items };
+    const href = '#/continuewatching';
+    return { lib_items, href };
 };
 
 const useContinueWatchingPreview = () => {
