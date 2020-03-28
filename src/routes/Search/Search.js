@@ -1,7 +1,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const Icon = require('stremio-icons/dom');
-const { Image, MainNavBars, MetaRow, useDeepEqualMemo } = require('stremio/common');
+const { Image, MainNavBars, MetaRow, MetaItem, useDeepEqualMemo } = require('stremio/common');
 const useSearch = require('./useSearch');
 const styles = require('./styles');
 
@@ -55,6 +55,7 @@ const Search = ({ queryParams }) => {
                                                 className={styles['search-row']}
                                                 title={title}
                                                 items={catalog_resource.content.content}
+                                                itemComponent={MetaItem}
                                                 href={catalog_resource.href}
                                             />
                                         );
