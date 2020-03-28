@@ -10564,9 +10564,9 @@ space-separated-tokens@^1.0.0:
   resolved "https://registry.yarnpkg.com/space-separated-tokens/-/space-separated-tokens-1.1.5.tgz#85f32c3d10d9682007e917414ddc5c26d1aa6899"
   integrity sha512-q/JSVd1Lptzhf5bkYm4ob4iWPjx0KiRe3sRFBNrVqbJkFaBm5vbbowy1mymoPNLRa52+oadOhJ+K49wsSeSjTA==
 
-"spatial-navigation-polyfill@git+https://git@github.com/Stremio/spatial-navigation.git#381b4f37d138e66ae8ea025e240af3704245e5dc":
+"spatial-navigation-polyfill@git+https://git@github.com/Stremio/spatial-navigation.git#40204ad9942fe786794c62f99ea5ab2b52b24096":
   version "1.2.0"
-  resolved "git+https://git@github.com/Stremio/spatial-navigation.git#381b4f37d138e66ae8ea025e240af3704245e5dc"
+  resolved "git+https://git@github.com/Stremio/spatial-navigation.git#40204ad9942fe786794c62f99ea5ab2b52b24096"
 
 spdx-correct@^3.0.0:
   version "3.1.0"
