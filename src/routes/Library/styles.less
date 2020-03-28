@@ -115,7 +115,7 @@
     }
 }
 
-@media only screen and (min-width: @xxlarge) {
+@media only screen and (min-width: @large) {
     .library-container {
         .library-content {
             .meta-items-container {
@@ -125,7 +125,7 @@
     }
 }
 
-@media only screen and (max-width: @xxlarge) {
+@media only screen and (max-width: @large) {
     .library-container {
         .library-content {
             .meta-items-container {
@@ -170,6 +170,16 @@
         .library-content {
             .meta-items-container {
                 grid-template-columns: repeat(5, 1fr);
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: @minimum) {
+    .library-container {
+        .library-content {
+            .meta-items-container {
+                grid-template-columns: repeat(4, 1fr);
             }
         }
     }
