@@ -10,6 +10,7 @@ const NotFound = () => {
                 title={'Page not found'}
                 backButton={true}
                 fullscreenButton={true}
+                navMenu={true}
             />
             <div className={styles['not-found-content']}>
                 <Image
