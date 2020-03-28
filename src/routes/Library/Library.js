@@ -7,12 +7,12 @@ const useLibrary = require('./useLibrary');
 const useSelectableInputs = require('./useSelectableInputs');
 const styles = require('./styles');
 
-const Library = ({ model, urlParams, queryParams }) => {
+const Library = ({ model, route, urlParams, queryParams }) => {
     const profile = useProfile();
     const library = useLibrary(model, urlParams, queryParams);
-    const [typeSelect, sortSelect] = useSelectableInputs(library);
+    const [typeSelect, sortSelect] = useSelectableInputs(route, library);
     return (
-        <MainNavBars className={styles['library-container']} route={'library'}>
+        <MainNavBars className={styles['library-container']} route={route}>
             <div className={styles['library-content']}>
                 {
                     profile.auth !== null && library.type_names.length > 0 ?
@@ -60,6 +60,7 @@ const Library = ({ model, urlParams, queryParams }) => {
 
 Library.propTypes = {
     model: PropTypes.string,
+    route: PropTypes.string,
     urlParams: PropTypes.shape({
         type: PropTypes.string
     }),
@@ -67,23 +68,24 @@ Library.propTypes = {
 };
 
 module.exports = ({ urlParams, queryParams }) => {
-    const model = React.useMemo(() => {
+    const [model, route] = React.useMemo(() => {
         return typeof urlParams.path === 'string' ?
             urlParams.path.match(routesRegexp.library.regexp) ?
-                'library'
+                ['library', 'library']
                 :
                 urlParams.path.match(routesRegexp.continuewatching.regexp) ?
-                    'continue_watching'
+                    ['continue_watching', 'continuewatching']
                     :
-                    null
+                    [null, null]
             :
-            null;
+            [null, null];
     }, [urlParams.path]);
     if (typeof model === 'string') {
         return (
             <Library
                 key={model}
                 model={model}
+                route={route}
                 urlParams={urlParams}
                 queryParams={queryParams}
             />

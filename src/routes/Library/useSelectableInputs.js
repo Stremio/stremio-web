@@ -6,7 +6,7 @@ const SORT_OPTIONS = [
     { label: 'Watched', value: 'timeswatched' },
 ];
 
-const mapSelectableInputs = (library) => {
+const mapSelectableInputs = (route, library) => {
     const typeSelect = {
         title: 'Select type',
         selected: library.selected !== null ?
@@ -18,7 +18,7 @@ const mapSelectableInputs = (library) => {
         onSelect: (event) => {
             const type = JSON.parse(event.value);
             const queryParams = new URLSearchParams(library.selected !== null ? [['sort', library.selected.sort]] : []);
-            window.location.replace(`#/library${type !== null ? `/${encodeURIComponent(type)}` : ''}?${queryParams.toString()}`);
+            window.location.replace(`#/${route}${type !== null ? `/${encodeURIComponent(type)}` : ''}?${queryParams.toString()}`);
         }
     };
     const sortSelect = {
@@ -31,15 +31,15 @@ const mapSelectableInputs = (library) => {
         onSelect: (event) => {
             const type = library.selected !== null ? library.selected.type_name : null;
             const queryParams = new URLSearchParams([['sort', event.value]]);
-            window.location.replace(`#/library${type !== null ? `/${encodeURIComponent(type)}` : ''}?${queryParams.toString()}`);
+            window.location.replace(`#/${route}${type !== null ? `/${encodeURIComponent(type)}` : ''}?${queryParams.toString()}`);
         }
     };
     return [typeSelect, sortSelect];
 };
 
-const useSelectableInputs = (library) => {
+const useSelectableInputs = (route, library) => {
     const selectableInputs = React.useMemo(() => {
-        return mapSelectableInputs(library);
+        return mapSelectableInputs(route, library);
     }, [library]);
     return selectableInputs;
 };
