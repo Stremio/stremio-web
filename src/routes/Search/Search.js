@@ -23,7 +23,7 @@ const Search = ({ queryParams }) => {
         <MainNavBars className={styles['search-container']} route={'search'} query={query}>
             <div className={styles['search-content']}>
                 {
-                    search.selected === null || search.selected.extra.every(([name]) => name !== 'search') ?
+                    query === null ?
                         <div className={styles['search-hints-container']}>
                             <div className={styles['search-hint-container']}>
                                 <Icon className={styles['icon']} icon={'ic_movies'} />
