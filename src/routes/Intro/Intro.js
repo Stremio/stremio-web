@@ -276,7 +276,7 @@ const Intro = ({ queryParams }) => {
         <div className={styles['intro-container']}>
             <div className={styles['form-container']}>
                 <div className={styles['logo-container']}>
-                    <Image className={styles['logo']} src={'/images/stremio_symbol.png'} />
+                    <Image className={styles['logo']} src={'/images/stremio_symbol.png'} alt={' '} />
                     <Icon className={styles['name']} icon={'ic_stremio'} />
                 </div>
                 <Button className={classnames(styles['form-button'], styles['facebook-button'])} onClick={loginWithFacebook}>
