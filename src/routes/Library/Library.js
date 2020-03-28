@@ -2,7 +2,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const NotFound = require('stremio/routes/NotFound');
-const { Button, Multiselect, MainNavBars, LibItem, useProfile, routesRegexp } = require('stremio/common');
+const { Button, Multiselect, MainNavBars, LibItem, Image, useProfile, routesRegexp } = require('stremio/common');
 const useLibrary = require('./useLibrary');
 const useSelectableInputs = require('./useSelectableInputs');
 const styles = require('./styles');
@@ -11,11 +11,14 @@ const Library = ({ model, route, urlParams, queryParams }) => {
     const profile = useProfile();
     const library = useLibrary(model, urlParams, queryParams);
     const [typeSelect, sortSelect] = useSelectableInputs(route, library);
+    const available = React.useMemo(() => {
+        return route === 'continuewatching' || profile.auth !== null;
+    }, []);
     return (
         <MainNavBars className={styles['library-container']} route={route}>
             <div className={styles['library-content']}>
                 {
-                    profile.auth !== null && library.type_names.length > 0 ?
+                    available ?
                         <div className={styles['selectable-inputs-container']}>
                             <Multiselect {...typeSelect} className={styles['select-input-container']} />
                             <Multiselect {...sortSelect} className={styles['select-input-container']} />
@@ -24,12 +27,17 @@ const Library = ({ model, route, urlParams, queryParams }) => {
                         null
                 }
                 {
-                    profile.auth === null ?
+                    !available ?
                         <div className={classnames(styles['message-container'], styles['no-user-message-container'])}>
-                            <div className={styles['message-label']}>Library is only available for logged in users</div>
+                            <Image
+                                className={styles['image']}
+                                src={'/images/anonymous.png'}
+                                alt={' '}
+                            />
                             <Button className={styles['login-button-container']} href={'#/intro'}>
                                 <div className={styles['label']}>LOG IN</div>
                             </Button>
+                            <div className={styles['message-label']}>Library is only available for logged in users!</div>
                         </div>
                         :
                         library.type_names.length === 0 ?
