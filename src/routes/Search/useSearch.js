@@ -27,7 +27,7 @@ const mapSearchStateWithCtx = (search, ctx) => {
             }
             :
             catalog_resource.content;
-        const origin = catalog_resource.origin = ctx.profile.addons.reduce((origin, addon) => {
+        const origin = ctx.profile.addons.reduce((origin, addon) => {
             if (addon.transportUrl === catalog_resource.request.base) {
                 return typeof addon.manifest.name === 'string' && addon.manifest.name.length > 0 ?
                     addon.manifest.name
