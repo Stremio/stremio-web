@@ -15,7 +15,7 @@ const mapLibraryState = (library) => {
         type: lib_item.type,
         name: lib_item.name,
         poster: lib_item.poster,
-        posterShape: lib_item.posterShape,
+        posterShape: lib_item.posterShape === 'landscape' ? 'square' : lib_item.posterShape,
         progress: lib_item.state.timeOffset > 0 && lib_item.state.duration > 0 ?
             lib_item.state.timeOffset / lib_item.state.duration
             :
