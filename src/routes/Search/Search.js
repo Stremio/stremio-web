@@ -1,5 +1,6 @@
 const React = require('react');
 const PropTypes = require('prop-types');
+const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const { Image, MainNavBars, MetaRow, MetaItem, useDeepEqualMemo } = require('stremio/common');
 const useSearch = require('./useSearch');
@@ -51,10 +52,14 @@ const Search = ({ queryParams }) => {
                                 const title = `${catalog_resource.origin} - ${catalog_resource.request.path.id} ${catalog_resource.request.path.type_name}`;
                                 switch (catalog_resource.content.type) {
                                     case 'Ready': {
+                                        const posterShape = catalog_resource.content.content.length > 0 ?
+                                            catalog_resource.content.content[0].posterShape
+                                            :
+                                            null;
                                         return (
                                             <MetaRow
                                                 key={index}
-                                                className={styles['search-row']}
+                                                className={classnames(styles['search-row'], styles['search-row-poster'], { [styles[`search-row-${posterShape}`]]: typeof posterShape === 'string' })}
                                                 title={title}
                                                 items={catalog_resource.content.content}
                                                 itemComponent={MetaItem}
@@ -78,7 +83,7 @@ const Search = ({ queryParams }) => {
                                         return (
                                             <MetaRow.Placeholder
                                                 key={index}
-                                                className={styles['search-row']}
+                                                className={classnames(styles['search-row'], styles['search-row-poster'])}
                                                 title={title}
                                                 href={href}
                                             />
