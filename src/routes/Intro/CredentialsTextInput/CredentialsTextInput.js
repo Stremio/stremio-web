@@ -13,10 +13,12 @@ const CredentialsTextInput = React.forwardRef((props, ref) => {
                 event.nativeEvent.spatialNavigationPrevented = true;
             }
 
-            if (event.key === 'ArrowDown') {
-                window.navigate('down');
-            } else if (event.key === 'ArrowUp') {
-                window.navigate('up');
+            if (!event.shiftKey) {
+                if (event.key === 'ArrowDown') {
+                    window.navigate('down');
+                } else if (event.key === 'ArrowUp') {
+                    window.navigate('up');
+                }
             }
         }
     }, [props.onKeyDown]);
