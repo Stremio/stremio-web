@@ -27,7 +27,7 @@ const ConsentCheckbox = React.forwardRef(({ className, label, link, href, onTogg
                 {label}
                 {' '}
                 {
-                    typeof link === 'string' && typeof href === 'string' ?
+                    typeof link === 'string' && link.length > 0 && typeof href === 'string' && href.length > 0 ?
                         <Button className={styles['link']} href={href} target={'_blank'} tabIndex={-1} onClick={linkOnClick}>
                             {link}
                         </Button>
