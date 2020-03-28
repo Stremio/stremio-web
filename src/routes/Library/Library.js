@@ -18,7 +18,7 @@ const Library = ({ model, route, urlParams, queryParams }) => {
         <MainNavBars className={styles['library-container']} route={route}>
             <div className={styles['library-content']}>
                 {
-                    available ?
+                    available && library.type_names.length > 0 ?
                         <div className={styles['selectable-inputs-container']}>
                             <Multiselect {...typeSelect} className={styles['select-input-container']} />
                             <Multiselect {...sortSelect} className={styles['select-input-container']} />
@@ -42,17 +42,32 @@ const Library = ({ model, route, urlParams, queryParams }) => {
                         :
                         library.type_names.length === 0 ?
                             <div className={styles['message-container']}>
-                                <div className={styles['message-label']}>Empty library</div>
+                                <Image
+                                    className={styles['image']}
+                                    src={'/images/empty.png'}
+                                    alt={' '}
+                                />
+                                <div className={styles['message-label']}>Empty {route === 'continuewatching' ? 'Continue Watching' : 'Library'}</div>
                             </div>
                             :
                             library.selected === null ?
                                 <div className={styles['message-container']}>
-                                    <div className={styles['message-label']}>Please select a type</div>
+                                    <Image
+                                        className={styles['image']}
+                                        src={'/images/empty.png'}
+                                        alt={' '}
+                                    />
+                                    <div className={styles['message-label']}>{route === 'continuewatching' ? 'Continue Watching' : 'Library'} not loaded!</div>
                                 </div>
                                 :
                                 library.lib_items.length === 0 ?
                                     <div className={styles['message-container']}>
-                                        <div className={styles['message-label']}>There are no items for the selected type</div>
+                                        <Image
+                                            className={styles['image']}
+                                            src={'/images/empty.png'}
+                                            alt={' '}
+                                        />
+                                        <div className={styles['message-label']}>There are no items for the selected type!</div>
                                     </div>
                                     :
                                     <div className={styles['meta-items-container']}>
