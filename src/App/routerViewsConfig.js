@@ -22,6 +22,10 @@ const routerViewsConfig = [
             component: routes.Library
         },
         {
+            ...routesRegexp.continuewatching,
+            component: routes.Library
+        },
+        {
             ...routesRegexp.search,
             component: routes.Search
         }

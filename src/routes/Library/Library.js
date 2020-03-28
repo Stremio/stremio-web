@@ -1,14 +1,15 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const { Button, Multiselect, MainNavBars, LibItem, useProfile } = require('stremio/common');
+const NotFound = require('stremio/routes/NotFound');
+const { Button, Multiselect, MainNavBars, LibItem, useProfile, routesRegexp } = require('stremio/common');
 const useLibrary = require('./useLibrary');
 const useSelectableInputs = require('./useSelectableInputs');
 const styles = require('./styles');
 
-const Library = ({ urlParams, queryParams }) => {
+const Library = ({ model, urlParams, queryParams }) => {
     const profile = useProfile();
-    const library = useLibrary(urlParams, queryParams);
+    const library = useLibrary(model, urlParams, queryParams);
     const [typeSelect, sortSelect] = useSelectableInputs(library);
     return (
         <MainNavBars className={styles['library-container']} route={'library'}>
@@ -58,10 +59,38 @@ const Library = ({ urlParams, queryParams }) => {
 };
 
 Library.propTypes = {
-    urlParams: PropTypes.exact({
+    model: PropTypes.string,
+    urlParams: PropTypes.shape({
         type: PropTypes.string
     }),
     queryParams: PropTypes.instanceOf(URLSearchParams)
 };
 
-module.exports = Library;
+module.exports = ({ urlParams, queryParams }) => {
+    const model = React.useMemo(() => {
+        return typeof urlParams.path === 'string' ?
+            urlParams.path.match(routesRegexp.library.regexp) ?
+                'library'
+                :
+                urlParams.path.match(routesRegexp.continuewatching.regexp) ?
+                    'continue_watching'
+                    :
+                    null
+            :
+            null;
+    }, [urlParams.path]);
+    if (typeof model === 'string') {
+        return (
+            <Library
+                key={model}
+                model={model}
+                urlParams={urlParams}
+                queryParams={queryParams}
+            />
+        );
+    } else {
+        return (
+            <NotFound />
+        );
+    }
+};

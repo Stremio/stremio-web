@@ -26,7 +26,7 @@ const mapLibraryState = (library) => {
     return { selected, type_names, lib_items };
 };
 
-const useLibrary = (urlParams, queryParams) => {
+const useLibrary = (libraryModel, urlParams, queryParams) => {
     const loadLibraryAction = React.useMemo(() => ({
         action: 'Load',
         args: {
@@ -38,7 +38,7 @@ const useLibrary = (urlParams, queryParams) => {
         }
     }), [urlParams, queryParams]);
     return useModelState({
-        model: 'library',
+        model: libraryModel,
         action: loadLibraryAction,
         map: mapLibraryState,
         init: initLibraryState

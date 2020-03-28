@@ -15,6 +15,10 @@ const routesRegexp = {
         regexp: /^\/library(?:\/([^/]*))?$/,
         urlParamsNames: ['type']
     },
+    continuewatching: {
+        regexp: /^\/continuewatching(?:\/([^/]*))?$/,
+        urlParamsNames: ['type']
+    },
     search: {
         regexp: /^\/search$/,
         urlParamsNames: []
