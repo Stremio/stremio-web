@@ -171,8 +171,9 @@ const Settings = () => {
                                 <div className={styles['label']}>Interface language</div>
                             </div>
                             <Multiselect
-                                disabled={true}
                                 className={classnames(styles['option-input-container'], styles['multiselect-container'])}
+                                disabled={true}
+                                tabIndex={-1}
                                 {...interfaceLanguageSelect}
                             />
                         </div>
@@ -180,7 +181,7 @@ const Settings = () => {
                             <div className={styles['option-name-container']}>
                                 <div className={styles['label']}>Trakt Scrobbling</div>
                             </div>
-                            <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Authenticate'} disabled={true} onClick={authenticateTraktOnClick}>
+                            <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Authenticate'} disabled={true} tabIndex={-1} onClick={authenticateTraktOnClick}>
                                 <Icon className={styles['icon']} icon={'ic_trakt'} />
                                 <div className={styles['label']}>Authenticate</div>
                             </Button>
@@ -189,7 +190,7 @@ const Settings = () => {
                             <div className={styles['option-name-container']}>
                                 <div className={styles['label']}>Facebook</div>
                             </div>
-                            <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Import'} disabled={true} onClick={importFacebookOnClick}>
+                            <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Import'} disabled={true} tabIndex={-1} onClick={importFacebookOnClick}>
                                 <Icon className={styles['icon']} icon={'ic_facebook'} />
                                 <div className={styles['label']}>Import</div>
                             </Button>
@@ -198,13 +199,13 @@ const Settings = () => {
                             <div className={styles['option-name-container']}>
                                 <div className={styles['label']}>Calendar</div>
                             </div>
-                            <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Subscribe'} disabled={true} onClick={subscribeCalendarOnClick}>
+                            <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Subscribe'} disabled={true} tabIndex={-1} onClick={subscribeCalendarOnClick}>
                                 <Icon className={styles['icon']} icon={'ic_calendar'} />
                                 <div className={styles['label']}>Subscribe</div>
                             </Button>
                         </div>
                         <div className={styles['option-container']}>
-                            <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={'Export user data'} disabled={true} onClick={exportDataOnClick}>
+                            <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={'Export user data'} disabled={true} tabIndex={-1} onClick={exportDataOnClick}>
                                 <div className={styles['label']}>Export user data</div>
                             </Button>
                         </div>
@@ -292,6 +293,7 @@ const Settings = () => {
                             <Checkbox
                                 className={classnames(styles['option-input-container'], styles['checkbox-container'])}
                                 disabled={true}
+                                tabIndex={-1}
                                 {...playInBackgroundCheckbox}
                             />
                         </div>
@@ -302,6 +304,7 @@ const Settings = () => {
                             <Checkbox
                                 className={classnames(styles['option-input-container'], styles['checkbox-container'])}
                                 disabled={true}
+                                tabIndex={-1}
                                 {...playInExternalPlayerCheckbox}
                             />
                         </div>
@@ -312,6 +315,7 @@ const Settings = () => {
                             <Checkbox
                                 className={classnames(styles['option-input-container'], styles['checkbox-container'])}
                                 disabled={true}
+                                tabIndex={-1}
                                 {...hardwareDecodingCheckbox}
                             />
                         </div>
