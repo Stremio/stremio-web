@@ -60,7 +60,7 @@ const Library = ({ model, route, urlParams, queryParams }) => {
 
 Library.propTypes = {
     model: PropTypes.oneOf(['library', 'continue_watching']),
-    route: PropTypes.string,
+    route: PropTypes.oneOf(['library', 'continuewatching']),
     urlParams: PropTypes.shape({
         type: PropTypes.string
     }),
