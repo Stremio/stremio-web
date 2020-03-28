@@ -8,7 +8,7 @@ const urlParamsForPath = (routeConfig, path) => {
         }
 
         return urlParams;
-    }, {});
+    }, { path });
 };
 
 module.exports = urlParamsForPath;
