@@ -7,10 +7,6 @@ const initSearchState = () => ({
 });
 
 const mapSearchStateWithCtx = (search, ctx) => {
-    const queryString = search.selected !== null ?
-        new URLSearchParams(search.selected.extra).toString()
-        :
-        '';
     const selected = search.selected;
     const catalog_resources = search.catalog_resources.map((catalog_resource) => {
         const request = catalog_resource.request;
@@ -37,8 +33,7 @@ const mapSearchStateWithCtx = (search, ctx) => {
 
             return origin;
         }, catalog_resource.request.base);
-        const href = `#/discover/${encodeURIComponent(catalog_resource.request.base)}/${encodeURIComponent(catalog_resource.request.path.type_name)}/${encodeURIComponent(catalog_resource.request.path.id)}?${queryString}`;
-        return { request, content, origin, href };
+        return { request, content, origin };
     });
     return { selected, catalog_resources };
 };

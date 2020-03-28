@@ -46,6 +46,8 @@ const Search = ({ queryParams }) => {
                             </div>
                             :
                             search.catalog_resources.map((catalog_resource, index) => {
+                                const queryString = new URLSearchParams([['search', query]]).toString();
+                                const href = `#/discover/${encodeURIComponent(catalog_resource.request.base)}/${encodeURIComponent(catalog_resource.request.path.type_name)}/${encodeURIComponent(catalog_resource.request.path.id)}?${queryString}`;
                                 const title = `${catalog_resource.origin} - ${catalog_resource.request.path.id} ${catalog_resource.request.path.type_name}`;
                                 switch (catalog_resource.content.type) {
                                     case 'Ready': {
@@ -56,7 +58,7 @@ const Search = ({ queryParams }) => {
                                                 title={title}
                                                 items={catalog_resource.content.content}
                                                 itemComponent={MetaItem}
-                                                href={catalog_resource.href}
+                                                href={href}
                                             />
                                         );
                                     }
@@ -68,7 +70,7 @@ const Search = ({ queryParams }) => {
                                                 className={styles['search-row']}
                                                 title={title}
                                                 message={message}
-                                                href={catalog_resource.href}
+                                                href={href}
                                             />
                                         );
                                     }
@@ -78,7 +80,7 @@ const Search = ({ queryParams }) => {
                                                 key={index}
                                                 className={styles['search-row']}
                                                 title={title}
-                                                href={catalog_resource.href}
+                                                href={href}
                                             />
                                         );
                                     }
