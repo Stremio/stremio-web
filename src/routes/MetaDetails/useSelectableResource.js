@@ -90,7 +90,7 @@ const useSelectableResource = (resourceRef, resources) => {
     }, []);
     React.useEffect(() => {
         dispatch({ type: 'resources-changed', resourceRef, resources });
-    }, [resources]);
+    }, [resourceRef, resources]);
     return [state.resourceRef, state.resources, state.selected.resource, selectResource];
 };
 
