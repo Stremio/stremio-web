@@ -68,12 +68,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
             {
                 typeof background === 'string' && background.length > 0 ?
                     <div className={styles['background-image-layer']}>
-                        <img
-                            key={background}
-                            className={styles['background-image']}
-                            src={background}
-                            alt={' '}
-                        />
+                        <Image className={styles['background-image']} src={background} alt={' '} />
                     </div>
                     :
                     null
