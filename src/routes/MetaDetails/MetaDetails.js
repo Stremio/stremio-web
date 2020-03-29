@@ -28,26 +28,22 @@ const MetaDetails = ({ urlParams }) => {
             <div className={styles['metadetails-content']}>
                 {
                     metaResourceRef === null ?
-                        <MetaPreview
-                            className={styles['meta-preview']}
-                            name={'No meta was selected'}
-                        />
+                        <div className={styles['meta-message-container']}>
+                            <Image className={styles['image']} src={'/images/empty.png'} alt={' '} />
+                            <div className={styles['message-label']}>No meta was selected!</div>
+                        </div>
                         :
                         metaResources.length === 0 ?
-                            <MetaPreview
-                                className={styles['meta-preview']}
-                                name={'No addons ware requested for this meta'}
-                                inLibrary={inLibrary}
-                                toggleInLibrary={toggleInLibrary}
-                            />
+                            <div className={styles['meta-message-container']}>
+                                <Image className={styles['image']} src={'/images/empty.png'} alt={' '} />
+                                <div className={styles['message-label']}>No addons ware requested for this meta!</div>
+                            </div>
                             :
                             metaResources.every((metaResource) => metaResource.content.type === 'Err') ?
-                                <MetaPreview
-                                    className={styles['meta-preview']}
-                                    name={'No metadata was found'}
-                                    inLibrary={inLibrary}
-                                    toggleInLibrary={toggleInLibrary}
-                                />
+                                <div className={styles['meta-message-container']}>
+                                    <Image className={styles['image']} src={'/images/empty.png'} alt={' '} />
+                                    <div className={styles['message-label']}>No metadata was found!</div>
+                                </div>
                                 :
                                 selectedMetaResource !== null ?
                                     <React.Fragment>

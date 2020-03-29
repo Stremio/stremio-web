@@ -55,6 +55,34 @@
             }
         }
 
+        .meta-message-container {
+            flex: 0 1 30rem;
+            align-self: stretch;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+
+            .image {
+                flex: none;
+                width: 12rem;
+                height: 12rem;
+                max-width: 100%;
+                margin-bottom: 1rem;
+                object-fit: contain;
+                object-position: center;
+                opacity: 0.9;
+            }
+
+            .message-label {
+                flex: none;
+                align-self: stretch;
+                font-size: 2rem;
+                text-align: center;
+                color: @color-secondaryvariant2-light1-90;
+            }
+        }
+
         .meta-preview {
             flex: 0 1 40rem;
             align-self: stretch;
