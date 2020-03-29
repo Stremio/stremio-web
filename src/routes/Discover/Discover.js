@@ -48,7 +48,7 @@ const Discover = ({ urlParams, queryParams }) => {
     React.useLayoutEffect(() => {
         closeInputsModal();
         closeAddonModal();
-    }, [urlParams, queryParams]);
+    }, [discover.selected]);
     return (
         <MainNavBars className={styles['discover-container']} route={'discover'}>
             <div className={styles['discover-content']}>
