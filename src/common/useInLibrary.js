@@ -13,46 +13,30 @@ const useInLibrary = (metaItem) => {
     });
     const addToLibrary = React.useCallback((metaItem) => {
         core.dispatch({
-            action: 'UserOp',
+            action: 'Ctx',
             args: {
-                userOp: 'AddToLibrary',
-                args: {
-                    meta_item: metaItem,
-                    now: new Date()
-                }
+                action: 'AddToLibrary',
+                args: metaItem
             }
         });
     }, []);
-    const removeFromLibrary = React.useCallback((id) => {
+    const removeFromLibrary = React.useCallback((metaItem) => {
         core.dispatch({
-            action: 'UserOp',
+            action: 'Ctx',
             args: {
-                userOp: 'RemoveFromLibrary',
-                args: {
-                    id,
-                    now: new Date()
-                }
+                action: 'RemoveFromLibrary',
+                args: metaItem.id
             }
         });
     }, []);
     const inLibrary = React.useMemo(() => {
-        return typeof metaItem === 'object' && metaItem !== null ?
-            libraryItems.ids.includes(metaItem.id)
-            :
-            false;
+        return libraryItems.ids.includes(metaItem !== null ? metaItem.id : null);
     }, [metaItem, libraryItems]);
     const toggleInLibrary = React.useMemo(() => {
-        if (typeof metaItem !== 'object' || metaItem === null) {
-            return null;
-        }
-
-        return () => {
-            if (inLibrary) {
-                removeFromLibrary(metaItem.id);
-            } else {
-                addToLibrary(metaItem);
-            }
-        };
+        return metaItem !== null ?
+            () => inLibrary ? removeFromLibrary(metaItem) : addToLibrary(metaItem)
+            :
+            null;
     }, [metaItem, inLibrary]);
     return [inLibrary, toggleInLibrary];
 };
