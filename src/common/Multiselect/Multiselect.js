@@ -102,7 +102,7 @@ const Multiselect = ({ className, mode, direction, title, disabled, dataset, ren
                                         title
                             }
                         </div>
-                        <Icon className={styles['icon']} icon={'ic_arrow_down'} />
+                        <Icon className={styles['icon']} icon={'ic_arrow_thin_down'} />
                     </React.Fragment>
             }
             {children}
