@@ -16,9 +16,6 @@ const SeasonsBar = ({ className, seasons, season, onSelect }) => {
     const selected = React.useMemo(() => {
         return [String(season)];
     }, [season]);
-    const renderMultiselectLabelContent = React.useMemo(() => () => (
-        <div className={styles['season-label']}>Season {season}</div>
-    ), [season]);
     const prevNextButtonOnClick = React.useCallback((event) => {
         if (typeof onSelect === 'function') {
             const seasonIndex = seasons.indexOf(season);
@@ -50,6 +47,7 @@ const SeasonsBar = ({ className, seasons, season, onSelect }) => {
         <div className={classnames(className, styles['seasons-bar-container'])}>
             <Button className={styles['prev-season-button']} data-action={'prev'} onClick={prevNextButtonOnClick}>
                 <Icon className={styles['icon']} icon={'ic_arrow_left'} />
+                <div className={styles['label']}>Prev</div>
             </Button>
             <Multiselect
                 className={styles['seasons-popup-label-container']}
@@ -57,10 +55,10 @@ const SeasonsBar = ({ className, seasons, season, onSelect }) => {
                 options={options}
                 selected={selected}
                 disabled={false}
-                renderLabelContent={renderMultiselectLabelContent}
                 onSelect={seasonOnSelect}
             />
             <Button className={styles['next-season-button']} data-action={'next'} onClick={prevNextButtonOnClick}>
+                <div className={styles['label']}>Next</div>
                 <Icon className={styles['icon']} icon={'ic_arrow_right'} />
             </Button>
         </div>

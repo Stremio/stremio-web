@@ -9,7 +9,7 @@ const MetaLinks = ({ className, label, links }) => {
         <div className={classnames(className, styles['meta-links-container'])}>
             {
                 typeof label === 'string' && label.length > 0 ?
-                    <div className={styles['label-container']}>{label}:</div>
+                    <div className={styles['label-container']}>{label}</div>
                     :
                     null
             }
@@ -17,9 +17,8 @@ const MetaLinks = ({ className, label, links }) => {
                 Array.isArray(links) && links.length > 0 ?
                     <div className={styles['links-container']}>
                         {links.map(({ label, href }, index) => (
-                            <Button key={index} className={styles['link-container']} title={label} tabIndex={-1} href={href}>
+                            <Button key={index} className={styles['link-container']} title={label} href={href}>
                                 {label}
-                                {index < links.length - 1 ? ',' : null}
                             </Button>
                         ))}
                     </div>
