@@ -2,6 +2,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const UrlUtils = require('url');
+const pako = require('pako');
 const Icon = require('stremio-icons/dom');
 const Button = require('stremio/common/Button');
 const Image = require('stremio/common/Image');
@@ -63,6 +64,12 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
             :
             [];
     }, [links]);
+    const trailerHref = React.useMemo(() => {
+        return typeof trailer === 'object' && trailer !== null ?
+            `#/player/${btoa(pako.deflate(JSON.stringify(trailer), { to: 'string' }))}`
+            :
+            null;
+    }, [trailer]);
     const renderLogoFallback = React.useMemo(() => () => (
         <Icon className={styles['logo-placeholder-icon']} icon={'ic_broken_link'} />
     ), []);
@@ -169,13 +176,13 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                         null
                 }
                 {
-                    typeof trailer === 'object' && trailer !== null ?
+                    typeof trailerHref === 'string' ?
                         <ActionButton
                             className={styles['action-button']}
                             icon={'ic_movies'}
                             label={'Trailer'}
                             tabIndex={compact ? -1 : 0}
-                            href={`#/player?stream=${JSON.stringify(trailer)}`}
+                            href={trailerHref}
                         />
                         :
                         null
