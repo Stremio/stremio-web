@@ -1,16 +1,19 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const { HorizontalNavBar, MetaPreview, useInLibrary } = require('stremio/common');
-const VideosList = require('./VideosList');
 const StreamsList = require('./StreamsList');
+const VideosList = require('./VideosList');
 const useMetaDetails = require('./useMetaDetails');
 const useSelectableResource = require('./useSelectableResource');
 const styles = require('./styles');
 
 const MetaDetails = ({ urlParams }) => {
     const metaDetails = useMetaDetails(urlParams);
-    const [metaResourceRef, metaResources, selectedMetaResource] = useSelectableResource(metaDetails.selected.meta_resource_ref, metaDetails.meta_resources);
-    const streamsResourceRef = metaDetails.selected.streams_resource_ref;
+    const [metaResourceRef, metaResources, selectedMetaResource] = useSelectableResource(
+        metaDetails.selected !== null ? metaDetails.selected.meta_resource_ref : null,
+        metaDetails.meta_resources
+    );
+    const streamsResourceRef = metaDetails.selected !== null ? metaDetails.selected.streams_resource_ref : null;
     const streamsResources = metaDetails.streams_resources;
     const metaItem = React.useMemo(() => {
         return selectedMetaResource !== null ?
