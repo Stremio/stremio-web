@@ -63,6 +63,9 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
             :
             [];
     }, [links]);
+    const renderLogoFallback = React.useMemo(() => () => (
+        <Icon className={styles['logo-placeholder-icon']} icon={'ic_broken_link'} />
+    ), []);
     return (
         <div className={classnames(className, styles['meta-preview-container'], { [styles['compact']]: compact })}>
             {
@@ -77,16 +80,10 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                 {
                     typeof logo === 'string' && logo.length > 0 ?
                         <Image
-                            key={logo}
                             className={styles['logo']}
                             src={logo}
                             alt={' '}
-                            renderFallback={() => (
-                                <Icon
-                                    className={styles['logo-placeholder-icon']}
-                                    icon={'ic_broken_link'}
-                                />
-                            )}
+                            renderFallback={renderLogoFallback}
                         />
                         :
                         null
