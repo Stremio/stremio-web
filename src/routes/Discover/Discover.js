@@ -59,7 +59,7 @@ const Discover = ({ urlParams, queryParams }) => {
                                 {selectInputs.map(({ title, options, selected, renderLabelText, onSelect }, index) => (
                                     <Multiselect
                                         key={index}
-                                        className={styles['select-input-container']}
+                                        className={styles['select-input']}
                                         title={title}
                                         options={options}
                                         selected={selected}
@@ -73,7 +73,7 @@ const Discover = ({ urlParams, queryParams }) => {
                                 <div className={styles['spacing']} />
                                 {
                                     paginationInput !== null ?
-                                        <PaginationInput {...paginationInput} className={styles['pagination-input-container']} />
+                                        <PaginationInput {...paginationInput} className={styles['pagination-input']} />
                                         :
                                         null
                                 }
