@@ -10,10 +10,7 @@
         .meta-info-container {
             .logo, .logo-placeholder-icon {
                 width: 100%;
-            }
-
-            .logo {
-                object-position: center;
+                background-color: @color-surface-dark5-10;
             }
 
             .runtime-release-info-container {
@@ -23,11 +20,19 @@
                     margin: 1rem 0.4rem;
                 }
             }
+
+            .description-container {
+                max-height: none;
+            }
         }
 
         .action-buttons-container {
             justify-content: space-evenly;
             padding: 0;
+
+            .action-button:not(:last-child) {
+                margin-right: 0;
+            }
         }
     }
 
@@ -85,7 +90,6 @@
         .logo {
             object-fit: contain;
             object-position: center;
-            background-color: @color-surface-dark5-10;
         }
 
         .logo-placeholder-icon {
