@@ -45,7 +45,7 @@ const SeasonsBar = ({ className, seasons, season, onSelect }) => {
     }, [onSelect]);
     return (
         <div className={classnames(className, styles['seasons-bar-container'])}>
-            <Button className={styles['prev-season-button']} data-action={'prev'} onClick={prevNextButtonOnClick}>
+            <Button className={styles['prev-season-button']} title={'Previous season'} data-action={'prev'} onClick={prevNextButtonOnClick}>
                 <Icon className={styles['icon']} icon={'ic_arrow_thin_left'} />
                 <div className={styles['label']}>Prev</div>
             </Button>
@@ -56,7 +56,7 @@ const SeasonsBar = ({ className, seasons, season, onSelect }) => {
                 selected={selected}
                 onSelect={seasonOnSelect}
             />
-            <Button className={styles['next-season-button']} data-action={'next'} onClick={prevNextButtonOnClick}>
+            <Button className={styles['next-season-button']} title={'Next season'} data-action={'next'} onClick={prevNextButtonOnClick}>
                 <div className={styles['label']}>Next</div>
                 <Icon className={styles['icon']} icon={'ic_arrow_thin_right'} />
             </Button>
