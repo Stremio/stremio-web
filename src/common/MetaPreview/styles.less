@@ -100,9 +100,7 @@
             margin-top: 1rem;
 
             .runtime-label, .release-info-label {
-                flex-grow: 0;
-                flex-shrink: 1;
-                flex-basis: auto;
+                flex: 0 1 auto;
                 margin-right: 2rem;
                 margin-bottom: 0.5rem;
                 font-size: 1.4rem;
@@ -110,13 +108,13 @@
             }
 
             .imdb-button-container {
-                flex: 0 1 none;
+                flex: 0 1 auto;
                 display: flex;
                 flex-direction: row;
                 align-items: center;
                 margin-bottom: 0.5rem;
                 padding: 0.3rem 1rem;
-                border-radius: 2.3rem;
+                border-radius: 2.5rem;
                 border: var(--focus-outline-size) solid transparent;
                 background-color: @color-surface-light5-20;
 
@@ -132,14 +130,13 @@
                 .icon {
                     flex: none;
                     width: 3rem;
+                    height: 1.1rem;
                     margin-right: 1rem;
-                    fill: @color-surface-dark2-90;
+                    fill: @color-surface-90;
                 }
 
                 .label {
-                    flex-grow: 0;
-                    flex-shrink: 1;
-                    flex-basis: auto;
+                    flex: 0 1 auto;
                     max-height: 1.2em;
                     font-size: 1.6rem;
                     font-weight: 500;
@@ -155,9 +152,10 @@
         }
 
         .description-container {
-            max-height: 6.8em;
+            max-height: 6em;
             margin-top: 1rem;
-            line-height: 1.7em;
+            font-size: 1.1rem;
+            line-height: 1.5em;
             color: @color-surface-light5-90;
         }
 
