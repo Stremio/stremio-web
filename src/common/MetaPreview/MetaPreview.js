@@ -162,8 +162,8 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                             className={styles['action-button']}
                             icon={inLibrary ? 'ic_removelib' : 'ic_addlib'}
                             label={inLibrary ? 'Remove from Library' : 'Add to library'}
+                            tabIndex={compact ? -1 : 0}
                             onClick={toggleInLibrary}
-                            {...(compact ? { tabIndex: -1 } : null)}
                         />
                         :
                         null
@@ -174,8 +174,8 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                             className={styles['action-button']}
                             icon={'ic_movies'}
                             label={'Trailer'}
+                            tabIndex={compact ? -1 : 0}
                             href={`#/player?stream=${JSON.stringify(trailer)}`}
-                            {...(compact ? { tabIndex: -1 } : null)}
                         />
                         :
                         null
@@ -187,8 +187,8 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                                 className={styles['action-button']}
                                 icon={'ic_share'}
                                 label={'Share'}
+                                tabIndex={compact ? -1 : 0}
                                 onClick={openShareModal}
-                                {...(compact ? { tabIndex: -1 } : null)}
                             />
                             {
                                 shareModalOpen ?
