@@ -41,8 +41,8 @@ const VideosList = ({ className, metaResource }) => {
                     :
                     metaResource.content.type === 'Err' || videosForSeason.length === 0 ?
                         <div className={styles['message-container']}>
-                            <Image className={styles['image']} src={'/images/empty.png'} />
-                            <div className={styles['label']}>No videos found for this meta</div>
+                            <Image className={styles['image']} src={'/images/empty.png'} alt={' '} />
+                            <div className={styles['label']}>No videos found for this meta!</div>
                         </div>
                         :
                         <React.Fragment>

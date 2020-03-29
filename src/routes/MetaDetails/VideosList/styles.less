@@ -18,19 +18,24 @@
         align-items: center;
         width: var(--item-size);
         padding: 2rem;
+        overflow-y: auto;
 
         .image {
             flex: none;
             width: 10rem;
+            height: 10rem;
+            max-width: 100%;
             margin-bottom: 1rem;
+            object-fit: contain;
+            object-position: center;
             opacity: 0.9;
         }
 
         .label {
-            flex: 0 1 auto;
+            flex: none;
             font-size: 1.4rem;
             text-align: center;
-            color: @color-surface-light5-90;
+            color: @color-secondaryvariant2-light1-90;
         }
     }
 
