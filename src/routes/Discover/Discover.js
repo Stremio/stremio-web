@@ -56,8 +56,16 @@ const Discover = ({ urlParams, queryParams }) => {
                     {
                         available ?
                             <div className={styles['selectable-inputs-container']}>
-                                {selectInputs.map((selectInput, index) => (
-                                    <Multiselect {...selectInput} key={index} className={styles['select-input-container']} />
+                                {selectInputs.map(({ title, options, selected, renderLabelText, onSelect }, index) => (
+                                    <Multiselect
+                                        key={index}
+                                        className={styles['select-input-container']}
+                                        title={title}
+                                        options={options}
+                                        selected={selected}
+                                        renderLabelText={renderLabelText}
+                                        onSelect={onSelect}
+                                    />
                                 ))}
                                 <Button className={styles['filter-container']} title={'All filters'} onClick={openInputsModal}>
                                     <Icon className={styles['filter-icon']} icon={'ic_filter'} />
