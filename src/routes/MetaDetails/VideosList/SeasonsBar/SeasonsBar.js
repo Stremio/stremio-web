@@ -46,7 +46,7 @@ const SeasonsBar = ({ className, seasons, season, onSelect }) => {
     return (
         <div className={classnames(className, styles['seasons-bar-container'])}>
             <Button className={styles['prev-season-button']} data-action={'prev'} onClick={prevNextButtonOnClick}>
-                <Icon className={styles['icon']} icon={'ic_arrow_left'} />
+                <Icon className={styles['icon']} icon={'ic_arrow_thin_left'} />
                 <div className={styles['label']}>Prev</div>
             </Button>
             <Multiselect
@@ -59,7 +59,7 @@ const SeasonsBar = ({ className, seasons, season, onSelect }) => {
             />
             <Button className={styles['next-season-button']} data-action={'next'} onClick={prevNextButtonOnClick}>
                 <div className={styles['label']}>Next</div>
-                <Icon className={styles['icon']} icon={'ic_arrow_right'} />
+                <Icon className={styles['icon']} icon={'ic_arrow_thin_right'} />
             </Button>
         </div>
     );
