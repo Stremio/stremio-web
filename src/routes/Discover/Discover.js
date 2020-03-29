@@ -44,6 +44,7 @@ const Discover = ({ urlParams, queryParams }) => {
     }, [discover.catalog_resource]);
     React.useLayoutEffect(() => {
         closeInputsModal();
+        closeAddonModal();
     }, [urlParams, queryParams]);
     return (
         <MainNavBars className={styles['discover-container']} route={'discover'}>
