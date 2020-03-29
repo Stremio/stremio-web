@@ -15,20 +15,9 @@ const MetaDetails = ({ urlParams }) => {
     );
     const streamsResourceRef = metaDetails.selected !== null ? metaDetails.selected.streams_resource_ref : null;
     const streamsResources = metaDetails.streams_resources;
-    const metaItem = React.useMemo(() => {
-        return selectedMetaResource !== null ?
-            selectedMetaResource.content.content
-            :
-            metaResourceRef !== null ?
-                {
-                    id: metaResourceRef.id,
-                    type: metaResourceRef.type_name,
-                    name: ''
-                }
-                :
-                null;
-    }, [metaResourceRef, selectedMetaResource]);
-    const [inLibrary, toggleInLibrary] = useInLibrary(metaItem);
+    const [inLibrary, toggleInLibrary] = useInLibrary(
+        selectedMetaResource !== null ? selectedMetaResource.content.content : null
+    );
     return (
         <div className={styles['metadetails-container']}>
             <HorizontalNavBar
