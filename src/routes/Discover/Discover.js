@@ -168,13 +168,13 @@ const Discover = ({ urlParams, queryParams }) => {
                 inputsModalOpen ?
                     <ModalDialog title={'Catalog filters'} className={styles['selectable-inputs-modal-container']} onCloseRequest={closeInputsModal}>
                         {selectInputs.map(({ title, isRequired, options, selected, renderLabelText, onSelect }, index) => (
-                            <div key={index} className={styles['selectable-inputs-container']}>
-                                <div className={styles['select-input-label-container']} title={title}>
+                            <div key={index} className={styles['selectable-input-container']}>
+                                <div className={styles['select-input-label']} title={title}>
                                     {title}
                                     {isRequired ? '*' : null}
                                 </div>
                                 <Multiselect
-                                    className={styles['select-input-container']}
+                                    className={styles['select-input']}
                                     mode={'modal'}
                                     title={title}
                                     options={options}
