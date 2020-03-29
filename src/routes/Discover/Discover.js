@@ -189,11 +189,8 @@ const Discover = ({ urlParams, queryParams }) => {
                     null
             }
             {
-                addonModalOpen ?
-                    <AddonDetailsModal
-                        transportUrl={discover.catalog_resource.request.base}
-                        onCloseRequest={closeAddonModal}
-                    />
+                addonModalOpen && discover.catalog_resource !== null ?
+                    <AddonDetailsModal transportUrl={discover.catalog_resource.request.base} onCloseRequest={closeAddonModal} />
                     :
                     null
             }
