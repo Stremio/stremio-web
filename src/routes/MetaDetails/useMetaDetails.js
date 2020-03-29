@@ -10,21 +10,35 @@ const initMetaDetailsState = () => ({
 const mapMetaDetailsState = (meta_details) => {
     const selected = meta_details.selected;
     const meta_resources = meta_details.meta_resources.map((meta_resource) => {
-        if (meta_resource.content.type === 'Ready') {
-            meta_resource.content.content.released = new Date(meta_resource.content.content.released);
-            meta_resource.content.content.videos = meta_resource.content.content.videos.map((video) => {
-                video.released = new Date(video.released);
-                video.upcoming = !isNaN(video.released.getTime()) ?
-                    video.released.getTime() > Date.now()
-                    :
-                    false;
-                video.href = `#/metadetails/${meta_resource.content.content.type}/${meta_resource.content.content.id}/${video.id}`;
-                // TODO add watched and progress
-                return video;
-            });
-        }
-
-        return meta_resource;
+        return meta_resource.content.type === 'Ready' ?
+            {
+                request: meta_resource.request,
+                content: {
+                    type: 'Ready',
+                    content: {
+                        ...meta_resource.content.content,
+                        released: new Date(
+                            typeof meta_resource.content.content.released === 'string' ?
+                                meta_resource.content.content.released
+                                :
+                                NaN
+                        ),
+                        videos: meta_resource.content.content.videos.map((video) => ({
+                            ...video,
+                            released: new Date(
+                                typeof video.released === 'string' ?
+                                    video.released
+                                    :
+                                    NaN
+                            ),
+                            // TODO add watched and progress
+                            href: `#/metadetails/${meta_resource.content.content.type}/${meta_resource.content.content.id}/${video.id}`
+                        }))
+                    }
+                }
+            }
+            :
+            meta_resource;
     });
     const streams_resources = meta_details.streams_resources;
     return { selected, meta_resources, streams_resources };
