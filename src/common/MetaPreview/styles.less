@@ -67,22 +67,12 @@
         padding: 0 2rem;
         overflow-y: auto;
 
-        &:hover {
-            &::-webkit-scrollbar-thumb {
-                background-color: @color-secondaryvariant2-light1;
+        &:not(:hover) {
+            scrollbar-color: transparent transparent;
+
+            &::-webkit-scrollbar-thumb, &::-webkit-scrollbar-track {
+                background-color: transparent;
             }
-
-            &::-webkit-scrollbar-track {
-                background-color: @color-background-dark2;
-            }
-        }
-
-        &::-webkit-scrollbar-thumb {
-            background-color: transparent;
-        }
-
-        &::-webkit-scrollbar-track {
-            background-color: transparent;
         }
 
         .logo, .logo-placeholder-icon {
