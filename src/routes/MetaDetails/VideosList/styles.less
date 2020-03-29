@@ -38,7 +38,6 @@
         }
     }
 
-
     .search-bar-container {
         flex: none;
         align-self: stretch;
@@ -46,9 +45,10 @@
         flex-direction: row;
         align-items: center;
         height: 3.5rem;
+        min-width: calc(var(--item-size) - 3rem);
         padding: 0 1rem;
         margin: 0 1.5rem 1rem 1.5rem;
-        border-radius: 2.3rem;
+        border-radius: 3.5rem;
         border: var(--focus-outline-size) solid transparent;
         background-color: @color-background;
         cursor: text;
@@ -82,7 +82,7 @@
             flex: none;
             width: 1.5rem;
             height: 1.5rem;
-            fill: @color-secondaryvariant1;
+            fill: @color-secondaryvariant1-90;
         }
     }
 
