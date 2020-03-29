@@ -75,7 +75,7 @@ const Discover = ({ urlParams, queryParams }) => {
                                     paginationInput !== null ?
                                         <PaginationInput {...paginationInput} className={styles['pagination-input']} />
                                         :
-                                        null
+                                        <PaginationInput label={'1'} className={classnames(styles['pagination-input'], styles['pagination-input-placeholder'])} />
                                 }
                             </div>
                             :

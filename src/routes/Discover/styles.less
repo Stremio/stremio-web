@@ -90,6 +90,20 @@
                     height: 3.5rem;
                     margin-left: 1.5rem;
 
+                    &.pagination-input-placeholder {
+                        pointer-events: none;
+
+                        .pagination-prev-button-container, .pagination-next-button-container {
+                            .pagination-button-icon {
+                                fill: @color-surface-dark5-90;
+                            }
+                        }
+
+                        .pagination-label {
+                            color: @color-surface-dark5-90;
+                        }
+                    }
+
                     .pagination-prev-button-container, .pagination-next-button-container {
                         width: 3.5rem;
                         height: 3.5rem;
