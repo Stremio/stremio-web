@@ -38,7 +38,7 @@ const Discover = ({ urlParams, queryParams }) => {
             event.currentTarget.focus();
         }
     }, [discover.catalog_resource, selectedMetaItem]);
-    const avaliable = React.useMemo(() => {
+    const available = React.useMemo(() => {
         return discover.selectable.types.length > 0 || discover.catalog_resource !== null;
     }, [discover]);
     React.useLayoutEffect(() => {
@@ -52,66 +52,54 @@ const Discover = ({ urlParams, queryParams }) => {
     return (
         <MainNavBars className={styles['discover-container']} route={'discover'}>
             <div className={styles['discover-content']}>
-                {
-                    avaliable ?
-                        <div className={styles['selectable-inputs-container']}>
-                            {selectInputs.map((selectInput, index) => (
-                                <Multiselect {...selectInput} key={index} className={styles['select-input-container']} />
-                            ))}
-                            <Button className={styles['filter-container']} title={'More filters'} onClick={openInputsModal}>
-                                <Icon className={styles['filter-icon']} icon={'ic_filter'} />
-                            </Button>
-                            <div className={styles['spacing']} />
-                            {
-                                paginationInput !== null ?
-                                    <PaginationInput {...paginationInput} className={styles['pagination-input-container']} />
-                                    :
-                                    null
-                            }
-                        </div>
-                        :
-                        null
-                }
-                {
-                    discover.catalog_resource !== null && discover.catalog_resource.content.type === 'Ready' && !profile.addons.some((addon) => addon.transportUrl === discover.catalog_resource.request.base) ?
-                        <div className={styles['missing-addon-warning-container']}>
-                            <div className={styles['warning-info']}>This addon is not installed. Install now?</div>
-                            <Button className={styles['install-button']} title={'Install addon'} onClick={openAddonModal}>
-                                <div className={styles['label']}>Install</div>
-                            </Button>
-                        </div>
-                        :
-                        null
-                }
-                <div className={styles['catalog-content-container']}>
+                <div className={styles['catalog-container']}>
                     {
-                        discover.selectable.types.length === 0 && discover.catalog_resource === null ?
+                        available ?
+                            <div className={styles['selectable-inputs-container']}>
+                                {selectInputs.map((selectInput, index) => (
+                                    <Multiselect {...selectInput} key={index} className={styles['select-input-container']} />
+                                ))}
+                                <Button className={styles['filter-container']} title={'All filters'} onClick={openInputsModal}>
+                                    <Icon className={styles['filter-icon']} icon={'ic_filter'} />
+                                </Button>
+                                <div className={styles['spacing']} />
+                                {
+                                    paginationInput !== null ?
+                                        <PaginationInput {...paginationInput} className={styles['pagination-input-container']} />
+                                        :
+                                        null
+                                }
+                            </div>
+                            :
+                            null
+                    }
+                    {
+                        discover.catalog_resource !== null && discover.catalog_resource.content.type === 'Ready' && !profile.addons.some((addon) => addon.transportUrl === discover.catalog_resource.request.base) ?
+                            <div className={styles['missing-addon-warning-container']}>
+                                <div className={styles['warning-label']}>Addon is not installed. Install now?</div>
+                                <Button className={styles['install-button']} title={'Install addon'} onClick={openAddonModal}>
+                                    <div className={styles['label']}>Install</div>
+                                </Button>
+                            </div>
+                            :
+                            null
+                    }
+                    {
+                        !available ?
                             <div className={styles['message-container']}>
-                                <Image
-                                    className={styles['image']}
-                                    src={'/images/empty.png'}
-                                    alt={' '}
-                                />
-                                <div className={styles['message-label']}>No catalogs avaliable.</div>
+                                <Image className={styles['image']} src={'/images/empty.png'} alt={' '} />
+                                <div className={styles['message-label']}>No catalogs available!</div>
                             </div>
                             :
                             discover.catalog_resource === null ?
                                 <div className={styles['message-container']}>
-                                    <Image
-                                        className={styles['image']}
-                                        src={'/images/empty.png'}
-                                        alt={' '}
-                                    />
-                                    <div className={styles['message-label']}>No catalog selected</div>
+                                    <Image className={styles['image']} src={'/images/empty.png'} alt={' '} />
+                                    <div className={styles['message-label']}>No catalog selected!</div>
                                 </div>
                                 :
                                 discover.catalog_resource.content.type === 'Err' ?
                                     <div className={styles['message-container']}>
-                                        <Image
-                                            className={styles['image']}
-                                            src={'/images/empty.png'}
-                                            alt={' '}
-                                        />
+                                        <Image className={styles['image']} src={'/images/empty.png'} alt={' '} />
                                         <div className={styles['message-label']}>
                                             {`Error(${discover.catalog_resource.content.content.type})${typeof discover.catalog_resource.content.content.content === 'string' ? ` - ${discover.catalog_resource.content.content.content}` : ''}`}
                                         </div>
@@ -148,7 +136,7 @@ const Discover = ({ urlParams, queryParams }) => {
                     }
                 </div>
                 {
-                    avaliable ?
+                    available ?
                         selectedMetaItem !== null ?
                             <MetaPreview
                                 className={styles['meta-preview-container']}
