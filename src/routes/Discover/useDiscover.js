@@ -3,6 +3,7 @@ const { useServices } = require('stremio/services');
 const { CONSTANTS, useModelState, comparatorWithPriorities } = require('stremio/common');
 
 const initDiscoverState = () => ({
+    selected: null,
     selectable: {
         types: [],
         catalogs: [],
@@ -14,6 +15,7 @@ const initDiscoverState = () => ({
 });
 
 const mapDiscoverState = (discover) => {
+    const selected = discover.selected;
     const selectable = {
         types: discover.selectable.types.sort((t1, t2) => {
             return comparatorWithPriorities(CONSTANTS.TYPE_PRIORITIES)(t1.name, t2.name);
@@ -45,7 +47,7 @@ const mapDiscoverState = (discover) => {
         }
         :
         discover.catalog_resource;
-    return { selectable, catalog_resource };
+    return { selected, selectable, catalog_resource };
 };
 
 const onNewDiscoverState = (discover) => {
