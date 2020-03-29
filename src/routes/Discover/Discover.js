@@ -38,6 +38,9 @@ const Discover = ({ urlParams, queryParams }) => {
             event.currentTarget.focus();
         }
     }, [discover.catalog_resource, selectedMetaItem]);
+    const avaliable = React.useMemo(() => {
+        return discover.selectable.types.length > 0 || discover.catalog_resource !== null;
+    }, [discover.catalog_resource, profile]);
     React.useLayoutEffect(() => {
         const metaItem = getMetaItemAtIndex(discover.catalog_resource, 0);
         setSelectedMetaItem(metaItem);
@@ -49,32 +52,26 @@ const Discover = ({ urlParams, queryParams }) => {
     return (
         <MainNavBars className={styles['discover-container']} route={'discover'}>
             <div className={styles['discover-content']}>
-                <div className={styles['selectable-inputs-container']}>
-                    {selectInputs.map(({ title, options, selected, renderLabelText, onSelect }, index) => (
-                        <Multiselect
-                            key={index}
-                            className={styles['select-input-container']}
-                            title={title}
-                            options={options}
-                            selected={selected}
-                            renderLabelText={renderLabelText}
-                            onSelect={onSelect}
-                        />
-                    ))}
-                    <Button className={styles['filter-container']} title={'More filters'} onClick={openInputsModal}>
-                        <Icon className={styles['filter-icon']} icon={'ic_filter'} />
-                    </Button>
-                    <div className={styles['spacing']} />
-                    {
-                        paginationInput !== null ?
-                            <PaginationInput
-                                {...paginationInput}
-                                className={styles['pagination-input-container']}
-                            />
-                            :
-                            null
-                    }
-                </div>
+                {
+                    avaliable ?
+                        <div className={styles['selectable-inputs-container']}>
+                            {selectInputs.map((selectInput, index) => (
+                                <Multiselect {...selectInput} key={index} className={styles['select-input-container']} />
+                            ))}
+                            <Button className={styles['filter-container']} title={'More filters'} onClick={openInputsModal}>
+                                <Icon className={styles['filter-icon']} icon={'ic_filter'} />
+                            </Button>
+                            <div className={styles['spacing']} />
+                            {
+                                paginationInput !== null ?
+                                    <PaginationInput {...paginationInput} className={styles['pagination-input-container']} />
+                                    :
+                                    null
+                            }
+                        </div>
+                        :
+                        null
+                }
                 {
                     discover.catalog_resource !== null && !profile.addons.some((addon) => addon.transportUrl === discover.catalog_resource.request.base) ?
                         <div className={styles['missing-addon-warning-container']}>
