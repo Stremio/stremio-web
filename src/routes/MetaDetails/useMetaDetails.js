@@ -40,6 +40,7 @@ const mapMetaDetailsState = (meta_details) => {
             :
             meta_resource;
     });
+    // TODO map streams with progress
     const streams_resources = meta_details.streams_resources;
     return { selected, meta_resources, streams_resources };
 };
