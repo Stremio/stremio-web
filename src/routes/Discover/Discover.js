@@ -73,7 +73,7 @@ const Discover = ({ urlParams, queryParams }) => {
                         null
                 }
                 {
-                    discover.catalog_resource !== null && !profile.addons.some((addon) => addon.transportUrl === discover.catalog_resource.request.base) ?
+                    discover.catalog_resource !== null && discover.catalog_resource.content.type === 'Ready' && !profile.addons.some((addon) => addon.transportUrl === discover.catalog_resource.request.base) ?
                         <div className={styles['missing-addon-warning-container']}>
                             <div className={styles['warning-info']}>This addon is not installed. Install now?</div>
                             <Button className={styles['install-button']} title={'Install addon'} onClick={openAddonModal}>
