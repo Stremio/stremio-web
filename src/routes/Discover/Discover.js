@@ -40,7 +40,7 @@ const Discover = ({ urlParams, queryParams }) => {
     }, [discover.catalog_resource, selectedMetaItem]);
     const avaliable = React.useMemo(() => {
         return discover.selectable.types.length > 0 || discover.catalog_resource !== null;
-    }, [discover.catalog_resource, profile]);
+    }, [discover]);
     React.useLayoutEffect(() => {
         const metaItem = getMetaItemAtIndex(discover.catalog_resource, 0);
         setSelectedMetaItem(metaItem);
