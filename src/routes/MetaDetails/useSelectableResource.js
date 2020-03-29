@@ -2,9 +2,13 @@ const React = require('react');
 const isEqual = require('lodash.isequal');
 
 const readyResourceForRequest = (resources, request) => {
-    return resources.find((resource) => {
-        return isEqual(resource.request, request) && resource.content.type === 'Ready';
-    });
+    return resources.reduce((result, resource) => {
+        if (resource.content.type === 'Ready' && isEqual(resource.request, request)) {
+            return resource;
+        }
+
+        return result;
+    }, null);
 };
 
 const reducer = (state, action) => {
@@ -12,7 +16,7 @@ const reducer = (state, action) => {
         case 'resources-changed': {
             if (state.selected.resource === null ||
                 !state.selected.byUser ||
-                !readyResourceForRequest(action.resources, state.selected.resource.request)) {
+                readyResourceForRequest(action.resources, state.selected.resource.request) === null) {
                 const firstReadyResource = action.resources.find((resource) => resource.content.type === 'Ready');
                 const selectedResource = firstReadyResource ? firstReadyResource : null;
                 return {
@@ -34,7 +38,7 @@ const reducer = (state, action) => {
         }
         case 'resource-selected': {
             const selectedResource = readyResourceForRequest(state.resources, action.request);
-            if (!selectedResource) {
+            if (selectedResource === null) {
                 return state;
             }
 
