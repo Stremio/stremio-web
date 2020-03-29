@@ -1,6 +1,6 @@
 const React = require('react');
 const PropTypes = require('prop-types');
-const { HorizontalNavBar, MetaPreview, useInLibrary } = require('stremio/common');
+const { HorizontalNavBar, MetaPreview, Image, useInLibrary } = require('stremio/common');
 const StreamsList = require('./StreamsList');
 const VideosList = require('./VideosList');
 const useMetaDetails = require('./useMetaDetails');
@@ -55,7 +55,7 @@ const MetaDetails = ({ urlParams }) => {
                                             typeof selectedMetaResource.content.content.background === 'string' &&
                                                 selectedMetaResource.content.content.background.length > 0 ?
                                                 <div className={styles['background-image-layer']}>
-                                                    <img
+                                                    <Image
                                                         className={styles['background-image']}
                                                         src={selectedMetaResource.content.content.background}
                                                         alt={' '}
