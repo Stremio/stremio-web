@@ -64,7 +64,6 @@ const MetaDetails = ({ urlParams }) => {
                                             className={styles['meta-preview']}
                                             name={selectedMetaResource.content.content.name}
                                             logo={selectedMetaResource.content.content.logo}
-                                            background={null}
                                             runtime={selectedMetaResource.content.content.runtime}
                                             releaseInfo={selectedMetaResource.content.content.releaseInfo}
                                             released={selectedMetaResource.content.content.released}
@@ -76,9 +75,7 @@ const MetaDetails = ({ urlParams }) => {
                                         />
                                     </React.Fragment>
                                     :
-                                    <MetaPreview.Placeholder
-                                        className={styles['meta-preview']}
-                                    />
+                                    <MetaPreview.Placeholder className={styles['meta-preview']} />
                 }
                 {
                     streamsResourceRef !== null ?
