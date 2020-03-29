@@ -148,21 +148,24 @@ const Discover = ({ urlParams, queryParams }) => {
                     }
                 </div>
                 {
-                    selectedMetaItem !== null ?
-                        <MetaPreview
-                            className={styles['meta-preview-container']}
-                            compact={true}
-                            name={selectedMetaItem.name}
-                            logo={selectedMetaItem.logo}
-                            background={selectedMetaItem.poster}
-                            runtime={selectedMetaItem.runtime}
-                            releaseInfo={selectedMetaItem.releaseInfo}
-                            released={selectedMetaItem.released}
-                            description={selectedMetaItem.description}
-                            trailer={selectedMetaItem.trailer}
-                        />
+                    avaliable ?
+                        selectedMetaItem !== null ?
+                            <MetaPreview
+                                className={styles['meta-preview-container']}
+                                compact={true}
+                                name={selectedMetaItem.name}
+                                logo={selectedMetaItem.logo}
+                                background={selectedMetaItem.poster}
+                                runtime={selectedMetaItem.runtime}
+                                releaseInfo={selectedMetaItem.releaseInfo}
+                                released={selectedMetaItem.released}
+                                description={selectedMetaItem.description}
+                                trailer={selectedMetaItem.trailer}
+                            />
+                            :
+                            <div className={styles['meta-preview-container']} />
                         :
-                        <div className={styles['meta-preview-container']} />
+                        null
                 }
             </div>
             {
