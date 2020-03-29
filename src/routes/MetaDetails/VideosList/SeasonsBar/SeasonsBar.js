@@ -54,7 +54,6 @@ const SeasonsBar = ({ className, seasons, season, onSelect }) => {
                 title={`Season ${season}`}
                 options={options}
                 selected={selected}
-                disabled={false}
                 onSelect={seasonOnSelect}
             />
             <Button className={styles['next-season-button']} data-action={'next'} onClick={prevNextButtonOnClick}>

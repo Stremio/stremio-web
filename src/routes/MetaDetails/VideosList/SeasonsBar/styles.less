@@ -1,13 +1,15 @@
 @import (reference) '~stremio-colors/dist/less/stremio-colors.less';
 
 :import('~stremio/common/Multiselect/styles.less') {
-    season-label: label;
-    season-icon: icon;
+    multiselect-label: label;
+    multiselect-icon: icon;
 }
 
 .seasons-bar-container {
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
+    padding: 1rem;
     overflow: visible;
 
     .prev-season-button, .next-season-button {
@@ -15,71 +17,59 @@
         display: flex;
         flex-direction: row;
         align-items: center;
-        justify-content: center;
         width: 6.5rem;
+        height: 3.5rem;
         padding: 0.5rem;
 
         &:hover, &:focus {
             .label {
-                color: @color-surface-dark1;
+                color: @color-surface-light2-90;
             }
 
             .icon {
-                fill: @color-surface-dark3;
+                fill: @color-surface-light2-90;
             }
         }
 
         &:focus {
-            outline: none;
             background-color: @color-surface-light5-10;
         }
 
         &>:first-child {
-            margin-right: 1rem;
+            margin-right: 0.5rem;
         }
 
         .label {
+            flex: 1;
             max-height: 1.2em;
-            color: @color-surface-dark3-90;
+            font-weight: 500;
+            text-align: center;
+            color: @color-surface-90;
         }
 
         .icon {
-            display: block;
+            flex: none;
             width: 1.5rem;
             height: 1.5rem;
-            fill: @color-surface-dark5;
+            fill: @color-surface-90;
         }
     }
 
     .seasons-popup-label-container {
-        flex: 1;
-        align-self: stretch;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 2rem;
+        flex: 0 1 auto;
+        height: 3.5rem;
         background: none;
-        overflow: visible;
 
-        &:hover, &:focus {
-            background-color: @color-background-dark1;
-
-            .season-icon {
-                fill: @color-surface-dark3;
-            }
-        }
-
-        &:global(.active) {
+        &:hover, &:focus, &:global(.active) {
             background-color: @color-background;
         }
 
-        .season-label {
-            flex: none;
+        &>.multiselect-label {
             color: @color-surface-light5-90;
         }
 
-        .season-icon {
-            fill: @color-surface-dark5;
+        &>.multiselect-icon {
+            fill: @color-surface-light5-90;
         }
     }
 }
