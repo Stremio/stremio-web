@@ -32,29 +32,35 @@ const mapMetaDetailsState = (meta_details) => {
 
 const useMetaDetails = (urlParams) => {
     const loadMetaDetailsAction = React.useMemo(() => {
-        return {
-            action: 'Load',
-            args: {
-                model: 'MetaDetails',
+        if (typeof urlParams.type === 'string' && typeof urlParams.id === 'string') {
+            return {
+                action: 'Load',
                 args: {
-                    meta_resource_ref: {
-                        resource: 'meta',
-                        type_name: urlParams.type,
-                        id: urlParams.id,
-                        extra: []
-                    },
-                    streams_resource_ref: typeof urlParams.videoId === 'string' ?
-                        {
-                            resource: 'stream',
+                    model: 'MetaDetails',
+                    args: {
+                        meta_resource_ref: {
+                            resource: 'meta',
                             type_name: urlParams.type,
-                            id: urlParams.videoId,
+                            id: urlParams.id,
                             extra: []
-                        }
-                        :
-                        null
+                        },
+                        streams_resource_ref: typeof urlParams.videoId === 'string' ?
+                            {
+                                resource: 'stream',
+                                type_name: urlParams.type,
+                                id: urlParams.videoId,
+                                extra: []
+                            }
+                            :
+                            null
+                    }
                 }
-            }
-        };
+            };
+        } else {
+            return {
+                action: 'Unload'
+            };
+        }
     }, [urlParams]);
     return useModelState({
         model: 'meta_details',
