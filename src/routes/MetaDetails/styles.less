@@ -24,6 +24,7 @@
         z-index: 0;
         display: flex;
         flex-direction: row;
+        justify-content: space-between;
 
         .background-image-layer {
             position: absolute;
@@ -55,7 +56,7 @@
         }
 
         .meta-preview {
-            flex: 1;
+            flex: 0 1 40rem;
             align-self: stretch;
         }
 
@@ -63,66 +64,6 @@
             --item-size: 26.5rem;
             flex: none;
             align-self: stretch;
-        }
-    }
-}
-
-@media only screen and (min-width: @large) {
-    .metadetails-container {
-        .metadetails-content {
-            .meta-preview {
-                .meta-info-container {
-                    width: 58rem;
-                }
-            }
-        }
-    }
-}
-
-@media only screen and (max-width: @large) {
-    .metadetails-container {
-        .metadetails-content {
-            .meta-preview {
-                .meta-info-container {
-                    width: 48rem;
-                }
-            }
-        }
-    }
-}
-
-@media only screen and (max-width: @medium) {
-    .metadetails-container {
-        .metadetails-content {
-            .meta-preview {
-                .meta-info-container {
-                    width: 40rem;
-                }
-            }
-        }
-    }
-}
-
-@media only screen and (max-width: @small) {
-    .metadetails-container {
-        .metadetails-content {
-            .meta-preview {
-                .meta-info-container {
-                    width: 34rem;
-                }
-            }
-        }
-    }
-}
-
-@media only screen and (max-width: @xsmall) {
-    .metadetails-container {
-        .metadetails-content {
-            .meta-preview {
-                .meta-info-container {
-                    width: 30rem;
-                }
-            }
         }
     }
 }
