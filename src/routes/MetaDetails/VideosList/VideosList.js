@@ -57,18 +57,16 @@ const VideosList = ({ className, metaResource }) => {
                                     :
                                     null
                             }
-                            <div className={styles['search-container']}>
-                                <label className={styles['search-bar-container']}>
-                                    <TextInput
-                                        className={styles['search-input']}
-                                        type={'text'}
-                                        placeholder={'Search videos'}
-                                        value={search}
-                                        onChange={searchInputOnChange}
-                                    />
-                                    <Icon className={styles['icon']} icon={'ic_search'} />
-                                </label>
-                            </div>
+                            <label className={styles['search-bar-container']}>
+                                <TextInput
+                                    className={styles['search-input']}
+                                    type={'text'}
+                                    placeholder={'Search videos'}
+                                    value={search}
+                                    onChange={searchInputOnChange}
+                                />
+                                <Icon className={styles['icon']} icon={'ic_search'} />
+                            </label>
                             <div className={styles['videos-scroll-container']}>
                                 {videosForSeason
                                     .filter((video) => {
