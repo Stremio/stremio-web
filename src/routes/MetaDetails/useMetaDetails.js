@@ -2,10 +2,7 @@ const React = require('react');
 const { useModelState } = require('stremio/common');
 
 const initMetaDetailsState = () => ({
-    selected: {
-        meta_resource_ref: null,
-        streams_resource_ref: null,
-    },
+    selected: null,
     meta_resources: [],
     streams_resources: []
 });
