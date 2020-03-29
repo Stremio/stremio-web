@@ -27,16 +27,12 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
     const linksGroups = React.useMemo(() => {
         return Array.isArray(links) ?
             links
-                .filter((link) => {
-                    return link &&
-                        typeof link.category === 'string' &&
-                        typeof link.url === 'string';
-                })
+                .filter((link) => link && typeof link.category === 'string' && typeof link.url === 'string')
                 .reduce((linksGroups, { category, name, url }) => {
                     if (category === IMDB_LINK_CATEGORY) {
                         linksGroups[category] = {
                             label: name,
-                            href: `https://www.stremio.com/warning#${encodeURIComponent(`https://www.imdb.com/title/${url}`)}`
+                            href: `https://www.stremio.com/warning#${encodeURIComponent(`https://www.imdb.com/title/${encodeURIComponent(url)}`)}`
                         };
                     } else if (category === SHARE_LINK_CATEGORY) {
                         linksGroups[category] = {
@@ -53,14 +49,12 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                                     href: `#${path}`
                                 });
                             }
-                        } else {
-                            if (typeof host === 'string' && host.length > 0) {
-                                linksGroups[category] = linksGroups[category] || [];
-                                linksGroups[category].push({
-                                    label: name,
-                                    href: `https://www.stremio.com/warning#${encodeURIComponent(url)}`
-                                });
-                            }
+                        } else if (typeof host === 'string' && host.length > 0) {
+                            linksGroups[category] = linksGroups[category] || [];
+                            linksGroups[category].push({
+                                label: name,
+                                href: `https://www.stremio.com/warning#${encodeURIComponent(url)}`
+                            });
                         }
                     }
 
