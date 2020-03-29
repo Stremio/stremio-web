@@ -17,8 +17,13 @@ const reducer = (state, action) => {
             if (state.selected.resource === null ||
                 !state.selected.byUser ||
                 readyResourceForRequest(action.resources, state.selected.resource.request) === null) {
-                const firstReadyResource = action.resources.find((resource) => resource.content.type === 'Ready');
-                const selectedResource = firstReadyResource ? firstReadyResource : null;
+                const selectedResource = action.resources.reduce((result, resource) => {
+                    if (resource.content.type === 'Ready') {
+                        return resource;
+                    }
+
+                    return result;
+                }, null);
                 return {
                     ...state,
                     resourceRef: action.resourceRef,
@@ -38,17 +43,17 @@ const reducer = (state, action) => {
         }
         case 'resource-selected': {
             const selectedResource = readyResourceForRequest(state.resources, action.request);
-            if (selectedResource === null) {
-                return state;
+            if (selectedResource !== null) {
+                return {
+                    ...state,
+                    selected: {
+                        resource: selectedResource,
+                        byUser: true
+                    }
+                };
             }
 
-            return {
-                ...state,
-                selected: {
-                    resource: selectedResource,
-                    byUser: true
-                }
-            };
+            return state;
         }
         default: {
             return state;
