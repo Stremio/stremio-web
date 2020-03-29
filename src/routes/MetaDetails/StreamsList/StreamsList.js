@@ -2,7 +2,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
-const { Button } = require('stremio/common');
+const { Button, Image } = require('stremio/common');
 const Stream = require('./Stream');
 const styles = require('./styles');
 
@@ -14,14 +14,21 @@ const StreamsList = ({ className, streamsResources }) => {
             .flat(1);
     }, [streamsResources]);
     return (
-        <div className={classnames(className, styles['streams-list-container'])}>
+        <div className={classnames(className, styles['streams-list-container'], { 'streams-list-message': streamsResources.length === 0 || streamsResources.every((streamsResource) => streamsResource.content.type === 'Err') })}>
             <div className={styles['streams-scroll-container']}>
                 {
                     streamsResources.length === 0 ?
-                        <div className={styles['message-label']}>No addons ware requested for streams</div>
+                        <div className={styles['message-container']}>
+                            <Image className={styles['image']} src={'/images/empty.png'} />
+                            <div className={styles['label']}>No addons were requested for streams</div>
+                        </div>
                         :
                         streamsResources.every((streamsResource) => streamsResource.content.type === 'Err') ?
-                            <div className={styles['message-label']}>No streams were found</div>
+                            <div className={styles['message-container']}>
+                                <Image className={styles['image']} src={'/images/empty.png'} />
+                                <div className={styles['label']}>No streams were found!</div>
+                                <div className={styles['description']}>Please install some addons to find more streams</div>
+                            </div>
                             :
                             streams.length > 0 ?
                                 streams.map((stream, index) => (
@@ -38,9 +45,9 @@ const StreamsList = ({ className, streamsResources }) => {
                                 </React.Fragment>
                 }
             </div>
-            <Button className={styles['install-addons-container']} title={'Install addons'} href={'#/addons'}>
+            <Button className={styles['install-addons-container']} title={'Install Addons'} href={'#/addons'}>
                 <Icon className={styles['icon']} icon={'ic_addons'} />
-                <div className={styles['label']}>Install addons</div>
+                <div className={styles['label']}>Install Addons</div>
             </Button>
         </div>
     );

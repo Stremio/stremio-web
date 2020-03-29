@@ -3,6 +3,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const UrlUtils = require('url');
 const Icon = require('stremio-icons/dom');
+const Button = require('stremio/common/Button');
 const Image = require('stremio/common/Image');
 const ModalDialog = require('stremio/common/ModalDialog');
 const SharePrompt = require('stremio/common/SharePrompt');
@@ -102,8 +103,14 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                         null
                 }
                 {
-                    (typeof releaseInfo === 'string' && releaseInfo.length > 0) || (released instanceof Date && !isNaN(released.getTime())) || (typeof runtime === 'string' && runtime.length > 0) ?
+                    (typeof releaseInfo === 'string' && releaseInfo.length > 0) || (released instanceof Date && !isNaN(released.getTime())) || (typeof runtime === 'string' && runtime.length > 0) || typeof linksGroups[IMDB_LINK_CATEGORY] === 'object' ?
                         <div className={styles['runtime-release-info-container']}>
+                            {
+                                typeof runtime === 'string' && runtime.length > 0 ?
+                                    <div className={styles['runtime-label']}>{runtime}</div>
+                                    :
+                                    null
+                            }
                             {
                                 typeof releaseInfo === 'string' && releaseInfo.length > 0 ?
                                     <div className={styles['release-info-label']}>{releaseInfo}</div>
@@ -114,8 +121,17 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                                         null
                             }
                             {
-                                typeof runtime === 'string' && runtime.length > 0 ?
-                                    <div className={styles['runtime-label']}>{runtime}</div>
+                                typeof linksGroups[IMDB_LINK_CATEGORY] === 'object' ?
+                                    <Button
+                                        className={styles['imdb-button-container']}
+                                        title={linksGroups[IMDB_LINK_CATEGORY].label}
+                                        href={linksGroups[IMDB_LINK_CATEGORY].href}
+                                        target={'_blank'}
+                                        {...(compact ? { tabIndex: -1 } : null)}
+                                    >
+                                        <Icon className={styles['icon']} icon={'ic_imdbnoframe'} />
+                                        <div className={styles['label']}>{linksGroups[IMDB_LINK_CATEGORY].label}</div>
+                                    </Button>
                                     :
                                     null
                             }
@@ -173,18 +189,6 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                             icon={'ic_movies'}
                             label={'Trailer'}
                             href={`#/player?stream=${JSON.stringify(trailer)}`}
-                            {...(compact ? { tabIndex: -1 } : null)}
-                        />
-                        :
-                        null
-                }
-                {
-                    typeof linksGroups[IMDB_LINK_CATEGORY] === 'object' ?
-                        <ActionButton
-                            {...linksGroups[IMDB_LINK_CATEGORY]}
-                            className={styles['action-button']}
-                            icon={'ic_imdb'}
-                            target={'_blank'}
                             {...(compact ? { tabIndex: -1 } : null)}
                         />
                         :

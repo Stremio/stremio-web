@@ -1,13 +1,29 @@
+@import (reference) '~stremio-colors/dist/less/stremio-colors.less';
+
+:import('~stremio/common/PlayIconCircleCentered/styles.less') {
+    play-icon-circle-centered-background: background;
+    play-icon-circle-centered-icon: icon;
+}
+
 .stream-container {
     display: flex;
     flex-direction: row;
     align-items: center;
     flex-wrap: wrap;
-    min-width: 18rem;
-    background-color: var(--color-surfacedarker60);
+    background-color: @color-background-dark3-80;
 
     &:hover, &:focus {
-        background-color: var(--color-surfacedarker);
+        background-color: @color-background;
+
+        .play-icon {
+            .play-icon-circle-centered-background {
+                fill: @color-accent4;
+            }
+
+            .play-icon-circle-centered-icon {
+                fill: @color-surface-light5;
+            }
+        }
     }
 
     .thumbnail-container, .addon-name-container {
@@ -26,7 +42,7 @@
             display: block;
             width: 5rem;
             height: 5rem;
-            fill: var(--color-surfacelight20);
+            fill: @color-secondaryvariant1-light3;
         }
 
         .addon-name {
@@ -34,38 +50,29 @@
             max-height: 3.6em;
             font-size: 1.1rem;
             text-align: center;
-            color: var(--color-surfacelighter);
+            color: @color-surface-light5;
         }
     }
 
     .info-container {
         flex: 1;
-        padding: 0.5rem;
-
-        .addon-name-label {
-            font-size: 1.1rem;
-            max-height: 3.6em;
-            margin-bottom: 0.5rem;
-            color: var(--color-surfacelighter);
-        }
-
-        .title-label {
-            max-height: 3.6em;
-            color: var(--color-surfacelighter);
-        }
+        max-height: 3.6em;
+        margin: 0.5rem;
+        font-size: 0.8rem;
+        color: @color-surface-90;
     }
 
-    .play-icon-container {
-        flex: none;
-        width: 6rem;
-        height: 6rem;
-        padding: 2rem;
+    .play-icon {
+        width: 3.5rem;
+        height: 5rem;
+        margin: 0.5rem 1.5rem 0.5rem 0.5rem;
 
-        .play-icon {
-            display: block;
-            width: 100%;
-            height: 100%;
-            fill: var(--color-surfacelighter);
+        .play-icon-circle-centered-background {
+            fill: none;
+        }
+
+        .play-icon-circle-centered-icon {
+            fill: @color-surface-dark5;
         }
     }
 
@@ -73,11 +80,11 @@
         flex-grow: 0;
         flex-shrink: 0;
         flex-basis: 100%;
-        background-color: var(--color-backgroundlighter);
+        background-color: @color-background-light2;
 
         .progress-bar {
             height: 0.5rem;
-            background-color: var(--color-primary);
+            background-color: @color-primaryvariant1;
         }
     }
 }
