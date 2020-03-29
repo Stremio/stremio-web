@@ -57,7 +57,7 @@ const VideosList = ({ className, metaResource }) => {
                                     :
                                     null
                             }
-                            <label className={styles['search-bar-container']}>
+                            <label title={'Search videos'} className={styles['search-bar-container']}>
                                 <TextInput
                                     className={styles['search-input']}
                                     type={'text'}
