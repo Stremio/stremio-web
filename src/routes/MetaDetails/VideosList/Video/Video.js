@@ -1,8 +1,8 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const { Button, Image } = require('stremio/common');
 const Icon = require('stremio-icons/dom');
+const { Button, Image } = require('stremio/common');
 const VideoPlaceholder = require('./VideoPlaceholder');
 const styles = require('./styles');
 
