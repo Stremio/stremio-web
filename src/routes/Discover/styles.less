@@ -250,110 +250,120 @@
     }
 }
 
-// @media only screen and (min-width: @xxlarge) {
-//     .discover-container {
-//         .discover-content {
-//             .catalog-content-container {
-//                 .meta-items-container {
-//                     grid-template-columns: repeat(10, 1fr);
-//                 }
-//             }
-//         }
-//     }
-// }
+@media only screen and (min-width: @xxlarge) {
+    .discover-container {
+        .discover-content {
+            .catalog-container {
+                .meta-items-container {
+                    grid-template-columns: repeat(10, 1fr);
+                }
+            }
+        }
+    }
+}
 
-// @media only screen and (max-width: @xxlarge) {
-//     .discover-container {
-//         .discover-content {
-//             .catalog-content-container {
-//                 .meta-items-container {
-//                     grid-template-columns: repeat(9, 1fr);
-//                 }
-//             }
-//         }
-//     }
-// }
+@media only screen and (max-width: @xxlarge) {
+    .discover-container {
+        .discover-content {
+            .catalog-container {
+                .meta-items-container {
+                    grid-template-columns: repeat(9, 1fr);
+                }
+            }
+        }
+    }
+}
 
-// @media only screen and (max-width: @xlarge) {
-//     .discover-container {
-//         .discover-content {
-//             .catalog-content-container {
-//                 .meta-items-container {
-//                     grid-template-columns: repeat(8, 1fr);
-//                 }
-//             }
-//         }
-//     }
-// }
+@media only screen and (max-width: @xlarge) {
+    .discover-container {
+        .discover-content {
+            .catalog-container {
+                .meta-items-container {
+                    grid-template-columns: repeat(8, 1fr);
+                }
+            }
+        }
+    }
+}
 
-// @media only screen and (max-width: @large) {
-//     .discover-container {
-//         .discover-content {
-//             .catalog-content-container {
-//                 .meta-items-container {
-//                     grid-template-columns: repeat(7, 1fr);
-//                 }
-//             }
-//         }
-//     }
-// }
+@media only screen and (max-width: @large) {
+    .discover-container {
+        .discover-content {
+            .catalog-container {
+                .meta-items-container {
+                    grid-template-columns: repeat(7, 1fr);
+                }
+            }
+        }
+    }
+}
 
-// @media only screen and (max-width: @normal) {
-//     .discover-container {
-//         .discover-content {
-//             .catalog-content-container {
-//                 .meta-items-container {
-//                     grid-template-columns: repeat(6, 1fr);
-//                 }
-//             }
-//         }
-//     }
-// }
+@media only screen and (max-width: @normal) {
+    .discover-container {
+        .discover-content {
+            .catalog-container {
+                .meta-items-container {
+                    grid-template-columns: repeat(6, 1fr);
+                }
+            }
+        }
+    }
+}
 
-// @media only screen and (max-width: @medium) {
-//     .discover-container {
-//         .discover-content {
-//             .catalog-content-container {
-//                 .meta-items-container {
-//                     grid-template-columns: repeat(5, 1fr);
-//                 }
-//             }
-//         }
-//     }
-// }
+@media only screen and (max-width: @medium) {
+    .discover-container {
+        .discover-content {
+            .catalog-container {
+                .meta-items-container {
+                    grid-template-columns: repeat(5, 1fr);
+                }
+            }
+        }
+    }
+}
 
-// @media only screen and (max-width: @small) {
-//     .discover-container {
-//         .discover-content {
-//             .catalog-content-container {
-//                 .meta-items-container {
-//                     grid-template-columns: repeat(4, 1fr);
-//                 }
-//             }
-//         }
-//     }
-// }
+@media only screen and (max-width: @small) {
+    .discover-container {
+        .discover-content {
+            .catalog-container {
+                .meta-items-container {
+                    grid-template-columns: repeat(4, 1fr);
+                }
+            }
+        }
+    }
+}
 
-// @media only screen and (max-width: @xsmall) {
-//     .discover-container {
-//         .discover-content {
-//             grid-template-columns: 1fr;
-//             grid-template-rows: auto auto 1fr;
-//             grid-template-areas:
-//                 "selectable-inputs-area"
-//                 "missing-addon-warning-container"
-//                 "catalog-content-area";
+@media only screen and (max-width: @xsmall) {
+    .discover-container {
+        .discover-content {
+            .catalog-container {
+                .meta-items-container {
+                    grid-template-columns: repeat(5, 1fr);
+                    margin-right: 0;
+                }
+            }
 
-//             .catalog-content-container {
-//                 .meta-items-container {
-//                     grid-template-columns: repeat(5, 1fr);
-//                     margin-right: 0;
-//                 }
-//             }
+            .meta-preview-container {
+                display: none;
+            }
+        }
+    }
+}
 
-//             .meta-preview-container {
-//                 display: none;
-//             }
-//         }
-//     }
-// }
+@media only screen and (max-width: @minimum) {
+    .discover-container {
+        .discover-content {
+            .catalog-container {
+                .meta-items-container {
+                    grid-template-columns: repeat(4, 1fr);
+                    margin-right: 0;
+                }
+            }
+
+            .meta-preview-container {
+                display: none;
+            }
+        }
+    }
+}
