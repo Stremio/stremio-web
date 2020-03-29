@@ -18,7 +18,7 @@ const mapSelectableInputs = (route, library) => {
         onSelect: (event) => {
             const type = JSON.parse(event.value);
             const queryParams = new URLSearchParams(library.selected !== null ? [['sort', library.selected.sort]] : []);
-            window.location.replace(`#/${route}${type !== null ? `/${encodeURIComponent(type)}` : ''}?${queryParams.toString()}`);
+            window.location = `#/${route}${type !== null ? `/${encodeURIComponent(type)}` : ''}?${queryParams.toString()}`;
         }
     };
     const sortSelect = {
@@ -31,7 +31,7 @@ const mapSelectableInputs = (route, library) => {
         onSelect: (event) => {
             const type = library.selected !== null ? library.selected.type_name : null;
             const queryParams = new URLSearchParams([['sort', event.value]]);
-            window.location.replace(`#/${route}${type !== null ? `/${encodeURIComponent(type)}` : ''}?${queryParams.toString()}`);
+            window.location = `#/${route}${type !== null ? `/${encodeURIComponent(type)}` : ''}?${queryParams.toString()}`;
         }
     };
     return [typeSelect, sortSelect];

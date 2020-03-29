@@ -12,7 +12,7 @@ const navigateWithRequest = (request) => {
     const type = encodeURIComponent(request.path.type_name);
     const catalogId = encodeURIComponent(request.path.id);
     const extra = new URLSearchParams(request.path.extra).toString();
-    window.location.replace(`#/discover/${transportUrl}/${type}/${catalogId}?${extra}`);
+    window.location = `#/discover/${transportUrl}/${type}/${catalogId}?${extra}`;
 };
 
 const nextExtra = (prevExtra, extraProp, extraValue) => {
