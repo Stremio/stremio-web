@@ -23,7 +23,7 @@ const Stream = ({ className, addonName, title, thumbnail, progress, ...props }) 
                         />
                     </div>
                     :
-                    <div className={styles['addon-name-container']}>
+                    <div className={styles['addon-name-container']} title={addonName}>
                         <div className={styles['addon-name']}>{addonName}</div>
                     </div>
             }
