@@ -7,6 +7,9 @@ const StreamPlaceholder = require('./StreamPlaceholder');
 const styles = require('./styles');
 
 const Stream = ({ className, addonName, title, thumbnail, progress, ...props }) => {
+    const renderThumbnailFallback = React.useMemo(() => () => (
+        <Icon className={styles['placeholder-icon']} icon={'ic_broken_link'} />
+    ), []);
     return (
         <Button {...props} className={classnames(className, styles['stream-container'])} title={title}>
             {
@@ -16,12 +19,7 @@ const Stream = ({ className, addonName, title, thumbnail, progress, ...props }) 
                             className={styles['thumbnail']}
                             src={thumbnail}
                             alt={' '}
-                            renderFallback={() => (
-                                <Icon
-                                    className={styles['placeholder-icon']}
-                                    icon={'ic_broken_link'}
-                                />
-                            )}
+                            renderFallback={renderThumbnailFallback}
                         />
                     </div>
                     :
