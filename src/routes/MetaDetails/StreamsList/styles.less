@@ -4,52 +4,39 @@
     display: flex;
     flex-direction: column;
 
-    &:global(.streams-list-message) {
-        background-color: @color-background-dark3-80;
-    }
-
-    .streams-scroll-container {
-        flex-grow: 0;
-        flex-shrink: 1;
-        flex-basis: auto;
+    .message-container {
+        flex: 0 1 auto;
         align-self: stretch;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 2rem 2rem 0;
         overflow-y: auto;
 
-        .message-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: var(--item-size);
-            height: 100%;
-            padding: 2rem;
-
-            &>:not(:last-child) {
-                margin-bottom: 1rem;
-            }
-
-            .image {
-                flex: none;
-                width: 10rem;
-                opacity: 0.9;
-            }
-
-            .label {
-                flex: none;
-                font-size: 1.4rem;
-                text-align: center;
-                color: @color-surface-light5-90;
-            }
-
-            .description {
-                flex: none;
-                text-align: center;
-                color: @color-surface-dark1-90;
-            }
+        .image {
+            flex: none;
+            width: 10rem;
+            height: 10rem;
+            max-width: 100%;
+            margin-bottom: 1rem;
+            object-fit: contain;
+            object-position: center;
+            opacity: 0.9;
         }
 
-        .stream {
-            width: var(--item-size);
+        .label {
+            flex: none;
+            font-size: 1.4rem;
+            text-align: center;
+            color: @color-secondaryvariant2-light1-90;
         }
+    }
+
+    .streams-container {
+        flex: 0 1 auto;
+        align-self: stretch;
+        padding-top: 1rem;
+        overflow-y: auto;
     }
 
     .install-button-container {
@@ -59,7 +46,7 @@
         flex-direction: row;
         align-items: center;
         justify-content: center;
-        margin: 1.5rem;
+        margin: 2rem;
         padding: 1.5rem 1rem;
         background-color: @color-accent3;
 
