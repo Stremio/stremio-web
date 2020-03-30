@@ -10,25 +10,24 @@
     flex-direction: row;
     align-items: center;
     flex-wrap: wrap;
-    background-color: @color-background-dark3-80;
+    padding: 0.5rem 1rem;
 
     &:hover, &:focus {
         background-color: @color-background;
 
         .play-icon {
             .play-icon-circle-centered-background {
-                fill: @color-accent4;
+                fill: @color-accent4-90;
             }
 
             .play-icon-circle-centered-icon {
-                fill: @color-surface-light5;
+                fill: @color-surface-light5-90;
             }
         }
     }
 
     .thumbnail-container, .addon-name-container {
         flex: none;
-        padding: 0.5rem;
 
         .thumbnail {
             display: block;
@@ -36,13 +35,15 @@
             height: 5rem;
             object-fit: contain;
             object-position: center;
+            opacity: 0.9;
         }
 
         .placeholder-icon {
             display: block;
             width: 5rem;
             height: 5rem;
-            fill: @color-secondaryvariant1-light3;
+            padding: 0.5rem;
+            fill: @color-secondaryvariant1-light3-90;
         }
 
         .addon-name {
@@ -50,36 +51,33 @@
             max-height: 3.6em;
             font-size: 1.1rem;
             text-align: center;
-            color: @color-surface-light5;
+            color: @color-surface-light5-90;
         }
     }
 
     .info-container {
         flex: 1;
         max-height: 3.6em;
-        margin: 0.5rem;
-        font-size: 0.8rem;
-        color: @color-surface-90;
+        margin: 0.5rem 1rem;
+        color: @color-surface-light5-90;
     }
 
     .play-icon {
+        flex: none;
         width: 3.5rem;
         height: 5rem;
-        margin: 0.5rem 1.5rem 0.5rem 0.5rem;
 
         .play-icon-circle-centered-background {
             fill: none;
         }
 
         .play-icon-circle-centered-icon {
-            fill: @color-surface-dark5;
+            fill: @color-surface-dark5-90;
         }
     }
 
     .progress-bar-container {
-        flex-grow: 0;
-        flex-shrink: 0;
-        flex-basis: 100%;
+        flex: 0 0 100%;
         background-color: @color-background-light2;
 
         .progress-bar {
