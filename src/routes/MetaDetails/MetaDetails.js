@@ -15,9 +15,19 @@ const MetaDetails = ({ urlParams }) => {
     );
     const streamsResourceRef = metaDetails.selected !== null ? metaDetails.selected.streams_resource_ref : null;
     const streamsResources = metaDetails.streams_resources;
-    const [inLibrary, toggleInLibrary] = useInLibrary(
-        selectedMetaResource !== null ? selectedMetaResource.content.content : null
-    );
+    const selectedVideo = React.useMemo(() => {
+        return streamsResourceRef !== null && selectedMetaResource !== null ?
+            selectedMetaResource.content.content.videos.reduce((result, video) => {
+                if (video.id === streamsResourceRef.id) {
+                    return video;
+                }
+
+                return result;
+            }, null)
+            :
+            null;
+    }, [selectedMetaResource, streamsResourceRef]);
+    const [inLibrary, toggleInLibrary] = useInLibrary(selectedMetaResource !== null ? selectedMetaResource.content.content : null);
     return (
         <div className={styles['metadetails-container']}>
             <HorizontalNavBar
@@ -62,12 +72,17 @@ const MetaDetails = ({ urlParams }) => {
                                         }
                                         <MetaPreview
                                             className={styles['meta-preview']}
-                                            name={selectedMetaResource.content.content.name}
+                                            name={selectedMetaResource.content.content.name + (selectedVideo !== null && typeof selectedVideo.title === 'string' ? ` - ${selectedVideo.title}` : '')}
                                             logo={selectedMetaResource.content.content.logo}
                                             runtime={selectedMetaResource.content.content.runtime}
                                             releaseInfo={selectedMetaResource.content.content.releaseInfo}
                                             released={selectedMetaResource.content.content.released}
-                                            description={selectedMetaResource.content.content.description}
+                                            description={
+                                                selectedVideo !== null && typeof selectedVideo.overview === 'string' && selectedVideo.overview.length > 0 ?
+                                                    selectedVideo.overview
+                                                    :
+                                                    selectedMetaResource.content.content.description
+                                            }
                                             links={selectedMetaResource.content.content.links}
                                             trailer={selectedMetaResource.content.content.trailer}
                                             inLibrary={inLibrary}
