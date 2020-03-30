@@ -6,10 +6,10 @@
 
     .message-container {
         flex: 1;
+        align-self: stretch;
         display: flex;
         flex-direction: column;
         align-items: center;
-        width: var(--item-size);
         padding: 2rem;
         overflow-y: auto;
 
@@ -35,7 +35,6 @@
     .seasons-bar {
         flex: none;
         align-self: stretch;
-        min-width: var(--item-size);
     }
 
     .search-bar-container {
@@ -45,7 +44,6 @@
         flex-direction: row;
         align-items: center;
         height: 3.5rem;
-        min-width: calc(var(--item-size) - 3rem);
         padding: 0 1rem;
         margin: 0 1.5rem 1rem 1.5rem;
         border-radius: 3.5rem;
@@ -88,10 +86,7 @@
 
     .videos-scroll-container {
         flex: 1;
+        align-self: stretch;
         overflow-y: auto;
-
-        .video {
-            width: var(--item-size);
-        }
     }
 }

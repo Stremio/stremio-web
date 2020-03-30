@@ -31,11 +31,11 @@ const VideosList = ({ className, metaResource }) => {
                     <React.Fragment>
                         <SeasonsBar.Placeholder className={styles['seasons-bar']} />
                         <div className={styles['videos-scroll-container']}>
-                            <Video.Placeholder className={styles['video']} />
-                            <Video.Placeholder className={styles['video']} />
-                            <Video.Placeholder className={styles['video']} />
-                            <Video.Placeholder className={styles['video']} />
-                            <Video.Placeholder className={styles['video']} />
+                            <Video.Placeholder />
+                            <Video.Placeholder />
+                            <Video.Placeholder />
+                            <Video.Placeholder />
+                            <Video.Placeholder />
                         </div>
                     </React.Fragment>
                     :
@@ -68,21 +68,19 @@ const VideosList = ({ className, metaResource }) => {
                                 <Icon className={styles['icon']} icon={'ic_search'} />
                             </label>
                             <div className={styles['videos-scroll-container']}>
-                                {videosForSeason
-                                    .filter((video) => {
-                                        return search.length === 0 ||
-                                            (
-                                                (typeof video.title === 'string' && video.title.toLowerCase().includes(search.toLowerCase())) ||
-                                                (video.released.toLocaleString(undefined, { year: '2-digit', month: 'short', day: 'numeric' }).toLowerCase().includes(search.toLowerCase()))
-                                            );
-                                    })
-                                    .map((video, index) => (
-                                        <Video
-                                            {...video}
-                                            key={index}
-                                            className={styles['video']}
-                                        />
-                                    ))}
+                                {
+                                    videosForSeason
+                                        .filter((video) => {
+                                            return search.length === 0 ||
+                                                (
+                                                    (typeof video.title === 'string' && video.title.toLowerCase().includes(search.toLowerCase())) ||
+                                                    (video.released.toLocaleString(undefined, { year: '2-digit', month: 'short', day: 'numeric' }).toLowerCase().includes(search.toLowerCase()))
+                                                );
+                                        })
+                                        .map((video, index) => (
+                                            <Video {...video} key={index} />
+                                        ))
+                                }
                             </div>
                         </React.Fragment>
             }
