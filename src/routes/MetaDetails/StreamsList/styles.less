@@ -22,24 +22,24 @@
             width: var(--item-size);
             height: 100%;
             padding: 2rem;
-    
+
             &>:not(:last-child) {
                 margin-bottom: 1rem;
             }
-    
+
             .image {
                 flex: none;
                 width: 10rem;
                 opacity: 0.9;
             }
-    
+
             .label {
                 flex: none;
                 font-size: 1.4rem;
                 text-align: center;
                 color: @color-surface-light5-90;
             }
-    
+
             .description {
                 flex: none;
                 text-align: center;
@@ -52,18 +52,19 @@
         }
     }
 
-    .install-addons-container {
+    .install-button-container {
         flex: none;
         align-self: stretch;
         display: flex;
         flex-direction: row;
         align-items: center;
         justify-content: center;
-        padding: 1.3rem;
+        margin: 1.5rem;
+        padding: 1.5rem 1rem;
         background-color: @color-accent3;
 
         &:hover, &:focus {
-            background-color: @color-accent3-light2;
+            background-color: @color-accent3-light1;
         }
 
         .icon {
@@ -75,11 +76,11 @@
         }
 
         .label {
-            flex-grow: 0;
-            flex-shrink: 1;
-            flex-basis: auto;
-            font-size: 1.4rem;
+            flex: 0 1 auto;
+            font-size: 1.5rem;
+            font-weight: 500;
             max-height: 3.6em;
+            text-align: center;
             color: @color-surface-light5-90;
         }
     }

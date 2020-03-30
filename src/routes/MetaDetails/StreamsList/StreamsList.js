@@ -45,7 +45,7 @@ const StreamsList = ({ className, streamsResources }) => {
                                 </React.Fragment>
                 }
             </div>
-            <Button className={styles['install-addons-container']} title={'Install Addons'} href={'#/addons'}>
+            <Button className={styles['install-button-container']} title={'Install Addons'} href={'#/addons'}>
                 <Icon className={styles['icon']} icon={'ic_addons'} />
                 <div className={styles['label']}>Install Addons</div>
             </Button>
