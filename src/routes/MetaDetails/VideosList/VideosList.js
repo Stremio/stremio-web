@@ -67,7 +67,7 @@ const VideosList = ({ className, metaResource }) => {
                                 />
                                 <Icon className={styles['icon']} icon={'ic_search'} />
                             </label>
-                            <div className={styles['videos-scroll-container']}>
+                            <div className={styles['videos-container']}>
                                 {
                                     videosForSeason
                                         .filter((video) => {
