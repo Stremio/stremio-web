@@ -15,23 +15,14 @@ const MetaPreviewPlaceholder = ({ className }) => {
                 <div className={styles['description-container']}>
                     <div className={styles['description-label-container']} />
                     <div className={styles['description-label-container']} />
-                    <div className={styles['description-label-container']} />
                 </div>
                 <div className={styles['genres-container']}>
                     <div className={styles['genres-header-container']} />
-                    <div className={styles['genres-labels-container']}>
-                        <div className={styles['genre-label-container']} />
-                        <div className={styles['genre-label-container']} />
-                        <div className={styles['genre-label-container']} />
-                    </div>
+                    <div className={styles['genre-label-container']} />
                 </div>
                 <div className={styles['genres-container']}>
                     <div className={styles['genres-header-container']} />
-                    <div className={styles['genres-labels-container']}>
-                        <div className={styles['genre-label-container']} />
-                        <div className={styles['genre-label-container']} />
-                        <div className={styles['genre-label-container']} />
-                    </div>
+                    <div className={styles['genre-label-container']} />
                 </div>
             </div>
             <div className={styles['action-buttons-container']}>
