@@ -1,5 +1,6 @@
 const React = require('react');
 const pako = require('pako');
+const { useServices } = require('stremio/services');
 const { useModelState } = require('stremio/common');
 
 const initPlayerState = () => ({
@@ -82,6 +83,7 @@ const mapPlayerStateWithCtx = (player, ctx) => {
 };
 
 const usePlayer = (urlParams) => {
+    const { core } = useServices();
     const loadPlayerAction = React.useMemo(() => {
         try {
             return {
@@ -133,12 +135,30 @@ const usePlayer = (urlParams) => {
             };
         }
     }, [urlParams]);
-    return useModelState({
+    const updateLibraryItemState = React.useCallback((time, duration) => {
+        core.dispatch({
+            action: 'Player',
+            args: {
+                action: 'UpdateLibraryItemState',
+                args: { time, duration }
+            }
+        }, 'player');
+    }, []);
+    const pushToLibrary = React.useCallback(() => {
+        core.dispatch({
+            action: 'Player',
+            args: {
+                action: 'PushToLibrary'
+            }
+        }, 'player');
+    }, []);
+    const player = useModelState({
         model: 'player',
         action: loadPlayerAction,
         init: initPlayerState,
         mapWithCtx: mapPlayerStateWithCtx
     });
+    return [player, updateLibraryItemState, pushToLibrary];
 };
 
 module.exports = usePlayer;

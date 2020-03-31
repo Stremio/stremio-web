@@ -16,7 +16,7 @@ const styles = require('./styles');
 
 const Player = ({ urlParams }) => {
     const { core } = useServices();
-    const player = usePlayer(urlParams);
+    const [player, updateLibraryItemState, pushToLibrary] = usePlayer(urlParams);
     const [settings, updateSettings] = useSettings();
     const routeFocused = useRouteFocused();
     const toast = useToast();
@@ -219,29 +219,13 @@ const Player = ({ urlParams }) => {
     }, [settings.subtitles_offset]);
     React.useEffect(() => {
         if (videoState.time !== null && !isNaN(videoState.time) && videoState.duration !== null && !isNaN(videoState.duration)) {
-            core.dispatch({
-                action: 'Player',
-                args: {
-                    action: 'UpdateLibraryItemState',
-                    args: {
-                        time: videoState.time,
-                        duration: videoState.duration
-                    }
-                }
-            }, 'player');
+            updateLibraryItemState(videoState.time, videoState.duration);
         }
     }, [videoState.time, videoState.duration]);
     React.useEffect(() => {
-        const interval = setInterval(() => {
-            core.dispatch({
-                action: 'Player',
-                args: {
-                    action: 'PushToLibrary'
-                }
-            }, 'player');
-        }, 30000);
+        const intervalId = setInterval(pushToLibrary, 30000);
         return () => {
-            clearInterval(interval);
+            clearInterval(intervalId);
         };
     }, []);
     React.useLayoutEffect(() => {
