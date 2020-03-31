@@ -125,7 +125,10 @@ const usePlayer = (urlParams) => {
                             }
                             :
                             null,
-                        video_id: urlParams.videoId
+                        video_id: typeof urlParams.videoId === 'string' ?
+                            urlParams.videoId
+                            :
+                            null
                     }
                 }
             };
