@@ -16,7 +16,7 @@ const useSettings = () => {
                 }
             }
         });
-    }, [profile.settings]);
+    }, [profile]);
     return [profile.settings, updateSettings];
 };
 
