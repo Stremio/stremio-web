@@ -18,17 +18,26 @@ const Player = ({ urlParams }) => {
     const { core } = useServices();
     const [player, updateLibraryItemState, pushToLibrary] = usePlayer(urlParams);
     const [settings, updateSettings] = useSettings();
+    const stream = React.useMemo(() => {
+        return player.selected !== null ?
+            player.selected.stream
+            :
+            null;
+    }, [player]);
+    const metaItem = React.useMemo(() => {
+        return player.meta_resource !== null && player.meta_resource.content.type === 'Ready' ?
+            player.meta_resource.content.content
+            :
+            null;
+    }, [player]);
     const routeFocused = useRouteFocused();
     const toast = useToast();
     const [, , , toggleFullscreen] = useFullscreen();
     const [immersed, setImmersed] = React.useState(true);
     const setImmersedDebounced = React.useCallback(debounce(setImmersed, 3000), []);
-    const [subtitlesPickerOpen, , closeSubtitlesPicker, toggleSubtitlesPicker] = useBinaryState(false);
+    const [subtitlesMenuOpen, , closeSubtitlesMenu, toggleSubtitlesMenu] = useBinaryState(false);
     const [infoMenuOpen, , closeInfoMenu, toggleInfoMenu] = useBinaryState(false);
     const [error, setError] = React.useState(null);
-    const infoAvailable = React.useMemo(() => {
-        return player.meta_resource !== null && player.meta_resource.content.type === 'Ready';
-    }, [player]);
     const [videoState, setVideoState] = React.useReducer(
         (videoState, nextVideoState) => ({ ...videoState, ...nextVideoState }),
         {
@@ -150,8 +159,8 @@ const Player = ({ urlParams }) => {
         toggleFullscreen();
     }, [toggleFullscreen]);
     const onContainerMouseDown = React.useCallback((event) => {
-        if (!event.nativeEvent.subtitlesPickerClosePrevented) {
-            closeSubtitlesPicker();
+        if (!event.nativeEvent.subtitlesMenuClosePrevented) {
+            closeSubtitlesMenu();
         }
         if (!event.nativeEvent.infoMenuClosePrevented) {
             closeInfoMenu();
@@ -239,7 +248,7 @@ const Player = ({ urlParams }) => {
         const onKeyDown = (event) => {
             switch (event.code) {
                 case 'Space': {
-                    if (!subtitlesPickerOpen && !infoMenuOpen && videoState.paused !== null) {
+                    if (!subtitlesMenuOpen && !infoMenuOpen && videoState.paused !== null) {
                         if (videoState.paused) {
                             onPlayRequested();
                         } else {
@@ -250,28 +259,28 @@ const Player = ({ urlParams }) => {
                     break;
                 }
                 case 'ArrowRight': {
-                    if (!subtitlesPickerOpen && !infoMenuOpen && videoState.time !== null) {
+                    if (!subtitlesMenuOpen && !infoMenuOpen && videoState.time !== null) {
                         onSeekRequested(videoState.time + 15000);
                     }
 
                     break;
                 }
                 case 'ArrowLeft': {
-                    if (!subtitlesPickerOpen && !infoMenuOpen && videoState.time !== null) {
+                    if (!subtitlesMenuOpen && !infoMenuOpen && videoState.time !== null) {
                         onSeekRequested(videoState.time - 15000);
                     }
 
                     break;
                 }
                 case 'ArrowUp': {
-                    if (!subtitlesPickerOpen && !infoMenuOpen && videoState.volume !== null) {
+                    if (!subtitlesMenuOpen && !infoMenuOpen && videoState.volume !== null) {
                         onVolumeChangeRequested(videoState.volume + 5);
                     }
 
                     break;
                 }
                 case 'ArrowDown': {
-                    if (!subtitlesPickerOpen && !infoMenuOpen && videoState.volume !== null) {
+                    if (!subtitlesMenuOpen && !infoMenuOpen && videoState.volume !== null) {
                         onVolumeChangeRequested(videoState.volume - 5);
                     }
 
@@ -279,18 +288,22 @@ const Player = ({ urlParams }) => {
                 }
                 case 'KeyS': {
                     closeInfoMenu();
-                    toggleSubtitlesPicker();
+                    if (Array.isArray(videoState.subtitlesTracks) && videoState.subtitlesTracks.length > 0) {
+                        toggleSubtitlesMenu();
+                    }
+
                     break;
                 }
                 case 'KeyM': {
-                    closeSubtitlesPicker();
-                    if (infoAvailable) {
+                    closeSubtitlesMenu();
+                    if (typeof metaItem === 'object' && metaItem !== null && typeof stream === 'object' && stream !== null) {
                         toggleInfoMenu();
                     }
+
                     break;
                 }
                 case 'Escape': {
-                    closeSubtitlesPicker();
+                    closeSubtitlesMenu();
                     closeInfoMenu();
                     break;
                 }
@@ -302,7 +315,7 @@ const Player = ({ urlParams }) => {
         return () => {
             window.removeEventListener('keydown', onKeyDown);
         };
-    }, [routeFocused, subtitlesPickerOpen, infoAvailable, infoMenuOpen, videoState.paused, videoState.time, videoState.volume, toggleSubtitlesPicker, toggleInfoMenu]);
+    }, [routeFocused, subtitlesMenuOpen, infoMenuOpen, stream, metaItem, videoState.paused, videoState.time, videoState.volume, videoState.subtitlesTracks, toggleSubtitlesMenu, toggleInfoMenu]);
     React.useLayoutEffect(() => {
         return () => {
             setImmersedDebounced.cancel();
@@ -311,7 +324,7 @@ const Player = ({ urlParams }) => {
         };
     }, []);
     return (
-        <div className={classnames(styles['player-container'], { [styles['immersed']]: immersed && videoState.paused !== null && !videoState.paused && !subtitlesPickerOpen && !infoMenuOpen })}
+        <div className={classnames(styles['player-container'], { [styles['immersed']]: immersed && videoState.paused !== null && !videoState.paused && !subtitlesMenuOpen && !infoMenuOpen })}
             onMouseDown={onContainerMouseDown}
             onMouseMove={onContainerMouseMove}
             onMouseOver={onContainerMouseMove}
@@ -343,7 +356,7 @@ const Player = ({ urlParams }) => {
                 onDoubleClick={onVideoDoubleClick}
             />
             {
-                subtitlesPickerOpen || infoMenuOpen ?
+                subtitlesMenuOpen || infoMenuOpen ?
                     <div className={styles['layer']} />
                     :
                     null
@@ -370,20 +383,21 @@ const Player = ({ urlParams }) => {
                 volume={videoState.volume}
                 muted={videoState.muted}
                 subtitlesTracks={videoState.subtitlesTracks}
-                infoAvailable={infoAvailable}
+                stream={stream}
+                metaItem={metaItem}
                 onPlayRequested={onPlayRequested}
                 onPauseRequested={onPauseRequested}
                 onMuteRequested={onMuteRequested}
                 onUnmuteRequested={onUnmuteRequested}
                 onVolumeChangeRequested={onVolumeChangeRequested}
                 onSeekRequested={onSeekRequested}
-                onToggleSubtitlesPicker={toggleSubtitlesPicker}
+                onToggleSubtitlesMenu={toggleSubtitlesMenu}
                 onToggleInfoMenu={toggleInfoMenu}
                 onMouseMove={onBarMouseMove}
                 onMouseOver={onBarMouseMove}
             />
             {
-                subtitlesPickerOpen ?
+                subtitlesMenuOpen ?
                     <SubtitlesPicker
                         className={classnames(styles['layer'], styles['menu-layer'])}
                         tracks={videoState.subtitlesTracks}

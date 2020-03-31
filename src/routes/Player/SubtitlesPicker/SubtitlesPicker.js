@@ -51,7 +51,7 @@ const SubtitlesPicker = (props) => {
             [];
     }, [props.tracks, selectedLanguage]);
     const onMouseDown = React.useCallback((event) => {
-        event.nativeEvent.subtitlesPickerClosePrevented = true;
+        event.nativeEvent.subtitlesMenuClosePrevented = true;
     }, []);
     const languageOnClick = React.useCallback((event) => {
         const trackId = Array.isArray(props.tracks) ?
