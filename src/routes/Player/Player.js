@@ -26,6 +26,9 @@ const Player = ({ urlParams }) => {
     const [subtitlesPickerOpen, , closeSubtitlesPicker, toggleSubtitlesPicker] = useBinaryState(false);
     const [infoMenuOpen, , closeInfoMenu, toggleInfoMenu] = useBinaryState(false);
     const [error, setError] = React.useState(null);
+    const infoAvailable = React.useMemo(() => {
+        return player.meta_resource !== null && player.meta_resource.content.type === 'Ready';
+    }, [player.meta_resource]);
     const [videoState, setVideoState] = React.useReducer(
         (videoState, nextVideoState) => ({ ...videoState, ...nextVideoState }),
         {
@@ -290,7 +293,9 @@ const Player = ({ urlParams }) => {
                 }
                 case 'KeyM': {
                     closeSubtitlesPicker();
-                    toggleInfoMenu();
+                    if (infoAvailable) {
+                        toggleInfoMenu();
+                    }
                     break;
                 }
                 case 'Escape': {
@@ -306,7 +311,7 @@ const Player = ({ urlParams }) => {
         return () => {
             window.removeEventListener('keydown', onKeyDown);
         };
-    }, [routeFocused, subtitlesPickerOpen, infoMenuOpen, videoState.paused, videoState.time, videoState.volume, toggleSubtitlesPicker, toggleInfoMenu]);
+    }, [routeFocused, subtitlesPickerOpen, infoAvailable, infoMenuOpen, videoState.paused, videoState.time, videoState.volume, toggleSubtitlesPicker, toggleInfoMenu]);
     React.useLayoutEffect(() => {
         return () => {
             setImmersedDebounced.cancel();
@@ -366,7 +371,7 @@ const Player = ({ urlParams }) => {
                 volume={videoState.volume}
                 muted={videoState.muted}
                 subtitlesTracks={videoState.subtitlesTracks}
-                metaResource={player.meta_resource}
+                infoAvailable={infoAvailable}
                 onPlayRequested={onPlayRequested}
                 onPauseRequested={onPauseRequested}
                 onMuteRequested={onMuteRequested}

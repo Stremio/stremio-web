@@ -13,13 +13,13 @@ const styles = require('./styles');
 
 const ControlBar = ({
     className,
+    infoAvailable,
     paused,
     time,
     duration,
     volume,
     muted,
     subtitlesTracks,
-    metaResource,
     onPlayRequested,
     onPauseRequested,
     onMuteRequested,
@@ -62,8 +62,7 @@ const ControlBar = ({
                     <Icon className={'icon'} icon={'ic_network'} />
                 </Button>
                 <InfoMenuButton
-                    className={styles['control-bar-button']}
-                    metaResource={metaResource}
+                    className={classnames(styles['control-bar-button'], { 'disabled': !infoAvailable })}
                     onToggleInfoMenu={onToggleInfoMenu}
                 />
                 <Button className={classnames(styles['control-bar-button'], 'disabled')} tabIndex={-1}>
@@ -84,13 +83,13 @@ const ControlBar = ({
 
 ControlBar.propTypes = {
     className: PropTypes.string,
+    infoAvailable: PropTypes.bool,
     paused: PropTypes.any,
     time: PropTypes.any,
     duration: PropTypes.any,
     volume: PropTypes.any,
     muted: PropTypes.any,
     subtitlesTracks: PropTypes.any,
-    metaResource: PropTypes.any,
     onPlayRequested: PropTypes.any,
     onPauseRequested: PropTypes.any,
     onMuteRequested: PropTypes.any,
