@@ -333,6 +333,12 @@ const Player = ({ urlParams }) => {
                 onClick={onVideoClick}
                 onDoubleClick={toggleFullscreen}
             />
+            {
+                subtitlesPickerOpen || infoMenuOpen ?
+                    <div className={styles['layer']} />
+                    :
+                    null
+            }
             <HorizontalNavBar
                 className={classnames(styles['layer'], styles['nav-bar-layer'])}
                 title={
