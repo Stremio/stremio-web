@@ -4,7 +4,7 @@ const classnames = require('classnames');
 const debounce = require('lodash.debounce');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
-const { HorizontalNavBar, useDeepEqualEffect, useDeepEqualMemo, useFullscreen, useBinaryState, useToast } = require('stremio/common');
+const { HorizontalNavBar, useDeepEqualEffect, useFullscreen, useBinaryState, useToast } = require('stremio/common');
 const BufferingLoader = require('./BufferingLoader');
 const ControlBar = require('./ControlBar');
 const InfoMenu = require('./InfoMenu');
@@ -28,7 +28,7 @@ const Player = ({ urlParams }) => {
     const [error, setError] = React.useState(null);
     const infoAvailable = React.useMemo(() => {
         return player.meta_resource !== null && player.meta_resource.content.type === 'Ready';
-    }, [player.meta_resource]);
+    }, [player]);
     const [videoState, setVideoState] = React.useReducer(
         (videoState, nextVideoState) => ({ ...videoState, ...nextVideoState }),
         {
@@ -67,7 +67,7 @@ const Player = ({ urlParams }) => {
     const onPropChanged = React.useCallback((propName, propValue) => {
         setVideoState({ [propName]: propValue });
     }, []);
-    const onEnded = useDeepEqualMemo(() => () => {
+    const onEnded = React.useCallback(() => {
         core.dispatch({ action: 'Unload' }, 'player');
         if (player.lib_item !== null) {
             core.dispatch({
@@ -82,7 +82,7 @@ const Player = ({ urlParams }) => {
             // TODO go to next video
         }
         window.history.back();
-    }, [player.next_video, player.lib_item]);
+    }, [player]);
     const onError = React.useCallback((error) => {
         if (error.critical) {
             setError(error);
