@@ -106,9 +106,11 @@ const Player = ({ urlParams }) => {
     const onPlayRequested = React.useCallback(() => {
         dispatch({ propName: 'paused', propValue: false });
     }, []);
+    const onPlayRequestedDebounced = React.useCallback(debounce(onPlayRequested, 200), []);
     const onPauseRequested = React.useCallback(() => {
         dispatch({ propName: 'paused', propValue: true });
     }, []);
+    const onPauseRequestedDebounced = React.useCallback(debounce(onPauseRequested, 200), []);
     const onMuteRequested = React.useCallback(() => {
         dispatch({ propName: 'muted', propValue: true });
     }, []);
@@ -136,12 +138,17 @@ const Player = ({ urlParams }) => {
     const onVideoClick = React.useCallback(() => {
         if (videoState.paused !== null) {
             if (videoState.paused) {
-                onPlayRequested();
+                onPlayRequestedDebounced();
             } else {
-                onPauseRequested();
+                onPauseRequestedDebounced();
             }
         }
     }, [videoState.paused]);
+    const onVideoDoubleClick = React.useCallback(() => {
+        onPlayRequestedDebounced.cancel();
+        onPauseRequestedDebounced.cancel();
+        toggleFullscreen();
+    }, [toggleFullscreen]);
     const onContainerMouseDown = React.useCallback((event) => {
         if (!event.nativeEvent.subtitlesPickerClosePrevented) {
             closeSubtitlesPicker();
@@ -299,6 +306,8 @@ const Player = ({ urlParams }) => {
     React.useLayoutEffect(() => {
         return () => {
             setImmersedDebounced.cancel();
+            onPlayRequestedDebounced.cancel();
+            onPauseRequestedDebounced.cancel();
         };
     }, []);
     return (
@@ -331,7 +340,7 @@ const Player = ({ urlParams }) => {
             <div
                 className={styles['layer']}
                 onClick={onVideoClick}
-                onDoubleClick={toggleFullscreen}
+                onDoubleClick={onVideoDoubleClick}
             />
             {
                 subtitlesPickerOpen || infoMenuOpen ?
