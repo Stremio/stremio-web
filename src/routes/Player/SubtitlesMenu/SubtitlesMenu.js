@@ -13,7 +13,7 @@ const LANGUAGE_PRIORITIES = {
     'eng': 1
 };
 
-const SubtitlesPicker = (props) => {
+const SubtitlesMenu = (props) => {
     const languages = React.useMemo(() => {
         return Array.isArray(props.tracks) ?
             props.tracks
@@ -101,7 +101,7 @@ const SubtitlesPicker = (props) => {
         }
     }, [props.offset, props.onOffsetChanged]);
     return (
-        <div className={classnames(props.className, styles['subtitles-picker-container'])} onMouseDown={onMouseDown}>
+        <div className={classnames(props.className, styles['subtitles-menu-container'])} onMouseDown={onMouseDown}>
             <div className={styles['languages-container']}>
                 <div className={styles['languages-header']}>Languages</div>
                 <div className={styles['languages-list']}>
@@ -182,7 +182,7 @@ const SubtitlesPicker = (props) => {
     );
 };
 
-SubtitlesPicker.propTypes = {
+SubtitlesMenu.propTypes = {
     className: PropTypes.string,
     tracks: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.string.isRequired,
@@ -202,4 +202,4 @@ SubtitlesPicker.propTypes = {
     onOffsetChanged: PropTypes.func
 };
 
-module.exports = SubtitlesPicker;
+module.exports = SubtitlesMenu;

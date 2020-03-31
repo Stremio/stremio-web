@@ -8,7 +8,7 @@ const { HorizontalNavBar, useDeepEqualEffect, useFullscreen, useBinaryState, use
 const BufferingLoader = require('./BufferingLoader');
 const ControlBar = require('./ControlBar');
 const InfoMenu = require('./InfoMenu');
-const SubtitlesPicker = require('./SubtitlesPicker');
+const SubtitlesMenu = require('./SubtitlesMenu');
 const Video = require('./Video');
 const usePlayer = require('./usePlayer');
 const useSettings = require('./useSettings');
@@ -398,7 +398,7 @@ const Player = ({ urlParams }) => {
             />
             {
                 subtitlesMenuOpen ?
-                    <SubtitlesPicker
+                    <SubtitlesMenu
                         className={classnames(styles['layer'], styles['menu-layer'])}
                         tracks={videoState.subtitlesTracks}
                         selectedTrackId={videoState.selectedSubtitlesTrackId}
