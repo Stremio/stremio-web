@@ -4,15 +4,15 @@ const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const { Button } = require('stremio/common');
 
-const MetaPreviewButton = ({ className, metaResource, onToggleMetaPreview }) => {
+const InfoMenuButton = ({ className, metaResource, onToggleInfoMenu }) => {
     const onMouseDown = React.useCallback((event) => {
-        event.nativeEvent.metaPreviewClosePrevented = true;
+        event.nativeEvent.infoMenuClosePrevented = true;
     }, []);
     const onClick = React.useCallback(() => {
-        if (typeof onToggleMetaPreview === 'function') {
-            onToggleMetaPreview();
+        if (typeof onToggleInfoMenu === 'function') {
+            onToggleInfoMenu();
         }
-    }, [onToggleMetaPreview]);
+    }, [onToggleInfoMenu]);
     return (
         <Button className={classnames(className, { 'disabled': metaResource === null || metaResource.content.type !== 'Ready' })} tabIndex={-1} onMouseDown={onMouseDown} onClick={onClick}>
             <Icon className={'icon'} icon={'ic_info'} />
@@ -20,10 +20,10 @@ const MetaPreviewButton = ({ className, metaResource, onToggleMetaPreview }) => 
     );
 };
 
-MetaPreviewButton.propTypes = {
+InfoMenuButton.propTypes = {
     className: PropTypes.string,
     metaResource: PropTypes.object,
-    onToggleMetaPreview: PropTypes.func
+    onToggleInfoMenu: PropTypes.func
 };
 
-module.exports = MetaPreviewButton;
+module.exports = InfoMenuButton;

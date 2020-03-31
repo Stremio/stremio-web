@@ -7,6 +7,7 @@ const { useServices } = require('stremio/services');
 const { HorizontalNavBar, useDeepEqualEffect, useDeepEqualMemo, useFullscreen, useBinaryState, useToast } = require('stremio/common');
 const BufferingLoader = require('./BufferingLoader');
 const ControlBar = require('./ControlBar');
+const InfoMenu = require('./InfoMenu');
 const SubtitlesPicker = require('./SubtitlesPicker');
 const Video = require('./Video');
 const usePlayer = require('./usePlayer');
@@ -23,7 +24,7 @@ const Player = ({ urlParams }) => {
     const [immersed, setImmersed] = React.useState(true);
     const setImmersedDebounced = React.useCallback(debounce(setImmersed, 3000), []);
     const [subtitlesPickerOpen, , closeSubtitlesPicker, toggleSubtitlesPicker] = useBinaryState(false);
-    const [metaPreviewOpen, , closeMetaPreview, toggleMetaPreview] = useBinaryState(false);
+    const [infoMenuOpen, , closeInfoMenu, toggleInfoMenu] = useBinaryState(false);
     const [error, setError] = React.useState(null);
     const [videoState, setVideoState] = React.useReducer(
         (videoState, nextVideoState) => ({ ...videoState, ...nextVideoState }),
@@ -142,8 +143,8 @@ const Player = ({ urlParams }) => {
         if (!event.nativeEvent.subtitlesPickerClosePrevented) {
             closeSubtitlesPicker();
         }
-        if (!event.nativeEvent.metaPreviewClosePrevented) {
-            closeMetaPreview();
+        if (!event.nativeEvent.infoMenuClosePrevented) {
+            closeInfoMenu();
         }
     }, []);
     const onContainerMouseMove = React.useCallback((event) => {
@@ -244,7 +245,7 @@ const Player = ({ urlParams }) => {
         const onKeyDown = (event) => {
             switch (event.code) {
                 case 'Space': {
-                    if (!subtitlesPickerOpen && !metaPreviewOpen && videoState.paused !== null) {
+                    if (!subtitlesPickerOpen && !infoMenuOpen && videoState.paused !== null) {
                         if (videoState.paused) {
                             onPlayRequested();
                         } else {
@@ -255,46 +256,46 @@ const Player = ({ urlParams }) => {
                     break;
                 }
                 case 'ArrowRight': {
-                    if (!subtitlesPickerOpen && !metaPreviewOpen && videoState.time !== null) {
+                    if (!subtitlesPickerOpen && !infoMenuOpen && videoState.time !== null) {
                         onSeekRequested(videoState.time + 15000);
                     }
 
                     break;
                 }
                 case 'ArrowLeft': {
-                    if (!subtitlesPickerOpen && !metaPreviewOpen && videoState.time !== null) {
+                    if (!subtitlesPickerOpen && !infoMenuOpen && videoState.time !== null) {
                         onSeekRequested(videoState.time - 15000);
                     }
 
                     break;
                 }
                 case 'ArrowUp': {
-                    if (!subtitlesPickerOpen && !metaPreviewOpen && videoState.volume !== null) {
+                    if (!subtitlesPickerOpen && !infoMenuOpen && videoState.volume !== null) {
                         onVolumeChangeRequested(videoState.volume + 5);
                     }
 
                     break;
                 }
                 case 'ArrowDown': {
-                    if (!subtitlesPickerOpen && !metaPreviewOpen && videoState.volume !== null) {
+                    if (!subtitlesPickerOpen && !infoMenuOpen && videoState.volume !== null) {
                         onVolumeChangeRequested(videoState.volume - 5);
                     }
 
                     break;
                 }
                 case 'KeyS': {
-                    closeMetaPreview();
+                    closeInfoMenu();
                     toggleSubtitlesPicker();
                     break;
                 }
                 case 'KeyM': {
                     closeSubtitlesPicker();
-                    toggleMetaPreview();
+                    toggleInfoMenu();
                     break;
                 }
                 case 'Escape': {
                     closeSubtitlesPicker();
-                    closeMetaPreview();
+                    closeInfoMenu();
                     break;
                 }
             }
@@ -305,14 +306,14 @@ const Player = ({ urlParams }) => {
         return () => {
             window.removeEventListener('keydown', onKeyDown);
         };
-    }, [routeFocused, subtitlesPickerOpen, metaPreviewOpen, videoState.paused, videoState.time, videoState.volume, toggleSubtitlesPicker, toggleMetaPreview]);
+    }, [routeFocused, subtitlesPickerOpen, infoMenuOpen, videoState.paused, videoState.time, videoState.volume, toggleSubtitlesPicker, toggleInfoMenu]);
     React.useLayoutEffect(() => {
         return () => {
             setImmersedDebounced.cancel();
         };
     }, []);
     return (
-        <div className={classnames(styles['player-container'], { [styles['immersed']]: immersed && videoState.paused !== null && !videoState.paused && !subtitlesPickerOpen && !metaPreviewOpen })}
+        <div className={classnames(styles['player-container'], { [styles['immersed']]: immersed && videoState.paused !== null && !videoState.paused && !subtitlesPickerOpen && !infoMenuOpen })}
             onMouseDown={onContainerMouseDown}
             onMouseMove={onContainerMouseMove}
             onMouseOver={onContainerMouseMove}
@@ -365,7 +366,7 @@ const Player = ({ urlParams }) => {
                 volume={videoState.volume}
                 muted={videoState.muted}
                 subtitlesTracks={videoState.subtitlesTracks}
-                metaResource={null}
+                metaResource={player.meta_resource}
                 onPlayRequested={onPlayRequested}
                 onPauseRequested={onPauseRequested}
                 onMuteRequested={onMuteRequested}
@@ -373,7 +374,7 @@ const Player = ({ urlParams }) => {
                 onVolumeChangeRequested={onVolumeChangeRequested}
                 onSeekRequested={onSeekRequested}
                 onToggleSubtitlesPicker={toggleSubtitlesPicker}
-                onToggleMetaPreview={toggleMetaPreview}
+                onToggleInfoMenu={toggleInfoMenu}
                 onMouseMove={onBarMouseMove}
                 onMouseOver={onBarMouseMove}
             />
@@ -397,14 +398,14 @@ const Player = ({ urlParams }) => {
                     :
                     null
             }
-            {/* {
-                metaPreviewOpen ?
-                    <div className={classnames(styles['layer'], styles['menu-layer'])} onMouseDown={(event) => event.nativeEvent.metaPreviewClosePrevented = true}>
-                        <div style={{ width: 300, height: 800, background: 'red' }} />
-                    </div>
+            {
+                infoMenuOpen ?
+                    <InfoMenu
+                        className={classnames(styles['layer'], styles['menu-layer'])}
+                    />
                     :
                     null
-            } */}
+            }
         </div>
     );
 };

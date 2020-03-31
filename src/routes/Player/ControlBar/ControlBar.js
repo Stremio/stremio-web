@@ -3,7 +3,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
 const { Button } = require('stremio/common');
-const MetaPreviewButton = require('./MetaPreviewButton');
+const InfoMenuButton = require('./InfoMenuButton');
 const MuteButton = require('./MuteButton');
 const PlayPauseButton = require('./PlayPauseButton');
 const SeekBar = require('./SeekBar');
@@ -27,7 +27,7 @@ const ControlBar = ({
     onVolumeChangeRequested,
     onSeekRequested,
     onToggleSubtitlesPicker,
-    onToggleMetaPreview,
+    onToggleInfoMenu,
     ...props
 }) => {
     return (
@@ -61,10 +61,10 @@ const ControlBar = ({
                 <Button className={classnames(styles['control-bar-button'], 'disabled')} tabIndex={-1}>
                     <Icon className={'icon'} icon={'ic_network'} />
                 </Button>
-                <MetaPreviewButton
+                <InfoMenuButton
                     className={styles['control-bar-button']}
                     metaResource={metaResource}
-                    onToggleMetaPreview={onToggleMetaPreview}
+                    onToggleInfoMenu={onToggleInfoMenu}
                 />
                 <Button className={classnames(styles['control-bar-button'], 'disabled')} tabIndex={-1}>
                     <Icon className={'icon'} icon={'ic_cast'} />
@@ -98,7 +98,7 @@ ControlBar.propTypes = {
     onVolumeChangeRequested: PropTypes.any,
     onSeekRequested: PropTypes.any,
     onToggleSubtitlesPicker: PropTypes.any,
-    onToggleMetaPreview: PropTypes.any
+    onToggleInfoMenu: PropTypes.any
 };
 
 module.exports = ControlBar;
