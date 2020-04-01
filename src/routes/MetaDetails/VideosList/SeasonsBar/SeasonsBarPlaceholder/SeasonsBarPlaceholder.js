@@ -8,13 +8,15 @@ const SeasonsBarPlaceholder = ({ className }) => {
     return (
         <div className={classnames(className, styles['seasons-bar-placeholder-container'])}>
             <div className={styles['prev-season-button']}>
-                <Icon className={styles['icon']} icon={'ic_arrow_left'} />
+                <Icon className={styles['icon']} icon={'ic_arrow_thin_left'} />
+                <div className={styles['label']} />
             </div>
             <div className={styles['seasons-popup-label-container']}>
                 <div className={styles['seasons-popup-label']} />
             </div>
             <div className={styles['next-season-button']}>
-                <Icon className={styles['icon']} icon={'ic_arrow_right'} />
+                <div className={styles['label']} />
+                <Icon className={styles['icon']} icon={'ic_arrow_thin_right'} />
             </div>
         </div>
     );
