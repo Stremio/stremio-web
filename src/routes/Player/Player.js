@@ -239,6 +239,16 @@ const Player = ({ urlParams }) => {
         }
     }, [videoState.time, videoState.duration]);
     React.useEffect(() => {
+        if (!Array.isArray(videoState.subtitlesTracks) || videoState.subtitlesTracks.length === 0) {
+            closeSubtitlesMenu();
+        }
+    }, [videoState.subtitlesTracks]);
+    React.useEffect(() => {
+        if (typeof stream !== 'object' || stream === null) {
+            closeInfoMenu();
+        }
+    }, [stream]);
+    React.useEffect(() => {
         const intervalId = setInterval(pushToLibrary, 30000);
         return () => {
             clearInterval(intervalId);
