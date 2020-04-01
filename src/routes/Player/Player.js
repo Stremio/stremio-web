@@ -264,7 +264,7 @@ const Player = ({ urlParams }) => {
         }
     }, [videoState.subtitlesTracks]);
     React.useEffect(() => {
-        if (typeof stream !== 'object' || stream === null) {
+        if (stream === null) {
             closeInfoMenu();
         }
     }, [stream]);
@@ -326,7 +326,7 @@ const Player = ({ urlParams }) => {
                 }
                 case 'KeyM': {
                     closeSubtitlesMenu();
-                    if (typeof stream === 'object' && stream !== null) {
+                    if (stream !== null) {
                         toggleInfoMenu();
                     }
 
