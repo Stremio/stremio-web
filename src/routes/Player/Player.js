@@ -19,17 +19,37 @@ const Player = ({ urlParams }) => {
     const [player, updateLibraryItemState, pushToLibrary] = usePlayer(urlParams);
     const [settings, updateSettings] = useSettings();
     const stream = React.useMemo(() => {
-        return player.selected !== null ?
-            player.selected.stream
-            :
-            null;
+        return player.selected !== null ? player.selected.stream : null;
     }, [player]);
     const metaItem = React.useMemo(() => {
-        return player.meta_resource !== null && player.meta_resource.content.type === 'Ready' ?
-            player.meta_resource.content.content
+        return player.meta_resource !== null && player.meta_resource.content.type === 'Ready' ? player.meta_resource.content.content : null;
+    }, [player]);
+    const video = React.useMemo(() => {
+        return metaItem !== null && player.selected !== null && typeof player.selected.video_id === 'string' ?
+            metaItem.videos.reduce((result, video) => {
+                if (video.id === player.selected.video_id) {
+                    return video;
+                }
+
+                return result;
+            }, null)
             :
             null;
-    }, [player]);
+    }, [player, metaItem]);
+    const title = React.useMemo(() => {
+        const streamTitle = stream !== null && typeof stream.title === 'string' ? stream.title : '';
+        const metaItemTitle = metaItem !== null ? metaItem.name : '';
+        const videoTitle = video !== null && typeof video.title === 'string' && video.title.length > 0 ? video.title : '';
+        const seriesInfo = video !== null && !isNaN(video.season) && !isNaN(video.episode) ? `${video.season}x${video.episode}` : '';
+        if (metaItemTitle.length > 0) {
+            return metaItemTitle
+                .concat(videoTitle.length > 0 || seriesInfo.length > 0 ? ' -' : '')
+                .concat(videoTitle.length > 0 ? ` ${videoTitle}` : '')
+                .concat(seriesInfo.length > 0 ? ` (${seriesInfo})` : '');
+        } else {
+            return streamTitle;
+        }
+    }, [stream, metaItem, video]);
     const routeFocused = useRouteFocused();
     const toast = useToast();
     const [, , , toggleFullscreen] = useFullscreen();
@@ -373,13 +393,7 @@ const Player = ({ urlParams }) => {
             }
             <HorizontalNavBar
                 className={classnames(styles['layer'], styles['nav-bar-layer'])}
-                title={
-                    // TODO consider use video.title and fallback to stream.title
-                    player.meta_resource !== null && player.meta_resource.content.type === 'Ready' ?
-                        player.meta_resource.content.content.name
-                        :
-                        null
-                }
+                title={title}
                 backButton={true}
                 fullscreenButton={true}
                 onMouseMove={onBarMouseMove}
