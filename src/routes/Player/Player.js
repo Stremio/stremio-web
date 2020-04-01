@@ -296,7 +296,7 @@ const Player = ({ urlParams }) => {
                 }
                 case 'KeyM': {
                     closeSubtitlesMenu();
-                    if (typeof metaItem === 'object' && metaItem !== null && typeof stream === 'object' && stream !== null) {
+                    if (typeof stream === 'object' && stream !== null) {
                         toggleInfoMenu();
                     }
 
@@ -315,7 +315,7 @@ const Player = ({ urlParams }) => {
         return () => {
             window.removeEventListener('keydown', onKeyDown);
         };
-    }, [routeFocused, subtitlesMenuOpen, infoMenuOpen, stream, metaItem, videoState.paused, videoState.time, videoState.volume, videoState.subtitlesTracks, toggleSubtitlesMenu, toggleInfoMenu]);
+    }, [routeFocused, subtitlesMenuOpen, infoMenuOpen, stream, videoState.paused, videoState.time, videoState.volume, videoState.subtitlesTracks, toggleSubtitlesMenu, toggleInfoMenu]);
     React.useLayoutEffect(() => {
         return () => {
             setImmersedDebounced.cancel();
@@ -384,7 +384,6 @@ const Player = ({ urlParams }) => {
                 muted={videoState.muted}
                 subtitlesTracks={videoState.subtitlesTracks}
                 stream={stream}
-                metaItem={metaItem}
                 onPlayRequested={onPlayRequested}
                 onPauseRequested={onPauseRequested}
                 onMuteRequested={onMuteRequested}

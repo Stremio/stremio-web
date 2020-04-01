@@ -15,7 +15,6 @@ const ControlBar = ({
     volume,
     muted,
     subtitlesTracks,
-    metaItem,
     stream,
     onPlayRequested,
     onPauseRequested,
@@ -98,7 +97,7 @@ const ControlBar = ({
                 <Button className={classnames(styles['control-bar-button'], 'disabled')} tabIndex={-1}>
                     <Icon className={styles['icon']} icon={'ic_network'} />
                 </Button>
-                <Button className={classnames(styles['control-bar-button'], { 'disabled': typeof metaItem !== 'object' || metaItem === null || typeof stream !== 'object' || stream === null })} tabIndex={-1} onMouseDown={onInfoButtonMouseDown} onClick={onInfoButtonClick}>
+                <Button className={classnames(styles['control-bar-button'], { 'disabled': typeof stream !== 'object' || stream === null })} tabIndex={-1} onMouseDown={onInfoButtonMouseDown} onClick={onInfoButtonClick}>
                     <Icon className={styles['icon']} icon={'ic_info'} />
                 </Button>
                 <Button className={classnames(styles['control-bar-button'], 'disabled')} tabIndex={-1}>
@@ -123,7 +122,6 @@ ControlBar.propTypes = {
     volume: PropTypes.number,
     muted: PropTypes.bool,
     subtitlesTracks: PropTypes.array,
-    metaItem: PropTypes.object,
     stream: PropTypes.object,
     onPlayRequested: PropTypes.func,
     onPauseRequested: PropTypes.func,
