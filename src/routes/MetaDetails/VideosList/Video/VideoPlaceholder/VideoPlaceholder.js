@@ -11,9 +11,6 @@ const VideoPlaceholder = ({ className }) => {
                 <div className={styles['name-container']} />
                 <div className={styles['released-container']} />
             </div>
-            <div className={styles['next-icon-container']}>
-                <Icon className={styles['next-icon']} icon={'ic_arrow_thin_right'} />
-            </div>
         </div>
     );
 };
