@@ -5,6 +5,7 @@ const { MetaPreview, CONSTANTS } = require('stremio/common');
 const styles = require('./styles');
 
 const InfoMenu = ({ className, ...props }) => {
+    // TODO handle stream and addon
     const metaItem = React.useMemo(() => {
         return props.metaItem !== null ?
             {
