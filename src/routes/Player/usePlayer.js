@@ -41,7 +41,35 @@ const mapPlayerStateWithCtx = (player, ctx) => {
         }
         :
         null;
-    const meta_resource = player.meta_resource;
+    const meta_resource = player.meta_resource !== null && player.meta_resource.content.type === 'Ready' ?
+        {
+            request: player.meta_resource.request,
+            content: {
+                type: 'Ready',
+                content: {
+                    ...player.meta_resource.content.content,
+                    released: new Date(
+                        typeof player.meta_resource.content.content.released === 'string' ?
+                            player.meta_resource.content.content.released
+                            :
+                            NaN
+                    ),
+                    videos: player.meta_resource.content.content.videos.map((video) => ({
+                        ...video,
+                        released: new Date(
+                            typeof video.released === 'string' ?
+                                video.released
+                                :
+                                NaN
+                        ),
+                        // TODO add watched and progress
+                        href: `#/metadetails/${player.meta_resource.content.content.type}/${player.meta_resource.content.content.id}/${video.id}`
+                    }))
+                }
+            }
+        }
+        :
+        player.meta_resource;
     const subtitles_resources = player.subtitles_resources.map((subtitles_resource) => {
         const request = subtitles_resource.request;
         const origin = ctx.profile.addons.reduce((origin, addon) => {
