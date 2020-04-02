@@ -240,7 +240,11 @@ const Player = ({ urlParams }) => {
                 tracks: player.subtitles_resources
                     .filter((subtitles_resource) => subtitles_resource.content.type === 'Ready')
                     .reduce((tracks, subtitles_resource) => {
-                        return tracks.concat(subtitles_resource.content.content);
+                        return tracks.concat(subtitles_resource.content.content.map(({ url, lang }) => ({
+                            url,
+                            lang,
+                            origin: subtitles_resource.addon !== null ? subtitles_resource.addon.manifest.name : subtitles_resource.request.base
+                        })));
                     }, [])
             }
         });

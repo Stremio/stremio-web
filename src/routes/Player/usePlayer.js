@@ -62,42 +62,19 @@ const mapPlayerStateWithCtx = (player, ctx) => {
         player.meta_resource;
     const subtitles_resources = player.subtitles_resources.map((subtitles_resource) => {
         const request = subtitles_resource.request;
-        const origin = ctx.profile.addons.reduce((origin, addon) => {
+        const addon = ctx.profile.addons.reduce((result, addon) => {
             if (addon.transportUrl === subtitles_resource.request.base) {
-                return typeof addon.manifest.name === 'string' && addon.manifest.name.length > 0 ?
-                    addon.manifest.name
-                    :
-                    addon.manifest.id;
+                return addon;
             }
 
-            return origin;
-        }, subtitles_resource.request.base);
-        const content = subtitles_resource.content.type === 'Ready' ?
-            {
-                type: 'Ready',
-                content: subtitles_resource.content.content.map(({ url, lang }) => ({
-                    url,
-                    lang,
-                    origin
-                }))
-            }
-            :
-            subtitles_resource.content;
-        return {
-            request,
-            origin,
-            content
-        };
+            return result;
+        }, null);
+        const content = subtitles_resource.content;
+        return { request, addon, content };
     });
     const next_video = player.next_video;
     const lib_item = player.lib_item;
-    return {
-        selected,
-        meta_resource,
-        subtitles_resources,
-        next_video,
-        lib_item
-    };
+    return { selected, meta_resource, subtitles_resources, next_video, lib_item };
 };
 
 const usePlayer = (urlParams) => {
