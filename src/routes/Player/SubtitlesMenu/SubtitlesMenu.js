@@ -6,8 +6,8 @@ const DiscreteSelectInput = require('./DiscreteSelectInput');
 const styles = require('./styles');
 
 const ORIGIN_PRIORITIES = {
-    'EMBEDDED': 1,
-    'Stream': 2
+    'EMBEDDED IN VIDEO': 1,
+    'EMBEDDED IN STREAM': 2
 };
 const LANGUAGE_PRIORITIES = {
     'eng': 1
