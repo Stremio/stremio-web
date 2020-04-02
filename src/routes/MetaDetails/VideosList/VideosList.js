@@ -1,9 +1,8 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const Icon = require('stremio-icons/dom');
 const Image = require('stremio/common/Image');
-const TextInput = require('stremio/common/TextInput');
+const SearchBar = require('stremio/common/SearchBar');
 const SeasonsBar = require('./SeasonsBar');
 const Video = require('./Video');
 const useSelectableSeasons = require('./useSelectableSeasons');
@@ -30,6 +29,7 @@ const VideosList = ({ className, metaResource }) => {
                 !metaResource || metaResource.content.type === 'Loading' ?
                     <React.Fragment>
                         <SeasonsBar.Placeholder className={styles['seasons-bar']} />
+                        <SearchBar.Placeholder className={styles['search-bar']} title={'Search videos'} />
                         <div className={styles['videos-scroll-container']}>
                             <Video.Placeholder />
                             <Video.Placeholder />
@@ -57,16 +57,12 @@ const VideosList = ({ className, metaResource }) => {
                                     :
                                     null
                             }
-                            <label title={'Search videos'} className={styles['search-bar-container']}>
-                                <TextInput
-                                    className={styles['search-input']}
-                                    type={'text'}
-                                    placeholder={'Search videos'}
-                                    value={search}
-                                    onChange={searchInputOnChange}
-                                />
-                                <Icon className={styles['icon']} icon={'ic_search'} />
-                            </label>
+                            <SearchBar
+                                className={styles['search-bar']}
+                                title={'Search videos'}
+                                value={search}
+                                onChange={searchInputOnChange}
+                            />
                             <div className={styles['videos-container']}>
                                 {
                                     videosForSeason

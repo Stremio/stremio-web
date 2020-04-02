@@ -14,6 +14,7 @@ const { HorizontalNavBar, VerticalNavBar } = require('./NavBar');
 const PaginationInput = require('./PaginationInput');
 const PlayIconCircleCentered = require('./PlayIconCircleCentered');
 const Popup = require('./Popup');
+const SearchBar = require('./SearchBar');
 const SharePrompt = require('./SharePrompt');
 const Slider = require('./Slider');
 const TextInput = require('./TextInput');
@@ -51,6 +52,7 @@ module.exports = {
     PaginationInput,
     PlayIconCircleCentered,
     Popup,
+    SearchBar,
     SharePrompt,
     Slider,
     TextInput,

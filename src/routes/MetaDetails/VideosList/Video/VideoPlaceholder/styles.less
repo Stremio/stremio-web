@@ -2,37 +2,25 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    background-color: var(--color-placeholder);
+    padding: 0.5rem 1rem;
 
     .info-container {
         flex: 1;
-        padding: 0.5rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 3rem;
+        margin: 0.5rem 1rem;
 
         .name-container {
             width: 80%;
             height: 1.2rem;
-            background: var(--color-placeholder);
+            background: var(--color-placeholder-background);
         }
 
         .released-container {
-            width: 40%;
-            height: 1.2rem;
-            margin-top: 0.5rem;
-            background: var(--color-placeholder);
-        }
-    }
-
-    .next-icon-container {
-        flex: none;
-        width: 2rem;
-        height: 2.5rem;
-        padding: 0.5rem;
-
-        .next-icon {
-            display: block;
-            width: 100%;
-            height: 100%;
-            fill: var(--color-placeholder);
+            height: 1rem;
+            background: var(--color-placeholder-background);
         }
     }
 }

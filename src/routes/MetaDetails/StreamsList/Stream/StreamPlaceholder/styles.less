@@ -1,27 +1,31 @@
+:import('~stremio/common/PlayIconCircleCentered/styles.less') {
+    play-icon-circle-centered-background: background;
+    play-icon-circle-centered-icon: icon;
+}
+
 .stream-placeholder-container {
     display: flex;
     flex-direction: row;
     align-items: center;
-    background-color: var(--color-placeholder);
+    padding: 0.5rem 1rem;
 
     .addon-container {
         flex: none;
-        padding: 0.5rem;
 
         .addon-name {
             width: 5rem;
             height: 2rem;
-            background-color: var(--color-placeholder);
+            background-color: var(--color-placeholder-background);
         }
     }
 
     .info-container {
         flex: 1;
-        padding: 0.5rem;
+        margin: 0.5rem 1rem;
 
         .description-container {
             height: 1.2rem;
-            background-color: var(--color-placeholder);
+            background-color: var(--color-placeholder-background);
 
             &:nth-child(1) {
                 width: 80%;
@@ -34,17 +38,17 @@
         }
     }
 
-    .play-icon-container {
+    .play-icon {
         flex: none;
-        width: 5rem;
+        width: 3.5rem;
         height: 5rem;
-        padding: 1.5rem;
 
-        .play-icon {
-            display: block;
-            width: 100%;
-            height: 100%;
-            fill: var(--color-placeholder);
+        .play-icon-circle-centered-background {
+            fill: none;
+        }
+
+        .play-icon-circle-centered-icon {
+            fill: var(--color-placeholder-background);
         }
     }
 }
