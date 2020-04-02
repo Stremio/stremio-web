@@ -2,7 +2,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const { useRouteFocused } = require('stremio-router');
 const Icon = require('stremio-icons/dom');
-const { AddonDetailsModal, Button, Image, Multiselect, MainNavBars, TextInput, SharePrompt, ModalDialog, useBinaryState } = require('stremio/common');
+const { AddonDetailsModal, Button, Image, Multiselect, MainNavBars, TextInput, SearchBar, SharePrompt, ModalDialog, useBinaryState } = require('stremio/common');
 const Addon = require('./Addon');
 const useAddons = require('./useAddons');
 const useSelectableInputs = require('./useSelectableInputs');
@@ -103,16 +103,12 @@ const Addons = ({ urlParams, queryParams }) => {
                         />
                     ))}
                     <div className={styles['spacing']} />
-                    <label className={styles['search-bar-container']}>
-                        <TextInput
-                            className={styles['search-input']}
-                            type={'text'}
-                            placeholder={'Search addons'}
-                            value={search}
-                            onChange={searchInputOnChange}
-                        />
-                        <Icon className={styles['icon']} icon={'ic_search'} />
-                    </label>
+                    <SearchBar
+                        className={styles['search-bar']}
+                        title={'Search addons'}
+                        search={search}
+                        searchInputOnChange={searchInputOnChange}
+                    />
                 </div>
                 {
                     addons.selectable.catalogs.length === 0 && addons.catalog_resource === null ?
