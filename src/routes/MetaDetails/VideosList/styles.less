@@ -37,50 +37,13 @@
         align-self: stretch;
     }
 
-    .search-bar-container {
+    .search-bar {
         flex: none;
         align-self: stretch;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        height: 3.5rem;
-        padding: 0 1rem;
         margin: 0 1.5rem 1rem 1.5rem;
-        border-radius: 3.5rem;
-        border: var(--focus-outline-size) solid transparent;
-        background-color: @color-background;
-        cursor: text;
 
         &:first-child {
             margin-top: 1rem;
-        }
-
-        &:hover, &:focus-within {
-            background-color: @color-background-light1;
-        }
-
-        &:focus-within {
-            border: var(--focus-outline-size) solid @color-surface-light5;
-        }
-
-        .search-input {
-            flex: 1;
-            margin-right: 1rem;
-            font-size: 1.1rem;
-            color: @color-surface-light5;
-
-            &::placeholder {
-                max-height: 1.2em;
-                opacity: 1;
-                color: @color-secondaryvariant1-light1-90;
-            }
-        }
-
-        .icon {
-            flex: none;
-            width: 1.5rem;
-            height: 1.5rem;
-            fill: @color-secondaryvariant1-90;
         }
     }
 
