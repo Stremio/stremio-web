@@ -4,52 +4,23 @@ const classnames = require('classnames');
 const debounce = require('lodash.debounce');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
-const { HorizontalNavBar, useDeepEqualEffect, useFullscreen, useBinaryState, useToast } = require('stremio/common');
+const { HorizontalNavBar, useDeepEqualEffect, useFullscreen, useBinaryState, useToast, useProfile } = require('stremio/common');
 const BufferingLoader = require('./BufferingLoader');
 const ControlBar = require('./ControlBar');
 const InfoMenu = require('./InfoMenu');
 const SubtitlesMenu = require('./SubtitlesMenu');
 const Video = require('./Video');
+const useInfo = require('./useInfo');
 const usePlayer = require('./usePlayer');
 const useSettings = require('./useSettings');
 const styles = require('./styles');
 
 const Player = ({ urlParams }) => {
     const { core } = useServices();
+    const profile = useProfile();
     const [player, updateLibraryItemState, pushToLibrary] = usePlayer(urlParams);
-    const [settings, updateSettings] = useSettings();
-    const stream = React.useMemo(() => {
-        return player.selected !== null ? player.selected.stream : null;
-    }, [player]);
-    const metaItem = React.useMemo(() => {
-        return player.meta_resource !== null && player.meta_resource.content.type === 'Ready' ? player.meta_resource.content.content : null;
-    }, [player]);
-    const video = React.useMemo(() => {
-        return metaItem !== null && player.selected !== null && typeof player.selected.video_id === 'string' ?
-            metaItem.videos.reduce((result, video) => {
-                if (video.id === player.selected.video_id) {
-                    return video;
-                }
-
-                return result;
-            }, null)
-            :
-            null;
-    }, [player, metaItem]);
-    const title = React.useMemo(() => {
-        const streamTitle = stream !== null && typeof stream.title === 'string' ? stream.title : '';
-        const metaItemTitle = metaItem !== null ? metaItem.name : '';
-        const videoTitle = video !== null && typeof video.title === 'string' && video.title.length > 0 ? video.title : '';
-        const seriesInfo = video !== null && !isNaN(video.season) && !isNaN(video.episode) ? `${video.season}x${video.episode}` : '';
-        if (metaItemTitle.length > 0) {
-            return metaItemTitle
-                .concat(videoTitle.length > 0 || seriesInfo.length > 0 ? ' -' : '')
-                .concat(videoTitle.length > 0 ? ` ${videoTitle}` : '')
-                .concat(seriesInfo.length > 0 ? ` (${seriesInfo})` : '');
-        } else {
-            return streamTitle;
-        }
-    }, [stream, metaItem, video]);
+    const [settings, updateSettings] = useSettings(profile);
+    const info = useInfo(player, profile);
     const routeFocused = useRouteFocused();
     const toast = useToast();
     const [, , , toggleFullscreen] = useFullscreen();
@@ -275,10 +246,10 @@ const Player = ({ urlParams }) => {
         }
     }, [videoState.subtitlesTracks]);
     React.useEffect(() => {
-        if (stream === null) {
+        if (info === null) {
             closeInfoMenu();
         }
-    }, [stream]);
+    }, [info]);
     React.useEffect(() => {
         const intervalId = setInterval(pushToLibrary, 30000);
         return () => {
@@ -337,7 +308,7 @@ const Player = ({ urlParams }) => {
                 }
                 case 'KeyM': {
                     closeSubtitlesMenu();
-                    if (stream !== null) {
+                    if (info !== null) {
                         toggleInfoMenu();
                     }
 
@@ -356,7 +327,7 @@ const Player = ({ urlParams }) => {
         return () => {
             window.removeEventListener('keydown', onKeyDown);
         };
-    }, [routeFocused, subtitlesMenuOpen, infoMenuOpen, stream, videoState.paused, videoState.time, videoState.volume, videoState.subtitlesTracks, toggleSubtitlesMenu, toggleInfoMenu]);
+    }, [routeFocused, subtitlesMenuOpen, infoMenuOpen, info, videoState.paused, videoState.time, videoState.volume, videoState.subtitlesTracks, toggleSubtitlesMenu, toggleInfoMenu]);
     React.useLayoutEffect(() => {
         return () => {
             setImmersedDebounced.cancel();
@@ -404,7 +375,7 @@ const Player = ({ urlParams }) => {
             }
             <HorizontalNavBar
                 className={classnames(styles['layer'], styles['nav-bar-layer'])}
-                title={title}
+                title={info !== null ? info.title : ''}
                 backButton={true}
                 fullscreenButton={true}
                 onMouseMove={onBarMouseMove}
@@ -418,7 +389,7 @@ const Player = ({ urlParams }) => {
                 volume={videoState.volume}
                 muted={videoState.muted}
                 subtitlesTracks={videoState.subtitlesTracks}
-                stream={stream}
+                info={info}
                 onPlayRequested={onPlayRequested}
                 onPauseRequested={onPauseRequested}
                 onMuteRequested={onMuteRequested}
@@ -454,6 +425,9 @@ const Player = ({ urlParams }) => {
                 infoMenuOpen ?
                     <InfoMenu
                         className={classnames(styles['layer'], styles['menu-layer'])}
+                        stream={info !== null ? info.stream : null}
+                        addon={info !== null ? info.addon : null}
+                        metaItem={info !== null ? info.metaItem : null}
                     />
                     :
                     null
