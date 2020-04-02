@@ -187,7 +187,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                         null
                 }
                 {
-                    !compact && typeof linksGroups[CONSTANTS.SHARE_LINK_CATEGORY] === 'object' ?
+                    typeof linksGroups[CONSTANTS.SHARE_LINK_CATEGORY] === 'object' ?
                         <React.Fragment>
                             <ActionButton
                                 className={styles['action-button']}
