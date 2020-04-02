@@ -106,8 +106,8 @@ const Addons = ({ urlParams, queryParams }) => {
                     <SearchBar
                         className={styles['search-bar']}
                         title={'Search addons'}
-                        search={search}
-                        searchInputOnChange={searchInputOnChange}
+                        value={search}
+                        onChange={searchInputOnChange}
                     />
                 </div>
                 {

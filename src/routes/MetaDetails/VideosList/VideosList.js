@@ -60,8 +60,8 @@ const VideosList = ({ className, metaResource }) => {
                             <SearchBar
                                 className={styles['search-bar']}
                                 title={'Search videos'}
-                                search={search}
-                                searchInputOnChange={searchInputOnChange}
+                                value={search}
+                                onChange={searchInputOnChange}
                             />
                             <div className={styles['videos-container']}>
                                 {
