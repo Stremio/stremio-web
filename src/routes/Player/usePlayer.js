@@ -16,23 +16,13 @@ const mapPlayerStateWithCtx = (player, ctx) => {
         {
             stream: {
                 ...player.selected.stream,
-                subtitles: Array.isArray(player.selected.stream.subtitles) ?
-                    player.selected.stream.subtitles.map(({ url, lang }) => ({
-                        url,
-                        lang,
-                        origin: ctx.profile.addons.reduce((origin, addon) => {
-                            if (player.selected.stream_resource_request !== null && addon.transportUrl === player.selected.stream_resource_request.base) {
-                                return typeof addon.manifest.name === 'string' && addon.manifest.name.length > 0 ?
-                                    addon.manifest.name
-                                    :
-                                    addon.manifest.id;
-                            }
+                addon: ctx.profile.addons.reduce((result, addon) => {
+                    if (player.selected.stream_resource_request !== null && addon.transportUrl === player.selected.stream_resource_request.base) {
+                        return addon;
+                    }
 
-                            return origin;
-                        }, player.selected.stream_resource_request !== null ? player.selected.stream_resource_request.base : 'Stream')
-                    }))
-                    :
-                    []
+                    return result;
+                }, null)
             },
             stream_resource_request: player.selected.stream_resource_request,
             meta_resource_request: player.selected.meta_resource_request,
