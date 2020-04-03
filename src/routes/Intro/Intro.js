@@ -288,6 +288,10 @@ const Intro = ({ queryParams }) => {
         sdkScriptElement.defer = true;
         document.body.appendChild(initScriptElement);
         document.body.appendChild(sdkScriptElement);
+        return () => {
+            document.body.removeChild(initScriptElement);
+            document.body.removeChild(sdkScriptElement);
+        };
     }, []);
     return (
         <div className={styles['intro-container']}>
