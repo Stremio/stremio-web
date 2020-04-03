@@ -272,6 +272,23 @@ const Intro = ({ queryParams }) => {
             core.off('Event', onEvent);
         };
     }, [routeFocused]);
+    React.useEffect(() => {
+        var scriptElementFunction = document.createElement('script');
+        var scriptElement = document.createElement('script');
+        scriptElementFunction.innerHTML = `window.fbAsyncInit = function() {
+                FB.init({
+                    appId: '1537119779906825',
+                    autoLogAppEvents: false,
+                    xfbml: false,
+                    version: 'v2.5'
+                });
+            };`;
+        scriptElement.src = "https://connect.facebook.net/en_US/sdk.js";
+        scriptElement.async = true;
+        scriptElement.defer = true;
+        document.body.appendChild(scriptElementFunction);
+        document.body.appendChild(scriptElement);
+    }, []);
     return (
         <div className={styles['intro-container']}>
             <div className={styles['form-container']}>
