@@ -273,9 +273,9 @@ const Intro = ({ queryParams }) => {
         };
     }, [routeFocused]);
     React.useEffect(() => {
-        var scriptElementFunction = document.createElement('script');
-        var scriptElement = document.createElement('script');
-        scriptElementFunction.innerHTML = `window.fbAsyncInit = function() {
+        var initScriptElement = document.createElement('script');
+        var sdkScriptElement = document.createElement('script');
+        initScriptElement.innerHTML = `window.fbAsyncInit = function() {
                 FB.init({
                     appId: '1537119779906825',
                     autoLogAppEvents: false,
@@ -283,11 +283,11 @@ const Intro = ({ queryParams }) => {
                     version: 'v2.5'
                 });
             };`;
-        scriptElement.src = 'https://connect.facebook.net/en_US/sdk.js';
-        scriptElement.async = true;
-        scriptElement.defer = true;
-        document.body.appendChild(scriptElementFunction);
-        document.body.appendChild(scriptElement);
+        sdkScriptElement.src = 'https://connect.facebook.net/en_US/sdk.js';
+        sdkScriptElement.async = true;
+        sdkScriptElement.defer = true;
+        document.body.appendChild(initScriptElement);
+        document.body.appendChild(sdkScriptElement);
     }, []);
     return (
         <div className={styles['intro-container']}>
