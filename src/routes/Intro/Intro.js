@@ -75,39 +75,41 @@ const Intro = ({ queryParams }) => {
         }
     );
     const loginWithFacebook = React.useCallback(() => {
-        FB.login((response) => {
-            if (response.status === 'connected') {
-                fetch('https://www.strem.io/fb-login-with-token/' + encodeURIComponent(response.authResponse.accessToken), { timeout: 10 * 60 * 1000 })
-                    .then((resp) => {
-                        if (resp.status < 200 || resp.status >= 300) {
-                            throw new Error('Login failed at getting token from Stremio with status ' + resp.status);
-                        } else {
-                            return resp.json();
-                        }
-                    })
-                    .then(({ user }) => {
-                        if (!user || typeof user.fbLoginToken !== 'string' || typeof user.email !== 'string') {
-                            throw new Error('Login failed at getting token from Stremio');
-                        }
-                        core.dispatch({
-                            action: 'Ctx',
-                            args: {
-                                action: 'Authenticate',
-                                args: {
-                                    type: 'Login',
-                                    email: user.email,
-                                    password: user.fbLoginToken
-                                }
+        if (typeof FB !== 'undefined') {
+            FB.login((response) => {
+                if (response.status === 'connected') {
+                    fetch('https://www.strem.io/fb-login-with-token/' + encodeURIComponent(response.authResponse.accessToken), { timeout: 10 * 60 * 1000 })
+                        .then((resp) => {
+                            if (resp.status < 200 || resp.status >= 300) {
+                                throw new Error('Login failed at getting token from Stremio with status ' + resp.status);
+                            } else {
+                                return resp.json();
                             }
+                        })
+                        .then(({ user }) => {
+                            if (!user || typeof user.fbLoginToken !== 'string' || typeof user.email !== 'string') {
+                                throw new Error('Login failed at getting token from Stremio');
+                            }
+                            core.dispatch({
+                                action: 'Ctx',
+                                args: {
+                                    action: 'Authenticate',
+                                    args: {
+                                        type: 'Login',
+                                        email: user.email,
+                                        password: user.fbLoginToken
+                                    }
+                                }
+                            });
+                        })
+                        .catch((err = {}) => {
+                            dispatch({ type: 'error', error: err.message || JSON.stringify(err) });
                         });
-                    })
-                    .catch((err = {}) => {
-                        dispatch({ type: 'error', error: err.message || JSON.stringify(err) });
-                    });
-            } else {
-                dispatch({ type: 'error', error: 'Login failed at getting token from Facebook' });
-            }
-        });
+                } else {
+                    dispatch({ type: 'error', error: 'Login failed at getting token from Facebook' });
+                }
+            });
+        }
     }, []);
     const loginWithEmail = React.useCallback(() => {
         if (typeof state.email !== 'string' || state.email.length === 0 || !emailRef.current.validity.valid) {
@@ -272,6 +274,27 @@ const Intro = ({ queryParams }) => {
             core.off('Event', onEvent);
         };
     }, [routeFocused]);
+    React.useEffect(() => {
+        var initScriptElement = document.createElement('script');
+        var sdkScriptElement = document.createElement('script');
+        initScriptElement.innerHTML = `window.fbAsyncInit = function() {
+                FB.init({
+                    appId: '1537119779906825',
+                    autoLogAppEvents: false,
+                    xfbml: false,
+                    version: 'v2.5'
+                });
+            };`;
+        sdkScriptElement.src = 'https://connect.facebook.net/en_US/sdk.js';
+        sdkScriptElement.async = true;
+        sdkScriptElement.defer = true;
+        document.body.appendChild(initScriptElement);
+        document.body.appendChild(sdkScriptElement);
+        return () => {
+            document.body.removeChild(initScriptElement);
+            document.body.removeChild(sdkScriptElement);
+        };
+    }, []);
     return (
         <div className={styles['intro-container']}>
             <div className={styles['form-container']}>
