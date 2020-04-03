@@ -283,7 +283,7 @@ const Intro = ({ queryParams }) => {
                     version: 'v2.5'
                 });
             };`;
-        scriptElement.src = "https://connect.facebook.net/en_US/sdk.js";
+        scriptElement.src = 'https://connect.facebook.net/en_US/sdk.js';
         scriptElement.async = true;
         scriptElement.defer = true;
         document.body.appendChild(scriptElementFunction);
