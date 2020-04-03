@@ -4,6 +4,8 @@ const CATALOG_PREVIEW_SIZE = 10;
 const CATALOG_PAGE_SIZE = 100;
 const NONE_EXTRA_VALUE = 'None';
 const SKIP_EXTRA_NAME = 'skip';
+const IMDB_LINK_CATEGORY = 'imdb';
+const SHARE_LINK_CATEGORY = 'share';
 const TYPE_PRIORITIES = {
     movie: 10,
     series: 9,
@@ -25,5 +27,7 @@ module.exports = {
     CATALOG_PAGE_SIZE,
     NONE_EXTRA_VALUE,
     SKIP_EXTRA_NAME,
+    IMDB_LINK_CATEGORY,
+    SHARE_LINK_CATEGORY,
     TYPE_PRIORITIES
 };

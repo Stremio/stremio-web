@@ -6,14 +6,14 @@ const DiscreteSelectInput = require('./DiscreteSelectInput');
 const styles = require('./styles');
 
 const ORIGIN_PRIORITIES = {
-    'EMBEDDED': 1,
-    'Stream': 2
+    'EMBEDDED IN VIDEO': 1,
+    'EMBEDDED IN STREAM': 2
 };
 const LANGUAGE_PRIORITIES = {
     'eng': 1
 };
 
-const SubtitlesPicker = (props) => {
+const SubtitlesMenu = (props) => {
     const languages = React.useMemo(() => {
         return Array.isArray(props.tracks) ?
             props.tracks
@@ -51,7 +51,7 @@ const SubtitlesPicker = (props) => {
             [];
     }, [props.tracks, selectedLanguage]);
     const onMouseDown = React.useCallback((event) => {
-        event.nativeEvent.subtitlesPickerClosePrevented = true;
+        event.nativeEvent.subtitlesMenuClosePrevented = true;
     }, []);
     const languageOnClick = React.useCallback((event) => {
         const trackId = Array.isArray(props.tracks) ?
@@ -101,7 +101,7 @@ const SubtitlesPicker = (props) => {
         }
     }, [props.offset, props.onOffsetChanged]);
     return (
-        <div className={classnames(props.className, styles['subtitles-picker-container'])} onMouseDown={onMouseDown}>
+        <div className={classnames(props.className, styles['subtitles-menu-container'])} onMouseDown={onMouseDown}>
             <div className={styles['languages-container']}>
                 <div className={styles['languages-header']}>Languages</div>
                 <div className={styles['languages-list']}>
@@ -182,7 +182,7 @@ const SubtitlesPicker = (props) => {
     );
 };
 
-SubtitlesPicker.propTypes = {
+SubtitlesMenu.propTypes = {
     className: PropTypes.string,
     tracks: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.string.isRequired,
@@ -202,4 +202,4 @@ SubtitlesPicker.propTypes = {
     onOffsetChanged: PropTypes.func
 };
 
-module.exports = SubtitlesPicker;
+module.exports = SubtitlesMenu;

@@ -1,10 +1,8 @@
 const React = require('react');
-const { useProfile } = require('stremio/common');
 const { useServices } = require('stremio/services');
 
-const useSettings = () => {
+const useSettings = (profile) => {
     const { core } = useServices();
-    const profile = useProfile();
     const updateSettings = React.useCallback((settings) => {
         core.dispatch({
             action: 'Ctx',
@@ -16,7 +14,7 @@ const useSettings = () => {
                 }
             }
         });
-    }, [profile.settings]);
+    }, [profile]);
     return [profile.settings, updateSettings];
 };
 

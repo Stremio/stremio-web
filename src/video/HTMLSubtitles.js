@@ -55,7 +55,7 @@ function HTMLSubtitles(options) {
                     track.url.length > 0 &&
                     typeof track.origin === 'string' &&
                     track.origin.length > 0 &&
-                    track.origin !== 'EMBEDDED';
+                    track.origin !== 'EMBEDDED IN VIDEO';
             })
             .map(function(track) {
                 return Object.freeze(Object.assign({}, track, {

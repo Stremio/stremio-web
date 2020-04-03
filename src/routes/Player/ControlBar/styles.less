@@ -4,6 +4,9 @@
     padding: 0 1.5rem;
 
     .seek-bar {
+        --track-size: 0.5rem;
+        --thumb-size: 1.5rem;
+
         height: 2.5rem;
     }
 
@@ -21,12 +24,12 @@
             align-items: center;
 
             &:global(.disabled) {
-                :global(.icon) {
+                .icon {
                     fill: @color-surface;
                 }
             }
 
-            :global(.icon) {
+            .icon {
                 flex: none;
                 width: 3rem;
                 height: 2rem;

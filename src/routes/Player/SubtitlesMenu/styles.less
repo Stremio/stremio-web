@@ -1,10 +1,9 @@
 @import (reference) '~stremio-colors/dist/less/stremio-colors.less';
 
-.subtitles-picker-container {
+.subtitles-menu-container {
     height: 23rem;
     display: flex;
     flex-direction: row;
-    background-color: @color-background-dark1;
 
     .languages-container, .variants-container, .subtitles-settings-container {
         flex: none;
@@ -49,7 +48,7 @@
                     height: 0.5rem;
                     border-radius: 100%;
                     margin-left: 1rem;
-                    background-color: @color-accent3;
+                    background-color: @color-accent3-90;
                 }
             }
         }
@@ -100,7 +99,7 @@
             }
 
             &:global(.disabled) {
-                color: @color-surface;
+                color: @color-surface-90;
             }
         }
     }
