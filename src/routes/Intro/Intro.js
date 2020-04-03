@@ -75,39 +75,41 @@ const Intro = ({ queryParams }) => {
         }
     );
     const loginWithFacebook = React.useCallback(() => {
-        FB.login((response) => {
-            if (response.status === 'connected') {
-                fetch('https://www.strem.io/fb-login-with-token/' + encodeURIComponent(response.authResponse.accessToken), { timeout: 10 * 60 * 1000 })
-                    .then((resp) => {
-                        if (resp.status < 200 || resp.status >= 300) {
-                            throw new Error('Login failed at getting token from Stremio with status ' + resp.status);
-                        } else {
-                            return resp.json();
-                        }
-                    })
-                    .then(({ user }) => {
-                        if (!user || typeof user.fbLoginToken !== 'string' || typeof user.email !== 'string') {
-                            throw new Error('Login failed at getting token from Stremio');
-                        }
-                        core.dispatch({
-                            action: 'Ctx',
-                            args: {
-                                action: 'Authenticate',
-                                args: {
-                                    type: 'Login',
-                                    email: user.email,
-                                    password: user.fbLoginToken
-                                }
+        if (typeof FB !== 'undefined') {
+            FB.login((response) => {
+                if (response.status === 'connected') {
+                    fetch('https://www.strem.io/fb-login-with-token/' + encodeURIComponent(response.authResponse.accessToken), { timeout: 10 * 60 * 1000 })
+                        .then((resp) => {
+                            if (resp.status < 200 || resp.status >= 300) {
+                                throw new Error('Login failed at getting token from Stremio with status ' + resp.status);
+                            } else {
+                                return resp.json();
                             }
+                        })
+                        .then(({ user }) => {
+                            if (!user || typeof user.fbLoginToken !== 'string' || typeof user.email !== 'string') {
+                                throw new Error('Login failed at getting token from Stremio');
+                            }
+                            core.dispatch({
+                                action: 'Ctx',
+                                args: {
+                                    action: 'Authenticate',
+                                    args: {
+                                        type: 'Login',
+                                        email: user.email,
+                                        password: user.fbLoginToken
+                                    }
+                                }
+                            });
+                        })
+                        .catch((err = {}) => {
+                            dispatch({ type: 'error', error: err.message || JSON.stringify(err) });
                         });
-                    })
-                    .catch((err = {}) => {
-                        dispatch({ type: 'error', error: err.message || JSON.stringify(err) });
-                    });
-            } else {
-                dispatch({ type: 'error', error: 'Login failed at getting token from Facebook' });
-            }
-        });
+                } else {
+                    dispatch({ type: 'error', error: 'Login failed at getting token from Facebook' });
+                }
+            });
+        }
     }, []);
     const loginWithEmail = React.useCallback(() => {
         if (typeof state.email !== 'string' || state.email.length === 0 || !emailRef.current.validity.valid) {
