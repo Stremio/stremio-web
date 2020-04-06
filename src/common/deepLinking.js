@@ -44,25 +44,25 @@ const withLibItem = ({ libItem, streams = {} }) => {
             null,
         // TODO check if stream is external
         player: typeof videoId === 'string' && typeof stream === 'object' && typeof streamTransportUrl === 'string' && typeof metaTransportUrl === 'string' ?
-            `#/player/${serializeStream(stream)}/${encodeURIComponent(streamTransportUrl)}/${encodeURIComponent(metaTransportUrl)}/${encodeURIComponent(libItem.type)}/${encodeURIComponent(libItem._id)}/${encodeURIComponent(videoId)}`
+            `#/player/${encodeURIComponent(serializeStream(stream))}/${encodeURIComponent(streamTransportUrl)}/${encodeURIComponent(metaTransportUrl)}/${encodeURIComponent(libItem.type)}/${encodeURIComponent(libItem._id)}/${encodeURIComponent(videoId)}`
             :
             null
     };
 };
 
-const withVideo = ({ metaItem, video, metaTransportUrl, streams = {} }) => {
+const withVideo = ({ video, metaTransportUrl, metaItem, streams = {} }) => {
     const [stream, streamTransportUrl] = typeof streams[`${encodeURIComponent(metaItem.id)}/${encodeURIComponent(video.id)}`] === 'object' ?
         streams[`${encodeURIComponent(metaItem.id)}/${encodeURIComponent(video.id)}`]
         :
         [];
     return {
-        streams: `#/metadetails/${encodeURIComponent(metaItem.type)}/${encodeURIComponent(metaItem.id)}/${encodeURIComponent(video.id)}`,
+        meta_details_streams: `#/metadetails/${encodeURIComponent(metaItem.type)}/${encodeURIComponent(metaItem.id)}/${encodeURIComponent(video.id)}`,
         // TODO check if stream is external
         player: typeof stream === 'object' && typeof streamTransportUrl === 'string' ?
-            `#/player/${serializeStream(stream)}/${encodeURIComponent(streamTransportUrl)}/${encodeURIComponent(metaTransportUrl)}/${encodeURIComponent(metaItem.type)}/${encodeURIComponent(metaItem.id)}/${encodeURIComponent(video.id)}`
+            `#/player/${encodeURIComponent(serializeStream(stream))}/${encodeURIComponent(streamTransportUrl)}/${encodeURIComponent(metaTransportUrl)}/${encodeURIComponent(metaItem.type)}/${encodeURIComponent(metaItem.id)}/${encodeURIComponent(video.id)}`
             :
             Array.isArray(video.streams) && video.streams.length === 1 ?
-                `#/player/${serializeStream(video.streams[0])}/${encodeURIComponent(metaTransportUrl)}/${encodeURIComponent(metaTransportUrl)}/${encodeURIComponent(metaItem.type)}/${encodeURIComponent(metaItem.id)}/${encodeURIComponent(video.id)}`
+                `#/player/${encodeURIComponent(serializeStream(video.streams[0]))}/${encodeURIComponent(metaTransportUrl)}/${encodeURIComponent(metaTransportUrl)}/${encodeURIComponent(metaItem.type)}/${encodeURIComponent(metaItem.id)}/${encodeURIComponent(video.id)}`
                 :
                 null
     };
@@ -71,9 +71,9 @@ const withVideo = ({ metaItem, video, metaTransportUrl, streams = {} }) => {
 const withStream = ({ stream, streamTransportUrl, metaTransportUrl, type, id, videoId }) => {
     return {
         player: typeof metaTransportUrl === 'string' && typeof type === 'string' && typeof id === 'string' && videoId === 'string' ?
-            `#/player/${serializeStream(stream)}/${encodeURIComponent(streamTransportUrl)}/${encodeURIComponent(metaTransportUrl)}/${encodeURIComponent(type)}/${encodeURIComponent(id)}/${encodeURIComponent(videoId)}`
+            `#/player/${encodeURIComponent(serializeStream(stream))}/${encodeURIComponent(streamTransportUrl)}/${encodeURIComponent(metaTransportUrl)}/${encodeURIComponent(type)}/${encodeURIComponent(id)}/${encodeURIComponent(videoId)}`
             :
-            `#/player/${serializeStream(stream)}`
+            `#/player/${encodeURIComponent(serializeStream(stream))}`
     };
 };
 
