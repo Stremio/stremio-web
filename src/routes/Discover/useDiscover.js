@@ -1,6 +1,6 @@
 const React = require('react');
 const { useServices } = require('stremio/services');
-const { CONSTANTS, useModelState, comparatorWithPriorities } = require('stremio/common');
+const { CONSTANTS, deepLinking, useModelState, comparatorWithPriorities } = require('stremio/common');
 
 const initDiscoverState = () => ({
     selected: null,
@@ -41,7 +41,7 @@ const mapDiscoverState = (discover) => {
                     released: new Date(metaItem.released),
                     description: metaItem.description,
                     trailer: metaItem.trailer,
-                    href: `#/metadetails/${encodeURIComponent(metaItem.type)}/${encodeURIComponent(metaItem.id)}` // TODO this should redirect with videoId at some cases
+                    deepLinks: deepLinking.withMetaItem({ metaItem })
                 }))
             }
         }
