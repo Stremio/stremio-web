@@ -70,7 +70,7 @@ const withVideo = ({ video, metaTransportUrl, metaItem, streams = {} }) => {
 
 const withStream = ({ stream, streamTransportUrl, metaTransportUrl, type, id, videoId }) => {
     return {
-        player: typeof metaTransportUrl === 'string' && typeof type === 'string' && typeof id === 'string' && videoId === 'string' ?
+        player: typeof metaTransportUrl === 'string' && typeof type === 'string' && typeof id === 'string' && typeof videoId === 'string' ?
             `#/player/${encodeURIComponent(serializeStream(stream))}/${encodeURIComponent(streamTransportUrl)}/${encodeURIComponent(metaTransportUrl)}/${encodeURIComponent(type)}/${encodeURIComponent(id)}/${encodeURIComponent(videoId)}`
             :
             `#/player/${encodeURIComponent(serializeStream(stream))}`
