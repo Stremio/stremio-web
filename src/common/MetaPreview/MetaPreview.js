@@ -2,13 +2,13 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const UrlUtils = require('url');
-const pako = require('pako');
 const Icon = require('stremio-icons/dom');
 const Button = require('stremio/common/Button');
 const Image = require('stremio/common/Image');
 const ModalDialog = require('stremio/common/ModalDialog');
 const SharePrompt = require('stremio/common/SharePrompt');
 const CONSTANTS = require('stremio/common/CONSTANTS');
+const deepLinking = require('stremio/common/deepLinking');
 const routesRegexp = require('stremio/common/routesRegexp');
 const useBinaryState = require('stremio/common/useBinaryState');
 const ActionButton = require('./ActionButton');
@@ -65,7 +65,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
     }, [links]);
     const trailerHref = React.useMemo(() => {
         return typeof trailer === 'object' && trailer !== null ?
-            `#/player/${btoa(pako.deflate(JSON.stringify(trailer), { to: 'string' }))}`
+            deepLinking.withStream({ stream: trailer }).player
             :
             null;
     }, [trailer]);
