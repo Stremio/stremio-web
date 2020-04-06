@@ -9,7 +9,6 @@ const mapContinueWatchingPreviewState = (continue_watching_preview) => {
         name: libItem.name,
         poster: libItem.poster,
         posterShape: libItem.posterShape === 'landscape' ? 'square' : libItem.posterShape,
-        videoId: libItem.state.video_id,
         progress: libItem.state.timeOffset > 0 && libItem.state.duration > 0 ?
             libItem.state.timeOffset / libItem.state.duration
             :
