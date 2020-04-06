@@ -1,5 +1,5 @@
 const React = require('react');
-const { CONSTANTS, useModelState, comparatorWithPriorities } = require('stremio/common');
+const { CONSTANTS, deepLinking, useModelState, comparatorWithPriorities } = require('stremio/common');
 
 const initLibraryState = () => ({
     selected: null,
@@ -10,18 +10,17 @@ const initLibraryState = () => ({
 const mapLibraryState = (library) => {
     const selected = library.selected;
     const type_names = library.type_names.sort(comparatorWithPriorities(CONSTANTS.TYPE_PRIORITIES));
-    const lib_items = library.lib_items.map((lib_item) => ({
-        id: lib_item._id,
-        type: lib_item.type,
-        name: lib_item.name,
-        poster: lib_item.poster,
-        posterShape: lib_item.posterShape === 'landscape' ? 'square' : lib_item.posterShape,
-        progress: lib_item.state.timeOffset > 0 && lib_item.state.duration > 0 ?
-            lib_item.state.timeOffset / lib_item.state.duration
+    const lib_items = library.lib_items.map((libItem) => ({
+        id: libItem._id,
+        type: libItem.type,
+        name: libItem.name,
+        poster: libItem.poster,
+        posterShape: libItem.posterShape === 'landscape' ? 'square' : libItem.posterShape,
+        progress: libItem.state.timeOffset > 0 && libItem.state.duration > 0 ?
+            libItem.state.timeOffset / libItem.state.duration
             :
             null,
-        videoId: lib_item.state.video_id,
-        href: `#/metadetails/${encodeURIComponent(lib_item.type)}/${encodeURIComponent(lib_item._id)}${lib_item.state.video_id !== null ? `/${encodeURIComponent(lib_item.state.video_id)}` : ''}`
+        deepLinks: deepLinking.withLibItem({ libItem })
     }));
     return { selected, type_names, lib_items };
 };
