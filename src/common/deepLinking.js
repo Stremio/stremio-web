@@ -31,8 +31,8 @@ const withLibItem = ({ libItem, streams = {} }) => {
         :
         [];
     return {
-        videos: `#/metadetails/${encodeURIComponent(libItem.type)}/${encodeURIComponent(libItem._id)}`,
-        streams: typeof videoId === 'string' ?
+        meta_details_videos: `#/metadetails/${encodeURIComponent(libItem.type)}/${encodeURIComponent(libItem._id)}`,
+        meta_details_streams: typeof videoId === 'string' ?
             `#/metadetails/${encodeURIComponent(libItem.type)}/${encodeURIComponent(libItem._id)}/${encodeURIComponent(videoId)}`
             :
             null,
