@@ -10,7 +10,10 @@ const deserializeStream = (stream) => {
 
 const withMetaItem = ({ metaItem }) => {
     return {
-        meta_details_videos: `#/metadetails/${encodeURIComponent(metaItem.type)}/${encodeURIComponent(metaItem.id)}`,
+        meta_details_videos: typeof metaItem.behaviorHints.defaultVideoId !== 'string' ?
+            `#/metadetails/${encodeURIComponent(metaItem.type)}/${encodeURIComponent(metaItem.id)}`
+            :
+            null,
         meta_details_streams: typeof metaItem.behaviorHints.defaultVideoId === 'string' ?
             `#/metadetails/${encodeURIComponent(metaItem.type)}/${encodeURIComponent(metaItem.id)}/${encodeURIComponent(metaItem.behaviorHints.defaultVideoId)}`
             :
@@ -31,7 +34,10 @@ const withLibItem = ({ libItem, streams = {} }) => {
         :
         [];
     return {
-        meta_details_videos: `#/metadetails/${encodeURIComponent(libItem.type)}/${encodeURIComponent(libItem._id)}`,
+        meta_details_videos: typeof libItem.behaviorHints.defaultVideoId !== 'string' ?
+            `#/metadetails/${encodeURIComponent(libItem.type)}/${encodeURIComponent(libItem._id)}`
+            :
+            null,
         meta_details_streams: typeof videoId === 'string' ?
             `#/metadetails/${encodeURIComponent(libItem.type)}/${encodeURIComponent(libItem._id)}/${encodeURIComponent(videoId)}`
             :
