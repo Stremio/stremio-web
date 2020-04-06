@@ -47,8 +47,6 @@ const Search = ({ queryParams }) => {
                             </div>
                             :
                             search.catalog_resources.map((catalog_resource, index) => {
-                                const queryString = new URLSearchParams([['search', query]]).toString();
-                                const href = `#/discover/${encodeURIComponent(catalog_resource.request.base)}/${encodeURIComponent(catalog_resource.request.path.type_name)}/${encodeURIComponent(catalog_resource.request.path.id)}?${queryString}`;
                                 const title = `${catalog_resource.origin} - ${catalog_resource.request.path.id} ${catalog_resource.request.path.type_name}`;
                                 switch (catalog_resource.content.type) {
                                     case 'Ready': {
@@ -63,7 +61,7 @@ const Search = ({ queryParams }) => {
                                                 title={title}
                                                 items={catalog_resource.content.content}
                                                 itemComponent={MetaItem}
-                                                href={href}
+                                                deepLinks={catalog_resource.deepLinks}
                                             />
                                         );
                                     }
@@ -75,7 +73,7 @@ const Search = ({ queryParams }) => {
                                                 className={styles['search-row']}
                                                 title={title}
                                                 message={message}
-                                                href={href}
+                                                deepLinks={catalog_resource.deepLinks}
                                             />
                                         );
                                     }
@@ -85,7 +83,7 @@ const Search = ({ queryParams }) => {
                                                 key={index}
                                                 className={classnames(styles['search-row'], styles['search-row-poster'])}
                                                 title={title}
-                                                href={href}
+                                                deepLinks={catalog_resource.deepLinks}
                                             />
                                         );
                                     }

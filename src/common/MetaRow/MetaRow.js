@@ -8,11 +8,11 @@ const CONSTANTS = require('stremio/common/CONSTANTS');
 const MetaRowPlaceholder = require('./MetaRowPlaceholder');
 const styles = require('./styles');
 
-const MetaRow = ({ className, title, message, items, itemComponent, href }) => {
+const MetaRow = ({ className, title, message, items, itemComponent, deepLinks }) => {
     return (
         <div className={classnames(className, styles['meta-row-container'])}>
             {
-                (typeof title === 'string' && title.length > 0) || (typeof href === 'string' && href.length > 0) ?
+                (typeof title === 'string' && title.length > 0) || (deepLinks && typeof deepLinks.discover === 'string') ?
                     <div className={styles['header-container']}>
                         {
                             typeof title === 'string' && title.length > 0 ?
@@ -21,8 +21,8 @@ const MetaRow = ({ className, title, message, items, itemComponent, href }) => {
                                 null
                         }
                         {
-                            typeof href === 'string' && href.length > 0 ?
-                                <Button className={styles['see-all-container']} title={'SEE ALL'} href={href}>
+                            deepLinks && typeof deepLinks.discover === 'string' ?
+                                <Button className={styles['see-all-container']} title={'SEE ALL'} href={deepLinks.discover}>
                                     <div className={styles['label']}>SEE ALL</div>
                                     <Icon className={styles['icon']} icon={'ic_arrow_thin_right'} />
                                 </Button>
@@ -69,7 +69,9 @@ MetaRow.propTypes = {
         posterShape: PropTypes.string
     })),
     itemComponent: PropTypes.elementType,
-    href: PropTypes.string
+    deepLinks: PropTypes.shape({
+        discover: PropTypes.string
+    })
 };
 
 module.exports = MetaRow;

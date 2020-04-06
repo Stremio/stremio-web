@@ -6,7 +6,7 @@ const Button = require('stremio/common/Button');
 const CONSTANTS = require('stremio/common/CONSTANTS');
 const styles = require('./styles');
 
-const MetaRowPlaceholder = ({ className, title, href }) => {
+const MetaRowPlaceholder = ({ className, title, deepLinks }) => {
     return (
         <div className={classnames(className, styles['meta-row-placeholder-container'])}>
             <div className={styles['header-container']}>
@@ -14,8 +14,8 @@ const MetaRowPlaceholder = ({ className, title, href }) => {
                     {typeof title === 'string' && title.length > 0 ? title : null}
                 </div>
                 {
-                    typeof href === 'string' && href.length > 0 ?
-                        <Button className={styles['see-all-container']} title={'SEE ALL'} href={href}>
+                    deepLinks && typeof deepLinks.discover === 'string' ?
+                        <Button className={styles['see-all-container']} title={'SEE ALL'} href={deepLinks.discover}>
                             <div className={styles['label']}>SEE ALL</div>
                             <Icon className={styles['icon']} icon={'ic_arrow_thin_right'} />
                         </Button>
@@ -40,7 +40,9 @@ const MetaRowPlaceholder = ({ className, title, href }) => {
 MetaRowPlaceholder.propTypes = {
     className: PropTypes.string,
     title: PropTypes.string,
-    href: PropTypes.string
+    deepLinks: PropTypes.shape({
+        discover: PropTypes.string
+    })
 };
 
 module.exports = MetaRowPlaceholder;

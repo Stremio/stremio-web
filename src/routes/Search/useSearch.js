@@ -1,5 +1,5 @@
 const React = require('react');
-const { useModelState } = require('stremio/common');
+const { deepLinking, useModelState } = require('stremio/common');
 
 const initSearchState = () => ({
     selected: null,
@@ -18,7 +18,7 @@ const mapSearchStateWithCtx = (search, ctx) => {
                     name: metaItem.name,
                     poster: metaItem.poster,
                     posterShape: metaItems[0].posterShape,
-                    href: `#/metadetails/${encodeURIComponent(metaItem.type)}/${encodeURIComponent(metaItem.id)}` // TODO this should redirect with videoId at some cases
+                    deepLinks: deepLinking.withMetaItem({ metaItem })
                 }))
             }
             :
@@ -33,7 +33,8 @@ const mapSearchStateWithCtx = (search, ctx) => {
 
             return origin;
         }, catalog_resource.request.base);
-        return { request, content, origin };
+        const deepLinks = deepLinking.withCatalog({ request });
+        return { request, content, origin, deepLinks };
     });
     return { selected, catalog_resources };
 };

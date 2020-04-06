@@ -23,8 +23,23 @@ const ICON_FOR_TYPE = new Map([
     ['other', 'ic_movies'],
 ]);
 
-const MetaItem = React.memo(({ className, type, name, poster, posterShape, playIcon, progress, options, dataset, optionOnSelect, ...props }) => {
+const MetaItem = React.memo(({ className, type, name, poster, posterShape, playIcon, progress, options, deepLinks, dataset, optionOnSelect, ...props }) => {
     const [menuOpen, onMenuOpen, onMenuClose] = useBinaryState(false);
+    const href = React.useMemo(() => {
+        return deepLinks ?
+            typeof deepLinks.player === 'string' ?
+                deepLinks.player
+                :
+                typeof deepLinks.meta_details_streams === 'string' ?
+                    deepLinks.meta_details_streams
+                    :
+                    typeof deepLinks.meta_details_videos === 'string' ?
+                        deepLinks.meta_details_videos
+                        :
+                        null
+            :
+            null;
+    }, [deepLinks]);
     const metaItemOnClick = React.useCallback((event) => {
         if (typeof props.onClick === 'function') {
             props.onClick(event);
@@ -58,7 +73,7 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, playI
         <Icon className={styles['icon']} icon={'ic_more'} />
     ), []);
     return (
-        <Button title={name} {...props} className={classnames(className, styles['meta-item-container'], styles['poster-shape-poster'], styles[`poster-shape-${posterShape}`], { 'active': menuOpen })} onClick={metaItemOnClick}>
+        <Button title={name} href={href} {...props} className={classnames(className, styles['meta-item-container'], styles['poster-shape-poster'], styles[`poster-shape-${posterShape}`], { 'active': menuOpen })} onClick={metaItemOnClick}>
             <div className={styles['poster-container']}>
                 <div className={styles['poster-image-layer']}>
                     <Image
@@ -125,6 +140,11 @@ MetaItem.propTypes = {
     playIcon: PropTypes.bool,
     progress: PropTypes.number,
     options: PropTypes.array,
+    deepLinks: PropTypes.shape({
+        meta_details_videos: PropTypes.string,
+        meta_details_streams: PropTypes.string,
+        player: PropTypes.string
+    }),
     dataset: PropTypes.object,
     optionOnSelect: PropTypes.func,
     onClick: PropTypes.func
