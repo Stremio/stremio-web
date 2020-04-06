@@ -1,5 +1,5 @@
 const React = require('react');
-const { useModelState } = require('stremio/common');
+const { deepLinking, useModelState } = require('stremio/common');
 
 const initMetaDetailsState = () => ({
     selected: null,
@@ -32,7 +32,11 @@ const mapMetaDetailsState = (meta_details) => {
                                     NaN
                             ),
                             // TODO add watched and progress
-                            href: `#/metadetails/${meta_resource.content.content.type}/${meta_resource.content.content.id}/${video.id}`
+                            deepLinks: deepLinking.withVideo({
+                                video,
+                                metaTransportUrl: meta_resource.request.base,
+                                metaItem: meta_resource.content.content
+                            })
                         }))
                     }
                 }
