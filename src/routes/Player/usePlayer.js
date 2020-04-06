@@ -1,7 +1,6 @@
 const React = require('react');
-const pako = require('pako');
 const { useServices } = require('stremio/services');
-const { useModelState } = require('stremio/common');
+const { deepLinking, useModelState } = require('stremio/common');
 
 const initPlayerState = () => ({
     selected: null,
@@ -86,7 +85,7 @@ const usePlayer = (urlParams) => {
                 args: {
                     model: 'Player',
                     args: {
-                        stream: JSON.parse(pako.inflate(atob(urlParams.stream), { to: 'string' })),
+                        stream: deepLinking.deserializeStream(urlParams.stream),
                         stream_resource_request: typeof urlParams.streamTransportUrl === 'string' && typeof urlParams.type === 'string' && typeof urlParams.videoId === 'string' ?
                             {
                                 base: urlParams.streamTransportUrl,
