@@ -189,19 +189,18 @@ const Player = ({ urlParams }) => {
                         0
                 }
             });
-            dispatch({
-                commandName: 'addSubtitlesTracks',
-                commandArgs: {
-                    tracks: player.selected.stream.subtitles.map(({ url, lang }) => ({
-                        url,
-                        lang,
-                        origin: player.selected.stream.addon !== null ?
-                            player.selected.stream.addon.manifest.name
-                            :
-                            'EMBEDDED IN STREAM'
-                    }))
-                }
-            });
+            if (Array.isArray(player.selected.stream.subtitles)) {
+                dispatch({
+                    commandName: 'addSubtitlesTracks',
+                    commandArgs: {
+                        tracks: player.selected.stream.subtitles.map(({ url, lang }) => ({
+                            url,
+                            lang,
+                            origin: 'EMBEDDED IN STREAM'
+                        }))
+                    }
+                });
+            }
         }
     }, [player.selected]);
     useDeepEqualEffect(() => {
