@@ -20,17 +20,22 @@ const InfoMenu = ({ className, ...props }) => {
     }, []);
     return (
         <div className={classnames(className, styles['info-menu-container'])} onMouseDown={onMouseDown}>
-            <MetaPreview
-                className={styles['meta-preview']}
-                compact={true}
-                name={metaItem.name}
-                logo={metaItem.logo}
-                runtime={metaItem.runtime}
-                releaseInfo={metaItem.releaseInfo}
-                released={metaItem.released}
-                description={metaItem.description}
-                links={metaItem.links}
-            />
+            {
+                metaItem !== null ?
+                    <MetaPreview
+                        className={styles['meta-preview']}
+                        compact={true}
+                        name={metaItem.name}
+                        logo={metaItem.logo}
+                        runtime={metaItem.runtime}
+                        releaseInfo={metaItem.releaseInfo}
+                        released={metaItem.released}
+                        description={metaItem.description}
+                        links={metaItem.links}
+                    />
+                    :
+                    null
+            }
         </div>
     );
 };
