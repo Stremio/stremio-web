@@ -9,22 +9,20 @@ const OPTIONS = [
     { label: 'Dismiss', value: 'dismiss' }
 ];
 
-const LibItem = ({ id, videoId, ...props }) => {
+const LibItem = ({ id, ...props }) => {
     const { core } = useServices();
     const options = React.useMemo(() => {
         return OPTIONS.filter(({ value }) => {
-            return value !== 'dismiss' || (props.progress !== null && !isNaN(props.progress));
+            switch (value) {
+                case 'play':
+                    return props.deepLinks && typeof props.deepLinks.player === 'string';
+                case 'details':
+                    return props.deepLinks && (typeof props.deepLinks.meta_details_videos === 'string' || typeof props.deepLinks.meta_details_streams === 'string');
+                case 'dismiss':
+                    return typeof id === 'string' && props.progress !== null && !isNaN(props.progress);
+            }
         });
-    }, [props.progress]);
-    const playIcon = React.useMemo(() => {
-        return props.progress !== null && !isNaN(props.progress);
-    }, [props.progress]);
-    const dataset = React.useMemo(() => ({
-        id,
-        videoId,
-        type: props.type,
-        ...props.dataset
-    }), [id, videoId, props.type, props.dataset]);
+    }, [id, props.progress, props.deepLinks]);
     const optionOnSelect = React.useCallback((event) => {
         if (typeof props.optionOnSelect === 'function') {
             props.optionOnSelect(event);
@@ -33,32 +31,30 @@ const LibItem = ({ id, videoId, ...props }) => {
         if (!event.nativeEvent.optionSelectPrevented) {
             switch (event.value) {
                 case 'play': {
-                    if (typeof event.dataset.id === 'string' && typeof event.dataset.type === 'string') {
-                        // TODO check streams storage
-                        // TODO check behaviour_hints
-                        // TODO add videos page to the history stack if needed
-                        window.location = `#/metadetails/${encodeURIComponent(event.dataset.type)}/${encodeURIComponent(event.dataset.id)}${typeof event.dataset.videoId === 'string' ? `/${encodeURIComponent(event.dataset.videoId)}` : ''}`;
+                    if (props.deepLinks && typeof props.deepLinks.player === 'string') {
+                        window.location = props.deepLinks.player;
                     }
 
                     break;
                 }
                 case 'details': {
-                    if (typeof event.dataset.id === 'string' && typeof event.dataset.type === 'string') {
-                        // TODO check streams storage
-                        // TODO check behaviour_hints
-                        // TODO add videos page to the history stack if needed
-                        window.location = `#/metadetails/${encodeURIComponent(event.dataset.type)}/${encodeURIComponent(event.dataset.id)}${typeof event.dataset.videoId === 'string' ? `/${encodeURIComponent(event.dataset.videoId)}` : ''}`;
+                    if (props.deepLinks) {
+                        if (typeof props.deepLinks.meta_details_videos === 'string') {
+                            window.location = props.deepLinks.meta_details_videos;
+                        } else if (typeof props.deepLinks.meta_details_streams === 'string') {
+                            window.location = props.deepLinks.meta_details_streams;
+                        }
                     }
 
                     break;
                 }
                 case 'dismiss': {
-                    if (typeof event.dataset.id === 'string') {
+                    if (typeof id === 'string') {
                         core.dispatch({
                             action: 'Ctx',
                             args: {
                                 action: 'RewindLibraryItem',
-                                args: event.dataset.id
+                                args: id
                             }
                         });
                     }
@@ -67,13 +63,12 @@ const LibItem = ({ id, videoId, ...props }) => {
                 }
             }
         }
-    }, [props.optionOnSelect]);
+    }, [id, props.deepLinks, props.optionOnSelect]);
     return (
         <MetaItem
-            options={options}
-            playIcon={playIcon}
+            playIcon={props.progress !== null && !isNaN(props.progress)}
             {...props}
-            dataset={dataset}
+            options={options}
             optionOnSelect={optionOnSelect}
         />
     );
@@ -81,10 +76,12 @@ const LibItem = ({ id, videoId, ...props }) => {
 
 LibItem.propTypes = {
     id: PropTypes.string,
-    videoId: PropTypes.string,
-    type: PropTypes.string,
     progress: PropTypes.number,
-    dataset: PropTypes.object,
+    deepLinks: PropTypes.shape({
+        meta_details_videos: PropTypes.string,
+        meta_details_streams: PropTypes.string,
+        player: PropTypes.string
+    }),
     optionOnSelect: PropTypes.func
 };
 

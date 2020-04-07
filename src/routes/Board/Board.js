@@ -18,13 +18,12 @@ const Board = () => {
                             title={'Continue Watching'}
                             items={continueWatchingPreview.lib_items}
                             itemComponent={LibItem}
-                            href={'#/continuewatching'}
+                            deepLinks={continueWatchingPreview.deepLinks}
                         />
                         :
                         null
                 }
                 {board.catalog_resources.map((catalog_resource, index) => {
-                    const href = `#/discover/${encodeURIComponent(catalog_resource.request.base)}/${encodeURIComponent(catalog_resource.request.path.type_name)}/${encodeURIComponent(catalog_resource.request.path.id)}`;
                     const title = `${catalog_resource.origin} - ${catalog_resource.request.path.id} ${catalog_resource.request.path.type_name}`;
                     switch (catalog_resource.content.type) {
                         case 'Ready': {
@@ -39,7 +38,7 @@ const Board = () => {
                                     title={title}
                                     items={catalog_resource.content.content}
                                     itemComponent={MetaItem}
-                                    href={href}
+                                    deepLinks={catalog_resource.deepLinks}
                                 />
                             );
                         }
@@ -51,7 +50,7 @@ const Board = () => {
                                     className={styles['board-row']}
                                     title={title}
                                     message={message}
-                                    href={href}
+                                    deepLinks={catalog_resource.deepLinks}
                                 />
                             );
                         }
@@ -61,7 +60,7 @@ const Board = () => {
                                     key={index}
                                     className={classnames(styles['board-row'], styles['board-row-poster'])}
                                     title={title}
-                                    href={href}
+                                    deepLinks={catalog_resource.deepLinks}
                                 />
                             );
                         }

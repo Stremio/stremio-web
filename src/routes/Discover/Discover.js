@@ -135,7 +135,7 @@ const Discover = ({ urlParams, queryParams }) => {
                                                     poster={metaItem.poster}
                                                     posterShape={metaItem.posterShape}
                                                     playIcon={selectedMetaItem === metaItem}
-                                                    href={metaItem.href}
+                                                    deepLinks={metaItem.deepLinks}
                                                     data-index={index}
                                                     onClick={metaItemOnClick}
                                                 />

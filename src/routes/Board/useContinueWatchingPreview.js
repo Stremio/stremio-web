@@ -1,22 +1,22 @@
 const React = require('react');
 const { useServices } = require('stremio/services');
-const { useModelState } = require('stremio/common');
+const { deepLinking, useModelState } = require('stremio/common');
 
 const mapContinueWatchingPreviewState = (continue_watching_preview) => {
-    const lib_items = continue_watching_preview.lib_items.map((lib_item) => ({
-        id: lib_item._id,
-        type: lib_item.type,
-        name: lib_item.name,
-        poster: lib_item.poster,
-        posterShape: lib_item.posterShape === 'landscape' ? 'square' : lib_item.posterShape,
-        videoId: lib_item.state.video_id,
-        progress: lib_item.state.timeOffset > 0 && lib_item.state.duration > 0 ?
-            lib_item.state.timeOffset / lib_item.state.duration
+    const lib_items = continue_watching_preview.lib_items.map((libItem) => ({
+        id: libItem._id,
+        type: libItem.type,
+        name: libItem.name,
+        poster: libItem.poster,
+        posterShape: libItem.posterShape === 'landscape' ? 'square' : libItem.posterShape,
+        progress: libItem.state.timeOffset > 0 && libItem.state.duration > 0 ?
+            libItem.state.timeOffset / libItem.state.duration
             :
             null,
-        href: `#/metadetails/${encodeURIComponent(lib_item.type)}/${encodeURIComponent(lib_item._id)}${lib_item.state.video_id !== null ? `/${encodeURIComponent(lib_item.state.video_id)}` : ''}`
+        deepLinks: deepLinking.withLibItem({ libItem })
     }));
-    return { lib_items };
+    const deepLinks = { discover: '#/continuewatching' };
+    return { lib_items, deepLinks };
 };
 
 const useContinueWatchingPreview = () => {

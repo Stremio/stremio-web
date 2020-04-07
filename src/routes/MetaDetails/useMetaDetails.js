@@ -1,5 +1,5 @@
 const React = require('react');
-const { useModelState } = require('stremio/common');
+const { deepLinking, useModelState } = require('stremio/common');
 
 const initMetaDetailsState = () => ({
     selected: null,
@@ -32,7 +32,11 @@ const mapMetaDetailsState = (meta_details) => {
                                     NaN
                             ),
                             // TODO add watched and progress
-                            href: `#/metadetails/${meta_resource.content.content.type}/${meta_resource.content.content.id}/${video.id}`
+                            deepLinks: deepLinking.withVideo({
+                                video,
+                                metaTransportUrl: meta_resource.request.base,
+                                metaItem: meta_resource.content.content
+                            })
                         }))
                     }
                 }
@@ -40,8 +44,36 @@ const mapMetaDetailsState = (meta_details) => {
             :
             meta_resource;
     });
-    // TODO map streams with progress
-    const streams_resources = meta_details.streams_resources;
+    const streams_resources = meta_details.streams_resources.map((stream_resource) => {
+        return stream_resource.content.type === 'Ready' ?
+            {
+                request: stream_resource.request,
+                content: {
+                    type: 'Ready',
+                    content: stream_resource.content.content.map((stream) => ({
+                        ...stream,
+                        // TODO map progress
+                        deepLinks: deepLinking.withStream({
+                            stream,
+                            streamTransportUrl: stream_resource.request.base,
+                            // TODO metaTransportUrl should be based on state
+                            metaTransportUrl: meta_details.meta_resources.reduceRight((result, meta_resource) => {
+                                if (meta_resource.content.type === 'Ready') {
+                                    return meta_resource.request.base;
+                                }
+
+                                return result;
+                            }, ''),
+                            type: selected.meta_resource_ref.type_name,
+                            id: selected.meta_resource_ref.id,
+                            videoId: selected.streams_resource_ref.id,
+                        })
+                    }))
+                }
+            }
+            :
+            stream_resource;
+    });
     return { selected, meta_resources, streams_resources };
 };
 
