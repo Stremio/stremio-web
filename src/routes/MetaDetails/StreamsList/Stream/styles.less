@@ -14,7 +14,9 @@
 
     &:hover, &:focus {
         background-color: @color-background;
+    }
 
+    &:hover, &:focus, &:global(.selected) {
         .play-icon {
             .play-icon-circle-centered-background {
                 fill: @color-accent4-90;
