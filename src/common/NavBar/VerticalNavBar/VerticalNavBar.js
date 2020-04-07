@@ -4,7 +4,7 @@ const classnames = require('classnames');
 const NavTabButton = require('./NavTabButton');
 const styles = require('./styles');
 
-const VerticalNavBar = React.memo(({ className, selected, tabs }) => {
+const VerticalNavBar = React.memo(({ className, detailsMenu, selected, tabs }) => {
     return (
         <nav className={classnames(className, styles['vertical-nav-bar-container'])}>
             {
@@ -17,6 +17,7 @@ const VerticalNavBar = React.memo(({ className, selected, tabs }) => {
                             href={tab.href}
                             icon={tab.icon}
                             label={tab.label}
+                            details={detailsMenu}
                             onClick={tab.onClick}
                         />
                     ))
@@ -31,6 +32,7 @@ VerticalNavBar.displayName = 'VerticalNavBar';
 
 VerticalNavBar.propTypes = {
     className: PropTypes.string,
+    detailsMenu: PropTypes.bool,
     selected: PropTypes.string,
     tabs: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.string,
