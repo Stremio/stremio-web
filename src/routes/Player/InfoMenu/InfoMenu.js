@@ -1,11 +1,12 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
+const Stream = require('stremio/routes/MetaDetails/StreamsList/Stream');
 const { MetaPreview, CONSTANTS } = require('stremio/common');
 const styles = require('./styles');
 
 const InfoMenu = ({ className, ...props }) => {
-    // TODO handle stream and addon
+    // TODO handle addon ui
     const metaItem = React.useMemo(() => {
         return props.metaItem !== null ?
             {
@@ -36,13 +37,25 @@ const InfoMenu = ({ className, ...props }) => {
                     :
                     null
             }
+            {
+                props.stream !== null ?
+                    <Stream
+                        {...props.stream}
+                        className={classnames(styles['stream'], 'active')}
+                        addonName={props.addon !== null ? props.addon.manifest.name : ''}
+                    />
+                    :
+                    null
+            }
         </div>
     );
 };
 
 InfoMenu.propTypes = {
     className: PropTypes.string,
-    metaItem: PropTypes.object
+    metaItem: PropTypes.object,
+    addon: PropTypes.object,
+    stream: PropTypes.object
 };
 
 module.exports = InfoMenu;
