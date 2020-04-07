@@ -305,7 +305,7 @@ const Player = ({ urlParams }) => {
 
                     break;
                 }
-                case 'KeyM': {
+                case 'KeyI': {
                     closeSubtitlesMenu();
                     if (info !== null) {
                         toggleInfoMenu();
