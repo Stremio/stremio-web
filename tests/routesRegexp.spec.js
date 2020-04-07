@@ -14,6 +14,11 @@ describe('routesRegexp', () => {
     });
 
     describe('board route regexp', () => {
+        it('match empty path', async () => {
+            expect(Array.from(''.match(routesRegexp.board.regexp)))
+                .toEqual(['']);
+        });
+
         it('match /', async () => {
             expect(Array.from('/'.match(routesRegexp.board.regexp)))
                 .toEqual(['/']);
