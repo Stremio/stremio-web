@@ -2,11 +2,11 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Stream = require('stremio/routes/MetaDetails/StreamsList/Stream');
+// const AddonDetails = require('stremio/common/AddonDetailsModal/AddonDetails');
 const { MetaPreview, CONSTANTS } = require('stremio/common');
 const styles = require('./styles');
 
 const InfoMenu = ({ className, ...props }) => {
-    // TODO handle addon ui
     const metaItem = React.useMemo(() => {
         return props.metaItem !== null ?
             {
@@ -47,6 +47,20 @@ const InfoMenu = ({ className, ...props }) => {
                     :
                     null
             }
+            {/* {
+                props.addon !== null ?
+                    <AddonDetails
+                        id={props.addon.manifest.id}
+                        name={props.addon.manifest.name}
+                        version={props.addon.manifest.version}
+                        logo={props.addon.manifest.logo}
+                        description={props.addon.manifest.description}
+                        types={props.addon.manifest.types}
+                        transportUrl={props.addon.transportUrl}
+                    />
+                    :
+                    null
+            } */}
         </div>
     );
 };
