@@ -10,28 +10,10 @@ const routeConfigForPath = require('./routeConfigForPath');
 const urlParamsForPath = require('./urlParamsForPath');
 
 const Router = ({ className, onPathNotMatch, ...props }) => {
-    const { homePath, viewsConfig } = React.useMemo(() => ({
-        homePath: props.homePath,
-        viewsConfig: props.viewsConfig
-    }), []);
+    const viewsConfig = React.useMemo(() => props.viewsConfig, []);
     const [views, setViews] = React.useState(() => {
         return Array(viewsConfig.length).fill(null);
     });
-    React.useLayoutEffect(() => {
-        if (typeof homePath === 'string') {
-            const { pathname, path } = UrlUtils.parse(window.location.hash.slice(1));
-            if (homePath !== path) {
-                window.location.replace(`#${homePath}`);
-                const routeConfig = typeof pathname === 'string' ?
-                    routeConfigForPath(viewsConfig, pathname)
-                    :
-                    null;
-                if (routeConfig) {
-                    window.location = `#${path}`;
-                }
-            }
-        }
-    }, []);
     React.useLayoutEffect(() => {
         const onLocationHashChange = () => {
             const { pathname, query } = UrlUtils.parse(window.location.hash.slice(1));
@@ -111,7 +93,6 @@ const Router = ({ className, onPathNotMatch, ...props }) => {
 
 Router.propTypes = {
     className: PropTypes.string,
-    homePath: PropTypes.string,
     onPathNotMatch: PropTypes.func,
     viewsConfig: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.exact({
         regexp: PropTypes.instanceOf(RegExp).isRequired,
