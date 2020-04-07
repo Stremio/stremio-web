@@ -47,7 +47,6 @@ const mapMetaDetailsState = (meta_details) => {
     const streams_resources = meta_details.streams_resources.map((stream_resource) => {
         return stream_resource.content.type === 'Ready' ?
             {
-
                 request: stream_resource.request,
                 content: {
                     type: 'Ready',
