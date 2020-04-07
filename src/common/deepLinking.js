@@ -22,15 +22,8 @@ const withMetaItem = ({ metaItem }) => {
 };
 
 const withLibItem = ({ libItem, streams = {} }) => {
-    const videoId = typeof libItem.state.video_id === 'string' ?
-        libItem.state.video_id
-        :
-        typeof libItem.behaviorHints.defaultVideoId === 'string' ?
-            libItem.behaviorHints.defaultVideoId
-            :
-            null;
-    const [stream, streamTransportUrl, metaTransportUrl] = typeof videoId === 'string' && typeof streams[`${encodeURIComponent(libItem._id)}/${encodeURIComponent(videoId)}`] === 'object' ?
-        streams[`${encodeURIComponent(libItem._id)}/${encodeURIComponent(videoId)}`]
+    const [stream, streamTransportUrl, metaTransportUrl] = typeof libItem.state.video_id === 'string' && typeof streams[`${encodeURIComponent(libItem._id)}/${encodeURIComponent(libItem.state.video_id)}`] === 'object' ?
+        streams[`${encodeURIComponent(libItem._id)}/${encodeURIComponent(libItem.state.video_id)}`]
         :
         [];
     return {
@@ -38,13 +31,16 @@ const withLibItem = ({ libItem, streams = {} }) => {
             `#/metadetails/${encodeURIComponent(libItem.type)}/${encodeURIComponent(libItem._id)}`
             :
             null,
-        meta_details_streams: typeof videoId === 'string' ?
-            `#/metadetails/${encodeURIComponent(libItem.type)}/${encodeURIComponent(libItem._id)}/${encodeURIComponent(videoId)}`
+        meta_details_streams: typeof libItem.state.video_id === 'string' ?
+            `#/metadetails/${encodeURIComponent(libItem.type)}/${encodeURIComponent(libItem._id)}/${encodeURIComponent(libItem.state.video_id)}`
             :
-            null,
+            typeof libItem.behaviorHints.defaultVideoId === 'string' ?
+                `#/metadetails/${encodeURIComponent(libItem.type)}/${encodeURIComponent(libItem._id)}/${encodeURIComponent(libItem.behaviorHints.defaultVideoId)}`
+                :
+                null,
         // TODO check if stream is external
-        player: typeof videoId === 'string' && typeof stream === 'object' && typeof streamTransportUrl === 'string' && typeof metaTransportUrl === 'string' ?
-            `#/player/${encodeURIComponent(serializeStream(stream))}/${encodeURIComponent(streamTransportUrl)}/${encodeURIComponent(metaTransportUrl)}/${encodeURIComponent(libItem.type)}/${encodeURIComponent(libItem._id)}/${encodeURIComponent(videoId)}`
+        player: typeof libItem.state.video_id === 'string' && typeof stream === 'object' && typeof streamTransportUrl === 'string' && typeof metaTransportUrl === 'string' ?
+            `#/player/${encodeURIComponent(serializeStream(stream))}/${encodeURIComponent(streamTransportUrl)}/${encodeURIComponent(metaTransportUrl)}/${encodeURIComponent(libItem.type)}/${encodeURIComponent(libItem._id)}/${encodeURIComponent(libItem.state.video_id)}`
             :
             null
     };
