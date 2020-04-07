@@ -7,7 +7,7 @@ const initMetaDetailsState = () => ({
     streams_resources: []
 });
 
-const mapMetaDetailsState = (meta_details) => {
+const mapMetaDetailsStateWithCtx = (meta_details, ctx) => {
     const selected = meta_details.selected;
     const meta_resources = meta_details.meta_resources.map((meta_resource) => {
         return meta_resource.content.type === 'Ready' ?
@@ -74,7 +74,9 @@ const mapMetaDetailsState = (meta_details) => {
             :
             stream_resource;
     });
-    return { selected, meta_resources, streams_resources };
+    const metaDetailsBase = meta_details.meta_resources.map((metaResource) => metaResource.request.base);
+    const addons = ctx.profile.addons.filter((addon) => metaDetailsBase.includes(addon.transportUrl));
+    return { selected, meta_resources, streams_resources, addons };
 };
 
 const useMetaDetails = (urlParams) => {
@@ -112,7 +114,7 @@ const useMetaDetails = (urlParams) => {
     return useModelState({
         model: 'meta_details',
         action: loadMetaDetailsAction,
-        map: mapMetaDetailsState,
+        mapWithCtx: mapMetaDetailsStateWithCtx,
         init: initMetaDetailsState
     });
 };
