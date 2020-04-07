@@ -58,7 +58,6 @@ const App = () => {
                             <CoreEventsToaster />
                             <Router
                                 className={styles['router']}
-                                homePath={'/'}
                                 viewsConfig={routerViewsConfig}
                                 onPathNotMatch={onPathNotMatch}
                             />
