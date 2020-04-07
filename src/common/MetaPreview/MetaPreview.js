@@ -64,10 +64,12 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
             [];
     }, [links]);
     const trailerHref = React.useMemo(() => {
-        return typeof trailer === 'object' && trailer !== null ?
-            deepLinking.withStream({ stream: trailer }).player
-            :
-            null;
+        if (typeof trailer !== 'object' || trailer === null) {
+            return null;
+        }
+
+        const deepLinks = deepLinking.withStream({ stream: trailer });
+        return deepLinks.player;
     }, [trailer]);
     const renderLogoFallback = React.useMemo(() => () => (
         <Icon className={styles['logo-placeholder-icon']} icon={'ic_broken_link'} />
