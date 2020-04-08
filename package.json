@@ -15,7 +15,7 @@
     },
     "dependencies": {
         "@sentry/browser": "5.11.1",
-        "@stremio/stremio-core-web": "0.10.0",
+        "@stremio/stremio-core-web": "0.11.0",
         "a-color-picker": "1.2.1",
         "classnames": "2.2.6",
         "events": "1.1.1",
