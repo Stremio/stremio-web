@@ -38,3 +38,7 @@ Discover
 
 Meta Details
 ![Alt text](/screenshots/metadetails.png "Optional Title")
+
+## License
+
+Stremio is copyright 2017-2020 Smart code and available under GPLv2 license. See the [LICENSE](/LICENSE.md) file in the project for more information.
