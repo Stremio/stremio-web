@@ -1,4 +1,4 @@
-# Stremio - the next generation media center
+# Stremio - The media center you need
 
 ![Build](https://github.com/stremio/stremio-web/workflows/Build/badge.svg?branch=development)
 
