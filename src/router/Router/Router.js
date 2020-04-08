@@ -18,11 +18,8 @@ const Router = ({ className, onPathNotMatch, ...props }) => {
         const onLocationHashChange = () => {
             const { pathname, query } = UrlUtils.parse(window.location.hash.slice(1));
             const queryParams = new URLSearchParams(typeof query === 'string' ? query : '');
-            const routeConfig = typeof pathname === 'string' ?
-                routeConfigForPath(viewsConfig, pathname)
-                :
-                null;
-            if (!routeConfig) {
+            const routeConfig = routeConfigForPath(viewsConfig, typeof pathname === 'string' ? pathname : '');
+            if (routeConfig === null) {
                 if (typeof onPathNotMatch === 'function') {
                     const component = onPathNotMatch();
                     if (ReactIs.isValidElementType(component)) {
@@ -40,7 +37,7 @@ const Router = ({ className, onPathNotMatch, ...props }) => {
                 return;
             }
 
-            const urlParams = urlParamsForPath(routeConfig, pathname);
+            const urlParams = urlParamsForPath(routeConfig, typeof pathname === 'string' ? pathname : '');
             const routeViewIndex = viewsConfig.findIndex((vc) => vc.includes(routeConfig));
             const routeIndex = viewsConfig[routeViewIndex].findIndex((rc) => rc === routeConfig);
             setViews((views) => {
