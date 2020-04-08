@@ -39,7 +39,8 @@ const mapMetaDetailsStateWithCtx = (meta_details, ctx) => {
                             })
                         }))
                     }
-                }
+                },
+                addon: ctx.profile.addons.find((addon) => addon.transportUrl === meta_resource.request.base)
             }
             :
             meta_resource;
@@ -74,9 +75,7 @@ const mapMetaDetailsStateWithCtx = (meta_details, ctx) => {
             :
             stream_resource;
     });
-    const metaDetailsBase = meta_details.meta_resources.map((metaResource) => metaResource.request.base);
-    const addons = ctx.profile.addons.filter((addon) => metaDetailsBase.includes(addon.transportUrl));
-    return { selected, meta_resources, streams_resources, addons };
+    return { selected, meta_resources, streams_resources };
 };
 
 const useMetaDetails = (urlParams) => {
