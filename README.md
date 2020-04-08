@@ -30,14 +30,14 @@ yarn build
 
 ## Screenshots
 
-Board
-![Alt text](/screenshots/board.png "Optional Title")
+### Board:
+![Board](/screenshots/board.png)
 
-Discover
-![Alt text](/screenshots/discover.png "Optional Title")
+### Discover:
+![Discover](/screenshots/discover.png)
 
-Meta Details
-![Alt text](/screenshots/metadetails.png "Optional Title")
+### Meta Details:
+![Meta Details](/screenshots/metadetails.png)
 
 ## License
 
