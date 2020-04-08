@@ -27,3 +27,14 @@ yarn start
 ```bash
 yarn build
 ```
+
+## Screenshots
+
+Board
+![Alt text](/screenshots/board.png "Optional Title")
+
+Discover
+![Alt text](/screenshots/discover.png "Optional Title")
+
+Meta Details
+![Alt text](/screenshots/metadetails.png "Optional Title")
