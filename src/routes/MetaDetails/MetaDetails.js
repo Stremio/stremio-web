@@ -1,6 +1,6 @@
 const React = require('react');
 const PropTypes = require('prop-types');
-const { HorizontalNavBar, MetaPreview, Image, useInLibrary } = require('stremio/common');
+const { VerticalNavBar, HorizontalNavBar, MetaPreview, Image, useInLibrary } = require('stremio/common');
 const StreamsList = require('./StreamsList');
 const VideosList = require('./VideosList');
 const useMetaDetails = require('./useMetaDetails');
@@ -9,12 +9,13 @@ const styles = require('./styles');
 
 const MetaDetails = ({ urlParams }) => {
     const metaDetails = useMetaDetails(urlParams);
-    const [metaResourceRef, metaResources, selectedMetaResource] = useSelectableResource(
+    const [metaResourceRef, metaResources, selectedMetaResource, selectResource] = useSelectableResource(
         metaDetails.selected !== null ? metaDetails.selected.meta_resource_ref : null,
         metaDetails.meta_resources
     );
     const streamsResourceRef = metaDetails.selected !== null ? metaDetails.selected.streams_resource_ref : null;
     const streamsResources = metaDetails.streams_resources;
+    const metaResourcesReady = metaDetails.meta_resources.filter((metaResource) => metaResource.content.type === 'Ready');
     const selectedVideo = React.useMemo(() => {
         return streamsResourceRef !== null && selectedMetaResource !== null ?
             selectedMetaResource.content.content.videos.reduce((result, video) => {
@@ -67,6 +68,22 @@ const MetaDetails = ({ urlParams }) => {
                                                         alt={' '}
                                                     />
                                                 </div>
+                                                :
+                                                null
+                                        }
+                                        {
+                                            metaResourcesReady.length > 0 ?
+                                                <VerticalNavBar
+                                                    className={styles['vertical-nav-bar']}
+                                                    detailsMenu={true}
+                                                    tabs={metaResourcesReady.map((metaResource) => ({
+                                                        id: metaResource.addon.transportUrl,
+                                                        label: metaResource.addon.manifest.name,
+                                                        icon: metaResource.addon.manifest.logo,
+                                                        onClick: () => { selectResource(metaResource.request); }
+                                                    }))}
+                                                    selected={selectedMetaResource.request.base}
+                                                />
                                                 :
                                                 null
                                         }
