@@ -1,3 +1,5 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
 const { HTMLVideo, YouTubeVideo, MPVVideo, withStreamingServer } = require('stremio-video');
 
 const selectVideoImplementation = (shell, stream) => {

@@ -1,3 +1,5 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
 var VTTJS = require('vtt.js');
 var binarySearchUpperBound = require('./binarySearchUpperBound');
 

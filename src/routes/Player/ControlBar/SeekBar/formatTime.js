@@ -1,3 +1,5 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
 const formatUnit = (value) => {
     return ('0' + value).slice(-1 * Math.max(value.toString().length, 2));
 };
