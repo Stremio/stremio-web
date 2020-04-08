@@ -1,3 +1,5 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
 const routeConfigForPath = (viewsConfig, path) => {
     for (const viewConfig of viewsConfig) {
         for (const routeConfig of viewConfig) {

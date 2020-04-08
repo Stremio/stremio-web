@@ -1,3 +1,5 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
 const isEqual = require('lodash.isequal');
 const { useServices } = require('stremio/services');
 const { useDeepEqualMemo } = require('stremio/common');

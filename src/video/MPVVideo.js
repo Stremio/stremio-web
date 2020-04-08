@@ -1,3 +1,5 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
 var EventEmitter = require('events');
 
 var MPV_CRITICAL_ERROR_CODES = [];

@@ -1,3 +1,5 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
 const path = require('path');
 const child_process = require('child_process');
 const webpack = require('webpack');

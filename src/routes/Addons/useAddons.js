@@ -1,3 +1,5 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
 const React = require('react');
 const { useServices } = require('stremio/services');
 const { useModelState } = require('stremio/common');

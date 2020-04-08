@@ -1,3 +1,5 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
 const EventEmitter = require('events');
 const { default: init, StremioCoreWeb } = require('@stremio/stremio-core-web');
 
