@@ -11,7 +11,7 @@ const BufferingLoader = ({ className, logo, progress }) => {
     return (
         <div className={classnames(className, styles['buffering-loader-container'])}>
             <Image
-                className={classnames(styles['buffering-loader'], hasProgress || styles['loader-animation'])}
+                className={classnames(styles['buffering-loader'], hasProgress || styles['pulsing'])}
                 src={logo}
                 alt={' '}
                 fallbackSrc={'/images/stremio_symbol.png'}
