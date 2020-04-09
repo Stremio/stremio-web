@@ -105,6 +105,7 @@ const MetaDetails = ({ urlParams }) => {
                                             inLibrary={inLibrary}
                                             toggleInLibrary={toggleInLibrary}
                                         />
+                                        <div className={styles['spacing']} />
                                     </React.Fragment>
                                     :
                                     <MetaPreview.Placeholder className={styles['meta-preview']} />
