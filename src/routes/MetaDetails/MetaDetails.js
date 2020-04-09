@@ -75,11 +75,10 @@ const MetaDetails = ({ urlParams }) => {
                                             metaResourcesReady.length > 0 ?
                                                 <VerticalNavBar
                                                     className={styles['vertical-nav-bar']}
-                                                    detailsMenu={true}
                                                     tabs={metaResourcesReady.map((metaResource) => ({
                                                         id: metaResource.addon.transportUrl,
                                                         label: metaResource.addon.manifest.name,
-                                                        icon: metaResource.addon.manifest.logo,
+                                                        logo: metaResource.addon.manifest.logo,
                                                         onClick: () => { selectResource(metaResource.request); }
                                                     }))}
                                                     selected={selectedMetaResource.request.base}
