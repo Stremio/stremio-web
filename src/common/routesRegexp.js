@@ -1,10 +1,12 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
 const routesRegexp = {
     intro: {
         regexp: /^\/intro$/,
         urlParamsNames: []
     },
     board: {
-        regexp: /^\/$/,
+        regexp: /^\/?$/,
         urlParamsNames: []
     },
     discover: {
@@ -12,8 +14,12 @@ const routesRegexp = {
         urlParamsNames: ['transportUrl', 'type', 'catalogId']
     },
     library: {
-        regexp: /^\/library(?:\/([^/]*)\/([^/]*))?$/,
-        urlParamsNames: ['type', 'sort']
+        regexp: /^\/library(?:\/([^/]*))?$/,
+        urlParamsNames: ['type']
+    },
+    continuewatching: {
+        regexp: /^\/continuewatching(?:\/([^/]*))?$/,
+        urlParamsNames: ['type']
     },
     search: {
         regexp: /^\/search$/,
@@ -32,8 +38,8 @@ const routesRegexp = {
         urlParamsNames: []
     },
     player: {
-        regexp: /^\/player\/([^/]*)(?:\/([^/]*)\/([^/]*)\/([^/]*)\/([^/]*))?$/,
-        urlParamsNames: ['stream', 'transportUrl', 'type', 'id', 'videoId']
+        regexp: /^\/player\/([^/]*)(?:\/([^/]*)\/([^/]*)\/([^/]*)\/([^/]*)\/([^/]*))?$/,
+        urlParamsNames: ['stream', 'streamTransportUrl', 'metaTransportUrl', 'type', 'id', 'videoId']
     }
 };
 

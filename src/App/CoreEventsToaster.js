@@ -1,3 +1,5 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
 const React = require('react');
 const { useServices } = require('stremio/services');
 const { useToast } = require('stremio/common');
@@ -13,8 +15,7 @@ const CoreEventsToaster = () => {
                     type: 'error',
                     title: args.source.event,
                     message: args.error.message,
-                    icon: 'ic_warning',
-                    timeout: 10000
+                    timeout: 4000
                 });
             }
         };

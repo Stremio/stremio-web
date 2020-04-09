@@ -1,3 +1,7 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
+@import (reference) '~stremio-colors/dist/less/stremio-colors.less';
+
 :import('~stremio/common/Popup/styles.less') {
     popup-menu-container: menu-container;
 }
@@ -7,24 +11,23 @@
     flex-direction: row;
     align-items: center;
     padding: 0 1rem;
-    background-color: var(--color-backgroundlighter);
+    background-color: @color-background;
 
     &:global(.active) {
-        background-color: var(--color-surfacelight);
-
         .label {
-            color: var(--color-backgrounddarker);
+            color: @color-surface-light5-90;
         }
 
         .icon {
-            fill: var(--color-backgrounddarker);
+            fill: @color-surface-light5-90;
         }
     }
 
-    .label {
+    >.label {
         flex: 1;
         max-height: 2.4em;
-        color: var(--color-surfacelighter);
+        font-weight: 500;
+        color: @color-secondaryvariant1-90;
     }
 
     .icon {
@@ -32,64 +35,66 @@
         width: 1rem;
         height: 1rem;
         margin-left: 1rem;
-        fill: var(--color-surfacelighter);
+        fill: @color-secondaryvariant1-90;
     }
 
     .popup-menu-container {
         width: 100%;
+    }
+}
 
-        .menu-container {
-            .option-container {
-                display: flex;
-                flex-direction: row;
-                align-items: center;
-                padding: 1rem;
-                background-color: var(--color-backgroundlighter);
+.modal-container, .popup-menu-container {
+    .menu-container {
+        .option-container {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 1rem;
+            background-color: @color-background;
 
-                &:global(.selected) {
-                    background-color: var(--color-surfacedarker);
-
-                    .icon {
-                        display: block;
-                    }
-                }
-
-                &:hover, &:focus {
-                    background-color: var(--color-surfacedark);
-                }
-
-                .label {
-                    flex: 1;
-                    max-height: 4.8em;
-                    color: var(--color-surfacelighter);
-                }
-
+            &:global(.selected) {
                 .icon {
-                    flex: none;
-                    display: none;
-                    width: 1rem;
-                    height: 1rem;
-                    margin-left: 1rem;
-                    fill: var(--color-surfacelighter);
+                    display: block;
                 }
             }
 
-            .no-options-container {
-                display: flex;
-                flex-direction: row;
-                align-items: center;
-                justify-content: center;
-                padding: 1rem;
-                background-color: var(--color-backgroundlighter);
+            &:hover, &:focus {
+                background-color: @color-background-light2;
+            }
 
-                .label {
-                    flex-grow: 0;
-                    flex-shrink: 1;
-                    flex-basis: auto;
-                    font-size: 1.2rem;
-                    text-align: center;
-                    color: var(--color-surfacelighter);
-                }
+            .label {
+                flex: 1;
+                max-height: 4.8em;
+                color: @color-surface-light5-90;
+            }
+
+            .icon {
+                flex: none;
+                display: none;
+                width: 0.5rem;
+                height: 0.5rem;
+                border-radius: 100%;
+                margin-left: 1rem;
+                background-color: @color-accent3-90;
+            }
+        }
+
+        .no-options-container {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            background-color: @color-background;
+
+            .label {
+                flex-grow: 0;
+                flex-shrink: 1;
+                flex-basis: auto;
+                font-size: 1.2rem;
+                font-weight: 500;
+                text-align: center;
+                color: @color-surface-light5-90;
             }
         }
     }

@@ -1,3 +1,5 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
 const React = require('react');
 const PropTypes = require('prop-types');
 const { TextInput } = require('stremio/common');
@@ -9,11 +11,16 @@ const CredentialsTextInput = React.forwardRef((props, ref) => {
         }
 
         if (!event.nativeEvent.navigationPrevented) {
-            event.stopPropagation();
-            if (event.key === 'ArrowDown') {
-                window.navigate('down');
-            } else if (event.key === 'ArrowUp') {
-                window.navigate('up');
+            if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
+                event.nativeEvent.spatialNavigationPrevented = true;
+            }
+
+            if (!event.shiftKey) {
+                if (event.key === 'ArrowDown') {
+                    window.navigate('down');
+                } else if (event.key === 'ArrowUp') {
+                    window.navigate('up');
+                }
             }
         }
     }, [props.onKeyDown]);

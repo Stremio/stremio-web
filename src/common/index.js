@@ -1,32 +1,41 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
 const AddonDetailsModal = require('./AddonDetailsModal');
 const Button = require('./Button');
 const Checkbox = require('./Checkbox');
 const ColorInput = require('./ColorInput');
 const Image = require('./Image');
-const MainNavBar = require('./MainNavBar');
+const LibItem = require('./LibItem');
+const MainNavBars = require('./MainNavBars');
 const MetaItem = require('./MetaItem');
 const MetaPreview = require('./MetaPreview');
 const MetaRow = require('./MetaRow');
 const ModalDialog = require('./ModalDialog');
 const Multiselect = require('./Multiselect');
-const NavBar = require('./NavBar');
+const { HorizontalNavBar, VerticalNavBar } = require('./NavBar');
 const PaginationInput = require('./PaginationInput');
 const PlayIconCircleCentered = require('./PlayIconCircleCentered');
 const Popup = require('./Popup');
+const SearchBar = require('./SearchBar');
 const SharePrompt = require('./SharePrompt');
 const Slider = require('./Slider');
 const TextInput = require('./TextInput');
 const { ToastProvider, useToast } = require('./Toast');
+const comparatorWithPriorities = require('./comparatorWithPriorities');
+const CONSTANTS = require('./CONSTANTS');
+const deepLinking = require('./deepLinking');
+const languageNames = require('./languageNames');
 const routesRegexp = require('./routesRegexp');
 const useAnimationFrame = require('./useAnimationFrame');
 const useBinaryState = require('./useBinaryState');
-const useCoreEvent = require('./useCoreEvent');
 const useDeepEqualEffect = require('./useDeepEqualEffect');
+const useDeepEqualMemo = require('./useDeepEqualMemo');
 const useDeepEqualState = require('./useDeepEqualState');
 const useFullscreen = require('./useFullscreen');
 const useInLibrary = require('./useInLibrary');
 const useLiveRef = require('./useLiveRef');
 const useModelState = require('./useModelState');
+const useProfile = require('./useProfile');
 
 module.exports = {
     AddonDetailsModal,
@@ -34,29 +43,37 @@ module.exports = {
     Checkbox,
     ColorInput,
     Image,
-    MainNavBar,
+    LibItem,
+    MainNavBars,
     MetaItem,
     MetaPreview,
     MetaRow,
     ModalDialog,
     Multiselect,
-    NavBar,
+    HorizontalNavBar,
+    VerticalNavBar,
     PaginationInput,
     PlayIconCircleCentered,
     Popup,
+    SearchBar,
     SharePrompt,
     Slider,
     TextInput,
     ToastProvider,
     useToast,
+    comparatorWithPriorities,
+    CONSTANTS,
+    deepLinking,
+    languageNames,
     routesRegexp,
     useAnimationFrame,
     useBinaryState,
-    useCoreEvent,
     useDeepEqualEffect,
+    useDeepEqualMemo,
     useDeepEqualState,
     useFullscreen,
     useInLibrary,
     useLiveRef,
-    useModelState
+    useModelState,
+    useProfile,
 };

@@ -1,8 +1,11 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
 const React = require('react');
 const { useServices } = require('stremio/services');
-const { useModelState } = require('stremio/common');
+const { CONSTANTS, deepLinking, useModelState, comparatorWithPriorities } = require('stremio/common');
 
 const initDiscoverState = () => ({
+    selected: null,
     selectable: {
         types: [],
         catalogs: [],
@@ -14,32 +17,39 @@ const initDiscoverState = () => ({
 });
 
 const mapDiscoverState = (discover) => {
-    const selectable = discover.selectable;
+    const selected = discover.selected;
+    const selectable = {
+        types: discover.selectable.types.sort((t1, t2) => {
+            return comparatorWithPriorities(CONSTANTS.TYPE_PRIORITIES)(t1.name, t2.name);
+        }),
+        catalogs: discover.selectable.catalogs,
+        extra: discover.selectable.extra,
+        has_next_page: discover.selectable.has_next_page,
+        has_prev_page: discover.selectable.has_prev_page,
+    };
     const catalog_resource = discover.catalog_resource !== null && discover.catalog_resource.content.type === 'Ready' ?
         {
-            ...discover.catalog_resource,
+            request: discover.catalog_resource.request,
             content: {
-                ...discover.catalog_resource.content,
+                type: 'Ready',
                 content: discover.catalog_resource.content.content.map((metaItem) => ({
                     type: metaItem.type,
                     name: metaItem.name,
                     logo: metaItem.logo,
-                    background: metaItem.background,
                     poster: metaItem.poster,
-                    posterShape: metaItem.posterShape,
+                    posterShape: metaItem.posterShape === 'landscape' ? 'square' : metaItem.posterShape,
                     runtime: metaItem.runtime,
                     releaseInfo: metaItem.releaseInfo,
                     released: new Date(metaItem.released),
                     description: metaItem.description,
-                    links: metaItem.links,
                     trailer: metaItem.trailer,
-                    href: `#/metadetails/${encodeURIComponent(metaItem.type)}/${encodeURIComponent(metaItem.id)}` // TODO this should redirect with videoId at some cases
+                    deepLinks: deepLinking.withMetaItem({ metaItem })
                 }))
             }
         }
         :
         discover.catalog_resource;
-    return { selectable, catalog_resource };
+    return { selected, selectable, catalog_resource };
 };
 
 const onNewDiscoverState = (discover) => {
@@ -47,10 +57,14 @@ const onNewDiscoverState = (discover) => {
         return {
             action: 'Load',
             args: {
-                load: 'CatalogFiltered',
-                args: discover.selectable.types[0].load_request
+                model: 'CatalogWithFilters',
+                args: {
+                    request: discover.selectable.types[0].request
+                }
             }
         };
+    } else {
+        return null;
     }
 };
 
@@ -61,14 +75,16 @@ const useDiscover = (urlParams, queryParams) => {
             return {
                 action: 'Load',
                 args: {
-                    load: 'CatalogFiltered',
+                    model: 'CatalogWithFilters',
                     args: {
-                        base: urlParams.transportUrl,
-                        path: {
-                            resource: 'catalog',
-                            type_name: urlParams.type,
-                            id: urlParams.catalogId,
-                            extra: Array.from(queryParams.entries())
+                        request: {
+                            base: urlParams.transportUrl,
+                            path: {
+                                resource: 'catalog',
+                                type_name: urlParams.type,
+                                id: urlParams.catalogId,
+                                extra: Array.from(queryParams.entries())
+                            }
                         }
                     }
                 }
@@ -79,8 +95,10 @@ const useDiscover = (urlParams, queryParams) => {
                 return {
                     action: 'Load',
                     args: {
-                        load: 'CatalogFiltered',
-                        args: discover.selectable.types[0].load_request
+                        model: 'CatalogWithFilters',
+                        args: {
+                            request: discover.selectable.types[0].request
+                        }
                     }
                 };
             } else {

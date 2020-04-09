@@ -1,91 +1,48 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
 const React = require('react');
-const { useServices } = require('stremio/services');
-const { useModelState } = require('stremio/common');
+const { CONSTANTS, deepLinking, useModelState, comparatorWithPriorities } = require('stremio/common');
 
 const initLibraryState = () => ({
-    library_state: {
-        type: 'NotLoaded'
-    },
     selected: null,
     type_names: [],
     lib_items: []
 });
 
 const mapLibraryState = (library) => {
-    const library_state = library.library_state;
     const selected = library.selected;
-    const type_names = library.type_names;
-    const lib_items = library.lib_items.map((lib_item) => ({
-        id: lib_item._id,
-        type: lib_item.type,
-        name: lib_item.name,
-        poster: lib_item.poster,
-        posterShape: lib_item.posterShape,
-        progress: lib_item.state.timeOffset > 0 && lib_item.state.duration > 0 ?
-            lib_item.state.timeOffset / lib_item.state.duration
+    const type_names = library.type_names.sort(comparatorWithPriorities(CONSTANTS.TYPE_PRIORITIES));
+    const lib_items = library.lib_items.map((libItem) => ({
+        id: libItem._id,
+        type: libItem.type,
+        name: libItem.name,
+        poster: libItem.poster,
+        posterShape: libItem.posterShape === 'landscape' ? 'square' : libItem.posterShape,
+        progress: libItem.state.timeOffset > 0 && libItem.state.duration > 0 ?
+            libItem.state.timeOffset / libItem.state.duration
             :
             null,
-        videoId: lib_item.state.video_id,
-        href: `#/metadetails/${encodeURIComponent(lib_item.type)}/${encodeURIComponent(lib_item._id)}${lib_item.state.video_id !== null ? `/${encodeURIComponent(lib_item.state.video_id)}` : ''}`
+        deepLinks: deepLinking.withLibItem({ libItem })
     }));
-    return { library_state, selected, type_names, lib_items };
+    return { selected, type_names, lib_items };
 };
 
-const onNewLibraryState = (library) => {
-    if (library.selected === null && library.type_names.length > 0) {
-        return {
-            action: 'Load',
+const useLibrary = (libraryModel, urlParams, queryParams) => {
+    const loadLibraryAction = React.useMemo(() => ({
+        action: 'Load',
+        args: {
+            model: 'LibraryWithFilters',
             args: {
-                load: 'LibraryFiltered',
-                args: {
-                    type_name: library.type_names[0],
-                    sort_prop: null
-                }
-            }
-        };
-    }
-};
-
-const useLibrary = (urlParams) => {
-    const { core } = useServices();
-    const loadLibraryAction = React.useMemo(() => {
-        if (typeof urlParams.type === 'string' && typeof urlParams.sort === 'string') {
-            return {
-                action: 'Load',
-                args: {
-                    load: 'LibraryFiltered',
-                    args: {
-                        type_name: urlParams.type,
-                        sort_prop: urlParams.sort
-                    }
-                }
-            };
-        } else {
-            const library = core.getState('library');
-            if (library.type_names.length > 0) {
-                return {
-                    action: 'Load',
-                    args: {
-                        load: 'LibraryFiltered',
-                        args: {
-                            type_name: library.type_names[0],
-                            sort_prop: null
-                        }
-                    }
-                };
-            } else {
-                return {
-                    action: 'Unload'
-                };
+                type_name: typeof urlParams.type === 'string' ? urlParams.type : null,
+                sort: queryParams.has('sort') ? queryParams.get('sort') : 'lastwatched'
             }
         }
-    }, [urlParams]);
+    }), [urlParams, queryParams]);
     return useModelState({
-        model: 'library',
+        model: libraryModel,
         action: loadLibraryAction,
         map: mapLibraryState,
-        init: initLibraryState,
-        onNewState: onNewLibraryState
+        init: initLibraryState
     });
 };
 

@@ -1,0 +1,20 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
+@import (reference) '~stremio-colors/dist/less/stremio-colors.less';
+
+.vertical-nav-bar-container {
+    width: var(--vertical-nav-bar-size);
+    padding: 1rem 0;
+    background-color: @color-background-dark1;
+    overflow-y: auto;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    .nav-tab-button {
+        width: var(--vertical-nav-bar-size);
+        height: var(--vertical-nav-bar-size);
+    }
+}

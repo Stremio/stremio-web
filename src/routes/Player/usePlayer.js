@@ -1,80 +1,163 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
 const React = require('react');
-const { useModelState } = require('stremio/common');
+const { useServices } = require('stremio/services');
+const { deepLinking, useModelState } = require('stremio/common');
 
 const initPlayerState = () => ({
-    selected: {
-        transport_url: null,
-        type_name: null,
-        id: null,
-        video_id: null,
-        stream: null,
-    },
+    selected: null,
     meta_resource: null,
     subtitles_resources: [],
-    next_video: null
+    next_video: null,
+    lib_item: null
 });
 
 const mapPlayerStateWithCtx = (player, ctx) => {
-    const selected = player.selected;
-    const meta_resource = player.meta_resource;
-    const subtitles_resources = player.subtitles_resources.map((subtitles_resource) => {
-        if (subtitles_resource.content.type === 'Ready') {
-            const origin = ctx.content.addons.reduce((origin, addon) => {
-                if (addon.transportUrl === subtitles_resource.request.base) {
-                    return typeof addon.manifest.name === 'string' && addon.manifest.name.length > 0 ?
-                        addon.manifest.name
-                        :
-                        addon.manifest.id;
-                }
+    const selected = player.selected !== null ?
+        {
+            stream: {
+                ...player.selected.stream,
+                addon: ctx.profile.addons.reduce((result, addon) => {
+                    if (player.selected.stream_resource_request !== null && addon.transportUrl === player.selected.stream_resource_request.base) {
+                        return addon;
+                    }
 
-                return origin;
-            }, subtitles_resource.request.base);
-            subtitles_resource.content.content = subtitles_resource.content.content.map((subtitles) => ({
-                ...subtitles,
-                origin
-            }));
+                    return result;
+                }, null)
+            },
+            stream_resource_request: player.selected.stream_resource_request,
+            meta_resource_request: player.selected.meta_resource_request,
+            subtitles_resource_ref: player.selected.subtitles_resource_ref,
+            video_id: player.selected.video_id
         }
+        :
+        null;
+    const meta_resource = player.meta_resource !== null && player.meta_resource.content.type === 'Ready' ?
+        {
+            request: player.meta_resource.request,
+            content: {
+                type: 'Ready',
+                content: {
+                    ...player.meta_resource.content.content,
+                    released: new Date(
+                        typeof player.meta_resource.content.content.released === 'string' ?
+                            player.meta_resource.content.content.released
+                            :
+                            NaN
+                    ),
+                    videos: player.meta_resource.content.content.videos.map((video) => ({
+                        ...video,
+                        released: new Date(
+                            typeof video.released === 'string' ?
+                                video.released
+                                :
+                                NaN
+                        ),
+                        // TODO add watched and progress
+                        href: `#/metadetails/${player.meta_resource.content.content.type}/${player.meta_resource.content.content.id}/${video.id}`
+                    }))
+                }
+            }
+        }
+        :
+        player.meta_resource;
+    const subtitles_resources = player.subtitles_resources.map((subtitles_resource) => {
+        const request = subtitles_resource.request;
+        const addon = ctx.profile.addons.reduce((result, addon) => {
+            if (addon.transportUrl === subtitles_resource.request.base) {
+                return addon;
+            }
 
-        return subtitles_resource;
-    }, []);
+            return result;
+        }, null);
+        const content = subtitles_resource.content;
+        return { request, addon, content };
+    });
     const next_video = player.next_video;
-    return {
-        selected,
-        meta_resource,
-        subtitles_resources,
-        next_video
-    };
+    const lib_item = player.lib_item;
+    return { selected, meta_resource, subtitles_resources, next_video, lib_item };
 };
 
 const usePlayer = (urlParams) => {
+    const { core } = useServices();
     const loadPlayerAction = React.useMemo(() => {
         try {
-            const stream = JSON.parse(urlParams.stream);
             return {
                 action: 'Load',
                 args: {
-                    load: 'Player',
+                    model: 'Player',
                     args: {
-                        transport_url: urlParams.transportUrl,
-                        type_name: urlParams.type,
-                        id: urlParams.id,
-                        video_id: urlParams.videoId,
-                        stream: stream
+                        stream: deepLinking.deserializeStream(urlParams.stream),
+                        stream_resource_request: typeof urlParams.streamTransportUrl === 'string' && typeof urlParams.type === 'string' && typeof urlParams.videoId === 'string' ?
+                            {
+                                base: urlParams.streamTransportUrl,
+                                path: {
+                                    resource: 'stream',
+                                    type_name: urlParams.type,
+                                    id: urlParams.videoId,
+                                    extra: []
+                                }
+                            }
+                            :
+                            null,
+                        meta_resource_request: typeof urlParams.metaTransportUrl === 'string' && typeof urlParams.type === 'string' && typeof urlParams.id === 'string' ?
+                            {
+                                base: urlParams.metaTransportUrl,
+                                path: {
+                                    resource: 'meta',
+                                    type_name: urlParams.type,
+                                    id: urlParams.id,
+                                    extra: []
+                                }
+                            }
+                            :
+                            null,
+                        subtitles_resource_ref: typeof urlParams.type === 'string' && typeof urlParams.videoId === 'string' ?
+                            {
+                                resource: 'subtitles',
+                                type_name: urlParams.type,
+                                id: urlParams.videoId,
+                                extra: []
+                            }
+                            :
+                            null,
+                        video_id: typeof urlParams.videoId === 'string' ?
+                            urlParams.videoId
+                            :
+                            null
                     }
                 }
             };
-        } catch {
+        } catch (e) {
             return {
                 action: 'Unload'
             };
         }
     }, [urlParams]);
-    return useModelState({
+    const updateLibraryItemState = React.useCallback((time, duration) => {
+        core.dispatch({
+            action: 'Player',
+            args: {
+                action: 'UpdateLibraryItemState',
+                args: { time, duration }
+            }
+        }, 'player');
+    }, []);
+    const pushToLibrary = React.useCallback(() => {
+        core.dispatch({
+            action: 'Player',
+            args: {
+                action: 'PushToLibrary'
+            }
+        }, 'player');
+    }, []);
+    const player = useModelState({
         model: 'player',
         action: loadPlayerAction,
         init: initPlayerState,
         mapWithCtx: mapPlayerStateWithCtx
     });
+    return [player, updateLibraryItemState, pushToLibrary];
 };
 
 module.exports = usePlayer;

@@ -1,3 +1,5 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
 var EventEmitter = require('events');
 var subtitlesParser = require('./subtitlesParser');
 var subtitlesRenderer = require('./subtitlesRenderer');
@@ -8,13 +10,7 @@ var ERROR_CODE = Object.freeze({
     FETCH_FAILED: 70,
     PARSE_FAILED: 71
 });
-var FONT_SIZE = Object.freeze({
-    1: '3vmin',
-    2: '4vmin',
-    3: '5vmin',
-    4: '8vmin',
-    5: '10vmin'
-});
+var SIZE_COEF = 25;
 
 function HTMLSubtitles(options) {
     var containerElement = options && options.containerElement;
@@ -37,7 +33,8 @@ function HTMLSubtitles(options) {
     events.on('error', function() { });
     containerElement.appendChild(stylesElement);
     var subtitlesContainerStylesIndex = stylesElement.sheet.insertRule('#' + containerElement.id + ' .subtitles { position: absolute; right: 0; bottom: 0; left: 0; z-index: 0; text-align: center; }', stylesElement.sheet.cssRules.length);
-    var subtitlesCueStylesIndex = stylesElement.sheet.insertRule('#' + containerElement.id + ' .subtitles .cue { display: inline-block; padding: 0.2em; text-shadow: 0 0 0.03em #222222ff, 0 0 0.03em #222222ff, 0 0 0.03em #222222ff, 0 0 0.03em #222222ff, 0 0 0.03em #222222ff; background-color: #00000000; color: #ffffffff; font-size: ' + FONT_SIZE[2] + '; }', stylesElement.sheet.cssRules.length);
+    var subtitlesCueStylesIndex = stylesElement.sheet.insertRule('#' + containerElement.id + ' .subtitles .cue { display: inline-block; padding: 0.2em; text-shadow: 0 0 0.03em #222222ff, 0 0 0.03em #222222ff, 0 0 0.03em #222222ff, 0 0 0.03em #222222ff, 0 0 0.03em #222222ff; background-color: #00000000; color: #ffffffff; font-size: 4vmin; }', stylesElement.sheet.cssRules.length);
+    stylesElement.sheet.insertRule('#' + containerElement.id + ' .subtitles .cue * { font-size: inherit; }', stylesElement.sheet.cssRules.length);
     containerElement.appendChild(subtitlesElement);
     subtitlesElement.classList.add('subtitles');
 
@@ -60,7 +57,7 @@ function HTMLSubtitles(options) {
                     track.url.length > 0 &&
                     typeof track.origin === 'string' &&
                     track.origin.length > 0 &&
-                    track.origin !== 'EMBEDDED';
+                    track.origin !== 'EMBEDDED IN VIDEO';
             })
             .map(function(track) {
                 return Object.freeze(Object.assign({}, track, {
@@ -164,6 +161,10 @@ function HTMLSubtitles(options) {
                         .then(function(text) {
                             if (typeof text === 'string' && selectedTrackId === selecterdTrack.id) {
                                 cuesByTime = subtitlesParser.parse(text);
+                                if (cuesByTime.times.length === 0) {
+                                    throw new Error('parse failed');
+                                }
+
                                 events.emit('trackLoaded', selecterdTrack);
                             }
                         })
@@ -205,16 +206,14 @@ function HTMLSubtitles(options) {
                     return null;
                 }
 
-                return parseInt(Object.keys(FONT_SIZE).find(function(size) {
-                    return FONT_SIZE[size] === stylesElement.sheet.cssRules[subtitlesCueStylesIndex].style.fontSize;
-                }));
+                return parseInt(stylesElement.sheet.cssRules[subtitlesCueStylesIndex].style.fontSize) * SIZE_COEF
             },
             set: function(value) {
                 if (destroyed || isNaN(value) || value === null) {
                     return;
                 }
 
-                stylesElement.sheet.cssRules[subtitlesCueStylesIndex].style.fontSize = FONT_SIZE[Math.max(1, Math.min(5, parseInt(value)))];
+                stylesElement.sheet.cssRules[subtitlesCueStylesIndex].style.fontSize = Math.floor(value / SIZE_COEF) + 'vmin';
                 events.emit('propChanged', 'size');
             }
         },

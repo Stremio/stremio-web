@@ -13,10 +13,15 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
+      name: Checkout
+    - uses: actions/setup-node@v1
+      name: Setup Node
+      with:
+        registry-url: 'https://npm.pkg.github.com'
     - name: Build
-      run: |
-        echo -e "[url \"https://github.com/\"]\n\tinsteadOf = ssh://git@github.com/" > ~/.gitconfig
-        yarn install && yarn build
+      run: yarn install && yarn build
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - run: zip -r stremio-web.zip ./build
     - name: Upload binaries to release
       uses: svenstaro/upload-release-action@v1-release

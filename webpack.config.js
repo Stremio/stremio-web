@@ -1,10 +1,14 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
 const path = require('path');
+const child_process = require('child_process');
 const webpack = require('webpack');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
+const pachageJson = require('./package.json');
 
 module.exports = (env, argv) => ({
     entry: './src/index.js',
@@ -64,7 +68,9 @@ module.exports = (env, argv) => ({
                                                 flexbox: false,
                                                 grid: false
                                             },
+                                            cssDeclarationSorter: true,
                                             calc: false,
+                                            colormin: false,
                                             convertValues: false,
                                             discardComments: {
                                                 removeAll: true,
@@ -130,11 +136,13 @@ module.exports = (env, argv) => ({
     plugins: [
         new webpack.EnvironmentPlugin({
             DEBUG: argv.mode !== 'production',
+            VERSION: pachageJson.version,
+            COMMIT_HASH: child_process.execSync('git rev-parse HEAD').toString(),
             ...env
         }),
         new webpack.ProgressPlugin(),
         new CopyWebpackPlugin([
-            { from: 'node_modules/stremio-core-web/static', to: '' },
+            { from: 'node_modules/@stremio/stremio-core-web/static', to: '' },
             { from: 'images', to: 'images' },
             { from: 'fonts', to: 'fonts' }
         ]),

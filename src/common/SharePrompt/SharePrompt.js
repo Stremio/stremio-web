@@ -1,3 +1,5 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
@@ -25,7 +27,7 @@ const SharePrompt = ({ className, url }) => {
         if (routeFocused && inputRef.current !== null) {
             inputRef.current.select();
         }
-    }, []);
+    }, [routeFocused]);
     return (
         <div className={classnames(className, styles['share-prompt-container'])}>
             <div className={styles['buttons-container']}>

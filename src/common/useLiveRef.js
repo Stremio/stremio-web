@@ -1,10 +1,10 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
 const React = require('react');
 
-const useLiveRef = (value, dependencies) => {
-    const ref = React.useRef(value);
-    React.useLayoutEffect(() => {
-        ref.current = value;
-    }, dependencies);
+const useLiveRef = (value) => {
+    const ref = React.useRef();
+    ref.current = value;
     return ref;
 };
 

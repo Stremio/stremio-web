@@ -1,33 +1,27 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
+@import (reference) '~stremio-colors/dist/less/stremio-colors.less';
 @import (reference) '~stremio/common/screen-sizes.less';
 
 :import('~stremio/common/MetaRow/styles.less') {
     meta-item: meta-item;
-    see-all-container: see-all-container;
 }
 
 :import('~stremio/common/MetaRow/MetaRowPlaceholder/styles.less') {
     meta-item-placeholder: meta-item;
-    see-all-container-placeholder: see-all-container;
 }
 
 .board-container {
-    display: flex;
-    flex-direction: column;
     width: 100%;
     height: 100%;
-    background-color: var(--color-background);
-
-    .nav-bar {
-        flex: none;
-        align-self: stretch;
-    }
+    background-color: @color-background-dark2;
 
     .board-content {
-        flex: 1;
-        align-self: stretch;
+        width: 100%;
+        height: 100%;
         overflow-y: auto;
 
-        .board-row, .board-row-placeholder {
+        .board-row {
             margin: 4rem 2rem;
 
             &:first-child {
@@ -37,18 +31,22 @@
             &:last-child {
                 margin-bottom: 2rem;
             }
-
-            .see-all-container, .see-all-container-placeholder {
-                width: 12rem;
-            }
         }
     }
 }
 
-@media only screen and (min-width: @large) {
+@media only screen and (max-width: @large) {
     .board-container {
         .board-content {
-            .board-row, .board-row-placeholder {
+            .board-row-poster, .board-row-square {
+                .meta-item, .meta-item-placeholder {
+                    &:nth-child(n+10) {
+                        display: none;
+                    }
+                }
+            }
+
+            .board-row-landscape, .continue-watching-row {
                 .meta-item, .meta-item-placeholder {
                     &:nth-child(n+9) {
                         display: none;
@@ -59,10 +57,18 @@
     }
 }
 
-@media only screen and (max-width: @large) {
+@media only screen and (max-width: @normal) {
     .board-container {
         .board-content {
-            .board-row, .board-row-placeholder {
+            .board-row-poster, .board-row-square {
+                .meta-item, .meta-item-placeholder {
+                    &:nth-child(n+9) {
+                        display: none;
+                    }
+                }
+            }
+
+            .board-row-landscape, .continue-watching-row {
                 .meta-item, .meta-item-placeholder {
                     &:nth-child(n+8) {
                         display: none;
@@ -76,7 +82,15 @@
 @media only screen and (max-width: @medium) {
     .board-container {
         .board-content {
-            .board-row, .board-row-placeholder {
+            .board-row-poster, .board-row-square {
+                .meta-item, .meta-item-placeholder {
+                    &:nth-child(n+8) {
+                        display: none;
+                    }
+                }
+            }
+
+            .board-row-landscape, .continue-watching-row {
                 .meta-item, .meta-item-placeholder {
                     &:nth-child(n+7) {
                         display: none;
@@ -90,7 +104,15 @@
 @media only screen and (max-width: @small) {
     .board-container {
         .board-content {
-            .board-row, .board-row-placeholder {
+            .board-row-poster, .board-row-square {
+                .meta-item, .meta-item-placeholder {
+                    &:nth-child(n+7) {
+                        display: none;
+                    }
+                }
+            }
+
+            .board-row-landscape, .continue-watching-row {
                 .meta-item, .meta-item-placeholder {
                     &:nth-child(n+6) {
                         display: none;
@@ -104,9 +126,39 @@
 @media only screen and (max-width: @xsmall) {
     .board-container {
         .board-content {
-            .board-row, .board-row-placeholder {
+            .board-row-poster, .board-row-square {
+                .meta-item, .meta-item-placeholder {
+                    &:nth-child(n+6) {
+                        display: none;
+                    }
+                }
+            }
+
+            .board-row-landscape, .continue-watching-row {
                 .meta-item, .meta-item-placeholder {
                     &:nth-child(n+5) {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: @minimum) {
+    .board-container {
+        .board-content {
+            .board-row-poster, .board-row-square {
+                .meta-item, .meta-item-placeholder {
+                    &:nth-child(n+5) {
+                        display: none;
+                    }
+                }
+            }
+
+            .board-row-landscape, .continue-watching-row {
+                .meta-item, .meta-item-placeholder {
+                    &:nth-child(n+4) {
                         display: none;
                     }
                 }

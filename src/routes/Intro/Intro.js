@@ -1,12 +1,15 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('stremio-icons/dom');
-const { useRouteFocused } = require('stremio-router');
-const { Button, useCoreEvent } = require('stremio/common');
+const { Modal, useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
+const { Button, Image, useBinaryState } = require('stremio/common');
 const CredentialsTextInput = require('./CredentialsTextInput');
 const ConsentCheckbox = require('./ConsentCheckbox');
+const PasswordResetModal = require('./PasswordResetModal');
 const styles = require('./styles');
 
 const SIGNUP_FORM = 'signup';
@@ -15,13 +18,15 @@ const LOGIN_FORM = 'login';
 const Intro = ({ queryParams }) => {
     const { core } = useServices();
     const routeFocused = useRouteFocused();
-    const emailRef = React.useRef();
-    const passwordRef = React.useRef();
-    const confirmPasswordRef = React.useRef();
-    const termsRef = React.useRef();
-    const privacyPolicyRef = React.useRef();
-    const marketingRef = React.useRef();
-    const errorRef = React.useRef();
+    const emailRef = React.useRef(null);
+    const passwordRef = React.useRef(null);
+    const confirmPasswordRef = React.useRef(null);
+    const termsRef = React.useRef(null);
+    const privacyPolicyRef = React.useRef(null);
+    const marketingRef = React.useRef(null);
+    const errorRef = React.useRef(null);
+    const [passwordRestModalOpen, openPasswordRestModal, closePasswordResetModal] = useBinaryState(false);
+    const [loaderModalOpen, openLoaderModal, closeLoaderModal] = useBinaryState(false);
     const [state, dispatch] = React.useReducer(
         (state, action) => {
             switch (action.type) {
@@ -71,50 +76,45 @@ const Intro = ({ queryParams }) => {
             error: ''
         }
     );
-    useCoreEvent(React.useCallback(({ event, args }) => {
-        switch (event) {
-            case 'UserAuthenticated': {
-                window.location.replace('#/');
-                break;
-            }
-            case 'Error': {
-                if (args.source.event === 'UserAuthenticated') {
-                    // TODO use error.code to match translated message;
-                    dispatch({ type: 'error', error: args.error.message });
-                }
-                break;
-            }
-        }
-    }, []));
     const loginWithFacebook = React.useCallback(() => {
-        FB.login((response) => {
-            if (response.status === 'connected') {
-                fetch('https://www.strem.io/fb-login-with-token/' + encodeURIComponent(response.authResponse.accessToken), { timeout: 10 * 1000 })
-                    .then((resp) => {
-                        if (resp.status < 200 || resp.status >= 300) {
-                            throw new Error('Login failed at getting token from Stremio with status ' + resp.status);
-                        } else {
-                            return resp.json();
-                        }
-                    })
-                    .then(() => {
-                        core.dispatch({
-                            action: 'UserOp',
-                            args: {
-                                userOp: 'Login',
-                                args: {
-                                    email: state.email,
-                                    password: response.authResponse.accessToken
-                                }
+        if (typeof FB !== 'undefined') {
+            FB.login((response) => {
+                if (response.status === 'connected') {
+                    fetch('https://www.strem.io/fb-login-with-token/' + encodeURIComponent(response.authResponse.accessToken), { timeout: 10 * 60 * 1000 })
+                        .then((resp) => {
+                            if (resp.status < 200 || resp.status >= 300) {
+                                throw new Error('Login failed at getting token from Stremio with status ' + resp.status);
+                            } else {
+                                return resp.json();
                             }
+                        })
+                        .then(({ user }) => {
+                            if (!user || typeof user.fbLoginToken !== 'string' || typeof user.email !== 'string') {
+                                throw new Error('Login failed at getting token from Stremio');
+                            }
+                            core.dispatch({
+                                action: 'Ctx',
+                                args: {
+                                    action: 'Authenticate',
+                                    args: {
+                                        type: 'Login',
+                                        email: user.email,
+                                        password: user.fbLoginToken
+                                    }
+                                }
+                            });
+                        })
+                        .catch((err = {}) => {
+                            dispatch({ type: 'error', error: err.message || JSON.stringify(err) });
                         });
-                    })
-                    .catch(() => { });
-            }
-        });
-    }, [state.email, state.password]);
+                } else {
+                    dispatch({ type: 'error', error: 'Login failed at getting token from Facebook' });
+                }
+            });
+        }
+    }, []);
     const loginWithEmail = React.useCallback(() => {
-        if (typeof state.email !== 'string' || state.email.length === 0) {
+        if (typeof state.email !== 'string' || state.email.length === 0 || !emailRef.current.validity.valid) {
             dispatch({ type: 'error', error: 'Invalid email' });
             return;
         }
@@ -122,6 +122,7 @@ const Intro = ({ queryParams }) => {
             dispatch({ type: 'error', error: 'Invalid password' });
             return;
         }
+        openLoaderModal();
         core.dispatch({
             action: 'Ctx',
             args: {
@@ -145,10 +146,10 @@ const Intro = ({ queryParams }) => {
                 action: 'Logout'
             }
         });
-        window.location.replace('#/');
+        window.location = '#/';
     }, [state.termsAccepted]);
     const signup = React.useCallback(() => {
-        if (typeof state.email !== 'string' || state.email.length === 0) {
+        if (typeof state.email !== 'string' || state.email.length === 0 || !emailRef.current.validity.valid) {
             dispatch({ type: 'error', error: 'Invalid email' });
             return;
         }
@@ -168,6 +169,7 @@ const Intro = ({ queryParams }) => {
             dispatch({ type: 'error', error: 'You must accept the Privacy Policy' });
             return;
         }
+        openLoaderModal();
         core.dispatch({
             action: 'Ctx',
             args: {
@@ -231,17 +233,16 @@ const Intro = ({ queryParams }) => {
         dispatch({ type: 'toggle-checkbox', name: 'marketingAccepted' });
     }, []);
     const switchFormOnClick = React.useCallback(() => {
-        const nextQueryParams = new URLSearchParams(queryParams);
-        nextQueryParams.set('form', state.form === SIGNUP_FORM ? LOGIN_FORM : SIGNUP_FORM);
-        window.location.replace(`#/intro?${nextQueryParams}`);
-    }, [queryParams, state.form]);
+        const queryParams = new URLSearchParams([['form', state.form === SIGNUP_FORM ? LOGIN_FORM : SIGNUP_FORM]]);
+        window.location = `#/intro?${queryParams.toString()}`;
+    }, [state.form]);
     React.useEffect(() => {
         if ([LOGIN_FORM, SIGNUP_FORM].includes(queryParams.get('form'))) {
             dispatch({ type: 'set-form', form: queryParams.get('form') });
         }
     }, [queryParams]);
     React.useEffect(() => {
-        if (typeof state.error === 'string' && state.error.length > 0) {
+        if (routeFocused && typeof state.error === 'string' && state.error.length > 0) {
             errorRef.current.scrollIntoView();
         }
     }, [state.error]);
@@ -250,13 +251,73 @@ const Intro = ({ queryParams }) => {
             emailRef.current.focus();
         }
     }, [state.form, routeFocused]);
+    React.useEffect(() => {
+        const onEvent = ({ event, args }) => {
+            switch (event) {
+                case 'UserAuthenticated': {
+                    closeLoaderModal();
+                    window.location = '#/';
+                    break;
+                }
+                case 'Error': {
+                    if (args.source.event === 'UserAuthenticated') {
+                        closeLoaderModal();
+                        dispatch({ type: 'error', error: args.error.message });
+                    }
+
+                    break;
+                }
+            }
+        };
+        if (routeFocused) {
+            core.on('Event', onEvent);
+        }
+        return () => {
+            core.off('Event', onEvent);
+        };
+    }, [routeFocused]);
+    React.useEffect(() => {
+        var initScriptElement = document.createElement('script');
+        var sdkScriptElement = document.createElement('script');
+        initScriptElement.innerHTML = `window.fbAsyncInit = function() {
+                FB.init({
+                    appId: '1537119779906825',
+                    autoLogAppEvents: false,
+                    xfbml: false,
+                    version: 'v2.5'
+                });
+            };`;
+        sdkScriptElement.src = 'https://connect.facebook.net/en_US/sdk.js';
+        sdkScriptElement.async = true;
+        sdkScriptElement.defer = true;
+        document.body.appendChild(initScriptElement);
+        document.body.appendChild(sdkScriptElement);
+        return () => {
+            document.body.removeChild(initScriptElement);
+            document.body.removeChild(sdkScriptElement);
+        };
+    }, []);
     return (
         <div className={styles['intro-container']}>
             <div className={styles['form-container']}>
+                <div className={styles['logo-container']}>
+                    <Image className={styles['logo']} src={'/images/stremio_symbol.png'} alt={' '} />
+                    <Icon className={styles['name']} icon={'ic_stremio'} />
+                </div>
                 <Button className={classnames(styles['form-button'], styles['facebook-button'])} onClick={loginWithFacebook}>
                     <Icon className={styles['icon']} icon={'ic_facebook'} />
                     <div className={styles['label']}>Continue with Facebook</div>
                 </Button>
+                {
+                    state.form === SIGNUP_FORM ?
+                        <Button className={classnames(styles['form-button'], styles['login-form-button'])} onClick={switchFormOnClick}>
+                            Already have an account?
+                            {' '}
+                            <span className={styles['login-label']}>LOG IN</span>
+                        </Button>
+                        :
+                        null
+                }
                 <CredentialsTextInput
                     ref={emailRef}
                     className={styles['credentials-text-input']}
@@ -315,7 +376,7 @@ const Intro = ({ queryParams }) => {
                         </React.Fragment>
                         :
                         <div className={styles['forgot-password-link-container']}>
-                            <Button className={styles['forgot-password-link']} href={'https://www.strem.io/reset-password/'} target={'_blank'}>Forgot password?</Button>
+                            <Button className={styles['forgot-password-link']} onClick={openPasswordRestModal}>Forgot password?</Button>
                         </div>
                 }
                 {
@@ -325,7 +386,7 @@ const Intro = ({ queryParams }) => {
                         null
                 }
                 <Button className={classnames(styles['form-button'], styles['submit-button'])} onClick={state.form === SIGNUP_FORM ? signup : loginWithEmail}>
-                    <div className={styles['label']}>{state.form === SIGNUP_FORM ? 'SING UP' : 'LOG IN'}</div>
+                    <div className={styles['label']}>{state.form === SIGNUP_FORM ? 'Sign up' : 'Log in'}</div>
                 </Button>
                 {
                     state.form === SIGNUP_FORM ?
@@ -335,10 +396,32 @@ const Intro = ({ queryParams }) => {
                         :
                         null
                 }
-                <Button className={classnames(styles['form-button'], styles['switch-form-button'])} onClick={switchFormOnClick}>
-                    <div className={styles['label']}>{state.form === SIGNUP_FORM ? 'LOG IN' : 'SING UP WITH EMAIL'}</div>
-                </Button>
+                {
+                    state.form === LOGIN_FORM ?
+                        <Button className={classnames(styles['form-button'], styles['signup-form-button'])} onClick={switchFormOnClick}>
+                            <div className={styles['label']}>SIGN UP WITH EMAIL</div>
+                        </Button>
+                        :
+                        null
+                }
             </div>
+            {
+                passwordRestModalOpen ?
+                    <PasswordResetModal email={state.email} onCloseRequest={closePasswordResetModal} />
+                    :
+                    null
+            }
+            {
+                loaderModalOpen ?
+                    <Modal className={styles['loading-modal-container']}>
+                        <div className={styles['loader-container']}>
+                            <Icon className={styles['icon']} icon={'ic_user'} />
+                            <div className={styles['label']}>Authenticating...</div>
+                        </div>
+                    </Modal>
+                    :
+                    null
+            }
         </div>
     );
 };

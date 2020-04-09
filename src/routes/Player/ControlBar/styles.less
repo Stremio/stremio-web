@@ -1,29 +1,14 @@
-:import('./ShareButton/styles.less') {
-    share-dialog-container: share-dialog-container;
-}
+// Copyright (C) 2017-2020 Smart code 203358507
 
-:import('./SubtitlesButton/styles.less') {
-    subtitles-picker-container: subtitles-picker-container;
-}
+@import (reference) '~stremio-colors/dist/less/stremio-colors.less';
 
 .control-bar-container {
-    position: relative;
-    z-index: 0;
     padding: 0 1.5rem;
-    overflow: visible;
-
-    &::after {
-        position: absolute;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        z-index: -1;
-        box-shadow: 0 0 8rem 8rem var(--color-backgrounddarker);
-        content: "";
-    }
 
     .seek-bar {
+        --track-size: 0.5rem;
         --thumb-size: 1.5rem;
+
         height: 2.5rem;
     }
 
@@ -40,28 +25,26 @@
             justify-content: center;
             align-items: center;
 
-            &:global(.active) {
-                background-color: var(--color-backgrounddarker);
-            }
-
             &:global(.disabled) {
-                :global(.icon) {
-                    fill: var(--color-surfacedark);
+                .icon {
+                    fill: @color-surface;
                 }
             }
 
-            :global(.icon) {
+            .icon {
                 flex: none;
-                width: 2.5rem;
-                height: 2.5rem;
-                fill: var(--color-surfacelighter);
+                width: 3rem;
+                height: 2rem;
+                fill: @color-surface-light5;
             }
         }
 
         .volume-slider {
-            --thumb-size: 1.25rem;
-            flex: none;
-            width: 16rem;
+            --track-size: 0.4rem;
+            --thumb-size: 1.3rem;
+
+            flex: 0 1 16rem;
+            min-width: 10rem;
             height: 4rem;
             margin: 0 1rem;
         }
@@ -69,18 +52,5 @@
         .spacing {
             flex: 1;
         }
-    }
-}
-
-.modal-container {
-    display: flex;
-    align-items: flex-end;
-    justify-content: flex-end;
-    padding: 8rem 1rem;
-
-    .share-dialog-container, .subtitles-picker-container {
-        flex: none;
-        background-color: var(--color-backgroundlighter);
-        border: thin solid var(--color-surfacelighter20);
     }
 }

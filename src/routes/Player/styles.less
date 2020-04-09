@@ -1,9 +1,34 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
+@import (reference) '~stremio-colors/dist/less/stremio-colors.less';
+
+:import('~stremio/common/Slider/styles.less') {
+    active-slider-within: active-slider-within;
+}
+
+:import('~stremio/common/NavBar/HorizontalNavBar/styles.less') {
+    nav-bar-button-container: button-container;
+    nav-bar-title: title;
+    nav-bar-icon: icon;
+}
+
+html:not(.active-slider-within) {
+    .player-container.immersed {
+        cursor: none;
+
+        .nav-bar-layer, .control-bar-layer, .menu-layer {
+            opacity: 0;
+            transition: opacity 200ms;
+        }
+    }
+}
+
 .player-container {
     position: relative;
     z-index: 0;
     width: 100%;
     height: 100%;
-    background-color: var(--color-backgrounddarker);
+    background-color: @color-background-dark5;
 
     .layer {
         position: absolute;
@@ -13,8 +38,78 @@
         bottom: 0;
         z-index: 0;
 
+        &.error-layer {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+
+            .error-label {
+                flex: 0 1 auto;
+                padding: 0 8rem;
+                max-height: 4.8em;
+                font-size: 2rem;
+                color: @color-surface-light5-90;
+                text-align: center;
+            }
+        }
+
+        &.nav-bar-layer {
+            bottom: initial;
+            background: transparent;
+            overflow: visible;
+
+            &::before {
+                position: absolute;
+                right: 0;
+                top: 0;
+                left: 0;
+                z-index: -1;
+                box-shadow: 0 0 8rem 6rem @color-background-dark5;
+                content: "";
+            }
+
+            .nav-bar-button-container {
+                &:hover {
+                    background: transparent;
+                }
+
+                .nav-bar-icon {
+                    fill: @color-surface-light5;
+                }
+            }
+
+            .nav-bar-title {
+                color: @color-surface-light5;
+            }
+        }
+
         &.control-bar-layer {
             top: initial;
+            overflow: visible;
+
+            &::before {
+                position: absolute;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                z-index: -1;
+                box-shadow: 0 0 8rem 8rem @color-background-dark5;
+                content: "";
+            }
+        }
+
+        &.menu-layer {
+            top: initial;
+            left: initial;
+            right: 2rem;
+            bottom: 8rem;
+            max-height: calc(100% - 13.5rem);
+            max-width: calc(100% - 4rem);
+            background-color: @color-background-dark1;
+            box-shadow: 0 1.35rem 2.7rem @color-background-dark5-40,
+                0 1.1rem 0.85rem @color-background-dark5-20;
+            overflow: auto;
         }
     }
 }

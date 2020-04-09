@@ -1,3 +1,5 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
@@ -15,23 +17,14 @@ const MetaPreviewPlaceholder = ({ className }) => {
                 <div className={styles['description-container']}>
                     <div className={styles['description-label-container']} />
                     <div className={styles['description-label-container']} />
-                    <div className={styles['description-label-container']} />
                 </div>
                 <div className={styles['genres-container']}>
                     <div className={styles['genres-header-container']} />
-                    <div className={styles['genres-labels-container']}>
-                        <div className={styles['genre-label-container']} />
-                        <div className={styles['genre-label-container']} />
-                        <div className={styles['genre-label-container']} />
-                    </div>
+                    <div className={styles['genre-label-container']} />
                 </div>
                 <div className={styles['genres-container']}>
                     <div className={styles['genres-header-container']} />
-                    <div className={styles['genres-labels-container']}>
-                        <div className={styles['genre-label-container']} />
-                        <div className={styles['genre-label-container']} />
-                        <div className={styles['genre-label-container']} />
-                    </div>
+                    <div className={styles['genre-label-container']} />
                 </div>
             </div>
             <div className={styles['action-buttons-container']}>

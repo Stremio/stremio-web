@@ -1,7 +1,9 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const Icon = require('stremio-icons/dom');
+const PlayIconCircleCentered = require('stremio/common/PlayIconCircleCentered');
 const styles = require('./styles');
 
 const StreamPlaceholder = ({ className }) => {
@@ -14,9 +16,7 @@ const StreamPlaceholder = ({ className }) => {
                 <div className={styles['description-container']} />
                 <div className={styles['description-container']} />
             </div>
-            <div className={styles['play-icon-container']}>
-                <Icon className={styles['play-icon']} icon={'ic_play'} />
-            </div>
+            <PlayIconCircleCentered className={styles['play-icon']} />
         </div>
     );
 };

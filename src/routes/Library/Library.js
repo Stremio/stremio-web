@@ -1,80 +1,123 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const { Button, Multiselect, MainNavBar, MetaItem } = require('stremio/common');
+const NotFound = require('stremio/routes/NotFound');
+const { Button, Multiselect, MainNavBars, LibItem, Image, useProfile, routesRegexp } = require('stremio/common');
 const useLibrary = require('./useLibrary');
 const useSelectableInputs = require('./useSelectableInputs');
-const useItemOptions = require('./useItemOptions');
 const styles = require('./styles');
 
-const Library = ({ urlParams }) => {
-    const library = useLibrary(urlParams);
-    const [typeSelect, sortPropSelect] = useSelectableInputs(library);
-    const [options, optionOnSelect] = useItemOptions();
+const Library = ({ model, route, urlParams, queryParams }) => {
+    const profile = useProfile();
+    const library = useLibrary(model, urlParams, queryParams);
+    const [typeSelect, sortSelect] = useSelectableInputs(route, library);
+    const available = React.useMemo(() => {
+        return route === 'continuewatching' || profile.auth !== null;
+    }, []);
     return (
-        <div className={styles['library-container']}>
-            <MainNavBar className={styles['nav-bar']} route={'library'} />
+        <MainNavBars className={styles['library-container']} route={route}>
             <div className={styles['library-content']}>
                 {
-                    library.library_state.type === 'Ready' && library.library_state.content.uid !== null && library.type_names.length > 0 ?
+                    available && library.type_names.length > 0 ?
                         <div className={styles['selectable-inputs-container']}>
                             <Multiselect {...typeSelect} className={styles['select-input-container']} />
-                            <Multiselect {...sortPropSelect} className={styles['select-input-container']} />
+                            <Multiselect {...sortSelect} className={styles['select-input-container']} />
                         </div>
                         :
                         null
                 }
                 {
-                    library.library_state.type === 'Ready' && library.library_state.content.uid === null ?
+                    !available ?
                         <div className={classnames(styles['message-container'], styles['no-user-message-container'])}>
-                            <div className={styles['message-label']}>Library is only availavle for logged in users</div>
+                            <Image
+                                className={styles['image']}
+                                src={'/images/anonymous.png'}
+                                alt={' '}
+                            />
                             <Button className={styles['login-button-container']} href={'#/intro'}>
                                 <div className={styles['label']}>LOG IN</div>
                             </Button>
+                            <div className={styles['message-label']}>Library is only available for logged in users!</div>
                         </div>
                         :
-                        library.library_state.type !== 'Ready' ?
+                        library.type_names.length === 0 ?
                             <div className={styles['message-container']}>
-                                <div className={styles['message-label']}>Loading</div>
+                                <Image
+                                    className={styles['image']}
+                                    src={'/images/empty.png'}
+                                    alt={' '}
+                                />
+                                <div className={styles['message-label']}>Empty {route === 'continuewatching' ? 'Continue Watching' : 'Library'}</div>
                             </div>
                             :
-                            library.type_names.length === 0 ?
+                            library.selected === null ?
                                 <div className={styles['message-container']}>
-                                    <div className={styles['message-label']}>Empty library</div>
+                                    <Image
+                                        className={styles['image']}
+                                        src={'/images/empty.png'}
+                                        alt={' '}
+                                    />
+                                    <div className={styles['message-label']}>{route === 'continuewatching' ? 'Continue Watching' : 'Library'} not loaded!</div>
                                 </div>
                                 :
-                                library.selected === null ?
+                                library.lib_items.length === 0 ?
                                     <div className={styles['message-container']}>
-                                        <div className={styles['message-label']}>Please select a type</div>
+                                        <Image
+                                            className={styles['image']}
+                                            src={'/images/empty.png'}
+                                            alt={' '}
+                                        />
+                                        <div className={styles['message-label']}>There are no items for the selected type!</div>
                                     </div>
                                     :
-                                    library.lib_items.length === 0 ?
-                                        <div className={styles['message-container']}>
-                                            <div className={styles['message-label']}>There are no items for the selected type</div>
-                                        </div>
-                                        :
-                                        <div className={styles['meta-items-container']}>
-                                            {library.lib_items.map(({ id, videoId, ...libItem }, index) => (
-                                                <MetaItem
-                                                    {...libItem}
-                                                    key={index}
-                                                    dataset={{ id, videoId, type: libItem.type }}
-                                                    options={options}
-                                                    optionOnSelect={optionOnSelect}
-                                                />
-                                            ))}
-                                        </div>
+                                    <div className={styles['meta-items-container']}>
+                                        {library.lib_items.map((libItem, index) => (
+                                            <LibItem {...libItem} key={index} />
+                                        ))}
+                                    </div>
                 }
             </div>
-        </div>
+        </MainNavBars>
     );
 };
 
 Library.propTypes = {
-    urlParams: PropTypes.exact({
-        type: PropTypes.string,
-        sort: PropTypes.string
-    })
+    model: PropTypes.oneOf(['library', 'continue_watching']),
+    route: PropTypes.oneOf(['library', 'continuewatching']),
+    urlParams: PropTypes.shape({
+        type: PropTypes.string
+    }),
+    queryParams: PropTypes.instanceOf(URLSearchParams)
 };
 
-module.exports = Library;
+module.exports = ({ urlParams, queryParams }) => {
+    const [model, route] = React.useMemo(() => {
+        return typeof urlParams.path === 'string' ?
+            urlParams.path.match(routesRegexp.library.regexp) ?
+                ['library', 'library']
+                :
+                urlParams.path.match(routesRegexp.continuewatching.regexp) ?
+                    ['continue_watching', 'continuewatching']
+                    :
+                    [null, null]
+            :
+            [null, null];
+    }, [urlParams.path]);
+    if (typeof model === 'string') {
+        return (
+            <Library
+                key={model}
+                model={model}
+                route={route}
+                urlParams={urlParams}
+                queryParams={queryParams}
+            />
+        );
+    } else {
+        return (
+            <NotFound />
+        );
+    }
+};

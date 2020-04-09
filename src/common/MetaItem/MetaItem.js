@@ -1,3 +1,5 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
@@ -14,11 +16,32 @@ const ICON_FOR_TYPE = new Map([
     ['series', 'ic_series'],
     ['channel', 'ic_channels'],
     ['tv', 'ic_tv'],
-    ['other', 'ic_movies']
+    ['book', 'ic_book'],
+    ['game', 'ic_games'],
+    ['music', 'ic_music'],
+    ['adult', 'ic_adult'],
+    ['radio', 'ic_radio'],
+    ['podcast', 'ic_podcast'],
+    ['other', 'ic_movies'],
 ]);
 
-const MetaItem = React.memo(({ className, type, name, poster, posterShape, playIcon, progress, options, dataset, optionOnSelect, ...props }) => {
+const MetaItem = React.memo(({ className, type, name, poster, posterShape, playIcon, progress, options, deepLinks, dataset, optionOnSelect, ...props }) => {
     const [menuOpen, onMenuOpen, onMenuClose] = useBinaryState(false);
+    const href = React.useMemo(() => {
+        return deepLinks ?
+            typeof deepLinks.player === 'string' ?
+                deepLinks.player
+                :
+                typeof deepLinks.meta_details_streams === 'string' ?
+                    deepLinks.meta_details_streams
+                    :
+                    typeof deepLinks.meta_details_videos === 'string' ?
+                        deepLinks.meta_details_videos
+                        :
+                        null
+            :
+            null;
+    }, [deepLinks]);
     const metaItemOnClick = React.useCallback((event) => {
         if (typeof props.onClick === 'function') {
             props.onClick(event);
@@ -52,7 +75,7 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, playI
         <Icon className={styles['icon']} icon={'ic_more'} />
     ), []);
     return (
-        <Button title={name} {...props} className={classnames(className, styles['meta-item-container'], styles['poster-shape-poster'], styles[`poster-shape-${posterShape}`], { 'active': menuOpen })} onClick={metaItemOnClick}>
+        <Button title={name} href={href} {...props} className={classnames(className, styles['meta-item-container'], styles['poster-shape-poster'], styles[`poster-shape-${posterShape}`], { 'active': menuOpen })} onClick={metaItemOnClick}>
             <div className={styles['poster-container']}>
                 <div className={styles['poster-image-layer']}>
                     <Image
@@ -73,7 +96,7 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, playI
                 {
                     progress > 0 ?
                         <div className={styles['progress-bar-layer']}>
-                            <div className={styles['progress-bar']} style={{ width: `${Math.min(progress, 1) * 100}%` }} />
+                            <div className={styles['progress-bar']} style={{ width: `${Math.max(0, Math.min(1, progress)) * 100}%` }} />
                         </div>
                         :
                         null
@@ -82,12 +105,9 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, playI
             {
                 (typeof name === 'string' && name.length > 0) || (Array.isArray(options) && options.length > 0) ?
                     <div className={styles['title-bar-container']}>
-                        {
-                            typeof name === 'string' && name.length > 0 ?
-                                <div className={styles['title-label']}>{name}</div>
-                                :
-                                null
-                        }
+                        <div className={styles['title-label']}>
+                            {typeof name === 'string' && name.length > 0 ? name : ''}
+                        </div>
                         {
                             Array.isArray(options) && options.length > 0 ?
                                 <Multiselect
@@ -97,6 +117,7 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, playI
                                     onOpen={onMenuOpen}
                                     onClose={onMenuClose}
                                     onSelect={menuOnSelect}
+                                    tabIndex={-1}
                                     onClick={menuOnClick}
                                 />
                                 :
@@ -121,6 +142,11 @@ MetaItem.propTypes = {
     playIcon: PropTypes.bool,
     progress: PropTypes.number,
     options: PropTypes.array,
+    deepLinks: PropTypes.shape({
+        meta_details_videos: PropTypes.string,
+        meta_details_streams: PropTypes.string,
+        player: PropTypes.string
+    }),
     dataset: PropTypes.object,
     optionOnSelect: PropTypes.func,
     onClick: PropTypes.func

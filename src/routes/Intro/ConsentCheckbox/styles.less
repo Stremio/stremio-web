@@ -1,3 +1,7 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
+@import (reference) '~stremio-colors/dist/less/stremio-colors.less';
+
 :import('~stremio/common/Checkbox/styles.less') {
     checkbox-icon: icon;
 }
@@ -6,38 +10,29 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding: 0.5rem;
+    padding: 0.5rem 1rem;
 
-    &:focus, &:hover {
-        background-color: var(--color-surfacedarker60);
-
-        .checkbox-icon {
-            fill: var(--color-surfacelighter);
-        }
-
-        .label {
-            color: var(--color-surfacelighter);
-
-            .link {
-                color: var(--color-surfacelighter);
-            }
-        }
+    &:focus {
+        outline: none;
+        background-color: @color-surface-light5-20;
     }
 
     .checkbox-icon {
         flex: none;
         width: 1.2rem;
         height: 1.2rem;
-        fill: var(--color-surfacelight);
+        fill: @color-surface-dark5;
     }
 
     .label {
         flex: 1;
         margin-left: 0.5rem;
-        color: var(--color-surface);
+        font-size: 0.9rem;
+        color: @color-surface-90;
 
         .link {
-            color: var(--color-surfacelight);
+            font-size: 0.9rem;
+            color: @color-surface-light5-90;
 
             &:hover {
                 text-decoration: underline;

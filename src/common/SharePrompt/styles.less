@@ -1,15 +1,14 @@
-.share-prompt-container {
-    min-width: 18rem;
-    background: var(--color-surfacelighter);
+// Copyright (C) 2017-2020 Smart code 203358507
 
+@import (reference) '~stremio-colors/dist/less/stremio-colors.less';
+
+.share-prompt-container {
     .buttons-container {
         display: flex;
         flex-direction: row;
 
         .button-container {
-            flex-grow: 0;
-            flex-shrink: 1;
-            flex-basis: 14rem;
+            flex: 1;
             display: flex;
             flex-direction: row;
             align-items: center;
@@ -20,20 +19,11 @@
                 margin-right: 1rem;
             }
 
-            &:hover {
-                filter: brightness(1.2);
-            }
-
-            &:focus {
-                outline: calc(1.5 * var(--focus-outline-size)) solid var(--color-surfacelighter);
-                outline-offset: calc(-2 * var(--focus-outline-size));
-            }
-
             .icon {
                 flex: none;
                 height: 1.2rem;
                 margin-right: 1rem;
-                fill: var(--color-surfacelighter);
+                fill: @color-surface-light5-90;
             }
 
             .label {
@@ -41,9 +31,16 @@
                 flex-shrink: 1;
                 flex-basis: auto;
                 max-height: 2.4em;
+                font-size: 1.1rem;
                 font-weight: 500;
                 text-align: center;
-                color: var(--color-surfacelighter);
+                color: @color-surface-light5-90;
+            }
+        }
+
+        .facebook-button, .twitter-button {
+            &:focus {
+                outline-color: @color-background-dark5;
             }
         }
 
@@ -60,15 +57,15 @@
         display: flex;
         flex-direction: row;
         margin-top: 1rem;
-        border: thin solid var(--color-surface);
+        background-color: @color-surface-light2;
 
         .url-text-input {
             flex: 1;
             align-self: stretch;
             padding: 1rem;
-            color: var(--color-backgroundlighter);
+            font-size: 1.1rem;
             text-align: center;
-            border-right: thin solid var(--color-surface);
+            color: @color-background-dark5;
         }
 
         .copy-button {
@@ -79,16 +76,15 @@
             align-items: center;
             justify-content: center;
             width: 8rem;
-            padding: 0.5rem;
-            background-color: var(--color-surface);
+            padding: 1rem;
+            background-color: @color-accent3;
 
             &:hover {
-                filter: brightness(1.2);
+                background-color: @color-accent3-light1;
             }
 
             &:focus {
-                outline: calc(1.5 * var(--focus-outline-size)) solid var(--color-surfacelighter);
-                outline-offset: calc(-1.5 * var(--focus-outline-size));
+                outline-color: @color-background-dark5;
             }
 
             .icon {
@@ -96,7 +92,7 @@
                 width: 1.2rem;
                 height: 1.2rem;
                 margin-right: 0.5rem;
-                fill: var(--color-surfacedarker);
+                fill: @color-surface-light5-90;
             }
 
             .label {
@@ -104,7 +100,8 @@
                 flex-shrink: 1;
                 flex-basis: auto;
                 max-height: 2.4em;
-                color: var(--color-surfacedarker);
+                font-size: 1.1rem;
+                color: @color-surface-light5-90;
             }
         }
     }

@@ -1,5 +1,7 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
 const EventEmitter = require('events');
-const { default: init, StremioCoreWeb } = require('stremio-core-web');
+const { default: init, StremioCoreWeb } = require('@stremio/stremio-core-web');
 
 function Core() {
     let active = false;
@@ -58,7 +60,7 @@ function Core() {
         events.off(name, listener);
     }
     function dispatch(action, model) {
-        if (!active) {
+        if (!active || typeof action === 'undefined') {
             return false;
         }
 

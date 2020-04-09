@@ -1,41 +1,49 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
+@import (reference) '~stremio-colors/dist/less/stremio-colors.less';
+
 .toast-item-container {
     display: flex;
     flex-direction: row;
     width: 25rem;
-    min-height: 6rem;
     margin-bottom: 1rem;
-    border: thin solid;
-    background-color: var(--color-surfacelighter);
+    background-color: @color-surface-light4;
     overflow: visible;
-    box-shadow: 0 0.3rem 0.5rem var(--color-backgrounddarker40),
-        0 0.6rem 1rem var(--color-backgrounddarker20);
+    box-shadow: 0 0.3rem 0.5rem @color-background-dark5-40,
+        0 0.6rem 1rem @color-background-dark5-20;
     pointer-events: auto;
 
     &.success {
-        color: var(--color-signal5);
-        fill: var(--color-signal5);
-    }
+        .icon-container {
+            background-color: @color-accent3;
 
-    &.alert {
-        color: var(--color-signal3);
-        fill: var(--color-signal3);
+            .icon {
+                fill: @color-surface-light5-90;
+            }
+        }
     }
 
     &.error {
-        color: var(--color-signal2);
-        fill: var(--color-signal2);
+        .icon-container {
+            background-color: @color-accent2;
+
+            .icon {
+                fill: @color-surface-light5-90;
+            }
+        }
     }
 
     .icon-container {
         flex: none;
         align-self: stretch;
-        width: 4.5rem;
-        padding: 1.2rem 0 1.2rem 1.2rem;
+        width: 2.5rem;
+        padding: 0.5rem;
 
         .icon {
             display: block;
             width: 100%;
             height: 100%;
+            fill: @color-background-dark5-90;
         }
     }
 
@@ -46,6 +54,10 @@
 
         .title-container {
             font-size: 1.2rem;
+
+            &:not(:last-child) {
+                margin-bottom: 0.2rem;
+            }
         }
 
         .message-container {
@@ -56,12 +68,13 @@
     .close-button-container {
         flex: none;
         align-self: flex-start;
-        width: 3rem;
-        height: 3rem;
-        padding: 1rem;
+        width: 2rem;
+        height: 2rem;
+        margin: 0.2rem;
+        padding: 0.5rem;
 
         &:hover {
-            background-color: var(--color-surfacelight);
+            background-color: @color-surface-light2;
         }
 
         .icon {

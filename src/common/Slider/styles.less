@@ -1,3 +1,7 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
+@import (reference) '~stremio-colors/dist/less/stremio-colors.less';
+
 html.active-slider-within {
     cursor: grabbing;
 
@@ -12,15 +16,25 @@ html.active-slider-within {
     overflow: visible;
     cursor: pointer;
 
+    &:hover, &:global(.active) {
+        .track-before {
+            background-color: @color-primary-light5;
+        }
+    }
+
     &:global(.disabled) {
         pointer-events: none;
 
-        .track, .track-before {
-            background-color: var(--color-surfacedark);
+        .track {
+            background-color: @color-surface-dark5;
+        }
+
+        .track-before {
+            background-color: @color-surface;
         }
 
         .thumb {
-            fill: var(--color-surfacedark);
+            fill: @color-surface;
         }
     }
 
@@ -39,21 +53,21 @@ html.active-slider-within {
 
     .track {
         flex: 1;
-        height: var(--track-size, 0.5rem);
-        background-color: var(--color-backgroundlighter);
+        height: var(--track-size);
+        background-color: @color-primary-dark3;
     }
 
     .track-before {
         flex: none;
-        height: var(--track-size, 0.5rem);
-        background-color: var(--color-primary);
+        height: var(--track-size);
+        background-color: @color-primary-light3;
     }
 
     .thumb {
         flex: none;
-        width: var(--thumb-size, 1.5rem);
-        height: var(--thumb-size, 1.5rem);
+        width: var(--thumb-size);
+        height: var(--thumb-size);
         transform: translateX(-50%);
-        fill: var(--color-surfacelighter);
+        fill: @color-surface-light5;
     }
 }

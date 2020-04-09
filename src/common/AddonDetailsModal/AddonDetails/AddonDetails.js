@@ -1,3 +1,5 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
@@ -20,21 +22,20 @@ const AddonDetails = ({ className, id, name, version, logo, description, types, 
                     alt={' '}
                     renderFallback={renderLogoFallback}
                 />
-                <span className={styles['name']}>{typeof name === 'string' && name.length > 0 ? name : id}</span>
+                <div className={styles['name-container']}>
+                    <span className={styles['name']}>{typeof name === 'string' && name.length > 0 ? name : id}</span>
+                    {
+                        typeof version === 'string' && version.length > 0 ?
+                            <span className={styles['version']}>v. {version}</span>
+                            :
+                            null
+                    }
+                </div>
             </div>
             {
                 typeof description === 'string' && description.length > 0 ?
                     <div className={styles['section-container']}>
-                        <span className={styles['section-header']}>{description}</span>
-                    </div>
-                    :
-                    null
-            }
-            {
-                typeof version === 'string' && version.length > 0 ?
-                    <div className={styles['section-container']}>
-                        <span className={styles['section-header']}>Version: </span>
-                        <span className={styles['section-label']}>{version}</span>
+                        <span className={styles['section-label']}>{description}</span>
                     </div>
                     :
                     null

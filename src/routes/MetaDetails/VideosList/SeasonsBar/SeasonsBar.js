@@ -1,3 +1,5 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
@@ -16,9 +18,6 @@ const SeasonsBar = ({ className, seasons, season, onSelect }) => {
     const selected = React.useMemo(() => {
         return [String(season)];
     }, [season]);
-    const renderMultiselectLabelContent = React.useMemo(() => () => (
-        <div className={styles['season-label']}>Season {season}</div>
-    ), [season]);
     const prevNextButtonOnClick = React.useCallback((event) => {
         if (typeof onSelect === 'function') {
             const seasonIndex = seasons.indexOf(season);
@@ -48,20 +47,20 @@ const SeasonsBar = ({ className, seasons, season, onSelect }) => {
     }, [onSelect]);
     return (
         <div className={classnames(className, styles['seasons-bar-container'])}>
-            <Button className={styles['prev-season-button']} data-action={'prev'} onClick={prevNextButtonOnClick}>
-                <Icon className={styles['icon']} icon={'ic_arrow_left'} />
+            <Button className={styles['prev-season-button']} title={'Previous season'} data-action={'prev'} onClick={prevNextButtonOnClick}>
+                <Icon className={styles['icon']} icon={'ic_arrow_thin_left'} />
+                <div className={styles['label']}>Prev</div>
             </Button>
             <Multiselect
                 className={styles['seasons-popup-label-container']}
                 title={`Season ${season}`}
                 options={options}
                 selected={selected}
-                disabled={false}
-                renderLabelContent={renderMultiselectLabelContent}
                 onSelect={seasonOnSelect}
             />
-            <Button className={styles['next-season-button']} data-action={'next'} onClick={prevNextButtonOnClick}>
-                <Icon className={styles['icon']} icon={'ic_arrow_right'} />
+            <Button className={styles['next-season-button']} title={'Next season'} data-action={'next'} onClick={prevNextButtonOnClick}>
+                <div className={styles['label']}>Next</div>
+                <Icon className={styles['icon']} icon={'ic_arrow_thin_right'} />
             </Button>
         </div>
     );

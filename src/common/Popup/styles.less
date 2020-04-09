@@ -1,3 +1,7 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
+@import (reference) '~stremio-colors/dist/less/stremio-colors.less';
+
 .label-container {
     position: relative;
     overflow: visible;
@@ -7,8 +11,8 @@
         z-index: 1;
         overflow: visible;
         visibility: hidden;
-        box-shadow: 0 1.35rem 2.7rem var(--color-backgrounddarker40),
-            0 1.1rem 0.85rem var(--color-backgrounddarker20);
+        box-shadow: 0 1.35rem 2.7rem @color-background-dark5-40,
+            0 1.1rem 0.85rem @color-background-dark5-20;
         cursor: auto;
 
         &.menu-direction-top-left {

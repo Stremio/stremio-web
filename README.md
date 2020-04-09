@@ -1,20 +1,44 @@
-Stremio - the next generation media center
-================
+# Stremio - The media center you need
 
+![Build](https://github.com/stremio/stremio-web/workflows/Build/badge.svg?branch=development)
 
-Stremio is a full-featured media center designed to help you organize and stream your favorite videos, movies and TV series. It will notify you for new episodes / movies, and allow you to find new content through Discover.
+Stremio is a modern media center that's a one-stop solution for your video entertainment. You discover, watch and organize video content from easy to install addons.
 
-Stremio allows, using it's [Add-ons system](http://github.com/Stremio/stremio-addons), to play movies, TV series and channels instantly.
+## Build
 
-This repository can be built to two distributable products:
+#### Prerequisites:
+* Node.js 10 or higher
+* yarn __configured for use with GitHub Packages__
 
-1. Stremio for the web (currently at http://app.strem.io)
-2. Stremio for Desktop (Windows, Linux, OS X)
+### Install dependencies:
 
+```bash
+yarn install
+```
 
-Copyright
-=========
+### Development:
 
-Legal entity: Smart Code LTD.
+```bash
+yarn start
+```
 
-UIN 203358507
+### Production:
+
+```bash
+yarn build
+```
+
+## Screenshots
+
+### Board:
+![Board](/screenshots/board.png)
+
+### Discover:
+![Discover](/screenshots/discover.png)
+
+### Meta Details:
+![Meta Details](/screenshots/metadetails.png)
+
+## License
+
+Stremio is copyright 2017-2020 Smart code and available under GPLv2 license. See the [LICENSE](/LICENSE.md) file in the project for more information.

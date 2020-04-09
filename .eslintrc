@@ -27,8 +27,6 @@
     "ignorePatterns": [
         "/*",
         "!/src",
-        "src/routes/Settings",
-        "src/routes/Player",
         "src/video"
     ],
     "rules": {
@@ -56,6 +54,7 @@
                 "max": 1
             }
         ],
+        "no-prototype-builtins": "off",
         "no-template-curly-in-string": "error",
         "no-trailing-spaces": "error",
         "no-useless-concat": "error",

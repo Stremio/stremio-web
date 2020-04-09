@@ -1,44 +1,57 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
+@import (reference) '~stremio-colors/dist/less/stremio-colors.less';
+
 .videos-list-container {
     display: flex;
     flex-direction: column;
-    background: var(--color-backgrounddark80);
 
-    .seasons-bar, .message-label {
+    .message-container {
+        flex: 1;
+        align-self: stretch;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 2rem;
+        overflow-y: auto;
+
+        .image {
+            flex: none;
+            width: 10rem;
+            height: 10rem;
+            max-width: 100%;
+            margin-bottom: 1rem;
+            object-fit: contain;
+            object-position: center;
+            opacity: 0.9;
+        }
+
+        .label {
+            flex: none;
+            font-size: 1.4rem;
+            text-align: center;
+            color: @color-secondaryvariant2-light1-90;
+        }
+    }
+
+    .seasons-bar {
         flex: none;
-        width: var(--item-size);
-        margin: 2rem 2rem 1rem 2rem;
+        align-self: stretch;
     }
 
-    .message-label {
-        font-size: 1.4rem;
-        text-align: center;
-        color: var(--color-surfacelighter);
+    .search-bar {
+        flex: none;
+        align-self: stretch;
+        margin: 0 1.5rem 1rem 1.5rem;
+
+        &:first-child {
+            margin-top: 1rem;
+        }
     }
 
-    .videos-scroll-container {
+    .videos-container {
         flex: 1;
         align-self: stretch;
         overflow-y: auto;
-
-        &:first-child {
-            .video {
-                &:first-child {
-                    margin-top: 2rem;
-                }
-            }
-        }
-
-        .video {
-            width: var(--item-size);
-            margin: 1rem 2rem;
-
-            &:first-child {
-                margin-top: 0;
-            }
-
-            &:last-child {
-                margin-bottom: 2rem;
-            }
-        }
     }
 }

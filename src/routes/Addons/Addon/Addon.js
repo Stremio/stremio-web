@@ -1,3 +1,5 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
@@ -85,9 +87,9 @@ const Addon = ({ className, id, name, version, logo, description, types, install
                 <Button className={installed ? styles['uninstall-button-container'] : styles['install-button-container']} title={installed ? 'Uninstall' : 'Install'} tabIndex={-1} onClick={toggleButtonOnClick}>
                     <div className={styles['label']}>{installed ? 'Uninstall' : 'Install'}</div>
                 </Button>
-                <Button className={styles['share-button-container']} title={'Share addon'} tabIndex={-1} onClick={shareButtonOnClick}>
+                <Button className={styles['share-button-container']} title={'SHARE ADDON'} tabIndex={-1} onClick={shareButtonOnClick}>
                     <Icon className={styles['icon']} icon={'ic_share'} />
-                    <div className={styles['label']}>Share addon</div>
+                    <div className={styles['label']}>SHARE ADDON</div>
                 </Button>
             </div>
         </Button>

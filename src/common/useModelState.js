@@ -1,12 +1,10 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
 const React = require('react');
 const throttle = require('lodash.throttle');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
 const useDeepEqualState = require('stremio/common/useDeepEqualState');
-
-const UNLOAD_ACTION = {
-    action: 'Unload',
-};
 
 const useModelState = ({ model, init, action, timeout, onNewState, map, mapWithCtx }) => {
     const modelRef = React.useRef(model);
@@ -19,7 +17,7 @@ const useModelState = ({ model, init, action, timeout, onNewState, map, mapWithC
     }, [action]);
     React.useLayoutEffect(() => {
         return () => {
-            core.dispatch(UNLOAD_ACTION, modelRef.current);
+            core.dispatch({ action: 'Unload' }, modelRef.current);
         };
     }, []);
     React.useLayoutEffect(() => {

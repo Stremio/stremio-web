@@ -1,43 +1,47 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
 const React = require('react');
 
-const SORT_PROP_OPTIONS = [
-    { label: 'Recent', value: '_ctime' },
+const SORT_OPTIONS = [
+    { label: 'Recent', value: 'lastwatched' },
     { label: 'A-Z', value: 'name' },
-    { label: 'Year', value: 'year' },
+    { label: 'Watched', value: 'timeswatched' },
 ];
 
-const mapSelectableInputs = (library) => {
+const mapSelectableInputs = (route, library) => {
     const typeSelect = {
         title: 'Select type',
         selected: library.selected !== null ?
-            [library.selected.type_name]
+            [JSON.stringify(library.selected.type_name)]
             :
             [],
-        options: library.type_names
-            .map((type) => ({ label: type, value: type })),
+        options: [{ label: 'All', value: JSON.stringify(null) }]
+            .concat(library.type_names.map((type) => ({ label: type, value: JSON.stringify(type) }))),
         onSelect: (event) => {
-            window.location.replace(`#/library/${encodeURIComponent(event.value)}/${encodeURIComponent(library.selected.sort_prop)}`);
+            const type = JSON.parse(event.value);
+            const queryParams = new URLSearchParams(library.selected !== null ? [['sort', library.selected.sort]] : []);
+            window.location = `#/${route}${type !== null ? `/${encodeURIComponent(type)}` : ''}?${queryParams.toString()}`;
         }
     };
-    const sortPropSelect = {
+    const sortSelect = {
         title: 'Select sort',
         selected: library.selected !== null ?
-            [library.selected.sort_prop]
+            [library.selected.sort]
             :
             [],
-        options: SORT_PROP_OPTIONS,
+        options: SORT_OPTIONS,
         onSelect: (event) => {
-            if (library.selected !== null) {
-                window.location.replace(`#/library/${encodeURIComponent(library.selected.type_name)}/${encodeURIComponent(event.value)}`);
-            }
+            const type = library.selected !== null ? library.selected.type_name : null;
+            const queryParams = new URLSearchParams([['sort', event.value]]);
+            window.location = `#/${route}${type !== null ? `/${encodeURIComponent(type)}` : ''}?${queryParams.toString()}`;
         }
     };
-    return [typeSelect, sortPropSelect];
+    return [typeSelect, sortSelect];
 };
 
-const useSelectableInputs = (library) => {
+const useSelectableInputs = (route, library) => {
     const selectableInputs = React.useMemo(() => {
-        return mapSelectableInputs(library);
+        return mapSelectableInputs(route, library);
     }, [library]);
     return selectableInputs;
 };

@@ -1,17 +1,10 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
 const React = require('react');
-const isEqual = require('lodash.isequal');
+const useDeepEqualMemo = require('stremio/common/useDeepEqualMemo');
 
 const useDeepEqualEffect = (cb, deps) => {
-    const mountedRef = React.useRef(false);
-    const depsRef = React.useRef(null);
-    React.useEffect(() => {
-        if (!mountedRef.current || !isEqual(depsRef.current, deps)) {
-            cb();
-        }
-
-        mountedRef.current = true;
-        depsRef.current = deps;
-    }, [deps]);
+    React.useEffect(cb, [useDeepEqualMemo(() => ({}), deps)]);
 };
 
 module.exports = useDeepEqualEffect;

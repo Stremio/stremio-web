@@ -1,3 +1,5 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
 const routes = require('stremio/routes');
 const { routesRegexp } = require('stremio/common');
 
@@ -19,6 +21,10 @@ const routerViewsConfig = [
         },
         {
             ...routesRegexp.library,
+            component: routes.Library
+        },
+        {
+            ...routesRegexp.continuewatching,
             component: routes.Library
         },
         {

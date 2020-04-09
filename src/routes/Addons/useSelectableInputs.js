@@ -1,20 +1,8 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
 const React = require('react');
 
-const navigateWithRequest = (request) => {
-    const transportUrl = encodeURIComponent(request.base);
-    const catalogId = encodeURIComponent(request.path.id);
-    const type = encodeURIComponent(request.path.type_name);
-    window.location.replace(`#/addons/${transportUrl}/${catalogId}/${type}`);
-};
-
-const equalWithouExtra = (request1, request2) => {
-    return request1.base === request2.base &&
-        request1.path.resource === request2.path.resource &&
-        request1.path.type_name === request2.path.type_name &&
-        request1.path.id === request2.path.id;
-};
-
-const mapSelectableInputs = (addons) => {
+const mapSelectableInputs = (addons, navigate) => {
     const catalogSelect = {
         title: 'Select catalog',
         options: addons.selectable.catalogs
@@ -23,13 +11,14 @@ const mapSelectableInputs = (addons) => {
                 label: name
             })),
         selected: addons.selectable.catalogs
-            .filter(({ request: { path: { id } } }) => {
+            .filter(({ request }) => {
                 return addons.catalog_resource !== null &&
-                    addons.catalog_resource.request.path.id === id;
+                    addons.catalog_resource.request.base === request.base &&
+                    addons.catalog_resource.request.path.id === request.path.id;
             })
             .map(({ request }) => JSON.stringify(request)),
         onSelect: (event) => {
-            navigateWithRequest(JSON.parse(event.value));
+            navigate({ request: JSON.parse(event.value) });
         }
     };
     const typeSelect = {
@@ -42,20 +31,20 @@ const mapSelectableInputs = (addons) => {
         selected: addons.selectable.types
             .filter(({ request }) => {
                 return addons.catalog_resource !== null &&
-                    equalWithouExtra(addons.catalog_resource.request, request);
+                    addons.catalog_resource.request.path.type_name === request.path.type_name;
             })
             .map(({ request }) => JSON.stringify(request)),
         onSelect: (event) => {
-            navigateWithRequest(JSON.parse(event.value));
+            navigate({ request: JSON.parse(event.value) });
         }
     };
     return [catalogSelect, typeSelect];
 };
 
-const useSelectableInputs = (addons) => {
+const useSelectableInputs = (addons, navigate) => {
     const selectableInputs = React.useMemo(() => {
-        return mapSelectableInputs(addons);
-    }, [addons]);
+        return mapSelectableInputs(addons, navigate);
+    }, [addons, navigate]);
     return selectableInputs;
 };
 

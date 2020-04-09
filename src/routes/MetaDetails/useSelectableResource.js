@@ -1,10 +1,16 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
 const React = require('react');
 const isEqual = require('lodash.isequal');
 
 const readyResourceForRequest = (resources, request) => {
-    return resources.find((resource) => {
-        return isEqual(resource.request, request) && resource.content.type === 'Ready';
-    });
+    return resources.reduce((result, resource) => {
+        if (resource.content.type === 'Ready' && isEqual(resource.request, request)) {
+            return resource;
+        }
+
+        return result;
+    }, null);
 };
 
 const reducer = (state, action) => {
@@ -12,9 +18,14 @@ const reducer = (state, action) => {
         case 'resources-changed': {
             if (state.selected.resource === null ||
                 !state.selected.byUser ||
-                !readyResourceForRequest(action.resources, state.selected.resource.request)) {
-                const firstReadyResource = action.resources.find((resource) => resource.content.type === 'Ready');
-                const selectedResource = firstReadyResource ? firstReadyResource : null;
+                readyResourceForRequest(action.resources, state.selected.resource.request) === null) {
+                const selectedResource = action.resources.reduce((result, resource) => {
+                    if (resource.content.type === 'Ready') {
+                        return resource;
+                    }
+
+                    return result;
+                }, null);
                 return {
                     ...state,
                     resourceRef: action.resourceRef,
@@ -34,17 +45,17 @@ const reducer = (state, action) => {
         }
         case 'resource-selected': {
             const selectedResource = readyResourceForRequest(state.resources, action.request);
-            if (!selectedResource) {
-                return state;
+            if (selectedResource !== null) {
+                return {
+                    ...state,
+                    selected: {
+                        resource: selectedResource,
+                        byUser: true
+                    }
+                };
             }
 
-            return {
-                ...state,
-                selected: {
-                    resource: selectedResource,
-                    byUser: true
-                }
-            };
+            return state;
         }
         default: {
             return state;
@@ -81,7 +92,7 @@ const useSelectableResource = (resourceRef, resources) => {
     }, []);
     React.useEffect(() => {
         dispatch({ type: 'resources-changed', resourceRef, resources });
-    }, [resources]);
+    }, [resourceRef, resources]);
     return [state.resourceRef, state.resources, state.selected.resource, selectResource];
 };
 

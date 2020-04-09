@@ -1,3 +1,5 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
 const routesRegexp = require('../src/common/routesRegexp');
 
 describe('routesRegexp', () => {
@@ -14,6 +16,11 @@ describe('routesRegexp', () => {
     });
 
     describe('board route regexp', () => {
+        it('match empty path', async () => {
+            expect(Array.from(''.match(routesRegexp.board.regexp)))
+                .toEqual(['']);
+        });
+
         it('match /', async () => {
             expect(Array.from('/'.match(routesRegexp.board.regexp)))
                 .toEqual(['/']);
@@ -115,46 +122,16 @@ describe('routesRegexp', () => {
     describe('library route regexp', () => {
         it('match /library', async () => {
             expect(Array.from('/library'.match(routesRegexp.library.regexp)))
-                .toEqual(['/library', undefined, undefined]);
+                .toEqual(['/library', undefined]);
         });
 
-        it('match /library//', async () => {
-            expect(Array.from('/library//'.match(routesRegexp.library.regexp)))
-                .toEqual(['/library//', '', '']);
+        it('match /library/type', async () => {
+            expect(Array.from('/library/type'.match(routesRegexp.library.regexp)))
+                .toEqual(['/library/type', 'type']);
         });
 
-        it('match /library/1/', async () => {
-            expect(Array.from('/library/1/'.match(routesRegexp.library.regexp)))
-                .toEqual(['/library/1/', '1', '']);
-        });
-
-        it('match /library//2', async () => {
-            expect(Array.from('/library//2'.match(routesRegexp.library.regexp)))
-                .toEqual(['/library//2', '', '2']);
-        });
-
-        it('match /library/1/2', async () => {
-            expect(Array.from('/library/1/2'.match(routesRegexp.library.regexp)))
-                .toEqual(['/library/1/2', '1', '2']);
-        });
-
-        it('not match /library/', async () => {
-            expect('/library/'.match(routesRegexp.library.regexp))
-                .toBe(null);
-        });
-
-        it('not match /library///', async () => {
-            expect('/library///'.match(routesRegexp.library.regexp))
-                .toBe(null);
-        });
-
-        it('not match /library/1', async () => {
-            expect('/library/1'.match(routesRegexp.library.regexp))
-                .toBe(null);
-        });
-
-        it('not match /library/1/2/', async () => {
-            expect('/library/1/2/'.match(routesRegexp.library.regexp))
+        it('match /library/type/', async () => {
+            expect('/library/type/'.match(routesRegexp.library.regexp))
                 .toBe(null);
         });
     });
@@ -353,288 +330,28 @@ describe('routesRegexp', () => {
     });
 
     describe('player route regexp', () => {
-        it('match /player/////', async () => {
-            expect(Array.from('/player/////'.match(routesRegexp.player.regexp)))
-                .toEqual(['/player/////', '', '', '', '', '']);
-        });
-
-        it('match /player/1////', async () => {
-            expect(Array.from('/player/1////'.match(routesRegexp.player.regexp)))
-                .toEqual(['/player/1////', '1', '', '', '', '']);
-        });
-
-        it('match /player//2///', async () => {
-            expect(Array.from('/player//2///'.match(routesRegexp.player.regexp)))
-                .toEqual(['/player//2///', '', '2', '', '', '']);
-        });
-
-        it('match /player///3//', async () => {
-            expect(Array.from('/player///3//'.match(routesRegexp.player.regexp)))
-                .toEqual(['/player///3//', '', '', '3', '', '']);
-        });
-
-        it('match /player////4/', async () => {
-            expect(Array.from('/player////4/'.match(routesRegexp.player.regexp)))
-                .toEqual(['/player////4/', '', '', '', '4', '']);
-        });
-
-        it('match /player/////5', async () => {
-            expect(Array.from('/player/////5'.match(routesRegexp.player.regexp)))
-                .toEqual(['/player/////5', '', '', '', '', '5']);
-        });
-
-        it('match /player/1/2///', async () => {
-            expect(Array.from('/player/1/2///'.match(routesRegexp.player.regexp)))
-                .toEqual(['/player/1/2///', '1', '2', '', '', '']);
-        });
-
-        it('match /player/1//3//', async () => {
-            expect(Array.from('/player/1//3//'.match(routesRegexp.player.regexp)))
-                .toEqual(['/player/1//3//', '1', '', '3', '', '']);
-        });
-
-        it('match /player/1///4/', async () => {
-            expect(Array.from('/player/1///4/'.match(routesRegexp.player.regexp)))
-                .toEqual(['/player/1///4/', '1', '', '', '4', '']);
-        });
-
-        it('match /player/1////5', async () => {
-            expect(Array.from('/player/1////5'.match(routesRegexp.player.regexp)))
-                .toEqual(['/player/1////5', '1', '', '', '', '5']);
-        });
-
-        it('match /player//2/3//', async () => {
-            expect(Array.from('/player//2/3//'.match(routesRegexp.player.regexp)))
-                .toEqual(['/player//2/3//', '', '2', '3', '', '']);
-        });
-
-        it('match /player//2//4/', async () => {
-            expect(Array.from('/player//2//4/'.match(routesRegexp.player.regexp)))
-                .toEqual(['/player//2//4/', '', '2', '', '4', '']);
-        });
-
-        it('match /player//2///5', async () => {
-            expect(Array.from('/player//2///5'.match(routesRegexp.player.regexp)))
-                .toEqual(['/player//2///5', '', '2', '', '', '5']);
-        });
-
-        it('match /player///3/4/', async () => {
-            expect(Array.from('/player///3/4/'.match(routesRegexp.player.regexp)))
-                .toEqual(['/player///3/4/', '', '', '3', '4', '']);
-        });
-
-        it('match /player///3//5', async () => {
-            expect(Array.from('/player///3//5'.match(routesRegexp.player.regexp)))
-                .toEqual(['/player///3//5', '', '', '3', '', '5']);
-        });
-
-        it('match /player////4/5', async () => {
-            expect(Array.from('/player////4/5'.match(routesRegexp.player.regexp)))
-                .toEqual(['/player////4/5', '', '', '', '4', '5']);
-        });
-
-        it('match /player/1/2/3//', async () => {
-            expect(Array.from('/player/1/2/3//'.match(routesRegexp.player.regexp)))
-                .toEqual(['/player/1/2/3//', '1', '2', '3', '', '']);
-        });
-
-        it('match /player/1/2//4/', async () => {
-            expect(Array.from('/player/1/2//4/'.match(routesRegexp.player.regexp)))
-                .toEqual(['/player/1/2//4/', '1', '2', '', '4', '']);
-        });
-
-        it('match /player/1/2///5', async () => {
-            expect(Array.from('/player/1/2///5'.match(routesRegexp.player.regexp)))
-                .toEqual(['/player/1/2///5', '1', '2', '', '', '5']);
-        });
-
-        it('match /player/1//3/4/', async () => {
-            expect(Array.from('/player/1//3/4/'.match(routesRegexp.player.regexp)))
-                .toEqual(['/player/1//3/4/', '1', '', '3', '4', '']);
-        });
-
-        it('match /player/1//3//5', async () => {
-            expect(Array.from('/player/1//3//5'.match(routesRegexp.player.regexp)))
-                .toEqual(['/player/1//3//5', '1', '', '3', '', '5']);
-        });
-
-        it('match /player/1///4/5', async () => {
-            expect(Array.from('/player/1///4/5'.match(routesRegexp.player.regexp)))
-                .toEqual(['/player/1///4/5', '1', '', '', '4', '5']);
-        });
-
-        it('match /player//2/3/4/', async () => {
-            expect(Array.from('/player//2/3/4/'.match(routesRegexp.player.regexp)))
-                .toEqual(['/player//2/3/4/', '', '2', '3', '4', '']);
-        });
-
-        it('match /player//2/3//5', async () => {
-            expect(Array.from('/player//2/3//5'.match(routesRegexp.player.regexp)))
-                .toEqual(['/player//2/3//5', '', '2', '3', '', '5']);
-        });
-
-        it('match /player///3/4/5', async () => {
-            expect(Array.from('/player///3/4/5'.match(routesRegexp.player.regexp)))
-                .toEqual(['/player///3/4/5', '', '', '3', '4', '5']);
-        });
-
-        it('match /player/1/2/3/4/', async () => {
-            expect(Array.from('/player/1/2/3/4/'.match(routesRegexp.player.regexp)))
-                .toEqual(['/player/1/2/3/4/', '1', '2', '3', '4', '']);
-        });
-
-        it('match /player/1/2/3//5', async () => {
-            expect(Array.from('/player/1/2/3//5'.match(routesRegexp.player.regexp)))
-                .toEqual(['/player/1/2/3//5', '1', '2', '3', '', '5']);
-        });
-
-        it('match /player/1/2//4/5', async () => {
-            expect(Array.from('/player/1/2//4/5'.match(routesRegexp.player.regexp)))
-                .toEqual(['/player/1/2//4/5', '1', '2', '', '4', '5']);
-        });
-
-        it('match /player/1//3/4/5', async () => {
-            expect(Array.from('/player/1//3/4/5'.match(routesRegexp.player.regexp)))
-                .toEqual(['/player/1//3/4/5', '1', '', '3', '4', '5']);
-        });
-
-        it('match /player//2/3/4/5', async () => {
-            expect(Array.from('/player//2/3/4/5'.match(routesRegexp.player.regexp)))
-                .toEqual(['/player//2/3/4/5', '', '2', '3', '4', '5']);
-        });
-
-        it('match /player/1/2/3/4/5', async () => {
-            expect(Array.from('/player/1/2/3/4/5'.match(routesRegexp.player.regexp)))
-                .toEqual(['/player/1/2/3/4/5', '1', '2', '3', '4', '5']);
-        });
-
         it('not match /player', async () => {
             expect('/player'.match(routesRegexp.player.regexp))
                 .toBe(null);
         });
 
-        it('not match /player/', async () => {
-            expect(Array.from('/player/'.match(routesRegexp.player.regexp)))
-                .toEqual(['/player/', '', undefined, undefined, undefined, undefined]);
+        it('match /player/stream', async () => {
+            expect(Array.from('/player/stream'.match(routesRegexp.player.regexp)))
+                .toEqual(['/player/stream', 'stream', undefined, undefined, undefined, undefined, undefined]);
         });
 
-        it('not match /player//', async () => {
-            expect('/player//'.match(routesRegexp.player.regexp))
+        it('match /player/stream/', async () => {
+            expect('/player/stream/'.match(routesRegexp.player.regexp))
                 .toBe(null);
         });
 
-        it('not match /player///', async () => {
-            expect('/player///'.match(routesRegexp.player.regexp))
-                .toBe(null);
+        it('match /player/stream/stu/mtu/t/i/v', async () => {
+            expect(Array.from('/player/stream/stu/mtu/t/i/v'.match(routesRegexp.player.regexp)))
+                .toEqual(['/player/stream/stu/mtu/t/i/v', 'stream', 'stu', 'mtu', 't', 'i', 'v']);
         });
 
-        it('not match /player//////', async () => {
-            expect('/player//////'.match(routesRegexp.player.regexp))
-                .toBe(null);
-        });
-
-        it('not match /player/1', async () => {
-            expect(Array.from('/player/1'.match(routesRegexp.player.regexp)))
-                .toEqual(['/player/1', '1', undefined, undefined, undefined, undefined]);
-        });
-
-        it('not match /player/1/', async () => {
-            expect('/player/1/'.match(routesRegexp.player.regexp))
-                .toBe(null);
-        });
-
-        it('not match /player/1//', async () => {
-            expect('/player/1//'.match(routesRegexp.player.regexp))
-                .toBe(null);
-        });
-
-        it('not match /player/1///', async () => {
-            expect('/player/1///'.match(routesRegexp.player.regexp))
-                .toBe(null);
-        });
-
-        it('not match /player//2', async () => {
-            expect('/player//2'.match(routesRegexp.player.regexp))
-                .toBe(null);
-        });
-
-        it('not match /player//2/', async () => {
-            expect('/player//2/'.match(routesRegexp.player.regexp))
-                .toBe(null);
-        });
-
-        it('not match /player//2//', async () => {
-            expect('/player//2//'.match(routesRegexp.player.regexp))
-                .toBe(null);
-        });
-
-        it('not match /player///3', async () => {
-            expect('/player///3'.match(routesRegexp.player.regexp))
-                .toBe(null);
-        });
-
-        it('not match /player///3/', async () => {
-            expect('/player///3/'.match(routesRegexp.player.regexp))
-                .toBe(null);
-        });
-
-        it('not match /player////4', async () => {
-            expect('/player////4'.match(routesRegexp.player.regexp))
-                .toBe(null);
-        });
-
-        it('not match /player/1/2', async () => {
-            expect('/player/1/2'.match(routesRegexp.player.regexp))
-                .toBe(null);
-        });
-
-        it('not match /player/1/2/', async () => {
-            expect('/player/1/2/'.match(routesRegexp.player.regexp))
-                .toBe(null);
-        });
-
-        it('not match /player/1/2//', async () => {
-            expect('/player/1/2//'.match(routesRegexp.player.regexp))
-                .toBe(null);
-        });
-
-        it('not match /player/1//3', async () => {
-            expect('/player/1//3'.match(routesRegexp.player.regexp))
-                .toBe(null);
-        });
-
-        it('not match /player/1//3/', async () => {
-            expect('/player/1//3/'.match(routesRegexp.player.regexp))
-                .toBe(null);
-        });
-
-        it('not match /player/1///4', async () => {
-            expect('/player/1///4'.match(routesRegexp.player.regexp))
-                .toBe(null);
-        });
-
-        it('not match /player/1/2/3', async () => {
-            expect('/player/1/2/3'.match(routesRegexp.player.regexp))
-                .toBe(null);
-        });
-
-        it('not match /player/1/2/3/', async () => {
-            expect('/player/1/2/3/'.match(routesRegexp.player.regexp))
-                .toBe(null);
-        });
-
-        it('not match /player/1/2//4', async () => {
-            expect('/player/1/2//4'.match(routesRegexp.player.regexp))
-                .toBe(null);
-        });
-
-        it('not match /player/1/2/3/4', async () => {
-            expect('/player/1/2/3/4'.match(routesRegexp.player.regexp))
-                .toBe(null);
-        });
-
-        it('not match /player/1/2/3/4/5/', async () => {
-            expect('/player/1/2/3/4/5/'.match(routesRegexp.player.regexp))
+        it('match /player/stream/stu/mtu/t/i/v/', async () => {
+            expect('/player/stream/stu/mtu/t/i/v/'.match(routesRegexp.player.regexp))
                 .toBe(null);
         });
     });

@@ -1,7 +1,10 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
 require('spatial-navigation-polyfill');
 const React = require('react');
 const { Router } = require('stremio-router');
 const { Core, KeyboardNavigation, ServicesProvider, Shell } = require('stremio/services');
+const { NotFound } = require('stremio/routes');
 const { ToastProvider } = require('stremio/common');
 const CoreEventsToaster = require('./CoreEventsToaster');
 const routerViewsConfig = require('./routerViewsConfig');
@@ -9,7 +12,7 @@ const styles = require('./styles');
 
 const App = () => {
     const onPathNotMatch = React.useCallback(() => {
-        window.history.back();
+        return NotFound;
     }, []);
     const services = React.useMemo(() => ({
         keyboardNavigation: new KeyboardNavigation(),
@@ -24,7 +27,6 @@ const App = () => {
         };
         const onCoreStateChanged = () => {
             if (services.core.active) {
-                window.core = services.core;
                 services.core.dispatch({
                     action: 'Load',
                     args: {
@@ -32,13 +34,15 @@ const App = () => {
                     }
                 });
             }
-            setCoreInitialized(services.core.active || services.core.error instanceof Error);
+            setCoreInitialized(services.core.active);
         };
         services.shell.on('stateChanged', onShellStateChanged);
         services.core.on('stateChanged', onCoreStateChanged);
         services.keyboardNavigation.start();
         services.shell.start();
         services.core.start();
+        window.shell = services.shell;
+        window.core = services.core;
         return () => {
             services.keyboardNavigation.stop();
             services.shell.stop();
@@ -56,7 +60,6 @@ const App = () => {
                             <CoreEventsToaster />
                             <Router
                                 className={styles['router']}
-                                homePath={'/'}
                                 viewsConfig={routerViewsConfig}
                                 onPathNotMatch={onPathNotMatch}
                             />

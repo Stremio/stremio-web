@@ -1,46 +1,46 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
 const React = require('react');
-const { MainNavBar, MetaRow } = require('stremio/common');
+const classnames = require('classnames');
+const { MainNavBars, MetaRow, LibItem, MetaItem } = require('stremio/common');
 const useBoard = require('./useBoard');
-const useContinueWatching = require('./useContinueWatching');
-const useItemOptions = require('./useItemOptions');
+const useContinueWatchingPreview = require('./useContinueWatchingPreview');
 const styles = require('./styles');
 
 const Board = () => {
     const board = useBoard();
-    const continueWatching = useContinueWatching();
-    const [options, optionOnSelect] = useItemOptions();
+    const continueWatchingPreview = useContinueWatchingPreview();
     return (
-        <div className={styles['board-container']}>
-            <MainNavBar className={styles['nav-bar']} route={'board'} />
+        <MainNavBars className={styles['board-container']} route={'board'}>
             <div className={styles['board-content']}>
                 {
-                    continueWatching.lib_items.length > 0 ?
+                    continueWatchingPreview.lib_items.length > 0 ?
                         <MetaRow
-                            className={styles['board-row']}
+                            className={classnames(styles['board-row'], styles['continue-watching-row'])}
                             title={'Continue Watching'}
-                            items={continueWatching.lib_items.map(({ id, videoId, ...libItem }) => ({
-                                ...libItem,
-                                dataset: { id, videoId, type: libItem.type },
-                                options,
-                                optionOnSelect
-                            }))}
-                            limit={10}
+                            items={continueWatchingPreview.lib_items}
+                            itemComponent={LibItem}
+                            deepLinks={continueWatchingPreview.deepLinks}
                         />
                         :
                         null
                 }
                 {board.catalog_resources.map((catalog_resource, index) => {
-                    const title = `${catalog_resource.addon_name} - ${catalog_resource.request.path.id} ${catalog_resource.request.path.type_name}`;
+                    const title = `${catalog_resource.origin} - ${catalog_resource.request.path.id} ${catalog_resource.request.path.type_name}`;
                     switch (catalog_resource.content.type) {
                         case 'Ready': {
+                            const posterShape = catalog_resource.content.content.length > 0 ?
+                                catalog_resource.content.content[0].posterShape
+                                :
+                                null;
                             return (
                                 <MetaRow
                                     key={index}
-                                    className={styles['board-row']}
+                                    className={classnames(styles['board-row'], styles['board-row-poster'], { [styles[`board-row-${posterShape}`]]: typeof posterShape === 'string' })}
                                     title={title}
                                     items={catalog_resource.content.content}
-                                    href={catalog_resource.href}
-                                    limit={10}
+                                    itemComponent={MetaItem}
+                                    deepLinks={catalog_resource.deepLinks}
                                 />
                             );
                         }
@@ -52,7 +52,7 @@ const Board = () => {
                                     className={styles['board-row']}
                                     title={title}
                                     message={message}
-                                    limit={10}
+                                    deepLinks={catalog_resource.deepLinks}
                                 />
                             );
                         }
@@ -60,16 +60,16 @@ const Board = () => {
                             return (
                                 <MetaRow.Placeholder
                                     key={index}
-                                    className={styles['board-row-placeholder']}
+                                    className={classnames(styles['board-row'], styles['board-row-poster'])}
                                     title={title}
-                                    limit={10}
+                                    deepLinks={catalog_resource.deepLinks}
                                 />
                             );
                         }
                     }
                 })}
             </div>
-        </div>
+        </MainNavBars>
     );
 };
 

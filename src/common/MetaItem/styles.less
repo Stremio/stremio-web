@@ -1,3 +1,7 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
+@import (reference) '~stremio-colors/dist/less/stremio-colors.less';
+
 :import('~stremio/common/Popup/styles.less') {
     popup-menu-container: menu-container;
 }
@@ -14,39 +18,13 @@
 }
 
 .meta-item-container {
-    position: relative;
+    padding: 1rem;
     overflow: visible;
 
     &:hover, &:focus, &:global(.active), &:global(.selected) {
         outline-style: none;
-
-        &::after {
-            position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            outline-style: solid;
-            outline-width: var(--focus-outline-size);
-            outline-color: var(--color-surfacelighter);
-            outline-offset: calc(-1 * var(--focus-outline-size));
-            pointer-events: none;
-            content: "";
-        }
-
-        .title-bar-container {
-            background-color: var(--color-surfacelight);
-
-            .title-label {
-                color: var(--color-backgrounddarker);
-            }
-
-            .menu-label-container {
-                .icon {
-                    fill: var(--color-backgrounddarker);
-                }
-            }
-        }
+        background-color: @color-background-light3;
+        transition: background-color 100ms ease-out;
     }
 
     &.poster-shape-poster {
@@ -70,7 +48,7 @@
     .poster-container {
         position: relative;
         z-index: 0;
-        background-color: var(--color-backgroundlight);
+        background-color: @color-background;
 
         .poster-image-layer {
             position: absolute;
@@ -90,13 +68,14 @@
                 height: 100%;
                 object-position: center;
                 object-fit: cover;
+                opacity: 0.9;
             }
 
             .placeholder-icon {
                 flex: none;
                 width: 80%;
                 height: 50%;
-                fill: var(--color-surfacelight20);
+                fill: @color-background-light3-90;
             }
         }
 
@@ -113,14 +92,14 @@
                 display: block;
                 width: 100%;
                 height: 100%;
-                filter: drop-shadow(0 0 0.5rem var(--color-backgroundlight));
+                filter: drop-shadow(0 0 0.5rem @color-background);
 
                 .play-icon-circle-centered-background {
-                    fill: var(--color-surfacelighter);
+                    fill: @color-accent4-90;
                 }
 
                 .play-icon-circle-centered-icon {
-                    fill: var(--color-primary);
+                    fill: @color-surface-light5-90;
                 }
             }
         }
@@ -131,11 +110,11 @@
             bottom: 0;
             left: 0;
             z-index: -1;
-            background-color: var(--color-backgroundlighter);
+            background-color: @color-background-light2;
 
             .progress-bar {
-                height: 0.5rem;
-                background-color: var(--color-primary);
+                height: 0.4rem;
+                background-color: @color-primaryvariant1;
             }
         }
     }
@@ -144,59 +123,52 @@
         display: flex;
         flex-direction: row;
         align-items: center;
-        justify-content: flex-end;
         height: 2.8rem;
-        background-color: var(--color-backgroundlight);
         overflow: visible;
 
         .title-label {
             flex: 1;
             max-height: 2.4em;
             padding-left: 0.5rem;
-            color: var(--color-surfacelighter);
+            color: @color-surface-light5-90;
 
             &:only-child {
                 padding-right: 0.5rem;
             }
         }
 
-
         .menu-label-container {
             flex: none;
-            width: 2.8rem;
+            width: 1.5rem;
             height: 2.8rem;
-            padding: 0.75rem;
+            padding: 1rem 0;
             background-color: transparent;
-
-            &:hover, &:global(.active) {
-                background-color: var(--color-surface80);
-            }
 
             .icon {
                 display: block;
                 width: 100%;
                 height: 100%;
-                fill: var(--color-surfacelighter);
+                fill: @color-surface-light1-90;
             }
 
             .popup-menu-container {
                 width: auto;
 
                 .multiselect-menu-container {
-                    min-width: 8rem;
+                    min-width: 6rem;
                     max-width: 12rem;
 
                     .multiselect-option-container {
                         padding: 0.5rem;
-                        background-color: var(--color-surfacelighter);
+                        background-color: @color-surface-light5;
 
                         &:hover, &:focus {
                             outline: none;
-                            background-color: var(--color-surfacelight);
+                            background-color: @color-surface-light2;
                         }
 
                         .multiselect-option-label {
-                            color: var(--color-backgrounddarker);
+                            color: @color-background-dark5-90;
                         }
                     }
                 }

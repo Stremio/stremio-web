@@ -1,3 +1,5 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
@@ -6,12 +8,12 @@ const useAnimationFrame = require('stremio/common/useAnimationFrame');
 const useLiveRef = require('stremio/common/useLiveRef');
 const styles = require('./styles');
 
-const Slider = ({ className, value, minimumValue, maximumValue, onSlide, onComplete }) => {
-    minimumValue = minimumValue !== null && !isNaN(minimumValue) && isFinite(minimumValue) ? minimumValue : 0;
-    maximumValue = maximumValue !== null && !isNaN(maximumValue) && isFinite(maximumValue) ? maximumValue : 100;
-    value = value !== null && !isNaN(value) && value >= minimumValue && value <= maximumValue ? value : 0;
-    const onSlideRef = useLiveRef(onSlide, [onSlide]);
-    const onCompleteRef = useLiveRef(onComplete, [onComplete]);
+const Slider = ({ className, value, minimumValue, maximumValue, disabled, onSlide, onComplete }) => {
+    const minimumValueRef = useLiveRef(minimumValue !== null && !isNaN(minimumValue) ? minimumValue : 0);
+    const maximumValueRef = useLiveRef(maximumValue !== null && !isNaN(maximumValue) ? maximumValue : 100);
+    const valueRef = useLiveRef(value !== null && !isNaN(value) ? Math.min(maximumValueRef.current, Math.max(minimumValueRef.current, value)) : 0);
+    const onSlideRef = useLiveRef(onSlide);
+    const onCompleteRef = useLiveRef(onComplete);
     const sliderContainerRef = React.useRef(null);
     const routeFocused = useRouteFocused();
     const [requestThumbAnimation, cancelThumbAnimation] = useAnimationFrame();
@@ -20,11 +22,9 @@ const Slider = ({ className, value, minimumValue, maximumValue, onSlide, onCompl
             return 0;
         }
 
-        const minimumValue = parseInt(sliderContainerRef.current.getAttribute('aria-valuemin'));
-        const maximumValue = parseInt(sliderContainerRef.current.getAttribute('aria-valuemax'));
         const { x: sliderX, width: sliderWidth } = sliderContainerRef.current.getBoundingClientRect();
         const thumbStart = Math.min(Math.max(mouseX - sliderX, 0), sliderWidth);
-        const value = (thumbStart / sliderWidth) * (maximumValue - minimumValue) + minimumValue;
+        const value = (thumbStart / sliderWidth) * (maximumValueRef.current - minimumValueRef.current) + minimumValueRef.current;
         return value;
     }, []);
     const retainThumb = React.useCallback(() => {
@@ -42,17 +42,16 @@ const Slider = ({ className, value, minimumValue, maximumValue, onSlide, onCompl
         const classIndex = classList.indexOf(styles['active-slider-within']);
         if (classIndex !== -1) {
             classList.splice(classIndex, 1);
+            document.documentElement.className = classnames(classList);
         }
-
-        document.documentElement.className = classnames(classList);
     }, []);
     const onBlur = React.useCallback(() => {
-        const value = parseInt(sliderContainerRef.current.getAttribute('aria-valuenow'));
         if (typeof onSlideRef.current === 'function') {
-            onSlideRef.current(value);
+            onSlideRef.current(valueRef.current);
         }
+
         if (typeof onCompleteRef.current === 'function') {
-            onCompleteRef.current(value);
+            onCompleteRef.current(valueRef.current);
         }
 
         releaseThumb();
@@ -85,22 +84,19 @@ const Slider = ({ className, value, minimumValue, maximumValue, onSlide, onCompl
 
         retainThumb();
     }, []);
-
-    React.useEffect(() => {
-        if (!routeFocused) {
+    React.useLayoutEffect(() => {
+        if (!routeFocused || disabled) {
             releaseThumb();
         }
-    }, [routeFocused]);
-    React.useEffect(() => {
+    }, [routeFocused, disabled]);
+    React.useLayoutEffect(() => {
         return () => {
             releaseThumb();
         };
     }, []);
-    const thumbPosition = React.useMemo(() => {
-        return Math.max(0, Math.min(1, (value - minimumValue) / (maximumValue - minimumValue)));
-    }, [value, minimumValue, maximumValue]);
+    const thumbPosition = Math.max(0, Math.min(1, (valueRef.current - minimumValueRef.current) / (maximumValueRef.current - minimumValueRef.current)));
     return (
-        <div ref={sliderContainerRef} className={classnames(className, styles['slider-container'])} aria-valuenow={value} aria-valuemin={minimumValue} aria-valuemax={maximumValue} onMouseDown={onMouseDown}>
+        <div ref={sliderContainerRef} className={classnames(className, styles['slider-container'], { 'disabled': disabled })} onMouseDown={onMouseDown}>
             <div className={styles['layer']}>
                 <div className={styles['track']} />
             </div>
@@ -121,6 +117,7 @@ Slider.propTypes = {
     value: PropTypes.number,
     minimumValue: PropTypes.number,
     maximumValue: PropTypes.number,
+    disabled: PropTypes.bool,
     onSlide: PropTypes.func,
     onComplete: PropTypes.func
 };

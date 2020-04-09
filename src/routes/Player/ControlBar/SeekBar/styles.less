@@ -1,5 +1,8 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
+@import (reference) '~stremio-colors/dist/less/stremio-colors.less';
+
 :import('~stremio/common/Slider/styles.less') {
-    slider-track: track;
     slider-track-before: track-before;
     slider-thumb: thumb;
 }
@@ -11,20 +14,20 @@
 
     &:hover, &:global(.active) {
         .slider:not(:global(.disabled)) {
-            .slider-track-before {
-                background-color: var(--color-primarylight);
-            }
-
             .slider-thumb {
-                fill: var(--color-surfacelighter);
+                fill: @color-surface-light5;
             }
         }
     }
 
     &:hover {
         .slider:not(:global(.disabled)) {
+            .slider-track-before {
+                transition: background-color 0s 100ms;
+            }
+
             .slider-thumb {
-                transition-delay: 100ms;
+                transition: fill 0s 100ms;
             }
         }
     }
@@ -36,7 +39,7 @@
         text-overflow: ellipsis;
         direction: rtl;
         text-align: left;
-        color: var(--color-surfacelighter);
+        color: @color-surface-light5;
     }
 
     .slider {
@@ -45,7 +48,6 @@
         margin: 0 var(--thumb-size);
 
         .slider-thumb {
-            transition: 0s fill;
             fill: transparent;
         }
     }

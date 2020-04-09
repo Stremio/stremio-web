@@ -1,3 +1,5 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
 var EventEmitter = require('events');
 var HTMLSubtitles = require('./HTMLSubtitles');
 
@@ -84,7 +86,7 @@ function YouTubeVideo(options) {
             .map(function(track) {
                 return Object.freeze({
                     id: track.languageCode,
-                    origin: 'EMBEDDED',
+                    origin: 'EMBEDDED IN VIDEO',
                     label: track.languageName
                 });
             });
@@ -482,7 +484,7 @@ function YouTubeVideo(options) {
                             embeddedSubtitlesSelectedTrackId = null;
                             var tracks = getSubtitlesTracks();
                             for (var i = 0; i < tracks.length; i++) {
-                                if (tracks[i].id === arguments[2] && tracks[i].origin === 'EMBEDDED') {
+                                if (tracks[i].id === arguments[2] && tracks[i].origin === 'EMBEDDED IN VIDEO') {
                                     embeddedSubtitlesSelectedTrackId = tracks[i].id;
                                     break;
                                 }

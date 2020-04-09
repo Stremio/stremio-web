@@ -1,3 +1,6 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
+@import (reference) '~stremio-colors/dist/less/stremio-colors.less';
 @import (reference) '~stremio/common/screen-sizes.less';
 
 :import('~stremio/common/Multiselect/styles.less') {
@@ -5,20 +8,13 @@
 }
 
 .library-container {
-    display: flex;
-    flex-direction: column;
     width: 100%;
     height: 100%;
-    background-color: var(--color-background);
-
-    .nav-bar {
-        flex: none;
-        align-self: stretch;
-    }
+    background-color: @color-background-dark2;
 
     .library-content {
-        flex: 1;
-        align-self: stretch;
+        width: 100%;
+        height: 100%;
         display: flex;
         flex-direction: column;
 
@@ -27,14 +23,14 @@
             align-self: stretch;
             display: flex;
             flex-direction: row;
-            margin: 1.5rem;
+            padding: 1.5rem;
             overflow: visible;
 
             .select-input-container {
                 flex-grow: 0;
                 flex-shrink: 1;
                 flex-basis: 15rem;
-                height: 3rem;
+                height: 3.5rem;
 
                 &:not(:last-child) {
                     margin-right: 1.5rem;
@@ -48,25 +44,19 @@
         }
 
         .message-container {
-            flex-grow: 0;
-            flex-shrink: 1;
-            flex-basis: auto;
+            flex: 0 1 auto;
+            align-self: stretch;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start;
             align-items: center;
             padding: 0 1.5rem;
+            overflow-y: auto;
 
             &:first-child {
-                .message-label {
-                    margin: 1.5rem 0;
-                }
+                padding: 4rem;
             }
 
             &.no-user-message-container {
-                flex: 1;
-                justify-content: center;
-
                 .login-button-container {
                     flex: none;
                     display: flex;
@@ -76,10 +66,11 @@
                     width: 20rem;
                     min-height: 4rem;
                     padding: 0.5rem 1rem;
-                    background-color: var(--color-primarydark);
+                    margin-bottom: 1rem;
+                    background-color: @color-accent3;
 
                     &:hover {
-                        background-color: var(--color-primary);
+                        background-color: @color-accent3-light1;
                     }
 
                     .label {
@@ -89,34 +80,44 @@
                         max-height: 4.8em;
                         font-size: 1.2rem;
                         font-weight: 700;
-                        color: var(--color-surfacelighter);
+                        color: @color-surface-light5-90;
                         text-align: center;
                     }
                 }
             }
 
+            .image {
+                flex: none;
+                width: 12rem;
+                height: 12rem;
+                margin-bottom: 1rem;
+                object-fit: contain;
+                object-position: center;
+                opacity: 0.9;
+            }
+
             .message-label {
                 flex: none;
-                max-height: 4.8em;
-                font-size: 2rem;
-                color: var(--color-surfacelighter);
+                font-size: 2.5rem;
                 text-align: center;
+                color: @color-secondaryvariant2-light1-90;
             }
         }
 
         .meta-items-container {
             flex: 1;
+            align-self: stretch;
             display: grid;
             grid-auto-rows: max-content;
             align-items: center;
-            grid-gap: 1.5rem;
+            grid-gap: 0.5rem;
             padding: 0 1.5rem;
             overflow-y: auto;
         }
     }
 }
 
-@media only screen and (min-width: @xxlarge) {
+@media only screen and (min-width: @large) {
     .library-container {
         .library-content {
             .meta-items-container {
@@ -126,7 +127,7 @@
     }
 }
 
-@media only screen and (max-width: @xxlarge) {
+@media only screen and (max-width: @large) {
     .library-container {
         .library-content {
             .meta-items-container {
@@ -171,6 +172,16 @@
         .library-content {
             .meta-items-container {
                 grid-template-columns: repeat(5, 1fr);
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: @minimum) {
+    .library-container {
+        .library-content {
+            .meta-items-container {
+                grid-template-columns: repeat(4, 1fr);
             }
         }
     }

@@ -1,10 +1,14 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const FocusLock = require('react-focus-lock').default;
+const { useRouteFocused } = require('stremio-router');
 const styles = require('./styles');
 
 const Popup = ({ open, direction, renderLabel, renderMenu, dataset, onCloseRequest, ...props }) => {
+    const routeFocused = useRouteFocused();
     const labelRef = React.useRef(null);
     const menuRef = React.useRef(null);
     const [autoDirection, setAutoDirection] = React.useState(null);
@@ -20,11 +24,8 @@ const Popup = ({ open, direction, renderLabel, renderMenu, dataset, onCloseReque
                     dataset: dataset
                 };
                 switch (event.type) {
-                    case 'resize':
-                        onCloseRequest(closeEvent);
-                        break;
                     case 'keydown':
-                        if (event.key === 'Escape') {
+                        if (event.code === 'Escape') {
                             onCloseRequest(closeEvent);
                         }
                         break;
@@ -36,17 +37,15 @@ const Popup = ({ open, direction, renderLabel, renderMenu, dataset, onCloseReque
                 }
             }
         };
-        if (open) {
-            window.addEventListener('resize', onCloseEvent);
+        if (routeFocused && open) {
             window.addEventListener('keydown', onCloseEvent);
             window.addEventListener('mousedown', onCloseEvent);
         }
         return () => {
-            window.removeEventListener('resize', onCloseEvent);
             window.removeEventListener('keydown', onCloseEvent);
             window.removeEventListener('mousedown', onCloseEvent);
         };
-    }, [open, onCloseRequest, dataset]);
+    }, [routeFocused, open, onCloseRequest, dataset]);
     React.useLayoutEffect(() => {
         if (open) {
             const autoDirection = [];

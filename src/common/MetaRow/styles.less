@@ -1,47 +1,23 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
+@import (reference) '~stremio-colors/dist/less/stremio-colors.less';
+
 .meta-row-container {
     overflow: visible;
 
-    .title-container {
-        max-height: 2.4em;
-        margin-bottom: 2rem;
-        font-size: 1.5rem;
-        color: var(--color-surfacelighter);
-    }
-
-    .message-container {
-        max-height: 3.6em;
-        font-size: 1.3rem;
-        color: var(--color-surfacelighter);
-    }
-
-    .content-container {
+    .header-container {
         display: flex;
         flex-direction: row;
-        align-items: stretch;
-        overflow: visible;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 0 1rem;
+        margin-bottom: 1rem;
 
-        .meta-items-container {
+        .title-container {
             flex: 1;
-            display: flex;
-            flex-direction: row;
-            align-items: stretch;
-            overflow: visible;
-
-            .meta-item {
-                margin-right: 2rem;
-
-                &.poster-shape-poster {
-                    flex: calc(1 / var(--poster-shape-ratio));
-                }
-
-                &.poster-shape-square {
-                    flex: 1;
-                }
-
-                &.poster-shape-landscape {
-                    flex: calc(1 / var(--landscape-shape-ratio));
-                }
-            }
+            max-height: 2.4em;
+            font-size: 1.8rem;
+            color: @color-secondaryvariant2-light1-90;
         }
 
         .see-all-container {
@@ -49,30 +25,72 @@
             display: flex;
             flex-direction: row;
             align-items: center;
-            justify-content: center;
-            padding: 1rem;
-            background-color: var(--color-backgroundlight);
+            max-width: 12rem;
+            padding: 0.2rem;
 
-            &:hover, &:focus {
-                background-color: var(--color-backgroundlighter);
+            &:focus {
+                outline: none;
+                background-color: @color-background-light3;
+            }
+
+            &:hover {
+                .label {
+                    color: @color-secondaryvariant2-light2-90;
+                }
+
+                .icon {
+                    fill: @color-secondaryvariant2-light2-90;
+                }
             }
 
             .label {
-                flex-grow: 0;
-                flex-shrink: 1;
-                flex-basis: auto;
-                max-height: 2.4em;
-                font-size: 1.2rem;
-                text-align: center;
-                color: var(--color-surfacelighter);
+                flex: 0 1 auto;
+                max-height: 1.2em;
+                font-size: 1.3rem;
+                font-weight: 500;
+                text-transform: uppercase;
+                color: @color-secondaryvariant2-light1-90;
             }
 
             .icon {
                 flex: none;
-                width: 1.3rem;
                 height: 1.3rem;
-                margin-left: 0.3rem;
-                fill: var(--color-surfacelighter);
+                margin-left: 0.5rem;
+                fill: @color-secondaryvariant2-light1-90;
+            }
+        }
+    }
+
+    .message-container {
+        max-height: 3.6em;
+        padding: 0 1rem;
+        font-size: 1.3rem;
+        color: @color-secondaryvariant2-light1-90;
+    }
+
+    .meta-items-container {
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+        overflow: visible;
+
+        .meta-item {
+            padding: 1rem;
+
+            &:not(:first-child) {
+                margin-left: 0.5rem;
+            }
+
+            &.poster-shape-poster {
+                flex: calc(1 / var(--poster-shape-ratio));
+            }
+
+            &.poster-shape-square {
+                flex: 1;
+            }
+
+            &.poster-shape-landscape {
+                flex: calc(1 / var(--landscape-shape-ratio));
             }
         }
     }
