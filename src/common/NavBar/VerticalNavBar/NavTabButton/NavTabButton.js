@@ -6,7 +6,7 @@ const Button = require('stremio/common/Button');
 const Image = require('stremio/common/Image');
 const styles = require('./styles');
 
-const NavTabButton = ({ className, icon, label, href, selected, details, onClick }) => {
+const NavTabButton = ({ className, logo, icon, label, href, selected, onClick }) => {
     const renderLogoFallback = React.useMemo(() => () => {
         return (
             <Icon className={styles['icon']} icon={'ic_addons'} />
@@ -15,10 +15,10 @@ const NavTabButton = ({ className, icon, label, href, selected, details, onClick
     return (
         <Button className={classnames(className, styles['nav-tab-button-container'], { 'selected': selected })} title={label} tabIndex={-1} href={href} onClick={onClick}>
             {
-                details ?
+                typeof logo === 'string' && logo.length > 0 ?
                     <Image
                         className={styles['logo']}
-                        src={icon}
+                        src={logo}
                         alt={' '}
                         renderFallback={renderLogoFallback}
                     />
@@ -40,11 +40,11 @@ const NavTabButton = ({ className, icon, label, href, selected, details, onClick
 
 NavTabButton.propTypes = {
     className: PropTypes.string,
+    logo: PropTypes.string,
     icon: PropTypes.string,
     label: PropTypes.string,
     href: PropTypes.string,
     selected: PropTypes.bool,
-    details: PropTypes.bool,
     onClick: PropTypes.func
 };
 
