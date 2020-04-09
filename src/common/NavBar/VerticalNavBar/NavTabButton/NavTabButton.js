@@ -44,6 +44,7 @@ NavTabButton.propTypes = {
     label: PropTypes.string,
     href: PropTypes.string,
     selected: PropTypes.bool,
+    details: PropTypes.bool,
     onClick: PropTypes.func
 };
 
