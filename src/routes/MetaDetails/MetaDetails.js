@@ -79,6 +79,7 @@ const MetaDetails = ({ urlParams }) => {
                                                         id: metaResource.addon.transportUrl,
                                                         label: metaResource.addon.manifest.name,
                                                         logo: metaResource.addon.manifest.logo,
+                                                        icon: 'ic_addons',
                                                         onClick: () => { selectResource(metaResource.request); }
                                                     }))}
                                                     selected={selectedMetaResource.request.base}
