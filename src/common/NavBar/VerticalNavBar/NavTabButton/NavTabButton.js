@@ -9,25 +9,20 @@ const styles = require('./styles');
 const NavTabButton = ({ className, logo, icon, label, href, selected, onClick }) => {
     const renderLogoFallback = React.useMemo(() => () => {
         return (
-            <Icon className={styles['icon']} icon={'ic_addons'} />
+            typeof icon === 'string' && icon.length > 0 ?
+                <Icon className={styles['icon']} icon={icon} />
+                :
+                null
         );
-    }, []);
+    }, [icon]);
     return (
         <Button className={classnames(className, styles['nav-tab-button-container'], { 'selected': selected })} title={label} tabIndex={-1} href={href} onClick={onClick}>
-            {
-                typeof logo === 'string' && logo.length > 0 ?
-                    <Image
-                        className={styles['logo']}
-                        src={logo}
-                        alt={' '}
-                        renderFallback={renderLogoFallback}
-                    />
-                    :
-                    typeof icon === 'string' && icon.length > 0 ?
-                        <Icon className={styles['icon']} icon={icon} />
-                        :
-                        null
-            }
+            <Image
+                className={styles['logo']}
+                src={logo}
+                alt={' '}
+                renderFallback={renderLogoFallback}
+            />
             {
                 typeof label === 'string' && label.length > 0 ?
                     <div className={styles['label']}>{label}</div>
