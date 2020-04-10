@@ -105,11 +105,11 @@ const MetaDetails = ({ urlParams }) => {
                                             inLibrary={inLibrary}
                                             toggleInLibrary={toggleInLibrary}
                                         />
-                                        <div className={styles['spacing']} />
                                     </React.Fragment>
                                     :
                                     <MetaPreview.Placeholder className={styles['meta-preview']} />
                 }
+                <div className={styles['spacing']} />
                 {
                     streamsResourceRef !== null ?
                         <StreamsList
