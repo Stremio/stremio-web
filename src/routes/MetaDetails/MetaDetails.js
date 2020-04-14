@@ -4,20 +4,21 @@ const { VerticalNavBar, HorizontalNavBar, MetaPreview, Image, useInLibrary } = r
 const StreamsList = require('./StreamsList');
 const VideosList = require('./VideosList');
 const useMetaDetails = require('./useMetaDetails');
-const useSelectableResource = require('./useSelectableResource');
 const styles = require('./styles');
 
-const MetaDetails = ({ urlParams }) => {
+const MetaDetails = ({ urlParams, queryParams }) => {
     const metaDetails = useMetaDetails(urlParams);
-    const [metaResourceRef, metaResources, selectedMetaResource, selectResource] = useSelectableResource(
-        metaDetails.selected !== null ? metaDetails.selected.meta_resource_ref : null,
-        metaDetails.meta_resources
-    );
+    const metaResourceRef = React.useMemo(() => {
+        return metaDetails.selected !== null ? metaDetails.selected.meta_resources_ref : null;
+    }, [metaDetails.selected]);
+    const selectedAddon = queryParams.get('addon');
+    const selectedMetaResource = React.useMemo(() => {
+        return metaDetails.meta_resources.find((metaResource) => selectedAddon ? metaResource.request.base === selectedAddon : metaResource.content.type === 'Ready') || null
+    }, [metaDetails, selectedAddon]);
     const streamsResourceRef = metaDetails.selected !== null ? metaDetails.selected.streams_resource_ref : null;
     const streamsResources = metaDetails.streams_resources;
-    const metaResourcesReady = metaDetails.meta_resources.filter((metaResource) => metaResource.content.type === 'Ready');
     const selectedVideo = React.useMemo(() => {
-        return streamsResourceRef !== null && selectedMetaResource !== null ?
+        return streamsResourceRef !== null && selectedMetaResource !== null && selectedMetaResource.content.type === 'Ready' ?
             selectedMetaResource.content.content.videos.reduce((result, video) => {
                 if (video.id === streamsResourceRef.id) {
                     return video;
@@ -28,15 +29,32 @@ const MetaDetails = ({ urlParams }) => {
             :
             null;
     }, [selectedMetaResource, streamsResourceRef]);
-    const [inLibrary, toggleInLibrary] = useInLibrary(selectedMetaResource !== null ? selectedMetaResource.content.content : null);
+    const [inLibrary, toggleInLibrary] = useInLibrary(selectedMetaResource !== null && selectedMetaResource.content.type === 'Ready' ? selectedMetaResource.content.content : null);
     return (
         <div className={styles['metadetails-container']}>
             <HorizontalNavBar
                 className={styles['nav-bar']}
                 backButton={true}
-                title={selectedMetaResource !== null ? selectedMetaResource.content.content.name : null}
+                title={selectedMetaResource !== null && selectedMetaResource.content.type === 'Ready' ? selectedMetaResource.content.content.name : null}
             />
             <div className={styles['metadetails-content']}>
+                {
+                    metaDetails.meta_resources.length > 0 ?
+                        <VerticalNavBar
+                            className={styles['vertical-nav-bar']}
+                            tabs={metaDetails.meta_resources.map((metaResource) => ({
+                                id: metaResource.addon.transportUrl,
+                                label: metaResource.addon.manifest.name,
+                                logo: metaResource.addon.manifest.logo,
+                                icon: 'ic_addons',
+                                //TODO add selected video id
+                                href: `#/metadetails/${encodeURIComponent(metaResource.request.path.type_name)}/${encodeURIComponent(metaResource.request.path.id)}?addon=${encodeURIComponent(metaResource.addon.transportUrl)}`,
+                            }))}
+                            selected={selectedMetaResource !== null ? selectedMetaResource.addon.transportUrl : null}
+                        />
+                        :
+                        null
+                }
                 {
                     metaResourceRef === null ?
                         <div className={styles['meta-message-container']}>
@@ -44,19 +62,19 @@ const MetaDetails = ({ urlParams }) => {
                             <div className={styles['message-label']}>No meta was selected!</div>
                         </div>
                         :
-                        metaResources.length === 0 ?
+                        metaDetails.meta_resources.length === 0 ?
                             <div className={styles['meta-message-container']}>
                                 <Image className={styles['image']} src={'/images/empty.png'} alt={' '} />
                                 <div className={styles['message-label']}>No addons ware requested for this meta!</div>
                             </div>
                             :
-                            metaResources.every((metaResource) => metaResource.content.type === 'Err') ?
+                            metaDetails.meta_resources.every((metaResource) => metaResource.content.type === 'Err') ?
                                 <div className={styles['meta-message-container']}>
                                     <Image className={styles['image']} src={'/images/empty.png'} alt={' '} />
                                     <div className={styles['message-label']}>No metadata was found!</div>
                                 </div>
                                 :
-                                selectedMetaResource !== null ?
+                                selectedMetaResource !== null && selectedMetaResource.content.type === 'Ready' ?
                                     <React.Fragment>
                                         {
                                             typeof selectedMetaResource.content.content.background === 'string' &&
@@ -68,22 +86,6 @@ const MetaDetails = ({ urlParams }) => {
                                                         alt={' '}
                                                     />
                                                 </div>
-                                                :
-                                                null
-                                        }
-                                        {
-                                            metaResourcesReady.length > 0 ?
-                                                <VerticalNavBar
-                                                    className={styles['vertical-nav-bar']}
-                                                    tabs={metaResourcesReady.map((metaResource) => ({
-                                                        id: metaResource.addon.transportUrl,
-                                                        label: metaResource.addon.manifest.name,
-                                                        logo: metaResource.addon.manifest.logo,
-                                                        icon: 'ic_addons',
-                                                        onClick: () => { selectResource(metaResource.request); }
-                                                    }))}
-                                                    selected={selectedMetaResource.request.base}
-                                                />
                                                 :
                                                 null
                                         }
