@@ -43,7 +43,10 @@ const mapMetaDetailsStateWithCtx = (meta_details, ctx) => {
                 addon: ctx.profile.addons.find((addon) => addon.transportUrl === meta_resource.request.base)
             }
             :
-            meta_resource;
+            {
+                ...meta_resource,
+                addon: ctx.profile.addons.find((addon) => addon.transportUrl === meta_resource.request.base)
+            }
     });
     const streams_resources = meta_details.streams_resources.map((stream_resource) => {
         return stream_resource.content.type === 'Ready' ?
