@@ -137,7 +137,8 @@ MetaDetails.propTypes = {
         type: PropTypes.string,
         id: PropTypes.string,
         videoId: PropTypes.string
-    })
+    }),
+    queryParams: PropTypes.instanceOf(URLSearchParams)
 };
 
 module.exports = MetaDetails;
