@@ -11,7 +11,7 @@ const MetaDetails = ({ urlParams, queryParams }) => {
     const metaResourceRef = React.useMemo(() => {
         return metaDetails.selected !== null ? metaDetails.selected.meta_resources_ref : null;
     }, [metaDetails.selected]);
-    const selectedAddon = queryParams.get('addon');
+    const selectedAddon = queryParams.get('metaTransportUrl');
     const selectedMetaResource = React.useMemo(() => {
         return metaDetails.meta_resources.find((metaResource) => selectedAddon ? metaResource.request.base === selectedAddon : metaResource.content.type === 'Ready') || null;
     }, [metaDetails, selectedAddon]);
@@ -47,8 +47,7 @@ const MetaDetails = ({ urlParams, queryParams }) => {
                                 label: metaResource.addon.manifest.name,
                                 logo: metaResource.addon.manifest.logo,
                                 icon: 'ic_addons',
-                                //TODO add selected video id
-                                href: `#/metadetails/${encodeURIComponent(metaResource.request.path.type_name)}/${encodeURIComponent(metaResource.request.path.id)}?addon=${encodeURIComponent(metaResource.addon.transportUrl)}`,
+                                href: metaResource.deepLinks.meta_details_streams ? metaResource.deepLinks.meta_details_streams : metaResource.deepLinks.meta_details_videos,
                             }))}
                             selected={selectedMetaResource !== null ? selectedMetaResource.addon.transportUrl : null}
                         />
