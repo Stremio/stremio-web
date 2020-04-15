@@ -41,9 +41,7 @@ const mapMetaDetailsStateWithCtx = (meta_details, ctx) => {
                     }
                 }
                 :
-                {
-                    ...meta_resource.content
-                },
+                meta_resource.content,
             deepLinks: meta_details.selected !== null ?
                 deepLinking.withMetaResource({
                     metaResource: meta_resource,
