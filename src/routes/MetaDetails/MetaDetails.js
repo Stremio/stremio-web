@@ -49,7 +49,7 @@ const MetaDetails = ({ urlParams, queryParams }) => {
                                 icon: 'ic_addons',
                                 href: metaResource.deepLinks.meta_details_streams ? metaResource.deepLinks.meta_details_streams : metaResource.deepLinks.meta_details_videos,
                             }))}
-                            selected={selectedMetaResource !== null ? selectedMetaResource.addon.transportUrl : null}
+                            selected={selectedMetaResource !== null ? selectedMetaResource.request.base : null}
                         />
                         :
                         null
