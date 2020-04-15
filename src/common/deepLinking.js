@@ -68,12 +68,13 @@ const withLibItem = ({ libItem, streams = {} }) => {
 };
 
 const withVideo = ({ video, metaTransportUrl, metaItem, streams = {} }) => {
+    const queryParams = new URLSearchParams([['metaTransportUrl', metaTransportUrl]]);
     const [stream, streamTransportUrl] = typeof streams[`${encodeURIComponent(metaItem.id)}/${encodeURIComponent(video.id)}`] === 'object' ?
         streams[`${encodeURIComponent(metaItem.id)}/${encodeURIComponent(video.id)}`]
         :
         [];
     return {
-        meta_details_streams: `#/metadetails/${encodeURIComponent(metaItem.type)}/${encodeURIComponent(metaItem.id)}/${encodeURIComponent(video.id)}`,
+        meta_details_streams: `#/metadetails/${encodeURIComponent(metaItem.type)}/${encodeURIComponent(metaItem.id)}/${encodeURIComponent(video.id)}?${queryParams.toString()}`,
         // TODO check if stream is external
         player: typeof stream === 'object' && typeof streamTransportUrl === 'string' ?
             `#/player/${encodeURIComponent(serializeStream(stream))}/${encodeURIComponent(streamTransportUrl)}/${encodeURIComponent(metaTransportUrl)}/${encodeURIComponent(metaItem.type)}/${encodeURIComponent(metaItem.id)}/${encodeURIComponent(video.id)}`
