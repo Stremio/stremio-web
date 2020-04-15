@@ -10,10 +10,10 @@ const initMetaDetailsState = () => ({
 const mapMetaDetailsStateWithCtx = (meta_details, ctx) => {
     const selected = meta_details.selected;
     const meta_resources = meta_details.meta_resources.map((meta_resource) => {
-        return meta_resource.content.type === 'Ready' ?
-            {
-                request: meta_resource.request,
-                content: {
+        return {
+            request: meta_resource.request,
+            content: meta_resource.content.type === 'Ready' ?
+                {
                     type: 'Ready',
                     content: {
                         ...meta_resource.content.content,
@@ -39,14 +39,21 @@ const mapMetaDetailsStateWithCtx = (meta_details, ctx) => {
                             })
                         }))
                     }
+                }
+                :
+                {
+                    ...meta_resource.content
                 },
-                addon: ctx.profile.addons.find((addon) => addon.transportUrl === meta_resource.request.base)
-            }
-            :
-            {
-                ...meta_resource,
-                addon: ctx.profile.addons.find((addon) => addon.transportUrl === meta_resource.request.base)
-            };
+            deepLinks: meta_details.selected !== null ?
+                deepLinking.withMetaResource({
+                    metaResource: meta_resource,
+                    type: meta_details.selected.meta_resource_ref.type_name,
+                    id: meta_details.selected.meta_resource_ref.id
+                })
+                :
+                null,
+            addon: ctx.profile.addons.find((addon) => addon.transportUrl === meta_resource.request.base)
+        }
     });
     const streams_resources = meta_details.streams_resources.map((stream_resource) => {
         return stream_resource.content.type === 'Ready' ?
