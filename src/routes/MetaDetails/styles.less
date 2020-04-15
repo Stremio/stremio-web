@@ -5,10 +5,6 @@
     meta-info-container: meta-info-container;
 }
 
-:import('~stremio/common/NavBar/VerticalNavBar/styles.less') {
-    nav-tab-button: nav-tab-button;
-}
-
 .metadetails-container {
     display: flex;
     flex-direction: column;
@@ -28,6 +24,10 @@
         z-index: 0;
         display: flex;
         flex-direction: row;
+
+        .vertical-nav-bar {
+            flex: none;
+        }
 
         .background-image-layer {
             position: absolute;
@@ -83,15 +83,6 @@
                 font-size: 2rem;
                 text-align: center;
                 color: @color-secondaryvariant2-light1-90;
-            }
-        }
-
-        .vertical-nav-bar {
-            flex: none;
-            width: 6rem;
-
-            .nav-tab-button {
-                width: 6rem;
             }
         }
 
