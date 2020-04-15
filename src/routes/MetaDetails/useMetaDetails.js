@@ -46,11 +46,12 @@ const mapMetaDetailsStateWithCtx = (meta_details, ctx) => {
                 deepLinking.withMetaResource({
                     metaResource: meta_resource,
                     type: meta_details.selected.meta_resource_ref.type_name,
-                    id: meta_details.selected.meta_resource_ref.id
+                    id: meta_details.selected.meta_resource_ref.id,
+                    videoId: meta_details.selected.streams_resource_ref ? meta_details.selected.streams_resource_ref.id : null
                 })
                 :
                 null,
-            addon: ctx.profile.addons.find((addon) => addon.transportUrl === meta_resource.request.base)
+            addon: ctx.profile.addons.find((addon) => addon.transportUrl === meta_resource.request.base) || null
         };
     });
     const streams_resources = meta_details.streams_resources.map((stream_resource) => {

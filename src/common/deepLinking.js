@@ -21,18 +21,8 @@ const withMetaItem = ({ metaItem }) => {
     };
 };
 
-const withMetaResource = ({ metaResource, type, id }) => {
+const withMetaResource = ({ metaResource, type, id, videoId }) => {
     const queryParams = new URLSearchParams([['metaTransportUrl', metaResource.request.base]]);
-    const videoId = metaResource.content.type === 'Ready' ?
-        typeof metaResource.content.content.behaviorHints.videoId === 'string' ?
-            metaResource.content.content.behaviorHints.videoId
-            :
-            metaResource.content.content.videos.length === 1 ?
-                metaResource.content.content.videos[0].id
-                :
-                metaResource.content.content.videos.find((video) => video.id === id) || null
-        :
-        null;
     return {
         meta_details_videos: `#/metadetails/${encodeURIComponent(type)}/${encodeURIComponent(id)}?${queryParams.toString()}`,
         meta_details_streams: typeof videoId === 'string' ?
