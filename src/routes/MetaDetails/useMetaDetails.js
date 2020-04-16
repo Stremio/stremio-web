@@ -53,7 +53,13 @@ const mapMetaDetailsStateWithCtx = (meta_details, ctx) => {
                 })
                 :
                 null,
-            addon: ctx.profile.addons.find((addon) => addon.transportUrl === meta_resource.request.base) || null
+            addon: ctx.profile.addons.reduce((origin, addon) => {
+                if (addon.transportUrl === meta_resource.request.base) {
+                    return addon;
+                }
+
+                return origin;
+            }, null)
         };
     });
     const streams_resources = meta_details.streams_resources.map((stream_resource) => {
