@@ -21,7 +21,7 @@ const MetaDetails = ({ urlParams, queryParams }) => {
             }
 
             return origin;
-        }, null)
+        }, null);
     }, [metaDetails, selectedAddon]);
     const streamsResourceRef = metaDetails.selected !== null ? metaDetails.selected.streams_resource_ref : null;
     const streamsResources = metaDetails.streams_resources;
