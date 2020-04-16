@@ -17,6 +17,7 @@ const VerticalNavBar = React.memo(({ className, selected, tabs }) => {
                             className={styles['nav-tab-button']}
                             selected={tab.id === selected}
                             href={tab.href}
+                            logo={tab.logo}
                             icon={tab.icon}
                             label={tab.label}
                             onClick={tab.onClick}
@@ -37,6 +38,7 @@ VerticalNavBar.propTypes = {
     tabs: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.string,
         label: PropTypes.string,
+        logo: PropTypes.string,
         icon: PropTypes.string,
         href: PropTypes.string,
         onClick: PropTypes.func

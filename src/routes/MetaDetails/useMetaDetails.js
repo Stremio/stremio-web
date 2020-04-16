@@ -9,13 +9,13 @@ const initMetaDetailsState = () => ({
     streams_resources: []
 });
 
-const mapMetaDetailsState = (meta_details) => {
+const mapMetaDetailsStateWithCtx = (meta_details, ctx) => {
     const selected = meta_details.selected;
     const meta_resources = meta_details.meta_resources.map((meta_resource) => {
-        return meta_resource.content.type === 'Ready' ?
-            {
-                request: meta_resource.request,
-                content: {
+        return {
+            request: meta_resource.request,
+            content: meta_resource.content.type === 'Ready' ?
+                {
                     type: 'Ready',
                     content: {
                         ...meta_resource.content.content,
@@ -42,9 +42,25 @@ const mapMetaDetailsState = (meta_details) => {
                         }))
                     }
                 }
-            }
-            :
-            meta_resource;
+                :
+                meta_resource.content,
+            deepLinks: meta_details.selected !== null ?
+                deepLinking.withMetaResource({
+                    metaResource: meta_resource,
+                    type: meta_details.selected.meta_resource_ref.type_name,
+                    id: meta_details.selected.meta_resource_ref.id,
+                    videoId: meta_details.selected.streams_resource_ref !== null ? meta_details.selected.streams_resource_ref.id : null
+                })
+                :
+                null,
+            addon: ctx.profile.addons.reduce((result, addon) => {
+                if (addon.transportUrl === meta_resource.request.base) {
+                    return addon;
+                }
+
+                return result;
+            }, null)
+        };
     });
     const streams_resources = meta_details.streams_resources.map((stream_resource) => {
         return stream_resource.content.type === 'Ready' ?
@@ -114,7 +130,7 @@ const useMetaDetails = (urlParams) => {
     return useModelState({
         model: 'meta_details',
         action: loadMetaDetailsAction,
-        map: mapMetaDetailsState,
+        mapWithCtx: mapMetaDetailsStateWithCtx,
         init: initMetaDetailsState
     });
 };

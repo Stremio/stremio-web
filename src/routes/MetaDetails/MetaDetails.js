@@ -2,23 +2,35 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const { HorizontalNavBar, MetaPreview, Image, useInLibrary } = require('stremio/common');
+const { VerticalNavBar, HorizontalNavBar, MetaPreview, Image, useInLibrary } = require('stremio/common');
 const StreamsList = require('./StreamsList');
 const VideosList = require('./VideosList');
 const useMetaDetails = require('./useMetaDetails');
-const useSelectableResource = require('./useSelectableResource');
 const styles = require('./styles');
 
-const MetaDetails = ({ urlParams }) => {
+const MetaDetails = ({ urlParams, queryParams }) => {
     const metaDetails = useMetaDetails(urlParams);
-    const [metaResourceRef, metaResources, selectedMetaResource] = useSelectableResource(
-        metaDetails.selected !== null ? metaDetails.selected.meta_resource_ref : null,
-        metaDetails.meta_resources
-    );
+    const metaResourceRef = React.useMemo(() => {
+        return metaDetails.selected !== null ? metaDetails.selected.meta_resources_ref : null;
+    }, [metaDetails.selected]);
+    const selectedAddon = queryParams.get('metaTransportUrl');
+    const selectedMetaResource = React.useMemo(() => {
+        return metaDetails.meta_resources.reduceRight((result, metaResource) => {
+            if (typeof selectedAddon === 'string') {
+                if (metaResource.request.base === selectedAddon) {
+                    return metaResource;
+                }
+            } else if (metaResource.content.type === 'Ready') {
+                return metaResource;
+            }
+
+            return result;
+        }, null);
+    }, [metaDetails, selectedAddon]);
     const streamsResourceRef = metaDetails.selected !== null ? metaDetails.selected.streams_resource_ref : null;
     const streamsResources = metaDetails.streams_resources;
     const selectedVideo = React.useMemo(() => {
-        return streamsResourceRef !== null && selectedMetaResource !== null ?
+        return streamsResourceRef !== null && selectedMetaResource !== null && selectedMetaResource.content.type === 'Ready' ?
             selectedMetaResource.content.content.videos.reduce((result, video) => {
                 if (video.id === streamsResourceRef.id) {
                     return video;
@@ -29,15 +41,34 @@ const MetaDetails = ({ urlParams }) => {
             :
             null;
     }, [selectedMetaResource, streamsResourceRef]);
-    const [inLibrary, toggleInLibrary] = useInLibrary(selectedMetaResource !== null ? selectedMetaResource.content.content : null);
+    const tabs = React.useMemo(() => {
+        return metaDetails.meta_resources.map((metaResource) => ({
+            id: metaResource.addon.transportUrl,
+            label: metaResource.addon.manifest.name,
+            logo: metaResource.addon.manifest.logo,
+            icon: 'ic_addons',
+            href: metaResource.deepLinks.meta_details_streams !== null ? metaResource.deepLinks.meta_details_streams : metaResource.deepLinks.meta_details_videos
+        }));
+    }, [metaDetails]);
+    const [inLibrary, toggleInLibrary] = useInLibrary(selectedMetaResource !== null && selectedMetaResource.content.type === 'Ready' ? selectedMetaResource.content.content : null);
     return (
         <div className={styles['metadetails-container']}>
             <HorizontalNavBar
                 className={styles['nav-bar']}
                 backButton={true}
-                title={selectedMetaResource !== null ? selectedMetaResource.content.content.name : null}
+                title={selectedMetaResource !== null && selectedMetaResource.content.type === 'Ready' ? selectedMetaResource.content.content.name : null}
             />
             <div className={styles['metadetails-content']}>
+                {
+                    metaDetails.meta_resources.length > 0 ?
+                        <VerticalNavBar
+                            className={styles['vertical-nav-bar']}
+                            tabs={tabs}
+                            selected={selectedMetaResource !== null ? selectedMetaResource.request.base : null}
+                        />
+                        :
+                        null
+                }
                 {
                     metaResourceRef === null ?
                         <div className={styles['meta-message-container']}>
@@ -45,19 +76,19 @@ const MetaDetails = ({ urlParams }) => {
                             <div className={styles['message-label']}>No meta was selected!</div>
                         </div>
                         :
-                        metaResources.length === 0 ?
+                        metaDetails.meta_resources.length === 0 ?
                             <div className={styles['meta-message-container']}>
                                 <Image className={styles['image']} src={'/images/empty.png'} alt={' '} />
                                 <div className={styles['message-label']}>No addons ware requested for this meta!</div>
                             </div>
                             :
-                            metaResources.every((metaResource) => metaResource.content.type === 'Err') ?
+                            metaDetails.meta_resources.every((metaResource) => metaResource.content.type === 'Err') ?
                                 <div className={styles['meta-message-container']}>
                                     <Image className={styles['image']} src={'/images/empty.png'} alt={' '} />
                                     <div className={styles['message-label']}>No metadata was found!</div>
                                 </div>
                                 :
-                                selectedMetaResource !== null ?
+                                selectedMetaResource !== null && selectedMetaResource.content.type === 'Ready' ?
                                     <React.Fragment>
                                         {
                                             typeof selectedMetaResource.content.content.background === 'string' &&
@@ -94,6 +125,7 @@ const MetaDetails = ({ urlParams }) => {
                                     :
                                     <MetaPreview.Placeholder className={styles['meta-preview']} />
                 }
+                <div className={styles['spacing']} />
                 {
                     streamsResourceRef !== null ?
                         <StreamsList
@@ -119,7 +151,8 @@ MetaDetails.propTypes = {
         type: PropTypes.string,
         id: PropTypes.string,
         videoId: PropTypes.string
-    })
+    }),
+    queryParams: PropTypes.instanceOf(URLSearchParams)
 };
 
 module.exports = MetaDetails;

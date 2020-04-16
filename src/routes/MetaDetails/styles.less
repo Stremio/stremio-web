@@ -26,7 +26,11 @@
         z-index: 0;
         display: flex;
         flex-direction: row;
-        justify-content: space-between;
+
+        .vertical-nav-bar {
+            --vertical-nav-bar-size: 6rem;
+            flex: none;
+        }
 
         .background-image-layer {
             position: absolute;
@@ -88,6 +92,10 @@
         .meta-preview {
             flex: 0 1 40rem;
             align-self: stretch;
+        }
+
+        .spacing {
+            flex: 1;
         }
 
         .videos-list, .streams-list {
