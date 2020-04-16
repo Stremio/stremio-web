@@ -53,12 +53,12 @@ const mapMetaDetailsStateWithCtx = (meta_details, ctx) => {
                 })
                 :
                 null,
-            addon: ctx.profile.addons.reduce((origin, addon) => {
+            addon: ctx.profile.addons.reduce((result, addon) => {
                 if (addon.transportUrl === meta_resource.request.base) {
                     return addon;
                 }
 
-                return origin;
+                return result;
             }, null)
         };
     });
