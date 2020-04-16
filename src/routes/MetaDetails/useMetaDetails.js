@@ -49,7 +49,7 @@ const mapMetaDetailsStateWithCtx = (meta_details, ctx) => {
                     metaResource: meta_resource,
                     type: meta_details.selected.meta_resource_ref.type_name,
                     id: meta_details.selected.meta_resource_ref.id,
-                    videoId: meta_details.selected.streams_resource_ref ? meta_details.selected.streams_resource_ref.id : null
+                    videoId: meta_details.selected.streams_resource_ref !== null ? meta_details.selected.streams_resource_ref.id : null
                 })
                 :
                 null,
