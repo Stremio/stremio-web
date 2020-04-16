@@ -15,7 +15,13 @@ const MetaDetails = ({ urlParams, queryParams }) => {
     }, [metaDetails.selected]);
     const selectedAddon = queryParams.get('metaTransportUrl');
     const selectedMetaResource = React.useMemo(() => {
-        return metaDetails.meta_resources.find((metaResource) => selectedAddon ? metaResource.request.base === selectedAddon : metaResource.content.type === 'Ready') || null;
+        return metaDetails.meta_resources.reduce((origin, metaResource) => {
+            if (typeof selectedAddon === 'string' ? metaResource.request.base === selectedAddon : metaResource.content.type === 'Ready') {
+                return metaResource;
+            }
+
+            return origin;
+        }, null)
     }, [metaDetails, selectedAddon]);
     const streamsResourceRef = metaDetails.selected !== null ? metaDetails.selected.streams_resource_ref : null;
     const streamsResources = metaDetails.streams_resources;
