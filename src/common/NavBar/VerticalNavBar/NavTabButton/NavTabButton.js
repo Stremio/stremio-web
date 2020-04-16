@@ -11,9 +11,11 @@ const styles = require('./styles');
 const NavTabButton = ({ className, logo, icon, label, href, selected, onClick }) => {
     const renderLogoFallback = React.useMemo(() => () => {
         return (
-            <Icon className={styles['icon']} icon={'ic_addons'} />
-        );
-    }, []);
+            typeof icon === 'string' && icon.length > 0 ?
+                <Icon className={styles['icon']} icon={icon} />
+                :
+                null);
+    }, [icon]);
     return (
         <Button className={classnames(className, styles['nav-tab-button-container'], { 'selected': selected })} title={label} tabIndex={-1} href={href} onClick={onClick}>
             {
