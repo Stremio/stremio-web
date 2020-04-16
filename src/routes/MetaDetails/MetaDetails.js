@@ -15,12 +15,12 @@ const MetaDetails = ({ urlParams, queryParams }) => {
     }, [metaDetails.selected]);
     const selectedAddon = queryParams.get('metaTransportUrl');
     const selectedMetaResource = React.useMemo(() => {
-        return metaDetails.meta_resources.reduce((origin, metaResource) => {
-            if (typeof selectedAddon === 'string' ? metaResource.request.base === selectedAddon : metaResource.content.type === 'Ready') {
+        return metaDetails.meta_resources.reduce((result, metaResource) => {
+            if (result === null && ((typeof selectedAddon === 'string' && metaResource.request.base === selectedAddon) || metaResource.content.type === 'Ready')) {
                 return metaResource;
             }
 
-            return origin;
+            return result;
         }, null);
     }, [metaDetails, selectedAddon]);
     const streamsResourceRef = metaDetails.selected !== null ? metaDetails.selected.streams_resource_ref : null;
@@ -43,7 +43,7 @@ const MetaDetails = ({ urlParams, queryParams }) => {
             label: metaResource.addon.manifest.name,
             logo: metaResource.addon.manifest.logo,
             icon: 'ic_addons',
-            href: metaResource.deepLinks.meta_details_streams ? metaResource.deepLinks.meta_details_streams : metaResource.deepLinks.meta_details_videos
+            href: metaResource.deepLinks.meta_details_streams !== null ? metaResource.deepLinks.meta_details_streams : metaResource.deepLinks.meta_details_videos
         }));
     }, [metaDetails]);
     const [inLibrary, toggleInLibrary] = useInLibrary(selectedMetaResource !== null && selectedMetaResource.content.type === 'Ready' ? selectedMetaResource.content.content : null);
