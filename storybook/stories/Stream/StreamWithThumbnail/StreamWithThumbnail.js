@@ -1,3 +1,5 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
 const React = require('react');
 const { storiesOf } = require('@storybook/react');
 const Stream = require('stremio/routes/MetaDetails/StreamsList/Stream');

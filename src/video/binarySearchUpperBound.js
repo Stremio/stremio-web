@@ -1,3 +1,5 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
 function binarySearchUpperBound(array, value) {
     if (value < array[0] || array[array.length - 1] < value) {
         return -1;

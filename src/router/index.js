@@ -1,3 +1,5 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
 const { useRouteFocused } = require('./RouteFocusedContext');
 const { useModalsContainer } = require('./ModalsContainerContext');
 const Modal = require('./Modal');

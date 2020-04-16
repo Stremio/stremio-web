@@ -1782,10 +1782,10 @@
     telejson "^3.0.2"
     util-deprecate "^1.0.2"
 
-"@stremio/stremio-core-web@0.10.0":
-  version "0.10.0"
-  resolved "https://npm.pkg.github.com/download/@stremio/stremio-core-web/0.10.0/b5fb7feb9fd7d77c8a1d12cc9ee7b887a9e41b7d467da448ac97bea76b44bbed#f98218ac570670c88e8ecadca7b655f66d0bae94"
-  integrity sha512-qZH4BzeoaSQP8yux6zsg3ffAARbdswObhruzGVOhiKXYLffWsv/zEX9wFIjGjOpaAipmZ1aCWkQEd3XoSLX34Q==
+"@stremio/stremio-core-web@0.12.0":
+  version "0.12.0"
+  resolved "https://npm.pkg.github.com/download/@stremio/stremio-core-web/0.12.0/e498bcdf44176c46602f06a97cfb76c2e05ac15bd9f42058f10fab17fe8399da#fa8051f5d34115fba6e63635480da6542b890eb3"
+  integrity sha512-7cgrZs59mCmiEbCAlbXdGUDp0zp2ErpPzA8wVk1surWElipShpc0eZqMeeaD2o4bBUl5P9UwHv5HWEVm9+03jA==
   dependencies:
     "@babel/runtime" "7.8.7"
 

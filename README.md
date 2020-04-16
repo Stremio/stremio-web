@@ -1,4 +1,4 @@
-# Stremio - the next generation media center
+# Stremio - The media center you need
 
 ![Build](https://github.com/stremio/stremio-web/workflows/Build/badge.svg?branch=development)
 
@@ -27,3 +27,18 @@ yarn start
 ```bash
 yarn build
 ```
+
+## Screenshots
+
+### Board:
+![Board](/screenshots/board.png)
+
+### Discover:
+![Discover](/screenshots/discover.png)
+
+### Meta Details:
+![Meta Details](/screenshots/metadetails.png)
+
+## License
+
+Stremio is copyright 2017-2020 Smart code and available under GPLv2 license. See the [LICENSE](/LICENSE.md) file in the project for more information.
