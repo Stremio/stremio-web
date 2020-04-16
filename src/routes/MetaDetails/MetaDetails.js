@@ -37,6 +37,15 @@ const MetaDetails = ({ urlParams, queryParams }) => {
             :
             null;
     }, [selectedMetaResource, streamsResourceRef]);
+    const tabs = React.useMemo(() => {
+        return metaDetails.meta_resources.map((metaResource) => ({
+            id: metaResource.addon.transportUrl,
+            label: metaResource.addon.manifest.name,
+            logo: metaResource.addon.manifest.logo,
+            icon: 'ic_addons',
+            href: metaResource.deepLinks.meta_details_streams ? metaResource.deepLinks.meta_details_streams : metaResource.deepLinks.meta_details_videos
+        }));
+    }, [metaDetails]);
     const [inLibrary, toggleInLibrary] = useInLibrary(selectedMetaResource !== null && selectedMetaResource.content.type === 'Ready' ? selectedMetaResource.content.content : null);
     return (
         <div className={styles['metadetails-container']}>
@@ -50,13 +59,7 @@ const MetaDetails = ({ urlParams, queryParams }) => {
                     metaDetails.meta_resources.length > 0 ?
                         <VerticalNavBar
                             className={styles['vertical-nav-bar']}
-                            tabs={metaDetails.meta_resources.map((metaResource) => ({
-                                id: metaResource.addon.transportUrl,
-                                label: metaResource.addon.manifest.name,
-                                logo: metaResource.addon.manifest.logo,
-                                icon: 'ic_addons',
-                                href: metaResource.deepLinks.meta_details_streams ? metaResource.deepLinks.meta_details_streams : metaResource.deepLinks.meta_details_videos,
-                            }))}
+                            tabs={tabs}
                             selected={selectedMetaResource !== null ? selectedMetaResource.request.base : null}
                         />
                         :
