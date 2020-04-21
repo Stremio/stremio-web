@@ -62,36 +62,7 @@ const mapMetaDetailsStateWithCtx = (meta_details, ctx) => {
             }, null)
         };
     });
-    const streams_resources = meta_details.streams_resources.map((stream_resource) => {
-        return stream_resource.content.type === 'Ready' ?
-            {
-                request: stream_resource.request,
-                content: {
-                    type: 'Ready',
-                    content: stream_resource.content.content.map((stream) => ({
-                        ...stream,
-                        // TODO map progress
-                        deepLinks: deepLinking.withStream({
-                            stream,
-                            streamTransportUrl: stream_resource.request.base,
-                            // TODO metaTransportUrl should be based on state
-                            metaTransportUrl: meta_details.meta_resources.reduceRight((result, meta_resource) => {
-                                if (meta_resource.content.type === 'Ready') {
-                                    return meta_resource.request.base;
-                                }
-
-                                return result;
-                            }, ''),
-                            type: selected.meta_resource_ref.type_name,
-                            id: selected.meta_resource_ref.id,
-                            videoId: selected.streams_resource_ref.id,
-                        })
-                    }))
-                }
-            }
-            :
-            stream_resource;
-    });
+    const streams_resources = meta_details.streams_resources;
     return { selected, meta_resources, streams_resources };
 };
 

@@ -2,7 +2,7 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const { VerticalNavBar, HorizontalNavBar, MetaPreview, Image, useInLibrary } = require('stremio/common');
+const { deepLinking, VerticalNavBar, HorizontalNavBar, MetaPreview, Image, useInLibrary } = require('stremio/common');
 const StreamsList = require('./StreamsList');
 const VideosList = require('./VideosList');
 const useMetaDetails = require('./useMetaDetails');
@@ -28,7 +28,6 @@ const MetaDetails = ({ urlParams, queryParams }) => {
         }, null);
     }, [metaDetails, selectedAddon]);
     const streamsResourceRef = metaDetails.selected !== null ? metaDetails.selected.streams_resource_ref : null;
-    const streamsResources = metaDetails.streams_resources;
     const selectedVideo = React.useMemo(() => {
         return streamsResourceRef !== null && selectedMetaResource !== null && selectedMetaResource.content.type === 'Ready' ?
             selectedMetaResource.content.content.videos.reduce((result, video) => {
@@ -41,6 +40,39 @@ const MetaDetails = ({ urlParams, queryParams }) => {
             :
             null;
     }, [selectedMetaResource, streamsResourceRef]);
+    const streamsResources = React.useMemo(() => {
+        const videoHasStreams = selectedVideo !== null && selectedVideo.id === urlParams.videoId && selectedVideo.streams.length > 0;
+        return (videoHasStreams ? [selectedMetaResource] : metaDetails.streams_resources).map((stream_resource) => {
+            return stream_resource.content.type === 'Ready' ?
+                {
+                    request: stream_resource.request,
+                    content: {
+                        type: 'Ready',
+                        content: (videoHasStreams ? selectedVideo.streams : stream_resource.content.content).map((stream) => ({
+                            ...stream,
+                            // TODO map progress
+                            deepLinks: deepLinking.withStream({
+                                stream,
+                                streamTransportUrl: stream_resource.request.base,
+                                // TODO metaTransportUrl should be based on state
+                                metaTransportUrl: metaDetails.meta_resources.reduceRight((result, meta_resource) => {
+                                    if (meta_resource.content.type === 'Ready') {
+                                        return meta_resource.request.base;
+                                    }
+
+                                    return result;
+                                }, ''),
+                                type: metaDetails.selected.meta_resource_ref.type_name,
+                                id: metaDetails.selected.meta_resource_ref.id,
+                                videoId: metaDetails.selected.streams_resource_ref.id,
+                            })
+                        }))
+                    }
+                }
+                :
+                stream_resource;
+        });
+    }, [metaDetails, selectedVideo]);
     const tabs = React.useMemo(() => {
         return metaDetails.meta_resources.map((metaResource) => ({
             id: metaResource.addon.transportUrl,
