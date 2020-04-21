@@ -10,30 +10,37 @@ function KeyboardNavigation() {
 
         switch (event.code) {
             case 'Digit0': {
+                event.preventDefault();
                 window.location = '#/search';
                 break;
             }
             case 'Digit1': {
+                event.preventDefault();
                 window.location = '#/';
                 break;
             }
             case 'Digit2': {
+                event.preventDefault();
                 window.location = '#/discover';
                 break;
             }
             case 'Digit3': {
+                event.preventDefault();
                 window.location = '#/library';
                 break;
             }
             case 'Digit4': {
+                event.preventDefault();
                 window.location = '#/settings';
                 break;
             }
             case 'Digit5': {
+                event.preventDefault();
                 window.location = '#/addons';
                 break;
             }
             case 'Backspace': {
+                event.preventDefault();
                 if (event.ctrlKey) {
                     window.history.forward();
                 } else {
@@ -43,6 +50,7 @@ function KeyboardNavigation() {
                 break;
             }
             case 'KeyF': {
+                event.preventDefault();
                 if (document.fullscreenElement === document.documentElement) {
                     document.exitFullscreen();
                 } else {
