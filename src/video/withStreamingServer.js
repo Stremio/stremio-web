@@ -7,8 +7,11 @@ function withStreamingServer(Video) {
     function StreamingServerVideo(options) {
         var video = new Video(options);
         var events = new EventEmitter();
+
         var destroyed = false;
+        var loaded = false;
         var stream = null;
+        var dispatchArgsLoadingQueue = [];
 
         events.on('error', function() { });
 
@@ -20,10 +23,15 @@ function withStreamingServer(Video) {
             Object.freeze(error);
             events.emit('error', error);
             if (error.critical) {
-                video.dispatch({ commandName: 'stop' });
+                dispatch({ commandName: 'stop' });
             }
         }
-
+        function flushDispatchArgsQueue(dispatchArgsQueue) {
+            while (dispatchArgsQueue.length > 0) {
+                var args = dispatchArgsQueue.shift();
+                dispatch(args);
+            }
+        }
         function on(eventName, listener) {
             if (!destroyed) {
                 events.on(eventName, listener);
@@ -32,88 +40,121 @@ function withStreamingServer(Video) {
             video.on(eventName, listener);
         }
         function dispatch(args) {
-            if (!destroyed && args && args.commandName === 'load') {
-                stream = null;
-                video.dispatch({ commandName: 'stop' });
-                if (args.commandArgs && args.commandArgs.stream && typeof args.commandArgs.stream.infoHash === 'string' && typeof args.commandArgs.streamingServerUrl === 'string') {
-                    stream = args.commandArgs.stream;
-                    if (stream.fileIdx !== null && !isNaN(stream.fileIdx)) {
-                        video.dispatch({
-                            commandName: 'load',
-                            commandArgs: {
-                                autoplay: args.commandArgs.autoplay,
-                                time: args.commandArgs.time,
-                                stream: {
-                                    url: UrlUtils.resolve(args.commandArgs.streamingServerUrl, stream.infoHash + '/' + String(stream.fileIdx))
-                                }
-                            }
-                        });
-                    } else {
-                        fetch(UrlUtils.resolve(args.commandArgs.streamingServerUrl, stream.infoHash + '/create'), {
-                            method: 'POST',
-                            headers: {
-                                'content-type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                torrent: {
-                                    infoHash: stream.infoHash
-                                }
-                            })
-                        }).then(function(resp) {
-                            return resp.json();
-                        }).then(function(resp) {
-                            if (stream !== args.commandArgs.stream) {
+            if (!destroyed && args) {
+                if (typeof args.commandName === 'string') {
+                    switch (args.commandName) {
+                        case 'addSubtitlesTracks': {
+                            if (!loaded && stream !== null) {
+                                dispatchArgsLoadingQueue.push(args);
                                 return;
                             }
 
-                            if (!Array.isArray(resp.files) || resp.files.length === 0) {
-                                onError({
-                                    message: 'Unable to get files from torrent',
-                                    critical: true
-                                });
-                                return;
-                            }
+                            break;
+                        }
+                        case 'stop': {
+                            loaded = false;
+                            stream = null;
+                            dispatchArgsLoadingQueue = [];
+                            break;
+                        }
+                        case 'load': {
+                            dispatch({ commandName: 'stop' });
+                            if (args.commandArgs && typeof args.commandArgs.streamingServerUrl === 'string' && args.commandArgs.stream) {
+                                if (typeof args.commandArgs.stream.infoHash === 'string') {
+                                    stream = args.commandArgs.stream;
+                                    if (stream.fileIdx !== null && !isNaN(stream.fileIdx)) {
+                                        video.dispatch({
+                                            commandName: 'load',
+                                            commandArgs: {
+                                                autoplay: args.commandArgs.autoplay,
+                                                time: args.commandArgs.time,
+                                                stream: {
+                                                    url: UrlUtils.resolve(args.commandArgs.streamingServerUrl, stream.infoHash + '/' + String(stream.fileIdx))
+                                                }
+                                            }
+                                        });
+                                        loaded = true;
+                                    } else {
+                                        fetch(UrlUtils.resolve(args.commandArgs.streamingServerUrl, stream.infoHash + '/create'), {
+                                            method: 'POST',
+                                            headers: {
+                                                'content-type': 'application/json'
+                                            },
+                                            body: JSON.stringify({
+                                                torrent: {
+                                                    infoHash: stream.infoHash
+                                                }
+                                            })
+                                        }).then(function(resp) {
+                                            return resp.json();
+                                        }).then(function(resp) {
+                                            if (stream !== args.commandArgs.stream) {
+                                                return;
+                                            }
 
-                            var fileIdx = resp.files.reduce((fileIdx, _, index, files) => {
-                                if (files[index].length > files[fileIdx].length) {
-                                    return index;
-                                }
+                                            if (!Array.isArray(resp.files) || resp.files.length === 0) {
+                                                onError({
+                                                    message: 'Unable to get files from torrent',
+                                                    critical: true
+                                                });
+                                                return;
+                                            }
 
-                                return fileIdx;
-                            }, 0);
-                            video.dispatch({
-                                commandName: 'load',
-                                commandArgs: {
-                                    autoplay: args.commandArgs.autoplay,
-                                    time: args.commandArgs.time,
-                                    stream: {
-                                        url: UrlUtils.resolve(args.commandArgs.streamingServerUrl, stream.infoHash + '/' + String(fileIdx))
+                                            var fileIdx = resp.files.reduce((fileIdx, _, index, files) => {
+                                                if (files[index].length > files[fileIdx].length) {
+                                                    return index;
+                                                }
+
+                                                return fileIdx;
+                                            }, 0);
+                                            video.dispatch({
+                                                commandName: 'load',
+                                                commandArgs: {
+                                                    autoplay: args.commandArgs.autoplay,
+                                                    time: args.commandArgs.time,
+                                                    stream: {
+                                                        url: UrlUtils.resolve(args.commandArgs.streamingServerUrl, stream.infoHash + '/' + String(fileIdx))
+                                                    }
+                                                }
+                                            });
+                                            loaded = true;
+                                            flushDispatchArgsQueue(dispatchArgsLoadingQueue);
+                                        }).catch(function(error) {
+                                            if (stream !== args.commandArgs.stream) {
+                                                return;
+                                            }
+
+                                            onError({
+                                                message: 'Unable to get files from torrent',
+                                                critical: true,
+                                                error: error
+                                            });
+                                        });
                                     }
+
+                                    return;
                                 }
-                            });
-                        }).catch(function(error) {
-                            if (stream !== args.commandArgs.stream) {
-                                return;
                             }
 
-                            onError({
-                                message: 'Unable to get files from torrent',
-                                critical: true,
-                                error: error
-                            });
-                        });
+                            break;
+                        }
+                        case 'destroy': {
+                            dispatch({ commandName: 'stop' });
+                            destroyed = true;
+                            events.removeAllListeners();
+                            events.on('error', function() { });
+                            break;
+                        }
+                    }
+                } else if (typeof args.propName === 'string') {
+                    if (!loaded && stream !== null && ['paused', 'time', 'selectedSubtitlesTrackId', 'subtitlesDelay'].indexOf(args.propName) !== -1) {
+                        dispatchArgsLoadingQueue.push(args);
+                        return;
                     }
                 }
-            } else {
-                if (args && args.commandName === 'destroy') {
-                    destroyed = true;
-                    stream = null;
-                    events.removeAllListeners();
-                    events.on('error', function() { });
-                }
-
-                video.dispatch(args);
             }
+
+            video.dispatch(args);
         }
 
         this.on = on;
