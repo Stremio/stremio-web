@@ -2,7 +2,7 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const { VerticalNavBar, HorizontalNavBar, MetaPreview, Image, useInLibrary } = require('stremio/common');
+const { VerticalNavBar, HorizontalNavBar, MetaPreview, ModalDialog, Image, useInLibrary } = require('stremio/common');
 const StreamsList = require('./StreamsList');
 const VideosList = require('./VideosList');
 const useMetaDetails = require('./useMetaDetails');
@@ -14,14 +14,22 @@ const MetaDetails = ({ urlParams, queryParams }) => {
         return metaDetails.selected !== null ? metaDetails.selected.meta_resources_ref : null;
     }, [metaDetails.selected]);
     const selectedAddon = queryParams.get('metaTransportUrl');
+    const metaResourcesReady = metaDetails.meta_resources.filter((metaResource) => metaResource.content.type === 'Ready' && metaResource.content.content.metaExtension !== null);
     const selectedMetaResource = React.useMemo(() => {
         return metaDetails.meta_resources.reduceRight((result, metaResource) => {
+            if (metaResource.content.type === 'Ready') {
+                return metaResource;
+            }
+
+            return result;
+        }, null);
+    }, [metaDetails, selectedAddon]);
+    const selectedMetaResourceRef = React.useMemo(() => {
+        return metaDetails.meta_resources.reduce((result, metaResource) => {
             if (typeof selectedAddon === 'string') {
                 if (metaResource.request.base === selectedAddon) {
                     return metaResource;
                 }
-            } else if (metaResource.content.type === 'Ready') {
-                return metaResource;
             }
 
             return result;
@@ -42,7 +50,7 @@ const MetaDetails = ({ urlParams, queryParams }) => {
             null;
     }, [selectedMetaResource, streamsResourceRef]);
     const tabs = React.useMemo(() => {
-        return metaDetails.meta_resources.map((metaResource) => ({
+        return metaResourcesReady.map((metaResource) => ({
             id: metaResource.addon.transportUrl,
             label: metaResource.addon.manifest.name,
             logo: metaResource.addon.manifest.logo,
@@ -50,6 +58,10 @@ const MetaDetails = ({ urlParams, queryParams }) => {
             href: metaResource.deepLinks.meta_details_streams !== null ? metaResource.deepLinks.meta_details_streams : metaResource.deepLinks.meta_details_videos
         }));
     }, [metaDetails]);
+    const clearSelectedAddon = React.useCallback(() => {
+        queryParams.delete('metaTransportUrl');
+        window.location.replace(`#${urlParams.path}`);
+    }, [queryParams]);
     const [inLibrary, toggleInLibrary] = useInLibrary(selectedMetaResource !== null && selectedMetaResource.content.type === 'Ready' ? selectedMetaResource.content.content : null);
     return (
         <div className={styles['metadetails-container']}>
@@ -60,11 +72,11 @@ const MetaDetails = ({ urlParams, queryParams }) => {
             />
             <div className={styles['metadetails-content']}>
                 {
-                    metaDetails.meta_resources.length > 0 ?
+                    metaResourcesReady.length > 0 ?
                         <VerticalNavBar
                             className={styles['vertical-nav-bar']}
                             tabs={tabs}
-                            selected={selectedMetaResource !== null ? selectedMetaResource.request.base : null}
+                            selected={typeof selectedAddon === 'string' ? selectedAddon : null}
                         />
                         :
                         null
@@ -142,12 +154,27 @@ const MetaDetails = ({ urlParams, queryParams }) => {
                             null
                 }
             </div>
+            {
+                typeof selectedAddon === 'string' ?
+                    <ModalDialog
+                        className={styles['addon-modal-container']}
+                        title={selectedMetaResourceRef !== null && selectedMetaResourceRef.content.type === 'Ready' ? selectedMetaResourceRef.content.content.metaExtension.name : null}
+                        onCloseRequest={clearSelectedAddon}>
+                        <iframe
+                            className={styles['addon-modal-iframe']}
+                            src={selectedMetaResourceRef !== null && selectedMetaResourceRef.content.type === 'Ready' ? selectedMetaResourceRef.content.content.metaExtension.url : null}
+                        />
+                    </ModalDialog>
+                    :
+                    null
+            }
         </div>
     );
 };
 
 MetaDetails.propTypes = {
     urlParams: PropTypes.shape({
+        path: PropTypes.string,
         type: PropTypes.string,
         id: PropTypes.string,
         videoId: PropTypes.string
