@@ -18,7 +18,7 @@ const reducer = (state, action) => {
                 state.selectedSeason
                 :
                 seasons.length > 0 ?
-                    seasons[0]
+                    seasons[seasons.length - 1]
                     :
                     null;
             return {
