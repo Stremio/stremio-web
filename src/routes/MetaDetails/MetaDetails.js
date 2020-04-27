@@ -2,6 +2,7 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
+const UrlUtils = require('url');
 const { VerticalNavBar, HorizontalNavBar, MetaPreview, ModalDialog, Image, useInLibrary } = require('stremio/common');
 const StreamsList = require('./StreamsList');
 const VideosList = require('./VideosList');
@@ -62,6 +63,15 @@ const MetaDetails = ({ urlParams, queryParams }) => {
         queryParams.delete('metaTransportUrl');
         window.location.replace(`#${urlParams.path}`);
     }, [queryParams]);
+    const receiveMessage = React.useCallback((event) => {
+        const { protocol, path } = UrlUtils.parse(event.data);
+        if (event.data.startsWith(protocol)) {
+            window.location.replace(`#${path}`);
+        }
+    }, []);
+    React.useEffect(() => {
+        window.addEventListener('message', receiveMessage, false);
+    }, []);
     const [inLibrary, toggleInLibrary] = useInLibrary(selectedMetaResource !== null && selectedMetaResource.content.type === 'Ready' ? selectedMetaResource.content.content : null);
     return (
         <div className={styles['metadetails-container']}>
@@ -162,6 +172,7 @@ const MetaDetails = ({ urlParams, queryParams }) => {
                         onCloseRequest={clearSelectedAddon}>
                         <iframe
                             className={styles['addon-modal-iframe']}
+                            sandbox={'allow-forms allow-scripts'}
                             src={selectedMetaResourceRef !== null && selectedMetaResourceRef.content.type === 'Ready' ? selectedMetaResourceRef.content.content.metaExtension.url : null}
                         />
                     </ModalDialog>
