@@ -71,6 +71,9 @@ const MetaDetails = ({ urlParams, queryParams }) => {
     }, []);
     React.useEffect(() => {
         window.addEventListener('message', receiveMessage, false);
+        return () => {
+            window.removeEventListener('message', receiveMessage);
+        };
     }, []);
     const [inLibrary, toggleInLibrary] = useInLibrary(selectedMetaResource !== null && selectedMetaResource.content.type === 'Ready' ? selectedMetaResource.content.content : null);
     return (
