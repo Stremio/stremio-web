@@ -23,13 +23,19 @@ const ALLOWED_LINK_REDIRECTS = [
     routesRegexp.discover.regexp,
     routesRegexp.metadetails.regexp
 ];
+const PROTOCOLS = ['https:', 'http:'];
 
 const MetaPreview = ({ className, compact, name, logo, background, runtime, releaseInfo, released, description, links, trailer, inLibrary, toggleInLibrary }) => {
     const [shareModalOpen, openShareModal, closeShareModal] = useBinaryState(false);
     const linksGroups = React.useMemo(() => {
         return Array.isArray(links) ?
             links
-                .filter((link) => link && typeof link.category === 'string' && typeof link.url === 'string')
+                .filter((link) => {
+                    if (link && typeof link.category === 'string' && typeof link.url === 'string') {
+                        const { protocol, host } = UrlUtils.parse(link.url);
+                        return protocol === 'stremio:' || (PROTOCOLS.includes(protocol) && typeof host === 'string' && host.length > 0);
+                    }
+                })
                 .reduce((linksGroups, { category, name, url }) => {
                     if (category === CONSTANTS.IMDB_LINK_CATEGORY) {
                         linksGroups[category] = {
@@ -42,7 +48,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                             href: url
                         };
                     } else {
-                        const { protocol, host, path, pathname } = UrlUtils.parse(url);
+                        const { protocol, path, pathname } = UrlUtils.parse(url);
                         if (protocol === 'stremio:') {
                             if (ALLOWED_LINK_REDIRECTS.some((regexp) => pathname.match(regexp))) {
                                 linksGroups[category] = linksGroups[category] || [];
@@ -51,7 +57,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                                     href: `#${path}`
                                 });
                             }
-                        } else if (typeof host === 'string' && host.length > 0) {
+                        } else {
                             linksGroups[category] = linksGroups[category] || [];
                             linksGroups[category].push({
                                 label: name,
