@@ -76,7 +76,7 @@ const VideosList = ({ className, metaResource }) => {
                                                 );
                                         })
                                         .map((video, index) => (
-                                            <Video {...video} key={index} />
+                                            <Video {...video} upcoming={video.released.getTime() > (new Date).getTime()} key={index} />
                                         ))
                                 }
                             </div>
