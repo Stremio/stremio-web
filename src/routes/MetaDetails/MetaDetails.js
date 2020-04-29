@@ -65,7 +65,7 @@ const MetaDetails = ({ urlParams }) => {
                         <VerticalNavBar
                             className={styles['vertical-nav-bar']}
                             tabs={tabs}
-                            selected={selected !== null ? selected.request.base : null}
+                            selected={selected !== null ? selected.metaExtension.url : null}
                         />
                         :
                         null
@@ -147,12 +147,12 @@ const MetaDetails = ({ urlParams }) => {
                 selected !== null ?
                     <ModalDialog
                         className={styles['addon-modal-container']}
-                        title={selected.content.content.metaExtension.name}
+                        title={selected.metaExtension.name}
                         onCloseRequest={closeSelected}>
                         <iframe
                             className={styles['addon-modal-iframe']}
                             sandbox={'allow-forms allow-scripts allow-same-origin'}
-                            src={selected.content.content.metaExtension.url}
+                            src={selected.metaExtension.url}
                         />
                     </ModalDialog>
                     :

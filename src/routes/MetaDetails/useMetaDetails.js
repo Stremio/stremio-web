@@ -40,13 +40,7 @@ const mapMetaDetailsStateWithCtx = (meta_details, ctx) => {
                                 metaItem: meta_resource.content.content
                             })
                         })),
-                        metaExtension: meta_resource.content.content.links.reduceRight((result, link) => {
-                            if (link.category === CONSTANTS.META_LINK_CATEGORY) {
-                                return link;
-                            }
-
-                            return result;
-                        }, null)
+                        metaExtensions: meta_resource.content.content.links.filter((link) => link.category === CONSTANTS.META_LINK_CATEGORY)
                     }
                 },
                 deepLinks: meta_details.selected !== null ?
