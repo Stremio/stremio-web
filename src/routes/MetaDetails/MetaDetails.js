@@ -7,15 +7,15 @@ const { VerticalNavBar, HorizontalNavBar, MetaPreview, ModalDialog, Image, useIn
 const StreamsList = require('./StreamsList');
 const VideosList = require('./VideosList');
 const useMetaDetails = require('./useMetaDetails');
+const useMetaExtensions = require('./useMetaExtensions');
 const styles = require('./styles');
 
-const MetaDetails = ({ urlParams, queryParams }) => {
+const MetaDetails = ({ urlParams }) => {
     const metaDetails = useMetaDetails(urlParams);
+    const { tabs, selected, closeSelected } = useMetaExtensions(metaDetails.meta_resources);
     const metaResourceRef = React.useMemo(() => {
         return metaDetails.selected !== null ? metaDetails.selected.meta_resources_ref : null;
     }, [metaDetails.selected]);
-    const selectedAddon = queryParams.get('metaTransportUrl');
-    const metaResourcesReady = metaDetails.meta_resources.filter((metaResource) => metaResource.content.type === 'Ready' && metaResource.content.content.metaExtension !== null && metaResource.addon !== null);
     const selectedMetaResource = React.useMemo(() => {
         return metaDetails.meta_resources.reduceRight((result, metaResource) => {
             if (metaResource.content.type === 'Ready') {
@@ -24,22 +24,11 @@ const MetaDetails = ({ urlParams, queryParams }) => {
 
             return result;
         }, null);
-    }, [metaDetails, selectedAddon]);
-    const selectedMetaResourceRef = React.useMemo(() => {
-        return metaDetails.meta_resources.reduce((result, metaResource) => {
-            if (typeof selectedAddon === 'string') {
-                if (metaResource.request.base === selectedAddon) {
-                    return metaResource;
-                }
-            }
-
-            return result;
-        }, null);
-    }, [metaDetails, selectedAddon]);
+    }, [metaDetails]);
     const streamsResourceRef = metaDetails.selected !== null ? metaDetails.selected.streams_resource_ref : null;
     const streamsResources = metaDetails.streams_resources;
     const selectedVideo = React.useMemo(() => {
-        return streamsResourceRef !== null && selectedMetaResource !== null && selectedMetaResource.content.type === 'Ready' ?
+        return streamsResourceRef !== null && selectedMetaResource !== null ?
             selectedMetaResource.content.content.videos.reduce((result, video) => {
                 if (video.id === streamsResourceRef.id) {
                     return video;
@@ -50,19 +39,6 @@ const MetaDetails = ({ urlParams, queryParams }) => {
             :
             null;
     }, [selectedMetaResource, streamsResourceRef]);
-    const tabs = React.useMemo(() => {
-        return metaResourcesReady.map((metaResource) => ({
-            id: metaResource.addon.transportUrl,
-            label: metaResource.addon.manifest.name,
-            logo: metaResource.addon.manifest.logo,
-            icon: 'ic_addons',
-            href: metaResource.deepLinks.meta_details_streams !== null ? metaResource.deepLinks.meta_details_streams : metaResource.deepLinks.meta_details_videos
-        }));
-    }, [metaDetails]);
-    const clearSelectedAddon = React.useCallback(() => {
-        queryParams.delete('metaTransportUrl');
-        window.location.replace(`#${urlParams.path}`);
-    }, [queryParams]);
     const receiveMessage = React.useCallback((event) => {
         const { protocol, path } = UrlUtils.parse(event.data);
         if (event.data.startsWith(protocol)) {
@@ -75,21 +51,21 @@ const MetaDetails = ({ urlParams, queryParams }) => {
             window.removeEventListener('message', receiveMessage);
         };
     }, []);
-    const [inLibrary, toggleInLibrary] = useInLibrary(selectedMetaResource !== null && selectedMetaResource.content.type === 'Ready' ? selectedMetaResource.content.content : null);
+    const [inLibrary, toggleInLibrary] = useInLibrary(selectedMetaResource !== null ? selectedMetaResource.content.content : null);
     return (
         <div className={styles['metadetails-container']}>
             <HorizontalNavBar
                 className={styles['nav-bar']}
                 backButton={true}
-                title={selectedMetaResource !== null && selectedMetaResource.content.type === 'Ready' ? selectedMetaResource.content.content.name : null}
+                title={selectedMetaResource !== null ? selectedMetaResource.content.content.name : null}
             />
             <div className={styles['metadetails-content']}>
                 {
-                    metaResourcesReady.length > 0 ?
+                    tabs.length > 0 ?
                         <VerticalNavBar
                             className={styles['vertical-nav-bar']}
                             tabs={tabs}
-                            selected={typeof selectedAddon === 'string' ? selectedAddon : null}
+                            selected={selected !== null ? selected.request.base : null}
                         />
                         :
                         null
@@ -113,7 +89,7 @@ const MetaDetails = ({ urlParams, queryParams }) => {
                                     <div className={styles['message-label']}>No metadata was found!</div>
                                 </div>
                                 :
-                                selectedMetaResource !== null && selectedMetaResource.content.type === 'Ready' ?
+                                selectedMetaResource !== null ?
                                     <React.Fragment>
                                         {
                                             typeof selectedMetaResource.content.content.background === 'string' &&
@@ -168,15 +144,15 @@ const MetaDetails = ({ urlParams, queryParams }) => {
                 }
             </div>
             {
-                typeof selectedAddon === 'string' ?
+                selected !== null ?
                     <ModalDialog
                         className={styles['addon-modal-container']}
-                        title={selectedMetaResourceRef !== null && selectedMetaResourceRef.content.type === 'Ready' ? selectedMetaResourceRef.content.content.metaExtension.name : null}
-                        onCloseRequest={clearSelectedAddon}>
+                        title={selected.content.content.metaExtension.name}
+                        onCloseRequest={closeSelected}>
                         <iframe
                             className={styles['addon-modal-iframe']}
-                            sandbox={'allow-forms allow-scripts'}
-                            src={selectedMetaResourceRef !== null && selectedMetaResourceRef.content.type === 'Ready' ? selectedMetaResourceRef.content.content.metaExtension.url : null}
+                            sandbox={'allow-forms allow-scripts allow-same-origin'}
+                            src={selected.content.content.metaExtension.url}
                         />
                     </ModalDialog>
                     :
