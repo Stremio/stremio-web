@@ -2,7 +2,6 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const hat = require('hat');
 const { useLiveRef } = require('stremio/common');
 const selectVideoImplementation = require('./selectVideoImplementation');
 
@@ -15,7 +14,6 @@ const Video = React.forwardRef(({ className, ...props }, ref) => {
     const onImplementationChangedRef = useLiveRef(props.onImplementationChanged);
     const containerElementRef = React.useRef(null);
     const videoRef = React.useRef(null);
-    const id = React.useMemo(() => `video-${hat()}`, []);
     const dispatch = React.useCallback((args) => {
         if (args && args.commandName === 'load' && args.commandArgs) {
             const Video = selectVideoImplementation(args.commandArgs.shell, args.commandArgs.stream);
@@ -24,7 +22,6 @@ const Video = React.forwardRef(({ className, ...props }, ref) => {
             } else if (videoRef.current === null || videoRef.current.constructor !== Video) {
                 dispatch({ commandName: 'destroy' });
                 videoRef.current = new Video({
-                    id: id,
                     containerElement: containerElementRef.current,
                     shell: args.commandArgs.shell
                 });
@@ -75,7 +72,7 @@ const Video = React.forwardRef(({ className, ...props }, ref) => {
         };
     }, []);
     return (
-        <div ref={containerElementRef} id={id} className={className} />
+        <div ref={containerElementRef} className={className} />
     );
 });
 
