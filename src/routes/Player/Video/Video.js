@@ -2,8 +2,10 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
+const classnames = require('classnames');
 const { useLiveRef } = require('stremio/common');
 const selectVideoImplementation = require('./selectVideoImplementation');
+const styles = require('./styles');
 
 const Video = React.forwardRef(({ className, ...props }, ref) => {
     const onEndedRef = useLiveRef(props.onEnded);
@@ -12,7 +14,7 @@ const Video = React.forwardRef(({ className, ...props }, ref) => {
     const onPropChangedRef = useLiveRef(props.onPropChanged);
     const onSubtitlesTrackLoadedRef = useLiveRef(props.onSubtitlesTrackLoaded);
     const onImplementationChangedRef = useLiveRef(props.onImplementationChanged);
-    const containerElementRef = React.useRef(null);
+    const videoElementRef = React.useRef(null);
     const videoRef = React.useRef(null);
     const dispatch = React.useCallback((args) => {
         if (args && args.commandName === 'load' && args.commandArgs) {
@@ -22,7 +24,7 @@ const Video = React.forwardRef(({ className, ...props }, ref) => {
             } else if (videoRef.current === null || videoRef.current.constructor !== Video) {
                 dispatch({ commandName: 'destroy' });
                 videoRef.current = new Video({
-                    containerElement: containerElementRef.current,
+                    containerElement: videoElementRef.current,
                     shell: args.commandArgs.shell
                 });
                 videoRef.current.on('ended', () => {
@@ -72,7 +74,9 @@ const Video = React.forwardRef(({ className, ...props }, ref) => {
         };
     }, []);
     return (
-        <div ref={containerElementRef} className={className} />
+        <div className={classnames(className, styles['video-container'])}>
+            <div ref={videoElementRef} className={styles['video']} />
+        </div>
     );
 });
 
