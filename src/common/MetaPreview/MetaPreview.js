@@ -27,47 +27,44 @@ const ALLOWED_LINK_REDIRECTS = [
 const MetaPreview = ({ className, compact, name, logo, background, runtime, releaseInfo, released, description, links, trailer, inLibrary, toggleInLibrary }) => {
     const [shareModalOpen, openShareModal, closeShareModal] = useBinaryState(false);
     const linksGroups = React.useMemo(() => {
-        return Array.isArray(links) ?
-            links
-                .filter((link) => link && typeof link.category === 'string' && typeof link.url === 'string')
-                .reduce((linksGroups, { category, name, url }) => {
-                    if (category === CONSTANTS.IMDB_LINK_CATEGORY) {
-                        linksGroups.set(category, {
-                            label: name,
-                            href: `https://www.stremio.com/warning#${encodeURIComponent(`https://www.imdb.com/title/${encodeURIComponent(url)}`)}`
-                        });
-                    } else if (category === CONSTANTS.SHARE_LINK_CATEGORY) {
-                        linksGroups.set(category, {
-                            label: name,
-                            href: url
-                        });
-                    } else {
-                        const { protocol, host, path, pathname } = UrlUtils.parse(url);
-                        if (protocol === 'stremio:') {
-                            if (pathname !== null && ALLOWED_LINK_REDIRECTS.some((regexp) => pathname.match(regexp))) {
-                                if (!linksGroups.has(category)) {
-                                    linksGroups.set(category, []);
-                                }
-                                linksGroups.get(category).push({
-                                    label: name,
-                                    href: `#${path}`
-                                });
-                            }
-                        } else if (typeof host === 'string' && host.length > 0) {
+        return links
+            .filter((link) => link && typeof link.category === 'string' && typeof link.url === 'string')
+            .reduce((linksGroups, { category, name, url }) => {
+                if (category === CONSTANTS.IMDB_LINK_CATEGORY) {
+                    linksGroups.set(category, {
+                        label: name,
+                        href: `https://www.stremio.com/warning#${encodeURIComponent(`https://www.imdb.com/title/${encodeURIComponent(url)}`)}`
+                    });
+                } else if (category === CONSTANTS.SHARE_LINK_CATEGORY) {
+                    linksGroups.set(category, {
+                        label: name,
+                        href: url
+                    });
+                } else {
+                    const { protocol, host, path, pathname } = UrlUtils.parse(url);
+                    if (protocol === 'stremio:') {
+                        if (pathname !== null && ALLOWED_LINK_REDIRECTS.some((regexp) => pathname.match(regexp))) {
                             if (!linksGroups.has(category)) {
                                 linksGroups.set(category, []);
                             }
                             linksGroups.get(category).push({
                                 label: name,
-                                href: `https://www.stremio.com/warning#${encodeURIComponent(url)}`
+                                href: `#${path}`
                             });
                         }
+                    } else if (typeof host === 'string' && host.length > 0) {
+                        if (!linksGroups.has(category)) {
+                            linksGroups.set(category, []);
+                        }
+                        linksGroups.get(category).push({
+                            label: name,
+                            href: `https://www.stremio.com/warning#${encodeURIComponent(url)}`
+                        });
                     }
+                }
 
-                    return linksGroups;
-                }, new Map())
-            :
-            [];
+                return linksGroups;
+            }, new Map());
     }, [links]);
     const trailerHref = React.useMemo(() => {
         if (typeof trailer !== 'object' || trailer === null) {
