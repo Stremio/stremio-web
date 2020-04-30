@@ -103,7 +103,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                         null
                 }
                 {
-                    (typeof releaseInfo === 'string' && releaseInfo.length > 0) || (released instanceof Date && !isNaN(released.getTime())) || (typeof runtime === 'string' && runtime.length > 0) || typeof linksGroups[CONSTANTS.IMDB_LINK_CATEGORY] === 'object' ?
+                    (typeof releaseInfo === 'string' && releaseInfo.length > 0) || (released instanceof Date && !isNaN(released.getTime())) || (typeof runtime === 'string' && runtime.length > 0) || typeof linksGroups.get(CONSTANTS.IMDB_LINK_CATEGORY) === 'object' ?
                         <div className={styles['runtime-release-info-container']}>
                             {
                                 typeof runtime === 'string' && runtime.length > 0 ?
@@ -121,16 +121,16 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                                         null
                             }
                             {
-                                typeof linksGroups[CONSTANTS.IMDB_LINK_CATEGORY] === 'object' ?
+                                typeof linksGroups.get(CONSTANTS.IMDB_LINK_CATEGORY) === 'object' ?
                                     <Button
                                         className={styles['imdb-button-container']}
-                                        title={linksGroups[CONSTANTS.IMDB_LINK_CATEGORY].label}
-                                        href={linksGroups[CONSTANTS.IMDB_LINK_CATEGORY].href}
+                                        title={linksGroups.get(CONSTANTS.IMDB_LINK_CATEGORY).label}
+                                        href={linksGroups.get(CONSTANTS.IMDB_LINK_CATEGORY).href}
                                         target={'_blank'}
                                         {...(compact ? { tabIndex: -1 } : null)}
                                     >
                                         <Icon className={styles['icon']} icon={'ic_imdbnoframe'} />
-                                        <div className={styles['label']}>{linksGroups[CONSTANTS.IMDB_LINK_CATEGORY].label}</div>
+                                        <div className={styles['label']}>{linksGroups.get(CONSTANTS.IMDB_LINK_CATEGORY).label}</div>
                                     </Button>
                                     :
                                     null
@@ -195,7 +195,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                         null
                 }
                 {
-                    typeof linksGroups[CONSTANTS.SHARE_LINK_CATEGORY] === 'object' ?
+                    typeof linksGroups.get(CONSTANTS.SHARE_LINK_CATEGORY) === 'object' ?
                         <React.Fragment>
                             <ActionButton
                                 className={styles['action-button']}
@@ -209,7 +209,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                                     <ModalDialog title={'Share'} onCloseRequest={closeShareModal}>
                                         <SharePrompt
                                             className={styles['share-prompt']}
-                                            url={linksGroups[CONSTANTS.SHARE_LINK_CATEGORY].href}
+                                            url={linksGroups.get(CONSTANTS.SHARE_LINK_CATEGORY).href}
                                         />
                                     </ModalDialog>
                                     :
