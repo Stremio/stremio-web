@@ -184,7 +184,7 @@ const Player = ({ urlParams }) => {
                 commandName: 'load',
                 commandArgs: {
                     stream: player.selected.stream,
-                    streamingServerUrl: settings.streaming_server_url,
+                    streamingServerURL: settings.streaming_server_url,
                     autoplay: true,
                     time: player.lib_item !== null && player.selected.video_id !== null && player.lib_item.state.video_id === player.selected.video_id ?
                         player.lib_item.state.timeOffset
