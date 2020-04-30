@@ -12,7 +12,7 @@ const styles = require('./styles');
 
 const MetaDetails = ({ urlParams }) => {
     const metaDetails = useMetaDetails(urlParams);
-    const { tabs, selected, closeSelected } = useMetaExtensions(metaDetails.meta_resources);
+    const { tabs, selected, clearSelected } = useMetaExtensions(metaDetails.meta_resources);
     const metaResourceRef = React.useMemo(() => {
         return metaDetails.selected !== null ? metaDetails.selected.meta_resources_ref : null;
     }, [metaDetails.selected]);
@@ -148,7 +148,7 @@ const MetaDetails = ({ urlParams }) => {
                     <ModalDialog
                         className={styles['addon-modal-container']}
                         title={selected.metaExtension.name}
-                        onCloseRequest={closeSelected}>
+                        onCloseRequest={clearSelected}>
                         <iframe
                             className={styles['addon-modal-iframe']}
                             sandbox={'allow-forms allow-scripts allow-same-origin'}

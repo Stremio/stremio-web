@@ -20,10 +20,10 @@ const useMetaExtensions = (metaResources) => {
         .flat(2)
         .filter((tab, index, tabs) => tabs.findIndex((_tab) => _tab.id === tab.id) === index);
     const [selected, setSelected] = React.useState(null);
-    const closeSelected = React.useCallback(() => {
+    const clearSelected = React.useCallback(() => {
         setSelected(null);
     }, []);
-    return { tabs, selected, closeSelected };
+    return { tabs, selected, clearSelected };
 };
 
 module.exports = useMetaExtensions;
