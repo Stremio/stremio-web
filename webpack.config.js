@@ -106,8 +106,7 @@ module.exports = (env, argv) => ({
         extensions: ['.js', '.json', '.less', '.wasm'],
         alias: {
             'stremio': path.resolve(__dirname, 'src'),
-            'stremio-router': path.resolve(__dirname, 'src/router'),
-            'stremio-video': path.resolve(__dirname, 'src/video')
+            'stremio-router': path.resolve(__dirname, 'src/router')
         }
     },
     devServer: {
