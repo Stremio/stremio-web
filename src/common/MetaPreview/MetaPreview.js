@@ -103,7 +103,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                         null
                 }
                 {
-                    (typeof releaseInfo === 'string' && releaseInfo.length > 0) || (released instanceof Date && !isNaN(released.getTime())) || (typeof runtime === 'string' && runtime.length > 0) || typeof linksGroups.get(CONSTANTS.IMDB_LINK_CATEGORY) === 'object' ?
+                    (typeof releaseInfo === 'string' && releaseInfo.length > 0) || (released instanceof Date && !isNaN(released.getTime())) || (typeof runtime === 'string' && runtime.length > 0) || linksGroups.has(CONSTANTS.IMDB_LINK_CATEGORY) ?
                         <div className={styles['runtime-release-info-container']}>
                             {
                                 typeof runtime === 'string' && runtime.length > 0 ?
@@ -121,7 +121,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                                         null
                             }
                             {
-                                typeof linksGroups.get(CONSTANTS.IMDB_LINK_CATEGORY) === 'object' ?
+                                linksGroups.has(CONSTANTS.IMDB_LINK_CATEGORY) ?
                                     <Button
                                         className={styles['imdb-button-container']}
                                         title={linksGroups.get(CONSTANTS.IMDB_LINK_CATEGORY).label}
@@ -195,7 +195,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                         null
                 }
                 {
-                    typeof linksGroups.get(CONSTANTS.SHARE_LINK_CATEGORY) === 'object' ?
+                    linksGroups.has(CONSTANTS.SHARE_LINK_CATEGORY) ?
                         <React.Fragment>
                             <ActionButton
                                 className={styles['action-button']}
