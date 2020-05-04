@@ -3,6 +3,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
+const deepLinking = require('stremio/common/deepLinking');
 const Image = require('stremio/common/Image');
 const SearchBar = require('stremio/common/SearchBar');
 const SeasonsBar = require('./SeasonsBar');
@@ -10,7 +11,7 @@ const Video = require('./Video');
 const useSelectableSeasons = require('./useSelectableSeasons');
 const styles = require('./styles');
 
-const VideosList = ({ className, metaResource }) => {
+const VideosList = ({ className, metaResource, season }) => {
     const videos = React.useMemo(() => {
         return metaResource && metaResource.content.type === 'Ready' ?
             metaResource.content.content.videos
@@ -19,8 +20,14 @@ const VideosList = ({ className, metaResource }) => {
     }, [metaResource]);
     const [seasons, selectedSeason, videosForSeason, selectSeason] = useSelectableSeasons(videos);
     const seasonOnSelect = React.useCallback((event) => {
+        const seasonDeepLink = deepLinking.withSeason({
+            season: event.value,
+            type: metaResource.request.path.type_name,
+            id: metaResource.request.path.id
+        });
         selectSeason(event.value);
-    }, []);
+        window.location.replace(seasonDeepLink.meta_details_videos_season);
+    }, [metaResource]);
     const [search, setSearch] = React.useState('');
     const searchInputOnChange = React.useCallback((event) => {
         setSearch(event.currentTarget.value);
@@ -52,7 +59,7 @@ const VideosList = ({ className, metaResource }) => {
                                 seasons.length > 1 ?
                                     <SeasonsBar
                                         className={styles['seasons-bar']}
-                                        season={selectedSeason}
+                                        season={season !== null && !isNaN(season) && typeof season === 'number' && seasons.includes(season) ? season : selectedSeason}
                                         seasons={seasons}
                                         onSelect={seasonOnSelect}
                                     />
@@ -88,7 +95,8 @@ const VideosList = ({ className, metaResource }) => {
 
 VideosList.propTypes = {
     className: PropTypes.string,
-    metaResource: PropTypes.object
+    metaResource: PropTypes.object,
+    season: PropTypes.number
 };
 
 module.exports = VideosList;
