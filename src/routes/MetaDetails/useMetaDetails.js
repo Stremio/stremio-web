@@ -44,15 +44,6 @@ const mapMetaDetailsStateWithCtx = (meta_details, ctx) => {
                         metaExtensions: meta_resource.content.content.links.filter((link) => link.category === CONSTANTS.META_LINK_CATEGORY)
                     }
                 },
-                deepLinks: meta_details.selected !== null ?
-                    deepLinking.withMetaResource({
-                        metaResource: meta_resource,
-                        type: meta_details.selected.meta_resource_ref.type_name,
-                        id: meta_details.selected.meta_resource_ref.id,
-                        videoId: meta_details.selected.streams_resource_ref !== null ? meta_details.selected.streams_resource_ref.id : null
-                    })
-                    :
-                    null,
                 addon: ctx.profile.addons.reduce((result, addon) => {
                     if (addon.transportUrl === meta_resource.request.base) {
                         return addon;
