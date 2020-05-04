@@ -133,11 +133,11 @@ const MetaDetails = ({ urlParams }) => {
             {
                 selected !== null ?
                     <ModalDialog
-                        className={styles['addon-modal-container']}
+                        className={styles['meta-extension-modal-container']}
                         title={selected.metaExtension.name}
                         onCloseRequest={clearSelected}>
                         <iframe
-                            className={styles['addon-modal-iframe']}
+                            className={styles['meta-extension-modal-iframe']}
                             sandbox={'allow-forms allow-scripts allow-same-origin'}
                             src={selected.metaExtension.url}
                         />
