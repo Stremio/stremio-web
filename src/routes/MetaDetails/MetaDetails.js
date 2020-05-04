@@ -2,7 +2,6 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const UrlUtils = require('url');
 const { VerticalNavBar, HorizontalNavBar, MetaPreview, ModalDialog, Image, useInLibrary } = require('stremio/common');
 const StreamsList = require('./StreamsList');
 const VideosList = require('./VideosList');
@@ -39,18 +38,6 @@ const MetaDetails = ({ urlParams }) => {
             :
             null;
     }, [selectedMetaResource, streamsResourceRef]);
-    const receiveMessage = React.useCallback((event) => {
-        const { protocol, path } = UrlUtils.parse(event.data);
-        if (event.data.startsWith(protocol)) {
-            window.location.replace(`#${path}`);
-        }
-    }, []);
-    React.useEffect(() => {
-        window.addEventListener('message', receiveMessage, false);
-        return () => {
-            window.removeEventListener('message', receiveMessage);
-        };
-    }, []);
     const [inLibrary, toggleInLibrary] = useInLibrary(selectedMetaResource !== null ? selectedMetaResource.content.content : null);
     return (
         <div className={styles['metadetails-container']}>
@@ -164,7 +151,6 @@ const MetaDetails = ({ urlParams }) => {
 
 MetaDetails.propTypes = {
     urlParams: PropTypes.shape({
-        path: PropTypes.string,
         type: PropTypes.string,
         id: PropTypes.string,
         videoId: PropTypes.string
