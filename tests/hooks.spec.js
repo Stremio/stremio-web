@@ -7,10 +7,10 @@ const videos = [{ 'season': 4 }, { 'season': 5 }, { 'season': 4 }, { 'season': 7
 
 describe('hooks tests', () => {
     describe('useSelectableSeasons hook', () => {
-        it('match 4', async () => {
+        it('match 7', async () => {
             const { result } = renderHook(() => useSelectableSeasons(videos));
             const [, selectedSeason] = result.current;
-            expect(selectedSeason).toBe(4);
+            expect(selectedSeason).toBe(7);
         });
 
         it('match 5', async () => {

@@ -33,6 +33,7 @@ const mapMetaDetailsStateWithCtx = (meta_details, ctx) => {
                                     :
                                     NaN
                             ),
+                            upcoming: Date.parse(video.released) > Date.now(),
                             // TODO add watched and progress
                             deepLinks: deepLinking.withVideo({
                                 video,
