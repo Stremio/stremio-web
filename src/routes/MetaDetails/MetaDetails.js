@@ -32,7 +32,7 @@ const MetaDetails = ({ urlParams, queryParams }) => {
             :
             null;
     }, [queryParams]);
-    const onSeasonChanged = React.useCallback((event) => {
+    const seasonOnSelect = React.useCallback((event) => {
         window.location.replace(`#/metadetails/${selectedMetaResource.request.path.type_name}/${selectedMetaResource.request.path.id}?season=${event.value}`);
     }, [selectedMetaResource]);
     const selectedVideo = React.useMemo(() => {
@@ -135,7 +135,7 @@ const MetaDetails = ({ urlParams, queryParams }) => {
                                 className={styles['videos-list']}
                                 metaResource={selectedMetaResource}
                                 season={seasonQueryParam}
-                                seasonOnSelect={onSeasonChanged}
+                                seasonOnSelect={seasonOnSelect}
                             />
                             :
                             null
