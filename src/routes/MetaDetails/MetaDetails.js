@@ -9,7 +9,7 @@ const useMetaDetails = require('./useMetaDetails');
 const useMetaExtensions = require('./useMetaExtensions');
 const styles = require('./styles');
 
-const MetaDetails = ({ urlParams }) => {
+const MetaDetails = ({ urlParams, queryParams }) => {
     const metaDetails = useMetaDetails(urlParams);
     const { tabs, selectedMetaExtension, clearSelectedMetaExtension } = useMetaExtensions(metaDetails.meta_resources);
     const metaResourceRef = React.useMemo(() => {
@@ -26,6 +26,15 @@ const MetaDetails = ({ urlParams }) => {
     }, [metaDetails]);
     const streamsResourceRef = metaDetails.selected !== null ? metaDetails.selected.streams_resource_ref : null;
     const streamsResources = metaDetails.streams_resources;
+    const seasonQueryParam = React.useMemo(() => {
+        return queryParams.has('season') && !isNaN(queryParams.get('season')) ?
+            parseInt(queryParams.get('season'))
+            :
+            null;
+    }, [queryParams]);
+    const seasonOnSelect = React.useCallback((event) => {
+        window.location.replace(`#/metadetails/${selectedMetaResource.request.path.type_name}/${selectedMetaResource.request.path.id}?season=${event.value}`);
+    }, [selectedMetaResource]);
     const selectedVideo = React.useMemo(() => {
         return streamsResourceRef !== null && selectedMetaResource !== null ?
             selectedMetaResource.content.content.videos.reduce((result, video) => {
@@ -125,6 +134,8 @@ const MetaDetails = ({ urlParams }) => {
                             <VideosList
                                 className={styles['videos-list']}
                                 metaResource={selectedMetaResource}
+                                season={seasonQueryParam}
+                                seasonOnSelect={seasonOnSelect}
                             />
                             :
                             null
