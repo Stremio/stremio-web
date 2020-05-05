@@ -26,7 +26,15 @@ const MetaDetails = ({ urlParams, queryParams }) => {
     }, [metaDetails]);
     const streamsResourceRef = metaDetails.selected !== null ? metaDetails.selected.streams_resource_ref : null;
     const streamsResources = metaDetails.streams_resources;
-    const selectedSeason = queryParams.get('season');
+    const seasonQueryParam = React.useMemo(() => {
+        return queryParams.has('season') && !isNaN(queryParams.get('season')) ?
+            parseInt(queryParams.get('season'))
+            :
+            null;
+    }, [queryParams]);
+    const onSeasonChanged = React.useCallback((season) => {
+        window.location.replace(`#/metadetails/${selectedMetaResource.request.path.type_name}/${selectedMetaResource.request.path.id}?season=${season.value}`);
+    }, [selectedMetaResource]);
     const selectedVideo = React.useMemo(() => {
         return streamsResourceRef !== null && selectedMetaResource !== null ?
             selectedMetaResource.content.content.videos.reduce((result, video) => {
@@ -126,7 +134,8 @@ const MetaDetails = ({ urlParams, queryParams }) => {
                             <VideosList
                                 className={styles['videos-list']}
                                 metaResource={selectedMetaResource}
-                                season={parseInt(selectedSeason, 10)}
+                                season={seasonQueryParam}
+                                seasonOnSelect={onSeasonChanged}
                             />
                             :
                             null
