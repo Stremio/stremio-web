@@ -32,8 +32,8 @@ const MetaDetails = ({ urlParams, queryParams }) => {
             :
             null;
     }, [queryParams]);
-    const onSeasonChanged = React.useCallback((season) => {
-        window.location.replace(`#/metadetails/${selectedMetaResource.request.path.type_name}/${selectedMetaResource.request.path.id}?season=${season.value}`);
+    const onSeasonChanged = React.useCallback((event) => {
+        window.location.replace(`#/metadetails/${selectedMetaResource.request.path.type_name}/${selectedMetaResource.request.path.id}?season=${event.value}`);
     }, [selectedMetaResource]);
     const selectedVideo = React.useMemo(() => {
         return streamsResourceRef !== null && selectedMetaResource !== null ?
