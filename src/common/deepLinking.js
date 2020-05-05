@@ -48,13 +48,6 @@ const withLibItem = ({ libItem, streams = {} }) => {
     };
 };
 
-const withSeason = ({ season, type, id }) => {
-    const queryParams = new URLSearchParams([['season', season]]);
-    return {
-        meta_details_videos_season: `#/metadetails/${encodeURIComponent(type)}/${encodeURIComponent(id)}?${queryParams.toString()}`
-    };
-};
-
 const withVideo = ({ video, metaTransportUrl, metaItem, streams = {} }) => {
     const [stream, streamTransportUrl] = typeof streams[`${encodeURIComponent(metaItem.id)}/${encodeURIComponent(video.id)}`] === 'object' ?
         streams[`${encodeURIComponent(metaItem.id)}/${encodeURIComponent(video.id)}`]
@@ -92,7 +85,6 @@ module.exports = {
     withCatalog,
     withMetaItem,
     withLibItem,
-    withSeason,
     withVideo,
     withStream,
     serializeStream,
