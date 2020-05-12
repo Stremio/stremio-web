@@ -6,6 +6,7 @@ function Shell() {
     let active = false;
     let error = null;
     let starting = false;
+
     const events = new EventEmitter();
     events.on('error', () => { });
 
@@ -17,12 +18,10 @@ function Shell() {
             return;
         }
 
-        starting = true;
-        setTimeout(() => {
-            error = new Error('Unable to init stremio shell');
-            starting = false;
-            onStateChanged();
-        });
+        active = false;
+        error = new Error('Stremio shell not available');
+        starting = false;
+        onStateChanged();
     }
     function stop() {
         active = false;
@@ -58,6 +57,13 @@ function Shell() {
             get: function() {
                 return error;
             }
+        },
+        starting: {
+            configurable: false,
+            enumerable: true,
+            get: function() {
+                return starting;
+            }
         }
     });
 
@@ -66,8 +72,6 @@ function Shell() {
     this.on = on;
     this.off = off;
     this.dispatch = dispatch;
-
-    Object.freeze(this);
 }
 
 module.exports = Shell;
