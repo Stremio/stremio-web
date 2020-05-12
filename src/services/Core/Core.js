@@ -1,13 +1,14 @@
 // Copyright (C) 2017-2020 Smart code 203358507
 
 const EventEmitter = require('events');
-const { default: init, StremioCoreWeb } = require('@stremio/stremio-core-web');
+const { default: initialize, StremioCoreWeb } = require('@stremio/stremio-core-web');
 
 function Core() {
     let active = false;
     let error = null;
     let starting = false;
-    let stremio_core = null;
+    let core = null;
+
     const events = new EventEmitter();
     events.on('error', () => { });
 
@@ -20,37 +21,37 @@ function Core() {
         }
 
         starting = true;
-        init()
-            .then(() => {
-                if (starting) {
-                    stremio_core = new StremioCoreWeb(({ name, args } = {}) => {
-                        if (active) {
-                            try {
-                                events.emit(name, args);
-                            } catch (e) {
-                                /* eslint-disable-next-line no-console */
-                                console.error(e);
-                            }
+        initialize().then(() => {
+            if (starting) {
+                core = new StremioCoreWeb(({ name, args } = {}) => {
+                    if (active) {
+                        try {
+                            events.emit(name, args);
+                        } catch (e) {
+                            /* eslint-disable-next-line no-console */
+                            console.error(e);
                         }
-                    });
-                    active = true;
-                    onStateChanged();
-                }
-            })
-            .catch((e) => {
-                error = new Error('Unable to init stremio-core-web');
-                error.error = e;
-                onStateChanged();
-            })
-            .then(() => {
+                    }
+                });
+                active = true;
+                error = null;
                 starting = false;
-            });
+                onStateChanged();
+            }
+        }).catch((error) => {
+            core = null;
+            active = false;
+            error = new Error('Unable to init stremio-core-web');
+            error.error = error;
+            starting = false;
+            onStateChanged();
+        });
     }
     function stop() {
+        core = null;
         active = false;
         error = null;
         starting = false;
-        stremio_core = null;
         onStateChanged();
     }
     function on(name, listener) {
@@ -64,14 +65,14 @@ function Core() {
             return false;
         }
 
-        return stremio_core.dispatch(action, model);
+        return core.dispatch(action, model);
     }
     function getState(model) {
         if (!active) {
             return null;
         }
 
-        return stremio_core.get_state(model);
+        return core.get_state(model);
     }
 
     Object.defineProperties(this, {
@@ -88,6 +89,13 @@ function Core() {
             get: function() {
                 return error;
             }
+        },
+        starting: {
+            configurable: false,
+            enumerable: true,
+            get: function() {
+                return starting;
+            }
         }
     });
 
@@ -97,8 +105,6 @@ function Core() {
     this.off = off;
     this.dispatch = dispatch;
     this.getState = getState;
-
-    Object.freeze(this);
 }
 
 module.exports = Core;
