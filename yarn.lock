@@ -7643,6 +7643,14 @@ lru-cache@^5.1.1:
   dependencies:
     yallist "^3.0.2"
 
+magnet-uri@5.2.4:
+  version "5.2.4"
+  resolved "https://registry.yarnpkg.com/magnet-uri/-/magnet-uri-5.2.4.tgz#7afe5b736af04445aff744c93a890a3710077688"
+  integrity sha512-VYaJMxhr8B9BrCiNINUsuhaEe40YnG+AQBwcqUKO66lSVaI9I3A1iH/6EmEwRI8OYUg5Gt+4lLE7achg676lrg==
+  dependencies:
+    thirty-two "^1.0.1"
+    uniq "^1.0.1"
+
 make-dir@^2.0.0, make-dir@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/make-dir/-/make-dir-2.1.0.tgz#5f0310e18b8be898cc07009295a30ae41e91e6f5"
@@ -10737,6 +10745,16 @@ stream-shift@^1.0.0:
   version "2.0.2"
   resolved "git+https://git@github.com/Stremio/stremio-icons.git#923bbcd5bedcbc3a10d0ae96a3d35d2638bf0ae9"
 
+"stremio-video@git+ssh://git@github.com/Stremio/stremio-video.git#8d18b9d92ca950e09918713dbaca0e0386e714c7":
+  version "0.0.1"
+  resolved "git+ssh://git@github.com/Stremio/stremio-video.git#8d18b9d92ca950e09918713dbaca0e0386e714c7"
+  dependencies:
+    events "1.1.1"
+    magnet-uri "5.2.4"
+    url "0.11.0"
+    video-name-parser "1.4.6"
+    vtt.js "0.13.0"
+
 strict-uri-encode@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/strict-uri-encode/-/strict-uri-encode-1.1.0.tgz#279b225df1d582b1f54e65addd4352e18faa0713"
@@ -11055,6 +11073,11 @@ text-table@0.2.0, text-table@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
+
+thirty-two@^1.0.1:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/thirty-two/-/thirty-two-1.0.2.tgz#4ca2fffc02a51290d2744b9e3f557693ca6b627a"
+  integrity sha1-TKL//AKlEpDSdEueP1V2k8prYno=
 
 throat@^4.0.0:
   version "4.1.0"
@@ -11382,7 +11405,7 @@ url-parse@^1.4.3:
     querystringify "^2.1.1"
     requires-port "^1.0.0"
 
-url@^0.11.0:
+url@0.11.0, url@^0.11.0:
   version "0.11.0"
   resolved "https://registry.yarnpkg.com/url/-/url-0.11.0.tgz#3838e97cfc60521eb73c525a8e55bfdd9e2e28f1"
   integrity sha1-ODjpfPxgUh63PFJajlW/3Z4uKPE=
@@ -11497,10 +11520,20 @@ verror@1.10.0:
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
 
+video-name-parser@1.4.6:
+  version "1.4.6"
+  resolved "https://registry.yarnpkg.com/video-name-parser/-/video-name-parser-1.4.6.tgz#8e7926ab2ba9253fed290b399e453d3b0702c687"
+  integrity sha512-ZdeYjh8X4ms1EzjY/UoiTZ6JWbi8SYyOPGY0jESSLq2BAmdc5sZHi+F8J19Qz0y7H1WSpaltojsCkO1p2dH4YA==
+
 vm-browserify@^1.0.1:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/vm-browserify/-/vm-browserify-1.1.2.tgz#78641c488b8e6ca91a75f511e7a3b32a86e5dda0"
   integrity sha512-2ham8XPWTONajOR0ohOKOHXkm3+gaBmGut3SRuu75xLd/RRaY6vqgh8NBYYk7+RW3u5AtzPQZG8F10LHkl0lAQ==
+
+vtt.js@0.13.0:
+  version "0.13.0"
+  resolved "https://registry.yarnpkg.com/vtt.js/-/vtt.js-0.13.0.tgz#955c667b34d5325b2012cb9e8ba9bad6e0b11ff8"
+  integrity sha1-lVxmezTVMlsgEsuei6m61uCxH/g=
 
 w3c-hr-time@^1.0.1:
   version "1.0.2"
