@@ -3,7 +3,7 @@
 require('spatial-navigation-polyfill');
 const React = require('react');
 const { Router } = require('stremio-router');
-const { Core, KeyboardNavigation, ServicesProvider, Shell } = require('stremio/services');
+const { Core, Shell, Chromecast, KeyboardNavigation, ServicesProvider } = require('stremio/services');
 const { NotFound } = require('stremio/routes');
 const { ToastProvider } = require('stremio/common');
 const CoreEventsToaster = require('./CoreEventsToaster');
@@ -15,47 +15,55 @@ const App = () => {
         return NotFound;
     }, []);
     const services = React.useMemo(() => ({
-        keyboardNavigation: new KeyboardNavigation(),
+        core: new Core(),
         shell: new Shell(),
-        core: new Core()
+        chromecast: new Chromecast(),
+        keyboardNavigation: new KeyboardNavigation()
     }), []);
-    const [shellInitialized, setShellInitialized] = React.useState(false);
     const [coreInitialized, setCoreInitialized] = React.useState(false);
+    const [shellInitialized, setShellInitialized] = React.useState(false);
+    const [chromecastInitialized, setChromecastInitialized] = React.useState(false);
     React.useEffect(() => {
+        const onCoreStateChanged = () => {
+            services.core.dispatch({
+                action: 'Load',
+                args: {
+                    model: 'Ctx'
+                }
+            });
+            setCoreInitialized(services.core.active);
+        };
         const onShellStateChanged = () => {
             setShellInitialized(services.shell.active || services.shell.error instanceof Error);
         };
-        const onCoreStateChanged = () => {
-            if (services.core.active) {
-                services.core.dispatch({
-                    action: 'Load',
-                    args: {
-                        model: 'Ctx'
-                    }
-                });
-            }
-            setCoreInitialized(services.core.active);
+        const onChromecastStateChange = () => {
+            setChromecastInitialized(services.chromecast.active || services.chromecast.error instanceof Error);
         };
-        services.shell.on('stateChanged', onShellStateChanged);
         services.core.on('stateChanged', onCoreStateChanged);
-        services.keyboardNavigation.start();
-        services.shell.start();
+        services.shell.on('stateChanged', onShellStateChanged);
+        services.chromecast.on('stateChanged', onChromecastStateChange);
         services.core.start();
-        window.shell = services.shell;
+        services.shell.start();
+        services.chromecast.start();
+        services.keyboardNavigation.start();
         window.core = services.core;
+        window.shell = services.shell;
+        window.services = services;
         return () => {
-            services.keyboardNavigation.stop();
-            services.shell.stop();
             services.core.stop();
-            services.shell.off('stateChanged', onShellStateChanged);
+            services.shell.stop();
+            services.chromecast.stop();
+            services.keyboardNavigation.stop();
             services.core.off('stateChanged', onCoreStateChanged);
+            services.shell.off('stateChanged', onShellStateChanged);
+            services.chromecast.off('stateChanged', onChromecastStateChange);
         };
     }, []);
     return (
         <React.StrictMode>
             <ServicesProvider services={services}>
                 {
-                    shellInitialized && coreInitialized ?
+                    coreInitialized && shellInitialized && chromecastInitialized ?
                         <ToastProvider className={styles['toasts-container']}>
                             <CoreEventsToaster />
                             <Router
