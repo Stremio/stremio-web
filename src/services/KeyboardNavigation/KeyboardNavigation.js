@@ -86,8 +86,6 @@ function KeyboardNavigation() {
 
     this.start = start;
     this.stop = stop;
-
-    Object.freeze(this);
 }
 
 module.exports = KeyboardNavigation;
