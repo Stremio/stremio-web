@@ -21,7 +21,7 @@ function Chromecast() {
     const events = new EventEmitter();
     events.on('error', () => { });
 
-    function onCastAPIAvailabilityChange() {
+    function onCastAPIAvailabilityChanged() {
         if (castAPIAvailable) {
             active = true;
             error = null;
@@ -42,7 +42,7 @@ function Chromecast() {
                 receiverApplicationId: RECEIVER_APPLICATION_ID,
                 resumeSavedSession: false
             });
-            // context.addEventListener(cast.framework.CastContextEventType.SESSION_STATE_CHANGED, onSessionStateChange);
+            // context.addEventListener(cast.framework.CastContextEventType.CAST_STATE_CHANGED, onCastStateChanged);
         } else if (castAPIAvailable) {
             const context = cast.framework.CastContext.getInstance();
             context.setOptions({
@@ -51,8 +51,7 @@ function Chromecast() {
                 receiverApplicationId: chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
                 resumeSavedSession: false
             });
-            // context.removeEventListener(cast.framework.CastContextEventType.SESSION_STATE_CHANGED, onSessionStateChange);
-            // context.removeEventListener(cast.framework.CastContextEventType.CAST_STATE_CHANGED, onSessionStateChange);
+            // context.removeEventListener(cast.framework.CastContextEventType.CAST_STATE_CHANGED, onCastStateChanged);
         }
 
         events.emit('stateChanged');
@@ -64,13 +63,13 @@ function Chromecast() {
 
         starting = true;
         if (castAPIAvailable !== null) {
-            onCastAPIAvailabilityChange();
+            onCastAPIAvailabilityChanged();
         } else {
-            castAPIEvents.on('availabilityChanged', onCastAPIAvailabilityChange);
+            castAPIEvents.on('availabilityChanged', onCastAPIAvailabilityChanged);
         }
     }
     function stop() {
-        castAPIEvents.off('availabilityChanged', onCastAPIAvailabilityChange);
+        castAPIEvents.off('availabilityChanged', onCastAPIAvailabilityChanged);
         active = false;
         error = null;
         starting = false;
