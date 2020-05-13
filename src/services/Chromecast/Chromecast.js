@@ -141,6 +141,17 @@ function Chromecast() {
                 return cast.framework.CastContext.getInstance().getCastState();
             }
         },
+        castSessionState: {
+            configurable: false,
+            enumerable: true,
+            get: function() {
+                if (!castAPIAvailable) {
+                    return null;
+                }
+
+                return cast.framework.CastContext.getInstance().getSessionState();
+            }
+        },
         castSession: {
             configurable: false,
             enumerable: true,
