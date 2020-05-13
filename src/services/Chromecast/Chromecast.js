@@ -17,29 +17,24 @@ function Chromecast() {
     let active = false;
     let error = null;
     let starting = false;
-    let castState = null;
 
     const events = new EventEmitter();
     events.on('error', () => { });
 
     function onCastAPIAvailabilityChanged() {
         if (castAPIAvailable) {
-            const context = cast.framework.CastContext.getInstance();
             active = true;
             error = null;
             starting = false;
-            castState = context.getCastState();
         } else {
             active = false;
             error = new Error('Google Cast API not available');
             starting = false;
-            castState = null;
         }
 
         onStateChanged();
     }
-    function onCastStateChanged(event) {
-        castState = event.castState;
+    function onCastStateChanged() {
         events.emit(cast.framework.CastContextEventType.CAST_STATE_CHANGED);
     }
     function onSesstionStateChanged(event) {
@@ -87,7 +82,6 @@ function Chromecast() {
         active = false;
         error = null;
         starting = false;
-        castState = null;
         onStateChanged();
     }
     function on(name, listener) {
@@ -139,7 +133,11 @@ function Chromecast() {
             configurable: false,
             enumerable: true,
             get: function() {
-                return castState;
+                if (!castAPIAvailable) {
+                    return null;
+                }
+
+                return cast.framework.CastContext.getInstance().getCastState();
             }
         }
     });
