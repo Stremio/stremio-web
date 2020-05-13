@@ -3,7 +3,7 @@
 const EventEmitter = require('events');
 
 const RECEIVER_APPLICATION_ID = '1634F54B';
-const CUSTOM_MESSAGE_NAMESPACE = 'urn:x-cast:com.stremio';
+const MESSAGE_NAMESPACE = 'urn:x-cast:com.stremio';
 
 let castAPIAvailable = null;
 const castAPIEvents = new EventEmitter();
@@ -17,23 +17,30 @@ function Chromecast() {
     let active = false;
     let error = null;
     let starting = false;
+    let castState = null;
 
     const events = new EventEmitter();
     events.on('error', () => { });
 
     function onCastAPIAvailabilityChanged() {
         if (castAPIAvailable) {
+            const context = cast.framework.CastContext.getInstance();
             active = true;
             error = null;
+            starting = false;
+            castState = context.getCastState();
         } else {
             active = false;
             error = new Error('Google Cast API not available');
+            starting = false;
+            castState = null;
         }
 
-        starting = false;
         onStateChanged();
     }
     function onCastStateChanged(event) {
+        castState = event.castState;
+        events.emit(cast.framework.CastContextEventType.CAST_STATE_CHANGED);
     }
     function onSesstionStateChanged(event) {
     }
@@ -72,6 +79,7 @@ function Chromecast() {
             onCastAPIAvailabilityChanged();
         } else {
             castAPIEvents.on('availabilityChanged', onCastAPIAvailabilityChanged);
+            onStateChanged();
         }
     }
     function stop() {
@@ -79,6 +87,7 @@ function Chromecast() {
         active = false;
         error = null;
         starting = false;
+        castState = null;
         onStateChanged();
     }
     function on(name, listener) {
@@ -96,7 +105,7 @@ function Chromecast() {
             case 'message': {
                 const castSession = cast.framework.CastContext.getInstance().getCurrentSession();
                 if (castSession) {
-                    castSession.sendMessage(CUSTOM_MESSAGE_NAMESPACE, action.message);
+                    castSession.sendMessage(MESSAGE_NAMESPACE, action.message);
                 }
 
                 return;
@@ -124,6 +133,13 @@ function Chromecast() {
             enumerable: true,
             get: function() {
                 return starting;
+            }
+        },
+        castState: {
+            configurable: false,
+            enumerable: true,
+            get: function() {
+                return castState;
             }
         }
     });
