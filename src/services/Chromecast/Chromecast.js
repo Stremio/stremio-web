@@ -33,6 +33,10 @@ function Chromecast() {
         starting = false;
         onStateChanged();
     }
+    function onCastStateChanged(event) {
+    }
+    function onSesstionStateChanged(event) {
+    }
     function onStateChanged() {
         if (active) {
             const context = cast.framework.CastContext.getInstance();
@@ -42,7 +46,8 @@ function Chromecast() {
                 receiverApplicationId: RECEIVER_APPLICATION_ID,
                 resumeSavedSession: false
             });
-            // context.addEventListener(cast.framework.CastContextEventType.CAST_STATE_CHANGED, onCastStateChanged);
+            context.addEventListener(cast.framework.CastContextEventType.CAST_STATE_CHANGED, onCastStateChanged);
+            context.addEventListener(cast.framework.CastContextEventType.SESSION_STATE_CHANGED, onSesstionStateChanged);
         } else if (castAPIAvailable) {
             const context = cast.framework.CastContext.getInstance();
             context.setOptions({
@@ -51,7 +56,8 @@ function Chromecast() {
                 receiverApplicationId: chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
                 resumeSavedSession: false
             });
-            // context.removeEventListener(cast.framework.CastContextEventType.CAST_STATE_CHANGED, onCastStateChanged);
+            context.removeEventListener(cast.framework.CastContextEventType.CAST_STATE_CHANGED, onCastStateChanged);
+            context.removeEventListener(cast.framework.CastContextEventType.SESSION_STATE_CHANGED, onSesstionStateChanged);
         }
 
         events.emit('stateChanged');
