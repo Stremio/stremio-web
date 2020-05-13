@@ -37,7 +37,21 @@ function Chromecast() {
     function onCastStateChanged() {
         events.emit(cast.framework.CastContextEventType.CAST_STATE_CHANGED);
     }
-    function onSesstionStateChanged() {
+    function onMessageReceived(event) {
+
+    }
+    function onSesstionStateChanged(event) {
+        switch (event.sessionState) {
+            case cast.framework.SessionState.SESSION_STARTED: {
+                event.session.addMessageListener(MESSAGE_NAMESPACE, onMessageReceived);
+                break;
+            }
+            case cast.framework.SessionState.SESSION_ENDING: {
+                event.session.removeMessageListener(MESSAGE_NAMESPACE, onMessageReceived);
+                break;
+            }
+        }
+
         events.emit(cast.framework.CastContextEventType.SESSION_STATE_CHANGED);
     }
     function onStateChanged() {
