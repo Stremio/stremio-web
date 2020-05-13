@@ -50,6 +50,10 @@ function Chromecast() {
                 event.session.removeMessageListener(MESSAGE_NAMESPACE, onMessageReceived);
                 break;
             }
+            case cast.framework.SessionState.SESSION_START_FAILED: {
+                events.emit('error', { code: event.errorCode });
+                break;
+            }
         }
 
         events.emit(cast.framework.CastContextEventType.SESSION_STATE_CHANGED);
