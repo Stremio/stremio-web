@@ -37,7 +37,8 @@ function Chromecast() {
     function onCastStateChanged() {
         events.emit(cast.framework.CastContextEventType.CAST_STATE_CHANGED);
     }
-    function onSesstionStateChanged(event) {
+    function onSesstionStateChanged() {
+        events.emit(cast.framework.CastContextEventType.SESSION_STATE_CHANGED);
     }
     function onStateChanged() {
         if (active) {
@@ -138,6 +139,17 @@ function Chromecast() {
                 }
 
                 return cast.framework.CastContext.getInstance().getCastState();
+            }
+        },
+        castSession: {
+            configurable: false,
+            enumerable: true,
+            get: function() {
+                if (!castAPIAvailable) {
+                    return null;
+                }
+
+                return cast.framework.CastContext.getInstance().getCurrentSession();
             }
         }
     });
