@@ -85,8 +85,8 @@ function Chromecast() {
 
         onStateChanged();
     }
-    function onCastStateChanged() {
-        events.emit(cast.framework.CastContextEventType.CAST_STATE_CHANGED);
+    function onCastStateChanged(event) {
+        events.emit(cast.framework.CastContextEventType.CAST_STATE_CHANGED, event);
     }
     function onCastError(code) {
         switch (code) {
@@ -148,14 +148,40 @@ function Chromecast() {
             });
         }
     }
+    function onApplicationStatusChanged(event) {
+        events.emit(cast.framework.CastSession.APPLICATION_STATUS_CHANGED, event);
+    }
+    function onApplicationMetadataChanged(event) {
+        events.emit(cast.framework.CastSession.APPLICATION_METADATA_CHANGED, event);
+    }
+    function onActiveInputStateChanged(event) {
+        events.emit(cast.framework.CastSession.ACTIVE_INPUT_STATE_CHANGED, event);
+    }
+    function onVolumeChanged(event) {
+        events.emit(cast.framework.CastSession.VOLUME_CHANGED, event);
+    }
+    function onMediaSessionChanged(event) {
+        events.emit(cast.framework.CastSession.MEDIA_SESSION, event);
+    }
     function onSesstionStateChanged(event) {
+        events.emit(cast.framework.CastContextEventType.SESSION_STATE_CHANGED, event);
         switch (event.sessionState) {
             case cast.framework.SessionState.SESSION_STARTED: {
                 event.session.addMessageListener(MESSAGE_NAMESPACE, onMessageReceived);
+                event.session.addEventListener(cast.framework.CastSession.APPLICATION_STATUS_CHANGED, onApplicationStatusChanged);
+                event.session.addEventListener(cast.framework.CastSession.APPLICATION_METADATA_CHANGED, onApplicationMetadataChanged);
+                event.session.addEventListener(cast.framework.CastSession.ACTIVE_INPUT_STATE_CHANGED, onActiveInputStateChanged);
+                event.session.addEventListener(cast.framework.CastSession.VOLUME_CHANGED, onVolumeChanged);
+                event.session.addEventListener(cast.framework.CastSession.MEDIA_SESSION, onMediaSessionChanged);
                 break;
             }
             case cast.framework.SessionState.SESSION_ENDING: {
                 event.session.removeMessageListener(MESSAGE_NAMESPACE, onMessageReceived);
+                event.session.removeEventListener(cast.framework.CastSession.APPLICATION_STATUS_CHANGED, onApplicationStatusChanged);
+                event.session.removeEventListener(cast.framework.CastSession.APPLICATION_METADATA_CHANGED, onApplicationMetadataChanged);
+                event.session.removeEventListener(cast.framework.CastSession.ACTIVE_INPUT_STATE_CHANGED, onActiveInputStateChanged);
+                event.session.removeEventListener(cast.framework.CastSession.VOLUME_CHANGED, onVolumeChanged);
+                event.session.removeEventListener(cast.framework.CastSession.MEDIA_SESSION, onMediaSessionChanged);
                 break;
             }
             case cast.framework.SessionState.SESSION_START_FAILED: {
@@ -163,8 +189,6 @@ function Chromecast() {
                 break;
             }
         }
-
-        events.emit(cast.framework.CastContextEventType.SESSION_STATE_CHANGED);
     }
     function onStateChanged() {
         if (active) {
