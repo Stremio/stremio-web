@@ -13,6 +13,57 @@ window['__onGCastApiAvailable'] = function(available) {
     castAPIEvents.emit('availabilityChanged');
 };
 
+const CAST_ERROR = {
+    CANCEL: {
+        code: 1,
+        message: 'The operation was canceled by the user'
+    },
+    TIMEOUT: {
+        code: 2,
+        message: 'The operation timed out'
+    },
+    API_NOT_INITIALIZED: {
+        code: 3,
+        message: 'The API is not initialized'
+    },
+    INVALID_PARAMETER: {
+        code: 4,
+        message: 'The parameters to the operation were not valid'
+    },
+    EXTENSION_NOT_COMPATIBLE: {
+        code: 5,
+        message: 'The API script is not compatible with the installed Cast extension'
+    },
+    EXTENSION_MISSING: {
+        code: 6,
+        message: 'The Cast extension is not available'
+    },
+    RECEIVER_UNAVAILABLE: {
+        code: 7,
+        message: 'No receiver was compatible with the session request'
+    },
+    SESSION_ERROR: {
+        code: 8,
+        message: 'A session could not be created, or a session was invalid'
+    },
+    CHANNEL_ERROR: {
+        code: 9,
+        message: 'A channel to the receiver is not available'
+    },
+    LOAD_MEDIA_FAILED: {
+        code: 10,
+        message: 'Load media failed'
+    },
+    INVALID_MESSAGE: {
+        code: 11,
+        message: 'Invalid message received'
+    },
+    UNKNOWN: {
+        code: 100,
+        message: 'Unknown error'
+    }
+};
+
 function Chromecast() {
     let active = false;
     let error = null;
@@ -37,10 +88,65 @@ function Chromecast() {
     function onCastStateChanged() {
         events.emit(cast.framework.CastContextEventType.CAST_STATE_CHANGED);
     }
+    function onCastError(code) {
+        switch (code) {
+            case chrome.cast.ErrorCode.CANCEL: {
+                events.emit('error', CAST_ERROR.CANCEL);
+                break;
+            }
+            case chrome.cast.ErrorCode.TIMEOUT: {
+                events.emit('error', CAST_ERROR.TIMEOUT);
+                break;
+            }
+            case chrome.cast.ErrorCode.API_NOT_INITIALIZED: {
+                events.emit('error', CAST_ERROR.API_NOT_INITIALIZED);
+                break;
+            }
+            case chrome.cast.ErrorCode.INVALID_PARAMETER: {
+                events.emit('error', CAST_ERROR.INVALID_PARAMETER);
+                break;
+            }
+            case chrome.cast.ErrorCode.EXTENSION_NOT_COMPATIBLE: {
+                events.emit('error', CAST_ERROR.EXTENSION_NOT_COMPATIBLE);
+                break;
+            }
+            case chrome.cast.ErrorCode.EXTENSION_MISSING: {
+                events.emit('error', CAST_ERROR.EXTENSION_MISSING);
+                break;
+            }
+            case chrome.cast.ErrorCode.RECEIVER_UNAVAILABLE: {
+                events.emit('error', CAST_ERROR.RECEIVER_UNAVAILABLE);
+                break;
+            }
+            case chrome.cast.ErrorCode.SESSION_ERROR: {
+                events.emit('error', CAST_ERROR.SESSION_ERROR);
+                break;
+            }
+            case chrome.cast.ErrorCode.CHANNEL_ERROR: {
+                events.emit('error', CAST_ERROR.CHANNEL_ERROR);
+                break;
+            }
+            case chrome.cast.ErrorCode.LOAD_MEDIA_FAILED: {
+                events.emit('error', CAST_ERROR.LOAD_MEDIA_FAILED);
+                break;
+            }
+            default: {
+                events.emit('error', {
+                    ...CAST_ERROR.UNKNOWN,
+                    error: { code }
+                });
+            }
+        }
+    }
     function onMessageReceived(_, message) {
         try {
             events.emit('message', JSON.parse(message));
-        } catch (error) { }
+        } catch (error) {
+            events.emit('error', {
+                ...CAST_ERROR.INVALID_MESSAGE,
+                error
+            });
+        }
     }
     function onSesstionStateChanged(event) {
         switch (event.sessionState) {
@@ -53,7 +159,7 @@ function Chromecast() {
                 break;
             }
             case cast.framework.SessionState.SESSION_START_FAILED: {
-                events.emit('error', { code: event.errorCode });
+                onCastError(event.errorCode);
                 break;
             }
         }
