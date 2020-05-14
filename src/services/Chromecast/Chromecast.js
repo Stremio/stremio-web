@@ -37,8 +37,10 @@ function Chromecast() {
     function onCastStateChanged() {
         events.emit(cast.framework.CastContextEventType.CAST_STATE_CHANGED);
     }
-    function onMessageReceived(event) {
-
+    function onMessageReceived(_, message) {
+        try {
+            events.emit('message', JSON.parse(message));
+        } catch (error) { }
     }
     function onSesstionStateChanged(event) {
         switch (event.sessionState) {
