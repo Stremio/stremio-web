@@ -3,7 +3,7 @@
 require('spatial-navigation-polyfill');
 const React = require('react');
 const { Router } = require('stremio-router');
-const { Core, Shell, Chromecast, KeyboardNavigation, ServicesProvider } = require('stremio/services');
+const { Core, Shell, Chromecast, KeyboardShortcuts, ServicesProvider } = require('stremio/services');
 const { NotFound } = require('stremio/routes');
 const { ToastProvider, CONSTANTS } = require('stremio/common');
 const CoreEventsToaster = require('./CoreEventsToaster');
@@ -18,7 +18,7 @@ const App = () => {
         core: new Core(),
         shell: new Shell(),
         chromecast: new Chromecast(),
-        keyboardNavigation: new KeyboardNavigation()
+        keyboardShortcuts: new KeyboardShortcuts()
     }), []);
     const [coreInitialized, setCoreInitialized] = React.useState(false);
     const [shellInitialized, setShellInitialized] = React.useState(false);
@@ -54,14 +54,14 @@ const App = () => {
         services.core.start();
         services.shell.start();
         services.chromecast.start();
-        services.keyboardNavigation.start();
+        services.keyboardShortcuts.start();
         window.core = services.core;
         window.shell = services.shell;
         return () => {
             services.core.stop();
             services.shell.stop();
             services.chromecast.stop();
-            services.keyboardNavigation.stop();
+            services.keyboardShortcuts.stop();
             services.core.off('stateChanged', onCoreStateChanged);
             services.shell.off('stateChanged', onShellStateChanged);
             services.chromecast.off('stateChanged', onChromecastStateChange);

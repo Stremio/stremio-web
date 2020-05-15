@@ -2,14 +2,14 @@
 
 const EventEmitter = require('events');
 
-function KeyboardNavigation() {
+function KeyboardShortcuts() {
     let active = false;
 
     const events = new EventEmitter();
     events.on('error', () => { });
 
     function onKeyDown(event) {
-        if (event.keyboardNavigationPrevented || event.target.tagName === 'INPUT') {
+        if (event.keyboardShortcutPrevented || event.target.tagName === 'INPUT') {
             return;
         }
 
@@ -96,4 +96,4 @@ function KeyboardNavigation() {
     };
 }
 
-module.exports = KeyboardNavigation;
+module.exports = KeyboardShortcuts;
