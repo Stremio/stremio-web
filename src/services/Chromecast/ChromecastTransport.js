@@ -218,6 +218,15 @@ function ChromecastTransport() {
 
         throw new Error('Invalid action dispatched: ' + JSON.stringify(action));
     };
+    this.getCastState = function() {
+        return cast.framework.CastContext.getInstance().getCastState();
+    };
+    this.getSessionState = function() {
+        return cast.framework.CastContext.getInstance().getSessionState();
+    };
+    this.getCurrentSession = function() {
+        return cast.framework.CastContext.getInstance().getCurrentSession();
+    };
 }
 
 module.exports = ChromecastTransport;
