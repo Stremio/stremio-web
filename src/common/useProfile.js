@@ -11,7 +11,7 @@ const mapProfileState = (ctx) => {
 const useProfile = () => {
     const { core } = useServices();
     const initProfileState = React.useCallback(() => {
-        const ctx = core.getState('ctx');
+        const ctx = core.transport.getState('ctx');
         return mapProfileState(ctx);
     }, []);
     const profile = useModelState({

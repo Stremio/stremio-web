@@ -24,12 +24,15 @@ const App = () => {
     const [shellInitialized, setShellInitialized] = React.useState(false);
     React.useEffect(() => {
         const onCoreStateChanged = () => {
-            services.core.dispatch({
-                action: 'Load',
-                args: {
-                    model: 'Ctx'
-                }
-            });
+            if (services.core.active) {
+                services.core.transport.dispatch({
+                    action: 'Load',
+                    args: {
+                        model: 'Ctx'
+                    }
+                });
+            }
+
             setCoreInitialized(services.core.active);
         };
         const onShellStateChanged = () => {

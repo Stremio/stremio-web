@@ -38,7 +38,7 @@ const Settings = () => {
         torrentProfileSelect
     } = useStreamingServerSettingsInputs(streamingServer);
     const logoutButtonOnClick = React.useCallback(() => {
-        core.dispatch({
+        core.transport.dispatch({
             action: 'Ctx',
             args: {
                 action: 'Logout'
@@ -58,7 +58,7 @@ const Settings = () => {
         // TODO
     }, []);
     const reloadStreamingServer = React.useCallback(() => {
-        core.dispatch({
+        core.transport.dispatch({
             action: 'StreamingServer',
             args: {
                 action: 'Reload'

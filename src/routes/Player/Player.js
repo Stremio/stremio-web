@@ -70,9 +70,9 @@ const Player = ({ urlParams }) => {
         setVideoState({ [propName]: propValue });
     }, []);
     const onEnded = React.useCallback(() => {
-        core.dispatch({ action: 'Unload' }, 'player');
+        core.transport.dispatch({ action: 'Unload' }, 'player');
         if (player.lib_item !== null) {
-            core.dispatch({
+            core.transport.dispatch({
                 action: 'Ctx',
                 args: {
                     action: 'RewindLibraryItem',

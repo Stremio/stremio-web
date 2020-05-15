@@ -90,7 +90,7 @@ const useDiscover = (urlParams, queryParams) => {
                 }
             };
         } else {
-            const discover = core.getState('discover');
+            const discover = core.transport.getState('discover');
             if (discover.selectable.types.length > 0) {
                 return {
                     action: 'Load',
