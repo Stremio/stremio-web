@@ -1,7 +1,12 @@
 // Copyright (C) 2017-2020 Smart code 203358507
 
+const EventEmitter = require('events');
+
 function KeyboardNavigation() {
     let active = false;
+
+    const events = new EventEmitter();
+    events.on('error', () => { });
 
     function onKeyDown(event) {
         if (event.keyboardNavigationPrevented || event.target.tagName === 'INPUT') {
@@ -61,17 +66,8 @@ function KeyboardNavigation() {
             }
         }
     }
-    function start() {
-        if (active) {
-            return;
-        }
-
-        window.addEventListener('keydown', onKeyDown);
-        active = true;
-    }
-    function stop() {
-        window.removeEventListener('keydown', onKeyDown);
-        active = false;
+    function onStateChanged() {
+        events.emit('stateChanged');
     }
 
     Object.defineProperties(this, {
@@ -84,8 +80,20 @@ function KeyboardNavigation() {
         }
     });
 
-    this.start = start;
-    this.stop = stop;
+    this.start = function() {
+        if (active) {
+            return;
+        }
+
+        window.addEventListener('keydown', onKeyDown);
+        active = true;
+        onStateChanged();
+    };
+    this.stop = function() {
+        window.removeEventListener('keydown', onKeyDown);
+        active = false;
+        onStateChanged();
+    };
 }
 
 module.exports = KeyboardNavigation;
