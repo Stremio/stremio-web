@@ -69,6 +69,11 @@ const ControlBar = ({
             onToggleInfoMenu();
         }
     }, [onToggleInfoMenu]);
+    const onChromecastButtonClick = React.useCallback(() => {
+        if (chromecast.active) {
+            chromecast.transport.dispatch({ type: 'requestSession' });
+        }
+    }, []);
     React.useEffect(() => {
         const onStateChanged = () => {
             setChromecastActive(chromecast.active);
@@ -114,7 +119,7 @@ const ControlBar = ({
                 <Button className={classnames(styles['control-bar-button'], { 'disabled': typeof info !== 'object' || info === null })} tabIndex={-1} onMouseDown={onInfoButtonMouseDown} onClick={onInfoButtonClick}>
                     <Icon className={styles['icon']} icon={'ic_info'} />
                 </Button>
-                <Button className={classnames(styles['control-bar-button'], { 'disabled': !chromecastActive })} tabIndex={-1}>
+                <Button className={classnames(styles['control-bar-button'], { 'disabled': !chromecastActive })} tabIndex={-1} onClick={onChromecastButtonClick}>
                     <Icon className={styles['icon']} icon={'ic_cast'} />
                 </Button>
                 <Button className={classnames(styles['control-bar-button'], { 'disabled': !Array.isArray(subtitlesTracks) || subtitlesTracks.length === 0 })} tabIndex={-1} onMouseDown={onSubtitlesButtonMouseDown} onClick={onSubtitlesButtonClick}>
