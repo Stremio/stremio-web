@@ -58,8 +58,7 @@ const App = () => {
         services.shell.start();
         services.chromecast.start();
         services.keyboardShortcuts.start();
-        window.core = services.core;
-        window.shell = services.shell;
+        window.services = services;
         return () => {
             services.core.stop();
             services.shell.stop();
