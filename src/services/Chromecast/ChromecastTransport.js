@@ -51,6 +51,10 @@ const CAST_ERROR = {
     INVALID_MESSAGE: {
         code: 350,
         message: 'Invalid message received'
+    },
+    INVALID_OPTIONS: {
+        code: 351,
+        message: 'Cannot start session before cast options are provided'
     }
 };
 
@@ -184,6 +188,21 @@ function ChromecastTransport() {
             switch (action.type) {
                 case 'setOptions': {
                     cast.framework.CastContext.getInstance().setOptions(action.options);
+                    return;
+                }
+                case 'requestSession': {
+                    try {
+                        cast.framework.CastContext.getInstance().requestSession()
+                            .catch((code) => {
+                                onCastError(code);
+                            });
+                    } catch (error) {
+                        events.emit('error', {
+                            ...CAST_ERROR.INVALID_OPTIONS,
+                            error
+                        });
+                    }
+
                     return;
                 }
                 case 'message': {
