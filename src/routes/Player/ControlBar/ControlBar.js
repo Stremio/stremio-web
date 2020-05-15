@@ -71,7 +71,12 @@ const ControlBar = ({
     }, [onToggleInfoMenu]);
     const onChromecastButtonClick = React.useCallback(() => {
         if (chromecast.active) {
-            chromecast.transport.dispatch({ type: 'requestSession' });
+            const sessionState = chromecast.transport.getSessionState();
+            if (sessionState === cast.framework.SessionState.SESSION_STARTING || sessionState === cast.framework.SessionState.SESSION_STARTED) {
+                chromecast.transport.dispatch({ type: 'endCurrentSession', stopCasting: true });
+            } else {
+                chromecast.transport.dispatch({ type: 'requestSession' });
+            }
         }
     }, []);
     React.useEffect(() => {
