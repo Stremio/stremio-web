@@ -205,6 +205,10 @@ function ChromecastTransport() {
 
                     return;
                 }
+                case 'endCurrentSession': {
+                    cast.framework.CastContext.getInstance().endCurrentSession(action.stopCasting);
+                    return;
+                }
                 case 'message': {
                     const castSession = cast.framework.CastContext.getInstance().getCurrentSession();
                     if (castSession) {
