@@ -5,7 +5,7 @@ const React = require('react');
 const { Router } = require('stremio-router');
 const { Core, Shell, Chromecast, KeyboardNavigation, ServicesProvider } = require('stremio/services');
 const { NotFound } = require('stremio/routes');
-const { ToastProvider } = require('stremio/common');
+const { ToastProvider, CONSTANTS } = require('stremio/common');
 const CoreEventsToaster = require('./CoreEventsToaster');
 const routerViewsConfig = require('./routerViewsConfig');
 const styles = require('./styles');
@@ -22,7 +22,6 @@ const App = () => {
     }), []);
     const [coreInitialized, setCoreInitialized] = React.useState(false);
     const [shellInitialized, setShellInitialized] = React.useState(false);
-    const [chromecastInitialized, setChromecastInitialized] = React.useState(false);
     React.useEffect(() => {
         const onCoreStateChanged = () => {
             services.core.dispatch({
@@ -37,7 +36,17 @@ const App = () => {
             setShellInitialized(services.shell.active || services.shell.error instanceof Error);
         };
         const onChromecastStateChange = () => {
-            setChromecastInitialized(services.chromecast.active || services.chromecast.error instanceof Error);
+            if (services.chromecast.active) {
+                services.chromecast.transport.dispatch({
+                    type: 'setOptions',
+                    options: {
+                        receiverApplicationId: CONSTANTS.CHROMECAST_RECEIVER_APP_ID,
+                        autoJoinPolicy: chrome.cast.AutoJoinPolicy.PAGE_SCOPED,
+                        resumeSavedSession: false,
+                        language: null
+                    }
+                });
+            }
         };
         services.core.on('stateChanged', onCoreStateChanged);
         services.shell.on('stateChanged', onShellStateChanged);
@@ -48,7 +57,6 @@ const App = () => {
         services.keyboardNavigation.start();
         window.core = services.core;
         window.shell = services.shell;
-        window.services = services;
         return () => {
             services.core.stop();
             services.shell.stop();
@@ -63,7 +71,7 @@ const App = () => {
         <React.StrictMode>
             <ServicesProvider services={services}>
                 {
-                    coreInitialized && shellInitialized && chromecastInitialized ?
+                    coreInitialized && shellInitialized ?
                         <ToastProvider className={styles['toasts-container']}>
                             <CoreEventsToaster />
                             <Router
