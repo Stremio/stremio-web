@@ -187,7 +187,15 @@ function ChromecastTransport() {
         if (action) {
             switch (action.type) {
                 case 'setOptions': {
-                    cast.framework.CastContext.getInstance().setOptions(action.options);
+                    try {
+                        cast.framework.CastContext.getInstance().setOptions(action.options);
+                    } catch (error) {
+                        events.emit('error', {
+                            ...CAST_ERROR.INVALID_OPTIONS,
+                            error
+                        });
+                    }
+
                     return;
                 }
                 case 'requestSession': {
