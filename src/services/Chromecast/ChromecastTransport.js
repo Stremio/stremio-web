@@ -209,6 +209,28 @@ function ChromecastTransport() {
                     cast.framework.CastContext.getInstance().endCurrentSession(action.stopCasting);
                     return;
                 }
+                case 'setVolume': {
+                    const castSession = cast.framework.CastContext.getInstance().getCurrentSession();
+                    if (castSession) {
+                        castSession.setVolume(MESSAGE_NAMESPACE, action.volume)
+                            .catch((code) => {
+                                onCastError(code);
+                            });
+                    }
+
+                    return;
+                }
+                case 'setMute': {
+                    const castSession = cast.framework.CastContext.getInstance().getCurrentSession();
+                    if (castSession) {
+                        castSession.setMute(MESSAGE_NAMESPACE, action.muted)
+                            .catch((code) => {
+                                onCastError(code);
+                            });
+                    }
+
+                    return;
+                }
                 case 'message': {
                     const castSession = cast.framework.CastContext.getInstance().getCurrentSession();
                     if (castSession) {
@@ -232,6 +254,22 @@ function ChromecastTransport() {
         const session = cast.framework.CastContext.getInstance().getCurrentSession();
         if (session !== null) {
             return session.getCastDevice();
+        }
+
+        return null;
+    };
+    this.getVolume = function() {
+        const session = cast.framework.CastContext.getInstance().getCurrentSession();
+        if (session !== null) {
+            return session.getVolume();
+        }
+
+        return null;
+    };
+    this.isMute = function() {
+        const session = cast.framework.CastContext.getInstance().getCurrentSession();
+        if (session !== null) {
+            return session.isMute();
         }
 
         return null;
