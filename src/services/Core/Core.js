@@ -93,7 +93,11 @@ function Core() {
         active = false;
         error = null;
         starting = false;
-        transport = null;
+        if (transport !== null) {
+            transport.free();
+            transport = null;
+        }
+
         onStateChanged();
     };
     this.on = function(name, listener) {

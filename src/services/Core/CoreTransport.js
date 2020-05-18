@@ -28,6 +28,9 @@ function CoreTransport() {
     this.getState = function(model) {
         return core.get_state(model);
     };
+    this.free = function() {
+        core.free();
+    };
 }
 
 module.exports = CoreTransport;
