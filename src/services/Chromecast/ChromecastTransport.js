@@ -228,8 +228,13 @@ function ChromecastTransport() {
     this.getSessionState = function() {
         return cast.framework.CastContext.getInstance().getSessionState();
     };
-    this.getCurrentSession = function() {
-        return cast.framework.CastContext.getInstance().getCurrentSession();
+    this.getCastDevice = function() {
+        const session = cast.framework.CastContext.getInstance().getCurrentSession();
+        if (session !== null) {
+            return session.getCastDevice();
+        }
+
+        return null;
     };
 }
 
