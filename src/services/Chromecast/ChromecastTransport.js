@@ -183,6 +183,36 @@ function ChromecastTransport() {
     this.off = function(name, listener) {
         events.off(name, listener);
     };
+    this.getCastState = function() {
+        return cast.framework.CastContext.getInstance().getCastState();
+    };
+    this.getSessionState = function() {
+        return cast.framework.CastContext.getInstance().getSessionState();
+    };
+    this.getCastDevice = function() {
+        const session = cast.framework.CastContext.getInstance().getCurrentSession();
+        if (session !== null) {
+            return session.getCastDevice();
+        }
+
+        return null;
+    };
+    this.getVolume = function() {
+        const session = cast.framework.CastContext.getInstance().getCurrentSession();
+        if (session !== null) {
+            return session.getVolume();
+        }
+
+        return null;
+    };
+    this.isMute = function() {
+        const session = cast.framework.CastContext.getInstance().getCurrentSession();
+        if (session !== null) {
+            return session.isMute();
+        }
+
+        return null;
+    };
     this.dispatch = function(action) {
         if (action) {
             switch (action.type) {
@@ -219,7 +249,7 @@ function ChromecastTransport() {
                 }
                 case 'setVolume': {
                     const castSession = cast.framework.CastContext.getInstance().getCurrentSession();
-                    if (castSession) {
+                    if (castSession !== null) {
                         castSession.setVolume(MESSAGE_NAMESPACE, action.volume)
                             .catch((code) => {
                                 onCastError(code);
@@ -230,8 +260,8 @@ function ChromecastTransport() {
                 }
                 case 'setMute': {
                     const castSession = cast.framework.CastContext.getInstance().getCurrentSession();
-                    if (castSession) {
-                        castSession.setMute(MESSAGE_NAMESPACE, action.muted)
+                    if (castSession !== null) {
+                        castSession.setMute(action.isMute)
                             .catch((code) => {
                                 onCastError(code);
                             });
@@ -239,10 +269,10 @@ function ChromecastTransport() {
 
                     return;
                 }
-                case 'message': {
+                case 'sendMessage': {
                     const castSession = cast.framework.CastContext.getInstance().getCurrentSession();
-                    if (castSession) {
-                        castSession.sendMessage(MESSAGE_NAMESPACE, JSON.stringify(action.message))
+                    if (castSession !== null) {
+                        castSession.sendMessage(MESSAGE_NAMESPACE, JSON.stringify(action.data))
                             .catch((code) => {
                                 onCastError(code);
                             });
@@ -254,36 +284,6 @@ function ChromecastTransport() {
         }
 
         throw new Error('Invalid action dispatched: ' + JSON.stringify(action));
-    };
-    this.getCastState = function() {
-        return cast.framework.CastContext.getInstance().getCastState();
-    };
-    this.getSessionState = function() {
-        return cast.framework.CastContext.getInstance().getSessionState();
-    };
-    this.getCastDevice = function() {
-        const session = cast.framework.CastContext.getInstance().getCurrentSession();
-        if (session !== null) {
-            return session.getCastDevice();
-        }
-
-        return null;
-    };
-    this.getVolume = function() {
-        const session = cast.framework.CastContext.getInstance().getCurrentSession();
-        if (session !== null) {
-            return session.getVolume();
-        }
-
-        return null;
-    };
-    this.isMute = function() {
-        const session = cast.framework.CastContext.getInstance().getCurrentSession();
-        if (session !== null) {
-            return session.isMute();
-        }
-
-        return null;
     };
 }
 
