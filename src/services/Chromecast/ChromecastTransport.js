@@ -170,10 +170,6 @@ function ChromecastTransport() {
                 event.session.removeEventListener(cast.framework.CastSession.MEDIA_SESSION, onMediaSessionChanged);
                 break;
             }
-            case cast.framework.SessionState.SESSION_START_FAILED: {
-                onCastError(event.errorCode);
-                break;
-            }
         }
     }
 
