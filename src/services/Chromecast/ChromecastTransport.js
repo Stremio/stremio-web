@@ -242,7 +242,7 @@ function ChromecastTransport() {
                 case 'message': {
                     const castSession = cast.framework.CastContext.getInstance().getCurrentSession();
                     if (castSession) {
-                        castSession.sendMessage(MESSAGE_NAMESPACE, action.message)
+                        castSession.sendMessage(MESSAGE_NAMESPACE, JSON.stringify(action.message))
                             .catch((code) => {
                                 onCastError(code);
                             });
