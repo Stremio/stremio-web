@@ -193,6 +193,14 @@ function ChromecastTransport() {
 
         return null;
     };
+    this.getMediaSession = function() {
+        const session = cast.framework.CastContext.getInstance().getCurrentSession();
+        if (session !== null) {
+            return session.getMediaSession();
+        }
+
+        return null;
+    };
     this.getVolume = function() {
         const session = cast.framework.CastContext.getInstance().getCurrentSession();
         if (session !== null) {
