@@ -161,7 +161,7 @@ function ChromecastTransport() {
                 event.session.addEventListener(cast.framework.CastSession.MEDIA_SESSION, onMediaSessionChanged);
                 break;
             }
-            case cast.framework.SessionState.SESSION_ENDING: {
+            case cast.framework.SessionState.SESSION_ENDED: {
                 event.session.removeMessageListener(MESSAGE_NAMESPACE, onMessage);
                 event.session.removeEventListener(cast.framework.CastSession.APPLICATION_STATUS_CHANGED, onApplicationStatusChanged);
                 event.session.removeEventListener(cast.framework.CastSession.APPLICATION_METADATA_CHANGED, onApplicationMetadataChanged);
