@@ -22,11 +22,11 @@ function CoreTransport() {
     this.off = function(name, listener) {
         events.off(name, listener);
     };
-    this.dispatch = function(action, model) {
-        return core.dispatch(action, model);
-    };
     this.getState = function(model) {
         return core.get_state(model);
+    };
+    this.dispatch = function(action, model) {
+        return core.dispatch(action, model);
     };
     this.free = function() {
         core.free();
