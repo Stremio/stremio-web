@@ -193,30 +193,6 @@ function ChromecastTransport() {
 
         return null;
     };
-    this.getMediaSession = function() {
-        const session = cast.framework.CastContext.getInstance().getCurrentSession();
-        if (session !== null) {
-            return session.getMediaSession();
-        }
-
-        return null;
-    };
-    this.getVolume = function() {
-        const session = cast.framework.CastContext.getInstance().getCurrentSession();
-        if (session !== null) {
-            return session.getVolume();
-        }
-
-        return null;
-    };
-    this.isMute = function() {
-        const session = cast.framework.CastContext.getInstance().getCurrentSession();
-        if (session !== null) {
-            return session.isMute();
-        }
-
-        return null;
-    };
     this.dispatch = function(action) {
         if (action) {
             switch (action.type) {
@@ -249,28 +225,6 @@ function ChromecastTransport() {
                 }
                 case 'endCurrentSession': {
                     cast.framework.CastContext.getInstance().endCurrentSession(action.stopCasting);
-                    return;
-                }
-                case 'setVolume': {
-                    const castSession = cast.framework.CastContext.getInstance().getCurrentSession();
-                    if (castSession !== null) {
-                        castSession.setVolume(MESSAGE_NAMESPACE, action.volume)
-                            .catch((code) => {
-                                onCastError(code);
-                            });
-                    }
-
-                    return;
-                }
-                case 'setMute': {
-                    const castSession = cast.framework.CastContext.getInstance().getCurrentSession();
-                    if (castSession !== null) {
-                        castSession.setMute(action.isMute)
-                            .catch((code) => {
-                                onCastError(code);
-                            });
-                    }
-
                     return;
                 }
                 case 'sendMessage': {
