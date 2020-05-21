@@ -40,14 +40,11 @@ const App = () => {
         };
         const onChromecastStateChange = () => {
             if (services.chromecast.active) {
-                services.chromecast.transport.dispatch({
-                    type: 'setOptions',
-                    options: {
-                        receiverApplicationId: CONSTANTS.CHROMECAST_RECEIVER_APP_ID,
-                        autoJoinPolicy: chrome.cast.AutoJoinPolicy.PAGE_SCOPED,
-                        resumeSavedSession: false,
-                        language: null
-                    }
+                services.chromecast.transport.setOptions({
+                    receiverApplicationId: CONSTANTS.CHROMECAST_RECEIVER_APP_ID,
+                    autoJoinPolicy: chrome.cast.AutoJoinPolicy.PAGE_SCOPED,
+                    resumeSavedSession: false,
+                    language: null
                 });
             }
         };

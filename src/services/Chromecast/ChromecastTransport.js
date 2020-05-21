@@ -193,55 +193,40 @@ function ChromecastTransport() {
 
         return null;
     };
-    this.dispatch = function(action) {
-        if (action) {
-            switch (action.type) {
-                case 'setOptions': {
-                    try {
-                        cast.framework.CastContext.getInstance().setOptions(action.options);
-                    } catch (error) {
-                        events.emit('error', {
-                            ...CAST_ERROR.INVALID_OPTIONS,
-                            error
-                        });
-                    }
-
-                    return;
-                }
-                case 'requestSession': {
-                    try {
-                        cast.framework.CastContext.getInstance().requestSession()
-                            .catch((code) => {
-                                onCastError(code);
-                            });
-                    } catch (error) {
-                        events.emit('error', {
-                            ...CAST_ERROR.INVALID_OPTIONS,
-                            error
-                        });
-                    }
-
-                    return;
-                }
-                case 'endCurrentSession': {
-                    cast.framework.CastContext.getInstance().endCurrentSession(action.stopCasting);
-                    return;
-                }
-                case 'sendMessage': {
-                    const castSession = cast.framework.CastContext.getInstance().getCurrentSession();
-                    if (castSession !== null) {
-                        castSession.sendMessage(MESSAGE_NAMESPACE, JSON.stringify(action.data))
-                            .catch((code) => {
-                                onCastError(code);
-                            });
-                    }
-
-                    return;
-                }
-            }
+    this.setOptions = function(options) {
+        try {
+            cast.framework.CastContext.getInstance().setOptions(options);
+        } catch (error) {
+            events.emit('error', {
+                ...CAST_ERROR.INVALID_OPTIONS,
+                error
+            });
         }
-
-        throw new Error('Invalid action dispatched: ' + JSON.stringify(action));
+    };
+    this.requestSession = function() {
+        try {
+            cast.framework.CastContext.getInstance().requestSession()
+                .catch((code) => {
+                    onCastError(code);
+                });
+        } catch (error) {
+            events.emit('error', {
+                ...CAST_ERROR.INVALID_OPTIONS,
+                error
+            });
+        }
+    };
+    this.endCurrentSession = function(stopCasting) {
+        cast.framework.CastContext.getInstance().endCurrentSession(stopCasting);
+    };
+    this.sendMessage = function(data) {
+        const castSession = cast.framework.CastContext.getInstance().getCurrentSession();
+        if (castSession !== null) {
+            castSession.sendMessage(MESSAGE_NAMESPACE, JSON.stringify(data))
+                .catch((code) => {
+                    onCastError(code);
+                });
+        }
     };
 }
 
