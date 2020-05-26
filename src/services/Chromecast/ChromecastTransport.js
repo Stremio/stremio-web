@@ -86,7 +86,7 @@ function ChromecastTransport() {
         cast.framework.CastContext.getInstance().setOptions(options);
     };
     this.requestSession = function() {
-        cast.framework.CastContext.getInstance().requestSession();
+        return cast.framework.CastContext.getInstance().requestSession();
     };
     this.endCurrentSession = function(stopCasting) {
         cast.framework.CastContext.getInstance().endCurrentSession(stopCasting);
