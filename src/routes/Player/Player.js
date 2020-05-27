@@ -18,7 +18,7 @@ const useSettings = require('./useSettings');
 const styles = require('./styles');
 
 const Player = ({ urlParams }) => {
-    const { core } = useServices();
+    const { core, chromecast } = useServices();
     const profile = useProfile();
     const [player, updateLibraryItemState, pushToLibrary] = usePlayer(urlParams);
     const [settings, updateSettings] = useSettings(profile);
@@ -26,6 +26,9 @@ const Player = ({ urlParams }) => {
     const routeFocused = useRouteFocused();
     const toast = useToast();
     const [, , , toggleFullscreen] = useFullscreen();
+    const [casting, setCasting] = React.useState(() => {
+        return chromecast.active && chromecast.transport.getSessionState() === cast.framework.SessionState.SESSION_STARTED;
+    });
     const [immersed, setImmersed] = React.useState(true);
     const setImmersedDebounced = React.useCallback(debounce(setImmersed, 3000), []);
     const [subtitlesMenuOpen, , closeSubtitlesMenu, toggleSubtitlesMenu] = useBinaryState(false);
@@ -184,12 +187,13 @@ const Player = ({ urlParams }) => {
                 commandName: 'load',
                 commandArgs: {
                     stream: player.selected.stream,
-                    streamingServerURL: settings.streaming_server_url,
                     autoplay: true,
                     time: player.lib_item !== null && player.selected.video_id !== null && player.lib_item.state.video_id === player.selected.video_id ?
                         player.lib_item.state.timeOffset
                         :
-                        0
+                        0,
+                    streamingServerURL: settings.streaming_server_url,
+                    chromecastTransport: chromecast.transport
                 }
             });
             if (Array.isArray(player.selected.stream.subtitles)) {
@@ -206,7 +210,7 @@ const Player = ({ urlParams }) => {
                 });
             }
         }
-    }, [player.selected]);
+    }, [player.selected, casting]);
     useDeepEqualEffect(() => {
         dispatch({
             type: 'command',
@@ -258,6 +262,31 @@ const Player = ({ urlParams }) => {
         const intervalId = setInterval(pushToLibrary, 30000);
         return () => {
             clearInterval(intervalId);
+        };
+    }, []);
+    React.useEffect(() => {
+        const onSessionStateChange = () => {
+            setCasting(chromecast.active && chromecast.transport.getSessionState() === cast.framework.SessionState.SESSION_STARTED);
+        };
+        const onChromecastStateChange = () => {
+            if (chromecast.active) {
+                chromecast.transport.on(
+                    cast.framework.CastContextEventType.SESSION_STATE_CHANGED,
+                    onSessionStateChange
+                );
+                onSessionStateChange();
+            }
+        };
+        chromecast.on('stateChanged', onChromecastStateChange);
+        onChromecastStateChange();
+        return () => {
+            chromecast.off('stateChanged', onChromecastStateChange);
+            if (chromecast.active) {
+                chromecast.transport.off(
+                    cast.framework.CastContextEventType.SESSION_STATE_CHANGED,
+                    onSessionStateChange
+                );
+            }
         };
     }, []);
     React.useLayoutEffect(() => {
