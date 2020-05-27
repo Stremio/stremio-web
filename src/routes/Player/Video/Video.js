@@ -16,16 +16,14 @@ const Video = React.forwardRef(({ className, ...props }, ref) => {
     const onImplementationChangedRef = useLiveRef(props.onImplementationChanged);
     const videoElementRef = React.useRef(null);
     const videoRef = React.useRef(null);
-    const dispatch = React.useCallback((args) => {
-        if (args && args.commandName === 'load' && args.commandArgs) {
-            const Video = selectVideoImplementation(args.commandArgs.shell, args.commandArgs.stream);
-            if (typeof Video !== 'function') {
-                videoRef.current = null;
-            } else if (videoRef.current === null || videoRef.current.constructor !== Video) {
-                dispatch({ commandName: 'destroy' });
+    const dispatch = React.useCallback((action) => {
+        if (action && action.type === 'command' && action.commandName === 'load' && action.commandArgs) {
+            const Video = selectVideoImplementation(action.commandArgs);
+            if (videoRef.current === null || videoRef.current.constructor !== Video) {
+                dispatch({ type: 'command', commandName: 'destroy' });
                 videoRef.current = new Video({
-                    containerElement: videoElementRef.current,
-                    shell: args.commandArgs.shell
+                    ...action.commandArgs,
+                    containerElement: videoElementRef.current
                 });
                 videoRef.current.on('ended', () => {
                     if (typeof onEndedRef.current === 'function') {
@@ -60,17 +58,17 @@ const Video = React.forwardRef(({ className, ...props }, ref) => {
 
         if (videoRef.current !== null) {
             try {
-                videoRef.current.dispatch(args);
-            } catch (e) {
+                videoRef.current.dispatch(action);
+            } catch (error) {
                 // eslint-disable-next-line no-console
-                console.error(videoRef.current.constructor.manifest.name, e);
+                console.error(videoRef.current.constructor.manifest.name, error);
             }
         }
     }, []);
     React.useImperativeHandle(ref, () => ({ dispatch }), []);
     React.useEffect(() => {
         return () => {
-            dispatch({ commandName: 'destroy' });
+            dispatch({ type: 'command', commandName: 'destroy' });
         };
     }, []);
     return (

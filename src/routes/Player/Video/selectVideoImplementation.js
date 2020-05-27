@@ -1,25 +1,21 @@
 // Copyright (C) 2017-2020 Smart code 203358507
 
-const { HTMLVideo, YouTubeVideo, MPVVideo, withStreamingServer, withHTMLSubtitles } = require('stremio-video');
+const { ChromecastVideo, HTMLVideo, YouTubeVideo, withStreamingServer, withHTMLSubtitles } = require('stremio-video');
 
-const selectVideoImplementation = (shell, stream) => {
+const selectVideoImplementation = (args) => {
     // TODO handle stream.behaviorHints
     // TODO handle IFrameVideo
-    // TODO handle ChromecastVideo
+    // TODO handle MPVVideo
 
-    if (shell) {
-        return withHTMLSubtitles(withStreamingServer(MPVVideo));
+    if (args.chromecastTransport && args.chromecastTransport.getSessionState() === cast.framework.SessionState.SESSION_STARTED) {
+        return ChromecastVideo;
     }
 
-    if (stream) {
-        if (typeof stream.ytId === 'string') {
-            return withHTMLSubtitles(YouTubeVideo);
-        } else if (typeof stream.url === 'string' || typeof stream.infoHash === 'string') {
-            return withHTMLSubtitles(withStreamingServer(HTMLVideo));
-        }
+    if (args.stream && typeof args.stream.ytId === 'string') {
+        return withHTMLSubtitles(YouTubeVideo);
     }
 
-    return null;
+    return withHTMLSubtitles(withStreamingServer(HTMLVideo));
 };
 
 module.exports = selectVideoImplementation;
