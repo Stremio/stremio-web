@@ -998,6 +998,13 @@
     core-js-pure "^3.0.0"
     regenerator-runtime "^0.13.4"
 
+"@babel/runtime@7.10.0":
+  version "7.10.0"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.10.0.tgz#2cdcd6d7a391c24f7154235134c830cfb58ac0b1"
+  integrity sha512-tgYb3zVApHbLHYOPWtVwg25sBqHhfBXRKeKoTIyoheIxln1nA7oBl7SfHfiTG2GhDPI8EUBkOD/0wJCP/3HN4Q==
+  dependencies:
+    regenerator-runtime "^0.13.4"
+
 "@babel/runtime@7.8.7":
   version "7.8.7"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.8.7.tgz#8fefce9802db54881ba59f90bb28719b4996324d"
@@ -1782,12 +1789,12 @@
     telejson "^3.0.2"
     util-deprecate "^1.0.2"
 
-"@stremio/stremio-core-web@0.12.0":
-  version "0.12.0"
-  resolved "https://npm.pkg.github.com/download/@stremio/stremio-core-web/0.12.0/e498bcdf44176c46602f06a97cfb76c2e05ac15bd9f42058f10fab17fe8399da#fa8051f5d34115fba6e63635480da6542b890eb3"
-  integrity sha512-7cgrZs59mCmiEbCAlbXdGUDp0zp2ErpPzA8wVk1surWElipShpc0eZqMeeaD2o4bBUl5P9UwHv5HWEVm9+03jA==
+"@stremio/stremio-core-web@0.16.0":
+  version "0.16.0"
+  resolved "https://registry.yarnpkg.com/@stremio/stremio-core-web/-/stremio-core-web-0.16.0.tgz#ae60ea017a48616db9b91ca9057d6df594fbe2e5"
+  integrity sha512-1DkiHMI47xolPta+SzN60vgvqBxF+73JU7H4yUoKV50H+opQ6lF5/Xb0E7+KmG/ZHERgaZX4YMafzCuf/6g3WQ==
   dependencies:
-    "@babel/runtime" "7.8.7"
+    "@babel/runtime" "7.10.0"
 
 "@svgr/babel-plugin-add-jsx-attribute@^4.2.0":
   version "4.2.0"

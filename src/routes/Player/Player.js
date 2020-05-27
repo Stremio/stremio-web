@@ -27,7 +27,7 @@ const Player = ({ urlParams }) => {
     const toast = useToast();
     const [, , , toggleFullscreen] = useFullscreen();
     const [casting, setCasting] = React.useState(() => {
-        return chromecast.active && chromecast.transport.getSessionState() === cast.framework.SessionState.SESSION_STARTED;
+        return chromecast.active && chromecast.transport.getCastState() === cast.framework.CastState.CONNECTED;
     });
     const [immersed, setImmersed] = React.useState(true);
     const setImmersedDebounced = React.useCallback(debounce(setImmersed, 3000), []);
@@ -265,16 +265,16 @@ const Player = ({ urlParams }) => {
         };
     }, []);
     React.useEffect(() => {
-        const onSessionStateChange = () => {
-            setCasting(chromecast.active && chromecast.transport.getSessionState() === cast.framework.SessionState.SESSION_STARTED);
+        const onCastStateChange = () => {
+            setCasting(chromecast.active && chromecast.transport.getCastState() === cast.framework.CastState.CONNECTED);
         };
         const onChromecastStateChange = () => {
             if (chromecast.active) {
                 chromecast.transport.on(
-                    cast.framework.CastContextEventType.SESSION_STATE_CHANGED,
-                    onSessionStateChange
+                    cast.framework.CastContextEventType.CAST_STATE_CHANGED,
+                    onCastStateChange
                 );
-                onSessionStateChange();
+                onCastStateChange();
             }
         };
         chromecast.on('stateChanged', onChromecastStateChange);
@@ -283,8 +283,8 @@ const Player = ({ urlParams }) => {
             chromecast.off('stateChanged', onChromecastStateChange);
             if (chromecast.active) {
                 chromecast.transport.off(
-                    cast.framework.CastContextEventType.SESSION_STATE_CHANGED,
-                    onSessionStateChange
+                    cast.framework.CastContextEventType.CAST_STATE_CHANGED,
+                    onCastStateChange
                 );
             }
         };

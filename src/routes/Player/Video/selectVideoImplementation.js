@@ -7,7 +7,7 @@ const selectVideoImplementation = (args) => {
     // TODO handle IFrameVideo
     // TODO handle MPVVideo
 
-    if (args.chromecastTransport && args.chromecastTransport.getSessionState() === cast.framework.SessionState.SESSION_STARTED) {
+    if (args.chromecastTransport && args.chromecastTransport.getCastState() === cast.framework.CastState.CONNECTED) {
         return ChromecastVideo;
     }
 
