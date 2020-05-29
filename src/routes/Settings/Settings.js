@@ -6,7 +6,7 @@ const throttle = require('lodash.throttle');
 const Icon = require('stremio-icons/dom');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
-const { Button, Checkbox, MainNavBars, Multiselect, ColorInput, useProfile } = require('stremio/common');
+const { Button, Checkbox, MainNavBars, Multiselect, ColorInput, TextInput, useProfile } = require('stremio/common');
 const useStreamingServer = require('./useStreamingServer');
 const useProfileSettingsInputs = require('./useProfileSettingsInputs');
 const useStreamingServerSettingsInputs = require('./useStreamingServerSettingsInputs');
@@ -31,7 +31,8 @@ const Settings = () => {
         bingeWatchingCheckbox,
         playInBackgroundCheckbox,
         playInExternalPlayerCheckbox,
-        hardwareDecodingCheckbox
+        hardwareDecodingCheckbox,
+        serverUrlTextInput
     } = useProfileSettingsInputs(profile);
     const {
         cacheSizeSelect,
@@ -354,11 +355,10 @@ const Settings = () => {
                             <div className={styles['option-name-container']}>
                                 <div className={styles['label']}>Url</div>
                             </div>
-                            <div className={classnames(styles['option-input-container'], styles['info-container'], styles['selectable'])}>
-                                <div className={styles['label']}>
-                                    {profile.settings.streaming_server_url}
-                                </div>
-                            </div>
+                            <TextInput
+                                className={classnames(styles['option-input-container'], styles['text-input-container'])}
+                                {...serverUrlTextInput}
+                            />
                         </div>
                         {
                             cacheSizeSelect !== null ?

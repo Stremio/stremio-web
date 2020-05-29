@@ -182,6 +182,21 @@ const useProfileSettingsInputs = (profile) => {
             });
         }
     }), [profile.settings]);
+    const serverUrlTextInput = useDeepEqualMemo(() => ({
+        defaultValue: profile.settings.streaming_server_url,
+        onSubmit: (event) => {
+            core.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'UpdateSettings',
+                    args: {
+                        ...profile.settings,
+                        streaming_server_url: event.target.value
+                    }
+                }
+            });
+        }
+    }), [profile.settings]);
     return {
         interfaceLanguageSelect,
         subtitlesLanguageSelect,
@@ -192,7 +207,8 @@ const useProfileSettingsInputs = (profile) => {
         bingeWatchingCheckbox,
         playInBackgroundCheckbox,
         playInExternalPlayerCheckbox,
-        hardwareDecodingCheckbox
+        hardwareDecodingCheckbox,
+        serverUrlTextInput
     };
 };
 

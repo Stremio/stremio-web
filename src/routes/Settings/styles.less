@@ -215,6 +215,18 @@
                     .option-input-container {
                         padding: 1rem;
 
+                        &.text-input-container {
+                            background-color: @color-background;
+                            color: @color-secondaryvariant1-90;
+                            font-weight: 500;
+
+                            &::placeholder {
+                                max-height: 1.2em;
+                                opacity: 0.5;
+                                color: @color-secondaryvariant1-light1-90;
+                            }
+                        }
+
                         &.button-container {
                             justify-content: center;
                             background-color: @color-accent3;
