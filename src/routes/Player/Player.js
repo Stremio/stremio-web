@@ -6,7 +6,7 @@ const classnames = require('classnames');
 const debounce = require('lodash.debounce');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
-const { HorizontalNavBar, useDeepEqualEffect, useFullscreen, useBinaryState, useToast, useProfile } = require('stremio/common');
+const { HorizontalNavBar, useDeepEqualEffect, useFullscreen, useBinaryState, useToast, useProfile, useStreamingServer } = require('stremio/common');
 const BufferingLoader = require('./BufferingLoader');
 const ControlBar = require('./ControlBar');
 const InfoMenu = require('./InfoMenu');
@@ -22,6 +22,7 @@ const Player = ({ urlParams }) => {
     const profile = useProfile();
     const [player, updateLibraryItemState, pushToLibrary] = usePlayer(urlParams);
     const [settings, updateSettings] = useSettings(profile);
+    const streamingServer = useStreamingServer();
     const info = useInfo(player, profile);
     const routeFocused = useRouteFocused();
     const toast = useToast();
@@ -181,7 +182,7 @@ const Player = ({ urlParams }) => {
         setError(null);
         if (player.selected === null) {
             dispatch({ type: 'command', commandName: 'unload' });
-        } else {
+        } else if (streamingServer.base_url !== null && streamingServer.base_url.type !== 'Loading') {
             dispatch({
                 type: 'command',
                 commandName: 'load',
@@ -192,7 +193,7 @@ const Player = ({ urlParams }) => {
                         player.lib_item.state.timeOffset
                         :
                         0,
-                    streamingServerURL: settings.streaming_server_url,
+                    streamingServerURL: typeof streamingServer.base_url.content === 'string' ? streamingServer.base_url.content : null,
                     chromecastTransport: chromecast.transport
                 }
             });
@@ -210,7 +211,7 @@ const Player = ({ urlParams }) => {
                 });
             }
         }
-    }, [player.selected, casting]);
+    }, [streamingServer.base_url, player.selected, casting]);
     useDeepEqualEffect(() => {
         dispatch({
             type: 'command',
@@ -227,7 +228,7 @@ const Player = ({ urlParams }) => {
                     }, [])
             }
         });
-    }, [player.subtitles_resources, player.selected, casting]);
+    }, [streamingServer.base_url, player.subtitles_resources, player.selected, casting]);
     React.useEffect(() => {
         dispatch({ type: 'setProp', propName: 'subtitlesSize', propValue: settings.subtitles_size });
     }, [settings.subtitles_size]);
