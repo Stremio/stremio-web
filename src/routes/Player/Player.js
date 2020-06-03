@@ -193,6 +193,7 @@ const Player = ({ urlParams }) => {
                         player.lib_item.state.timeOffset
                         :
                         0,
+                    transcode: casting,
                     streamingServerURL: typeof streamingServer.base_url.content === 'string' ? streamingServer.base_url.content : null,
                     chromecastTransport: chromecast.transport
                 }
