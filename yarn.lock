@@ -1796,6 +1796,17 @@
   dependencies:
     "@babel/runtime" "7.10.0"
 
+"@stremio/stremio-video@0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@stremio/stremio-video/-/stremio-video-0.0.4.tgz#338fcc0e39152e69ea8b0ecfd8beefab8b486624"
+  integrity sha512-ffRSs3KiDDoHmCWTqcP//dqPDiqN9AMOaQEp0Rkw3O6L6wzISNfdi/ajwHQaHO1B4Jc6QXtejcLUNiZ+cI6tmg==
+  dependencies:
+    events "1.1.1"
+    magnet-uri "5.2.4"
+    url "0.11.0"
+    video-name-parser "1.4.6"
+    vtt.js "0.13.0"
+
 "@svgr/babel-plugin-add-jsx-attribute@^4.2.0":
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/@svgr/babel-plugin-add-jsx-attribute/-/babel-plugin-add-jsx-attribute-4.2.0.tgz#dadcb6218503532d6884b210e7f3c502caaa44b1"
@@ -10751,16 +10762,6 @@ stream-shift@^1.0.0:
 "stremio-icons@git+https://git@github.com/Stremio/stremio-icons.git#v2.0.2":
   version "2.0.2"
   resolved "git+https://git@github.com/Stremio/stremio-icons.git#923bbcd5bedcbc3a10d0ae96a3d35d2638bf0ae9"
-
-"stremio-video@git+ssh://git@github.com/Stremio/stremio-video.git#8d18b9d92ca950e09918713dbaca0e0386e714c7":
-  version "0.0.1"
-  resolved "git+ssh://git@github.com/Stremio/stremio-video.git#8d18b9d92ca950e09918713dbaca0e0386e714c7"
-  dependencies:
-    events "1.1.1"
-    magnet-uri "5.2.4"
-    url "0.11.0"
-    video-name-parser "1.4.6"
-    vtt.js "0.13.0"
 
 strict-uri-encode@^1.0.0:
   version "1.1.0"
