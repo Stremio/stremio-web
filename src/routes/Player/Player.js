@@ -371,7 +371,7 @@ const Player = ({ urlParams }) => {
         };
     }, []);
     return (
-        <div className={classnames(styles['player-container'], { [styles['immersed']]: immersed && videoState.paused !== null && !videoState.paused && !subtitlesMenuOpen && !infoMenuOpen })}
+        <div className={classnames(styles['player-container'], { [styles['immersed']]: immersed && !casting && videoState.paused !== null && !videoState.paused && !subtitlesMenuOpen && !infoMenuOpen })}
             onMouseDown={onContainerMouseDown}
             onMouseMove={onContainerMouseMove}
             onMouseOver={onContainerMouseMove}
