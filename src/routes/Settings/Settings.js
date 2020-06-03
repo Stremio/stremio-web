@@ -6,7 +6,7 @@ const throttle = require('lodash.throttle');
 const Icon = require('stremio-icons/dom');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
-const { Button, Checkbox, MainNavBars, Multiselect, ColorInput, TextInput, useProfile } = require('stremio/common');
+const { Button, Checkbox, MainNavBars, Multiselect, ColorInput, TextInput, ModalDialog, useProfile, useBinaryState } = require('stremio/common');
 const useStreamingServer = require('./useStreamingServer');
 const useProfileSettingsInputs = require('./useProfileSettingsInputs');
 const useStreamingServerSettingsInputs = require('./useStreamingServerSettingsInputs');
@@ -21,6 +21,42 @@ const Settings = () => {
     const { routeFocused } = useRouteFocused();
     const profile = useProfile();
     const streamingServer = useStreamingServer();
+    const [editServerUrlModalOpen, openEditServerUrlModal, closeEditServerUrlModal] = useBinaryState(false);
+    const editServerUrlInputRef = React.useRef(null);
+    const editServerUrlOnClick = React.useCallback(() => {
+        if (editServerUrlInputRef.current !== null) {
+            core.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'UpdateSettings',
+                    args: {
+                        ...profile.settings,
+                        streaming_server_url: editServerUrlInputRef.current.value
+                    }
+                }
+            });
+            if (typeof closeEditServerUrlModal === 'function') {
+                closeEditServerUrlModal();
+            }
+        }
+    }, []);
+    const editServerUrlModalButtons = React.useMemo(() => {
+        return [
+            {
+                className: styles['cancel-button'],
+                label: 'Cancel',
+                props: {
+                    onClick: closeEditServerUrlModal
+                }
+            },
+            {
+                label: 'Edit',
+                props: {
+                    onClick: editServerUrlOnClick,
+                }
+            }
+        ];
+    }, [editServerUrlOnClick]);
     const {
         interfaceLanguageSelect,
         subtitlesLanguageSelect,
@@ -104,6 +140,7 @@ const Settings = () => {
         if (routeFocused) {
             updateSelectedSectionId();
         }
+        closeEditServerUrlModal();
     }, [routeFocused]);
     return (
         <MainNavBars className={styles['settings-container']} route={'settings'}>
@@ -355,10 +392,12 @@ const Settings = () => {
                             <div className={styles['option-name-container']}>
                                 <div className={styles['label']}>Url</div>
                             </div>
-                            <TextInput
-                                className={classnames(styles['option-input-container'], styles['text-input-container'])}
-                                {...serverUrlTextInput}
-                            />
+                            <div className={classnames(styles['option-input-container'], styles['edit-container'])}>
+                                <div className={styles['label']}>{profile.settings.streaming_server_url}</div>
+                                <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Edit'} onClick={openEditServerUrlModal}>
+                                    <Icon className={styles['icon']} icon={'ic_settings'} />
+                                </Button>
+                            </div>
                         </div>
                         {
                             cacheSizeSelect !== null ?
@@ -391,6 +430,25 @@ const Settings = () => {
                     </div>
                 </div>
             </div>
+            {
+                editServerUrlModalOpen ?
+                    <ModalDialog
+                        className={styles['edit-server-url-modal-container']}
+                        title={'Edit streaming server url'}
+                        buttons={editServerUrlModalButtons}
+                        onCloseRequest={closeEditServerUrlModal}>
+                        <div className={styles['notice']}>You can edit the default streaming server url</div>
+                        <TextInput
+                            ref={editServerUrlInputRef}
+                            className={styles['server-url-input']}
+                            type={'text'}
+                            placeholder={'Enter a streaming server url'}
+                            {...serverUrlTextInput}
+                        />
+                    </ModalDialog>
+                    :
+                    null
+            }
         </MainNavBars>
     );
 };

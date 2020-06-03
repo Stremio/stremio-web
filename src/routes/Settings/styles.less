@@ -11,6 +11,11 @@
     multiselect-label: label;
 }
 
+:import('~stremio/common/ModalDialog/styles.less') {
+    addon-modal-content: modal-dialog-content;
+    cancel-button-label: label;
+}
+
 .settings-container {
     width: 100%;
     height: 100%;
@@ -215,18 +220,6 @@
                     .option-input-container {
                         padding: 1rem;
 
-                        &.text-input-container {
-                            background-color: @color-background;
-                            color: @color-secondaryvariant1-90;
-                            font-weight: 500;
-
-                            &::placeholder {
-                                max-height: 1.2em;
-                                opacity: 0.5;
-                                color: @color-secondaryvariant1-light1-90;
-                            }
-                        }
-
                         &.button-container {
                             justify-content: center;
                             background-color: @color-accent3;
@@ -287,9 +280,72 @@
                                 }
                             }
                         }
+
+                        &.edit-container {
+                            padding: 0;
+
+                            .label {
+                                overflow: hidden;
+                                white-space: pre;
+                                text-overflow: ellipsis;
+                                padding: 0 1rem;
+                            }
+
+                            .button-container {
+                                flex: auto;
+
+                                .icon {
+                                    margin: 0;
+                                }
+                            }
+                        }
                     }
                 }
             }
+        }
+    }
+}
+
+.edit-server-url-modal-container {
+    .addon-modal-content {
+        width: 30rem;
+
+        .notice {
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+            color: @color-background-dark5-90;
+        }
+
+        .server-url-input {
+            width: 100%;
+            padding: 1rem;
+            color: @color-surface-dark5;
+            outline: var(--focus-outline-size) solid @color-surface-light2;
+            outline-offset: calc(-1 * var(--focus-outline-size));
+
+            &:hover {
+                outline-color: @color-surface-light4;
+            }
+
+            &:focus {
+                outline-color: @color-background-dark5;
+            }
+        }
+    }
+
+    .cancel-button {
+        background-color: transparent;
+
+        &:hover {
+            background-color: @color-surface-light3;
+        }
+
+        &:focus {
+            outline-color: @color-background-dark5;
+        }
+
+        .cancel-button-label {
+            color: @color-surface-dark2;
         }
     }
 }
