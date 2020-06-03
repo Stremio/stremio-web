@@ -2,7 +2,7 @@
 
 const React = require('react');
 const { useServices } = require('stremio/services');
-const { useModelState } = require('stremio/common');
+const useModelState = require('stremio/common/useModelState');
 
 const useStreamingServer = () => {
     const { core } = useServices();
