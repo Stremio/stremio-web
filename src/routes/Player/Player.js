@@ -227,7 +227,7 @@ const Player = ({ urlParams }) => {
                     }, [])
             }
         });
-    }, [player.selected, player.subtitles_resources]);
+    }, [player.subtitles_resources, player.selected, casting]);
     React.useEffect(() => {
         dispatch({ type: 'setProp', propName: 'subtitlesSize', propValue: settings.subtitles_size });
     }, [settings.subtitles_size]);
