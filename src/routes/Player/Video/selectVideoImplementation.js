@@ -15,7 +15,11 @@ const selectVideoImplementation = (args) => {
         return withHTMLSubtitles(YouTubeVideo);
     }
 
-    return withHTMLSubtitles(withStreamingServer(HTMLVideo));
+    if (typeof args.streamingServerURL === 'string') {
+        return withHTMLSubtitles(withStreamingServer(HTMLVideo));
+    }
+
+    return withHTMLSubtitles(HTMLVideo);
 };
 
 module.exports = selectVideoImplementation;
