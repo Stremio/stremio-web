@@ -23,17 +23,6 @@ const withMetaItem = ({ metaItem }) => {
     };
 };
 
-const withMetaResource = ({ metaResource, type, id, videoId }) => {
-    const queryParams = new URLSearchParams([['metaTransportUrl', metaResource.request.base]]);
-    return {
-        meta_details_videos: `#/metadetails/${encodeURIComponent(type)}/${encodeURIComponent(id)}?${queryParams.toString()}`,
-        meta_details_streams: typeof videoId === 'string' ?
-            `#/metadetails/${encodeURIComponent(type)}/${encodeURIComponent(id)}/${encodeURIComponent(videoId)}?${queryParams.toString()}`
-            :
-            null
-    };
-};
-
 const withLibItem = ({ libItem, streams = {} }) => {
     const [stream, streamTransportUrl, metaTransportUrl] = typeof libItem.state.video_id === 'string' && typeof streams[`${encodeURIComponent(libItem._id)}/${encodeURIComponent(libItem.state.video_id)}`] === 'object' ?
         streams[`${encodeURIComponent(libItem._id)}/${encodeURIComponent(libItem.state.video_id)}`]
@@ -60,13 +49,12 @@ const withLibItem = ({ libItem, streams = {} }) => {
 };
 
 const withVideo = ({ video, metaTransportUrl, metaItem, streams = {} }) => {
-    const queryParams = new URLSearchParams([['metaTransportUrl', metaTransportUrl]]);
     const [stream, streamTransportUrl] = typeof streams[`${encodeURIComponent(metaItem.id)}/${encodeURIComponent(video.id)}`] === 'object' ?
         streams[`${encodeURIComponent(metaItem.id)}/${encodeURIComponent(video.id)}`]
         :
         [];
     return {
-        meta_details_streams: `#/metadetails/${encodeURIComponent(metaItem.type)}/${encodeURIComponent(metaItem.id)}/${encodeURIComponent(video.id)}?${queryParams.toString()}`,
+        meta_details_streams: `#/metadetails/${encodeURIComponent(metaItem.type)}/${encodeURIComponent(metaItem.id)}/${encodeURIComponent(video.id)}`,
         // TODO check if stream is external
         player: typeof stream === 'object' && typeof streamTransportUrl === 'string' ?
             `#/player/${encodeURIComponent(serializeStream(stream))}/${encodeURIComponent(streamTransportUrl)}/${encodeURIComponent(metaTransportUrl)}/${encodeURIComponent(metaItem.type)}/${encodeURIComponent(metaItem.id)}/${encodeURIComponent(video.id)}`
@@ -96,7 +84,6 @@ const withCatalog = ({ request }) => {
 module.exports = {
     withCatalog,
     withMetaItem,
-    withMetaResource,
     withLibItem,
     withVideo,
     withStream,

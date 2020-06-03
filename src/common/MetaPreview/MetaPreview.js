@@ -27,43 +27,44 @@ const ALLOWED_LINK_REDIRECTS = [
 const MetaPreview = ({ className, compact, name, logo, background, runtime, releaseInfo, released, description, links, trailer, inLibrary, toggleInLibrary }) => {
     const [shareModalOpen, openShareModal, closeShareModal] = useBinaryState(false);
     const linksGroups = React.useMemo(() => {
-        return Array.isArray(links) ?
-            links
-                .filter((link) => link && typeof link.category === 'string' && typeof link.url === 'string')
-                .reduce((linksGroups, { category, name, url }) => {
-                    if (category === CONSTANTS.IMDB_LINK_CATEGORY) {
-                        linksGroups[category] = {
-                            label: name,
-                            href: `https://www.stremio.com/warning#${encodeURIComponent(`https://www.imdb.com/title/${encodeURIComponent(url)}`)}`
-                        };
-                    } else if (category === CONSTANTS.SHARE_LINK_CATEGORY) {
-                        linksGroups[category] = {
-                            label: name,
-                            href: url
-                        };
-                    } else {
-                        const { protocol, host, path, pathname } = UrlUtils.parse(url);
-                        if (protocol === 'stremio:') {
-                            if (ALLOWED_LINK_REDIRECTS.some((regexp) => pathname.match(regexp))) {
-                                linksGroups[category] = linksGroups[category] || [];
-                                linksGroups[category].push({
-                                    label: name,
-                                    href: `#${path}`
-                                });
+        return links
+            .filter((link) => link && typeof link.category === 'string' && typeof link.url === 'string')
+            .reduce((linksGroups, { category, name, url }) => {
+                if (category === CONSTANTS.IMDB_LINK_CATEGORY) {
+                    linksGroups.set(category, {
+                        label: name,
+                        href: `https://www.stremio.com/warning#${encodeURIComponent(`https://www.imdb.com/title/${encodeURIComponent(url)}`)}`
+                    });
+                } else if (category === CONSTANTS.SHARE_LINK_CATEGORY) {
+                    linksGroups.set(category, {
+                        label: name,
+                        href: url
+                    });
+                } else {
+                    const { protocol, host, path, pathname } = UrlUtils.parse(url);
+                    if (protocol === 'stremio:') {
+                        if (pathname !== null && ALLOWED_LINK_REDIRECTS.some((regexp) => pathname.match(regexp))) {
+                            if (!linksGroups.has(category)) {
+                                linksGroups.set(category, []);
                             }
-                        } else if (typeof host === 'string' && host.length > 0) {
-                            linksGroups[category] = linksGroups[category] || [];
-                            linksGroups[category].push({
+                            linksGroups.get(category).push({
                                 label: name,
-                                href: `https://www.stremio.com/warning#${encodeURIComponent(url)}`
+                                href: `#${path}`
                             });
                         }
+                    } else if (typeof host === 'string' && host.length > 0) {
+                        if (!linksGroups.has(category)) {
+                            linksGroups.set(category, []);
+                        }
+                        linksGroups.get(category).push({
+                            label: name,
+                            href: `https://www.stremio.com/warning#${encodeURIComponent(url)}`
+                        });
                     }
+                }
 
-                    return linksGroups;
-                }, {})
-            :
-            [];
+                return linksGroups;
+            }, new Map());
     }, [links]);
     const trailerHref = React.useMemo(() => {
         if (typeof trailer !== 'object' || trailer === null) {
@@ -99,7 +100,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                         null
                 }
                 {
-                    (typeof releaseInfo === 'string' && releaseInfo.length > 0) || (released instanceof Date && !isNaN(released.getTime())) || (typeof runtime === 'string' && runtime.length > 0) || typeof linksGroups[CONSTANTS.IMDB_LINK_CATEGORY] === 'object' ?
+                    (typeof releaseInfo === 'string' && releaseInfo.length > 0) || (released instanceof Date && !isNaN(released.getTime())) || (typeof runtime === 'string' && runtime.length > 0) || linksGroups.has(CONSTANTS.IMDB_LINK_CATEGORY) ?
                         <div className={styles['runtime-release-info-container']}>
                             {
                                 typeof runtime === 'string' && runtime.length > 0 ?
@@ -117,16 +118,16 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                                         null
                             }
                             {
-                                typeof linksGroups[CONSTANTS.IMDB_LINK_CATEGORY] === 'object' ?
+                                linksGroups.has(CONSTANTS.IMDB_LINK_CATEGORY) ?
                                     <Button
                                         className={styles['imdb-button-container']}
-                                        title={linksGroups[CONSTANTS.IMDB_LINK_CATEGORY].label}
-                                        href={linksGroups[CONSTANTS.IMDB_LINK_CATEGORY].href}
+                                        title={linksGroups.get(CONSTANTS.IMDB_LINK_CATEGORY).label}
+                                        href={linksGroups.get(CONSTANTS.IMDB_LINK_CATEGORY).href}
                                         target={'_blank'}
                                         {...(compact ? { tabIndex: -1 } : null)}
                                     >
                                         <Icon className={styles['icon']} icon={'ic_imdbnoframe'} />
-                                        <div className={styles['label']}>{linksGroups[CONSTANTS.IMDB_LINK_CATEGORY].label}</div>
+                                        <div className={styles['label']}>{linksGroups.get(CONSTANTS.IMDB_LINK_CATEGORY).label}</div>
                                     </Button>
                                     :
                                     null
@@ -150,7 +151,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                         null
                 }
                 {
-                    Object.keys(linksGroups)
+                    Array.from(linksGroups.keys())
                         .filter((category) => {
                             return category !== CONSTANTS.IMDB_LINK_CATEGORY &&
                                 category !== CONSTANTS.SHARE_LINK_CATEGORY;
@@ -160,7 +161,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                                 key={index}
                                 className={styles['meta-links']}
                                 label={category}
-                                links={linksGroups[category]}
+                                links={linksGroups.get(category)}
                             />
                         ))
                 }
@@ -191,7 +192,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                         null
                 }
                 {
-                    typeof linksGroups[CONSTANTS.SHARE_LINK_CATEGORY] === 'object' ?
+                    linksGroups.has(CONSTANTS.SHARE_LINK_CATEGORY) ?
                         <React.Fragment>
                             <ActionButton
                                 className={styles['action-button']}
@@ -205,7 +206,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                                     <ModalDialog title={'Share'} onCloseRequest={closeShareModal}>
                                         <SharePrompt
                                             className={styles['share-prompt']}
-                                            url={linksGroups[CONSTANTS.SHARE_LINK_CATEGORY].href}
+                                            url={linksGroups.get(CONSTANTS.SHARE_LINK_CATEGORY).href}
                                         />
                                     </ModalDialog>
                                     :

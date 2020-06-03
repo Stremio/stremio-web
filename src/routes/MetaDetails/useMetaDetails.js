@@ -1,7 +1,7 @@
 // Copyright (C) 2017-2020 Smart code 203358507
 
 const React = require('react');
-const { deepLinking, useModelState } = require('stremio/common');
+const { CONSTANTS, deepLinking, useModelState } = require('stremio/common');
 
 const initMetaDetailsState = () => ({
     selected: null,
@@ -12,10 +12,10 @@ const initMetaDetailsState = () => ({
 const mapMetaDetailsStateWithCtx = (meta_details, ctx) => {
     const selected = meta_details.selected;
     const meta_resources = meta_details.meta_resources.map((meta_resource) => {
-        return {
-            request: meta_resource.request,
-            content: meta_resource.content.type === 'Ready' ?
-                {
+        return meta_resource.content.type === 'Ready' ?
+            {
+                request: meta_resource.request,
+                content: {
                     type: 'Ready',
                     content: {
                         ...meta_resource.content.content,
@@ -33,34 +33,27 @@ const mapMetaDetailsStateWithCtx = (meta_details, ctx) => {
                                     :
                                     NaN
                             ),
+                            upcoming: Date.parse(video.released) > Date.now(),
                             // TODO add watched and progress
                             deepLinks: deepLinking.withVideo({
                                 video,
                                 metaTransportUrl: meta_resource.request.base,
                                 metaItem: meta_resource.content.content
                             })
-                        }))
+                        })),
+                        metaExtensions: meta_resource.content.content.links.filter((link) => link.category === CONSTANTS.META_LINK_CATEGORY)
                     }
-                }
-                :
-                meta_resource.content,
-            deepLinks: meta_details.selected !== null ?
-                deepLinking.withMetaResource({
-                    metaResource: meta_resource,
-                    type: meta_details.selected.meta_resource_ref.type_name,
-                    id: meta_details.selected.meta_resource_ref.id,
-                    videoId: meta_details.selected.streams_resource_ref !== null ? meta_details.selected.streams_resource_ref.id : null
-                })
-                :
-                null,
-            addon: ctx.profile.addons.reduce((result, addon) => {
-                if (addon.transportUrl === meta_resource.request.base) {
-                    return addon;
-                }
+                },
+                addon: ctx.profile.addons.reduce((result, addon) => {
+                    if (addon.transportUrl === meta_resource.request.base) {
+                        return addon;
+                    }
 
-                return result;
-            }, null)
-        };
+                    return result;
+                }, null)
+            }
+            :
+            meta_resource;
     });
     const streams_resources = meta_details.streams_resources.map((stream_resource) => {
         return stream_resource.content.type === 'Ready' ?

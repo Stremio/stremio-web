@@ -277,23 +277,20 @@ const Intro = ({ queryParams }) => {
         };
     }, [routeFocused]);
     React.useEffect(() => {
-        var initScriptElement = document.createElement('script');
-        var sdkScriptElement = document.createElement('script');
-        initScriptElement.innerHTML = `window.fbAsyncInit = function() {
-                FB.init({
-                    appId: '1537119779906825',
-                    autoLogAppEvents: false,
-                    xfbml: false,
-                    version: 'v2.5'
-                });
-            };`;
+        window.fbAsyncInit = function() {
+            FB.init({
+                appId: '1537119779906825',
+                autoLogAppEvents: false,
+                xfbml: false,
+                version: 'v2.5'
+            });
+        };
+        const sdkScriptElement = document.createElement('script');
         sdkScriptElement.src = 'https://connect.facebook.net/en_US/sdk.js';
         sdkScriptElement.async = true;
         sdkScriptElement.defer = true;
-        document.body.appendChild(initScriptElement);
         document.body.appendChild(sdkScriptElement);
         return () => {
-            document.body.removeChild(initScriptElement);
             document.body.removeChild(sdkScriptElement);
         };
     }, []);

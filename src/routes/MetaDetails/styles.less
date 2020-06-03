@@ -7,6 +7,11 @@
     meta-info-container: meta-info-container;
 }
 
+:import('~stremio/common/ModalDialog/styles.less') {
+    modal-dialog-container: modal-dialog-container;
+    title-modal-container: title-container;
+}
+
 .metadetails-container {
     display: flex;
     flex-direction: column;
@@ -102,6 +107,22 @@
             flex: 0 0 26.5rem;
             align-self: stretch;
             background-color: @color-background-dark5-70;
+        }
+    }
+}
+
+.meta-extension-modal-container {
+    .modal-dialog-container {
+        width: 80%;
+        height: 80%;
+
+        .title-modal-container {
+            max-height: 1.2em;
+        }
+
+        .meta-extension-modal-iframe {
+            width: 100%;
+            height: 100%;
         }
     }
 }
