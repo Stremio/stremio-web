@@ -141,7 +141,7 @@ module.exports = (env, argv) => ({
         }),
         new webpack.ProgressPlugin(),
         new CopyWebpackPlugin([
-            { from: 'node_modules/@stremio/stremio-core-web/static', to: '' },
+            { from: 'node_modules/@stremio/stremio-core-web/stremio_core_web_bg.wasm', to: '' },
             { from: 'images', to: 'images' },
             { from: 'fonts', to: 'fonts' }
         ]),
