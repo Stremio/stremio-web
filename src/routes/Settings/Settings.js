@@ -23,7 +23,7 @@ const Settings = () => {
     const streamingServer = useStreamingServer();
     const [editServerUrlModalOpen, openEditServerUrlModal, closeEditServerUrlModal] = useBinaryState(false);
     const editServerUrlInputRef = React.useRef(null);
-    const editServerUrlOnClick = React.useCallback(() => {
+    const editServerUrlOnSubmit = React.useCallback(() => {
         if (editServerUrlInputRef.current !== null) {
             core.dispatch({
                 action: 'Ctx',
@@ -52,11 +52,11 @@ const Settings = () => {
             {
                 label: 'Edit',
                 props: {
-                    onClick: editServerUrlOnClick,
+                    onClick: editServerUrlOnSubmit,
                 }
             }
         ];
-    }, [editServerUrlOnClick]);
+    }, [editServerUrlOnSubmit]);
     const {
         interfaceLanguageSelect,
         subtitlesLanguageSelect,
@@ -67,8 +67,7 @@ const Settings = () => {
         bingeWatchingCheckbox,
         playInBackgroundCheckbox,
         playInExternalPlayerCheckbox,
-        hardwareDecodingCheckbox,
-        serverUrlTextInput
+        hardwareDecodingCheckbox
     } = useProfileSettingsInputs(profile);
     const {
         cacheSizeSelect,
@@ -442,8 +441,9 @@ const Settings = () => {
                             ref={editServerUrlInputRef}
                             className={styles['server-url-input']}
                             type={'text'}
+                            defaultValue={profile.settings.streaming_server_url}
                             placeholder={'Enter a streaming server url'}
-                            {...serverUrlTextInput}
+                            onSubmit={editServerUrlOnSubmit}
                         />
                     </ModalDialog>
                     :
