@@ -26,7 +26,7 @@ const NavMenu = (props) => {
         event.nativeEvent.togglePopupPrevented = true;
     }, []);
     const logoutButtonOnClick = React.useCallback(() => {
-        core.dispatch({
+        core.transport.dispatch({
             action: 'Ctx',
             args: {
                 action: 'Logout'

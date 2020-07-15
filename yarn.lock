@@ -998,6 +998,13 @@
     core-js-pure "^3.0.0"
     regenerator-runtime "^0.13.4"
 
+"@babel/runtime@7.10.0":
+  version "7.10.0"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.10.0.tgz#2cdcd6d7a391c24f7154235134c830cfb58ac0b1"
+  integrity sha512-tgYb3zVApHbLHYOPWtVwg25sBqHhfBXRKeKoTIyoheIxln1nA7oBl7SfHfiTG2GhDPI8EUBkOD/0wJCP/3HN4Q==
+  dependencies:
+    regenerator-runtime "^0.13.4"
+
 "@babel/runtime@7.8.7":
   version "7.8.7"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.8.7.tgz#8fefce9802db54881ba59f90bb28719b4996324d"
@@ -1782,12 +1789,23 @@
     telejson "^3.0.2"
     util-deprecate "^1.0.2"
 
-"@stremio/stremio-core-web@0.12.0":
-  version "0.12.0"
-  resolved "https://npm.pkg.github.com/download/@stremio/stremio-core-web/0.12.0/e498bcdf44176c46602f06a97cfb76c2e05ac15bd9f42058f10fab17fe8399da#fa8051f5d34115fba6e63635480da6542b890eb3"
-  integrity sha512-7cgrZs59mCmiEbCAlbXdGUDp0zp2ErpPzA8wVk1surWElipShpc0eZqMeeaD2o4bBUl5P9UwHv5HWEVm9+03jA==
+"@stremio/stremio-core-web@0.16.0":
+  version "0.16.0"
+  resolved "https://registry.yarnpkg.com/@stremio/stremio-core-web/-/stremio-core-web-0.16.0.tgz#ae60ea017a48616db9b91ca9057d6df594fbe2e5"
+  integrity sha512-1DkiHMI47xolPta+SzN60vgvqBxF+73JU7H4yUoKV50H+opQ6lF5/Xb0E7+KmG/ZHERgaZX4YMafzCuf/6g3WQ==
   dependencies:
-    "@babel/runtime" "7.8.7"
+    "@babel/runtime" "7.10.0"
+
+"@stremio/stremio-video@0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@stremio/stremio-video/-/stremio-video-0.0.4.tgz#338fcc0e39152e69ea8b0ecfd8beefab8b486624"
+  integrity sha512-ffRSs3KiDDoHmCWTqcP//dqPDiqN9AMOaQEp0Rkw3O6L6wzISNfdi/ajwHQaHO1B4Jc6QXtejcLUNiZ+cI6tmg==
+  dependencies:
+    events "1.1.1"
+    magnet-uri "5.2.4"
+    url "0.11.0"
+    video-name-parser "1.4.6"
+    vtt.js "0.13.0"
 
 "@svgr/babel-plugin-add-jsx-attribute@^4.2.0":
   version "4.2.0"
@@ -5940,11 +5958,6 @@ hastscript@^5.0.0:
     property-information "^5.0.0"
     space-separated-tokens "^1.0.0"
 
-hat@0.0.3:
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/hat/-/hat-0.0.3.tgz#bb014a9e64b3788aed8005917413d4ff3d502d8a"
-  integrity sha1-uwFKnmSzeIrtgAWRdBPU/z1QLYo=
-
 he@1.2.x, he@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/he/-/he-1.2.0.tgz#84ae65fa7eafb165fddb61566ae14baf05664f0f"
@@ -7647,6 +7660,14 @@ lru-cache@^5.1.1:
   integrity sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w==
   dependencies:
     yallist "^3.0.2"
+
+magnet-uri@5.2.4:
+  version "5.2.4"
+  resolved "https://registry.yarnpkg.com/magnet-uri/-/magnet-uri-5.2.4.tgz#7afe5b736af04445aff744c93a890a3710077688"
+  integrity sha512-VYaJMxhr8B9BrCiNINUsuhaEe40YnG+AQBwcqUKO66lSVaI9I3A1iH/6EmEwRI8OYUg5Gt+4lLE7achg676lrg==
+  dependencies:
+    thirty-two "^1.0.1"
+    uniq "^1.0.1"
 
 make-dir@^2.0.0, make-dir@^2.1.0:
   version "2.1.0"
@@ -11061,6 +11082,11 @@ text-table@0.2.0, text-table@^0.2.0:
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
 
+thirty-two@^1.0.1:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/thirty-two/-/thirty-two-1.0.2.tgz#4ca2fffc02a51290d2744b9e3f557693ca6b627a"
+  integrity sha1-TKL//AKlEpDSdEueP1V2k8prYno=
+
 throat@^4.0.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/throat/-/throat-4.1.0.tgz#89037cbc92c56ab18926e6ba4cbb200e15672a6a"
@@ -11387,7 +11413,7 @@ url-parse@^1.4.3:
     querystringify "^2.1.1"
     requires-port "^1.0.0"
 
-url@^0.11.0:
+url@0.11.0, url@^0.11.0:
   version "0.11.0"
   resolved "https://registry.yarnpkg.com/url/-/url-0.11.0.tgz#3838e97cfc60521eb73c525a8e55bfdd9e2e28f1"
   integrity sha1-ODjpfPxgUh63PFJajlW/3Z4uKPE=
@@ -11501,6 +11527,11 @@ verror@1.10.0:
     assert-plus "^1.0.0"
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
+
+video-name-parser@1.4.6:
+  version "1.4.6"
+  resolved "https://registry.yarnpkg.com/video-name-parser/-/video-name-parser-1.4.6.tgz#8e7926ab2ba9253fed290b399e453d3b0702c687"
+  integrity sha512-ZdeYjh8X4ms1EzjY/UoiTZ6JWbi8SYyOPGY0jESSLq2BAmdc5sZHi+F8J19Qz0y7H1WSpaltojsCkO1p2dH4YA==
 
 vm-browserify@^1.0.1:
   version "1.1.2"

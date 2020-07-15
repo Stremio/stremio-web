@@ -126,7 +126,7 @@ const useAddons = (urlParams) => {
                 }
             };
         } else {
-            const addons = core.getState('addons');
+            const addons = core.transport.getState('addons');
             if (addons.selectable.catalogs.length > 0) {
                 return {
                     action: 'Load',

@@ -1,22 +1,17 @@
 // Copyright (C) 2017-2020 Smart code 203358507
 
 const EventEmitter = require('events');
-const { default: initializeCoreAPI } = require('@stremio/stremio-core-web');
-const CoreTransport = require('./CoreTransport');
+const ChromecastTransport = require('./ChromecastTransport');
 
-let coreAPIAvailable = null;
-const coreAPIEvents = new EventEmitter();
-initializeCoreAPI()
-    .then(() => {
-        coreAPIAvailable = true;
-        coreAPIEvents.emit('availabilityChanged');
-    })
-    .catch(() => {
-        coreAPIAvailable = false;
-        coreAPIEvents.emit('availabilityChanged');
-    });
+let castAPIAvailable = null;
+const castAPIEvents = new EventEmitter();
+window['__onGCastApiAvailable'] = function(available) {
+    delete window['__onGCastApiAvailable'];
+    castAPIAvailable = available;
+    castAPIEvents.emit('availabilityChanged');
+};
 
-function Core() {
+function Chromecast() {
     let active = false;
     let error = null;
     let starting = false;
@@ -25,15 +20,15 @@ function Core() {
     const events = new EventEmitter();
     events.on('error', () => { });
 
-    function onCoreAPIAvailabilityChanged() {
-        if (coreAPIAvailable) {
+    function onCastAPIAvailabilityChanged() {
+        if (castAPIAvailable) {
             active = true;
             error = null;
             starting = false;
-            transport = new CoreTransport();
+            transport = new ChromecastTransport();
         } else {
             active = false;
-            error = new Error('Stremio Core API not available');
+            error = new Error('Google Cast API not available');
             starting = false;
             transport = null;
         }
@@ -81,23 +76,19 @@ function Core() {
         }
 
         starting = true;
-        if (coreAPIAvailable !== null) {
-            onCoreAPIAvailabilityChanged();
+        if (castAPIAvailable !== null) {
+            onCastAPIAvailabilityChanged();
         } else {
-            coreAPIEvents.on('availabilityChanged', onCoreAPIAvailabilityChanged);
+            castAPIEvents.on('availabilityChanged', onCastAPIAvailabilityChanged);
             onStateChanged();
         }
     };
     this.stop = function() {
-        coreAPIEvents.off('availabilityChanged', onCoreAPIAvailabilityChanged);
+        castAPIEvents.off('availabilityChanged', onCastAPIAvailabilityChanged);
         active = false;
         error = null;
         starting = false;
-        if (transport !== null) {
-            transport.free();
-            transport = null;
-        }
-
+        transport = null;
         onStateChanged();
     };
     this.on = function(name, listener) {
@@ -108,4 +99,4 @@ function Core() {
     };
 }
 
-module.exports = Core;
+module.exports = Chromecast;

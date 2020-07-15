@@ -13,26 +13,26 @@ const useModelState = ({ model, init, action, timeout, onNewState, map, mapWithC
     const routeFocused = useRouteFocused();
     const [state, setState] = useDeepEqualState(init);
     React.useLayoutEffect(() => {
-        core.dispatch(action, modelRef.current);
+        core.transport.dispatch(action, modelRef.current);
     }, [action]);
     React.useLayoutEffect(() => {
         return () => {
-            core.dispatch({ action: 'Unload' }, modelRef.current);
+            core.transport.dispatch({ action: 'Unload' }, modelRef.current);
         };
     }, []);
     React.useLayoutEffect(() => {
         const onNewStateThrottled = throttle(() => {
-            const state = core.getState(modelRef.current);
+            const state = core.transport.getState(modelRef.current);
             if (typeof onNewState === 'function') {
                 const action = onNewState(state);
-                const handled = core.dispatch(action, modelRef.current);
+                const handled = core.transport.dispatch(action, modelRef.current);
                 if (handled) {
                     return;
                 }
             }
 
             if (typeof mapWithCtx === 'function') {
-                const ctx = core.getState('ctx');
+                const ctx = core.transport.getState('ctx');
                 setState(mapWithCtx(state, ctx));
             } else if (typeof map === 'function') {
                 setState(map(state));
@@ -41,14 +41,14 @@ const useModelState = ({ model, init, action, timeout, onNewState, map, mapWithC
             }
         }, timeout);
         if (routeFocused) {
-            core.on('NewState', onNewStateThrottled);
+            core.transport.on('NewState', onNewStateThrottled);
             if (mountedRef.current) {
                 onNewStateThrottled.call();
             }
         }
         return () => {
             onNewStateThrottled.cancel();
-            core.off('NewState', onNewStateThrottled);
+            core.transport.off('NewState', onNewStateThrottled);
         };
     }, [routeFocused, timeout, onNewState, map, mapWithCtx]);
     React.useLayoutEffect(() => {

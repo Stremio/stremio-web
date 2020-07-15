@@ -15,11 +15,11 @@
     },
     "dependencies": {
         "@sentry/browser": "5.11.1",
-        "@stremio/stremio-core-web": "0.12.0",
+        "@stremio/stremio-core-web": "0.16.0",
+        "@stremio/stremio-video": "0.0.4",
         "a-color-picker": "1.2.1",
         "classnames": "2.2.6",
         "events": "1.1.1",
-        "hat": "0.0.3",
         "lodash.debounce": "4.0.8",
         "lodash.isequal": "4.5.0",
         "lodash.throttle": "4.1.1",
@@ -30,8 +30,7 @@
         "react-focus-lock": "2.2.1",
         "spatial-navigation-polyfill": "git+https://git@github.com/Stremio/spatial-navigation.git#40204ad9942fe786794c62f99ea5ab2b52b24096",
         "stremio-colors": "git+https://git@github.com/Stremio/stremio-colors.git#v3.0.0",
-        "stremio-icons": "git+https://git@github.com/Stremio/stremio-icons.git#v2.0.2",
-        "vtt.js": "0.13.0"
+        "stremio-icons": "git+https://git@github.com/Stremio/stremio-icons.git#v2.0.2"
     },
     "devDependencies": {
         "@babel/core": "7.8.7",

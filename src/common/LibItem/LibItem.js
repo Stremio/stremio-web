@@ -52,7 +52,7 @@ const LibItem = ({ id, ...props }) => {
                 }
                 case 'dismiss': {
                     if (typeof id === 'string') {
-                        core.dispatch({
+                        core.transport.dispatch({
                             action: 'Ctx',
                             args: {
                                 action: 'RewindLibraryItem',
