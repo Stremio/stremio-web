@@ -5,19 +5,12 @@ on: push
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v1
-      name: Checkout
-    - uses: actions/setup-node@v1
-      name: Setup Node
-      with:
-        registry-url: 'https://npm.pkg.github.com'
-    - name: Install dependencies
-      run: yarn install
-      env:
-        NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Checkout
+      uses: actions/checkout@v1
+    - name: Install NPM dependencies
+      run: npm install
     - name: Test
-      run: yarn test
+      run: npm test
     - name: Lint
-      run: yarn lint
+      run: npm run lint
