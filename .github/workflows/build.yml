@@ -5,16 +5,15 @@ on: push
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v1
-      name: Checkout
-    - name: Install dependencies
+    - name: Checkout
+      uses: actions/checkout@v1
+    - name: Install NPM dependencies
       run: npm install
     - name: Build
       run: npm run build
-    - uses: actions/upload-artifact@v1
-      name: Upload build artifact
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v1
       with:
         name: stremio-web
         path: build
