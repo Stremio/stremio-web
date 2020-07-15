@@ -1,11 +1,6 @@
 name: Test
 
-on:
-  push:
-    branches:
-      - '*'
-    tags-ignore:
-      - '*'
+on: push
 
 jobs:
   build:
