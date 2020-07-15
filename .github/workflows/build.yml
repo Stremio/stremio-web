@@ -14,16 +14,10 @@ jobs:
     steps:
     - uses: actions/checkout@v1
       name: Checkout
-    - uses: actions/setup-node@v1
-      name: Setup Node
-      with:
-        registry-url: 'https://npm.pkg.github.com'
     - name: Install dependencies
-      run: yarn install
-      env:
-        NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: npm install
     - name: Build
-      run: yarn build
+      run: npm run build
     - uses: actions/upload-artifact@v1
       name: Upload build artifact
       with:
