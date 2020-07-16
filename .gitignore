@@ -1,5 +1,5 @@
 /node_modules
 /build
-/package-lock.json
+/yarn.lock
 /npm-debug.log
 .DS_Store
