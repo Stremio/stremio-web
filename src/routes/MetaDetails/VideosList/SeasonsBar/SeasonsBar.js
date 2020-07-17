@@ -3,7 +3,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const Icon = require('stremio-icons/dom');
+const Icon = require('@stremio/stremio-icons/dom');
 const { Button, Multiselect } = require('stremio/common');
 const SeasonsBarPlaceholder = require('./SeasonsBarPlaceholder');
 const styles = require('./styles');

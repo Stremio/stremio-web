@@ -3,7 +3,7 @@
 const React = require('react');
 const classnames = require('classnames');
 const throttle = require('lodash.throttle');
-const Icon = require('stremio-icons/dom');
+const Icon = require('@stremio/stremio-icons/dom');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
 const { Button, Checkbox, MainNavBars, Multiselect, ColorInput, useProfile, useStreamingServer } = require('stremio/common');
