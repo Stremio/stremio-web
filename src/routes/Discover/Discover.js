@@ -3,7 +3,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const Icon = require('stremio-icons/dom');
+const Icon = require('@stremio/stremio-icons/dom');
 const { AddonDetailsModal, Button, MainNavBars, MetaItem, Image, MetaPreview, Multiselect, ModalDialog, PaginationInput, CONSTANTS, useBinaryState, useProfile } = require('stremio/common');
 const useDiscover = require('./useDiscover');
 const useSelectableInputs = require('./useSelectableInputs');
