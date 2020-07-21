@@ -14,6 +14,7 @@
         "lint": "eslint src"
     },
     "dependencies": {
+        "@babel/runtime": "7.8.7",
         "@sentry/browser": "5.11.1",
         "@stremio/stremio-colors": "4.0.1",
         "@stremio/stremio-core-web": "0.16.0",
@@ -38,7 +39,6 @@
         "@babel/plugin-proposal-object-rest-spread": "7.8.3",
         "@babel/preset-env": "7.8.7",
         "@babel/preset-react": "7.8.3",
-        "@babel/runtime": "7.8.7",
         "@storybook/addon-actions": "5.2.8",
         "@storybook/addon-console": "1.2.1",
         "@storybook/addons": "5.2.8",
