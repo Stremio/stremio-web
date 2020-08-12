@@ -380,8 +380,8 @@ const Settings = () => {
                                 <div className={styles['label']}>Url</div>
                             </div>
                             <div className={classnames(styles['option-input-container'], styles['edit-container'])}>
-                                <div className={styles['label']}>{streamingServerUrlInput.value}</div>
-                                <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Edit'} onClick={openEditServerUrlModal}>
+                                <div className={styles['label']} title={streamingServerUrlInput.value}>{streamingServerUrlInput.value}</div>
+                                <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Edit url'} onClick={openEditServerUrlModal}>
                                     <Icon className={styles['icon']} icon={'ic_settings'} />
                                 </Button>
                             </div>
