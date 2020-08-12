@@ -21,24 +21,28 @@ const Settings = () => {
     const { routeFocused } = useRouteFocused();
     const profile = useProfile();
     const streamingServer = useStreamingServer();
+    const {
+        interfaceLanguageSelect,
+        subtitlesLanguageSelect,
+        subtitlesSizeSelect,
+        subtitlesTextColorInput,
+        subtitlesBackgroundColorInput,
+        subtitlesOutlineColorInput,
+        bingeWatchingCheckbox,
+        playInBackgroundCheckbox,
+        playInExternalPlayerCheckbox,
+        hardwareDecodingCheckbox,
+        streamingServerUrlInput
+    } = useProfileSettingsInputs(profile);
+    const {
+        cacheSizeSelect,
+        torrentProfileSelect
+    } = useStreamingServerSettingsInputs(streamingServer);
     const [editServerUrlModalOpen, openEditServerUrlModal, closeEditServerUrlModal] = useBinaryState(false);
     const editServerUrlInputRef = React.useRef(null);
     const editServerUrlOnSubmit = React.useCallback(() => {
-        if (editServerUrlInputRef.current !== null) {
-            core.dispatch({
-                action: 'Ctx',
-                args: {
-                    action: 'UpdateSettings',
-                    args: {
-                        ...profile.settings,
-                        streaming_server_url: editServerUrlInputRef.current.value
-                    }
-                }
-            });
-            if (typeof closeEditServerUrlModal === 'function') {
-                closeEditServerUrlModal();
-            }
-        }
+        streamingServerUrlInput.onChange(editServerUrlInputRef.current.value);
+        closeEditServerUrlModal();
     }, []);
     const editServerUrlModalButtons = React.useMemo(() => {
         return [
@@ -50,29 +54,13 @@ const Settings = () => {
                 }
             },
             {
-                label: 'Edit',
+                label: 'Submit',
                 props: {
                     onClick: editServerUrlOnSubmit,
                 }
             }
         ];
-    }, [editServerUrlOnSubmit]);
-    const {
-        interfaceLanguageSelect,
-        subtitlesLanguageSelect,
-        subtitlesSizeSelect,
-        subtitlesTextColorInput,
-        subtitlesBackgroundColorInput,
-        subtitlesOutlineColorInput,
-        bingeWatchingCheckbox,
-        playInBackgroundCheckbox,
-        playInExternalPlayerCheckbox,
-        hardwareDecodingCheckbox
-    } = useProfileSettingsInputs(profile);
-    const {
-        cacheSizeSelect,
-        torrentProfileSelect
-    } = useStreamingServerSettingsInputs(streamingServer);
+    }, []);
     const logoutButtonOnClick = React.useCallback(() => {
         core.dispatch({
             action: 'Ctx',
@@ -392,7 +380,7 @@ const Settings = () => {
                                 <div className={styles['label']}>Url</div>
                             </div>
                             <div className={classnames(styles['option-input-container'], styles['edit-container'])}>
-                                <div className={styles['label']}>{profile.settings.streaming_server_url}</div>
+                                <div className={styles['label']}>{streamingServerUrlInput.value}</div>
                                 <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Edit'} onClick={openEditServerUrlModal}>
                                     <Icon className={styles['icon']} icon={'ic_settings'} />
                                 </Button>
@@ -441,7 +429,7 @@ const Settings = () => {
                             ref={editServerUrlInputRef}
                             className={styles['server-url-input']}
                             type={'text'}
-                            defaultValue={profile.settings.streaming_server_url}
+                            defaultValue={streamingServerUrlInput.value}
                             placeholder={'Enter a streaming server url'}
                             onSubmit={editServerUrlOnSubmit}
                         />
