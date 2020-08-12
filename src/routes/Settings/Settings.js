@@ -424,7 +424,6 @@ const Settings = () => {
                         title={'Edit streaming server url'}
                         buttons={editServerUrlModalButtons}
                         onCloseRequest={closeEditServerUrlModal}>
-                        <div className={styles['notice']}>You can edit the default streaming server url</div>
                         <TextInput
                             ref={editServerUrlInputRef}
                             className={styles['server-url-input']}
