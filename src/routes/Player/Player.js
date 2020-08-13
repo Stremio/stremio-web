@@ -6,7 +6,7 @@ const classnames = require('classnames');
 const debounce = require('lodash.debounce');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
-const { HorizontalNavBar, useDeepEqualEffect, useFullscreen, useBinaryState, useToast, useProfile } = require('stremio/common');
+const { HorizontalNavBar, useDeepEqualEffect, useFullscreen, useBinaryState, useToast, useProfile, useStreamingServer } = require('stremio/common');
 const BufferingLoader = require('./BufferingLoader');
 const ControlBar = require('./ControlBar');
 const InfoMenu = require('./InfoMenu');
@@ -18,14 +18,18 @@ const useSettings = require('./useSettings');
 const styles = require('./styles');
 
 const Player = ({ urlParams }) => {
-    const { core } = useServices();
+    const { core, chromecast } = useServices();
     const profile = useProfile();
     const [player, updateLibraryItemState, pushToLibrary] = usePlayer(urlParams);
     const [settings, updateSettings] = useSettings(profile);
+    const streamingServer = useStreamingServer();
     const info = useInfo(player, profile);
     const routeFocused = useRouteFocused();
     const toast = useToast();
     const [, , , toggleFullscreen] = useFullscreen();
+    const [casting, setCasting] = React.useState(() => {
+        return chromecast.active && chromecast.transport.getCastState() === cast.framework.CastState.CONNECTED;
+    });
     const [immersed, setImmersed] = React.useState(true);
     const setImmersedDebounced = React.useCallback(debounce(setImmersed, 3000), []);
     const [subtitlesMenuOpen, , closeSubtitlesMenu, toggleSubtitlesMenu] = useBinaryState(false);
@@ -58,21 +62,21 @@ const Player = ({ urlParams }) => {
     }, []);
     const onImplementationChanged = React.useCallback((manifest) => {
         manifest.props.forEach((propName) => {
-            dispatch({ observedPropName: propName });
+            dispatch({ type: 'observeProp', propName });
         });
-        dispatch({ propName: 'subtitlesSize', propValue: settings.subtitles_size });
-        dispatch({ propName: 'subtitlesTextColor', propValue: settings.subtitles_text_color });
-        dispatch({ propName: 'subtitlesBackgroundColor', propValue: settings.subtitles_background_color });
-        dispatch({ propName: 'subtitlesOutlineColor', propValue: settings.subtitles_outline_color });
-        dispatch({ propName: 'subtitlesOffset', propValue: settings.subtitles_offset });
+        dispatch({ type: 'setProp', propName: 'subtitlesSize', propValue: settings.subtitles_size });
+        dispatch({ type: 'setProp', propName: 'subtitlesTextColor', propValue: settings.subtitles_text_color });
+        dispatch({ type: 'setProp', propName: 'subtitlesBackgroundColor', propValue: settings.subtitles_background_color });
+        dispatch({ type: 'setProp', propName: 'subtitlesOutlineColor', propValue: settings.subtitles_outline_color });
+        dispatch({ type: 'setProp', propName: 'subtitlesOffset', propValue: settings.subtitles_offset });
     }, [settings.subtitles_size, settings.subtitles_text_color, settings.subtitles_background_color, settings.subtitles_outline_color, settings.subtitles_offset]);
     const onPropChanged = React.useCallback((propName, propValue) => {
         setVideoState({ [propName]: propValue });
     }, []);
     const onEnded = React.useCallback(() => {
-        core.dispatch({ action: 'Unload' }, 'player');
+        core.transport.dispatch({ action: 'Unload' }, 'player');
         if (player.lib_item !== null) {
-            core.dispatch({
+            core.transport.dispatch({
                 action: 'Ctx',
                 args: {
                     action: 'RewindLibraryItem',
@@ -106,30 +110,30 @@ const Player = ({ urlParams }) => {
         });
     }, []);
     const onPlayRequested = React.useCallback(() => {
-        dispatch({ propName: 'paused', propValue: false });
+        dispatch({ type: 'setProp', propName: 'paused', propValue: false });
     }, []);
     const onPlayRequestedDebounced = React.useCallback(debounce(onPlayRequested, 200), []);
     const onPauseRequested = React.useCallback(() => {
-        dispatch({ propName: 'paused', propValue: true });
+        dispatch({ type: 'setProp', propName: 'paused', propValue: true });
     }, []);
     const onPauseRequestedDebounced = React.useCallback(debounce(onPauseRequested, 200), []);
     const onMuteRequested = React.useCallback(() => {
-        dispatch({ propName: 'muted', propValue: true });
+        dispatch({ type: 'setProp', propName: 'muted', propValue: true });
     }, []);
     const onUnmuteRequested = React.useCallback(() => {
-        dispatch({ propName: 'muted', propValue: false });
+        dispatch({ type: 'setProp', propName: 'muted', propValue: false });
     }, []);
     const onVolumeChangeRequested = React.useCallback((volume) => {
-        dispatch({ propName: 'volume', propValue: volume });
+        dispatch({ type: 'setProp', propName: 'volume', propValue: volume });
     }, []);
     const onSeekRequested = React.useCallback((time) => {
-        dispatch({ propName: 'time', propValue: time });
+        dispatch({ type: 'setProp', propName: 'time', propValue: time });
     }, []);
     const onSubtitlesTrackSelected = React.useCallback((trackId) => {
-        dispatch({ propName: 'selectedSubtitlesTrackId', propValue: trackId });
+        dispatch({ type: 'setProp', propName: 'selectedSubtitlesTrackId', propValue: trackId });
     }, []);
     const onSubtitlesDelayChanged = React.useCallback((delay) => {
-        dispatch({ propName: 'subtitlesDelay', propValue: delay });
+        dispatch({ type: 'setProp', propName: 'subtitlesDelay', propValue: delay });
     }, []);
     const onSubtitlesSizeChanged = React.useCallback((size) => {
         updateSettings({ subtitles_size: size });
@@ -177,22 +181,26 @@ const Player = ({ urlParams }) => {
     useDeepEqualEffect(() => {
         setError(null);
         if (player.selected === null) {
-            dispatch({ commandName: 'stop' });
-        } else {
+            dispatch({ type: 'command', commandName: 'unload' });
+        } else if (streamingServer.base_url !== null && streamingServer.base_url.type !== 'Loading') {
             dispatch({
+                type: 'command',
                 commandName: 'load',
                 commandArgs: {
                     stream: player.selected.stream,
-                    streamingServerUrl: settings.streaming_server_url,
                     autoplay: true,
                     time: player.lib_item !== null && player.selected.video_id !== null && player.lib_item.state.video_id === player.selected.video_id ?
                         player.lib_item.state.timeOffset
                         :
-                        0
+                        0,
+                    transcode: casting,
+                    streamingServerURL: typeof streamingServer.base_url.content === 'string' ? streamingServer.base_url.content : null,
+                    chromecastTransport: chromecast.transport
                 }
             });
             if (Array.isArray(player.selected.stream.subtitles)) {
                 dispatch({
+                    type: 'command',
                     commandName: 'addSubtitlesTracks',
                     commandArgs: {
                         tracks: player.selected.stream.subtitles.map(({ url, lang }) => ({
@@ -204,9 +212,10 @@ const Player = ({ urlParams }) => {
                 });
             }
         }
-    }, [player.selected]);
+    }, [streamingServer.base_url, player.selected, casting]);
     useDeepEqualEffect(() => {
         dispatch({
+            type: 'command',
             commandName: 'addSubtitlesTracks',
             commandArgs: {
                 tracks: player.subtitles_resources
@@ -220,21 +229,21 @@ const Player = ({ urlParams }) => {
                     }, [])
             }
         });
-    }, [player.selected, player.subtitles_resources]);
+    }, [streamingServer.base_url, player.subtitles_resources, player.selected, casting]);
     React.useEffect(() => {
-        dispatch({ propName: 'subtitlesSize', propValue: settings.subtitles_size });
+        dispatch({ type: 'setProp', propName: 'subtitlesSize', propValue: settings.subtitles_size });
     }, [settings.subtitles_size]);
     React.useEffect(() => {
-        dispatch({ propName: 'subtitlesTextColor', propValue: settings.subtitles_text_color });
+        dispatch({ type: 'setProp', propName: 'subtitlesTextColor', propValue: settings.subtitles_text_color });
     }, [settings.subtitles_text_color]);
     React.useEffect(() => {
-        dispatch({ propName: 'subtitlesBackgroundColor', propValue: settings.subtitles_background_color });
+        dispatch({ type: 'setProp', propName: 'subtitlesBackgroundColor', propValue: settings.subtitles_background_color });
     }, [settings.subtitles_background_color]);
     React.useEffect(() => {
-        dispatch({ propName: 'subtitlesOutlineColor', propValue: settings.subtitles_outline_color });
+        dispatch({ type: 'setProp', propName: 'subtitlesOutlineColor', propValue: settings.subtitles_outline_color });
     }, [settings.subtitles_outline_color]);
     React.useEffect(() => {
-        dispatch({ propName: 'subtitlesOffset', propValue: settings.subtitles_offset });
+        dispatch({ type: 'setProp', propName: 'subtitlesOffset', propValue: settings.subtitles_offset });
     }, [settings.subtitles_offset]);
     React.useEffect(() => {
         if (videoState.time !== null && !isNaN(videoState.time) && videoState.duration !== null && !isNaN(videoState.duration)) {
@@ -255,6 +264,31 @@ const Player = ({ urlParams }) => {
         const intervalId = setInterval(pushToLibrary, 30000);
         return () => {
             clearInterval(intervalId);
+        };
+    }, []);
+    React.useEffect(() => {
+        const onCastStateChange = () => {
+            setCasting(chromecast.active && chromecast.transport.getCastState() === cast.framework.CastState.CONNECTED);
+        };
+        const onChromecastStateChange = () => {
+            if (chromecast.active) {
+                chromecast.transport.on(
+                    cast.framework.CastContextEventType.CAST_STATE_CHANGED,
+                    onCastStateChange
+                );
+                onCastStateChange();
+            }
+        };
+        chromecast.on('stateChanged', onChromecastStateChange);
+        onChromecastStateChange();
+        return () => {
+            chromecast.off('stateChanged', onChromecastStateChange);
+            if (chromecast.active) {
+                chromecast.transport.off(
+                    cast.framework.CastContextEventType.CAST_STATE_CHANGED,
+                    onCastStateChange
+                );
+            }
         };
     }, []);
     React.useLayoutEffect(() => {
@@ -337,7 +371,7 @@ const Player = ({ urlParams }) => {
         };
     }, []);
     return (
-        <div className={classnames(styles['player-container'], { [styles['immersed']]: immersed && videoState.paused !== null && !videoState.paused && !subtitlesMenuOpen && !infoMenuOpen })}
+        <div className={classnames(styles['player-container'], { [styles['immersed']]: immersed && !casting && videoState.paused !== null && !videoState.paused && !subtitlesMenuOpen && !infoMenuOpen })}
             onMouseDown={onContainerMouseDown}
             onMouseMove={onContainerMouseMove}
             onMouseOver={onContainerMouseMove}

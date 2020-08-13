@@ -18,7 +18,7 @@ const useProfileSettingsInputs = (profile) => {
                 profile.settings.interface_language;
         },
         onSelect: (event) => {
-            core.dispatch({
+            core.transport.dispatch({
                 action: 'Ctx',
                 args: {
                     action: 'UpdateSettings',
@@ -43,7 +43,7 @@ const useProfileSettingsInputs = (profile) => {
                 profile.settings.subtitles_language;
         },
         onSelect: (event) => {
-            core.dispatch({
+            core.transport.dispatch({
                 action: 'Ctx',
                 args: {
                     action: 'UpdateSettings',
@@ -65,7 +65,7 @@ const useProfileSettingsInputs = (profile) => {
             return `${profile.settings.subtitles_size}%`;
         },
         onSelect: (event) => {
-            core.dispatch({
+            core.transport.dispatch({
                 action: 'Ctx',
                 args: {
                     action: 'UpdateSettings',
@@ -80,7 +80,7 @@ const useProfileSettingsInputs = (profile) => {
     const subtitlesTextColorInput = useDeepEqualMemo(() => ({
         value: profile.settings.subtitles_text_color,
         onChange: (event) => {
-            core.dispatch({
+            core.transport.dispatch({
                 action: 'Ctx',
                 args: {
                     action: 'UpdateSettings',
@@ -95,7 +95,7 @@ const useProfileSettingsInputs = (profile) => {
     const subtitlesBackgroundColorInput = useDeepEqualMemo(() => ({
         value: profile.settings.subtitles_background_color,
         onChange: (event) => {
-            core.dispatch({
+            core.transport.dispatch({
                 action: 'Ctx',
                 args: {
                     action: 'UpdateSettings',
@@ -110,7 +110,7 @@ const useProfileSettingsInputs = (profile) => {
     const subtitlesOutlineColorInput = useDeepEqualMemo(() => ({
         value: profile.settings.subtitles_outline_color,
         onChange: (event) => {
-            core.dispatch({
+            core.transport.dispatch({
                 action: 'Ctx',
                 args: {
                     action: 'UpdateSettings',
@@ -125,7 +125,7 @@ const useProfileSettingsInputs = (profile) => {
     const bingeWatchingCheckbox = useDeepEqualMemo(() => ({
         checked: profile.settings.binge_watching,
         onClick: () => {
-            core.dispatch({
+            core.transport.dispatch({
                 action: 'Ctx',
                 args: {
                     action: 'UpdateSettings',
@@ -140,7 +140,7 @@ const useProfileSettingsInputs = (profile) => {
     const playInBackgroundCheckbox = useDeepEqualMemo(() => ({
         checked: profile.settings.play_in_background,
         onClick: () => {
-            core.dispatch({
+            core.transport.dispatch({
                 action: 'Ctx',
                 args: {
                     action: 'UpdateSettings',
@@ -155,7 +155,7 @@ const useProfileSettingsInputs = (profile) => {
     const playInExternalPlayerCheckbox = useDeepEqualMemo(() => ({
         checked: profile.settings.play_in_external_player,
         onClick: () => {
-            core.dispatch({
+            core.transport.dispatch({
                 action: 'Ctx',
                 args: {
                     action: 'UpdateSettings',
@@ -170,7 +170,7 @@ const useProfileSettingsInputs = (profile) => {
     const hardwareDecodingCheckbox = useDeepEqualMemo(() => ({
         checked: profile.settings.hardware_decoding,
         onClick: () => {
-            core.dispatch({
+            core.transport.dispatch({
                 action: 'Ctx',
                 args: {
                     action: 'UpdateSettings',

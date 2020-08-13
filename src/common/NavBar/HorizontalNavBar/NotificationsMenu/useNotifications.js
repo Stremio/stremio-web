@@ -8,18 +8,18 @@ const useNotifications = () => {
     const { core } = useServices();
     React.useEffect(() => {
         const onNewState = () => {
-            const state = core.getState();
+            const state = core.transport.getState();
             setNotifications(state.notifications.groups);
         };
-        core.on('NewModel', onNewState);
-        core.dispatch({
+        core.transport.on('NewModel', onNewState);
+        core.transport.dispatch({
             action: 'Load',
             args: {
                 load: 'Notifications'
             }
         });
         return () => {
-            core.off('NewModel', onNewState);
+            core.transport.off('NewModel', onNewState);
         };
     }, []);
     return notifications;

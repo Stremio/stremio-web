@@ -135,7 +135,7 @@ const usePlayer = (urlParams) => {
         }
     }, [urlParams]);
     const updateLibraryItemState = React.useCallback((time, duration) => {
-        core.dispatch({
+        core.transport.dispatch({
             action: 'Player',
             args: {
                 action: 'UpdateLibraryItemState',
@@ -144,7 +144,7 @@ const usePlayer = (urlParams) => {
         }, 'player');
     }, []);
     const pushToLibrary = React.useCallback(() => {
-        core.dispatch({
+        core.transport.dispatch({
             action: 'Player',
             args: {
                 action: 'PushToLibrary'

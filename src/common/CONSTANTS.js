@@ -1,5 +1,6 @@
 // Copyright (C) 2017-2020 Smart code 203358507
 
+const CHROMECAST_RECEIVER_APP_ID = '1634F54B';
 const SUBTITLES_SIZES = [75, 100, 125, 150, 175, 200, 250];
 const SUBTITLES_FONTS = ['Roboto', 'Arial', 'Halvetica', 'Times New Roman', 'Verdana', 'Courier', 'Lucida Console', 'sans-serif', 'serif', 'monospace'];
 const CATALOG_PREVIEW_SIZE = 10;
@@ -24,6 +25,7 @@ const TYPE_PRIORITIES = {
 };
 
 module.exports = {
+    CHROMECAST_RECEIVER_APP_ID,
     SUBTITLES_SIZES,
     SUBTITLES_FONTS,
     CATALOG_PREVIEW_SIZE,

@@ -2,15 +2,15 @@
 
 const React = require('react');
 const { useServices } = require('stremio/services');
-const { useModelState } = require('stremio/common');
+const useModelState = require('stremio/common/useModelState');
 
 const useStreamingServer = () => {
     const { core } = useServices();
     const initStreamingServer = React.useCallback(() => {
-        return core.getState('streaming_server');
+        return core.transport.getState('streaming_server');
     }, []);
     const loadStreamingServerAction = React.useMemo(() => {
-        const streamingServer = core.getState('streaming_server');
+        const streamingServer = core.transport.getState('streaming_server');
         if (streamingServer.selected === null) {
             return {
                 action: 'StreamingServer',

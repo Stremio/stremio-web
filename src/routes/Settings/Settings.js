@@ -3,11 +3,10 @@
 const React = require('react');
 const classnames = require('classnames');
 const throttle = require('lodash.throttle');
-const Icon = require('stremio-icons/dom');
+const Icon = require('@stremio/stremio-icons/dom');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
-const { Button, Checkbox, MainNavBars, Multiselect, ColorInput, TextInput, ModalDialog, useProfile, useBinaryState } = require('stremio/common');
-const useStreamingServer = require('./useStreamingServer');
+const { Button, Checkbox, MainNavBars, Multiselect, ColorInput, TextInput, ModalDialog, useProfile, useStreamingServer, useBinaryState } = require('stremio/common');
 const useProfileSettingsInputs = require('./useProfileSettingsInputs');
 const useStreamingServerSettingsInputs = require('./useStreamingServerSettingsInputs');
 const styles = require('./styles');
@@ -62,7 +61,7 @@ const Settings = () => {
         ];
     }, [configureServerUrlOnSubmit]);
     const logoutButtonOnClick = React.useCallback(() => {
-        core.dispatch({
+        core.transport.dispatch({
             action: 'Ctx',
             args: {
                 action: 'Logout'
@@ -82,7 +81,7 @@ const Settings = () => {
         // TODO
     }, []);
     const reloadStreamingServer = React.useCallback(() => {
-        core.dispatch({
+        core.transport.dispatch({
             action: 'StreamingServer',
             args: {
                 action: 'Reload'

@@ -10,7 +10,9 @@
     },
     "globals": {
         "YT": "readonly",
-        "FB": "readonly"
+        "FB": "readonly",
+        "cast": "readonly",
+        "chrome": "readonly"
     },
     "env": {
         "node": true,

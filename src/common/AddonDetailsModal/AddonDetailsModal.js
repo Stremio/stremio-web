@@ -26,7 +26,7 @@ const AddonDetailsModal = ({ transportUrl, onCloseRequest }) => {
             }
         };
         const installOnClick = (event) => {
-            core.dispatch({
+            core.transport.dispatch({
                 action: 'Ctx',
                 args: {
                     action: 'InstallAddon',
@@ -42,7 +42,7 @@ const AddonDetailsModal = ({ transportUrl, onCloseRequest }) => {
             }
         };
         const uninstallOnClick = (event) => {
-            core.dispatch({
+            core.transport.dispatch({
                 action: 'Ctx',
                 args: {
                     action: 'UninstallAddon',

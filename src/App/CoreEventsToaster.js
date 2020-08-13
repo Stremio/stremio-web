@@ -19,9 +19,9 @@ const CoreEventsToaster = () => {
                 });
             }
         };
-        core.on('Event', onEvent);
+        core.transport.on('Event', onEvent);
         return () => {
-            core.off('Event', onEvent);
+            core.transport.off('Event', onEvent);
         };
     }, []);
     return null;
