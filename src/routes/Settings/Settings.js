@@ -38,29 +38,29 @@ const Settings = () => {
         cacheSizeSelect,
         torrentProfileSelect
     } = useStreamingServerSettingsInputs(streamingServer);
-    const [editServerUrlModalOpen, openEditServerUrlModal, closeEditServerUrlModal] = useBinaryState(false);
-    const editServerUrlInputRef = React.useRef(null);
-    const editServerUrlOnSubmit = React.useCallback(() => {
-        streamingServerUrlInput.onChange(editServerUrlInputRef.current.value);
-        closeEditServerUrlModal();
-    }, []);
-    const editServerUrlModalButtons = React.useMemo(() => {
+    const [configureServerUrlModalOpen, openConfigureServerUrlModal, closeConfigureServerUrlModal] = useBinaryState(false);
+    const configureServerUrlInputRef = React.useRef(null);
+    const configureServerUrlOnSubmit = React.useCallback(() => {
+        streamingServerUrlInput.onChange(configureServerUrlInputRef.current.value);
+        closeConfigureServerUrlModal();
+    }, [streamingServerUrlInput]);
+    const configureServerUrlModalButtons = React.useMemo(() => {
         return [
             {
                 className: styles['cancel-button'],
                 label: 'Cancel',
                 props: {
-                    onClick: closeEditServerUrlModal
+                    onClick: closeConfigureServerUrlModal
                 }
             },
             {
                 label: 'Submit',
                 props: {
-                    onClick: editServerUrlOnSubmit,
+                    onClick: configureServerUrlOnSubmit,
                 }
             }
         ];
-    }, []);
+    }, [configureServerUrlOnSubmit]);
     const logoutButtonOnClick = React.useCallback(() => {
         core.dispatch({
             action: 'Ctx',
@@ -127,7 +127,7 @@ const Settings = () => {
         if (routeFocused) {
             updateSelectedSectionId();
         }
-        closeEditServerUrlModal();
+        closeConfigureServerUrlModal();
     }, [routeFocused]);
     return (
         <MainNavBars className={styles['settings-container']} route={'settings'}>
@@ -379,9 +379,9 @@ const Settings = () => {
                             <div className={styles['option-name-container']}>
                                 <div className={styles['label']}>Url</div>
                             </div>
-                            <div className={classnames(styles['option-input-container'], styles['edit-container'])}>
+                            <div className={classnames(styles['option-input-container'], styles['configure-input-container'])}>
                                 <div className={styles['label']} title={streamingServerUrlInput.value}>{streamingServerUrlInput.value}</div>
-                                <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Edit url'} onClick={openEditServerUrlModal}>
+                                <Button className={styles['configure-button-container']} title={'Configure server url'} onClick={openConfigureServerUrlModal}>
                                     <Icon className={styles['icon']} icon={'ic_settings'} />
                                 </Button>
                             </div>
@@ -418,19 +418,19 @@ const Settings = () => {
                 </div>
             </div>
             {
-                editServerUrlModalOpen ?
+                configureServerUrlModalOpen ?
                     <ModalDialog
-                        className={styles['edit-server-url-modal-container']}
-                        title={'Edit streaming server url'}
-                        buttons={editServerUrlModalButtons}
-                        onCloseRequest={closeEditServerUrlModal}>
+                        className={styles['configure-server-url-modal-container']}
+                        title={'Configure streaming server url'}
+                        buttons={configureServerUrlModalButtons}
+                        onCloseRequest={closeConfigureServerUrlModal}>
                         <TextInput
-                            ref={editServerUrlInputRef}
+                            ref={configureServerUrlInputRef}
                             className={styles['server-url-input']}
                             type={'text'}
                             defaultValue={streamingServerUrlInput.value}
                             placeholder={'Enter a streaming server url'}
-                            onSubmit={editServerUrlOnSubmit}
+                            onSubmit={configureServerUrlOnSubmit}
                         />
                     </ModalDialog>
                     :
