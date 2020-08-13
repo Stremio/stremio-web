@@ -185,7 +185,7 @@ const useProfileSettingsInputs = (profile) => {
     const streamingServerUrlInput = useDeepEqualMemo(() => ({
         value: profile.settings.streaming_server_url,
         onChange: (value) => {
-            core.transport.dispatch({
+            core.dispatch({
                 action: 'Ctx',
                 args: {
                     action: 'UpdateSettings',
