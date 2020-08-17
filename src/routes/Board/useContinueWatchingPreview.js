@@ -24,7 +24,7 @@ const mapContinueWatchingPreviewState = (continue_watching_preview) => {
 const useContinueWatchingPreview = () => {
     const { core } = useServices();
     const initContinueWatchingPreviewState = React.useMemo(() => {
-        return mapContinueWatchingPreviewState(core.getState('continue_watching_preview'));
+        return mapContinueWatchingPreviewState(core.transport.getState('continue_watching_preview'));
     }, []);
     return useModelState({
         model: 'continue_watching_preview',

@@ -3,8 +3,9 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const Icon = require('stremio-icons/dom');
+const Icon = require('@stremio/stremio-icons/dom');
 const { Button } = require('stremio/common');
+const { useServices } = require('stremio/services');
 const SeekBar = require('./SeekBar');
 const VolumeSlider = require('./VolumeSlider');
 const styles = require('./styles');
@@ -28,6 +29,8 @@ const ControlBar = ({
     onToggleInfoMenu,
     ...props
 }) => {
+    const { chromecast } = useServices();
+    const [chromecastServiceActive, setChromecastServiceActive] = React.useState(() => chromecast.active);
     const onSubtitlesButtonMouseDown = React.useCallback((event) => {
         event.nativeEvent.subtitlesMenuClosePrevented = true;
     }, []);
@@ -66,6 +69,18 @@ const ControlBar = ({
             onToggleInfoMenu();
         }
     }, [onToggleInfoMenu]);
+    const onChromecastButtonClick = React.useCallback(() => {
+        chromecast.transport.requestSession();
+    }, []);
+    React.useEffect(() => {
+        const onStateChanged = () => {
+            setChromecastServiceActive(chromecast.active);
+        };
+        chromecast.on('stateChanged', onStateChanged);
+        return () => {
+            chromecast.off('stateChanged', onStateChanged);
+        };
+    }, []);
     return (
         <div {...props} className={classnames(className, styles['control-bar-container'])}>
             <SeekBar
@@ -102,7 +117,7 @@ const ControlBar = ({
                 <Button className={classnames(styles['control-bar-button'], { 'disabled': typeof info !== 'object' || info === null })} tabIndex={-1} onMouseDown={onInfoButtonMouseDown} onClick={onInfoButtonClick}>
                     <Icon className={styles['icon']} icon={'ic_info'} />
                 </Button>
-                <Button className={classnames(styles['control-bar-button'], 'disabled')} tabIndex={-1}>
+                <Button className={classnames(styles['control-bar-button'], { 'disabled': !chromecastServiceActive })} tabIndex={-1} onClick={onChromecastButtonClick}>
                     <Icon className={styles['icon']} icon={'ic_cast'} />
                 </Button>
                 <Button className={classnames(styles['control-bar-button'], { 'disabled': !Array.isArray(subtitlesTracks) || subtitlesTracks.length === 0 })} tabIndex={-1} onMouseDown={onSubtitlesButtonMouseDown} onClick={onSubtitlesButtonClick}>

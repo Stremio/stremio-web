@@ -3,7 +3,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const Icon = require('stremio-icons/dom');
+const Icon = require('@stremio/stremio-icons/dom');
 const { Modal, useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
 const { Button, Image, useBinaryState } = require('stremio/common');
@@ -92,7 +92,7 @@ const Intro = ({ queryParams }) => {
                             if (!user || typeof user.fbLoginToken !== 'string' || typeof user.email !== 'string') {
                                 throw new Error('Login failed at getting token from Stremio');
                             }
-                            core.dispatch({
+                            core.transport.dispatch({
                                 action: 'Ctx',
                                 args: {
                                     action: 'Authenticate',
@@ -123,7 +123,7 @@ const Intro = ({ queryParams }) => {
             return;
         }
         openLoaderModal();
-        core.dispatch({
+        core.transport.dispatch({
             action: 'Ctx',
             args: {
                 action: 'Authenticate',
@@ -140,7 +140,7 @@ const Intro = ({ queryParams }) => {
             dispatch({ type: 'error', error: 'You must accept the Terms of Service' });
             return;
         }
-        core.dispatch({
+        core.transport.dispatch({
             action: 'Ctx',
             args: {
                 action: 'Logout'
@@ -170,7 +170,7 @@ const Intro = ({ queryParams }) => {
             return;
         }
         openLoaderModal();
-        core.dispatch({
+        core.transport.dispatch({
             action: 'Ctx',
             args: {
                 action: 'Authenticate',
@@ -270,10 +270,10 @@ const Intro = ({ queryParams }) => {
             }
         };
         if (routeFocused) {
-            core.on('Event', onEvent);
+            core.transport.on('Event', onEvent);
         }
         return () => {
-            core.off('Event', onEvent);
+            core.transport.off('Event', onEvent);
         };
     }, [routeFocused]);
     React.useEffect(() => {

@@ -7,14 +7,14 @@ const useModelState = require('stremio/common/useModelState');
 const useInLibrary = (metaItem) => {
     const { core } = useServices();
     const initLibraryItemsState = React.useCallback(() => {
-        return core.getState('library_items');
+        return core.transport.getState('library_items');
     }, []);
     const libraryItems = useModelState({
         model: 'library_items',
         init: initLibraryItemsState
     });
     const addToLibrary = React.useCallback((metaItem) => {
-        core.dispatch({
+        core.transport.dispatch({
             action: 'Ctx',
             args: {
                 action: 'AddToLibrary',
@@ -23,7 +23,7 @@ const useInLibrary = (metaItem) => {
         });
     }, []);
     const removeFromLibrary = React.useCallback((metaItem) => {
-        core.dispatch({
+        core.transport.dispatch({
             action: 'Ctx',
             args: {
                 action: 'RemoveFromLibrary',

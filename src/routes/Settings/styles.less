@@ -1,6 +1,6 @@
 // Copyright (C) 2017-2020 Smart code 203358507
 
-@import (reference) '~stremio-colors/dist/less/stremio-colors.less';
+@import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
 
 :import('~stremio/common/Checkbox/styles.less') {
     checkbox-icon: icon;
@@ -12,7 +12,7 @@
 }
 
 :import('~stremio/common/ModalDialog/styles.less') {
-    addon-modal-content: modal-dialog-content;
+    configure-server-url-modal-content: modal-dialog-content;
     cancel-button-label: label;
 }
 
@@ -281,21 +281,36 @@
                             }
                         }
 
-                        &.edit-container {
+                        &.configure-input-container {
                             padding: 0;
 
                             .label {
-                                overflow: hidden;
+                                flex-grow: 1;
                                 white-space: pre;
                                 text-overflow: ellipsis;
                                 padding: 0 1rem;
                             }
 
-                            .button-container {
-                                flex: auto;
+                            .configure-button-container {
+                                flex: none;
+                                width: 3rem;
+                                height: 3rem;
+                                display: flex;
+                                flex-direction: row;
+                                align-items: center;
+                                justify-content: center;
+                                background-color: @color-accent3;
+
+                                &:hover {
+                                    background-color: @color-accent3-light1;
+                                }
 
                                 .icon {
+                                    flex: none;
+                                    width: 1rem;
+                                    height: 1rem;
                                     margin: 0;
+                                    fill: @color-surface-light5-90;
                                 }
                             }
                         }
@@ -306,15 +321,9 @@
     }
 }
 
-.edit-server-url-modal-container {
-    .addon-modal-content {
+.configure-server-url-modal-container {
+    .configure-server-url-modal-content {
         width: 30rem;
-
-        .notice {
-            margin-bottom: 1.5rem;
-            font-size: 1rem;
-            color: @color-background-dark5-90;
-        }
 
         .server-url-input {
             width: 100%;

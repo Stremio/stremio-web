@@ -3,7 +3,7 @@
 const React = require('react');
 const { storiesOf } = require('@storybook/react');
 const { action } = require('@storybook/addon-actions');
-const Icon = require('stremio-icons/dom');
+const Icon = require('@stremio/stremio-icons/dom');
 const { Image } = require('stremio/common');
 const styles = require('./styles');
 

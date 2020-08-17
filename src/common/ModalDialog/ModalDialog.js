@@ -5,7 +5,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { useRouteFocused, useModalsContainer } = require('stremio-router');
 const Button = require('stremio/common/Button');
-const Icon = require('stremio-icons/dom');
+const Icon = require('@stremio/stremio-icons/dom');
 const { Modal } = require('stremio-router');
 const styles = require('./styles');
 

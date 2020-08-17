@@ -1,77 +1,47 @@
 // Copyright (C) 2017-2020 Smart code 203358507
 
 const EventEmitter = require('events');
-const { default: init, StremioCoreWeb } = require('@stremio/stremio-core-web');
+const { default: initializeCoreAPI } = require('@stremio/stremio-core-web');
+const CoreTransport = require('./CoreTransport');
+
+let coreAPIAvailable = null;
+const coreAPIEvents = new EventEmitter();
+initializeCoreAPI()
+    .then(() => {
+        coreAPIAvailable = true;
+        coreAPIEvents.emit('availabilityChanged');
+    })
+    .catch(() => {
+        coreAPIAvailable = false;
+        coreAPIEvents.emit('availabilityChanged');
+    });
 
 function Core() {
     let active = false;
     let error = null;
     let starting = false;
-    let stremio_core = null;
+    let transport = null;
+
     const events = new EventEmitter();
     events.on('error', () => { });
 
-    function onStateChanged() {
-        events.emit('stateChanged');
-    }
-    function start() {
-        if (active || error instanceof Error || starting) {
-            return;
+    function onCoreAPIAvailabilityChanged() {
+        if (coreAPIAvailable) {
+            active = true;
+            error = null;
+            starting = false;
+            transport = new CoreTransport();
+        } else {
+            active = false;
+            error = new Error('Stremio Core API not available');
+            starting = false;
+            transport = null;
         }
 
-        starting = true;
-        init()
-            .then(() => {
-                if (starting) {
-                    stremio_core = new StremioCoreWeb(({ name, args } = {}) => {
-                        if (active) {
-                            try {
-                                events.emit(name, args);
-                            } catch (e) {
-                                /* eslint-disable-next-line no-console */
-                                console.error(e);
-                            }
-                        }
-                    });
-                    active = true;
-                    onStateChanged();
-                }
-            })
-            .catch((e) => {
-                error = new Error('Unable to init stremio-core-web');
-                error.error = e;
-                onStateChanged();
-            })
-            .then(() => {
-                starting = false;
-            });
-    }
-    function stop() {
-        active = false;
-        error = null;
-        starting = false;
-        stremio_core = null;
         onStateChanged();
     }
-    function on(name, listener) {
-        events.on(name, listener);
-    }
-    function off(name, listener) {
-        events.off(name, listener);
-    }
-    function dispatch(action, model) {
-        if (!active || typeof action === 'undefined') {
-            return false;
-        }
-
-        return stremio_core.dispatch(action, model);
-    }
-    function getState(model) {
-        if (!active) {
-            return null;
-        }
-
-        return stremio_core.get_state(model);
+    function onStateChanged() {
+        events.emit('stateChanged');
     }
 
     Object.defineProperties(this, {
@@ -88,17 +58,54 @@ function Core() {
             get: function() {
                 return error;
             }
+        },
+        starting: {
+            configurable: false,
+            enumerable: true,
+            get: function() {
+                return starting;
+            }
+        },
+        transport: {
+            configurable: false,
+            enumerable: true,
+            get: function() {
+                return transport;
+            }
         }
     });
 
-    this.start = start;
-    this.stop = stop;
-    this.on = on;
-    this.off = off;
-    this.dispatch = dispatch;
-    this.getState = getState;
+    this.start = function() {
+        if (active || error instanceof Error || starting) {
+            return;
+        }
 
-    Object.freeze(this);
+        starting = true;
+        if (coreAPIAvailable !== null) {
+            onCoreAPIAvailabilityChanged();
+        } else {
+            coreAPIEvents.on('availabilityChanged', onCoreAPIAvailabilityChanged);
+            onStateChanged();
+        }
+    };
+    this.stop = function() {
+        coreAPIEvents.off('availabilityChanged', onCoreAPIAvailabilityChanged);
+        active = false;
+        error = null;
+        starting = false;
+        if (transport !== null) {
+            transport.free();
+            transport = null;
+        }
+
+        onStateChanged();
+    };
+    this.on = function(name, listener) {
+        events.on(name, listener);
+    };
+    this.off = function(name, listener) {
+        events.off(name, listener);
+    };
 }
 
 module.exports = Core;

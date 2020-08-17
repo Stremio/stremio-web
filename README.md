@@ -1,6 +1,7 @@
 # Stremio - The media center you need
 
-![Build](https://github.com/stremio/stremio-web/workflows/Build/badge.svg?branch=development)
+![Build](https://github.com/stremio/stremio-web/workflows/Build/badge.svg?branch=development) 
+[![Netlify](https://api.netlify.com/api/v1/badges/ac26d7ae-d08b-4cc4-a14d-a83ba7c3e8ca/deploy-status)](https://stremio-development.netlify.app)
 
 Stremio is a modern media center that's a one-stop solution for your video entertainment. You discover, watch and organize video content from easy to install addons.
 
@@ -8,24 +9,24 @@ Stremio is a modern media center that's a one-stop solution for your video enter
 
 #### Prerequisites:
 * Node.js 10 or higher
-* yarn __configured for use with GitHub Packages__
+* npm 6 or higher
 
 ### Install dependencies:
 
 ```bash
-yarn install
+npm install
 ```
 
 ### Development:
 
 ```bash
-yarn start
+npm start
 ```
 
 ### Production:
 
 ```bash
-yarn build
+npm run build
 ```
 
 ## Screenshots

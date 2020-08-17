@@ -106,8 +106,7 @@ module.exports = (env, argv) => ({
         extensions: ['.js', '.json', '.less', '.wasm'],
         alias: {
             'stremio': path.resolve(__dirname, 'src'),
-            'stremio-router': path.resolve(__dirname, 'src/router'),
-            'stremio-video': path.resolve(__dirname, 'src/video')
+            'stremio-router': path.resolve(__dirname, 'src/router')
         }
     },
     devServer: {
@@ -142,7 +141,7 @@ module.exports = (env, argv) => ({
         }),
         new webpack.ProgressPlugin(),
         new CopyWebpackPlugin([
-            { from: 'node_modules/@stremio/stremio-core-web/static', to: '' },
+            { from: 'node_modules/@stremio/stremio-core-web/stremio_core_web_bg.wasm', to: '' },
             { from: 'images', to: 'images' },
             { from: 'fonts', to: 'fonts' }
         ]),
@@ -153,7 +152,7 @@ module.exports = (env, argv) => ({
         new MiniCssExtractPlugin(),
         new CleanWebpackPlugin({
             verbose: true,
-            cleanOnceBeforeBuildPatterns: [],
+            cleanOnceBeforeBuildPatterns: ['*'],
             cleanAfterEveryBuildPatterns: ['./main.js', './main.css']
         })
     ]

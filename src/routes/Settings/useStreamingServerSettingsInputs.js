@@ -60,7 +60,7 @@ const useStreaminServerSettingsInputs = (streaminServer) => {
                 return cacheSizeToString(streaminServer.settings.content.cacheSize);
             },
             onSelect: (event) => {
-                core.dispatch({
+                core.transport.dispatch({
                     action: 'StreamingServer',
                     args: {
                         action: 'UpdateSettings',
@@ -115,7 +115,7 @@ const useStreaminServerSettingsInputs = (streaminServer) => {
                 }, 'custom');
             },
             onSelect: (event) => {
-                core.dispatch({
+                core.transport.dispatch({
                     action: 'StreamingServer',
                     args: {
                         action: 'UpdateSettings',
