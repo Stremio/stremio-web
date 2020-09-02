@@ -243,7 +243,7 @@ MetaPreview.propTypes = {
         name: PropTypes.string,
         url: PropTypes.string
     })),
-    trailers: PropTypes.object,
+    trailers: PropTypes.array,
     inLibrary: PropTypes.bool,
     toggleInLibrary: PropTypes.func
 };
