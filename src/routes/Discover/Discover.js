@@ -158,7 +158,7 @@ const Discover = ({ urlParams, queryParams }) => {
                                 releaseInfo={selectedMetaItem.releaseInfo}
                                 released={selectedMetaItem.released}
                                 description={selectedMetaItem.description}
-                                trailer={selectedMetaItem.trailer}
+                                trailers={selectedMetaItem.trailers}
                             />
                             :
                             <div className={styles['meta-preview-container']} />

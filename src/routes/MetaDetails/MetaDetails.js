@@ -114,7 +114,7 @@ const MetaDetails = ({ urlParams, queryParams }) => {
                                                     selectedMetaResource.content.content.description
                                             }
                                             links={selectedMetaResource.content.content.links}
-                                            trailer={selectedMetaResource.content.content.trailer}
+                                            trailers={selectedMetaResource.content.content.trailers}
                                             inLibrary={inLibrary}
                                             toggleInLibrary={toggleInLibrary}
                                         />

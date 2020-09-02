@@ -42,7 +42,7 @@ const mapDiscoverState = (discover) => {
                     releaseInfo: metaItem.releaseInfo,
                     released: new Date(metaItem.released),
                     description: metaItem.description,
-                    trailer: metaItem.trailer,
+                    trailers: metaItem.trailers,
                     deepLinks: deepLinking.withMetaItem({ metaItem })
                 }))
             }
