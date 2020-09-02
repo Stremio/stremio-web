@@ -34,7 +34,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                     if (category === CONSTANTS.IMDB_LINK_CATEGORY) {
                         linksGroups.set(category, {
                             label: name,
-                            href: `https://www.stremio.com/warning#${encodeURIComponent(`https://www.imdb.com/title/${encodeURIComponent(url)}`)}`
+                            href: `https://www.stremio.com/warning#${encodeURIComponent(url)}`
                         });
                     } else if (category === CONSTANTS.SHARE_LINK_CATEGORY) {
                         linksGroups.set(category, {
