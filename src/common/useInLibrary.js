@@ -4,14 +4,20 @@ const React = require('react');
 const { useServices } = require('stremio/services');
 const useModelState = require('stremio/common/useModelState');
 
+const mapLibraryState = (ctx) => {
+    return ctx.library;
+};
+
 const useInLibrary = (metaItem) => {
     const { core } = useServices();
-    const initLibraryItemsState = React.useCallback(() => {
-        return core.transport.getState('library_items');
+    const initLibraryState = React.useCallback(() => {
+        const ctx = core.transport.getState('ctx');
+        return mapLibraryState(ctx);
     }, []);
-    const libraryItems = useModelState({
-        model: 'library_items',
-        init: initLibraryItemsState
+    const library = useModelState({
+        model: 'ctx',
+        init: initLibraryState,
+        map: mapLibraryState
     });
     const addToLibrary = React.useCallback((metaItem) => {
         core.transport.dispatch({
@@ -32,8 +38,8 @@ const useInLibrary = (metaItem) => {
         });
     }, []);
     const inLibrary = React.useMemo(() => {
-        return libraryItems.ids.includes(metaItem !== null ? metaItem.id : null);
-    }, [metaItem, libraryItems]);
+        return metaItem !== null && metaItem.id in library && !library[metaItem.id].removed;
+    }, [metaItem, library]);
     const toggleInLibrary = React.useMemo(() => {
         return metaItem !== null ?
             () => inLibrary ? removeFromLibrary(metaItem) : addToLibrary(metaItem)
