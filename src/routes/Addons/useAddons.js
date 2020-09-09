@@ -5,7 +5,7 @@ const { useServices } = require('stremio/services');
 const { useModelState } = require('stremio/common');
 
 const INSTALLED_CATALOG_ID = 'INSTALLED';
-const INSTALLED_CATALOG_BASE = '';
+const INSTALLED_CATALOG_BASE = 'http://demo/';
 
 const initAddonsState = () => ({
     selectable: {
@@ -17,7 +17,8 @@ const initAddonsState = () => ({
 
 const mapAddonsStateWithCtx = (addons, ctx) => {
     const installedSelectableTypes = ctx.profile.addons.map((addon) => addon.manifest.types)
-        .flat(2).filter((type, index, types) => types.indexOf(type) === index)
+        .flat(2)
+        .filter((type, index, types) => types.indexOf(type) === index)
         .map((type) => ({
             name: type,
             request: {
