@@ -26,7 +26,7 @@ function CoreTransport() {
         return core.get_state(model);
     };
     this.dispatch = function(action, model) {
-        return core.dispatch(action, model);
+        return core.dispatch(model, action);
     };
     this.free = function() {
         core.free();
