@@ -68,7 +68,7 @@ const Search = ({ queryParams }) => {
                                         );
                                     }
                                     case 'Err': {
-                                        const message = `Error(${catalog_resource.content.content.type})${typeof catalog_resource.content.content.content === 'string' ? ` - ${catalog_resource.content.content.content}` : ''}`;
+                                        const message = `Error(${catalog_resource.content.content.type})${typeof catalog_resource.content.content.content.message === 'string' ? ` - ${catalog_resource.content.content.content.message}` : ''}`;
                                         return (
                                             <MetaRow
                                                 key={index}

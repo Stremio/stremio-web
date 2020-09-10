@@ -111,7 +111,7 @@ const Discover = ({ urlParams, queryParams }) => {
                                     <div className={styles['message-container']}>
                                         <Image className={styles['image']} src={'/images/empty.png'} alt={' '} />
                                         <div className={styles['message-label']}>
-                                            {`Error(${discover.catalog_resource.content.content.type})${typeof discover.catalog_resource.content.content.content === 'string' ? ` - ${discover.catalog_resource.content.content.content}` : ''}`}
+                                            {`Error(${discover.catalog_resource.content.content.type})${typeof discover.catalog_resource.content.content.content.message === 'string' ? ` - ${discover.catalog_resource.content.content.content.message}` : ''}`}
                                         </div>
                                     </div>
                                     :
