@@ -6,7 +6,7 @@ const { useRouteFocused } = require('stremio-router');
 const Icon = require('@stremio/stremio-icons/dom');
 const { AddonDetailsModal, Button, Image, Multiselect, MainNavBars, TextInput, SearchBar, SharePrompt, ModalDialog, useBinaryState } = require('stremio/common');
 const Addon = require('./Addon');
-const useAddons = require('./useAddons');
+const useRemoteAddons = require('./useRemoteAddons');
 const useSelectableInputs = require('./useSelectableInputs');
 const styles = require('./styles');
 
@@ -35,9 +35,9 @@ const Addons = ({ urlParams, queryParams }) => {
 
         window.location.replace(`#/addons${nextPath}?${nextQueryParams}`);
     }, [routeFocused, urlParams, queryParams]);
-    const addons = useAddons(urlParams);
+    const remoteAddons = useRemoteAddons(urlParams);
     const detailsTransportUrl = queryParams.get('addon');
-    const selectInputs = useSelectableInputs(addons, navigate);
+    const selectInputs = useSelectableInputs(remoteAddons, navigate);
     const [addAddonModalOpen, openAddAddonModal, closeAddAddonModal] = useBinaryState(false);
     const addAddonUrlInputRef = React.useRef(null);
     const addAddonOnSubmit = React.useCallback(() => {
@@ -113,29 +113,29 @@ const Addons = ({ urlParams, queryParams }) => {
                     />
                 </div>
                 {
-                    addons.selectable.catalogs.length === 0 && addons.catalog_resource === null ?
+                    remoteAddons.selectable.catalogs.length === 0 && remoteAddons.catalog_resource === null ?
                         <div className={styles['message-container']}>
                             No addons
                         </div>
                         :
-                        addons.catalog_resource === null ?
+                        remoteAddons.catalog_resource === null ?
                             <div className={styles['message-container']}>
                                 No select
                             </div>
                             :
-                            addons.catalog_resource.content.type === 'Err' ?
+                            remoteAddons.catalog_resource.content.type === 'Err' ?
                                 <div className={styles['message-container']}>
                                     Addons could not be loaded
                                 </div>
                                 :
-                                addons.catalog_resource.content.type === 'Loading' ?
+                                remoteAddons.catalog_resource.content.type === 'Loading' ?
                                     <div className={styles['message-container']}>
                                         Loading
                                     </div>
                                     :
                                     <div className={styles['addons-list-container']}>
                                         {
-                                            addons.catalog_resource.content.content
+                                            remoteAddons.catalog_resource.content.content
                                                 .filter((addon) => {
                                                     return search.length === 0 ||
                                                         (
