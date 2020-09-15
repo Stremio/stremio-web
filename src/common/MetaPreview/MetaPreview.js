@@ -24,7 +24,7 @@ const ALLOWED_LINK_REDIRECTS = [
     routesRegexp.metadetails.regexp
 ];
 
-const MetaPreview = ({ className, compact, name, logo, background, runtime, releaseInfo, released, description, links, trailers, inLibrary, toggleInLibrary }) => {
+const MetaPreview = ({ className, compact, name, logo, background, runtime, releaseInfo, released, description, links, trailerStreams, inLibrary, toggleInLibrary }) => {
     const [shareModalOpen, openShareModal, closeShareModal] = useBinaryState(false);
     const linksGroups = React.useMemo(() => {
         return Array.isArray(links) ?
@@ -72,13 +72,13 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
             new Map();
     }, [links]);
     const trailerHref = React.useMemo(() => {
-        if (trailers.length === 0) {
+        if (trailerStreams.length === 0) {
             return null;
         }
 
-        const deepLinks = deepLinking.withStream({ stream: trailers[0] });
+        const deepLinks = deepLinking.withStream({ stream: trailerStreams[0] });
         return deepLinks.player;
-    }, [trailers]);
+    }, [trailerStreams]);
     const renderLogoFallback = React.useMemo(() => () => (
         <Icon className={styles['logo-placeholder-icon']} icon={'ic_broken_link'} />
     ), []);
@@ -243,7 +243,7 @@ MetaPreview.propTypes = {
         name: PropTypes.string,
         url: PropTypes.string
     })),
-    trailers: PropTypes.array,
+    trailerStreams: PropTypes.array,
     inLibrary: PropTypes.bool,
     toggleInLibrary: PropTypes.func
 };
