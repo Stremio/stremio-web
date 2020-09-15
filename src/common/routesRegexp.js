@@ -30,8 +30,8 @@ const routesRegexp = {
         urlParamsNames: ['type', 'id', 'videoId']
     },
     addons: {
-        regexp: /^\/addons(?:\/([^/]*)\/([^/]*)\/([^/]*))?$/,
-        urlParamsNames: ['transportUrl', 'catalogId', 'type']
+        regexp: /^\/addons(?:\/([^/]*)(?:\/([^/]*)\/([^/]*))?)?$/,
+        urlParamsNames: ['type', 'transportUrl', 'catalogId']
     },
     settings: {
         regexp: /^\/settings$/,
