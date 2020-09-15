@@ -6,6 +6,7 @@ const { useRouteFocused } = require('stremio-router');
 const Icon = require('@stremio/stremio-icons/dom');
 const { AddonDetailsModal, Button, Image, Multiselect, MainNavBars, TextInput, SearchBar, SharePrompt, ModalDialog, useBinaryState } = require('stremio/common');
 const Addon = require('./Addon');
+const useInstalledAddons = require('./useInstalledAddons');
 const useRemoteAddons = require('./useRemoteAddons');
 const useSelectableInputs = require('./useSelectableInputs');
 const styles = require('./styles');
@@ -18,26 +19,33 @@ const Addons = ({ urlParams, queryParams }) => {
         }
 
         const nextPath = args.hasOwnProperty('request') ?
-            `/${encodeURIComponent(args.request.base)}/${encodeURIComponent(args.request.path.id)}/${encodeURIComponent(args.request.path.type_name)}`
+            `/${encodeURIComponent(args.request.path.type_name)}/${encodeURIComponent(args.request.base)}/${encodeURIComponent(args.request.path.id)}`
             :
-            typeof urlParams.transportUrl === 'string' && typeof urlParams.catalogId === 'string' && typeof urlParams.type === 'string' ?
-                `/${encodeURIComponent(urlParams.transportUrl)}/${encodeURIComponent(urlParams.catalogId)}/${encodeURIComponent(urlParams.type)}`
+            args.hasOwnProperty('type_name') ?
+                typeof args.type_name === 'string' ?
+                    `/${encodeURIComponent(args.type_name)}`
+                    :
+                    ''
                 :
-                '';
+                typeof urlParams.type === 'string' && typeof urlParams.transportUrl === 'string' && typeof urlParams.catalogId === 'string' ?
+                    `/${encodeURIComponent(urlParams.type)}/${encodeURIComponent(urlParams.transportUrl)}/${encodeURIComponent(urlParams.catalogId)}`
+                    :
+                    '';
         const nextQueryParams = new URLSearchParams(queryParams);
         if (args.hasOwnProperty('detailsTransportUrl')) {
-            if (args.detailsTransportUrl === null) {
-                nextQueryParams.delete('addon');
-            } else {
+            if (typeof args.detailsTransportUrl === 'string') {
                 nextQueryParams.set('addon', args.detailsTransportUrl);
+            } else {
+                nextQueryParams.delete('addon');
             }
         }
 
-        window.location.replace(`#/addons${nextPath}?${nextQueryParams}`);
+        window.location = `#/addons${nextPath}?${nextQueryParams}`;
     }, [routeFocused, urlParams, queryParams]);
+    const installedAddons = useInstalledAddons(urlParams);
     const remoteAddons = useRemoteAddons(urlParams);
     const detailsTransportUrl = queryParams.get('addon');
-    const selectInputs = useSelectableInputs(remoteAddons, navigate);
+    const selectInputs = useSelectableInputs(installedAddons, remoteAddons, navigate);
     const [addAddonModalOpen, openAddAddonModal, closeAddAddonModal] = useBinaryState(false);
     const addAddonUrlInputRef = React.useRef(null);
     const addAddonOnSubmit = React.useCallback(() => {
@@ -84,6 +92,13 @@ const Addons = ({ urlParams, queryParams }) => {
     const closeAddonDetails = React.useCallback(() => {
         navigate({ detailsTransportUrl: null });
     }, [navigate]);
+    const searchFilterPredicate = React.useCallback((addon) => {
+        return search.length === 0 ||
+            (
+                (typeof addon.manifest.name === 'string' && addon.manifest.name.toLowerCase().includes(search.toLowerCase())) ||
+                (typeof addon.manifest.description === 'string' && addon.manifest.description.toLowerCase().includes(search.toLowerCase()))
+            );
+    }, [search]);
     React.useLayoutEffect(() => {
         closeAddAddonModal();
         setSearch('');
@@ -113,36 +128,55 @@ const Addons = ({ urlParams, queryParams }) => {
                     />
                 </div>
                 {
-                    remoteAddons.selectable.catalogs.length === 0 && remoteAddons.catalog_resource === null ?
-                        <div className={styles['message-container']}>
-                            No addons
-                        </div>
-                        :
-                        remoteAddons.catalog_resource === null ?
+                    installedAddons.selected !== null ?
+                        installedAddons.type_names.length === 0 ?
                             <div className={styles['message-container']}>
-                                No select
+                                No addons ware installed!
                             </div>
                             :
+                            installedAddons.addons.length === 0 ?
+                                <div className={styles['message-container']}>
+                                    No addons ware installed for that type!
+                                </div>
+                                :
+                                <div className={styles['addons-list-container']}>
+                                    {
+                                        installedAddons.addons
+                                            .filter(searchFilterPredicate)
+                                            .map((addon, index) => (
+                                                <Addon
+                                                    key={index}
+                                                    className={styles['addon']}
+                                                    id={addon.manifest.id}
+                                                    name={addon.manifest.name}
+                                                    version={addon.manifest.version}
+                                                    logo={addon.manifest.logo}
+                                                    description={addon.manifest.description}
+                                                    types={addon.manifest.types}
+                                                    installed={addon.installed}
+                                                    onToggle={onAddonToggle}
+                                                    onShare={onAddonShare}
+                                                    dataset={{ addon }}
+                                                />
+                                            ))
+                                    }
+                                </div>
+                        :
+                        remoteAddons.selected !== null ?
                             remoteAddons.catalog_resource.content.type === 'Err' ?
                                 <div className={styles['message-container']}>
-                                    Addons could not be loaded
+                                    Addons could not be loaded!
                                 </div>
                                 :
                                 remoteAddons.catalog_resource.content.type === 'Loading' ?
                                     <div className={styles['message-container']}>
-                                        Loading
+                                        Loading!
                                     </div>
                                     :
                                     <div className={styles['addons-list-container']}>
                                         {
                                             remoteAddons.catalog_resource.content.content
-                                                .filter((addon) => {
-                                                    return search.length === 0 ||
-                                                        (
-                                                            (typeof addon.manifest.name === 'string' && addon.manifest.name.toLowerCase().includes(search.toLowerCase())) ||
-                                                            (typeof addon.manifest.description === 'string' && addon.manifest.description.toLowerCase().includes(search.toLowerCase()))
-                                                        );
-                                                })
+                                                .filter(searchFilterPredicate)
                                                 .map((addon, index) => (
                                                     <Addon
                                                         key={index}
@@ -161,6 +195,10 @@ const Addons = ({ urlParams, queryParams }) => {
                                                 ))
                                         }
                                     </div>
+                            :
+                            <div className={styles['message-container']}>
+                                No select
+                            </div>
                 }
             </div>
             {

@@ -1,10 +1,10 @@
 // Copyright (C) 2017-2020 Smart code 203358507
 
 const React = require('react');
-const { useServices } = require('stremio/services');
 const { useModelState } = require('stremio/common');
 
 const initAddonsState = () => ({
+    selected: null,
     selectable: {
         types: [],
         catalogs: []
@@ -13,6 +13,7 @@ const initAddonsState = () => ({
 });
 
 const mapAddonsStateWithCtx = (addons, ctx) => {
+    const selected = addons.selected;
     const selectable = addons.selectable;
     const catalog_resource = addons.catalog_resource !== null && addons.catalog_resource.content.type === 'Ready' ?
         {
@@ -35,27 +36,12 @@ const mapAddonsStateWithCtx = (addons, ctx) => {
         }
         :
         addons.catalog_resource;
-    return { selectable, catalog_resource };
-};
-
-const onNewAddonsState = (addons) => {
-    if (addons.catalog_resource === null && addons.selectable.catalogs.length > 0) {
-        return {
-            action: 'Load',
-            args: {
-                model: 'CatalogWithFilters',
-                args: {
-                    request: addons.selectable.catalogs[0].request
-                }
-            }
-        };
-    }
+    return { selected, selectable, catalog_resource };
 };
 
 const useRemoteAddons = (urlParams) => {
-    const { core } = useServices();
     const loadAddonsAction = React.useMemo(() => {
-        if (typeof urlParams.transportUrl === 'string' && typeof urlParams.catalogId === 'string' && typeof urlParams.type === 'string') {
+        if (typeof urlParams.type === 'string' && typeof urlParams.transportUrl === 'string' && typeof urlParams.catalogId === 'string') {
             return {
                 action: 'Load',
                 args: {
@@ -74,30 +60,16 @@ const useRemoteAddons = (urlParams) => {
                 }
             };
         } else {
-            const addons = core.transport.getState('remote_addons');
-            if (addons.selectable.catalogs.length > 0) {
-                return {
-                    action: 'Load',
-                    args: {
-                        model: 'CatalogWithFilters',
-                        args: {
-                            request: addons.selectable.catalogs[0].request
-                        }
-                    }
-                };
-            } else {
-                return {
-                    action: 'Unload'
-                };
-            }
+            return {
+                action: 'Unload'
+            };
         }
     }, [urlParams]);
     return useModelState({
         model: 'remote_addons',
         action: loadAddonsAction,
         mapWithCtx: mapAddonsStateWithCtx,
-        init: initAddonsState,
-        onNewState: onNewAddonsState
+        init: initAddonsState
     });
 };
 
