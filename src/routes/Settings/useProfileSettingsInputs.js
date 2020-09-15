@@ -11,12 +11,6 @@ const useProfileSettingsInputs = (profile) => {
             label: languageNames[code]
         })),
         selected: [profile.settings.interface_language],
-        renderLabelText: () => {
-            return typeof languageNames[profile.settings.interface_language] === 'string' ?
-                languageNames[profile.settings.interface_language]
-                :
-                profile.settings.interface_language;
-        },
         onSelect: (event) => {
             core.transport.dispatch({
                 action: 'Ctx',
@@ -36,12 +30,6 @@ const useProfileSettingsInputs = (profile) => {
             label: languageNames[code]
         })),
         selected: [profile.settings.subtitles_language],
-        renderLabelText: () => {
-            return typeof languageNames[profile.settings.subtitles_language] === 'string' ?
-                languageNames[profile.settings.subtitles_language]
-                :
-                profile.settings.subtitles_language;
-        },
         onSelect: (event) => {
             core.transport.dispatch({
                 action: 'Ctx',

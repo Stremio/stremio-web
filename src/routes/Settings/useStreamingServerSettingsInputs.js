@@ -105,15 +105,6 @@ const useStreaminServerSettingsInputs = (streaminServer) => {
                         []
                 ),
             selected: [JSON.stringify(selectedTorrentProfile)],
-            renderLabelText: () => {
-                return Object.keys(TORRENT_PROFILES).reduce((result, profileName) => {
-                    if (isEqual(TORRENT_PROFILES[profileName], selectedTorrentProfile)) {
-                        return profileName;
-                    }
-
-                    return result;
-                }, 'custom');
-            },
             onSelect: (event) => {
                 core.transport.dispatch({
                     action: 'StreamingServer',
