@@ -17,6 +17,9 @@ const mapSelectableInputs = (route, library) => {
             [],
         options: [{ label: 'All', value: JSON.stringify(null) }]
             .concat(library.type_names.map((type) => ({ label: type, value: JSON.stringify(type) }))),
+        renderLabelText: () => {
+            return library.selected.type_name === null ? 'All' : library.selected.type_name;
+        },
         onSelect: (event) => {
             const type = JSON.parse(event.value);
             const queryParams = new URLSearchParams(library.selected !== null ? [['sort', library.selected.sort]] : []);

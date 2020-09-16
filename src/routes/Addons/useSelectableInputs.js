@@ -58,6 +58,18 @@ const mapSelectableInputs = (installedAddons, remoteAddons, navigate) => {
                         remoteAddons.selected.request.path.type_name === request.path.type_name;
                 })
                 .map(({ request }) => JSON.stringify(request)),
+        renderLabelText: () => {
+            return installedAddons.selected !== null ?
+                installedAddons.selected.type_name === ALL_TYPES_OPTION.value ?
+                    ALL_TYPES_OPTION.label
+                    :
+                    installedAddons.selected.type_name
+                :
+                remoteAddons.selected !== null ?
+                    remoteAddons.selected.request.path.type_name
+                    :
+                    typeSelect.title;
+        },
         onSelect: (event) => {
             const value = JSON.parse(event.value);
             if (value === ALL_TYPES_OPTION.value || typeof value === 'string') {

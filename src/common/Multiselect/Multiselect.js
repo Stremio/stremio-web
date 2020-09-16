@@ -93,13 +93,13 @@ const Multiselect = ({ className, mode, direction, title, disabled, dataset, ren
                                     renderLabelText()
                                     :
                                     selected.length > 0 ?
-                                        options.reduce((labels, { label, value }) => {
-                                            if (selected.includes(value)) {
-                                                labels.push(typeof label === 'string' ? label : value);
-                                            }
-
-                                            return labels;
-                                        }, []).join(', ')
+                                        selected.map((value) => {
+                                            const option = options.find((option) => option.value === value);
+                                            return option && typeof option.label === 'string' ?
+                                                option.label
+                                                :
+                                                value;
+                                        }).join(', ')
                                         :
                                         title
                             }
