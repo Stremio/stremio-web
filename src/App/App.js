@@ -26,9 +26,9 @@ const App = () => {
         const onCoreStateChanged = () => {
             if (services.core.active) {
                 services.core.transport.dispatch({
-                    action: 'Load',
+                    action: 'Ctx',
                     args: {
-                        model: 'Ctx'
+                        action: 'PullFromStorage'
                     }
                 });
             }
