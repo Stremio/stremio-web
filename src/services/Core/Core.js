@@ -6,12 +6,18 @@ const CoreTransport = require('./CoreTransport');
 
 let coreAPIAvailable = null;
 const coreAPIEvents = new EventEmitter();
+coreAPIEvents.on('error', (error) => {
+    /* eslint-disable-next-line no-console */
+    console.error(error);
+});
 initializeCoreAPI()
     .then(() => {
         coreAPIAvailable = true;
         coreAPIEvents.emit('availabilityChanged');
     })
-    .catch(() => {
+    .catch((error) => {
+        /* eslint-disable-next-line no-console */
+        console.error(error);
         coreAPIAvailable = false;
         coreAPIEvents.emit('availabilityChanged');
     });
@@ -23,7 +29,10 @@ function Core() {
     let transport = null;
 
     const events = new EventEmitter();
-    events.on('error', () => { });
+    events.on('error', (error) => {
+        /* eslint-disable-next-line no-console */
+        console.error(error);
+    });
 
     function onCoreAPIAvailabilityChanged() {
         if (coreAPIAvailable) {

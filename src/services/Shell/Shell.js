@@ -8,7 +8,10 @@ function Shell() {
     let starting = false;
 
     const events = new EventEmitter();
-    events.on('error', () => { });
+    events.on('error', (error) => {
+        /* eslint-disable-next-line no-console */
+        console.error(error);
+    });
 
     function onStateChanged() {
         events.emit('stateChanged');

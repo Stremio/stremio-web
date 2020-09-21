@@ -5,7 +5,10 @@ const { StremioCoreWeb } = require('@stremio/stremio-core-web');
 
 function CoreTransport() {
     const events = new EventEmitter();
-    events.on('error', () => { });
+    events.on('error', (error) => {
+        /* eslint-disable-next-line no-console */
+        console.error(error);
+    });
 
     const core = new StremioCoreWeb(({ name, args }) => {
         try {
