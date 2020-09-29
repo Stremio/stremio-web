@@ -95,8 +95,8 @@ function Chromecast() {
         active = false;
         error = null;
         starting = false;
-        transport = null;
         onStateChanged();
+        transport = null;
     };
     this.on = function(name, listener) {
         events.on(name, listener);
