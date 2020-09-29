@@ -120,9 +120,8 @@ function Core() {
         active = false;
         error = null;
         starting = false;
-        _transport = null;
-
         onStateChanged();
+        _transport = null;
     };
     this.on = function(name, listener) {
         events.on(name, listener);
