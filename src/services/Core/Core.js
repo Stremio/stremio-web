@@ -1,32 +1,50 @@
 // Copyright (C) 2017-2020 Smart code 203358507
 
 const EventEmitter = require('events');
-const { default: initializeCoreAPI } = require('@stremio/stremio-core-web');
+const { default: initialize_api, initialize_runtime } = require('@stremio/stremio-core-web');
 const CoreTransport = require('./CoreTransport');
 
-let coreAPIAvailable = null;
-const coreAPIEvents = new EventEmitter();
-coreAPIEvents.on('error', (error) => {
+let transport = null;
+let apiInitialized = null;
+const apiEvents = new EventEmitter();
+apiEvents.on('error', (error) => {
     /* eslint-disable-next-line no-console */
     console.error(error);
 });
-initializeCoreAPI()
+initialize_api()
     .then(() => {
-        coreAPIAvailable = true;
-        coreAPIEvents.emit('availabilityChanged');
+        const transportEvents = new EventEmitter();
+        transportEvents.on('error', (error) => {
+            /* eslint-disable-next-line no-console */
+            console.error(error);
+        });
+        return initialize_runtime(({ name, args }) => {
+            try {
+                transportEvents.emit(name, args);
+            } catch (error) {
+                /* eslint-disable-next-line no-console */
+                console.error(error);
+            }
+        }).then(() => {
+            transport = new CoreTransport(transportEvents);
+        });
+    })
+    .then(() => {
+        apiInitialized = true;
+        apiEvents.emit('initialized');
     })
     .catch((error) => {
         /* eslint-disable-next-line no-console */
         console.error(error);
-        coreAPIAvailable = false;
-        coreAPIEvents.emit('availabilityChanged');
+        apiInitialized = false;
+        apiEvents.emit('initialized');
     });
 
 function Core() {
     let active = false;
     let error = null;
     let starting = false;
-    let transport = null;
+    let _transport = null;
 
     const events = new EventEmitter();
     events.on('error', (error) => {
@@ -34,17 +52,17 @@ function Core() {
         console.error(error);
     });
 
-    function onCoreAPIAvailabilityChanged() {
-        if (coreAPIAvailable) {
+    function onAPIInitialized() {
+        if (apiInitialized) {
             active = true;
             error = null;
             starting = false;
-            transport = new CoreTransport();
+            _transport = transport;
         } else {
             active = false;
-            error = new Error('Stremio Core API not available');
+            error = new Error('Stremio Core API initialization failed');
             starting = false;
-            transport = null;
+            _transport = null;
         }
 
         onStateChanged();
@@ -79,7 +97,7 @@ function Core() {
             configurable: false,
             enumerable: true,
             get: function() {
-                return transport;
+                return _transport;
             }
         }
     });
@@ -90,22 +108,19 @@ function Core() {
         }
 
         starting = true;
-        if (coreAPIAvailable !== null) {
-            onCoreAPIAvailabilityChanged();
+        if (apiInitialized !== null) {
+            onAPIInitialized();
         } else {
-            coreAPIEvents.on('availabilityChanged', onCoreAPIAvailabilityChanged);
+            apiEvents.on('initialized', onAPIInitialized);
             onStateChanged();
         }
     };
     this.stop = function() {
-        coreAPIEvents.off('availabilityChanged', onCoreAPIAvailabilityChanged);
+        apiEvents.off('initialized', onAPIInitialized);
         active = false;
         error = null;
         starting = false;
-        if (transport !== null) {
-            transport.free();
-            transport = null;
-        }
+        _transport = null;
 
         onStateChanged();
     };
