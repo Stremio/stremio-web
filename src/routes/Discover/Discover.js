@@ -111,8 +111,21 @@ const Discover = ({ urlParams, queryParams }) => {
                                     <div className={styles['message-container']}>
                                         <Image className={styles['image']} src={'/images/empty.png'} alt={' '} />
                                         <div className={styles['message-label']}>
-                                            {`Error(${discover.catalog_resource.content.content.type})${typeof discover.catalog_resource.content.content.content.message === 'string' ? ` - ${discover.catalog_resource.content.content.content.message}` : ''}`}
+                                            {`Error(${discover.catalog_resource.content.content.type})`}
                                         </div>
+                                        {
+                                            discover.catalog_resource.content.content.type === 'UnexpectedResponse' ?
+                                                <div className={styles['message-label']}>
+                                                    {discover.catalog_resource.content.content.content}
+                                                </div>
+                                                :
+                                                discover.catalog_resource.content.content.type === 'Env' ?
+                                                    <div className={styles['message-label']}>
+                                                        {discover.catalog_resource.content.content.content.message}
+                                                    </div>
+                                                    :
+                                                    null
+                                        }
                                     </div>
                                     :
                                     discover.catalog_resource.content.type === 'Loading' ?
