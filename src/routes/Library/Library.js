@@ -62,7 +62,7 @@ const Library = ({ model, route, urlParams, queryParams }) => {
                                     <div className={styles['message-label']}>{route === 'continuewatching' ? 'Continue Watching' : 'Library'} not loaded!</div>
                                 </div>
                                 :
-                                library.lib_items.length === 0 ?
+                                library.library_items.length === 0 ?
                                     <div className={styles['message-container']}>
                                         <Image
                                             className={styles['image']}
@@ -73,7 +73,7 @@ const Library = ({ model, route, urlParams, queryParams }) => {
                                     </div>
                                     :
                                     <div className={styles['meta-items-container']}>
-                                        {library.lib_items.map((libItem, index) => (
+                                        {library.library_items.map((libItem, index) => (
                                             <LibItem {...libItem} key={index} />
                                         ))}
                                     </div>

@@ -14,11 +14,11 @@ const Board = () => {
         <MainNavBars className={styles['board-container']} route={'board'}>
             <div className={styles['board-content']}>
                 {
-                    continueWatchingPreview.lib_items.length > 0 ?
+                    continueWatchingPreview.library_items.length > 0 ?
                         <MetaRow
                             className={classnames(styles['board-row'], styles['continue-watching-row'])}
                             title={'Continue Watching'}
-                            items={continueWatchingPreview.lib_items}
+                            items={continueWatchingPreview.library_items}
                             itemComponent={LibItem}
                             deepLinks={continueWatchingPreview.deepLinks}
                         />

@@ -9,7 +9,7 @@ const initPlayerState = () => ({
     meta_resource: null,
     subtitles_resources: [],
     next_video: null,
-    lib_item: null
+    library_item: null
 });
 
 const mapPlayerStateWithCtx = (player, ctx) => {
@@ -74,8 +74,8 @@ const mapPlayerStateWithCtx = (player, ctx) => {
         return { request, addon, content };
     });
     const next_video = player.next_video;
-    const lib_item = player.lib_item;
-    return { selected, meta_resource, subtitles_resources, next_video, lib_item };
+    const library_item = player.library_item;
+    return { selected, meta_resource, subtitles_resources, next_video, library_item };
 };
 
 const usePlayer = (urlParams) => {

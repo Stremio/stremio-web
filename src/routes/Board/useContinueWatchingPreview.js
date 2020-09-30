@@ -5,7 +5,7 @@ const { useServices } = require('stremio/services');
 const { deepLinking, useModelState } = require('stremio/common');
 
 const mapContinueWatchingPreviewState = (continue_watching_preview) => {
-    const lib_items = continue_watching_preview.lib_items.map((libItem) => ({
+    const library_items = continue_watching_preview.library_items.map((libItem) => ({
         id: libItem._id,
         type: libItem.type,
         name: libItem.name,
@@ -18,7 +18,7 @@ const mapContinueWatchingPreviewState = (continue_watching_preview) => {
         deepLinks: deepLinking.withLibItem({ libItem })
     }));
     const deepLinks = { discover: '#/continuewatching' };
-    return { lib_items, deepLinks };
+    return { library_items, deepLinks };
 };
 
 const useContinueWatchingPreview = () => {

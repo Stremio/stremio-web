@@ -75,12 +75,12 @@ const Player = ({ urlParams }) => {
     }, []);
     const onEnded = React.useCallback(() => {
         core.transport.dispatch({ action: 'Unload' }, 'player');
-        if (player.lib_item !== null) {
+        if (player.library_item !== null) {
             core.transport.dispatch({
                 action: 'Ctx',
                 args: {
                     action: 'RewindLibraryItem',
-                    args: player.lib_item._id
+                    args: player.library_item._id
                 }
             });
         }
@@ -189,8 +189,8 @@ const Player = ({ urlParams }) => {
                 commandArgs: {
                     stream: player.selected.stream,
                     autoplay: true,
-                    time: player.lib_item !== null && player.selected.video_id !== null && player.lib_item.state.video_id === player.selected.video_id ?
-                        player.lib_item.state.timeOffset
+                    time: player.library_item !== null && player.selected.video_id !== null && player.library_item.state.video_id === player.selected.video_id ?
+                        player.library_item.state.timeOffset
                         :
                         0,
                     transcode: casting,

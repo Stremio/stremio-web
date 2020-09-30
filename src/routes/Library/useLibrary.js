@@ -6,13 +6,13 @@ const { CONSTANTS, deepLinking, useModelState, comparatorWithPriorities } = requ
 const initLibraryState = () => ({
     selected: null,
     type_names: [],
-    lib_items: []
+    library_items: []
 });
 
 const mapLibraryState = (library) => {
     const selected = library.selected;
     const type_names = library.type_names.sort(comparatorWithPriorities(CONSTANTS.TYPE_PRIORITIES));
-    const lib_items = library.lib_items.map((libItem) => ({
+    const library_items = library.library_items.map((libItem) => ({
         id: libItem._id,
         type: libItem.type,
         name: libItem.name,
@@ -24,7 +24,7 @@ const mapLibraryState = (library) => {
             null,
         deepLinks: deepLinking.withLibItem({ libItem })
     }));
-    return { selected, type_names, lib_items };
+    return { selected, type_names, library_items };
 };
 
 const useLibrary = (libraryModel, urlParams, queryParams) => {
