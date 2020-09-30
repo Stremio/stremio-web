@@ -5,25 +5,25 @@ const useModelState = require('stremio/common/useModelState');
 
 const initAddonDetailsState = () => ({
     selected: null,
-    addon: null
+    remote_addon: null
 });
 
 const mapAddonDetailsStateWithCtx = (addonDetails, ctx) => {
     const selected = addonDetails.selected;
-    const addon = addonDetails.addon !== null && addonDetails.addon.content.type === 'Ready' ?
+    const remote_addon = addonDetails.remote_addon !== null && addonDetails.remote_addon.content.type === 'Ready' ?
         {
-            transport_url: addonDetails.addon.transport_url,
+            transport_url: addonDetails.remote_addon.transport_url,
             content: {
-                type: addonDetails.addon.content.type,
+                type: addonDetails.remote_addon.content.type,
                 content: {
-                    ...addonDetails.addon.content.content,
-                    installed: ctx.profile.addons.some(({ transportUrl }) => transportUrl === addonDetails.addon.transport_url),
+                    ...addonDetails.remote_addon.content.content,
+                    installed: ctx.profile.addons.some(({ transportUrl }) => transportUrl === addonDetails.remote_addon.transport_url),
                 }
             }
         }
         :
-        addonDetails.addon;
-    return { selected, addon };
+        addonDetails.remote_addon;
+    return { selected, remote_addon };
 };
 
 const useAddonDetails = (transportUrl) => {
