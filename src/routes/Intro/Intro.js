@@ -280,9 +280,9 @@ const Intro = ({ queryParams }) => {
         window.fbAsyncInit = function() {
             FB.init({
                 appId: '1537119779906825',
-                autoLogAppEvents: false,
+                status: true,
                 xfbml: false,
-                version: 'v2.5'
+                version: 'v2.7'
             });
         };
         const sdkScriptElement = document.createElement('script');
