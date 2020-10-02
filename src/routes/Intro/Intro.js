@@ -111,8 +111,6 @@ const Intro = ({ queryParams }) => {
                 .catch((err = {}) => {
                     dispatch({ type: 'error', error: err.message || JSON.stringify(err) });
                 });
-        }, {
-            auth_type: 'reauthenticate',
         });
     }, []);
     const loginWithEmail = React.useCallback(() => {
