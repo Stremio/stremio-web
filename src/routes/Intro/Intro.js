@@ -10,6 +10,7 @@ const { Button, Image, useBinaryState } = require('stremio/common');
 const CredentialsTextInput = require('./CredentialsTextInput');
 const ConsentCheckbox = require('./ConsentCheckbox');
 const PasswordResetModal = require('./PasswordResetModal');
+const useFacebookToken = require('./useFacebookToken');
 const styles = require('./styles');
 
 const SIGNUP_FORM = 'signup';
@@ -76,42 +77,44 @@ const Intro = ({ queryParams }) => {
             error: ''
         }
     );
+    const getFacebookToken = useFacebookToken();
     const loginWithFacebook = React.useCallback(() => {
-        if (typeof FB === 'undefined') {
-            dispatch({ type: 'error', error: 'Failed to connect to Facebook' });
-            return;
-        }
-
         openLoaderModal();
-        FB.login((resp) => {
-            if (!resp || !resp.authResponse || typeof resp.authResponse.accessToken !== 'string' || resp.status !== 'connected') {
-                dispatch({ type: 'error', error: 'Login failed at getting token from Facebook' });
-                return;
-            }
-
-            fetch('https://www.strem.io/fb-login-with-token/' + encodeURIComponent(resp.authResponse.accessToken))
-                .then((resp) => resp.json())
-                .then(({ user } = {}) => {
-                    if (!user || typeof user.email !== 'string' || typeof user.fbLoginToken !== 'string') {
+        getFacebookToken()
+            .then((accessToken) => {
+                return fetch('https://www.strem.io/fb-login-with-token/' + encodeURIComponent(accessToken))
+                    .then((resp) => resp.json())
+                    .catch(() => {
                         throw new Error('Login failed at getting token from Stremio');
-                    }
-
-                    core.transport.dispatch({
-                        action: 'Ctx',
-                        args: {
-                            action: 'Authenticate',
-                            args: {
-                                type: 'Login',
-                                email: user.email,
-                                password: user.fbLoginToken
-                            }
+                    })
+                    .then(({ user } = {}) => {
+                        if (!user || typeof user.email !== 'string' || typeof user.fbLoginToken !== 'string') {
+                            throw new Error('Login failed at getting token from Stremio');
                         }
+
+                        return {
+                            email: user.email,
+                            password: user.fbLoginToken
+                        };
                     });
-                })
-                .catch((err = {}) => {
-                    dispatch({ type: 'error', error: err.message || JSON.stringify(err) });
+            })
+            .then(({ email, password }) => {
+                core.transport.dispatch({
+                    action: 'Ctx',
+                    args: {
+                        action: 'Authenticate',
+                        args: {
+                            type: 'Login',
+                            email,
+                            password
+                        }
+                    }
                 });
-        });
+            })
+            .catch((error) => {
+                closeLoaderModal();
+                dispatch({ type: 'error', error: error.message });
+            });
     }, []);
     const loginWithEmail = React.useCallback(() => {
         if (typeof state.email !== 'string' || state.email.length === 0 || !emailRef.current.validity.valid) {
@@ -276,24 +279,6 @@ const Intro = ({ queryParams }) => {
             core.transport.off('Event', onEvent);
         };
     }, [routeFocused]);
-    React.useEffect(() => {
-        window.fbAsyncInit = function() {
-            FB.init({
-                appId: '1537119779906825',
-                status: true,
-                xfbml: false,
-                version: 'v2.7'
-            });
-        };
-        const sdkScriptElement = document.createElement('script');
-        sdkScriptElement.src = 'https://connect.facebook.net/en_US/sdk.js';
-        sdkScriptElement.async = true;
-        sdkScriptElement.defer = true;
-        document.body.appendChild(sdkScriptElement);
-        return () => {
-            document.body.removeChild(sdkScriptElement);
-        };
-    }, []);
     return (
         <div className={styles['intro-container']}>
             <div className={styles['form-container']}>
