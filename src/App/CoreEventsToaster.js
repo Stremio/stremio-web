@@ -9,8 +9,7 @@ const CoreEventsToaster = () => {
     const toast = useToast();
     React.useEffect(() => {
         const onEvent = ({ event, args }) => {
-            // UserAuthenticated are handled only in the /intro route
-            if (event === 'Error' && args.source.event !== 'UserAuthenticated') {
+            if (event === 'Error') {
                 toast.show({
                     type: 'error',
                     title: args.source.event,
