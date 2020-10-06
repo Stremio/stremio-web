@@ -19,6 +19,7 @@ const LOGIN_FORM = 'login';
 const Intro = ({ queryParams }) => {
     const { core } = useServices();
     const routeFocused = useRouteFocused();
+    const getFacebookToken = useFacebookToken();
     const emailRef = React.useRef(null);
     const passwordRef = React.useRef(null);
     const confirmPasswordRef = React.useRef(null);
@@ -77,7 +78,6 @@ const Intro = ({ queryParams }) => {
             error: ''
         }
     );
-    const getFacebookToken = useFacebookToken();
     const loginWithFacebook = React.useCallback(() => {
         openLoaderModal();
         getFacebookToken()
