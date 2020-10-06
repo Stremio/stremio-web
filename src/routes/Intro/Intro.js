@@ -259,22 +259,21 @@ const Intro = ({ queryParams }) => {
             switch (event) {
                 case 'UserAuthenticated': {
                     closeLoaderModal();
-                    window.location = '#/';
+                    if (routeFocused) {
+                        window.location = '#/';
+                    }
                     break;
                 }
                 case 'Error': {
                     if (args.source.event === 'UserAuthenticated') {
                         closeLoaderModal();
-                        dispatch({ type: 'error', error: args.error.message });
                     }
 
                     break;
                 }
             }
         };
-        if (routeFocused) {
-            core.transport.on('Event', onEvent);
-        }
+        core.transport.on('Event', onEvent);
         return () => {
             core.transport.off('Event', onEvent);
         };
