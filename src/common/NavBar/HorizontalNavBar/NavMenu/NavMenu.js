@@ -4,6 +4,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('@stremio/stremio-icons/dom');
+const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
 const Button = require('stremio/common/Button');
 const Popup = require('stremio/common/Popup');
@@ -14,6 +15,7 @@ const styles = require('./styles');
 
 const NavMenu = (props) => {
     const { core } = useServices();
+    const routeFocused = useRouteFocused();
     const profile = useProfile();
     const [menuOpen, , closeMenu, toggleMenu] = useBinaryState(false);
     const [fullscreen, requestFullscreen, exitFullscreen] = useFullscreen();
@@ -101,6 +103,11 @@ const NavMenu = (props) => {
             </div>
         </div>
     ), [profile, fullscreen]);
+    React.useEffect(() => {
+        if (!routeFocused) {
+            closeMenu();
+        }
+    }, [routeFocused]);
     return (
         <Popup
             open={menuOpen}
