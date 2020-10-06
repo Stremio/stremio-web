@@ -4,6 +4,8 @@
 
 .nav-menu-container {
     width: 20rem;
+    max-height: calc(100vh - var(--horizontal-nav-bar-size));
+    overflow-y: auto;
     background-color: @color-background-dark1;
 
     .user-info-container {
