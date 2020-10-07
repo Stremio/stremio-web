@@ -4,7 +4,6 @@
 
 .vertical-nav-bar-container {
     width: var(--vertical-nav-bar-size);
-    padding: 1rem 0;
     background-color: @color-background-dark1;
     overflow-y: auto;
     scrollbar-width: none;
@@ -16,5 +15,13 @@
     .nav-tab-button {
         width: var(--vertical-nav-bar-size);
         height: var(--vertical-nav-bar-size);
+
+        &:first-child {
+            margin-top: 1rem;
+        }
+
+        &:last-child {
+            margin-bottom: 1rem;
+        }
     }
 }
