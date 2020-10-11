@@ -9,23 +9,9 @@ const useStreamingServer = () => {
     const initStreamingServer = React.useCallback(() => {
         return core.transport.getState('streaming_server');
     }, []);
-    const loadStreamingServerAction = React.useMemo(() => {
-        const streamingServer = core.transport.getState('streaming_server');
-        if (streamingServer.selected === null) {
-            return {
-                action: 'StreamingServer',
-                args: {
-                    action: 'Reload'
-                }
-            };
-        } else {
-            return null;
-        }
-    }, []);
     return useModelState({
         model: 'streaming_server',
-        init: initStreamingServer,
-        action: loadStreamingServerAction
+        init: initStreamingServer
     });
 };
 
