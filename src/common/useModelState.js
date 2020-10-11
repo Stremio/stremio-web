@@ -25,8 +25,8 @@ const useModelState = ({ model, init, action, timeout, onNewState, map, mapWithC
             const state = core.transport.getState(modelRef.current);
             if (typeof onNewState === 'function') {
                 const action = onNewState(state);
-                const handled = core.transport.dispatch(action, modelRef.current);
-                if (handled) {
+                if (action) {
+                    core.transport.dispatch(action, modelRef.current);
                     return;
                 }
             }
