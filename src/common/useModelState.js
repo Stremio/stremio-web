@@ -6,23 +6,25 @@ const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
 const useDeepEqualState = require('stremio/common/useDeepEqualState');
 
-const useModelState = ({ model, init, action, timeout, map }) => {
-    const modelRef = React.useRef(model);
-    const mountedRef = React.useRef(false);
+const useModelState = ({ init, action, ...args }) => {
     const { core } = useServices();
     const routeFocused = useRouteFocused();
+    const mountedRef = React.useRef(false);
+    const [model, timeout, map] = React.useMemo(() => {
+        return [args.model, args.timeout, args.map];
+    }, []);
     const [state, setState] = useDeepEqualState(init);
     React.useLayoutEffect(() => {
-        core.transport.dispatch(action, modelRef.current);
+        core.transport.dispatch(action, model);
     }, [action]);
     React.useLayoutEffect(() => {
         return () => {
-            core.transport.dispatch({ action: 'Unload' }, modelRef.current);
+            core.transport.dispatch({ action: 'Unload' }, model);
         };
     }, []);
     React.useLayoutEffect(() => {
         const onNewStateThrottled = throttle(() => {
-            setState(map(core.transport.getState(modelRef.current)));
+            setState(map(core.transport.getState(model)));
         }, timeout);
         if (routeFocused) {
             core.transport.on('NewState', onNewStateThrottled);
@@ -34,7 +36,7 @@ const useModelState = ({ model, init, action, timeout, map }) => {
             onNewStateThrottled.cancel();
             core.transport.off('NewState', onNewStateThrottled);
         };
-    }, [routeFocused, timeout, map]);
+    }, [routeFocused]);
     React.useLayoutEffect(() => {
         mountedRef.current = true;
     }, []);
