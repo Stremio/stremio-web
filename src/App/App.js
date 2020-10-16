@@ -24,15 +24,6 @@ const App = () => {
     const [shellInitialized, setShellInitialized] = React.useState(false);
     React.useEffect(() => {
         const onCoreStateChanged = () => {
-            if (services.core.active) {
-                services.core.transport.dispatch({
-                    action: 'Ctx',
-                    args: {
-                        action: 'PullFromStorage'
-                    }
-                });
-            }
-
             setCoreInitialized(services.core.active);
         };
         const onShellStateChanged = () => {
