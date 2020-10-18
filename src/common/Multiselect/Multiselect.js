@@ -114,8 +114,8 @@ const Multiselect = ({ className, mode, direction, title, disabled, dataset, ren
         <div className={styles['menu-container']} onKeyDown={menuOnKeyDown} onClick={menuOnClick}>
             {
                 options.length > 0 ?
-                    options.map(({ label, value }) => (
-                        <Button key={value} className={classnames(styles['option-container'], { 'selected': selected.includes(value) })} title={typeof label === 'string' ? label : value} data-value={value} onClick={optionOnClick}>
+                    options.map(({ label, title, value }) => (
+                        <Button key={value} className={classnames(styles['option-container'], { 'selected': selected.includes(value) })} title={typeof title === 'string' ? title : typeof label === 'string' ? label : value} data-value={value} onClick={optionOnClick}>
                             <div className={styles['label']}>{typeof label === 'string' ? label : value}</div>
                             <div className={styles['icon']} />
                         </Button>
@@ -162,6 +162,7 @@ Multiselect.propTypes = {
     title: PropTypes.string,
     options: PropTypes.arrayOf(PropTypes.shape({
         value: PropTypes.string.isRequired,
+        title: PropTypes.string,
         label: PropTypes.string
     })),
     selected: PropTypes.arrayOf(PropTypes.string),
