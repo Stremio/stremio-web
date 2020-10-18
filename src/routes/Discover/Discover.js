@@ -29,8 +29,10 @@ const Discover = ({ urlParams, queryParams }) => {
         return getMetaItemAtIndex(discover.catalog, 0);
     });
     const metaItemsOnFocusCapture = React.useCallback((event) => {
-        const metaItem = getMetaItemAtIndex(discover.catalog, event.target.dataset.index);
-        setSelectedMetaItem(metaItem);
+        if (event.target.dataset.index !== null && !isNaN(event.target.dataset.index)) {
+            const metaItem = getMetaItemAtIndex(discover.catalog, event.target.dataset.index);
+            setSelectedMetaItem(metaItem);
+        }
     }, [discover.catalog]);
     const metaItemOnClick = React.useCallback((event) => {
         const metaItem = getMetaItemAtIndex(discover.catalog, event.currentTarget.dataset.index);
