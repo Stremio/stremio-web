@@ -1,120 +1,86 @@
 // Copyright (C) 2017-2020 Smart code 203358507
 
 const React = require('react');
+const UrlUtils = require('url');
 const { useServices } = require('stremio/services');
-const { CONSTANTS, deepLinking, useModelState, comparatorWithPriorities } = require('stremio/common');
+const { useModelState } = require('stremio/common');
 
-const initDiscoverState = () => ({
+const init = () => ({
     selected: null,
     selectable: {
         types: [],
         catalogs: [],
         extra: [],
-        has_next_page: false,
-        has_prev_page: false
+        prev_page: null,
+        next_page: null
     },
-    catalog_resource: null
+    catalog: null,
+    default_request: null,
+    page: 1,
 });
 
-const mapDiscoverState = (discover) => {
-    const selected = discover.selected;
-    const selectable = {
-        types: discover.selectable.types.sort((t1, t2) => {
-            return comparatorWithPriorities(CONSTANTS.TYPE_PRIORITIES)(t1.name, t2.name);
-        }),
-        catalogs: discover.selectable.catalogs,
-        extra: discover.selectable.extra,
-        has_next_page: discover.selectable.has_next_page,
-        has_prev_page: discover.selectable.has_prev_page,
-    };
-    const catalog_resource = discover.catalog_resource !== null && discover.catalog_resource.content.type === 'Ready' ?
+const map = (discover) => ({
+    ...discover,
+    catalog: discover.catalog !== null && discover.catalog.content.type === 'Ready' ?
         {
-            request: discover.catalog_resource.request,
+            ...discover.catalog,
             content: {
-                type: 'Ready',
-                content: discover.catalog_resource.content.content.map((metaItem) => ({
-                    type: metaItem.type,
-                    name: metaItem.name,
-                    logo: metaItem.logo,
-                    poster: metaItem.poster,
+                ...discover.catalog.content,
+                content: discover.catalog.content.content.map((metaItem) => ({
+                    ...metaItem,
                     posterShape: metaItem.posterShape === 'landscape' ? 'square' : metaItem.posterShape,
-                    runtime: metaItem.runtime,
-                    releaseInfo: metaItem.releaseInfo,
-                    released: new Date(metaItem.released),
-                    description: metaItem.description,
-                    trailerStreams: metaItem.trailerStreams,
-                    deepLinks: deepLinking.withMetaItem({ metaItem })
+                    released: new Date(typeof metaItem.released === 'string' ? metaItem.released : NaN),
                 }))
             }
         }
         :
-        discover.catalog_resource;
-    return { selected, selectable, catalog_resource };
-};
-
-const onNewDiscoverState = (discover) => {
-    if (discover.catalog_resource === null && discover.selectable.types.length > 0) {
-        return {
-            action: 'Load',
-            args: {
-                model: 'CatalogWithFilters',
-                args: {
-                    request: discover.selectable.types[0].request
-                }
-            }
-        };
-    } else {
-        return null;
-    }
-};
+        discover.catalog
+});
 
 const useDiscover = (urlParams, queryParams) => {
     const { core } = useServices();
-    const loadDiscoverAction = React.useMemo(() => {
+    const action = React.useMemo(() => {
         if (typeof urlParams.transportUrl === 'string' && typeof urlParams.type === 'string' && typeof urlParams.catalogId === 'string') {
-            return {
-                action: 'Load',
-                args: {
-                    model: 'CatalogWithFilters',
-                    args: {
-                        request: {
-                            base: urlParams.transportUrl,
-                            path: {
-                                resource: 'catalog',
-                                type_name: urlParams.type,
-                                id: urlParams.catalogId,
-                                extra: Array.from(queryParams.entries())
-                            }
-                        }
-                    }
-                }
-            };
-        } else {
-            const discover = core.transport.getState('discover');
-            if (discover.selectable.types.length > 0) {
+            const { hostname } = UrlUtils.parse(urlParams.transportUrl);
+            if (typeof hostname === 'string' && hostname.length > 0) {
                 return {
                     action: 'Load',
                     args: {
                         model: 'CatalogWithFilters',
                         args: {
-                            request: discover.selectable.types[0].request
+                            request: {
+                                base: urlParams.transportUrl,
+                                path: {
+                                    resource: 'catalog',
+                                    type: urlParams.type,
+                                    id: urlParams.catalogId,
+                                    extra: Array.from(queryParams.entries())
+                                }
+                            }
                         }
                     }
                 };
-            } else {
+            }
+        } else {
+            const discover = core.transport.getState('discover');
+            if (discover.default_request !== null) {
                 return {
-                    action: 'Unload'
+                    action: 'Load',
+                    args: {
+                        model: 'CatalogWithFilters',
+                        args: {
+                            request: discover.default_request
+                        }
+                    }
                 };
             }
         }
+
+        return {
+            action: 'Unload'
+        };
     }, [urlParams, queryParams]);
-    return useModelState({
-        model: 'discover',
-        action: loadDiscoverAction,
-        map: mapDiscoverState,
-        init: initDiscoverState,
-        onNewState: onNewDiscoverState
-    });
+    return useModelState({ model: 'discover', action, map, init });
 };
 
 module.exports = useDiscover;

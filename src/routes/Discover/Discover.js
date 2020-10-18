@@ -4,18 +4,18 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('@stremio/stremio-icons/dom');
-const { AddonDetailsModal, Button, MainNavBars, MetaItem, Image, MetaPreview, Multiselect, ModalDialog, PaginationInput, CONSTANTS, useBinaryState, useProfile } = require('stremio/common');
+const { AddonDetailsModal, Button, MainNavBars, MetaItem, Image, MetaPreview, Multiselect, ModalDialog, PaginationInput, CONSTANTS, useBinaryState, useDeepEqualEffect } = require('stremio/common');
 const useDiscover = require('./useDiscover');
 const useSelectableInputs = require('./useSelectableInputs');
 const styles = require('./styles');
 
-const getMetaItemAtIndex = (catalog_resource, index) => {
+const getMetaItemAtIndex = (catalog, index) => {
     return index !== null &&
         isFinite(index) &&
-        catalog_resource !== null &&
-        catalog_resource.content.type === 'Ready' &&
-        catalog_resource.content.content[index] ?
-        catalog_resource.content.content[index]
+        catalog !== null &&
+        catalog.content.type === 'Ready' &&
+        catalog.content.content[index] ?
+        catalog.content.content[index]
         :
         null;
 };
@@ -23,31 +23,27 @@ const getMetaItemAtIndex = (catalog_resource, index) => {
 const Discover = ({ urlParams, queryParams }) => {
     const discover = useDiscover(urlParams, queryParams);
     const [selectInputs, paginationInput] = useSelectableInputs(discover);
-    const profile = useProfile();
     const [inputsModalOpen, openInputsModal, closeInputsModal] = useBinaryState(false);
     const [addonModalOpen, openAddonModal, closeAddonModal] = useBinaryState(false);
     const [selectedMetaItem, setSelectedMetaItem] = React.useState(() => {
-        return getMetaItemAtIndex(discover.catalog_resource, 0);
+        return getMetaItemAtIndex(discover.catalog, 0);
     });
     const metaItemsOnFocusCapture = React.useCallback((event) => {
-        const metaItem = getMetaItemAtIndex(discover.catalog_resource, event.target.dataset.index);
+        const metaItem = getMetaItemAtIndex(discover.catalog, event.target.dataset.index);
         setSelectedMetaItem(metaItem);
-    }, [discover.catalog_resource]);
+    }, [discover.catalog]);
     const metaItemOnClick = React.useCallback((event) => {
-        const metaItem = getMetaItemAtIndex(discover.catalog_resource, event.currentTarget.dataset.index);
+        const metaItem = getMetaItemAtIndex(discover.catalog, event.currentTarget.dataset.index);
         if (metaItem !== selectedMetaItem) {
             event.preventDefault();
             event.currentTarget.focus();
         }
-    }, [discover.catalog_resource, selectedMetaItem]);
-    const available = React.useMemo(() => {
-        return discover.selectable.types.length > 0 || discover.catalog_resource !== null;
-    }, [discover]);
+    }, [discover.catalog, selectedMetaItem]);
     React.useLayoutEffect(() => {
-        const metaItem = getMetaItemAtIndex(discover.catalog_resource, 0);
+        const metaItem = getMetaItemAtIndex(discover.catalog, 0);
         setSelectedMetaItem(metaItem);
-    }, [discover.catalog_resource]);
-    React.useLayoutEffect(() => {
+    }, [discover.catalog]);
+    useDeepEqualEffect(() => {
         closeInputsModal();
         closeAddonModal();
     }, [discover.selected]);
@@ -56,7 +52,7 @@ const Discover = ({ urlParams, queryParams }) => {
             <div className={styles['discover-content']}>
                 <div className={styles['catalog-container']}>
                     {
-                        available ?
+                        discover.default_request ?
                             <div className={styles['selectable-inputs-container']}>
                                 {selectInputs.map(({ title, options, selected, renderLabelText, onSelect }, index) => (
                                     <Multiselect
@@ -84,7 +80,7 @@ const Discover = ({ urlParams, queryParams }) => {
                             null
                     }
                     {
-                        discover.catalog_resource !== null && discover.catalog_resource.content.type === 'Ready' && !profile.addons.some((addon) => addon.transportUrl === discover.catalog_resource.request.base) ?
+                        discover.catalog !== null && typeof discover.catalog.addon_name !== 'string' ?
                             <div className={styles['missing-addon-warning-container']}>
                                 <div className={styles['warning-label']}>Addon is not installed. Install now?</div>
                                 <Button className={styles['install-button']} title={'Install addon'} onClick={openAddonModal}>
@@ -95,92 +91,86 @@ const Discover = ({ urlParams, queryParams }) => {
                             null
                     }
                     {
-                        !available ?
+                        discover.catalog === null ?
                             <div className={styles['message-container']}>
                                 <Image className={styles['image']} src={'/images/empty.png'} alt={' '} />
-                                <div className={styles['message-label']}>No catalogs available!</div>
+                                <div className={styles['message-label']}>No catalog selected!</div>
                             </div>
                             :
-                            discover.catalog_resource === null ?
+                            discover.catalog.content.type === 'Err' ?
                                 <div className={styles['message-container']}>
                                     <Image className={styles['image']} src={'/images/empty.png'} alt={' '} />
-                                    <div className={styles['message-label']}>No catalog selected!</div>
-                                </div>
-                                :
-                                discover.catalog_resource.content.type === 'Err' ?
-                                    <div className={styles['message-container']}>
-                                        <Image className={styles['image']} src={'/images/empty.png'} alt={' '} />
-                                        <div className={styles['message-label']}>
-                                            {`Error(${discover.catalog_resource.content.content.type})`}
-                                        </div>
-                                        {
-                                            discover.catalog_resource.content.content.type === 'UnexpectedResponse' ?
+                                    <div className={styles['message-label']}>
+                                        {`Error(${discover.catalog.content.content.type})`}
+                                    </div>
+                                    {
+                                        discover.catalog.content.content.type === 'UnexpectedResponse' ?
+                                            <div className={styles['message-label']}>
+                                                {discover.catalog.content.content.content}
+                                            </div>
+                                            :
+                                            discover.catalog.content.content.type === 'Env' ?
                                                 <div className={styles['message-label']}>
-                                                    {discover.catalog_resource.content.content.content}
+                                                    {discover.catalog.content.content.content.message}
                                                 </div>
                                                 :
-                                                discover.catalog_resource.content.content.type === 'Env' ?
-                                                    <div className={styles['message-label']}>
-                                                        {discover.catalog_resource.content.content.content.message}
-                                                    </div>
-                                                    :
-                                                    null
-                                        }
+                                                null
+                                    }
+                                </div>
+                                :
+                                discover.catalog.content.type === 'Loading' ?
+                                    <div className={styles['meta-items-container']}>
+                                        {Array(CONSTANTS.CATALOG_PAGE_SIZE).fill(null).map((_, index) => (
+                                            <div key={index} className={styles['meta-item-placeholder']}>
+                                                <div className={styles['poster-container']} />
+                                                <div className={styles['title-bar-container']}>
+                                                    <div className={styles['title-label']} />
+                                                </div>
+                                            </div>
+                                        ))}
                                     </div>
                                     :
-                                    discover.catalog_resource.content.type === 'Loading' ?
-                                        <div className={styles['meta-items-container']}>
-                                            {Array(CONSTANTS.CATALOG_PAGE_SIZE).fill(null).map((_, index) => (
-                                                <div key={index} className={styles['meta-item-placeholder']}>
-                                                    <div className={styles['poster-container']} />
-                                                    <div className={styles['title-bar-container']}>
-                                                        <div className={styles['title-label']} />
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                        :
-                                        <div className={styles['meta-items-container']} onFocusCapture={metaItemsOnFocusCapture}>
-                                            {discover.catalog_resource.content.content.map((metaItem, index) => (
-                                                <MetaItem
-                                                    key={index}
-                                                    className={classnames({ 'selected': selectedMetaItem === metaItem })}
-                                                    type={metaItem.type}
-                                                    name={metaItem.name}
-                                                    poster={metaItem.poster}
-                                                    posterShape={metaItem.posterShape}
-                                                    playIcon={selectedMetaItem === metaItem}
-                                                    deepLinks={metaItem.deepLinks}
-                                                    data-index={index}
-                                                    onClick={metaItemOnClick}
-                                                />
-                                            ))}
-                                        </div>
+                                    <div className={styles['meta-items-container']} onFocusCapture={metaItemsOnFocusCapture}>
+                                        {discover.catalog.content.content.map((metaItem, index) => (
+                                            <MetaItem
+                                                key={index}
+                                                className={classnames({ 'selected': selectedMetaItem === metaItem })}
+                                                type={metaItem.type}
+                                                name={metaItem.name}
+                                                poster={metaItem.poster}
+                                                posterShape={metaItem.posterShape}
+                                                playIcon={selectedMetaItem === metaItem}
+                                                deepLinks={metaItem.deep_links}
+                                                data-index={index}
+                                                onClick={metaItemOnClick}
+                                            />
+                                        ))}
+                                    </div>
                     }
                 </div>
                 {
-                    available ?
-                        selectedMetaItem !== null ?
-                            <MetaPreview
-                                className={styles['meta-preview-container']}
-                                compact={true}
-                                name={selectedMetaItem.name}
-                                logo={selectedMetaItem.logo}
-                                background={selectedMetaItem.poster}
-                                runtime={selectedMetaItem.runtime}
-                                releaseInfo={selectedMetaItem.releaseInfo}
-                                released={selectedMetaItem.released}
-                                description={selectedMetaItem.description}
-                                trailerStreams={selectedMetaItem.trailerStreams}
-                            />
-                            :
-                            <div className={styles['meta-preview-container']} />
+                    selectedMetaItem !== null ?
+                        <MetaPreview
+                            className={styles['meta-preview-container']}
+                            compact={true}
+                            name={selectedMetaItem.name}
+                            logo={selectedMetaItem.logo}
+                            background={selectedMetaItem.poster}
+                            runtime={selectedMetaItem.runtime}
+                            releaseInfo={selectedMetaItem.releaseInfo}
+                            released={selectedMetaItem.released}
+                            description={selectedMetaItem.description}
+                            trailerStreams={selectedMetaItem.trailerStreams}
+                        />
                         :
-                        null
+                        discover.catalog !== null && discover.catalog.content.type === 'Loading' ?
+                            <div className={styles['meta-preview-container']} />
+                            :
+                            null
                 }
             </div>
             {
-                inputsModalOpen ?
+                inputsModalOpen && discover.default_request ?
                     <ModalDialog title={'Catalog filters'} className={styles['selectable-inputs-modal-container']} onCloseRequest={closeInputsModal}>
                         {selectInputs.map(({ title, isRequired, options, selected, renderLabelText, onSelect }, index) => (
                             <div key={index} className={styles['selectable-input-container']}>
@@ -204,8 +194,8 @@ const Discover = ({ urlParams, queryParams }) => {
                     null
             }
             {
-                addonModalOpen && discover.catalog_resource !== null ?
-                    <AddonDetailsModal transportUrl={discover.catalog_resource.request.base} onCloseRequest={closeAddonModal} />
+                addonModalOpen && discover.catalog !== null ?
+                    <AddonDetailsModal transportUrl={discover.catalog.request.base} onCloseRequest={closeAddonModal} />
                     :
                     null
             }
