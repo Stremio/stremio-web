@@ -24,7 +24,12 @@ const useModelState = ({ init, action, ...args }) => {
     }, []);
     React.useLayoutEffect(() => {
         const onNewStateThrottled = throttle(() => {
-            setState(map(core.transport.getState(model)));
+            const state = core.transport.getState(model);
+            if (typeof map === 'function') {
+                setState(map(state));
+            } else {
+                setState(state);
+            }
         }, timeout);
         if (routeFocused) {
             core.transport.on('NewState', onNewStateThrottled);
