@@ -2,10 +2,11 @@
 
 const React = require('react');
 const { useServices } = require('stremio/services');
-const { deepLinking, useModelState } = require('stremio/common');
+const { useModelState } = require('stremio/common');
 
-const mapContinueWatchingPreviewState = (continue_watching_preview) => {
-    const library_items = continue_watching_preview.library_items.map((libItem) => ({
+const map = (continue_watching_preview) => ({
+    ...continue_watching_preview,
+    library_items: continue_watching_preview.library_items.map((libItem) => ({
         id: libItem._id,
         type: libItem.type,
         name: libItem.name,
@@ -15,22 +16,17 @@ const mapContinueWatchingPreviewState = (continue_watching_preview) => {
             libItem.state.timeOffset / libItem.state.duration
             :
             null,
-        deepLinks: deepLinking.withLibItem({ libItem })
-    }));
-    const deepLinks = { discover: '#/continuewatching' };
-    return { library_items, deepLinks };
-};
+        deepLinks: libItem.deep_links
+    })),
+    deepLinks: continue_watching_preview.deep_links
+});
 
 const useContinueWatchingPreview = () => {
     const { core } = useServices();
-    const initContinueWatchingPreviewState = React.useMemo(() => {
-        return mapContinueWatchingPreviewState(core.transport.getState('continue_watching_preview'));
+    const init = React.useMemo(() => {
+        return map(core.transport.getState('continue_watching_preview'));
     }, []);
-    return useModelState({
-        model: 'continue_watching_preview',
-        map: mapContinueWatchingPreviewState,
-        init: initContinueWatchingPreviewState
-    });
+    return useModelState({ model: 'continue_watching_preview', map, init });
 };
 
 module.exports = useContinueWatchingPreview;

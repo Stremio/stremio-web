@@ -1,61 +1,43 @@
 // Copyright (C) 2017-2020 Smart code 203358507
 
 const React = require('react');
-const { deepLinking, useModelState } = require('stremio/common');
+const { useModelState } = require('stremio/common');
 
-const initBoardState = () => ({
+const init = () => ({
     selected: null,
-    catalog_resources: []
+    catalogs: []
 });
 
-const mapBoardStateWithCtx = (board, ctx) => {
-    const selected = board.selected;
-    const catalog_resources = board.catalog_resources.map((catalog_resource) => {
-        const request = catalog_resource.request;
-        const content = catalog_resource.content.type === 'Ready' ?
+const map = (board) => ({
+    ...board,
+    catalogs: board.catalogs.map((catalog) => ({
+        ...catalog,
+        content: catalog.content.type === 'Ready' ?
             {
-                type: 'Ready',
-                content: catalog_resource.content.content.map((metaItem, _, metaItems) => ({
+                ...catalog.content,
+                content: catalog.content.content.map((metaItem, _, metaItems) => ({
                     type: metaItem.type,
                     name: metaItem.name,
                     poster: metaItem.poster,
                     posterShape: metaItems[0].posterShape,
-                    deepLinks: deepLinking.withMetaItem({ metaItem })
+                    deepLinks: metaItem.deep_links
                 }))
             }
             :
-            catalog_resource.content;
-        const origin = ctx.profile.addons.reduce((origin, addon) => {
-            if (addon.transportUrl === catalog_resource.request.base) {
-                return typeof addon.manifest.name === 'string' && addon.manifest.name.length > 0 ?
-                    addon.manifest.name
-                    :
-                    addon.manifest.id;
-            }
-
-            return origin;
-        }, catalog_resource.request.base);
-        const deepLinks = deepLinking.withCatalog({ request });
-        return { request, content, origin, deepLinks };
-    });
-    return { selected, catalog_resources };
-};
+            catalog.content,
+        deepLinks: catalog.deep_links
+    }))
+});
 
 const useBoard = () => {
-    const loadBoardAction = React.useMemo(() => ({
+    const action = React.useMemo(() => ({
         action: 'Load',
         args: {
             model: 'CatalogsWithExtra',
             args: { extra: [] }
         }
     }), []);
-    return useModelState({
-        model: 'board',
-        action: loadBoardAction,
-        mapWithCtx: mapBoardStateWithCtx,
-        init: initBoardState,
-        timeout: 1500
-    });
+    return useModelState({ model: 'board', timeout: 1500, action, init, map });
 };
 
 module.exports = useBoard;
