@@ -37,7 +37,7 @@ const map = (discover) => ({
                     released: new Date(typeof metaItem.released === 'string' ? metaItem.released : NaN),
                     description: metaItem.description,
                     trailerStreams: metaItem.trailerStreams,
-                    deep_links: metaItem.deep_links
+                    deepLinks: metaItem.deep_links
                 }))
             }
         }
