@@ -14,7 +14,7 @@ const MetaRow = ({ className, title, message, items, itemComponent, deepLinks })
     return (
         <div className={classnames(className, styles['meta-row-container'])}>
             {
-                (typeof title === 'string' && title.length > 0) || (deepLinks && typeof deepLinks.discover === 'string') ?
+                (typeof title === 'string' && title.length > 0) || (deepLinks && (typeof deepLinks.discover === 'string' || typeof deepLinks.library === 'string')) ?
                     <div className={styles['header-container']}>
                         {
                             typeof title === 'string' && title.length > 0 ?
@@ -23,8 +23,8 @@ const MetaRow = ({ className, title, message, items, itemComponent, deepLinks })
                                 null
                         }
                         {
-                            deepLinks && typeof deepLinks.discover === 'string' ?
-                                <Button className={styles['see-all-container']} title={'SEE ALL'} href={deepLinks.discover}>
+                            deepLinks && (typeof deepLinks.discover === 'string' || typeof deepLinks.library === 'string') ?
+                                <Button className={styles['see-all-container']} title={'SEE ALL'} href={deepLinks.discover || deepLinks.library}>
                                     <div className={styles['label']}>SEE ALL</div>
                                     <Icon className={styles['icon']} icon={'ic_arrow_thin_right'} />
                                 </Button>
@@ -72,7 +72,8 @@ MetaRow.propTypes = {
     })),
     itemComponent: PropTypes.elementType,
     deepLinks: PropTypes.shape({
-        discover: PropTypes.string
+        discover: PropTypes.string,
+        library: PropTypes.string
     })
 };
 
