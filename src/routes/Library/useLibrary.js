@@ -1,18 +1,20 @@
 // Copyright (C) 2017-2020 Smart code 203358507
 
 const React = require('react');
-const { CONSTANTS, deepLinking, useModelState, comparatorWithPriorities } = require('stremio/common');
+const { useModelState } = require('stremio/common');
 
-const initLibraryState = () => ({
+const init = () => ({
     selected: null,
-    type_names: [],
-    library_items: []
+    selectable: {
+        types: [],
+        sorts: []
+    },
+    catalog: []
 });
 
-const mapLibraryState = (library) => {
-    const selected = library.selected;
-    const type_names = library.type_names.sort(comparatorWithPriorities(CONSTANTS.TYPE_PRIORITIES));
-    const library_items = library.library_items.map((libItem) => ({
+const map = (library) => ({
+    ...library,
+    catalog: library.catalog.map((libItem) => ({
         id: libItem._id,
         type: libItem.type,
         name: libItem.name,
@@ -22,28 +24,24 @@ const mapLibraryState = (library) => {
             libItem.state.timeOffset / libItem.state.duration
             :
             null,
-        deepLinks: deepLinking.withLibItem({ libItem })
-    }));
-    return { selected, type_names, library_items };
-};
+        deepLinks: libItem.deepLinks
+    }))
+});
 
-const useLibrary = (libraryModel, urlParams, queryParams) => {
-    const loadLibraryAction = React.useMemo(() => ({
+const useLibrary = (model, urlParams, queryParams) => {
+    const action = React.useMemo(() => ({
         action: 'Load',
         args: {
             model: 'LibraryWithFilters',
             args: {
-                type_name: typeof urlParams.type === 'string' ? urlParams.type : null,
-                sort: queryParams.has('sort') ? queryParams.get('sort') : 'lastwatched'
+                request: {
+                    type: typeof urlParams.type === 'string' ? urlParams.type : null,
+                    sort: queryParams.has('sort') ? queryParams.get('sort') : undefined
+                }
             }
         }
     }), [urlParams, queryParams]);
-    return useModelState({
-        model: libraryModel,
-        action: loadLibraryAction,
-        map: mapLibraryState,
-        init: initLibraryState
-    });
+    return useModelState({ model, action, map, init });
 };
 
 module.exports = useLibrary;

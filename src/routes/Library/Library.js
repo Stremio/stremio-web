@@ -9,18 +9,15 @@ const useLibrary = require('./useLibrary');
 const useSelectableInputs = require('./useSelectableInputs');
 const styles = require('./styles');
 
-const Library = ({ model, route, urlParams, queryParams }) => {
+const Library = ({ model, urlParams, queryParams }) => {
     const profile = useProfile();
     const library = useLibrary(model, urlParams, queryParams);
-    const [typeSelect, sortSelect] = useSelectableInputs(route, library);
-    const available = React.useMemo(() => {
-        return route === 'continuewatching' || profile.auth !== null;
-    }, []);
+    const [typeSelect, sortSelect] = useSelectableInputs(library);
     return (
-        <MainNavBars className={styles['library-container']} route={route}>
+        <MainNavBars className={styles['library-container']} route={model}>
             <div className={styles['library-content']}>
                 {
-                    available && library.type_names.length > 0 ?
+                    model === 'continue_watching' || profile.auth !== null ?
                         <div className={styles['selectable-inputs-container']}>
                             <Multiselect {...typeSelect} className={styles['select-input-container']} />
                             <Multiselect {...sortSelect} className={styles['select-input-container']} />
@@ -29,7 +26,7 @@ const Library = ({ model, route, urlParams, queryParams }) => {
                         null
                 }
                 {
-                    !available ?
+                    model === 'library' && profile.auth === null ?
                         <div className={classnames(styles['message-container'], styles['no-user-message-container'])}>
                             <Image
                                 className={styles['image']}
@@ -42,41 +39,31 @@ const Library = ({ model, route, urlParams, queryParams }) => {
                             <div className={styles['message-label']}>Library is only available for logged in users!</div>
                         </div>
                         :
-                        library.type_names.length === 0 ?
+                        library.selected === null ?
                             <div className={styles['message-container']}>
                                 <Image
                                     className={styles['image']}
                                     src={'/images/empty.png'}
                                     alt={' '}
                                 />
-                                <div className={styles['message-label']}>Empty {route === 'continuewatching' ? 'Continue Watching' : 'Library'}</div>
+                                <div className={styles['message-label']}>{model === 'library' ? 'Library' : 'Continue Watching'} not loaded!</div>
                             </div>
                             :
-                            library.selected === null ?
+                            library.catalog.length === 0 ?
                                 <div className={styles['message-container']}>
                                     <Image
                                         className={styles['image']}
                                         src={'/images/empty.png'}
                                         alt={' '}
                                     />
-                                    <div className={styles['message-label']}>{route === 'continuewatching' ? 'Continue Watching' : 'Library'} not loaded!</div>
+                                    <div className={styles['message-label']}>Empty {model === 'library' ? 'Library' : 'Continue Watching'}</div>
                                 </div>
                                 :
-                                library.library_items.length === 0 ?
-                                    <div className={styles['message-container']}>
-                                        <Image
-                                            className={styles['image']}
-                                            src={'/images/empty.png'}
-                                            alt={' '}
-                                        />
-                                        <div className={styles['message-label']}>There are no items for the selected type!</div>
-                                    </div>
-                                    :
-                                    <div className={styles['meta-items-container']}>
-                                        {library.library_items.map((libItem, index) => (
-                                            <LibItem {...libItem} key={index} />
-                                        ))}
-                                    </div>
+                                <div className={styles['meta-items-container']}>
+                                    {library.catalog.map((libItem, index) => (
+                                        <LibItem {...libItem} key={index} />
+                                    ))}
+                                </div>
                 }
             </div>
         </MainNavBars>
@@ -85,7 +72,6 @@ const Library = ({ model, route, urlParams, queryParams }) => {
 
 Library.propTypes = {
     model: PropTypes.oneOf(['library', 'continue_watching']),
-    route: PropTypes.oneOf(['library', 'continuewatching']),
     urlParams: PropTypes.shape({
         type: PropTypes.string
     }),
@@ -93,24 +79,23 @@ Library.propTypes = {
 };
 
 module.exports = ({ urlParams, queryParams }) => {
-    const [model, route] = React.useMemo(() => {
+    const model = React.useMemo(() => {
         return typeof urlParams.path === 'string' ?
             urlParams.path.match(routesRegexp.library.regexp) ?
-                ['library', 'library']
+                'library'
                 :
                 urlParams.path.match(routesRegexp.continuewatching.regexp) ?
-                    ['continue_watching', 'continuewatching']
+                    'continue_watching'
                     :
-                    [null, null]
+                    null
             :
-            [null, null];
+            null;
     }, [urlParams.path]);
     if (typeof model === 'string') {
         return (
             <Library
                 key={model}
                 model={model}
-                route={route}
                 urlParams={urlParams}
                 queryParams={queryParams}
             />

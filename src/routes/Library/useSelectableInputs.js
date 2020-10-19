@@ -2,49 +2,41 @@
 
 const React = require('react');
 
-const SORT_OPTIONS = [
-    { label: 'Recent', value: 'lastwatched' },
-    { label: 'A-Z', value: 'name' },
-    { label: 'Watched', value: 'timeswatched' },
-];
-
-const mapSelectableInputs = (route, library) => {
+const mapSelectableInputs = (library) => {
     const typeSelect = {
         title: 'Select type',
-        selected: library.selected !== null ?
-            [JSON.stringify(library.selected.type_name)]
-            :
-            [],
-        options: [{ label: 'All', value: JSON.stringify(null) }]
-            .concat(library.type_names.map((type) => ({ label: type, value: JSON.stringify(type) }))),
-        renderLabelText: () => {
-            return library.selected.type_name === null ? 'All' : library.selected.type_name;
-        },
+        options: library.selectable.types
+            .map(({ type, deep_links }) => ({
+                value: deep_links.library,
+                label: type === null ? 'All' : type
+            })),
+        selected: library.selectable.types
+            .filter(({ selected }) => selected)
+            .map(({ deep_links }) => deep_links.library),
         onSelect: (event) => {
-            const type = JSON.parse(event.value);
-            const queryParams = new URLSearchParams(library.selected !== null ? [['sort', library.selected.sort]] : []);
-            window.location = `#/${route}${type !== null ? `/${encodeURIComponent(type)}` : ''}?${queryParams.toString()}`;
+            window.location = event.value;
         }
     };
     const sortSelect = {
         title: 'Select sort',
-        selected: library.selected !== null ?
-            [library.selected.sort]
-            :
-            [],
-        options: SORT_OPTIONS,
+        options: library.selectable.sorts
+            .map(({ sort, deep_links }) => ({
+                value: deep_links.library,
+                label: sort
+            })),
+        selected: library.selectable.sorts
+            .filter(({ selected }) => selected)
+            .map(({ deep_links }) => deep_links.library),
         onSelect: (event) => {
-            const type = library.selected !== null ? library.selected.type_name : null;
-            const queryParams = new URLSearchParams([['sort', event.value]]);
-            window.location = `#/${route}${type !== null ? `/${encodeURIComponent(type)}` : ''}?${queryParams.toString()}`;
+            window.location = event.value;
         }
     };
     return [typeSelect, sortSelect];
 };
 
-const useSelectableInputs = (route, library) => {
+const useSelectableInputs = (library) => {
     const selectableInputs = React.useMemo(() => {
-        return mapSelectableInputs(route, library);
+        return mapSelectableInputs(library);
     }, [library]);
     return selectableInputs;
 };
