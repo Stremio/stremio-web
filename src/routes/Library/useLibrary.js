@@ -24,7 +24,7 @@ const map = (library) => ({
             libItem.state.timeOffset / libItem.state.duration
             :
             null,
-        deepLinks: libItem.deepLinks
+        deepLinks: libItem.deep_links
     }))
 });
 
