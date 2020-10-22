@@ -24,7 +24,11 @@ const App = () => {
     const [shellInitialized, setShellInitialized] = React.useState(false);
     React.useEffect(() => {
         const onCoreStateChanged = () => {
-            setCoreInitialized(services.core.active);
+            if (services.core.error) {
+                alert(services.core.error);
+            } else if (services.core.active) {
+                setCoreInitialized(services.core.active);
+            }
         };
         const onShellStateChanged = () => {
             setShellInitialized(services.shell.active || services.shell.error instanceof Error);
