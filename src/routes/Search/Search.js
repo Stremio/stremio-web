@@ -38,7 +38,7 @@ const Search = ({ queryParams }) => {
                             </div>
                         </div>
                         :
-                        search.catalog_resources.length === 0 ?
+                        search.catalogs.length === 0 ?
                             <div className={styles['message-container']}>
                                 <Image
                                     className={styles['image']}
@@ -48,12 +48,12 @@ const Search = ({ queryParams }) => {
                                 <div className={styles['message-label']}>No addons were requested for catalogs!</div>
                             </div>
                             :
-                            search.catalog_resources.map((catalog_resource, index) => {
-                                const title = `${catalog_resource.origin} - ${catalog_resource.request.path.id} ${catalog_resource.request.path.type_name}`;
-                                switch (catalog_resource.content.type) {
+                            search.catalogs.map((catalog, index) => {
+                                const title = `${catalog.addon_name} - ${catalog.request.path.id} ${catalog.request.path.type}`;
+                                switch (catalog.content.type) {
                                     case 'Ready': {
-                                        const posterShape = catalog_resource.content.content.length > 0 ?
-                                            catalog_resource.content.content[0].posterShape
+                                        const posterShape = catalog.content.content.length > 0 ?
+                                            catalog.content.content[0].posterShape
                                             :
                                             null;
                                         return (
@@ -61,21 +61,29 @@ const Search = ({ queryParams }) => {
                                                 key={index}
                                                 className={classnames(styles['search-row'], styles['search-row-poster'], { [styles[`search-row-${posterShape}`]]: typeof posterShape === 'string' })}
                                                 title={title}
-                                                items={catalog_resource.content.content}
+                                                items={catalog.content.content}
                                                 itemComponent={MetaItem}
-                                                deepLinks={catalog_resource.deepLinks}
+                                                deepLinks={catalog.deepLinks}
                                             />
                                         );
                                     }
                                     case 'Err': {
-                                        const message = `Error(${catalog_resource.content.content.type})`;
+                                        const type = `Error(${catalog.content.content.type})`;
+                                        const description = catalog.content.content.type === 'UnexpectedResponse' ?
+                                            catalog.content.content.content
+                                            :
+                                            catalog.content.content.type === 'Env' ?
+                                                catalog.content.content.content.message
+                                                :
+                                                '';
+                                        const message = `${type}${description !== null ? ` ${description}` : null}`;
                                         return (
                                             <MetaRow
                                                 key={index}
                                                 className={styles['search-row']}
                                                 title={title}
                                                 message={message}
-                                                deepLinks={catalog_resource.deepLinks}
+                                                deepLinks={catalog.deepLinks}
                                             />
                                         );
                                     }
@@ -85,7 +93,7 @@ const Search = ({ queryParams }) => {
                                                 key={index}
                                                 className={classnames(styles['search-row'], styles['search-row-poster'])}
                                                 title={title}
-                                                deepLinks={catalog_resource.deepLinks}
+                                                deepLinks={catalog.deepLinks}
                                             />
                                         );
                                     }

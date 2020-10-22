@@ -1,48 +1,36 @@
 // Copyright (C) 2017-2020 Smart code 203358507
 
 const React = require('react');
-const { deepLinking, useModelState } = require('stremio/common');
+const { useModelState } = require('stremio/common');
 
-const initSearchState = () => ({
+const init = () => ({
     selected: null,
-    catalog_resources: []
+    catalogs: []
 });
 
-const mapSearchStateWithCtx = (search, ctx) => {
-    const selected = search.selected;
-    const catalog_resources = search.catalog_resources.map((catalog_resource) => {
-        const request = catalog_resource.request;
-        const content = catalog_resource.content.type === 'Ready' ?
+const map = (search) => ({
+    ...search,
+    catalogs: search.catalogs.map((catalog) => ({
+        ...catalog,
+        content: catalog.content.type === 'Ready' ?
             {
-                type: 'Ready',
-                content: catalog_resource.content.content.map((metaItem, _, metaItems) => ({
+                ...catalog.content,
+                content: catalog.content.content.map((metaItem, _, metaItems) => ({
                     type: metaItem.type,
                     name: metaItem.name,
                     poster: metaItem.poster,
                     posterShape: metaItems[0].posterShape,
-                    deepLinks: deepLinking.withMetaItem({ metaItem })
+                    deepLinks: metaItem.deep_links
                 }))
             }
             :
-            catalog_resource.content;
-        const origin = ctx.profile.addons.reduce((origin, addon) => {
-            if (addon.transportUrl === catalog_resource.request.base) {
-                return typeof addon.manifest.name === 'string' && addon.manifest.name.length > 0 ?
-                    addon.manifest.name
-                    :
-                    addon.manifest.id;
-            }
-
-            return origin;
-        }, catalog_resource.request.base);
-        const deepLinks = deepLinking.withCatalog({ request });
-        return { request, content, origin, deepLinks };
-    });
-    return { selected, catalog_resources };
-};
+            catalog.content,
+        deepLinks: catalog.deep_links
+    }))
+});
 
 const useSearch = (queryParams) => {
-    const loadSearchAction = React.useMemo(() => {
+    const action = React.useMemo(() => {
         if (queryParams.has('search') && queryParams.get('search').length > 0) {
             return {
                 action: 'Load',
@@ -61,12 +49,7 @@ const useSearch = (queryParams) => {
             };
         }
     }, [queryParams]);
-    return useModelState({
-        model: 'search',
-        action: loadSearchAction,
-        mapWithCtx: mapSearchStateWithCtx,
-        init: initSearchState
-    });
+    return useModelState({ model: 'search', action, map, init });
 };
 
 module.exports = useSearch;
