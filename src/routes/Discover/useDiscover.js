@@ -11,11 +11,11 @@ const init = () => ({
         types: [],
         catalogs: [],
         extra: [],
-        prev_page: null,
-        next_page: null
+        prevPage: null,
+        nextPage: null
     },
     catalog: null,
-    default_request: null,
+    defaultRequest: null,
     page: 1,
 });
 
@@ -37,7 +37,7 @@ const map = (discover) => ({
                     released: new Date(typeof metaItem.released === 'string' ? metaItem.released : NaN),
                     description: metaItem.description,
                     trailerStreams: metaItem.trailerStreams,
-                    deepLinks: metaItem.deep_links
+                    deepLinks: metaItem.deepLinks
                 }))
             }
         }
@@ -71,13 +71,13 @@ const useDiscover = (urlParams, queryParams) => {
             }
         } else {
             const discover = core.transport.getState('discover');
-            if (discover.default_request !== null) {
+            if (discover.defaultRequest !== null) {
                 return {
                     action: 'Load',
                     args: {
                         model: 'CatalogWithFilters',
                         args: {
-                            request: discover.default_request
+                            request: discover.defaultRequest
                         }
                     }
                 };

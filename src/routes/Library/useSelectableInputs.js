@@ -6,13 +6,13 @@ const mapSelectableInputs = (library) => {
     const typeSelect = {
         title: 'Select type',
         options: library.selectable.types
-            .map(({ type, deep_links }) => ({
-                value: deep_links.library,
+            .map(({ type, deepLinks }) => ({
+                value: deepLinks.library,
                 label: type === null ? 'All' : type
             })),
         selected: library.selectable.types
             .filter(({ selected }) => selected)
-            .map(({ deep_links }) => deep_links.library),
+            .map(({ deepLinks }) => deepLinks.library),
         onSelect: (event) => {
             window.location = event.value;
         }
@@ -20,13 +20,13 @@ const mapSelectableInputs = (library) => {
     const sortSelect = {
         title: 'Select sort',
         options: library.selectable.sorts
-            .map(({ sort, deep_links }) => ({
-                value: deep_links.library,
+            .map(({ sort, deepLinks }) => ({
+                value: deepLinks.library,
                 label: sort
             })),
         selected: library.selectable.sorts
             .filter(({ selected }) => selected)
-            .map(({ deep_links }) => deep_links.library),
+            .map(({ deepLinks }) => deepLinks.library),
         onSelect: (event) => {
             window.location = event.value;
         }

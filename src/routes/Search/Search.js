@@ -49,7 +49,7 @@ const Search = ({ queryParams }) => {
                             </div>
                             :
                             search.catalogs.map((catalog, index) => {
-                                const title = `${catalog.addon_name} - ${catalog.request.path.id} ${catalog.request.path.type}`;
+                                const title = `${catalog.addonName} - ${catalog.request.path.id} ${catalog.request.path.type}`;
                                 switch (catalog.content.type) {
                                     case 'Ready': {
                                         const posterShape = catalog.content.content.length > 0 ?

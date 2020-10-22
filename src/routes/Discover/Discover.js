@@ -54,7 +54,7 @@ const Discover = ({ urlParams, queryParams }) => {
             <div className={styles['discover-content']}>
                 <div className={styles['catalog-container']}>
                     {
-                        discover.default_request ?
+                        discover.defaultRequest ?
                             <div className={styles['selectable-inputs-container']}>
                                 {selectInputs.map(({ title, options, selected, renderLabelText, onSelect }, index) => (
                                     <Multiselect
@@ -82,7 +82,7 @@ const Discover = ({ urlParams, queryParams }) => {
                             null
                     }
                     {
-                        discover.catalog !== null && typeof discover.catalog.addon_name !== 'string' ?
+                        discover.catalog !== null && typeof discover.catalog.addonName !== 'string' ?
                             <div className={styles['missing-addon-warning-container']}>
                                 <div className={styles['warning-label']}>Addon is not installed. Install now?</div>
                                 <Button className={styles['install-button']} title={'Install addon'} onClick={openAddonModal}>
@@ -172,7 +172,7 @@ const Discover = ({ urlParams, queryParams }) => {
                 }
             </div>
             {
-                inputsModalOpen && discover.default_request ?
+                inputsModalOpen && discover.defaultRequest ?
                     <ModalDialog title={'Catalog filters'} className={styles['selectable-inputs-modal-container']} onCloseRequest={closeInputsModal}>
                         {selectInputs.map(({ title, isRequired, options, selected, renderLabelText, onSelect }, index) => (
                             <div key={index} className={styles['selectable-input-container']}>

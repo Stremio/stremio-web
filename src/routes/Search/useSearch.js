@@ -20,12 +20,11 @@ const map = (search) => ({
                     name: metaItem.name,
                     poster: metaItem.poster,
                     posterShape: metaItems[0].posterShape,
-                    deepLinks: metaItem.deep_links
+                    deepLinks: metaItem.deepLinks
                 }))
             }
             :
-            catalog.content,
-        deepLinks: catalog.deep_links
+            catalog.content
     }))
 });
 

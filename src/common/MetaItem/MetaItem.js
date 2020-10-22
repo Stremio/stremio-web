@@ -32,11 +32,11 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, playI
             typeof deepLinks.player === 'string' ?
                 deepLinks.player
                 :
-                typeof deepLinks.meta_details_streams === 'string' ?
-                    deepLinks.meta_details_streams
+                typeof deepLinks.metaDetailsStreams === 'string' ?
+                    deepLinks.metaDetailsStreams
                     :
-                    typeof deepLinks.meta_details_videos === 'string' ?
-                        deepLinks.meta_details_videos
+                    typeof deepLinks.metaDetailsVideos === 'string' ?
+                        deepLinks.metaDetailsVideos
                         :
                         null
             :
@@ -143,8 +143,8 @@ MetaItem.propTypes = {
     progress: PropTypes.number,
     options: PropTypes.array,
     deepLinks: PropTypes.shape({
-        meta_details_videos: PropTypes.string,
-        meta_details_streams: PropTypes.string,
+        metaDetailsVideos: PropTypes.string,
+        metaDetailsStreams: PropTypes.string,
         player: PropTypes.string
     }),
     dataset: PropTypes.object,

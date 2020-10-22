@@ -19,7 +19,7 @@ const LibItem = ({ id, ...props }) => {
                 case 'play':
                     return props.deepLinks && typeof props.deepLinks.player === 'string';
                 case 'details':
-                    return props.deepLinks && (typeof props.deepLinks.meta_details_videos === 'string' || typeof props.deepLinks.meta_details_streams === 'string');
+                    return props.deepLinks && (typeof props.deepLinks.metaDetailsVideos === 'string' || typeof props.deepLinks.metaDetailsStreams === 'string');
                 case 'dismiss':
                     return typeof id === 'string' && props.progress !== null && !isNaN(props.progress);
             }
@@ -41,10 +41,10 @@ const LibItem = ({ id, ...props }) => {
                 }
                 case 'details': {
                     if (props.deepLinks) {
-                        if (typeof props.deepLinks.meta_details_videos === 'string') {
-                            window.location = props.deepLinks.meta_details_videos;
-                        } else if (typeof props.deepLinks.meta_details_streams === 'string') {
-                            window.location = props.deepLinks.meta_details_streams;
+                        if (typeof props.deepLinks.metaDetailsVideos === 'string') {
+                            window.location = props.deepLinks.metaDetailsVideos;
+                        } else if (typeof props.deepLinks.metaDetailsStreams === 'string') {
+                            window.location = props.deepLinks.metaDetailsStreams;
                         }
                     }
 
@@ -79,8 +79,8 @@ LibItem.propTypes = {
     id: PropTypes.string,
     progress: PropTypes.number,
     deepLinks: PropTypes.shape({
-        meta_details_videos: PropTypes.string,
-        meta_details_streams: PropTypes.string,
+        metaDetailsVideos: PropTypes.string,
+        metaDetailsStreams: PropTypes.string,
         player: PropTypes.string
     }),
     optionOnSelect: PropTypes.func

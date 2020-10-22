@@ -6,13 +6,13 @@ const mapSelectableInputs = (discover) => {
     const typeSelect = {
         title: 'Select type',
         options: discover.selectable.types
-            .map(({ type, deep_links }) => ({
-                value: deep_links.discover,
+            .map(({ type, deepLinks }) => ({
+                value: deepLinks.discover,
                 label: type
             })),
         selected: discover.selectable.types
             .filter(({ selected }) => selected)
-            .map(({ deep_links }) => deep_links.discover),
+            .map(({ deepLinks }) => deepLinks.discover),
         onSelect: (event) => {
             window.location = event.value;
         }
@@ -20,28 +20,28 @@ const mapSelectableInputs = (discover) => {
     const catalogSelect = {
         title: 'Select catalog',
         options: discover.selectable.catalogs
-            .map(({ catalog, addon_name, deep_links }) => ({
-                value: deep_links.discover,
+            .map(({ catalog, addonName, deepLinks }) => ({
+                value: deepLinks.discover,
                 label: catalog,
-                title: `${catalog} (${addon_name})`
+                title: `${catalog} (${addonName})`
             })),
         selected: discover.selectable.catalogs
             .filter(({ selected }) => selected)
-            .map(({ deep_links }) => deep_links.discover),
+            .map(({ deepLinks }) => deepLinks.discover),
         onSelect: (event) => {
             window.location = event.value;
         }
     };
-    const extraSelects = discover.selectable.extra.map(({ name, is_required, options }) => ({
+    const extraSelects = discover.selectable.extra.map(({ name, isRequired, options }) => ({
         title: `Select ${name}`,
-        isRequired: is_required,
-        options: options.map(({ value, deep_links }) => ({
+        isRequired: isRequired,
+        options: options.map(({ value, deepLinks }) => ({
             label: typeof value === 'string' ? value : 'None',
-            value: deep_links.discover
+            value: deepLinks.discover
         })),
         selected: options
             .filter(({ selected }) => selected)
-            .map(({ deep_links }) => deep_links.discover),
+            .map(({ deepLinks }) => deepLinks.discover),
         renderLabelText: options.some(({ selected, value }) => selected && value === null) ?
             () => `Select ${name}`
             :
@@ -50,15 +50,15 @@ const mapSelectableInputs = (discover) => {
             window.location = event.value;
         }
     }));
-    const paginationInput = discover.selectable.prev_page || discover.selectable.next_page ?
+    const paginationInput = discover.selectable.prevPage || discover.selectable.nextPage ?
         {
             label: discover.page.toString(),
             onSelect: (event) => {
-                if (event.value === 'prev' && discover.selectable.prev_page) {
-                    window.location = discover.selectable.prev_page.deep_links.discover;
+                if (event.value === 'prev' && discover.selectable.prevPage) {
+                    window.location = discover.selectable.prevPage.deepLinks.discover;
                 }
-                if (event.value === 'next' && discover.selectable.next_page) {
-                    window.location = discover.selectable.next_page.deep_links.discover;
+                if (event.value === 'next' && discover.selectable.nextPage) {
+                    window.location = discover.selectable.nextPage.deepLinks.discover;
                 }
             }
         }

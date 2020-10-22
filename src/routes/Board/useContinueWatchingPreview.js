@@ -4,9 +4,9 @@ const React = require('react');
 const { useServices } = require('stremio/services');
 const { useModelState } = require('stremio/common');
 
-const map = (continue_watching_preview) => ({
-    ...continue_watching_preview,
-    library_items: continue_watching_preview.library_items.map((libItem) => ({
+const map = (continueWatchingPreview) => ({
+    ...continueWatchingPreview,
+    libraryItems: continueWatchingPreview.libraryItems.map((libItem) => ({
         id: libItem._id,
         type: libItem.type,
         name: libItem.name,
@@ -17,9 +17,8 @@ const map = (continue_watching_preview) => ({
             :
             null,
         playIcon: true,
-        deepLinks: libItem.deep_links
-    })),
-    deepLinks: continue_watching_preview.deep_links
+        deepLinks: libItem.deepLinks
+    }))
 });
 
 const useContinueWatchingPreview = () => {

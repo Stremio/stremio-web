@@ -14,11 +14,11 @@ const Board = () => {
         <MainNavBars className={styles['board-container']} route={'board'}>
             <div className={styles['board-content']}>
                 {
-                    continueWatchingPreview.library_items.length > 0 ?
+                    continueWatchingPreview.libraryItems.length > 0 ?
                         <MetaRow
                             className={classnames(styles['board-row'], styles['continue-watching-row'])}
                             title={'Continue Watching'}
-                            items={continueWatchingPreview.library_items}
+                            items={continueWatchingPreview.libraryItems}
                             itemComponent={LibItem}
                             deepLinks={continueWatchingPreview.deepLinks}
                         />
@@ -26,7 +26,7 @@ const Board = () => {
                         null
                 }
                 {board.catalogs.map((catalog, index) => {
-                    const title = `${catalog.addon_name} - ${catalog.request.path.id} ${catalog.request.path.type}`;
+                    const title = `${catalog.addonName} - ${catalog.request.path.id} ${catalog.request.path.type}`;
                     switch (catalog.content.type) {
                         case 'Ready': {
                             const posterShape = catalog.content.content.length > 0 ?
