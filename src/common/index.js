@@ -32,11 +32,11 @@ const useDeepEqualEffect = require('./useDeepEqualEffect');
 const useDeepEqualMemo = require('./useDeepEqualMemo');
 const useDeepEqualState = require('./useDeepEqualState');
 const useFullscreen = require('./useFullscreen');
-const useInLibrary = require('./useInLibrary');
 const useLiveRef = require('./useLiveRef');
 const useModelState = require('./useModelState');
 const useProfile = require('./useProfile');
 const useStreamingServer = require('./useStreamingServer');
+const useToggleInLibrary = require('./useToggleInLibrary');
 
 module.exports = {
     AddonDetailsModal,
@@ -73,9 +73,9 @@ module.exports = {
     useDeepEqualMemo,
     useDeepEqualState,
     useFullscreen,
-    useInLibrary,
     useLiveRef,
     useModelState,
     useProfile,
     useStreamingServer,
+    useToggleInLibrary,
 };
