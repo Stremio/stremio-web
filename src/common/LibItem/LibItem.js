@@ -68,7 +68,6 @@ const LibItem = ({ id, ...props }) => {
     }, [id, props.deepLinks, props.optionOnSelect]);
     return (
         <MetaItem
-            playIcon={props.progress !== null && !isNaN(props.progress)}
             {...props}
             options={options}
             optionOnSelect={optionOnSelect}

@@ -16,6 +16,7 @@ const map = (continue_watching_preview) => ({
             libItem.state.timeOffset / libItem.state.duration
             :
             null,
+        playIcon: true,
         deepLinks: libItem.deep_links
     })),
     deepLinks: continue_watching_preview.deep_links
