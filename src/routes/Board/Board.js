@@ -32,7 +32,7 @@ const Board = () => {
                             const posterShape = catalog.content.content.length > 0 ?
                                 catalog.content.content[0].posterShape
                                 :
-                                null;
+                                '';
                             return (
                                 <MetaRow
                                     key={index}
