@@ -27,17 +27,8 @@ const map = (discover) => ({
             content: {
                 ...discover.catalog.content,
                 content: discover.catalog.content.content.map((metaItem) => ({
-                    type: metaItem.type,
-                    name: metaItem.name,
-                    logo: metaItem.logo,
-                    poster: metaItem.poster,
-                    posterShape: metaItem.posterShape === 'landscape' ? 'square' : metaItem.posterShape,
-                    runtime: metaItem.runtime,
-                    releaseInfo: metaItem.releaseInfo,
+                    ...metaItem,
                     released: new Date(typeof metaItem.released === 'string' ? metaItem.released : NaN),
-                    description: metaItem.description,
-                    trailerStreams: metaItem.trailerStreams,
-                    deepLinks: metaItem.deepLinks
                 }))
             }
         }

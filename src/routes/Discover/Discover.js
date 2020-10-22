@@ -4,50 +4,41 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('@stremio/stremio-icons/dom');
-const { AddonDetailsModal, Button, MainNavBars, MetaItem, Image, MetaPreview, Multiselect, ModalDialog, PaginationInput, CONSTANTS, useBinaryState, useDeepEqualEffect } = require('stremio/common');
+const { AddonDetailsModal, Button, MainNavBars, MetaItem, Image, MetaPreview, Multiselect, ModalDialog, PaginationInput, CONSTANTS, useBinaryState, useDeepEqualEffect, useToggleInLibrary } = require('stremio/common');
 const useDiscover = require('./useDiscover');
 const useSelectableInputs = require('./useSelectableInputs');
 const styles = require('./styles');
-
-const getMetaItemAtIndex = (catalog, index) => {
-    return index !== null &&
-        isFinite(index) &&
-        catalog !== null &&
-        catalog.content.type === 'Ready' &&
-        catalog.content.content[index] ?
-        catalog.content.content[index]
-        :
-        null;
-};
 
 const Discover = ({ urlParams, queryParams }) => {
     const discover = useDiscover(urlParams, queryParams);
     const [selectInputs, paginationInput] = useSelectableInputs(discover);
     const [inputsModalOpen, openInputsModal, closeInputsModal] = useBinaryState(false);
     const [addonModalOpen, openAddonModal, closeAddonModal] = useBinaryState(false);
-    const [selectedMetaItem, setSelectedMetaItem] = React.useState(() => {
-        return getMetaItemAtIndex(discover.catalog, 0);
-    });
+    const [selectedMetaItemIndex, setSelectedMetaItemIndex] = React.useState(0);
+    const selectedMetaItem = React.useMemo(() => {
+        return discover.catalog !== null &&
+            discover.catalog.content.type === 'Ready' &&
+            discover.catalog.content.content[selectedMetaItemIndex] ?
+            discover.catalog.content.content[selectedMetaItemIndex]
+            :
+            null;
+    }, [discover.catalog, selectedMetaItemIndex]);
+    const toggleInLibrary = useToggleInLibrary(selectedMetaItem);
     const metaItemsOnFocusCapture = React.useCallback((event) => {
         if (event.target.dataset.index !== null && !isNaN(event.target.dataset.index)) {
-            const metaItem = getMetaItemAtIndex(discover.catalog, event.target.dataset.index);
-            setSelectedMetaItem(metaItem);
+            setSelectedMetaItemIndex(parseInt(event.target.dataset.index));
         }
-    }, [discover.catalog]);
+    }, []);
     const metaItemOnClick = React.useCallback((event) => {
-        const metaItem = getMetaItemAtIndex(discover.catalog, event.currentTarget.dataset.index);
-        if (metaItem !== selectedMetaItem) {
+        if (event.currentTarget.dataset.index !== selectedMetaItemIndex.toString()) {
             event.preventDefault();
             event.currentTarget.focus();
         }
-    }, [discover.catalog, selectedMetaItem]);
-    React.useLayoutEffect(() => {
-        const metaItem = getMetaItemAtIndex(discover.catalog, 0);
-        setSelectedMetaItem(metaItem);
-    }, [discover.catalog]);
+    }, [selectedMetaItemIndex]);
     useDeepEqualEffect(() => {
         closeInputsModal();
         closeAddonModal();
+        setSelectedMetaItemIndex(0);
     }, [discover.selected]);
     return (
         <MainNavBars className={styles['discover-container']} route={'discover'}>
@@ -136,12 +127,12 @@ const Discover = ({ urlParams, queryParams }) => {
                                         {discover.catalog.content.content.map((metaItem, index) => (
                                             <MetaItem
                                                 key={index}
-                                                className={classnames({ 'selected': selectedMetaItem === metaItem })}
+                                                className={classnames({ 'selected': selectedMetaItemIndex === index })}
                                                 type={metaItem.type}
                                                 name={metaItem.name}
                                                 poster={metaItem.poster}
                                                 posterShape={metaItem.posterShape}
-                                                playIcon={selectedMetaItem === metaItem}
+                                                playIcon={selectedMetaItemIndex === index}
                                                 deepLinks={metaItem.deepLinks}
                                                 data-index={index}
                                                 onClick={metaItemOnClick}
@@ -163,6 +154,8 @@ const Discover = ({ urlParams, queryParams }) => {
                             released={selectedMetaItem.released}
                             description={selectedMetaItem.description}
                             trailerStreams={selectedMetaItem.trailerStreams}
+                            inLibrary={selectedMetaItem.inLibrary}
+                            toggleInLibrary={toggleInLibrary}
                         />
                         :
                         discover.catalog !== null && discover.catalog.content.type === 'Loading' ?
