@@ -4,22 +4,15 @@ const React = require('react');
 const { useServices } = require('stremio/services');
 const useModelState = require('stremio/common/useModelState');
 
-const mapProfileState = (ctx) => {
-    return ctx.profile;
-};
+const map = (ctx) => ctx.profile;
 
 const useProfile = () => {
     const { core } = useServices();
-    const initProfileState = React.useCallback(() => {
+    const init = React.useCallback(() => {
         const ctx = core.transport.getState('ctx');
-        return mapProfileState(ctx);
+        return map(ctx);
     }, []);
-    const profile = useModelState({
-        model: 'ctx',
-        init: initProfileState,
-        map: mapProfileState
-    });
-    return profile;
+    return useModelState({ model: 'ctx', init, map });
 };
 
 module.exports = useProfile;
