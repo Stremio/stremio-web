@@ -45,7 +45,15 @@ const Board = () => {
                             );
                         }
                         case 'Err': {
-                            const message = `Error(${catalog.content.content.type})`;
+                            const type = `Error(${catalog.content.content.type})`;
+                            const description = catalog.content.content.type === 'UnexpectedResponse' ?
+                                catalog.content.content.content
+                                :
+                                catalog.content.content.type === 'Env' ?
+                                    catalog.content.content.content.message
+                                    :
+                                    null;
+                            const message = `${type}${description !== null ? ` ${description}` : null}`;
                             return (
                                 <MetaRow
                                     key={index}
