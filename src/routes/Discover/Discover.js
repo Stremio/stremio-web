@@ -4,12 +4,14 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('@stremio/stremio-icons/dom');
-const { AddonDetailsModal, Button, MainNavBars, MetaItem, Image, MetaPreview, Multiselect, ModalDialog, PaginationInput, CONSTANTS, useBinaryState, useDeepEqualEffect, useToggleInLibrary } = require('stremio/common');
+const { useServices } = require('stremio/services');
+const { AddonDetailsModal, Button, MainNavBars, MetaItem, Image, MetaPreview, Multiselect, ModalDialog, PaginationInput, CONSTANTS, useBinaryState, useDeepEqualEffect } = require('stremio/common');
 const useDiscover = require('./useDiscover');
 const useSelectableInputs = require('./useSelectableInputs');
 const styles = require('./styles');
 
 const Discover = ({ urlParams, queryParams }) => {
+    const { core } = useServices();
     const discover = useDiscover(urlParams, queryParams);
     const [selectInputs, paginationInput] = useSelectableInputs(discover);
     const [inputsModalOpen, openInputsModal, closeInputsModal] = useBinaryState(false);
@@ -23,7 +25,32 @@ const Discover = ({ urlParams, queryParams }) => {
             :
             null;
     }, [discover.catalog, selectedMetaItemIndex]);
-    const toggleInLibrary = useToggleInLibrary(selectedMetaItem);
+    const addToLibrary = React.useCallback(() => {
+        if (selectedMetaItem === null) {
+            return;
+        }
+
+        core.transport.dispatch({
+            action: 'Ctx',
+            args: {
+                action: 'AddToLibrary',
+                args: selectedMetaItem
+            }
+        });
+    }, [selectedMetaItem]);
+    const removeFromLibrary = React.useCallback(() => {
+        if (selectedMetaItem === null) {
+            return;
+        }
+
+        core.transport.dispatch({
+            action: 'Ctx',
+            args: {
+                action: 'RemoveFromLibrary',
+                args: selectedMetaItem.id
+            }
+        });
+    }, [selectedMetaItem]);
     const metaItemsOnFocusCapture = React.useCallback((event) => {
         if (event.target.dataset.index !== null && !isNaN(event.target.dataset.index)) {
             setSelectedMetaItemIndex(parseInt(event.target.dataset.index));
@@ -155,7 +182,7 @@ const Discover = ({ urlParams, queryParams }) => {
                             description={selectedMetaItem.description}
                             trailerStreams={selectedMetaItem.trailerStreams}
                             inLibrary={selectedMetaItem.inLibrary}
-                            toggleInLibrary={toggleInLibrary}
+                            toggleInLibrary={selectedMetaItem.inLibrary ? removeFromLibrary : addToLibrary}
                         />
                         :
                         discover.catalog !== null && discover.catalog.content.type === 'Loading' ?
