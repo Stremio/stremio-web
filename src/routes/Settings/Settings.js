@@ -99,7 +99,7 @@ const Settings = () => {
     ]), []);
     const [selectedSectionId, setSelectedSectionId] = React.useState(GENERAL_SECTION);
     const updateSelectedSectionId = React.useCallback(() => {
-        if (sectionsContainerRef.current.scrollTop + sectionsContainerRef.current.clientHeight === sectionsContainerRef.current.scrollHeight) {
+        if (sectionsContainerRef.current.scrollTop + sectionsContainerRef.current.clientHeight >= sectionsContainerRef.current.scrollHeight - 50) {
             setSelectedSectionId(sections[sections.length - 1].id);
         } else {
             for (let i = sections.length - 1; i >= 0; i--) {
