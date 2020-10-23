@@ -8,10 +8,11 @@ const MetaItem = require('stremio/common/MetaItem');
 const OPTIONS = [
     { label: 'Play', value: 'play' },
     { label: 'Details', value: 'details' },
-    { label: 'Dismiss', value: 'dismiss' }
+    { label: 'Dismiss', value: 'dismiss' },
+    { label: 'Remove', value: 'remove' },
 ];
 
-const LibItem = ({ id, ...props }) => {
+const LibItem = ({ id, removable, ...props }) => {
     const { core } = useServices();
     const options = React.useMemo(() => {
         return OPTIONS.filter(({ value }) => {
@@ -22,9 +23,11 @@ const LibItem = ({ id, ...props }) => {
                     return props.deepLinks && (typeof props.deepLinks.metaDetailsVideos === 'string' || typeof props.deepLinks.metaDetailsStreams === 'string');
                 case 'dismiss':
                     return typeof id === 'string' && props.progress !== null && !isNaN(props.progress);
+                case 'remove':
+                    return typeof id === 'string' && removable;
             }
         });
-    }, [id, props.progress, props.deepLinks]);
+    }, [id, removable, props.progress, props.deepLinks]);
     const optionOnSelect = React.useCallback((event) => {
         if (typeof props.optionOnSelect === 'function') {
             props.optionOnSelect(event);
@@ -63,6 +66,19 @@ const LibItem = ({ id, ...props }) => {
 
                     break;
                 }
+                case 'remove': {
+                    if (typeof id === 'string') {
+                        core.transport.dispatch({
+                            action: 'Ctx',
+                            args: {
+                                action: 'RemoveFromLibrary',
+                                args: id
+                            }
+                        });
+                    }
+
+                    break;
+                }
             }
         }
     }, [id, props.deepLinks, props.optionOnSelect]);
@@ -77,6 +93,7 @@ const LibItem = ({ id, ...props }) => {
 
 LibItem.propTypes = {
     id: PropTypes.string,
+    removable: PropTypes.bool,
     progress: PropTypes.number,
     deepLinks: PropTypes.shape({
         metaDetailsVideos: PropTypes.string,

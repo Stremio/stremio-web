@@ -61,7 +61,7 @@ const Library = ({ model, urlParams, queryParams }) => {
                                 :
                                 <div className={styles['meta-items-container']}>
                                     {library.catalog.map((libItem, index) => (
-                                        <LibItem {...libItem} key={index} />
+                                        <LibItem {...libItem} removable={model === 'library'} key={index} />
                                     ))}
                                 </div>
                 }
