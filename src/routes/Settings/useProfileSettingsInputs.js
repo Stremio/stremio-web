@@ -10,7 +10,7 @@ const useProfileSettingsInputs = (profile) => {
             value: code,
             label: languageNames[code]
         })),
-        selected: [profile.settings.interface_language],
+        selected: [profile.settings.interfaceLanguage],
         onSelect: (event) => {
             core.transport.dispatch({
                 action: 'Ctx',
@@ -18,7 +18,7 @@ const useProfileSettingsInputs = (profile) => {
                     action: 'UpdateSettings',
                     args: {
                         ...profile.settings,
-                        interface_language: event.value
+                        interfaceLanguage: event.value
                     }
                 }
             });
@@ -29,7 +29,7 @@ const useProfileSettingsInputs = (profile) => {
             value: code,
             label: languageNames[code]
         })),
-        selected: [profile.settings.subtitles_language],
+        selected: [profile.settings.subtitlesLanguage],
         onSelect: (event) => {
             core.transport.dispatch({
                 action: 'Ctx',
@@ -37,7 +37,7 @@ const useProfileSettingsInputs = (profile) => {
                     action: 'UpdateSettings',
                     args: {
                         ...profile.settings,
-                        subtitles_language: event.value
+                        subtitlesLanguage: event.value
                     }
                 }
             });
@@ -48,9 +48,9 @@ const useProfileSettingsInputs = (profile) => {
             value: `${size}`,
             label: `${size}%`
         })),
-        selected: [`${profile.settings.subtitles_size}`],
+        selected: [`${profile.settings.subtitlesSize}`],
         renderLabelText: () => {
-            return `${profile.settings.subtitles_size}%`;
+            return `${profile.settings.subtitlesSize}%`;
         },
         onSelect: (event) => {
             core.transport.dispatch({
@@ -59,14 +59,14 @@ const useProfileSettingsInputs = (profile) => {
                     action: 'UpdateSettings',
                     args: {
                         ...profile.settings,
-                        subtitles_size: parseInt(event.value)
+                        subtitlesSize: parseInt(event.value)
                     }
                 }
             });
         }
     }), [profile.settings]);
     const subtitlesTextColorInput = useDeepEqualMemo(() => ({
-        value: profile.settings.subtitles_text_color,
+        value: profile.settings.subtitlesTextColor,
         onChange: (event) => {
             core.transport.dispatch({
                 action: 'Ctx',
@@ -74,14 +74,14 @@ const useProfileSettingsInputs = (profile) => {
                     action: 'UpdateSettings',
                     args: {
                         ...profile.settings,
-                        subtitles_text_color: event.value
+                        subtitlesTextColor: event.value
                     }
                 }
             });
         }
     }), [profile.settings]);
     const subtitlesBackgroundColorInput = useDeepEqualMemo(() => ({
-        value: profile.settings.subtitles_background_color,
+        value: profile.settings.subtitlesBackgroundColor,
         onChange: (event) => {
             core.transport.dispatch({
                 action: 'Ctx',
@@ -89,14 +89,14 @@ const useProfileSettingsInputs = (profile) => {
                     action: 'UpdateSettings',
                     args: {
                         ...profile.settings,
-                        subtitles_background_color: event.value
+                        subtitlesBackgroundColor: event.value
                     }
                 }
             });
         }
     }), [profile.settings]);
     const subtitlesOutlineColorInput = useDeepEqualMemo(() => ({
-        value: profile.settings.subtitles_outline_color,
+        value: profile.settings.subtitlesOutlineColor,
         onChange: (event) => {
             core.transport.dispatch({
                 action: 'Ctx',
@@ -104,14 +104,14 @@ const useProfileSettingsInputs = (profile) => {
                     action: 'UpdateSettings',
                     args: {
                         ...profile.settings,
-                        subtitles_outline_color: event.value
+                        subtitlesOutlineColor: event.value
                     }
                 }
             });
         }
     }), [profile.settings]);
     const bingeWatchingCheckbox = useDeepEqualMemo(() => ({
-        checked: profile.settings.binge_watching,
+        checked: profile.settings.bingeWatching,
         onClick: () => {
             core.transport.dispatch({
                 action: 'Ctx',
@@ -119,14 +119,14 @@ const useProfileSettingsInputs = (profile) => {
                     action: 'UpdateSettings',
                     args: {
                         ...profile.settings,
-                        binge_watching: !profile.settings.binge_watching
+                        bingeWatching: !profile.settings.bingeWatching
                     }
                 }
             });
         }
     }), [profile.settings]);
     const playInBackgroundCheckbox = useDeepEqualMemo(() => ({
-        checked: profile.settings.play_in_background,
+        checked: profile.settings.playInBackground,
         onClick: () => {
             core.transport.dispatch({
                 action: 'Ctx',
@@ -134,14 +134,14 @@ const useProfileSettingsInputs = (profile) => {
                     action: 'UpdateSettings',
                     args: {
                         ...profile.settings,
-                        play_in_background: !profile.settings.play_in_background
+                        playInBackground: !profile.settings.playInBackground
                     }
                 }
             });
         }
     }), [profile.settings]);
     const playInExternalPlayerCheckbox = useDeepEqualMemo(() => ({
-        checked: profile.settings.play_in_external_player,
+        checked: profile.settings.playInExternalPlayer,
         onClick: () => {
             core.transport.dispatch({
                 action: 'Ctx',
@@ -149,14 +149,14 @@ const useProfileSettingsInputs = (profile) => {
                     action: 'UpdateSettings',
                     args: {
                         ...profile.settings,
-                        play_in_external_player: !profile.settings.play_in_external_player
+                        playInExternalPlayer: !profile.settings.playInExternalPlayer
                     }
                 }
             });
         }
     }), [profile.settings]);
     const hardwareDecodingCheckbox = useDeepEqualMemo(() => ({
-        checked: profile.settings.hardware_decoding,
+        checked: profile.settings.hardwareDecoding,
         onClick: () => {
             core.transport.dispatch({
                 action: 'Ctx',
@@ -164,14 +164,14 @@ const useProfileSettingsInputs = (profile) => {
                     action: 'UpdateSettings',
                     args: {
                         ...profile.settings,
-                        hardware_decoding: !profile.settings.hardware_decoding
+                        hardwareDecoding: !profile.settings.hardwareDecoding
                     }
                 }
             });
         }
     }), [profile.settings]);
     const streamingServerUrlInput = useDeepEqualMemo(() => ({
-        value: profile.settings.streaming_server_url,
+        value: profile.settings.streamingServerUrl,
         onChange: (value) => {
             core.transport.dispatch({
                 action: 'Ctx',
@@ -179,7 +179,7 @@ const useProfileSettingsInputs = (profile) => {
                     action: 'UpdateSettings',
                     args: {
                         ...profile.settings,
-                        streaming_server_url: value
+                        streamingServerUrl: value
                     }
                 }
             });
