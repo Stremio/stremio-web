@@ -11,7 +11,8 @@ const ColorPicker = require('./ColorPicker');
 const styles = require('./styles');
 
 const parseColor = (value) => {
-    return AColorPicker.parseColor(value, 'hexcss4');
+    const color = AColorPicker.parseColor(value, 'hexcss4');
+    return typeof color === 'string' ? color : '#ffffffff';
 };
 
 const ColorInput = ({ className, value, dataset, onChange, ...props }) => {
