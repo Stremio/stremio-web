@@ -6,13 +6,10 @@ const useModelState = require('stremio/common/useModelState');
 
 const useStreamingServer = () => {
     const { core } = useServices();
-    const initStreamingServer = React.useCallback(() => {
+    const init = React.useCallback(() => {
         return core.transport.getState('streaming_server');
     }, []);
-    return useModelState({
-        model: 'streaming_server',
-        init: initStreamingServer
-    });
+    return useModelState({ model: 'streaming_server', init });
 };
 
 module.exports = useStreamingServer;
