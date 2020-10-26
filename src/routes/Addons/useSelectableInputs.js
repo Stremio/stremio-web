@@ -2,91 +2,79 @@
 
 const React = require('react');
 
-const ALL_TYPES_OPTION = {
-    value: null,
-    label: 'All'
-};
-
-const mapSelectableInputs = (installedAddons, remoteAddons, navigate) => {
+const mapSelectableInputs = (installedAddons, remoteAddons) => {
     const catalogSelect = {
         title: 'Select catalog',
         options: remoteAddons.selectable.catalogs
-            .map(({ name, request }) => ({
-                value: JSON.stringify(request),
-                label: name
+            .map(({ catalog, addonName, deepLinks }) => ({
+                value: deepLinks.addons,
+                label: catalog,
+                title: `${catalog} (${addonName})`
             }))
-            .concat({
-                value: JSON.stringify(ALL_TYPES_OPTION.value),
-                label: 'Installed'
-            }),
+            .concat(installedAddons.selectable.catalogs.map(({ catalog, deepLinks }) => ({
+                value: deepLinks.addons,
+                label: catalog,
+                title: catalog
+            }))),
         selected: remoteAddons.selectable.catalogs
-            .filter(({ request }) => {
-                return remoteAddons.selected !== null &&
-                    remoteAddons.selected.request.base === request.base &&
-                    remoteAddons.selected.request.path.id === request.path.id;
-            })
-            .map(({ request }) => JSON.stringify(request))
-            .concat(installedAddons.selected !== null ? JSON.stringify(ALL_TYPES_OPTION.value) : []),
-        onSelect: (event) => {
-            const value = JSON.parse(event.value);
-            if (value === ALL_TYPES_OPTION.value) {
-                navigate({ type_name: value });
-                return;
+            .concat(installedAddons.selectable.catalogs)
+            .filter(({ selected }) => selected)
+            .map(({ deepLinks }) => deepLinks.addons),
+        renderLabelText: remoteAddons.selected !== null ?
+            () => {
+                const selectableCatalog = remoteAddons.selectable.catalogs
+                    .find(({ request }) => request.path.id === remoteAddons.selected.request.path.id);
+                return selectableCatalog ? selectableCatalog.catalog : remoteAddons.selected.request.path.id;
             }
-
-            navigate({ request: value });
+            :
+            null,
+        onSelect: (event) => {
+            window.location = event.value;
         }
     };
     const typeSelect = {
         title: 'Select type',
         options: installedAddons.selected !== null ?
-            [{ label: ALL_TYPES_OPTION.label, value: JSON.stringify(ALL_TYPES_OPTION.value) }].concat(installedAddons.type_names.map((type_name) => ({
-                value: JSON.stringify(type_name),
-                label: type_name
-            })))
+            installedAddons.selectable.types.map(({ type, deepLinks }) => ({
+                value: deepLinks.addons,
+                label: type !== null ? type : 'All'
+            }))
             :
-            remoteAddons.selectable.types.map(({ name, request }) => ({
-                value: JSON.stringify(request),
-                label: name
+            remoteAddons.selectable.types.map(({ type, deepLinks }) => ({
+                value: deepLinks.addons,
+                label: type
             })),
         selected: installedAddons.selected !== null ?
-            [JSON.stringify(installedAddons.selected.type_name)]
+            installedAddons.selectable.types
+                .filter(({ selected }) => selected)
+                .map(({ deepLinks }) => deepLinks.addons)
             :
             remoteAddons.selectable.types
-                .filter(({ request }) => {
-                    return remoteAddons.selected !== null &&
-                        remoteAddons.selected.request.path.type_name === request.path.type_name;
-                })
-                .map(({ request }) => JSON.stringify(request)),
+                .filter(({ selected }) => selected)
+                .map(({ deepLinks }) => deepLinks.addons),
         renderLabelText: () => {
             return installedAddons.selected !== null ?
-                installedAddons.selected.type_name === ALL_TYPES_OPTION.value ?
-                    ALL_TYPES_OPTION.label
+                installedAddons.selected.request.type === null ?
+                    'All'
                     :
-                    installedAddons.selected.type_name
+                    installedAddons.selected.request.type
                 :
                 remoteAddons.selected !== null ?
-                    remoteAddons.selected.request.path.type_name
+                    remoteAddons.selected.request.path.type
                     :
                     typeSelect.title;
         },
         onSelect: (event) => {
-            const value = JSON.parse(event.value);
-            if (value === ALL_TYPES_OPTION.value || typeof value === 'string') {
-                navigate({ type_name: value });
-                return;
-            }
-
-            navigate({ request: value });
+            window.location = event.value;
         }
     };
     return [catalogSelect, typeSelect];
 };
 
-const useSelectableInputs = (installedAddons, remoteAddons, navigate) => {
+const useSelectableInputs = (installedAddons, remoteAddons) => {
     const selectableInputs = React.useMemo(() => {
-        return mapSelectableInputs(installedAddons, remoteAddons, navigate);
-    }, [installedAddons, remoteAddons, navigate]);
+        return mapSelectableInputs(installedAddons, remoteAddons);
+    }, [installedAddons, remoteAddons]);
     return selectableInputs;
 };
 

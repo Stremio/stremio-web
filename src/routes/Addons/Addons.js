@@ -2,57 +2,27 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const { useRouteFocused } = require('stremio-router');
 const Icon = require('@stremio/stremio-icons/dom');
 const { AddonDetailsModal, Button, Image, Multiselect, MainNavBars, TextInput, SearchBar, SharePrompt, ModalDialog, useBinaryState } = require('stremio/common');
 const Addon = require('./Addon');
 const useInstalledAddons = require('./useInstalledAddons');
 const useRemoteAddons = require('./useRemoteAddons');
+const useAddonDetailsTransportUrl = require('./useAddonDetailsTransportUrl');
 const useSelectableInputs = require('./useSelectableInputs');
 const styles = require('./styles');
 
 const Addons = ({ urlParams, queryParams }) => {
-    const routeFocused = useRouteFocused();
-    const navigate = React.useCallback((args) => {
-        if (!routeFocused) {
-            return;
-        }
-
-        const nextPath = args.hasOwnProperty('request') ?
-            `/${encodeURIComponent(args.request.path.type_name)}/${encodeURIComponent(args.request.base)}/${encodeURIComponent(args.request.path.id)}`
-            :
-            args.hasOwnProperty('type_name') ?
-                typeof args.type_name === 'string' ?
-                    `/${encodeURIComponent(args.type_name)}`
-                    :
-                    ''
-                :
-                typeof urlParams.type === 'string' && typeof urlParams.transportUrl === 'string' && typeof urlParams.catalogId === 'string' ?
-                    `/${encodeURIComponent(urlParams.type)}/${encodeURIComponent(urlParams.transportUrl)}/${encodeURIComponent(urlParams.catalogId)}`
-                    :
-                    '';
-        const nextQueryParams = new URLSearchParams(queryParams);
-        if (args.hasOwnProperty('detailsTransportUrl')) {
-            if (typeof args.detailsTransportUrl === 'string') {
-                nextQueryParams.set('addon', args.detailsTransportUrl);
-            } else {
-                nextQueryParams.delete('addon');
-            }
-        }
-
-        window.location = `#/addons${nextPath}?${nextQueryParams}`;
-    }, [routeFocused, urlParams, queryParams]);
     const installedAddons = useInstalledAddons(urlParams);
     const remoteAddons = useRemoteAddons(urlParams);
-    const detailsTransportUrl = queryParams.get('addon');
-    const selectInputs = useSelectableInputs(installedAddons, remoteAddons, navigate);
+    const [addonDetailsTransportUrl, setAddonDetailsTransportUrl] = useAddonDetailsTransportUrl(urlParams, queryParams);
+    const selectInputs = useSelectableInputs(installedAddons, remoteAddons);
     const [addAddonModalOpen, openAddAddonModal, closeAddAddonModal] = useBinaryState(false);
     const addAddonUrlInputRef = React.useRef(null);
     const addAddonOnSubmit = React.useCallback(() => {
         if (addAddonUrlInputRef.current !== null) {
-            navigate({ detailsTransportUrl: addAddonUrlInputRef.current.value });
+            setAddonDetailsTransportUrl(addAddonUrlInputRef.current.value);
         }
-    }, [navigate]);
+    }, [setAddonDetailsTransportUrl]);
     const addAddonModalButtons = React.useMemo(() => {
         return [
             {
@@ -75,11 +45,6 @@ const Addons = ({ urlParams, queryParams }) => {
         setSearch(event.currentTarget.value);
     }, []);
     const [sharedAddon, setSharedAddon] = React.useState(null);
-    const renderLogoFallback = React.useMemo(() => () => {
-        return (
-            <Icon className={styles['icon']} icon={'ic_addons'} />
-        );
-    }, []);
     const clearSharedAddon = React.useCallback(() => {
         setSharedAddon(null);
     }, []);
@@ -87,11 +52,11 @@ const Addons = ({ urlParams, queryParams }) => {
         setSharedAddon(event.dataset.addon);
     }, []);
     const onAddonToggle = React.useCallback((event) => {
-        navigate({ detailsTransportUrl: event.dataset.addon.transportUrl });
-    }, [navigate]);
+        setAddonDetailsTransportUrl(event.dataset.addon.transportUrl);
+    }, [setAddonDetailsTransportUrl]);
     const closeAddonDetails = React.useCallback(() => {
-        navigate({ detailsTransportUrl: null });
-    }, [navigate]);
+        setAddonDetailsTransportUrl(null);
+    }, [setAddonDetailsTransportUrl]);
     const searchFilterPredicate = React.useCallback((addon) => {
         return search.length === 0 ||
             (
@@ -99,6 +64,11 @@ const Addons = ({ urlParams, queryParams }) => {
                 (typeof addon.manifest.description === 'string' && addon.manifest.description.toLowerCase().includes(search.toLowerCase()))
             );
     }, [search]);
+    const renderLogoFallback = React.useMemo(() => () => {
+        return (
+            <Icon className={styles['icon']} icon={'ic_addons'} />
+        );
+    }, []);
     React.useLayoutEffect(() => {
         closeAddAddonModal();
         setSearch('');
@@ -129,19 +99,19 @@ const Addons = ({ urlParams, queryParams }) => {
                 </div>
                 {
                     installedAddons.selected !== null ?
-                        installedAddons.type_names.length === 0 ?
+                        installedAddons.selectable.types.length === 0 ?
                             <div className={styles['message-container']}>
                                 No addons ware installed!
                             </div>
                             :
-                            installedAddons.addons.length === 0 ?
+                            installedAddons.catalog.length === 0 ?
                                 <div className={styles['message-container']}>
                                     No addons ware installed for that type!
                                 </div>
                                 :
                                 <div className={styles['addons-list-container']}>
                                     {
-                                        installedAddons.addons
+                                        installedAddons.catalog
                                             .filter(searchFilterPredicate)
                                             .map((addon, index) => (
                                                 <Addon
@@ -163,19 +133,19 @@ const Addons = ({ urlParams, queryParams }) => {
                                 </div>
                         :
                         remoteAddons.selected !== null ?
-                            remoteAddons.catalog_resource.content.type === 'Err' ?
+                            remoteAddons.catalog.content.type === 'Err' ?
                                 <div className={styles['message-container']}>
                                     Addons could not be loaded!
                                 </div>
                                 :
-                                remoteAddons.catalog_resource.content.type === 'Loading' ?
+                                remoteAddons.catalog.content.type === 'Loading' ?
                                     <div className={styles['message-container']}>
                                         Loading!
                                     </div>
                                     :
                                     <div className={styles['addons-list-container']}>
                                         {
-                                            remoteAddons.catalog_resource.content.content
+                                            remoteAddons.catalog.content.content
                                                 .filter(searchFilterPredicate)
                                                 .map((addon, index) => (
                                                     <Addon
@@ -252,9 +222,9 @@ const Addons = ({ urlParams, queryParams }) => {
                     null
             }
             {
-                typeof detailsTransportUrl === 'string' ?
+                typeof addonDetailsTransportUrl === 'string' ?
                     <AddonDetailsModal
-                        transportUrl={detailsTransportUrl}
+                        transportUrl={addonDetailsTransportUrl}
                         onCloseRequest={closeAddonDetails}
                     />
                     :
@@ -266,6 +236,7 @@ const Addons = ({ urlParams, queryParams }) => {
 
 Addons.propTypes = {
     urlParams: PropTypes.shape({
+        path: PropTypes.string,
         transportUrl: PropTypes.string,
         catalogId: PropTypes.string,
         type: PropTypes.string
