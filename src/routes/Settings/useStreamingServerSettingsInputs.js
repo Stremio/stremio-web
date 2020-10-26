@@ -43,10 +43,10 @@ const TORRENT_PROFILES = {
     }
 };
 
-const useStreaminServerSettingsInputs = (streaminServer) => {
+const useStreamingServerSettingsInputs = (streamingServer) => {
     const { core } = useServices();
     const cacheSizeSelect = useDeepEqualMemo(() => {
-        if (streaminServer.settings === null || streaminServer.settings.type !== 'Ready') {
+        if (streamingServer.settings === null || streamingServer.settings.type !== 'Ready') {
             return null;
         }
 
@@ -55,9 +55,9 @@ const useStreaminServerSettingsInputs = (streaminServer) => {
                 label: cacheSizeToString(size),
                 value: JSON.stringify(size)
             })),
-            selected: [JSON.stringify(streaminServer.settings.content.cacheSize)],
+            selected: [JSON.stringify(streamingServer.settings.content.cacheSize)],
             renderLabelText: () => {
-                return cacheSizeToString(streaminServer.settings.content.cacheSize);
+                return cacheSizeToString(streamingServer.settings.content.cacheSize);
             },
             onSelect: (event) => {
                 core.transport.dispatch({
@@ -65,26 +65,26 @@ const useStreaminServerSettingsInputs = (streaminServer) => {
                     args: {
                         action: 'UpdateSettings',
                         args: {
-                            ...streaminServer.settings.content,
+                            ...streamingServer.settings.content,
                             cacheSize: JSON.parse(event.value)
                         }
                     }
                 });
             }
         };
-    }, [streaminServer.settings]);
+    }, [streamingServer.settings]);
     const torrentProfileSelect = useDeepEqualMemo(() => {
-        if (streaminServer.settings === null || streaminServer.settings.type !== 'Ready') {
+        if (streamingServer.settings === null || streamingServer.settings.type !== 'Ready') {
             return null;
         }
 
         const selectedTorrentProfile = {
-            btDownloadSpeedHardLimit: streaminServer.settings.content.btDownloadSpeedHardLimit,
-            btDownloadSpeedSoftLimit: streaminServer.settings.content.btDownloadSpeedSoftLimit,
-            btHandshakeTimeout: streaminServer.settings.content.btHandshakeTimeout,
-            btMaxConnections: streaminServer.settings.content.btMaxConnections,
-            btMinPeersForStable: streaminServer.settings.content.btMinPeersForStable,
-            btRequestTimeout: streaminServer.settings.content.btRequestTimeout
+            btDownloadSpeedHardLimit: streamingServer.settings.content.btDownloadSpeedHardLimit,
+            btDownloadSpeedSoftLimit: streamingServer.settings.content.btDownloadSpeedSoftLimit,
+            btHandshakeTimeout: streamingServer.settings.content.btHandshakeTimeout,
+            btMaxConnections: streamingServer.settings.content.btMaxConnections,
+            btMinPeersForStable: streamingServer.settings.content.btMinPeersForStable,
+            btRequestTimeout: streamingServer.settings.content.btRequestTimeout
         };
         const isCustomTorrentProfileSelected = Object.values(TORRENT_PROFILES).every((torrentProfile) => {
             return !isEqual(torrentProfile, selectedTorrentProfile);
@@ -111,15 +111,15 @@ const useStreaminServerSettingsInputs = (streaminServer) => {
                     args: {
                         action: 'UpdateSettings',
                         args: {
-                            ...streaminServer.settings.content,
+                            ...streamingServer.settings.content,
                             ...JSON.parse(event.value)
                         }
                     }
                 });
             }
         };
-    }, [streaminServer.settings]);
+    }, [streamingServer.settings]);
     return { cacheSizeSelect, torrentProfileSelect };
 };
 
-module.exports = useStreaminServerSettingsInputs;
+module.exports = useStreamingServerSettingsInputs;
