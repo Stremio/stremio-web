@@ -12,7 +12,7 @@ const AddonDetailsModal = ({ transportUrl, onCloseRequest }) => {
     const { core } = useServices();
     const addonDetails = useAddonDetails(transportUrl);
     const modalButtons = React.useMemo(() => {
-        if (addonDetails.remote_addon === null || addonDetails.remote_addon.content.type !== 'Ready') {
+        if (addonDetails.remoteAddon === null || addonDetails.remoteAddon.content.type !== 'Ready') {
             return null;
         }
 
@@ -30,7 +30,7 @@ const AddonDetailsModal = ({ transportUrl, onCloseRequest }) => {
                 action: 'Ctx',
                 args: {
                     action: 'InstallAddon',
-                    args: addonDetails.remote_addon.content.content
+                    args: addonDetails.remoteAddon.content.content
                 }
             });
             if (typeof onCloseRequest === 'function') {
@@ -46,7 +46,7 @@ const AddonDetailsModal = ({ transportUrl, onCloseRequest }) => {
                 action: 'Ctx',
                 args: {
                     action: 'UninstallAddon',
-                    args: addonDetails.remote_addon.content.content.transportUrl
+                    args: addonDetails.remoteAddon.content.content.transportUrl
                 }
             });
             if (typeof onCloseRequest === 'function') {
@@ -65,7 +65,7 @@ const AddonDetailsModal = ({ transportUrl, onCloseRequest }) => {
                     onClick: cancelOnClick
                 }
             },
-            addonDetails.remote_addon.content.content.installed ?
+            addonDetails.localAddon !== null ?
                 {
                     className: styles['uninstall-button'],
                     label: 'Uninstall',
@@ -92,27 +92,27 @@ const AddonDetailsModal = ({ transportUrl, onCloseRequest }) => {
                         Loading addon manifest
                     </div>
                     :
-                    addonDetails.remote_addon === null || addonDetails.remote_addon.content.type === 'Loading' ?
+                    addonDetails.remoteAddon === null || addonDetails.remoteAddon.content.type === 'Loading' ?
                         <div className={styles['addon-details-message-container']}>
-                            Loading addon manifest from {addonDetails.selected.transport_url}
+                            Loading addon manifest from {addonDetails.selected.transportUrl}
                         </div>
                         :
-                        addonDetails.remote_addon.content.type === 'Err' ?
+                        addonDetails.remoteAddon.content.type === 'Err' ?
                             <div className={styles['addon-details-message-container']}>
-                                Failed to get addon manifest from {addonDetails.selected.transport_url}.
-                                {addonDetails.remote_addon.content.content}
+                                Failed to get addon manifest from {addonDetails.selected.transportUrl}
+                                <div>{addonDetails.remoteAddon.content.content.message}</div>
                             </div>
                             :
                             <AddonDetails
                                 className={styles['addon-details-container']}
-                                id={addonDetails.remote_addon.content.content.manifest.id}
-                                name={addonDetails.remote_addon.content.content.manifest.name}
-                                version={addonDetails.remote_addon.content.content.manifest.version}
-                                logo={addonDetails.remote_addon.content.content.manifest.logo}
-                                description={addonDetails.remote_addon.content.content.manifest.description}
-                                types={addonDetails.remote_addon.content.content.manifest.types}
-                                transportUrl={addonDetails.remote_addon.content.content.transportUrl}
-                                official={addonDetails.remote_addon.content.content.flags.official}
+                                id={addonDetails.remoteAddon.content.content.manifest.id}
+                                name={addonDetails.remoteAddon.content.content.manifest.name}
+                                version={addonDetails.remoteAddon.content.content.manifest.version}
+                                logo={addonDetails.remoteAddon.content.content.manifest.logo}
+                                description={addonDetails.remoteAddon.content.content.manifest.description}
+                                types={addonDetails.remoteAddon.content.content.manifest.types}
+                                transportUrl={addonDetails.remoteAddon.content.content.transportUrl}
+                                official={addonDetails.remoteAddon.content.content.flags.official}
                             />
             }
         </ModalDialog>
