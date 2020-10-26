@@ -13,6 +13,10 @@ const mapSelectableInputs = (discover) => {
         selected: discover.selectable.types
             .filter(({ selected }) => selected)
             .map(({ deepLinks }) => deepLinks.discover),
+        renderLabelText: discover.selected !== null ?
+            () => discover.selected.request.path.type
+            :
+            null,
         onSelect: (event) => {
             window.location = event.value;
         }
@@ -28,6 +32,14 @@ const mapSelectableInputs = (discover) => {
         selected: discover.selectable.catalogs
             .filter(({ selected }) => selected)
             .map(({ deepLinks }) => deepLinks.discover),
+        renderLabelText: discover.selected !== null ?
+            () => {
+                const selectableCatalog = discover.selectable.catalogs
+                    .find(({ request }) => request.path.id === discover.selected.request.path.id);
+                return selectableCatalog ? selectableCatalog.catalog : discover.selected.request.path.id;
+            }
+            :
+            null,
         onSelect: (event) => {
             window.location = event.value;
         }
