@@ -9,13 +9,13 @@ const SeasonsBar = require('./SeasonsBar');
 const Video = require('./Video');
 const styles = require('./styles');
 
-const VideosList = ({ className, metaResource, season, seasonOnSelect }) => {
+const VideosList = ({ className, metaCatalog, season, seasonOnSelect }) => {
     const videos = React.useMemo(() => {
-        return metaResource && metaResource.content.type === 'Ready' ?
-            metaResource.content.content.videos
+        return metaCatalog && metaCatalog.content.type === 'Ready' ?
+            metaCatalog.content.content.videos
             :
             [];
-    }, [metaResource]);
+    }, [metaCatalog]);
     const seasons = React.useMemo(() => {
         return videos
             .map(({ season }) => season)
@@ -52,7 +52,7 @@ const VideosList = ({ className, metaResource, season, seasonOnSelect }) => {
     return (
         <div className={classnames(className, styles['videos-list-container'])}>
             {
-                !metaResource || metaResource.content.type === 'Loading' ?
+                !metaCatalog || metaCatalog.content.type === 'Loading' ?
                     <React.Fragment>
                         <SeasonsBar.Placeholder className={styles['seasons-bar']} />
                         <SearchBar.Placeholder className={styles['search-bar']} title={'Search videos'} />
@@ -65,7 +65,7 @@ const VideosList = ({ className, metaResource, season, seasonOnSelect }) => {
                         </div>
                     </React.Fragment>
                     :
-                    metaResource.content.type === 'Err' || videosForSeason.length === 0 ?
+                    metaCatalog.content.type === 'Err' || videosForSeason.length === 0 ?
                         <div className={styles['message-container']}>
                             <Image className={styles['image']} src={'/images/empty.png'} alt={' '} />
                             <div className={styles['label']}>No videos found for this meta!</div>
@@ -96,11 +96,23 @@ const VideosList = ({ className, metaResource, season, seasonOnSelect }) => {
                                             return search.length === 0 ||
                                                 (
                                                     (typeof video.title === 'string' && video.title.toLowerCase().includes(search.toLowerCase())) ||
-                                                    (video.released.toLocaleString(undefined, { year: '2-digit', month: 'short', day: 'numeric' }).toLowerCase().includes(search.toLowerCase()))
+                                                    (!isNaN(video.released.getTime()) && video.released.toLocaleString(undefined, { year: '2-digit', month: 'short', day: 'numeric' }).toLowerCase().includes(search.toLowerCase()))
                                                 );
                                         })
                                         .map((video, index) => (
-                                            <Video {...video} key={index} />
+                                            <Video
+                                                key={index}
+                                                id={video.id}
+                                                title={video.title}
+                                                thumbnail={video.thumbnail}
+                                                episode={video.episode}
+                                                released={video.released}
+                                                upcoming={video.upcoming}
+                                                watched={video.watched}
+                                                progress={video.progress}
+                                                deepLinks={video.deepLinks}
+                                                scheduled={video.scheduled}
+                                            />
                                         ))
                                 }
                             </div>
@@ -112,7 +124,7 @@ const VideosList = ({ className, metaResource, season, seasonOnSelect }) => {
 
 VideosList.propTypes = {
     className: PropTypes.string,
-    metaResource: PropTypes.object,
+    metaCatalog: PropTypes.object,
     season: PropTypes.number,
     seasonOnSelect: PropTypes.func
 };

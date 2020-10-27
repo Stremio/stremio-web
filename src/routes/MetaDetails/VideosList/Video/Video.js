@@ -8,7 +8,7 @@ const { Button, Image } = require('stremio/common');
 const VideoPlaceholder = require('./VideoPlaceholder');
 const styles = require('./styles');
 
-const Video = ({ className, id, title, thumbnail, episode, released, upcoming, watched, progress, deepLinks, ...props }) => {
+const Video = ({ className, id, title, thumbnail, episode, released, upcoming, watched, progress, scheduled, deepLinks, ...props }) => {
     const href = React.useMemo(() => {
         return deepLinks ?
             typeof deepLinks.player === 'string' ?
@@ -53,7 +53,12 @@ const Video = ({ className, id, title, thumbnail, episode, released, upcoming, w
                                 {released.toLocaleString(undefined, { year: '2-digit', month: 'short', day: 'numeric' })}
                             </div>
                             :
-                            null
+                            scheduled ?
+                                <div className={styles['released-container']} title={'To be announced'}>
+                                    TBA
+                                </div>
+                                :
+                                null
                     }
                     <div className={styles['upcoming-watched-container']}>
                         {
@@ -99,6 +104,7 @@ Video.propTypes = {
     upcoming: PropTypes.bool,
     watched: PropTypes.bool,
     progress: PropTypes.number,
+    scheduled: PropTypes.bool,
     deepLinks: PropTypes.shape({
         meta_details_streams: PropTypes.string,
         player: PropTypes.string
