@@ -12,10 +12,12 @@ const StreamsList = ({ className, streamsCatalogs }) => {
     const streams = React.useMemo(() => {
         return streamsCatalogs
             .filter((catalog) => catalog.content.type === 'Ready')
-            .map((catalog) => ({
-                ...catalog.content.content,
-                addonName: catalog.addonName
-            }))
+            .map((catalog) => {
+                return catalog.content.content.map((stream) => ({
+                    ...stream,
+                    addonName: catalog.addonName
+                }));
+            })
             .flat(1);
     }, [streamsCatalogs]);
     return (
