@@ -10,7 +10,6 @@ const Image = require('stremio/common/Image');
 const ModalDialog = require('stremio/common/ModalDialog');
 const SharePrompt = require('stremio/common/SharePrompt');
 const CONSTANTS = require('stremio/common/CONSTANTS');
-const deepLinking = require('stremio/common/deepLinking');
 const routesRegexp = require('stremio/common/routesRegexp');
 const useBinaryState = require('stremio/common/useBinaryState');
 const ActionButton = require('./ActionButton');
@@ -76,8 +75,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
             return null;
         }
 
-        const deepLinks = deepLinking.withStream({ stream: trailerStreams[0] });
-        return deepLinks.player;
+        return trailerStreams[0].deepLinks.player;
     }, [trailerStreams]);
     const renderLogoFallback = React.useMemo(() => () => (
         <Icon className={styles['logo-placeholder-icon']} icon={'ic_broken_link'} />

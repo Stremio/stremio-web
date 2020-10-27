@@ -23,7 +23,6 @@ const TextInput = require('./TextInput');
 const { ToastProvider, useToast } = require('./Toast');
 const comparatorWithPriorities = require('./comparatorWithPriorities');
 const CONSTANTS = require('./CONSTANTS');
-const deepLinking = require('./deepLinking');
 const languageNames = require('./languageNames');
 const routesRegexp = require('./routesRegexp');
 const useAnimationFrame = require('./useAnimationFrame');
@@ -63,7 +62,6 @@ module.exports = {
     useToast,
     comparatorWithPriorities,
     CONSTANTS,
-    deepLinking,
     languageNames,
     routesRegexp,
     useAnimationFrame,
