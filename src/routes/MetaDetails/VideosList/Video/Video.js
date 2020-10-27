@@ -14,8 +14,8 @@ const Video = ({ className, id, title, thumbnail, episode, released, upcoming, w
             typeof deepLinks.player === 'string' ?
                 deepLinks.player
                 :
-                typeof deepLinks.meta_details_streams === 'string' ?
-                    deepLinks.meta_details_streams
+                typeof deepLinks.metaDetailsStreams === 'string' ?
+                    deepLinks.metaDetailsStreams
                     :
                     null
             :
@@ -106,7 +106,7 @@ Video.propTypes = {
     progress: PropTypes.number,
     scheduled: PropTypes.bool,
     deepLinks: PropTypes.shape({
-        meta_details_streams: PropTypes.string,
+        metaDetailsStreams: PropTypes.string,
         player: PropTypes.string
     })
 };
