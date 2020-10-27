@@ -19,7 +19,7 @@ const SearchBar = ({ className, query, active }) => {
     }, [active]);
     const queryInputOnSubmit = React.useCallback(() => {
         if (searchInputRef.current !== null) {
-            const queryParams = new URLSearchParams([['search', searchInputRef.current.value]]);
+            const queryParams = new URLSearchParams([['q', searchInputRef.current.value]]);
             window.location = `#/search?${queryParams.toString()}`;
         }
     }, []);

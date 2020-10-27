@@ -30,14 +30,14 @@ const map = (search) => ({
 
 const useSearch = (queryParams) => {
     const action = React.useMemo(() => {
-        if (queryParams.has('search') && queryParams.get('search').length > 0) {
+        if (queryParams.has('q') && queryParams.get('q').length > 0) {
             return {
                 action: 'Load',
                 args: {
                     model: 'CatalogsWithExtra',
                     args: {
                         extra: [
-                            ['search', queryParams.get('search')]
+                            ['search', queryParams.get('q')]
                         ]
                     }
                 }
