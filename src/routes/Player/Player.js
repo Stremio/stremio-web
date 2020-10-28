@@ -81,12 +81,12 @@ const Player = ({ urlParams }) => {
                 }
             });
         }
-        if (player.nextVideoDeepLinks !== null) {
+        if (player.nextVideo !== null) {
             window.location.replace(
-                typeof player.nextVideoDeepLinks.player === 'string' ?
-                    player.nextVideoDeepLinks.player
+                typeof player.nextVideo.deepLinks.player === 'string' ?
+                    player.nextVideo.deepLinks.player
                     :
-                    player.nextVideoDeepLinks.metaDetailsStreams
+                    player.nextVideo.deepLinks.metaDetailsStreams
             );
         } else {
             window.history.back();
