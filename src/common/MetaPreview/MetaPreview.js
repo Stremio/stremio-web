@@ -71,7 +71,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
             new Map();
     }, [links]);
     const trailerHref = React.useMemo(() => {
-        if (trailerStreams.length === 0) {
+        if (!Array.isArray(trailerStreams) || trailerStreams.length === 0) {
             return null;
         }
 
