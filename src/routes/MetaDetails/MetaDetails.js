@@ -16,16 +16,16 @@ const MetaDetails = ({ urlParams, queryParams }) => {
     const metaDetails = useMetaDetails(urlParams);
     const [season, setSeason] = useSeason(urlParams, queryParams);
     const [tabs, metaExtension, clearMetaExtension] = useMetaExtensionTabs(metaDetails.metaExtensions);
-    const [metaPath, streamsPath] = React.useMemo(() => {
+    const [metaPath, streamPath] = React.useMemo(() => {
         return metaDetails.selected !== null ?
-            [metaDetails.selected.metaPath, metaDetails.selected.streamsPath]
+            [metaDetails.selected.metaPath, metaDetails.selected.streamPath]
             :
             [null, null];
     }, [metaDetails.selected]);
     const video = React.useMemo(() => {
-        return streamsPath !== null && metaDetails.metaCatalog !== null && metaDetails.metaCatalog.content.type === 'Ready' ?
-            metaDetails.metaCatalog.content.content.videos.reduce((result, video) => {
-                if (video.id === streamsPath.id) {
+        return streamPath !== null && metaDetails.metaItem !== null && metaDetails.metaItem.content.type === 'Ready' ?
+            metaDetails.metaItem.content.content.videos.reduce((result, video) => {
+                if (video.id === streamPath.id) {
                     return video;
                 }
 
@@ -33,9 +33,9 @@ const MetaDetails = ({ urlParams, queryParams }) => {
             }, null)
             :
             null;
-    }, [metaDetails.metaCatalog, streamsPath]);
+    }, [metaDetails.metaItem, streamPath]);
     const addToLibrary = React.useCallback(() => {
-        if (metaDetails.metaCatalog === null || metaDetails.metaCatalog.content.type !== 'Ready') {
+        if (metaDetails.metaItem === null || metaDetails.metaItem.content.type !== 'Ready') {
             return;
         }
 
@@ -43,12 +43,12 @@ const MetaDetails = ({ urlParams, queryParams }) => {
             action: 'Ctx',
             args: {
                 action: 'AddToLibrary',
-                args: metaDetails.metaCatalog.content.content
+                args: metaDetails.metaItem.content.content
             }
         });
     }, [metaDetails]);
     const removeFromLibrary = React.useCallback(() => {
-        if (metaDetails.metaCatalog === null || metaDetails.metaCatalog.content.type !== 'Ready') {
+        if (metaDetails.metaItem === null || metaDetails.metaItem.content.type !== 'Ready') {
             return;
         }
 
@@ -56,7 +56,7 @@ const MetaDetails = ({ urlParams, queryParams }) => {
             action: 'Ctx',
             args: {
                 action: 'RemoveFromLibrary',
-                args: metaDetails.metaCatalog.content.content.id
+                args: metaDetails.metaItem.content.content.id
             }
         });
     }, [metaDetails]);
@@ -68,7 +68,7 @@ const MetaDetails = ({ urlParams, queryParams }) => {
             <HorizontalNavBar
                 className={styles['nav-bar']}
                 backButton={true}
-                title={metaDetails.metaCatalog !== null && metaDetails.metaCatalog.content.type === 'Ready' ? metaDetails.metaCatalog.content.content.name : null}
+                title={metaDetails.title}
             />
             <div className={styles['metadetails-content']}>
                 {
@@ -88,29 +88,29 @@ const MetaDetails = ({ urlParams, queryParams }) => {
                             <div className={styles['message-label']}>No meta was selected!</div>
                         </div>
                         :
-                        metaDetails.metaCatalog === null ?
+                        metaDetails.metaItem === null ?
                             <div className={styles['meta-message-container']}>
                                 <Image className={styles['image']} src={'/images/empty.png'} alt={' '} />
                                 <div className={styles['message-label']}>No addons ware requested for this meta!</div>
                             </div>
                             :
-                            metaDetails.metaCatalog.content.type === 'Err' ?
+                            metaDetails.metaItem.content.type === 'Err' ?
                                 <div className={styles['meta-message-container']}>
                                     <Image className={styles['image']} src={'/images/empty.png'} alt={' '} />
                                     <div className={styles['message-label']}>No metadata was found!</div>
                                 </div>
                                 :
-                                metaDetails.metaCatalog.content.type === 'Loading' ?
+                                metaDetails.metaItem.content.type === 'Loading' ?
                                     <MetaPreview.Placeholder className={styles['meta-preview']} />
                                     :
                                     <React.Fragment>
                                         {
-                                            typeof metaDetails.metaCatalog.content.content.background === 'string' &&
-                                                metaDetails.metaCatalog.content.content.background.length > 0 ?
+                                            typeof metaDetails.metaItem.content.content.background === 'string' &&
+                                                metaDetails.metaItem.content.content.background.length > 0 ?
                                                 <div className={styles['background-image-layer']}>
                                                     <Image
                                                         className={styles['background-image']}
-                                                        src={metaDetails.metaCatalog.content.content.background}
+                                                        src={metaDetails.metaItem.content.content.background}
                                                         alt={' '}
                                                     />
                                                 </div>
@@ -119,36 +119,36 @@ const MetaDetails = ({ urlParams, queryParams }) => {
                                         }
                                         <MetaPreview
                                             className={styles['meta-preview']}
-                                            name={metaDetails.metaCatalog.content.content.name + (video !== null && typeof video.title === 'string' && video.title.length > 0 ? ` - ${video.title}` : '')}
-                                            logo={metaDetails.metaCatalog.content.content.logo}
-                                            runtime={metaDetails.metaCatalog.content.content.runtime}
-                                            releaseInfo={metaDetails.metaCatalog.content.content.releaseInfo}
-                                            released={metaDetails.metaCatalog.content.content.released}
+                                            name={metaDetails.metaItem.content.content.name}
+                                            logo={metaDetails.metaItem.content.content.logo}
+                                            runtime={metaDetails.metaItem.content.content.runtime}
+                                            releaseInfo={metaDetails.metaItem.content.content.releaseInfo}
+                                            released={metaDetails.metaItem.content.content.released}
                                             description={
                                                 video !== null && typeof video.overview === 'string' && video.overview.length > 0 ?
                                                     video.overview
                                                     :
-                                                    metaDetails.metaCatalog.content.content.description
+                                                    metaDetails.metaItem.content.content.description
                                             }
-                                            links={metaDetails.metaCatalog.content.content.links}
-                                            trailerStreams={metaDetails.metaCatalog.content.content.trailerStreams}
-                                            inLibrary={metaDetails.metaCatalog.content.content.inLibrary}
-                                            toggleInLibrary={metaDetails.metaCatalog.content.content.inLibrary ? removeFromLibrary : addToLibrary}
+                                            links={metaDetails.metaItem.content.content.links}
+                                            trailerStreams={metaDetails.metaItem.content.content.trailerStreams}
+                                            inLibrary={metaDetails.metaItem.content.content.inLibrary}
+                                            toggleInLibrary={metaDetails.metaItem.content.content.inLibrary ? removeFromLibrary : addToLibrary}
                                         />
                                     </React.Fragment>
                 }
                 <div className={styles['spacing']} />
                 {
-                    streamsPath !== null ?
+                    streamPath !== null ?
                         <StreamsList
                             className={styles['streams-list']}
-                            streamsCatalogs={metaDetails.streamsCatalogs}
+                            streams={metaDetails.streams}
                         />
                         :
                         metaPath !== null ?
                             <VideosList
                                 className={styles['videos-list']}
-                                metaCatalog={metaDetails.metaCatalog}
+                                metaItem={metaDetails.metaItem}
                                 season={season}
                                 seasonOnSelect={seasonOnSelect}
                             />

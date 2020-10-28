@@ -9,13 +9,13 @@ const SeasonsBar = require('./SeasonsBar');
 const Video = require('./Video');
 const styles = require('./styles');
 
-const VideosList = ({ className, metaCatalog, season, seasonOnSelect }) => {
+const VideosList = ({ className, metaItem, season, seasonOnSelect }) => {
     const videos = React.useMemo(() => {
-        return metaCatalog && metaCatalog.content.type === 'Ready' ?
-            metaCatalog.content.content.videos
+        return metaItem && metaItem.content.type === 'Ready' ?
+            metaItem.content.content.videos
             :
             [];
-    }, [metaCatalog]);
+    }, [metaItem]);
     const seasons = React.useMemo(() => {
         return videos
             .map(({ season }) => season)
@@ -52,7 +52,7 @@ const VideosList = ({ className, metaCatalog, season, seasonOnSelect }) => {
     return (
         <div className={classnames(className, styles['videos-list-container'])}>
             {
-                !metaCatalog || metaCatalog.content.type === 'Loading' ?
+                !metaItem || metaItem.content.type === 'Loading' ?
                     <React.Fragment>
                         <SeasonsBar.Placeholder className={styles['seasons-bar']} />
                         <SearchBar.Placeholder className={styles['search-bar']} title={'Search videos'} />
@@ -65,7 +65,7 @@ const VideosList = ({ className, metaCatalog, season, seasonOnSelect }) => {
                         </div>
                     </React.Fragment>
                     :
-                    metaCatalog.content.type === 'Err' || videosForSeason.length === 0 ?
+                    metaItem.content.type === 'Err' || videosForSeason.length === 0 ?
                         <div className={styles['message-container']}>
                             <Image className={styles['image']} src={'/images/empty.png'} alt={' '} />
                             <div className={styles['label']}>No videos found for this meta!</div>
@@ -124,7 +124,7 @@ const VideosList = ({ className, metaCatalog, season, seasonOnSelect }) => {
 
 VideosList.propTypes = {
     className: PropTypes.string,
-    metaCatalog: PropTypes.object,
+    metaItem: PropTypes.object,
     season: PropTypes.number,
     seasonOnSelect: PropTypes.func
 };

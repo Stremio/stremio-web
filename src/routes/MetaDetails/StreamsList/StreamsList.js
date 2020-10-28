@@ -8,28 +8,28 @@ const { Button, Image } = require('stremio/common');
 const Stream = require('./Stream');
 const styles = require('./styles');
 
-const StreamsList = ({ className, streamsCatalogs }) => {
+const StreamsList = ({ className, ...props }) => {
     const streams = React.useMemo(() => {
-        return streamsCatalogs
-            .filter((catalog) => catalog.content.type === 'Ready')
-            .map((catalog) => {
-                return catalog.content.content.map((stream) => ({
+        return props.streams
+            .filter((streams) => streams.content.type === 'Ready')
+            .map((streams) => {
+                return streams.content.content.map((stream) => ({
                     ...stream,
-                    addonName: catalog.addonName
+                    addonName: streams.addon.manifest.name
                 }));
             })
             .flat(1);
-    }, [streamsCatalogs]);
+    }, [props.streams]);
     return (
         <div className={classnames(className, styles['streams-list-container'])}>
             {
-                streamsCatalogs.length === 0 ?
+                props.streams.length === 0 ?
                     <div className={styles['message-container']}>
                         <Image className={styles['image']} src={'/images/empty.png'} alt={' '} />
                         <div className={styles['label']}>No addons were requested for streams!</div>
                     </div>
                     :
-                    streamsCatalogs.every((streamsResource) => streamsResource.content.type === 'Err') ?
+                    props.streams.every((streams) => streams.content.type === 'Err') ?
                         <div className={styles['message-container']}>
                             <Image className={styles['image']} src={'/images/empty.png'} alt={' '} />
                             <div className={styles['label']}>No streams were found!</div>
@@ -64,7 +64,7 @@ const StreamsList = ({ className, streamsCatalogs }) => {
 
 StreamsList.propTypes = {
     className: PropTypes.string,
-    streamsCatalogs: PropTypes.arrayOf(PropTypes.object).isRequired
+    streams: PropTypes.arrayOf(PropTypes.object).isRequired
 };
 
 module.exports = StreamsList;

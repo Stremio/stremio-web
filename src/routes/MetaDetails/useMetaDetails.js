@@ -5,27 +5,28 @@ const { useModelState } = require('stremio/common');
 
 const init = () => ({
     selected: null,
-    metaCatalog: null,
-    streamsCatalogs: [],
-    metaExtensions: []
+    metaItem: null,
+    streams: [],
+    metaExtensions: [],
+    title: null
 });
 
 const map = (metaDetails) => ({
     ...metaDetails,
-    metaCatalog: metaDetails.metaCatalog !== null && metaDetails.metaCatalog.content.type === 'Ready' ?
+    metaItem: metaDetails.metaItem !== null && metaDetails.metaItem.content.type === 'Ready' ?
         {
-            ...metaDetails.metaCatalog,
+            ...metaDetails.metaItem,
             content: {
-                ...metaDetails.metaCatalog.content,
+                ...metaDetails.metaItem.content,
                 content: {
-                    ...metaDetails.metaCatalog.content.content,
+                    ...metaDetails.metaItem.content.content,
                     released: new Date(
-                        typeof metaDetails.metaCatalog.content.content.released === 'string' ?
-                            metaDetails.metaCatalog.content.content.released
+                        typeof metaDetails.metaItem.content.content.released === 'string' ?
+                            metaDetails.metaItem.content.content.released
                             :
                             NaN
                     ),
-                    videos: metaDetails.metaCatalog.content.content.videos.map((video) => ({
+                    videos: metaDetails.metaItem.content.content.videos.map((video) => ({
                         ...video,
                         released: new Date(
                             typeof video.released === 'string' ?
@@ -38,7 +39,7 @@ const map = (metaDetails) => ({
             }
         }
         :
-        metaDetails.metaCatalog
+        metaDetails.metaItem
 });
 
 const useMetaDetails = (urlParams) => {
@@ -55,7 +56,7 @@ const useMetaDetails = (urlParams) => {
                             id: urlParams.id,
                             extra: []
                         },
-                        streamsPath: typeof urlParams.videoId === 'string' ?
+                        streamPath: typeof urlParams.videoId === 'string' ?
                             {
                                 resource: 'stream',
                                 type: urlParams.type,
