@@ -3,7 +3,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const Stream = require('stremio/routes/MetaDetails/StreamsList/Stream');
+// const Stream = require('stremio/routes/MetaDetails/StreamsList/Stream');
 // const AddonDetails = require('stremio/common/AddonDetailsModal/AddonDetails');
 const { MetaPreview, CONSTANTS } = require('stremio/common');
 const styles = require('./styles');
@@ -39,7 +39,7 @@ const InfoMenu = ({ className, ...props }) => {
                     :
                     null
             }
-            {
+            {/* {
                 props.stream !== null ?
                     <Stream
                         {...props.stream}
@@ -48,7 +48,7 @@ const InfoMenu = ({ className, ...props }) => {
                     />
                     :
                     null
-            }
+            } */}
             {/* {
                 props.addon !== null ?
                     <AddonDetails

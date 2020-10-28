@@ -2,9 +2,11 @@
 
 const React = require('react');
 const { useServices } = require('stremio/services');
+const { useProfile } = require('stremio/common');
 
-const useSettings = (profile) => {
+const useSettings = () => {
     const { core } = useServices();
+    const profile = useProfile();
     const updateSettings = React.useCallback((settings) => {
         core.transport.dispatch({
             action: 'Ctx',

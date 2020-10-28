@@ -1,128 +1,86 @@
 // Copyright (C) 2017-2020 Smart code 203358507
 
 const React = require('react');
+const pako = require('pako');
 const { useServices } = require('stremio/services');
-const { deepLinking, useModelState } = require('stremio/common');
+const { useModelState } = require('stremio/common');
 
-const initPlayerState = () => ({
+const init = () => ({
     selected: null,
-    meta_resource: null,
-    subtitles_resources: [],
-    next_video: null,
-    library_item: null
+    metaItem: null,
+    subtitles: [],
+    nextVideoDeepLinks: null,
+    libraryItem: null,
+    title: null,
+    addon: null,
 });
 
-const mapPlayerStateWithCtx = (player, ctx) => {
-    const selected = player.selected !== null ?
+const map = (player) => ({
+    ...player,
+    metaItem: player.metaItem !== null ?
         {
-            stream: {
-                ...player.selected.stream,
-                addon: ctx.profile.addons.reduce((result, addon) => {
-                    if (player.selected.stream_resource_request !== null && addon.transportUrl === player.selected.stream_resource_request.base) {
-                        return addon;
-                    }
-
-                    return result;
-                }, null)
-            },
-            stream_resource_request: player.selected.stream_resource_request,
-            meta_resource_request: player.selected.meta_resource_request,
-            subtitles_resource_ref: player.selected.subtitles_resource_ref,
-            video_id: player.selected.video_id
+            ...player.metaItem,
+            released: new Date(
+                typeof player.metaItem.released === 'string' ?
+                    player.metaItem.released
+                    :
+                    NaN
+            ),
+            videos: player.metaItem.videos.map((video) => ({
+                ...video,
+                released: new Date(
+                    typeof video.released === 'string' ?
+                        video.released
+                        :
+                        NaN
+                ),
+            }))
         }
         :
-        null;
-    const meta_resource = player.meta_resource !== null && player.meta_resource.content.type === 'Ready' ?
-        {
-            request: player.meta_resource.request,
-            content: {
-                type: 'Ready',
-                content: {
-                    ...player.meta_resource.content.content,
-                    released: new Date(
-                        typeof player.meta_resource.content.content.released === 'string' ?
-                            player.meta_resource.content.content.released
-                            :
-                            NaN
-                    ),
-                    videos: player.meta_resource.content.content.videos.map((video) => ({
-                        ...video,
-                        released: new Date(
-                            typeof video.released === 'string' ?
-                                video.released
-                                :
-                                NaN
-                        ),
-                        // TODO add watched and progress
-                        href: `#/metadetails/${player.meta_resource.content.content.type}/${player.meta_resource.content.content.id}/${video.id}`
-                    }))
-                }
-            }
-        }
-        :
-        player.meta_resource;
-    const subtitles_resources = player.subtitles_resources.map((subtitles_resource) => {
-        const request = subtitles_resource.request;
-        const addon = ctx.profile.addons.reduce((result, addon) => {
-            if (addon.transportUrl === subtitles_resource.request.base) {
-                return addon;
-            }
-
-            return result;
-        }, null);
-        const content = subtitles_resource.content;
-        return { request, addon, content };
-    });
-    const next_video = player.next_video;
-    const library_item = player.library_item;
-    return { selected, meta_resource, subtitles_resources, next_video, library_item };
-};
+        null,
+});
 
 const usePlayer = (urlParams) => {
     const { core } = useServices();
-    const loadPlayerAction = React.useMemo(() => {
+    const action = React.useMemo(() => {
         try {
             return {
                 action: 'Load',
                 args: {
                     model: 'Player',
                     args: {
-                        stream: deepLinking.deserializeStream(urlParams.stream),
-                        stream_resource_request: typeof urlParams.streamTransportUrl === 'string' && typeof urlParams.type === 'string' && typeof urlParams.videoId === 'string' ?
+                        stream: JSON.parse(pako.inflate(atob(urlParams.stream), { to: 'string' })),
+                        streamRequest: typeof urlParams.streamTransportUrl === 'string' && typeof urlParams.type === 'string' && typeof urlParams.videoId === 'string' ?
                             {
                                 base: urlParams.streamTransportUrl,
                                 path: {
                                     resource: 'stream',
-                                    type_name: urlParams.type,
+                                    type: urlParams.type,
                                     id: urlParams.videoId,
                                     extra: []
                                 }
                             }
                             :
                             null,
-                        meta_resource_request: typeof urlParams.metaTransportUrl === 'string' && typeof urlParams.type === 'string' && typeof urlParams.id === 'string' ?
+                        metaRequest: typeof urlParams.metaTransportUrl === 'string' && typeof urlParams.type === 'string' && typeof urlParams.id === 'string' ?
                             {
                                 base: urlParams.metaTransportUrl,
                                 path: {
                                     resource: 'meta',
-                                    type_name: urlParams.type,
+                                    type: urlParams.type,
                                     id: urlParams.id,
                                     extra: []
                                 }
                             }
                             :
                             null,
-                        subtitles_resource_ref: typeof urlParams.type === 'string' && typeof urlParams.videoId === 'string' ?
+                        subtitlesPath: typeof urlParams.type === 'string' && typeof urlParams.videoId === 'string' ?
                             {
                                 resource: 'subtitles',
-                                type_name: urlParams.type,
+                                type: urlParams.type,
                                 id: urlParams.videoId,
                                 extra: []
                             }
-                            :
-                            null,
-                        video_id: typeof urlParams.videoId === 'string' ?
-                            urlParams.videoId
                             :
                             null
                     }
@@ -151,12 +109,7 @@ const usePlayer = (urlParams) => {
             }
         }, 'player');
     }, []);
-    const player = useModelState({
-        model: 'player',
-        action: loadPlayerAction,
-        init: initPlayerState,
-        mapWithCtx: mapPlayerStateWithCtx
-    });
+    const player = useModelState({ model: 'player', action, init, map });
     return [player, updateLibraryItemState, pushToLibrary];
 };
 

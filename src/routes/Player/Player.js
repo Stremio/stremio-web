@@ -6,24 +6,21 @@ const classnames = require('classnames');
 const debounce = require('lodash.debounce');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
-const { HorizontalNavBar, useDeepEqualEffect, useFullscreen, useBinaryState, useToast, useProfile, useStreamingServer } = require('stremio/common');
+const { HorizontalNavBar, useDeepEqualEffect, useFullscreen, useBinaryState, useToast, useStreamingServer } = require('stremio/common');
 const BufferingLoader = require('./BufferingLoader');
 const ControlBar = require('./ControlBar');
 const InfoMenu = require('./InfoMenu');
 const SubtitlesMenu = require('./SubtitlesMenu');
 const Video = require('./Video');
-const useInfo = require('./useInfo');
 const usePlayer = require('./usePlayer');
 const useSettings = require('./useSettings');
 const styles = require('./styles');
 
 const Player = ({ urlParams }) => {
     const { core, chromecast } = useServices();
-    const profile = useProfile();
     const [player, updateLibraryItemState, pushToLibrary] = usePlayer(urlParams);
-    const [settings, updateSettings] = useSettings(profile);
+    const [settings, updateSettings] = useSettings();
     const streamingServer = useStreamingServer();
-    const info = useInfo(player, profile);
     const routeFocused = useRouteFocused();
     const toast = useToast();
     const [, , , toggleFullscreen] = useFullscreen();
@@ -64,30 +61,36 @@ const Player = ({ urlParams }) => {
         manifest.props.forEach((propName) => {
             dispatch({ type: 'observeProp', propName });
         });
-        dispatch({ type: 'setProp', propName: 'subtitlesSize', propValue: settings.subtitles_size });
-        dispatch({ type: 'setProp', propName: 'subtitlesTextColor', propValue: settings.subtitles_text_color });
-        dispatch({ type: 'setProp', propName: 'subtitlesBackgroundColor', propValue: settings.subtitles_background_color });
-        dispatch({ type: 'setProp', propName: 'subtitlesOutlineColor', propValue: settings.subtitles_outline_color });
-        dispatch({ type: 'setProp', propName: 'subtitlesOffset', propValue: settings.subtitles_offset });
-    }, [settings.subtitles_size, settings.subtitles_text_color, settings.subtitles_background_color, settings.subtitles_outline_color, settings.subtitles_offset]);
+        dispatch({ type: 'setProp', propName: 'subtitlesSize', propValue: settings.subtitlesSize });
+        dispatch({ type: 'setProp', propName: 'subtitlesTextColor', propValue: settings.subtitlesTextColor });
+        dispatch({ type: 'setProp', propName: 'subtitlesBackgroundColor', propValue: settings.subtitlesBackgroundColor });
+        dispatch({ type: 'setProp', propName: 'subtitlesOutlineColor', propValue: settings.subtitlesOutlineColor });
+        dispatch({ type: 'setProp', propName: 'subtitlesOffset', propValue: settings.subtitlesOffset });
+    }, [settings.subtitlesSize, settings.subtitlesTextColor, settings.subtitlesBackgroundColor, settings.subtitlesOutlineColor, settings.subtitlesOffset]);
     const onPropChanged = React.useCallback((propName, propValue) => {
         setVideoState({ [propName]: propValue });
     }, []);
     const onEnded = React.useCallback(() => {
         core.transport.dispatch({ action: 'Unload' }, 'player');
-        if (player.library_item !== null) {
+        if (player.libraryItem !== null) {
             core.transport.dispatch({
                 action: 'Ctx',
                 args: {
                     action: 'RewindLibraryItem',
-                    args: player.library_item._id
+                    args: player.libraryItem._id
                 }
             });
         }
-        if (player.next_video !== null) {
-            // TODO go to next video
+        if (player.nextVideoDeepLinks !== null) {
+            window.location.replace(
+                typeof player.nextVideoDeepLinks.player === 'string' ?
+                    player.nextVideoDeepLinks.player
+                    :
+                    player.nextVideoDeepLinks.metaDetailsStreams
+            );
+        } else {
+            window.history.back();
         }
-        window.history.back();
     }, [player]);
     const onError = React.useCallback((error) => {
         if (error.critical) {
@@ -136,10 +139,10 @@ const Player = ({ urlParams }) => {
         dispatch({ type: 'setProp', propName: 'subtitlesDelay', propValue: delay });
     }, []);
     const onSubtitlesSizeChanged = React.useCallback((size) => {
-        updateSettings({ subtitles_size: size });
+        updateSettings({ subtitlesSize: size });
     }, [updateSettings]);
     const onSubtitlesOffsetChanged = React.useCallback((offset) => {
-        updateSettings({ subtitles_offset: offset });
+        updateSettings({ subtitlesOffset: offset });
     }, [updateSettings]);
     const onVideoClick = React.useCallback(() => {
         if (videoState.paused !== null) {
@@ -182,19 +185,19 @@ const Player = ({ urlParams }) => {
         setError(null);
         if (player.selected === null) {
             dispatch({ type: 'command', commandName: 'unload' });
-        } else if (streamingServer.base_url !== null && streamingServer.base_url.type !== 'Loading') {
+        } else if (streamingServer.baseUrl !== null && streamingServer.baseUrl.type !== 'Loading') {
             dispatch({
                 type: 'command',
                 commandName: 'load',
                 commandArgs: {
                     stream: player.selected.stream,
                     autoplay: true,
-                    time: player.library_item !== null && player.selected.video_id !== null && player.library_item.state.video_id === player.selected.video_id ?
-                        player.library_item.state.timeOffset
+                    time: player.libraryItem !== null && player.selected.streamRequest !== null && player.libraryItem.state.video_id === player.selected.streamRequest.id ?
+                        player.libraryItem.state.timeOffset
                         :
                         0,
                     transcode: casting,
-                    streamingServerURL: typeof streamingServer.base_url.content === 'string' ? streamingServer.base_url.content : null,
+                    streamingServerURL: streamingServer.baseUrl.type === 'Ready' ? streamingServer.baseUrl.content : null,
                     chromecastTransport: chromecast.transport
                 }
             });
@@ -203,48 +206,39 @@ const Player = ({ urlParams }) => {
                     type: 'command',
                     commandName: 'addSubtitlesTracks',
                     commandArgs: {
-                        tracks: player.selected.stream.subtitles.map(({ url, lang }) => ({
-                            url,
-                            lang,
+                        tracks: player.selected.stream.subtitles.map((subtitles) => ({
+                            ...subtitles,
                             origin: 'EMBEDDED IN STREAM'
                         }))
                     }
                 });
             }
         }
-    }, [streamingServer.base_url, player.selected, casting]);
+    }, [streamingServer.baseUrl, player.selected, casting]);
     useDeepEqualEffect(() => {
         dispatch({
             type: 'command',
             commandName: 'addSubtitlesTracks',
             commandArgs: {
-                tracks: player.subtitles_resources
-                    .filter((subtitles_resource) => subtitles_resource.content.type === 'Ready')
-                    .reduce((tracks, subtitles_resource) => {
-                        return tracks.concat(subtitles_resource.content.content.map(({ url, lang }) => ({
-                            url,
-                            lang,
-                            origin: subtitles_resource.addon !== null ? subtitles_resource.addon.manifest.name : subtitles_resource.request.base
-                        })));
-                    }, [])
+                tracks: player.subtitles
             }
         });
-    }, [streamingServer.base_url, player.subtitles_resources, player.selected, casting]);
+    }, [player.subtitles, streamingServer.baseUrl, player.selected, casting]);
     React.useEffect(() => {
-        dispatch({ type: 'setProp', propName: 'subtitlesSize', propValue: settings.subtitles_size });
-    }, [settings.subtitles_size]);
+        dispatch({ type: 'setProp', propName: 'subtitlesSize', propValue: settings.subtitlesSize });
+    }, [settings.subtitlesSize]);
     React.useEffect(() => {
-        dispatch({ type: 'setProp', propName: 'subtitlesTextColor', propValue: settings.subtitles_text_color });
-    }, [settings.subtitles_text_color]);
+        dispatch({ type: 'setProp', propName: 'subtitlesTextColor', propValue: settings.subtitlesTextColor });
+    }, [settings.subtitlesTextColor]);
     React.useEffect(() => {
-        dispatch({ type: 'setProp', propName: 'subtitlesBackgroundColor', propValue: settings.subtitles_background_color });
-    }, [settings.subtitles_background_color]);
+        dispatch({ type: 'setProp', propName: 'subtitlesBackgroundColor', propValue: settings.subtitlesBackgroundColor });
+    }, [settings.subtitlesBackgroundColor]);
     React.useEffect(() => {
-        dispatch({ type: 'setProp', propName: 'subtitlesOutlineColor', propValue: settings.subtitles_outline_color });
-    }, [settings.subtitles_outline_color]);
+        dispatch({ type: 'setProp', propName: 'subtitlesOutlineColor', propValue: settings.subtitlesOutlineColor });
+    }, [settings.subtitlesOutlineColor]);
     React.useEffect(() => {
-        dispatch({ type: 'setProp', propName: 'subtitlesOffset', propValue: settings.subtitles_offset });
-    }, [settings.subtitles_offset]);
+        dispatch({ type: 'setProp', propName: 'subtitlesOffset', propValue: settings.subtitlesOffset });
+    }, [settings.subtitlesOffset]);
     React.useEffect(() => {
         if (videoState.time !== null && !isNaN(videoState.time) && videoState.duration !== null && !isNaN(videoState.duration)) {
             updateLibraryItemState(videoState.time, videoState.duration);
@@ -256,12 +250,14 @@ const Player = ({ urlParams }) => {
         }
     }, [videoState.subtitlesTracks]);
     React.useEffect(() => {
-        if (info === null) {
+        if (player.metaItem === null) {
             closeInfoMenu();
         }
-    }, [info]);
+    }, [player]);
     React.useEffect(() => {
-        const intervalId = setInterval(pushToLibrary, 30000);
+        const intervalId = setInterval(() => {
+            pushToLibrary();
+        }, 30000);
         return () => {
             clearInterval(intervalId);
         };
@@ -343,7 +339,7 @@ const Player = ({ urlParams }) => {
                 }
                 case 'KeyI': {
                     closeSubtitlesMenu();
-                    if (info !== null) {
+                    if (player.metaItem !== null) {
                         toggleInfoMenu();
                     }
 
@@ -362,7 +358,7 @@ const Player = ({ urlParams }) => {
         return () => {
             window.removeEventListener('keydown', onKeyDown);
         };
-    }, [routeFocused, subtitlesMenuOpen, infoMenuOpen, info, videoState.paused, videoState.time, videoState.volume, videoState.subtitlesTracks, toggleSubtitlesMenu, toggleInfoMenu]);
+    }, [player, routeFocused, subtitlesMenuOpen, infoMenuOpen, videoState.paused, videoState.time, videoState.volume, videoState.subtitlesTracks, toggleSubtitlesMenu, toggleInfoMenu]);
     React.useLayoutEffect(() => {
         return () => {
             setImmersedDebounced.cancel();
@@ -410,7 +406,7 @@ const Player = ({ urlParams }) => {
             }
             <HorizontalNavBar
                 className={classnames(styles['layer'], styles['nav-bar-layer'])}
-                title={info !== null ? info.title : ''}
+                title={player.title !== null ? player.title : ''}
                 backButton={true}
                 fullscreenButton={true}
                 onMouseMove={onBarMouseMove}
@@ -424,7 +420,7 @@ const Player = ({ urlParams }) => {
                 volume={videoState.volume}
                 muted={videoState.muted}
                 subtitlesTracks={videoState.subtitlesTracks}
-                info={info}
+                infoAvailable={player.metaItem !== null}
                 onPlayRequested={onPlayRequested}
                 onPauseRequested={onPauseRequested}
                 onMuteRequested={onMuteRequested}
@@ -460,9 +456,9 @@ const Player = ({ urlParams }) => {
                 infoMenuOpen ?
                     <InfoMenu
                         className={classnames(styles['layer'], styles['menu-layer'])}
-                        stream={info !== null ? info.stream : null}
-                        addon={info !== null ? info.addon : null}
-                        metaItem={info !== null ? info.metaItem : null}
+                        stream={player.selected !== null ? player.selected.stream : null}
+                        addon={player.addon}
+                        metaItem={player.metaItem}
                     />
                     :
                     null
