@@ -6,16 +6,12 @@ const mapSelectableInputs = (installedAddons, remoteAddons) => {
     const catalogSelect = {
         title: 'Select catalog',
         options: remoteAddons.selectable.catalogs
-            .map(({ catalog, addonName, deepLinks }) => ({
+            .concat(installedAddons.selectable.catalogs)
+            .map(({ name, deepLinks }) => ({
                 value: deepLinks.addons,
-                label: catalog,
-                title: `${catalog} (${addonName})`
-            }))
-            .concat(installedAddons.selectable.catalogs.map(({ catalog, deepLinks }) => ({
-                value: deepLinks.addons,
-                label: catalog,
-                title: catalog
-            }))),
+                label: name,
+                title: name
+            })),
         selected: remoteAddons.selectable.catalogs
             .concat(installedAddons.selectable.catalogs)
             .filter(({ selected }) => selected)
@@ -23,8 +19,8 @@ const mapSelectableInputs = (installedAddons, remoteAddons) => {
         renderLabelText: remoteAddons.selected !== null ?
             () => {
                 const selectableCatalog = remoteAddons.selectable.catalogs
-                    .find(({ request }) => request.path.id === remoteAddons.selected.request.path.id);
-                return selectableCatalog ? selectableCatalog.catalog : remoteAddons.selected.request.path.id;
+                    .find(({ id }) => id === remoteAddons.selected.request.path.id);
+                return selectableCatalog ? selectableCatalog.name : remoteAddons.selected.request.path.id;
             }
             :
             null,
