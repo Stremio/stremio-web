@@ -2,7 +2,7 @@
     "name": "stremio",
     "displayName": "Stremio",
     "version": "5.0.0",
-    "publisher": "Smart Code Ltd.",
+    "author": "Smart Code OOD",
     "website": "www.stremio.com",
     "private": true,
     "license": "gpl-2.0",
