@@ -285,6 +285,19 @@
         width: 15rem;
         max-height: calc(3.2rem * 7);
         overflow-y: auto;
+        scrollbar-color: @color-surface-light1 @color-surface-light4;
+
+        ::-webkit-scrollbar-thumb {
+            background-color: @color-surface-light1;
+
+            &:hover {
+                background-color: @color-surface-light2;
+            }
+        }
+
+        ::-webkit-scrollbar-track {
+            background-color: @color-surface-light4;
+        }
 
         .multiselect-option-container {
             background: none;
