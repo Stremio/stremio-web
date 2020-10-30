@@ -8,26 +8,6 @@ const init = () => ({
     catalogs: []
 });
 
-const map = (search) => ({
-    ...search,
-    catalogs: search.catalogs.map((catalog) => ({
-        ...catalog,
-        content: catalog.content.type === 'Ready' ?
-            {
-                ...catalog.content,
-                content: catalog.content.content.map((metaItem, _, metaItems) => ({
-                    type: metaItem.type,
-                    name: metaItem.name,
-                    poster: metaItem.poster,
-                    posterShape: metaItems[0].posterShape,
-                    deepLinks: metaItem.deepLinks
-                }))
-            }
-            :
-            catalog.content
-    }))
-});
-
 const useSearch = (queryParams) => {
     const action = React.useMemo(() => {
         if (queryParams.has('search') && queryParams.get('search').length > 0) {
@@ -48,7 +28,7 @@ const useSearch = (queryParams) => {
             };
         }
     }, [queryParams]);
-    return useModelState({ model: 'search', action, map, init });
+    return useModelState({ model: 'search', action, init });
 };
 
 module.exports = useSearch;
