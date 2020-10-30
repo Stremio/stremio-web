@@ -3,7 +3,6 @@
     "displayName": "Stremio",
     "version": "5.0.0",
     "author": "Smart Code OOD",
-    "website": "www.stremio.com",
     "private": true,
     "license": "gpl-2.0",
     "scripts": {
