@@ -24,10 +24,10 @@ const mapSelectableInputs = (discover) => {
     const catalogSelect = {
         title: 'Select catalog',
         options: discover.selectable.catalogs
-            .map(({ catalog, addonName, deepLinks }) => ({
+            .map(({ name, addon, deepLinks }) => ({
                 value: deepLinks.discover,
-                label: catalog,
-                title: `${catalog} (${addonName})`
+                label: name,
+                title: `${name} (${addon.manifest.name})`
             })),
         selected: discover.selectable.catalogs
             .filter(({ selected }) => selected)
@@ -35,8 +35,8 @@ const mapSelectableInputs = (discover) => {
         renderLabelText: discover.selected !== null ?
             () => {
                 const selectableCatalog = discover.selectable.catalogs
-                    .find(({ request }) => request.path.id === discover.selected.request.path.id);
-                return selectableCatalog ? selectableCatalog.catalog : discover.selected.request.path.id;
+                    .find(({ id }) => id === discover.selected.request.path.id);
+                return selectableCatalog ? selectableCatalog.name : discover.selected.request.path.id;
             }
             :
             null,
