@@ -12,22 +12,6 @@ const init = () => ({
     catalog: []
 });
 
-const map = (library) => ({
-    ...library,
-    catalog: library.catalog.map((libItem) => ({
-        id: libItem._id,
-        type: libItem.type,
-        name: libItem.name,
-        poster: libItem.poster,
-        posterShape: libItem.posterShape === 'landscape' ? 'square' : libItem.posterShape,
-        progress: libItem.state.timeOffset > 0 && libItem.state.duration > 0 ?
-            libItem.state.timeOffset / libItem.state.duration
-            :
-            null,
-        deepLinks: libItem.deepLinks
-    }))
-});
-
 const useLibrary = (model, urlParams, queryParams) => {
     const action = React.useMemo(() => ({
         action: 'Load',
@@ -41,7 +25,7 @@ const useLibrary = (model, urlParams, queryParams) => {
             }
         }
     }), [urlParams, queryParams]);
-    return useModelState({ model, action, map, init });
+    return useModelState({ model, action, init });
 };
 
 module.exports = useLibrary;
