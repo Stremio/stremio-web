@@ -12,7 +12,7 @@ const OPTIONS = [
     { label: 'Remove', value: 'remove' },
 ];
 
-const LibItem = ({ id, removable, ...props }) => {
+const LibItem = ({ _id, removable, ...props }) => {
     const { core } = useServices();
     const options = React.useMemo(() => {
         return OPTIONS.filter(({ value }) => {
@@ -22,12 +22,12 @@ const LibItem = ({ id, removable, ...props }) => {
                 case 'details':
                     return props.deepLinks && (typeof props.deepLinks.metaDetailsVideos === 'string' || typeof props.deepLinks.metaDetailsStreams === 'string');
                 case 'dismiss':
-                    return typeof id === 'string' && props.progress !== null && !isNaN(props.progress);
+                    return typeof _id === 'string' && props.progress !== null && !isNaN(props.progress);
                 case 'remove':
-                    return typeof id === 'string' && removable;
+                    return typeof _id === 'string' && removable;
             }
         });
-    }, [id, removable, props.progress, props.deepLinks]);
+    }, [_id, removable, props.progress, props.deepLinks]);
     const optionOnSelect = React.useCallback((event) => {
         if (typeof props.optionOnSelect === 'function') {
             props.optionOnSelect(event);
@@ -54,12 +54,12 @@ const LibItem = ({ id, removable, ...props }) => {
                     break;
                 }
                 case 'dismiss': {
-                    if (typeof id === 'string') {
+                    if (typeof _id === 'string') {
                         core.transport.dispatch({
                             action: 'Ctx',
                             args: {
                                 action: 'RewindLibraryItem',
-                                args: id
+                                args: _id
                             }
                         });
                     }
@@ -67,12 +67,12 @@ const LibItem = ({ id, removable, ...props }) => {
                     break;
                 }
                 case 'remove': {
-                    if (typeof id === 'string') {
+                    if (typeof _id === 'string') {
                         core.transport.dispatch({
                             action: 'Ctx',
                             args: {
                                 action: 'RemoveFromLibrary',
-                                args: id
+                                args: _id
                             }
                         });
                     }
@@ -81,7 +81,7 @@ const LibItem = ({ id, removable, ...props }) => {
                 }
             }
         }
-    }, [id, props.deepLinks, props.optionOnSelect]);
+    }, [_id, props.deepLinks, props.optionOnSelect]);
     return (
         <MetaItem
             {...props}
@@ -92,7 +92,7 @@ const LibItem = ({ id, removable, ...props }) => {
 };
 
 LibItem.propTypes = {
-    id: PropTypes.string,
+    _id: PropTypes.string,
     removable: PropTypes.bool,
     progress: PropTypes.number,
     deepLinks: PropTypes.shape({
