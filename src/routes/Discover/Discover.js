@@ -100,7 +100,7 @@ const Discover = ({ urlParams, queryParams }) => {
                             null
                     }
                     {
-                        discover.catalog !== null && typeof discover.catalog.addonName !== 'string' ?
+                        discover.catalog !== null && !discover.catalog.installed ?
                             <div className={styles['missing-addon-warning-container']}>
                                 <div className={styles['warning-label']}>Addon is not installed. Install now?</div>
                                 <Button className={styles['install-button']} title={'Install addon'} onClick={openAddonModal}>
@@ -216,8 +216,8 @@ const Discover = ({ urlParams, queryParams }) => {
                     null
             }
             {
-                addonModalOpen && discover.catalog !== null ?
-                    <AddonDetailsModal transportUrl={discover.catalog.request.base} onCloseRequest={closeAddonModal} />
+                addonModalOpen && discover.selected !== null ?
+                    <AddonDetailsModal transportUrl={discover.selected.request.base} onCloseRequest={closeAddonModal} />
                     :
                     null
             }
