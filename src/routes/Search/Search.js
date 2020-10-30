@@ -49,18 +49,13 @@ const Search = ({ queryParams }) => {
                             </div>
                             :
                             search.catalogs.map((catalog, index) => {
-                                const title = `${catalog.addonName} - ${catalog.request.path.id} ${catalog.request.path.type}`;
                                 switch (catalog.content.type) {
                                     case 'Ready': {
-                                        const posterShape = catalog.content.content.length > 0 ?
-                                            catalog.content.content[0].posterShape
-                                            :
-                                            null;
                                         return (
                                             <MetaRow
                                                 key={index}
-                                                className={classnames(styles['search-row'], styles['search-row-poster'], { [styles[`search-row-${posterShape}`]]: typeof posterShape === 'string' })}
-                                                title={title}
+                                                className={classnames(styles['search-row'], styles[`search-row-${catalog.content.content[0].posterShape}`])}
+                                                title={catalog.title}
                                                 items={catalog.content.content}
                                                 itemComponent={MetaItem}
                                                 deepLinks={catalog.deepLinks}
@@ -81,7 +76,7 @@ const Search = ({ queryParams }) => {
                                             <MetaRow
                                                 key={index}
                                                 className={styles['search-row']}
-                                                title={title}
+                                                title={catalog.title}
                                                 message={message}
                                                 deepLinks={catalog.deepLinks}
                                             />
@@ -92,7 +87,7 @@ const Search = ({ queryParams }) => {
                                             <MetaRow.Placeholder
                                                 key={index}
                                                 className={classnames(styles['search-row'], styles['search-row-poster'])}
-                                                title={title}
+                                                title={catalog.title}
                                                 deepLinks={catalog.deepLinks}
                                             />
                                         );

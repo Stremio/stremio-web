@@ -26,18 +26,13 @@ const Board = () => {
                         null
                 }
                 {board.catalogs.map((catalog, index) => {
-                    const title = `${catalog.addonName} - ${catalog.request.path.id} ${catalog.request.path.type}`;
                     switch (catalog.content.type) {
                         case 'Ready': {
-                            const posterShape = catalog.content.content.length > 0 ?
-                                catalog.content.content[0].posterShape
-                                :
-                                '';
                             return (
                                 <MetaRow
                                     key={index}
-                                    className={classnames(styles['board-row'], styles['board-row-poster'], { [styles[`board-row-${posterShape}`]]: typeof posterShape === 'string' })}
-                                    title={title}
+                                    className={classnames(styles['board-row'], styles[`board-row-${catalog.content.content[0].posterShape}`])}
+                                    title={catalog.title}
                                     items={catalog.content.content}
                                     itemComponent={MetaItem}
                                     deepLinks={catalog.deepLinks}
@@ -58,7 +53,7 @@ const Board = () => {
                                 <MetaRow
                                     key={index}
                                     className={styles['board-row']}
-                                    title={title}
+                                    title={catalog.title}
                                     message={message}
                                     deepLinks={catalog.deepLinks}
                                 />
@@ -69,7 +64,7 @@ const Board = () => {
                                 <MetaRow.Placeholder
                                     key={index}
                                     className={classnames(styles['board-row'], styles['board-row-poster'])}
-                                    title={title}
+                                    title={catalog.title}
                                     deepLinks={catalog.deepLinks}
                                 />
                             );
