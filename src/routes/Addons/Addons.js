@@ -135,7 +135,7 @@ const Addons = ({ urlParams, queryParams }) => {
                         remoteAddons.selected !== null ?
                             remoteAddons.catalog.content.type === 'Err' ?
                                 <div className={styles['message-container']}>
-                                    Addons could not be loaded!
+                                    {remoteAddons.catalog.content.content}
                                 </div>
                                 :
                                 remoteAddons.catalog.content.type === 'Loading' ?
