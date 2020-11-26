@@ -4,7 +4,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const NotFound = require('stremio/routes/NotFound');
-const { Button, Multiselect, MainNavBars, LibItem, Image, useProfile, routesRegexp } = require('stremio/common');
+const { Button, Multiselect, MainNavBars, LibItem, Image, PaginationInput, useProfile, routesRegexp } = require('stremio/common');
 const useLibrary = require('./useLibrary');
 const useSelectableInputs = require('./useSelectableInputs');
 const styles = require('./styles');
@@ -12,7 +12,7 @@ const styles = require('./styles');
 const Library = ({ model, urlParams, queryParams }) => {
     const profile = useProfile();
     const library = useLibrary(model, urlParams, queryParams);
-    const [typeSelect, sortSelect] = useSelectableInputs(library);
+    const [typeSelect, sortSelect, paginationInput] = useSelectableInputs(library);
     return (
         <MainNavBars className={styles['library-container']} route={model}>
             <div className={styles['library-content']}>
@@ -21,6 +21,13 @@ const Library = ({ model, urlParams, queryParams }) => {
                         <div className={styles['selectable-inputs-container']}>
                             <Multiselect {...typeSelect} className={styles['select-input-container']} />
                             <Multiselect {...sortSelect} className={styles['select-input-container']} />
+                            <div className={styles['spacing']} />
+                            {
+                                paginationInput !== null ?
+                                    <PaginationInput {...paginationInput} className={styles['pagination-input']} />
+                                    :
+                                    <PaginationInput label={'1'} className={classnames(styles['pagination-input'], styles['pagination-input-placeholder'])} />
+                            }
                         </div>
                         :
                         null

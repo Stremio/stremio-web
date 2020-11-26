@@ -7,7 +7,9 @@ const init = () => ({
     selected: null,
     selectable: {
         types: [],
-        sorts: []
+        sorts: [],
+        prevPage: null,
+        nextPage: null
     },
     catalog: []
 });
@@ -20,7 +22,8 @@ const useLibrary = (model, urlParams, queryParams) => {
             args: {
                 request: {
                     type: typeof urlParams.type === 'string' ? urlParams.type : null,
-                    sort: queryParams.has('sort') ? queryParams.get('sort') : undefined
+                    sort: queryParams.has('sort') ? queryParams.get('sort') : undefined,
+                    page: queryParams.has('page') ? parseInt(queryParams.get('page'), 10) : undefined
                 }
             }
         }
