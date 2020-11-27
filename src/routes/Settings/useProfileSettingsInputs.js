@@ -59,7 +59,7 @@ const useProfileSettingsInputs = (profile) => {
                     action: 'UpdateSettings',
                     args: {
                         ...profile.settings,
-                        subtitlesSize: parseInt(event.value)
+                        subtitlesSize: parseInt(event.value, 10)
                     }
                 }
             });

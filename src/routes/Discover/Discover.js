@@ -53,7 +53,7 @@ const Discover = ({ urlParams, queryParams }) => {
     }, [selectedMetaItem]);
     const metaItemsOnFocusCapture = React.useCallback((event) => {
         if (event.target.dataset.index !== null && !isNaN(event.target.dataset.index)) {
-            setSelectedMetaItemIndex(parseInt(event.target.dataset.index));
+            setSelectedMetaItemIndex(parseInt(event.target.dataset.index, 10));
         }
     }, []);
     const metaItemOnClick = React.useCallback((event) => {

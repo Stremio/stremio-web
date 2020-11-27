@@ -5,7 +5,7 @@ const React = require('react');
 const useSeason = (urlParams, queryParams) => {
     const season = React.useMemo(() => {
         return queryParams.has('season') && !isNaN(queryParams.get('season')) ?
-            parseInt(queryParams.get('season'))
+            parseInt(queryParams.get('season'), 10)
             :
             null;
     }, [queryParams]);
