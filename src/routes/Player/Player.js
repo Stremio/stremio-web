@@ -16,7 +16,7 @@ const usePlayer = require('./usePlayer');
 const useSettings = require('./useSettings');
 const styles = require('./styles');
 
-const Player = ({ urlParams }) => {
+const Player = ({ urlParams, queryParams }) => {
     const { core, chromecast } = useServices();
     const [player, updateLibraryItemState, pushToLibrary] = usePlayer(urlParams);
     const [settings, updateSettings] = useSettings();
@@ -27,6 +27,9 @@ const Player = ({ urlParams }) => {
     const [casting, setCasting] = React.useState(() => {
         return chromecast.active && chromecast.transport.getCastState() === cast.framework.CastState.CONNECTED;
     });
+    const forceTranscoding = React.useMemo(() => {
+        return casting || queryParams.has('forceTranscoding');
+    }, [casting, queryParams]);
     const [immersed, setImmersed] = React.useState(true);
     const setImmersedDebounced = React.useCallback(debounce(setImmersed, 3000), []);
     const [subtitlesMenuOpen, , closeSubtitlesMenu, toggleSubtitlesMenu] = useBinaryState(false);
@@ -43,12 +46,14 @@ const Player = ({ urlParams }) => {
             muted: null,
             subtitlesTracks: [],
             selectedSubtitlesTrackId: null,
-            subtitlesSize: null,
-            subtitlesDelay: null,
-            subtitlesOffset: null,
-            subtitlesTextColor: null,
-            subtitlesBackgroundColor: null,
-            subtitlesOutlineColor: null
+            extraSubtitlesTracks: [],
+            selectedExtraSubtitlesTrackId: null,
+            extraSubtitlesSize: null,
+            extraSubtitlesDelay: null,
+            extraSubtitlesOffset: null,
+            extraSubtitlesTextColor: null,
+            extraSubtitlesBackgroundColor: null,
+            extraSubtitlesOutlineColor: null
         }
     );
     const videoRef = React.useRef(null);
@@ -61,12 +66,12 @@ const Player = ({ urlParams }) => {
         manifest.props.forEach((propName) => {
             dispatch({ type: 'observeProp', propName });
         });
-        dispatch({ type: 'setProp', propName: 'subtitlesSize', propValue: settings.subtitlesSize });
-        dispatch({ type: 'setProp', propName: 'subtitlesTextColor', propValue: settings.subtitlesTextColor });
-        dispatch({ type: 'setProp', propName: 'subtitlesBackgroundColor', propValue: settings.subtitlesBackgroundColor });
-        dispatch({ type: 'setProp', propName: 'subtitlesOutlineColor', propValue: settings.subtitlesOutlineColor });
-        dispatch({ type: 'setProp', propName: 'subtitlesOffset', propValue: settings.subtitlesOffset });
-    }, [settings.subtitlesSize, settings.subtitlesTextColor, settings.subtitlesBackgroundColor, settings.subtitlesOutlineColor, settings.subtitlesOffset]);
+        dispatch({ type: 'setProp', propName: 'extraSubtitlesSize', propValue: settings.subtitlesSize });
+        dispatch({ type: 'setProp', propName: 'extraSubtitlesOffset', propValue: settings.subtitlesOffset });
+        dispatch({ type: 'setProp', propName: 'extraSubtitlesTextColor', propValue: settings.subtitlesTextColor });
+        dispatch({ type: 'setProp', propName: 'extraSubtitlesBackgroundColor', propValue: settings.subtitlesBackgroundColor });
+        dispatch({ type: 'setProp', propName: 'extraSubtitlesOutlineColor', propValue: settings.subtitlesOutlineColor });
+    }, [settings.subtitlesSize, settings.subtitlesOffset, settings.subtitlesTextColor, settings.subtitlesBackgroundColor, settings.subtitlesOutlineColor]);
     const onPropChanged = React.useCallback((propName, propValue) => {
         setVideoState({ [propName]: propValue });
     }, []);
@@ -104,7 +109,15 @@ const Player = ({ urlParams }) => {
             });
         }
     }, []);
-    const onSubtitlesTrackLoaded = React.useCallback((track) => {
+    const onSubtitlesTrackLoaded = React.useCallback(() => {
+        toast.show({
+            type: 'success',
+            title: 'Subtitles loaded',
+            message: 'Embedded subtitles loaded',
+            timeout: 3000
+        });
+    }, []);
+    const onExtraSubtitlesTrackLoaded = React.useCallback((track) => {
         toast.show({
             type: 'success',
             title: 'Subtitles loaded',
@@ -132,11 +145,16 @@ const Player = ({ urlParams }) => {
     const onSeekRequested = React.useCallback((time) => {
         dispatch({ type: 'setProp', propName: 'time', propValue: time });
     }, []);
-    const onSubtitlesTrackSelected = React.useCallback((trackId) => {
-        dispatch({ type: 'setProp', propName: 'selectedSubtitlesTrackId', propValue: trackId });
+    const onSubtitlesTrackSelected = React.useCallback((id) => {
+        dispatch({ type: 'setProp', propName: 'selectedExtraSubtitlesTrackId', propValue: null });
+        dispatch({ type: 'setProp', propName: 'selectedSubtitlesTrackId', propValue: id });
     }, []);
-    const onSubtitlesDelayChanged = React.useCallback((delay) => {
-        dispatch({ type: 'setProp', propName: 'subtitlesDelay', propValue: delay });
+    const onExtraSubtitlesTrackSelected = React.useCallback((id) => {
+        dispatch({ type: 'setProp', propName: 'selectedSubtitlesTrackId', propValue: null });
+        dispatch({ type: 'setProp', propName: 'selectedExtraSubtitlesTrackId', propValue: id });
+    }, []);
+    const onExtraSubtitlesDelayChanged = React.useCallback((delay) => {
+        dispatch({ type: 'setProp', propName: 'extraSubtitlesDelay', propValue: delay });
     }, []);
     const onSubtitlesSizeChanged = React.useCallback((size) => {
         updateSettings({ subtitlesSize: size });
@@ -196,49 +214,41 @@ const Player = ({ urlParams }) => {
                         player.libraryItem.state.timeOffset
                         :
                         0,
-                    transcode: casting,
+                    forceTranscoding: forceTranscoding,
                     streamingServerURL: streamingServer.baseUrl.type === 'Ready' ? streamingServer.baseUrl.content : null,
                     chromecastTransport: chromecast.transport
                 }
             });
-            if (Array.isArray(player.selected.stream.subtitles)) {
-                dispatch({
-                    type: 'command',
-                    commandName: 'addSubtitlesTracks',
-                    commandArgs: {
-                        tracks: player.selected.stream.subtitles.map((subtitles) => ({
-                            ...subtitles,
-                            origin: 'EMBEDDED IN STREAM'
-                        }))
-                    }
-                });
-            }
         }
-    }, [streamingServer.baseUrl, player.selected, casting]);
+    }, [streamingServer.baseUrl, player.selected, forceTranscoding]);
     useDeepEqualEffect(() => {
         dispatch({
             type: 'command',
-            commandName: 'addSubtitlesTracks',
+            commandName: 'addExtraSubtitlesTracks',
             commandArgs: {
-                tracks: player.subtitles
+                tracks: player.subtitles.map((subtitles, index) => ({
+                    ...subtitles,
+                    id: `extra_${index}`,
+                    label: subtitles.lang
+                }))
             }
         });
-    }, [player.subtitles, streamingServer.baseUrl, player.selected, casting]);
+    }, [player.subtitles, streamingServer.baseUrl, player.selected, forceTranscoding]);
     React.useEffect(() => {
-        dispatch({ type: 'setProp', propName: 'subtitlesSize', propValue: settings.subtitlesSize });
+        dispatch({ type: 'setProp', propName: 'extraSubtitlesSize', propValue: settings.subtitlesSize });
     }, [settings.subtitlesSize]);
     React.useEffect(() => {
-        dispatch({ type: 'setProp', propName: 'subtitlesTextColor', propValue: settings.subtitlesTextColor });
+        dispatch({ type: 'setProp', propName: 'extraSubtitlesOffset', propValue: settings.subtitlesOffset });
+    }, [settings.subtitlesOffset]);
+    React.useEffect(() => {
+        dispatch({ type: 'setProp', propName: 'extraSubtitlesTextColor', propValue: settings.subtitlesTextColor });
     }, [settings.subtitlesTextColor]);
     React.useEffect(() => {
-        dispatch({ type: 'setProp', propName: 'subtitlesBackgroundColor', propValue: settings.subtitlesBackgroundColor });
+        dispatch({ type: 'setProp', propName: 'extraSubtitlesBackgroundColor', propValue: settings.subtitlesBackgroundColor });
     }, [settings.subtitlesBackgroundColor]);
     React.useEffect(() => {
-        dispatch({ type: 'setProp', propName: 'subtitlesOutlineColor', propValue: settings.subtitlesOutlineColor });
+        dispatch({ type: 'setProp', propName: 'extraSubtitlesOutlineColor', propValue: settings.subtitlesOutlineColor });
     }, [settings.subtitlesOutlineColor]);
-    React.useEffect(() => {
-        dispatch({ type: 'setProp', propName: 'subtitlesOffset', propValue: settings.subtitlesOffset });
-    }, [settings.subtitlesOffset]);
     React.useEffect(() => {
         if (videoState.time !== null && !isNaN(videoState.time) && videoState.duration !== null && !isNaN(videoState.duration)) {
             updateLibraryItemState(videoState.time, videoState.duration);
@@ -380,6 +390,7 @@ const Player = ({ urlParams }) => {
                 onPropValue={onPropChanged}
                 onPropChanged={onPropChanged}
                 onSubtitlesTrackLoaded={onSubtitlesTrackLoaded}
+                onExtraSubtitlesTrackLoaded={onExtraSubtitlesTrackLoaded}
                 onImplementationChanged={onImplementationChanged}
             />
             {
@@ -419,7 +430,7 @@ const Player = ({ urlParams }) => {
                 duration={videoState.duration}
                 volume={videoState.volume}
                 muted={videoState.muted}
-                subtitlesTracks={videoState.subtitlesTracks}
+                subtitlesTracks={videoState.subtitlesTracks.concat(videoState.extraSubtitlesTracks)}
                 infoAvailable={player.metaItem !== null}
                 onPlayRequested={onPlayRequested}
                 onPauseRequested={onPauseRequested}
@@ -438,16 +449,16 @@ const Player = ({ urlParams }) => {
                         className={classnames(styles['layer'], styles['menu-layer'])}
                         tracks={videoState.subtitlesTracks}
                         selectedTrackId={videoState.selectedSubtitlesTrackId}
-                        offset={videoState.subtitlesOffset}
-                        size={videoState.subtitlesSize}
-                        delay={videoState.subtitlesDelay}
-                        textColor={videoState.subtitlesTextColor}
-                        backgroundColor={videoState.subtitlesBackgroundColor}
-                        outlineColor={videoState.subtitlesOutlineColor}
+                        extraTracks={videoState.extraSubtitlesTracks}
+                        selectedExtraTrackId={videoState.selectedExtraSubtitlesTrackId}
+                        extraDelay={videoState.extraSubtitlesDelay}
+                        extraSize={videoState.extraSubtitlesSize}
+                        extraOffset={videoState.extraSubtitlesOffset}
                         onTrackSelected={onSubtitlesTrackSelected}
-                        onDelayChanged={onSubtitlesDelayChanged}
-                        onSizeChanged={onSubtitlesSizeChanged}
-                        onOffsetChanged={onSubtitlesOffsetChanged}
+                        onExtraTrackSelected={onExtraSubtitlesTrackSelected}
+                        onExtraDelayChanged={onExtraSubtitlesDelayChanged}
+                        onExtraSizeChanged={onSubtitlesSizeChanged}
+                        onExtraOffsetChanged={onSubtitlesOffsetChanged}
                     />
                     :
                     null
@@ -475,7 +486,8 @@ Player.propTypes = {
         type: PropTypes.string,
         id: PropTypes.string,
         videoId: PropTypes.string
-    })
+    }),
+    queryParams: PropTypes.instanceOf(URLSearchParams)
 };
 
 module.exports = Player;
