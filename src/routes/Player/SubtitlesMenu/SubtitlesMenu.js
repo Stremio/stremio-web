@@ -155,7 +155,7 @@ const SubtitlesMenu = (props) => {
                     tracksForLanguage.length > 0 ?
                         <div className={styles['variants-list']}>
                             {tracksForLanguage.map((track, index) => (
-                                <Button key={index} title={track.origin} className={classnames(styles['variant-option'], { 'selected': props.selectedTrackId === track.id || props.selectedExtraTrackId === track.id })} data-id={track.id} data-origin={track.origin} onClick={trackOnClick}>
+                                <Button key={index} title={track.label} className={classnames(styles['variant-option'], { 'selected': props.selectedTrackId === track.id || props.selectedExtraTrackId === track.id })} data-id={track.id} data-origin={track.origin} onClick={trackOnClick}>
                                     <div className={styles['variant-label']}>{track.origin}</div>
                                     {
                                         props.selectedTrackId === track.id || props.selectedExtraTrackId === track.id ?

@@ -229,7 +229,7 @@ const Player = ({ urlParams, queryParams }) => {
                 tracks: player.subtitles.map((subtitles, index) => ({
                     ...subtitles,
                     id: `extra_${index}`,
-                    label: subtitles.lang
+                    label: subtitles.url
                 }))
             }
         });
