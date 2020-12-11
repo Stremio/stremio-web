@@ -38,6 +38,7 @@ const Player = ({ urlParams, queryParams }) => {
     const [videoState, setVideoState] = React.useReducer(
         (videoState, nextVideoState) => ({ ...videoState, ...nextVideoState }),
         {
+            stream: null,
             paused: null,
             time: null,
             duration: null,
@@ -233,7 +234,7 @@ const Player = ({ urlParams, queryParams }) => {
                 }))
             }
         });
-    }, [player.subtitles, streamingServer.baseUrl, player.selected, forceTranscoding]);
+    }, [player.subtitles, videoState.stream]);
     React.useEffect(() => {
         dispatch({ type: 'setProp', propName: 'extraSubtitlesSize', propValue: settings.subtitlesSize });
     }, [settings.subtitlesSize]);
