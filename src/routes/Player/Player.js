@@ -18,6 +18,9 @@ const styles = require('./styles');
 
 const Player = ({ urlParams, queryParams }) => {
     const { core, chromecast } = useServices();
+    const forceTranscoding = React.useMemo(() => {
+        return queryParams.has('forceTranscoding');
+    }, [queryParams]);
     const [player, updateLibraryItemState, pushToLibrary] = usePlayer(urlParams);
     const [settings, updateSettings] = useSettings();
     const streamingServer = useStreamingServer();
@@ -27,9 +30,6 @@ const Player = ({ urlParams, queryParams }) => {
     const [casting, setCasting] = React.useState(() => {
         return chromecast.active && chromecast.transport.getCastState() === cast.framework.CastState.CONNECTED;
     });
-    const forceTranscoding = React.useMemo(() => {
-        return casting || queryParams.has('forceTranscoding');
-    }, [casting, queryParams]);
     const [immersed, setImmersed] = React.useState(true);
     const setImmersedDebounced = React.useCallback(debounce(setImmersed, 3000), []);
     const [subtitlesMenuOpen, , closeSubtitlesMenu, toggleSubtitlesMenu] = useBinaryState(false);
@@ -215,13 +215,13 @@ const Player = ({ urlParams, queryParams }) => {
                         player.libraryItem.state.timeOffset
                         :
                         0,
-                    forceTranscoding: forceTranscoding,
+                    forceTranscoding: forceTranscoding || casting,
                     streamingServerURL: streamingServer.baseUrl.type === 'Ready' ? streamingServer.baseUrl.content : null,
                     chromecastTransport: chromecast.transport
                 }
             });
         }
-    }, [streamingServer.baseUrl, player.selected, forceTranscoding]);
+    }, [streamingServer.baseUrl, player.selected, forceTranscoding, casting]);
     useDeepEqualEffect(() => {
         dispatch({
             type: 'command',
