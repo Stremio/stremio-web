@@ -46,7 +46,15 @@
                 "SwitchCase": 1
             }
         ],
-        "no-console": "error",
+        "no-console": [
+            "error",
+            {
+                "allow": [
+                    "warn",
+                    "error"
+                ]
+            }
+        ],
         "no-extra-semi": "error",
         "no-eq-null": "error",
         "no-multi-spaces": "error",
