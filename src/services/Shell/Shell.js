@@ -9,7 +9,6 @@ function Shell() {
 
     const events = new EventEmitter();
     events.on('error', (error) => {
-        /* eslint-disable-next-line no-console */
         console.error(error);
     });
 

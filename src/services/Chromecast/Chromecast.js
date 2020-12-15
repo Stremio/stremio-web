@@ -6,7 +6,6 @@ const ChromecastTransport = require('./ChromecastTransport');
 let castAPIAvailable = null;
 const castAPIEvents = new EventEmitter();
 castAPIEvents.on('error', (error) => {
-    /* eslint-disable-next-line no-console */
     console.error(error);
 });
 window['__onGCastApiAvailable'] = function(available) {
@@ -23,7 +22,6 @@ function Chromecast() {
 
     const events = new EventEmitter();
     events.on('error', (error) => {
-        /* eslint-disable-next-line no-console */
         console.error(error);
     });
 

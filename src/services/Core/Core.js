@@ -8,21 +8,18 @@ let transport = null;
 let apiInitialized = null;
 const apiEvents = new EventEmitter();
 apiEvents.on('error', (error) => {
-    /* eslint-disable-next-line no-console */
     console.error(error);
 });
 initialize_api()
     .then(() => {
         const transportEvents = new EventEmitter();
         transportEvents.on('error', (error) => {
-            /* eslint-disable-next-line no-console */
             console.error(error);
         });
         return initialize_runtime(({ name, args }) => {
             try {
                 transportEvents.emit(name, args);
             } catch (error) {
-                /* eslint-disable-next-line no-console */
                 console.error(error);
             }
         }).then(() => {
@@ -34,7 +31,6 @@ initialize_api()
         apiEvents.emit('initialized');
     })
     .catch((error) => {
-        /* eslint-disable-next-line no-console */
         console.error(error);
         apiInitialized = false;
         apiEvents.emit('initialized');
@@ -48,7 +44,6 @@ function Core() {
 
     const events = new EventEmitter();
     events.on('error', (error) => {
-        /* eslint-disable-next-line no-console */
         console.error(error);
     });
 

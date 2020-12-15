@@ -23,7 +23,6 @@ const Video = React.forwardRef(({ className, ...props }, ref) => {
             try {
                 videoRef.current.dispatch(action);
             } catch (error) {
-                // eslint-disable-next-line no-console
                 console.error('StremioVideo', error);
             }
         }
