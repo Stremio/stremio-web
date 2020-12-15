@@ -212,9 +212,8 @@ const Player = ({ urlParams, queryParams }) => {
                     stream: {
                         ...player.selected.stream,
                         subtitles: Array.isArray(player.selected.stream.subtitles) ?
-                            player.selected.stream.subtitles.map((subtitles, index) => ({
+                            player.selected.stream.subtitles.map((subtitles) => ({
                                 ...subtitles,
-                                id: 'exclusive_' + index,
                                 label: subtitles.url
                             }))
                             :
@@ -238,9 +237,8 @@ const Player = ({ urlParams, queryParams }) => {
                 type: 'command',
                 commandName: 'addExtraSubtitlesTracks',
                 commandArgs: {
-                    tracks: player.subtitles.map((subtitles, index) => ({
+                    tracks: player.subtitles.map((subtitles) => ({
                         ...subtitles,
-                        id: `extra_${index}`,
                         label: subtitles.url
                     }))
                 }
