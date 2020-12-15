@@ -223,17 +223,19 @@ const Player = ({ urlParams, queryParams }) => {
         }
     }, [streamingServer.baseUrl, player.selected, forceTranscoding, casting]);
     useDeepEqualEffect(() => {
-        dispatch({
-            type: 'command',
-            commandName: 'addExtraSubtitlesTracks',
-            commandArgs: {
-                tracks: player.subtitles.map((subtitles, index) => ({
-                    ...subtitles,
-                    id: `extra_${index}`,
-                    label: subtitles.url
-                }))
-            }
-        });
+        if (videoState.stream !== null) {
+            dispatch({
+                type: 'command',
+                commandName: 'addExtraSubtitlesTracks',
+                commandArgs: {
+                    tracks: player.subtitles.map((subtitles, index) => ({
+                        ...subtitles,
+                        id: `extra_${index}`,
+                        label: subtitles.url
+                    }))
+                }
+            });
+        }
     }, [player.subtitles, videoState.stream]);
     React.useEffect(() => {
         dispatch({ type: 'setProp', propName: 'extraSubtitlesSize', propValue: settings.subtitlesSize });
