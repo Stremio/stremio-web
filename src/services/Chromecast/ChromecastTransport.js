@@ -20,7 +20,7 @@ function ChromecastTransport() {
     );
 
     function onMessage(_, message) {
-        events.emit('message', message);
+        events.emit('message', JSON.parse(message));
     }
     function onApplicationStatusChanged(event) {
         events.emit(cast.framework.CastSession.APPLICATION_STATUS_CHANGED, event);
