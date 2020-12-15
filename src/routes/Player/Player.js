@@ -209,7 +209,17 @@ const Player = ({ urlParams, queryParams }) => {
                 type: 'command',
                 commandName: 'load',
                 commandArgs: {
-                    stream: player.selected.stream,
+                    stream: {
+                        ...player.selected.stream,
+                        subtitles: Array.isArray(player.selected.stream.subtitles) ?
+                            player.selected.stream.subtitles.map((subtitles, index) => ({
+                                ...subtitles,
+                                id: 'exclusive_' + index,
+                                label: subtitles.url
+                            }))
+                            :
+                            []
+                    },
                     autoplay: true,
                     time: player.libraryItem !== null && player.selected.streamRequest !== null && player.libraryItem.state.video_id === player.selected.streamRequest.id ?
                         player.libraryItem.state.timeOffset
