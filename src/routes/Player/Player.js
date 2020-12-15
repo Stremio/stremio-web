@@ -122,7 +122,7 @@ const Player = ({ urlParams, queryParams }) => {
         toast.show({
             type: 'success',
             title: 'Subtitles loaded',
-            message: `Subtitles from ${track.origin} loaded`,
+            message: track.exclusive ? 'Exclusice subtitles loaded' : `Subtitles from ${track.origin} loaded`,
             timeout: 3000
         });
     }, []);
