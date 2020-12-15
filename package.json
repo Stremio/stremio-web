@@ -18,7 +18,7 @@
         "@stremio/stremio-colors": "4.0.1",
         "@stremio/stremio-core-web": "0.21.0",
         "@stremio/stremio-icons": "3.0.5",
-        "@stremio/stremio-video": "0.0.5",
+        "@stremio/stremio-video": "0.0.7",
         "a-color-picker": "1.2.1",
         "classnames": "2.2.6",
         "events": "1.1.1",
