@@ -2,10 +2,10 @@
 
 const React = require('react');
 const ReactDOM = require('react-dom');
-const Sentry = require('@sentry/browser');
 const App = require('./App');
 
 if (typeof process.env.SENTRY_DSN === 'string') {
+    const Sentry = require('@sentry/browser');
     Sentry.init({ dsn: process.env.SENTRY_DSN });
 }
 
