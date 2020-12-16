@@ -21,7 +21,7 @@
         "@stremio/stremio-video": "0.0.7",
         "a-color-picker": "1.2.1",
         "classnames": "2.2.6",
-        "events": "1.1.1",
+        "eventemitter3": "4.0.7",
         "lodash.debounce": "4.0.8",
         "lodash.isequal": "4.5.0",
         "lodash.throttle": "4.1.1",

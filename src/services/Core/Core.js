@@ -1,6 +1,6 @@
 // Copyright (C) 2017-2020 Smart code 203358507
 
-const EventEmitter = require('events');
+const EventEmitter = require('eventemitter3');
 const { default: initialize_api, initialize_runtime } = require('@stremio/stremio-core-web');
 const CoreTransport = require('./CoreTransport');
 

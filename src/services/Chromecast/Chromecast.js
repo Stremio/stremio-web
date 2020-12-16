@@ -1,6 +1,6 @@
 // Copyright (C) 2017-2020 Smart code 203358507
 
-const EventEmitter = require('events');
+const EventEmitter = require('eventemitter3');
 const ChromecastTransport = require('./ChromecastTransport');
 
 let castAPIAvailable = null;
