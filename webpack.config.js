@@ -41,14 +41,19 @@ module.exports = (env, argv) => ({
                     {
                         loader: MiniCssExtractPlugin.loader,
                         options: {
-                            reloadAll: true
+                            esModule: false,
+                            modules: {
+                                namedExport: false
+                            }
                         }
                     },
                     {
                         loader: 'css-loader',
                         options: {
+                            esModule: false,
                             importLoaders: 2,
                             modules: {
+                                namedExport: false,
                                 localIdentName: '[local]-[hash:base64:5]'
                             }
                         }
@@ -56,49 +61,71 @@ module.exports = (env, argv) => ({
                     {
                         loader: 'postcss-loader',
                         options: {
-                            ident: 'postcss-id',
-                            plugins: () => [
-                                require('cssnano')({
-                                    preset: [
-                                        'advanced',
-                                        {
-                                            autoprefixer: {
-                                                add: true,
-                                                remove: true,
-                                                flexbox: false,
-                                                grid: false
-                                            },
-                                            cssDeclarationSorter: true,
-                                            calc: false,
-                                            colormin: false,
-                                            convertValues: false,
-                                            discardComments: {
-                                                removeAll: true,
-                                            },
-                                            discardOverridden: false,
-                                            mergeIdents: false,
-                                            normalizeDisplayValues: false,
-                                            normalizePositions: false,
-                                            normalizeRepeatStyle: false,
-                                            normalizeUnicode: false,
-                                            normalizeUrl: false,
-                                            reduceIdents: false,
-                                            reduceInitial: false,
-                                            zindex: false
-                                        }
-                                    ]
-                                })
-                            ]
+                            postcssOptions: {
+                                plugins: [
+                                    require('cssnano')({
+                                        preset: [
+                                            'advanced',
+                                            {
+                                                autoprefixer: {
+                                                    add: true,
+                                                    remove: true,
+                                                    flexbox: false,
+                                                    grid: false
+                                                },
+                                                cssDeclarationSorter: true,
+                                                calc: false,
+                                                colormin: false,
+                                                convertValues: false,
+                                                discardComments: {
+                                                    removeAll: true,
+                                                },
+                                                discardOverridden: false,
+                                                mergeIdents: false,
+                                                normalizeDisplayValues: false,
+                                                normalizePositions: false,
+                                                normalizeRepeatStyle: false,
+                                                normalizeUnicode: false,
+                                                normalizeUrl: false,
+                                                reduceIdents: false,
+                                                reduceInitial: false,
+                                                zindex: false
+                                            }
+                                        ]
+                                    })
+                                ]
+                            }
                         }
                     },
                     {
                         loader: 'less-loader',
                         options: {
-                            strictMath: true,
-                            noIeCompat: true
+                            lessOptions: {
+                                strictMath: true,
+                                ieCompat: false
+                            }
                         }
                     }
                 ]
+            },
+            {
+                test: /\.ttf$/,
+                exclude: /node_modules/,
+                loader: 'file-loader',
+                options: {
+                    outputPath: 'fonts',
+                    publicPath: 'fonts',
+                }
+            },
+            {
+                test: /\.(png|jpe?g)$/,
+                exclude: /node_modules/,
+                loader: 'file-loader',
+                options: {
+                    esModule: false,
+                    outputPath: 'images',
+                    publicPath: 'images',
+                }
             }
         ]
     },
@@ -116,6 +143,7 @@ module.exports = (env, argv) => ({
         https: true
     },
     optimization: {
+        minimize: true,
         minimizer: [
             new TerserPlugin({
                 test: /\.js$/,
@@ -138,14 +166,18 @@ module.exports = (env, argv) => ({
             DEBUG: argv.mode !== 'production',
             VERSION: pachageJson.version,
             COMMIT_HASH: child_process.execSync('git rev-parse HEAD').toString(),
+            SENTRY_DSN: null,
             ...env
         }),
         new webpack.ProgressPlugin(),
-        new CopyWebpackPlugin([
-            { from: 'node_modules/@stremio/stremio-core-web/stremio_core_web_bg.wasm', to: '' },
-            { from: 'images', to: 'images' },
-            { from: 'fonts', to: 'fonts' }
-        ]),
+        new CopyWebpackPlugin({
+            patterns: [
+                {
+                    from: 'node_modules/@stremio/stremio-core-web/stremio_core_web_bg.wasm',
+                    to: ''
+                }
+            ]
+        }),
         new HtmlWebPackPlugin({
             template: './src/index.html',
             inject: false
