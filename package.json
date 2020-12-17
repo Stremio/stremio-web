@@ -18,7 +18,7 @@
         "@stremio/stremio-colors": "4.0.1",
         "@stremio/stremio-core-web": "0.21.0",
         "@stremio/stremio-icons": "3.0.5",
-        "@stremio/stremio-video": "0.0.7",
+        "@stremio/stremio-video": "0.0.8",
         "a-color-picker": "1.2.1",
         "classnames": "2.2.6",
         "events": "1.1.1",
@@ -27,8 +27,8 @@
         "lodash.throttle": "4.1.1",
         "pako": "1.0.11",
         "prop-types": "15.7.2",
-        "react": "16.12.0",
-        "react-dom": "16.12.0",
+        "react": "17.0.1",
+        "react-dom": "17.0.1",
         "react-focus-lock": "2.2.1",
         "spatial-navigation-polyfill": "git+https://git@github.com/Stremio/spatial-navigation.git#40204ad9942fe786794c62f99ea5ab2b52b24096"
     },
@@ -61,8 +61,8 @@
         "react-test-renderer": "16.13.0",
         "storybook-addon-jsx": "7.1.15",
         "terser-webpack-plugin": "^2.3.8",
-        "webpack": "4.42.0",
-        "webpack-cli": "3.3.11",
+        "webpack": "^4.42.0",
+        "webpack-cli": "^3.3.11",
         "webpack-dev-server": "^3.11.0"
     }
 }
