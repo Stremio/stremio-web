@@ -62,7 +62,7 @@
         "react-test-renderer": "16.13.0",
         "storybook-addon-jsx": "7.1.15",
         "terser-webpack-plugin": "5.0.3",
-        "webpack": "5.10.3",
+        "webpack": "5.11.0",
         "webpack-cli": "4.2.0",
         "webpack-dev-server": "3.11.0"
     }
