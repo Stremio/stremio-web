@@ -10,4 +10,22 @@
         width: 17rem;
         height: 17rem;
     }
+
+    .pulsing {
+        @keyframes pulsing-animation {
+            0% {
+                opacity: 0.3;
+            }
+
+            50% {
+                opacity: 0.8;
+            }
+
+            100% {
+                opacity: 0.3;
+            }
+        }
+
+        animation: pulsing-animation ease-in 1.8s infinite;
+    }
 }
