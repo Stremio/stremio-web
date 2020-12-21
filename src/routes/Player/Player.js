@@ -226,7 +226,13 @@ const Player = ({ urlParams, queryParams }) => {
                         :
                         0,
                     forceTranscoding: forceTranscoding || casting,
-                    streamingServerURL: streamingServer.baseUrl.type === 'Ready' ? streamingServer.baseUrl.content : null,
+                    streamingServerURL: streamingServer.baseUrl.type === 'Ready' ?
+                        casting ?
+                            streamingServer.baseUrl.content
+                            :
+                            streamingServer.selected.transportUrl
+                        :
+                        null,
                     chromecastTransport: chromecast.transport
                 }
             });
