@@ -77,7 +77,7 @@ const Player = ({ urlParams, queryParams }) => {
         setVideoState({ [propName]: propValue });
     }, []);
     const onEnded = React.useCallback(() => {
-        core.transport.dispatch({ action: 'Unload' }, 'player');
+        pushToLibrary();
         if (player.libraryItem !== null) {
             core.transport.dispatch({
                 action: 'Ctx',
