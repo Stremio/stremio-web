@@ -13,7 +13,11 @@ function CoreTransport(events) {
         return get_state(field);
     };
     this.dispatch = function(action, field) {
-        return dispatch(action, field);
+        try {
+            return dispatch(action, field);
+        } catch (error) {
+            console.error('CoreTransport', error);
+        }
     };
 }
 
