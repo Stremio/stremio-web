@@ -10,7 +10,7 @@ const apiEvents = new EventEmitter();
 apiEvents.on('error', (error) => {
     console.error(error);
 });
-initialize_api()
+initialize_api(require('@stremio/stremio-core-web/stremio_core_web_bg.wasm'))
     .then(() => {
         const transportEvents = new EventEmitter();
         transportEvents.on('error', (error) => {
