@@ -6,16 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
     <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon-96.png">
     <title>Stremio - All you can watch!</title>
-    <style>
-        <%= compilation.assets['main.css'].source() %>
-    </style>
+    <%= htmlWebpackPlugin.tags.headTags %>
 </head>
 
 <body>
     <div id="app"></div>
-    <script type="text/javascript">
-        <%= compilation.assets['main.js'].source() %>
-    </script>
+    <%= htmlWebpackPlugin.tags.bodyTags %>
     <script src="//www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1"></script>
 </body>
 
