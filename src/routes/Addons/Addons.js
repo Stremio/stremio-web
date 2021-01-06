@@ -64,11 +64,9 @@ const Addons = ({ urlParams, queryParams }) => {
                 (typeof addon.manifest.description === 'string' && addon.manifest.description.toLowerCase().includes(search.toLowerCase()))
             );
     }, [search]);
-    const renderLogoFallback = React.useMemo(() => () => {
-        return (
-            <Icon className={styles['icon']} icon={'ic_addons'} />
-        );
-    }, []);
+    const renderLogoFallback = React.useCallback(() => (
+        <Icon className={styles['icon']} icon={'ic_addons'} />
+    ), []);
     React.useLayoutEffect(() => {
         closeAddAddonModal();
         setSearch('');

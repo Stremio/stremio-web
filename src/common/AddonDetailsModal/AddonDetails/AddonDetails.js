@@ -8,11 +8,9 @@ const Image = require('stremio/common/Image');
 const styles = require('./styles');
 
 const AddonDetails = ({ className, id, name, version, logo, description, types, transportUrl, official }) => {
-    const renderLogoFallback = React.useMemo(() => () => {
-        return (
-            <Icon className={styles['icon']} icon={'ic_addons'} />
-        );
-    }, []);
+    const renderLogoFallback = React.useCallback(() => (
+        <Icon className={styles['icon']} icon={'ic_addons'} />
+    ), []);
     return (
         <div className={classnames(className, styles['addon-details-container'])}>
             <div className={styles['title-container']}>

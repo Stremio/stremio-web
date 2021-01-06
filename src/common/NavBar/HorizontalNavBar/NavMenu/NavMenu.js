@@ -43,7 +43,7 @@ const NavMenu = (props) => {
             children,
         })
     ), [menuOpen, popupLabelOnClick, props.renderLabel]);
-    const renderMenu = React.useMemo(() => () => (
+    const renderMenu = React.useCallback(() => (
         <div className={styles['nav-menu-container']} onClick={popupMenuOnClick}>
             <div className={styles['user-info-container']}>
                 <div

@@ -38,11 +38,9 @@ const Addon = ({ className, id, name, version, logo, description, types, install
             });
         }
     }, [onToggle, dataset]);
-    const renderLogoFallback = React.useMemo(() => () => {
-        return (
-            <Icon className={styles['icon']} icon={'ic_addons'} />
-        );
-    }, []);
+    const renderLogoFallback = React.useCallback(() => (
+        <Icon className={styles['icon']} icon={'ic_addons'} />
+    ), []);
     return (
         <Button className={classnames(className, styles['addon-container'])} onKeyDown={onKeyDown}>
             <div className={styles['logo-container']}>

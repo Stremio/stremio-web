@@ -18,7 +18,7 @@ const Stream = ({ className, addonName, title, thumbnail, progress, deepLinks, .
             :
             null;
     }, [deepLinks]);
-    const renderThumbnailFallback = React.useMemo(() => () => (
+    const renderThumbnailFallback = React.useCallback(() => (
         <Icon className={styles['placeholder-icon']} icon={'ic_broken_link'} />
     ), []);
     return (

@@ -65,13 +65,13 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, playI
             });
         }
     }, [dataset, optionOnSelect]);
-    const renderPosterFallback = React.useMemo(() => () => (
+    const renderPosterFallback = React.useCallback(() => (
         <Icon
             className={styles['placeholder-icon']}
             icon={ICON_FOR_TYPE.has(type) ? ICON_FOR_TYPE.get(type) : ICON_FOR_TYPE.get('other')}
         />
     ), [type]);
-    const renderMenuLabelContent = React.useMemo(() => () => (
+    const renderMenuLabelContent = React.useCallback(() => (
         <Icon className={styles['icon']} icon={'ic_more'} />
     ), []);
     return (

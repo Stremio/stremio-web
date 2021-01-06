@@ -77,7 +77,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
 
         return trailerStreams[0].deepLinks.player;
     }, [trailerStreams]);
-    const renderLogoFallback = React.useMemo(() => () => (
+    const renderLogoFallback = React.useCallback(() => (
         <Icon className={styles['logo-placeholder-icon']} icon={'ic_broken_link'} />
     ), []);
     return (

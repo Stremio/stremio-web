@@ -80,7 +80,7 @@ const Multiselect = ({ className, mode, direction, title, disabled, dataset, ren
 
         mountedRef.current = true;
     }, [menuOpen]);
-    const renderLabel = React.useMemo(() => ({ children, className, ...props }) => (
+    const renderLabel = React.useCallback(({ children, className, ...props }) => (
         <Button {...props} className={classnames(className, styles['label-container'], { 'active': menuOpen })} title={title} disabled={disabled} onClick={labelOnClick}>
             {
                 typeof renderLabelContent === 'function' ?
@@ -110,7 +110,7 @@ const Multiselect = ({ className, mode, direction, title, disabled, dataset, ren
             {children}
         </Button>
     ), [menuOpen, title, disabled, options, selected, labelOnClick, renderLabelContent, renderLabelText]);
-    const renderMenu = React.useMemo(() => () => (
+    const renderMenu = React.useCallback(() => (
         <div className={styles['menu-container']} onKeyDown={menuOnKeyDown} onClick={menuOnClick}>
             {
                 options.length > 0 ?

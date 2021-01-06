@@ -9,13 +9,12 @@ const Image = require('stremio/common/Image');
 const styles = require('./styles');
 
 const NavTabButton = ({ className, logo, icon, label, href, selected, onClick }) => {
-    const renderLogoFallback = React.useMemo(() => () => {
-        return (
-            typeof icon === 'string' && icon.length > 0 ?
-                <Icon className={styles['icon']} icon={icon} />
-                :
-                null);
-    }, [icon]);
+    const renderLogoFallback = React.useCallback(() => (
+        typeof icon === 'string' && icon.length > 0 ?
+            <Icon className={styles['icon']} icon={icon} />
+            :
+            null
+    ), [icon]);
     return (
         <Button className={classnames(className, styles['nav-tab-button-container'], { 'selected': selected })} title={label} tabIndex={-1} href={href} onClick={onClick}>
             {
