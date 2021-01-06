@@ -37,7 +37,7 @@ const Library = ({ model, urlParams, queryParams }) => {
                         <div className={classnames(styles['message-container'], styles['no-user-message-container'])}>
                             <Image
                                 className={styles['image']}
-                                src={'/images/anonymous.png'}
+                                src={require('/images/anonymous.png')}
                                 alt={' '}
                             />
                             <Button className={styles['login-button-container']} href={'#/intro'}>
@@ -50,7 +50,7 @@ const Library = ({ model, urlParams, queryParams }) => {
                             <div className={styles['message-container']}>
                                 <Image
                                     className={styles['image']}
-                                    src={'/images/empty.png'}
+                                    src={require('/images/empty.png')}
                                     alt={' '}
                                 />
                                 <div className={styles['message-label']}>{model === 'library' ? 'Library' : 'Continue Watching'} not loaded!</div>
@@ -60,7 +60,7 @@ const Library = ({ model, urlParams, queryParams }) => {
                                 <div className={styles['message-container']}>
                                     <Image
                                         className={styles['image']}
-                                        src={'/images/empty.png'}
+                                        src={require('/images/empty.png')}
                                         alt={' '}
                                     />
                                     <div className={styles['message-label']}>Empty {model === 'library' ? 'Library' : 'Continue Watching'}</div>

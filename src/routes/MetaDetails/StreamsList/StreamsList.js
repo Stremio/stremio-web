@@ -25,13 +25,13 @@ const StreamsList = ({ className, ...props }) => {
             {
                 props.streams.length === 0 ?
                     <div className={styles['message-container']}>
-                        <Image className={styles['image']} src={'/images/empty.png'} alt={' '} />
+                        <Image className={styles['image']} src={require('/images/empty.png')} alt={' '} />
                         <div className={styles['label']}>No addons were requested for streams!</div>
                     </div>
                     :
                     props.streams.every((streams) => streams.content.type === 'Err') ?
                         <div className={styles['message-container']}>
-                            <Image className={styles['image']} src={'/images/empty.png'} alt={' '} />
+                            <Image className={styles['image']} src={require('/images/empty.png')} alt={' '} />
                             <div className={styles['label']}>No streams were found!</div>
                         </div>
                         :

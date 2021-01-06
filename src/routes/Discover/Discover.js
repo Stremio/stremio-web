@@ -113,13 +113,13 @@ const Discover = ({ urlParams, queryParams }) => {
                     {
                         discover.catalog === null ?
                             <div className={styles['message-container']}>
-                                <Image className={styles['image']} src={'/images/empty.png'} alt={' '} />
+                                <Image className={styles['image']} src={require('/images/empty.png')} alt={' '} />
                                 <div className={styles['message-label']}>No catalog selected!</div>
                             </div>
                             :
                             discover.catalog.content.type === 'Err' ?
                                 <div className={styles['message-container']}>
-                                    <Image className={styles['image']} src={'/images/empty.png'} alt={' '} />
+                                    <Image className={styles['image']} src={require('/images/empty.png')} alt={' '} />
                                     <div className={styles['message-label']}>{discover.catalog.content.content}</div>
                                 </div>
                                 :

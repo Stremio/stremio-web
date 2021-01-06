@@ -67,7 +67,7 @@ const VideosList = ({ className, metaItem, season, seasonOnSelect }) => {
                     :
                     metaItem.content.type === 'Err' || videosForSeason.length === 0 ?
                         <div className={styles['message-container']}>
-                            <Image className={styles['image']} src={'/images/empty.png'} alt={' '} />
+                            <Image className={styles['image']} src={require('/images/empty.png')} alt={' '} />
                             <div className={styles['label']}>No videos found for this meta!</div>
                         </div>
                         :

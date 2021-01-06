@@ -158,9 +158,9 @@ const Settings = () => {
                                 className={styles['avatar-container']}
                                 style={{
                                     backgroundImage: profile.auth === null ?
-                                        'url(\'/images/anonymous.png\')'
+                                        `url('${require('/images/anonymous.png')}')`
                                         :
-                                        `url('${profile.auth.user.avatar}'), url('/images/default_avatar.png')`
+                                        `url('${profile.auth.user.avatar}'), url('${require('/images/default_avatar.png')}')`
                                 }}
                             />
                             <div className={styles['email-logout-container']}>

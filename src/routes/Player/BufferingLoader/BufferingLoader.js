@@ -13,7 +13,7 @@ const BufferingLoader = ({ className, logo }) => {
                 className={styles['buffering-loader']}
                 src={logo}
                 alt={' '}
-                fallbackSrc={'/images/stremio_symbol.png'}
+                fallbackSrc={require('/images/stremio_symbol.png')}
             />
         </div>
     );

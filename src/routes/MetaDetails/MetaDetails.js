@@ -84,19 +84,19 @@ const MetaDetails = ({ urlParams, queryParams }) => {
                 {
                     metaPath === null ?
                         <div className={styles['meta-message-container']}>
-                            <Image className={styles['image']} src={'/images/empty.png'} alt={' '} />
+                            <Image className={styles['image']} src={require('/images/empty.png')} alt={' '} />
                             <div className={styles['message-label']}>No meta was selected!</div>
                         </div>
                         :
                         metaDetails.metaItem === null ?
                             <div className={styles['meta-message-container']}>
-                                <Image className={styles['image']} src={'/images/empty.png'} alt={' '} />
+                                <Image className={styles['image']} src={require('/images/empty.png')} alt={' '} />
                                 <div className={styles['message-label']}>No addons ware requested for this meta!</div>
                             </div>
                             :
                             metaDetails.metaItem.content.type === 'Err' ?
                                 <div className={styles['meta-message-container']}>
-                                    <Image className={styles['image']} src={'/images/empty.png'} alt={' '} />
+                                    <Image className={styles['image']} src={require('/images/empty.png')} alt={' '} />
                                     <div className={styles['message-label']}>No metadata was found!</div>
                                 </div>
                                 :

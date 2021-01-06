@@ -42,7 +42,7 @@ const Search = ({ queryParams }) => {
                             <div className={styles['message-container']}>
                                 <Image
                                     className={styles['image']}
-                                    src={'/images/empty.png'}
+                                    src={require('/images/empty.png')}
                                     alt={' '}
                                 />
                                 <div className={styles['message-label']}>No addons were requested for catalogs!</div>

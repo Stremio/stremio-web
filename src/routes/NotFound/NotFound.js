@@ -17,7 +17,7 @@ const NotFound = () => {
             <div className={styles['not-found-content']}>
                 <Image
                     className={styles['not-found-image']}
-                    src={'/images/empty.png'}
+                    src={require('/images/empty.png')}
                     alt={' '}
                 />
                 <div className={styles['not-found-label']}>Page not found!</div>
