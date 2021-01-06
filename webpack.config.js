@@ -180,6 +180,7 @@ module.exports = (env, argv) => ({
         ]
     },
     plugins: [
+        new webpack.ProgressPlugin(),
         new webpack.EnvironmentPlugin({
             SENTRY_DSN: null,
             ...env,
@@ -187,25 +188,19 @@ module.exports = (env, argv) => ({
             VERSION: pachageJson.version,
             COMMIT_HASH
         }),
-        new webpack.ProgressPlugin(),
+        new CleanWebpackPlugin({
+            cleanOnceBeforeBuildPatterns: ['*']
+        }),
         new CopyWebpackPlugin({
-            patterns: [
-                {
-                    from: 'favicons',
-                    to: `${COMMIT_HASH}/favicons`
-                }
-            ]
+            patterns: [{ from: 'favicons', to: `${COMMIT_HASH}/favicons` }]
+        }),
+        new MiniCssExtractPlugin({
+            filename: `${COMMIT_HASH}/styles/[name].css`
         }),
         new HtmlWebPackPlugin({
             template: './src/index.html',
             inject: false,
             faviconsPath: `${COMMIT_HASH}/favicons`
-        }),
-        new MiniCssExtractPlugin({
-            filename: `${COMMIT_HASH}/styles/[name].css`
-        }),
-        new CleanWebpackPlugin({
-            cleanOnceBeforeBuildPatterns: ['*']
         })
     ]
 });
