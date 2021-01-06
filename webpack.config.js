@@ -10,10 +10,14 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const pachageJson = require('./package.json');
 
+const COMMIT_HASH = child_process.execSync('git rev-parse HEAD').toString().trim();
+
 module.exports = (env, argv) => ({
+    mode: argv.mode,
     entry: './src/index.js',
     output: {
-        path: path.join(__dirname, 'build')
+        path: path.join(__dirname, 'build'),
+        filename: `${COMMIT_HASH}/scripts/[name].js`
     },
     module: {
         rules: [
@@ -113,8 +117,10 @@ module.exports = (env, argv) => ({
                 exclude: /node_modules/,
                 loader: 'file-loader',
                 options: {
-                    outputPath: 'fonts',
-                    publicPath: 'fonts',
+                    esModule: false,
+                    name: '[name].[ext]',
+                    outputPath: `${COMMIT_HASH}/fonts`,
+                    publicPath: `/${COMMIT_HASH}/fonts`
                 }
             },
             {
@@ -123,8 +129,19 @@ module.exports = (env, argv) => ({
                 loader: 'file-loader',
                 options: {
                     esModule: false,
-                    outputPath: 'images',
-                    publicPath: 'images',
+                    name: '[name].[ext]',
+                    outputPath: `${COMMIT_HASH}/images`,
+                    publicPath: `/${COMMIT_HASH}/images`
+                }
+            },
+            {
+                test: /\.wasm$/,
+                loader: 'file-loader',
+                options: {
+                    esModule: false,
+                    name: '[name].[ext]',
+                    outputPath: `${COMMIT_HASH}/binaries`,
+                    publicPath: `/${COMMIT_HASH}/binaries`
                 }
             }
         ]
@@ -132,12 +149,13 @@ module.exports = (env, argv) => ({
     resolve: {
         extensions: ['.js', '.json', '.less', '.wasm'],
         alias: {
-            'stremio': path.resolve(__dirname, 'src'),
-            'stremio-router': path.resolve(__dirname, 'src/router')
+            'stremio': path.join(__dirname, 'src'),
+            'stremio-router': path.join(__dirname, 'src', 'router')
         }
     },
     devServer: {
         host: '0.0.0.0',
+        contentBase: false,
         hot: false,
         inline: false,
         https: true
@@ -163,30 +181,31 @@ module.exports = (env, argv) => ({
     },
     plugins: [
         new webpack.EnvironmentPlugin({
+            SENTRY_DSN: null,
+            ...env,
             DEBUG: argv.mode !== 'production',
             VERSION: pachageJson.version,
-            COMMIT_HASH: child_process.execSync('git rev-parse HEAD').toString(),
-            SENTRY_DSN: null,
-            ...env
+            COMMIT_HASH
         }),
         new webpack.ProgressPlugin(),
         new CopyWebpackPlugin({
             patterns: [
                 {
-                    from: 'node_modules/@stremio/stremio-core-web/stremio_core_web_bg.wasm',
-                    to: ''
+                    from: 'favicons',
+                    to: `${COMMIT_HASH}/favicons`
                 }
             ]
         }),
         new HtmlWebPackPlugin({
             template: './src/index.html',
-            inject: false
+            inject: false,
+            faviconsPath: `${COMMIT_HASH}/favicons`
         }),
-        new MiniCssExtractPlugin(),
+        new MiniCssExtractPlugin({
+            filename: `${COMMIT_HASH}/styles/[name].css`
+        }),
         new CleanWebpackPlugin({
-            verbose: true,
-            cleanOnceBeforeBuildPatterns: ['*'],
-            cleanAfterEveryBuildPatterns: ['./main.js', './main.css']
+            cleanOnceBeforeBuildPatterns: ['*']
         })
     ]
 });
