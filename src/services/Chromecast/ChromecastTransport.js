@@ -6,9 +6,6 @@ const MESSAGE_NAMESPACE = 'urn:x-cast:com.stremio';
 
 function ChromecastTransport() {
     const events = new EventEmitter();
-    events.on('error', (error) => {
-        console.error(error);
-    });
 
     cast.framework.CastContext.getInstance().addEventListener(
         cast.framework.CastContextEventType.CAST_STATE_CHANGED,

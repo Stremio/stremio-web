@@ -7,15 +7,9 @@ const CoreTransport = require('./CoreTransport');
 let transport = null;
 let apiInitialized = null;
 const apiEvents = new EventEmitter();
-apiEvents.on('error', (error) => {
-    console.error(error);
-});
 initialize_api(require('@stremio/stremio-core-web/stremio_core_web_bg.wasm'))
     .then(() => {
         const transportEvents = new EventEmitter();
-        transportEvents.on('error', (error) => {
-            console.error(error);
-        });
         return initialize_runtime(({ name, args }) => {
             try {
                 transportEvents.emit(name, args);
@@ -43,9 +37,6 @@ function Core() {
     let _transport = null;
 
     const events = new EventEmitter();
-    events.on('error', (error) => {
-        console.error(error);
-    });
 
     function onAPIInitialized() {
         if (apiInitialized) {

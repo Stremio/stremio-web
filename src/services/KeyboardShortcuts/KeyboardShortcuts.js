@@ -6,9 +6,6 @@ function KeyboardShortcuts() {
     let active = false;
 
     const events = new EventEmitter();
-    events.on('error', (error) => {
-        console.error(error);
-    });
 
     function onKeyDown(event) {
         if (event.keyboardShortcutPrevented || event.target.tagName === 'INPUT') {

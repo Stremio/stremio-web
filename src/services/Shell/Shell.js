@@ -8,9 +8,6 @@ function Shell() {
     let starting = false;
 
     const events = new EventEmitter();
-    events.on('error', (error) => {
-        console.error(error);
-    });
 
     function onStateChanged() {
         events.emit('stateChanged');

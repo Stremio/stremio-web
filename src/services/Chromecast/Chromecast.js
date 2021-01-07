@@ -5,9 +5,6 @@ const ChromecastTransport = require('./ChromecastTransport');
 
 let castAPIAvailable = null;
 const castAPIEvents = new EventEmitter();
-castAPIEvents.on('error', (error) => {
-    console.error(error);
-});
 window['__onGCastApiAvailable'] = function(available) {
     delete window['__onGCastApiAvailable'];
     castAPIAvailable = available;
@@ -21,9 +18,6 @@ function Chromecast() {
     let transport = null;
 
     const events = new EventEmitter();
-    events.on('error', (error) => {
-        console.error(error);
-    });
 
     function onCastAPIAvailabilityChanged() {
         if (castAPIAvailable) {
