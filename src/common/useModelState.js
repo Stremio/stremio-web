@@ -15,7 +15,9 @@ const useModelState = ({ init, action, ...args }) => {
     }, []);
     const [state, setState] = useDeepEqualState(init);
     React.useLayoutEffect(() => {
-        core.transport.dispatch(action, model);
+        if (action) {
+            core.transport.dispatch(action, model);
+        }
     }, [action]);
     React.useLayoutEffect(() => {
         return () => {
