@@ -14,7 +14,7 @@ initialize_api(require('@stremio/stremio-core-web/stremio_core_web_bg.wasm'))
             try {
                 transportEvents.emit(name, args);
             } catch (error) {
-                console.error(error);
+                console.error('Core', error);
             }
         }).then(() => {
             transport = new CoreTransport(transportEvents);
@@ -25,7 +25,7 @@ initialize_api(require('@stremio/stremio-core-web/stremio_core_web_bg.wasm'))
         apiEvents.emit('initialized');
     })
     .catch((error) => {
-        console.error(error);
+        console.error('Core', error);
         apiInitialized = false;
         apiEvents.emit('initialized');
     });

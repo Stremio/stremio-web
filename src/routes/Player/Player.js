@@ -99,7 +99,7 @@ const Player = ({ urlParams, queryParams }) => {
         }
     }, [player]);
     const onError = React.useCallback((error) => {
-        console.error(error);
+        console.error('Player', error);
         if (error.critical) {
             setError(error);
         } else {

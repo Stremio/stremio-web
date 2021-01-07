@@ -23,7 +23,7 @@ const Video = React.forwardRef(({ className, ...props }, ref) => {
             try {
                 videoRef.current.dispatch(action);
             } catch (error) {
-                console.error('StremioVideo', error);
+                console.error('Video', error);
             }
         }
     }, []);
