@@ -6,7 +6,7 @@
     "private": true,
     "license": "gpl-2.0",
     "scripts": {
-        "start": "webpack-dev-server --mode development",
+        "start": "webpack serve --mode development",
         "build": "webpack --mode production",
         "storybook": "start-storybook --ci --config-dir ./storybook --static-dir ./ --port 6060",
         "test": "jest",
