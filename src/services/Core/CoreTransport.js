@@ -1,8 +1,30 @@
 // Copyright (C) 2017-2020 Smart code 203358507
 
-const { get_state, dispatch } = require('@stremio/stremio-core-web');
+const EventEmitter = require('eventemitter3');
+const { default: initialize_api, initialize_runtime, get_state, dispatch } = require('@stremio/stremio-core-web');
 
-function CoreTransport(events) {
+function CoreTransport() {
+    const events = new EventEmitter();
+
+    initialize_api(require('@stremio/stremio-core-web/stremio_core_web_bg.wasm'))
+        .then(() => initialize_runtime(({ name, args }) => {
+            try {
+                events.emit(name, args);
+            } catch (error) {
+                console.error('CoreTransport', error);
+            }
+        }))
+        .then(() => {
+            try {
+                events.emit('init');
+            } catch (error) {
+                console.error('CoreTransport', error);
+            }
+        })
+        .catch((error) => {
+            events.emit('error', error);
+        });
+
     this.on = function(name, listener) {
         events.on(name, listener);
     };
