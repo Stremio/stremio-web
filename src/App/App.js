@@ -10,6 +10,8 @@ const CoreEventsToaster = require('./CoreEventsToaster');
 const routerViewsConfig = require('./routerViewsConfig');
 const styles = require('./styles');
 
+window.sanitizedUrl = require('./sanitizedUrl');
+
 const App = () => {
     const onPathNotMatch = React.useCallback(() => {
         return NotFound;
