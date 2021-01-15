@@ -158,7 +158,8 @@ module.exports = (env, argv) => ({
         contentBase: false,
         hot: false,
         inline: false,
-        https: true
+        https: true,
+        liveReload: false
     },
     optimization: {
         minimize: true,
