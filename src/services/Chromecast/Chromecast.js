@@ -3,14 +3,6 @@
 const EventEmitter = require('eventemitter3');
 const ChromecastTransport = require('./ChromecastTransport');
 
-let castAPIAvailable = null;
-const castAPIEvents = new EventEmitter();
-window['__onGCastApiAvailable'] = function(available) {
-    delete window['__onGCastApiAvailable'];
-    castAPIAvailable = available;
-    castAPIEvents.emit('availabilityChanged');
-};
-
 function Chromecast() {
     let active = false;
     let error = null;
@@ -19,20 +11,18 @@ function Chromecast() {
 
     const events = new EventEmitter();
 
-    function onCastAPIAvailabilityChanged() {
-        if (castAPIAvailable) {
-            active = true;
-            error = null;
-            starting = false;
-            transport = new ChromecastTransport();
-        } else {
-            active = false;
-            error = new Error('Google Cast API not available');
-            starting = false;
-            transport = null;
-        }
-
+    function onTransportInit() {
+        active = true;
+        error = null;
+        starting = false;
         onStateChanged();
+    }
+    function onTransportError(args) {
+        active = false;
+        error = new Error(`Google Cast API not available: ${args}`);
+        starting = false;
+        onStateChanged();
+        transport = null;
     }
     function onStateChanged() {
         events.emit('stateChanged');
@@ -75,20 +65,21 @@ function Chromecast() {
         }
 
         starting = true;
-        if (castAPIAvailable !== null) {
-            onCastAPIAvailabilityChanged();
-        } else {
-            castAPIEvents.on('availabilityChanged', onCastAPIAvailabilityChanged);
-            onStateChanged();
-        }
+        transport = new ChromecastTransport();
+        transport.on('init', onTransportInit);
+        transport.on('error', onTransportError);
+        onStateChanged();
     };
     this.stop = function() {
-        castAPIEvents.off('availabilityChanged', onCastAPIAvailabilityChanged);
         active = false;
         error = null;
         starting = false;
         onStateChanged();
-        transport = null;
+        if (transport !== null) {
+            transport.off('init', onTransportInit);
+            transport.off('error', onTransportError);
+            transport = null;
+        }
     };
     this.on = function(name, listener) {
         events.on(name, listener);

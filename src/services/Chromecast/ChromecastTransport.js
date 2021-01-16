@@ -4,17 +4,57 @@ const EventEmitter = require('eventemitter3');
 
 const MESSAGE_NAMESPACE = 'urn:x-cast:com.stremio';
 
+let castAPIAvailable = null;
+const castAPIEvents = new EventEmitter();
+window['__onGCastApiAvailable'] = function(available) {
+    delete window['__onGCastApiAvailable'];
+    castAPIAvailable = !!available;
+    castAPIEvents.emit('availabilityChanged');
+};
+
+const initialize = () => {
+    return new Promise((resolve, reject) => {
+        function onCastAPIAvailabilityChanged() {
+            castAPIEvents.off('availabilityChanged', onCastAPIAvailabilityChanged);
+            if (castAPIAvailable) {
+                resolve();
+            } else {
+                reject();
+            }
+        }
+        if (castAPIAvailable !== null) {
+            onCastAPIAvailabilityChanged();
+        } else {
+            castAPIEvents.on('availabilityChanged', onCastAPIAvailabilityChanged);
+        }
+    });
+};
+
 function ChromecastTransport() {
     const events = new EventEmitter();
 
-    cast.framework.CastContext.getInstance().addEventListener(
-        cast.framework.CastContextEventType.CAST_STATE_CHANGED,
-        onCastStateChanged
-    );
-    cast.framework.CastContext.getInstance().addEventListener(
-        cast.framework.CastContextEventType.SESSION_STATE_CHANGED,
-        onSesstionStateChanged
-    );
+    initialize()
+        .then(() => {
+            cast.framework.CastContext.getInstance().addEventListener(
+                cast.framework.CastContextEventType.CAST_STATE_CHANGED,
+                onCastStateChanged
+            );
+            cast.framework.CastContext.getInstance().addEventListener(
+                cast.framework.CastContextEventType.SESSION_STATE_CHANGED,
+                onSesstionStateChanged
+            );
+        })
+        .then(() => {
+            try {
+                events.emit('init');
+
+            } catch (error) {
+                console.error('ChromecastTransport', error);
+            }
+        })
+        .catch((error) => {
+            events.emit('error', error);
+        });
 
     function onMessage(_, message) {
         events.emit('message', JSON.parse(message));
