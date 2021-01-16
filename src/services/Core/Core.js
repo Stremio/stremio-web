@@ -22,6 +22,7 @@ function Core() {
         error = new Error(`Stremio Core Transport initialization failed: ${args}`);
         starting = false;
         onStateChanged();
+        transport = null;
     }
     function onStateChanged() {
         events.emit('stateChanged');
