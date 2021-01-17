@@ -8,7 +8,7 @@ const CoreEventsToaster = () => {
     const { core } = useServices();
     const toast = useToast();
     React.useEffect(() => {
-        const onEvent = ({ event, args }) => {
+        const onCoreEvent = ({ event, args }) => {
             if (event === 'Error') {
                 toast.show({
                     type: 'error',
@@ -18,9 +18,9 @@ const CoreEventsToaster = () => {
                 });
             }
         };
-        core.transport.on('Event', onEvent);
+        core.transport.on('CoreEvent', onCoreEvent);
         return () => {
-            core.transport.off('Event', onEvent);
+            core.transport.off('CoreEvent', onCoreEvent);
         };
     }, []);
     return null;

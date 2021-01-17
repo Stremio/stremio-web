@@ -255,7 +255,7 @@ const Intro = ({ queryParams }) => {
         }
     }, [state.form, routeFocused]);
     React.useEffect(() => {
-        const onEvent = ({ event, args }) => {
+        const onCoreEvent = ({ event, args }) => {
             switch (event) {
                 case 'UserAuthenticated': {
                     closeLoaderModal();
@@ -273,9 +273,9 @@ const Intro = ({ queryParams }) => {
                 }
             }
         };
-        core.transport.on('Event', onEvent);
+        core.transport.on('CoreEvent', onCoreEvent);
         return () => {
-            core.transport.off('Event', onEvent);
+            core.transport.off('CoreEvent', onCoreEvent);
         };
     }, [routeFocused]);
     return (
