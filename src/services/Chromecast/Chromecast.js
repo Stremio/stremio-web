@@ -18,8 +18,9 @@ function Chromecast() {
         onStateChanged();
     }
     function onTransportError(args) {
+        console.error(args);
         active = false;
-        error = new Error(`Google Cast API not available: ${args}`);
+        error = new Error('Google Cast API not available');
         starting = false;
         onStateChanged();
         transport = null;
