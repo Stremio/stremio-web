@@ -19,7 +19,7 @@ const initialize = () => {
             if (castAPIAvailable) {
                 resolve();
             } else {
-                reject();
+                reject(new Error('window.cast api not available'));
             }
         }
         if (castAPIAvailable !== null) {
