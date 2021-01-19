@@ -8,7 +8,7 @@ function KeyboardShortcuts() {
     const events = new EventEmitter();
 
     function onKeyDown(event) {
-        if (event.keyboardShortcutPrevented || event.target.tagName === 'INPUT') {
+        if (event.keyboardShortcutPrevented || event.target.tagName === 'INPUT' || event.ctrlKey || event.altKey || event.shiftKey || event.metaKey) {
             return;
         }
 
