@@ -11,8 +11,9 @@ const routerViewsConfig = require('./routerViewsConfig');
 const styles = require('./styles');
 
 window.core_imports = {
-    sanitize_location_path: sanitizeLocationPath,
-    app_version: process.env.VERSION
+    app_version: process.env.VERSION,
+    shell_version: null,
+    sanitize_location_path: sanitizeLocationPath
 };
 
 const App = () => {
