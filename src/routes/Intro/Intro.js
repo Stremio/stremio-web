@@ -106,7 +106,8 @@ const Intro = ({ queryParams }) => {
                         args: {
                             type: 'Login',
                             email,
-                            password
+                            password,
+                            facebook: true
                         }
                     }
                 });
