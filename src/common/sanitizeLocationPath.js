@@ -1,8 +1,8 @@
 const UrlUtils = require('url');
-const { routesRegexp } = require('stremio/common');
+const routesRegexp = require('stremio/common/routesRegexp');
 
-const sanitizedUrl = () => {
-    const { href, pathname, search } = UrlUtils.parse(window.location.hash.slice(1));
+const sanitizeLocationPath = (path) => {
+    const { href, pathname, search } = UrlUtils.parse(path);
     if (typeof pathname === 'string') {
         const matches = pathname.match(routesRegexp.player.regexp);
         if (matches) {
@@ -17,4 +17,4 @@ const sanitizedUrl = () => {
     return href;
 };
 
-module.exports = sanitizedUrl;
+module.exports = sanitizeLocationPath;

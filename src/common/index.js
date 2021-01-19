@@ -25,6 +25,7 @@ const comparatorWithPriorities = require('./comparatorWithPriorities');
 const CONSTANTS = require('./CONSTANTS');
 const languageNames = require('./languageNames');
 const routesRegexp = require('./routesRegexp');
+const sanitizeLocationPath = require('./sanitizeLocationPath');
 const useAnimationFrame = require('./useAnimationFrame');
 const useBinaryState = require('./useBinaryState');
 const useDeepEqualEffect = require('./useDeepEqualEffect');
@@ -64,6 +65,7 @@ module.exports = {
     CONSTANTS,
     languageNames,
     routesRegexp,
+    sanitizeLocationPath,
     useAnimationFrame,
     useBinaryState,
     useDeepEqualEffect,

@@ -5,12 +5,15 @@ const React = require('react');
 const { Router } = require('stremio-router');
 const { Core, Shell, Chromecast, KeyboardShortcuts, ServicesProvider } = require('stremio/services');
 const { NotFound } = require('stremio/routes');
-const { ToastProvider, CONSTANTS } = require('stremio/common');
+const { ToastProvider, sanitizeLocationPath, CONSTANTS } = require('stremio/common');
 const CoreEventsToaster = require('./CoreEventsToaster');
 const routerViewsConfig = require('./routerViewsConfig');
 const styles = require('./styles');
 
-window.sanitizedUrl = require('./sanitizedUrl');
+window.core_imports = {
+    sanitize_location_path: sanitizeLocationPath,
+    app_version: process.env.VERSION
+};
 
 const App = () => {
     const onPathNotMatch = React.useCallback(() => {
