@@ -46,7 +46,7 @@ const AddonDetailsModal = ({ transportUrl, onCloseRequest }) => {
                 action: 'Ctx',
                 args: {
                     action: 'UninstallAddon',
-                    args: addonDetails.remoteAddon.content.content.transportUrl
+                    args: addonDetails.remoteAddon.content.content
                 }
             });
             if (typeof onCloseRequest === 'function') {
