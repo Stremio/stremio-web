@@ -36,7 +36,7 @@ function CoreTransport() {
     };
     this.dispatch = function(action, field) {
         try {
-            return dispatch(action, field);
+            dispatch(action, field);
         } catch (error) {
             console.error('CoreTransport', error);
         }
