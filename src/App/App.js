@@ -29,6 +29,22 @@ const App = () => {
     const [coreInitialized, setCoreInitialized] = React.useState(false);
     const [shellInitialized, setShellInitialized] = React.useState(false);
     React.useEffect(() => {
+        let prevPath = window.location.hash.slice(1);
+        const onLocationHashChange = () => {
+            if (services.core.active) {
+                services.core.transport.analytics({
+                    event: 'LocationPathChanged',
+                    args: { prevPath }
+                });
+            }
+            prevPath = window.location.hash.slice(1);
+        };
+        window.addEventListener('hashchange', onLocationHashChange);
+        return () => {
+            window.removeEventListener('hashchange', onLocationHashChange);
+        };
+    }, []);
+    React.useEffect(() => {
         const onCoreStateChanged = () => {
             setCoreInitialized(services.core.active);
             if (services.core.error) {
