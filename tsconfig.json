@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "./src",
+    "downlevelIteration": true,
+    "jsx": "react",
+    "lib": ["ES5", "ES6", "ES2015.Collection", "ES2015.Iterable", "DOM"],
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "outDir": "./build",
+    "paths": {
+      "stremio/*": ["*"]
+    },
+    "resolveJsonModule": true,
+    "target": "ES6"
+  },
+  "exclude": ["node_modules", "build"]
+}
