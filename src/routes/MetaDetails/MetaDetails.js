@@ -137,7 +137,6 @@ const MetaDetails = ({ urlParams, queryParams }) => {
                                         />
                                     </React.Fragment>
                 }
-                <div className={styles['spacing']} />
                 {
                     streamPath !== null ?
                         <StreamsList
