@@ -27,7 +27,7 @@ const Search = ({ queryParams }) => {
     }, [search.selected]);
     const debounceAnanlytics = debounce((query, search) => {
         if (query !== null) {
-            const responses_count = search.catalogs.filter((catalog) => catalog.content.type !== 'Loading').length;
+            const responses_count = search.catalogs.filter((catalog) => catalog.content.type === 'Ready').length;
             core.transport.analytics({
                 event: 'Search',
                 args: {
