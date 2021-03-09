@@ -3,15 +3,12 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const debounce = require('lodash.debounce');
 const Icon = require('@stremio/stremio-icons/dom');
-const { useServices } = require('stremio/services');
 const { Image, MainNavBars, MetaRow, MetaItem, useDeepEqualMemo } = require('stremio/common');
 const useSearch = require('./useSearch');
 const styles = require('./styles');
 
 const Search = ({ queryParams }) => {
-    const { core } = useServices();
     const search = useSearch(queryParams);
     const query = useDeepEqualMemo(() => {
         return search.selected !== null ?
@@ -25,18 +22,6 @@ const Search = ({ queryParams }) => {
             :
             null;
     }, [search.selected]);
-    const debounceAnanlytics = debounce((query, search) => {
-        if (query !== null) {
-            const responses_count = search.catalogs.filter((catalog) => catalog.content.type === 'Ready').length;
-            core.transport.analytics({
-                event: 'Search',
-                args: {
-                    query, responses_count
-                }
-            });
-        }
-    }, 500, { leading: false });
-    React.useEffect(() => { debounceAnanlytics(query, search); }, [search]);
     return (
         <MainNavBars className={styles['search-container']} route={'search'} query={query}>
             <div className={styles['search-content']}>
