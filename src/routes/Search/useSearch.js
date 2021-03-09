@@ -16,13 +16,14 @@ const useSearch = (queryParams) => {
         function emitSearchEvent() {
             timerId = null;
             const state = core.transport.getState('search');
-            const query = state.selected.extra.find((extra) => extra[0] === 'search')[1];
-            if (query !== null) {
-                const responses_count = state.catalogs.filter((catalog) => catalog.content.type === 'Ready').length;
+            if (state.selected !== null) {
+                const [, query] = state.selected.extra.find(([name]) => name === 'search');
+                const responses = state.catalogs.filter((catalog) => catalog.content.type === 'Ready');
                 core.transport.analytics({
                     event: 'Search',
                     args: {
-                        query, responses_count
+                        query,
+                        responsesCount: responses.length
                     }
                 });
             }
