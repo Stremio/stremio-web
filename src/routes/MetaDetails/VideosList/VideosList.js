@@ -25,7 +25,7 @@ const VideosList = ({ className, metaItem, season, seasonOnSelect }) => {
                     typeof season === 'number' &&
                     seasons.indexOf(season) === index;
             })
-            .sort((a, b) => a - b);
+            .sort((a, b) => (a || Number.MAX_SAFE_INTEGER) - (b || Number.MAX_SAFE_INTEGER));
     }, [videos]);
     const selectedSeason = React.useMemo(() => {
         return seasons.includes(season) ?
