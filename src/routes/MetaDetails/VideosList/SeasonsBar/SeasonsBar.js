@@ -12,7 +12,7 @@ const SeasonsBar = ({ className, seasons, season, onSelect }) => {
     const options = React.useMemo(() => {
         return seasons.map((season) => ({
             value: String(season),
-            label: `Season ${season}`
+            label: season > 0 ? `Season ${season}` : `Specials`
         }));
     }, [seasons]);
     const selected = React.useMemo(() => {
@@ -53,7 +53,7 @@ const SeasonsBar = ({ className, seasons, season, onSelect }) => {
             </Button>
             <Multiselect
                 className={styles['seasons-popup-label-container']}
-                title={`Season ${season}`}
+                title={season > 0 ? `Season ${season}` : `Specials`}
                 options={options}
                 selected={selected}
                 onSelect={seasonOnSelect}
