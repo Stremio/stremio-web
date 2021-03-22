@@ -69,7 +69,12 @@
         "no-trailing-spaces": "error",
         "no-useless-concat": "error",
         "no-unreachable": "error",
-        "no-unused-vars": "error",
+        "no-unused-vars": [
+            "error",
+            {
+                "varsIgnorePattern": "_"
+            }
+        ],
         "prefer-const": "error",
         "quotes": [
             "error",
