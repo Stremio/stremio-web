@@ -28,13 +28,17 @@ const VideosList = ({ className, metaItem, season, seasonOnSelect }) => {
             .sort((a, b) => (a || Number.MAX_SAFE_INTEGER) - (b || Number.MAX_SAFE_INTEGER));
     }, [videos]);
     const selectedSeason = React.useMemo(() => {
-        return seasons.includes(season) ?
-            season
-            :
-            seasons.length > 0 ?
-                seasons[seasons.length - 1]
-                :
-                null;
+        if (seasons.includes(season)) {
+            return season;
+        }
+
+        return seasons.reduceRight((result, season) => {
+            if (result !== null || season === 0) {
+                return result;
+            }
+
+            return season;
+        }, null);
     }, [seasons, season]);
     const videosForSeason = React.useMemo(() => {
         return videos
