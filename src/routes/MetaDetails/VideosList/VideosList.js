@@ -32,13 +32,16 @@ const VideosList = ({ className, metaItem, season, seasonOnSelect }) => {
             return season;
         }
 
-        return seasons.reduceRight((result, season) => {
-            if (result !== null || season === 0) {
-                return result;
-            }
+        const nonSpecialSeasons = seasons.filter((season) => season !== 0);
+        if (nonSpecialSeasons.length > 0) {
+            return nonSpecialSeasons[nonSpecialSeasons.length - 1];
+        }
 
-            return season;
-        }, null);
+        if (seasons.length > 0) {
+            return seasons[seasons.length - 1];
+        }
+
+        return null;
     }, [seasons, season]);
     const videosForSeason = React.useMemo(() => {
         return videos
@@ -77,7 +80,7 @@ const VideosList = ({ className, metaItem, season, seasonOnSelect }) => {
                         :
                         <React.Fragment>
                             {
-                                seasons.length > 1 ?
+                                seasons.length > 0 ?
                                     <SeasonsBar
                                         className={styles['seasons-bar']}
                                         season={selectedSeason}
