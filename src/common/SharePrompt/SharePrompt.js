@@ -34,7 +34,7 @@ const SharePrompt = ({ className, url }) => {
         core.transport.analytics({
             event: 'Share',
             args: {
-                shareUrl: inputRef.current.value
+                url: inputRef.current.value
             }
         });
     }, [inputRef]);
