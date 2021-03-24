@@ -34,10 +34,10 @@ const SharePrompt = ({ className, url }) => {
         core.transport.analytics({
             event: 'Share',
             args: {
-                url: inputRef.current.value
+                url: url
             }
         });
-    }, [inputRef]);
+    }, [url]);
     return (
         <div className={classnames(className, styles['share-prompt-container'])}>
             <div className={styles['buttons-container']}>
