@@ -5,11 +5,13 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('@stremio/stremio-icons/dom');
 const { useRouteFocused } = require('stremio-router');
+const { useServices } = require('stremio/services');
 const Button = require('stremio/common/Button');
 const TextInput = require('stremio/common/TextInput');
 const styles = require('./styles');
 
 const SharePrompt = ({ className, url }) => {
+    const { core } = useServices();
     const inputRef = React.useRef(null);
     const routeFocused = useRouteFocused();
     const selectInputContent = React.useCallback(() => {
@@ -28,6 +30,14 @@ const SharePrompt = ({ className, url }) => {
             inputRef.current.select();
         }
     }, [routeFocused]);
+    React.useEffect(() => {
+        core.transport.analytics({
+            event: 'Share',
+            args: {
+                shareUrl: inputRef.current.value
+            }
+        });
+    }, [inputRef]);
     return (
         <div className={classnames(className, styles['share-prompt-container'])}>
             <div className={styles['buttons-container']}>
