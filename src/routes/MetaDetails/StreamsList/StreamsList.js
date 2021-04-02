@@ -17,7 +17,7 @@ const StreamsList = ({ className, ...props }) => {
             .map((streams) => {
                 return streams.content.content.map((stream) => ({
                     ...stream,
-                    sendToAnalytics: () => {
+                    onClick: () => {
                         core.transport.analytics({
                             event: 'StreamClicked',
                             args: {
@@ -60,7 +60,7 @@ const StreamsList = ({ className, ...props }) => {
                                         thumbnail={stream.thumbnail}
                                         progress={stream.progress}
                                         deepLinks={stream.deepLinks}
-                                        onClick={stream.sendToAnalytics}
+                                        onClick={stream.onClick}
                                     />
                                 ))}
                             </div>
