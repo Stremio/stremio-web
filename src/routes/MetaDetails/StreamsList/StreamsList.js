@@ -21,7 +21,7 @@ const StreamsList = ({ className, ...props }) => {
                         core.transport.analytics({
                             event: 'StreamClicked',
                             args: {
-                                stream: stream
+                                stream
                             }
                         });
                     },
