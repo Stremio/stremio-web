@@ -5,16 +5,26 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('@stremio/stremio-icons/dom');
 const { Button, Image } = require('stremio/common');
+const { useServices } = require('stremio/services');
 const Stream = require('./Stream');
 const styles = require('./styles');
 
 const StreamsList = ({ className, ...props }) => {
+    const { core } = useServices();
     const streams = React.useMemo(() => {
         return props.streams
             .filter((streams) => streams.content.type === 'Ready')
             .map((streams) => {
                 return streams.content.content.map((stream) => ({
                     ...stream,
+                    onClick: () => {
+                        core.transport.analytics({
+                            event: 'StreamClicked',
+                            args: {
+                                stream
+                            }
+                        });
+                    },
                     addonName: streams.addon.manifest.name
                 }));
             })
@@ -50,6 +60,7 @@ const StreamsList = ({ className, ...props }) => {
                                         thumbnail={stream.thumbnail}
                                         progress={stream.progress}
                                         deepLinks={stream.deepLinks}
+                                        onClick={stream.onClick}
                                     />
                                 ))}
                             </div>
