@@ -9,7 +9,9 @@
         "start": "webpack serve --mode development",
         "build": "webpack --mode production",
         "test": "jest",
-        "lint": "eslint src"
+        "lint": "eslint src",
+        "storybook": "start-storybook -p 6006",
+        "build-storybook": "build-storybook"
     },
     "dependencies": {
         "@babel/runtime": "7.12.5",
@@ -37,6 +39,11 @@
         "@babel/plugin-proposal-object-rest-spread": "7.12.1",
         "@babel/preset-env": "7.12.10",
         "@babel/preset-react": "7.12.10",
+        "@storybook/addon-actions": "^6.2.8",
+        "@storybook/addon-essentials": "^6.2.8",
+        "@storybook/addon-links": "^6.2.8",
+        "@storybook/builder-webpack5": "^6.2.8",
+        "@storybook/react": "^6.2.8",
         "@testing-library/react": "9.4.0",
         "@testing-library/react-hooks": "3.2.1",
         "babel-loader": "8.2.2",
