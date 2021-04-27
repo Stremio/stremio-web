@@ -28,4 +28,8 @@ module.exports = {
 
     return storybookConfig;
   },
+  core: {
+    builder: 'webpack5',
+  },
+  stories: ['../src/stories/**/*.@(js)'],
 };
