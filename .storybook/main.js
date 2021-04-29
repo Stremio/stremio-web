@@ -1,3 +1,5 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
 const appConfig = require('../webpack.config.js')({}, { mode: 'development' });
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
