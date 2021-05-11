@@ -10,7 +10,7 @@
         "build": "webpack --mode production",
         "test": "jest",
         "lint": "eslint src",
-        "storybook": "start-storybook -p 6006"
+        "storybook": "start-storybook --ci -p 6006"
     },
     "dependencies": {
         "@babel/runtime": "7.12.5",
