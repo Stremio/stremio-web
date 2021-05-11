@@ -8,9 +8,9 @@
     "scripts": {
         "start": "webpack serve --mode development",
         "build": "webpack --mode production",
-        "storybook": "start-storybook --ci --config-dir ./storybook --static-dir ./ --port 6060",
         "test": "jest",
-        "lint": "eslint src"
+        "lint": "eslint src",
+        "storybook": "start-storybook --ci -p 6006"
     },
     "dependencies": {
         "@babel/runtime": "7.12.5",
@@ -38,10 +38,10 @@
         "@babel/plugin-proposal-object-rest-spread": "7.12.1",
         "@babel/preset-env": "7.12.10",
         "@babel/preset-react": "7.12.10",
-        "@storybook/addon-actions": "5.2.8",
-        "@storybook/addon-console": "1.2.1",
-        "@storybook/addons": "5.2.8",
-        "@storybook/react": "5.2.8",
+        "@storybook/addon-actions": "6.2.8",
+        "@storybook/addon-console": "1.2.3",
+        "@storybook/builder-webpack5": "6.2.8",
+        "@storybook/react": "6.2.8",
         "@testing-library/react": "9.4.0",
         "@testing-library/react-hooks": "3.2.1",
         "babel-loader": "8.2.2",
@@ -60,7 +60,7 @@
         "mini-css-extract-plugin": "1.3.3",
         "postcss-loader": "4.1.0",
         "react-test-renderer": "16.13.0",
-        "storybook-addon-jsx": "7.1.15",
+        "storybook-addon-jsx": "7.3.9",
         "terser-webpack-plugin": "5.0.3",
         "webpack": "5.31.2",
         "webpack-cli": "4.6.0",
