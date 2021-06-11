@@ -3,14 +3,15 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
+const { ShimmerEffect } = require('stremio/common');
 const styles = require('./styles');
 
 const VideoPlaceholder = ({ className }) => {
     return (
         <div className={classnames(className, styles['video-placeholder-container'])}>
             <div className={styles['info-container']}>
-                <div className={styles['name-container']} />
-                <div className={styles['released-container']} />
+                <ShimmerEffect className={styles['name-container']} />
+                <ShimmerEffect className={styles['released-container']} />
             </div>
         </div>
     );

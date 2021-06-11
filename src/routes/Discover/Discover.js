@@ -4,6 +4,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('@stremio/stremio-icons/dom');
+const { ShimmerEffect } = require('stremio/common');
 const { useServices } = require('stremio/services');
 const { AddonDetailsModal, Button, MainNavBars, MetaItem, Image, MetaPreview, Multiselect, ModalDialog, PaginationInput, CONSTANTS, useBinaryState, useDeepEqualEffect } = require('stremio/common');
 const useDiscover = require('./useDiscover');
@@ -127,9 +128,9 @@ const Discover = ({ urlParams, queryParams }) => {
                                     <div className={styles['meta-items-container']}>
                                         {Array(CONSTANTS.CATALOG_PAGE_SIZE).fill(null).map((_, index) => (
                                             <div key={index} className={styles['meta-item-placeholder']}>
-                                                <div className={styles['poster-container']} />
+                                                <ShimmerEffect className={styles['poster-container']} />
                                                 <div className={styles['title-bar-container']}>
-                                                    <div className={styles['title-label']} />
+                                                    <ShimmerEffect className={styles['title-label']} />
                                                 </div>
                                             </div>
                                         ))}

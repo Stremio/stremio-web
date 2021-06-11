@@ -18,6 +18,7 @@ const PlayIconCircleCentered = require('./PlayIconCircleCentered');
 const Popup = require('./Popup');
 const SearchBar = require('./SearchBar');
 const SharePrompt = require('./SharePrompt');
+const ShimmerEffect = require('./ShimmerEffect');
 const Slider = require('./Slider');
 const TextInput = require('./TextInput');
 const { ToastProvider, useToast } = require('./Toast');
@@ -57,6 +58,7 @@ module.exports = {
     Popup,
     SearchBar,
     SharePrompt,
+    ShimmerEffect,
     Slider,
     TextInput,
     ToastProvider,

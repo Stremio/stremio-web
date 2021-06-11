@@ -5,6 +5,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('@stremio/stremio-icons/dom');
 const Button = require('stremio/common/Button');
+const ShimmerEffect = require('stremio/common/ShimmerEffect');
 const CONSTANTS = require('stremio/common/CONSTANTS');
 const styles = require('./styles');
 
@@ -28,9 +29,9 @@ const MetaRowPlaceholder = ({ className, title, deepLinks }) => {
             <div className={styles['meta-items-container']}>
                 {Array(CONSTANTS.CATALOG_PREVIEW_SIZE).fill(null).map((_, index) => (
                     <div key={index} className={styles['meta-item']}>
-                        <div className={styles['poster-container']} />
+                        <ShimmerEffect className={styles['poster-container']} />
                         <div className={styles['title-bar-container']}>
-                            <div className={styles['title-label']} />
+                            <ShimmerEffect className={styles['title-label']} />
                         </div>
                     </div>
                 ))}
