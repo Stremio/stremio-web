@@ -6,7 +6,8 @@ const classnames = require('classnames');
 const debounce = require('lodash.debounce');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
-const { HorizontalNavBar, useDeepEqualEffect, useFullscreen, useBinaryState, useToast, useStreamingServer } = require('stremio/common');
+const { HorizontalNavBar, Button, useDeepEqualEffect, useFullscreen, useBinaryState, useToast, useStreamingServer } = require('stremio/common');
+const Icon = require('@stremio/stremio-icons/dom');
 const BufferingLoader = require('./BufferingLoader');
 const ControlBar = require('./ControlBar');
 const InfoMenu = require('./InfoMenu');
@@ -21,7 +22,7 @@ const Player = ({ urlParams, queryParams }) => {
     const forceTranscoding = React.useMemo(() => {
         return queryParams.has('forceTranscoding');
     }, [queryParams]);
-    const [player, updateLibraryItemState, pushToLibrary] = usePlayer(urlParams);
+    const [player, playlist, updateLibraryItemState, pushToLibrary] = usePlayer(urlParams);
     const [settings, updateSettings] = useSettings();
     const streamingServer = useStreamingServer();
     const routeFocused = useRouteFocused();
@@ -418,6 +419,17 @@ const Player = ({ urlParams, queryParams }) => {
                     error !== null ?
                         <div className={classnames(styles['layer'], styles['error-layer'])}>
                             <div className={styles['error-label']}>{error.message}</div>
+                            {
+                                playlist ?
+                                    <div className={styles['error-details']}>
+                                        <Button className={styles['error-details-button']} title={'Download MU3 Playlist'} href={playlist.file} download={playlist.name}>
+                                            <Icon className={styles['icon']} icon={'ic_downloads'} />
+                                            <div className={styles['label']}>Download Playlist</div>
+                                        </Button>
+                                    </div>
+                                    :
+                                    null
+                            }
                         </div>
                         :
                         null

@@ -36,13 +36,14 @@ html:not(.active-slider-within) {
         left: 0;
         right: 0;
         bottom: 0;
-        z-index: 0;
 
         &.error-layer {
+            z-index: 1;
             display: flex;
-            flex-direction: row;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
+            gap: 1.5rem;
             background-color: @color-background-dark5;
 
             .error-label {
@@ -53,9 +54,39 @@ html:not(.active-slider-within) {
                 color: @color-surface-light5-90;
                 text-align: center;
             }
+
+            .error-details {
+                gap: 0.8rem;
+                font-size: 1.5rem;
+                color: @color-surface-light5-90;
+
+                .error-details-button {
+                    flex: none;
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    gap: 1rem;
+                    height: 3.5rem;
+                    padding: 0.5rem 1rem;
+                    font-weight: 500;
+                    color: @color-surface-light5-90;
+                    background-color: @color-surface-light5-20;
+
+                    &:hover, &:focus {
+                        background-color: @color-accent3;
+                    }
+
+                    .icon {
+                        width: 1.5rem;
+                        height: 1.5rem;
+                        fill: @color-surface-light5-90;
+                    }
+                }
+            }
         }
 
         &.nav-bar-layer {
+            z-index: 2;
             bottom: initial;
             background: transparent;
             overflow: visible;
@@ -86,6 +117,7 @@ html:not(.active-slider-within) {
         }
 
         &.control-bar-layer {
+            z-index: 2;
             top: initial;
             overflow: visible;
 
@@ -101,6 +133,7 @@ html:not(.active-slider-within) {
         }
 
         &.menu-layer {
+            z-index: 2;
             top: initial;
             left: initial;
             right: 2rem;
