@@ -27,6 +27,8 @@ const Settings = () => {
         subtitlesTextColorInput,
         subtitlesBackgroundColorInput,
         subtitlesOutlineColorInput,
+        seekTimeDuration,
+        seekTimeShiftDuration,
         bingeWatchingCheckbox,
         playInBackgroundCheckbox,
         playInExternalPlayerCheckbox,
@@ -301,6 +303,24 @@ const Settings = () => {
                             <ColorInput
                                 className={classnames(styles['option-input-container'], styles['color-input-container'])}
                                 {...subtitlesOutlineColorInput}
+                            />
+                        </div>
+                        <div className={styles['option-container']}>
+                            <div className={styles['option-name-container']}>
+                                <div className={styles['label']}>Arrow keys seek time</div>
+                            </div>
+                            <Multiselect
+                                className={classnames(styles['option-input-container'], styles['multiselect-container'])}
+                                {...seekTimeDuration}
+                            />
+                        </div>
+                        <div className={styles['option-container']}>
+                            <div className={styles['option-name-container']}>
+                                <div className={styles['label']}>Arrow keys seek time when holding Shift key</div>
+                            </div>
+                            <Multiselect
+                                className={classnames(styles['option-input-container'], styles['multiselect-container'])}
+                                {...seekTimeShiftDuration}
                             />
                         </div>
                         <div className={styles['option-container']}>

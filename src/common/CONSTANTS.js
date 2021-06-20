@@ -3,6 +3,7 @@
 const CHROMECAST_RECEIVER_APP_ID = '1634F54B';
 const SUBTITLES_SIZES = [75, 100, 125, 150, 175, 200, 250];
 const SUBTITLES_FONTS = ['Roboto', 'Arial', 'Halvetica', 'Times New Roman', 'Verdana', 'Courier', 'Lucida Console', 'sans-serif', 'serif', 'monospace'];
+const SEEK_TIME_DURATIONS = [5, 10, 15, 20, 25, 30];
 const CATALOG_PREVIEW_SIZE = 10;
 const CATALOG_PAGE_SIZE = 100;
 const NONE_EXTRA_VALUE = 'None';
@@ -28,6 +29,7 @@ module.exports = {
     CHROMECAST_RECEIVER_APP_ID,
     SUBTITLES_SIZES,
     SUBTITLES_FONTS,
+    SEEK_TIME_DURATIONS,
     CATALOG_PREVIEW_SIZE,
     CATALOG_PAGE_SIZE,
     NONE_EXTRA_VALUE,
