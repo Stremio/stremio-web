@@ -5,7 +5,7 @@ const React = require('react');
 const { Router } = require('stremio-router');
 const { Core, Shell, Chromecast, KeyboardShortcuts, ServicesProvider } = require('stremio/services');
 const { NotFound } = require('stremio/routes');
-const { ToastProvider, sanitizeLocationPath, CONSTANTS } = require('stremio/common');
+const { ToastProvider, ServerNotification, sanitizeLocationPath, CONSTANTS } = require('stremio/common');
 const CoreEventsToaster = require('./CoreEventsToaster');
 const routerViewsConfig = require('./routerViewsConfig');
 const styles = require('./styles');
@@ -98,6 +98,7 @@ const App = () => {
                         :
                         <div className={styles['app-loader']} />
                 }
+                <ServerNotification />
             </ServicesProvider>
         </React.StrictMode>
     );
