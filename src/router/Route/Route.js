@@ -15,7 +15,7 @@ const Route = ({ children }) => {
                     {children}
                 </div>
                 {
-                    pathname === '/' || pathname.startsWith('/discover') || pathname.startsWith('/library') ?
+                    pathname !== null && (pathname === '/' || pathname.startsWith('/discover') || pathname.startsWith('/library')) ?
                         <ServerNotification />
                         :
                         null
