@@ -11,8 +11,8 @@ const Board = () => {
     const board = useBoard();
     const continueWatchingPreview = useContinueWatchingPreview();
     return (
-        <div className={styles['board-content-container']}>
-            <MainNavBars className={styles['board-container']} route={'board'}>
+        <div className={styles['board-container']}>
+            <MainNavBars className={styles['board-content-container']} route={'board'}>
                 <div className={styles['board-content']}>
                     {
                         continueWatchingPreview.libraryItems.length > 0 ?
