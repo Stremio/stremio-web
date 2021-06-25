@@ -11,25 +11,32 @@
     meta-item-placeholder: meta-item;
 }
 
-.board-container {
+.board-content-container {
     width: 100%;
     height: 100%;
-    background-color: @color-background-dark2;
+    display: flex;
+    flex-direction: column;
 
-    .board-content {
-        width: 100%;
-        height: 100%;
-        overflow-y: auto;
+    .board-container {
+        flex: 1;
+        align-self: stretch;
+        background-color: @color-background-dark2;
 
-        .board-row {
-            margin: 4rem 2rem;
+        .board-content {
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
 
-            &:first-child {
-                margin-top: 2rem;
-            }
+            .board-row {
+                margin: 4rem 2rem;
 
-            &:last-child {
-                margin-bottom: 2rem;
+                &:first-child {
+                    margin-top: 2rem;
+                }
+
+                &:last-child {
+                    margin-bottom: 2rem;
+                }
             }
         }
     }
