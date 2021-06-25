@@ -65,7 +65,7 @@ const Board = () => {
                     })}
                 </div>
             </MainNavBars>
-            <ServerNotification />
+            <ServerNotification className={styles['board-notification-container']} />
         </div>
     );
 };

@@ -1,12 +1,14 @@
 // Copyright (C) 2017-2020 Smart code 203358507
 
 const React = require('react');
+const PropTypes = require('prop-types');
+const classnames = require('classnames');
 const Button = require('stremio/common/Button');
 const styles = require('./styles');
 
-const ServerNotification = () => {
+const ServerNotification = ({ className }) => {
     return (
-        <div className={styles['notification-container']}>
+        <div className={classnames(className, styles['notification-container'])}>
             <div className={styles['notification-statement']}>Streaming server must be available.</div>
             <Button className={styles['notification-button']} title={'later'}>
                 <span className={styles['notification-label']}>Later</span>
@@ -16,6 +18,10 @@ const ServerNotification = () => {
             </Button>
         </div>
     );
+};
+
+ServerNotification.propTypes = {
+    className: PropTypes.string
 };
 
 module.exports = ServerNotification;
