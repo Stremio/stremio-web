@@ -195,6 +195,15 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                         null
                 }
                 {
+                    <ActionButton
+                        className={styles['action-button']}
+                        icon={'ic_play'}
+                        label={'Show'}
+                        tabIndex={compact ? -1 : 0}
+                        href={'#'}
+                    />
+                }
+                {
                     linksGroups.has(CONSTANTS.SHARE_LINK_CATEGORY) ?
                         <React.Fragment>
                             <ActionButton
