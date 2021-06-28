@@ -2,7 +2,7 @@
 
 const React = require('react');
 const classnames = require('classnames');
-const { MainNavBars, MetaRow, LibItem, MetaItem, ServerNotification } = require('stremio/common');
+const { MainNavBars, MetaRow, LibItem, MetaItem, ServerWarning } = require('stremio/common');
 const useBoard = require('./useBoard');
 const useContinueWatchingPreview = require('./useContinueWatchingPreview');
 const styles = require('./styles');
@@ -65,7 +65,7 @@ const Board = () => {
                     })}
                 </div>
             </MainNavBars>
-            <ServerNotification className={styles['board-notification-container']} />
+            <ServerWarning className={styles['board-warning-container']} />
         </div>
     );
 };

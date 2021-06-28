@@ -2,25 +2,25 @@
 
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
 
-.notification-container {
+.warning-container {
     display: flex;
     flex-direction: row;
     padding: 0.5rem 1rem;
     background-color: @color-accent3;
 
-    .notification-statement {
+    .warning-statement {
         flex: 1;
         margin-right: 1rem;
         font-size: 1.2rem;
         color: @color-surface-light5-90;
     }
 
-    .notification-button {
+    .warning-button {
         &:not(:last-child) {
             margin-right: 1rem;
         }
 
-        .notification-label {
+        .warning-label {
             font-size: 1.2rem;
             color: @color-surface-light5-90;
         }
