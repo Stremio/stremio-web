@@ -70,7 +70,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
             :
             new Map();
     }, [links]);
-    const href = React.useMemo(() => {
+    const showHref = React.useMemo(() => {
         return deepLinks ?
             typeof deepLinks.player === 'string' ?
                 deepLinks.player
@@ -215,7 +215,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                         icon={'ic_play'}
                         label={'Show'}
                         tabIndex={compact ? -1 : 0}
-                        href={href}
+                        href={showHref}
                     />
                 }
                 {
