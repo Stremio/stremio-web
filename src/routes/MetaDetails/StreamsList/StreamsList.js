@@ -15,7 +15,7 @@ const StreamsList = ({ className, ...props }) => {
     const isServerOpen = streamingServer.settings.type === 'Ready';
     const streamToMagnetURI = React.useCallback((stream) => {
         const displayName = stream.title || 'Stream';
-        const trackers = stream.announce && stream.announce.filter(source => source.includes('tracker:')).map(source => `&tr=${source.replace('tracker:', '')}`);
+        const trackers = stream.announce && stream.announce.filter((source) => source.includes('tracker:')).map((source) => `&tr=${source.replace('tracker:', '')}`);
         return encodeURI(`magnet:?dn=${displayName}&xt=urn:btih:${stream.infoHash}${trackers.join()}`);
     });
     const streams = React.useMemo(() => {
