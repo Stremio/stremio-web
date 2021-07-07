@@ -13,12 +13,17 @@ const StreamsList = ({ className, ...props }) => {
     const { core } = useServices();
     const streamingServer = useStreamingServer();
     const isServerOpen = streamingServer.settings.type === 'Ready';
+    const streamToMagnetURI = React.useCallback((stream) => {
+        const displayName = stream.title || 'Stream';
+        const trackers = stream.announce && stream.announce.filter(source => source.includes('tracker:')).map(source => `&tr=${source.replace('tracker:', '')}`);
+        return encodeURI(`magnet:?dn=${displayName}&xt=urn:btih:${stream.infoHash}${trackers.join()}`);
+    });
     const streams = React.useMemo(() => {
         return props.streams
             .filter((streams) => streams.content.type === 'Ready')
             .map((streams) => {
                 return streams.content.content.map((stream) => {
-                    const externalUrl = !isServerOpen && stream.infoHash ? `magnet:?dn=${encodeURIComponent(stream.title)}&xt=urn:btih:${stream.infoHash}` : stream.externalUrl;
+                    const externalUrl = !isServerOpen && stream.infoHash ? streamToMagnetURI(stream) : stream.externalUrl;
                     return {
                         ...stream,
                         externalUrl,
