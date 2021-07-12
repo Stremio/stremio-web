@@ -182,7 +182,7 @@ const Addons = ({ urlParams, queryParams }) => {
                             className={styles['addon-url-input']}
                             type={'text'}
                             placeholder={'Paste addon URL'}
-                            autoFocus
+                            autoFocus={true}
                             onSubmit={addAddonOnSubmit}
                         />
                     </ModalDialog>
