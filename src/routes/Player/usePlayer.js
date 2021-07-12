@@ -110,19 +110,7 @@ const usePlayer = (urlParams) => {
         }, 'player');
     }, []);
     const player = useModelState({ model: 'player', action, init, map });
-    const playlist = React.useMemo(() => {
-        if (player.selected === null || typeof player.selected.stream.url !== 'string') {
-            return null;
-        }
-
-        const playlist = `#EXTM3U\n\n#EXTINF:0,${player.title}\n${player.selected.stream.url}`;
-        const base64File = `data:application/octet-stream;charset=utf-8;base64,${window.btoa(playlist)}`;
-        return {
-            name: `${player.title}.m3u`,
-            file: base64File
-        };
-    }, [player]);
-    return [player, playlist, updateLibraryItemState, pushToLibrary];
+    return [player, updateLibraryItemState, pushToLibrary];
 };
 
 module.exports = usePlayer;

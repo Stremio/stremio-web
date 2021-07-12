@@ -43,7 +43,6 @@ html:not(.active-slider-within) {
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 1.5rem;
             background-color: @color-background-dark5;
 
             .error-label {
@@ -56,8 +55,10 @@ html:not(.active-slider-within) {
             }
 
             .error-details {
+                display: flex;
                 gap: 0.8rem;
                 font-size: 1.5rem;
+                margin-top: 1.5rem;
                 color: @color-surface-light5-90;
 
                 .error-details-button {

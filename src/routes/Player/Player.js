@@ -22,7 +22,7 @@ const Player = ({ urlParams, queryParams }) => {
     const forceTranscoding = React.useMemo(() => {
         return queryParams.has('forceTranscoding');
     }, [queryParams]);
-    const [player, playlist, updateLibraryItemState, pushToLibrary] = usePlayer(urlParams);
+    const [player, updateLibraryItemState, pushToLibrary] = usePlayer(urlParams);
     const [settings, updateSettings] = useSettings();
     const streamingServer = useStreamingServer();
     const routeFocused = useRouteFocused();
@@ -64,6 +64,18 @@ const Player = ({ urlParams, queryParams }) => {
             videoRef.current.dispatch(args);
         }
     }, []);
+    const playlist = React.useMemo(() => {
+        if (player.selected === null || typeof player.selected.stream.url !== 'string') {
+            return null;
+        }
+
+        const m3u = `#EXTM3U\n\n#EXTINF:0,${encodeURIComponent(player.title)}\n${encodeURI(player.selected.stream.url)}`;
+        const base64File = `data:application/octet-stream;charset=utf-8;base64,${window.btoa(m3u)}`;
+        return {
+            name: `${player.title}.m3u`,
+            file: base64File
+        };
+    }, [player]);
     const onImplementationChanged = React.useCallback((manifest) => {
         manifest.props.forEach((propName) => {
             dispatch({ type: 'observeProp', propName });
