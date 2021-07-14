@@ -233,7 +233,7 @@ const Player = ({ urlParams, queryParams }) => {
                             streamingServer.selected.transportUrl
                         :
                         null,
-                    chromecastTransport: chromecast.transport
+                    chromecastTransport: chromecast.active ? chromecast.transport : null
                 }
             });
         }
