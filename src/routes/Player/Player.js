@@ -428,29 +428,32 @@ const Player = ({ urlParams, queryParams }) => {
                 videoState.buffering ?
                     <BufferingLoader className={styles['layer']} />
                     :
-                    error !== null ?
-                        <div className={classnames(styles['layer'], styles['error-layer'])}>
-                            <div className={styles['error-label']}>{error.message}</div>
-                            {
-                                playlist ?
-                                    <div className={styles['error-details']}>
-                                        <Button className={styles['error-details-button']} title={'Download MU3 Playlist'} href={playlist.file} download={playlist.name}>
-                                            <Icon className={styles['icon']} icon={'ic_downloads'} />
-                                            <div className={styles['label']}>Download Playlist</div>
-                                        </Button>
-                                    </div>
-                                    :
-                                    null
-                            }
-                        </div>
-                        :
-                        null
+                    null
             }
             <div
                 className={styles['layer']}
                 onClick={onVideoClick}
                 onDoubleClick={onVideoDoubleClick}
             />
+            {
+                error !== null ?
+                    <div className={classnames(styles['layer'], styles['error-layer'])}>
+                        <div className={styles['error-label']}>{error.message}</div>
+                        {
+                            playlist ?
+                                <div className={styles['error-details']}>
+                                    <Button className={styles['error-details-button']} title={'Download MU3 Playlist'} href={playlist.file} download={playlist.name}>
+                                        <Icon className={styles['icon']} icon={'ic_downloads'} />
+                                        <div className={styles['label']}>Download Playlist</div>
+                                    </Button>
+                                </div>
+                                :
+                                null
+                        }
+                    </div>
+                    :
+                    null
+            }
             {
                 subtitlesMenuOpen || infoMenuOpen ?
                     <div className={styles['layer']} />
