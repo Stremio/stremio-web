@@ -36,6 +36,7 @@ html:not(.active-slider-within) {
         left: 0;
         right: 0;
         bottom: 0;
+        z-index: 0;
 
         &.error-layer {
             display: flex;
@@ -85,7 +86,6 @@ html:not(.active-slider-within) {
         }
 
         &.nav-bar-layer {
-            z-index: 2;
             bottom: initial;
             background: transparent;
             overflow: visible;
@@ -116,7 +116,6 @@ html:not(.active-slider-within) {
         }
 
         &.control-bar-layer {
-            z-index: 2;
             top: initial;
             overflow: visible;
 
@@ -132,7 +131,6 @@ html:not(.active-slider-within) {
         }
 
         &.menu-layer {
-            z-index: 2;
             top: initial;
             left: initial;
             right: 2rem;
