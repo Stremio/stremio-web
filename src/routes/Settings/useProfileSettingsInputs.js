@@ -132,28 +132,6 @@ const useProfileSettingsInputs = (profile) => {
             });
         }
     }), [profile.settings]);
-    const seekTimeShiftDuration = useDeepEqualMemo(() => ({
-        options: CONSTANTS.SEEK_TIME_DURATIONS.map((size) => ({
-            value: `${size}`,
-            label: `${size}s`
-        })),
-        selected: [`${profile.settings.seekTimeShiftDuration}`],
-        renderLabelText: () => {
-            return `${profile.settings.seekTimeShiftDuration}s`;
-        },
-        onSelect: (event) => {
-            core.transport.dispatch({
-                action: 'Ctx',
-                args: {
-                    action: 'UpdateSettings',
-                    args: {
-                        ...profile.settings,
-                        seekTimeShiftDuration: parseInt(event.value, 10)
-                    }
-                }
-            });
-        }
-    }), [profile.settings]);
     const bingeWatchingCheckbox = useDeepEqualMemo(() => ({
         checked: profile.settings.bingeWatching,
         onClick: () => {
@@ -237,7 +215,6 @@ const useProfileSettingsInputs = (profile) => {
         subtitlesBackgroundColorInput,
         subtitlesOutlineColorInput,
         seekTimeDuration,
-        seekTimeShiftDuration,
         bingeWatchingCheckbox,
         playInBackgroundCheckbox,
         playInExternalPlayerCheckbox,
