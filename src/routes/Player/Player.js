@@ -331,14 +331,26 @@ const Player = ({ urlParams, queryParams }) => {
                 }
                 case 'ArrowRight': {
                     if (!subtitlesMenuOpen && !infoMenuOpen && videoState.time !== null) {
-                        onSeekRequested(videoState.time + 15000);
+                        let seekTimeDuration = settings.seekTimeDuration * 1000;
+
+                        if (event.shiftKey === true) {
+                            seekTimeDuration = seekTimeDuration * 3;
+                        }
+
+                        onSeekRequested(videoState.time + seekTimeDuration);
                     }
 
                     break;
                 }
                 case 'ArrowLeft': {
                     if (!subtitlesMenuOpen && !infoMenuOpen && videoState.time !== null) {
-                        onSeekRequested(videoState.time - 15000);
+                        let seekTimeDuration = settings.seekTimeDuration * 1000;
+
+                        if (event.shiftKey === true) {
+                            seekTimeDuration = seekTimeDuration * 3;
+                        }
+
+                        onSeekRequested(videoState.time - seekTimeDuration);
                     }
 
                     break;
