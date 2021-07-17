@@ -40,18 +40,56 @@ html:not(.active-slider-within) {
 
         &.error-layer {
             display: flex;
-            flex-direction: row;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             background-color: @color-background-dark5;
 
             .error-label {
-                flex: 0 1 auto;
+                flex: auto;
                 padding: 0 8rem;
                 max-height: 4.8em;
                 font-size: 2rem;
                 color: @color-surface-light5-90;
                 text-align: center;
+            }
+
+            .error-details {
+                display: flex;
+                flex: auto;
+                font-size: 1.5rem;
+                margin-top: 1.5rem;
+                color: @color-surface-light5-90;
+
+                .error-details-button {
+                    display: flex;
+                    flex: none;
+                    flex-direction: row;
+                    align-items: center;
+                    height: 3.5rem;
+                    padding: 0.5rem 1rem;
+                    font-weight: 500;
+                    background-color: @color-accent3;
+
+                    &:hover, &:focus {
+                        background-color: @color-accent3-light1;
+                    }
+
+                    .icon {
+                        flex: none;
+                        width: 1.5rem;
+                        height: 1.5rem;
+                        margin-right: 1rem;
+                        fill: @color-surface-light5-90;
+                    }
+
+                    .label {
+                        flex: auto;
+                        max-height: 2.4em;
+                        font-size: 1.1rem;
+                        color: @color-surface-light5-90;
+                    }
+                }
             }
         }
 

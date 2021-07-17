@@ -6,7 +6,8 @@ const classnames = require('classnames');
 const debounce = require('lodash.debounce');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
-const { HorizontalNavBar, useDeepEqualEffect, useFullscreen, useBinaryState, useToast, useStreamingServer } = require('stremio/common');
+const { HorizontalNavBar, Button, useDeepEqualEffect, useFullscreen, useBinaryState, useToast, useStreamingServer } = require('stremio/common');
+const Icon = require('@stremio/stremio-icons/dom');
 const BufferingLoader = require('./BufferingLoader');
 const ControlBar = require('./ControlBar');
 const InfoMenu = require('./InfoMenu');
@@ -63,6 +64,18 @@ const Player = ({ urlParams, queryParams }) => {
             videoRef.current.dispatch(args);
         }
     }, []);
+    const playlist = React.useMemo(() => {
+        if (player.selected === null || typeof player.selected.stream.url !== 'string') {
+            return null;
+        }
+
+        const m3u = `#EXTM3U\n\n#EXTINF:0,${encodeURIComponent(player.title)}\n${encodeURI(player.selected.stream.url)}`;
+        const base64File = `data:application/octet-stream;charset=utf-8;base64,${window.btoa(m3u)}`;
+        return {
+            name: `${player.title}.m3u`,
+            file: base64File
+        };
+    }, [player]);
     const onImplementationChanged = React.useCallback((manifest) => {
         manifest.props.forEach((propName) => {
             dispatch({ type: 'observeProp', propName });
@@ -415,18 +428,32 @@ const Player = ({ urlParams, queryParams }) => {
                 videoState.buffering ?
                     <BufferingLoader className={styles['layer']} />
                     :
-                    error !== null ?
-                        <div className={classnames(styles['layer'], styles['error-layer'])}>
-                            <div className={styles['error-label']}>{error.message}</div>
-                        </div>
-                        :
-                        null
+                    null
             }
             <div
                 className={styles['layer']}
                 onClick={onVideoClick}
                 onDoubleClick={onVideoDoubleClick}
             />
+            {
+                error !== null ?
+                    <div className={classnames(styles['layer'], styles['error-layer'])}>
+                        <div className={styles['error-label']}>{error.message}</div>
+                        {
+                            playlist ?
+                                <div className={styles['error-details']}>
+                                    <Button className={styles['error-details-button']} title={'Download MU3 Playlist'} href={playlist.file} download={playlist.name}>
+                                        <Icon className={styles['icon']} icon={'ic_downloads'} />
+                                        <div className={styles['label']}>Download Playlist</div>
+                                    </Button>
+                                </div>
+                                :
+                                null
+                        }
+                    </div>
+                    :
+                    null
+            }
             {
                 subtitlesMenuOpen || infoMenuOpen ?
                     <div className={styles['layer']} />
