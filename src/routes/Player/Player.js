@@ -344,14 +344,16 @@ const Player = ({ urlParams, queryParams }) => {
                 }
                 case 'ArrowRight': {
                     if (!subtitlesMenuOpen && !infoMenuOpen && videoState.time !== null) {
-                        onSeekRequested(videoState.time + 15000);
+                        const seekTimeMultiplier = event.shiftKey ? 3 : 1;
+                        onSeekRequested(videoState.time + (settings.seekTimeDuration * seekTimeMultiplier));
                     }
 
                     break;
                 }
                 case 'ArrowLeft': {
                     if (!subtitlesMenuOpen && !infoMenuOpen && videoState.time !== null) {
-                        onSeekRequested(videoState.time - 15000);
+                        const seekTimeMultiplier = event.shiftKey ? 3 : 1;
+                        onSeekRequested(videoState.time - (settings.seekTimeDuration * seekTimeMultiplier));
                     }
 
                     break;
@@ -399,7 +401,7 @@ const Player = ({ urlParams, queryParams }) => {
         return () => {
             window.removeEventListener('keydown', onKeyDown);
         };
-    }, [player, routeFocused, subtitlesMenuOpen, infoMenuOpen, videoState.paused, videoState.time, videoState.volume, videoState.subtitlesTracks, toggleSubtitlesMenu, toggleInfoMenu]);
+    }, [player, routeFocused, subtitlesMenuOpen, infoMenuOpen, videoState.paused, videoState.time, videoState.volume, videoState.subtitlesTracks, toggleSubtitlesMenu, toggleInfoMenu, settings.seekTimeDuration]);
     React.useLayoutEffect(() => {
         return () => {
             setImmersedDebounced.cancel();
