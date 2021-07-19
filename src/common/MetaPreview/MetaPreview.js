@@ -23,7 +23,7 @@ const ALLOWED_LINK_REDIRECTS = [
     routesRegexp.metadetails.regexp
 ];
 
-const MetaPreview = ({ className, compact, name, logo, background, runtime, releaseInfo, released, description, links, trailerStreams, inLibrary, toggleInLibrary }) => {
+const MetaPreview = ({ className, compact, name, logo, background, runtime, releaseInfo, released, description, deepLinks, links, trailerStreams, inLibrary, toggleInLibrary }) => {
     const [shareModalOpen, openShareModal, closeShareModal] = useBinaryState(false);
     const linksGroups = React.useMemo(() => {
         return Array.isArray(links) ?
@@ -70,6 +70,21 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
             :
             new Map();
     }, [links]);
+    const showHref = React.useMemo(() => {
+        return deepLinks ?
+            typeof deepLinks.player === 'string' ?
+                deepLinks.player
+                :
+                typeof deepLinks.metaDetailsStreams === 'string' ?
+                    deepLinks.metaDetailsStreams
+                    :
+                    typeof deepLinks.metaDetailsVideos === 'string' ?
+                        deepLinks.metaDetailsVideos
+                        :
+                        null
+            :
+            null;
+    }, [deepLinks]);
     const trailerHref = React.useMemo(() => {
         if (!Array.isArray(trailerStreams) || trailerStreams.length === 0) {
             return null;
@@ -195,7 +210,19 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                         null
                 }
                 {
-                    linksGroups.has(CONSTANTS.SHARE_LINK_CATEGORY) ?
+                    typeof showHref === 'string' && compact ?
+                        <ActionButton
+                            className={styles['action-button']}
+                            icon={'ic_play'}
+                            label={'Show'}
+                            tabIndex={compact ? -1 : 0}
+                            href={showHref}
+                        />
+                        :
+                        null
+                }
+                {
+                    linksGroups.has(CONSTANTS.SHARE_LINK_CATEGORY) && !compact ?
                         <React.Fragment>
                             <ActionButton
                                 className={styles['action-button']}
@@ -236,6 +263,11 @@ MetaPreview.propTypes = {
     releaseInfo: PropTypes.string,
     released: PropTypes.instanceOf(Date),
     description: PropTypes.string,
+    deepLinks: PropTypes.shape({
+        metaDetailsVideos: PropTypes.string,
+        metaDetailsStreams: PropTypes.string,
+        player: PropTypes.string
+    }),
     links: PropTypes.arrayOf(PropTypes.shape({
         category: PropTypes.string,
         name: PropTypes.string,
