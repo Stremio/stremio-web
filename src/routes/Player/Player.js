@@ -344,7 +344,7 @@ const Player = ({ urlParams, queryParams }) => {
                 }
                 case 'ArrowRight': {
                     if (!subtitlesMenuOpen && !infoMenuOpen && videoState.time !== null) {
-                        let seekTimeDuration = settings.seekTimeDuration * 1000;
+                        let seekTimeDuration = settings.seekTimeDuration;
 
                         if (event.shiftKey === true) {
                             seekTimeDuration = seekTimeDuration * 3;
@@ -357,7 +357,7 @@ const Player = ({ urlParams, queryParams }) => {
                 }
                 case 'ArrowLeft': {
                     if (!subtitlesMenuOpen && !infoMenuOpen && videoState.time !== null) {
-                        let seekTimeDuration = settings.seekTimeDuration * 1000;
+                        let seekTimeDuration = settings.seekTimeDuration;
 
                         if (event.shiftKey === true) {
                             seekTimeDuration = seekTimeDuration * 3;
