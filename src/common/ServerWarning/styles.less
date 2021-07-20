@@ -1,0 +1,33 @@
+// Copyright (C) 2017-2020 Smart code 203358507
+
+@import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
+
+.warning-container {
+    display: flex;
+    flex-direction: row;
+    padding: 0.5rem 1rem;
+    background-color: @color-accent3;
+
+    .warning-statement {
+        flex: 1;
+        margin-right: 1rem;
+        font-size: 1.2rem;
+        color: @color-surface-light5-90;
+    }
+
+    .warning-button {
+        &:not(:last-child) {
+            margin-right: 1rem;
+        }
+
+        .warning-label {
+            font-size: 1.2rem;
+            color: @color-surface-light5-90;
+        }
+
+        &:hover {
+            text-decoration: underline;
+            color: @color-surface-light5-90;
+        }
+    }
+}
