@@ -4,32 +4,43 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('@stremio/stremio-icons/dom');
-const { Button, Image } = require('stremio/common');
+const { Button, Image, useStreamingServer } = require('stremio/common');
 const { useServices } = require('stremio/services');
 const Stream = require('./Stream');
 const styles = require('./styles');
 
 const StreamsList = ({ className, ...props }) => {
     const { core } = useServices();
+    const streamingServer = useStreamingServer();
+    const isServerOpen = streamingServer.settings.type === 'Ready';
+    const streamToMagnetURI = React.useCallback((stream) => {
+        const displayName = stream.title || 'Stream';
+        const trackers = stream.announce && stream.announce.filter((source) => source.includes('tracker:')).map((source) => `&tr=${source.replace('tracker:', '')}`);
+        return encodeURI(`magnet:?dn=${displayName}&xt=urn:btih:${stream.infoHash}${trackers.join()}`);
+    });
     const streams = React.useMemo(() => {
         return props.streams
             .filter((streams) => streams.content.type === 'Ready')
             .map((streams) => {
-                return streams.content.content.map((stream) => ({
-                    ...stream,
-                    onClick: () => {
-                        core.transport.analytics({
-                            event: 'StreamClicked',
-                            args: {
-                                stream
-                            }
-                        });
-                    },
-                    addonName: streams.addon.manifest.name
-                }));
+                return streams.content.content.map((stream) => {
+                    const externalUrl = !isServerOpen && stream.infoHash ? streamToMagnetURI(stream) : stream.externalUrl;
+                    return {
+                        ...stream,
+                        externalUrl,
+                        onClick: () => {
+                            core.transport.analytics({
+                                event: 'StreamClicked',
+                                args: {
+                                    stream
+                                }
+                            });
+                        },
+                        addonName: streams.addon.manifest.name
+                    };
+                });
             })
             .flat(1);
-    }, [props.streams]);
+    }, [props.streams, isServerOpen]);
     return (
         <div className={classnames(className, styles['streams-list-container'])}>
             {
@@ -59,6 +70,7 @@ const StreamsList = ({ className, ...props }) => {
                                         title={stream.title}
                                         thumbnail={stream.thumbnail}
                                         progress={stream.progress}
+                                        externalUrl={stream.externalUrl}
                                         deepLinks={stream.deepLinks}
                                         onClick={stream.onClick}
                                     />
