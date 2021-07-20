@@ -27,7 +27,7 @@ const Settings = () => {
         subtitlesTextColorInput,
         subtitlesBackgroundColorInput,
         subtitlesOutlineColorInput,
-        seekTimeDuration,
+        seekTimeDurationSelect,
         bingeWatchingCheckbox,
         playInBackgroundCheckbox,
         playInExternalPlayerCheckbox,
@@ -310,7 +310,7 @@ const Settings = () => {
                             </div>
                             <Multiselect
                                 className={classnames(styles['option-input-container'], styles['multiselect-container'])}
-                                {...seekTimeDuration}
+                                {...seekTimeDurationSelect}
                             />
                         </div>
                         <div className={styles['option-container']}>

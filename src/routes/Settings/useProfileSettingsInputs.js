@@ -110,7 +110,7 @@ const useProfileSettingsInputs = (profile) => {
             });
         }
     }), [profile.settings]);
-    const seekTimeDuration = useDeepEqualMemo(() => ({
+    const seekTimeDurationSelect = useDeepEqualMemo(() => ({
         options: CONSTANTS.SEEK_TIME_DURATIONS.map((size) => ({
             value: `${size}`,
             label: `${size / 1000}s`
@@ -214,7 +214,7 @@ const useProfileSettingsInputs = (profile) => {
         subtitlesTextColorInput,
         subtitlesBackgroundColorInput,
         subtitlesOutlineColorInput,
-        seekTimeDuration,
+        seekTimeDurationSelect,
         bingeWatchingCheckbox,
         playInBackgroundCheckbox,
         playInExternalPlayerCheckbox,
