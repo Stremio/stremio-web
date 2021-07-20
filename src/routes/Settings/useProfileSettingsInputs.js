@@ -113,11 +113,11 @@ const useProfileSettingsInputs = (profile) => {
     const seekTimeDurationSelect = useDeepEqualMemo(() => ({
         options: CONSTANTS.SEEK_TIME_DURATIONS.map((size) => ({
             value: `${size}`,
-            label: `${size / 1000}s`
+            label: `${size / 1000} seconds`
         })),
         selected: [`${profile.settings.seekTimeDuration}`],
         renderLabelText: () => {
-            return `${profile.settings.seekTimeDuration / 1000}s`;
+            return `${profile.settings.seekTimeDuration / 1000} seconds`;
         },
         onSelect: (event) => {
             core.transport.dispatch({
