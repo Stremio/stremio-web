@@ -430,7 +430,7 @@ const Player = ({ urlParams, queryParams }) => {
             {
                 error !== null ?
                     <div className={classnames(styles['layer'], styles['error-layer'])}>
-                        <div className={styles['error-label']}>{error.message}</div>
+                        <div className={styles['error-label']} title={error.message}>{error.message}</div>
                         {
                             playlist ?
                                 <div className={styles['error-details']}>
