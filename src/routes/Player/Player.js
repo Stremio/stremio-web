@@ -14,6 +14,7 @@ const InfoMenu = require('./InfoMenu');
 const SubtitlesMenu = require('./SubtitlesMenu');
 const Video = require('./Video');
 const usePlayer = require('./usePlayer');
+const usePlaylist = require('./usePlaylist');
 const useSettings = require('./useSettings');
 const styles = require('./styles');
 
@@ -23,21 +24,12 @@ const Player = ({ urlParams, queryParams }) => {
         return queryParams.has('forceTranscoding');
     }, [queryParams]);
     const [player, updateLibraryItemState, pushToLibrary] = usePlayer(urlParams);
+    const playlist = usePlaylist(player);
     const [settings, updateSettings] = useSettings();
     const streamingServer = useStreamingServer();
     const routeFocused = useRouteFocused();
     const toast = useToast();
     const [, , , toggleFullscreen] = useFullscreen();
-    const playlist = React.useMemo(() => {
-        if (player.selected === null || typeof player.selected.stream.url !== 'string') {
-            return null;
-        }
-
-        const name = `${player.title}.m3u`;
-        const m3u = `#EXTM3U\n\n#EXTINF:0,${encodeURIComponent(player.title)}\n${encodeURI(player.selected.stream.url)}`;
-        const href = `data:application/octet-stream;charset=utf-8;base64,${window.btoa(m3u)}`;
-        return { name, href };
-    }, [player]);
     const [casting, setCasting] = React.useState(() => {
         return chromecast.active && chromecast.transport.getCastState() === cast.framework.CastState.CONNECTED;
     });
