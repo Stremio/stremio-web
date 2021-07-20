@@ -433,12 +433,10 @@ const Player = ({ urlParams, queryParams }) => {
                         <div className={styles['error-label']} title={error.message}>{error.message}</div>
                         {
                             playlist ?
-                                <div className={styles['error-details']}>
-                                    <Button className={styles['error-details-button']} title={'Download M3U Playlist'} href={playlist.href} download={playlist.name}>
-                                        <Icon className={styles['icon']} icon={'ic_downloads'} />
-                                        <div className={styles['label']}>Download Playlist</div>
-                                    </Button>
-                                </div>
+                                <Button className={styles['playlist-button']} title={'Download M3U Playlist'} href={playlist.href} download={playlist.name}>
+                                    <Icon className={styles['icon']} icon={'ic_downloads'} />
+                                    <div className={styles['label']}>Download Playlist</div>
+                                </Button>
                                 :
                                 null
                         }
