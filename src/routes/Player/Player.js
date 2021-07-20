@@ -33,12 +33,10 @@ const Player = ({ urlParams, queryParams }) => {
             return null;
         }
 
+        const name = `${player.title}.m3u`;
         const m3u = `#EXTM3U\n\n#EXTINF:0,${encodeURIComponent(player.title)}\n${encodeURI(player.selected.stream.url)}`;
-        const base64File = `data:application/octet-stream;charset=utf-8;base64,${window.btoa(m3u)}`;
-        return {
-            name: `${player.title}.m3u`,
-            file: base64File
-        };
+        const href = `data:application/octet-stream;charset=utf-8;base64,${window.btoa(m3u)}`;
+        return { name, href };
     }, [player]);
     const [casting, setCasting] = React.useState(() => {
         return chromecast.active && chromecast.transport.getCastState() === cast.framework.CastState.CONNECTED;
@@ -444,7 +442,7 @@ const Player = ({ urlParams, queryParams }) => {
                         {
                             playlist ?
                                 <div className={styles['error-details']}>
-                                    <Button className={styles['error-details-button']} title={'Download MU3 Playlist'} href={playlist.file} download={playlist.name}>
+                                    <Button className={styles['error-details-button']} title={'Download MU3 Playlist'} href={playlist.href} download={playlist.name}>
                                         <Icon className={styles['icon']} icon={'ic_downloads'} />
                                         <div className={styles['label']}>Download Playlist</div>
                                     </Button>
