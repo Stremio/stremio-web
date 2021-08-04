@@ -11,27 +11,28 @@ const styles = require('./styles');
 const ServerWarning = ({ className }) => {
     const { core } = useServices();
     const profile = useProfile();
-    const streamingServerWarningDismissed = new Date();
     const onLaterClick = React.useCallback(() => {
+        const streamingServerWarningDismissed = new Date();
         core.transport.dispatch({
             action: 'Ctx',
             args: {
                 action: 'UpdateSettings',
                 args: {
                     ...profile.settings,
-                    streamingServerWarningDismissed: streamingServerWarningDismissed.setMonth(new Date().getMonth() + 1)
+                    streamingServerWarningDismissed: streamingServerWarningDismissed.setMonth(streamingServerWarningDismissed.getMonth() + 1)
                 }
             }
         });
     }, [profile.settings]);
     const onDismissedClick = React.useCallback(() => {
+        const streamingServerWarningDismissed = new Date();
         core.transport.dispatch({
             action: 'Ctx',
             args: {
                 action: 'UpdateSettings',
                 args: {
                     ...profile.settings,
-                    streamingServerWarningDismissed: streamingServerWarningDismissed.setFullYear(new Date().getFullYear() + 50)
+                    streamingServerWarningDismissed: streamingServerWarningDismissed.setFullYear(streamingServerWarningDismissed.getFullYear() + 50)
                 }
             }
         });
