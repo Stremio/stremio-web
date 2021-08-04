@@ -6,13 +6,15 @@ const classnames = require('classnames');
 const debounce = require('lodash.debounce');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
-const { HorizontalNavBar, useDeepEqualEffect, useFullscreen, useBinaryState, useToast, useStreamingServer } = require('stremio/common');
+const { HorizontalNavBar, Button, useDeepEqualEffect, useFullscreen, useBinaryState, useToast, useStreamingServer } = require('stremio/common');
+const Icon = require('@stremio/stremio-icons/dom');
 const BufferingLoader = require('./BufferingLoader');
 const ControlBar = require('./ControlBar');
 const InfoMenu = require('./InfoMenu');
 const SubtitlesMenu = require('./SubtitlesMenu');
 const Video = require('./Video');
 const usePlayer = require('./usePlayer');
+const usePlaylist = require('./usePlaylist');
 const useSettings = require('./useSettings');
 const styles = require('./styles');
 
@@ -22,6 +24,7 @@ const Player = ({ urlParams, queryParams }) => {
         return queryParams.has('forceTranscoding');
     }, [queryParams]);
     const [player, updateLibraryItemState, pushToLibrary] = usePlayer(urlParams);
+    const playlist = usePlaylist(player);
     const [settings, updateSettings] = useSettings();
     const streamingServer = useStreamingServer();
     const routeFocused = useRouteFocused();
@@ -233,7 +236,7 @@ const Player = ({ urlParams, queryParams }) => {
                             streamingServer.selected.transportUrl
                         :
                         null,
-                    chromecastTransport: chromecast.transport
+                    chromecastTransport: chromecast.active ? chromecast.transport : null
                 }
             });
         }
@@ -331,14 +334,16 @@ const Player = ({ urlParams, queryParams }) => {
                 }
                 case 'ArrowRight': {
                     if (!subtitlesMenuOpen && !infoMenuOpen && videoState.time !== null) {
-                        onSeekRequested(videoState.time + 15000);
+                        const seekTimeMultiplier = event.shiftKey ? 3 : 1;
+                        onSeekRequested(videoState.time + (settings.seekTimeDuration * seekTimeMultiplier));
                     }
 
                     break;
                 }
                 case 'ArrowLeft': {
                     if (!subtitlesMenuOpen && !infoMenuOpen && videoState.time !== null) {
-                        onSeekRequested(videoState.time - 15000);
+                        const seekTimeMultiplier = event.shiftKey ? 3 : 1;
+                        onSeekRequested(videoState.time - (settings.seekTimeDuration * seekTimeMultiplier));
                     }
 
                     break;
@@ -386,7 +391,7 @@ const Player = ({ urlParams, queryParams }) => {
         return () => {
             window.removeEventListener('keydown', onKeyDown);
         };
-    }, [player, routeFocused, subtitlesMenuOpen, infoMenuOpen, videoState.paused, videoState.time, videoState.volume, videoState.subtitlesTracks, toggleSubtitlesMenu, toggleInfoMenu]);
+    }, [player, settings.seekTimeDuration, routeFocused, subtitlesMenuOpen, infoMenuOpen, videoState.paused, videoState.time, videoState.volume, videoState.subtitlesTracks, toggleSubtitlesMenu, toggleInfoMenu]);
     React.useLayoutEffect(() => {
         return () => {
             setImmersedDebounced.cancel();
@@ -415,18 +420,30 @@ const Player = ({ urlParams, queryParams }) => {
                 videoState.buffering ?
                     <BufferingLoader className={styles['layer']} />
                     :
-                    error !== null ?
-                        <div className={classnames(styles['layer'], styles['error-layer'])}>
-                            <div className={styles['error-label']}>{error.message}</div>
-                        </div>
-                        :
-                        null
+                    null
             }
             <div
                 className={styles['layer']}
                 onClick={onVideoClick}
                 onDoubleClick={onVideoDoubleClick}
             />
+            {
+                error !== null ?
+                    <div className={classnames(styles['layer'], styles['error-layer'])}>
+                        <div className={styles['error-label']} title={error.message}>{error.message}</div>
+                        {
+                            playlist ?
+                                <Button className={styles['playlist-button']} title={'Download M3U Playlist'} href={playlist.href} download={playlist.name}>
+                                    <Icon className={styles['icon']} icon={'ic_downloads'} />
+                                    <div className={styles['label']}>Download Playlist</div>
+                                </Button>
+                                :
+                                null
+                        }
+                    </div>
+                    :
+                    null
+            }
             {
                 subtitlesMenuOpen || infoMenuOpen ?
                     <div className={styles['layer']} />
