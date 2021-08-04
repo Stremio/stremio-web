@@ -13,26 +13,28 @@ const ServerWarning = ({ className }) => {
     const profile = useProfile();
     const onLaterClick = React.useCallback(() => {
         const streamingServerWarningDismissed = new Date();
+        streamingServerWarningDismissed.setMonth(streamingServerWarningDismissed.getMonth() + 1);
         core.transport.dispatch({
             action: 'Ctx',
             args: {
                 action: 'UpdateSettings',
                 args: {
                     ...profile.settings,
-                    streamingServerWarningDismissed: streamingServerWarningDismissed.setMonth(streamingServerWarningDismissed.getMonth() + 1)
+                    streamingServerWarningDismissed: streamingServerWarningDismissed
                 }
             }
         });
     }, [profile.settings]);
     const onDismissedClick = React.useCallback(() => {
         const streamingServerWarningDismissed = new Date();
+        streamingServerWarningDismissed.setFullYear(streamingServerWarningDismissed.getFullYear() + 50);
         core.transport.dispatch({
             action: 'Ctx',
             args: {
                 action: 'UpdateSettings',
                 args: {
                     ...profile.settings,
-                    streamingServerWarningDismissed: streamingServerWarningDismissed.setFullYear(streamingServerWarningDismissed.getFullYear() + 50)
+                    streamingServerWarningDismissed: streamingServerWarningDismissed
                 }
             }
         });
