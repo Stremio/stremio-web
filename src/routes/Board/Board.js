@@ -4,11 +4,13 @@ const React = require('react');
 const classnames = require('classnames');
 const { MainNavBars, MetaRow, LibItem, MetaItem, ServerWarning } = require('stremio/common');
 const useBoard = require('./useBoard');
+const useProfile = require('stremio/common/useProfile');
 const useContinueWatchingPreview = require('./useContinueWatchingPreview');
 const styles = require('./styles');
 
 const Board = () => {
     const board = useBoard();
+    const profile = useProfile();
     const continueWatchingPreview = useContinueWatchingPreview();
     return (
         <div className={styles['board-container']}>
@@ -65,7 +67,12 @@ const Board = () => {
                     })}
                 </div>
             </MainNavBars>
-            <ServerWarning className={styles['board-warning-container']} />
+            {
+                new Date(profile.settings.streamingServerWarningDismissed).getTime() > Date.now() ?
+                    <ServerWarning className={styles['board-warning-container']} />
+                    :
+                    null
+            }
         </div>
     );
 };
