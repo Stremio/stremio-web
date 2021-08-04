@@ -68,7 +68,7 @@ const Board = () => {
                 </div>
             </MainNavBars>
             {
-                new Date(profile.settings.streamingServerWarningDismissed).getTime() > Date.now() ?
+                profile.settings.streamingServerWarningDismissed !== null && new Date(profile.settings.streamingServerWarningDismissed).getTime() > Date.now() ?
                     <ServerWarning className={styles['board-warning-container']} />
                     :
                     null
