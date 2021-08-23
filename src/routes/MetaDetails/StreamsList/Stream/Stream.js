@@ -8,20 +8,20 @@ const { Button, Image, PlayIconCircleCentered } = require('stremio/common');
 const StreamPlaceholder = require('./StreamPlaceholder');
 const styles = require('./styles');
 
-const Stream = ({ className, addonName, title, thumbnail, progress, externalUrl, deepLinks, ...props }) => {
+const Stream = ({ className, addonName, title, thumbnail, progress, deepLinks, ...props }) => {
     const href = React.useMemo(() => {
-        return externalUrl ?
-            externalUrl
-            :
-            deepLinks ?
+        return deepLinks ?
+            deepLinks.external ?
+                deepLinks.external
+                :
                 typeof deepLinks.player === 'string' ?
                     deepLinks.player
                     :
                     null
-                :
-                null;
-    }, [externalUrl, deepLinks]);
-    const target = externalUrl ? '_blank' : null;
+            :
+            null;
+    }, [deepLinks]);
+    const target = deepLinks.external ? '_blank' : null;
     const renderThumbnailFallback = React.useCallback(() => (
         <Icon className={styles['placeholder-icon']} icon={'ic_broken_link'} />
     ), []);
@@ -64,7 +64,6 @@ Stream.propTypes = {
     title: PropTypes.string,
     thumbnail: PropTypes.string,
     progress: PropTypes.number,
-    externalUrl: PropTypes.string,
     deepLinks: PropTypes.shape({
         player: PropTypes.string
     })
