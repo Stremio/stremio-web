@@ -189,6 +189,9 @@ module.exports = (env, argv) => ({
             VERSION: pachageJson.version,
             COMMIT_HASH
         }),
+        new webpack.ProvidePlugin({
+            Buffer: ['buffer', 'Buffer']
+        }),
         new CleanWebpackPlugin({
             cleanOnceBeforeBuildPatterns: ['*']
         }),
