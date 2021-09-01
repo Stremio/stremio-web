@@ -16,7 +16,7 @@ const selectVideoImplementation = (args) => {
     }
 
     if (typeof args.streamingServerURL === 'string') {
-        return withHTMLSubtitles(withStreamingServer(HTMLVideo));
+        return withStreamingServer(withHTMLSubtitles(HTMLVideo));
     }
 
     return withHTMLSubtitles(HTMLVideo);
