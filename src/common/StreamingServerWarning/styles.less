@@ -5,6 +5,7 @@
 .warning-container {
     display: flex;
     flex-direction: row;
+    align-items: center;
     padding: 0.5rem 1rem;
     background-color: @color-accent3;
 
@@ -12,21 +13,27 @@
         flex: 1;
         margin-right: 1rem;
         font-size: 1.2rem;
+        max-height: 2.4em;
         color: @color-surface-light5-90;
     }
 
     .warning-button {
+        flex: none;
+        max-width: 8rem;
+
         &:not(:last-child) {
             margin-right: 1rem;
         }
 
-        .warning-label {
-            font-size: 1.2rem;
-            color: @color-surface-light5-90;
+        &:hover {
+            .warning-label {
+                text-decoration: underline;
+            }
         }
 
-        &:hover {
-            text-decoration: underline;
+        .warning-label {
+            font-size: 1.2rem;
+            max-height: 1.2em;
             color: @color-surface-light5-90;
         }
     }

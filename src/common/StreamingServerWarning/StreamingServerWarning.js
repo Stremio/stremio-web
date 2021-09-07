@@ -8,7 +8,7 @@ const Button = require('stremio/common/Button');
 const useProfile = require('stremio/common/useProfile');
 const styles = require('./styles');
 
-const ServerWarning = ({ className }) => {
+const StreamingServerWarning = ({ className }) => {
     const { core } = useServices();
     const profile = useProfile();
     const onLaterClick = React.useCallback(() => {
@@ -20,12 +20,12 @@ const ServerWarning = ({ className }) => {
                 action: 'UpdateSettings',
                 args: {
                     ...profile.settings,
-                    streamingServerWarningDismissed: streamingServerWarningDismissed
+                    streamingServerWarningDismissed
                 }
             }
         });
     }, [profile.settings]);
-    const onDismissedClick = React.useCallback(() => {
+    const onDismissClick = React.useCallback(() => {
         const streamingServerWarningDismissed = new Date();
         streamingServerWarningDismissed.setFullYear(streamingServerWarningDismissed.getFullYear() + 50);
         core.transport.dispatch({
@@ -34,26 +34,26 @@ const ServerWarning = ({ className }) => {
                 action: 'UpdateSettings',
                 args: {
                     ...profile.settings,
-                    streamingServerWarningDismissed: streamingServerWarningDismissed
+                    streamingServerWarningDismissed
                 }
             }
         });
     }, [profile.settings]);
     return (
         <div className={classnames(className, styles['warning-container'])}>
-            <div className={styles['warning-statement']}>Streaming server must be available.</div>
-            <Button className={styles['warning-button']} title={'later'} onClick={onLaterClick}>
+            <div className={styles['warning-statement']}>Streaming server is not available.</div>
+            <Button className={styles['warning-button']} title={'Later'} onClick={onLaterClick}>
                 <span className={styles['warning-label']}>Later</span>
             </Button>
-            <Button className={styles['warning-button']} title={'dismiss'} onClick={onDismissedClick}>
+            <Button className={styles['warning-button']} title={'Dismiss'} onClick={onDismissClick}>
                 <span className={styles['warning-label']}>Dismiss</span>
             </Button>
         </div>
     );
 };
 
-ServerWarning.propTypes = {
+StreamingServerWarning.propTypes = {
     className: PropTypes.string
 };
 
-module.exports = ServerWarning;
+module.exports = StreamingServerWarning;
