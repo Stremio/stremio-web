@@ -19,8 +19,11 @@ const styles = require('./styles');
 
 const Player = ({ urlParams, queryParams }) => {
     const { core, chromecast } = useServices();
-    const forceTranscoding = React.useMemo(() => {
-        return queryParams.has('forceTranscoding');
+    const [forceTranscoding, audioChannels] = React.useMemo(() => {
+        return [
+            queryParams.has('forceTranscoding'),
+            queryParams.has('audioChannels') ? parseInt(queryParams.get('audioChannels'), 10) : null
+        ];
     }, [queryParams]);
     const [player, updateLibraryItemState, pushToLibrary] = usePlayer(urlParams);
     const [settings, updateSettings] = useSettings();
@@ -227,6 +230,7 @@ const Player = ({ urlParams, queryParams }) => {
                         :
                         0,
                     forceTranscoding: forceTranscoding || casting,
+                    audioChannels,
                     streamingServerURL: streamingServer.baseUrl.type === 'Ready' ?
                         casting ?
                             streamingServer.baseUrl.content
@@ -238,7 +242,7 @@ const Player = ({ urlParams, queryParams }) => {
                 }
             });
         }
-    }, [streamingServer.baseUrl, player.selected, forceTranscoding, casting]);
+    }, [streamingServer.baseUrl, player.selected, forceTranscoding, audioChannels, casting]);
     useDeepEqualEffect(() => {
         if (videoState.stream !== null) {
             dispatch({
