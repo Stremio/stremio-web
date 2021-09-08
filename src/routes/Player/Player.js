@@ -14,7 +14,6 @@ const InfoMenu = require('./InfoMenu');
 const SubtitlesMenu = require('./SubtitlesMenu');
 const Video = require('./Video');
 const usePlayer = require('./usePlayer');
-const usePlaylist = require('./usePlaylist');
 const useSettings = require('./useSettings');
 const styles = require('./styles');
 
@@ -24,7 +23,6 @@ const Player = ({ urlParams, queryParams }) => {
         return queryParams.has('forceTranscoding');
     }, [queryParams]);
     const [player, updateLibraryItemState, pushToLibrary] = usePlayer(urlParams);
-    const playlist = usePlaylist(player);
     const [settings, updateSettings] = useSettings();
     const streamingServer = useStreamingServer();
     const routeFocused = useRouteFocused();
@@ -432,10 +430,10 @@ const Player = ({ urlParams, queryParams }) => {
                     <div className={classnames(styles['layer'], styles['error-layer'])}>
                         <div className={styles['error-label']} title={error.message}>{error.message}</div>
                         {
-                            playlist ?
-                                <Button className={styles['playlist-button']} title={'Download M3U Playlist'} href={playlist.href} download={playlist.name}>
+                            player.selected !== null ?
+                                <Button {...player.selected.stream.deepLinks.externalPlayer.props} className={styles['playlist-button']} title={'Open in external player'} href={player.selected.stream.deepLinks.externalPlayer.href} target={'_blank'}>
                                     <Icon className={styles['icon']} icon={'ic_downloads'} />
-                                    <div className={styles['label']}>Download Playlist</div>
+                                    <div className={styles['label']}>Open in external player</div>
                                 </Button>
                                 :
                                 null
