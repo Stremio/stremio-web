@@ -28,8 +28,7 @@
     },
     "ignorePatterns": [
         "/*",
-        "!/src",
-        "src/video"
+        "!/src"
     ],
     "rules": {
         "arrow-parens": "error",
