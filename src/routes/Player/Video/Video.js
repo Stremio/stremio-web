@@ -3,9 +3,8 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const { StremioVideo } = require('@stremio/stremio-video');
+const StremioVideo = require('@stremio/stremio-video');
 const { useLiveRef } = require('stremio/common');
-const selectVideoImplementation = require('./selectVideoImplementation');
 const styles = require('./styles');
 
 const Video = React.forwardRef(({ className, ...props }, ref) => {
@@ -30,10 +29,7 @@ const Video = React.forwardRef(({ className, ...props }, ref) => {
     React.useImperativeHandle(ref, () => ({ dispatch }), []);
     React.useEffect(() => {
         if (videoElementRef.current !== null) {
-            videoRef.current = new StremioVideo({
-                selectVideoImplementation,
-                containerElement: videoElementRef.current
-            });
+            videoRef.current = new StremioVideo({ containerElement: videoElementRef.current });
             videoRef.current.on('ended', () => {
                 if (typeof onEndedRef.current === 'function') {
                     onEndedRef.current();

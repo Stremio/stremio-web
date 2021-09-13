@@ -40,7 +40,7 @@ html:not(.active-slider-within) {
 
         &.error-layer {
             display: flex;
-            flex-direction: row;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             background-color: @color-background-dark5;
@@ -52,6 +52,39 @@ html:not(.active-slider-within) {
                 font-size: 2rem;
                 color: @color-surface-light5-90;
                 text-align: center;
+            }
+
+            .playlist-button {
+                flex: none;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                height: 3.5rem;
+                max-width: 16rem;
+                margin-top: 1.5rem;
+                padding: 0.5rem 1rem;
+                background-color: @color-accent3;
+
+                &:hover, &:focus {
+                    background-color: @color-accent3-light1;
+                }
+
+                .icon {
+                    flex: none;
+                    width: 1.5rem;
+                    height: 1.5rem;
+                    margin-right: 1rem;
+                    fill: @color-surface-light5-90;
+                }
+
+                .label {
+                    flex: 1;
+                    max-height: 2.4em;
+                    font-size: 1.1rem;
+                    font-weight: 500;
+                    color: @color-surface-light5-90;
+                    text-align: center;
+                }
             }
         }
 

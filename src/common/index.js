@@ -17,6 +17,7 @@ const PaginationInput = require('./PaginationInput');
 const PlayIconCircleCentered = require('./PlayIconCircleCentered');
 const Popup = require('./Popup');
 const SearchBar = require('./SearchBar');
+const StreamingServerWarning = require('./StreamingServerWarning');
 const SharePrompt = require('./SharePrompt');
 const Slider = require('./Slider');
 const TextInput = require('./TextInput');
@@ -56,6 +57,7 @@ module.exports = {
     PlayIconCircleCentered,
     Popup,
     SearchBar,
+    StreamingServerWarning,
     SharePrompt,
     Slider,
     TextInput,

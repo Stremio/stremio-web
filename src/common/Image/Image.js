@@ -19,9 +19,9 @@ const Image = ({ className, src, alt, fallbackSrc, renderFallback, ...props }) =
         typeof renderFallback === 'function' ?
             renderFallback()
             :
-            <img {...props} className={className} src={fallbackSrc} alt={alt} />
+            <img {...props} className={className} src={fallbackSrc} alt={alt} loading={'lazy'} />
         :
-        <img {...props} className={className} src={src} alt={alt} onError={onError} />;
+        <img {...props} className={className} src={src} alt={alt} loading={'lazy'} onError={onError} />;
 };
 
 Image.propTypes = {

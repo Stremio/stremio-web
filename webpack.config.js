@@ -1,7 +1,7 @@
 // Copyright (C) 2017-2020 Smart code 203358507
 
 const path = require('path');
-const child_process = require('child_process');
+const { execSync } = require('child_process');
 const webpack = require('webpack');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -10,7 +10,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const pachageJson = require('./package.json');
 
-const COMMIT_HASH = child_process.execSync('git rev-parse HEAD').toString().trim();
+const COMMIT_HASH = execSync('git rev-parse HEAD').toString().trim();
 
 module.exports = (env, argv) => ({
     mode: argv.mode,
@@ -85,6 +85,7 @@ module.exports = (env, argv) => ({
                                                     removeAll: true,
                                                 },
                                                 discardOverridden: false,
+                                                discardUnused: false,
                                                 mergeIdents: false,
                                                 normalizeDisplayValues: false,
                                                 normalizePositions: false,
@@ -189,6 +190,9 @@ module.exports = (env, argv) => ({
             VERSION: pachageJson.version,
             COMMIT_HASH
         }),
+        new webpack.ProvidePlugin({
+            Buffer: ['buffer', 'Buffer']
+        }),
         new CleanWebpackPlugin({
             cleanOnceBeforeBuildPatterns: ['*']
         }),
@@ -201,6 +205,7 @@ module.exports = (env, argv) => ({
         new HtmlWebPackPlugin({
             template: './src/index.html',
             inject: false,
+            scriptLoading: 'blocking',
             faviconsPath: `${COMMIT_HASH}/favicons`
         })
     ]

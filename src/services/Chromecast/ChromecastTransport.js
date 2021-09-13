@@ -47,7 +47,6 @@ function ChromecastTransport() {
         .then(() => {
             try {
                 events.emit('init');
-
             } catch (error) {
                 console.error('ChromecastTransport', error);
             }
