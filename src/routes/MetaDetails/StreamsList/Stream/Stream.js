@@ -11,8 +11,8 @@ const styles = require('./styles');
 const Stream = ({ className, addonName, title, thumbnail, progress, deepLinks, ...props }) => {
     const href = React.useMemo(() => {
         return deepLinks ?
-            deepLinks.external ?
-                deepLinks.external
+            deepLinks.externalPlayer ?
+                deepLinks.externalPlayer.href
                 :
                 typeof deepLinks.player === 'string' ?
                     deepLinks.player
@@ -21,7 +21,7 @@ const Stream = ({ className, addonName, title, thumbnail, progress, deepLinks, .
             :
             null;
     }, [deepLinks]);
-    const target = deepLinks.external ? '_blank' : null;
+    const target = deepLinks.externalPlayer ? '_blank' : null;
     const renderThumbnailFallback = React.useCallback(() => (
         <Icon className={styles['placeholder-icon']} icon={'ic_broken_link'} />
     ), []);
