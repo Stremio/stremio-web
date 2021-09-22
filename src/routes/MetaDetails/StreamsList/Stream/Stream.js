@@ -66,7 +66,7 @@ Stream.propTypes = {
     progress: PropTypes.number,
     deepLinks: PropTypes.shape({
         player: PropTypes.string,
-        external: PropTypes.string
+        externalPlayer: PropTypes.string
     })
 };
 
