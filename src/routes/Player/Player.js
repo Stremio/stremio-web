@@ -230,7 +230,13 @@ const Player = ({ urlParams, queryParams }) => {
                         :
                         0,
                     forceTranscoding: forceTranscoding || casting,
-                    audioChannels,
+                    audioChannels: typeof audioChannels === 'number' ?
+                        audioChannels
+                        :
+                        window.chrome ?
+                            2
+                            :
+                            null,
                     streamingServerURL: streamingServer.baseUrl.type === 'Ready' ?
                         casting ?
                             streamingServer.baseUrl.content
