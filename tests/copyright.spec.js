@@ -12,4 +12,11 @@ describe('copyright', () => {
             expect(content).toEqual(expect.stringMatching(COPYRIGHT_HEADER));
         }
     });
+    
+    test('less', async () => {
+        for await (const { fullPath } of readdirp('src', { fileFilter: '*.less' })) {
+            const content = await fs.promises.readFile(fullPath, 'utf8');
+            expect(content).toEqual(expect.stringMatching(COPYRIGHT_HEADER));
+        }
+    });
 });
