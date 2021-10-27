@@ -19,7 +19,8 @@ const init = () => ({
     page: 1,
 });
 
-const map = (discover) => ({
+const map = (discover) => {    
+   let discoverObj = ({
     ...discover,
     catalog: discover.catalog !== null && discover.catalog.content.type === 'Ready' ?
         {
@@ -34,7 +35,13 @@ const map = (discover) => ({
         }
         :
         discover.catalog
-});
+    });
+
+    if( discover.catalog !== null && discover.catalog.content.type === 'Ready' && discoverObj.selected.request.path.id==='year')
+        discoverObj.catalog.content.content.sort( (a,b)=> (b.released-a.released) )
+
+    return discoverObj;
+}
 
 const useDiscover = (urlParams, queryParams) => {
     const { core } = useServices();
