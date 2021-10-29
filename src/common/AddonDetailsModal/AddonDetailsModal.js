@@ -4,9 +4,40 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const ModalDialog = require('stremio/common/ModalDialog');
 const { useServices } = require('stremio/services');
-const AddonDetails = require('./AddonDetails');
+const AddonDetailsWithRemoteAndLocalAddon = withRemoteAndLocalAddon(require('./AddonDetails'));
 const useAddonDetails = require('./useAddonDetails');
 const styles = require('./styles');
+
+function withRemoteAndLocalAddon(AddonDetails) {
+    const withRemoteAndLocalAddon = ({ remoteAddon, localAddon, ...props }) => {
+        const addon = remoteAddon !== null && remoteAddon.content.type === 'Ready' ?
+            remoteAddon.content.content
+            :
+            localAddon !== null ?
+                localAddon
+                :
+                null;
+        if (addon === null) {
+            return null;
+        }
+
+        return (
+            <AddonDetails
+                {...props}
+                id={addon.manifest.id}
+                name={addon.manifest.name}
+                version={addon.manifest.version}
+                logo={addon.manifest.logo}
+                description={addon.manifest.description}
+                types={addon.manifest.types}
+                transportUrl={addon.transportUrl}
+                official={addon.flags.official}
+            />
+        );
+    };
+    withRemoteAndLocalAddon.displayName = 'withRemoteAndLocalAddon';
+    return withRemoteAndLocalAddon;
+}
 
 const AddonDetailsModal = ({ transportUrl, onCloseRequest }) => {
     const { core } = useServices();
@@ -97,22 +128,16 @@ const AddonDetailsModal = ({ transportUrl, onCloseRequest }) => {
                             Loading addon manifest from {addonDetails.selected.transportUrl}
                         </div>
                         :
-                        addonDetails.remoteAddon.content.type === 'Err' ?
+                        addonDetails.remoteAddon.content.type === 'Err' && addonDetails.localAddon === null ?
                             <div className={styles['addon-details-message-container']}>
                                 Failed to get addon manifest from {addonDetails.selected.transportUrl}
                                 <div>{addonDetails.remoteAddon.content.content.message}</div>
                             </div>
                             :
-                            <AddonDetails
+                            <AddonDetailsWithRemoteAndLocalAddon
                                 className={styles['addon-details-container']}
-                                id={addonDetails.remoteAddon.content.content.manifest.id}
-                                name={addonDetails.remoteAddon.content.content.manifest.name}
-                                version={addonDetails.remoteAddon.content.content.manifest.version}
-                                logo={addonDetails.remoteAddon.content.content.manifest.logo}
-                                description={addonDetails.remoteAddon.content.content.manifest.description}
-                                types={addonDetails.remoteAddon.content.content.manifest.types}
-                                transportUrl={addonDetails.remoteAddon.content.content.transportUrl}
-                                official={addonDetails.remoteAddon.content.content.flags.official}
+                                remoteAddon={addonDetails.remoteAddon}
+                                localAddon={addonDetails.localAddon}
                             />
             }
         </ModalDialog>
