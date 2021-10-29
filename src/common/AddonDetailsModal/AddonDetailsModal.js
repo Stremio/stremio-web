@@ -43,77 +43,72 @@ const AddonDetailsModal = ({ transportUrl, onCloseRequest }) => {
     const { core } = useServices();
     const addonDetails = useAddonDetails(transportUrl);
     const modalButtons = React.useMemo(() => {
-        if (addonDetails.remoteAddon === null || addonDetails.remoteAddon.content.type !== 'Ready') {
-            return null;
-        }
-
-        const cancelOnClick = (event) => {
-            if (typeof onCloseRequest === 'function') {
-                onCloseRequest({
-                    type: 'cancel',
-                    reactEvent: event,
-                    nativeEvent: event.nativeEvent
-                });
-            }
-        };
-        const installOnClick = (event) => {
-            core.transport.dispatch({
-                action: 'Ctx',
-                args: {
-                    action: 'InstallAddon',
-                    args: addonDetails.remoteAddon.content.content
-                }
-            });
-            if (typeof onCloseRequest === 'function') {
-                onCloseRequest({
-                    type: 'install',
-                    reactEvent: event,
-                    nativeEvent: event.nativeEvent
-                });
-            }
-        };
-        const uninstallOnClick = (event) => {
-            core.transport.dispatch({
-                action: 'Ctx',
-                args: {
-                    action: 'UninstallAddon',
-                    args: addonDetails.remoteAddon.content.content
-                }
-            });
-            if (typeof onCloseRequest === 'function') {
-                onCloseRequest({
-                    type: 'uninstall',
-                    reactEvent: event,
-                    nativeEvent: event.nativeEvent
-                });
-            }
-        };
-        return [
-            {
-                className: styles['cancel-button'],
-                label: 'Cancel',
-                props: {
-                    onClick: cancelOnClick
-                }
-            },
-            addonDetails.localAddon !== null ?
-                {
-                    className: styles['uninstall-button'],
-                    label: 'Uninstall',
-                    props: {
-                        onClick: uninstallOnClick
+        const cancelButton = {
+            className: styles['cancel-button'],
+            label: 'Cancel',
+            props: {
+                onClick: (event) => {
+                    if (typeof onCloseRequest === 'function') {
+                        onCloseRequest({
+                            type: 'cancel',
+                            reactEvent: event,
+                            nativeEvent: event.nativeEvent
+                        });
                     }
                 }
-                :
+            }
+        };
+        const toggleButton = addonDetails.localAddon !== null ?
+            {
+                className: styles['uninstall-button'],
+                label: 'Uninstall',
+                props: {
+                    onClick: (event) => {
+                        core.transport.dispatch({
+                            action: 'Ctx',
+                            args: {
+                                action: 'UninstallAddon',
+                                args: addonDetails.localAddon
+                            }
+                        });
+                        if (typeof onCloseRequest === 'function') {
+                            onCloseRequest({
+                                type: 'uninstall',
+                                reactEvent: event,
+                                nativeEvent: event.nativeEvent
+                            });
+                        }
+                    }
+                }
+            }
+            :
+            addonDetails.remoteAddon !== null && addonDetails.remoteAddon.content.type === 'Ready' ?
                 {
 
                     className: styles['install-button'],
                     label: 'Install',
                     props: {
-                        onClick: installOnClick
+                        onClick: (event) => {
+                            core.transport.dispatch({
+                                action: 'Ctx',
+                                args: {
+                                    action: 'InstallAddon',
+                                    args: addonDetails.remoteAddon.content.content
+                                }
+                            });
+                            if (typeof onCloseRequest === 'function') {
+                                onCloseRequest({
+                                    type: 'install',
+                                    reactEvent: event,
+                                    nativeEvent: event.nativeEvent
+                                });
+                            }
+                        }
                     }
                 }
-        ];
+                :
+                null;
+        return toggleButton !== null ? [cancelButton, toggleButton] : [cancelButton];
     }, [addonDetails, onCloseRequest]);
     return (
         <ModalDialog className={styles['addon-details-modal-container']} title={'Stremio addon'} buttons={modalButtons} onCloseRequest={onCloseRequest}>
