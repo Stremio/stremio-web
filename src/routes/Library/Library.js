@@ -9,6 +9,39 @@ const useLibrary = require('./useLibrary');
 const useSelectableInputs = require('./useSelectableInputs');
 const styles = require('./styles');
 
+function withModel(Library) {
+    const withModel = ({ urlParams, queryParams }) => {
+        const model = React.useMemo(() => {
+            return typeof urlParams.path === 'string' ?
+                urlParams.path.match(routesRegexp.library.regexp) ?
+                    'library'
+                    :
+                    urlParams.path.match(routesRegexp.continuewatching.regexp) ?
+                        'continue_watching'
+                        :
+                        null
+                :
+                null;
+        }, [urlParams.path]);
+        if (model === null) {
+            return (
+                <NotFound />
+            );
+        }
+
+        return (
+            <Library
+                key={model}
+                model={model}
+                urlParams={urlParams}
+                queryParams={queryParams}
+            />
+        );
+    };
+    withModel.displayName = 'withModel';
+    return withModel;
+}
+
 const Library = ({ model, urlParams, queryParams }) => {
     const profile = useProfile();
     const library = useLibrary(model, urlParams, queryParams);
@@ -85,31 +118,4 @@ Library.propTypes = {
     queryParams: PropTypes.instanceOf(URLSearchParams)
 };
 
-module.exports = ({ urlParams, queryParams }) => {
-    const model = React.useMemo(() => {
-        return typeof urlParams.path === 'string' ?
-            urlParams.path.match(routesRegexp.library.regexp) ?
-                'library'
-                :
-                urlParams.path.match(routesRegexp.continuewatching.regexp) ?
-                    'continue_watching'
-                    :
-                    null
-            :
-            null;
-    }, [urlParams.path]);
-    if (typeof model === 'string') {
-        return (
-            <Library
-                key={model}
-                model={model}
-                urlParams={urlParams}
-                queryParams={queryParams}
-            />
-        );
-    } else {
-        return (
-            <NotFound />
-        );
-    }
-};
+module.exports = withModel(Library);
