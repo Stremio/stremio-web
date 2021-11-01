@@ -45,10 +45,7 @@ module.exports = (env, argv) => ({
                     {
                         loader: MiniCssExtractPlugin.loader,
                         options: {
-                            esModule: false,
-                            modules: {
-                                namedExport: false
-                            }
+                            esModule: false
                         }
                     },
                     {
@@ -116,33 +113,24 @@ module.exports = (env, argv) => ({
             {
                 test: /\.ttf$/,
                 exclude: /node_modules/,
-                loader: 'file-loader',
-                options: {
-                    esModule: false,
-                    name: '[name].[ext]',
-                    outputPath: `${COMMIT_HASH}/fonts`,
-                    publicPath: `/${COMMIT_HASH}/fonts`
+                type: 'asset/resource',
+                generator: {
+                    filename: `${COMMIT_HASH}/fonts/[name][ext][query]`
                 }
             },
             {
                 test: /\.(png|jpe?g)$/,
                 exclude: /node_modules/,
-                loader: 'file-loader',
-                options: {
-                    esModule: false,
-                    name: '[name].[ext]',
-                    outputPath: `${COMMIT_HASH}/images`,
-                    publicPath: `/${COMMIT_HASH}/images`
+                type: 'asset/resource',
+                generator: {
+                    filename: `${COMMIT_HASH}/images/[name][ext][query]`
                 }
             },
             {
                 test: /\.wasm$/,
-                loader: 'file-loader',
-                options: {
-                    esModule: false,
-                    name: '[name].[ext]',
-                    outputPath: `${COMMIT_HASH}/binaries`,
-                    publicPath: `/${COMMIT_HASH}/binaries`
+                type: 'asset/resource',
+                generator: {
+                    filename: `${COMMIT_HASH}/binaries/[name][ext][query]`
                 }
             }
         ]
@@ -156,9 +144,8 @@ module.exports = (env, argv) => ({
     },
     devServer: {
         host: '0.0.0.0',
-        contentBase: false,
+        static: false,
         hot: false,
-        inline: false,
         https: true,
         liveReload: false
     },
