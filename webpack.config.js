@@ -14,6 +14,7 @@ const COMMIT_HASH = execSync('git rev-parse HEAD').toString().trim();
 
 module.exports = (env, argv) => ({
     mode: argv.mode,
+    devtool: argv.mode === 'production' ? 'source-map' : 'eval-source-map',
     entry: './src/index.js',
     output: {
         path: path.join(__dirname, 'build'),
