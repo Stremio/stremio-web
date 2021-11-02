@@ -7,11 +7,13 @@ const { Button, Image } = require('stremio/common');
 const styles = require('./styles');
 
 const ErrorDialog = ({ className }) => {
+    const [dataCleared, setDataCleared] = React.useState(false);
     const reload = React.useCallback(() => {
         window.location.reload();
     }, []);
     const clearData = React.useCallback(() => {
         window.localStorage.clear();
+        setDataCleared(true);
     }, []);
     return (
         <div className={classnames(className, styles['error-container'])}>
@@ -25,7 +27,7 @@ const ErrorDialog = ({ className }) => {
                 <Button className={styles['button-container']} title={'Try again'} onClick={reload}>
                     <div className={styles['label']}>Try again</div>
                 </Button>
-                <Button className={styles['button-container']} title={'Clear data'} onClick={clearData}>
+                <Button className={styles['button-container']} disabled={dataCleared} title={'Clear data'} onClick={clearData}>
                     <div className={styles['label']}>Clear data</div>
                 </Button>
             </div>
