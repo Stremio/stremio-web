@@ -7,6 +7,7 @@ const { Core, Shell, Chromecast, KeyboardShortcuts, ServicesProvider } = require
 const { NotFound } = require('stremio/routes');
 const { ToastProvider, sanitizeLocationPath, CONSTANTS } = require('stremio/common');
 const CoreEventsToaster = require('./CoreEventsToaster');
+const ErrorDialog = require('./ErrorDialog');
 const routerViewsConfig = require('./routerViewsConfig');
 const styles = require('./styles');
 
@@ -26,8 +27,7 @@ const App = () => {
         chromecast: new Chromecast(),
         keyboardShortcuts: new KeyboardShortcuts()
     }), []);
-    const [coreInitialized, setCoreInitialized] = React.useState(false);
-    const [shellInitialized, setShellInitialized] = React.useState(false);
+    const [initialized, setInitialized] = React.useState(false);
     React.useEffect(() => {
         let prevPath = window.location.hash.slice(1);
         const onLocationHashChange = () => {
@@ -46,13 +46,16 @@ const App = () => {
     }, []);
     React.useEffect(() => {
         const onCoreStateChanged = () => {
-            setCoreInitialized(services.core.active);
-            if (services.core.error) {
-                alert(services.core.error);
-            }
+            setInitialized(
+                (services.core.active || services.core.error instanceof Error) &&
+                (services.shell.active || services.shell.error instanceof Error)
+            );
         };
         const onShellStateChanged = () => {
-            setShellInitialized(services.shell.active || services.shell.error instanceof Error);
+            setInitialized(
+                (services.core.active || services.core.error instanceof Error) &&
+                (services.shell.active || services.shell.error instanceof Error)
+            );
         };
         const onChromecastStateChange = () => {
             if (services.chromecast.active) {
@@ -86,17 +89,20 @@ const App = () => {
         <React.StrictMode>
             <ServicesProvider services={services}>
                 {
-                    coreInitialized && shellInitialized ?
-                        <ToastProvider className={styles['toasts-container']}>
-                            <CoreEventsToaster />
-                            <Router
-                                className={styles['router']}
-                                viewsConfig={routerViewsConfig}
-                                onPathNotMatch={onPathNotMatch}
-                            />
-                        </ToastProvider>
+                    initialized ?
+                        services.core.error instanceof Error ?
+                            <ErrorDialog className={styles['error-container']} />
+                            :
+                            <ToastProvider className={styles['toasts-container']}>
+                                <CoreEventsToaster />
+                                <Router
+                                    className={styles['router']}
+                                    viewsConfig={routerViewsConfig}
+                                    onPathNotMatch={onPathNotMatch}
+                                />
+                            </ToastProvider>
                         :
-                        <div className={styles['app-loader']} />
+                        <div className={styles['loader-container']} />
                 }
             </ServicesProvider>
         </React.StrictMode>
