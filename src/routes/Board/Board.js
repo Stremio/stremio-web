@@ -68,7 +68,7 @@ const Board = () => {
                 </div>
             </MainNavBars>
             {
-                (streamingServer.settings === null || streamingServer.settings.type !== 'Ready') &&
+                streamingServer.settings !== null && streamingServer.settings.type === 'Err' &&
                     (isNaN(profile.settings.streamingServerWarningDismissed.getTime()) || profile.settings.streamingServerWarningDismissed.getTime() < Date.now()) ?
                     <StreamingServerWarning className={styles['board-warning-container']} />
                     :
