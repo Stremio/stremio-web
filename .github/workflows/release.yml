@@ -13,6 +13,8 @@ jobs:
       - name: Install NPM dependencies
         run: npm install
       - name: Build
+        env:
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
         run: npm run build
       - name: Zip build artifact
         run: zip -r stremio-web.zip ./build
