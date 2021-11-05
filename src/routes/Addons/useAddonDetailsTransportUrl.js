@@ -14,7 +14,7 @@ const useAddonDetailsTransportUrl = (urlParams, queryParams) => {
             nextQueryParams.delete('addon');
         }
 
-        window.location = `#${urlParams.path}?${nextQueryParams}`;
+        window.location.replace(`#${urlParams.path}?${nextQueryParams}`);
     }, [urlParams, queryParams]);
     return [transportUrl, setTransportUrl];
 };
