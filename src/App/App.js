@@ -85,6 +85,16 @@ const App = () => {
             services.chromecast.off('stateChanged', onChromecastStateChange);
         };
     }, []);
+    React.useEffect(() => {
+        if (services.core.active) {
+            services.core.transport.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'PullAddonsFromAPI'
+                }
+            });
+        }
+    }, [initialized]);
     return (
         <React.StrictMode>
             <ServicesProvider services={services}>
