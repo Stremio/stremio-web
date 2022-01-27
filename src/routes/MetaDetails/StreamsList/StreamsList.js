@@ -56,7 +56,8 @@ const StreamsList = ({ className, ...props }) => {
                                     <Stream
                                         key={index}
                                         addonName={stream.addonName}
-                                        title={stream.title}
+                                        name={stream.name}
+                                        description={stream.description}
                                         thumbnail={stream.thumbnail}
                                         progress={stream.progress}
                                         deepLinks={stream.deepLinks}

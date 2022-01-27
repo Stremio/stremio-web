@@ -8,7 +8,7 @@ const { Button, Image, PlayIconCircleCentered } = require('stremio/common');
 const StreamPlaceholder = require('./StreamPlaceholder');
 const styles = require('./styles');
 
-const Stream = ({ className, addonName, title, thumbnail, progress, deepLinks, ...props }) => {
+const Stream = ({ className, addonName, name, description, thumbnail, progress, deepLinks, ...props }) => {
     const href = React.useMemo(() => {
         return deepLinks ?
             typeof deepLinks.player === 'string' ?
@@ -22,10 +22,10 @@ const Stream = ({ className, addonName, title, thumbnail, progress, deepLinks, .
         <Icon className={styles['placeholder-icon']} icon={'ic_broken_link'} />
     ), []);
     return (
-        <Button href={href} {...props} className={classnames(className, styles['stream-container'])} title={title}>
+        <Button href={href} {...props} className={classnames(className, styles['stream-container'])} title={addonName}>
             {
                 typeof thumbnail === 'string' && thumbnail.length > 0 ?
-                    <div className={styles['thumbnail-container']} title={addonName}>
+                    <div className={styles['thumbnail-container']} title={name}>
                         <Image
                             className={styles['thumbnail']}
                             src={thumbnail}
@@ -34,11 +34,11 @@ const Stream = ({ className, addonName, title, thumbnail, progress, deepLinks, .
                         />
                     </div>
                     :
-                    <div className={styles['addon-name-container']} title={addonName}>
-                        <div className={styles['addon-name']}>{addonName}</div>
+                    <div className={styles['addon-name-container']} title={name}>
+                        <div className={styles['addon-name']}>{name}</div>
                     </div>
             }
-            <div className={styles['info-container']}>{title}</div>
+            <div className={styles['info-container']} title={description}>{description}</div>
             <PlayIconCircleCentered className={styles['play-icon']} />
             {
                 progress !== null && !isNaN(progress) && progress > 0 ?
@@ -57,7 +57,8 @@ Stream.Placeholder = StreamPlaceholder;
 Stream.propTypes = {
     className: PropTypes.string,
     addonName: PropTypes.string,
-    title: PropTypes.string,
+    name: PropTypes.string,
+    description: PropTypes.string,
     thumbnail: PropTypes.string,
     progress: PropTypes.number,
     deepLinks: PropTypes.shape({
