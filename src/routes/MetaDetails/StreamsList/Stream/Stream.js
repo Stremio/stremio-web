@@ -35,7 +35,7 @@ const Stream = ({ className, addonName, name, description, thumbnail, progress, 
                     </div>
                     :
                     <div className={styles['addon-name-container']} title={name}>
-                        <div className={styles['addon-name']}>{name}</div>
+                        <div className={styles['addon-name']}>{name || addonName}</div>
                     </div>
             }
             <div className={styles['info-container']} title={description}>{description}</div>
