@@ -92,9 +92,16 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
 
         return trailerStreams[0].deepLinks.player;
     }, [trailerStreams]);
-    const renderLogoFallback = React.useCallback(() => (
-        <Icon className={styles['logo-placeholder-icon']} icon={'ic_broken_link'} />
-    ), []);
+    const logoFallback = ({ currentTarget }) => {
+        currentTarget.onerror = null; // detach handler
+        if (compact) {
+            // replace with blank png
+            currentTarget.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
+        } else {
+            // show img.alt without broken image icon
+            currentTarget.className = styles['missing'];
+        }
+    }
     return (
         <div className={classnames(className, styles['meta-preview-container'], { [styles['compact']]: compact })}>
             {
@@ -106,17 +113,14 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                     null
             }
             <div className={styles['meta-info-container']}>
-                {
-                    typeof logo === 'string' && logo.length > 0 ?
-                        <Image
-                            className={styles['logo']}
-                            src={logo}
-                            alt={' '}
-                            renderFallback={renderLogoFallback}
-                        />
-                        :
-                        null
-                }
+                <div className={styles['logo-holder']}>
+                    <Image
+                        className={styles['logo']}
+                        src={logo || ''}
+                        alt={name}
+                        onError={logoFallback}
+                    />
+                </div>
                 {
                     (typeof releaseInfo === 'string' && releaseInfo.length > 0) || (released instanceof Date && !isNaN(released.getTime())) || (typeof runtime === 'string' && runtime.length > 0) || linksGroups.has(CONSTANTS.IMDB_LINK_CATEGORY) ?
                         <div className={styles['runtime-release-info-container']}>
@@ -155,7 +159,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                         null
                 }
                 {
-                    typeof name === 'string' && name.length > 0 ?
+                    compact && typeof name === 'string' && name.length > 0 ?
                         <div className={styles['name-container']}>
                             {name}
                         </div>
@@ -163,7 +167,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                         null
                 }
                 {
-                    typeof description === 'string' && description.length > 0 ?
+                    compact && typeof description === 'string' && description.length > 0 ?
                         <div className={styles['description-container']}>{description}</div>
                         :
                         null
@@ -172,7 +176,8 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                     Array.from(linksGroups.keys())
                         .filter((category) => {
                             return category !== CONSTANTS.IMDB_LINK_CATEGORY &&
-                                category !== CONSTANTS.SHARE_LINK_CATEGORY;
+                                category !== CONSTANTS.SHARE_LINK_CATEGORY &&
+                                category !== 'Writers';
                         })
                         .map((category, index) => (
                             <MetaLinks
