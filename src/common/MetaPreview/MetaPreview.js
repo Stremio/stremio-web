@@ -101,7 +101,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
             // show img.alt without broken image icon
             currentTarget.className = styles['missing'];
         }
-    }
+    };
     return (
         <div className={classnames(className, styles['meta-preview-container'], { [styles['compact']]: compact })}>
             {
