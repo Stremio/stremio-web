@@ -67,6 +67,11 @@ const Discover = ({ urlParams, queryParams }) => {
         closeAddonModal();
         setSelectedMetaItemIndex(0);
     }, [discover.selected]);
+    const metaItemsContainerRef = React.useRef();
+    React.useEffect(() => {
+        if (((discover.catalog || {}).content || {}).type === 'Loading')
+            metaItemsContainerRef.current.scrollTo(0,0);
+    }, [discover.catalog]);
     return (
         <MainNavBars className={styles['discover-container']} route={'discover'}>
             <div className={styles['discover-content']}>
@@ -124,7 +129,7 @@ const Discover = ({ urlParams, queryParams }) => {
                                 </div>
                                 :
                                 discover.catalog.content.type === 'Loading' ?
-                                    <div className={styles['meta-items-container']}>
+                                    <div className={styles['meta-items-container']} ref={metaItemsContainerRef}>
                                         {Array(CONSTANTS.CATALOG_PAGE_SIZE).fill(null).map((_, index) => (
                                             <div key={index} className={styles['meta-item-placeholder']}>
                                                 <div className={styles['poster-container']} />
