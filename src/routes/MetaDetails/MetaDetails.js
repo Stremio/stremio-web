@@ -107,12 +107,7 @@ const MetaDetails = ({ urlParams, queryParams }) => {
                                         {
                                             typeof metaDetails.metaItem.content.content.background === 'string' &&
                                                 metaDetails.metaItem.content.content.background.length > 0 ?
-                                                <div className={styles['background-image-layer']}>
-                                                    <Image
-                                                        className={styles['background-image']}
-                                                        src={metaDetails.metaItem.content.content.background}
-                                                        alt={' '}
-                                                    />
+                                                <div className={styles['background-image-layer']} style={{backgroundImage:'url('+metaDetails.metaItem.content.content.background+')'}}>
                                                 </div>
                                                 :
                                                 null
