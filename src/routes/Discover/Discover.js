@@ -69,8 +69,9 @@ const Discover = ({ urlParams, queryParams }) => {
     }, [discover.selected]);
     const metaItemsContainerRef = React.useRef();
     React.useEffect(() => {
-        if (((discover.catalog || {}).content || {}).type === 'Loading')
+        if (discover.catalog?.content.type === 'Loading') {
             metaItemsContainerRef.current.scrollTo(0, 0);
+        }
     }, [discover.catalog]);
     return (
         <MainNavBars className={styles['discover-container']} route={'discover'}>
