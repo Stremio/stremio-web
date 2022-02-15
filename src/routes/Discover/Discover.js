@@ -130,7 +130,7 @@ const Discover = ({ urlParams, queryParams }) => {
                                 </div>
                                 :
                                 discover.catalog.content.type === 'Loading' ?
-                                    <div className={styles['meta-items-container']} ref={metaItemsContainerRef}>
+                                    <div ref={metaItemsContainerRef} className={styles['meta-items-container']}>
                                         {Array(CONSTANTS.CATALOG_PAGE_SIZE).fill(null).map((_, index) => (
                                             <div key={index} className={styles['meta-item-placeholder']}>
                                                 <div className={styles['poster-container']} />
@@ -141,7 +141,7 @@ const Discover = ({ urlParams, queryParams }) => {
                                         ))}
                                     </div>
                                     :
-                                    <div className={styles['meta-items-container']} onFocusCapture={metaItemsOnFocusCapture}>
+                                    <div ref={metaItemsContainerRef} className={styles['meta-items-container']} onFocusCapture={metaItemsOnFocusCapture}>
                                         {discover.catalog.content.content.map((metaItem, index) => (
                                             <MetaItem
                                                 key={index}
