@@ -93,7 +93,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
         return trailerStreams[0].deepLinks.player;
     }, [trailerStreams]);
     const renderLogoFallback = React.useCallback(() => (
-        <Icon className={styles['logo-placeholder-icon']} icon={'ic_broken_link'} />
+        <div className={styles['logo-placeholder']}>{name}</div>
     ), []);
     return (
         <div className={classnames(className, styles['meta-preview-container'], { [styles['compact']]: compact })}>
@@ -112,6 +112,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                             className={styles['logo']}
                             src={logo}
                             alt={' '}
+                            title={name}
                             renderFallback={renderLogoFallback}
                         />
                         :
@@ -150,14 +151,6 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                                     :
                                     null
                             }
-                        </div>
-                        :
-                        null
-                }
-                {
-                    typeof name === 'string' && name.length > 0 ?
-                        <div className={styles['name-container']}>
-                            {name}
                         </div>
                         :
                         null
