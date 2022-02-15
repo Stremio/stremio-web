@@ -25,7 +25,7 @@ const Stream = ({ className, addonName, name, description, thumbnail, progress, 
         <Button href={href} {...props} className={classnames(className, styles['stream-container'])} title={addonName}>
             {
                 typeof thumbnail === 'string' && thumbnail.length > 0 ?
-                    <div className={styles['thumbnail-container']} title={name}>
+                    <div className={styles['thumbnail-container']} title={name || addonName}>
                         <Image
                             className={styles['thumbnail']}
                             src={thumbnail}
@@ -34,8 +34,8 @@ const Stream = ({ className, addonName, name, description, thumbnail, progress, 
                         />
                     </div>
                     :
-                    <div className={styles['addon-name-container']} title={name}>
-                        <div className={styles['addon-name']}>{name}</div>
+                    <div className={styles['addon-name-container']} title={name || addonName}>
+                        <div className={styles['addon-name']}>{name || addonName}</div>
                     </div>
             }
             <div className={styles['info-container']} title={description}>{description}</div>
