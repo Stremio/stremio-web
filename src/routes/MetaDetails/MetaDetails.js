@@ -68,7 +68,9 @@ const MetaDetails = ({ urlParams, queryParams }) => {
             <HorizontalNavBar
                 className={styles['nav-bar']}
                 backButton={true}
-                title={metaDetails.title}
+                addonsButton={true}
+                fullscreenButton={true}
+                navMenu={true}
             />
             <div className={styles['metadetails-content']}>
                 {
