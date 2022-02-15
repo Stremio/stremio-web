@@ -156,6 +156,14 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                         null
                 }
                 {
+                    compact && typeof name === 'string' && name.length > 0 ?
+                        <div className={styles['name-container']}>
+                            {name}
+                        </div>
+                        :
+                        null
+                }
+                {
                     typeof description === 'string' && description.length > 0 ?
                         <div className={styles['description-container']}>{description}</div>
                         :
