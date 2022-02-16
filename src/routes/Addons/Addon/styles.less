@@ -173,6 +173,40 @@
     .addon-container {
         flex-direction: column;
         align-items: center;
-        gap: 1em;
+        gap: 2em;
+
+        .info-container {
+            flex-basis: auto;
+            padding: 0;
+        }
+
+        .buttons-container {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5em;
+            width: 100%;
+
+            .install-button-container, .uninstall-button-container, .share-button-container {
+                &:not(:first-child) {
+                    margin-top: 0;
+                }
+            }
+
+            .share-button-container {
+                .icon {
+                    margin-right: 0;
+                }
+
+                .label {
+                    display: none;
+                }
+            }
+
+            .install-button-container, .uninstall-button-container {
+                flex-basis: 100%;
+            }
+        }
     }
 }
