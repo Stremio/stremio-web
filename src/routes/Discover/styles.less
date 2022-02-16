@@ -438,3 +438,33 @@
         }
     }
 }
+
+@media only screen and (max-width: @minimum) {
+    .discover-container {
+        .discover-content {
+            .catalog-container {
+                .selectable-inputs-container {
+                    flex-direction: column;
+                    gap: 1em;
+                    padding: 1em;
+
+                    .select-input {
+                        flex: 0 1 3.5em;
+
+                        &:not(:first-child) {
+                            margin-left: 0;
+                        }
+                    }
+
+                    .spacing {
+                        display: none;
+                    }
+
+                    .pagination-input {
+                        margin-left: 0;
+                    }
+                }
+            }
+        }
+    }
+}
