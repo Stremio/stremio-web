@@ -196,11 +196,19 @@
         .board-content-container {
             .board-content {
                 .board-row {
-                    margin: 2em 1.5em;
+                    margin: 2em 1em;
+                }
+
+                .board-row-poster, .board-row-square {
+                    .meta-item, .meta-item-placeholder {
+                        &:nth-child(n+4) {
+                            display: none;
+                        }
+                    }
                 }
             }
         }
-
+        
         .board-warning-container {
             width: 100%;
             position: absolute;
