@@ -33,19 +33,26 @@
             padding: 1.5rem;
             overflow: visible;
 
-            .select-input-container {
-                flex-grow: 0;
-                flex-shrink: 1;
-                flex-basis: 15rem;
-                height: 3.5rem;
+            .multiselect-inputs-container {
+                flex: auto;
+                display: flex;
+                flex-direction: row;
+                overflow: visible;
 
-                &:not(:last-child) {
-                    margin-right: 1.5rem;
-                }
+                .select-input-container {
+                    flex-grow: 0;
+                    flex-shrink: 1;
+                    flex-basis: 15rem;
+                    height: 3.5rem;
 
-                .multiselect-menu-container {
-                    max-height: calc(3.2rem * 7);
-                    overflow: auto;
+                    &:not(:last-child) {
+                        margin-right: 1.5rem;
+                    }
+
+                    .multiselect-menu-container {
+                        max-height: calc(3.2rem * 7);
+                        overflow: auto;
+                    }
                 }
             }
 
@@ -85,6 +92,10 @@
                 .pagination-label {
                     width: 3rem;
                 }
+            }
+
+            .filters {
+                display: none;
             }
         }
 
@@ -227,6 +238,45 @@
         .library-content {
             .meta-items-container {
                 grid-template-columns: repeat(4, 1fr);
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: @minimum) {
+    .library-container {
+        .library-content {
+            .selectable-inputs-container {
+                justify-content: space-between;
+                gap: 1em;
+
+                .select-input-container {
+                    flex-basis: 3.5em;
+
+                    &:not(:last-child) {
+                        margin-right: 0;
+                    }
+                }
+
+                .multiselect-inputs-container {
+                    display: none;
+                }
+
+                .spacing {
+                    display: none;
+                }
+
+                .pagination-input {
+                    margin-left: 0;
+                }
+
+                .filters {
+                    display: block;
+                }
+            }
+
+            .meta-items-container {
+                grid-template-columns: repeat(3, 1fr);
             }
         }
     }

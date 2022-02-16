@@ -71,45 +71,6 @@
                 }
             }
 
-            .filter-button-container {
-                display: none;
-                flex: none;
-                flex-direction: row;
-                align-items: center;
-                justify-content: center;
-                height: 3.5rem;
-                padding: 0 1rem;
-                background-color: @color-background;
-
-                .icon {
-                    flex: none;
-                    width: 1.2rem;
-                    height: 1.2rem;
-                    fill: @color-secondaryvariant1-90;
-                }
-            }
-
-            .filters-menu-container {
-                flex: auto;
-                display: flex;
-                position: absolute;
-                top: 5em;
-                left: 0;
-                right: 0;
-                flex-direction: column;
-                gap: 1em;
-                padding: 1.5em;
-                background-color: @color-background-dark2;
-                box-shadow: 0 1.35rem 2.7rem @color-background-dark5-40,
-                    0 1.1rem 0.85rem @color-background-dark5-20;
-                overflow: visible;
-
-                .select-input-container {
-                    flex-basis: 3.5em;
-                    margin-right: 0;
-                }
-            }
-
             .multiselect-inputs-container {
                 flex: auto;
                 display: flex;
@@ -138,6 +99,10 @@
                 flex-grow: 0;
                 flex-shrink: 1;
                 flex-basis: 18rem;
+            }
+
+            .filters {
+                display: none;
             }
         }
 
@@ -270,8 +235,6 @@
     .addons-container {
         .addons-content {
             .selectable-inputs-container {
-                position: relative;
-                flex-direction: row;
                 gap: 1em;
 
                 .add-button-container {
@@ -281,9 +244,9 @@
                     box-shadow: 0 1.35rem 2.7rem @color-background-dark5-40,
                         0 1.1rem 0.85rem @color-background-dark5-20;
                 }
-                
-                .filter-button-container {
-                    display: flex;
+
+                .select-input-container {
+                    flex: 0 1 3.5em;
                 }
 
                 .multiselect-inputs-container {
@@ -296,6 +259,10 @@
 
                 .search-bar {
                     flex-basis: 100%;
+                }
+
+                .filters {
+                    display: block;
                 }
             }
         }

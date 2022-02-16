@@ -9,12 +9,12 @@ const { AddonDetailsModal, Button, MainNavBars, MetaItem, Image, MetaPreview, Mu
 const useDiscover = require('./useDiscover');
 const useSelectableInputs = require('./useSelectableInputs');
 const styles = require('./styles');
+const { Filters } = require('stremio/common');
 
 const Discover = ({ urlParams, queryParams }) => {
     const { core } = useServices();
     const discover = useDiscover(urlParams, queryParams);
     const [selectInputs, paginationInput] = useSelectableInputs(discover);
-    const [filtersMenuOpen, setFiltersMenuOpen] = React.useState(false);
     const [inputsModalOpen, openInputsModal, closeInputsModal] = useBinaryState(false);
     const [addonModalOpen, openAddonModal, closeAddonModal] = useBinaryState(false);
     const [selectedMetaItemIndex, setSelectedMetaItemIndex] = React.useState(0);
@@ -107,17 +107,9 @@ const Discover = ({ urlParams, queryParams }) => {
                                         :
                                         <PaginationInput label={'1'} className={classnames(styles['pagination-input'], styles['pagination-input-placeholder'])} />
                                 }
-                                <Button className={styles['filter-button-container']} title={'Filter items'} onClick={() => setFiltersMenuOpen(!filtersMenuOpen)}>
-                                    <Icon className={styles['icon']} icon={'ic_filter'} />
-                                </Button>
-                                {
-                                    filtersMenuOpen ?
-                                        <div className={styles['filters-menu-container']}>
-                                            { renderMultiselectsInputs() }
-                                        </div>
-                                        :
-                                        null
-                                }
+                                <Filters className={styles['filters']}>
+                                    { renderMultiselectsInputs() }
+                                </Filters>
                             </div>
                             :
                             null

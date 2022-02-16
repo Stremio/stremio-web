@@ -8,6 +8,7 @@ const { Button, Multiselect, MainNavBars, LibItem, Image, PaginationInput, usePr
 const useLibrary = require('./useLibrary');
 const useSelectableInputs = require('./useSelectableInputs');
 const styles = require('./styles');
+const { Filters } = require('stremio/common');
 
 function withModel(Library) {
     const withModel = ({ urlParams, queryParams }) => {
@@ -46,14 +47,19 @@ const Library = ({ model, urlParams, queryParams }) => {
     const profile = useProfile();
     const library = useLibrary(model, urlParams, queryParams);
     const [typeSelect, sortSelect, paginationInput] = useSelectableInputs(library);
+    const multiselectInputs = <>
+        <Multiselect {...typeSelect} className={styles['select-input-container']} />
+        <Multiselect {...sortSelect} className={styles['select-input-container']} />
+    </>;
     return (
         <MainNavBars className={styles['library-container']} route={model}>
             <div className={styles['library-content']}>
                 {
                     model === 'continue_watching' || profile.auth !== null ?
                         <div className={styles['selectable-inputs-container']}>
-                            <Multiselect {...typeSelect} className={styles['select-input-container']} />
-                            <Multiselect {...sortSelect} className={styles['select-input-container']} />
+                            <div className={styles['multiselect-inputs-container']}>
+                                { multiselectInputs }
+                            </div>
                             <div className={styles['spacing']} />
                             {
                                 paginationInput !== null ?
@@ -61,6 +67,9 @@ const Library = ({ model, urlParams, queryParams }) => {
                                     :
                                     <PaginationInput label={'1'} className={classnames(styles['pagination-input'], styles['pagination-input-placeholder'])} />
                             }
+                            <Filters className={styles['filters']}>
+                                { multiselectInputs }
+                            </Filters>
                         </div>
                         :
                         null

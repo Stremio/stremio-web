@@ -43,46 +43,6 @@
                 padding: 1.5rem;
                 overflow: visible;
 
-                .filter-button-container {
-                    display: none;
-                    flex: none;
-                    flex-direction: row;
-                    align-items: center;
-                    justify-content: center;
-                    height: 3.5rem;
-                    padding: 0 1rem;
-                    background-color: @color-background;
-
-                    .icon {
-                        flex: none;
-                        width: 1.2rem;
-                        height: 1.2rem;
-                        fill: @color-secondaryvariant1-90;
-                    }
-                }
-
-                .filters-menu-container {
-                    z-index: 99;
-                    flex: auto;
-                    display: flex;
-                    position: absolute;
-                    top: 5em;
-                    left: 0;
-                    right: 0;
-                    flex-direction: column;
-                    gap: 1em;
-                    padding: 1.5em;
-                    background-color: @color-background-dark2;
-                    box-shadow: 0 1.35rem 2.7rem @color-background-dark5-40,
-                        0 1.1rem 0.85rem @color-background-dark5-20;
-                    overflow: visible;
-
-                    .select-input-container {
-                        flex-basis: 3.5em;
-                        margin-right: 0;
-                    }
-                }
-
                 .multiselect-inputs-container {
                     flex: auto;
                     display: flex;
@@ -166,6 +126,10 @@
                     .pagination-label {
                         width: 3rem;
                     }
+                }
+
+                .filters {
+                    display: none;
                 }
             }
 
@@ -491,8 +455,6 @@
         .discover-content {
             .catalog-container {
                 .selectable-inputs-container {
-                    position: relative;
-                    flex-direction: row;
                     justify-content: space-between;
                     gap: 1em;
 
@@ -502,10 +464,6 @@
                         &:not(:first-child) {
                             margin-left: 0;
                         }
-                    }
-
-                    .filter-button-container {
-                        display: flex;
                     }
 
                     .multiselect-inputs-container {
@@ -518,6 +476,10 @@
 
                     .pagination-input {
                         margin-left: 0;
+                    }
+
+                    .filters {
+                        display: block;
                     }
                 }
 

@@ -10,6 +10,7 @@ const useRemoteAddons = require('./useRemoteAddons');
 const useAddonDetailsTransportUrl = require('./useAddonDetailsTransportUrl');
 const useSelectableInputs = require('./useSelectableInputs');
 const styles = require('./styles');
+const { Filters } = require('stremio/common');
 
 const Addons = ({ urlParams, queryParams }) => {
     const installedAddons = useInstalledAddons(urlParams);
@@ -40,7 +41,6 @@ const Addons = ({ urlParams, queryParams }) => {
             }
         ];
     }, [addAddonOnSubmit]);
-    const [filtersMenuOpen, setFiltersMenuOpen] = React.useState(false);
     const [search, setSearch] = React.useState('');
     const searchInputOnChange = React.useCallback((event) => {
         setSearch(event.currentTarget.value);
@@ -100,17 +100,9 @@ const Addons = ({ urlParams, queryParams }) => {
                         value={search}
                         onChange={searchInputOnChange}
                     />
-                    <Button className={styles['filter-button-container']} title={'Filter addons'} onClick={() => setFiltersMenuOpen(!filtersMenuOpen)}>
-                        <Icon className={styles['icon']} icon={'ic_filter'} />
-                    </Button>
-                    {
-                        filtersMenuOpen ?
-                            <div className={styles['filters-menu-container']}>
-                                { renderMultiselectsInputs() }
-                            </div>
-                            :
-                            null
-                    }
+                    <Filters className={styles['filters']}>
+                        { renderMultiselectsInputs() }
+                    </Filters>
                 </div>
                 {
                     installedAddons.selected !== null ?
