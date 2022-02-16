@@ -1,4 +1,5 @@
 // Copyright (C) 2017-2020 Smart code 203358507
+@import (reference) '~stremio/common/screen-sizes.less';
 
 .main-nav-bars-container {
     position: relative;
@@ -27,5 +28,18 @@
         bottom: 0;
         left: var(--vertical-nav-bar-size);
         z-index: 0;
+    }
+}
+
+@media only screen and (max-width: @xsmall) {
+    .main-nav-bars-container {
+        .nav-content-container {
+            left: 0 !important;
+            bottom: var(--vertical-nav-bar-size) !important;
+        }
+
+        .vertical-nav-bar {
+            top: initial !important;
+        }
     }
 }
