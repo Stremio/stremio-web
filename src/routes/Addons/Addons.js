@@ -75,8 +75,8 @@ const Addons = ({ urlParams, queryParams }) => {
                 key={index}
                 className={styles['select-input-container']}
             />
-        ))
-    }, [selectInputs])
+        ));
+    }, [selectInputs]);
     React.useLayoutEffect(() => {
         closeAddAddonModal();
         setSearch('');
