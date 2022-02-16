@@ -71,16 +71,62 @@
                 }
             }
 
-            .select-input-container {
-                flex-grow: 0;
-                flex-shrink: 1;
-                flex-basis: 15rem;
+            .filter-button-container {
+                display: none;
+                flex: none;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
                 height: 3.5rem;
-                margin-right: 1.5rem;
+                padding: 0 1rem;
+                background-color: @color-background;
 
-                .multiselect-menu-container {
-                    max-height: calc(3.2rem * 7);
-                    overflow: auto;
+                .icon {
+                    flex: none;
+                    width: 1.2rem;
+                    height: 1.2rem;
+                    fill: @color-secondaryvariant1-90;
+                }
+            }
+
+            .filters-menu-container {
+                flex: auto;
+                display: flex;
+                position: absolute;
+                top: 5em;
+                left: 0;
+                right: 0;
+                flex-direction: column;
+                gap: 1em;
+                padding: 1.5em;
+                background-color: @color-background-dark2;
+                box-shadow: 0 1.35rem 2.7rem @color-background-dark5-40,
+                    0 1.1rem 0.85rem @color-background-dark5-20;
+                overflow: visible;
+
+                .select-input-container {
+                    flex-basis: 3.5em;
+                    margin-right: 0;
+                }
+            }
+
+            .multiselect-inputs-container {
+                flex: auto;
+                display: flex;
+                flex-direction: row;
+                overflow: visible;
+
+                .select-input-container {
+                    flex-grow: 0;
+                    flex-shrink: 1;
+                    flex-basis: 15rem;
+                    height: 3.5rem;
+                    margin-right: 1.5rem;
+
+                    .multiselect-menu-container {
+                        max-height: calc(3.2rem * 7);
+                        overflow: auto;
+                    }
                 }
             }
 
@@ -224,18 +270,24 @@
     .addons-container {
         .addons-content {
             .selectable-inputs-container {
-                flex-direction: column;
+                position: relative;
+                flex-direction: row;
                 gap: 1em;
 
                 .add-button-container {
                     position: fixed;
                     right: 0;
                     bottom: calc(3em + var(--horizontal-nav-bar-size));
+                    box-shadow: 0 1.35rem 2.7rem @color-background-dark5-40,
+                        0 1.1rem 0.85rem @color-background-dark5-20;
+                }
+                
+                .filter-button-container {
+                    display: flex;
                 }
 
-                .select-input-container {
-                    flex-basis: 3.5em;
-                    margin-right: 0;
+                .multiselect-inputs-container {
+                    display: none;
                 }
 
                 .spacing {
@@ -243,7 +295,7 @@
                 }
 
                 .search-bar {
-                    flex-basis: 3.5em;
+                    flex-basis: 100%;
                 }
             }
         }

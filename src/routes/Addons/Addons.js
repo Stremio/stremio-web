@@ -40,6 +40,7 @@ const Addons = ({ urlParams, queryParams }) => {
             }
         ];
     }, [addAddonOnSubmit]);
+    const [filtersMenuOpen, setFiltersMenuOpen] = React.useState(false);
     const [search, setSearch] = React.useState('');
     const searchInputOnChange = React.useCallback((event) => {
         setSearch(event.currentTarget.value);
@@ -67,6 +68,15 @@ const Addons = ({ urlParams, queryParams }) => {
     const renderLogoFallback = React.useCallback(() => (
         <Icon className={styles['icon']} icon={'ic_addons'} />
     ), []);
+    const renderMultiselectsInputs = React.useCallback(() => {
+        return selectInputs.map((selectInput, index) => (
+            <Multiselect
+                {...selectInput}
+                key={index}
+                className={styles['select-input-container']}
+            />
+        ))
+    }, [selectInputs])
     React.useLayoutEffect(() => {
         closeAddAddonModal();
         setSearch('');
@@ -80,13 +90,9 @@ const Addons = ({ urlParams, queryParams }) => {
                         <Icon className={styles['icon']} icon={'ic_plus'} />
                         <div className={styles['add-button-label']}>Add addon</div>
                     </Button>
-                    {selectInputs.map((selectInput, index) => (
-                        <Multiselect
-                            {...selectInput}
-                            key={index}
-                            className={styles['select-input-container']}
-                        />
-                    ))}
+                    <div className={styles['multiselect-inputs-container']}>
+                        { renderMultiselectsInputs() }
+                    </div>
                     <div className={styles['spacing']} />
                     <SearchBar
                         className={styles['search-bar']}
@@ -94,6 +100,17 @@ const Addons = ({ urlParams, queryParams }) => {
                         value={search}
                         onChange={searchInputOnChange}
                     />
+                    <Button className={styles['filter-button-container']} title={'Filter addons'} onClick={() => setFiltersMenuOpen(!filtersMenuOpen)}>
+                        <Icon className={styles['icon']} icon={'ic_filter'} />
+                    </Button>
+                    {
+                        filtersMenuOpen ?
+                            <div className={styles['filters-menu-container']}>
+                                { renderMultiselectsInputs() }
+                            </div>
+                            :
+                            null
+                    }
                 </div>
                 {
                     installedAddons.selected !== null ?
