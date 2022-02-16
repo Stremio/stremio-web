@@ -126,3 +126,16 @@
         }
     }
 }
+
+@media only screen and (max-width: @minimum) {
+    .metadetails-container {
+        .metadetails-content {
+            flex-direction: column;
+
+            .videos-list, .streams-list {
+                flex-basis: 30em;
+                background-color: transparent;
+            }
+        }
+    }
+}

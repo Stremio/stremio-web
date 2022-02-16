@@ -95,6 +95,7 @@
 
 @media only screen and (max-width: @minimum) {
     .horizontal-nav-bar-container {
+        justify-content: space-between;
         gap: 0.5em;
         padding-right: 0;
 
@@ -107,7 +108,7 @@
         }
 
         .button-container {
-            &:not(:last-child) {
+            &:not(:last-child):not(.back-button-container) {
                 display: none;
             }
         }

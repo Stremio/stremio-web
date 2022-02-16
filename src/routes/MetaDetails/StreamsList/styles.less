@@ -1,6 +1,7 @@
 // Copyright (C) 2017-2020 Smart code 203358507
 
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
+@import (reference) '~stremio/common/screen-sizes.less';
 
 .streams-list-container {
     display: flex;
@@ -71,6 +72,14 @@
             max-height: 3.6em;
             text-align: center;
             color: @color-surface-light5-90;
+        }
+    }
+}
+
+@media only screen and (max-width: @minimum) {
+    .streams-list-container {
+        .streams-container {
+            margin-top: 0;
         }
     }
 }
