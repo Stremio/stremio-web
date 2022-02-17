@@ -1,6 +1,7 @@
 // Copyright (C) 2017-2020 Smart code 203358507
 
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
+@import (reference) '~stremio/common/screen-sizes.less';
 
 :import('~stremio/common/ModalDialog/styles.less') {
     password-reset-modal-content: modal-dialog-content;
@@ -48,6 +49,14 @@
 
         .cancel-button-label {
             color: @color-surface-dark4-90;
+        }
+    }
+}
+
+@media only screen and (max-width: @minimum) {
+    .password-reset-modal-container {
+        .password-reset-modal-content {
+            width: auto;
         }
     }
 }
