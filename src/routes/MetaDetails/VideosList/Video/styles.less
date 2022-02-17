@@ -1,6 +1,7 @@
 // Copyright (C) 2017-2020 Smart code 203358507
 
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
+@import (reference) '~stremio/common/screen-sizes.less';
 
 .video-container {
     display: flex;
@@ -117,6 +118,14 @@
         .progress-bar {
             height: 0.5rem;
             background-color: @color-primaryvariant1;
+        }
+    }
+}
+
+@media only screen and (max-width: @minimum) {
+    .video-container {
+        &:hover, &:focus {
+            background-color: @color-surface-light5-20;
         }
     }
 }
