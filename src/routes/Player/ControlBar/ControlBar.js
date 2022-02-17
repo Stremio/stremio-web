@@ -9,6 +9,7 @@ const { useServices } = require('stremio/services');
 const SeekBar = require('./SeekBar');
 const VolumeSlider = require('./VolumeSlider');
 const styles = require('./styles');
+const { useBinaryState } = require('stremio/common');
 
 const ControlBar = ({
     className,
@@ -31,6 +32,7 @@ const ControlBar = ({
 }) => {
     const { chromecast } = useServices();
     const [chromecastServiceActive, setChromecastServiceActive] = React.useState(() => chromecast.active);
+    const [buttonsMenuOpen,,, toogleButtonsMenu] = useBinaryState(false);
     const onSubtitlesButtonMouseDown = React.useCallback((event) => {
         event.nativeEvent.subtitlesMenuClosePrevented = true;
     }, []);
@@ -111,21 +113,26 @@ const ControlBar = ({
                     onVolumeChangeRequested={onVolumeChangeRequested}
                 />
                 <div className={styles['spacing']} />
-                <Button className={classnames(styles['control-bar-button'], 'disabled')} tabIndex={-1}>
-                    <Icon className={styles['icon']} icon={'ic_network'} />
+                <Button className={styles['control-bar-buttons-menu-button']} onClick={toogleButtonsMenu}>
+                    <Icon className={styles['icon']} icon="ic_more"/>
                 </Button>
-                <Button className={classnames(styles['control-bar-button'], { 'disabled': !infoAvailable })} tabIndex={-1} onMouseDown={onInfoButtonMouseDown} onClick={onInfoButtonClick}>
-                    <Icon className={styles['icon']} icon={'ic_info'} />
-                </Button>
-                <Button className={classnames(styles['control-bar-button'], { 'disabled': !chromecastServiceActive })} tabIndex={-1} onClick={onChromecastButtonClick}>
-                    <Icon className={styles['icon']} icon={'ic_cast'} />
-                </Button>
-                <Button className={classnames(styles['control-bar-button'], { 'disabled': !Array.isArray(subtitlesTracks) || subtitlesTracks.length === 0 })} tabIndex={-1} onMouseDown={onSubtitlesButtonMouseDown} onClick={onSubtitlesButtonClick}>
-                    <Icon className={styles['icon']} icon={'ic_sub'} />
-                </Button>
-                <Button className={classnames(styles['control-bar-button'], 'disabled')} tabIndex={-1}>
-                    <Icon className={styles['icon']} icon={'ic_videos'} />
-                </Button>
+                <div className={classnames(styles['control-bar-buttons-menu-container'], { 'open': buttonsMenuOpen })}>
+                    <Button className={classnames(styles['control-bar-button'], 'disabled')} tabIndex={-1}>
+                        <Icon className={styles['icon']} icon={'ic_network'} />
+                    </Button>
+                    <Button className={classnames(styles['control-bar-button'], { 'disabled': !infoAvailable })} tabIndex={-1} onMouseDown={onInfoButtonMouseDown} onClick={onInfoButtonClick}>
+                        <Icon className={styles['icon']} icon={'ic_info'} />
+                    </Button>
+                    <Button className={classnames(styles['control-bar-button'], { 'disabled': !chromecastServiceActive })} tabIndex={-1} onClick={onChromecastButtonClick}>
+                        <Icon className={styles['icon']} icon={'ic_cast'} />
+                    </Button>
+                    <Button className={classnames(styles['control-bar-button'], { 'disabled': !Array.isArray(subtitlesTracks) || subtitlesTracks.length === 0 })} tabIndex={-1} onMouseDown={onSubtitlesButtonMouseDown} onClick={onSubtitlesButtonClick}>
+                        <Icon className={styles['icon']} icon={'ic_sub'} />
+                    </Button>
+                    <Button className={classnames(styles['control-bar-button'], 'disabled')} tabIndex={-1}>
+                        <Icon className={styles['icon']} icon={'ic_videos'} />
+                    </Button>
+                </div>
             </div>
         </div>
     );
