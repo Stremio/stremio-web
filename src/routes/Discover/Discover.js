@@ -9,7 +9,6 @@ const { AddonDetailsModal, Button, MainNavBars, MetaItem, Image, MetaPreview, Mu
 const useDiscover = require('./useDiscover');
 const useSelectableInputs = require('./useSelectableInputs');
 const styles = require('./styles');
-const { Filters } = require('stremio/common');
 
 const Discover = ({ urlParams, queryParams }) => {
     const { core } = useServices();
@@ -107,9 +106,6 @@ const Discover = ({ urlParams, queryParams }) => {
                                         :
                                         <PaginationInput label={'1'} className={classnames(styles['pagination-input'], styles['pagination-input-placeholder'])} />
                                 }
-                                <Filters className={styles['filters']}>
-                                    { renderMultiselectsInputs() }
-                                </Filters>
                             </div>
                             :
                             null
@@ -194,24 +190,10 @@ const Discover = ({ urlParams, queryParams }) => {
             </div>
             {
                 inputsModalOpen && discover.defaultRequest ?
-                    <ModalDialog title={'Catalog filters'} className={styles['selectable-inputs-modal-container']} onCloseRequest={closeInputsModal}>
-                        {selectInputs.map(({ title, isRequired, options, selected, renderLabelText, onSelect }, index) => (
-                            <div key={index} className={styles['selectable-input-container']}>
-                                <div className={styles['select-input-label']} title={title}>
-                                    {title}
-                                    {isRequired ? '*' : null}
-                                </div>
-                                <Multiselect
-                                    className={styles['select-input']}
-                                    mode={'modal'}
-                                    title={title}
-                                    options={options}
-                                    selected={selected}
-                                    renderLabelText={renderLabelText}
-                                    onSelect={onSelect}
-                                />
-                            </div>
-                        ))}
+                    <ModalDialog title={'Catalog filters'} className={styles['selectable-inputs-modal']} onCloseRequest={closeInputsModal}>
+                        <div className={styles['selectable-input-container']}>
+                            { renderMultiselectsInputs() }
+                        </div>
                     </ModalDialog>
                     :
                     null
