@@ -14,6 +14,12 @@
     pagination-label: label;
 }
 
+:import('~stremio/common/ModalDialog/styles.less') {
+    selectable-inputs-modal-container: modal-dialog-container;
+    selectable-inputs-modal-content: modal-dialog-content;
+}
+
+
 .library-container {
     width: 100%;
     height: 100%;
@@ -53,6 +59,23 @@
                         max-height: calc(3.2rem * 7);
                         overflow: auto;
                     }
+                }
+            }
+
+            .filter-container {
+                flex: none;
+                display: none;
+                align-items: center;
+                justify-content: center;
+                width: 3.5rem;
+                height: 3.5rem;
+                background-color: @color-background;
+
+                .filter-icon {
+                    flex: none;
+                    width: 1.4rem;
+                    height: 1.4rem;
+                    fill: @color-secondaryvariant1-90;
                 }
             }
 
@@ -173,6 +196,28 @@
     }
 }
 
+.selectable-inputs-modal {
+    .selectable-inputs-modal-container {
+        overflow: visible;
+
+        .selectable-inputs-modal-content {
+            overflow-y: visible !important;
+            overflow: visible;
+
+            .selectable-input-container {
+                display: flex;
+                gap: 1em;
+                flex-direction: column;
+                overflow: visible;
+
+                .select-input-container {
+                    height: 3.5em;
+                }
+            }
+        }
+    }
+}
+
 @media only screen and (min-width: @large) {
     .library-container {
         .library-content {
@@ -262,16 +307,16 @@
                     display: none;
                 }
 
+                .filter-container {
+                    display: flex;
+                }
+
                 .spacing {
                     display: none;
                 }
 
                 .pagination-input {
                     margin-left: 0;
-                }
-
-                .filters {
-                    display: block;
                 }
             }
 
