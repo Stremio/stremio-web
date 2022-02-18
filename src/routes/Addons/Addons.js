@@ -10,13 +10,13 @@ const useRemoteAddons = require('./useRemoteAddons');
 const useAddonDetailsTransportUrl = require('./useAddonDetailsTransportUrl');
 const useSelectableInputs = require('./useSelectableInputs');
 const styles = require('./styles');
-const { Filters } = require('stremio/common');
 
 const Addons = ({ urlParams, queryParams }) => {
     const installedAddons = useInstalledAddons(urlParams);
     const remoteAddons = useRemoteAddons(urlParams);
     const [addonDetailsTransportUrl, setAddonDetailsTransportUrl] = useAddonDetailsTransportUrl(urlParams, queryParams);
     const selectInputs = useSelectableInputs(installedAddons, remoteAddons);
+    const [filtersModalOpen, openFiltersModal, closeFiltersModal] = useBinaryState(false);
     const [addAddonModalOpen, openAddAddonModal, closeAddAddonModal] = useBinaryState(false);
     const addAddonUrlInputRef = React.useRef(null);
     const addAddonOnSubmit = React.useCallback(() => {
@@ -100,9 +100,9 @@ const Addons = ({ urlParams, queryParams }) => {
                         value={search}
                         onChange={searchInputOnChange}
                     />
-                    <Filters className={styles['filters']}>
-                        { renderMultiselectsInputs() }
-                    </Filters>
+                    <Button className={styles['filter-button']} title={'All filters'} onClick={openFiltersModal}>
+                        <Icon className={styles['filter-icon']} icon={'ic_filter'} />
+                    </Button>
                 </div>
                 {
                     installedAddons.selected !== null ?
@@ -178,6 +178,14 @@ const Addons = ({ urlParams, queryParams }) => {
                             </div>
                 }
             </div>
+            {
+                filtersModalOpen ?
+                    <ModalDialog title={'Addons filters'} className={styles['filters-modal']} onCloseRequest={closeFiltersModal}>
+                        { renderMultiselectsInputs() }
+                    </ModalDialog>
+                    :
+                    null
+            }
             {
                 addAddonModalOpen ?
                     <ModalDialog
