@@ -68,15 +68,6 @@ const Addons = ({ urlParams, queryParams }) => {
     const renderLogoFallback = React.useCallback(() => (
         <Icon className={styles['icon']} icon={'ic_addons'} />
     ), []);
-    const renderMultiselectsInputs = React.useCallback(() => {
-        return selectInputs.map((selectInput, index) => (
-            <Multiselect
-                {...selectInput}
-                key={index}
-                className={styles['select-input-container']}
-            />
-        ));
-    }, [selectInputs]);
     React.useLayoutEffect(() => {
         closeAddAddonModal();
         setSearch('');
@@ -91,7 +82,13 @@ const Addons = ({ urlParams, queryParams }) => {
                         <div className={styles['add-button-label']}>Add addon</div>
                     </Button>
                     <div className={styles['multiselect-inputs-container']}>
-                        { renderMultiselectsInputs() }
+                        {selectInputs.map((selectInput, index) => (
+                            <Multiselect
+                                {...selectInput}
+                                key={index}
+                                className={styles['select-input-container']}
+                            />
+                        ))}
                     </div>
                     <div className={styles['spacing']} />
                     <SearchBar
@@ -181,7 +178,13 @@ const Addons = ({ urlParams, queryParams }) => {
             {
                 filtersModalOpen ?
                     <ModalDialog title={'Addons filters'} className={styles['filters-modal']} onCloseRequest={closeFiltersModal}>
-                        { renderMultiselectsInputs() }
+                        {selectInputs.map((selectInput, index) => (
+                            <Multiselect
+                                {...selectInput}
+                                key={index}
+                                className={styles['select-input-container']}
+                            />
+                        ))}
                     </ModalDialog>
                     :
                     null

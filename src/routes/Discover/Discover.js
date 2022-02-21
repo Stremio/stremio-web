@@ -17,19 +17,6 @@ const Discover = ({ urlParams, queryParams }) => {
     const [inputsModalOpen, openInputsModal, closeInputsModal] = useBinaryState(false);
     const [addonModalOpen, openAddonModal, closeAddonModal] = useBinaryState(false);
     const [selectedMetaItemIndex, setSelectedMetaItemIndex] = React.useState(0);
-    const renderMultiselectsInputs = React.useCallback(() => {
-        return selectInputs.map(({ title, options, selected, renderLabelText, onSelect }, index) => (
-            <Multiselect
-                key={index}
-                className={styles['select-input']}
-                title={title}
-                options={options}
-                selected={selected}
-                renderLabelText={renderLabelText}
-                onSelect={onSelect}
-            />
-        ));
-    }, [selectInputs]);
     const selectedMetaItem = React.useMemo(() => {
         return discover.catalog !== null &&
             discover.catalog.content.type === 'Ready' &&
@@ -94,7 +81,17 @@ const Discover = ({ urlParams, queryParams }) => {
                         discover.defaultRequest ?
                             <div className={styles['selectable-inputs-container']}>
                                 <div className={styles['multiselect-inputs-container']}>
-                                    { renderMultiselectsInputs() }
+                                    {selectInputs.map(({ title, options, selected, renderLabelText, onSelect }, index) => (
+                                        <Multiselect
+                                            key={index}
+                                            className={styles['select-input']}
+                                            title={title}
+                                            options={options}
+                                            selected={selected}
+                                            renderLabelText={renderLabelText}
+                                            onSelect={onSelect}
+                                        />
+                                    ))}
                                 </div>
                                 <Button className={styles['filter-container']} title={'All filters'} onClick={openInputsModal}>
                                     <Icon className={styles['filter-icon']} icon={'ic_filter'} />
@@ -192,7 +189,17 @@ const Discover = ({ urlParams, queryParams }) => {
                 inputsModalOpen && discover.defaultRequest ?
                     <ModalDialog title={'Catalog filters'} className={styles['selectable-inputs-modal']} onCloseRequest={closeInputsModal}>
                         <div className={styles['selectable-input-container']}>
-                            { renderMultiselectsInputs() }
+                            {selectInputs.map(({ title, options, selected, renderLabelText, onSelect }, index) => (
+                                <Multiselect
+                                    key={index}
+                                    className={styles['select-input']}
+                                    title={title}
+                                    options={options}
+                                    selected={selected}
+                                    renderLabelText={renderLabelText}
+                                    onSelect={onSelect}
+                                />
+                            ))}
                         </div>
                     </ModalDialog>
                     :

@@ -48,10 +48,6 @@ const Library = ({ model, urlParams, queryParams }) => {
     const library = useLibrary(model, urlParams, queryParams);
     const [typeSelect, sortSelect, paginationInput] = useSelectableInputs(library);
     const [inputsModalOpen, openInputsModal, closeInputsModal] = useBinaryState(false);
-    const multiselectInputs = <>
-        <Multiselect {...typeSelect} className={styles['select-input-container']} />
-        <Multiselect {...sortSelect} className={styles['select-input-container']} />
-    </>;
     return (
         <MainNavBars className={styles['library-container']} route={model}>
             <div className={styles['library-content']}>
@@ -59,7 +55,8 @@ const Library = ({ model, urlParams, queryParams }) => {
                     model === 'continue_watching' || profile.auth !== null ?
                         <div className={styles['selectable-inputs-container']}>
                             <div className={styles['multiselect-inputs-container']}>
-                                { multiselectInputs }
+                                <Multiselect {...typeSelect} className={styles['select-input-container']} />
+                                <Multiselect {...sortSelect} className={styles['select-input-container']} />
                             </div>
                             <div className={styles['spacing']} />
                             {
@@ -120,7 +117,8 @@ const Library = ({ model, urlParams, queryParams }) => {
                 inputsModalOpen ?
                     <ModalDialog title={'Library filters'} className={styles['selectable-inputs-modal']} onCloseRequest={closeInputsModal}>
                         <div className={styles['selectable-input-container']}>
-                            { multiselectInputs }
+                            <Multiselect {...typeSelect} className={styles['select-input-container']} />
+                            <Multiselect {...sortSelect} className={styles['select-input-container']} />
                         </div>
                     </ModalDialog>
                     :
