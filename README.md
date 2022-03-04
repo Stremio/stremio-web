@@ -1,4 +1,4 @@
-# Stremio - The media center you need
+# Stremio - Freedom to Stream
 
 ![Build](https://github.com/stremio/stremio-web/workflows/Build/badge.svg?branch=development)
 [![Netlify](https://api.netlify.com/api/v1/badges/ac26d7ae-d08b-4cc4-a14d-a83ba7c3e8ca/deploy-status)](https://stremio-development.netlify.app)
