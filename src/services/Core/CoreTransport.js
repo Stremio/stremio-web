@@ -1,4 +1,4 @@
-// Copyright (C) 2017-2020 Smart code 203358507
+// Copyright (C) 2017-2022 Smart code 203358507
 
 const EventEmitter = require('eventemitter3');
 const { default: initialize_api, initialize_runtime, get_state, get_debug_state, dispatch, analytics } = require('@stremio/stremio-core-web');

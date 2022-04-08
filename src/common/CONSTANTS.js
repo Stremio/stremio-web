@@ -1,4 +1,4 @@
-// Copyright (C) 2017-2020 Smart code 203358507
+// Copyright (C) 2017-2022 Smart code 203358507
 
 const CHROMECAST_RECEIVER_APP_ID = '1634F54B';
 const SUBTITLES_SIZES = [75, 100, 125, 150, 175, 200, 250];

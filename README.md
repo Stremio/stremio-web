@@ -46,4 +46,4 @@ npm run build
 
 ## License
 
-Stremio is copyright 2017-2020 Smart code and available under GPLv2 license. See the [LICENSE](/LICENSE.md) file in the project for more information.
+Stremio is copyright 2017-2022 Smart code and available under GPLv2 license. See the [LICENSE](/LICENSE.md) file in the project for more information.
