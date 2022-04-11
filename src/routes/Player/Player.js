@@ -51,6 +51,7 @@ const Player = ({ urlParams, queryParams }) => {
             muted: null,
             subtitlesTracks: [],
             selectedSubtitlesTrackId: null,
+            subtitlesOffset: null,
             extraSubtitlesTracks: [],
             selectedExtraSubtitlesTrackId: null,
             extraSubtitlesSize: null,
@@ -71,6 +72,7 @@ const Player = ({ urlParams, queryParams }) => {
         manifest.props.forEach((propName) => {
             dispatch({ type: 'observeProp', propName });
         });
+        dispatch({ type: 'setProp', propName: 'subtitlesOffset', propValue: settings.subtitlesOffset });
         dispatch({ type: 'setProp', propName: 'extraSubtitlesSize', propValue: settings.subtitlesSize });
         dispatch({ type: 'setProp', propName: 'extraSubtitlesOffset', propValue: settings.subtitlesOffset });
         dispatch({ type: 'setProp', propName: 'extraSubtitlesTextColor', propValue: settings.subtitlesTextColor });
@@ -268,6 +270,7 @@ const Player = ({ urlParams, queryParams }) => {
     }, [settings.subtitlesSize]);
     React.useEffect(() => {
         dispatch({ type: 'setProp', propName: 'extraSubtitlesOffset', propValue: settings.subtitlesOffset });
+        dispatch({ type: 'setProp', propName: 'subtitlesOffset', propValue: settings.subtitlesOffset });
     }, [settings.subtitlesOffset]);
     React.useEffect(() => {
         dispatch({ type: 'setProp', propName: 'extraSubtitlesTextColor', propValue: settings.subtitlesTextColor });
@@ -492,16 +495,21 @@ const Player = ({ urlParams, queryParams }) => {
                         className={classnames(styles['layer'], styles['menu-layer'])}
                         tracks={videoState.subtitlesTracks}
                         selectedTrackId={videoState.selectedSubtitlesTrackId}
+                        offset={
+                            videoState.subtitlesOffset !== null && !isNaN(videoState.subtitlesOffset) ?
+                                videoState.subtitlesOffset
+                                :
+                                videoState.extraSubtitlesOffset
+                        }
                         extraTracks={videoState.extraSubtitlesTracks}
                         selectedExtraTrackId={videoState.selectedExtraSubtitlesTrackId}
                         extraDelay={videoState.extraSubtitlesDelay}
                         extraSize={videoState.extraSubtitlesSize}
-                        extraOffset={videoState.extraSubtitlesOffset}
                         onTrackSelected={onSubtitlesTrackSelected}
+                        onOffsetChanged={onSubtitlesOffsetChanged}
                         onExtraTrackSelected={onExtraSubtitlesTrackSelected}
                         onExtraDelayChanged={onExtraSubtitlesDelayChanged}
                         onExtraSizeChanged={onSubtitlesSizeChanged}
-                        onExtraOffsetChanged={onSubtitlesOffsetChanged}
                     />
                     :
                     null

@@ -113,15 +113,15 @@ const SubtitlesMenu = (props) => {
             }
         }
     }, [props.extraSize, props.onExtraSizeChanged]);
-    const onExtraOffsetChanged = React.useCallback((event) => {
-        if (props.extraOffset !== null && !isNaN(props.extraOffset)) {
+    const onOffsetChanged = React.useCallback((event) => {
+        if (props.offset !== null && !isNaN(props.offset)) {
             const delta = event.value === 'increment' ? 1 : -1;
-            const extraOffset = props.extraOffset + delta;
-            if (typeof props.onExtraOffsetChanged === 'function') {
-                props.onExtraOffsetChanged(extraOffset);
+            const offset = Math.max(0, Math.min(100, Math.floor(props.offset + delta)));
+            if (typeof props.onOffsetChanged === 'function') {
+                props.onOffsetChanged(offset);
             }
         }
-    }, [props.extraOffset, props.onExtraOffsetChanged]);
+    }, [props.offset, props.onOffsetChanged]);
     return (
         <div className={classnames(props.className, styles['subtitles-menu-container'])} onMouseDown={onMouseDown}>
             <div className={styles['languages-container']}>
@@ -193,9 +193,9 @@ const SubtitlesMenu = (props) => {
                 <DiscreteSelectInput
                     className={styles['discrete-input']}
                     label={'Vertical position'}
-                    value={props.extraOffset !== null && !isNaN(props.extraOffset) ? `${props.extraOffset}%` : '--'}
-                    disabled={typeof props.selectedExtraTrackId !== 'string' || props.extraOffset === null || isNaN(props.extraOffset)}
-                    onChange={onExtraOffsetChanged}
+                    value={props.offset !== null && !isNaN(props.offset) ? `${props.offset}%` : '--'}
+                    disabled={props.offset === null || isNaN(props.offset)}
+                    onChange={onOffsetChanged}
                 />
                 <div className={styles['spacing']} />
                 <Button className={classnames(styles['advanced-button'], 'disabled')} title={'Advanced'}>Advanced</Button>
@@ -212,6 +212,7 @@ SubtitlesMenu.propTypes = {
         origin: PropTypes.string.isRequired
     })),
     selectedTrackId: PropTypes.string,
+    offset: PropTypes.number,
     extraTracks: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.string.isRequired,
         lang: PropTypes.string.isRequired,
@@ -220,12 +221,11 @@ SubtitlesMenu.propTypes = {
     selectedExtraTrackId: PropTypes.string,
     extraDelay: PropTypes.number,
     extraSize: PropTypes.number,
-    extraOffset: PropTypes.number,
     onTrackSelected: PropTypes.func,
+    onOffsetChanged: PropTypes.func,
     onExtraTrackSelected: PropTypes.func,
     onExtraDelayChanged: PropTypes.func,
-    onExtraSizeChanged: PropTypes.func,
-    onExtraOffsetChanged: PropTypes.func
+    onExtraSizeChanged: PropTypes.func
 };
 
 module.exports = SubtitlesMenu;
