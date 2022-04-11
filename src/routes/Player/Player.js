@@ -19,10 +19,10 @@ const styles = require('./styles');
 
 const Player = ({ urlParams, queryParams }) => {
     const { core, chromecast } = useServices();
-    const [forceTranscoding, audioChannels] = React.useMemo(() => {
+    const [forceTranscoding, maxAudioChannels] = React.useMemo(() => {
         return [
             queryParams.has('forceTranscoding'),
-            queryParams.has('audioChannels') ? parseInt(queryParams.get('audioChannels'), 10) : null
+            queryParams.has('maxAudioChannels') ? parseInt(queryParams.get('maxAudioChannels'), 10) : null
         ];
     }, [queryParams]);
     const [player, updateLibraryItemState, pushToLibrary] = usePlayer(urlParams);
@@ -232,8 +232,8 @@ const Player = ({ urlParams, queryParams }) => {
                         :
                         0,
                     forceTranscoding: forceTranscoding || casting,
-                    audioChannels: typeof audioChannels === 'number' ?
-                        audioChannels
+                    maxAudioChannels: typeof maxAudioChannels === 'number' ?
+                        maxAudioChannels
                         :
                         window.chrome ?
                             2
@@ -250,7 +250,7 @@ const Player = ({ urlParams, queryParams }) => {
                 }
             });
         }
-    }, [streamingServer.baseUrl, player.selected, forceTranscoding, audioChannels, casting]);
+    }, [streamingServer.baseUrl, player.selected, forceTranscoding, maxAudioChannels, casting]);
     useDeepEqualEffect(() => {
         if (videoState.stream !== null) {
             dispatch({
