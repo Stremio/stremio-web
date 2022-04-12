@@ -154,8 +154,8 @@ const Player = ({ urlParams, queryParams }) => {
         dispatch({ type: 'setProp', propName: 'time', propValue: time });
     }, []);
     const onSubtitlesTrackSelected = React.useCallback((id) => {
-        dispatch({ type: 'setProp', propName: 'selectedExtraSubtitlesTrackId', propValue: null });
         dispatch({ type: 'setProp', propName: 'selectedSubtitlesTrackId', propValue: id });
+        dispatch({ type: 'setProp', propName: 'selectedExtraSubtitlesTrackId', propValue: null });
     }, []);
     const onExtraSubtitlesTrackSelected = React.useCallback((id) => {
         dispatch({ type: 'setProp', propName: 'selectedSubtitlesTrackId', propValue: null });
@@ -269,8 +269,8 @@ const Player = ({ urlParams, queryParams }) => {
         dispatch({ type: 'setProp', propName: 'extraSubtitlesSize', propValue: settings.subtitlesSize });
     }, [settings.subtitlesSize]);
     React.useEffect(() => {
-        dispatch({ type: 'setProp', propName: 'extraSubtitlesOffset', propValue: settings.subtitlesOffset });
         dispatch({ type: 'setProp', propName: 'subtitlesOffset', propValue: settings.subtitlesOffset });
+        dispatch({ type: 'setProp', propName: 'extraSubtitlesOffset', propValue: settings.subtitlesOffset });
     }, [settings.subtitlesOffset]);
     React.useEffect(() => {
         dispatch({ type: 'setProp', propName: 'extraSubtitlesTextColor', propValue: settings.subtitlesTextColor });
@@ -287,10 +287,11 @@ const Player = ({ urlParams, queryParams }) => {
         }
     }, [videoState.time, videoState.duration]);
     React.useEffect(() => {
-        if (!Array.isArray(videoState.subtitlesTracks) || videoState.subtitlesTracks.length === 0) {
+        if ((!Array.isArray(videoState.subtitlesTracks) || videoState.subtitlesTracks.length === 0) &&
+            (!Array.isArray(videoState.extraSubtitlesTracks) || videoState.extraSubtitlesTracks.length === 0)) {
             closeSubtitlesMenu();
         }
-    }, [videoState.subtitlesTracks]);
+    }, [videoState.subtitlesTracks, videoState.extraSubtitlesTracks]);
     React.useEffect(() => {
         if (player.metaItem === null) {
             closeInfoMenu();
@@ -375,7 +376,8 @@ const Player = ({ urlParams, queryParams }) => {
                 }
                 case 'KeyS': {
                     closeInfoMenu();
-                    if (Array.isArray(videoState.subtitlesTracks) && videoState.subtitlesTracks.length > 0) {
+                    if ((Array.isArray(videoState.subtitlesTracks) && videoState.subtitlesTracks.length > 0) ||
+                        (Array.isArray(videoState.extraSubtitlesTracks) && videoState.extraSubtitlesTracks.length > 0)) {
                         toggleSubtitlesMenu();
                     }
 
@@ -402,7 +404,7 @@ const Player = ({ urlParams, queryParams }) => {
         return () => {
             window.removeEventListener('keydown', onKeyDown);
         };
-    }, [player, settings.seekTimeDuration, routeFocused, subtitlesMenuOpen, infoMenuOpen, videoState.paused, videoState.time, videoState.volume, videoState.subtitlesTracks, toggleSubtitlesMenu, toggleInfoMenu]);
+    }, [player, settings.seekTimeDuration, routeFocused, subtitlesMenuOpen, infoMenuOpen, videoState.paused, videoState.time, videoState.volume, videoState.subtitlesTracks, videoState.extraSubtitlesTracks, toggleSubtitlesMenu, toggleInfoMenu]);
     React.useLayoutEffect(() => {
         return () => {
             setImmersedDebounced.cancel();
