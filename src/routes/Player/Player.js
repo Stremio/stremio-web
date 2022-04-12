@@ -53,6 +53,7 @@ const Player = ({ urlParams, queryParams }) => {
             selectedSubtitlesTrackId: null,
             subtitlesOffset: null,
             subtitlesSize: null,
+            subtitlesTextColor: null,
             extraSubtitlesTracks: [],
             selectedExtraSubtitlesTrackId: null,
             extraSubtitlesSize: null,
@@ -75,6 +76,7 @@ const Player = ({ urlParams, queryParams }) => {
         });
         dispatch({ type: 'setProp', propName: 'subtitlesSize', propValue: settings.subtitlesSize });
         dispatch({ type: 'setProp', propName: 'subtitlesOffset', propValue: settings.subtitlesOffset });
+        dispatch({ type: 'setProp', propName: 'subtitlesTextColor', propValue: settings.subtitlesTextColor });
         dispatch({ type: 'setProp', propName: 'extraSubtitlesSize', propValue: settings.subtitlesSize });
         dispatch({ type: 'setProp', propName: 'extraSubtitlesOffset', propValue: settings.subtitlesOffset });
         dispatch({ type: 'setProp', propName: 'extraSubtitlesTextColor', propValue: settings.subtitlesTextColor });
@@ -276,6 +278,7 @@ const Player = ({ urlParams, queryParams }) => {
         dispatch({ type: 'setProp', propName: 'extraSubtitlesOffset', propValue: settings.subtitlesOffset });
     }, [settings.subtitlesOffset]);
     React.useEffect(() => {
+        dispatch({ type: 'setProp', propName: 'subtitlesTextColor', propValue: settings.subtitlesTextColor });
         dispatch({ type: 'setProp', propName: 'extraSubtitlesTextColor', propValue: settings.subtitlesTextColor });
     }, [settings.subtitlesTextColor]);
     React.useEffect(() => {
