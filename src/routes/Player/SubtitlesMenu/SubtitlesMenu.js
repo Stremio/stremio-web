@@ -107,16 +107,24 @@ const SubtitlesMenu = (props) => {
     }, [props.selectedExtraSubtitlesTrackId, props.extraSubtitlesDelay, props.onExtraSubtitlesDelayChanged]);
     const onSubtitlesSizeChanged = React.useCallback((event) => {
         const delta = event.value === 'increment' ? 1 : -1;
-        if (typeof props.selectedExtraSubtitlesTrackId === 'string') {
+        if (typeof props.selectedSubtitlesTrackId === 'string') {
+            if (props.subtitlesSize !== null && !isNaN(props.subtitlesSize)) {
+                const sizeIndex = CONSTANTS.SUBTITLES_SIZES.indexOf(props.subtitlesSize);
+                const size = CONSTANTS.SUBTITLES_SIZES[Math.max(0, Math.min(CONSTANTS.SUBTITLES_SIZES.length - 1, sizeIndex + delta))];
+                if (typeof props.onSubtitlesSizeChanged === 'function') {
+                    props.onSubtitlesSizeChanged(size);
+                }
+            }
+        } else if (typeof props.selectedExtraSubtitlesTrackId === 'string') {
             if (props.extraSubtitlesSize !== null && !isNaN(props.extraSubtitlesSize)) {
                 const extraSizeIndex = CONSTANTS.SUBTITLES_SIZES.indexOf(props.extraSubtitlesSize);
-                const extraSize = CONSTANTS.SUBTITLES_SIZES[Math.max(0, Math.min(CONSTANTS.SUBTITLES_SIZES.length, extraSizeIndex + delta))];
+                const extraSize = CONSTANTS.SUBTITLES_SIZES[Math.max(0, Math.min(CONSTANTS.SUBTITLES_SIZES.length - 1, extraSizeIndex + delta))];
                 if (typeof props.onExtraSubtitlesSizeChanged === 'function') {
                     props.onExtraSubtitlesSizeChanged(extraSize);
                 }
             }
         }
-    }, [props.selectedExtraSubtitlesTrackId, props.extraSubtitlesSize, props.onExtraSubtitlesSizeChanged]);
+    }, [props.selectedSubtitlesTrackId, props.selectedExtraSubtitlesTrackId, props.subtitlesSize, props.extraSubtitlesSize, props.onSubtitlesSizeChanged, props.onExtraSubtitlesSizeChanged]);
     const onSubtitlesOffsetChanged = React.useCallback((event) => {
         const delta = event.value === 'increment' ? 1 : -1;
         if (typeof props.selectedSubtitlesTrackId === 'string') {
@@ -199,8 +207,24 @@ const SubtitlesMenu = (props) => {
                 <DiscreteSelectInput
                     className={styles['discrete-input']}
                     label={'Size'}
-                    value={typeof props.selectedExtraSubtitlesTrackId === 'string' && props.extraSubtitlesSize !== null && !isNaN(props.extraSubtitlesSize) ? `${props.extraSubtitlesSize}%` : '--'}
-                    disabled={typeof props.selectedExtraSubtitlesTrackId !== 'string' || props.extraSubtitlesSize === null || isNaN(props.extraSubtitlesSize)}
+                    value={
+                        typeof props.selectedSubtitlesTrackId === 'string' ?
+                            props.subtitlesSize !== null && !isNaN(props.subtitlesSize) ? `${props.subtitlesSize}%` : '--'
+                            :
+                            typeof props.selectedExtraSubtitlesTrackId === 'string' ?
+                                props.extraSubtitlesSize !== null && !isNaN(props.extraSubtitlesSize) ? `${props.extraSubtitlesSize}%` : '--'
+                                :
+                                '--'
+                    }
+                    disabled={
+                        typeof props.selectedSubtitlesTrackId === 'string' ?
+                            props.subtitlesSize === null || isNaN(props.subtitlesSize)
+                            :
+                            typeof props.selectedExtraSubtitlesTrackId === 'string' ?
+                                props.extraSubtitlesSize === null || isNaN(props.extraSubtitlesSize)
+                                :
+                                true
+                    }
                     onChange={onSubtitlesSizeChanged}
                 />
                 <DiscreteSelectInput
@@ -242,6 +266,7 @@ SubtitlesMenu.propTypes = {
     })),
     selectedSubtitlesTrackId: PropTypes.string,
     subtitlesOffset: PropTypes.number,
+    subtitlesSize: PropTypes.number,
     extraSubtitlesTracks: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.string.isRequired,
         lang: PropTypes.string.isRequired,
@@ -254,6 +279,7 @@ SubtitlesMenu.propTypes = {
     onSubtitlesTrackSelected: PropTypes.func,
     onExtraSubtitlesTrackSelected: PropTypes.func,
     onSubtitlesOffsetChanged: PropTypes.func,
+    onSubtitlesSizeChanged: PropTypes.func,
     onExtraSubtitlesOffsetChanged: PropTypes.func,
     onExtraSubtitlesDelayChanged: PropTypes.func,
     onExtraSubtitlesSizeChanged: PropTypes.func

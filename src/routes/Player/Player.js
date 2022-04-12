@@ -52,6 +52,7 @@ const Player = ({ urlParams, queryParams }) => {
             subtitlesTracks: [],
             selectedSubtitlesTrackId: null,
             subtitlesOffset: null,
+            subtitlesSize: null,
             extraSubtitlesTracks: [],
             selectedExtraSubtitlesTrackId: null,
             extraSubtitlesSize: null,
@@ -72,6 +73,7 @@ const Player = ({ urlParams, queryParams }) => {
         manifest.props.forEach((propName) => {
             dispatch({ type: 'observeProp', propName });
         });
+        dispatch({ type: 'setProp', propName: 'subtitlesSize', propValue: settings.subtitlesSize });
         dispatch({ type: 'setProp', propName: 'subtitlesOffset', propValue: settings.subtitlesOffset });
         dispatch({ type: 'setProp', propName: 'extraSubtitlesSize', propValue: settings.subtitlesSize });
         dispatch({ type: 'setProp', propName: 'extraSubtitlesOffset', propValue: settings.subtitlesOffset });
@@ -266,6 +268,7 @@ const Player = ({ urlParams, queryParams }) => {
         }
     }, [player.subtitles, videoState.stream]);
     React.useEffect(() => {
+        dispatch({ type: 'setProp', propName: 'subtitlesSize', propValue: settings.subtitlesSize });
         dispatch({ type: 'setProp', propName: 'extraSubtitlesSize', propValue: settings.subtitlesSize });
     }, [settings.subtitlesSize]);
     React.useEffect(() => {
@@ -498,6 +501,7 @@ const Player = ({ urlParams, queryParams }) => {
                         subtitlesTracks={videoState.subtitlesTracks}
                         selectedSubtitlesTrackId={videoState.selectedSubtitlesTrackId}
                         subtitlesOffset={videoState.subtitlesOffset}
+                        subtitlesSize={videoState.subtitlesSize}
                         extraSubtitlesTracks={videoState.extraSubtitlesTracks}
                         selectedExtraSubtitlesTrackId={videoState.selectedExtraSubtitlesTrackId}
                         extraSubtitlesOffset={videoState.extraSubtitlesOffset}
@@ -506,6 +510,7 @@ const Player = ({ urlParams, queryParams }) => {
                         onSubtitlesTrackSelected={onSubtitlesTrackSelected}
                         onExtraSubtitlesTrackSelected={onExtraSubtitlesTrackSelected}
                         onSubtitlesOffsetChanged={onSubtitlesOffsetChanged}
+                        onSubtitlesSizeChanged={onSubtitlesSizeChanged}
                         onExtraSubtitlesOffsetChanged={onSubtitlesOffsetChanged}
                         onExtraSubtitlesDelayChanged={onExtraSubtitlesDelayChanged}
                         onExtraSubtitlesSizeChanged={onSubtitlesSizeChanged}
