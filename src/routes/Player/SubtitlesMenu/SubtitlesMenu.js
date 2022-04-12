@@ -16,131 +16,144 @@ const LANGUAGE_PRIORITIES = {
 };
 
 const SubtitlesMenu = (props) => {
-    const languages = React.useMemo(() => {
-        return (Array.isArray(props.tracks) ? props.tracks : [])
-            .concat(Array.isArray(props.extraTracks) ? props.extraTracks : [])
-            .reduce((languages, { lang }) => {
-                if (!languages.includes(lang)) {
-                    languages.push(lang);
+    const subtitlesLanguages = React.useMemo(() => {
+        return (Array.isArray(props.subtitlesTracks) ? props.subtitlesTracks : [])
+            .concat(Array.isArray(props.extraSubtitlesTracks) ? props.extraSubtitlesTracks : [])
+            .reduce((subtitlesLanguages, { lang }) => {
+                if (!subtitlesLanguages.includes(lang)) {
+                    subtitlesLanguages.push(lang);
                 }
 
-                return languages;
+                return subtitlesLanguages;
             }, [])
             .sort(comparatorWithPriorities(LANGUAGE_PRIORITIES));
-    }, [props.tracks, props.extraTracks]);
-    const selectedLanguage = React.useMemo(() => {
-        return typeof props.selectedTrackId === 'string' ?
-            (Array.isArray(props.tracks) ? props.tracks : [])
-                .reduce((selectedLanguage, { id, lang }) => {
-                    if (id === props.selectedTrackId) {
+    }, [props.subtitlesTracks, props.extraSubtitlesTracks]);
+    const selectedSubtitlesLanguages = React.useMemo(() => {
+        return typeof props.selectedSubtitlesTrackId === 'string' ?
+            (Array.isArray(props.subtitlesTracks) ? props.subtitlesTracks : [])
+                .reduce((selectedSubtitlesLanguages, { id, lang }) => {
+                    if (id === props.selectedSubtitlesTrackId) {
                         return lang;
                     }
 
-                    return selectedLanguage;
+                    return selectedSubtitlesLanguages;
                 }, null)
             :
-            typeof props.selectedExtraTrackId === 'string' ?
-                (Array.isArray(props.extraTracks) ? props.extraTracks : [])
-                    .reduce((selectedLanguage, { id, lang }) => {
-                        if (id === props.selectedExtraTrackId) {
+            typeof props.selectedExtraSubtitlesTrackId === 'string' ?
+                (Array.isArray(props.extraSubtitlesTracks) ? props.extraSubtitlesTracks : [])
+                    .reduce((selectedSubtitlesLanguages, { id, lang }) => {
+                        if (id === props.selectedExtraSubtitlesTrackId) {
                             return lang;
                         }
 
-                        return selectedLanguage;
+                        return selectedSubtitlesLanguages;
                     }, null)
                 :
                 null;
-    }, [props.tracks, props.extraTracks, props.selectedTrackId, props.selectedExtraTrackId]);
+    }, [props.subtitlesTracks, props.extraSubtitlesTracks, props.selectedSubtitlesTrackId, props.selectedExtraSubtitlesTrackId]);
     const tracksForLanguage = React.useMemo(() => {
-        return (Array.isArray(props.tracks) ? props.tracks : [])
-            .concat(Array.isArray(props.extraTracks) ? props.extraTracks : [])
-            .filter(({ lang }) => lang === selectedLanguage)
+        return (Array.isArray(props.subtitlesTracks) ? props.subtitlesTracks : [])
+            .concat(Array.isArray(props.extraSubtitlesTracks) ? props.extraSubtitlesTracks : [])
+            .filter(({ lang }) => lang === selectedSubtitlesLanguages)
             .sort((t1, t2) => comparatorWithPriorities(ORIGIN_PRIORITIES)(t1.origin, t2.origin));
-    }, [props.tracks, props.extraTracks, selectedLanguage]);
+    }, [props.subtitlesTracks, props.extraSubtitlesTracks, selectedSubtitlesLanguages]);
     const onMouseDown = React.useCallback((event) => {
         event.nativeEvent.subtitlesMenuClosePrevented = true;
     }, []);
     const languageOnClick = React.useCallback((event) => {
-        const track = (Array.isArray(props.tracks) ? props.tracks : [])
-            .concat(Array.isArray(props.extraTracks) ? props.extraTracks : [])
+        const track = (Array.isArray(props.subtitlesTracks) ? props.subtitlesTracks : [])
+            .concat(Array.isArray(props.extraSubtitlesTracks) ? props.extraSubtitlesTracks : [])
             .filter(({ lang }) => lang === event.currentTarget.dataset.lang)
             .sort((t1, t2) => comparatorWithPriorities(ORIGIN_PRIORITIES)(t1.origin, t2.origin))
             .shift();
         if (!track) {
-            if (typeof props.onTrackSelected === 'function') {
-                props.onTrackSelected(null);
+            if (typeof props.onSubtitlesTrackSelected === 'function') {
+                props.onSubtitlesTrackSelected(null);
             }
-            if (typeof props.onExtraTrackSelected === 'function') {
-                props.onExtraTrackSelected(null);
+            if (typeof props.onExtraSubtitlesTrackSelected === 'function') {
+                props.onExtraSubtitlesTrackSelected(null);
             }
         } else if (track.origin === 'EMBEDDED') {
-            if (typeof props.onTrackSelected === 'function') {
-                props.onTrackSelected(track.id);
+            if (typeof props.onSubtitlesTrackSelected === 'function') {
+                props.onSubtitlesTrackSelected(track.id);
             }
         } else {
-            if (typeof props.onExtraTrackSelected === 'function') {
-                props.onExtraTrackSelected(track.id);
+            if (typeof props.onExtraSubtitlesTrackSelected === 'function') {
+                props.onExtraSubtitlesTrackSelected(track.id);
             }
         }
-    }, [props.tracks, props.extraTracks, props.onTrackSelected, props.onExtraTrackSelected]);
+    }, [props.subtitlesTracks, props.extraSubtitlesTracks, props.onSubtitlesTrackSelected, props.onExtraSubtitlesTrackSelected]);
     const trackOnClick = React.useCallback((event) => {
         if (event.currentTarget.dataset.origin === 'EMBEDDED') {
-            if (typeof props.onTrackSelected === 'function') {
-                props.onTrackSelected(event.currentTarget.dataset.id);
+            if (typeof props.onSubtitlesTrackSelected === 'function') {
+                props.onSubtitlesTrackSelected(event.currentTarget.dataset.id);
             }
         } else {
-            if (typeof props.onExtraTrackSelected === 'function') {
-                props.onExtraTrackSelected(event.currentTarget.dataset.id);
+            if (typeof props.onExtraSubtitlesTrackSelected === 'function') {
+                props.onExtraSubtitlesTrackSelected(event.currentTarget.dataset.id);
             }
         }
-    }, [props.onTrackSelected, props.onExtraTrackSelected]);
-    const onExtraDelayChanged = React.useCallback((event) => {
-        if (props.extraDelay !== null && !isNaN(props.extraDelay)) {
-            const delta = event.value === 'increment' ? 250 : -250;
-            const extraDelay = props.extraDelay + delta;
-            if (typeof props.onExtraDelayChanged === 'function') {
-                props.onExtraDelayChanged(extraDelay);
+    }, [props.onSubtitlesTrackSelected, props.onExtraSubtitlesTrackSelected]);
+    const onSubtitlesDelayChanged = React.useCallback((event) => {
+        const delta = event.value === 'increment' ? 250 : -250;
+        if (typeof props.selectedExtraSubtitlesTrackId === 'string') {
+            if (props.extraSubtitlesDelay !== null && !isNaN(props.extraSubtitlesDelay)) {
+                const extraDelay = props.extraSubtitlesDelay + delta;
+                if (typeof props.onExtraSubtitlesDelayChanged === 'function') {
+                    props.onExtraSubtitlesDelayChanged(extraDelay);
+                }
             }
         }
-    }, [props.extraDelay, props.onExtraDelayChanged]);
-    const onExtraSizeChanged = React.useCallback((event) => {
-        if (props.extraSize !== null && !isNaN(props.extraSize)) {
-            const extraSizeIndex = CONSTANTS.SUBTITLES_SIZES.indexOf(props.extraSize);
-            const delta = event.value === 'increment' ? 1 : -1;
-            const extraSize = CONSTANTS.SUBTITLES_SIZES[Math.max(0, Math.min(CONSTANTS.SUBTITLES_SIZES.length, extraSizeIndex + delta))];
-            if (typeof props.onExtraSizeChanged === 'function') {
-                props.onExtraSizeChanged(extraSize);
+    }, [props.selectedExtraSubtitlesTrackId, props.extraSubtitlesDelay, props.onExtraSubtitlesDelayChanged]);
+    const onSubtitlesSizeChanged = React.useCallback((event) => {
+        const delta = event.value === 'increment' ? 1 : -1;
+        if (typeof props.selectedExtraSubtitlesTrackId === 'string') {
+            if (props.extraSubtitlesSize !== null && !isNaN(props.extraSubtitlesSize)) {
+                const extraSizeIndex = CONSTANTS.SUBTITLES_SIZES.indexOf(props.extraSubtitlesSize);
+                const extraSize = CONSTANTS.SUBTITLES_SIZES[Math.max(0, Math.min(CONSTANTS.SUBTITLES_SIZES.length, extraSizeIndex + delta))];
+                if (typeof props.onExtraSubtitlesSizeChanged === 'function') {
+                    props.onExtraSubtitlesSizeChanged(extraSize);
+                }
             }
         }
-    }, [props.extraSize, props.onExtraSizeChanged]);
-    const onOffsetChanged = React.useCallback((event) => {
-        if (props.offset !== null && !isNaN(props.offset)) {
-            const delta = event.value === 'increment' ? 1 : -1;
-            const offset = Math.max(0, Math.min(100, Math.floor(props.offset + delta)));
-            if (typeof props.onOffsetChanged === 'function') {
-                props.onOffsetChanged(offset);
+    }, [props.selectedExtraSubtitlesTrackId, props.extraSubtitlesSize, props.onExtraSubtitlesSizeChanged]);
+    const onSubtitlesOffsetChanged = React.useCallback((event) => {
+        const delta = event.value === 'increment' ? 1 : -1;
+        if (typeof props.selectedSubtitlesTrackId === 'string') {
+            if (props.extraSubtitlesOffset !== null && !isNaN(props.extraSubtitlesOffset)) {
+                const offset = Math.max(0, Math.min(100, Math.floor(props.extraSubtitlesOffset + delta)));
+                if (typeof props.onExtraSubtitlesOffsetChanged === 'function') {
+                    props.onExtraSubtitlesOffsetChanged(offset);
+                }
+            }
+        } else if (typeof props.selectedExtraSubtitlesTrackId === 'string') {
+            if (props.subtitlesOffset !== null && !isNaN(props.subtitlesOffset)) {
+                const offset = Math.max(0, Math.min(100, Math.floor(props.subtitlesOffset + delta)));
+                if (typeof props.onSubtitlesOffsetChanged === 'function') {
+                    props.onSubtitlesOffsetChanged(offset);
+                }
             }
         }
-    }, [props.offset, props.onOffsetChanged]);
+    }, [props.selectedSubtitlesTrackId, props.selectedExtraSubtitlesTrackId, props.subtitlesOffset, props.extraSubtitlesOffset, props.onSubtitlesOffsetChanged, props.onExtraSubtitlesOffsetChanged]);
     return (
         <div className={classnames(props.className, styles['subtitles-menu-container'])} onMouseDown={onMouseDown}>
             <div className={styles['languages-container']}>
                 <div className={styles['languages-header']}>Languages</div>
                 <div className={styles['languages-list']}>
-                    <Button title={'Off'} className={classnames(styles['language-option'], { 'selected': selectedLanguage === null })} onClick={languageOnClick}>
+                    <Button title={'Off'} className={classnames(styles['language-option'], { 'selected': selectedSubtitlesLanguages === null })} onClick={languageOnClick}>
                         <div className={styles['language-label']}>Off</div>
                         {
-                            selectedLanguage === null ?
+                            selectedSubtitlesLanguages === null ?
                                 <div className={styles['icon']} />
                                 :
                                 null
                         }
                     </Button>
-                    {languages.map((lang, index) => (
-                        <Button key={index} title={typeof languageNames[lang] === 'string' ? languageNames[lang] : lang} className={classnames(styles['language-option'], { 'selected': selectedLanguage === lang })} data-lang={lang} onClick={languageOnClick}>
+                    {subtitlesLanguages.map((lang, index) => (
+                        <Button key={index} title={typeof languageNames[lang] === 'string' ? languageNames[lang] : lang} className={classnames(styles['language-option'], { 'selected': selectedSubtitlesLanguages === lang })} data-lang={lang} onClick={languageOnClick}>
                             <div className={styles['language-label']}>{typeof languageNames[lang] === 'string' ? languageNames[lang] : lang}</div>
                             {
-                                selectedLanguage === lang ?
+                                selectedSubtitlesLanguages === lang ?
                                     <div className={styles['icon']} />
                                     :
                                     null
@@ -155,10 +168,10 @@ const SubtitlesMenu = (props) => {
                     tracksForLanguage.length > 0 ?
                         <div className={styles['variants-list']}>
                             {tracksForLanguage.map((track, index) => (
-                                <Button key={index} title={track.label} className={classnames(styles['variant-option'], { 'selected': props.selectedTrackId === track.id || props.selectedExtraTrackId === track.id })} data-id={track.id} data-origin={track.origin} onClick={trackOnClick}>
+                                <Button key={index} title={track.label} className={classnames(styles['variant-option'], { 'selected': props.selectedSubtitlesTrackId === track.id || props.selectedExtraSubtitlesTrackId === track.id })} data-id={track.id} data-origin={track.origin} onClick={trackOnClick}>
                                     <div className={styles['variant-label']}>{track.origin}</div>
                                     {
-                                        props.selectedTrackId === track.id || props.selectedExtraTrackId === track.id ?
+                                        props.selectedSubtitlesTrackId === track.id || props.selectedExtraSubtitlesTrackId === track.id ?
                                             <div className={styles['icon']} />
                                             :
                                             null
@@ -179,23 +192,39 @@ const SubtitlesMenu = (props) => {
                 <DiscreteSelectInput
                     className={styles['discrete-input']}
                     label={'Delay'}
-                    value={props.extraDelay !== null && !isNaN(props.extraDelay) ? `${(props.extraDelay / 1000).toFixed(2)}s` : '--'}
-                    disabled={typeof props.selectedExtraTrackId !== 'string' || props.extraDelay === null || isNaN(props.extraDelay)}
-                    onChange={onExtraDelayChanged}
+                    value={typeof props.selectedExtraSubtitlesTrackId === 'string' && props.extraSubtitlesDelay !== null && !isNaN(props.extraSubtitlesDelay) ? `${(props.extraSubtitlesDelay / 1000).toFixed(2)}s` : '--'}
+                    disabled={typeof props.selectedExtraSubtitlesTrackId !== 'string' || props.extraSubtitlesDelay === null || isNaN(props.extraSubtitlesDelay)}
+                    onChange={onSubtitlesDelayChanged}
                 />
                 <DiscreteSelectInput
                     className={styles['discrete-input']}
                     label={'Size'}
-                    value={props.extraSize !== null && !isNaN(props.extraSize) ? `${props.extraSize}%` : '--'}
-                    disabled={typeof props.selectedExtraTrackId !== 'string' || props.extraSize === null || isNaN(props.extraSize)}
-                    onChange={onExtraSizeChanged}
+                    value={typeof props.selectedExtraSubtitlesTrackId === 'string' && props.extraSubtitlesSize !== null && !isNaN(props.extraSubtitlesSize) ? `${props.extraSubtitlesSize}%` : '--'}
+                    disabled={typeof props.selectedExtraSubtitlesTrackId !== 'string' || props.extraSubtitlesSize === null || isNaN(props.extraSubtitlesSize)}
+                    onChange={onSubtitlesSizeChanged}
                 />
                 <DiscreteSelectInput
                     className={styles['discrete-input']}
                     label={'Vertical position'}
-                    value={props.offset !== null && !isNaN(props.offset) ? `${props.offset}%` : '--'}
-                    disabled={props.offset === null || isNaN(props.offset)}
-                    onChange={onOffsetChanged}
+                    value={
+                        typeof props.selectedSubtitlesTrackId === 'string' ?
+                            props.subtitlesOffset !== null && !isNaN(props.subtitlesOffset) ? `${props.subtitlesOffset}%` : '--'
+                            :
+                            typeof props.selectedExtraSubtitlesTrackId === 'string' ?
+                                props.extraSubtitlesOffset !== null && !isNaN(props.extraSubtitlesOffset) ? `${props.extraSubtitlesOffset}%` : '--'
+                                :
+                                '--'
+                    }
+                    disabled={
+                        typeof props.selectedSubtitlesTrackId === 'string' ?
+                            props.subtitlesOffset === null || isNaN(props.subtitlesOffset)
+                            :
+                            typeof props.selectedExtraSubtitlesTrackId === 'string' ?
+                                props.extraSubtitlesOffset === null || isNaN(props.extraSubtitlesOffset)
+                                :
+                                true
+                    }
+                    onChange={onSubtitlesOffsetChanged}
                 />
                 <div className={styles['spacing']} />
                 <Button className={classnames(styles['advanced-button'], 'disabled')} title={'Advanced'}>Advanced</Button>
@@ -206,26 +235,28 @@ const SubtitlesMenu = (props) => {
 
 SubtitlesMenu.propTypes = {
     className: PropTypes.string,
-    tracks: PropTypes.arrayOf(PropTypes.shape({
+    subtitlesTracks: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.string.isRequired,
         lang: PropTypes.string.isRequired,
         origin: PropTypes.string.isRequired
     })),
-    selectedTrackId: PropTypes.string,
-    offset: PropTypes.number,
-    extraTracks: PropTypes.arrayOf(PropTypes.shape({
+    selectedSubtitlesTrackId: PropTypes.string,
+    subtitlesOffset: PropTypes.number,
+    extraSubtitlesTracks: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.string.isRequired,
         lang: PropTypes.string.isRequired,
         origin: PropTypes.string.isRequired
     })),
-    selectedExtraTrackId: PropTypes.string,
-    extraDelay: PropTypes.number,
-    extraSize: PropTypes.number,
-    onTrackSelected: PropTypes.func,
-    onOffsetChanged: PropTypes.func,
-    onExtraTrackSelected: PropTypes.func,
-    onExtraDelayChanged: PropTypes.func,
-    onExtraSizeChanged: PropTypes.func
+    selectedExtraSubtitlesTrackId: PropTypes.string,
+    extraSubtitlesOffset: PropTypes.number,
+    extraSubtitlesDelay: PropTypes.number,
+    extraSubtitlesSize: PropTypes.number,
+    onSubtitlesTrackSelected: PropTypes.func,
+    onExtraSubtitlesTrackSelected: PropTypes.func,
+    onSubtitlesOffsetChanged: PropTypes.func,
+    onExtraSubtitlesOffsetChanged: PropTypes.func,
+    onExtraSubtitlesDelayChanged: PropTypes.func,
+    onExtraSubtitlesSizeChanged: PropTypes.func
 };
 
 module.exports = SubtitlesMenu;

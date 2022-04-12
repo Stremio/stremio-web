@@ -495,23 +495,20 @@ const Player = ({ urlParams, queryParams }) => {
                 subtitlesMenuOpen ?
                     <SubtitlesMenu
                         className={classnames(styles['layer'], styles['menu-layer'])}
-                        tracks={videoState.subtitlesTracks}
-                        selectedTrackId={videoState.selectedSubtitlesTrackId}
-                        offset={
-                            videoState.subtitlesOffset !== null && !isNaN(videoState.subtitlesOffset) ?
-                                videoState.subtitlesOffset
-                                :
-                                videoState.extraSubtitlesOffset
-                        }
-                        extraTracks={videoState.extraSubtitlesTracks}
-                        selectedExtraTrackId={videoState.selectedExtraSubtitlesTrackId}
-                        extraDelay={videoState.extraSubtitlesDelay}
-                        extraSize={videoState.extraSubtitlesSize}
-                        onTrackSelected={onSubtitlesTrackSelected}
-                        onOffsetChanged={onSubtitlesOffsetChanged}
-                        onExtraTrackSelected={onExtraSubtitlesTrackSelected}
-                        onExtraDelayChanged={onExtraSubtitlesDelayChanged}
-                        onExtraSizeChanged={onSubtitlesSizeChanged}
+                        subtitlesTracks={videoState.subtitlesTracks}
+                        selectedSubtitlesTrackId={videoState.selectedSubtitlesTrackId}
+                        subtitlesOffset={videoState.subtitlesOffset}
+                        extraSubtitlesTracks={videoState.extraSubtitlesTracks}
+                        selectedExtraSubtitlesTrackId={videoState.selectedExtraSubtitlesTrackId}
+                        extraSubtitlesOffset={videoState.extraSubtitlesOffset}
+                        extraSubtitlesDelay={videoState.extraSubtitlesDelay}
+                        extraSubtitlesSize={videoState.extraSubtitlesSize}
+                        onSubtitlesTrackSelected={onSubtitlesTrackSelected}
+                        onExtraSubtitlesTrackSelected={onExtraSubtitlesTrackSelected}
+                        onSubtitlesOffsetChanged={onSubtitlesOffsetChanged}
+                        onExtraSubtitlesOffsetChanged={onSubtitlesOffsetChanged}
+                        onExtraSubtitlesDelayChanged={onExtraSubtitlesDelayChanged}
+                        onExtraSubtitlesSizeChanged={onSubtitlesSizeChanged}
                     />
                     :
                     null
