@@ -210,6 +210,17 @@ const Player = ({ urlParams, queryParams }) => {
         if (player.selected === null) {
             dispatch({ type: 'command', commandName: 'unload' });
         } else if (streamingServer.baseUrl !== null && streamingServer.baseUrl.type !== 'Loading') {
+            let seriesInfo = false;
+            if ((player.metaItem?.videos || []).length) {
+                const videoId = player.selected?.streamRequest?.path?.id;
+                const video = player.metaItem.videos.find(vid => vid.id === videoId);
+                if (video?.season || video?.episode) {
+                    seriesInfo = {
+                        season: video.season,
+                        episode: video.episode,
+                    }
+                }
+            }
             dispatch({
                 type: 'command',
                 commandName: 'load',
@@ -244,11 +255,12 @@ const Player = ({ urlParams, queryParams }) => {
                             streamingServer.selected.transportUrl
                         :
                         null,
-                    chromecastTransport: chromecast.active ? chromecast.transport : null
+                    chromecastTransport: chromecast.active ? chromecast.transport : null,
+                    seriesInfo,
                 }
             });
         }
-    }, [streamingServer.baseUrl, player.selected, forceTranscoding, audioChannels, casting]);
+    }, [streamingServer.baseUrl, player.metaItem, forceTranscoding, audioChannels, casting]);
     useDeepEqualEffect(() => {
         if (videoState.stream !== null) {
             dispatch({
