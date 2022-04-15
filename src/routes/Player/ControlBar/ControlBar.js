@@ -18,6 +18,7 @@ const ControlBar = ({
     volume,
     muted,
     subtitlesTracks,
+    audioTracks,
     infoAvailable,
     onPlayRequested,
     onPauseRequested,
@@ -120,7 +121,7 @@ const ControlBar = ({
                 <Button className={classnames(styles['control-bar-button'], { 'disabled': !chromecastServiceActive })} tabIndex={-1} onClick={onChromecastButtonClick}>
                     <Icon className={styles['icon']} icon={'ic_cast'} />
                 </Button>
-                <Button className={classnames(styles['control-bar-button'], { 'disabled': !Array.isArray(subtitlesTracks) || subtitlesTracks.length === 0 })} tabIndex={-1} onMouseDown={onSubtitlesButtonMouseDown} onClick={onSubtitlesButtonClick}>
+                <Button className={classnames(styles['control-bar-button'], { 'disabled': (!Array.isArray(subtitlesTracks) || subtitlesTracks.length === 0) && (!Array.isArray(audioTracks) || audioTracks.length === 0) })} tabIndex={-1} onMouseDown={onSubtitlesButtonMouseDown} onClick={onSubtitlesButtonClick}>
                     <Icon className={styles['icon']} icon={'ic_sub'} />
                 </Button>
                 <Button className={classnames(styles['control-bar-button'], 'disabled')} tabIndex={-1}>
@@ -139,6 +140,7 @@ ControlBar.propTypes = {
     volume: PropTypes.number,
     muted: PropTypes.bool,
     subtitlesTracks: PropTypes.array,
+    audioTracks: PropTypes.array,
     infoAvailable: PropTypes.bool,
     onPlayRequested: PropTypes.func,
     onPauseRequested: PropTypes.func,

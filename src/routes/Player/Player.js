@@ -49,6 +49,8 @@ const Player = ({ urlParams, queryParams }) => {
             buffering: null,
             volume: null,
             muted: null,
+            audioTracks: [],
+            selectedAudioTrackId: null,
             subtitlesTracks: [],
             selectedSubtitlesTrackId: null,
             subtitlesOffset: null,
@@ -168,6 +170,9 @@ const Player = ({ urlParams, queryParams }) => {
     const onExtraSubtitlesTrackSelected = React.useCallback((id) => {
         dispatch({ type: 'setProp', propName: 'selectedSubtitlesTrackId', propValue: null });
         dispatch({ type: 'setProp', propName: 'selectedExtraSubtitlesTrackId', propValue: id });
+    }, []);
+    const onAudioTrackSelected = React.useCallback((id) => {
+        dispatch({ type: 'setProp', propName: 'selectedAudioTrackId', propValue: id });
     }, []);
     const onExtraSubtitlesDelayChanged = React.useCallback((delay) => {
         dispatch({ type: 'setProp', propName: 'extraSubtitlesDelay', propValue: delay });
@@ -300,10 +305,11 @@ const Player = ({ urlParams, queryParams }) => {
     }, [videoState.time, videoState.duration]);
     React.useEffect(() => {
         if ((!Array.isArray(videoState.subtitlesTracks) || videoState.subtitlesTracks.length === 0) &&
-            (!Array.isArray(videoState.extraSubtitlesTracks) || videoState.extraSubtitlesTracks.length === 0)) {
+            (!Array.isArray(videoState.extraSubtitlesTracks) || videoState.extraSubtitlesTracks.length === 0) &&
+            (!Array.isArray(videoState.audioTracks) || videoState.audioTracks.length === 0)) {
             closeSubtitlesMenu();
         }
-    }, [videoState.subtitlesTracks, videoState.extraSubtitlesTracks]);
+    }, [videoState.audioTracks, videoState.subtitlesTracks, videoState.extraSubtitlesTracks]);
     React.useEffect(() => {
         if (player.metaItem === null) {
             closeInfoMenu();
@@ -389,7 +395,8 @@ const Player = ({ urlParams, queryParams }) => {
                 case 'KeyS': {
                     closeInfoMenu();
                     if ((Array.isArray(videoState.subtitlesTracks) && videoState.subtitlesTracks.length > 0) ||
-                        (Array.isArray(videoState.extraSubtitlesTracks) && videoState.extraSubtitlesTracks.length > 0)) {
+                        (Array.isArray(videoState.extraSubtitlesTracks) && videoState.extraSubtitlesTracks.length > 0) ||
+                        (Array.isArray(videoState.audioTracks) && videoState.audioTracks.length > 0)) {
                         toggleSubtitlesMenu();
                     }
 
@@ -416,7 +423,7 @@ const Player = ({ urlParams, queryParams }) => {
         return () => {
             window.removeEventListener('keydown', onKeyDown);
         };
-    }, [player, settings.seekTimeDuration, routeFocused, subtitlesMenuOpen, infoMenuOpen, videoState.paused, videoState.time, videoState.volume, videoState.subtitlesTracks, videoState.extraSubtitlesTracks, toggleSubtitlesMenu, toggleInfoMenu]);
+    }, [player, settings.seekTimeDuration, routeFocused, subtitlesMenuOpen, infoMenuOpen, videoState.paused, videoState.time, videoState.volume, videoState.audioTracks, videoState.subtitlesTracks, videoState.extraSubtitlesTracks, toggleSubtitlesMenu, toggleInfoMenu]);
     React.useLayoutEffect(() => {
         return () => {
             setImmersedDebounced.cancel();
@@ -491,6 +498,7 @@ const Player = ({ urlParams, queryParams }) => {
                 volume={videoState.volume}
                 muted={videoState.muted}
                 subtitlesTracks={videoState.subtitlesTracks.concat(videoState.extraSubtitlesTracks)}
+                audioTracks={videoState.audioTracks}
                 infoAvailable={player.metaItem !== null}
                 onPlayRequested={onPlayRequested}
                 onPauseRequested={onPauseRequested}
@@ -507,6 +515,8 @@ const Player = ({ urlParams, queryParams }) => {
                 subtitlesMenuOpen ?
                     <SubtitlesMenu
                         className={classnames(styles['layer'], styles['menu-layer'])}
+                        audioTracks={videoState.audioTracks}
+                        selectedAudioTrackId={videoState.selectedAudioTrackId}
                         subtitlesTracks={videoState.subtitlesTracks}
                         selectedSubtitlesTrackId={videoState.selectedSubtitlesTrackId}
                         subtitlesOffset={videoState.subtitlesOffset}
@@ -518,6 +528,7 @@ const Player = ({ urlParams, queryParams }) => {
                         extraSubtitlesSize={videoState.extraSubtitlesSize}
                         onSubtitlesTrackSelected={onSubtitlesTrackSelected}
                         onExtraSubtitlesTrackSelected={onExtraSubtitlesTrackSelected}
+                        onAudioTrackSelected={onAudioTrackSelected}
                         onSubtitlesOffsetChanged={onSubtitlesOffsetChanged}
                         onSubtitlesSizeChanged={onSubtitlesSizeChanged}
                         onExtraSubtitlesOffsetChanged={onSubtitlesOffsetChanged}

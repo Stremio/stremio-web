@@ -143,8 +143,34 @@ const SubtitlesMenu = (props) => {
             }
         }
     }, [props.selectedSubtitlesTrackId, props.selectedExtraSubtitlesTrackId, props.subtitlesOffset, props.extraSubtitlesOffset, props.onSubtitlesOffsetChanged, props.onExtraSubtitlesOffsetChanged]);
+    const audioTrackOnClick = React.useCallback((event) => {
+        if (typeof props.onAudioTrackSelected === 'function') {
+            props.onAudioTrackSelected(event.currentTarget.dataset.id);
+        }
+    }, [props.onAudioTrackSelected]);
     return (
         <div className={classnames(props.className, styles['subtitles-menu-container'])} onMouseDown={onMouseDown}>
+            {
+                Array.isArray(props.audioTracks) && props.audioTracks.length > 1 ?
+                    <div className={styles['languages-container']}>
+                        <div className={styles['languages-header']}>Audio Languages</div>
+                        <div className={styles['languages-list']}>
+                            {props.audioTracks.map(({ id, label }, index) => (
+                                <Button key={index} title={label} className={classnames(styles['language-option'], { 'selected': props.selectedAudioTrackId === id })} data-id={id} onClick={audioTrackOnClick}>
+                                    <div className={styles['language-label']}>{label}</div>
+                                    {
+                                        props.selectedAudioTrackId === id ?
+                                            <div className={styles['icon']} />
+                                            :
+                                            null
+                                    }
+                                </Button>
+                            ))}
+                        </div>
+                    </div>
+                    :
+                    null
+            }
             <div className={styles['languages-container']}>
                 <div className={styles['languages-header']}>Languages</div>
                 <div className={styles['languages-list']}>
@@ -270,14 +296,23 @@ SubtitlesMenu.propTypes = {
     extraSubtitlesTracks: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.string.isRequired,
         lang: PropTypes.string.isRequired,
-        origin: PropTypes.string.isRequired
+        origin: PropTypes.string.isRequired,
+        label: PropTypes.string.isRequired
     })),
     selectedExtraSubtitlesTrackId: PropTypes.string,
     extraSubtitlesOffset: PropTypes.number,
     extraSubtitlesDelay: PropTypes.number,
     extraSubtitlesSize: PropTypes.number,
+    audioTracks: PropTypes.arrayOf(PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        lang: PropTypes.string.isRequired,
+        origin: PropTypes.string.isRequired,
+        label: PropTypes.string.isRequired
+    })),
+    selectedAudioTrackId: PropTypes.string,
     onSubtitlesTrackSelected: PropTypes.func,
     onExtraSubtitlesTrackSelected: PropTypes.func,
+    onAudioTrackSelected: PropTypes.func,
     onSubtitlesOffsetChanged: PropTypes.func,
     onSubtitlesSizeChanged: PropTypes.func,
     onExtraSubtitlesOffsetChanged: PropTypes.func,
