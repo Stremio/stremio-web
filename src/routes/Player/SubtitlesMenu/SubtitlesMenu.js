@@ -28,25 +28,25 @@ const SubtitlesMenu = (props) => {
             }, [])
             .sort(comparatorWithPriorities(LANGUAGE_PRIORITIES));
     }, [props.subtitlesTracks, props.extraSubtitlesTracks]);
-    const selectedSubtitlesLanguages = React.useMemo(() => {
+    const selectedSubtitlesLanguage = React.useMemo(() => {
         return typeof props.selectedSubtitlesTrackId === 'string' ?
             (Array.isArray(props.subtitlesTracks) ? props.subtitlesTracks : [])
-                .reduce((selectedSubtitlesLanguages, { id, lang }) => {
+                .reduce((selectedSubtitlesLanguage, { id, lang }) => {
                     if (id === props.selectedSubtitlesTrackId) {
                         return lang;
                     }
 
-                    return selectedSubtitlesLanguages;
+                    return selectedSubtitlesLanguage;
                 }, null)
             :
             typeof props.selectedExtraSubtitlesTrackId === 'string' ?
                 (Array.isArray(props.extraSubtitlesTracks) ? props.extraSubtitlesTracks : [])
-                    .reduce((selectedSubtitlesLanguages, { id, lang }) => {
+                    .reduce((selectedSubtitlesLanguage, { id, lang }) => {
                         if (id === props.selectedExtraSubtitlesTrackId) {
                             return lang;
                         }
 
-                        return selectedSubtitlesLanguages;
+                        return selectedSubtitlesLanguage;
                     }, null)
                 :
                 null;
@@ -54,9 +54,9 @@ const SubtitlesMenu = (props) => {
     const tracksForLanguage = React.useMemo(() => {
         return (Array.isArray(props.subtitlesTracks) ? props.subtitlesTracks : [])
             .concat(Array.isArray(props.extraSubtitlesTracks) ? props.extraSubtitlesTracks : [])
-            .filter(({ lang }) => lang === selectedSubtitlesLanguages)
+            .filter(({ lang }) => lang === selectedSubtitlesLanguage)
             .sort((t1, t2) => comparatorWithPriorities(ORIGIN_PRIORITIES)(t1.origin, t2.origin));
-    }, [props.subtitlesTracks, props.extraSubtitlesTracks, selectedSubtitlesLanguages]);
+    }, [props.subtitlesTracks, props.extraSubtitlesTracks, selectedSubtitlesLanguage]);
     const onMouseDown = React.useCallback((event) => {
         event.nativeEvent.subtitlesMenuClosePrevented = true;
     }, []);
@@ -174,20 +174,20 @@ const SubtitlesMenu = (props) => {
             <div className={styles['languages-container']}>
                 <div className={styles['languages-header']}>Languages</div>
                 <div className={styles['languages-list']}>
-                    <Button title={'Off'} className={classnames(styles['language-option'], { 'selected': selectedSubtitlesLanguages === null })} onClick={languageOnClick}>
+                    <Button title={'Off'} className={classnames(styles['language-option'], { 'selected': selectedSubtitlesLanguage === null })} onClick={languageOnClick}>
                         <div className={styles['language-label']}>Off</div>
                         {
-                            selectedSubtitlesLanguages === null ?
+                            selectedSubtitlesLanguage === null ?
                                 <div className={styles['icon']} />
                                 :
                                 null
                         }
                     </Button>
                     {subtitlesLanguages.map((lang, index) => (
-                        <Button key={index} title={typeof languageNames[lang] === 'string' ? languageNames[lang] : lang} className={classnames(styles['language-option'], { 'selected': selectedSubtitlesLanguages === lang })} data-lang={lang} onClick={languageOnClick}>
+                        <Button key={index} title={typeof languageNames[lang] === 'string' ? languageNames[lang] : lang} className={classnames(styles['language-option'], { 'selected': selectedSubtitlesLanguage === lang })} data-lang={lang} onClick={languageOnClick}>
                             <div className={styles['language-label']}>{typeof languageNames[lang] === 'string' ? languageNames[lang] : lang}</div>
                             {
-                                selectedSubtitlesLanguages === lang ?
+                                selectedSubtitlesLanguage === lang ?
                                     <div className={styles['icon']} />
                                     :
                                     null
