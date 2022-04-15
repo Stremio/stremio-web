@@ -51,7 +51,7 @@ const SubtitlesMenu = (props) => {
                 :
                 null;
     }, [props.subtitlesTracks, props.extraSubtitlesTracks, props.selectedSubtitlesTrackId, props.selectedExtraSubtitlesTrackId]);
-    const tracksForLanguage = React.useMemo(() => {
+    const subtitlesTracksForLanguage = React.useMemo(() => {
         return (Array.isArray(props.subtitlesTracks) ? props.subtitlesTracks : [])
             .concat(Array.isArray(props.extraSubtitlesTracks) ? props.extraSubtitlesTracks : [])
             .filter(({ lang }) => lang === selectedSubtitlesLanguage)
@@ -60,7 +60,7 @@ const SubtitlesMenu = (props) => {
     const onMouseDown = React.useCallback((event) => {
         event.nativeEvent.subtitlesMenuClosePrevented = true;
     }, []);
-    const languageOnClick = React.useCallback((event) => {
+    const subtitlesLanguageOnClick = React.useCallback((event) => {
         const track = (Array.isArray(props.subtitlesTracks) ? props.subtitlesTracks : [])
             .concat(Array.isArray(props.extraSubtitlesTracks) ? props.extraSubtitlesTracks : [])
             .filter(({ lang }) => lang === event.currentTarget.dataset.lang)
@@ -83,7 +83,7 @@ const SubtitlesMenu = (props) => {
             }
         }
     }, [props.subtitlesTracks, props.extraSubtitlesTracks, props.onSubtitlesTrackSelected, props.onExtraSubtitlesTrackSelected]);
-    const trackOnClick = React.useCallback((event) => {
+    const subtitlesTrackOnClick = React.useCallback((event) => {
         if (event.currentTarget.dataset.origin === 'EMBEDDED') {
             if (typeof props.onSubtitlesTrackSelected === 'function') {
                 props.onSubtitlesTrackSelected(event.currentTarget.dataset.id);
@@ -174,7 +174,7 @@ const SubtitlesMenu = (props) => {
             <div className={styles['languages-container']}>
                 <div className={styles['languages-header']}>Languages</div>
                 <div className={styles['languages-list']}>
-                    <Button title={'Off'} className={classnames(styles['language-option'], { 'selected': selectedSubtitlesLanguage === null })} onClick={languageOnClick}>
+                    <Button title={'Off'} className={classnames(styles['language-option'], { 'selected': selectedSubtitlesLanguage === null })} onClick={subtitlesLanguageOnClick}>
                         <div className={styles['language-label']}>Off</div>
                         {
                             selectedSubtitlesLanguage === null ?
@@ -184,7 +184,7 @@ const SubtitlesMenu = (props) => {
                         }
                     </Button>
                     {subtitlesLanguages.map((lang, index) => (
-                        <Button key={index} title={typeof languageNames[lang] === 'string' ? languageNames[lang] : lang} className={classnames(styles['language-option'], { 'selected': selectedSubtitlesLanguage === lang })} data-lang={lang} onClick={languageOnClick}>
+                        <Button key={index} title={typeof languageNames[lang] === 'string' ? languageNames[lang] : lang} className={classnames(styles['language-option'], { 'selected': selectedSubtitlesLanguage === lang })} data-lang={lang} onClick={subtitlesLanguageOnClick}>
                             <div className={styles['language-label']}>{typeof languageNames[lang] === 'string' ? languageNames[lang] : lang}</div>
                             {
                                 selectedSubtitlesLanguage === lang ?
@@ -199,10 +199,10 @@ const SubtitlesMenu = (props) => {
             <div className={styles['variants-container']}>
                 <div className={styles['variants-header']}>Variants</div>
                 {
-                    tracksForLanguage.length > 0 ?
+                    subtitlesTracksForLanguage.length > 0 ?
                         <div className={styles['variants-list']}>
-                            {tracksForLanguage.map((track, index) => (
-                                <Button key={index} title={track.label} className={classnames(styles['variant-option'], { 'selected': props.selectedSubtitlesTrackId === track.id || props.selectedExtraSubtitlesTrackId === track.id })} data-id={track.id} data-origin={track.origin} onClick={trackOnClick}>
+                            {subtitlesTracksForLanguage.map((track, index) => (
+                                <Button key={index} title={track.label} className={classnames(styles['variant-option'], { 'selected': props.selectedSubtitlesTrackId === track.id || props.selectedExtraSubtitlesTrackId === track.id })} data-id={track.id} data-origin={track.origin} onClick={subtitlesTrackOnClick}>
                                     <div className={styles['variant-label']}>{track.origin}</div>
                                     {
                                         props.selectedSubtitlesTrackId === track.id || props.selectedExtraSubtitlesTrackId === track.id ?
