@@ -213,12 +213,12 @@ const Player = ({ urlParams, queryParams }) => {
             let seriesInfo = false;
             if ((player.metaItem?.videos || []).length) {
                 const videoId = player.selected?.streamRequest?.path?.id;
-                const video = player.metaItem.videos.find(vid => vid.id === videoId);
+                const video = player.metaItem.videos.find((vid) => vid.id === videoId);
                 if (video?.season || video?.episode) {
                     seriesInfo = {
                         season: video.season,
                         episode: video.episode,
-                    }
+                    };
                 }
             }
             dispatch({
