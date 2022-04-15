@@ -73,7 +73,7 @@ const SubtitlesMenu = (props) => {
             if (typeof props.onExtraSubtitlesTrackSelected === 'function') {
                 props.onExtraSubtitlesTrackSelected(null);
             }
-        } else if (track.origin === 'EMBEDDED') {
+        } else if (track.embedded) {
             if (typeof props.onSubtitlesTrackSelected === 'function') {
                 props.onSubtitlesTrackSelected(track.id);
             }
@@ -84,7 +84,7 @@ const SubtitlesMenu = (props) => {
         }
     }, [props.subtitlesTracks, props.extraSubtitlesTracks, props.onSubtitlesTrackSelected, props.onExtraSubtitlesTrackSelected]);
     const subtitlesTrackOnClick = React.useCallback((event) => {
-        if (event.currentTarget.dataset.origin === 'EMBEDDED') {
+        if (event.currentTarget.dataset.embedded === 'true') {
             if (typeof props.onSubtitlesTrackSelected === 'function') {
                 props.onSubtitlesTrackSelected(event.currentTarget.dataset.id);
             }
@@ -202,7 +202,7 @@ const SubtitlesMenu = (props) => {
                     subtitlesTracksForLanguage.length > 0 ?
                         <div className={styles['variants-list']}>
                             {subtitlesTracksForLanguage.map((track, index) => (
-                                <Button key={index} title={track.label} className={classnames(styles['variant-option'], { 'selected': props.selectedSubtitlesTrackId === track.id || props.selectedExtraSubtitlesTrackId === track.id })} data-id={track.id} data-origin={track.origin} onClick={subtitlesTrackOnClick}>
+                                <Button key={index} title={track.label} className={classnames(styles['variant-option'], { 'selected': props.selectedSubtitlesTrackId === track.id || props.selectedExtraSubtitlesTrackId === track.id })} data-id={track.id} data-origin={track.origin} data-embedded={track.embedded} onClick={subtitlesTrackOnClick}>
                                     <div className={styles['variant-label']}>{track.origin}</div>
                                     {
                                         props.selectedSubtitlesTrackId === track.id || props.selectedExtraSubtitlesTrackId === track.id ?
