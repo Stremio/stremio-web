@@ -259,11 +259,12 @@ const Player = ({ urlParams, queryParams }) => {
                             streamingServer.selected.transportUrl
                         :
                         null,
-                    chromecastTransport: chromecast.active ? chromecast.transport : null
+                    chromecastTransport: chromecast.active ? chromecast.transport : null,
+                    seriesInfo: player.seriesInfo
                 }
             });
         }
-    }, [streamingServer.baseUrl, player.selected, forceTranscoding, maxAudioChannels, casting]);
+    }, [streamingServer.baseUrl, player.selected, player.seriesInfo, forceTranscoding, maxAudioChannels, casting]);
     useDeepEqualEffect(() => {
         if (videoState.stream !== null) {
             dispatch({
