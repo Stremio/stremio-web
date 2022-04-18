@@ -155,9 +155,9 @@ const SubtitlesMenu = (props) => {
                     <div className={styles['languages-container']}>
                         <div className={styles['languages-header']}>Audio Languages</div>
                         <div className={styles['languages-list']}>
-                            {props.audioTracks.map(({ id, label }, index) => (
+                            {props.audioTracks.map(({ id, label, lang }, index) => (
                                 <Button key={index} title={label} className={classnames(styles['language-option'], { 'selected': props.selectedAudioTrackId === id })} data-id={id} onClick={audioTrackOnClick}>
-                                    <div className={styles['language-label']}>{label}</div>
+                                    <div className={styles['language-label']}>{typeof languageNames[lang] === 'string' ? languageNames[lang] : lang}</div>
                                     {
                                         props.selectedAudioTrackId === id ?
                                             <div className={styles['icon']} />
