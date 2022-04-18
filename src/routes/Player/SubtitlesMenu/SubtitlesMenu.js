@@ -172,7 +172,7 @@ const SubtitlesMenu = (props) => {
                     null
             }
             <div className={styles['languages-container']}>
-                <div className={styles['languages-header']}>Languages</div>
+                <div className={styles['languages-header']}>Subtitles Languages</div>
                 <div className={styles['languages-list']}>
                     <Button title={'Off'} className={classnames(styles['language-option'], { 'selected': selectedSubtitlesLanguage === null })} onClick={subtitlesLanguageOnClick}>
                         <div className={styles['language-label']}>Off</div>
@@ -197,7 +197,7 @@ const SubtitlesMenu = (props) => {
                 </div>
             </div>
             <div className={styles['variants-container']}>
-                <div className={styles['variants-header']}>Variants</div>
+                <div className={styles['variants-header']}>Subtitles Variants</div>
                 {
                     subtitlesTracksForLanguage.length > 0 ?
                         <div className={styles['variants-list']}>
@@ -222,7 +222,7 @@ const SubtitlesMenu = (props) => {
                 }
             </div>
             <div className={styles['subtitles-settings-container']}>
-                <div className={styles['settings-header']}>Settings</div>
+                <div className={styles['settings-header']}>Subtitles Settings</div>
                 <DiscreteSelectInput
                     className={styles['discrete-input']}
                     label={'Delay'}
