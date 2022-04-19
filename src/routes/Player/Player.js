@@ -224,7 +224,7 @@ const Player = ({ urlParams, queryParams }) => {
         setError(null);
         if (player.selected === null) {
             dispatch({ type: 'command', commandName: 'unload' });
-        } else if (streamingServer.baseUrl !== null && streamingServer.baseUrl.type !== 'Loading') {
+        } else if (streamingServer.baseUrl !== null && streamingServer.baseUrl.type !== 'Loading' && player.metaItem !== null && player.metaItem.type !== 'Loading') {
             dispatch({
                 type: 'command',
                 commandName: 'load',
@@ -264,7 +264,7 @@ const Player = ({ urlParams, queryParams }) => {
                 }
             });
         }
-    }, [streamingServer.baseUrl, player.selected, player.seriesInfo, forceTranscoding, maxAudioChannels, casting]);
+    }, [streamingServer.baseUrl, player.selected, player.metaItem && player.metaItem.type, forceTranscoding, maxAudioChannels, casting]);
     useDeepEqualEffect(() => {
         if (videoState.stream !== null) {
             dispatch({
@@ -312,7 +312,7 @@ const Player = ({ urlParams, queryParams }) => {
         }
     }, [videoState.audioTracks, videoState.subtitlesTracks, videoState.extraSubtitlesTracks]);
     React.useEffect(() => {
-        if (player.metaItem === null) {
+        if (player.metaItem === null || player.metaItem.type !== 'Ready') {
             closeInfoMenu();
         }
     }, [player]);
@@ -405,7 +405,7 @@ const Player = ({ urlParams, queryParams }) => {
                 }
                 case 'KeyI': {
                     closeSubtitlesMenu();
-                    if (player.metaItem !== null) {
+                    if (player.metaItem !== null && player.metaItem.type === 'Ready') {
                         toggleInfoMenu();
                     }
 
@@ -500,7 +500,7 @@ const Player = ({ urlParams, queryParams }) => {
                 muted={videoState.muted}
                 subtitlesTracks={videoState.subtitlesTracks.concat(videoState.extraSubtitlesTracks)}
                 audioTracks={videoState.audioTracks}
-                infoAvailable={player.metaItem !== null}
+                metaItem={player.metaItem}
                 onPlayRequested={onPlayRequested}
                 onPauseRequested={onPauseRequested}
                 onMuteRequested={onMuteRequested}
@@ -545,7 +545,7 @@ const Player = ({ urlParams, queryParams }) => {
                         className={classnames(styles['layer'], styles['menu-layer'])}
                         stream={player.selected !== null ? player.selected.stream : null}
                         addon={player.addon}
-                        metaItem={player.metaItem}
+                        metaItem={player.metaItem !== null && player.metaItem.type === 'Ready' ? player.metaItem.content : null}
                     />
                     :
                     null

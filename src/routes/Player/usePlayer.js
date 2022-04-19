@@ -18,27 +18,30 @@ const init = () => ({
 
 const map = (player) => ({
     ...player,
-    metaItem: player.metaItem !== null ?
+    metaItem: player.metaItem !== null && player.metaItem.type === 'Ready' ?
         {
             ...player.metaItem,
-            released: new Date(
-                typeof player.metaItem.released === 'string' ?
-                    player.metaItem.released
-                    :
-                    NaN
-            ),
-            videos: player.metaItem.videos.map((video) => ({
-                ...video,
+            content: {
+                ...player.metaItem.content,
                 released: new Date(
-                    typeof video.released === 'string' ?
-                        video.released
+                    typeof player.metaItem.content.released === 'string' ?
+                        player.metaItem.content.released
                         :
                         NaN
                 ),
-            }))
+                videos: player.metaItem.content.videos.map((video) => ({
+                    ...video,
+                    released: new Date(
+                        typeof video.released === 'string' ?
+                            video.released
+                            :
+                            NaN
+                    ),
+                }))
+            }
         }
         :
-        null,
+        player.metaItem,
 });
 
 const usePlayer = (urlParams) => {
