@@ -113,7 +113,7 @@ const Player = ({ urlParams, queryParams }) => {
         } else {
             window.history.back();
         }
-    }, [player]);
+    }, [player.libraryItem, player.nextVideo]);
     const onError = React.useCallback((error) => {
         console.error('Player', error);
         if (error.critical) {
@@ -315,7 +315,7 @@ const Player = ({ urlParams, queryParams }) => {
         if (player.metaItem === null || player.metaItem.type !== 'Ready') {
             closeInfoMenu();
         }
-    }, [player]);
+    }, [player.metaItem]);
     React.useEffect(() => {
         const intervalId = setInterval(() => {
             pushToLibrary();
@@ -424,7 +424,7 @@ const Player = ({ urlParams, queryParams }) => {
         return () => {
             window.removeEventListener('keydown', onKeyDown);
         };
-    }, [player, settings.seekTimeDuration, routeFocused, subtitlesMenuOpen, infoMenuOpen, videoState.paused, videoState.time, videoState.volume, videoState.audioTracks, videoState.subtitlesTracks, videoState.extraSubtitlesTracks, toggleSubtitlesMenu, toggleInfoMenu]);
+    }, [player.metaItem, settings.seekTimeDuration, routeFocused, subtitlesMenuOpen, infoMenuOpen, videoState.paused, videoState.time, videoState.volume, videoState.audioTracks, videoState.subtitlesTracks, videoState.extraSubtitlesTracks, toggleSubtitlesMenu, toggleInfoMenu]);
     React.useLayoutEffect(() => {
         return () => {
             setImmersedDebounced.cancel();
