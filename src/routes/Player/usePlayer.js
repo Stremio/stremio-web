@@ -9,7 +9,7 @@ const init = () => ({
     selected: null,
     metaItem: null,
     subtitles: [],
-    nextVideoDeepLinks: null,
+    nextVideo: null,
     seriesInfo: null,
     libraryItem: null,
     title: null,
