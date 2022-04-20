@@ -6,7 +6,7 @@ const classnames = require('classnames');
 const debounce = require('lodash.debounce');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
-const { HorizontalNavBar, Button, useDeepEqualEffect, useFullscreen, useBinaryState, useToast, useStreamingServer } = require('stremio/common');
+const { HorizontalNavBar, Button, useFullscreen, useBinaryState, useToast, useStreamingServer } = require('stremio/common');
 const Icon = require('@stremio/stremio-icons/dom');
 const BufferingLoader = require('./BufferingLoader');
 const ControlBar = require('./ControlBar');
@@ -220,7 +220,7 @@ const Player = ({ urlParams, queryParams }) => {
     const onBarMouseMove = React.useCallback((event) => {
         event.nativeEvent.immersePrevented = true;
     }, []);
-    useDeepEqualEffect(() => {
+    React.useEffect(() => {
         setError(null);
         if (player.selected === null) {
             dispatch({ type: 'command', commandName: 'unload' });
@@ -264,8 +264,8 @@ const Player = ({ urlParams, queryParams }) => {
                 }
             });
         }
-    }, [streamingServer.baseUrl, player.selected, player.metaItem && player.metaItem.type, forceTranscoding, maxAudioChannels, casting]);
-    useDeepEqualEffect(() => {
+    }, [streamingServer.baseUrl, player.selected, player.metaItem, forceTranscoding, maxAudioChannels, casting]);
+    React.useEffect(() => {
         if (videoState.stream !== null) {
             dispatch({
                 type: 'command',
