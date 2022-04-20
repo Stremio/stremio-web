@@ -15,7 +15,7 @@ const LANGUAGE_PRIORITIES = {
     'eng': 1
 };
 
-const SubtitlesMenu = (props) => {
+const SubtitlesMenu = React.memo((props) => {
     const subtitlesLanguages = React.useMemo(() => {
         return (Array.isArray(props.subtitlesTracks) ? props.subtitlesTracks : [])
             .concat(Array.isArray(props.extraSubtitlesTracks) ? props.extraSubtitlesTracks : [])
@@ -281,7 +281,9 @@ const SubtitlesMenu = (props) => {
             </div>
         </div>
     );
-};
+});
+
+SubtitlesMenu.displayName = 'MainNavBars';
 
 SubtitlesMenu.propTypes = {
     className: PropTypes.string,
