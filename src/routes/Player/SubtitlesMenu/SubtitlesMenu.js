@@ -8,8 +8,8 @@ const DiscreteSelectInput = require('./DiscreteSelectInput');
 const styles = require('./styles');
 
 const ORIGIN_PRIORITIES = {
-    'EMBEDDED': 1,
-    'EXCLUSIVE': 2
+    'EMBEDDED': 2,
+    'EXCLUSIVE': 1
 };
 const LANGUAGE_PRIORITIES = {
     'eng': 1
