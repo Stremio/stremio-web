@@ -328,19 +328,19 @@ const Player = ({ urlParams, queryParams }) => {
         const onCastStateChange = () => {
             setCasting(chromecast.active && chromecast.transport.getCastState() === cast.framework.CastState.CONNECTED);
         };
-        const onChromecastStateChange = () => {
+        const onChromecastServiceStateChange = () => {
+            onCastStateChange();
             if (chromecast.active) {
                 chromecast.transport.on(
                     cast.framework.CastContextEventType.CAST_STATE_CHANGED,
                     onCastStateChange
                 );
-                onCastStateChange();
             }
         };
-        chromecast.on('stateChanged', onChromecastStateChange);
-        onChromecastStateChange();
+        chromecast.on('stateChanged', onChromecastServiceStateChange);
+        onChromecastServiceStateChange();
         return () => {
-            chromecast.off('stateChanged', onChromecastStateChange);
+            chromecast.off('stateChanged', onChromecastServiceStateChange);
             if (chromecast.active) {
                 chromecast.transport.off(
                     cast.framework.CastContextEventType.CAST_STATE_CHANGED,
