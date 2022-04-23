@@ -77,8 +77,7 @@ function Chromecast() {
         starting = false;
         onStateChanged();
         if (transport !== null) {
-            transport.off('init', onTransportInit);
-            transport.off('error', onTransportError);
+            transport.removeAllListeners();
             transport = null;
         }
     };
