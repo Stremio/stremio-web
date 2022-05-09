@@ -63,6 +63,7 @@ const MetaDetails = ({ urlParams, queryParams }) => {
     const seasonOnSelect = React.useCallback((event) => {
         setSeason(event.value);
     }, [setSeason]);
+    const renderBackgroundImageFallback = React.useCallback(() => null, []);
     return (
         <div className={styles['metadetails-container']}>
             <HorizontalNavBar
@@ -113,6 +114,7 @@ const MetaDetails = ({ urlParams, queryParams }) => {
                                                     <Image
                                                         className={styles['background-image']}
                                                         src={metaDetails.metaItem.content.content.background}
+                                                        renderFallback={renderBackgroundImageFallback}
                                                         alt={' '}
                                                     />
                                                 </div>
