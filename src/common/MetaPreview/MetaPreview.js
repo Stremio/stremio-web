@@ -164,7 +164,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                         null
                 }
                 {
-                    typeof description === 'string' && description.length > 0 ?
+                    compact && typeof description === 'string' && description.length > 0 ?
                         <div className={styles['description-container']}>{description}</div>
                         :
                         null
@@ -173,7 +173,8 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                     Array.from(linksGroups.keys())
                         .filter((category) => {
                             return category !== CONSTANTS.IMDB_LINK_CATEGORY &&
-                                category !== CONSTANTS.SHARE_LINK_CATEGORY;
+                                category !== CONSTANTS.SHARE_LINK_CATEGORY &&
+                                category !== CONSTANTS.WRITERS_LINK_CATEGORY;
                         })
                         .map((category, index) => (
                             <MetaLinks
