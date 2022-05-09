@@ -18,7 +18,8 @@ const ControlBar = ({
     volume,
     muted,
     subtitlesTracks,
-    infoAvailable,
+    audioTracks,
+    metaItem,
     onPlayRequested,
     onPauseRequested,
     onMuteRequested,
@@ -114,13 +115,13 @@ const ControlBar = ({
                 <Button className={classnames(styles['control-bar-button'], 'disabled')} tabIndex={-1}>
                     <Icon className={styles['icon']} icon={'ic_network'} />
                 </Button>
-                <Button className={classnames(styles['control-bar-button'], { 'disabled': !infoAvailable })} tabIndex={-1} onMouseDown={onInfoButtonMouseDown} onClick={onInfoButtonClick}>
+                <Button className={classnames(styles['control-bar-button'], { 'disabled': metaItem === null || metaItem.type !== 'Ready' })} tabIndex={-1} onMouseDown={onInfoButtonMouseDown} onClick={onInfoButtonClick}>
                     <Icon className={styles['icon']} icon={'ic_info'} />
                 </Button>
                 <Button className={classnames(styles['control-bar-button'], { 'disabled': !chromecastServiceActive })} tabIndex={-1} onClick={onChromecastButtonClick}>
                     <Icon className={styles['icon']} icon={'ic_cast'} />
                 </Button>
-                <Button className={classnames(styles['control-bar-button'], { 'disabled': !Array.isArray(subtitlesTracks) || subtitlesTracks.length === 0 })} tabIndex={-1} onMouseDown={onSubtitlesButtonMouseDown} onClick={onSubtitlesButtonClick}>
+                <Button className={classnames(styles['control-bar-button'], { 'disabled': (!Array.isArray(subtitlesTracks) || subtitlesTracks.length === 0) && (!Array.isArray(audioTracks) || audioTracks.length === 0) })} tabIndex={-1} onMouseDown={onSubtitlesButtonMouseDown} onClick={onSubtitlesButtonClick}>
                     <Icon className={styles['icon']} icon={'ic_sub'} />
                 </Button>
                 <Button className={classnames(styles['control-bar-button'], 'disabled')} tabIndex={-1}>
@@ -139,7 +140,8 @@ ControlBar.propTypes = {
     volume: PropTypes.number,
     muted: PropTypes.bool,
     subtitlesTracks: PropTypes.array,
-    infoAvailable: PropTypes.bool,
+    audioTracks: PropTypes.array,
+    metaItem: PropTypes.object,
     onPlayRequested: PropTypes.func,
     onPauseRequested: PropTypes.func,
     onMuteRequested: PropTypes.func,
