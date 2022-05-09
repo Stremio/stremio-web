@@ -174,7 +174,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                         .filter((category) => {
                             return category !== CONSTANTS.IMDB_LINK_CATEGORY &&
                                 category !== CONSTANTS.SHARE_LINK_CATEGORY &&
-                                category !== 'Writers';
+                                category !== CONSTANTS.WRITERS_LINK_CATEGORY;
                         })
                         .map((category, index) => (
                             <MetaLinks

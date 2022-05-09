@@ -11,6 +11,7 @@ const SKIP_EXTRA_NAME = 'skip';
 const META_LINK_CATEGORY = 'meta';
 const IMDB_LINK_CATEGORY = 'imdb';
 const SHARE_LINK_CATEGORY = 'share';
+const WRITERS_LINK_CATEGORY = 'Writers';
 const TYPE_PRIORITIES = {
     movie: 10,
     series: 9,
@@ -37,5 +38,6 @@ module.exports = {
     META_LINK_CATEGORY,
     IMDB_LINK_CATEGORY,
     SHARE_LINK_CATEGORY,
+    WRITERS_LINK_CATEGORY,
     TYPE_PRIORITIES
 };
