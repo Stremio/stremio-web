@@ -1,4 +1,4 @@
-// Copyright (C) 2017-2020 Smart code 203358507
+// Copyright (C) 2017-2022 Smart code 203358507
 
 const EventEmitter = require('eventemitter3');
 const CoreTransport = require('./CoreTransport');
@@ -77,8 +77,7 @@ function Core() {
         starting = false;
         onStateChanged();
         if (transport !== null) {
-            transport.off('init', onTransportInit);
-            transport.off('error', onTransportError);
+            transport.removeAllListeners();
             transport = null;
         }
     };

@@ -1,4 +1,4 @@
-// Copyright (C) 2017-2020 Smart code 203358507
+// Copyright (C) 2017-2022 Smart code 203358507
 
 const React = require('react');
 const PropTypes = require('prop-types');
@@ -92,16 +92,9 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
 
         return trailerStreams[0].deepLinks.player;
     }, [trailerStreams]);
-    const logoFallback = ({ currentTarget }) => {
-        currentTarget.onerror = null; // detach handler
-        if (compact) {
-            // replace with blank png
-            currentTarget.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
-        } else {
-            // show img.alt without broken image icon
-            currentTarget.className = styles['missing'];
-        }
-    };
+    const renderLogoFallback = React.useCallback(() => (
+        <div className={styles['logo-placeholder']}>{!compact ? name : null}</div>
+    ), [compact, name]);
     return (
         <div className={classnames(className, styles['meta-preview-container'], { [styles['compact']]: compact })}>
             {
@@ -113,14 +106,18 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                     null
             }
             <div className={styles['meta-info-container']}>
-                <div className={styles['logo-holder']}>
-                    <Image
-                        className={styles['logo']}
-                        src={logo || ''}
-                        alt={name}
-                        onError={logoFallback}
-                    />
-                </div>
+                {
+                    typeof logo === 'string' && logo.length > 0 ?
+                        <Image
+                            className={styles['logo']}
+                            src={logo}
+                            alt={' '}
+                            title={name}
+                            renderFallback={renderLogoFallback}
+                        />
+                        :
+                        null
+                }
                 {
                     (typeof releaseInfo === 'string' && releaseInfo.length > 0) || (released instanceof Date && !isNaN(released.getTime())) || (typeof runtime === 'string' && runtime.length > 0) || linksGroups.has(CONSTANTS.IMDB_LINK_CATEGORY) ?
                         <div className={styles['runtime-release-info-container']}>

@@ -1,4 +1,4 @@
-// Copyright (C) 2017-2020 Smart code 203358507
+// Copyright (C) 2017-2022 Smart code 203358507
 
 const React = require('react');
 const PropTypes = require('prop-types');
@@ -63,12 +63,15 @@ const MetaDetails = ({ urlParams, queryParams }) => {
     const seasonOnSelect = React.useCallback((event) => {
         setSeason(event.value);
     }, [setSeason]);
+    const renderBackgroundImageFallback = React.useCallback(() => null, []);
     return (
         <div className={styles['metadetails-container']}>
             <HorizontalNavBar
                 className={styles['nav-bar']}
                 backButton={true}
-                title={metaDetails.title}
+                addonsButton={true}
+                fullscreenButton={true}
+                navMenu={true}
             />
             <div className={styles['metadetails-content']}>
                 {
@@ -111,6 +114,7 @@ const MetaDetails = ({ urlParams, queryParams }) => {
                                                     <Image
                                                         className={styles['background-image']}
                                                         src={metaDetails.metaItem.content.content.background}
+                                                        renderFallback={renderBackgroundImageFallback}
                                                         alt={' '}
                                                     />
                                                 </div>

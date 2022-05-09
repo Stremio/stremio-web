@@ -1,11 +1,11 @@
-// Copyright (C) 2017-2020 Smart code 203358507
+// Copyright (C) 2017-2022 Smart code 203358507
 
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('@stremio/stremio-icons/dom');
 const { useServices } = require('stremio/services');
-const { AddonDetailsModal, Button, MainNavBars, MetaItem, Image, MetaPreview, Multiselect, ModalDialog, PaginationInput, CONSTANTS, useBinaryState, useDeepEqualEffect } = require('stremio/common');
+const { AddonDetailsModal, Button, MainNavBars, MetaItem, Image, MetaPreview, Multiselect, ModalDialog, PaginationInput, CONSTANTS, useBinaryState } = require('stremio/common');
 const useDiscover = require('./useDiscover');
 const useSelectableInputs = require('./useSelectableInputs');
 const styles = require('./styles');
@@ -62,11 +62,17 @@ const Discover = ({ urlParams, queryParams }) => {
             event.currentTarget.focus();
         }
     }, [selectedMetaItemIndex]);
-    useDeepEqualEffect(() => {
+    React.useEffect(() => {
         closeInputsModal();
         closeAddonModal();
         setSelectedMetaItemIndex(0);
     }, [discover.selected]);
+    const metaItemsContainerRef = React.useRef();
+    React.useEffect(() => {
+        if (discover.catalog?.content.type === 'Loading') {
+            metaItemsContainerRef.current.scrollTop = 0;
+        }
+    }, [discover.catalog]);
     return (
         <MainNavBars className={styles['discover-container']} route={'discover'}>
             <div className={styles['discover-content']}>
@@ -124,7 +130,7 @@ const Discover = ({ urlParams, queryParams }) => {
                                 </div>
                                 :
                                 discover.catalog.content.type === 'Loading' ?
-                                    <div className={styles['meta-items-container']}>
+                                    <div ref={metaItemsContainerRef} className={styles['meta-items-container']}>
                                         {Array(CONSTANTS.CATALOG_PAGE_SIZE).fill(null).map((_, index) => (
                                             <div key={index} className={styles['meta-item-placeholder']}>
                                                 <div className={styles['poster-container']} />
@@ -135,7 +141,7 @@ const Discover = ({ urlParams, queryParams }) => {
                                         ))}
                                     </div>
                                     :
-                                    <div className={styles['meta-items-container']} onFocusCapture={metaItemsOnFocusCapture}>
+                                    <div ref={metaItemsContainerRef} className={styles['meta-items-container']} onFocusCapture={metaItemsOnFocusCapture}>
                                         {discover.catalog.content.content.map((metaItem, index) => (
                                             <MetaItem
                                                 key={index}
