@@ -69,9 +69,9 @@ const Player = ({ urlParams, queryParams }) => {
         }
     );
     const videoRef = React.useRef(null);
-    const dispatch = React.useCallback((args) => {
+    const dispatch = React.useCallback((action, options) => {
         if (videoRef.current !== null) {
-            videoRef.current.dispatch(args);
+            videoRef.current.dispatch(action, options);
         }
     }, []);
     const onImplementationChanged = React.useCallback((manifest) => {
@@ -259,9 +259,10 @@ const Player = ({ urlParams, queryParams }) => {
                             streamingServer.selected.transportUrl
                         :
                         null,
-                    chromecastTransport: chromecast.active ? chromecast.transport : null,
                     seriesInfo: player.seriesInfo
                 }
+            }, {
+                chromecastTransport: chromecast.active ? chromecast.transport : null,
             });
         }
     }, [streamingServer.baseUrl, player.selected, player.metaItem, forceTranscoding, maxAudioChannels, casting]);
