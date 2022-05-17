@@ -27,19 +27,15 @@
             height: 100%;
             overflow-y: auto;
 
-            .board-rows-window {
-                position: relative;
-                width: 100%;
+            .board-row {
+                margin: 4rem 2rem;
 
-                .board-row-container {
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
+                &:first-child {
+                    margin-top: 2rem;
+                }
 
-                    .board-row {
-                        padding: 2rem;
-                    }
+                &:last-child {
+                    margin-bottom: 2rem;
                 }
             }
         }
