@@ -5,7 +5,7 @@ const React = require('react');
 const { Router } = require('stremio-router');
 const { Core, Shell, Chromecast, KeyboardShortcuts, ServicesProvider } = require('stremio/services');
 const { NotFound } = require('stremio/routes');
-const { ToastProvider, sanitizeLocationPath, CONSTANTS } = require('stremio/common');
+const { ToastProvider, AnimationSyncProvider, sanitizeLocationPath, CONSTANTS } = require('stremio/common');
 const CoreEventsToaster = require('./CoreEventsToaster');
 const routerViewsConfig = require('./routerViewsConfig');
 const styles = require('./styles');
@@ -87,14 +87,16 @@ const App = () => {
             <ServicesProvider services={services}>
                 {
                     coreInitialized && shellInitialized ?
-                        <ToastProvider className={styles['toasts-container']}>
-                            <CoreEventsToaster />
-                            <Router
-                                className={styles['router']}
-                                viewsConfig={routerViewsConfig}
-                                onPathNotMatch={onPathNotMatch}
-                            />
-                        </ToastProvider>
+                        <AnimationSyncProvider>
+                            <ToastProvider className={styles['toasts-container']}>
+                                <CoreEventsToaster />
+                                <Router
+                                    className={styles['router']}
+                                    viewsConfig={routerViewsConfig}
+                                    onPathNotMatch={onPathNotMatch}
+                                />
+                            </ToastProvider>
+                        </AnimationSyncProvider>
                         :
                         <div className={styles['app-loader']} />
                 }

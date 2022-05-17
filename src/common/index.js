@@ -1,6 +1,7 @@
 // Copyright (C) 2017-2020 Smart code 203358507
 
 const AddonDetailsModal = require('./AddonDetailsModal');
+const { AnimationSyncProvider, useAnimationSync } = require('./AnimationSync');
 const Button = require('./Button');
 const Checkbox = require('./Checkbox');
 const ColorInput = require('./ColorInput');
@@ -40,6 +41,7 @@ const useStreamingServer = require('./useStreamingServer');
 
 module.exports = {
     AddonDetailsModal,
+    AnimationSyncProvider,
     Button,
     Checkbox,
     ColorInput,
@@ -68,6 +70,7 @@ module.exports = {
     languageNames,
     routesRegexp,
     sanitizeLocationPath,
+    useAnimationSync,
     useAnimationFrame,
     useBinaryState,
     useDeepEqualEffect,

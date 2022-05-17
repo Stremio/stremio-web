@@ -1,14 +1,13 @@
 .shimmer {
     mask: linear-gradient(white, white);
 
-    &::before {
-        content: " ";
-        position: absolute;
+    .effect {
+        position: fixed;
         top: 0;
         bottom: 0;
         left: 0;
         right: 0;
-        background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.1) 80%, rgba(255, 255, 255, 0) 100%);
+        background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.1) 80%, transparent 100%);
         animation: shimmer 2.5s infinite;
     }
 }
