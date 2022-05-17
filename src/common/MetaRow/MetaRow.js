@@ -10,9 +10,9 @@ const CONSTANTS = require('stremio/common/CONSTANTS');
 const MetaRowPlaceholder = require('./MetaRowPlaceholder');
 const styles = require('./styles');
 
-const MetaRow = ({ className, title, message, items, itemComponent, deepLinks }) => {
+const MetaRow = ({ className, title, message, items, itemComponent, deepLinks, ...props }) => {
     return (
-        <div className={classnames(className, styles['meta-row-container'])}>
+        <div {...props} className={classnames(className, styles['meta-row-container'])}>
             {
                 (typeof title === 'string' && title.length > 0) || (deepLinks && (typeof deepLinks.discover === 'string' || typeof deepLinks.library === 'string')) ?
                     <div className={styles['header-container']}>

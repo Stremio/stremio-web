@@ -8,9 +8,9 @@ const Button = require('stremio/common/Button');
 const CONSTANTS = require('stremio/common/CONSTANTS');
 const styles = require('./styles');
 
-const MetaRowPlaceholder = ({ className, title, deepLinks }) => {
+const MetaRowPlaceholder = ({ className, title, deepLinks, ...props }) => {
     return (
-        <div className={classnames(className, styles['meta-row-placeholder-container'])}>
+        <div {...props} className={classnames(className, styles['meta-row-placeholder-container'])}>
             <div className={styles['header-container']}>
                 <div className={styles['title-container']} title={typeof title === 'string' && title.length > 0 ? title : null}>
                     {typeof title === 'string' && title.length > 0 ? title : null}
