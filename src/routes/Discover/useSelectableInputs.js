@@ -1,4 +1,4 @@
-// Copyright (C) 2017-2020 Smart code 203358507
+// Copyright (C) 2017-2022 Smart code 203358507
 
 const React = require('react');
 
@@ -49,17 +49,24 @@ const mapSelectableInputs = (discover) => {
         isRequired: isRequired,
         options: options.map(({ value, deepLinks }) => ({
             label: typeof value === 'string' ? value : 'None',
-            value: deepLinks.discover
+            value: JSON.stringify({
+                href: deepLinks.discover,
+                value
+            })
         })),
         selected: options
             .filter(({ selected }) => selected)
-            .map(({ deepLinks }) => deepLinks.discover),
+            .map(({ value, deepLinks }) => JSON.stringify({
+                href: deepLinks.discover,
+                value
+            })),
         renderLabelText: options.some(({ selected, value }) => selected && value === null) ?
             () => `Select ${name}`
             :
             null,
         onSelect: (event) => {
-            window.location = event.value;
+            const { href } = JSON.parse(event.value);
+            window.location = href;
         }
     }));
     const paginationInput = discover.selectable.prevPage || discover.selectable.nextPage ?

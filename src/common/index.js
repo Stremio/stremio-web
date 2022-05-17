@@ -1,4 +1,4 @@
-// Copyright (C) 2017-2020 Smart code 203358507
+// Copyright (C) 2017-2022 Smart code 203358507
 
 const AddonDetailsModal = require('./AddonDetailsModal');
 const { AnimationSyncProvider, useAnimationSync } = require('./AnimationSync');
@@ -18,6 +18,7 @@ const PaginationInput = require('./PaginationInput');
 const PlayIconCircleCentered = require('./PlayIconCircleCentered');
 const Popup = require('./Popup');
 const SearchBar = require('./SearchBar');
+const StreamingServerWarning = require('./StreamingServerWarning');
 const SharePrompt = require('./SharePrompt');
 const ShimmerEffect = require('./ShimmerEffect');
 const Slider = require('./Slider');
@@ -59,6 +60,7 @@ module.exports = {
     PlayIconCircleCentered,
     Popup,
     SearchBar,
+    StreamingServerWarning,
     SharePrompt,
     ShimmerEffect,
     Slider,

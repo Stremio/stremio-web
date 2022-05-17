@@ -1,4 +1,4 @@
-// Copyright (C) 2017-2020 Smart code 203358507
+// Copyright (C) 2017-2022 Smart code 203358507
 
 const React = require('react');
 const classnames = require('classnames');
@@ -27,6 +27,7 @@ const Settings = () => {
         subtitlesTextColorInput,
         subtitlesBackgroundColorInput,
         subtitlesOutlineColorInput,
+        seekTimeDurationSelect,
         bingeWatchingCheckbox,
         playInBackgroundCheckbox,
         playInExternalPlayerCheckbox,
@@ -301,6 +302,15 @@ const Settings = () => {
                             <ColorInput
                                 className={classnames(styles['option-input-container'], styles['color-input-container'])}
                                 {...subtitlesOutlineColorInput}
+                            />
+                        </div>
+                        <div className={styles['option-container']}>
+                            <div className={styles['option-name-container']}>
+                                <div className={styles['label']}>Rewind & Fast-forward duration</div>
+                            </div>
+                            <Multiselect
+                                className={classnames(styles['option-input-container'], styles['multiselect-container'])}
+                                {...seekTimeDurationSelect}
                             />
                         </div>
                         <div className={styles['option-container']}>

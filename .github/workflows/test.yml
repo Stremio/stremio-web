@@ -6,11 +6,11 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-    - name: Install NPM dependencies
-      run: npm install
-    - name: Test
-      run: npm test
-    - name: Lint
-      run: npm run lint
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install NPM dependencies
+        run: npm install
+      - name: Test
+        run: npm test
+      - name: Lint
+        run: npm run lint

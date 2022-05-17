@@ -1,7 +1,7 @@
-// Copyright (C) 2017-2020 Smart code 203358507
+// Copyright (C) 2017-2022 Smart code 203358507
 
 const EventEmitter = require('eventemitter3');
-const { default: initialize_api, initialize_runtime, get_state, dispatch, analytics } = require('@stremio/stremio-core-web');
+const { default: initialize_api, initialize_runtime, get_state, get_debug_state, dispatch, analytics } = require('@stremio/stremio-core-web');
 
 function CoreTransport() {
     const events = new EventEmitter();
@@ -31,8 +31,14 @@ function CoreTransport() {
     this.off = function(name, listener) {
         events.off(name, listener);
     };
+    this.removeAllListeners = function() {
+        events.removeAllListeners();
+    };
     this.getState = function(field) {
         return get_state(field);
+    };
+    this.getDebugState = function() {
+        return get_debug_state();
     };
     this.dispatch = function(action, field) {
         try {

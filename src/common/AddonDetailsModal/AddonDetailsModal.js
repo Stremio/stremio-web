@@ -1,88 +1,114 @@
-// Copyright (C) 2017-2020 Smart code 203358507
+// Copyright (C) 2017-2022 Smart code 203358507
 
 const React = require('react');
 const PropTypes = require('prop-types');
 const ModalDialog = require('stremio/common/ModalDialog');
 const { useServices } = require('stremio/services');
-const AddonDetails = require('./AddonDetails');
+const AddonDetailsWithRemoteAndLocalAddon = withRemoteAndLocalAddon(require('./AddonDetails'));
 const useAddonDetails = require('./useAddonDetails');
 const styles = require('./styles');
+
+function withRemoteAndLocalAddon(AddonDetails) {
+    const withRemoteAndLocalAddon = ({ remoteAddon, localAddon, ...props }) => {
+        const addon = remoteAddon !== null && remoteAddon.content.type === 'Ready' ?
+            remoteAddon.content.content
+            :
+            localAddon !== null ?
+                localAddon
+                :
+                null;
+        if (addon === null) {
+            return null;
+        }
+
+        return (
+            <AddonDetails
+                {...props}
+                id={addon.manifest.id}
+                name={addon.manifest.name}
+                version={addon.manifest.version}
+                logo={addon.manifest.logo}
+                description={addon.manifest.description}
+                types={addon.manifest.types}
+                transportUrl={addon.transportUrl}
+                official={addon.flags.official}
+            />
+        );
+    };
+    withRemoteAndLocalAddon.displayName = 'withRemoteAndLocalAddon';
+    return withRemoteAndLocalAddon;
+}
 
 const AddonDetailsModal = ({ transportUrl, onCloseRequest }) => {
     const { core } = useServices();
     const addonDetails = useAddonDetails(transportUrl);
     const modalButtons = React.useMemo(() => {
-        if (addonDetails.remoteAddon === null || addonDetails.remoteAddon.content.type !== 'Ready') {
-            return null;
-        }
-
-        const cancelOnClick = (event) => {
-            if (typeof onCloseRequest === 'function') {
-                onCloseRequest({
-                    type: 'cancel',
-                    reactEvent: event,
-                    nativeEvent: event.nativeEvent
-                });
-            }
-        };
-        const installOnClick = (event) => {
-            core.transport.dispatch({
-                action: 'Ctx',
-                args: {
-                    action: 'InstallAddon',
-                    args: addonDetails.remoteAddon.content.content
-                }
-            });
-            if (typeof onCloseRequest === 'function') {
-                onCloseRequest({
-                    type: 'install',
-                    reactEvent: event,
-                    nativeEvent: event.nativeEvent
-                });
-            }
-        };
-        const uninstallOnClick = (event) => {
-            core.transport.dispatch({
-                action: 'Ctx',
-                args: {
-                    action: 'UninstallAddon',
-                    args: addonDetails.remoteAddon.content.content
-                }
-            });
-            if (typeof onCloseRequest === 'function') {
-                onCloseRequest({
-                    type: 'uninstall',
-                    reactEvent: event,
-                    nativeEvent: event.nativeEvent
-                });
-            }
-        };
-        return [
-            {
-                className: styles['cancel-button'],
-                label: 'Cancel',
-                props: {
-                    onClick: cancelOnClick
-                }
-            },
-            addonDetails.localAddon !== null ?
-                {
-                    className: styles['uninstall-button'],
-                    label: 'Uninstall',
-                    props: {
-                        onClick: uninstallOnClick
+        const cancelButton = {
+            className: styles['cancel-button'],
+            label: 'Cancel',
+            props: {
+                onClick: (event) => {
+                    if (typeof onCloseRequest === 'function') {
+                        onCloseRequest({
+                            type: 'cancel',
+                            reactEvent: event,
+                            nativeEvent: event.nativeEvent
+                        });
                     }
                 }
-                :
+            }
+        };
+        const toggleButton = addonDetails.localAddon !== null ?
+            {
+                className: styles['uninstall-button'],
+                label: 'Uninstall',
+                props: {
+                    onClick: (event) => {
+                        core.transport.dispatch({
+                            action: 'Ctx',
+                            args: {
+                                action: 'UninstallAddon',
+                                args: addonDetails.localAddon
+                            }
+                        });
+                        if (typeof onCloseRequest === 'function') {
+                            onCloseRequest({
+                                type: 'uninstall',
+                                reactEvent: event,
+                                nativeEvent: event.nativeEvent
+                            });
+                        }
+                    }
+                }
+            }
+            :
+            addonDetails.remoteAddon !== null && addonDetails.remoteAddon.content.type === 'Ready' ?
                 {
 
                     className: styles['install-button'],
                     label: 'Install',
                     props: {
-                        onClick: installOnClick
+                        onClick: (event) => {
+                            core.transport.dispatch({
+                                action: 'Ctx',
+                                args: {
+                                    action: 'InstallAddon',
+                                    args: addonDetails.remoteAddon.content.content
+                                }
+                            });
+                            if (typeof onCloseRequest === 'function') {
+                                onCloseRequest({
+                                    type: 'install',
+                                    reactEvent: event,
+                                    nativeEvent: event.nativeEvent
+                                });
+                            }
+                        }
                     }
                 }
-        ];
+                :
+                null;
+        return toggleButton !== null ? [cancelButton, toggleButton] : [cancelButton];
     }, [addonDetails, onCloseRequest]);
     return (
         <ModalDialog className={styles['addon-details-modal-container']} title={'Stremio addon'} buttons={modalButtons} onCloseRequest={onCloseRequest}>
@@ -97,22 +123,16 @@ const AddonDetailsModal = ({ transportUrl, onCloseRequest }) => {
                             Loading addon manifest from {addonDetails.selected.transportUrl}
                         </div>
                         :
-                        addonDetails.remoteAddon.content.type === 'Err' ?
+                        addonDetails.remoteAddon.content.type === 'Err' && addonDetails.localAddon === null ?
                             <div className={styles['addon-details-message-container']}>
                                 Failed to get addon manifest from {addonDetails.selected.transportUrl}
                                 <div>{addonDetails.remoteAddon.content.content.message}</div>
                             </div>
                             :
-                            <AddonDetails
+                            <AddonDetailsWithRemoteAndLocalAddon
                                 className={styles['addon-details-container']}
-                                id={addonDetails.remoteAddon.content.content.manifest.id}
-                                name={addonDetails.remoteAddon.content.content.manifest.name}
-                                version={addonDetails.remoteAddon.content.content.manifest.version}
-                                logo={addonDetails.remoteAddon.content.content.manifest.logo}
-                                description={addonDetails.remoteAddon.content.content.manifest.description}
-                                types={addonDetails.remoteAddon.content.content.manifest.types}
-                                transportUrl={addonDetails.remoteAddon.content.content.transportUrl}
-                                official={addonDetails.remoteAddon.content.content.flags.official}
+                                remoteAddon={addonDetails.remoteAddon}
+                                localAddon={addonDetails.localAddon}
                             />
             }
         </ModalDialog>

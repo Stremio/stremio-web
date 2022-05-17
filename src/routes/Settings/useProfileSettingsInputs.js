@@ -1,4 +1,4 @@
-// Copyright (C) 2017-2020 Smart code 203358507
+// Copyright (C) 2017-2022 Smart code 203358507
 
 const { useServices } = require('stremio/services');
 const { CONSTANTS, languageNames, useDeepEqualMemo } = require('stremio/common');
@@ -110,6 +110,28 @@ const useProfileSettingsInputs = (profile) => {
             });
         }
     }), [profile.settings]);
+    const seekTimeDurationSelect = useDeepEqualMemo(() => ({
+        options: CONSTANTS.SEEK_TIME_DURATIONS.map((size) => ({
+            value: `${size}`,
+            label: `${size / 1000} seconds`
+        })),
+        selected: [`${profile.settings.seekTimeDuration}`],
+        renderLabelText: () => {
+            return `${profile.settings.seekTimeDuration / 1000} seconds`;
+        },
+        onSelect: (event) => {
+            core.transport.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'UpdateSettings',
+                    args: {
+                        ...profile.settings,
+                        seekTimeDuration: parseInt(event.value, 10)
+                    }
+                }
+            });
+        }
+    }), [profile.settings]);
     const bingeWatchingCheckbox = useDeepEqualMemo(() => ({
         checked: profile.settings.bingeWatching,
         onClick: () => {
@@ -192,6 +214,7 @@ const useProfileSettingsInputs = (profile) => {
         subtitlesTextColorInput,
         subtitlesBackgroundColorInput,
         subtitlesOutlineColorInput,
+        seekTimeDurationSelect,
         bingeWatchingCheckbox,
         playInBackgroundCheckbox,
         playInExternalPlayerCheckbox,

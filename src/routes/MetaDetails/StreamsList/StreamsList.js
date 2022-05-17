@@ -1,4 +1,4 @@
-// Copyright (C) 2017-2020 Smart code 203358507
+// Copyright (C) 2017-2022 Smart code 203358507
 
 const React = require('react');
 const PropTypes = require('prop-types');
@@ -56,7 +56,8 @@ const StreamsList = ({ className, ...props }) => {
                                     <Stream
                                         key={index}
                                         addonName={stream.addonName}
-                                        title={stream.title}
+                                        name={stream.name}
+                                        description={stream.description}
                                         thumbnail={stream.thumbnail}
                                         progress={stream.progress}
                                         deepLinks={stream.deepLinks}

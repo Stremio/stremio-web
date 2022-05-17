@@ -1,4 +1,4 @@
-// Copyright (C) 2017-2020 Smart code 203358507
+// Copyright (C) 2017-2022 Smart code 203358507
 
 const React = require('react');
 
@@ -14,7 +14,7 @@ const useAddonDetailsTransportUrl = (urlParams, queryParams) => {
             nextQueryParams.delete('addon');
         }
 
-        window.location = `#${urlParams.path}?${nextQueryParams}`;
+        window.location.replace(`#${urlParams.path}?${nextQueryParams}`);
     }, [urlParams, queryParams]);
     return [transportUrl, setTransportUrl];
 };

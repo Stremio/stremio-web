@@ -1,4 +1,4 @@
-// Copyright (C) 2017-2020 Smart code 203358507
+// Copyright (C) 2017-2022 Smart code 203358507
 
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
 
@@ -10,8 +10,9 @@
 
     &.compact {
         .meta-info-container {
-            .logo, .logo-placeholder-icon {
+            .logo, .logo-placeholder {
                 width: 100%;
+                height: 8rem;
                 background-color: @color-surface-dark5-10;
             }
 
@@ -82,20 +83,21 @@
             }
         }
 
-        .logo, .logo-placeholder-icon {
+        .logo, .logo-placeholder {
             display: block;
             max-width: 100%;
-            height: 8rem;
             margin: 2rem 0;
         }
 
         .logo {
+            height: 8rem;
             object-fit: contain;
             object-position: center;
         }
 
-        .logo-placeholder-icon {
-            fill: @color-surface-light1-90;
+        .logo-placeholder {
+            font-size: 1.7rem;
+            color: @color-surface-light5-90;
         }
 
         .runtime-release-info-container {
@@ -153,7 +155,7 @@
 
         .name-container {
             margin-top: 1rem;
-            font-size: 1.7rem;
+            font-size: 1.5rem;
             color: @color-surface-light5-90;
         }
 

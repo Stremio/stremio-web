@@ -1,4 +1,4 @@
-// Copyright (C) 2017-2020 Smart code 203358507
+// Copyright (C) 2017-2022 Smart code 203358507
 
 const React = require('react');
 const PropTypes = require('prop-types');
@@ -182,6 +182,7 @@ const Addons = ({ urlParams, queryParams }) => {
                             className={styles['addon-url-input']}
                             type={'text'}
                             placeholder={'Paste addon URL'}
+                            autoFocus={true}
                             onSubmit={addAddonOnSubmit}
                         />
                     </ModalDialog>

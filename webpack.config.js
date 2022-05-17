@@ -1,7 +1,7 @@
-// Copyright (C) 2017-2020 Smart code 203358507
+// Copyright (C) 2017-2022 Smart code 203358507
 
 const path = require('path');
-const child_process = require('child_process');
+const { execSync } = require('child_process');
 const webpack = require('webpack');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -10,10 +10,11 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const pachageJson = require('./package.json');
 
-const COMMIT_HASH = child_process.execSync('git rev-parse HEAD').toString().trim();
+const COMMIT_HASH = execSync('git rev-parse HEAD').toString().trim();
 
 module.exports = (env, argv) => ({
     mode: argv.mode,
+    devtool: argv.mode === 'production' ? 'source-map' : 'eval-source-map',
     entry: './src/index.js',
     output: {
         path: path.join(__dirname, 'build'),
@@ -45,10 +46,7 @@ module.exports = (env, argv) => ({
                     {
                         loader: MiniCssExtractPlugin.loader,
                         options: {
-                            esModule: false,
-                            modules: {
-                                namedExport: false
-                            }
+                            esModule: false
                         }
                     },
                     {
@@ -85,6 +83,7 @@ module.exports = (env, argv) => ({
                                                     removeAll: true,
                                                 },
                                                 discardOverridden: false,
+                                                discardUnused: false,
                                                 mergeIdents: false,
                                                 normalizeDisplayValues: false,
                                                 normalizePositions: false,
@@ -115,33 +114,24 @@ module.exports = (env, argv) => ({
             {
                 test: /\.ttf$/,
                 exclude: /node_modules/,
-                loader: 'file-loader',
-                options: {
-                    esModule: false,
-                    name: '[name].[ext]',
-                    outputPath: `${COMMIT_HASH}/fonts`,
-                    publicPath: `/${COMMIT_HASH}/fonts`
+                type: 'asset/resource',
+                generator: {
+                    filename: `${COMMIT_HASH}/fonts/[name][ext][query]`
                 }
             },
             {
                 test: /\.(png|jpe?g)$/,
                 exclude: /node_modules/,
-                loader: 'file-loader',
-                options: {
-                    esModule: false,
-                    name: '[name].[ext]',
-                    outputPath: `${COMMIT_HASH}/images`,
-                    publicPath: `/${COMMIT_HASH}/images`
+                type: 'asset/resource',
+                generator: {
+                    filename: `${COMMIT_HASH}/images/[name][ext][query]`
                 }
             },
             {
                 test: /\.wasm$/,
-                loader: 'file-loader',
-                options: {
-                    esModule: false,
-                    name: '[name].[ext]',
-                    outputPath: `${COMMIT_HASH}/binaries`,
-                    publicPath: `/${COMMIT_HASH}/binaries`
+                type: 'asset/resource',
+                generator: {
+                    filename: `${COMMIT_HASH}/binaries/[name][ext][query]`
                 }
             }
         ]
@@ -155,9 +145,8 @@ module.exports = (env, argv) => ({
     },
     devServer: {
         host: '0.0.0.0',
-        contentBase: false,
+        static: false,
         hot: false,
-        inline: false,
         https: true,
         liveReload: false
     },
@@ -189,6 +178,9 @@ module.exports = (env, argv) => ({
             VERSION: pachageJson.version,
             COMMIT_HASH
         }),
+        new webpack.ProvidePlugin({
+            Buffer: ['buffer', 'Buffer']
+        }),
         new CleanWebpackPlugin({
             cleanOnceBeforeBuildPatterns: ['*']
         }),
@@ -201,6 +193,7 @@ module.exports = (env, argv) => ({
         new HtmlWebPackPlugin({
             template: './src/index.html',
             inject: false,
+            scriptLoading: 'blocking',
             faviconsPath: `${COMMIT_HASH}/favicons`
         })
     ]

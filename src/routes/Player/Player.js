@@ -1,4 +1,4 @@
-// Copyright (C) 2017-2020 Smart code 203358507
+// Copyright (C) 2017-2022 Smart code 203358507
 
 const React = require('react');
 const PropTypes = require('prop-types');
@@ -6,7 +6,8 @@ const classnames = require('classnames');
 const debounce = require('lodash.debounce');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
-const { HorizontalNavBar, useDeepEqualEffect, useFullscreen, useBinaryState, useToast, useStreamingServer } = require('stremio/common');
+const { HorizontalNavBar, Button, useFullscreen, useBinaryState, useToast, useStreamingServer } = require('stremio/common');
+const Icon = require('@stremio/stremio-icons/dom');
 const BufferingLoader = require('./BufferingLoader');
 const ControlBar = require('./ControlBar');
 const InfoMenu = require('./InfoMenu');
@@ -18,8 +19,11 @@ const styles = require('./styles');
 
 const Player = ({ urlParams, queryParams }) => {
     const { core, chromecast } = useServices();
-    const forceTranscoding = React.useMemo(() => {
-        return queryParams.has('forceTranscoding');
+    const [forceTranscoding, maxAudioChannels] = React.useMemo(() => {
+        return [
+            queryParams.has('forceTranscoding'),
+            queryParams.has('maxAudioChannels') ? parseInt(queryParams.get('maxAudioChannels'), 10) : null
+        ];
     }, [queryParams]);
     const [player, updateLibraryItemState, pushToLibrary] = usePlayer(urlParams);
     const [settings, updateSettings] = useSettings();
@@ -45,8 +49,15 @@ const Player = ({ urlParams, queryParams }) => {
             buffering: null,
             volume: null,
             muted: null,
+            audioTracks: [],
+            selectedAudioTrackId: null,
             subtitlesTracks: [],
             selectedSubtitlesTrackId: null,
+            subtitlesOffset: null,
+            subtitlesSize: null,
+            subtitlesTextColor: null,
+            subtitlesBackgroundColor: null,
+            subtitlesOutlineColor: null,
             extraSubtitlesTracks: [],
             selectedExtraSubtitlesTrackId: null,
             extraSubtitlesSize: null,
@@ -58,15 +69,20 @@ const Player = ({ urlParams, queryParams }) => {
         }
     );
     const videoRef = React.useRef(null);
-    const dispatch = React.useCallback((args) => {
+    const dispatch = React.useCallback((action, options) => {
         if (videoRef.current !== null) {
-            videoRef.current.dispatch(args);
+            videoRef.current.dispatch(action, options);
         }
     }, []);
     const onImplementationChanged = React.useCallback((manifest) => {
         manifest.props.forEach((propName) => {
             dispatch({ type: 'observeProp', propName });
         });
+        dispatch({ type: 'setProp', propName: 'subtitlesSize', propValue: settings.subtitlesSize });
+        dispatch({ type: 'setProp', propName: 'subtitlesOffset', propValue: settings.subtitlesOffset });
+        dispatch({ type: 'setProp', propName: 'subtitlesTextColor', propValue: settings.subtitlesTextColor });
+        dispatch({ type: 'setProp', propName: 'subtitlesBackgroundColor', propValue: settings.subtitlesBackgroundColor });
+        dispatch({ type: 'setProp', propName: 'subtitlesOutlineColor', propValue: settings.subtitlesOutlineColor });
         dispatch({ type: 'setProp', propName: 'extraSubtitlesSize', propValue: settings.subtitlesSize });
         dispatch({ type: 'setProp', propName: 'extraSubtitlesOffset', propValue: settings.subtitlesOffset });
         dispatch({ type: 'setProp', propName: 'extraSubtitlesTextColor', propValue: settings.subtitlesTextColor });
@@ -97,7 +113,7 @@ const Player = ({ urlParams, queryParams }) => {
         } else {
             window.history.back();
         }
-    }, [player]);
+    }, [player.libraryItem, player.nextVideo]);
     const onError = React.useCallback((error) => {
         console.error('Player', error);
         if (error.critical) {
@@ -148,12 +164,15 @@ const Player = ({ urlParams, queryParams }) => {
         dispatch({ type: 'setProp', propName: 'time', propValue: time });
     }, []);
     const onSubtitlesTrackSelected = React.useCallback((id) => {
-        dispatch({ type: 'setProp', propName: 'selectedExtraSubtitlesTrackId', propValue: null });
         dispatch({ type: 'setProp', propName: 'selectedSubtitlesTrackId', propValue: id });
+        dispatch({ type: 'setProp', propName: 'selectedExtraSubtitlesTrackId', propValue: null });
     }, []);
     const onExtraSubtitlesTrackSelected = React.useCallback((id) => {
         dispatch({ type: 'setProp', propName: 'selectedSubtitlesTrackId', propValue: null });
         dispatch({ type: 'setProp', propName: 'selectedExtraSubtitlesTrackId', propValue: id });
+    }, []);
+    const onAudioTrackSelected = React.useCallback((id) => {
+        dispatch({ type: 'setProp', propName: 'selectedAudioTrackId', propValue: id });
     }, []);
     const onExtraSubtitlesDelayChanged = React.useCallback((delay) => {
         dispatch({ type: 'setProp', propName: 'extraSubtitlesDelay', propValue: delay });
@@ -201,11 +220,11 @@ const Player = ({ urlParams, queryParams }) => {
     const onBarMouseMove = React.useCallback((event) => {
         event.nativeEvent.immersePrevented = true;
     }, []);
-    useDeepEqualEffect(() => {
+    React.useEffect(() => {
         setError(null);
         if (player.selected === null) {
             dispatch({ type: 'command', commandName: 'unload' });
-        } else if (streamingServer.baseUrl !== null && streamingServer.baseUrl.type !== 'Loading') {
+        } else if (streamingServer.baseUrl !== null && streamingServer.baseUrl.type !== 'Loading' && player.metaItem !== null && player.metaItem.type !== 'Loading') {
             dispatch({
                 type: 'command',
                 commandName: 'load',
@@ -226,6 +245,13 @@ const Player = ({ urlParams, queryParams }) => {
                         :
                         0,
                     forceTranscoding: forceTranscoding || casting,
+                    maxAudioChannels: typeof maxAudioChannels === 'number' ?
+                        maxAudioChannels
+                        :
+                        window.chrome ?
+                            2
+                            :
+                            null,
                     streamingServerURL: streamingServer.baseUrl.type === 'Ready' ?
                         casting ?
                             streamingServer.baseUrl.content
@@ -233,12 +259,14 @@ const Player = ({ urlParams, queryParams }) => {
                             streamingServer.selected.transportUrl
                         :
                         null,
-                    chromecastTransport: chromecast.transport
+                    seriesInfo: player.seriesInfo
                 }
+            }, {
+                chromecastTransport: chromecast.active ? chromecast.transport : null,
             });
         }
-    }, [streamingServer.baseUrl, player.selected, forceTranscoding, casting]);
-    useDeepEqualEffect(() => {
+    }, [streamingServer.baseUrl, player.selected, player.metaItem, forceTranscoding, maxAudioChannels, casting]);
+    React.useEffect(() => {
         if (videoState.stream !== null) {
             dispatch({
                 type: 'command',
@@ -253,18 +281,23 @@ const Player = ({ urlParams, queryParams }) => {
         }
     }, [player.subtitles, videoState.stream]);
     React.useEffect(() => {
+        dispatch({ type: 'setProp', propName: 'subtitlesSize', propValue: settings.subtitlesSize });
         dispatch({ type: 'setProp', propName: 'extraSubtitlesSize', propValue: settings.subtitlesSize });
     }, [settings.subtitlesSize]);
     React.useEffect(() => {
+        dispatch({ type: 'setProp', propName: 'subtitlesOffset', propValue: settings.subtitlesOffset });
         dispatch({ type: 'setProp', propName: 'extraSubtitlesOffset', propValue: settings.subtitlesOffset });
     }, [settings.subtitlesOffset]);
     React.useEffect(() => {
+        dispatch({ type: 'setProp', propName: 'subtitlesTextColor', propValue: settings.subtitlesTextColor });
         dispatch({ type: 'setProp', propName: 'extraSubtitlesTextColor', propValue: settings.subtitlesTextColor });
     }, [settings.subtitlesTextColor]);
     React.useEffect(() => {
+        dispatch({ type: 'setProp', propName: 'subtitlesBackgroundColor', propValue: settings.subtitlesBackgroundColor });
         dispatch({ type: 'setProp', propName: 'extraSubtitlesBackgroundColor', propValue: settings.subtitlesBackgroundColor });
     }, [settings.subtitlesBackgroundColor]);
     React.useEffect(() => {
+        dispatch({ type: 'setProp', propName: 'subtitlesOutlineColor', propValue: settings.subtitlesOutlineColor });
         dispatch({ type: 'setProp', propName: 'extraSubtitlesOutlineColor', propValue: settings.subtitlesOutlineColor });
     }, [settings.subtitlesOutlineColor]);
     React.useEffect(() => {
@@ -273,15 +306,17 @@ const Player = ({ urlParams, queryParams }) => {
         }
     }, [videoState.time, videoState.duration]);
     React.useEffect(() => {
-        if (!Array.isArray(videoState.subtitlesTracks) || videoState.subtitlesTracks.length === 0) {
+        if ((!Array.isArray(videoState.subtitlesTracks) || videoState.subtitlesTracks.length === 0) &&
+            (!Array.isArray(videoState.extraSubtitlesTracks) || videoState.extraSubtitlesTracks.length === 0) &&
+            (!Array.isArray(videoState.audioTracks) || videoState.audioTracks.length === 0)) {
             closeSubtitlesMenu();
         }
-    }, [videoState.subtitlesTracks]);
+    }, [videoState.audioTracks, videoState.subtitlesTracks, videoState.extraSubtitlesTracks]);
     React.useEffect(() => {
-        if (player.metaItem === null) {
+        if (player.metaItem === null || player.metaItem.type !== 'Ready') {
             closeInfoMenu();
         }
-    }, [player]);
+    }, [player.metaItem]);
     React.useEffect(() => {
         const intervalId = setInterval(() => {
             pushToLibrary();
@@ -294,19 +329,19 @@ const Player = ({ urlParams, queryParams }) => {
         const onCastStateChange = () => {
             setCasting(chromecast.active && chromecast.transport.getCastState() === cast.framework.CastState.CONNECTED);
         };
-        const onChromecastStateChange = () => {
+        const onChromecastServiceStateChange = () => {
+            onCastStateChange();
             if (chromecast.active) {
                 chromecast.transport.on(
                     cast.framework.CastContextEventType.CAST_STATE_CHANGED,
                     onCastStateChange
                 );
-                onCastStateChange();
             }
         };
-        chromecast.on('stateChanged', onChromecastStateChange);
-        onChromecastStateChange();
+        chromecast.on('stateChanged', onChromecastServiceStateChange);
+        onChromecastServiceStateChange();
         return () => {
-            chromecast.off('stateChanged', onChromecastStateChange);
+            chromecast.off('stateChanged', onChromecastServiceStateChange);
             if (chromecast.active) {
                 chromecast.transport.off(
                     cast.framework.CastContextEventType.CAST_STATE_CHANGED,
@@ -331,14 +366,16 @@ const Player = ({ urlParams, queryParams }) => {
                 }
                 case 'ArrowRight': {
                     if (!subtitlesMenuOpen && !infoMenuOpen && videoState.time !== null) {
-                        onSeekRequested(videoState.time + 15000);
+                        const seekTimeMultiplier = event.shiftKey ? 3 : 1;
+                        onSeekRequested(videoState.time + (settings.seekTimeDuration * seekTimeMultiplier));
                     }
 
                     break;
                 }
                 case 'ArrowLeft': {
                     if (!subtitlesMenuOpen && !infoMenuOpen && videoState.time !== null) {
-                        onSeekRequested(videoState.time - 15000);
+                        const seekTimeMultiplier = event.shiftKey ? 3 : 1;
+                        onSeekRequested(videoState.time - (settings.seekTimeDuration * seekTimeMultiplier));
                     }
 
                     break;
@@ -359,7 +396,9 @@ const Player = ({ urlParams, queryParams }) => {
                 }
                 case 'KeyS': {
                     closeInfoMenu();
-                    if (Array.isArray(videoState.subtitlesTracks) && videoState.subtitlesTracks.length > 0) {
+                    if ((Array.isArray(videoState.subtitlesTracks) && videoState.subtitlesTracks.length > 0) ||
+                        (Array.isArray(videoState.extraSubtitlesTracks) && videoState.extraSubtitlesTracks.length > 0) ||
+                        (Array.isArray(videoState.audioTracks) && videoState.audioTracks.length > 0)) {
                         toggleSubtitlesMenu();
                     }
 
@@ -367,7 +406,7 @@ const Player = ({ urlParams, queryParams }) => {
                 }
                 case 'KeyI': {
                     closeSubtitlesMenu();
-                    if (player.metaItem !== null) {
+                    if (player.metaItem !== null && player.metaItem.type === 'Ready') {
                         toggleInfoMenu();
                     }
 
@@ -386,7 +425,7 @@ const Player = ({ urlParams, queryParams }) => {
         return () => {
             window.removeEventListener('keydown', onKeyDown);
         };
-    }, [player, routeFocused, subtitlesMenuOpen, infoMenuOpen, videoState.paused, videoState.time, videoState.volume, videoState.subtitlesTracks, toggleSubtitlesMenu, toggleInfoMenu]);
+    }, [player.metaItem, settings.seekTimeDuration, routeFocused, subtitlesMenuOpen, infoMenuOpen, videoState.paused, videoState.time, videoState.volume, videoState.audioTracks, videoState.subtitlesTracks, videoState.extraSubtitlesTracks, toggleSubtitlesMenu, toggleInfoMenu]);
     React.useLayoutEffect(() => {
         return () => {
             setImmersedDebounced.cancel();
@@ -415,18 +454,30 @@ const Player = ({ urlParams, queryParams }) => {
                 videoState.buffering ?
                     <BufferingLoader className={styles['layer']} />
                     :
-                    error !== null ?
-                        <div className={classnames(styles['layer'], styles['error-layer'])}>
-                            <div className={styles['error-label']}>{error.message}</div>
-                        </div>
-                        :
-                        null
+                    null
             }
             <div
                 className={styles['layer']}
                 onClick={onVideoClick}
                 onDoubleClick={onVideoDoubleClick}
             />
+            {
+                error !== null ?
+                    <div className={classnames(styles['layer'], styles['error-layer'])}>
+                        <div className={styles['error-label']} title={error.message}>{error.message}</div>
+                        {
+                            player.selected !== null ?
+                                <Button {...player.selected.stream.deepLinks.externalPlayer} className={styles['playlist-button']} title={'Open in external player'} target={'_blank'}>
+                                    <Icon className={styles['icon']} icon={'ic_downloads'} />
+                                    <div className={styles['label']}>Open in external player</div>
+                                </Button>
+                                :
+                                null
+                        }
+                    </div>
+                    :
+                    null
+            }
             {
                 subtitlesMenuOpen || infoMenuOpen ?
                     <div className={styles['layer']} />
@@ -449,7 +500,8 @@ const Player = ({ urlParams, queryParams }) => {
                 volume={videoState.volume}
                 muted={videoState.muted}
                 subtitlesTracks={videoState.subtitlesTracks.concat(videoState.extraSubtitlesTracks)}
-                infoAvailable={player.metaItem !== null}
+                audioTracks={videoState.audioTracks}
+                metaItem={player.metaItem}
                 onPlayRequested={onPlayRequested}
                 onPauseRequested={onPauseRequested}
                 onMuteRequested={onMuteRequested}
@@ -465,18 +517,25 @@ const Player = ({ urlParams, queryParams }) => {
                 subtitlesMenuOpen ?
                     <SubtitlesMenu
                         className={classnames(styles['layer'], styles['menu-layer'])}
-                        tracks={videoState.subtitlesTracks}
-                        selectedTrackId={videoState.selectedSubtitlesTrackId}
-                        extraTracks={videoState.extraSubtitlesTracks}
-                        selectedExtraTrackId={videoState.selectedExtraSubtitlesTrackId}
-                        extraDelay={videoState.extraSubtitlesDelay}
-                        extraSize={videoState.extraSubtitlesSize}
-                        extraOffset={videoState.extraSubtitlesOffset}
-                        onTrackSelected={onSubtitlesTrackSelected}
-                        onExtraTrackSelected={onExtraSubtitlesTrackSelected}
-                        onExtraDelayChanged={onExtraSubtitlesDelayChanged}
-                        onExtraSizeChanged={onSubtitlesSizeChanged}
-                        onExtraOffsetChanged={onSubtitlesOffsetChanged}
+                        audioTracks={videoState.audioTracks}
+                        selectedAudioTrackId={videoState.selectedAudioTrackId}
+                        subtitlesTracks={videoState.subtitlesTracks}
+                        selectedSubtitlesTrackId={videoState.selectedSubtitlesTrackId}
+                        subtitlesOffset={videoState.subtitlesOffset}
+                        subtitlesSize={videoState.subtitlesSize}
+                        extraSubtitlesTracks={videoState.extraSubtitlesTracks}
+                        selectedExtraSubtitlesTrackId={videoState.selectedExtraSubtitlesTrackId}
+                        extraSubtitlesOffset={videoState.extraSubtitlesOffset}
+                        extraSubtitlesDelay={videoState.extraSubtitlesDelay}
+                        extraSubtitlesSize={videoState.extraSubtitlesSize}
+                        onSubtitlesTrackSelected={onSubtitlesTrackSelected}
+                        onExtraSubtitlesTrackSelected={onExtraSubtitlesTrackSelected}
+                        onAudioTrackSelected={onAudioTrackSelected}
+                        onSubtitlesOffsetChanged={onSubtitlesOffsetChanged}
+                        onSubtitlesSizeChanged={onSubtitlesSizeChanged}
+                        onExtraSubtitlesOffsetChanged={onSubtitlesOffsetChanged}
+                        onExtraSubtitlesDelayChanged={onExtraSubtitlesDelayChanged}
+                        onExtraSubtitlesSizeChanged={onSubtitlesSizeChanged}
                     />
                     :
                     null
@@ -487,7 +546,7 @@ const Player = ({ urlParams, queryParams }) => {
                         className={classnames(styles['layer'], styles['menu-layer'])}
                         stream={player.selected !== null ? player.selected.stream : null}
                         addon={player.addon}
-                        metaItem={player.metaItem}
+                        metaItem={player.metaItem !== null && player.metaItem.type === 'Ready' ? player.metaItem.content : null}
                     />
                     :
                     null

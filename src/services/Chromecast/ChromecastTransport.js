@@ -1,4 +1,4 @@
-// Copyright (C) 2017-2020 Smart code 203358507
+// Copyright (C) 2017-2022 Smart code 203358507
 
 const EventEmitter = require('eventemitter3');
 
@@ -47,7 +47,6 @@ function ChromecastTransport() {
         .then(() => {
             try {
                 events.emit('init');
-
             } catch (error) {
                 console.error('ChromecastTransport', error);
             }
@@ -106,6 +105,9 @@ function ChromecastTransport() {
     };
     this.off = function(name, listener) {
         events.off(name, listener);
+    };
+    this.removeAllListeners = function() {
+        events.removeAllListeners();
     };
     this.getCastState = function() {
         return cast.framework.CastContext.getInstance().getCastState();

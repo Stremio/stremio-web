@@ -8,25 +8,27 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-    - name: Install NPM dependencies
-      run: npm install
-    - name: Build
-      run: npm run build
-    - name: Zip build artifact
-      run: zip -r stremio-web.zip ./build
-    - name: Upload build artifact to GitHub release assets
-      uses: svenstaro/upload-release-action@v1-release
-      with:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: stremio-web.zip
-        asset_name: stremio-web.zip
-        tag: ${{ github.ref }}
-        overwrite: true
-    - name: Upload build artifact to Netlify
-      run: |
-        curl -H "Content-Type: application/zip" \
-             -H "Authorization: Bearer ${{ secrets.netlify_access_token }}" \
-             --data-binary "@stremio-web.zip" \
-             https://api.netlify.com/api/v1/sites/stremio-development.netlify.com/deploys
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install NPM dependencies
+        run: npm install
+      - name: Build
+        env:
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+        run: npm run build
+      - name: Zip build artifact
+        run: zip -r stremio-web.zip ./build
+      - name: Upload build artifact to GitHub release assets
+        uses: svenstaro/upload-release-action@v1-release
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: stremio-web.zip
+          asset_name: stremio-web.zip
+          tag: ${{ github.ref }}
+          overwrite: true
+      - name: Upload build artifact to Netlify
+        run: |
+          curl -H "Content-Type: application/zip" \
+               -H "Authorization: Bearer ${{ secrets.netlify_access_token }}" \
+               --data-binary "@stremio-web.zip" \
+               https://api.netlify.com/api/v1/sites/stremio-development.netlify.com/deploys
