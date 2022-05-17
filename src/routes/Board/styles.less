@@ -25,16 +25,21 @@
         .board-content {
             width: 100%;
             height: 100%;
+            overflow-y: auto;
 
-            .board-row {
-                padding: 2rem;
+            .board-rows-window {
+                position: relative;
+                width: 100%;
 
-                &:first-child {
-                    padding-top: 2rem;
-                }
+                .board-row-container {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
 
-                &:last-child {
-                    padding-bottom: 2rem;
+                    .board-row {
+                        padding: 2rem;
+                    }
                 }
             }
         }
