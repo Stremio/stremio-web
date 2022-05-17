@@ -106,6 +106,9 @@ function ChromecastTransport() {
     this.off = function(name, listener) {
         events.off(name, listener);
     };
+    this.removeAllListeners = function() {
+        events.removeAllListeners();
+    };
     this.getCastState = function() {
         return cast.framework.CastContext.getInstance().getCastState();
     };
