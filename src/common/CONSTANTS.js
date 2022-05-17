@@ -1,4 +1,4 @@
-// Copyright (C) 2017-2020 Smart code 203358507
+// Copyright (C) 2017-2022 Smart code 203358507
 
 const CHROMECAST_RECEIVER_APP_ID = '1634F54B';
 const SUBTITLES_SIZES = [75, 100, 125, 150, 175, 200, 250];
@@ -11,6 +11,7 @@ const SKIP_EXTRA_NAME = 'skip';
 const META_LINK_CATEGORY = 'meta';
 const IMDB_LINK_CATEGORY = 'imdb';
 const SHARE_LINK_CATEGORY = 'share';
+const WRITERS_LINK_CATEGORY = 'Writers';
 const TYPE_PRIORITIES = {
     movie: 10,
     series: 9,
@@ -37,5 +38,6 @@ module.exports = {
     META_LINK_CATEGORY,
     IMDB_LINK_CATEGORY,
     SHARE_LINK_CATEGORY,
+    WRITERS_LINK_CATEGORY,
     TYPE_PRIORITIES
 };

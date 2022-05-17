@@ -1,4 +1,4 @@
-// Copyright (C) 2017-2020 Smart code 203358507
+// Copyright (C) 2017-2022 Smart code 203358507
 
 const React = require('react');
 const PropTypes = require('prop-types');
@@ -93,8 +93,8 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
         return trailerStreams[0].deepLinks.player;
     }, [trailerStreams]);
     const renderLogoFallback = React.useCallback(() => (
-        <Icon className={styles['logo-placeholder-icon']} icon={'ic_broken_link'} />
-    ), []);
+        <div className={styles['logo-placeholder']}>{!compact ? name : null}</div>
+    ), [compact, name]);
     return (
         <div className={classnames(className, styles['meta-preview-container'], { [styles['compact']]: compact })}>
             {
@@ -112,6 +112,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                             className={styles['logo']}
                             src={logo}
                             alt={' '}
+                            title={name}
                             renderFallback={renderLogoFallback}
                         />
                         :
@@ -155,7 +156,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                         null
                 }
                 {
-                    typeof name === 'string' && name.length > 0 ?
+                    compact && typeof name === 'string' && name.length > 0 ?
                         <div className={styles['name-container']}>
                             {name}
                         </div>
@@ -163,7 +164,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                         null
                 }
                 {
-                    typeof description === 'string' && description.length > 0 ?
+                    compact && typeof description === 'string' && description.length > 0 ?
                         <div className={styles['description-container']}>{description}</div>
                         :
                         null
@@ -172,7 +173,8 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                     Array.from(linksGroups.keys())
                         .filter((category) => {
                             return category !== CONSTANTS.IMDB_LINK_CATEGORY &&
-                                category !== CONSTANTS.SHARE_LINK_CATEGORY;
+                                category !== CONSTANTS.SHARE_LINK_CATEGORY &&
+                                category !== CONSTANTS.WRITERS_LINK_CATEGORY;
                         })
                         .map((category, index) => (
                             <MetaLinks

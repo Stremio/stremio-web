@@ -1,11 +1,11 @@
-// Copyright (C) 2017-2020 Smart code 203358507
+// Copyright (C) 2017-2022 Smart code 203358507
 
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('@stremio/stremio-icons/dom');
 const { useServices } = require('stremio/services');
-const { AddonDetailsModal, Button, MainNavBars, MetaItem, Image, MetaPreview, Multiselect, ModalDialog, PaginationInput, CONSTANTS, useBinaryState, useDeepEqualEffect } = require('stremio/common');
+const { AddonDetailsModal, Button, MainNavBars, MetaItem, Image, MetaPreview, Multiselect, ModalDialog, PaginationInput, CONSTANTS, useBinaryState } = require('stremio/common');
 const useDiscover = require('./useDiscover');
 const useSelectableInputs = require('./useSelectableInputs');
 const styles = require('./styles');
@@ -62,7 +62,7 @@ const Discover = ({ urlParams, queryParams }) => {
             event.currentTarget.focus();
         }
     }, [selectedMetaItemIndex]);
-    useDeepEqualEffect(() => {
+    React.useEffect(() => {
         closeInputsModal();
         closeAddonModal();
         setSelectedMetaItemIndex(0);
@@ -70,7 +70,7 @@ const Discover = ({ urlParams, queryParams }) => {
     const metaItemsContainerRef = React.useRef();
     React.useEffect(() => {
         if (discover.catalog?.content.type === 'Loading') {
-            metaItemsContainerRef.current.scrollTo(0, 0);
+            metaItemsContainerRef.current.scrollTop = 0;
         }
     }, [discover.catalog]);
     return (

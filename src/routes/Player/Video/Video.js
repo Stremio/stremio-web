@@ -1,4 +1,4 @@
-// Copyright (C) 2017-2020 Smart code 203358507
+// Copyright (C) 2017-2022 Smart code 203358507
 
 const React = require('react');
 const PropTypes = require('prop-types');
@@ -17,10 +17,13 @@ const Video = React.forwardRef(({ className, ...props }, ref) => {
     const onImplementationChangedRef = useLiveRef(props.onImplementationChanged);
     const videoElementRef = React.useRef(null);
     const videoRef = React.useRef(null);
-    const dispatch = React.useCallback((action) => {
+    const dispatch = React.useCallback((action, options = {}) => {
         if (videoRef.current !== null) {
             try {
-                videoRef.current.dispatch(action);
+                videoRef.current.dispatch(action, {
+                    ...options,
+                    containerElement: videoElementRef.current
+                });
             } catch (error) {
                 console.error('Video', error);
             }
@@ -29,7 +32,7 @@ const Video = React.forwardRef(({ className, ...props }, ref) => {
     React.useImperativeHandle(ref, () => ({ dispatch }), []);
     React.useEffect(() => {
         if (videoElementRef.current !== null) {
-            videoRef.current = new StremioVideo({ containerElement: videoElementRef.current });
+            videoRef.current = new StremioVideo();
             videoRef.current.on('ended', () => {
                 if (typeof onEndedRef.current === 'function') {
                     onEndedRef.current();
