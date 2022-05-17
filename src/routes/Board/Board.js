@@ -8,7 +8,7 @@ const useContinueWatchingPreview = require('./useContinueWatchingPreview');
 const styles = require('./styles');
 
 const Board = () => {
-    const board = useBoard();
+    const [board] = useBoard();
     const profile = useProfile();
     const streamingServer = useStreamingServer();
     const continueWatchingPreview = useContinueWatchingPreview();
