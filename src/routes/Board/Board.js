@@ -11,14 +11,28 @@ const styles = require('./styles');
 const Board = () => {
     const profile = useProfile();
     const streamingServer = useStreamingServer();
-    const board = useBoard();
+    const [board, loadBoardCatalogs] = useBoard();
     const continueWatchingPreview = useContinueWatchingPreview();
     const boardCatalogsOffset = continueWatchingPreview.libraryItems.length > 0 ? 1 : 0;
     const scrollContainerRef = React.useRef();
     const virtualizer = useVirtual({
-        size: board.catalogs.length + boardCatalogsOffset,
         parentRef: scrollContainerRef,
+        size: board.catalogs.length + boardCatalogsOffset,
+        overscan: 1
     });
+    React.useEffect(() => {
+        if (virtualizer.virtualItems.length === 0) {
+            return;
+        }
+
+        const start = Math.max(0, virtualizer.virtualItems[0].index - boardCatalogsOffset);
+        const end = virtualizer.virtualItems[virtualizer.virtualItems.length - 1].index - boardCatalogsOffset;
+        if (end < start) {
+            return;
+        }
+
+        loadBoardCatalogs(start, end);
+    }, [virtualizer.virtualItems, boardCatalogsOffset]);
     return (
         <div className={styles['board-container']}>
             <MainNavBars className={styles['board-content-container']} route={'board'}>
