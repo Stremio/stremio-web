@@ -1,7 +1,6 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
 const React = require('react');
-const debounce = require('lodash.debounce');
 const { useServices } = require('stremio/services');
 const { useModelState } = require('stremio/common');
 
@@ -19,15 +18,15 @@ const useBoard = () => {
             args: { extra: [] }
         }
     }), []);
-    const loadRange = React.useCallback(debounce((start, end) => {
+    const loadRange = React.useCallback((range) => {
         core.transport.dispatch({
             action: 'CatalogsWithExtra',
             args: {
                 action: 'LoadRange',
-                args: { start, end }
+                args: range
             }
         }, 'board');
-    }, 100), []);
+    }, []);
     const board = useModelState({ model: 'board', timeout: 1500, action, init });
     return [board, loadRange];
 };
