@@ -30,7 +30,6 @@
         "react": "16.12.0",
         "react-dom": "16.12.0",
         "react-focus-lock": "2.2.1",
-        "react-window": "1.8.7",
         "spatial-navigation-polyfill": "git+https://git@github.com/Stremio/spatial-navigation.git#40204ad9942fe786794c62f99ea5ab2b52b24096"
     },
     "devDependencies": {
