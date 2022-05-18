@@ -8,9 +8,9 @@ const Button = require('stremio/common/Button');
 const CONSTANTS = require('stremio/common/CONSTANTS');
 const styles = require('./styles');
 
-const MetaRowPlaceholder = React.forwardRef(({ className, title, deepLinks, ...props }, ref) => {
+const MetaRowPlaceholder = ({ className, title, deepLinks }) => {
     return (
-        <div {...props} ref={ref} className={classnames(className, styles['meta-row-placeholder-container'])}>
+        <div className={classnames(className, styles['meta-row-placeholder-container'])}>
             <div className={styles['header-container']}>
                 <div className={styles['title-container']} title={typeof title === 'string' && title.length > 0 ? title : null}>
                     {typeof title === 'string' && title.length > 0 ? title : null}
@@ -37,9 +37,7 @@ const MetaRowPlaceholder = React.forwardRef(({ className, title, deepLinks, ...p
             </div>
         </div>
     );
-});
-
-MetaRowPlaceholder.displayName = 'MetaRowPlaceholder';
+};
 
 MetaRowPlaceholder.propTypes = {
     className: PropTypes.string,
