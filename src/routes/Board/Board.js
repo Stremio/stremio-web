@@ -52,7 +52,7 @@ const Board = () => {
                             null
                     }
                     {board.catalogs.map((catalog, index) => {
-                        switch (catalog.content.type) {
+                        switch (catalog.content?.type) {
                             case 'Ready': {
                                 return (
                                     <MetaRow
@@ -76,7 +76,7 @@ const Board = () => {
                                     />
                                 );
                             }
-                            case 'Loading': {
+                            default: {
                                 return (
                                     <MetaRow.Placeholder
                                         key={index}
