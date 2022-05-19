@@ -1,3 +1,5 @@
+// Copyright (C) 2017-2022 Smart code 203358507
+
 const isChildVisible = (container, element, threshold) => {
     const elementTop = element.offsetTop;
     const elementBottom = element.offsetTop + element.clientHeight;
