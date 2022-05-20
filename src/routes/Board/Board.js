@@ -2,20 +2,43 @@
 
 const React = require('react');
 const classnames = require('classnames');
-const { MainNavBars, MetaRow, LibItem, MetaItem, StreamingServerWarning, useProfile, useStreamingServer } = require('stremio/common');
+const debounce = require('lodash.debounce');
+const { MainNavBars, MetaRow, LibItem, MetaItem, StreamingServerWarning, useProfile, useStreamingServer, getVisibleChildrenRange } = require('stremio/common');
 const useBoard = require('./useBoard');
 const useContinueWatchingPreview = require('./useContinueWatchingPreview');
 const styles = require('./styles');
 
+const THRESHOLD = 300;
+
 const Board = () => {
-    const board = useBoard();
     const profile = useProfile();
     const streamingServer = useStreamingServer();
     const continueWatchingPreview = useContinueWatchingPreview();
+    const [board, loadBoardRows] = useBoard();
+    const boardCatalogsOffset = continueWatchingPreview.libraryItems.length > 0 ? 1 : 0;
+    const scrollContainerRef = React.useRef();
+    const onVisibleRangeChange = React.useCallback(() => {
+        const range = getVisibleChildrenRange(scrollContainerRef.current, THRESHOLD);
+        if (range === null) {
+            return;
+        }
+
+        const start = Math.max(0, range.start - boardCatalogsOffset);
+        const end = range.end - boardCatalogsOffset;
+        if (end < start) {
+            return;
+        }
+
+        loadBoardRows({ start, end });
+    }, [boardCatalogsOffset]);
+    const onScroll = React.useCallback(debounce(onVisibleRangeChange, 250), [onVisibleRangeChange]);
+    React.useLayoutEffect(() => {
+        onVisibleRangeChange();
+    }, [board.catalogs, onVisibleRangeChange]);
     return (
         <div className={styles['board-container']}>
             <MainNavBars className={styles['board-content-container']} route={'board'}>
-                <div className={styles['board-content']}>
+                <div ref={scrollContainerRef} className={styles['board-content']} onScroll={onScroll}>
                     {
                         continueWatchingPreview.libraryItems.length > 0 ?
                             <MetaRow
@@ -29,7 +52,7 @@ const Board = () => {
                             null
                     }
                     {board.catalogs.map((catalog, index) => {
-                        switch (catalog.content.type) {
+                        switch (catalog.content?.type) {
                             case 'Ready': {
                                 return (
                                     <MetaRow
@@ -53,7 +76,7 @@ const Board = () => {
                                     />
                                 );
                             }
-                            case 'Loading': {
+                            default: {
                                 return (
                                     <MetaRow.Placeholder
                                         key={index}

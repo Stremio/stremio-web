@@ -24,6 +24,7 @@ const TextInput = require('./TextInput');
 const { ToastProvider, useToast } = require('./Toast');
 const comparatorWithPriorities = require('./comparatorWithPriorities');
 const CONSTANTS = require('./CONSTANTS');
+const getVisibleChildrenRange = require('./getVisibleChildrenRange');
 const languageNames = require('./languageNames');
 const routesRegexp = require('./routesRegexp');
 const sanitizeLocationPath = require('./sanitizeLocationPath');
@@ -65,6 +66,7 @@ module.exports = {
     useToast,
     comparatorWithPriorities,
     CONSTANTS,
+    getVisibleChildrenRange,
     languageNames,
     routesRegexp,
     sanitizeLocationPath,

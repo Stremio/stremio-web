@@ -1,6 +1,7 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
 const React = require('react');
+const { useServices } = require('stremio/services');
 const { useModelState } = require('stremio/common');
 
 const init = () => ({
@@ -9,6 +10,7 @@ const init = () => ({
 });
 
 const useBoard = () => {
+    const { core } = useServices();
     const action = React.useMemo(() => ({
         action: 'Load',
         args: {
@@ -16,7 +18,17 @@ const useBoard = () => {
             args: { extra: [] }
         }
     }), []);
-    return useModelState({ model: 'board', timeout: 1500, action, init });
+    const loadRange = React.useCallback((range) => {
+        core.transport.dispatch({
+            action: 'CatalogsWithExtra',
+            args: {
+                action: 'LoadRange',
+                args: range
+            }
+        }, 'board');
+    }, []);
+    const board = useModelState({ model: 'board', timeout: 1500, action, init });
+    return [board, loadRange];
 };
 
 module.exports = useBoard;

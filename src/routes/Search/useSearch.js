@@ -54,7 +54,17 @@ const useSearch = (queryParams) => {
             };
         }
     }, [queryParams]);
-    return useModelState({ model: 'search', action, init });
+    const loadRange = React.useCallback((range) => {
+        core.transport.dispatch({
+            action: 'CatalogsWithExtra',
+            args: {
+                action: 'LoadRange',
+                args: range
+            }
+        }, 'search');
+    }, []);
+    const search = useModelState({ model: 'search', action, init });
+    return [search, loadRange];
 };
 
 module.exports = useSearch;
