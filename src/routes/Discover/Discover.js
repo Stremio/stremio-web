@@ -80,19 +80,17 @@ const Discover = ({ urlParams, queryParams }) => {
                     {
                         discover.defaultRequest ?
                             <div className={styles['selectable-inputs-container']}>
-                                <div className={styles['multiselect-inputs-container']}>
-                                    {selectInputs.map(({ title, options, selected, renderLabelText, onSelect }, index) => (
-                                        <Multiselect
-                                            key={index}
-                                            className={styles['select-input']}
-                                            title={title}
-                                            options={options}
-                                            selected={selected}
-                                            renderLabelText={renderLabelText}
-                                            onSelect={onSelect}
-                                        />
-                                    ))}
-                                </div>
+                                {selectInputs.map(({ title, options, selected, renderLabelText, onSelect }, index) => (
+                                    <Multiselect
+                                        key={index}
+                                        className={styles['select-input']}
+                                        title={title}
+                                        options={options}
+                                        selected={selected}
+                                        renderLabelText={renderLabelText}
+                                        onSelect={onSelect}
+                                    />
+                                ))}
                                 <Button className={styles['filter-container']} title={'All filters'} onClick={openInputsModal}>
                                     <Icon className={styles['filter-icon']} icon={'ic_filter'} />
                                 </Button>
@@ -188,19 +186,17 @@ const Discover = ({ urlParams, queryParams }) => {
             {
                 inputsModalOpen && discover.defaultRequest ?
                     <ModalDialog title={'Catalog filters'} className={styles['selectable-inputs-modal']} onCloseRequest={closeInputsModal}>
-                        <div className={styles['selectable-input-container']}>
-                            {selectInputs.map(({ title, options, selected, renderLabelText, onSelect }, index) => (
-                                <Multiselect
-                                    key={index}
-                                    className={styles['select-input']}
-                                    title={title}
-                                    options={options}
-                                    selected={selected}
-                                    renderLabelText={renderLabelText}
-                                    onSelect={onSelect}
-                                />
-                            ))}
-                        </div>
+                        {selectInputs.map(({ title, options, selected, renderLabelText, onSelect }, index) => (
+                            <Multiselect
+                                key={index}
+                                className={styles['select-input']}
+                                title={title}
+                                options={options}
+                                selected={selected}
+                                renderLabelText={renderLabelText}
+                                onSelect={onSelect}
+                            />
+                        ))}
                     </ModalDialog>
                     :
                     null

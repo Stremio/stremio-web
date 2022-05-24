@@ -180,23 +180,17 @@
 
 @media only screen and (max-width: @minimum) {
     .meta-item-container {
-        display: flex;
-        flex-direction: column;
-        gap: 0.75em;
-        padding: 0.5em;
-
-        .poster-container {
-            flex: auto;
-        }
+        padding: 0.5rem;
 
         .title-bar-container {
-            height: 2.5rem;
-            flex: auto;
-            align-items: flex-start;
+            margin-top: 0.5rem;
 
             .title-label {
                 padding-left: 0;
-                padding-right: 0 !important;
+
+                &:only-child {
+                    padding-right: 0;
+                }
             }
         }
     }

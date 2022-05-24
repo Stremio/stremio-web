@@ -33,7 +33,7 @@ const ControlBar = ({
 }) => {
     const { chromecast } = useServices();
     const [chromecastServiceActive, setChromecastServiceActive] = React.useState(() => chromecast.active);
-    const [buttonsMenuOpen,,, toogleButtonsMenu] = useBinaryState(false);
+    const [buttonsMenuOpen, , , toogleButtonsMenu] = useBinaryState(false);
     const onSubtitlesButtonMouseDown = React.useCallback((event) => {
         event.nativeEvent.subtitlesMenuClosePrevented = true;
     }, []);
@@ -115,7 +115,7 @@ const ControlBar = ({
                 />
                 <div className={styles['spacing']} />
                 <Button className={styles['control-bar-buttons-menu-button']} onClick={toogleButtonsMenu}>
-                    <Icon className={styles['icon']} icon="ic_more"/>
+                    <Icon className={styles['icon']} icon={'ic_more'} />
                 </Button>
                 <div className={classnames(styles['control-bar-buttons-menu-container'], { 'open': buttonsMenuOpen })}>
                     <Button className={classnames(styles['control-bar-button'], 'disabled')} tabIndex={-1}>

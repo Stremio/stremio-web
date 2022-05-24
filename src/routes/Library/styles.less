@@ -39,26 +39,19 @@
             padding: 1.5rem;
             overflow: visible;
 
-            .multiselect-inputs-container {
-                flex: auto;
-                display: flex;
-                flex-direction: row;
-                overflow: visible;
+            .select-input-container {
+                flex-grow: 0;
+                flex-shrink: 1;
+                flex-basis: 15rem;
+                height: 3.5rem;
 
-                .select-input-container {
-                    flex-grow: 0;
-                    flex-shrink: 1;
-                    flex-basis: 15rem;
-                    height: 3.5rem;
+                &:not(:last-child) {
+                    margin-right: 1.5rem;
+                }
 
-                    &:not(:last-child) {
-                        margin-right: 1.5rem;
-                    }
-
-                    .multiselect-menu-container {
-                        max-height: calc(3.2rem * 7);
-                        overflow: auto;
-                    }
+                .multiselect-menu-container {
+                    max-height: calc(3.2rem * 7);
+                    overflow: auto;
                 }
             }
 
@@ -115,10 +108,6 @@
                 .pagination-label {
                     width: 3rem;
                 }
-            }
-
-            .filters {
-                display: none;
             }
         }
 
@@ -201,17 +190,13 @@
         overflow: visible;
 
         .selectable-inputs-modal-content {
-            overflow-y: visible !important;
             overflow: visible;
 
-            .selectable-input-container {
-                display: flex;
-                gap: 1em;
-                flex-direction: column;
-                overflow: visible;
+            .select-input-container {
+                height: 3.5em;
 
-                .select-input-container {
-                    height: 3.5em;
+                &:not(:last-child) {
+                    margin-bottom: 1rem;
                 }
             }
         }
@@ -293,22 +278,9 @@
         .library-content {
             .selectable-inputs-container {
                 justify-content: space-between;
-                gap: 1em;
 
                 .select-input-container {
-                    flex-basis: 3.5em;
-
-                    &:not(:last-child) {
-                        margin-right: 0;
-                    }
-                }
-
-                .multiselect-inputs-container {
                     display: none;
-                }
-
-                .filter-container {
-                    display: flex;
                 }
 
                 .spacing {
@@ -317,6 +289,10 @@
 
                 .pagination-input {
                     margin-left: 0;
+                }
+
+                .filter-container {
+                    display: flex;
                 }
             }
 
