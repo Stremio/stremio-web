@@ -2,6 +2,7 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
+const filterInvalidDOMProps = require('filter-invalid-dom-props').default;
 const classnames = require('classnames');
 const Icon = require('@stremio/stremio-icons/dom');
 const Button = require('stremio/common/Button');
@@ -75,7 +76,7 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, playI
         <Icon className={styles['icon']} icon={'ic_more'} />
     ), []);
     return (
-        <Button title={name} href={href} {...props} className={classnames(className, styles['meta-item-container'], styles['poster-shape-poster'], styles[`poster-shape-${posterShape}`], { 'active': menuOpen })} onClick={metaItemOnClick}>
+        <Button title={name} href={href} {...filterInvalidDOMProps(props)} className={classnames(className, styles['meta-item-container'], styles['poster-shape-poster'], styles[`poster-shape-${posterShape}`], { 'active': menuOpen })} onClick={metaItemOnClick}>
             <div className={styles['poster-container']}>
                 <div className={styles['poster-image-layer']}>
                     <Image
