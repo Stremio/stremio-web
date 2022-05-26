@@ -7,6 +7,19 @@ const FocusLock = require('react-focus-lock').default;
 const { useRouteFocused } = require('stremio-router');
 const styles = require('./styles');
 
+const getAnchorElement = (element) => {
+    if (element === document.documentElement) {
+        return element;
+    }
+
+    const style = window.getComputedStyle(element);
+    if (style.overflowY.indexOf('auto') !== -1 || style.overflowY.indexOf('scroll') !== -1) {
+        return element;
+    }
+
+    return getAnchorElement(element.parentElement);
+};
+
 const Popup = ({ open, direction, renderLabel, renderMenu, dataset, onCloseRequest, ...props }) => {
     const routeFocused = useRouteFocused();
     const labelRef = React.useRef(null);
@@ -49,14 +62,16 @@ const Popup = ({ open, direction, renderLabel, renderMenu, dataset, onCloseReque
     React.useLayoutEffect(() => {
         if (open) {
             const autoDirection = [];
-            const documentRect = document.documentElement.getBoundingClientRect();
+            const anchor = getAnchorElement(labelRef.current);
+            const anchorRect = anchor.getBoundingClientRect();
+
             const labelRect = labelRef.current.getBoundingClientRect();
             const menuRect = menuRef.current.getBoundingClientRect();
             const labelPosition = {
-                left: labelRect.left - documentRect.left,
-                top: labelRect.top - documentRect.top,
-                right: (documentRect.width + documentRect.left) - (labelRect.left + labelRect.width),
-                bottom: (documentRect.height + documentRect.top) - (labelRect.top + labelRect.height)
+                left: labelRect.left - anchorRect.left,
+                top: labelRect.top - anchorRect.top,
+                right: (anchorRect.width + anchorRect.left) - (labelRect.left + labelRect.width),
+                bottom: (anchorRect.height + anchorRect.top) - (labelRect.top + labelRect.height)
             };
 
             if (menuRect.height <= labelPosition.bottom) {
