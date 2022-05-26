@@ -102,7 +102,7 @@ const Popup = ({ open, direction, renderLabel, renderMenu, dataset, onCloseReque
     return renderLabel({
         ...props,
         ref: labelRef,
-        className: styles['label-container'],
+        className: classnames(styles['label-container'], props.className, { 'active': open }),
         children: open ?
             <FocusLock ref={menuRef} className={classnames(styles['menu-container'], styles[`menu-direction-${autoDirection}`], styles[`menu-direction-${direction}`])} autoFocus={false} lockProps={{ onMouseDown: menuOnMouseDown }}>
                 {renderMenu()}
