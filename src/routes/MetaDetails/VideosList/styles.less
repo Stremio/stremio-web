@@ -1,6 +1,7 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
+@import (reference) '~stremio/common/screen-sizes.less';
 
 .videos-list-container {
     display: flex;
@@ -53,5 +54,11 @@
         flex: 1;
         align-self: stretch;
         overflow-y: auto;
+    }
+}
+
+@media only screen and (max-width: @minimum) {
+    .videos-list-container {
+        overflow: visible;
     }
 }
