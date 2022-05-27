@@ -110,10 +110,8 @@
             display: none;
         }
 
-        .button-container {
-            &:not(:last-child):not(.back-button-container) {
-                display: none;
-            }
+        .button-container:not(.back-button-container):not(.menu-button-container) {
+            display: none;
         }
     }
 }
