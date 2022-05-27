@@ -18,7 +18,7 @@ const useSearch = (queryParams) => {
             const state = core.transport.getState('search');
             if (state.selected !== null) {
                 const [, query] = state.selected.extra.find(([name]) => name === 'search');
-                const responses = state.catalogs.filter((catalog) => catalog.content.type === 'Ready');
+                const responses = state.catalogs.filter((catalog) => catalog.content?.type === 'Ready');
                 core.transport.analytics({
                     event: 'Search',
                     args: {
