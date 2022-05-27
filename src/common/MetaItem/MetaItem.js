@@ -2,8 +2,8 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const filterInvalidDOMProps = require('filter-invalid-dom-props').default;
 const classnames = require('classnames');
+const filterInvalidDOMProps = require('filter-invalid-dom-props').default;
 const Icon = require('@stremio/stremio-icons/dom');
 const Button = require('stremio/common/Button');
 const Image = require('stremio/common/Image');
