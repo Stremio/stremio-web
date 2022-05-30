@@ -182,3 +182,23 @@
         }
     }
 }
+
+.blinker {
+  animation: blinker 2s linear infinite;
+  color: white;
+  font-size: 1.4rem;
+  padding: 1.5rem 3rem;
+  font-weight: lighter;
+}
+
+@keyframes blinker {
+  0% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.2;
+  }
+  100% {
+    opacity: 0.4;
+  }
+}
