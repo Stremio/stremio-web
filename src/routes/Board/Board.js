@@ -28,7 +28,7 @@ const Board = () => {
         }
 
         range.end += 8;
-        let start = Math.max(0, range.start - boardCatalogsOffset);
+        const start = Math.max(0, range.start - boardCatalogsOffset);
         const end = range.end - boardCatalogsOffset;
         if (end < start) {
             return;
@@ -39,7 +39,7 @@ const Board = () => {
     }, [loadedCatalogs, boardCatalogsOffset]);
     const onScroll = React.useCallback(throttle(onVisibleRangeChange, 250), [onVisibleRangeChange]);
     React.useLayoutEffect(() => {
-        setLoadedCatalogs(board?.catalogs.filter(catalog => ['Ready','Err'].includes(catalog?.content?.type)).length === board?.catalogs?.length);
+        setLoadedCatalogs(board?.catalogs.filter((catalog) => ['Ready', 'Err'].includes(catalog?.content?.type)).length === board?.catalogs?.length);
         onVisibleRangeChange();
     }, [board.catalogs, onVisibleRangeChange]);
     return (
