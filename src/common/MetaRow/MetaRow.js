@@ -24,7 +24,7 @@ const MetaRow = ({ className, title, message, items, itemComponent, deepLinks })
                         }
                         {
                             deepLinks && (typeof deepLinks.discover === 'string' || typeof deepLinks.library === 'string') ?
-                                <Button className={styles['see-all-container']} title={'SEE ALL'} href={deepLinks.discover || deepLinks.library}>
+                                <Button className={styles['see-all-container']} title={'SEE ALL'} href={deepLinks.discover || deepLinks.library} tabIndex={-1}>
                                     <div className={styles['label']}>SEE ALL</div>
                                     <Icon className={styles['icon']} icon={'ic_arrow_thin_right'} />
                                 </Button>

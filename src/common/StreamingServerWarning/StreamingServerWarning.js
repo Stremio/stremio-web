@@ -42,10 +42,10 @@ const StreamingServerWarning = ({ className }) => {
     return (
         <div className={classnames(className, styles['warning-container'])}>
             <div className={styles['warning-statement']}>Streaming server is not available.</div>
-            <Button className={styles['warning-button']} title={'Later'} onClick={onLaterClick}>
+            <Button className={styles['warning-button']} title={'Later'} onClick={onLaterClick} tabIndex={-1}>
                 <div className={styles['warning-label']}>Later</div>
             </Button>
-            <Button className={styles['warning-button']} title={'Dismiss'} onClick={onDismissClick}>
+            <Button className={styles['warning-button']} title={'Dismiss'} onClick={onDismissClick} tabIndex={-1}>
                 <div className={styles['warning-label']}>Dismiss</div>
             </Button>
         </div>
