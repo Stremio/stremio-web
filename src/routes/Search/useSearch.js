@@ -18,7 +18,7 @@ const useSearch = (queryParams) => {
             const state = core.transport.getState('search');
             if (state.selected !== null) {
                 const [, query] = state.selected.extra.find(([name]) => name === 'search');
-                const responses = state.catalogs.filter((catalog) => catalog.content.type === 'Ready');
+                const responses = state.catalogs.filter((catalog) => catalog.content?.type === 'Ready');
                 core.transport.analytics({
                     event: 'Search',
                     args: {
@@ -54,7 +54,17 @@ const useSearch = (queryParams) => {
             };
         }
     }, [queryParams]);
-    return useModelState({ model: 'search', action, init });
+    const loadRange = React.useCallback((range) => {
+        core.transport.dispatch({
+            action: 'CatalogsWithExtra',
+            args: {
+                action: 'LoadRange',
+                args: range
+            }
+        }, 'search');
+    }, []);
+    const search = useModelState({ model: 'search', action, init });
+    return [search, loadRange];
 };
 
 module.exports = useSearch;

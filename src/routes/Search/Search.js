@@ -3,13 +3,16 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
+const debounce = require('lodash.debounce');
 const Icon = require('@stremio/stremio-icons/dom');
-const { Image, MainNavBars, MetaRow, MetaItem, useDeepEqualMemo } = require('stremio/common');
+const { Image, MainNavBars, MetaRow, MetaItem, useDeepEqualMemo, getVisibleChildrenRange } = require('stremio/common');
 const useSearch = require('./useSearch');
 const styles = require('./styles');
 
+const THRESHOLD = 100;
+
 const Search = ({ queryParams }) => {
-    const search = useSearch(queryParams);
+    const [search, loadSearchRows] = useSearch(queryParams);
     const query = useDeepEqualMemo(() => {
         return search.selected !== null ?
             search.selected.extra.reduceRight((query, [name, value]) => {
@@ -22,9 +25,26 @@ const Search = ({ queryParams }) => {
             :
             null;
     }, [search.selected]);
+    const scrollContainerRef = React.useRef();
+    const onVisibleRangeChange = React.useCallback(() => {
+        if (search.catalogs.length === 0) {
+            return;
+        }
+
+        const range = getVisibleChildrenRange(scrollContainerRef.current, THRESHOLD);
+        if (range === null) {
+            return;
+        }
+
+        loadSearchRows(range);
+    }, [search.catalogs]);
+    const onScroll = React.useCallback(debounce(onVisibleRangeChange, 250), [onVisibleRangeChange]);
+    React.useLayoutEffect(() => {
+        onVisibleRangeChange();
+    }, [search.catalogs, onVisibleRangeChange]);
     return (
         <MainNavBars className={styles['search-container']} route={'search'} query={query}>
-            <div className={styles['search-content']}>
+            <div ref={scrollContainerRef} className={styles['search-content']} onScroll={onScroll}>
                 {
                     query === null ?
                         <div className={styles['search-hints-container']}>
@@ -49,7 +69,7 @@ const Search = ({ queryParams }) => {
                             </div>
                             :
                             search.catalogs.map((catalog, index) => {
-                                switch (catalog.content.type) {
+                                switch (catalog.content?.type) {
                                     case 'Ready': {
                                         return (
                                             <MetaRow
@@ -73,7 +93,7 @@ const Search = ({ queryParams }) => {
                                             />
                                         );
                                     }
-                                    case 'Loading': {
+                                    default: {
                                         return (
                                             <MetaRow.Placeholder
                                                 key={index}

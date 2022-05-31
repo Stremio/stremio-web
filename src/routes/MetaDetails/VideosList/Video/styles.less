@@ -3,13 +3,21 @@
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
 @import (reference) '~stremio/common/screen-sizes.less';
 
+:import('~stremio/common/Popup/styles.less') {
+    context-menu-container: menu-container;
+    menu-direction-top-left: menu-direction-top-left;
+    menu-direction-bottom-left: menu-direction-bottom-left;
+    menu-direction-top-right: menu-direction-top-right;
+    menu-direction-bottom-right: menu-direction-bottom-right;
+}
+
 .video-container {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     padding: 0.5rem 1rem;
 
-    &:hover, &:focus {
+    &:hover, &:focus, &:global(.active) {
         background-color: @color-background;
     }
 
@@ -118,6 +126,47 @@
         .progress-bar {
             height: 0.5rem;
             background-color: @color-primaryvariant1;
+        }
+    }
+
+    .context-menu-container {
+        max-width: calc(90% - 1.5rem);
+
+        &.menu-direction-top-left, &.menu-direction-bottom-left {
+            right: 1.5rem;
+        }
+
+        &.menu-direction-top-right, &.menu-direction-bottom-right {
+            left: 1.5rem;
+        }
+
+        &.menu-direction-top-left, &.menu-direction-top-right {
+            bottom: 90%;
+        }
+
+        &.menu-direction-bottom-left, &.menu-direction-bottom-right {
+            top: 90%;
+        }
+
+        .context-menu-content {
+            background-color: @color-background-dark1;
+
+            .context-menu-option-container {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                padding: 0.5rem 1rem;
+
+                &:hover, &:focus {
+                    background-color: @color-background;
+                }
+
+                .context-menu-option-label {
+                    font-size: 1rem;
+                    max-height: 2.4em;
+                    color: @color-surface-light5-90;
+                }
+            }
         }
     }
 }

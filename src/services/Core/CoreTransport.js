@@ -31,6 +31,9 @@ function CoreTransport() {
     this.off = function(name, listener) {
         events.off(name, listener);
     };
+    this.removeAllListeners = function() {
+        events.removeAllListeners();
+    };
     this.getState = function(field) {
         return get_state(field);
     };
