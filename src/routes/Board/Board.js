@@ -8,7 +8,7 @@ const useBoard = require('./useBoard');
 const useContinueWatchingPreview = require('./useContinueWatchingPreview');
 const styles = require('./styles');
 
-const THRESHOLD = 300;
+const THRESHOLD = 5;
 
 const Board = () => {
     const profile = useProfile();
@@ -18,13 +18,13 @@ const Board = () => {
     const boardCatalogsOffset = continueWatchingPreview.libraryItems.length > 0 ? 1 : 0;
     const scrollContainerRef = React.useRef();
     const onVisibleRangeChange = React.useCallback(() => {
-        const range = getVisibleChildrenRange(scrollContainerRef.current, THRESHOLD);
+        const range = getVisibleChildrenRange(scrollContainerRef.current);
         if (range === null) {
             return;
         }
 
-        const start = Math.max(0, range.start - boardCatalogsOffset);
-        const end = range.end - boardCatalogsOffset;
+        const start = Math.max(0, range.start - boardCatalogsOffset - THRESHOLD);
+        const end = range.end - boardCatalogsOffset + THRESHOLD;
         if (end < start) {
             return;
         }
