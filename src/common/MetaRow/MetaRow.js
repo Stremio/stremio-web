@@ -18,7 +18,11 @@ const MetaRow = ({ className, title, message, items, itemComponent, deepLinks })
                     <div className={styles['header-container']}>
                         {
                             typeof title === 'string' && title.length > 0 ?
-                                <div className={styles['title-container']} title={title}>{title}</div>
+                                <div className={styles['title-container']}>
+                                    <Button className={styles['row-title']} href={deepLinks.discover || deepLinks.library} title={title} href={deepLinks.discover || deepLinks.library}>
+                                        {title}
+                                    </Button>
+                                </div>
                                 :
                                 null
                         }

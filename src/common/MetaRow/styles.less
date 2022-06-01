@@ -16,8 +16,16 @@
         .title-container {
             flex: 1;
             max-height: 2.4em;
-            font-size: 1.8rem;
-            color: @color-secondaryvariant2-light1-90;
+            text-align: left;
+            .row-title {
+                font-size: 1.8rem;
+                color: @color-secondaryvariant2-light1-90;
+                &:focus-within {
+                    outline-width: 0;
+                    background-color: @color-background-light3;
+                    border: none;
+                }
+            }
         }
 
         .see-all-container {
