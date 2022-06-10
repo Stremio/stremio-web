@@ -3,6 +3,7 @@
 const EventEmitter = require('eventemitter3');
 
 const MESSAGE_NAMESPACE = 'urn:x-cast:com.stremio';
+const CHUNK_SIZE = 20000;
 
 let castAPIAvailable = null;
 const castAPIEvents = new EventEmitter();
@@ -32,6 +33,7 @@ const initialize = () => {
 
 function ChromecastTransport() {
     const events = new EventEmitter();
+    const chunks = [];
 
     initialize()
         .then(() => {
@@ -52,11 +54,31 @@ function ChromecastTransport() {
             }
         })
         .catch((error) => {
-            events.emit('error', error);
+            events.emit('init-error', error);
         });
 
     function onMessage(_, message) {
-        events.emit('message', JSON.parse(message));
+        try {
+            const { chunk, last } = JSON.parse(message);
+            chunks.push(chunk);
+            if (!last) {
+                return;
+            }
+        } catch (error) {
+            chunks.splice(0, chunks.length);
+            events.emit('message-error', error);
+            return;
+        }
+
+        let parsedMessage;
+        try {
+            parsedMessage = JSON.parse(chunks.splice(0, chunks.length).join(''));
+        } catch (error) {
+            events.emit('message-error', error);
+            return;
+        }
+
+        events.emit('message', parsedMessage);
     }
     function onApplicationStatusChanged(event) {
         events.emit(cast.framework.CastSession.APPLICATION_STATUS_CHANGED, event);
@@ -135,7 +157,21 @@ function ChromecastTransport() {
     this.sendMessage = function(message) {
         const castSession = cast.framework.CastContext.getInstance().getCurrentSession();
         if (castSession !== null) {
-            return castSession.sendMessage(MESSAGE_NAMESPACE, message);
+            const serializedMessage = JSON.stringify(message);
+            const chunksCount = Math.ceil(serializedMessage.length / CHUNK_SIZE);
+            const chunks = [];
+            for (let i = 0; i < chunksCount; i++) {
+                const start = i * CHUNK_SIZE;
+                const chunk = serializedMessage.slice(start, start + CHUNK_SIZE);
+                chunks.push(chunk);
+            }
+
+            return Promise.all(chunks.map((chunk, index) => {
+                return castSession.sendMessage(MESSAGE_NAMESPACE, {
+                    chunk,
+                    last: index === chunks.length - 1,
+                });
+            }));
         } else {
             return Promise.reject(new Error('Session not started'));
         }
