@@ -14,13 +14,25 @@ const Video = ({ className, id, title, thumbnail, episode, released, upcoming, w
     const { core } = useServices();
     const routeFocused = useRouteFocused();
     const [menuOpen, , closeMenu, toggleMenu] = useBinaryState(false);
+    const popupLabelOnClick = React.useCallback((event) => {
+        if (!event.nativeEvent.togglePopupPrevented && event.nativeEvent.ctrlKey) {
+            event.preventDefault();
+            toggleMenu();
+        }
+    }, []);
+    const popupLabelOnKeyDown = React.useCallback((event) => {
+        event.nativeEvent.buttonClickPrevented = true;
+    }, []);
     const popupLabelOnContextMenu = React.useCallback((event) => {
         if (!event.nativeEvent.togglePopupPrevented && !event.nativeEvent.ctrlKey) {
+            event.preventDefault();
             toggleMenu();
-            event.nativeEvent.preventDefault();
         }
     }, [toggleMenu]);
     const popupMenuOnContextMenu = React.useCallback((event) => {
+        event.nativeEvent.togglePopupPrevented = true;
+    }, []);
+    const popupMenuOnClick = React.useCallback((event) => {
         event.nativeEvent.togglePopupPrevented = true;
     }, []);
     const toggleWatchedOnClick = React.useCallback((event) => {
@@ -120,7 +132,7 @@ const Video = ({ className, id, title, thumbnail, episode, released, upcoming, w
     }, []);
     const renderMenu = React.useMemo(() => function renderMenu() {
         return (
-            <div className={styles['context-menu-content']} onContextMenu={popupMenuOnContextMenu}>
+            <div className={styles['context-menu-content']} onContextMenu={popupMenuOnContextMenu} onClick={popupMenuOnClick}>
                 <Button className={styles['context-menu-option-container']} title={'Watch'}>
                     <div className={styles['context-menu-option-label']}>Watch</div>
                 </Button>
@@ -149,6 +161,8 @@ const Video = ({ className, id, title, thumbnail, episode, released, upcoming, w
             scheduled={scheduled}
             href={href}
             {...props}
+            onClick={popupLabelOnClick}
+            onKeyDown={popupLabelOnKeyDown}
             onContextMenu={popupLabelOnContextMenu}
             open={menuOpen}
             onCloseRequest={closeMenu}
