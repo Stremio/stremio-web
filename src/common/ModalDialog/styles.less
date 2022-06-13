@@ -123,33 +123,38 @@
 @media only screen and (max-width: @minimum) {
     .modal-container {
         .modal-dialog-container {
+            position: relative;
             width: 90%;
             max-width: initial;
-            gap: 0.5em;
+            z-index: 0;
 
             .close-button-container {
                 position: absolute;
+                top: 0;
+                right: 0;
                 margin: 0.75rem 0.75rem 0 0;
                 padding: 0.25rem;
             }
 
             .title-container {
-                max-height: initial;
-                margin: 0;
-                padding: 1em 1.5em;
+                max-height: 4.8em;
+                margin: 1rem 3rem 1rem 1.5rem;
             }
 
             .modal-dialog-content {
-                margin: 0;
-                padding: 0 1.5rem;
+                margin: 0 0.5rem;
+                padding: 0 0.5rem;
+
+                &:last-child {
+                    margin-bottom: 1rem;
+                }
             }
 
             .buttons-container {
-                margin: 0;
-                padding: 1.5em;
+                margin: 1rem 1rem 0;
 
                 &:last-child {
-                    margin-bottom: 0;
+                    margin-bottom: 1rem;
                 }
             }
         }

@@ -51,17 +51,24 @@
 @media only screen and (max-width: @minimum) {
     .action-button-container {
         flex-direction: row;
+        padding: 0 1rem;
 
         .icon-container {
+            flex: none;
             align-self: center;
-            flex: 0 0 auto;
-            height: 2em;
-            width: 2em;
+            height: 2rem;
+            width: 2rem;
             padding-top: 0;
+            margin-right: 0.5rem;
+
+            &:only-child {
+                padding: 0;
+                margin-right: 0;
+            }
         }
 
         .label-container {
-            flex: 0 0 auto;
+            flex: 1;
         }
     }
 }

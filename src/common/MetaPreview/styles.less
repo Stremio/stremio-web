@@ -210,9 +210,7 @@
         }
 
         .action-buttons-container {
-            max-height: 9.5rem;
             flex-wrap: nowrap;
-            gap: 1em;
             padding: 0 1.5rem;
             overflow-x: visible;
             scrollbar-width: none;
@@ -222,18 +220,19 @@
             }
 
             .action-button {
-                height: 4rem;
                 width: auto;
-                display: flex;
-                flex-direction: row;
-                gap: 0.75em;
-                padding: 0 1.5em;
+                height: 4rem;
+                max-width: 60%;
                 margin: 1rem 0;
 
                 &:not(:last-child) {
-                    margin-right: 0;
+                    margin-right: 1rem;
                 }
             }
         }
+    }
+
+    .share-prompt {
+        width: 100%;
     }
 }

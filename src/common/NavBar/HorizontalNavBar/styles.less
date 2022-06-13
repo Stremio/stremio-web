@@ -96,21 +96,22 @@
 @media only screen and (max-width: @minimum) {
     .horizontal-nav-bar-container {
         justify-content: space-between;
-        gap: 0.5em;
         padding-right: 0;
 
         .logo-container {
-            width: 4em;
+            width: var(--horizontal-nav-bar-size);
+        }
+
+        .search-bar {
+            margin: 0 0.5rem;
         }
 
         .spacing {
             display: none;
         }
 
-        .button-container {
-            &:not(:last-child):not(.back-button-container) {
-                display: none;
-            }
+        .button-container:not(.back-button-container):not(.menu-button-container) {
+            display: none;
         }
     }
 }

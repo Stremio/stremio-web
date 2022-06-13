@@ -17,7 +17,7 @@ const MetaRowPlaceholder = ({ className, title, deepLinks }) => {
                 </div>
                 {
                     deepLinks && typeof deepLinks.discover === 'string' ?
-                        <Button className={styles['see-all-container']} title={'SEE ALL'} href={deepLinks.discover}>
+                        <Button className={styles['see-all-container']} title={'SEE ALL'} href={deepLinks.discover} tabIndex={-1}>
                             <div className={styles['label']}>SEE ALL</div>
                             <Icon className={styles['icon']} icon={'ic_arrow_thin_right'} />
                         </Button>

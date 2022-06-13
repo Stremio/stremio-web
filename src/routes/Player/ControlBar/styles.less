@@ -71,6 +71,7 @@
         }
 
         .control-bar-buttons-menu-container {
+            flex: none;
             display: flex;
             flex-direction: row;
         }
@@ -82,12 +83,13 @@
         padding: 0;
 
         .seek-bar {
-            padding: 0 1.5em;
+            margin: 0 1.5rem;
         }
 
         .control-bar-buttons-container {
-            gap: 0.5em;
-            padding: 0 0.5em;
+            position: relative;
+            padding: 0 0.5rem;
+            overflow: visible;
 
             .control-bar-buttons-menu-button {
                 display: flex;
@@ -95,10 +97,10 @@
 
             .control-bar-buttons-menu-container {
                 position: absolute;
-                right: 0.15em;
+                right: 0.15rem;
                 bottom: 4.5rem;
                 flex-direction: column;
-                padding: 0.5em;
+                padding: 0.5rem;
                 background-color: @color-background-dark1;
                 box-shadow: 0 1.35rem 2.7rem @color-background-dark5-40,
                     0 1.1rem 0.85rem @color-background-dark5-20;

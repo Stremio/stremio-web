@@ -81,15 +81,13 @@ const Addons = ({ urlParams, queryParams }) => {
                         <Icon className={styles['icon']} icon={'ic_plus'} />
                         <div className={styles['add-button-label']}>Add addon</div>
                     </Button>
-                    <div className={styles['multiselect-inputs-container']}>
-                        {selectInputs.map((selectInput, index) => (
-                            <Multiselect
-                                {...selectInput}
-                                key={index}
-                                className={styles['select-input-container']}
-                            />
-                        ))}
-                    </div>
+                    {selectInputs.map((selectInput, index) => (
+                        <Multiselect
+                            {...selectInput}
+                            key={index}
+                            className={styles['select-input-container']}
+                        />
+                    ))}
                     <div className={styles['spacing']} />
                     <SearchBar
                         className={styles['search-bar']}

@@ -93,7 +93,15 @@
     .meta-row-placeholder-container {
         .meta-items-container {
             .meta-item {
-                margin: 0;
+                margin: 0.5rem;
+
+                &:not(:first-child) {
+                    margin-left: 0.5rem;
+                }
+
+                .title-bar-container {
+                    margin-top: 0.5rem;
+                }
             }
         }
     }

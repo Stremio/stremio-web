@@ -72,6 +72,7 @@
             .released-container {
                 flex: 1;
                 margin-right: 0.5rem;
+                padding: 0.2rem 0;
                 font-size: 0.8rem;
                 font-weight: 500;
                 white-space: nowrap;
@@ -128,53 +129,54 @@
             background-color: @color-primaryvariant1;
         }
     }
-
-    .context-menu-container {
-        max-width: calc(90% - 1.5rem);
-
-        &.menu-direction-top-left, &.menu-direction-bottom-left {
-            right: 1.5rem;
-        }
-
-        &.menu-direction-top-right, &.menu-direction-bottom-right {
-            left: 1.5rem;
-        }
-
-        &.menu-direction-top-left, &.menu-direction-top-right {
-            bottom: 90%;
-        }
-
-        &.menu-direction-bottom-left, &.menu-direction-bottom-right {
-            top: 90%;
-        }
-
-        .context-menu-content {
-            background-color: @color-background-dark1;
-
-            .context-menu-option-container {
-                display: flex;
-                flex-direction: row;
-                align-items: center;
-                padding: 0.5rem 1rem;
-
-                &:hover, &:focus {
-                    background-color: @color-background;
-                }
-
-                .context-menu-option-label {
-                    font-size: 1rem;
-                    max-height: 2.4em;
-                    color: @color-surface-light5-90;
-                }
-            }
-        }
-    }
 }
 
 @media only screen and (max-width: @minimum) {
     .video-container {
-        &:hover, &:focus {
+        &:hover, &:focus, &:global(.active) {
             background-color: @color-surface-light5-20;
+        }
+
+        .context-menu-container {
+            max-width: calc(90% - 1.5rem);
+
+            &.menu-direction-top-left, &.menu-direction-bottom-left {
+                right: 1.5rem;
+            }
+
+            &.menu-direction-top-right, &.menu-direction-bottom-right {
+                left: 1.5rem;
+            }
+
+            &.menu-direction-top-left, &.menu-direction-top-right {
+                bottom: 90%;
+            }
+
+            &.menu-direction-bottom-left, &.menu-direction-bottom-right {
+                top: 90%;
+            }
+
+            .context-menu-content {
+                --spatial-navigation-contain: contain;
+                background-color: @color-background-dark1;
+
+                .context-menu-option-container {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    padding: 0.5rem 1rem;
+
+                    &:hover, &:focus {
+                        background-color: @color-background;
+                    }
+
+                    .context-menu-option-label {
+                        font-size: 1rem;
+                        max-height: 2.4em;
+                        color: @color-surface-light5-90;
+                    }
+                }
+            }
         }
     }
 }

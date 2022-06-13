@@ -28,7 +28,7 @@
             overflow-y: auto;
 
             .board-row {
-                padding: 2rem;
+                margin: 4rem 2rem;
             }
         }
     }
@@ -185,17 +185,34 @@
 
 @media only screen and (max-width: @minimum) {
     .board-container {
+        position: relative;
+        z-index: 0;
+
         .board-content-container {
+            &:only-child {
+                .board-content {
+                    height: 100%;
+                }
+            }
+            
             .board-content {
-                padding: 1em 0;
+                height: calc(100% - 4rem);
 
                 .board-row {
-                    padding: 1em;
+                    margin: 2rem 1rem;
                 }
 
-                .board-row-poster, .board-row-square {
+                .board-row-poster, .board-row-square, .continue-watching-row {
                     .meta-item, .meta-item-placeholder {
                         &:nth-child(n+4) {
+                            display: none;
+                        }
+                    }
+                }
+
+                .board-row-landscape {
+                    .meta-item, .meta-item-placeholder {
+                        &:nth-child(n+3) {
                             display: none;
                         }
                     }
@@ -204,9 +221,11 @@
         }
         
         .board-warning-container {
-            width: 100%;
             position: absolute;
+            left: 0;
+            right: 0;
             bottom: var(--vertical-nav-bar-size);
+            height: 4rem;
         }
     }
 }

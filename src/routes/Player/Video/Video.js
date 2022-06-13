@@ -70,7 +70,7 @@ const Video = React.forwardRef(({ className, ...props }, ref) => {
             });
         }
         return () => {
-            dispatch({ type: 'command', commandName: 'destroy' });
+            videoRef.current.destroy();
         };
     }, []);
     return (
