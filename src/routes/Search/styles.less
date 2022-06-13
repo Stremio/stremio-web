@@ -219,3 +219,29 @@
         }
     }
 }
+
+@media only screen and (max-width: @minimum) {
+    .search-container {
+        .search-content {
+            .search-row {
+                margin: 2rem 1rem;
+            }
+
+            .search-row-poster, .search-row-square {
+                .meta-item, .meta-item-placeholder {
+                    &:nth-child(n+4) {
+                        display: none;
+                    }
+                }
+            }
+
+            .search-hints-container {
+                padding: 4rem 2rem;
+
+                .search-hint-container {
+                    padding: 0 1.5rem;
+                }
+            }
+        }
+    }
+}

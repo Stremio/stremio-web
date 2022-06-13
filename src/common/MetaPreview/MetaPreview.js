@@ -116,7 +116,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                             renderFallback={renderLogoFallback}
                         />
                         :
-                        null
+                        renderLogoFallback()
                 }
                 {
                     (typeof releaseInfo === 'string' && releaseInfo.length > 0) || (released instanceof Date && !isNaN(released.getTime())) || (typeof runtime === 'string' && runtime.length > 0) || linksGroups.has(CONSTANTS.IMDB_LINK_CATEGORY) ?

@@ -185,23 +185,17 @@ const Discover = ({ urlParams, queryParams }) => {
             </div>
             {
                 inputsModalOpen && discover.defaultRequest ?
-                    <ModalDialog title={'Catalog filters'} className={styles['selectable-inputs-modal-container']} onCloseRequest={closeInputsModal}>
-                        {selectInputs.map(({ title, isRequired, options, selected, renderLabelText, onSelect }, index) => (
-                            <div key={index} className={styles['selectable-input-container']}>
-                                <div className={styles['select-input-label']} title={title}>
-                                    {title}
-                                    {isRequired ? '*' : null}
-                                </div>
-                                <Multiselect
-                                    className={styles['select-input']}
-                                    mode={'modal'}
-                                    title={title}
-                                    options={options}
-                                    selected={selected}
-                                    renderLabelText={renderLabelText}
-                                    onSelect={onSelect}
-                                />
-                            </div>
+                    <ModalDialog title={'Catalog filters'} className={styles['selectable-inputs-modal']} onCloseRequest={closeInputsModal}>
+                        {selectInputs.map(({ title, options, selected, renderLabelText, onSelect }, index) => (
+                            <Multiselect
+                                key={index}
+                                className={styles['select-input']}
+                                title={title}
+                                options={options}
+                                selected={selected}
+                                renderLabelText={renderLabelText}
+                                onSelect={onSelect}
+                            />
                         ))}
                     </ModalDialog>
                     :

@@ -1,14 +1,24 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
+@import (reference) '~stremio/common/screen-sizes.less';
 
 :import('~stremio/common/Multiselect/styles.less') {
     multiselect-menu-container: menu-container;
 }
 
 :import('~stremio/common/ModalDialog/styles.less') {
+    share-modal-content: modal-dialog-content;
+}
+
+:import('~stremio/common/ModalDialog/styles.less') {
     addon-modal-content: modal-dialog-content;
     cancel-button-label: label;
+}
+
+:import('~stremio/common/ModalDialog/styles.less') {
+    filters-modal-container: modal-dialog-container;
+    filters-modal-content: modal-dialog-content;
 }
 
 .addons-container {
@@ -92,6 +102,23 @@
                 flex-shrink: 1;
                 flex-basis: 18rem;
             }
+
+            .filter-button {
+                flex: none;
+                display: none;
+                align-items: center;
+                justify-content: center;
+                width: 3.5rem;
+                height: 3.5rem;
+                background-color: @color-background;
+
+                .filter-icon {
+                    flex: none;
+                    width: 1.4rem;
+                    height: 1.4rem;
+                    fill: @color-secondaryvariant1-90;
+                }
+            }
         }
 
         .message-container {
@@ -110,6 +137,26 @@
 
             .addon {
                 margin-bottom: 1.5rem;
+            }
+        }
+    }
+}
+
+.filters-modal {
+    .filters-modal-container {
+        overflow: visible;
+
+        .filters-modal-content {
+            display: flex;
+            flex-direction: column;
+            overflow: visible;
+
+            .select-input-container {
+                height: 3.5rem;
+
+                &:not(:last-child) {
+                    margin-bottom: 1rem;
+                }
             }
         }
     }
@@ -160,7 +207,7 @@
 }
 
 .share-modal-container {
-    .addon-modal-content {
+    .share-modal-content {
         width: 30rem;
 
         .title-container {
@@ -215,6 +262,55 @@
 
         .share-prompt-container {
             margin-top: 1rem;
+        }
+    }
+}
+
+@media only screen and (max-width: @minimum) {
+    .addons-container {
+        .addons-content {
+            .selectable-inputs-container {
+                .add-button-container {
+                    position: fixed;
+                    right: 0;
+                    bottom: calc(3rem + var(--horizontal-nav-bar-size));
+                    box-shadow: 0 1.35rem 2.7rem @color-background-dark5-40,
+                        0 1.1rem 0.85rem @color-background-dark5-20;
+                }
+
+                .select-input-container {
+                    display: none;
+                }
+
+                .spacing {
+                    display: none;
+                }
+
+                .search-bar {
+                    flex-basis: 100%;
+                    margin-right: 1rem;
+                }
+
+                .filter-button {
+                    display: flex;
+                }
+            }
+        }
+    }
+
+    .share-modal-container {
+        .share-modal-content {
+            width: auto;
+        }
+    }
+
+    .add-addon-modal-container {
+        .addon-modal-content {
+            width: auto;
+
+            .notice {
+                margin-bottom: 1rem;
+            }
         }
     }
 }

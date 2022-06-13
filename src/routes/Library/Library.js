@@ -3,8 +3,9 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
+const Icon = require('@stremio/stremio-icons/dom');
 const NotFound = require('stremio/routes/NotFound');
-const { Button, Multiselect, MainNavBars, LibItem, Image, PaginationInput, useProfile, routesRegexp } = require('stremio/common');
+const { Button, Multiselect, MainNavBars, LibItem, Image, ModalDialog, PaginationInput, useProfile, routesRegexp, useBinaryState } = require('stremio/common');
 const useLibrary = require('./useLibrary');
 const useSelectableInputs = require('./useSelectableInputs');
 const styles = require('./styles');
@@ -46,6 +47,7 @@ const Library = ({ model, urlParams, queryParams }) => {
     const profile = useProfile();
     const library = useLibrary(model, urlParams, queryParams);
     const [typeSelect, sortSelect, paginationInput] = useSelectableInputs(library);
+    const [inputsModalOpen, openInputsModal, closeInputsModal] = useBinaryState(false);
     return (
         <MainNavBars className={styles['library-container']} route={model}>
             <div className={styles['library-content']}>
@@ -61,6 +63,9 @@ const Library = ({ model, urlParams, queryParams }) => {
                                     :
                                     <PaginationInput label={'1'} className={classnames(styles['pagination-input'], styles['pagination-input-placeholder'])} />
                             }
+                            <Button className={styles['filter-container']} title={'All filters'} onClick={openInputsModal}>
+                                <Icon className={styles['filter-icon']} icon={'ic_filter'} />
+                            </Button>
                         </div>
                         :
                         null
@@ -106,6 +111,15 @@ const Library = ({ model, urlParams, queryParams }) => {
                                 </div>
                 }
             </div>
+            {
+                inputsModalOpen ?
+                    <ModalDialog title={'Library filters'} className={styles['selectable-inputs-modal']} onCloseRequest={closeInputsModal}>
+                        <Multiselect {...typeSelect} className={styles['select-input-container']} />
+                        <Multiselect {...sortSelect} className={styles['select-input-container']} />
+                    </ModalDialog>
+                    :
+                    null
+            }
         </MainNavBars>
     );
 };

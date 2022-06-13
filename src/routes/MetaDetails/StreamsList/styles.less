@@ -1,6 +1,7 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
+@import (reference) '~stremio/common/screen-sizes.less';
 
 .streams-list-container {
     display: flex;
@@ -71,6 +72,25 @@
             max-height: 3.6em;
             text-align: center;
             color: @color-surface-light5-90;
+        }
+    }
+}
+
+@media only screen and (max-width: @minimum) {
+    .streams-list-container {
+        overflow: visible;
+
+        .streams-container {
+            margin-top: 0;
+            scrollbar-color: @color-surface-light5-20 transparent;
+
+            &::-webkit-scrollbar-thumb {
+                background-color: @color-surface-light5-20;
+            }
+
+            &::-webkit-scrollbar-track {
+                background-color: transparent;
+            }
         }
     }
 }

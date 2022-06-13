@@ -1,5 +1,7 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
+@import (reference) '~stremio/common/screen-sizes.less';
+
 .meta-row-placeholder-container {
     .header-container {
         display: flex;
@@ -81,6 +83,24 @@
                     width: 60%;
                     height: 1.2rem;
                     background-color: var(--color-placeholder-background);
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: @minimum) {
+    .meta-row-placeholder-container {
+        .meta-items-container {
+            .meta-item {
+                margin: 0.5rem;
+
+                &:not(:first-child) {
+                    margin-left: 0.5rem;
+                }
+
+                .title-bar-container {
+                    margin-top: 0.5rem;
                 }
             }
         }

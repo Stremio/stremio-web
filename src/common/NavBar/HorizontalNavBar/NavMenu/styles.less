@@ -1,6 +1,7 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
+@import (reference) '~stremio/common/screen-sizes.less';
 
 .nav-menu-container {
     width: 20rem;
@@ -99,5 +100,11 @@
                 }
             }
         }
+    }
+}
+
+@media only screen and (max-width: @minimum) {
+    .nav-menu-container {
+        max-height: calc(100vh - var(--horizontal-nav-bar-size) - var(--vertical-nav-bar-size) - 1rem);
     }
 }

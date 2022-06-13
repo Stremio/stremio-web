@@ -1,6 +1,7 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
+@import (reference) '~stremio/common/screen-sizes.less';
 
 :import('~stremio/common/Popup/styles.less') {
     context-menu-container: menu-container;
@@ -128,44 +129,52 @@
             background-color: @color-primaryvariant1;
         }
     }
+}
 
-    .context-menu-container {
-        max-width: calc(90% - 1.5rem);
-
-        &.menu-direction-top-left, &.menu-direction-bottom-left {
-            right: 1.5rem;
+@media only screen and (max-width: @minimum) {
+    .video-container {
+        &:hover, &:focus, &:global(.active) {
+            background-color: @color-surface-light5-20;
         }
 
-        &.menu-direction-top-right, &.menu-direction-bottom-right {
-            left: 1.5rem;
-        }
+        .context-menu-container {
+            max-width: calc(90% - 1.5rem);
 
-        &.menu-direction-top-left, &.menu-direction-top-right {
-            bottom: 90%;
-        }
+            &.menu-direction-top-left, &.menu-direction-bottom-left {
+                right: 1.5rem;
+            }
 
-        &.menu-direction-bottom-left, &.menu-direction-bottom-right {
-            top: 90%;
-        }
+            &.menu-direction-top-right, &.menu-direction-bottom-right {
+                left: 1.5rem;
+            }
 
-        .context-menu-content {
-            --spatial-navigation-contain: contain;
-            background-color: @color-background-dark1;
+            &.menu-direction-top-left, &.menu-direction-top-right {
+                bottom: 90%;
+            }
 
-            .context-menu-option-container {
-                display: flex;
-                flex-direction: row;
-                align-items: center;
-                padding: 0.5rem 1rem;
+            &.menu-direction-bottom-left, &.menu-direction-bottom-right {
+                top: 90%;
+            }
 
-                &:hover, &:focus {
-                    background-color: @color-background;
-                }
+            .context-menu-content {
+                --spatial-navigation-contain: contain;
+                background-color: @color-background-dark1;
 
-                .context-menu-option-label {
-                    font-size: 1rem;
-                    max-height: 2.4em;
-                    color: @color-surface-light5-90;
+                .context-menu-option-container {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    padding: 0.5rem 1rem;
+
+                    &:hover, &:focus {
+                        background-color: @color-background;
+                    }
+
+                    .context-menu-option-label {
+                        font-size: 1rem;
+                        max-height: 2.4em;
+                        color: @color-surface-light5-90;
+                    }
                 }
             }
         }
