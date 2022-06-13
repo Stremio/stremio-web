@@ -12,7 +12,6 @@
 }
 
 .board-container {
-    position: relative;
     width: 100%;
     height: 100%;
     display: flex;
@@ -186,7 +185,16 @@
 
 @media only screen and (max-width: @minimum) {
     .board-container {
+        position: relative;
+        z-index: 0;
+
         .board-content-container {
+            &:only-child {
+                .board-content {
+                    height: 100%;
+                }
+            }
+            
             .board-content {
                 height: calc(100% - 4rem);
 
