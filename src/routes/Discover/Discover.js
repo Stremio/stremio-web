@@ -5,15 +5,17 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('@stremio/stremio-icons/dom');
 const { useServices } = require('stremio/services');
-const { AddonDetailsModal, Button, MainNavBars, MetaItem, Image, MetaPreview, Multiselect, ModalDialog, PaginationInput, CONSTANTS, useBinaryState } = require('stremio/common');
+const { AddonDetailsModal, Button, MainNavBars, MetaItem, Image, MetaPreview, Multiselect, ModalDialog, CONSTANTS, useBinaryState, useOnScrollToBottom } = require('stremio/common');
 const useDiscover = require('./useDiscover');
 const useSelectableInputs = require('./useSelectableInputs');
 const styles = require('./styles');
 
+const SCROLL_TO_BOTTOM_TRESHOLD = 400;
+
 const Discover = ({ urlParams, queryParams }) => {
     const { core } = useServices();
-    const discover = useDiscover(urlParams, queryParams);
-    const [selectInputs, paginationInput] = useSelectableInputs(discover);
+    const [discover, loadNextPage] = useDiscover(urlParams, queryParams);
+    const [selectInputs, hasNextPage] = useSelectableInputs(discover);
     const [inputsModalOpen, openInputsModal, closeInputsModal] = useBinaryState(false);
     const [addonModalOpen, openAddonModal, closeAddonModal] = useBinaryState(false);
     const [selectedMetaItemIndex, setSelectedMetaItemIndex] = React.useState(0);
@@ -62,6 +64,12 @@ const Discover = ({ urlParams, queryParams }) => {
             event.currentTarget.focus();
         }
     }, [selectedMetaItemIndex]);
+    const onScrollToBottom = React.useCallback(() => {
+        if (hasNextPage) {
+            loadNextPage();
+        }
+    }, [hasNextPage, loadNextPage]);
+    const onScroll = useOnScrollToBottom(onScrollToBottom, SCROLL_TO_BOTTOM_TRESHOLD);
     React.useEffect(() => {
         closeInputsModal();
         closeAddonModal();
@@ -94,13 +102,6 @@ const Discover = ({ urlParams, queryParams }) => {
                                 <Button className={styles['filter-container']} title={'All filters'} onClick={openInputsModal}>
                                     <Icon className={styles['filter-icon']} icon={'ic_filter'} />
                                 </Button>
-                                <div className={styles['spacing']} />
-                                {
-                                    paginationInput !== null ?
-                                        <PaginationInput {...paginationInput} className={styles['pagination-input']} />
-                                        :
-                                        <PaginationInput label={'1'} className={classnames(styles['pagination-input'], styles['pagination-input-placeholder'])} />
-                                }
                             </div>
                             :
                             null
@@ -141,7 +142,7 @@ const Discover = ({ urlParams, queryParams }) => {
                                         ))}
                                     </div>
                                     :
-                                    <div ref={metaItemsContainerRef} className={styles['meta-items-container']} onFocusCapture={metaItemsOnFocusCapture}>
+                                    <div ref={metaItemsContainerRef} className={styles['meta-items-container']} onScroll={onScroll} onFocusCapture={metaItemsOnFocusCapture}>
                                         {discover.catalog.content.content.map((metaItem, index) => (
                                             <MetaItem
                                                 key={index}

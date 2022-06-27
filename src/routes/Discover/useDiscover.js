@@ -11,12 +11,10 @@ const init = () => ({
         types: [],
         catalogs: [],
         extra: [],
-        prevPage: null,
-        nextPage: null
+        nextPage: false
     },
     catalog: null,
     defaultRequest: null,
-    page: 1,
 });
 
 const map = (discover) => ({
@@ -38,6 +36,14 @@ const map = (discover) => ({
 
 const useDiscover = (urlParams, queryParams) => {
     const { core } = useServices();
+    const loadNextPage = React.useCallback(() => {
+        core.transport.dispatch({
+            action: 'CatalogWithFilters',
+            args: {
+                action: 'LoadNextPage'
+            }
+        }, 'discover');
+    }, []);
     const action = React.useMemo(() => {
         if (typeof urlParams.transportUrl === 'string' && typeof urlParams.type === 'string' && typeof urlParams.catalogId === 'string') {
             const { hostname } = UrlUtils.parse(urlParams.transportUrl);
@@ -79,7 +85,8 @@ const useDiscover = (urlParams, queryParams) => {
             action: 'Unload'
         };
     }, [urlParams, queryParams]);
-    return useModelState({ model: 'discover', action, map, init });
+    const discover = useModelState({ model: 'discover', action, map, init });
+    return [discover, loadNextPage];
 };
 
 module.exports = useDiscover;
