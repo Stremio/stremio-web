@@ -1,7 +1,6 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
 const React = require('react');
-const pako = require('pako');
 const { useServices } = require('stremio/services');
 const { useModelState } = require('stremio/common');
 
@@ -47,13 +46,14 @@ const map = (player) => ({
 const usePlayer = (urlParams) => {
     const { core } = useServices();
     const action = React.useMemo(() => {
-        try {
+        const stream = core.transport.decodeStream(urlParams.stream);
+        if (stream !== null) {
             return {
                 action: 'Load',
                 args: {
                     model: 'Player',
                     args: {
-                        stream: JSON.parse(pako.inflate(atob(urlParams.stream), { to: 'string' })),
+                        stream,
                         streamRequest: typeof urlParams.streamTransportUrl === 'string' && typeof urlParams.type === 'string' && typeof urlParams.videoId === 'string' ?
                             {
                                 base: urlParams.streamTransportUrl,
@@ -90,7 +90,7 @@ const usePlayer = (urlParams) => {
                     }
                 }
             };
-        } catch (e) {
+        } else {
             return {
                 action: 'Unload'
             };
