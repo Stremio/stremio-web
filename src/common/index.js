@@ -36,6 +36,7 @@ const useDeepEqualState = require('./useDeepEqualState');
 const useFullscreen = require('./useFullscreen');
 const useLiveRef = require('./useLiveRef');
 const useModelState = require('./useModelState');
+const useOnScrollToBottom = require('./useOnScrollToBottom');
 const useProfile = require('./useProfile');
 const useStreamingServer = require('./useStreamingServer');
 
@@ -78,6 +79,7 @@ module.exports = {
     useFullscreen,
     useLiveRef,
     useModelState,
+    useOnScrollToBottom,
     useProfile,
     useStreamingServer
 };
