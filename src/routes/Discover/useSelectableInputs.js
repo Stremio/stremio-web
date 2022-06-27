@@ -69,21 +69,7 @@ const mapSelectableInputs = (discover) => {
             window.location = href;
         }
     }));
-    const paginationInput = discover.selectable.prevPage || discover.selectable.nextPage ?
-        {
-            label: discover.page.toString(),
-            onSelect: (event) => {
-                if (event.value === 'prev' && discover.selectable.prevPage) {
-                    window.location = discover.selectable.prevPage.deepLinks.discover;
-                }
-                if (event.value === 'next' && discover.selectable.nextPage) {
-                    window.location = discover.selectable.nextPage.deepLinks.discover;
-                }
-            }
-        }
-        :
-        null;
-    return [[typeSelect, catalogSelect, ...extraSelects], paginationInput];
+    return [[typeSelect, catalogSelect, ...extraSelects], discover.selectable.nextPage];
 };
 
 const useSelectableInputs = (discover) => {
