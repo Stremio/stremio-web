@@ -75,7 +75,7 @@ const mapSelectableInputs = (discover) => {
 const useSelectableInputs = (discover) => {
     const selectableInputs = React.useMemo(() => {
         return mapSelectableInputs(discover);
-    }, [discover]);
+    }, [discover.selected, discover.selectable]);
     return selectableInputs;
 };
 
