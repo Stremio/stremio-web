@@ -12,7 +12,8 @@ if (browser?.platform?.type === 'desktop') {
 }
 
 const React = require('react');
-const ReactDOM = require('react-dom');
+const ReactDOM = require('react-dom/client');
 const App = require('./App');
 
-ReactDOM.render(<App />, document.getElementById('app'));
+const root = ReactDOM.createRoot(document.getElementById('app'));
+root.render(<App />);

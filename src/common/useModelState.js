@@ -6,13 +6,65 @@ const isEqual = require('lodash.isequal');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
 
-const useModelState = ({ init, action, ...args }) => {
+const GetInitStateContext = React.createContext();
+
+GetInitStateContext.displayName = 'GetInitStateContext';
+
+function wrapPromise(promise) {
+    let status = 'pending';
+    let result;
+    const suspender = promise.then(
+        (resp) => {
+            status = 'success';
+            result = resp;
+        },
+        (error) => {
+            status = 'error';
+            result = error;
+        }
+    );
+    return {
+        read() {
+            if (status === 'pending') {
+                throw suspender;
+            } else if (status === 'error') {
+                throw result;
+            } else if (status === 'success') {
+                return result;
+            }
+        }
+    };
+}
+
+const withGetInitState = (Component) => {
+    return function WithGetInitState(props) {
+        const { core } = useServices();
+        const initStateRef = React.useRef({});
+        const getInitState = React.useCallback((model) => {
+            if (!initStateRef.current[model]) {
+                initStateRef.current[model] = wrapPromise(core.transport.getState(model));
+            }
+
+            return initStateRef.current[model].read();
+        }, []);
+        return (
+            <React.Suspense>
+                <GetInitStateContext.Provider value={getInitState}>
+                    <Component {...props} />
+                </GetInitStateContext.Provider>
+            </React.Suspense>
+        );
+    };
+};
+
+const useModelState = ({ action, ...args }) => {
     const { core } = useServices();
     const routeFocused = useRouteFocused();
     const mountedRef = React.useRef(false);
     const [model, timeout, map] = React.useMemo(() => {
         return [args.model, args.timeout, args.map];
     }, []);
+    const getInitState = React.useContext(GetInitStateContext);
     const [state, setState] = React.useReducer(
         (prevState, nextState) => {
             return Object.keys(prevState).reduce((result, key) => {
@@ -22,10 +74,11 @@ const useModelState = ({ init, action, ...args }) => {
         },
         undefined,
         () => {
-            return typeof init === 'function' ?
-                init()
-                :
-                init;
+            if (typeof map === 'function') {
+                return map(getInitState(model));
+            } else {
+                return getInitState(model);
+            }
         }
     );
     React.useLayoutEffect(() => {
@@ -39,8 +92,8 @@ const useModelState = ({ init, action, ...args }) => {
         };
     }, []);
     React.useLayoutEffect(() => {
-        const onNewStateThrottled = throttle(() => {
-            const state = core.transport.getState(model);
+        const onNewStateThrottled = throttle(async () => {
+            const state = await core.transport.getState(model);
             if (typeof map === 'function') {
                 setState(map(state));
             } else {
@@ -64,4 +117,7 @@ const useModelState = ({ init, action, ...args }) => {
     return state;
 };
 
-module.exports = useModelState;
+module.exports = {
+    withGetInitState,
+    useModelState
+};

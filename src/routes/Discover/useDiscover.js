@@ -5,18 +5,6 @@ const UrlUtils = require('url');
 const { useServices } = require('stremio/services');
 const { useModelState } = require('stremio/common');
 
-const init = () => ({
-    selected: null,
-    selectable: {
-        types: [],
-        catalogs: [],
-        extra: [],
-        nextPage: false
-    },
-    catalog: null,
-    defaultRequest: null,
-});
-
 const map = (discover) => ({
     ...discover,
     catalog: discover.catalog !== null && discover.catalog.content.type === 'Ready' ?
@@ -67,25 +55,20 @@ const useDiscover = (urlParams, queryParams) => {
                 };
             }
         } else {
-            const discover = core.transport.getState('discover');
-            if (discover.defaultRequest !== null) {
-                return {
-                    action: 'Load',
-                    args: {
-                        model: 'CatalogWithFilters',
-                        args: {
-                            request: discover.defaultRequest
-                        }
-                    }
-                };
-            }
+            return {
+                action: 'Load',
+                args: {
+                    model: 'CatalogWithFilters',
+                    args: null
+                }
+            };
         }
 
         return {
             action: 'Unload'
         };
     }, [urlParams, queryParams]);
-    const discover = useModelState({ model: 'discover', action, map, init });
+    const discover = useModelState({ model: 'discover', action, map });
     return [discover, loadNextPage];
 };
 

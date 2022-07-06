@@ -3,14 +3,6 @@
 const React = require('react');
 const { useModelState } = require('stremio/common');
 
-const init = () => ({
-    selected: null,
-    metaItem: null,
-    streams: [],
-    metaExtensions: [],
-    title: null
-});
-
 const map = (metaDetails) => ({
     ...metaDetails,
     metaItem: metaDetails.metaItem !== null && metaDetails.metaItem.content.type === 'Ready' ?
@@ -74,7 +66,7 @@ const useMetaDetails = (urlParams) => {
             };
         }
     }, [urlParams]);
-    return useModelState({ model: 'meta_details', action, map, init });
+    return useModelState({ model: 'meta_details', action, map });
 };
 
 module.exports = useMetaDetails;

@@ -4,17 +4,6 @@ const React = require('react');
 const { useServices } = require('stremio/services');
 const { useModelState } = require('stremio/common');
 
-const init = () => ({
-    selected: null,
-    metaItem: null,
-    subtitles: [],
-    nextVideo: null,
-    seriesInfo: null,
-    libraryItem: null,
-    title: null,
-    addon: null,
-});
-
 const map = (player) => ({
     ...player,
     metaItem: player.metaItem !== null && player.metaItem.type === 'Ready' ?
@@ -113,7 +102,7 @@ const usePlayer = (urlParams) => {
             }
         }, 'player');
     }, []);
-    const player = useModelState({ model: 'player', action, init, map });
+    const player = useModelState({ model: 'player', action, map });
     return [player, updateLibraryItemState, pushToLibrary];
 };
 

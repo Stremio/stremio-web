@@ -28,13 +28,15 @@ module.exports = (env, argv) => ({
                 use: {
                     loader: 'babel-loader',
                     options: {
+                        sourceType: 'unambiguous',
                         presets: [
                             '@babel/preset-env',
                             '@babel/preset-react'
                         ],
                         plugins: [
                             '@babel/plugin-proposal-class-properties',
-                            '@babel/plugin-proposal-object-rest-spread'
+                            '@babel/plugin-proposal-object-rest-spread',
+                            '@babel/plugin-transform-runtime'
                         ]
                     }
                 }

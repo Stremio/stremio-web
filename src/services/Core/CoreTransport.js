@@ -34,8 +34,8 @@ function CoreTransport() {
     this.removeAllListeners = function() {
         events.removeAllListeners();
     };
-    this.getState = function(field) {
-        return get_state(field);
+    this.getState = async function(field) {
+        return Promise.resolve(get_state(field));
     };
     this.getDebugState = function() {
         return get_debug_state();
