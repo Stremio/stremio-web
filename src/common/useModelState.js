@@ -36,7 +36,7 @@ function wrapPromise(promise) {
     };
 }
 
-const withGetInitState = (Component) => {
+const withGetInitState = (Component, Fallback = () => { }) => {
     return function WithGetInitState(props) {
         const { core } = useServices();
         const initStateRef = React.useRef({});
@@ -48,7 +48,7 @@ const withGetInitState = (Component) => {
             return initStateRef.current[model].read();
         }, []);
         return (
-            <React.Suspense>
+            <React.Suspense fallback={<Fallback {...props} />}>
                 <GetInitStateContext.Provider value={getInitState}>
                     <Component {...props} />
                 </GetInitStateContext.Provider>
