@@ -6,9 +6,9 @@ const isEqual = require('lodash.isequal');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
 
-const GetInitStateContext = React.createContext();
+const ModelSuspenderContext = React.createContext();
 
-GetInitStateContext.displayName = 'GetInitStateContext';
+ModelSuspenderContext.displayName = 'ModelSuspenderContext';
 
 function wrapPromise(promise) {
     let status = 'pending';
@@ -36,8 +36,8 @@ function wrapPromise(promise) {
     };
 }
 
-const withGetInitState = (Component, Fallback = () => { }) => {
-    return function WithGetInitState(props) {
+const withModelSuspender = (Component, Fallback = () => { }) => {
+    return function WithModelSuspender(props) {
         const { core } = useServices();
         const initStateRef = React.useRef({});
         const getInitState = React.useCallback((model) => {
@@ -49,9 +49,9 @@ const withGetInitState = (Component, Fallback = () => { }) => {
         }, []);
         return (
             <React.Suspense fallback={<Fallback {...props} />}>
-                <GetInitStateContext.Provider value={getInitState}>
+                <ModelSuspenderContext.Provider value={getInitState}>
                     <Component {...props} />
-                </GetInitStateContext.Provider>
+                </ModelSuspenderContext.Provider>
             </React.Suspense>
         );
     };
@@ -64,7 +64,7 @@ const useModelState = ({ action, ...args }) => {
     const [model, timeout, map] = React.useMemo(() => {
         return [args.model, args.timeout, args.map];
     }, []);
-    const getInitState = React.useContext(GetInitStateContext);
+    const getInitState = React.useContext(ModelSuspenderContext);
     const [state, setState] = React.useReducer(
         (prevState, nextState) => {
             return Object.keys(prevState).reduce((result, key) => {
@@ -123,6 +123,6 @@ const useModelState = ({ action, ...args }) => {
 };
 
 module.exports = {
-    withGetInitState,
+    withModelSuspender,
     useModelState
 };

@@ -36,7 +36,7 @@ const useDeepEqualMemo = require('./useDeepEqualMemo');
 const useDeepEqualState = require('./useDeepEqualState');
 const useFullscreen = require('./useFullscreen');
 const useLiveRef = require('./useLiveRef');
-const { withGetInitState, useModelState } = require('./useModelState');
+const { withModelSuspender, useModelState } = require('./useModelState');
 const useOnScrollToBottom = require('./useOnScrollToBottom');
 const useProfile = require('./useProfile');
 const useStreamingServer = require('./useStreamingServer');
@@ -80,7 +80,7 @@ module.exports = {
     useDeepEqualState,
     useFullscreen,
     useLiveRef,
-    withGetInitState,
+    withModelSuspender,
     useModelState,
     useOnScrollToBottom,
     useProfile,
