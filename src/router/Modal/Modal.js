@@ -1,7 +1,7 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
 const React = require('react');
-const ReactDOM = require('react-dom/client');
+const ReactDOM = require('react-dom');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const FocusLock = require('react-focus-lock').default;
