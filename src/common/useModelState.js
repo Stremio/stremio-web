@@ -81,18 +81,22 @@ const useModelState = ({ action, ...args }) => {
             }
         }
     );
-    React.useLayoutEffect(() => {
+    React.useInsertionEffect(() => {
         if (action) {
             core.transport.dispatch(action, model);
         }
     }, [action]);
-    React.useLayoutEffect(() => {
+    React.useInsertionEffect(() => {
         return () => {
             core.transport.dispatch({ action: 'Unload' }, model);
         };
     }, []);
-    React.useLayoutEffect(() => {
-        const onNewStateThrottled = throttle(async () => {
+    React.useInsertionEffect(() => {
+        const onNewStateThrottled = throttle(async (models) => {
+            if (models.indexOf(model) === -1) {
+                return;
+            }
+
             const state = await core.transport.getState(model);
             if (typeof map === 'function') {
                 setState(map(state));
@@ -111,7 +115,7 @@ const useModelState = ({ action, ...args }) => {
             core.transport.off('NewState', onNewStateThrottled);
         };
     }, [routeFocused]);
-    React.useLayoutEffect(() => {
+    React.useInsertionEffect(() => {
         mountedRef.current = true;
     }, []);
     return state;
