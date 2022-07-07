@@ -4,6 +4,7 @@ const AddonDetailsModal = require('./AddonDetailsModal');
 const Button = require('./Button');
 const Checkbox = require('./Checkbox');
 const ColorInput = require('./ColorInput');
+const DelayedRenderer = require('./DelayedRenderer');
 const Image = require('./Image');
 const LibItem = require('./LibItem');
 const MainNavBars = require('./MainNavBars');
@@ -45,6 +46,7 @@ module.exports = {
     Button,
     Checkbox,
     ColorInput,
+    DelayedRenderer,
     Image,
     LibItem,
     MainNavBars,
