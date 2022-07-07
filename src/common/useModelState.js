@@ -92,7 +92,7 @@ const useModelState = ({ action, ...args }) => {
         };
     }, []);
     React.useInsertionEffect(() => {
-        const onNewStateThrottled = throttle(async (models) => {
+        const onNewState = async (models) => {
             if (models.indexOf(model) === -1) {
                 return;
             }
@@ -103,11 +103,12 @@ const useModelState = ({ action, ...args }) => {
             } else {
                 setState(state);
             }
-        }, timeout);
+        };
+        const onNewStateThrottled = throttle(onNewState, timeout);
         if (routeFocused) {
             core.transport.on('NewState', onNewStateThrottled);
             if (mountedRef.current) {
-                onNewStateThrottled.call();
+                onNewState([model]);
             }
         }
         return () => {
