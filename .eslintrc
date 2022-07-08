@@ -21,6 +21,8 @@
         "es6": true
     },
     "parserOptions": {
+        "sourceType": "module",
+        "allowImportExportEverywhere": true,
         "ecmaVersion": 11,
         "ecmaFeatures": {
             "jsx": true
