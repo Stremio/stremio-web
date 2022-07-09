@@ -1,19 +1,22 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
 const EventEmitter = require('eventemitter3');
-const { default: initialize_api, initialize_runtime, get_state, get_debug_state, dispatch, analytics, decode_stream } = require('@stremio/stremio-core-web');
+const Bridge = require('./bridge');
 
-function CoreTransport() {
+function CoreTransport(args) {
     const events = new EventEmitter();
+    const worker = new Worker(`${process.env.COMMIT_HASH}/scripts/worker.js`);
+    const bridge = new Bridge(worker, window);
 
-    initialize_api(require('@stremio/stremio-core-web/stremio_core_web_bg.wasm'))
-        .then(() => initialize_runtime(({ name, args }) => {
-            try {
-                events.emit(name, args);
-            } catch (error) {
-                console.error('CoreTransport', error);
-            }
-        }))
+    window.onCoreEvent = ({ name, args }) => {
+        try {
+            events.emit(name, args);
+        } catch (error) {
+            console.error('CoreTransport', error);
+        }
+    };
+
+    bridge.call(['init'], [args])
         .then(() => {
             try {
                 events.emit('init');
@@ -35,27 +38,19 @@ function CoreTransport() {
         events.removeAllListeners();
     };
     this.getState = async function(field) {
-        return Promise.resolve(get_state(field));
+        return bridge.call(['getState'], [field]);
     };
-    this.getDebugState = function() {
-        return get_debug_state();
+    this.getDebugState = async function() {
+        return bridge.call(['getDebugState'], []);
     };
-    this.dispatch = function(action, field) {
-        try {
-            dispatch(action, field);
-        } catch (error) {
-            console.error('CoreTransport', error);
-        }
+    this.dispatch = async function(action, field) {
+        return bridge.call(['dispatch'], [action, field, location.hash]);
     };
-    this.analytics = function(event) {
-        try {
-            analytics(event);
-        } catch (error) {
-            console.error('CoreTransport', error);
-        }
+    this.analytics = async function(event) {
+        return bridge.call(['analytics'], [event, location.hash]);
     };
-    this.decodeStream = function(stream) {
-        return decode_stream(stream);
+    this.decodeStream = async function(stream) {
+        return bridge.call(['decodeStream'], [stream]);
     };
 }
 
