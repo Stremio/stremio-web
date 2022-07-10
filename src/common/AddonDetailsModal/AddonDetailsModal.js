@@ -3,6 +3,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const ModalDialog = require('stremio/common/ModalDialog');
+const { withModelSuspender } = require('stremio/common/useModelState');
 const { useServices } = require('stremio/services');
 const AddonDetailsWithRemoteAndLocalAddon = withRemoteAndLocalAddon(require('./AddonDetails'));
 const useAddonDetails = require('./useAddonDetails');
@@ -144,4 +145,18 @@ AddonDetailsModal.propTypes = {
     onCloseRequest: PropTypes.func
 };
 
-module.exports = AddonDetailsModal;
+const AddonDetailsModalFallback = ({ onCloseRequest }) => (
+    <ModalDialog
+        className={styles['addon-details-modal-container']}
+        title={'Stremio addon'}
+        onCloseRequest={onCloseRequest}
+    >
+        <div className={styles['addon-details-message-container']}>
+            Loading addon manifest
+        </div>
+    </ModalDialog>
+);
+
+AddonDetailsModalFallback.propTypes = AddonDetailsModal.propTypes;
+
+module.exports = withModelSuspender(AddonDetailsModal, AddonDetailsModalFallback);
