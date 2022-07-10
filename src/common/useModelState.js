@@ -3,6 +3,7 @@
 const React = require('react');
 const throttle = require('lodash.throttle');
 const isEqual = require('lodash.isequal');
+const intersection = require('lodash.intersection');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
 
@@ -61,8 +62,8 @@ const useModelState = ({ action, ...args }) => {
     const { core } = useServices();
     const routeFocused = useRouteFocused();
     const mountedRef = React.useRef(false);
-    const [model, timeout, map] = React.useMemo(() => {
-        return [args.model, args.timeout, args.map];
+    const [model, timeout, map, deps] = React.useMemo(() => {
+        return [args.model, args.timeout, args.map, args.deps];
     }, []);
     const getInitState = React.useContext(ModelSuspenderContext);
     const [state, setState] = React.useReducer(
@@ -93,7 +94,7 @@ const useModelState = ({ action, ...args }) => {
     }, []);
     React.useInsertionEffect(() => {
         const onNewState = async (models) => {
-            if (models.indexOf(model) === -1) {
+            if (models.indexOf(model) === -1 && (!Array.isArray(deps) || intersection(deps, models).length === 0)) {
                 return;
             }
 
