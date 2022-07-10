@@ -1,3 +1,5 @@
+// Copyright (C) 2017-2022 Smart code 203358507
+
 function getId() {
     return Math.random().toString(32).slice(2);
 }
