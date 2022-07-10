@@ -8,7 +8,7 @@ const { useServices } = require('stremio/services');
 const Button = require('stremio/common/Button');
 const useFullscreen = require('stremio/common/useFullscreen');
 const useProfile = require('stremio/common/useProfile');
-const { withModelSuspender } = require('stremio/common/useModelState');
+const { withCoreSuspender } = require('stremio/common/useModelState');
 const styles = require('./styles');
 
 const NavMenuContent = ({ onClick }) => {
@@ -93,4 +93,4 @@ const NavMenuContentFallback = () => (
     <div className={styles['nav-menu-container']} />
 );
 
-module.exports = withModelSuspender(NavMenuContent, NavMenuContentFallback);
+module.exports = withCoreSuspender(NavMenuContent, NavMenuContentFallback);

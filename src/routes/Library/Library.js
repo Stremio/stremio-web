@@ -5,7 +5,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('@stremio/stremio-icons/dom');
 const NotFound = require('stremio/routes/NotFound');
-const { Button, DelayedRenderer, Multiselect, MainNavBars, LibItem, Image, ModalDialog, PaginationInput, useProfile, routesRegexp, useBinaryState, withModelSuspender } = require('stremio/common');
+const { Button, DelayedRenderer, Multiselect, MainNavBars, LibItem, Image, ModalDialog, PaginationInput, useProfile, routesRegexp, useBinaryState, withCoreSuspender } = require('stremio/common');
 const useLibrary = require('./useLibrary');
 const useSelectableInputs = require('./useSelectableInputs');
 const styles = require('./styles');
@@ -140,4 +140,4 @@ const LibraryFallback = ({ model }) => (
 
 LibraryFallback.propTypes = Library.propTypes;
 
-module.exports = withModel(withModelSuspender(Library, LibraryFallback));
+module.exports = withModel(withCoreSuspender(Library, LibraryFallback));

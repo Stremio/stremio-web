@@ -7,9 +7,9 @@ const intersection = require('lodash.intersection');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
 
-const ModelSuspenderContext = React.createContext();
+const CoreSuspenderContext = React.createContext();
 
-ModelSuspenderContext.displayName = 'ModelSuspenderContext';
+CoreSuspenderContext.displayName = 'CoreSuspenderContext';
 
 function wrapPromise(promise) {
     let status = 'pending';
@@ -37,8 +37,8 @@ function wrapPromise(promise) {
     };
 }
 
-const withModelSuspender = (Component, Fallback = () => { }) => {
-    return function WithModelSuspender(props) {
+const withCoreSuspender = (Component, Fallback = () => { }) => {
+    return function withCoreSuspender(props) {
         const { core } = useServices();
         const initStateRef = React.useRef({});
         const getInitState = React.useCallback((model) => {
@@ -50,9 +50,9 @@ const withModelSuspender = (Component, Fallback = () => { }) => {
         }, []);
         return (
             <React.Suspense fallback={<Fallback {...props} />}>
-                <ModelSuspenderContext.Provider value={getInitState}>
+                <CoreSuspenderContext.Provider value={getInitState}>
                     <Component {...props} />
-                </ModelSuspenderContext.Provider>
+                </CoreSuspenderContext.Provider>
             </React.Suspense>
         );
     };
@@ -65,7 +65,7 @@ const useModelState = ({ action, ...args }) => {
     const [model, timeout, map, deps] = React.useMemo(() => {
         return [args.model, args.timeout, args.map, args.deps];
     }, []);
-    const getInitState = React.useContext(ModelSuspenderContext);
+    const getInitState = React.useContext(CoreSuspenderContext);
     const [state, setState] = React.useReducer(
         (prevState, nextState) => {
             return Object.keys(prevState).reduce((result, key) => {
@@ -124,6 +124,6 @@ const useModelState = ({ action, ...args }) => {
 };
 
 module.exports = {
-    withModelSuspender,
+    withCoreSuspender,
     useModelState
 };

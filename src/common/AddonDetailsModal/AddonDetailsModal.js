@@ -3,7 +3,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const ModalDialog = require('stremio/common/ModalDialog');
-const { withModelSuspender } = require('stremio/common/useModelState');
+const { withCoreSuspender } = require('stremio/common/useModelState');
 const { useServices } = require('stremio/services');
 const AddonDetailsWithRemoteAndLocalAddon = withRemoteAndLocalAddon(require('./AddonDetails'));
 const useAddonDetails = require('./useAddonDetails');
@@ -159,4 +159,4 @@ const AddonDetailsModalFallback = ({ onCloseRequest }) => (
 
 AddonDetailsModalFallback.propTypes = AddonDetailsModal.propTypes;
 
-module.exports = withModelSuspender(AddonDetailsModal, AddonDetailsModalFallback);
+module.exports = withCoreSuspender(AddonDetailsModal, AddonDetailsModalFallback);

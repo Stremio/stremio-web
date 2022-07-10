@@ -6,7 +6,7 @@ const throttle = require('lodash.throttle');
 const Icon = require('@stremio/stremio-icons/dom');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
-const { Button, Checkbox, MainNavBars, Multiselect, ColorInput, TextInput, ModalDialog, useProfile, useStreamingServer, useBinaryState, withModelSuspender } = require('stremio/common');
+const { Button, Checkbox, MainNavBars, Multiselect, ColorInput, TextInput, ModalDialog, useProfile, useStreamingServer, useBinaryState, withCoreSuspender } = require('stremio/common');
 const useProfileSettingsInputs = require('./useProfileSettingsInputs');
 const useStreamingServerSettingsInputs = require('./useStreamingServerSettingsInputs');
 const styles = require('./styles');
@@ -453,4 +453,4 @@ const SettingsFallback = () => (
     <MainNavBars className={styles['settings-container']} route={'settings'} />
 );
 
-module.exports = withModelSuspender(Settings, SettingsFallback);
+module.exports = withCoreSuspender(Settings, SettingsFallback);

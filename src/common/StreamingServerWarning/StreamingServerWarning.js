@@ -6,7 +6,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Button = require('stremio/common/Button');
 const useProfile = require('stremio/common/useProfile');
-const { withModelSuspender } = require('stremio/common/useModelState');
+const { withCoreSuspender } = require('stremio/common/useModelState');
 const styles = require('./styles');
 
 const StreamingServerWarning = ({ className }) => {
@@ -63,4 +63,4 @@ StreamingServerWarning.propTypes = {
     className: PropTypes.string
 };
 
-module.exports = withModelSuspender(StreamingServerWarning);
+module.exports = withCoreSuspender(StreamingServerWarning);
