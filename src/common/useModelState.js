@@ -4,7 +4,7 @@ const React = require('react');
 const throttle = require('lodash.throttle');
 const isEqual = require('lodash.isequal');
 const intersection = require('lodash.intersection');
-const { useCoreSuspender } = require('stremio/common/coreSuspender');
+const { useCoreSuspender } = require('stremio/common/CoreSuspender');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
 

@@ -6,7 +6,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Button = require('stremio/common/Button');
 const useProfile = require('stremio/common/useProfile');
-const { withCoreSuspender } = require('stremio/common/coreSuspender');
+const { withCoreSuspender } = require('stremio/common/CoreSuspender');
 const styles = require('./styles');
 
 const StreamingServerWarning = ({ className }) => {
