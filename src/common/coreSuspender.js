@@ -56,6 +56,7 @@ const withCoreSuspender = (Component, Fallback = () => { }) => {
 
             return streamsRef.current[stream].read();
         }, []);
+        const suspender = React.useMemo(() => ({ getState, decodeStream }), []);
         React.useLayoutEffect(() => {
             if (!render) {
                 setRender(true);
@@ -63,7 +64,7 @@ const withCoreSuspender = (Component, Fallback = () => { }) => {
         }, []);
         return render ?
             <React.Suspense fallback={<Fallback {...props} />}>
-                <CoreSuspenderContext.Provider value={{ getState, decodeStream }}>
+                <CoreSuspenderContext.Provider value={suspender}>
                     <Component {...props} />
                 </CoreSuspenderContext.Provider>
             </React.Suspense>
