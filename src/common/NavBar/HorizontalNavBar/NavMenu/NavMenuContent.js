@@ -8,7 +8,7 @@ const { useServices } = require('stremio/services');
 const Button = require('stremio/common/Button');
 const useFullscreen = require('stremio/common/useFullscreen');
 const useProfile = require('stremio/common/useProfile');
-const { withCoreSuspender } = require('stremio/common/useModelState');
+const { withCoreSuspender } = require('stremio/common/coreSuspender');
 const styles = require('./styles');
 
 const NavMenuContent = ({ onClick }) => {

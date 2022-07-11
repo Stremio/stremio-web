@@ -25,6 +25,7 @@ const TextInput = require('./TextInput');
 const { ToastProvider, useToast } = require('./Toast');
 const comparatorWithPriorities = require('./comparatorWithPriorities');
 const CONSTANTS = require('./CONSTANTS');
+const { withCoreSuspender, useCoreSuspender } = require('./coreSuspender');
 const getVisibleChildrenRange = require('./getVisibleChildrenRange');
 const languageNames = require('./languageNames');
 const routesRegexp = require('./routesRegexp');
@@ -36,7 +37,7 @@ const useDeepEqualMemo = require('./useDeepEqualMemo');
 const useDeepEqualState = require('./useDeepEqualState');
 const useFullscreen = require('./useFullscreen');
 const useLiveRef = require('./useLiveRef');
-const { withCoreSuspender, useModelState } = require('./useModelState');
+const useModelState = require('./useModelState');
 const useOnScrollToBottom = require('./useOnScrollToBottom');
 const useProfile = require('./useProfile');
 const useStreamingServer = require('./useStreamingServer');
@@ -69,6 +70,8 @@ module.exports = {
     useToast,
     comparatorWithPriorities,
     CONSTANTS,
+    withCoreSuspender,
+    useCoreSuspender,
     getVisibleChildrenRange,
     languageNames,
     routesRegexp,
@@ -80,7 +83,6 @@ module.exports = {
     useDeepEqualState,
     useFullscreen,
     useLiveRef,
-    withCoreSuspender,
     useModelState,
     useOnScrollToBottom,
     useProfile,

@@ -4,59 +4,9 @@ const React = require('react');
 const throttle = require('lodash.throttle');
 const isEqual = require('lodash.isequal');
 const intersection = require('lodash.intersection');
+const { useCoreSuspender } = require('stremio/common/coreSuspender');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
-
-const CoreSuspenderContext = React.createContext();
-
-CoreSuspenderContext.displayName = 'CoreSuspenderContext';
-
-function wrapPromise(promise) {
-    let status = 'pending';
-    let result;
-    const suspender = promise.then(
-        (resp) => {
-            status = 'success';
-            result = resp;
-        },
-        (error) => {
-            status = 'error';
-            result = error;
-        }
-    );
-    return {
-        read() {
-            if (status === 'pending') {
-                throw suspender;
-            } else if (status === 'error') {
-                throw result;
-            } else if (status === 'success') {
-                return result;
-            }
-        }
-    };
-}
-
-const withCoreSuspender = (Component, Fallback = () => { }) => {
-    return function withCoreSuspender(props) {
-        const { core } = useServices();
-        const initStateRef = React.useRef({});
-        const getInitState = React.useCallback((model) => {
-            if (!initStateRef.current[model]) {
-                initStateRef.current[model] = wrapPromise(core.transport.getState(model));
-            }
-
-            return initStateRef.current[model].read();
-        }, []);
-        return (
-            <React.Suspense fallback={<Fallback {...props} />}>
-                <CoreSuspenderContext.Provider value={getInitState}>
-                    <Component {...props} />
-                </CoreSuspenderContext.Provider>
-            </React.Suspense>
-        );
-    };
-};
 
 const useModelState = ({ action, ...args }) => {
     const { core } = useServices();
@@ -65,7 +15,7 @@ const useModelState = ({ action, ...args }) => {
     const [model, timeout, map, deps] = React.useMemo(() => {
         return [args.model, args.timeout, args.map, args.deps];
     }, []);
-    const getInitState = React.useContext(CoreSuspenderContext);
+    const { getState } = useCoreSuspender();
     const [state, setState] = React.useReducer(
         (prevState, nextState) => {
             return Object.keys(prevState).reduce((result, key) => {
@@ -76,9 +26,9 @@ const useModelState = ({ action, ...args }) => {
         undefined,
         () => {
             if (typeof map === 'function') {
-                return map(getInitState(model));
+                return map(getState(model));
             } else {
-                return getInitState(model);
+                return getState(model);
             }
         }
     );
@@ -123,7 +73,4 @@ const useModelState = ({ action, ...args }) => {
     return state;
 };
 
-module.exports = {
-    withCoreSuspender,
-    useModelState
-};
+module.exports = useModelState;
