@@ -47,7 +47,7 @@ const Search = ({ queryParams }) => {
             <div ref={scrollContainerRef} className={styles['search-content']} onScroll={onScroll}>
                 {
                     query === null ?
-                        <div className={styles['search-hints-container']}>
+                        <div className={classnames(styles['search-hints-container'], 'animation-fade-in')}>
                             <div className={styles['search-hint-container']}>
                                 <Icon className={styles['icon']} icon={'ic_movies'} />
                                 <div className={styles['label']}>Search for movies, series, YouTube and TV channels</div>
@@ -74,7 +74,7 @@ const Search = ({ queryParams }) => {
                                         return (
                                             <MetaRow
                                                 key={index}
-                                                className={classnames(styles['search-row'], styles[`search-row-${catalog.content.content[0].posterShape}`])}
+                                                className={classnames(styles['search-row'], styles[`search-row-${catalog.content.content[0].posterShape}`], 'animation-fade-in')}
                                                 title={catalog.title}
                                                 items={catalog.content.content}
                                                 itemComponent={MetaItem}
@@ -86,7 +86,7 @@ const Search = ({ queryParams }) => {
                                         return (
                                             <MetaRow
                                                 key={index}
-                                                className={styles['search-row']}
+                                                className={classnames(styles['search-row'], 'animation-fade-in')}
                                                 title={catalog.title}
                                                 message={catalog.content.content}
                                                 deepLinks={catalog.deepLinks}
@@ -97,7 +97,7 @@ const Search = ({ queryParams }) => {
                                         return (
                                             <MetaRow.Placeholder
                                                 key={index}
-                                                className={classnames(styles['search-row'], styles['search-row-poster'])}
+                                                className={classnames(styles['search-row'], styles['search-row-poster'], 'animation-fade-in')}
                                                 title={catalog.title}
                                                 deepLinks={catalog.deepLinks}
                                             />
