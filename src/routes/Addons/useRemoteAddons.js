@@ -29,7 +29,7 @@ const useRemoteAddons = (urlParams) => {
             };
         }
     }, [urlParams]);
-    return useModelState({ model: 'remote_addons', action });
+    return useModelState({ model: 'remote_addons', action, deps: ['ctx'] });
 };
 
 module.exports = useRemoteAddons;
