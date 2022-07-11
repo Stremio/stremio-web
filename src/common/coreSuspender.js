@@ -1,7 +1,7 @@
 const React = require('react');
 const { useServices } = require('stremio/services');
 
-const CoreSuspenderContext = React.createContext();
+const CoreSuspenderContext = React.createContext(null);
 
 CoreSuspenderContext.displayName = 'CoreSuspenderContext';
 
@@ -31,9 +31,15 @@ function wrapPromise(promise) {
     };
 }
 
+const useCoreSuspender = () => {
+    return React.useContext(CoreSuspenderContext);
+};
+
 const withCoreSuspender = (Component, Fallback = () => { }) => {
     return function withCoreSuspender(props) {
         const { core } = useServices();
+        const parentSuspender = useCoreSuspender();
+        const [render, setRender] = React.useState(parentSuspender === null);
         const statesRef = React.useRef({});
         const streamsRef = React.useRef({});
         const getState = React.useCallback((model) => {
@@ -50,18 +56,20 @@ const withCoreSuspender = (Component, Fallback = () => { }) => {
 
             return streamsRef.current[stream].read();
         }, []);
-        return (
+        React.useLayoutEffect(() => {
+            if (!render) {
+                setRender(true);
+            }
+        }, []);
+        return render ?
             <React.Suspense fallback={<Fallback {...props} />}>
                 <CoreSuspenderContext.Provider value={{ getState, decodeStream }}>
                     <Component {...props} />
                 </CoreSuspenderContext.Provider>
             </React.Suspense>
-        );
+            :
+            null;
     };
-};
-
-const useCoreSuspender = () => {
-    return React.useContext(CoreSuspenderContext);
 };
 
 module.exports = { withCoreSuspender, useCoreSuspender };
