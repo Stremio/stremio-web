@@ -68,7 +68,7 @@ const useDiscover = (urlParams, queryParams) => {
             action: 'Unload'
         };
     }, [urlParams, queryParams]);
-    const discover = useModelState({ model: 'discover', action, map });
+    const discover = useModelState({ model: 'discover', action, map, deps: ['ctx'] });
     return [discover, loadNextPage];
 };
 
