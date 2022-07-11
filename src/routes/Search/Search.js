@@ -5,7 +5,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const debounce = require('lodash.debounce');
 const Icon = require('@stremio/stremio-icons/dom');
-const { Image, MainNavBars, MetaRow, MetaItem, useDeepEqualMemo, getVisibleChildrenRange } = require('stremio/common');
+const { Image, MainNavBars, MetaRow, MetaItem, useDeepEqualMemo, withCoreSuspender, getVisibleChildrenRange } = require('stremio/common');
 const useSearch = require('./useSearch');
 const styles = require('./styles');
 
@@ -115,4 +115,10 @@ Search.propTypes = {
     queryParams: PropTypes.instanceOf(URLSearchParams)
 };
 
-module.exports = Search;
+const SearchFallback = ({ queryParams }) => (
+    <MainNavBars className={styles['search-container']} route={'search'} query={queryParams.get('search')} />
+);
+
+SearchFallback.propTypes = Search.propTypes;
+
+module.exports = withCoreSuspender(Search, SearchFallback);
