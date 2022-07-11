@@ -3,7 +3,7 @@
 const React = require('react');
 const classnames = require('classnames');
 const debounce = require('lodash.debounce');
-const { MainNavBars, MetaRow, LibItem, MetaItem, StreamingServerWarning, useProfile, useStreamingServer, getVisibleChildrenRange } = require('stremio/common');
+const { MainNavBars, MetaRow, LibItem, MetaItem, StreamingServerWarning, useStreamingServer, withCoreSuspender, getVisibleChildrenRange } = require('stremio/common');
 const useBoard = require('./useBoard');
 const useContinueWatchingPreview = require('./useContinueWatchingPreview');
 const styles = require('./styles');
@@ -11,7 +11,6 @@ const styles = require('./styles');
 const THRESHOLD = 5;
 
 const Board = () => {
-    const profile = useProfile();
     const streamingServer = useStreamingServer();
     const continueWatchingPreview = useContinueWatchingPreview();
     const [board, loadBoardRows] = useBoard();
@@ -42,7 +41,7 @@ const Board = () => {
                     {
                         continueWatchingPreview.libraryItems.length > 0 ?
                             <MetaRow
-                                className={classnames(styles['board-row'], styles['continue-watching-row'])}
+                                className={classnames(styles['board-row'], styles['continue-watching-row'], 'animation-fade-in')}
                                 title={'Continue Watching'}
                                 items={continueWatchingPreview.libraryItems}
                                 itemComponent={LibItem}
@@ -57,7 +56,7 @@ const Board = () => {
                                 return (
                                     <MetaRow
                                         key={index}
-                                        className={classnames(styles['board-row'], styles[`board-row-${catalog.content.content[0].posterShape}`])}
+                                        className={classnames(styles['board-row'], styles[`board-row-${catalog.content.content[0].posterShape}`], 'animation-fade-in')}
                                         title={catalog.title}
                                         items={catalog.content.content}
                                         itemComponent={MetaItem}
@@ -69,7 +68,7 @@ const Board = () => {
                                 return (
                                     <MetaRow
                                         key={index}
-                                        className={styles['board-row']}
+                                        className={classnames(styles['board-row'], 'animation-fade-in')}
                                         title={catalog.title}
                                         message={catalog.content.content}
                                         deepLinks={catalog.deepLinks}
@@ -80,7 +79,7 @@ const Board = () => {
                                 return (
                                     <MetaRow.Placeholder
                                         key={index}
-                                        className={classnames(styles['board-row'], styles['board-row-poster'])}
+                                        className={classnames(styles['board-row'], styles['board-row-poster'], 'animation-fade-in')}
                                         title={catalog.title}
                                         deepLinks={catalog.deepLinks}
                                     />
@@ -91,8 +90,7 @@ const Board = () => {
                 </div>
             </MainNavBars>
             {
-                streamingServer.settings !== null && streamingServer.settings.type === 'Err' &&
-                    (isNaN(profile.settings.streamingServerWarningDismissed.getTime()) || profile.settings.streamingServerWarningDismissed.getTime() < Date.now()) ?
+                streamingServer.settings !== null && streamingServer.settings.type === 'Err' ?
                     <StreamingServerWarning className={styles['board-warning-container']} />
                     :
                     null
@@ -101,4 +99,10 @@ const Board = () => {
     );
 };
 
-module.exports = Board;
+const BoardFallback = () => (
+    <div className={styles['board-container']}>
+        <MainNavBars className={styles['board-content-container']} route={'board'} />
+    </div>
+);
+
+module.exports = withCoreSuspender(Board, BoardFallback);
