@@ -6,7 +6,7 @@ const classnames = require('classnames');
 const debounce = require('lodash.debounce');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
-const { HorizontalNavBar, Button, useFullscreen, useBinaryState, useToast, useStreamingServer } = require('stremio/common');
+const { HorizontalNavBar, Button, useFullscreen, useBinaryState, useToast, useStreamingServer, withCoreSuspender } = require('stremio/common');
 const Icon = require('@stremio/stremio-icons/dom');
 const BufferingLoader = require('./BufferingLoader');
 const ControlBar = require('./ControlBar');
@@ -567,4 +567,8 @@ Player.propTypes = {
     queryParams: PropTypes.instanceOf(URLSearchParams)
 };
 
-module.exports = Player;
+const PlayerFallback = () => (
+    <div className={classnames(styles['player-container'])} />
+);
+
+module.exports = withCoreSuspender(Player, PlayerFallback);

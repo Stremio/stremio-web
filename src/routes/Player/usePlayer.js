@@ -2,7 +2,7 @@
 
 const React = require('react');
 const { useServices } = require('stremio/services');
-const { useModelState } = require('stremio/common');
+const { useModelState, useCoreSuspender } = require('stremio/common');
 
 const map = (player) => ({
     ...player,
@@ -34,8 +34,9 @@ const map = (player) => ({
 
 const usePlayer = (urlParams) => {
     const { core } = useServices();
+    const { decodeStream } = useCoreSuspender();
+    const stream = decodeStream(urlParams.stream);
     const action = React.useMemo(() => {
-        const stream = core.transport.decodeStream(urlParams.stream);
         if (stream !== null) {
             return {
                 action: 'Load',
