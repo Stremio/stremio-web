@@ -45,6 +45,7 @@ const TORRENT_PROFILES = {
 
 const useStreamingServerSettingsInputs = (streamingServer) => {
     const { core } = useServices();
+    // TODO combine those useDeepEqualMemo in one
     const cacheSizeSelect = useDeepEqualMemo(() => {
         if (streamingServer.settings === null || streamingServer.settings.type !== 'Ready') {
             return null;

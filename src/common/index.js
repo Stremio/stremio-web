@@ -32,9 +32,7 @@ const routesRegexp = require('./routesRegexp');
 const sanitizeLocationPath = require('./sanitizeLocationPath');
 const useAnimationFrame = require('./useAnimationFrame');
 const useBinaryState = require('./useBinaryState');
-const useDeepEqualEffect = require('./useDeepEqualEffect');
 const useDeepEqualMemo = require('./useDeepEqualMemo');
-const useDeepEqualState = require('./useDeepEqualState');
 const useFullscreen = require('./useFullscreen');
 const useLiveRef = require('./useLiveRef');
 const useModelState = require('./useModelState');
@@ -78,9 +76,7 @@ module.exports = {
     sanitizeLocationPath,
     useAnimationFrame,
     useBinaryState,
-    useDeepEqualEffect,
     useDeepEqualMemo,
-    useDeepEqualState,
     useFullscreen,
     useLiveRef,
     useModelState,
