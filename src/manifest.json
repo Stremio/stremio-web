@@ -1,0 +1,15 @@
+{
+    "short_name": "Stremio",
+    "name": "Stremio-web",
+    "icons": [
+      { "src": "/big-logo.png", "type": "image/png", "sizes": "maskable" },
+      { "src": "/big-logo.png", "type": "image/png", "sizes": "any" }
+    ],
+    "start_url": "/",
+    "background_color": "#2A2841",
+    "display": "standalone",
+    "scope": "/",
+    "theme_color": "#2A2841",
+    "description": "PWA version of Stremio for iOS"
+  }
+  

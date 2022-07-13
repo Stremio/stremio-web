@@ -4,15 +4,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
-    <link rel="icon" type="image/png" sizes="96x96" href="<%= htmlWebpackPlugin.options.faviconsPath %>/icon-96.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/big-logo.png" />
     <title>Stremio - All you can watch!</title>
     <%= htmlWebpackPlugin.tags.headTags %>
+    <link rel="manifest" href="manifest.json" />
+    <link rel="apple-touch-icon" href="/example.png" />
 </head>
 
 <body>
     <div id="app"></div>
     <%= htmlWebpackPlugin.tags.bodyTags %>
     <script src="//www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1"></script>
+    <script>
+        if ("serviceWorker" in navigator) {
+            window.addEventListener("load", () => {
+                navigator.serviceWorker
+                    .register("/sw.js")
+                    .then((res) => {
+                        console.log("Worker registered!");
+                    })
+                    .catch((err) => {
+                        console.log("Error registering worker:", err);
+                    });
+          });
+        }
+      </script>
 </body>
 
 </html>

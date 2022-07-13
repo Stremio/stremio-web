@@ -185,7 +185,12 @@ module.exports = (env, argv) => ({
             cleanOnceBeforeBuildPatterns: ['*']
         }),
         new CopyWebpackPlugin({
-            patterns: [{ from: 'favicons', to: `${COMMIT_HASH}/favicons` }]
+            patterns: [
+                { from: "./src/icon-96.png", to: "" },
+                { from: "./src/big-logo.png", to: "" },
+                { from: "./src/manifest.json", to: "" },
+                { from: "./src/sw.js", to: "" },
+            ],
         }),
         new MiniCssExtractPlugin({
             filename: `${COMMIT_HASH}/styles/[name].css`
