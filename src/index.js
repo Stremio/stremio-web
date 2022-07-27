@@ -16,3 +16,12 @@ const ReactDOM = require('react-dom');
 const App = require('./App');
 
 ReactDOM.render(<App />, document.getElementById('app'));
+
+if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js')
+            .catch((registrationError) => {
+                console.error('SW registration failed: ', registrationError);
+            });
+    });
+}
