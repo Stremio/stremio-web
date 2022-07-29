@@ -20,7 +20,7 @@ function Shell() {
     function onTransportInitError(err) {
         console.error(err);
         active = false;
-        error = err;
+        error = new Error(err);
         starting = false;
         onStateChanged();
         transport = null;
