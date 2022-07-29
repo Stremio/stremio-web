@@ -263,7 +263,7 @@ const Player = ({ urlParams, queryParams }) => {
                 }
             }, {
                 chromecastTransport: chromecast.active ? chromecast.transport : null,
-                shell,
+                shell: shell.active ? shell : null,
             });
         }
     }, [streamingServer.baseUrl, player.selected, player.metaItem, forceTranscoding, maxAudioChannels, casting]);
