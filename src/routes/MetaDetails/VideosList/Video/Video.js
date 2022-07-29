@@ -88,7 +88,7 @@ const Video = ({ className, id, title, thumbnail, episode, released, upcoming, w
                         {
                             released instanceof Date && !isNaN(released.getTime()) ?
                                 <div className={styles['released-container']}>
-                                    {released.toLocaleString(undefined, { year: '2-digit', month: 'short', day: 'numeric' })}
+                                    {released.toLocaleString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}
                                 </div>
                                 :
                                 scheduled ?
