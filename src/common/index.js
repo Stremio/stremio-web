@@ -29,7 +29,6 @@ const { withCoreSuspender, useCoreSuspender } = require('./CoreSuspender');
 const getVisibleChildrenRange = require('./getVisibleChildrenRange');
 const languageNames = require('./languageNames');
 const routesRegexp = require('./routesRegexp');
-const sanitizeLocationPath = require('./sanitizeLocationPath');
 const useAnimationFrame = require('./useAnimationFrame');
 const useBinaryState = require('./useBinaryState');
 const useDeepEqualMemo = require('./useDeepEqualMemo');
@@ -73,7 +72,6 @@ module.exports = {
     getVisibleChildrenRange,
     languageNames,
     routesRegexp,
-    sanitizeLocationPath,
     useAnimationFrame,
     useBinaryState,
     useDeepEqualMemo,

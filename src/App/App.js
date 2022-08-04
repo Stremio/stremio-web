@@ -5,7 +5,7 @@ const React = require('react');
 const { Router } = require('stremio-router');
 const { Core, Shell, Chromecast, KeyboardShortcuts, ServicesProvider } = require('stremio/services');
 const { NotFound } = require('stremio/routes');
-const { ToastProvider, sanitizeLocationPath, CONSTANTS } = require('stremio/common');
+const { ToastProvider, CONSTANTS } = require('stremio/common');
 const CoreEventsToaster = require('./CoreEventsToaster');
 const ErrorDialog = require('./ErrorDialog');
 const routerViewsConfig = require('./routerViewsConfig');
@@ -19,8 +19,7 @@ const App = () => {
         core: new Core({
             baseURI: document.baseURI,
             appVersion: process.env.VERSION,
-            shellVersion: null,
-            sanitizeLocationPath
+            shellVersion: null
         }),
         shell: new Shell(),
         chromecast: new Chromecast(),
