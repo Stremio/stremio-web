@@ -1,7 +1,7 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
 const EventEmitter = require('eventemitter3');
-const Bridge = require('./bridge');
+const Bridge = require('@stremio/stremio-core-web/bridge');
 
 function CoreTransport(args) {
     const events = new EventEmitter();
