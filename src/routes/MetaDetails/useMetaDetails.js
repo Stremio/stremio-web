@@ -66,7 +66,7 @@ const useMetaDetails = (urlParams) => {
             };
         }
     }, [urlParams]);
-    return useModelState({ model: 'meta_details', action, map, deps: ['ctx'] });
+    return useModelState({ model: 'meta_details', action, map });
 };
 
 module.exports = useMetaDetails;
