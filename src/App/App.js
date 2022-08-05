@@ -17,7 +17,6 @@ const App = () => {
     }, []);
     const services = React.useMemo(() => ({
         core: new Core({
-            baseURI: document.baseURI,
             appVersion: process.env.VERSION,
             shellVersion: null
         }),
