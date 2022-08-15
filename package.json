@@ -33,7 +33,8 @@
         "react-dom": "18.2.0",
         "react-is": "18.2.0",
         "react-focus-lock": "2.9.1",
-        "spatial-navigation-polyfill": "git+https://git@github.com/Stremio/spatial-navigation.git#64871b1422466f5f45d24ebc8bbd315b2ebab6a6"
+        "spatial-navigation-polyfill": "git+https://git@github.com/Stremio/spatial-navigation.git#64871b1422466f5f45d24ebc8bbd315b2ebab6a6",
+        "url": "0.11.0"
     },
     "devDependencies": {
         "@babel/core": "7.16.0",
