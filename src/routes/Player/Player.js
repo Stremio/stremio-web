@@ -25,7 +25,7 @@ const Player = ({ urlParams, queryParams }) => {
             queryParams.has('maxAudioChannels') ? parseInt(queryParams.get('maxAudioChannels'), 10) : null
         ];
     }, [queryParams]);
-    const [player, updateLibraryItemState, pushToLibrary] = usePlayer(urlParams);
+    const [player, timeUpdate, pushToLibrary] = usePlayer(urlParams);
     const [settings, updateSettings] = useSettings();
     const streamingServer = useStreamingServer();
     const routeFocused = useRouteFocused();
@@ -42,6 +42,7 @@ const Player = ({ urlParams, queryParams }) => {
     const [videoState, setVideoState] = React.useReducer(
         (videoState, nextVideoState) => ({ ...videoState, ...nextVideoState }),
         {
+            manifest: null,
             stream: null,
             paused: null,
             time: null,
@@ -75,6 +76,7 @@ const Player = ({ urlParams, queryParams }) => {
         }
     }, []);
     const onImplementationChanged = React.useCallback((manifest) => {
+        setVideoState({ manifest });
         manifest.props.forEach((propName) => {
             dispatch({ type: 'observeProp', propName });
         });
@@ -302,10 +304,12 @@ const Player = ({ urlParams, queryParams }) => {
         dispatch({ type: 'setProp', propName: 'extraSubtitlesOutlineColor', propValue: settings.subtitlesOutlineColor });
     }, [settings.subtitlesOutlineColor]);
     React.useEffect(() => {
-        if (videoState.time !== null && !isNaN(videoState.time) && videoState.duration !== null && !isNaN(videoState.duration)) {
-            updateLibraryItemState(videoState.time, videoState.duration);
+        if (videoState.time !== null && !isNaN(videoState.time) &&
+            videoState.duration !== null && !isNaN(videoState.duration) &&
+            videoState.manifest !== null && typeof videoState.manifest.name === 'string') {
+            timeUpdate(videoState.time, videoState.duration, videoState.manifest.name);
         }
-    }, [videoState.time, videoState.duration]);
+    }, [videoState.time, videoState.duration, videoState.manifest]);
     React.useEffect(() => {
         if ((!Array.isArray(videoState.subtitlesTracks) || videoState.subtitlesTracks.length === 0) &&
             (!Array.isArray(videoState.extraSubtitlesTracks) || videoState.extraSubtitlesTracks.length === 0) &&
