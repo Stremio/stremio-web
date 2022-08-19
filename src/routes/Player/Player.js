@@ -18,7 +18,7 @@ const useSettings = require('./useSettings');
 const styles = require('./styles');
 
 const Player = ({ urlParams, queryParams }) => {
-    const { core, chromecast } = useServices();
+    const { chromecast } = useServices();
     const [forceTranscoding, maxAudioChannels] = React.useMemo(() => {
         return [
             queryParams.has('forceTranscoding'),
@@ -96,15 +96,6 @@ const Player = ({ urlParams, queryParams }) => {
     }, []);
     const onEnded = React.useCallback(() => {
         pushToLibrary();
-        if (player.libraryItem !== null) {
-            core.transport.dispatch({
-                action: 'Ctx',
-                args: {
-                    action: 'RewindLibraryItem',
-                    args: player.libraryItem._id
-                }
-            });
-        }
         if (player.nextVideo !== null) {
             window.location.replace(
                 typeof player.nextVideo.deepLinks.player === 'string' ?
