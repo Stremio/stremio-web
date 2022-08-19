@@ -103,8 +103,16 @@ const usePlayer = (urlParams) => {
             }
         }, 'player');
     }, []);
+    const ended = React.useCallback(() => {
+        core.transport.dispatch({
+            action: 'Player',
+            args: {
+                action: 'Ended'
+            }
+        }, 'player');
+    }, []);
     const player = useModelState({ model: 'player', action, map });
-    return [player, timeUpdate, pushToLibrary];
+    return [player, timeUpdate, pushToLibrary, ended];
 };
 
 module.exports = usePlayer;
