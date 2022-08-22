@@ -111,8 +111,17 @@ const usePlayer = (urlParams) => {
             }
         }, 'player');
     }, []);
+    const pausedChanged = React.useCallback((paused) => {
+        core.transport.dispatch({
+            action: 'Player',
+            args: {
+                action: 'PausedChanged',
+                args: { paused }
+            }
+        }, 'player');
+    }, []);
     const player = useModelState({ model: 'player', action, map });
-    return [player, timeChanged, pushToLibrary, ended];
+    return [player, timeChanged, pausedChanged, ended, pushToLibrary];
 };
 
 module.exports = usePlayer;
