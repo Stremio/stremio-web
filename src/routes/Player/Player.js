@@ -25,7 +25,7 @@ const Player = ({ urlParams, queryParams }) => {
             queryParams.has('maxAudioChannels') ? parseInt(queryParams.get('maxAudioChannels'), 10) : null
         ];
     }, [queryParams]);
-    const [player, timeUpdate, pushToLibrary, ended] = usePlayer(urlParams);
+    const [player, timeChanged, pushToLibrary, ended] = usePlayer(urlParams);
     const [settings, updateSettings] = useSettings();
     const streamingServer = useStreamingServer();
     const routeFocused = useRouteFocused();
@@ -299,7 +299,7 @@ const Player = ({ urlParams, queryParams }) => {
         if (videoState.time !== null && !isNaN(videoState.time) &&
             videoState.duration !== null && !isNaN(videoState.duration) &&
             videoState.manifest !== null && typeof videoState.manifest.name === 'string') {
-            timeUpdate(videoState.time, videoState.duration, videoState.manifest.name);
+            timeChanged(videoState.time, videoState.duration, videoState.manifest.name);
         }
     }, [videoState.time, videoState.duration, videoState.manifest]);
     React.useEffect(() => {

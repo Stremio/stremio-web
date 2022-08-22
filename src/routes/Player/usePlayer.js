@@ -86,11 +86,11 @@ const usePlayer = (urlParams) => {
             };
         }
     }, [urlParams]);
-    const timeUpdate = React.useCallback((time, duration, device) => {
+    const timeChanged = React.useCallback((time, duration, device) => {
         core.transport.dispatch({
             action: 'Player',
             args: {
-                action: 'TimeUpdate',
+                action: 'TimeChanged',
                 args: { time, duration, device }
             }
         }, 'player');
@@ -112,7 +112,7 @@ const usePlayer = (urlParams) => {
         }, 'player');
     }, []);
     const player = useModelState({ model: 'player', action, map });
-    return [player, timeUpdate, pushToLibrary, ended];
+    return [player, timeChanged, pushToLibrary, ended];
 };
 
 module.exports = usePlayer;
