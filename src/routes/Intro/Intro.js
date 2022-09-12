@@ -186,7 +186,6 @@ const Intro = ({ queryParams }) => {
                         tos: state.termsAccepted,
                         privacy: state.privacyPolicyAccepted,
                         marketing: state.marketingAccepted,
-                        time: new Date(),
                         from: 'web'
                     }
                 }

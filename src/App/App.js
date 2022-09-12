@@ -90,6 +90,12 @@ const App = () => {
                     action: 'PullAddonsFromAPI'
                 }
             });
+            services.core.transport.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'PullUserFromAPI'
+                }
+            });
         }
     }, [initialized]);
     return (
