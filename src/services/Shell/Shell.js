@@ -1,13 +1,30 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
 const EventEmitter = require('eventemitter3');
+const ShellTransport = require('./ShellTransport');
 
 function Shell() {
     let active = false;
     let error = null;
     let starting = false;
+    let transport = null;
 
     const events = new EventEmitter();
+
+    function onTransportInit() {
+        active = true;
+        error = null;
+        starting = false;
+        onStateChanged();
+    }
+    function onTransportInitError(err) {
+        console.error(err);
+        active = false;
+        error = new Error(err);
+        starting = false;
+        onStateChanged();
+        transport = null;
+    }
 
     function onStateChanged() {
         events.emit('stateChanged');
@@ -34,6 +51,13 @@ function Shell() {
             get: function() {
                 return starting;
             }
+        },
+        transport: {
+            configurable: false,
+            enumerable: true,
+            get: function() {
+                return transport;
+            }
         }
     });
 
@@ -43,8 +67,10 @@ function Shell() {
         }
 
         active = false;
-        error = new Error('Stremio Shell API not available');
-        starting = false;
+        starting = true;
+        transport = new ShellTransport();
+        transport.on('init', onTransportInit);
+        transport.on('init-error', onTransportInitError);
         onStateChanged();
     };
     this.stop = function() {

@@ -18,7 +18,7 @@ const useSettings = require('./useSettings');
 const styles = require('./styles');
 
 const Player = ({ urlParams, queryParams }) => {
-    const { chromecast } = useServices();
+    const { chromecast, shell } = useServices();
     const [forceTranscoding, maxAudioChannels] = React.useMemo(() => {
         return [
             queryParams.has('forceTranscoding'),
@@ -258,6 +258,7 @@ const Player = ({ urlParams, queryParams }) => {
                 }
             }, {
                 chromecastTransport: chromecast.active ? chromecast.transport : null,
+                shellTransport: shell.active ? shell.transport : null,
             });
         }
     }, [streamingServer.baseUrl, player.selected, player.metaItem, forceTranscoding, maxAudioChannels, casting]);
