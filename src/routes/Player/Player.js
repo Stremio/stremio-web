@@ -6,7 +6,7 @@ const classnames = require('classnames');
 const debounce = require('lodash.debounce');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
-const { HorizontalNavBar, Button, useFullscreen, useBinaryState, useToast, useStreamingServer } = require('stremio/common');
+const { HorizontalNavBar, Button, useFullscreen, useBinaryState, useToast, useStreamingServer, withCoreSuspender } = require('stremio/common');
 const Icon = require('@stremio/stremio-icons/dom');
 const BufferingLoader = require('./BufferingLoader');
 const ControlBar = require('./ControlBar');
@@ -18,14 +18,14 @@ const useSettings = require('./useSettings');
 const styles = require('./styles');
 
 const Player = ({ urlParams, queryParams }) => {
-    const { core, chromecast, shell } = useServices();
+    const { chromecast, shell } = useServices();
     const [forceTranscoding, maxAudioChannels] = React.useMemo(() => {
         return [
             queryParams.has('forceTranscoding'),
             queryParams.has('maxAudioChannels') ? parseInt(queryParams.get('maxAudioChannels'), 10) : null
         ];
     }, [queryParams]);
-    const [player, updateLibraryItemState, pushToLibrary] = usePlayer(urlParams);
+    const [player, timeChanged, pausedChanged, ended, pushToLibrary] = usePlayer(urlParams);
     const [settings, updateSettings] = useSettings();
     const streamingServer = useStreamingServer();
     const routeFocused = useRouteFocused();
@@ -42,6 +42,7 @@ const Player = ({ urlParams, queryParams }) => {
     const [videoState, setVideoState] = React.useReducer(
         (videoState, nextVideoState) => ({ ...videoState, ...nextVideoState }),
         {
+            manifest: null,
             stream: null,
             paused: null,
             time: null,
@@ -75,6 +76,7 @@ const Player = ({ urlParams, queryParams }) => {
         }
     }, []);
     const onImplementationChanged = React.useCallback((manifest) => {
+        setVideoState({ manifest });
         manifest.props.forEach((propName) => {
             dispatch({ type: 'observeProp', propName });
         });
@@ -93,16 +95,8 @@ const Player = ({ urlParams, queryParams }) => {
         setVideoState({ [propName]: propValue });
     }, []);
     const onEnded = React.useCallback(() => {
+        ended();
         pushToLibrary();
-        if (player.libraryItem !== null) {
-            core.transport.dispatch({
-                action: 'Ctx',
-                args: {
-                    action: 'RewindLibraryItem',
-                    args: player.libraryItem._id
-                }
-            });
-        }
         if (player.nextVideo !== null) {
             window.location.replace(
                 typeof player.nextVideo.deepLinks.player === 'string' ?
@@ -224,7 +218,8 @@ const Player = ({ urlParams, queryParams }) => {
         setError(null);
         if (player.selected === null) {
             dispatch({ type: 'command', commandName: 'unload' });
-        } else if (streamingServer.baseUrl !== null && streamingServer.baseUrl.type !== 'Loading' && player.metaItem !== null && player.metaItem.type !== 'Loading') {
+        } else if (streamingServer.baseUrl !== null && streamingServer.baseUrl.type !== 'Loading' &&
+            (player.selected.metaRequest === null || (player.metaItem !== null && player.metaItem.type !== 'Loading'))) {
             dispatch({
                 type: 'command',
                 commandName: 'load',
@@ -302,10 +297,17 @@ const Player = ({ urlParams, queryParams }) => {
         dispatch({ type: 'setProp', propName: 'extraSubtitlesOutlineColor', propValue: settings.subtitlesOutlineColor });
     }, [settings.subtitlesOutlineColor]);
     React.useEffect(() => {
-        if (videoState.time !== null && !isNaN(videoState.time) && videoState.duration !== null && !isNaN(videoState.duration)) {
-            updateLibraryItemState(videoState.time, videoState.duration);
+        if (videoState.time !== null && !isNaN(videoState.time) &&
+            videoState.duration !== null && !isNaN(videoState.duration) &&
+            videoState.manifest !== null && typeof videoState.manifest.name === 'string') {
+            timeChanged(videoState.time, videoState.duration, videoState.manifest.name);
         }
-    }, [videoState.time, videoState.duration]);
+    }, [videoState.time, videoState.duration, videoState.manifest]);
+    React.useEffect(() => {
+        if (videoState.paused !== null) {
+            pausedChanged(videoState.paused);
+        }
+    }, [videoState.paused]);
     React.useEffect(() => {
         if ((!Array.isArray(videoState.subtitlesTracks) || videoState.subtitlesTracks.length === 0) &&
             (!Array.isArray(videoState.extraSubtitlesTracks) || videoState.extraSubtitlesTracks.length === 0) &&
@@ -568,4 +570,8 @@ Player.propTypes = {
     queryParams: PropTypes.instanceOf(URLSearchParams)
 };
 
-module.exports = Player;
+const PlayerFallback = () => (
+    <div className={classnames(styles['player-container'])} />
+);
+
+module.exports = withCoreSuspender(Player, PlayerFallback);

@@ -5,7 +5,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('@stremio/stremio-icons/dom');
 const NotFound = require('stremio/routes/NotFound');
-const { Button, Multiselect, MainNavBars, LibItem, Image, ModalDialog, PaginationInput, useProfile, routesRegexp, useBinaryState } = require('stremio/common');
+const { Button, DelayedRenderer, Multiselect, MainNavBars, LibItem, Image, ModalDialog, PaginationInput, useProfile, routesRegexp, useBinaryState, withCoreSuspender } = require('stremio/common');
 const useLibrary = require('./useLibrary');
 const useSelectableInputs = require('./useSelectableInputs');
 const styles = require('./styles');
@@ -85,14 +85,16 @@ const Library = ({ model, urlParams, queryParams }) => {
                         </div>
                         :
                         library.selected === null ?
-                            <div className={styles['message-container']}>
-                                <Image
-                                    className={styles['image']}
-                                    src={require('/images/empty.png')}
-                                    alt={' '}
-                                />
-                                <div className={styles['message-label']}>{model === 'library' ? 'Library' : 'Continue Watching'} not loaded!</div>
-                            </div>
+                            <DelayedRenderer delay={500}>
+                                <div className={styles['message-container']}>
+                                    <Image
+                                        className={styles['image']}
+                                        src={require('/images/empty.png')}
+                                        alt={' '}
+                                    />
+                                    <div className={styles['message-label']}>{model === 'library' ? 'Library' : 'Continue Watching'} not loaded!</div>
+                                </div>
+                            </DelayedRenderer>
                             :
                             library.catalog.length === 0 ?
                                 <div className={styles['message-container']}>
@@ -104,7 +106,7 @@ const Library = ({ model, urlParams, queryParams }) => {
                                     <div className={styles['message-label']}>Empty {model === 'library' ? 'Library' : 'Continue Watching'}</div>
                                 </div>
                                 :
-                                <div className={styles['meta-items-container']}>
+                                <div className={classnames(styles['meta-items-container'], 'animation-fade-in')}>
                                     {library.catalog.map((libItem, index) => (
                                         <LibItem {...libItem} removable={model === 'library'} key={index} />
                                     ))}
@@ -132,4 +134,10 @@ Library.propTypes = {
     queryParams: PropTypes.instanceOf(URLSearchParams)
 };
 
-module.exports = withModel(Library);
+const LibraryFallback = ({ model }) => (
+    <MainNavBars className={styles['library-container']} route={model} />
+);
+
+LibraryFallback.propTypes = Library.propTypes;
+
+module.exports = withModel(withCoreSuspender(Library, LibraryFallback));

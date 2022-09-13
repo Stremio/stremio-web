@@ -3,17 +3,6 @@
 const React = require('react');
 const { useModelState } = require('stremio/common');
 
-const init = () => ({
-    selected: null,
-    selectable: {
-        types: [],
-        sorts: [],
-        prevPage: null,
-        nextPage: null
-    },
-    catalog: []
-});
-
 const useLibrary = (model, urlParams, queryParams) => {
     const action = React.useMemo(() => ({
         action: 'Load',
@@ -28,7 +17,7 @@ const useLibrary = (model, urlParams, queryParams) => {
             }
         }
     }), [urlParams, queryParams]);
-    return useModelState({ model, action, init });
+    return useModelState({ model, action });
 };
 
 module.exports = useLibrary;

@@ -6,6 +6,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Button = require('stremio/common/Button');
 const useProfile = require('stremio/common/useProfile');
+const { withCoreSuspender } = require('stremio/common/CoreSuspender');
 const styles = require('./styles');
 
 const StreamingServerWarning = ({ className }) => {
@@ -39,6 +40,12 @@ const StreamingServerWarning = ({ className }) => {
             }
         });
     }, [profile.settings]);
+
+    if (!isNaN(profile.settings.streamingServerWarningDismissed.getTime()) &&
+        profile.settings.streamingServerWarningDismissed.getTime() > Date.now()) {
+        return null;
+    }
+
     return (
         <div className={classnames(className, styles['warning-container'])}>
             <div className={styles['warning-statement']}>Streaming server is not available.</div>
@@ -56,4 +63,4 @@ StreamingServerWarning.propTypes = {
     className: PropTypes.string
 };
 
-module.exports = StreamingServerWarning;
+module.exports = withCoreSuspender(StreamingServerWarning);

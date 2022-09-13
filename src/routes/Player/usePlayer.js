@@ -2,18 +2,7 @@
 
 const React = require('react');
 const { useServices } = require('stremio/services');
-const { useModelState } = require('stremio/common');
-
-const init = () => ({
-    selected: null,
-    metaItem: null,
-    subtitles: [],
-    nextVideo: null,
-    seriesInfo: null,
-    libraryItem: null,
-    title: null,
-    addon: null,
-});
+const { useModelState, useCoreSuspender } = require('stremio/common');
 
 const map = (player) => ({
     ...player,
@@ -45,8 +34,9 @@ const map = (player) => ({
 
 const usePlayer = (urlParams) => {
     const { core } = useServices();
+    const { decodeStream } = useCoreSuspender();
+    const stream = decodeStream(urlParams.stream);
     const action = React.useMemo(() => {
-        const stream = core.transport.decodeStream(urlParams.stream);
         if (stream !== null) {
             return {
                 action: 'Load',
@@ -96,12 +86,12 @@ const usePlayer = (urlParams) => {
             };
         }
     }, [urlParams]);
-    const updateLibraryItemState = React.useCallback((time, duration) => {
+    const timeChanged = React.useCallback((time, duration, device) => {
         core.transport.dispatch({
             action: 'Player',
             args: {
-                action: 'UpdateLibraryItemState',
-                args: { time, duration }
+                action: 'TimeChanged',
+                args: { time, duration, device }
             }
         }, 'player');
     }, []);
@@ -113,8 +103,25 @@ const usePlayer = (urlParams) => {
             }
         }, 'player');
     }, []);
-    const player = useModelState({ model: 'player', action, init, map });
-    return [player, updateLibraryItemState, pushToLibrary];
+    const ended = React.useCallback(() => {
+        core.transport.dispatch({
+            action: 'Player',
+            args: {
+                action: 'Ended'
+            }
+        }, 'player');
+    }, []);
+    const pausedChanged = React.useCallback((paused) => {
+        core.transport.dispatch({
+            action: 'Player',
+            args: {
+                action: 'PausedChanged',
+                args: { paused }
+            }
+        }, 'player');
+    }, []);
+    const player = useModelState({ model: 'player', action, map });
+    return [player, timeChanged, pausedChanged, ended, pushToLibrary];
 };
 
 module.exports = usePlayer;

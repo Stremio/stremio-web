@@ -3,15 +3,6 @@
 const React = require('react');
 const { useModelState } = require('stremio/common');
 
-const init = () => ({
-    selected: null,
-    selectable: {
-        catalogs: [],
-        types: []
-    },
-    catalog: null,
-});
-
 const useRemoteAddons = (urlParams) => {
     const action = React.useMemo(() => {
         if (typeof urlParams.type === 'string' && typeof urlParams.transportUrl === 'string' && typeof urlParams.catalogId === 'string') {
@@ -38,7 +29,7 @@ const useRemoteAddons = (urlParams) => {
             };
         }
     }, [urlParams]);
-    return useModelState({ model: 'remote_addons', action, init });
+    return useModelState({ model: 'remote_addons', action, deps: ['ctx'] });
 };
 
 module.exports = useRemoteAddons;

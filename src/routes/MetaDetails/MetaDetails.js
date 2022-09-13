@@ -2,8 +2,9 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
+const classnames = require('classnames');
 const { useServices } = require('stremio/services');
-const { VerticalNavBar, HorizontalNavBar, MetaPreview, ModalDialog, Image } = require('stremio/common');
+const { VerticalNavBar, HorizontalNavBar, MetaPreview, ModalDialog, Image, DelayedRenderer, withCoreSuspender } = require('stremio/common');
 const StreamsList = require('./StreamsList');
 const VideosList = require('./VideosList');
 const useMetaDetails = require('./useMetaDetails');
@@ -86,10 +87,12 @@ const MetaDetails = ({ urlParams, queryParams }) => {
                 }
                 {
                     metaPath === null ?
-                        <div className={styles['meta-message-container']}>
-                            <Image className={styles['image']} src={require('/images/empty.png')} alt={' '} />
-                            <div className={styles['message-label']}>No meta was selected!</div>
-                        </div>
+                        <DelayedRenderer delay={500}>
+                            <div className={styles['meta-message-container']}>
+                                <Image className={styles['image']} src={require('/images/empty.png')} alt={' '} />
+                                <div className={styles['message-label']}>No meta was selected!</div>
+                            </div>
+                        </DelayedRenderer>
                         :
                         metaDetails.metaItem === null ?
                             <div className={styles['meta-message-container']}>
@@ -122,7 +125,7 @@ const MetaDetails = ({ urlParams, queryParams }) => {
                                                 null
                                         }
                                         <MetaPreview
-                                            className={styles['meta-preview']}
+                                            className={classnames(styles['meta-preview'], 'animation-fade-in')}
                                             name={metaDetails.metaItem.content.content.name}
                                             logo={metaDetails.metaItem.content.content.logo}
                                             runtime={metaDetails.metaItem.content.content.runtime}
@@ -188,4 +191,16 @@ MetaDetails.propTypes = {
     queryParams: PropTypes.instanceOf(URLSearchParams)
 };
 
-module.exports = MetaDetails;
+const MetaDetailsFallback = () => (
+    <div className={styles['metadetails-container']}>
+        <HorizontalNavBar
+            className={styles['nav-bar']}
+            backButton={true}
+            addonsButton={true}
+            fullscreenButton={true}
+            navMenu={true}
+        />
+    </div>
+);
+
+module.exports = withCoreSuspender(MetaDetails, MetaDetailsFallback);

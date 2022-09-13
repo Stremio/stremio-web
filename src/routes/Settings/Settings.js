@@ -6,7 +6,7 @@ const throttle = require('lodash.throttle');
 const Icon = require('@stremio/stremio-icons/dom');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
-const { Button, Checkbox, MainNavBars, Multiselect, ColorInput, TextInput, ModalDialog, useProfile, useStreamingServer, useBinaryState } = require('stremio/common');
+const { Button, Checkbox, MainNavBars, Multiselect, ColorInput, TextInput, ModalDialog, useProfile, useStreamingServer, useBinaryState, withCoreSuspender } = require('stremio/common');
 const useProfileSettingsInputs = require('./useProfileSettingsInputs');
 const useStreamingServerSettingsInputs = require('./useStreamingServerSettingsInputs');
 const styles = require('./styles');
@@ -131,7 +131,7 @@ const Settings = () => {
     }, [routeFocused]);
     return (
         <MainNavBars className={styles['settings-container']} route={'settings'}>
-            <div className={styles['settings-content']}>
+            <div className={classnames(styles['settings-content'], 'animation-fade-in')}>
                 <div className={styles['side-menu-container']}>
                     <Button className={classnames(styles['side-menu-button'], { [styles['selected']]: selectedSectionId === GENERAL_SECTION })} title={'General'} data-section={GENERAL_SECTION} onClick={sideMenuButtonOnClick}>
                         General
@@ -449,4 +449,8 @@ const Settings = () => {
     );
 };
 
-module.exports = Settings;
+const SettingsFallback = () => (
+    <MainNavBars className={styles['settings-container']} route={'settings'} />
+);
+
+module.exports = withCoreSuspender(Settings, SettingsFallback);

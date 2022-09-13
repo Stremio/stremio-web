@@ -5,7 +5,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('@stremio/stremio-icons/dom');
 const { useServices } = require('stremio/services');
-const { AddonDetailsModal, Button, MainNavBars, MetaItem, Image, MetaPreview, Multiselect, ModalDialog, CONSTANTS, useBinaryState, useOnScrollToBottom } = require('stremio/common');
+const { AddonDetailsModal, DelayedRenderer, Button, MainNavBars, MetaItem, Image, MetaPreview, Multiselect, ModalDialog, CONSTANTS, useBinaryState, useOnScrollToBottom, withCoreSuspender } = require('stremio/common');
 const useDiscover = require('./useDiscover');
 const useSelectableInputs = require('./useSelectableInputs');
 const styles = require('./styles');
@@ -75,37 +75,26 @@ const Discover = ({ urlParams, queryParams }) => {
         closeAddonModal();
         setSelectedMetaItemIndex(0);
     }, [discover.selected]);
-    const metaItemsContainerRef = React.useRef();
-    React.useEffect(() => {
-        if (discover.catalog?.content.type === 'Loading') {
-            metaItemsContainerRef.current.scrollTop = 0;
-        }
-    }, [discover.catalog]);
     return (
         <MainNavBars className={styles['discover-container']} route={'discover'}>
             <div className={styles['discover-content']}>
                 <div className={styles['catalog-container']}>
-                    {
-                        discover.defaultRequest ?
-                            <div className={styles['selectable-inputs-container']}>
-                                {selectInputs.map(({ title, options, selected, renderLabelText, onSelect }, index) => (
-                                    <Multiselect
-                                        key={index}
-                                        className={styles['select-input']}
-                                        title={title}
-                                        options={options}
-                                        selected={selected}
-                                        renderLabelText={renderLabelText}
-                                        onSelect={onSelect}
-                                    />
-                                ))}
-                                <Button className={styles['filter-container']} title={'All filters'} onClick={openInputsModal}>
-                                    <Icon className={styles['filter-icon']} icon={'ic_filter'} />
-                                </Button>
-                            </div>
-                            :
-                            null
-                    }
+                    <div className={styles['selectable-inputs-container']}>
+                        {selectInputs.map(({ title, options, selected, renderLabelText, onSelect }, index) => (
+                            <Multiselect
+                                key={index}
+                                className={styles['select-input']}
+                                title={title}
+                                options={options}
+                                selected={selected}
+                                renderLabelText={renderLabelText}
+                                onSelect={onSelect}
+                            />
+                        ))}
+                        <Button className={styles['filter-container']} title={'All filters'} onClick={openInputsModal}>
+                            <Icon className={styles['filter-icon']} icon={'ic_filter'} />
+                        </Button>
+                    </div>
                     {
                         discover.catalog !== null && !discover.catalog.installed ?
                             <div className={styles['missing-addon-warning-container']}>
@@ -119,10 +108,12 @@ const Discover = ({ urlParams, queryParams }) => {
                     }
                     {
                         discover.catalog === null ?
-                            <div className={styles['message-container']}>
-                                <Image className={styles['image']} src={require('/images/empty.png')} alt={' '} />
-                                <div className={styles['message-label']}>No catalog selected!</div>
-                            </div>
+                            <DelayedRenderer delay={500}>
+                                <div className={styles['message-container']}>
+                                    <Image className={styles['image']} src={require('/images/empty.png')} alt={' '} />
+                                    <div className={styles['message-label']}>No catalog selected!</div>
+                                </div>
+                            </DelayedRenderer>
                             :
                             discover.catalog.content.type === 'Err' ?
                                 <div className={styles['message-container']}>
@@ -131,7 +122,7 @@ const Discover = ({ urlParams, queryParams }) => {
                                 </div>
                                 :
                                 discover.catalog.content.type === 'Loading' ?
-                                    <div ref={metaItemsContainerRef} className={styles['meta-items-container']}>
+                                    <div className={classnames(styles['meta-items-container'], 'animation-fade-in')}>
                                         {Array(CONSTANTS.CATALOG_PAGE_SIZE).fill(null).map((_, index) => (
                                             <div key={index} className={styles['meta-item-placeholder']}>
                                                 <div className={styles['poster-container']} />
@@ -142,7 +133,7 @@ const Discover = ({ urlParams, queryParams }) => {
                                         ))}
                                     </div>
                                     :
-                                    <div ref={metaItemsContainerRef} className={styles['meta-items-container']} onScroll={onScroll} onFocusCapture={metaItemsOnFocusCapture}>
+                                    <div className={classnames(styles['meta-items-container'], 'animation-fade-in')} onScroll={onScroll} onFocusCapture={metaItemsOnFocusCapture}>
                                         {discover.catalog.content.content.map((metaItem, index) => (
                                             <MetaItem
                                                 key={index}
@@ -185,7 +176,7 @@ const Discover = ({ urlParams, queryParams }) => {
                 }
             </div>
             {
-                inputsModalOpen && discover.defaultRequest ?
+                inputsModalOpen ?
                     <ModalDialog title={'Catalog filters'} className={styles['selectable-inputs-modal']} onCloseRequest={closeInputsModal}>
                         {selectInputs.map(({ title, options, selected, renderLabelText, onSelect }, index) => (
                             <Multiselect
@@ -221,4 +212,8 @@ Discover.propTypes = {
     queryParams: PropTypes.instanceOf(URLSearchParams)
 };
 
-module.exports = Discover;
+const DiscoverFallback = () => (
+    <MainNavBars className={styles['discover-container']} route={'discover'} />
+);
+
+module.exports = withCoreSuspender(Discover, DiscoverFallback);

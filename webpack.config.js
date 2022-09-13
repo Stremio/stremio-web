@@ -15,7 +15,10 @@ const COMMIT_HASH = execSync('git rev-parse HEAD').toString().trim();
 module.exports = (env, argv) => ({
     mode: argv.mode,
     devtool: argv.mode === 'production' ? 'source-map' : 'eval-source-map',
-    entry: './src/index.js',
+    entry: {
+        main: './src/index.js',
+        worker: './node_modules/@stremio/stremio-core-web/worker.js'
+    },
     output: {
         path: path.join(__dirname, 'build'),
         filename: `${COMMIT_HASH}/scripts/[name].js`
