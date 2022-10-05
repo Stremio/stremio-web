@@ -6,7 +6,7 @@ const throttle = require('lodash.throttle');
 const Icon = require('@stremio/stremio-icons/dom');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
-const { Button, Checkbox, MainNavBars, Multiselect, ColorInput, TextInput, ModalDialog, useProfile, useStreamingServer, useBinaryState, withCoreSuspender } = require('stremio/common');
+const { Button, Checkbox, MainNavBars, Multiselect, ColorInput, TextInput, ModalDialog, useProfile, useStreamingServer, useBinaryState, withCoreSuspender, useToast } = require('stremio/common');
 const useProfileSettingsInputs = require('./useProfileSettingsInputs');
 const useStreamingServerSettingsInputs = require('./useStreamingServerSettingsInputs');
 const styles = require('./styles');
@@ -20,6 +20,7 @@ const Settings = () => {
     const { routeFocused } = useRouteFocused();
     const profile = useProfile();
     const streamingServer = useStreamingServer();
+    const toast = useToast();
     const {
         interfaceLanguageSelect,
         subtitlesLanguageSelect,
