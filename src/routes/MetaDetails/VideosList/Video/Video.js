@@ -5,7 +5,6 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { useServices } = require('stremio/services');
 const { useRouteFocused } = require('stremio-router');
-const Icon = require('@stremio/stremio-icons/dom');
 const { Button, Image, Popup, useBinaryState } = require('stremio/common');
 const VideoPlaceholder = require('./VideoPlaceholder');
 const styles = require('./styles');
