@@ -71,7 +71,7 @@ const Video = ({ className, id, title, thumbnail, episode, released, upcoming, w
                                 renderFallback={() => (
                                     <Icon
                                         className={styles['placeholder-icon']}
-                                        icon={'ic_broken_link'}
+                                        icon={'ic_stremio_tray'}
                                     />
                                 )}
                             />
