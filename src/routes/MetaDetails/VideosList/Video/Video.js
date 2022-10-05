@@ -69,9 +69,9 @@ const Video = ({ className, id, title, thumbnail, episode, released, upcoming, w
                                 src={thumbnail}
                                 alt={' '}
                                 renderFallback={() => (
-                                    <Icon
+                                    <img
                                         className={styles['placeholder-icon']}
-                                        icon={'ic_broken_link'}
+                                        src={require('/images/stremio_dock_white.png')}
                                     />
                                 )}
                             />
