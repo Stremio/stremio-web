@@ -76,7 +76,14 @@ const Settings = () => {
         // TODO
     }, []);
     const subscribeCalendarOnClick = React.useCallback(() => {
-        // TODO
+        const url = `webcal://www.strem.io/calendar/${profile.auth.user._id}.ics`
+        window.open(url);
+        toast.show({
+            type: 'success',
+            title: 'Calendar has been added to your default caldendar app',
+            timeout: 25000
+        })
+        //Stremio 4 emits not documented event subscribeCalendar
     }, []);
     const exportDataOnClick = React.useCallback(() => {
         // TODO
@@ -226,7 +233,7 @@ const Settings = () => {
                             <div className={styles['option-name-container']}>
                                 <div className={styles['label']}>Calendar</div>
                             </div>
-                            <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Subscribe'} disabled={true} tabIndex={-1} onClick={subscribeCalendarOnClick}>
+                            <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Subscribe'} disabled={!(profile.auth && profile.auth.user && profile.auth.user._id)} tabIndex={-1} onClick={subscribeCalendarOnClick}>
                                 <Icon className={styles['icon']} icon={'ic_calendar'} />
                                 <div className={styles['label']}>Subscribe</div>
                             </Button>
