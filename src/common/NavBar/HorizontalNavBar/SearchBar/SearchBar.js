@@ -3,6 +3,8 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
+const magnet = require('magnet-uri');
+const { useServices } = require('stremio/services');
 const Icon = require('@stremio/stremio-icons/dom');
 const { useRouteFocused } = require('stremio-router');
 const Button = require('stremio/common/Button');
@@ -10,6 +12,7 @@ const TextInput = require('stremio/common/TextInput');
 const styles = require('./styles');
 
 const SearchBar = ({ className, query, active }) => {
+    const { core } = useServices();
     const routeFocused = useRouteFocused();
     const searchInputRef = React.useRef(null);
     const searchBarOnClick = React.useCallback(() => {
@@ -17,6 +20,22 @@ const SearchBar = ({ className, query, active }) => {
             window.location = '#/search';
         }
     }, [active]);
+    const queryInputOnChange = React.useCallback(() => {
+        try {
+            const parsed = magnet.decode(searchInputRef.current.value);
+            if (parsed && typeof parsed.infoHash === 'string') {
+                core.transport.dispatch({
+                    action: 'StreamingServer',
+                    args: {
+                        action: 'CreateTorrent',
+                        args: searchInputRef.current.value
+                    }
+                });
+                searchInputRef.current.value = '';
+            }
+            // eslint-disable-next-line no-empty
+        } catch { }
+    }, []);
     const queryInputOnSubmit = React.useCallback(() => {
         if (searchInputRef.current !== null) {
             const queryParams = new URLSearchParams([['search', searchInputRef.current.value]]);
@@ -40,6 +59,7 @@ const SearchBar = ({ className, query, active }) => {
                         placeholder={'Search or paste link'}
                         defaultValue={query}
                         tabIndex={-1}
+                        onChange={queryInputOnChange}
                         onSubmit={queryInputOnSubmit}
                     />
                     :
