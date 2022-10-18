@@ -9,13 +9,32 @@ const ServicesToaster = () => {
     const toast = useToast();
     React.useEffect(() => {
         const onCoreEvent = ({ event, args }) => {
-            if (event === 'Error') {
-                toast.show({
-                    type: 'error',
-                    title: args.source.event,
-                    message: args.error.message,
-                    timeout: 4000
-                });
+            switch (event) {
+                case 'Error': {
+                    toast.show({
+                        type: 'error',
+                        title: args.source.event,
+                        message: args.error.message,
+                        timeout: 4000
+                    });
+                    break;
+                }
+                case 'TorrentParsed': {
+                    toast.show({
+                        type: 'success',
+                        title: 'Torrent file parsed',
+                        timeout: 4000
+                    });
+                    break;
+                }
+                case 'MagnetParsed': {
+                    toast.show({
+                        type: 'success',
+                        title: 'Magnet link parsed',
+                        timeout: 4000
+                    });
+                    break;
+                }
             }
         };
         const onDrop = (file) => {
