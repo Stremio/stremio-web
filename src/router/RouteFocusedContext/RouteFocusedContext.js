@@ -2,7 +2,7 @@
 
 const React = require('react');
 
-const RouteFocusedContext = React.createContext(false);
+const RouteFocusedContext = React.createContext(true);
 
 RouteFocusedContext.displayName = 'RouteFocusedContext';
 
