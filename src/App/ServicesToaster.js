@@ -37,14 +37,6 @@ const ServicesToaster = () => {
                 }
             }
         };
-        const onDrop = (file) => {
-            toast.show({
-                type: 'alert',
-                title: 'Processing file',
-                message: file.name,
-                timeout: 4000
-            });
-        };
         const onDragAndDropError = (error) => {
             toast.show({
                 type: 'error',
@@ -54,11 +46,9 @@ const ServicesToaster = () => {
             });
         };
         core.transport.on('CoreEvent', onCoreEvent);
-        dragAndDrop.on('drop', onDrop);
         dragAndDrop.on('error', onDragAndDropError);
         return () => {
             core.transport.off('CoreEvent', onCoreEvent);
-            dragAndDrop.off('drop', onDrop);
             dragAndDrop.off('error', onDragAndDropError);
         };
     }, []);

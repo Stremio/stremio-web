@@ -16,10 +16,6 @@ function DragAndDrop({ core }) {
             const file = event.dataTransfer.files[0];
             switch (file.type) {
                 case 'application/x-bittorrent': {
-                    events.emit('drop', {
-                        name: file.name,
-                        type: file.type
-                    });
                     try {
                         const torrent = await file.arrayBuffer();
                         core.transport.dispatch({
