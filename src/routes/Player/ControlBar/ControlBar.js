@@ -18,6 +18,7 @@ const ControlBar = ({
     duration,
     volume,
     muted,
+    playbackSpeed,
     subtitlesTracks,
     audioTracks,
     metaItem,
@@ -29,6 +30,7 @@ const ControlBar = ({
     onSeekRequested,
     onToggleSubtitlesMenu,
     onToggleInfoMenu,
+    onToggleSpeedMenu,
     ...props
 }) => {
     const { chromecast } = useServices();
@@ -72,6 +74,11 @@ const ControlBar = ({
             onToggleInfoMenu();
         }
     }, [onToggleInfoMenu]);
+    const onSpeedButtonClick = React.useCallback(() => {
+        if (typeof onToggleSpeedMenu === 'function') {
+            onToggleSpeedMenu();
+        }
+    }, [onToggleSpeedMenu]);
     const onChromecastButtonClick = React.useCallback(() => {
         chromecast.transport.requestSession();
     }, []);
@@ -118,6 +125,9 @@ const ControlBar = ({
                     <Icon className={styles['icon']} icon={'ic_more'} />
                 </Button>
                 <div className={classnames(styles['control-bar-buttons-menu-container'], { 'open': buttonsMenuOpen })}>
+                    <Button className={classnames(styles['control-bar-button'], { 'disabled': playbackSpeed === null })} tabIndex={-1} onClick={onSpeedButtonClick}>
+                        <Icon className={styles['icon']} icon={'ic_speedometer'} />
+                    </Button>
                     <Button className={classnames(styles['control-bar-button'], 'disabled')} tabIndex={-1}>
                         <Icon className={styles['icon']} icon={'ic_network'} />
                     </Button>
@@ -146,6 +156,7 @@ ControlBar.propTypes = {
     duration: PropTypes.number,
     volume: PropTypes.number,
     muted: PropTypes.bool,
+    playbackSpeed: PropTypes.number,
     subtitlesTracks: PropTypes.array,
     audioTracks: PropTypes.array,
     metaItem: PropTypes.object,
@@ -156,7 +167,8 @@ ControlBar.propTypes = {
     onVolumeChangeRequested: PropTypes.func,
     onSeekRequested: PropTypes.func,
     onToggleSubtitlesMenu: PropTypes.func,
-    onToggleInfoMenu: PropTypes.func
+    onToggleInfoMenu: PropTypes.func,
+    onToggleSpeedMenu: PropTypes.func
 };
 
 module.exports = ControlBar;
