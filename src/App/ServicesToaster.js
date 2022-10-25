@@ -11,6 +11,10 @@ const ServicesToaster = () => {
         const onCoreEvent = ({ event, args }) => {
             switch (event) {
                 case 'Error': {
+                    if (args.source.event === 'UserPulledFromAPI' && args.source.args.uid === null) {
+                        break;
+                    }
+
                     toast.show({
                         type: 'error',
                         title: args.source.event,
