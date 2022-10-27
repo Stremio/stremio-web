@@ -90,10 +90,15 @@ const StreamsList = ({ className, ...props }) => {
                             </div>
                             :
                             <React.Fragment>
-                                <Multiselect
-                                    {...selectableOptions}
-                                    className={styles['select-input-container']}
-                                />
+                                {
+                                    Object.keys(streamsByAddon).length > 1 ?
+                                        <Multiselect
+                                            {...selectableOptions}
+                                            className={styles['select-input-container']}
+                                        />
+                                        :
+                                        null
+                                }
                                 <div className={styles['streams-container']}>
                                     {filteredStreams.map((stream, index) => (
                                         <Stream
