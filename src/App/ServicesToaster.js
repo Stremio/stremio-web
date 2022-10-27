@@ -15,6 +15,10 @@ const ServicesToaster = () => {
                         break;
                     }
 
+                    if (args.source.event === 'LibrarySyncWithAPIPlanned' && args.source.args.uid === null) {
+                        break;
+                    }
+
                     toast.show({
                         type: 'error',
                         title: args.source.event,
