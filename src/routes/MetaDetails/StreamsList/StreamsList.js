@@ -17,35 +17,39 @@ const StreamsList = ({ className, ...props }) => {
     const onAddonSelected = React.useCallback((event) => {
         setSelectedAddon(event.value);
     }, []);
-    const streams = React.useMemo(() => {
+    const streamsByAddon = React.useMemo(() => {
         return props.streams
             .filter((streams) => streams.content.type === 'Ready')
-            .map((streams) => {
-                return streams.content.content.map((stream) => ({
-                    ...stream,
-                    onClick: () => {
-                        core.transport.analytics({
-                            event: 'StreamClicked',
-                            args: {
-                                stream
-                            }
-                        });
-                    },
-                    transportUrl: streams.addon.transportUrl,
-                    addonName: streams.addon.manifest.name
-                }));
-            })
-            .flat(1);
+            .reduce((streamsByAddon, streams) => {
+                streamsByAddon[streams.addon.transportUrl] = {
+                    addon: streams.addon,
+                    streams: streams.content.content.map((stream) => ({
+                        ...stream,
+                        onClick: () => {
+                            core.transport.analytics({
+                                event: 'StreamClicked',
+                                args: {
+                                    stream
+                                }
+                            });
+                        },
+                        addonName: streams.addon.manifest.name
+                    }))
+                };
+
+                return streamsByAddon;
+            }, {});
     }, [props.streams]);
     const filteredStreams = React.useMemo(() => {
         return selectedAddon === ALL_ADDONS_KEY ?
-            streams
+            Object.values(streamsByAddon).map(({ streams }) => streams).flat(1)
             :
-            streams.filter((stream) => stream.transportUrl === selectedAddon);
-    }, [streams, selectedAddon]);
+            streamsByAddon[selectedAddon] ?
+                streamsByAddon[selectedAddon].streams
+                :
+                [];
+    }, [streamsByAddon, selectedAddon]);
     const selectableOptions = React.useMemo(() => {
-        const transportUrls = [...new Set(streams.map(({ transportUrl }) => transportUrl))];
-        const sortedStreams = transportUrls.map((transportUrl) => streams.filter((stream) => stream.transportUrl === transportUrl));
         return {
             title: 'Select Addon',
             options: [
@@ -54,16 +58,16 @@ const StreamsList = ({ className, ...props }) => {
                     label: 'All',
                     title: 'All'
                 },
-                ...sortedStreams.map((streams) => ({
-                    value: streams[0].transportUrl,
-                    label: streams[0].addonName,
-                    title: streams[0].addonName
+                ...Object.keys(streamsByAddon).map((transportUrl) => ({
+                    value: transportUrl,
+                    label: streamsByAddon[transportUrl].addon.manifest.name,
+                    title: streamsByAddon[transportUrl].addon.manifest.name,
                 }))
             ],
             selected: [selectedAddon],
             onSelect: onAddonSelected
         };
-    }, [streams, selectedAddon]);
+    }, [streamsByAddon, selectedAddon]);
     return (
         <div className={classnames(className, styles['streams-list-container'])}>
             {
