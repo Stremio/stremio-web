@@ -330,6 +330,11 @@ const Player = ({ urlParams, queryParams }) => {
         }
     }, [player.metaItem]);
     React.useEffect(() => {
+        if (videoState.playbackSpeed === null) {
+            closeSpeedMenu();
+        }
+    }, [videoState.playbackSpeed]);
+    React.useEffect(() => {
         const intervalId = setInterval(() => {
             pushToLibrary();
         }, 30000);
