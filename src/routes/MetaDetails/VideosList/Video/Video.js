@@ -41,7 +41,7 @@ const Video = ({ className, id, title, thumbnail, episode, released, upcoming, w
         core.transport.dispatch({
             action: 'MetaDetails',
             args: {
-                action: 'MarkAsWatched',
+                action: 'MarkVideoAsWatched',
                 args: [id, !watched]
             }
         });
