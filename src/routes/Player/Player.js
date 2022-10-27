@@ -431,6 +431,15 @@ const Player = ({ urlParams, queryParams }) => {
 
                     break;
                 }
+                case 'KeyR': {
+                    closeInfoMenu();
+                    closeSubtitlesMenu();
+                    if (player.playbackSpeed !== null) {
+                        toggleSpeedMenu();
+                    }
+
+                    break;
+                }
                 case 'Escape': {
                     closeSubtitlesMenu();
                     closeInfoMenu();
