@@ -103,6 +103,12 @@ const App = () => {
                     action: 'PullUserFromAPI'
                 }
             });
+            services.core.transport.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'SyncLibraryWithAPI'
+                }
+            });
         }
     }, [initialized]);
     return (
