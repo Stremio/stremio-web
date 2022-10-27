@@ -413,6 +413,7 @@ const Player = ({ urlParams, queryParams }) => {
                 }
                 case 'KeyS': {
                     closeInfoMenu();
+                    closeSpeedMenu();
                     if ((Array.isArray(videoState.subtitlesTracks) && videoState.subtitlesTracks.length > 0) ||
                         (Array.isArray(videoState.extraSubtitlesTracks) && videoState.extraSubtitlesTracks.length > 0) ||
                         (Array.isArray(videoState.audioTracks) && videoState.audioTracks.length > 0)) {
@@ -423,6 +424,7 @@ const Player = ({ urlParams, queryParams }) => {
                 }
                 case 'KeyI': {
                     closeSubtitlesMenu();
+                    closeSpeedMenu();
                     if (player.metaItem !== null && player.metaItem.type === 'Ready') {
                         toggleInfoMenu();
                     }
