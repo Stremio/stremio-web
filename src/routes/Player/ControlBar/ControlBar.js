@@ -42,6 +42,9 @@ const ControlBar = ({
     const onInfoButtonMouseDown = React.useCallback((event) => {
         event.nativeEvent.infoMenuClosePrevented = true;
     }, []);
+    const onSpeedButtonMouseDown = React.useCallback((event) => {
+        event.nativeEvent.speedMenuClosePrevented = true;
+    }, []);
     const onPlayPauseButtonClick = React.useCallback(() => {
         if (paused) {
             if (typeof onPlayRequested === 'function') {
@@ -125,7 +128,7 @@ const ControlBar = ({
                     <Icon className={styles['icon']} icon={'ic_more'} />
                 </Button>
                 <div className={classnames(styles['control-bar-buttons-menu-container'], { 'open': buttonsMenuOpen })}>
-                    <Button className={classnames(styles['control-bar-button'], { 'disabled': playbackSpeed === null })} tabIndex={-1} onClick={onSpeedButtonClick}>
+                    <Button className={classnames(styles['control-bar-button'], { 'disabled': playbackSpeed === null })} tabIndex={-1} onMouseDown={onSpeedButtonMouseDown} onClick={onSpeedButtonClick}>
                         <Icon className={styles['icon']} icon={'ic_speedometer'} />
                     </Button>
                     <Button className={classnames(styles['control-bar-button'], 'disabled')} tabIndex={-1}>
