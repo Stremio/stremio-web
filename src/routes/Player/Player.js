@@ -52,6 +52,7 @@ const Player = ({ urlParams, queryParams }) => {
             buffering: null,
             volume: null,
             muted: null,
+            playbackSpeed: null,
             audioTracks: [],
             selectedAudioTrackId: null,
             subtitlesTracks: [],
