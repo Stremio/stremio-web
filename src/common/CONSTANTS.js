@@ -2,7 +2,7 @@
 
 const CHROMECAST_RECEIVER_APP_ID = '1634F54B';
 const SUBTITLES_SIZES = [75, 100, 125, 150, 175, 200, 250];
-const SUBTITLES_FONTS = ['Roboto', 'Arial', 'Halvetica', 'Times New Roman', 'Verdana', 'Courier', 'Lucida Console', 'sans-serif', 'serif', 'monospace'];
+const SUBTITLES_FONTS = ['Roboto Flex', 'Roboto', 'Arial', 'Halvetica', 'Times New Roman', 'Verdana', 'Courier', 'Lucida Console', 'sans-serif', 'serif', 'monospace'];
 const SEEK_TIME_DURATIONS = [5000, 10000, 15000, 20000, 25000, 30000];
 const CATALOG_PREVIEW_SIZE = 10;
 const CATALOG_PAGE_SIZE = 100;
