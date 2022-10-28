@@ -329,6 +329,8 @@ const Player = ({ urlParams, queryParams }) => {
         };
     }, []);
     React.useEffect(() => {
+        const toastFilter = (item) => item?.dataset?.type === 'CoreEvent';
+        toast.addFilter(toastFilter);
         const onCastStateChange = () => {
             setCasting(chromecast.active && chromecast.transport.getCastState() === cast.framework.CastState.CONNECTED);
         };
@@ -344,6 +346,7 @@ const Player = ({ urlParams, queryParams }) => {
         chromecast.on('stateChanged', onChromecastServiceStateChange);
         onChromecastServiceStateChange();
         return () => {
+            toast.removeFilter(toastFilter);
             chromecast.off('stateChanged', onChromecastServiceStateChange);
             if (chromecast.active) {
                 chromecast.transport.off(
