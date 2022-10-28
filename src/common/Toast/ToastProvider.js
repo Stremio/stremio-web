@@ -28,32 +28,48 @@ const ToastProvider = ({ className, children }) => {
         clearTimeout(event.dataset.id);
         dispatch({ type: 'remove', id: event.dataset.id });
     }, []);
-    const toast = React.useMemo(() => ({
-        show: (item) => {
-            const timeout = typeof item.timeout === 'number' && !isNaN(item.timeout) ?
-                item.timeout
-                :
-                DEFAULT_TIMEOUT;
-            const id = setTimeout(() => {
-                dispatch({ type: 'remove', id });
-            }, timeout);
-            dispatch({
-                type: 'add',
-                item: {
-                    ...item,
-                    id,
-                    dataset: {
-                        ...item.dataset,
-                        id
-                    },
-                    onClose: itemOnClose
+    const toast = React.useMemo(() => {
+        const filters = [];
+        return {
+            addFilter: (filter) => {
+                filters.push(filter);
+            },
+            removeFilter: (filter) => {
+                const index = filters.indexOf(filter);
+                if (index > -1) {
+                    filters.splice(index, 1);
                 }
-            });
-        },
-        clear: () => {
-            dispatch({ type: 'clear' });
-        }
-    }), []);
+            },
+            show: (item) => {
+                if (filters.some((filter) => filter(item))) {
+                    return;
+                }
+
+                const timeout = typeof item.timeout === 'number' && !isNaN(item.timeout) ?
+                    item.timeout
+                    :
+                    DEFAULT_TIMEOUT;
+                const id = setTimeout(() => {
+                    dispatch({ type: 'remove', id });
+                }, timeout);
+                dispatch({
+                    type: 'add',
+                    item: {
+                        ...item,
+                        id,
+                        dataset: {
+                            ...item.dataset,
+                            id
+                        },
+                        onClose: itemOnClose
+                    }
+                });
+            },
+            clear: () => {
+                dispatch({ type: 'clear' });
+            }
+        };
+    }, []);
     return (
         <ToastContext.Provider value={toast}>
             {container instanceof HTMLElement ? children : null}
