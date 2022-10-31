@@ -11,6 +11,7 @@ const Icon = require('@stremio/stremio-icons/dom');
 const BufferingLoader = require('./BufferingLoader');
 const ControlBar = require('./ControlBar');
 const InfoMenu = require('./InfoMenu');
+const OptionsMenu = require('./OptionsMenu');
 const SubtitlesMenu = require('./SubtitlesMenu');
 const Video = require('./Video');
 const usePlayer = require('./usePlayer');
@@ -38,6 +39,7 @@ const Player = ({ urlParams, queryParams }) => {
     const setImmersedDebounced = React.useCallback(debounce(setImmersed, 3000), []);
     const [subtitlesMenuOpen, , closeSubtitlesMenu, toggleSubtitlesMenu] = useBinaryState(false);
     const [infoMenuOpen, , closeInfoMenu, toggleInfoMenu] = useBinaryState(false);
+    const [optionsMenuOpen, , closeOptionsMenu, toggleOptionsMenu] = useBinaryState(false);
     const [error, setError] = React.useState(null);
     const [videoState, setVideoState] = React.useReducer(
         (videoState, nextVideoState) => ({ ...videoState, ...nextVideoState }),
@@ -197,6 +199,9 @@ const Player = ({ urlParams, queryParams }) => {
         }
         if (!event.nativeEvent.infoMenuClosePrevented) {
             closeInfoMenu();
+        }
+        if (!event.nativeEvent.optionsMenuClosePrevented) {
+            closeOptionsMenu();
         }
     }, []);
     const onContainerMouseMove = React.useCallback((event) => {
@@ -399,6 +404,7 @@ const Player = ({ urlParams, queryParams }) => {
                 }
                 case 'KeyS': {
                     closeInfoMenu();
+                    closeOptionsMenu();
                     if ((Array.isArray(videoState.subtitlesTracks) && videoState.subtitlesTracks.length > 0) ||
                         (Array.isArray(videoState.extraSubtitlesTracks) && videoState.extraSubtitlesTracks.length > 0) ||
                         (Array.isArray(videoState.audioTracks) && videoState.audioTracks.length > 0)) {
@@ -409,6 +415,7 @@ const Player = ({ urlParams, queryParams }) => {
                 }
                 case 'KeyI': {
                     closeSubtitlesMenu();
+                    closeOptionsMenu();
                     if (player.metaItem !== null && player.metaItem.type === 'Ready') {
                         toggleInfoMenu();
                     }
@@ -418,6 +425,7 @@ const Player = ({ urlParams, queryParams }) => {
                 case 'Escape': {
                     closeSubtitlesMenu();
                     closeInfoMenu();
+                    closeOptionsMenu();
                     break;
                 }
             }
@@ -437,7 +445,7 @@ const Player = ({ urlParams, queryParams }) => {
         };
     }, []);
     return (
-        <div className={classnames(styles['player-container'], { [styles['immersed']]: immersed && !casting && videoState.paused !== null && !videoState.paused && !subtitlesMenuOpen && !infoMenuOpen })}
+        <div className={classnames(styles['player-container'], { [styles['immersed']]: immersed && !casting && videoState.paused !== null && !videoState.paused && !subtitlesMenuOpen && !infoMenuOpen && !optionsMenuOpen })}
             onMouseDown={onContainerMouseDown}
             onMouseMove={onContainerMouseMove}
             onMouseOver={onContainerMouseMove}
@@ -513,6 +521,7 @@ const Player = ({ urlParams, queryParams }) => {
                 onSeekRequested={onSeekRequested}
                 onToggleSubtitlesMenu={toggleSubtitlesMenu}
                 onToggleInfoMenu={toggleInfoMenu}
+                onToggleOptionsMenu={toggleOptionsMenu}
                 onMouseMove={onBarMouseMove}
                 onMouseOver={onBarMouseMove}
             />
@@ -550,6 +559,15 @@ const Player = ({ urlParams, queryParams }) => {
                         stream={player.selected !== null ? player.selected.stream : null}
                         addon={player.addon}
                         metaItem={player.metaItem !== null && player.metaItem.type === 'Ready' ? player.metaItem.content : null}
+                    />
+                    :
+                    null
+            }
+            {
+                optionsMenuOpen ?
+                    <OptionsMenu
+                        className={classnames(styles['layer'], styles['menu-layer'])}
+                        stream={videoState.stream}
                     />
                     :
                     null
