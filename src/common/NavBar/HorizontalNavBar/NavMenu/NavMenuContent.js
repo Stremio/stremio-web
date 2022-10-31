@@ -3,6 +3,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
+const magnet = require('magnet-uri');
 const Icon = require('@stremio/stremio-icons/dom');
 const { useServices } = require('stremio/services');
 const Button = require('stremio/common/Button');
@@ -22,6 +23,23 @@ const NavMenuContent = ({ onClick }) => {
                 action: 'Logout'
             }
         });
+    }, []);
+    const onPlayMagnetLinkClick = React.useCallback(async () => {
+        try {
+            const clipboardText = await navigator.clipboard.readText();
+            const parsed = magnet.decode(clipboardText);
+            if (parsed && typeof parsed.infoHash === 'string') {
+                core.transport.dispatch({
+                    action: 'StreamingServer',
+                    args: {
+                        action: 'CreateTorrent',
+                        args: clipboardText
+                    }
+                });
+            }
+        } catch(e) {
+            console.error(e);
+        }
     }, []);
     return (
         <div className={classnames(styles['nav-menu-container'], 'animation-fade-in')} onClick={onClick}>
@@ -57,7 +75,7 @@ const NavMenuContent = ({ onClick }) => {
                     <Icon className={styles['icon']} icon={'ic_addons'} />
                     <div className={styles['nav-menu-option-label']}>Addons</div>
                 </Button>
-                <Button className={styles['nav-menu-option-container']} title={'Play Magnet Link'} disabled={true}>
+                <Button className={styles['nav-menu-option-container']} title={'Play Magnet Link'} onClick={onPlayMagnetLinkClick}>
                     <Icon className={styles['icon']} icon={'ic_magnet'} />
                     <div className={styles['nav-menu-option-label']}>Play Magnet Link</div>
                 </Button>
