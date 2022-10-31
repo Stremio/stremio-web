@@ -5,10 +5,12 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('@stremio/stremio-icons/dom');
 const { Button, useStreamingServer, useToast } = require('stremio/common');
+const { useServices } = require('stremio/services');
 const styles = require('./styles');
 
 const OptionsMenu = ({ className, stream }) => {
     const streamingServer = useStreamingServer();
+    const { core } = useServices();
     const toast = useToast();
     const streamUrl = React.useMemo(() => {
         return stream !== null ?
@@ -54,7 +56,16 @@ const OptionsMenu = ({ className, stream }) => {
     }, [streamUrl]);
     const onExternalPlayerButtonClick = React.useCallback(() => {
         if (streamUrl !== null) {
-            window.open(`vlc://${encodeURIComponent(streamUrl)}`);
+            core.transport.dispatch({
+                action: 'StreamingServer',
+                args: {
+                    action: 'PlayOnDevice',
+                    args: {
+                        device: 'vlc',
+                        source: streamUrl,
+                    }
+                }
+            });
         }
     }, [streamUrl]);
     const onMouseDown = React.useCallback((event) => {
