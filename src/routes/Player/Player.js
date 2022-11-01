@@ -508,6 +508,7 @@ const Player = ({ urlParams, queryParams }) => {
                 subtitlesTracks={videoState.subtitlesTracks.concat(videoState.extraSubtitlesTracks)}
                 audioTracks={videoState.audioTracks}
                 metaItem={player.metaItem}
+                nextVideo={player.nextVideo}
                 onPlayRequested={onPlayRequested}
                 onPauseRequested={onPauseRequested}
                 onMuteRequested={onMuteRequested}

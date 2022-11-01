@@ -21,6 +21,7 @@ const ControlBar = ({
     subtitlesTracks,
     audioTracks,
     metaItem,
+    nextVideo,
     onPlayRequested,
     onPauseRequested,
     onMuteRequested,
@@ -51,6 +52,15 @@ const ControlBar = ({
             }
         }
     }, [paused, onPlayRequested, onPauseRequested]);
+    const onNextVideoButtonClick = React.useCallback(() => {
+        if (nextVideo !== null && typeof nextVideo.deepLinks === 'object') {
+            if (nextVideo.deepLinks.player !== null) {
+                window.location.href = nextVideo.deepLinks.player;
+            } else if (nextVideo.deepLinks.metaDetailsStreams !== null) {
+                window.location.href = nextVideo.deepLinks.metaDetailsStreams;
+            }
+        }
+    }, [nextVideo]);
     const onMuteButtonClick = React.useCallback(() => {
         if (muted) {
             if (typeof onUnmuteRequested === 'function') {
@@ -96,6 +106,14 @@ const ControlBar = ({
                 <Button className={classnames(styles['control-bar-button'], { 'disabled': typeof paused !== 'boolean' })} title={paused ? 'Play' : 'Pause'} tabIndex={-1} onClick={onPlayPauseButtonClick}>
                     <Icon className={styles['icon']} icon={typeof paused !== 'boolean' || paused ? 'ic_play' : 'ic_pause'} />
                 </Button>
+                {
+                    nextVideo !== null ?
+                        <Button className={classnames(styles['control-bar-button'])} title={'Next Video'} tabIndex={-1} onClick={onNextVideoButtonClick}>
+                            <Icon className={styles['icon']} icon={'ic_play_next'} />
+                        </Button>
+                        :
+                        null
+                }
                 <Button className={classnames(styles['control-bar-button'], { 'disabled': typeof muted !== 'boolean' })} title={muted ? 'Unmute' : 'Mute'} tabIndex={-1} onClick={onMuteButtonClick}>
                     <Icon
                         className={styles['icon']}
@@ -149,6 +167,7 @@ ControlBar.propTypes = {
     subtitlesTracks: PropTypes.array,
     audioTracks: PropTypes.array,
     metaItem: PropTypes.object,
+    nextVideo: PropTypes.object,
     onPlayRequested: PropTypes.func,
     onPauseRequested: PropTypes.func,
     onMuteRequested: PropTypes.func,
