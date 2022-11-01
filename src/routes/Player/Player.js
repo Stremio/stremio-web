@@ -581,6 +581,7 @@ const Player = ({ urlParams, queryParams }) => {
                     <VideosMenu
                         className={classnames(styles['layer'], styles['menu-layer'])}
                         metaItem={player.metaItem !== null && player.metaItem.type === 'Ready' ? player.metaItem.content : null}
+                        seriesInfo={player.seriesInfo}
                     />
                     :
                     null

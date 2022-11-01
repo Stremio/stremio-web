@@ -6,14 +6,20 @@ const classnames = require('classnames');
 const Video = require('../../MetaDetails/VideosList/Video');
 const styles = require('./styles');
 
-const VideosMenu = ({ className, metaItem }) => {
+const VideosMenu = ({ className, metaItem, seriesInfo }) => {
     const onMouseDown = React.useCallback((event) => {
         event.nativeEvent.videosMenuClosePrevented = true;
     }, []);
+    const videos = React.useMemo(() => {
+        return seriesInfo && seriesInfo.season && Array.isArray(metaItem.videos) ?
+            metaItem.videos.filter(({ season }) => season === seriesInfo.season)
+            :
+            metaItem.videos;
+    }, [metaItem, seriesInfo]);
     return (
         <div className={classnames(className, styles['videos-menu-container'])} onMouseDown={onMouseDown}>
             {
-                metaItem.videos.map((video, index) => (
+                videos.map((video, index) => (
                     <Video
                         key={index}
                         id={video.id}
@@ -36,6 +42,10 @@ const VideosMenu = ({ className, metaItem }) => {
 VideosMenu.propTypes = {
     className: PropTypes.string,
     metaItem: PropTypes.object,
+    seriesInfo: PropTypes.objectOf({
+        season: PropTypes.number,
+        episode: PropTypes.number,
+    }),
 };
 
 module.exports = VideosMenu;
