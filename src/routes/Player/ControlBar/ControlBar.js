@@ -55,9 +55,9 @@ const ControlBar = ({
     const onNextVideoButtonClick = React.useCallback(() => {
         if (nextVideo !== null && typeof nextVideo.deepLinks === 'object') {
             if (nextVideo.deepLinks.player !== null) {
-                window.location.href = nextVideo.deepLinks.player;
+                window.location.replace(nextVideo.deepLinks.player);
             } else if (nextVideo.deepLinks.metaDetailsStreams !== null) {
-                window.location.href = nextVideo.deepLinks.metaDetailsStreams;
+                window.location.replace(nextVideo.deepLinks.metaDetailsStreams);
             }
         }
     }, [nextVideo]);
