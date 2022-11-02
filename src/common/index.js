@@ -38,6 +38,7 @@ const useModelState = require('./useModelState');
 const useOnScrollToBottom = require('./useOnScrollToBottom');
 const useProfile = require('./useProfile');
 const useStreamingServer = require('./useStreamingServer');
+const useTorrent = require('./useTorrent');
 
 module.exports = {
     AddonDetailsModal,
@@ -80,5 +81,6 @@ module.exports = {
     useModelState,
     useOnScrollToBottom,
     useProfile,
-    useStreamingServer
+    useStreamingServer,
+    useTorrent
 };
