@@ -4,6 +4,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const debounce = require('lodash.debounce');
+const langs = require('langs');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
 const { HorizontalNavBar, Button, useFullscreen, useBinaryState, useToast, useStreamingServer, withCoreSuspender } = require('stremio/common');
@@ -38,6 +39,7 @@ const Player = ({ urlParams, queryParams }) => {
     const setImmersedDebounced = React.useCallback(debounce(setImmersed, 3000), []);
     const [subtitlesMenuOpen, , closeSubtitlesMenu, toggleSubtitlesMenu] = useBinaryState(false);
     const [infoMenuOpen, , closeInfoMenu, toggleInfoMenu] = useBinaryState(false);
+    const defaultSubtitlesSelected = React.useRef(false);
     const [error, setError] = React.useState(null);
     const [videoState, setVideoState] = React.useReducer(
         (videoState, nextVideoState) => ({ ...videoState, ...nextVideoState }),
@@ -308,6 +310,22 @@ const Player = ({ urlParams, queryParams }) => {
             pausedChanged(videoState.paused);
         }
     }, [videoState.paused]);
+    React.useEffect(() => {
+        if (defaultSubtitlesSelected.current === false) {
+            const findTrackByLang = (tracks, lang) => tracks.find((track) => track.lang === lang || langs.where('1', track.lang)?.[2] === lang);
+
+            const subtitlesTrack = findTrackByLang(videoState.subtitlesTracks, settings.subtitlesLanguage);
+            const extraSubtitlesTrack = findTrackByLang(videoState.extraSubtitlesTracks, settings.subtitlesLanguage);
+
+            if (subtitlesTrack && subtitlesTrack.id) {
+                onSubtitlesTrackSelected(subtitlesTrack.id);
+                defaultSubtitlesSelected.current = true;
+            } else if (extraSubtitlesTrack && extraSubtitlesTrack.id) {
+                onExtraSubtitlesTrackSelected(extraSubtitlesTrack.id);
+                defaultSubtitlesSelected.current = true;
+            }
+        }
+    }, [videoState.subtitlesTracks, videoState.extraSubtitlesTracks, settings.subtitlesLanguage]);
     React.useEffect(() => {
         if ((!Array.isArray(videoState.subtitlesTracks) || videoState.subtitlesTracks.length === 0) &&
             (!Array.isArray(videoState.extraSubtitlesTracks) || videoState.extraSubtitlesTracks.length === 0) &&
