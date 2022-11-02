@@ -30,7 +30,7 @@ const useTorrent = () => {
                 });
             }, 10000);
         }
-    }, [toast]);
+    }, []);
     React.useEffect(() => {
         if (streamingServer.torrent !== null) {
             const [, { type }] = streamingServer.torrent;
