@@ -29,6 +29,7 @@ const ControlBar = ({
     onSeekRequested,
     onToggleSubtitlesMenu,
     onToggleInfoMenu,
+    onToggleVideosMenu,
     ...props
 }) => {
     const { chromecast } = useServices();
@@ -39,6 +40,9 @@ const ControlBar = ({
     }, []);
     const onInfoButtonMouseDown = React.useCallback((event) => {
         event.nativeEvent.infoMenuClosePrevented = true;
+    }, []);
+    const onVideosButtonMouseDown = React.useCallback((event) => {
+        event.nativeEvent.videosMenuClosePrevented = true;
     }, []);
     const onPlayPauseButtonClick = React.useCallback(() => {
         if (paused) {
@@ -72,6 +76,11 @@ const ControlBar = ({
             onToggleInfoMenu();
         }
     }, [onToggleInfoMenu]);
+    const onVideosButtonClick = React.useCallback(() => {
+        if (typeof onToggleVideosMenu === 'function') {
+            onToggleVideosMenu();
+        }
+    }, [onToggleVideosMenu]);
     const onChromecastButtonClick = React.useCallback(() => {
         chromecast.transport.requestSession();
     }, []);
@@ -130,9 +139,14 @@ const ControlBar = ({
                     <Button className={classnames(styles['control-bar-button'], { 'disabled': (!Array.isArray(subtitlesTracks) || subtitlesTracks.length === 0) && (!Array.isArray(audioTracks) || audioTracks.length === 0) })} tabIndex={-1} onMouseDown={onSubtitlesButtonMouseDown} onClick={onSubtitlesButtonClick}>
                         <Icon className={styles['icon']} icon={'ic_sub'} />
                     </Button>
-                    <Button className={classnames(styles['control-bar-button'], 'disabled')} tabIndex={-1}>
-                        <Icon className={styles['icon']} icon={'ic_videos'} />
-                    </Button>
+                    {
+                        metaItem?.content?.videos?.length > 0 ?
+                            <Button className={styles['control-bar-button']} tabIndex={-1} onMouseDown={onVideosButtonMouseDown} onClick={onVideosButtonClick}>
+                                <Icon className={styles['icon']} icon={'ic_videos'} />
+                            </Button>
+                            :
+                            null
+                    }
                 </div>
             </div>
         </div>
@@ -156,7 +170,8 @@ ControlBar.propTypes = {
     onVolumeChangeRequested: PropTypes.func,
     onSeekRequested: PropTypes.func,
     onToggleSubtitlesMenu: PropTypes.func,
-    onToggleInfoMenu: PropTypes.func
+    onToggleInfoMenu: PropTypes.func,
+    onToggleVideosMenu: PropTypes.func
 };
 
 module.exports = ControlBar;
