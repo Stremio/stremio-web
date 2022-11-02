@@ -11,7 +11,7 @@ const VideosMenu = ({ className, metaItem, seriesInfo }) => {
         event.nativeEvent.videosMenuClosePrevented = true;
     }, []);
     const videos = React.useMemo(() => {
-        return seriesInfo && seriesInfo.season && Array.isArray(metaItem.videos) ?
+        return seriesInfo && typeof seriesInfo.season === 'number' && Array.isArray(metaItem.videos) ?
             metaItem.videos.filter(({ season }) => season === seriesInfo.season)
             :
             metaItem.videos;
