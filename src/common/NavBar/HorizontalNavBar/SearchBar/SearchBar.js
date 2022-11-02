@@ -70,4 +70,17 @@ SearchBar.propTypes = {
     active: PropTypes.bool
 };
 
-module.exports = withCoreSuspender(SearchBar);
+const SearchBarFallback = ({ className }) => (
+    <label className={classnames(className, styles['search-bar-container'])}>
+        <div className={styles['search-input']}>
+            <div className={styles['placeholder-label']}>Search or paste link</div>
+        </div>
+        <Button className={styles['submit-button-container']} tabIndex={-1}>
+            <Icon className={styles['icon']} icon={'ic_search_link'} />
+        </Button>
+    </label>
+);
+
+SearchBarFallback.propTypes = SearchBar.propTypes;
+
+module.exports = withCoreSuspender(SearchBar, SearchBarFallback);
