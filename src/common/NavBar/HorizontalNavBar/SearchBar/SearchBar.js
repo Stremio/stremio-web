@@ -3,17 +3,17 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const magnet = require('magnet-uri');
-const { useServices } = require('stremio/services');
 const Icon = require('@stremio/stremio-icons/dom');
 const { useRouteFocused } = require('stremio-router');
 const Button = require('stremio/common/Button');
 const TextInput = require('stremio/common/TextInput');
+const useTorrent = require('stremio/common/useTorrent');
+const { withCoreSuspender } = require('stremio/common/CoreSuspender');
 const styles = require('./styles');
 
 const SearchBar = ({ className, query, active }) => {
-    const { core } = useServices();
     const routeFocused = useRouteFocused();
+    const { createTorrentFromMagnet } = useTorrent();
     const searchInputRef = React.useRef(null);
     const searchBarOnClick = React.useCallback(() => {
         if (!active) {
@@ -22,17 +22,7 @@ const SearchBar = ({ className, query, active }) => {
     }, [active]);
     const queryInputOnChange = React.useCallback(() => {
         try {
-            const parsed = magnet.decode(searchInputRef.current.value);
-            if (parsed && typeof parsed.infoHash === 'string') {
-                core.transport.dispatch({
-                    action: 'StreamingServer',
-                    args: {
-                        action: 'CreateTorrent',
-                        args: searchInputRef.current.value
-                    }
-                });
-                searchInputRef.current.value = '';
-            }
+            createTorrentFromMagnet(searchInputRef.current.value);
             // eslint-disable-next-line no-empty
         } catch { }
     }, []);
@@ -80,4 +70,4 @@ SearchBar.propTypes = {
     active: PropTypes.bool
 };
 
-module.exports = SearchBar;
+module.exports = withCoreSuspender(SearchBar);

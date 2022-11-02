@@ -3,18 +3,19 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const magnet = require('magnet-uri');
 const Icon = require('@stremio/stremio-icons/dom');
 const { useServices } = require('stremio/services');
 const Button = require('stremio/common/Button');
 const useFullscreen = require('stremio/common/useFullscreen');
 const useProfile = require('stremio/common/useProfile');
+const useTorrent = require('stremio/common/useTorrent');
 const { withCoreSuspender } = require('stremio/common/CoreSuspender');
 const styles = require('./styles');
 
 const NavMenuContent = ({ onClick }) => {
     const { core } = useServices();
     const profile = useProfile();
+    const { createTorrentFromMagnet } = useTorrent();
     const [fullscreen, requestFullscreen, exitFullscreen] = useFullscreen();
     const logoutButtonOnClick = React.useCallback(() => {
         core.transport.dispatch({
@@ -27,16 +28,7 @@ const NavMenuContent = ({ onClick }) => {
     const onPlayMagnetLinkClick = React.useCallback(async () => {
         try {
             const clipboardText = await navigator.clipboard.readText();
-            const parsed = magnet.decode(clipboardText);
-            if (parsed && typeof parsed.infoHash === 'string') {
-                core.transport.dispatch({
-                    action: 'StreamingServer',
-                    args: {
-                        action: 'CreateTorrent',
-                        args: clipboardText
-                    }
-                });
-            }
+            createTorrentFromMagnet(clipboardText);
         } catch(e) {
             console.error(e);
         }
