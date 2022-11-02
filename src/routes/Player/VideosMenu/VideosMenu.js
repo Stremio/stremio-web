@@ -42,7 +42,7 @@ const VideosMenu = ({ className, metaItem, seriesInfo }) => {
 VideosMenu.propTypes = {
     className: PropTypes.string,
     metaItem: PropTypes.object,
-    seriesInfo: PropTypes.objectOf({
+    seriesInfo: PropTypes.shape({
         season: PropTypes.number,
         episode: PropTypes.number,
     }),
