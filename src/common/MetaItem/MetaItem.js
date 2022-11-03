@@ -10,21 +10,8 @@ const Image = require('stremio/common/Image');
 const Multiselect = require('stremio/common/Multiselect');
 const PlayIconCircleCentered = require('stremio/common/PlayIconCircleCentered');
 const useBinaryState = require('stremio/common/useBinaryState');
+const { ICON_FOR_TYPE } = require('stremio/common/CONSTANTS');
 const styles = require('./styles');
-
-const ICON_FOR_TYPE = new Map([
-    ['movie', 'ic_movies'],
-    ['series', 'ic_series'],
-    ['channel', 'ic_channels'],
-    ['tv', 'ic_tv'],
-    ['book', 'ic_book'],
-    ['game', 'ic_games'],
-    ['music', 'ic_music'],
-    ['adult', 'ic_adult'],
-    ['radio', 'ic_radio'],
-    ['podcast', 'ic_podcast'],
-    ['other', 'ic_movies'],
-]);
 
 const MetaItem = React.memo(({ className, type, name, poster, posterShape, playIcon, progress, options, deepLinks, dataset, optionOnSelect, ...props }) => {
     const [menuOpen, onMenuOpen, onMenuClose] = useBinaryState(false);

@@ -25,6 +25,19 @@ const TYPE_PRIORITIES = {
     adult: 1,
     other: -Infinity
 };
+const ICON_FOR_TYPE = new Map([
+    ['movie', 'ic_movies'],
+    ['series', 'ic_series'],
+    ['channel', 'ic_channels'],
+    ['tv', 'ic_tv'],
+    ['book', 'ic_book'],
+    ['game', 'ic_games'],
+    ['music', 'ic_music'],
+    ['adult', 'ic_adult'],
+    ['radio', 'ic_radio'],
+    ['podcast', 'ic_podcast'],
+    ['other', 'ic_movies'],
+]);
 
 module.exports = {
     CHROMECAST_RECEIVER_APP_ID,
@@ -39,5 +52,6 @@ module.exports = {
     IMDB_LINK_CATEGORY,
     SHARE_LINK_CATEGORY,
     WRITERS_LINK_CATEGORY,
-    TYPE_PRIORITIES
+    TYPE_PRIORITIES,
+    ICON_FOR_TYPE
 };

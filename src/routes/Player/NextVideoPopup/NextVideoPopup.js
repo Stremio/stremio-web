@@ -2,22 +2,8 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('@stremio/stremio-icons/dom');
-const { Image, Button } = require('stremio/common');
+const { Image, Button, CONSTANTS } = require('stremio/common');
 const styles = require('./styles');
-
-const ICON_FOR_TYPE = new Map([
-    ['movie', 'ic_movies'],
-    ['series', 'ic_series'],
-    ['channel', 'ic_channels'],
-    ['tv', 'ic_tv'],
-    ['book', 'ic_book'],
-    ['game', 'ic_games'],
-    ['music', 'ic_music'],
-    ['adult', 'ic_adult'],
-    ['radio', 'ic_radio'],
-    ['podcast', 'ic_podcast'],
-    ['other', 'ic_movies'],
-]);
 
 const NextVideoPopup = ({ className, metaItem, nextVideo, onDismiss, onPlayNextVideoRequested }) => {
     const watchNowButtonRef = React.useRef(null);
@@ -38,7 +24,7 @@ const NextVideoPopup = ({ className, metaItem, nextVideo, onDismiss, onPlayNextV
         return metaItem !== null && typeof metaItem.type === 'string' ?
             <Icon
                 className={styles['placeholder-icon']}
-                icon={ICON_FOR_TYPE.has(metaItem.type) ? ICON_FOR_TYPE.get(metaItem.type) : ICON_FOR_TYPE.get('other')}
+                icon={CONSTANTS.ICON_FOR_TYPE.has(metaItem.type) ? CONSTANTS.ICON_FOR_TYPE.get(metaItem.type) : CONSTANTS.ICON_FOR_TYPE.get('other')}
             />
             :
             null;
