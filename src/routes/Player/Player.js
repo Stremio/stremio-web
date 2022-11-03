@@ -4,6 +4,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const debounce = require('lodash.debounce');
+const langs = require('langs');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
 const { HorizontalNavBar, Button, useFullscreen, useBinaryState, useToast, useStreamingServer, withCoreSuspender } = require('stremio/common');
@@ -40,6 +41,7 @@ const Player = ({ urlParams, queryParams }) => {
     const [subtitlesMenuOpen, , closeSubtitlesMenu, toggleSubtitlesMenu] = useBinaryState(false);
     const [infoMenuOpen, , closeInfoMenu, toggleInfoMenu] = useBinaryState(false);
     const [videosMenuOpen, , closeVideosMenu, toggleVideosMenu] = useBinaryState(false);
+    const defaultAudioTrackSelected = React.useRef(false);
     const [error, setError] = React.useState(null);
     const [videoState, setVideoState] = React.useReducer(
         (videoState, nextVideoState) => ({ ...videoState, ...nextVideoState }),
@@ -313,6 +315,17 @@ const Player = ({ urlParams, queryParams }) => {
             pausedChanged(videoState.paused);
         }
     }, [videoState.paused]);
+    React.useEffect(() => {
+        if (defaultAudioTrackSelected.current === false) {
+            const findTrackByLang = (tracks, lang) => tracks.find((track) => track.lang === lang || langs.where('1', track.lang)?.[2] === lang);
+            const audioTrack = findTrackByLang(videoState.audioTracks, settings.audioLanguage);
+
+            if (audioTrack && audioTrack.id) {
+                onAudioTrackSelected(audioTrack.id);
+                defaultAudioTrackSelected.current = true;
+            }
+        }
+    }, [videoState.audioTracks, settings.audioLanguage]);
     React.useEffect(() => {
         if ((!Array.isArray(videoState.subtitlesTracks) || videoState.subtitlesTracks.length === 0) &&
             (!Array.isArray(videoState.extraSubtitlesTracks) || videoState.extraSubtitlesTracks.length === 0) &&
