@@ -8,12 +8,14 @@ const { useServices } = require('stremio/services');
 const Button = require('stremio/common/Button');
 const useFullscreen = require('stremio/common/useFullscreen');
 const useProfile = require('stremio/common/useProfile');
+const useTorrent = require('stremio/common/useTorrent');
 const { withCoreSuspender } = require('stremio/common/CoreSuspender');
 const styles = require('./styles');
 
 const NavMenuContent = ({ onClick }) => {
     const { core } = useServices();
     const profile = useProfile();
+    const { createTorrentFromMagnet } = useTorrent();
     const [fullscreen, requestFullscreen, exitFullscreen] = useFullscreen();
     const logoutButtonOnClick = React.useCallback(() => {
         core.transport.dispatch({
@@ -22,6 +24,14 @@ const NavMenuContent = ({ onClick }) => {
                 action: 'Logout'
             }
         });
+    }, []);
+    const onPlayMagnetLinkClick = React.useCallback(async () => {
+        try {
+            const clipboardText = await navigator.clipboard.readText();
+            createTorrentFromMagnet(clipboardText);
+        } catch(e) {
+            console.error(e);
+        }
     }, []);
     return (
         <div className={classnames(styles['nav-menu-container'], 'animation-fade-in')} onClick={onClick}>
@@ -57,11 +67,7 @@ const NavMenuContent = ({ onClick }) => {
                     <Icon className={styles['icon']} icon={'ic_addons'} />
                     <div className={styles['nav-menu-option-label']}>Addons</div>
                 </Button>
-                <Button className={styles['nav-menu-option-container']} title={'Remote Control'} disabled={true}>
-                    <Icon className={styles['icon']} icon={'ic_remote'} />
-                    <div className={styles['nav-menu-option-label']}>Remote Control</div>
-                </Button>
-                <Button className={styles['nav-menu-option-container']} title={'Play Magnet Link'} disabled={true}>
+                <Button className={styles['nav-menu-option-container']} title={'Play Magnet Link'} onClick={onPlayMagnetLinkClick}>
                     <Icon className={styles['icon']} icon={'ic_magnet'} />
                     <div className={styles['nav-menu-option-label']}>Play Magnet Link</div>
                 </Button>

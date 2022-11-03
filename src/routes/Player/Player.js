@@ -12,6 +12,7 @@ const Icon = require('@stremio/stremio-icons/dom');
 const BufferingLoader = require('./BufferingLoader');
 const ControlBar = require('./ControlBar');
 const InfoMenu = require('./InfoMenu');
+const VideosMenu = require('./VideosMenu');
 const SubtitlesMenu = require('./SubtitlesMenu');
 const Video = require('./Video');
 const usePlayer = require('./usePlayer');
@@ -39,6 +40,7 @@ const Player = ({ urlParams, queryParams }) => {
     const setImmersedDebounced = React.useCallback(debounce(setImmersed, 3000), []);
     const [subtitlesMenuOpen, , closeSubtitlesMenu, toggleSubtitlesMenu] = useBinaryState(false);
     const [infoMenuOpen, , closeInfoMenu, toggleInfoMenu] = useBinaryState(false);
+    const [videosMenuOpen, , closeVideosMenu, toggleVideosMenu] = useBinaryState(false);
     const defaultSubtitlesSelected = React.useRef(false);
     const [error, setError] = React.useState(null);
     const [videoState, setVideoState] = React.useReducer(
@@ -200,6 +202,9 @@ const Player = ({ urlParams, queryParams }) => {
         if (!event.nativeEvent.infoMenuClosePrevented) {
             closeInfoMenu();
         }
+        if (!event.nativeEvent.videosMenuClosePrevented) {
+            closeVideosMenu();
+        }
     }, []);
     const onContainerMouseMove = React.useCallback((event) => {
         setImmersed(false);
@@ -336,6 +341,7 @@ const Player = ({ urlParams, queryParams }) => {
     React.useEffect(() => {
         if (player.metaItem === null || player.metaItem.type !== 'Ready') {
             closeInfoMenu();
+            closeVideosMenu();
         }
     }, [player.metaItem]);
     React.useEffect(() => {
@@ -420,6 +426,7 @@ const Player = ({ urlParams, queryParams }) => {
                 }
                 case 'KeyS': {
                     closeInfoMenu();
+                    closeVideosMenu();
                     if ((Array.isArray(videoState.subtitlesTracks) && videoState.subtitlesTracks.length > 0) ||
                         (Array.isArray(videoState.extraSubtitlesTracks) && videoState.extraSubtitlesTracks.length > 0) ||
                         (Array.isArray(videoState.audioTracks) && videoState.audioTracks.length > 0)) {
@@ -430,8 +437,18 @@ const Player = ({ urlParams, queryParams }) => {
                 }
                 case 'KeyI': {
                     closeSubtitlesMenu();
+                    closeVideosMenu();
                     if (player.metaItem !== null && player.metaItem.type === 'Ready') {
                         toggleInfoMenu();
+                    }
+
+                    break;
+                }
+                case 'KeyV': {
+                    closeInfoMenu();
+                    closeSubtitlesMenu();
+                    if (player.metaItem !== null && player.metaItem.type === 'Ready') {
+                        toggleVideosMenu();
                     }
 
                     break;
@@ -439,6 +456,7 @@ const Player = ({ urlParams, queryParams }) => {
                 case 'Escape': {
                     closeSubtitlesMenu();
                     closeInfoMenu();
+                    closeVideosMenu();
                     break;
                 }
             }
@@ -449,7 +467,7 @@ const Player = ({ urlParams, queryParams }) => {
         return () => {
             window.removeEventListener('keydown', onKeyDown);
         };
-    }, [player.metaItem, settings.seekTimeDuration, routeFocused, subtitlesMenuOpen, infoMenuOpen, videoState.paused, videoState.time, videoState.volume, videoState.audioTracks, videoState.subtitlesTracks, videoState.extraSubtitlesTracks, toggleSubtitlesMenu, toggleInfoMenu]);
+    }, [player.metaItem, settings.seekTimeDuration, routeFocused, subtitlesMenuOpen, infoMenuOpen, videoState.paused, videoState.time, videoState.volume, videoState.audioTracks, videoState.subtitlesTracks, videoState.extraSubtitlesTracks, toggleSubtitlesMenu, toggleInfoMenu, toggleVideosMenu]);
     React.useLayoutEffect(() => {
         return () => {
             setImmersedDebounced.cancel();
@@ -458,7 +476,7 @@ const Player = ({ urlParams, queryParams }) => {
         };
     }, []);
     return (
-        <div className={classnames(styles['player-container'], { [styles['immersed']]: immersed && !casting && videoState.paused !== null && !videoState.paused && !subtitlesMenuOpen && !infoMenuOpen })}
+        <div className={classnames(styles['player-container'], { [styles['immersed']]: immersed && !casting && videoState.paused !== null && !videoState.paused && !subtitlesMenuOpen && !infoMenuOpen && !videosMenuOpen })}
             onMouseDown={onContainerMouseDown}
             onMouseMove={onContainerMouseMove}
             onMouseOver={onContainerMouseMove}
@@ -526,6 +544,7 @@ const Player = ({ urlParams, queryParams }) => {
                 subtitlesTracks={videoState.subtitlesTracks.concat(videoState.extraSubtitlesTracks)}
                 audioTracks={videoState.audioTracks}
                 metaItem={player.metaItem}
+                nextVideo={player.nextVideo}
                 onPlayRequested={onPlayRequested}
                 onPauseRequested={onPauseRequested}
                 onMuteRequested={onMuteRequested}
@@ -534,6 +553,7 @@ const Player = ({ urlParams, queryParams }) => {
                 onSeekRequested={onSeekRequested}
                 onToggleSubtitlesMenu={toggleSubtitlesMenu}
                 onToggleInfoMenu={toggleInfoMenu}
+                onToggleVideosMenu={toggleVideosMenu}
                 onMouseMove={onBarMouseMove}
                 onMouseOver={onBarMouseMove}
             />
@@ -571,6 +591,16 @@ const Player = ({ urlParams, queryParams }) => {
                         stream={player.selected !== null ? player.selected.stream : null}
                         addon={player.addon}
                         metaItem={player.metaItem !== null && player.metaItem.type === 'Ready' ? player.metaItem.content : null}
+                    />
+                    :
+                    null
+            }
+            {
+                videosMenuOpen ?
+                    <VideosMenu
+                        className={classnames(styles['layer'], styles['menu-layer'])}
+                        metaItem={player.metaItem !== null && player.metaItem.type === 'Ready' ? player.metaItem.content : null}
+                        seriesInfo={player.seriesInfo}
                     />
                     :
                     null
