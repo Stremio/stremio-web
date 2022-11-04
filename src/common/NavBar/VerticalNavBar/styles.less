@@ -1,52 +1,52 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
-@import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
-@import (reference) '~stremio/common/screen-sizes.less';
+@import (reference) "~@stremio/stremio-colors/less/stremio-colors.less";
+@import (reference) "~stremio/common/screen-sizes.less";
 
 .vertical-nav-bar-container {
+  width: var(--vertical-nav-bar-size);
+  background-color: @color-background-dark1;
+  overflow-y: auto;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nav-tab-button {
     width: var(--vertical-nav-bar-size);
-    background-color: @color-background-dark1;
-    overflow-y: auto;
-    scrollbar-width: none;
+    height: var(--vertical-nav-bar-size);
 
-    &::-webkit-scrollbar {
-        display: none;
+    &:first-child {
+      margin-top: 1rem;
     }
 
-    .nav-tab-button {
-        width: var(--vertical-nav-bar-size);
-        height: var(--vertical-nav-bar-size);
-
-        &:first-child {
-            margin-top: 1rem;
-        }
-
-        &:last-child {
-            margin-bottom: 1rem;
-        }
+    &:last-child {
+      margin-bottom: 1rem;
     }
+  }
 }
 
 @media only screen and (max-width: @minimum) {
-    .vertical-nav-bar-container {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        height: var(--vertical-nav-bar-size);
-        width: 100%;
-        overflow-y: hidden;
-        overflow-x: auto;
+  .vertical-nav-bar-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: var(--vertical-nav-bar-size);
+    width: 100%;
+    overflow-y: hidden;
+    overflow-x: auto;
 
-        .nav-tab-button {
-            flex: none;
+    .nav-tab-button {
+      flex: none;
 
-            &:first-child {
-                margin-top: 0;
-            }
-    
-            &:last-child {
-                margin-bottom: 0;
-            }
-        }
+      &:first-child {
+        margin-top: 0;
+      }
+
+      &:last-child {
+        margin-bottom: 0;
+      }
     }
+  }
 }

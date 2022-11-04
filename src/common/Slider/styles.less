@@ -1,73 +1,74 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
-@import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
+@import (reference) "~@stremio/stremio-colors/less/stremio-colors.less";
 
 html.active-slider-within {
-    cursor: grabbing;
+  cursor: grabbing;
 
-    body {
-        pointer-events: none;
-    }
+  body {
+    pointer-events: none;
+  }
 }
 
 .slider-container {
-    position: relative;
-    z-index: 0;
-    overflow: visible;
-    cursor: pointer;
+  position: relative;
+  z-index: 0;
+  overflow: visible;
+  cursor: pointer;
 
-    &:hover, &:global(.active) {
-        .track-before {
-            background-color: @color-primary-light5;
-        }
+  &:hover,
+  &:global(.active) {
+    .track-before {
+      background-color: @color-primary-light5;
     }
+  }
 
-    &:global(.disabled) {
-        pointer-events: none;
-
-        .track {
-            background-color: @color-surface-dark5;
-        }
-
-        .track-before {
-            background-color: @color-surface;
-        }
-
-        .thumb {
-            fill: @color-surface;
-        }
-    }
-
-    .layer {
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        z-index: 0;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        overflow: visible;
-    }
+  &:global(.disabled) {
+    pointer-events: none;
 
     .track {
-        flex: 1;
-        height: var(--track-size);
-        background-color: @color-primary-dark3;
+      background-color: @color-surface-dark5;
     }
 
     .track-before {
-        flex: none;
-        height: var(--track-size);
-        background-color: @color-primary-light3;
+      background-color: @color-surface;
     }
 
     .thumb {
-        flex: none;
-        width: var(--thumb-size);
-        height: var(--thumb-size);
-        transform: translateX(-50%);
-        fill: @color-surface-light5;
+      fill: @color-surface;
     }
+  }
+
+  .layer {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    overflow: visible;
+  }
+
+  .track {
+    flex: 1;
+    height: var(--track-size);
+    background-color: @color-primary-dark3;
+  }
+
+  .track-before {
+    flex: none;
+    height: var(--track-size);
+    background-color: @color-primary-light3;
+  }
+
+  .thumb {
+    flex: none;
+    width: var(--thumb-size);
+    height: var(--thumb-size);
+    transform: translateX(-50%);
+    fill: @color-surface-light5;
+  }
 }

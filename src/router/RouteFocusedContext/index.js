@@ -1,9 +1,9 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
-const RouteFocusedContext = require('./RouteFocusedContext');
-const useRouteFocused = require('./useRouteFocused');
+const RouteFocusedContext = require("./RouteFocusedContext");
+const useRouteFocused = require("./useRouteFocused");
 
 module.exports = {
-    RouteFocusedProvider: RouteFocusedContext.Provider,
-    useRouteFocused
+  RouteFocusedProvider: RouteFocusedContext.Provider,
+  useRouteFocused,
 };

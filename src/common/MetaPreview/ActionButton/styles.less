@@ -1,74 +1,75 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
-@import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
-@import (reference) '~stremio/common/screen-sizes.less';
+@import (reference) "~@stremio/stremio-colors/less/stremio-colors.less";
+@import (reference) "~stremio/common/screen-sizes.less";
 
 .action-button-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: @color-surface-light5-20;
+
+  &:hover,
+  &:focus {
+    background-color: @color-accent3;
+  }
+
+  .icon-container {
+    flex: 0 0 50%;
+    align-self: stretch;
+    padding-top: 15%;
+
+    &:only-child {
+      padding: 5% 0;
+    }
+
+    .icon {
+      display: block;
+      width: 100%;
+      height: 100%;
+      fill: @color-surface-light5-90;
+    }
+  }
+
+  .label-container {
+    flex: 0 0 50%;
+    align-self: stretch;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    background-color: @color-surface-light5-20;
+    flex-direction: row;
+    align-items: center;
 
-    &:hover, &:focus {
-        background-color: @color-accent3;
+    .label {
+      flex: 1;
+      font-weight: 500;
+      max-height: 2.4em;
+      padding: 0 0.2rem;
+      text-align: center;
+      color: @color-surface-light5-90;
     }
-
-    .icon-container {
-        flex: 0 0 50%;
-        align-self: stretch;
-        padding-top: 15%;
-
-        &:only-child {
-            padding: 5% 0;
-        }
-
-        .icon {
-            display: block;
-            width: 100%;
-            height: 100%;
-            fill: @color-surface-light5-90;
-        }
-    }
-
-    .label-container {
-        flex: 0 0 50%;
-        align-self: stretch;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-
-        .label {
-            flex: 1;
-            font-weight: 500;
-            max-height: 2.4em;
-            padding: 0 0.2rem;
-            text-align: center;
-            color: @color-surface-light5-90;
-        }
-    }
+  }
 }
 
 @media only screen and (max-width: @minimum) {
-    .action-button-container {
-        flex-direction: row;
-        padding: 0 1rem;
+  .action-button-container {
+    flex-direction: row;
+    padding: 0 1rem;
 
-        .icon-container {
-            flex: none;
-            align-self: center;
-            height: 2rem;
-            width: 2rem;
-            padding-top: 0;
-            margin-right: 0.5rem;
+    .icon-container {
+      flex: none;
+      align-self: center;
+      height: 2rem;
+      width: 2rem;
+      padding-top: 0;
+      margin-right: 0.5rem;
 
-            &:only-child {
-                padding: 0;
-                margin-right: 0;
-            }
-        }
-
-        .label-container {
-            flex: 1;
-        }
+      &:only-child {
+        padding: 0;
+        margin-right: 0;
+      }
     }
+
+    .label-container {
+      flex: 1;
+    }
+  }
 }

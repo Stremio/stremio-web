@@ -1,154 +1,156 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
-@import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
-@import (reference) '~stremio/common/screen-sizes.less';
+@import (reference) "~@stremio/stremio-colors/less/stremio-colors.less";
+@import (reference) "~stremio/common/screen-sizes.less";
 
-:import('~stremio/common/MetaPreview/styles.less') {
-    meta-info-container: meta-info-container;
+:import("~stremio/common/MetaPreview/styles.less") {
+  meta-info-container: meta-info-container;
 }
 
-:import('~stremio/common/ModalDialog/styles.less') {
-    modal-dialog-container: modal-dialog-container;
-    title-modal-container: title-container;
+:import("~stremio/common/ModalDialog/styles.less") {
+  modal-dialog-container: modal-dialog-container;
+  title-modal-container: title-container;
 }
 
 .metadetails-container {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
-    background-color: @color-background-dark2;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background-color: @color-background-dark2;
 
-    .nav-bar {
+  .nav-bar {
+    flex: none;
+    align-self: stretch;
+  }
+
+  .metadetails-content {
+    flex: 1;
+    align-self: stretch;
+    position: relative;
+    z-index: 0;
+    display: flex;
+    flex-direction: row;
+
+    .vertical-nav-bar {
+      --vertical-nav-bar-size: 6rem;
+      flex: none;
+    }
+
+    .background-image-layer {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: -1;
+
+      &::after {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1;
+        background: @color-background-dark2-70;
+        content: "";
+      }
+
+      .background-image {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: top left;
+        opacity: 0.9;
+      }
+    }
+
+    .meta-message-container {
+      flex: 0 1 30rem;
+      align-self: stretch;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+
+      .image {
+        flex: none;
+        width: 12rem;
+        height: 12rem;
+        max-width: 100%;
+        margin-bottom: 1rem;
+        object-fit: contain;
+        object-position: center;
+        opacity: 0.9;
+      }
+
+      .message-label {
         flex: none;
         align-self: stretch;
+        font-size: 2rem;
+        text-align: center;
+        color: @color-secondaryvariant2-light1-90;
+      }
     }
 
-    .metadetails-content {
-        flex: 1;
-        align-self: stretch;
-        position: relative;
-        z-index: 0;
-        display: flex;
-        flex-direction: row;
-
-        .vertical-nav-bar {
-            --vertical-nav-bar-size: 6rem;
-            flex: none;
-        }
-
-        .background-image-layer {
-            position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            z-index: -1;
-
-            &::after {
-                position: absolute;
-                top: 0;
-                right: 0;
-                bottom: 0;
-                left: 0;
-                z-index: 1;
-                background: @color-background-dark2-70;
-                content: "";
-            }
-
-            .background-image {
-                display: block;
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                object-position: top left;
-                opacity: 0.9;
-            }
-        }
-
-        .meta-message-container {
-            flex: 0 1 30rem;
-            align-self: stretch;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 2rem;
-
-            .image {
-                flex: none;
-                width: 12rem;
-                height: 12rem;
-                max-width: 100%;
-                margin-bottom: 1rem;
-                object-fit: contain;
-                object-position: center;
-                opacity: 0.9;
-            }
-
-            .message-label {
-                flex: none;
-                align-self: stretch;
-                font-size: 2rem;
-                text-align: center;
-                color: @color-secondaryvariant2-light1-90;
-            }
-        }
-
-        .meta-preview {
-            flex: 0 1 40rem;
-            align-self: stretch;
-        }
-
-        .spacing {
-            flex: 1;
-        }
-
-        .videos-list, .streams-list {
-            flex: 0 0 26.5rem;
-            align-self: stretch;
-            background-color: @color-background-dark5-70;
-        }
+    .meta-preview {
+      flex: 0 1 40rem;
+      align-self: stretch;
     }
+
+    .spacing {
+      flex: 1;
+    }
+
+    .videos-list,
+    .streams-list {
+      flex: 0 0 26.5rem;
+      align-self: stretch;
+      background-color: @color-background-dark5-70;
+    }
+  }
 }
 
 .meta-extension-modal-container {
-    .modal-dialog-container {
-        width: 80%;
-        height: 80%;
+  .modal-dialog-container {
+    width: 80%;
+    height: 80%;
 
-        .title-modal-container {
-            max-height: 1.2em;
-        }
-
-        .meta-extension-modal-iframe {
-            width: 100%;
-            height: 100%;
-        }
+    .title-modal-container {
+      max-height: 1.2em;
     }
+
+    .meta-extension-modal-iframe {
+      width: 100%;
+      height: 100%;
+    }
+  }
 }
 
 @media only screen and (max-width: @minimum) {
-    .metadetails-container {
-        position: relative;
-        z-index: 0;
+  .metadetails-container {
+    position: relative;
+    z-index: 0;
 
-        .metadetails-content {
-            display: block;
-            position: static;
-            z-index: initial;
-            overflow-y: auto;
+    .metadetails-content {
+      display: block;
+      position: static;
+      z-index: initial;
+      overflow-y: auto;
 
-            .spacing {
-                display: none;
-            }
+      .spacing {
+        display: none;
+      }
 
-            .background-image-layer {
-                top: var(--horizontal-nav-bar-size);
-            }
+      .background-image-layer {
+        top: var(--horizontal-nav-bar-size);
+      }
 
-            .videos-list, .streams-list {
-                background-color: transparent;
-            }
-        }
+      .videos-list,
+      .streams-list {
+        background-color: transparent;
+      }
     }
+  }
 }

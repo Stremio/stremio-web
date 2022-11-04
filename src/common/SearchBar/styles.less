@@ -1,43 +1,44 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
-@import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
+@import (reference) "~@stremio/stremio-colors/less/stremio-colors.less";
 
 .search-bar-container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    height: 3.5rem;
-    padding: 0 1rem;
-    border-radius: 3.5rem;
-    border: var(--focus-outline-size) solid transparent;
-    background-color: @color-background;
-    cursor: text;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 3.5rem;
+  padding: 0 1rem;
+  border-radius: 3.5rem;
+  border: var(--focus-outline-size) solid transparent;
+  background-color: @color-background;
+  cursor: text;
 
-    &:hover, &:focus-within {
-        background-color: @color-background-light1;
+  &:hover,
+  &:focus-within {
+    background-color: @color-background-light1;
+  }
+
+  &:focus-within {
+    border: var(--focus-outline-size) solid @color-surface-light5;
+  }
+
+  .search-input {
+    flex: 1;
+    margin-right: 1rem;
+    font-size: 1.1rem;
+    color: @color-surface-light5;
+
+    &::placeholder {
+      max-height: 1.2em;
+      opacity: 1;
+      color: @color-secondaryvariant1-light1-90;
     }
+  }
 
-    &:focus-within {
-        border: var(--focus-outline-size) solid @color-surface-light5;
-    }
-
-    .search-input {
-        flex: 1;
-        margin-right: 1rem;
-        font-size: 1.1rem;
-        color: @color-surface-light5;
-
-        &::placeholder {
-            max-height: 1.2em;
-            opacity: 1;
-            color: @color-secondaryvariant1-light1-90;
-        }
-    }
-
-    .icon {
-        flex: none;
-        width: 1.5rem;
-        height: 1.5rem;
-        fill: @color-secondaryvariant1-90;
-    }
+  .icon {
+    flex: none;
+    width: 1.5rem;
+    height: 1.5rem;
+    fill: @color-secondaryvariant1-90;
+  }
 }

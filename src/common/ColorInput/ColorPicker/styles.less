@@ -1,22 +1,23 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
 .color-picker-container {
+  overflow: visible;
+  text-align: center;
+
+  * {
     overflow: visible;
-    text-align: center;
+  }
 
-    * {
-        overflow: visible;
-    }
+  :global(.a-color-picker-stack):not(:global(.a-color-picker-row-top)) canvas,
+  :global(.a-color-picker-circle) {
+    border: solid thin var(--color-surfacedark);
+  }
 
-    :global(.a-color-picker-stack):not(:global(.a-color-picker-row-top)) canvas, :global(.a-color-picker-circle) {
-        border: solid thin var(--color-surfacedark);
-    }
+  :global(.a-color-picker-circle) {
+    box-shadow: 0 0 0.2rem var(--color-surfacedark);
+  }
 
-    :global(.a-color-picker-circle) {
-        box-shadow: 0 0 .2rem var(--color-surfacedark);
-    }
-
-    :global(.a-color-picker-clipbaord) {
-        pointer-events: none;
-    }
+  :global(.a-color-picker-clipbaord) {
+    pointer-events: none;
+  }
 }

@@ -1,50 +1,51 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
-@import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
+@import (reference) "~@stremio/stremio-colors/less/stremio-colors.less";
 
 .nav-tab-button-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-color: @color-background-dark1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: @color-background-dark1;
+
+  &:hover {
+    background-color: @color-background-light2;
+  }
+
+  &:global(.selected) {
+    background-color: @color-secondaryvariant1-dark5;
 
     &:hover {
-        background-color: @color-background-light2;
+      background-color: @color-secondaryvariant1-dark4;
     }
 
-    &:global(.selected) {
-        background-color: @color-secondaryvariant1-dark5;
-
-        &:hover {
-            background-color: @color-secondaryvariant1-dark4;
-        }
-
-        .icon {
-            fill: @color-surface-light5-90;
-        }
-
-        .label {
-            color: @color-surface-light5-90;
-        }
-    }
-
-    .icon, .logo {
-        flex: none;
-        width: 1.7rem;
-        height: 1.7rem;
-        margin-bottom: 0.5rem;
-        fill: @color-secondary-light5-90;
+    .icon {
+      fill: @color-surface-light5-90;
     }
 
     .label {
-        flex: none;
-        max-height: 2.4em;
-        padding: 0 0.2rem;
-        font-size: 0.9rem;
-        font-weight: 500;
-        letter-spacing: 0.01rem;
-        text-align: center;
-        color: @color-secondaryvariant1-90;
+      color: @color-surface-light5-90;
     }
+  }
+
+  .icon,
+  .logo {
+    flex: none;
+    width: 1.7rem;
+    height: 1.7rem;
+    margin-bottom: 0.5rem;
+    fill: @color-secondary-light5-90;
+  }
+
+  .label {
+    flex: none;
+    max-height: 2.4em;
+    padding: 0 0.2rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.01rem;
+    text-align: center;
+    color: @color-secondaryvariant1-90;
+  }
 }

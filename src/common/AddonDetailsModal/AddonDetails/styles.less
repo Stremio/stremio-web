@@ -1,79 +1,80 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
-@import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
+@import (reference) "~@stremio/stremio-colors/less/stremio-colors.less";
 
 .addon-details-container {
-    .title-container {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
+  .title-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 
-        .logo, .icon {
-            float: left;
-            width: 5rem;
-            height: 5rem;
-            margin-right: 1.5rem;
-            padding: 0.5rem;
-            background-color: @color-background-dark5;
-        }
-
-        .logo {
-            object-fit: contain;
-            object-position: center;
-        }
-
-        .icon {
-            fill: @color-secondaryvariant1-light3;
-        }
-
-        .name-container {
-            flex-grow: 1;
-            flex-shrink: 1;
-            flex-basis: 0;
-            display: flex;
-            flex-direction: row;
-            flex-wrap: wrap;
-            align-items: baseline;
-    
-            .name {
-                flex-grow: 0;
-                flex-shrink: 1;
-                flex-basis: auto;
-                margin-right: 0.5rem;
-                font-size: 1.6rem;
-                color: @color-background-dark5-90;
-            }
-    
-            .version {
-                flex-grow: 1;
-                flex-shrink: 1;
-                flex-basis: auto;
-                margin-top: 0.5rem;
-                color: @color-background-dark5-60;
-            }
-        }
+    .logo,
+    .icon {
+      float: left;
+      width: 5rem;
+      height: 5rem;
+      margin-right: 1.5rem;
+      padding: 0.5rem;
+      background-color: @color-background-dark5;
     }
 
-    .section-container {
-        margin-top: 1rem;
-
-        .section-header {
-            font-size: 1.1rem;
-            color: @color-background-dark5-90;
-        }
-
-        .section-label {
-            font-size: 1.1rem;
-            font-weight: 300;
-            color: @color-background-dark5-90;
-
-            &.transport-url-label {
-                user-select: text;
-            }
-
-            &.disclaimer-label {
-                font-style: italic;
-            }
-        }
+    .logo {
+      object-fit: contain;
+      object-position: center;
     }
+
+    .icon {
+      fill: @color-secondaryvariant1-light3;
+    }
+
+    .name-container {
+      flex-grow: 1;
+      flex-shrink: 1;
+      flex-basis: 0;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: baseline;
+
+      .name {
+        flex-grow: 0;
+        flex-shrink: 1;
+        flex-basis: auto;
+        margin-right: 0.5rem;
+        font-size: 1.6rem;
+        color: @color-background-dark5-90;
+      }
+
+      .version {
+        flex-grow: 1;
+        flex-shrink: 1;
+        flex-basis: auto;
+        margin-top: 0.5rem;
+        color: @color-background-dark5-60;
+      }
+    }
+  }
+
+  .section-container {
+    margin-top: 1rem;
+
+    .section-header {
+      font-size: 1.1rem;
+      color: @color-background-dark5-90;
+    }
+
+    .section-label {
+      font-size: 1.1rem;
+      font-weight: 300;
+      color: @color-background-dark5-90;
+
+      &.transport-url-label {
+        user-select: text;
+      }
+
+      &.disclaimer-label {
+        font-style: italic;
+      }
+    }
+  }
 }

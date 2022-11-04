@@ -1,47 +1,51 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
-@import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
+@import (reference) "~@stremio/stremio-colors/less/stremio-colors.less";
 
-:import('~stremio/common/ModalDialog/styles.less') {
-    label: label;
+:import("~stremio/common/ModalDialog/styles.less") {
+  label: label;
 }
 
 .addon-details-modal-container {
-    .addon-details-container, .addon-details-message-container {
-        width: 40rem;
-        max-width: 100%;
+  .addon-details-container,
+  .addon-details-message-container {
+    width: 40rem;
+    max-width: 100%;
+  }
+
+  .install-button,
+  .uninstall-button,
+  .cancel-button {
+    .label {
+      font-size: 1.2rem;
+      font-weight: 500;
+    }
+  }
+
+  .uninstall-button,
+  .cancel-button {
+    &:focus {
+      outline-color: @color-background-dark5;
+    }
+  }
+
+  .cancel-button {
+    background-color: transparent;
+
+    &:hover {
+      background-color: @color-surface-light3;
     }
 
-    .install-button, .uninstall-button, .cancel-button {
-        .label {
-            font-size: 1.2rem;
-            font-weight: 500;
-        }
+    .label {
+      color: @color-surface-dark2;
     }
+  }
 
-    .uninstall-button, .cancel-button {
-        &:focus {
-            outline-color: @color-background-dark5;
-        }
+  .uninstall-button {
+    background-color: @color-accent2;
+
+    &:hover {
+      background-color: @color-accent2-light2;
     }
-
-    .cancel-button {
-        background-color: transparent;
-
-        &:hover {
-            background-color: @color-surface-light3;
-        }
-
-        .label {
-            color: @color-surface-dark2;
-        }
-    }
-
-    .uninstall-button {
-        background-color: @color-accent2;
-
-        &:hover {
-            background-color: @color-accent2-light2;
-        }
-    }
+  }
 }

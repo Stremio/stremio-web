@@ -1,146 +1,147 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
-@import (inline, once, css) '~stremio/common/roboto.css';
-@import (reference) '~stremio/common/screen-sizes.less';
-@import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
+@import (inline, once, css) "~stremio/common/roboto.css";
+@import (reference) "~stremio/common/screen-sizes.less";
+@import (reference) "~@stremio/stremio-colors/less/stremio-colors.less";
 
 :global {
-    @import (once, less) '~stremio/common/animations.less';
-    @import (once, less) '~stremio-router/styles.css';
+  @import (once, less) "~stremio/common/animations.less";
+  @import (once, less) "~stremio-router/styles.css";
 }
 
 :root {
-    --landscape-shape-ratio: 0.5625;
-    --poster-shape-ratio: 1.464;
-    --scroll-bar-size: 6px;
-    --horizontal-nav-bar-size: 4rem;
-    --vertical-nav-bar-size: 5.2rem;
-    --focus-outline-size: 2px;
-    --color-facebook: #4267b2;
-    --color-twitter: #1DA1F2;
-    --color-placeholder: #60606080;
-    --color-placeholder-text: @color-surface-50;
-    --color-placeholder-background: @color-surface-dark5-20;
+  --landscape-shape-ratio: 0.5625;
+  --poster-shape-ratio: 1.464;
+  --scroll-bar-size: 6px;
+  --horizontal-nav-bar-size: 4rem;
+  --vertical-nav-bar-size: 5.2rem;
+  --focus-outline-size: 2px;
+  --color-facebook: #4267b2;
+  --color-twitter: #1da1f2;
+  --color-placeholder: #60606080;
+  --color-placeholder-text: @color-surface-50;
+  --color-placeholder-background: @color-surface-dark5-20;
 }
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-size: 1rem;
-    line-height: 1.2em;
-    font-family: inherit;
-    border: none;
-    outline: none;
-    list-style: none;
-    user-select: none;
-    text-decoration: none;
-    appearance: none;
-    background: none;
-    box-shadow: none;
-    overflow: hidden;
-    word-break: break-word;
-    scrollbar-width: thin;
-    scrollbar-color: @color-secondaryvariant2-light1 @color-background-dark2;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-size: 1rem;
+  line-height: 1.2em;
+  font-family: inherit;
+  border: none;
+  outline: none;
+  list-style: none;
+  user-select: none;
+  text-decoration: none;
+  appearance: none;
+  background: none;
+  box-shadow: none;
+  overflow: hidden;
+  word-break: break-word;
+  scrollbar-width: thin;
+  scrollbar-color: @color-secondaryvariant2-light1 @color-background-dark2;
 }
 
 ::-webkit-scrollbar {
-    width: var(--scroll-bar-size);
-    height: var(--scroll-bar-size);
+  width: var(--scroll-bar-size);
+  height: var(--scroll-bar-size);
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: @color-secondaryvariant2-light1;
+  background-color: @color-secondaryvariant2-light1;
 
-    &:hover {
-        background-color: @color-secondaryvariant2-light2;
-    }
+  &:hover {
+    background-color: @color-secondaryvariant2-light2;
+  }
 }
 
 ::-webkit-scrollbar-track {
-    background-color: @color-background-dark2;
+  background-color: @color-background-dark2;
 }
 
 svg {
-    overflow: visible;
+  overflow: visible;
 }
 
 html {
+  width: 100%;
+  height: 100%;
+  min-width: 640px;
+  min-height: 480px;
+  font-family: "Roboto Flex", "sans-serif";
+  overflow: auto;
+
+  body {
     width: 100%;
     height: 100%;
-    min-width: 640px;
-    min-height: 480px;
-    font-family: 'Roboto Flex', 'sans-serif';
-    overflow: auto;
 
-    body {
+    :global(#app) {
+      position: relative;
+      z-index: 0;
+      width: 100%;
+      height: 100%;
+
+      .toasts-container {
+        position: absolute;
+        top: calc(1.2 * var(--horizontal-nav-bar-size));
+        right: 0;
+        bottom: calc(1.2 * var(--horizontal-nav-bar-size));
+        left: auto;
+        z-index: 1;
+        padding: 0 calc(0.5 * var(--horizontal-nav-bar-size));
+        overflow-y: auto;
+        scrollbar-width: none;
+        pointer-events: none;
+
+        &::-webkit-scrollbar {
+          display: none;
+        }
+      }
+
+      .router {
         width: 100%;
         height: 100%;
+      }
 
-        :global(#app) {
-            position: relative;
-            z-index: 0;
-            width: 100%;
-            height: 100%;
-
-            .toasts-container {
-                position: absolute;
-                top: calc(1.2 * var(--horizontal-nav-bar-size));
-                right: 0;
-                bottom: calc(1.2 * var(--horizontal-nav-bar-size));
-                left: auto;
-                z-index: 1;
-                padding: 0 calc(0.5 * var(--horizontal-nav-bar-size));
-                overflow-y: auto;
-                scrollbar-width: none;
-                pointer-events: none;
-
-                &::-webkit-scrollbar {
-                    display: none;
-                }
-            }
-
-            .router {
-                width: 100%;
-                height: 100%;
-            }
-
-            .loader-container, .error-container {
-                width: 100%;
-                height: 100%;
-                background-color: @color-background-dark2;
-            }
-        }
+      .loader-container,
+      .error-container {
+        width: 100%;
+        height: 100%;
+        background-color: @color-background-dark2;
+      }
     }
+  }
 }
 
 @media only screen and (min-width: @xxlarge) {
-    html {
-        font-size: 18px;
-    }
+  html {
+    font-size: 18px;
+  }
 }
 
 @media only screen and (max-width: @xxlarge) {
-    html {
-        font-size: 16px;
-    }
+  html {
+    font-size: 16px;
+  }
 }
 
 @media only screen and (max-width: @large) {
-    html {
-        font-size: 15px;
-    }
+  html {
+    font-size: 15px;
+  }
 }
 
 @media only screen and (max-width: @medium) {
-    html {
-        font-size: 14px;
-    }
+  html {
+    font-size: 14px;
+  }
 }
 
 @media only screen and (max-width: @xsmall) {
-    html {
-        min-width: inherit;
-        min-height: inherit;
-    }
+  html {
+    min-width: inherit;
+    min-height: inherit;
+  }
 }

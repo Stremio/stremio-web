@@ -1,62 +1,62 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
-@import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
-@import (reference) '~stremio/common/screen-sizes.less';
+@import (reference) "~@stremio/stremio-colors/less/stremio-colors.less";
+@import (reference) "~stremio/common/screen-sizes.less";
 
-:import('~stremio/common/ModalDialog/styles.less') {
-    password-reset-modal-content: modal-dialog-content;
-    cancel-button-label: label;
+:import("~stremio/common/ModalDialog/styles.less") {
+  password-reset-modal-content: modal-dialog-content;
+  cancel-button-label: label;
 }
 
 .password-reset-modal-container {
-    .password-reset-modal-content {
-        width: 30rem;
+  .password-reset-modal-content {
+    width: 30rem;
 
-        .credentials-text-input {
-            width: 100%;
-            padding: 1rem;
-            color: @color-surface-dark5;
-            outline: var(--focus-outline-size) solid @color-surface-light2-90;
-            outline-offset: calc(-1 * var(--focus-outline-size));
+    .credentials-text-input {
+      width: 100%;
+      padding: 1rem;
+      color: @color-surface-dark5;
+      outline: var(--focus-outline-size) solid @color-surface-light2-90;
+      outline-offset: calc(-1 * var(--focus-outline-size));
 
-            &:hover {
-                outline-color: @color-surface-light4-90;
-            }
+      &:hover {
+        outline-color: @color-surface-light4-90;
+      }
 
-            &:focus {
-                outline-color: @color-background-dark5-90;
-            }
-        }
+      &:focus {
+        outline-color: @color-background-dark5-90;
+      }
+    }
+  }
+
+  .error-message {
+    font-size: 1.1rem;
+    margin-top: 2rem;
+    text-align: center;
+    color: @color-accent5-90;
+  }
+
+  .cancel-button {
+    background-color: transparent;
+
+    &:hover {
+      background-color: @color-surface-light3;
     }
 
-    .error-message {
-        font-size: 1.1rem;
-        margin-top: 2rem;
-        text-align: center;
-        color: @color-accent5-90;
+    &:focus {
+      outline-color: @color-background-dark5-90;
     }
 
-    .cancel-button {
-        background-color: transparent;
-
-        &:hover {
-            background-color: @color-surface-light3;
-        }
-
-        &:focus {
-            outline-color: @color-background-dark5-90;
-        }
-
-        .cancel-button-label {
-            color: @color-surface-dark4-90;
-        }
+    .cancel-button-label {
+      color: @color-surface-dark4-90;
     }
+  }
 }
 
 @media only screen and (max-width: @minimum) {
-    .password-reset-modal-container {
-        .password-reset-modal-content {
-            width: auto;
-        }
+  .password-reset-modal-container {
+    .password-reset-modal-content {
+      width: auto;
     }
+  }
 }

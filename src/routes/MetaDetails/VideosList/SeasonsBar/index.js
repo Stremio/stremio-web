@@ -1,5 +1,5 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
-const SeasonsBar = require('./SeasonsBar');
+const SeasonsBar = require("./SeasonsBar");
 
 module.exports = SeasonsBar;

@@ -1,5 +1,5 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
-const CredentialsTextInput = require('./CredentialsTextInput');
+const CredentialsTextInput = require("./CredentialsTextInput");
 
 module.exports = CredentialsTextInput;

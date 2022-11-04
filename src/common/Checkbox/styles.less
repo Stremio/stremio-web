@@ -1,19 +1,19 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
-@import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
+@import (reference) "~@stremio/stremio-colors/less/stremio-colors.less";
 
 .checkbox-container {
-    &:global(.checked) {
-        .icon {
-            fill: @color-surface-light5;
-            background-color: @color-primaryvariant1;
-        }
-    }
-
+  &:global(.checked) {
     .icon {
-        display: block;
-        width: 1rem;
-        height: 1rem;
-        fill: @color-surface-light5;
+      fill: @color-surface-light5;
+      background-color: @color-primaryvariant1;
     }
+  }
+
+  .icon {
+    display: block;
+    width: 1rem;
+    height: 1rem;
+    fill: @color-surface-light5;
+  }
 }

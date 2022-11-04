@@ -1,114 +1,114 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
-@import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
-@import (reference) '~stremio/common/screen-sizes.less';
+@import (reference) "~@stremio/stremio-colors/less/stremio-colors.less";
+@import (reference) "~stremio/common/screen-sizes.less";
 
 .control-bar-container {
-    padding: 0 1.5rem;
+  padding: 0 1.5rem;
 
-    .seek-bar {
-        --track-size: 0.5rem;
-        --thumb-size: 1.5rem;
+  .seek-bar {
+    --track-size: 0.5rem;
+    --thumb-size: 1.5rem;
 
-        height: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .control-bar-buttons-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    .control-bar-button {
+      flex: none;
+      width: 4rem;
+      height: 4rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      &:global(.disabled) {
+        .icon {
+          fill: @color-surface;
+        }
+      }
+
+      .icon {
+        flex: none;
+        width: 3rem;
+        height: 2rem;
+        fill: @color-surface-light5;
+      }
     }
 
-    .control-bar-buttons-container {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
+    .volume-slider {
+      --track-size: 0.4rem;
+      --thumb-size: 1.3rem;
 
-        .control-bar-button {
-            flex: none;
-            width: 4rem;
-            height: 4rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-
-            &:global(.disabled) {
-                .icon {
-                    fill: @color-surface;
-                }
-            }
-
-            .icon {
-                flex: none;
-                width: 3rem;
-                height: 2rem;
-                fill: @color-surface-light5;
-            }
-        }
-
-        .volume-slider {
-            --track-size: 0.4rem;
-            --thumb-size: 1.3rem;
-
-            flex: 0 1 16rem;
-            min-width: 10rem;
-            height: 4rem;
-            margin: 0 1rem;
-        }
-
-        .spacing {
-            flex: 1;
-        }
-
-        .control-bar-buttons-menu-button {
-            flex: none;
-            width: 4rem;
-            height: 4rem;
-            display: none;
-            justify-content: center;
-            align-items: center;
-
-            .icon {
-                flex: none;
-                width: 3rem;
-                height: 2rem;
-                fill: @color-surface-light5;
-            }
-        }
-
-        .control-bar-buttons-menu-container {
-            flex: none;
-            display: flex;
-            flex-direction: row;
-        }
+      flex: 0 1 16rem;
+      min-width: 10rem;
+      height: 4rem;
+      margin: 0 1rem;
     }
+
+    .spacing {
+      flex: 1;
+    }
+
+    .control-bar-buttons-menu-button {
+      flex: none;
+      width: 4rem;
+      height: 4rem;
+      display: none;
+      justify-content: center;
+      align-items: center;
+
+      .icon {
+        flex: none;
+        width: 3rem;
+        height: 2rem;
+        fill: @color-surface-light5;
+      }
+    }
+
+    .control-bar-buttons-menu-container {
+      flex: none;
+      display: flex;
+      flex-direction: row;
+    }
+  }
 }
 
 @media only screen and (max-width: @minimum) {
-    .control-bar-container {
-        padding: 0;
+  .control-bar-container {
+    padding: 0;
 
-        .seek-bar {
-            margin: 0 1.5rem;
-        }
-
-        .control-bar-buttons-container {
-            position: relative;
-            padding: 0 0.5rem;
-            overflow: visible;
-
-            .control-bar-buttons-menu-button {
-                display: flex;
-            }
-
-            .control-bar-buttons-menu-container {
-                position: absolute;
-                right: 0.15rem;
-                bottom: 4.5rem;
-                flex-direction: column;
-                padding: 0.5rem;
-                background-color: @color-background-dark1;
-                box-shadow: 0 1.35rem 2.7rem @color-background-dark5-40,
-                    0 1.1rem 0.85rem @color-background-dark5-20;
-
-                &:not(:global(.open)) {
-                    display: none;
-                }
-            }
-        }
+    .seek-bar {
+      margin: 0 1.5rem;
     }
+
+    .control-bar-buttons-container {
+      position: relative;
+      padding: 0 0.5rem;
+      overflow: visible;
+
+      .control-bar-buttons-menu-button {
+        display: flex;
+      }
+
+      .control-bar-buttons-menu-container {
+        position: absolute;
+        right: 0.15rem;
+        bottom: 4.5rem;
+        flex-direction: column;
+        padding: 0.5rem;
+        background-color: @color-background-dark1;
+        box-shadow: 0 1.35rem 2.7rem @color-background-dark5-40,
+          0 1.1rem 0.85rem @color-background-dark5-20;
+
+        &:not(:global(.open)) {
+          display: none;
+        }
+      }
+    }
+  }
 }

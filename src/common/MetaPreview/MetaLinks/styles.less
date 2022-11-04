@@ -1,42 +1,43 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
-@import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
+@import (reference) "~@stremio/stremio-colors/less/stremio-colors.less";
 
 .meta-links-container {
-    .label-container {
-        margin-bottom: 0.2rem;
-        text-transform: uppercase;
-        font-weight: 500;
-        color: @color-surface-dark3-90;
+  .label-container {
+    margin-bottom: 0.2rem;
+    text-transform: uppercase;
+    font-weight: 500;
+    color: @color-surface-dark3-90;
+  }
+
+  .links-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    .link-container {
+      flex-grow: 0;
+      flex-shrink: 1;
+      flex-basis: auto;
+      margin-right: 0.5rem;
+      margin-bottom: 0.2rem;
+      padding: 0.3rem 0.5rem;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      border-radius: 2rem;
+      border: var(--focus-outline-size) solid transparent;
+      color: @color-surface-light2-90;
+      background-color: @color-surface-light5-20;
+
+      &:hover,
+      &:focus {
+        background-color: @color-surface-light5-30;
+      }
+
+      &:focus {
+        outline: none;
+        border-color: @color-surface-light5;
+      }
     }
-
-    .links-container {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-
-        .link-container {
-            flex-grow: 0;
-            flex-shrink: 1;
-            flex-basis: auto;
-            margin-right: 0.5rem;
-            margin-bottom: 0.2rem;
-            padding: 0.3rem 0.5rem;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            border-radius: 2rem;
-            border: var(--focus-outline-size) solid transparent;
-            color: @color-surface-light2-90;
-            background-color: @color-surface-light5-20;
-
-            &:hover, &:focus {
-                background-color: @color-surface-light5-30;
-            }
-
-            &:focus {
-                outline: none;
-                border-color: @color-surface-light5;
-            }
-        }
-    }
+  }
 }

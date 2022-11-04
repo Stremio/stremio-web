@@ -1,45 +1,46 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const classnames = require('classnames');
+const React = require("react");
+const PropTypes = require("prop-types");
+const classnames = require("classnames");
 // const Stream = require('stremio/routes/MetaDetails/StreamsList/Stream');
 // const AddonDetails = require('stremio/common/AddonDetailsModal/AddonDetails');
-const { MetaPreview, CONSTANTS } = require('stremio/common');
-const styles = require('./styles');
+const { MetaPreview, CONSTANTS } = require("stremio/common");
+const styles = require("./styles");
 
 const InfoMenu = ({ className, ...props }) => {
-    const metaItem = React.useMemo(() => {
-        return props.metaItem !== null ?
-            {
-                ...props.metaItem,
-                links: props.metaItem.links.filter(({ category }) => category === CONSTANTS.SHARE_LINK_CATEGORY)
-            }
-            :
-            null;
-    }, [props.metaItem]);
-    const onMouseDown = React.useCallback((event) => {
-        event.nativeEvent.infoMenuClosePrevented = true;
-    }, []);
-    return (
-        <div className={classnames(className, styles['info-menu-container'])} onMouseDown={onMouseDown}>
-            {
-                metaItem !== null ?
-                    <MetaPreview
-                        className={styles['meta-preview']}
-                        compact={true}
-                        name={metaItem.name}
-                        logo={metaItem.logo}
-                        runtime={metaItem.runtime}
-                        releaseInfo={metaItem.releaseInfo}
-                        released={metaItem.released}
-                        description={metaItem.description}
-                        links={metaItem.links}
-                    />
-                    :
-                    null
-            }
-            {/* {
+  const metaItem = React.useMemo(() => {
+    return props.metaItem !== null
+      ? {
+          ...props.metaItem,
+          links: props.metaItem.links.filter(
+            ({ category }) => category === CONSTANTS.SHARE_LINK_CATEGORY
+          ),
+        }
+      : null;
+  }, [props.metaItem]);
+  const onMouseDown = React.useCallback((event) => {
+    event.nativeEvent.infoMenuClosePrevented = true;
+  }, []);
+  return (
+    <div
+      className={classnames(className, styles["info-menu-container"])}
+      onMouseDown={onMouseDown}
+    >
+      {metaItem !== null ? (
+        <MetaPreview
+          className={styles["meta-preview"]}
+          compact={true}
+          name={metaItem.name}
+          logo={metaItem.logo}
+          runtime={metaItem.runtime}
+          releaseInfo={metaItem.releaseInfo}
+          released={metaItem.released}
+          description={metaItem.description}
+          links={metaItem.links}
+        />
+      ) : null}
+      {/* {
                 props.stream !== null ?
                     <Stream
                         {...props.stream}
@@ -49,7 +50,7 @@ const InfoMenu = ({ className, ...props }) => {
                     :
                     null
             } */}
-            {/* {
+      {/* {
                 props.addon !== null ?
                     <AddonDetails
                         id={props.addon.manifest.id}
@@ -63,15 +64,15 @@ const InfoMenu = ({ className, ...props }) => {
                     :
                     null
             } */}
-        </div>
-    );
+    </div>
+  );
 };
 
 InfoMenu.propTypes = {
-    className: PropTypes.string,
-    metaItem: PropTypes.object,
-    addon: PropTypes.object,
-    stream: PropTypes.object
+  className: PropTypes.string,
+  metaItem: PropTypes.object,
+  addon: PropTypes.object,
+  stream: PropTypes.object,
 };
 
 module.exports = InfoMenu;

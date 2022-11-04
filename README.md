@@ -9,8 +9,8 @@ Stremio is a modern media center that's a one-stop solution for your video enter
 
 ### Prerequisites
 
-* Node.js 12 or higher
-* npm 6 or higher
+- Node.js 12 or higher
+- npm 6 or higher
 
 ### Install dependencies
 

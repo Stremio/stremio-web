@@ -1,96 +1,100 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
-@import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
-@import (reference) '~stremio/common/screen-sizes.less';
+@import (reference) "~@stremio/stremio-colors/less/stremio-colors.less";
+@import (reference) "~stremio/common/screen-sizes.less";
 
-:import('~stremio/common/Multiselect/styles.less') {
-    multiselect-menu-container: menu-container;
-    multiselect-label: label;
-    multiselect-icon: icon;
+:import("~stremio/common/Multiselect/styles.less") {
+  multiselect-menu-container: menu-container;
+  multiselect-label: label;
+  multiselect-icon: icon;
 }
 
 .seasons-bar-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 1rem;
+  overflow: visible;
+
+  .prev-season-button,
+  .next-season-button {
+    flex: none;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
-    padding: 1rem;
-    overflow: visible;
+    align-items: center;
+    width: 6.5rem;
+    height: 3.5rem;
+    padding: 0.5rem;
 
-    .prev-season-button, .next-season-button {
-        flex: none;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        width: 6.5rem;
-        height: 3.5rem;
-        padding: 0.5rem;
+    &:hover,
+    &:focus {
+      .label {
+        color: @color-surface-light2-90;
+      }
 
-        &:hover, &:focus {
-            .label {
-                color: @color-surface-light2-90;
-            }
-
-            .icon {
-                fill: @color-surface-light2-90;
-            }
-        }
-
-        &:focus {
-            background-color: @color-surface-light5-10;
-        }
-
-        &>:first-child {
-            margin-right: 0.5rem;
-        }
-
-        .label {
-            flex: 1;
-            max-height: 1.2em;
-            font-weight: 500;
-            text-align: center;
-            color: @color-surface-90;
-        }
-
-        .icon {
-            flex: none;
-            width: 1.5rem;
-            height: 1.5rem;
-            fill: @color-surface-90;
-        }
+      .icon {
+        fill: @color-surface-light2-90;
+      }
     }
 
-    .seasons-popup-label-container {
-        flex: 0 1 auto;
-        height: 3.5rem;
-        background: none;
-
-        &:hover, &:focus, &:global(.active) {
-            background-color: @color-background;
-        }
-
-        &>.multiselect-label {
-            color: @color-surface-light5-90;
-        }
-
-        &>.multiselect-icon {
-            fill: @color-surface-light5-90;
-        }
-
-        .multiselect-menu-container {
-            max-height: calc(3.2rem * 7);
-            overflow: auto;
-        }
+    &:focus {
+      background-color: @color-surface-light5-10;
     }
+
+    & > :first-child {
+      margin-right: 0.5rem;
+    }
+
+    .label {
+      flex: 1;
+      max-height: 1.2em;
+      font-weight: 500;
+      text-align: center;
+      color: @color-surface-90;
+    }
+
+    .icon {
+      flex: none;
+      width: 1.5rem;
+      height: 1.5rem;
+      fill: @color-surface-90;
+    }
+  }
+
+  .seasons-popup-label-container {
+    flex: 0 1 auto;
+    height: 3.5rem;
+    background: none;
+
+    &:hover,
+    &:focus,
+    &:global(.active) {
+      background-color: @color-background;
+    }
+
+    & > .multiselect-label {
+      color: @color-surface-light5-90;
+    }
+
+    & > .multiselect-icon {
+      fill: @color-surface-light5-90;
+    }
+
+    .multiselect-menu-container {
+      max-height: calc(3.2rem * 7);
+      overflow: auto;
+    }
+  }
 }
 
 @media only screen and (max-width: @minimum) {
-    .seasons-bar-container {
-        padding-top: 0;
+  .seasons-bar-container {
+    padding-top: 0;
 
-        .seasons-popup-label-container {
-            .multiselect-menu-container {
-                max-height: calc(3.2rem * 3);
-            }
-        }
+    .seasons-popup-label-container {
+      .multiselect-menu-container {
+        max-height: calc(3.2rem * 3);
+      }
     }
+  }
 }

@@ -1,126 +1,129 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
-@import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
-@import (reference) '~stremio/common/screen-sizes.less';
+@import (reference) "~@stremio/stremio-colors/less/stremio-colors.less";
+@import (reference) "~stremio/common/screen-sizes.less";
 
-:import('~stremio/common/Multiselect/styles.less') {
-    multiselect-menu-container: menu-container;
-    multiselect-label: label;
-    multiselect-icon: icon;
+:import("~stremio/common/Multiselect/styles.less") {
+  multiselect-menu-container: menu-container;
+  multiselect-label: label;
+  multiselect-icon: icon;
 }
 
 .streams-list-container {
+  display: flex;
+  flex-direction: column;
+
+  .message-container {
+    flex: 0 1 auto;
+    align-self: stretch;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    padding: 1rem 1rem 0;
+    overflow-y: auto;
 
-    .message-container {
-        flex: 0 1 auto;
-        align-self: stretch;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 1rem 1rem 0;
-        overflow-y: auto;
-
-        .image {
-            flex: none;
-            width: 10rem;
-            height: 10rem;
-            max-width: 100%;
-            margin-bottom: 1rem;
-            object-fit: contain;
-            object-position: center;
-            opacity: 0.9;
-        }
-
-        .label {
-            flex: none;
-            font-size: 1.4rem;
-            text-align: center;
-            color: @color-secondaryvariant2-light1-90;
-        }
+    .image {
+      flex: none;
+      width: 10rem;
+      height: 10rem;
+      max-width: 100%;
+      margin-bottom: 1rem;
+      object-fit: contain;
+      object-position: center;
+      opacity: 0.9;
     }
 
-    .select-input-container {
-        flex: 0 0 auto;
-        height: 3.5rem;
-        margin: 1em 1em 0 1em;
-        background: none;
+    .label {
+      flex: none;
+      font-size: 1.4rem;
+      text-align: center;
+      color: @color-secondaryvariant2-light1-90;
+    }
+  }
 
-        &:hover, &:focus, &:global(.active) {
-            background-color: @color-background;
-        }
+  .select-input-container {
+    flex: 0 0 auto;
+    height: 3.5rem;
+    margin: 1em 1em 0 1em;
+    background: none;
 
-        & >.multiselect-label {
-            color: @color-surface-light5-90;
-        }
-
-        & >.multiselect-icon {
-            fill: @color-surface-light5-90;
-        }
-
-        .multiselect-menu-container {
-            max-height: calc(3.2rem * 7);
-            overflow: auto;
-        }
+    &:hover,
+    &:focus,
+    &:global(.active) {
+      background-color: @color-background;
     }
 
-    .streams-container {
-        flex: 0 1 auto;
-        align-self: stretch;
-        margin-top: 1rem;
-        overflow-y: auto;
+    & > .multiselect-label {
+      color: @color-surface-light5-90;
     }
 
-    .install-button-container {
-        flex: none;
-        align-self: stretch;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-        margin: 1rem;
-        padding: 1.5rem 1rem;
-        background-color: @color-accent3;
-
-        &:hover, &:focus {
-            background-color: @color-accent3-light1;
-        }
-
-        .icon {
-            flex: none;
-            width: 2rem;
-            height: 2rem;
-            margin-right: 1rem;
-            fill: @color-surface-light5-90;
-        }
-
-        .label {
-            flex: 0 1 auto;
-            font-size: 1.5rem;
-            font-weight: 500;
-            max-height: 3.6em;
-            text-align: center;
-            color: @color-surface-light5-90;
-        }
+    & > .multiselect-icon {
+      fill: @color-surface-light5-90;
     }
+
+    .multiselect-menu-container {
+      max-height: calc(3.2rem * 7);
+      overflow: auto;
+    }
+  }
+
+  .streams-container {
+    flex: 0 1 auto;
+    align-self: stretch;
+    margin-top: 1rem;
+    overflow-y: auto;
+  }
+
+  .install-button-container {
+    flex: none;
+    align-self: stretch;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin: 1rem;
+    padding: 1.5rem 1rem;
+    background-color: @color-accent3;
+
+    &:hover,
+    &:focus {
+      background-color: @color-accent3-light1;
+    }
+
+    .icon {
+      flex: none;
+      width: 2rem;
+      height: 2rem;
+      margin-right: 1rem;
+      fill: @color-surface-light5-90;
+    }
+
+    .label {
+      flex: 0 1 auto;
+      font-size: 1.5rem;
+      font-weight: 500;
+      max-height: 3.6em;
+      text-align: center;
+      color: @color-surface-light5-90;
+    }
+  }
 }
 
 @media only screen and (max-width: @minimum) {
-    .streams-list-container {
-        overflow: visible;
+  .streams-list-container {
+    overflow: visible;
 
-        .streams-container {
-            margin-top: 0;
-            scrollbar-color: @color-surface-light5-20 transparent;
+    .streams-container {
+      margin-top: 0;
+      scrollbar-color: @color-surface-light5-20 transparent;
 
-            &::-webkit-scrollbar-thumb {
-                background-color: @color-surface-light5-20;
-            }
+      &::-webkit-scrollbar-thumb {
+        background-color: @color-surface-light5-20;
+      }
 
-            &::-webkit-scrollbar-track {
-                background-color: transparent;
-            }
-        }
+      &::-webkit-scrollbar-track {
+        background-color: transparent;
+      }
     }
+  }
 }

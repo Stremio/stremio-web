@@ -1,9 +1,9 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
-const ModalsContainerProvider = require('./ModalsContainerProvider');
-const useModalsContainer = require('./useModalsContainer');
+const ModalsContainerProvider = require("./ModalsContainerProvider");
+const useModalsContainer = require("./useModalsContainer");
 
 module.exports = {
-    ModalsContainerProvider,
-    useModalsContainer
+  ModalsContainerProvider,
+  useModalsContainer,
 };

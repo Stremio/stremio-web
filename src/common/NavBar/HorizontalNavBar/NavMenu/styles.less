@@ -1,110 +1,114 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
-@import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
-@import (reference) '~stremio/common/screen-sizes.less';
+@import (reference) "~@stremio/stremio-colors/less/stremio-colors.less";
+@import (reference) "~stremio/common/screen-sizes.less";
 
 .nav-menu-container {
-    width: 20rem;
-    max-height: calc(100vh - var(--horizontal-nav-bar-size));
-    overflow-y: auto;
-    background-color: @color-background-dark1;
+  width: 20rem;
+  max-height: calc(100vh - var(--horizontal-nav-bar-size));
+  overflow-y: auto;
+  background-color: @color-background-dark1;
 
-    .user-info-container {
-        display: grid;
-        height: 7rem;
-        grid-template-columns: 7rem 1fr;
-        grid-template-rows: 50% 50%;
-        grid-template-areas:
-            "avatar-area email-area"
-            "avatar-area logout-button-area";
+  .user-info-container {
+    display: grid;
+    height: 7rem;
+    grid-template-columns: 7rem 1fr;
+    grid-template-rows: 50% 50%;
+    grid-template-areas:
+      "avatar-area email-area"
+      "avatar-area logout-button-area";
 
-        .avatar-container {
-            grid-area: avatar-area;
-            padding: 1rem;
-            border-radius: 50%;
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-position: center;
-            background-origin: content-box;
-            background-clip: content-box;
-            opacity: 0.9;
-        }
-
-        .email-container {
-            grid-area: email-area;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            padding: 1rem 1rem 0 0;
-
-            .email-label {
-                flex: 1;
-                max-height: 2.4em;
-                color: @color-surface-light5-90;
-            }
-        }
-
-        .logout-button-container {
-            grid-area: logout-button-area;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            padding: 0 1rem 1rem 0;
-
-            &:hover, &:focus {
-                outline: none;
-
-                .logout-label {
-                    color: @color-surface-light5-90;
-                    text-decoration: underline;
-                }
-            }
-
-            .logout-label {
-                flex: 1;
-                max-height: 2.4em;
-                color: @color-surface-light3-90;
-            }
-        }
+    .avatar-container {
+      grid-area: avatar-area;
+      padding: 1rem;
+      border-radius: 50%;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-origin: content-box;
+      background-clip: content-box;
+      opacity: 0.9;
     }
 
-    .nav-menu-section {
-        border-top: thin solid @color-surface-light5-20;
+    .email-container {
+      grid-area: email-area;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 1rem 1rem 0 0;
 
-        .nav-menu-option-container {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            height: 4rem;
-
-            &:hover {
-                background-color: @color-background-light2;
-            }
-
-            .icon {
-                flex: none;
-                width: 1.4rem;
-                height: 1.4rem;
-                margin: 1.3rem;
-                fill: @color-secondaryvariant2-light1-90;
-            }
-
-            .nav-menu-option-label {
-                flex: 1;
-                max-height: 2.4em;
-                padding-right: 1.3rem;
-                color: @color-surface-light5-90;
-
-                &:only-child {
-                    padding-left: 1.3rem;
-                }
-            }
-        }
+      .email-label {
+        flex: 1;
+        max-height: 2.4em;
+        color: @color-surface-light5-90;
+      }
     }
+
+    .logout-button-container {
+      grid-area: logout-button-area;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 0 1rem 1rem 0;
+
+      &:hover,
+      &:focus {
+        outline: none;
+
+        .logout-label {
+          color: @color-surface-light5-90;
+          text-decoration: underline;
+        }
+      }
+
+      .logout-label {
+        flex: 1;
+        max-height: 2.4em;
+        color: @color-surface-light3-90;
+      }
+    }
+  }
+
+  .nav-menu-section {
+    border-top: thin solid @color-surface-light5-20;
+
+    .nav-menu-option-container {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      height: 4rem;
+
+      &:hover {
+        background-color: @color-background-light2;
+      }
+
+      .icon {
+        flex: none;
+        width: 1.4rem;
+        height: 1.4rem;
+        margin: 1.3rem;
+        fill: @color-secondaryvariant2-light1-90;
+      }
+
+      .nav-menu-option-label {
+        flex: 1;
+        max-height: 2.4em;
+        padding-right: 1.3rem;
+        color: @color-surface-light5-90;
+
+        &:only-child {
+          padding-left: 1.3rem;
+        }
+      }
+    }
+  }
 }
 
 @media only screen and (max-width: @minimum) {
-    .nav-menu-container {
-        max-height: calc(100vh - var(--horizontal-nav-bar-size) - var(--vertical-nav-bar-size) - 1rem);
-    }
+  .nav-menu-container {
+    max-height: calc(
+      100vh - var(--horizontal-nav-bar-size) - var(--vertical-nav-bar-size) -
+        1rem
+    );
+  }
 }

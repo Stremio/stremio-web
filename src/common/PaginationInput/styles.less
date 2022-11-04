@@ -1,41 +1,42 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
-@import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
+@import (reference) "~@stremio/stremio-colors/less/stremio-colors.less";
 
 .pagination-input-container {
+  display: flex;
+  flex-direction: row;
+
+  .prev-button-container,
+  .next-button-container {
+    flex: none;
     display: flex;
-    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    background-color: @color-background;
 
-    .prev-button-container, .next-button-container {
-        flex: none;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: @color-background;
-
-        .icon {
-            display: block;
-            fill: @color-secondaryvariant1-90;
-        }
+    .icon {
+      display: block;
+      fill: @color-secondaryvariant1-90;
     }
+  }
 
-    .label-container {
-        flex: 1;
-        align-self: stretch;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: @color-background-dark1;
+  .label-container {
+    flex: 1;
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: @color-background-dark1;
 
-        .label {
-            flex: none;
-            min-width: 1.2rem;
-            max-width: 3rem;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            text-align: center;
-            font-weight: 500;
-            color: @color-secondaryvariant1-90;
-        }
+    .label {
+      flex: none;
+      min-width: 1.2rem;
+      max-width: 3rem;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      text-align: center;
+      font-weight: 500;
+      color: @color-secondaryvariant1-90;
     }
+  }
 }

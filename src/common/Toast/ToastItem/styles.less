@@ -1,86 +1,86 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
-@import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
+@import (reference) "~@stremio/stremio-colors/less/stremio-colors.less";
 
 .toast-item-container {
-    display: flex;
-    flex-direction: row;
-    width: 25rem;
-    margin-bottom: 1rem;
-    background-color: @color-surface-light4;
-    overflow: visible;
-    box-shadow: 0 0.3rem 0.5rem @color-background-dark5-40,
-        0 0.6rem 1rem @color-background-dark5-20;
-    pointer-events: auto;
+  display: flex;
+  flex-direction: row;
+  width: 25rem;
+  margin-bottom: 1rem;
+  background-color: @color-surface-light4;
+  overflow: visible;
+  box-shadow: 0 0.3rem 0.5rem @color-background-dark5-40,
+    0 0.6rem 1rem @color-background-dark5-20;
+  pointer-events: auto;
 
-    &.success {
-        .icon-container {
-            background-color: @color-accent3;
-
-            .icon {
-                fill: @color-surface-light5-90;
-            }
-        }
-    }
-
-    &.error {
-        .icon-container {
-            background-color: @color-accent2;
-
-            .icon {
-                fill: @color-surface-light5-90;
-            }
-        }
-    }
-
+  &.success {
     .icon-container {
-        flex: none;
-        align-self: stretch;
-        width: 2.5rem;
-        padding: 0.5rem;
+      background-color: @color-accent3;
 
-        .icon {
-            display: block;
-            width: 100%;
-            height: 100%;
-            fill: @color-background-dark5-90;
-        }
+      .icon {
+        fill: @color-surface-light5-90;
+      }
+    }
+  }
+
+  &.error {
+    .icon-container {
+      background-color: @color-accent2;
+
+      .icon {
+        fill: @color-surface-light5-90;
+      }
+    }
+  }
+
+  .icon-container {
+    flex: none;
+    align-self: stretch;
+    width: 2.5rem;
+    padding: 0.5rem;
+
+    .icon {
+      display: block;
+      width: 100%;
+      height: 100%;
+      fill: @color-background-dark5-90;
+    }
+  }
+
+  .info-container {
+    flex: 1;
+    align-self: stretch;
+    padding: 1rem;
+
+    .title-container {
+      font-size: 1.2rem;
+
+      &:not(:last-child) {
+        margin-bottom: 0.2rem;
+      }
     }
 
-    .info-container {
-        flex: 1;
-        align-self: stretch;
-        padding: 1rem;
+    .message-container {
+      font-size: 1.1rem;
+    }
+  }
 
-        .title-container {
-            font-size: 1.2rem;
+  .close-button-container {
+    flex: none;
+    align-self: flex-start;
+    width: 2rem;
+    height: 2rem;
+    margin: 0.2rem;
+    padding: 0.5rem;
 
-            &:not(:last-child) {
-                margin-bottom: 0.2rem;
-            }
-        }
-
-        .message-container {
-            font-size: 1.1rem;
-        }
+    &:hover {
+      background-color: @color-surface-light2;
     }
 
-    .close-button-container {
-        flex: none;
-        align-self: flex-start;
-        width: 2rem;
-        height: 2rem;
-        margin: 0.2rem;
-        padding: 0.5rem;
-
-        &:hover {
-            background-color: @color-surface-light2;
-        }
-
-        .icon {
-            display: block;
-            width: 100%;
-            height: 100%;
-        }
+    .icon {
+      display: block;
+      width: 100%;
+      height: 100%;
     }
+  }
 }

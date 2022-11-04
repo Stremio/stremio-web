@@ -1,106 +1,115 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
-const React = require('react');
-const { useServices } = require('stremio/services');
-const PropTypes = require('prop-types');
-const MetaItem = require('stremio/common/MetaItem');
+const React = require("react");
+const { useServices } = require("stremio/services");
+const PropTypes = require("prop-types");
+const MetaItem = require("stremio/common/MetaItem");
 
 const OPTIONS = [
-    { label: 'Play', value: 'play' },
-    { label: 'Details', value: 'details' },
-    { label: 'Dismiss', value: 'dismiss' },
-    { label: 'Remove', value: 'remove' },
+  { label: "Play", value: "play" },
+  { label: "Details", value: "details" },
+  { label: "Dismiss", value: "dismiss" },
+  { label: "Remove", value: "remove" },
 ];
 
 const LibItem = ({ _id, removable, ...props }) => {
-    const { core } = useServices();
-    const options = React.useMemo(() => {
-        return OPTIONS.filter(({ value }) => {
-            switch (value) {
-                case 'play':
-                    return props.deepLinks && typeof props.deepLinks.player === 'string';
-                case 'details':
-                    return props.deepLinks && (typeof props.deepLinks.metaDetailsVideos === 'string' || typeof props.deepLinks.metaDetailsStreams === 'string');
-                case 'dismiss':
-                    return typeof _id === 'string' && props.progress !== null && !isNaN(props.progress);
-                case 'remove':
-                    return typeof _id === 'string' && removable;
+  const { core } = useServices();
+  const options = React.useMemo(() => {
+    return OPTIONS.filter(({ value }) => {
+      switch (value) {
+        case "play":
+          return props.deepLinks && typeof props.deepLinks.player === "string";
+        case "details":
+          return (
+            props.deepLinks &&
+            (typeof props.deepLinks.metaDetailsVideos === "string" ||
+              typeof props.deepLinks.metaDetailsStreams === "string")
+          );
+        case "dismiss":
+          return (
+            typeof _id === "string" &&
+            props.progress !== null &&
+            !isNaN(props.progress)
+          );
+        case "remove":
+          return typeof _id === "string" && removable;
+      }
+    });
+  }, [_id, removable, props.progress, props.deepLinks]);
+  const optionOnSelect = React.useCallback(
+    (event) => {
+      if (typeof props.optionOnSelect === "function") {
+        props.optionOnSelect(event);
+      }
+
+      if (!event.nativeEvent.optionSelectPrevented) {
+        switch (event.value) {
+          case "play": {
+            if (props.deepLinks && typeof props.deepLinks.player === "string") {
+              window.location = props.deepLinks.player;
             }
-        });
-    }, [_id, removable, props.progress, props.deepLinks]);
-    const optionOnSelect = React.useCallback((event) => {
-        if (typeof props.optionOnSelect === 'function') {
-            props.optionOnSelect(event);
-        }
 
-        if (!event.nativeEvent.optionSelectPrevented) {
-            switch (event.value) {
-                case 'play': {
-                    if (props.deepLinks && typeof props.deepLinks.player === 'string') {
-                        window.location = props.deepLinks.player;
-                    }
-
-                    break;
-                }
-                case 'details': {
-                    if (props.deepLinks) {
-                        if (typeof props.deepLinks.metaDetailsVideos === 'string') {
-                            window.location = props.deepLinks.metaDetailsVideos;
-                        } else if (typeof props.deepLinks.metaDetailsStreams === 'string') {
-                            window.location = props.deepLinks.metaDetailsStreams;
-                        }
-                    }
-
-                    break;
-                }
-                case 'dismiss': {
-                    if (typeof _id === 'string') {
-                        core.transport.dispatch({
-                            action: 'Ctx',
-                            args: {
-                                action: 'RewindLibraryItem',
-                                args: _id
-                            }
-                        });
-                    }
-
-                    break;
-                }
-                case 'remove': {
-                    if (typeof _id === 'string') {
-                        core.transport.dispatch({
-                            action: 'Ctx',
-                            args: {
-                                action: 'RemoveFromLibrary',
-                                args: _id
-                            }
-                        });
-                    }
-
-                    break;
-                }
+            break;
+          }
+          case "details": {
+            if (props.deepLinks) {
+              if (typeof props.deepLinks.metaDetailsVideos === "string") {
+                window.location = props.deepLinks.metaDetailsVideos;
+              } else if (
+                typeof props.deepLinks.metaDetailsStreams === "string"
+              ) {
+                window.location = props.deepLinks.metaDetailsStreams;
+              }
             }
+
+            break;
+          }
+          case "dismiss": {
+            if (typeof _id === "string") {
+              core.transport.dispatch({
+                action: "Ctx",
+                args: {
+                  action: "RewindLibraryItem",
+                  args: _id,
+                },
+              });
+            }
+
+            break;
+          }
+          case "remove": {
+            if (typeof _id === "string") {
+              core.transport.dispatch({
+                action: "Ctx",
+                args: {
+                  action: "RemoveFromLibrary",
+                  args: _id,
+                },
+              });
+            }
+
+            break;
+          }
         }
-    }, [_id, props.deepLinks, props.optionOnSelect]);
-    return (
-        <MetaItem
-            {...props}
-            options={options}
-            optionOnSelect={optionOnSelect}
-        />
-    );
+      }
+    },
+    [_id, props.deepLinks, props.optionOnSelect]
+  );
+  return (
+    <MetaItem {...props} options={options} optionOnSelect={optionOnSelect} />
+  );
 };
 
 LibItem.propTypes = {
-    _id: PropTypes.string,
-    removable: PropTypes.bool,
-    progress: PropTypes.number,
-    deepLinks: PropTypes.shape({
-        metaDetailsVideos: PropTypes.string,
-        metaDetailsStreams: PropTypes.string,
-        player: PropTypes.string
-    }),
-    optionOnSelect: PropTypes.func
+  _id: PropTypes.string,
+  removable: PropTypes.bool,
+  progress: PropTypes.number,
+  deepLinks: PropTypes.shape({
+    metaDetailsVideos: PropTypes.string,
+    metaDetailsStreams: PropTypes.string,
+    player: PropTypes.string,
+  }),
+  optionOnSelect: PropTypes.func,
 };
 
 module.exports = LibItem;

@@ -1,28 +1,28 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
 .video-placeholder-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0.5rem 1rem;
+
+  .info-container {
+    flex: 1;
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding: 0.5rem 1rem;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 3rem;
+    margin: 0.5rem 1rem;
 
-    .info-container {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        height: 3rem;
-        margin: 0.5rem 1rem;
-
-        .name-container {
-            width: 80%;
-            height: 1.2rem;
-            background: var(--color-placeholder-background);
-        }
-
-        .released-container {
-            height: 1rem;
-            background: var(--color-placeholder-background);
-        }
+    .name-container {
+      width: 80%;
+      height: 1.2rem;
+      background: var(--color-placeholder-background);
     }
+
+    .released-container {
+      height: 1rem;
+      background: var(--color-placeholder-background);
+    }
+  }
 }

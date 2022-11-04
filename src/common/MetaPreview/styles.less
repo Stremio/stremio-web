@@ -1,238 +1,244 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
-@import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
-@import (reference) '~stremio/common/screen-sizes.less';
+@import (reference) "~@stremio/stremio-colors/less/stremio-colors.less";
+@import (reference) "~stremio/common/screen-sizes.less";
 
 .meta-preview-container {
-    position: relative;
-    z-index: 0;
-    display: flex;
-    flex-direction: column;
+  position: relative;
+  z-index: 0;
+  display: flex;
+  flex-direction: column;
 
-    &.compact {
-        .meta-info-container {
-            .logo, .logo-placeholder {
-                width: 100%;
-                height: 8rem;
-                background-color: @color-surface-dark5-10;
-            }
-
-            .runtime-release-info-container {
-                justify-content: space-evenly;
-
-                .runtime-label, .release-info-label {
-                    margin: 1rem 0.4rem;
-                }
-            }
-
-            .description-container {
-                max-height: none;
-            }
-        }
-
-        .action-buttons-container {
-            justify-content: space-evenly;
-            padding: 0;
-
-            .action-button:not(:last-child) {
-                margin-right: 0;
-            }
-        }
-    }
-
-    .background-image-layer {
-        position: absolute;
-        top: -10px;
-        right: -10px;
-        bottom: -10px;
-        left: -10px;
-        z-index: -1;
-
-        &::after {
-            position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            z-index: 1;
-            background: @color-background-dark2-60;
-            content: "";
-        }
-
-        .background-image {
-            display: block;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center;
-            opacity: 0.9;
-            filter: blur(5px);
-        }
-    }
-
+  &.compact {
     .meta-info-container {
-        flex: 1;
-        align-self: stretch;
-        padding: 0 2rem;
-        overflow-y: auto;
+      .logo,
+      .logo-placeholder {
+        width: 100%;
+        height: 8rem;
+        background-color: @color-surface-dark5-10;
+      }
 
-        &:not(:hover) {
-            scrollbar-color: transparent transparent;
+      .runtime-release-info-container {
+        justify-content: space-evenly;
 
-            &::-webkit-scrollbar-thumb, &::-webkit-scrollbar-track {
-                background-color: transparent;
-            }
+        .runtime-label,
+        .release-info-label {
+          margin: 1rem 0.4rem;
         }
+      }
 
-        .logo, .logo-placeholder {
-            display: block;
-            max-width: 100%;
-            margin: 2rem 0;
-        }
-
-        .logo {
-            height: 8rem;
-            object-fit: contain;
-            object-position: center;
-        }
-
-        .logo-placeholder {
-            font-size: 1.7rem;
-            color: @color-surface-light5-90;
-        }
-
-        .runtime-release-info-container {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            flex-wrap: wrap;
-            margin-top: 1rem;
-
-            .runtime-label, .release-info-label {
-                flex: 0 1 auto;
-                margin-right: 2rem;
-                margin-bottom: 0.5rem;
-                font-size: 1.4rem;
-                color: @color-surface-light5-90;
-            }
-
-            .imdb-button-container {
-                flex: 0 1 auto;
-                display: flex;
-                flex-direction: row;
-                align-items: center;
-                margin-bottom: 0.5rem;
-                padding: 0.3rem 1rem;
-                border-radius: 2.5rem;
-                border: var(--focus-outline-size) solid transparent;
-                background-color: @color-surface-light5-20;
-
-                &:hover, &:focus {
-                    background-color: @color-surface-light5-30;
-                }
-
-                &:focus {
-                    outline: none;
-                    border: var(--focus-outline-size) solid @color-surface-light5;
-                }
-
-                .icon {
-                    flex: none;
-                    width: 3rem;
-                    height: 1.1rem;
-                    margin-right: 1rem;
-                    fill: @color-surface-90;
-                }
-
-                .label {
-                    flex: 0 1 auto;
-                    max-height: 1.2em;
-                    font-size: 1.6rem;
-                    font-weight: 500;
-                    color: @color-surface-light5-90;
-                }
-            }
-        }
-
-        .name-container {
-            margin-top: 1rem;
-            font-size: 1.5rem;
-            color: @color-surface-light5-90;
-        }
-
-        .description-container {
-            max-height: 6em;
-            margin-top: 1rem;
-            font-size: 1.1rem;
-            line-height: 1.5em;
-            color: @color-surface-light5-90;
-        }
-
-        .meta-links {
-            margin-top: 1rem;
-        }
+      .description-container {
+        max-height: none;
+      }
     }
 
     .action-buttons-container {
-        flex: none;
-        align-self: stretch;
+      justify-content: space-evenly;
+      padding: 0;
+
+      .action-button:not(:last-child) {
+        margin-right: 0;
+      }
+    }
+  }
+
+  .background-image-layer {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    bottom: -10px;
+    left: -10px;
+    z-index: -1;
+
+    &::after {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 1;
+      background: @color-background-dark2-60;
+      content: "";
+    }
+
+    .background-image {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      opacity: 0.9;
+      filter: blur(5px);
+    }
+  }
+
+  .meta-info-container {
+    flex: 1;
+    align-self: stretch;
+    padding: 0 2rem;
+    overflow-y: auto;
+
+    &:not(:hover) {
+      scrollbar-color: transparent transparent;
+
+      &::-webkit-scrollbar-thumb,
+      &::-webkit-scrollbar-track {
+        background-color: transparent;
+      }
+    }
+
+    .logo,
+    .logo-placeholder {
+      display: block;
+      max-width: 100%;
+      margin: 2rem 0;
+    }
+
+    .logo {
+      height: 8rem;
+      object-fit: contain;
+      object-position: center;
+    }
+
+    .logo-placeholder {
+      font-size: 1.7rem;
+      color: @color-surface-light5-90;
+    }
+
+    .runtime-release-info-container {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+
+      .runtime-label,
+      .release-info-label {
+        flex: 0 1 auto;
+        margin-right: 2rem;
+        margin-bottom: 0.5rem;
+        font-size: 1.4rem;
+        color: @color-surface-light5-90;
+      }
+
+      .imdb-button-container {
+        flex: 0 1 auto;
         display: flex;
         flex-direction: row;
-        flex-wrap: wrap;
-        max-height: 10rem;
-        padding: 0 2rem;
+        align-items: center;
+        margin-bottom: 0.5rem;
+        padding: 0.3rem 1rem;
+        border-radius: 2.5rem;
+        border: var(--focus-outline-size) solid transparent;
+        background-color: @color-surface-light5-20;
 
-        .action-button {
-            flex: none;
-            width: 6rem;
-            height: 6rem;
-            margin: 2rem 0;
-
-            &:not(:last-child) {
-                margin-right: 2rem;
-            }
+        &:hover,
+        &:focus {
+          background-color: @color-surface-light5-30;
         }
+
+        &:focus {
+          outline: none;
+          border: var(--focus-outline-size) solid @color-surface-light5;
+        }
+
+        .icon {
+          flex: none;
+          width: 3rem;
+          height: 1.1rem;
+          margin-right: 1rem;
+          fill: @color-surface-90;
+        }
+
+        .label {
+          flex: 0 1 auto;
+          max-height: 1.2em;
+          font-size: 1.6rem;
+          font-weight: 500;
+          color: @color-surface-light5-90;
+        }
+      }
     }
+
+    .name-container {
+      margin-top: 1rem;
+      font-size: 1.5rem;
+      color: @color-surface-light5-90;
+    }
+
+    .description-container {
+      max-height: 6em;
+      margin-top: 1rem;
+      font-size: 1.1rem;
+      line-height: 1.5em;
+      color: @color-surface-light5-90;
+    }
+
+    .meta-links {
+      margin-top: 1rem;
+    }
+  }
+
+  .action-buttons-container {
+    flex: none;
+    align-self: stretch;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    max-height: 10rem;
+    padding: 0 2rem;
+
+    .action-button {
+      flex: none;
+      width: 6rem;
+      height: 6rem;
+      margin: 2rem 0;
+
+      &:not(:last-child) {
+        margin-right: 2rem;
+      }
+    }
+  }
 }
 
 .share-prompt {
-    width: 24rem;
+  width: 24rem;
 }
 
 @media only screen and (max-width: @minimum) {
-    .meta-preview-container {
-        .meta-info-container {
-            padding: 0 1.5rem;
+  .meta-preview-container {
+    .meta-info-container {
+      padding: 0 1.5rem;
 
-            .logo {
-                margin: 1em 0;
-            }
-        }
-
-        .action-buttons-container {
-            flex-wrap: nowrap;
-            padding: 0 1.5rem;
-            overflow-x: visible;
-            scrollbar-width: none;
-
-            &::-webkit-scrollbar {
-                display: none;
-            }
-
-            .action-button {
-                width: auto;
-                height: 4rem;
-                max-width: 60%;
-                margin: 1rem 0;
-
-                &:not(:last-child) {
-                    margin-right: 1rem;
-                }
-            }
-        }
+      .logo {
+        margin: 1em 0;
+      }
     }
 
-    .share-prompt {
-        width: 100%;
+    .action-buttons-container {
+      flex-wrap: nowrap;
+      padding: 0 1.5rem;
+      overflow-x: visible;
+      scrollbar-width: none;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+
+      .action-button {
+        width: auto;
+        height: 4rem;
+        max-width: 60%;
+        margin: 1rem 0;
+
+        &:not(:last-child) {
+          margin-right: 1rem;
+        }
+      }
     }
+  }
+
+  .share-prompt {
+    width: 100%;
+  }
 }

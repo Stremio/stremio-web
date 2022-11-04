@@ -1,42 +1,42 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
-@import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
+@import (reference) "~@stremio/stremio-colors/less/stremio-colors.less";
 
-:import('~stremio/common/Checkbox/styles.less') {
-    checkbox-icon: icon;
+:import("~stremio/common/Checkbox/styles.less") {
+  checkbox-icon: icon;
 }
 
 .consent-checkbox-container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding: 0.5rem 1rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0.5rem 1rem;
 
-    &:focus {
-        outline: none;
-        background-color: @color-surface-light5-20;
+  &:focus {
+    outline: none;
+    background-color: @color-surface-light5-20;
+  }
+
+  .checkbox-icon {
+    flex: none;
+    width: 1.2rem;
+    height: 1.2rem;
+    fill: @color-surface-dark5;
+  }
+
+  .label {
+    flex: 1;
+    margin-left: 0.5rem;
+    font-size: 0.9rem;
+    color: @color-surface-90;
+
+    .link {
+      font-size: 0.9rem;
+      color: @color-surface-light5-90;
+
+      &:hover {
+        text-decoration: underline;
+      }
     }
-
-    .checkbox-icon {
-        flex: none;
-        width: 1.2rem;
-        height: 1.2rem;
-        fill: @color-surface-dark5;
-    }
-
-    .label {
-        flex: 1;
-        margin-left: 0.5rem;
-        font-size: 0.9rem;
-        color: @color-surface-90;
-
-        .link {
-            font-size: 0.9rem;
-            color: @color-surface-light5-90;
-
-            &:hover {
-                text-decoration: underline;
-            }
-        }
-    }
+  }
 }

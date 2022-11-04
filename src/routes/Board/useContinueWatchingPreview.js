@@ -1,9 +1,9 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
-const { useModelState } = require('stremio/common');
+const { useModelState } = require("stremio/common");
 
 const useContinueWatchingPreview = () => {
-    return useModelState({ model: 'continue_watching_preview' });
+  return useModelState({ model: "continue_watching_preview" });
 };
 
 module.exports = useContinueWatchingPreview;

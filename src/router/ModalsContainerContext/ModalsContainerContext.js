@@ -1,9 +1,9 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
-const React = require('react');
+const React = require("react");
 
 const ModalsContainerContext = React.createContext(null);
 
-ModalsContainerContext.displayName = 'ModalsContainerContext';
+ModalsContainerContext.displayName = "ModalsContainerContext";
 
 module.exports = ModalsContainerContext;

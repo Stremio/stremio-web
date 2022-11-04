@@ -1,108 +1,109 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
-@import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
+@import (reference) "~@stremio/stremio-colors/less/stremio-colors.less";
 
 .share-prompt-container {
-    .buttons-container {
-        display: flex;
-        flex-direction: row;
+  .buttons-container {
+    display: flex;
+    flex-direction: row;
 
-        .button-container {
-            flex: 1;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
+    .button-container {
+      flex: 1;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
 
-            &:not(:last-child) {
-                margin-right: 1rem;
-            }
+      &:not(:last-child) {
+        margin-right: 1rem;
+      }
 
-            .icon {
-                flex: none;
-                height: 1.2rem;
-                margin-right: 1rem;
-                fill: @color-surface-light5-90;
-            }
+      .icon {
+        flex: none;
+        height: 1.2rem;
+        margin-right: 1rem;
+        fill: @color-surface-light5-90;
+      }
 
-            .label {
-                flex-grow: 0;
-                flex-shrink: 1;
-                flex-basis: auto;
-                max-height: 2.4em;
-                font-size: 1.1rem;
-                font-weight: 500;
-                text-align: center;
-                color: @color-surface-light5-90;
-            }
-        }
-
-        .facebook-button, .twitter-button {
-            &:focus {
-                outline-color: @color-background-dark5;
-            }
-        }
-
-        .facebook-button {
-            background-color: var(--color-facebook);
-        }
-
-        .twitter-button {
-            background-color: var(--color-twitter);
-        }
+      .label {
+        flex-grow: 0;
+        flex-shrink: 1;
+        flex-basis: auto;
+        max-height: 2.4em;
+        font-size: 1.1rem;
+        font-weight: 500;
+        text-align: center;
+        color: @color-surface-light5-90;
+      }
     }
 
-    .url-container {
-        display: flex;
-        flex-direction: row;
-        margin-top: 1rem;
-        background-color: @color-surface-light2;
-
-        .url-text-input {
-            flex: 1;
-            align-self: stretch;
-            padding: 1rem;
-            font-size: 1.1rem;
-            text-align: center;
-            color: @color-background-dark5;
-        }
-
-        .copy-button {
-            flex: none;
-            align-self: stretch;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: center;
-            width: 8rem;
-            padding: 1rem;
-            background-color: @color-accent3;
-
-            &:hover {
-                background-color: @color-accent3-light1;
-            }
-
-            &:focus {
-                outline-color: @color-background-dark5;
-            }
-
-            .icon {
-                flex: none;
-                width: 1.2rem;
-                height: 1.2rem;
-                margin-right: 0.5rem;
-                fill: @color-surface-light5-90;
-            }
-
-            .label {
-                flex-grow: 0;
-                flex-shrink: 1;
-                flex-basis: auto;
-                max-height: 2.4em;
-                font-size: 1.1rem;
-                color: @color-surface-light5-90;
-            }
-        }
+    .facebook-button,
+    .twitter-button {
+      &:focus {
+        outline-color: @color-background-dark5;
+      }
     }
+
+    .facebook-button {
+      background-color: var(--color-facebook);
+    }
+
+    .twitter-button {
+      background-color: var(--color-twitter);
+    }
+  }
+
+  .url-container {
+    display: flex;
+    flex-direction: row;
+    margin-top: 1rem;
+    background-color: @color-surface-light2;
+
+    .url-text-input {
+      flex: 1;
+      align-self: stretch;
+      padding: 1rem;
+      font-size: 1.1rem;
+      text-align: center;
+      color: @color-background-dark5;
+    }
+
+    .copy-button {
+      flex: none;
+      align-self: stretch;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      width: 8rem;
+      padding: 1rem;
+      background-color: @color-accent3;
+
+      &:hover {
+        background-color: @color-accent3-light1;
+      }
+
+      &:focus {
+        outline-color: @color-background-dark5;
+      }
+
+      .icon {
+        flex: none;
+        width: 1.2rem;
+        height: 1.2rem;
+        margin-right: 0.5rem;
+        fill: @color-surface-light5-90;
+      }
+
+      .label {
+        flex-grow: 0;
+        flex-shrink: 1;
+        flex-basis: auto;
+        max-height: 2.4em;
+        font-size: 1.1rem;
+        color: @color-surface-light5-90;
+      }
+    }
+  }
 }

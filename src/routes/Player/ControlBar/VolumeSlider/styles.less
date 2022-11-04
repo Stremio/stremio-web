@@ -1,24 +1,25 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
-@import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
+@import (reference) "~@stremio/stremio-colors/less/stremio-colors.less";
 
-:import('~stremio/common/Slider/styles.less') {
-    slider-track: track;
-    slider-track-before: track-before;
+:import("~stremio/common/Slider/styles.less") {
+  slider-track: track;
+  slider-track-before: track-before;
 }
 
 .volume-slider:not(:global(.disabled)) {
-    .slider-track {
-        background-color: @color-surface-dark5;
-    }
+  .slider-track {
+    background-color: @color-surface-dark5;
+  }
 
+  .slider-track-before {
+    background-color: @color-surface-light3;
+  }
+
+  &:hover,
+  &:global(.active) {
     .slider-track-before {
-        background-color: @color-surface-light3;
+      background-color: @color-surface-light5;
     }
-
-    &:hover, &:global(.active) {
-        .slider-track-before {
-            background-color: @color-surface-light5;
-        }
-    }
+  }
 }

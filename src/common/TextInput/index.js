@@ -1,5 +1,5 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
-const TextInput = require('./TextInput');
+const TextInput = require("./TextInput");
 
 module.exports = TextInput;
