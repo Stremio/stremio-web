@@ -1,9 +1,5 @@
 {
-  "extends": [
-    "eslint:recommended",
-    "plugin:react/recommended",
-    "prettier"
-  ],
+  "extends": ["eslint:recommended", "plugin:react/recommended", "prettier"],
   "settings": {
     "react": {
       "version": "detect"
@@ -27,19 +23,13 @@
       "jsx": true
     }
   },
-  "ignorePatterns": [
-    "/*",
-    "!/src"
-  ],
+  "ignorePatterns": ["/*", "!/src"],
   "rules": {
     "eqeqeq": "error",
     "no-console": [
       "error",
       {
-        "allow": [
-          "warn",
-          "error"
-        ]
+        "allow": ["warn", "error"]
       }
     ],
     "no-eq-null": "error",
