@@ -4,11 +4,19 @@ const React = require('react');
 
 const useFullscreen = () => {
     const [fullscreen, setFullscreen] = React.useState(document.fullscreenElement === document.documentElement);
-    const requestFullscreen = React.useCallback(() => {
-        document.documentElement.requestFullscreen();
+    const requestFullscreen = React.useCallback(async () => {
+        if (window.shell !== null) {
+            window.shell.invoke('set_fullscreen', true);
+        } else {
+            document.documentElement.requestFullscreen();
+        }
     }, []);
     const exitFullscreen = React.useCallback(() => {
-        document.exitFullscreen();
+        if (window.shell !== null) {
+            window.shell.invoke('set_fullscreen', false);
+        } else {
+            document.exitFullscreen();
+        }
     }, []);
     const toggleFullscreen = React.useCallback(() => {
         if (fullscreen) {
@@ -18,9 +26,16 @@ const useFullscreen = () => {
         }
     }, [fullscreen]);
     React.useEffect(() => {
-        const onFullscreenChange = () => {
-            setFullscreen(document.fullscreenElement === document.documentElement);
+        const onFullscreenChange = (response) => {
+            if (typeof response === 'object' && typeof response.payload === 'boolean') {
+                setFullscreen(response.payload);
+            } else {
+                setFullscreen(document.fullscreenElement === document.documentElement);
+            }
         };
+        if (window.shell !== null) {
+            window.shell.addEventListener('fullscreenchange', onFullscreenChange);
+        }
         document.addEventListener('fullscreenchange', onFullscreenChange);
         return () => {
             document.removeEventListener('fullscreenchange', onFullscreenChange);
