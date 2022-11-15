@@ -3,7 +3,7 @@
 const EventEmitter = require('eventemitter3');
 const CoreTransport = require('./CoreTransport');
 
-function Core() {
+function Core(args) {
     let active = false;
     let error = null;
     let starting = false;
@@ -66,7 +66,7 @@ function Core() {
         }
 
         starting = true;
-        transport = new CoreTransport();
+        transport = new CoreTransport(args);
         transport.on('init', onTransportInit);
         transport.on('error', onTransportError);
         onStateChanged();

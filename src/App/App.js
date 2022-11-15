@@ -3,30 +3,32 @@
 require('spatial-navigation-polyfill');
 const React = require('react');
 const { Router } = require('stremio-router');
-const { Core, Shell, Chromecast, KeyboardShortcuts, ServicesProvider } = require('stremio/services');
+const { Core, Shell, Chromecast, DragAndDrop, KeyboardShortcuts, ServicesProvider } = require('stremio/services');
 const { NotFound } = require('stremio/routes');
-const { ToastProvider, sanitizeLocationPath, CONSTANTS } = require('stremio/common');
-const CoreEventsToaster = require('./CoreEventsToaster');
+const { ToastProvider, CONSTANTS } = require('stremio/common');
+const ServicesToaster = require('./ServicesToaster');
+const DeepLinkHandler = require('./DeepLinkHandler');
 const ErrorDialog = require('./ErrorDialog');
 const routerViewsConfig = require('./routerViewsConfig');
 const styles = require('./styles');
-
-window.core_imports = {
-    app_version: process.env.VERSION,
-    shell_version: null,
-    sanitize_location_path: sanitizeLocationPath
-};
 
 const App = () => {
     const onPathNotMatch = React.useCallback(() => {
         return NotFound;
     }, []);
-    const services = React.useMemo(() => ({
-        core: new Core(),
-        shell: new Shell(),
-        chromecast: new Chromecast(),
-        keyboardShortcuts: new KeyboardShortcuts()
-    }), []);
+    const services = React.useMemo(() => {
+        const core = new Core({
+            appVersion: process.env.VERSION,
+            shellVersion: null
+        });
+        return {
+            core,
+            shell: new Shell(),
+            chromecast: new Chromecast(),
+            keyboardShortcuts: new KeyboardShortcuts(),
+            dragAndDrop: new DragAndDrop({ core })
+        };
+    }, []);
     const [initialized, setInitialized] = React.useState(false);
     React.useEffect(() => {
         let prevPath = window.location.hash.slice(1);
@@ -74,12 +76,14 @@ const App = () => {
         services.shell.start();
         services.chromecast.start();
         services.keyboardShortcuts.start();
+        services.dragAndDrop.start();
         window.services = services;
         return () => {
             services.core.stop();
             services.shell.stop();
             services.chromecast.stop();
             services.keyboardShortcuts.stop();
+            services.dragAndDrop.stop();
             services.core.off('stateChanged', onCoreStateChanged);
             services.shell.off('stateChanged', onShellStateChanged);
             services.chromecast.off('stateChanged', onChromecastStateChange);
@@ -93,6 +97,18 @@ const App = () => {
                     action: 'PullAddonsFromAPI'
                 }
             });
+            services.core.transport.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'PullUserFromAPI'
+                }
+            });
+            services.core.transport.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'SyncLibraryWithAPI'
+                }
+            });
         }
     }, [initialized]);
     return (
@@ -104,7 +120,8 @@ const App = () => {
                             <ErrorDialog className={styles['error-container']} />
                             :
                             <ToastProvider className={styles['toasts-container']}>
-                                <CoreEventsToaster />
+                                <ServicesToaster />
+                                <DeepLinkHandler />
                                 <Router
                                     className={styles['router']}
                                     viewsConfig={routerViewsConfig}

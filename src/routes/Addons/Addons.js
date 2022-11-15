@@ -2,8 +2,9 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
+const classnames = require('classnames');
 const Icon = require('@stremio/stremio-icons/dom');
-const { AddonDetailsModal, Button, Image, Multiselect, MainNavBars, TextInput, SearchBar, SharePrompt, ModalDialog, useBinaryState } = require('stremio/common');
+const { AddonDetailsModal, Button, Image, Multiselect, MainNavBars, TextInput, SearchBar, SharePrompt, ModalDialog, useBinaryState, withCoreSuspender } = require('stremio/common');
 const Addon = require('./Addon');
 const useInstalledAddons = require('./useInstalledAddons');
 const useRemoteAddons = require('./useRemoteAddons');
@@ -118,7 +119,7 @@ const Addons = ({ urlParams, queryParams }) => {
                                             .map((addon, index) => (
                                                 <Addon
                                                     key={index}
-                                                    className={styles['addon']}
+                                                    className={classnames(styles['addon'], 'animation-fade-in')}
                                                     id={addon.manifest.id}
                                                     name={addon.manifest.name}
                                                     version={addon.manifest.version}
@@ -152,7 +153,7 @@ const Addons = ({ urlParams, queryParams }) => {
                                                 .map((addon, index) => (
                                                     <Addon
                                                         key={index}
-                                                        className={styles['addon']}
+                                                        className={classnames(styles['addon'], 'animation-fade-in')}
                                                         id={addon.manifest.id}
                                                         name={addon.manifest.name}
                                                         version={addon.manifest.version}
@@ -261,4 +262,8 @@ Addons.propTypes = {
     queryParams: PropTypes.instanceOf(URLSearchParams)
 };
 
-module.exports = Addons;
+const AddonsFallback = () => (
+    <MainNavBars className={styles['addons-container']} route={'addons'} />
+);
+
+module.exports = withCoreSuspender(Addons, AddonsFallback);

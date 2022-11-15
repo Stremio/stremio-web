@@ -5,6 +5,7 @@ const { CONSTANTS, languageNames, useDeepEqualMemo } = require('stremio/common')
 
 const useProfileSettingsInputs = (profile) => {
     const { core } = useServices();
+    // TODO combine those useDeepEqualMemo in one
     const interfaceLanguageSelect = useDeepEqualMemo(() => ({
         options: Object.keys(languageNames).map((code) => ({
             value: code,

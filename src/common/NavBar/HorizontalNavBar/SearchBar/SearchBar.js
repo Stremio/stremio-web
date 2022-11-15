@@ -7,16 +7,25 @@ const Icon = require('@stremio/stremio-icons/dom');
 const { useRouteFocused } = require('stremio-router');
 const Button = require('stremio/common/Button');
 const TextInput = require('stremio/common/TextInput');
+const useTorrent = require('stremio/common/useTorrent');
+const { withCoreSuspender } = require('stremio/common/CoreSuspender');
 const styles = require('./styles');
 
 const SearchBar = ({ className, query, active }) => {
     const routeFocused = useRouteFocused();
+    const { createTorrentFromMagnet } = useTorrent();
     const searchInputRef = React.useRef(null);
     const searchBarOnClick = React.useCallback(() => {
         if (!active) {
             window.location = '#/search';
         }
     }, [active]);
+    const queryInputOnChange = React.useCallback(() => {
+        try {
+            createTorrentFromMagnet(searchInputRef.current.value);
+            // eslint-disable-next-line no-empty
+        } catch { }
+    }, []);
     const queryInputOnSubmit = React.useCallback(() => {
         if (searchInputRef.current !== null) {
             const queryParams = new URLSearchParams([['search', searchInputRef.current.value]]);
@@ -40,6 +49,7 @@ const SearchBar = ({ className, query, active }) => {
                         placeholder={'Search or paste link'}
                         defaultValue={query}
                         tabIndex={-1}
+                        onChange={queryInputOnChange}
                         onSubmit={queryInputOnSubmit}
                     />
                     :
@@ -60,4 +70,17 @@ SearchBar.propTypes = {
     active: PropTypes.bool
 };
 
-module.exports = SearchBar;
+const SearchBarFallback = ({ className }) => (
+    <label className={classnames(className, styles['search-bar-container'])}>
+        <div className={styles['search-input']}>
+            <div className={styles['placeholder-label']}>Search or paste link</div>
+        </div>
+        <Button className={styles['submit-button-container']} tabIndex={-1}>
+            <Icon className={styles['icon']} icon={'ic_search_link'} />
+        </Button>
+    </label>
+);
+
+SearchBarFallback.propTypes = SearchBar.propTypes;
+
+module.exports = withCoreSuspender(SearchBar, SearchBarFallback);

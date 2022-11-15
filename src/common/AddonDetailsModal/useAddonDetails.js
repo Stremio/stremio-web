@@ -3,12 +3,6 @@
 const React = require('react');
 const useModelState = require('stremio/common/useModelState');
 
-const init = () => ({
-    selected: null,
-    localAddon: null,
-    remoteAddon: null
-});
-
 const useAddonDetails = (transportUrl) => {
     const action = React.useMemo(() => {
         if (typeof transportUrl === 'string') {
@@ -27,7 +21,7 @@ const useAddonDetails = (transportUrl) => {
             };
         }
     }, [transportUrl]);
-    return useModelState({ model: 'addon_details', action, init });
+    return useModelState({ model: 'addon_details', action });
 };
 
 module.exports = useAddonDetails;

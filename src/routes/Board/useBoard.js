@@ -4,11 +4,6 @@ const React = require('react');
 const { useServices } = require('stremio/services');
 const { useModelState } = require('stremio/common');
 
-const init = () => ({
-    selected: null,
-    catalogs: []
-});
-
 const useBoard = () => {
     const { core } = useServices();
     const action = React.useMemo(() => ({
@@ -27,7 +22,7 @@ const useBoard = () => {
             }
         }, 'board');
     }, []);
-    const board = useModelState({ model: 'board', timeout: 1500, action, init });
+    const board = useModelState({ model: 'board', timeout: 1500, action });
     return [board, loadRange];
 };
 

@@ -17,7 +17,9 @@
     flex-wrap: wrap;
     padding: 0.5rem 1rem;
 
-    &:hover, &:focus, &:global(.active) {
+    &:hover,
+    &:focus,
+    &:global(.active) {
         background-color: @color-background;
     }
 
@@ -26,7 +28,7 @@
 
         .thumbnail {
             display: block;
-            width: 5rem;
+            width: 7.5rem;
             height: 5rem;
             object-fit: contain;
             object-position: center;
@@ -35,10 +37,12 @@
 
         .placeholder-icon {
             display: block;
-            width: 5rem;
+            width: 7.5rem;
             height: 5rem;
-            padding: 0.5rem;
-            fill: @color-secondaryvariant1-light3-90;
+            padding: 1rem;
+            fill: @color-surface-light5;
+            background-color: @color-surface-light5-40;
+            opacity: 0.25;
         }
     }
 
@@ -90,7 +94,8 @@
                     margin-left: 0.5rem;
                 }
 
-                .upcoming-container, .watched-container {
+                .upcoming-container,
+                .watched-container {
                     flex: none;
                     padding: 0.2rem 0.4rem;
                     max-width: 10rem;
@@ -129,53 +134,64 @@
             background-color: @color-primaryvariant1;
         }
     }
+
+    .context-menu-container {
+        max-width: calc(90% - 1.5rem);
+
+        .context-menu-content {
+            --spatial-navigation-contain: contain;
+            background-color: @color-background-dark1;
+
+            .context-menu-option-container {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                padding: 0.5rem 1rem;
+
+                &:hover,
+                &:focus {
+                    background-color: @color-background;
+                }
+
+                .context-menu-option-label {
+                    font-size: 1rem;
+                    max-height: 2.4em;
+                    color: @color-surface-light5-90;
+                }
+            }
+        }
+    }
 }
 
 @media only screen and (max-width: @minimum) {
     .video-container {
-        &:hover, &:focus, &:global(.active) {
+
+        &:hover,
+        &:focus,
+        &:global(.active) {
             background-color: @color-surface-light5-20;
         }
 
         .context-menu-container {
-            max-width: calc(90% - 1.5rem);
 
-            &.menu-direction-top-left, &.menu-direction-bottom-left {
+            &.menu-direction-top-left,
+            &.menu-direction-bottom-left {
                 right: 1.5rem;
             }
 
-            &.menu-direction-top-right, &.menu-direction-bottom-right {
+            &.menu-direction-top-right,
+            &.menu-direction-bottom-right {
                 left: 1.5rem;
             }
 
-            &.menu-direction-top-left, &.menu-direction-top-right {
+            &.menu-direction-top-left,
+            &.menu-direction-top-right {
                 bottom: 90%;
             }
 
-            &.menu-direction-bottom-left, &.menu-direction-bottom-right {
+            &.menu-direction-bottom-left,
+            &.menu-direction-bottom-right {
                 top: 90%;
-            }
-
-            .context-menu-content {
-                --spatial-navigation-contain: contain;
-                background-color: @color-background-dark1;
-
-                .context-menu-option-container {
-                    display: flex;
-                    flex-direction: row;
-                    align-items: center;
-                    padding: 0.5rem 1rem;
-
-                    &:hover, &:focus {
-                        background-color: @color-background;
-                    }
-
-                    .context-menu-option-label {
-                        font-size: 1rem;
-                        max-height: 2.4em;
-                        color: @color-surface-light5-90;
-                    }
-                }
             }
         }
     }

@@ -18,10 +18,10 @@ const cacheSizeToString = (size) => {
 
 const TORRENT_PROFILES = {
     default: {
-        btDownloadSpeedHardLimit: 2621440,
-        btDownloadSpeedSoftLimit: 1677721.6,
+        btDownloadSpeedHardLimit: 3670016,
+        btDownloadSpeedSoftLimit: 2621440,
         btHandshakeTimeout: 20000,
-        btMaxConnections: 35,
+        btMaxConnections: 55,
         btMinPeersForStable: 5,
         btRequestTimeout: 4000
     },
@@ -40,11 +40,20 @@ const TORRENT_PROFILES = {
         btMaxConnections: 200,
         btMinPeersForStable: 10,
         btRequestTimeout: 4000
+    },
+    'ultra fast': {
+        btDownloadSpeedHardLimit: 78643200,
+        btDownloadSpeedSoftLimit: 8388608,
+        btHandshakeTimeout: 25000,
+        btMaxConnections: 400,
+        btMinPeersForStable: 10,
+        btRequestTimeout: 6000
     }
 };
 
 const useStreamingServerSettingsInputs = (streamingServer) => {
     const { core } = useServices();
+    // TODO combine those useDeepEqualMemo in one
     const cacheSizeSelect = useDeepEqualMemo(() => {
         if (streamingServer.settings === null || streamingServer.settings.type !== 'Ready') {
             return null;

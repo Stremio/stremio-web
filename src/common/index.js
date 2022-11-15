@@ -4,6 +4,7 @@ const AddonDetailsModal = require('./AddonDetailsModal');
 const Button = require('./Button');
 const Checkbox = require('./Checkbox');
 const ColorInput = require('./ColorInput');
+const DelayedRenderer = require('./DelayedRenderer');
 const Image = require('./Image');
 const LibItem = require('./LibItem');
 const MainNavBars = require('./MainNavBars');
@@ -24,27 +25,27 @@ const TextInput = require('./TextInput');
 const { ToastProvider, useToast } = require('./Toast');
 const comparatorWithPriorities = require('./comparatorWithPriorities');
 const CONSTANTS = require('./CONSTANTS');
+const { withCoreSuspender, useCoreSuspender } = require('./CoreSuspender');
 const getVisibleChildrenRange = require('./getVisibleChildrenRange');
 const languageNames = require('./languageNames');
 const routesRegexp = require('./routesRegexp');
-const sanitizeLocationPath = require('./sanitizeLocationPath');
 const useAnimationFrame = require('./useAnimationFrame');
 const useBinaryState = require('./useBinaryState');
-const useDeepEqualEffect = require('./useDeepEqualEffect');
 const useDeepEqualMemo = require('./useDeepEqualMemo');
-const useDeepEqualState = require('./useDeepEqualState');
 const useFullscreen = require('./useFullscreen');
 const useLiveRef = require('./useLiveRef');
 const useModelState = require('./useModelState');
 const useOnScrollToBottom = require('./useOnScrollToBottom');
 const useProfile = require('./useProfile');
 const useStreamingServer = require('./useStreamingServer');
+const useTorrent = require('./useTorrent');
 
 module.exports = {
     AddonDetailsModal,
     Button,
     Checkbox,
     ColorInput,
+    DelayedRenderer,
     Image,
     LibItem,
     MainNavBars,
@@ -67,19 +68,19 @@ module.exports = {
     useToast,
     comparatorWithPriorities,
     CONSTANTS,
+    withCoreSuspender,
+    useCoreSuspender,
     getVisibleChildrenRange,
     languageNames,
     routesRegexp,
-    sanitizeLocationPath,
     useAnimationFrame,
     useBinaryState,
-    useDeepEqualEffect,
     useDeepEqualMemo,
-    useDeepEqualState,
     useFullscreen,
     useLiveRef,
     useModelState,
     useOnScrollToBottom,
     useProfile,
-    useStreamingServer
+    useStreamingServer,
+    useTorrent
 };

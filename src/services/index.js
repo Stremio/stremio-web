@@ -2,6 +2,7 @@
 
 const Chromecast = require('./Chromecast');
 const Core = require('./Core');
+const DragAndDrop = require('./DragAndDrop');
 const KeyboardShortcuts = require('./KeyboardShortcuts');
 const { ServicesProvider, useServices } = require('./ServicesContext');
 const Shell = require('./Shell');
@@ -9,6 +10,7 @@ const Shell = require('./Shell');
 module.exports = {
     Chromecast,
     Core,
+    DragAndDrop,
     KeyboardShortcuts,
     ServicesProvider,
     useServices,

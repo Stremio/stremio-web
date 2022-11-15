@@ -1,14 +1,9 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
 const React = require('react');
-const { useServices } = require('stremio/services');
 const { useModelState } = require('stremio/common');
 
 const useInstalledAddons = (urlParams) => {
-    const { core } = useServices();
-    const init = React.useMemo(() => {
-        return core.transport.getState('installed_addons');
-    }, []);
     const action = React.useMemo(() => {
         if (typeof urlParams.transportUrl !== 'string' && typeof urlParams.catalogId !== 'string') {
             return {
@@ -28,7 +23,7 @@ const useInstalledAddons = (urlParams) => {
             };
         }
     }, [urlParams]);
-    return useModelState({ model: 'installed_addons', action, init });
+    return useModelState({ model: 'installed_addons', action });
 };
 
 module.exports = useInstalledAddons;
