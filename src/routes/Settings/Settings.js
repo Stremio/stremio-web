@@ -77,13 +77,13 @@ const Settings = () => {
         // TODO
     }, []);
     const subscribeCalendarOnClick = React.useCallback(() => {
-        const url = `webcal://www.strem.io/calendar/${profile.auth.user._id}.ics`
+        const url = `webcal://www.strem.io/calendar/${profile.auth.user._id}.ics`;
         window.open(url);
         toast.show({
             type: 'success',
             title: 'Calendar has been added to your default caldendar app',
             timeout: 25000
-        })
+        });
         //Stremio 4 emits not documented event subscribeCalendar
     }, []);
     const exportDataOnClick = React.useCallback(() => {
