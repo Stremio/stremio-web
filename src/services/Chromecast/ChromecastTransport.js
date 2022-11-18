@@ -1,6 +1,7 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
 const EventEmitter = require('eventemitter3');
+const hat = require('hat');
 
 const MESSAGE_NAMESPACE = 'urn:x-cast:com.stremio';
 const CHUNK_SIZE = 20000;
@@ -33,7 +34,7 @@ const initialize = () => {
 
 function ChromecastTransport() {
     const events = new EventEmitter();
-    const chunks = [];
+    const messages = {};
 
     initialize()
         .then(() => {
@@ -59,26 +60,17 @@ function ChromecastTransport() {
 
     function onMessage(_, message) {
         try {
-            const { chunk, last } = JSON.parse(message);
-            chunks.push(chunk);
-            if (!last) {
-                return;
+            const { id, chunk, index, length } = JSON.parse(message);
+            messages[id] = messages[id] || [];
+            messages[id][index] = chunk;
+            if (Object.keys(messages[id]).length === length) {
+                const parsedMessage = JSON.parse(messages[id].join(''));
+                delete messages[id];
+                events.emit('message', parsedMessage);
             }
         } catch (error) {
-            chunks.splice(0, chunks.length);
             events.emit('message-error', error);
-            return;
         }
-
-        let parsedMessage;
-        try {
-            parsedMessage = JSON.parse(chunks.splice(0, chunks.length).join(''));
-        } catch (error) {
-            events.emit('message-error', error);
-            return;
-        }
-
-        events.emit('message', parsedMessage);
     }
     function onApplicationStatusChanged(event) {
         events.emit(cast.framework.CastSession.APPLICATION_STATUS_CHANGED, event);
@@ -165,11 +157,13 @@ function ChromecastTransport() {
                 const chunk = serializedMessage.slice(start, start + CHUNK_SIZE);
                 chunks.push(chunk);
             }
-
+            const id = hat();
             return Promise.all(chunks.map((chunk, index) => {
                 return castSession.sendMessage(MESSAGE_NAMESPACE, {
+                    id,
                     chunk,
-                    last: index === chunks.length - 1,
+                    index,
+                    length: chunks.length
                 });
             }));
         } else {
