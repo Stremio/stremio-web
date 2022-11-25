@@ -240,7 +240,10 @@ const Player = ({ urlParams, queryParams }) => {
                             []
                     },
                     autoplay: true,
-                    time: player.libraryItem !== null && player.selected.streamRequest !== null && player.libraryItem.state.video_id === player.selected.streamRequest.id ?
+                    time: player.libraryItem !== null &&
+                        player.selected.streamRequest !== null &&
+                        player.selected.streamRequest.path !== null &&
+                        player.libraryItem.state.video_id === player.selected.streamRequest.path.id ?
                         player.libraryItem.state.timeOffset
                         :
                         0,
