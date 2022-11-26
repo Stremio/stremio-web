@@ -449,7 +449,7 @@ const Player = ({ urlParams, queryParams }) => {
                     closeInfoMenu();
                     closeSubtitlesMenu();
                     closeVideosMenu();
-                    if (player.playbackSpeed !== null) {
+                    if (videoState.playbackSpeed !== null) {
                         toggleSpeedMenu();
                     }
 
@@ -480,7 +480,7 @@ const Player = ({ urlParams, queryParams }) => {
         return () => {
             window.removeEventListener('keydown', onKeyDown);
         };
-    }, [player.metaItem, settings.seekTimeDuration, routeFocused, subtitlesMenuOpen, infoMenuOpen, videosMenuOpen, speedMenuOpen, videoState.paused, videoState.time, videoState.volume, videoState.audioTracks, videoState.subtitlesTracks, videoState.extraSubtitlesTracks, toggleSubtitlesMenu, toggleInfoMenu, toggleVideosMenu]);
+    }, [player.metaItem, settings.seekTimeDuration, routeFocused, subtitlesMenuOpen, infoMenuOpen, videosMenuOpen, speedMenuOpen, videoState.paused, videoState.time, videoState.volume, videoState.audioTracks, videoState.subtitlesTracks, videoState.extraSubtitlesTracks, videoState.playbackSpeed, toggleSubtitlesMenu, toggleInfoMenu, toggleVideosMenu]);
     React.useLayoutEffect(() => {
         return () => {
             setImmersedDebounced.cancel();
