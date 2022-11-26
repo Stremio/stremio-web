@@ -5,7 +5,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const debounce = require('lodash.debounce');
 const Icon = require('@stremio/stremio-icons/dom');
-const { Image, MainNavBars, MetaRow, MetaItem, useDeepEqualMemo, withCoreSuspender, getVisibleChildrenRange } = require('stremio/common');
+const { Image, MainNavBars, MetaRow, MetaItem, withCoreSuspender, getVisibleChildrenRange } = require('stremio/common');
 const useSearch = require('./useSearch');
 const styles = require('./styles');
 
@@ -13,7 +13,7 @@ const THRESHOLD = 100;
 
 const Search = ({ queryParams }) => {
     const [search, loadSearchRows] = useSearch(queryParams);
-    const query = useDeepEqualMemo(() => {
+    const query = React.useMemo(() => {
         return search.selected !== null ?
             search.selected.extra.reduceRight((query, [name, value]) => {
                 if (name === 'search') {
