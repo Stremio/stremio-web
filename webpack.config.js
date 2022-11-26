@@ -9,6 +9,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
+const colors = require('@stremio/stremio-colors');
 const pachageJson = require('./package.json');
 
 const COMMIT_HASH = execSync('git rev-parse HEAD').toString().trim();
@@ -208,6 +209,7 @@ module.exports = (env, argv) => ({
             template: './src/index.html',
             inject: false,
             scriptLoading: 'blocking',
+            themeColor: colors.background,
             faviconsPath: `${COMMIT_HASH}/favicons`,
             imagesPath: `${COMMIT_HASH}/images`,
             manifestPath: `${COMMIT_HASH}/manifest.json`,
