@@ -448,6 +448,7 @@ const Player = ({ urlParams, queryParams }) => {
                 case 'KeyR': {
                     closeInfoMenu();
                     closeSubtitlesMenu();
+                    closeVideosMenu();
                     if (player.playbackSpeed !== null) {
                         toggleSpeedMenu();
                     }
@@ -457,6 +458,7 @@ const Player = ({ urlParams, queryParams }) => {
                 case 'KeyV': {
                     closeInfoMenu();
                     closeSubtitlesMenu();
+                    closeSpeedMenu();
                     if (player.metaItem !== null && player.metaItem.type === 'Ready') {
                         toggleVideosMenu();
                     }
