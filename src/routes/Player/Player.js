@@ -113,7 +113,7 @@ const Player = ({ urlParams, queryParams }) => {
         } else {
             window.history.back();
         }
-    }, [player.libraryItem, player.nextVideo, onPlayNextVideoRequested]);
+    }, [player.nextVideo, onPlayNextVideoRequested]);
     const onError = React.useCallback((error) => {
         console.error('Player', error);
         if (error.critical) {
