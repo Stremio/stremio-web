@@ -17,3 +17,12 @@ const App = require('./App');
 
 const root = ReactDOM.createRoot(document.getElementById('app'));
 root.render(<App />);
+
+if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js')
+            .catch((registrationError) => {
+                console.error('SW registration failed: ', registrationError);
+            });
+    });
+}
