@@ -341,14 +341,14 @@ const Player = ({ urlParams, queryParams }) => {
         }
     }, [videoState.paused]);
     React.useEffect(() => {
-        if (!!settings.bingeWatching && !nextVideoPopupDismissed.current) {
+        if (!!settings.bingeWatching && player.nextVideo !== null && !nextVideoPopupDismissed.current) {
             if (videoState.time !== null && videoState.duration !== null && videoState.time < videoState.duration && (videoState.duration - videoState.time) <= settings.nextVideoNotificationDuration) {
                 openNextVideoPopup();
             } else {
                 closeNextVideoPopup();
             }
         }
-    }, [videoState.time, videoState.duration]);
+    }, [player.nextVideo, videoState.time, videoState.duration]);
     React.useEffect(() => {
         if (!defaultSubtitlesSelected.current) {
             const findTrackByLang = (tracks, lang) => tracks.find((track) => track.lang === lang || langs.where('1', track.lang)?.[2] === lang);
@@ -630,7 +630,7 @@ const Player = ({ urlParams, queryParams }) => {
                 onMouseOver={onBarMouseMove}
             />
             {
-                player.nextVideo !== null && nextVideoPopupOpen ?
+                nextVideoPopupOpen ?
                     <NextVideoPopup
                         className={classnames(styles['layer'], styles['menu-layer'])}
                         metaItem={player.metaItem !== null && player.metaItem.type === 'Ready' ? player.metaItem.content : null}
