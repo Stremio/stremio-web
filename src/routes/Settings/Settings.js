@@ -30,6 +30,7 @@ const Settings = () => {
         subtitlesOutlineColorInput,
         audioLanguageSelect,
         seekTimeDurationSelect,
+        nextVideoPopupDurationSelect,
         bingeWatchingCheckbox,
         playInBackgroundCheckbox,
         playInExternalPlayerCheckbox,
@@ -336,6 +337,15 @@ const Settings = () => {
                             <Checkbox
                                 className={classnames(styles['option-input-container'], styles['checkbox-container'])}
                                 {...bingeWatchingCheckbox}
+                            />
+                        </div>
+                        <div className={styles['option-container']}>
+                            <div className={styles['option-name-container']}>
+                                <div className={styles['label']}>Next video popup duration</div>
+                            </div>
+                            <Multiselect
+                                className={classnames(styles['option-input-container'], styles['multiselect-container'])}
+                                {...nextVideoPopupDurationSelect}
                             />
                         </div>
                         <div className={styles['option-container']}>
