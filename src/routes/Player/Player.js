@@ -578,7 +578,7 @@ const Player = ({ urlParams, queryParams }) => {
                     null
             }
             {
-                subtitlesMenuOpen || infoMenuOpen || videosMenuOpen || speedMenuOpen ?
+                subtitlesMenuOpen || infoMenuOpen || videosMenuOpen || speedMenuOpen || optionsMenuOpen ?
                     <div className={styles['layer']} />
                     :
                     null
