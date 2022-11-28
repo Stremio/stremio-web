@@ -1,8 +1,8 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
+const React = require('react');
 const isEqual = require('lodash.isequal');
 const { useServices } = require('stremio/services');
-const { useDeepEqualMemo } = require('stremio/common');
 
 const CACHE_SIZES = [0, 2147483648, 5368709120, 10737418240, null];
 
@@ -53,8 +53,8 @@ const TORRENT_PROFILES = {
 
 const useStreamingServerSettingsInputs = (streamingServer) => {
     const { core } = useServices();
-    // TODO combine those useDeepEqualMemo in one
-    const cacheSizeSelect = useDeepEqualMemo(() => {
+    // TODO combine those useMemo in one
+    const cacheSizeSelect = React.useMemo(() => {
         if (streamingServer.settings === null || streamingServer.settings.type !== 'Ready') {
             return null;
         }
@@ -82,7 +82,7 @@ const useStreamingServerSettingsInputs = (streamingServer) => {
             }
         };
     }, [streamingServer.settings]);
-    const torrentProfileSelect = useDeepEqualMemo(() => {
+    const torrentProfileSelect = React.useMemo(() => {
         if (streamingServer.settings === null || streamingServer.settings.type !== 'Ready') {
             return null;
         }

@@ -14,16 +14,19 @@
     "dependencies": {
         "@babel/runtime": "7.16.0",
         "@sentry/browser": "6.13.3",
-        "@stremio/stremio-colors": "4.0.1",
+        "@stremio/stremio-colors": "5.0.1",
         "@stremio/stremio-core-web": "0.44.6",
-        "@stremio/stremio-icons": "3.0.5",
-        "@stremio/stremio-video": "0.0.23",
+        "@stremio/stremio-icons": "4.0.0",
+        "@stremio/stremio-video": "0.0.24",
         "a-color-picker": "1.2.1",
         "bowser": "2.11.0",
         "buffer": "6.0.3",
         "classnames": "2.3.1",
         "eventemitter3": "4.0.7",
         "filter-invalid-dom-props": "2.1.0",
+        "langs": "^2.0.0",
+        "hat": "0.0.3",
+        "langs": "^2.0.0",
         "lodash.debounce": "4.0.8",
         "lodash.intersection": "4.4.0",
         "lodash.isequal": "4.5.0",
@@ -61,6 +64,7 @@
         "terser-webpack-plugin": "5.2.4",
         "webpack": "5.61.0",
         "webpack-cli": "4.9.1",
-        "webpack-dev-server": "4.7.4"
+        "webpack-dev-server": "4.7.4",
+        "workbox-webpack-plugin": "^6.5.3"
     }
 }
