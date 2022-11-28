@@ -345,6 +345,7 @@ const Settings = () => {
                             </div>
                             <Multiselect
                                 className={classnames(styles['option-input-container'], styles['multiselect-container'])}
+                                disabled={!profile.settings.bingeWatching}
                                 {...nextVideoPopupDurationSelect}
                             />
                         </div>
