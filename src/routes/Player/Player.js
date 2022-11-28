@@ -341,7 +341,7 @@ const Player = ({ urlParams, queryParams }) => {
         }
     }, [videoState.paused]);
     React.useEffect(() => {
-        if (!nextVideoPopupDismissed.current) {
+        if (!!settings.bingeWatching && !nextVideoPopupDismissed.current) {
             if (videoState.time !== null && videoState.duration !== null && videoState.time < videoState.duration && (videoState.duration - videoState.time) <= (35 * 1000)) {
                 openNextVideoPopup();
             } else {
