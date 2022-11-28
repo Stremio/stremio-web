@@ -14,6 +14,7 @@ const styles = require('./styles');
 const GENERAL_SECTION = 'general';
 const PLAYER_SECTION = 'player';
 const STREAMING_SECTION = 'streaming';
+const SHORTCUTS_SECTION = 'shortcuts';
 
 const Settings = () => {
     const { core } = useServices();
@@ -27,6 +28,7 @@ const Settings = () => {
         subtitlesTextColorInput,
         subtitlesBackgroundColorInput,
         subtitlesOutlineColorInput,
+        audioLanguageSelect,
         seekTimeDurationSelect,
         bingeWatchingCheckbox,
         playInBackgroundCheckbox,
@@ -93,10 +95,12 @@ const Settings = () => {
     const generalSectionRef = React.useRef(null);
     const playerSectionRef = React.useRef(null);
     const streamingServerSectionRef = React.useRef(null);
+    const shortcutsSectionRef = React.useRef(null);
     const sections = React.useMemo(() => ([
         { ref: generalSectionRef, id: GENERAL_SECTION },
         { ref: playerSectionRef, id: PLAYER_SECTION },
         { ref: streamingServerSectionRef, id: STREAMING_SECTION },
+        { ref: shortcutsSectionRef, id: SHORTCUTS_SECTION },
     ]), []);
     const [selectedSectionId, setSelectedSectionId] = React.useState(GENERAL_SECTION);
     const updateSelectedSectionId = React.useCallback(() => {
@@ -141,6 +145,9 @@ const Settings = () => {
                     </Button>
                     <Button className={classnames(styles['side-menu-button'], { [styles['selected']]: selectedSectionId === STREAMING_SECTION })} title={'Streaming server'} data-section={STREAMING_SECTION} onClick={sideMenuButtonOnClick}>
                         Streaming server
+                    </Button>
+                    <Button className={classnames(styles['side-menu-button'], { [styles['selected']]: selectedSectionId === SHORTCUTS_SECTION })} title={'Shortcuts'} data-section={SHORTCUTS_SECTION} onClick={sideMenuButtonOnClick}>
+                        Shortcuts
                     </Button>
                     <div className={styles['spacing']} />
                     <div className={styles['version-info-label']} title={process.env.VERSION}>App Version: {process.env.VERSION}</div>
@@ -306,6 +313,15 @@ const Settings = () => {
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
+                                <div className={styles['label']}>Audio Language</div>
+                            </div>
+                            <Multiselect
+                                className={classnames(styles['option-input-container'], styles['multiselect-container'])}
+                                {...audioLanguageSelect}
+                            />
+                        </div>
+                        <div className={styles['option-container']}>
+                            <div className={styles['option-name-container']}>
                                 <div className={styles['label']}>Rewind & Fast-forward duration</div>
                             </div>
                             <Multiselect
@@ -423,6 +439,107 @@ const Settings = () => {
                                 :
                                 null
                         }
+                    </div>
+                    <div ref={shortcutsSectionRef} className={styles['section-container']}>
+                        <div className={styles['section-title']}>Shortcuts</div>
+                        <div className={styles['option-container']}>
+                            <div className={styles['option-name-container']}>
+                                <div className={styles['label']}>Play / Pause</div>
+                            </div>
+                            <div className={classnames(styles['option-input-container'], styles['shortcut-container'])}>
+                                <kbd>Space</kbd>
+                            </div>
+                        </div>
+                        <div className={styles['option-container']}>
+                            <div className={styles['option-name-container']}>
+                                <div className={styles['label']}>Seek Forward</div>
+                            </div>
+                            <div className={classnames(styles['option-input-container'], styles['shortcut-container'])}>
+                                <kbd>→</kbd>
+                                <div className={styles['label']}>or</div>
+                                <kbd>⇧ Shift</kbd>
+                                <div className={styles['label']}>+</div>
+                                <kbd>→</kbd>
+                            </div>
+                        </div>
+                        <div className={styles['option-container']}>
+                            <div className={styles['option-name-container']}>
+                                <div className={styles['label']}>Seek Backward</div>
+                            </div>
+                            <div className={classnames(styles['option-input-container'], styles['shortcut-container'])}>
+                                <kbd>←</kbd>
+                                <div className={styles['label']}>or</div>
+                                <kbd>⇧ Shift</kbd>
+                                <div className={styles['label']}>+</div>
+                                <kbd>←</kbd>
+                            </div>
+                        </div>
+                        <div className={styles['option-container']}>
+                            <div className={styles['option-name-container']}>
+                                <div className={styles['label']}>Volume Up</div>
+                            </div>
+                            <div className={classnames(styles['option-input-container'], styles['shortcut-container'])}>
+                                <kbd>↑</kbd>
+                            </div>
+                        </div>
+                        <div className={styles['option-container']}>
+                            <div className={styles['option-name-container']}>
+                                <div className={styles['label']}>Volume Down</div>
+                            </div>
+                            <div className={classnames(styles['option-input-container'], styles['shortcut-container'])}>
+                                <kbd>↓</kbd>
+                            </div>
+                        </div>
+                        <div className={styles['option-container']}>
+                            <div className={styles['option-name-container']}>
+                                <div className={styles['label']}>Toggle Subtitles Menu</div>
+                            </div>
+                            <div className={classnames(styles['option-input-container'], styles['shortcut-container'])}>
+                                <kbd>S</kbd>
+                            </div>
+                        </div>
+                        <div className={styles['option-container']}>
+                            <div className={styles['option-name-container']}>
+                                <div className={styles['label']}>Toggle Info Menu</div>
+                            </div>
+                            <div className={classnames(styles['option-input-container'], styles['shortcut-container'])}>
+                                <kbd>I</kbd>
+                            </div>
+                        </div>
+                        <div className={styles['option-container']}>
+                            <div className={styles['option-name-container']}>
+                                <div className={styles['label']}>Toggle Fullscreen</div>
+                            </div>
+                            <div className={classnames(styles['option-input-container'], styles['shortcut-container'])}>
+                                <kbd>F</kbd>
+                            </div>
+                        </div>
+                        <div className={styles['option-container']}>
+                            <div className={styles['option-name-container']}>
+                                <div className={styles['label']}>Navigate Between Menus</div>
+                            </div>
+                            <div className={classnames(styles['option-input-container'], styles['shortcut-container'])}>
+                                <kbd>1</kbd>
+                                <div className={styles['label']}>to</div>
+                                <kbd>5</kbd>
+                            </div>
+                        </div>
+                        <div className={styles['option-container']}>
+                            <div className={styles['option-name-container']}>
+                                <div className={styles['label']}>Go to Search</div>
+                            </div>
+                            <div className={classnames(styles['option-input-container'], styles['shortcut-container'])}>
+                                <kbd>0</kbd>
+                            </div>
+                        </div>
+                        <div className={styles['option-container']}>
+                            <div className={styles['option-name-container']}>
+                                <div className={styles['label']}>Close Menu or Modal</div>
+                            </div>
+                            <div className={classnames(styles['option-input-container'], styles['shortcut-container'])}>
+                                <kbd>Esc</kbd>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -3,6 +3,12 @@
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
 @import (reference) '~stremio/common/screen-sizes.less';
 
+:import('~stremio/common/Multiselect/styles.less') {
+    multiselect-menu-container: menu-container;
+    multiselect-label: label;
+    multiselect-icon: icon;
+}
+
 .streams-list-container {
     display: flex;
     flex-direction: column;
@@ -32,6 +38,30 @@
             font-size: 1.4rem;
             text-align: center;
             color: @color-secondaryvariant2-light1-90;
+        }
+    }
+
+    .select-input-container {
+        flex: 0 0 auto;
+        height: 3.5rem;
+        margin: 1em 1em 0 1em;
+        background: none;
+
+        &:hover, &:focus, &:global(.active) {
+            background-color: @color-background;
+        }
+
+        & >.multiselect-label {
+            color: @color-surface-light5-90;
+        }
+
+        & >.multiselect-icon {
+            fill: @color-surface-light5-90;
+        }
+
+        .multiselect-menu-container {
+            max-height: calc(3.2rem * 7);
+            overflow: auto;
         }
     }
 

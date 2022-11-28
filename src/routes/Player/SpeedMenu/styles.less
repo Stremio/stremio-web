@@ -1,0 +1,27 @@
+// Copyright (C) 2017-2022 Smart code 203358507
+
+@import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
+
+.speed-menu-container {
+    width: 12rem;
+    overflow: visible !important;
+
+    .title {
+        flex: none;
+        align-self: stretch;
+        max-height: 2.4em;
+        font-weight: 600;
+        color: @color-surface-light5-90;
+        margin: 1rem;
+    }
+
+    .options-container {
+        flex: 0 1 auto;
+        max-height: calc(3.2rem * 8);
+        overflow-y: auto;
+        
+        .option {
+            height: 3.2rem;
+        }
+    }
+}

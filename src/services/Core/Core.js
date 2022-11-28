@@ -20,7 +20,7 @@ function Core(args) {
     function onTransportError(args) {
         console.error(args);
         active = false;
-        error = new Error('Stremio Core Transport initialization failed');
+        error = new Error('Stremio Core Transport initialization failed', { cause: args });
         starting = false;
         onStateChanged();
         transport = null;

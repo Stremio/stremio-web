@@ -23,7 +23,10 @@ const ServicesToaster = () => {
                         type: 'error',
                         title: args.source.event,
                         message: args.error.message,
-                        timeout: 4000
+                        timeout: 4000,
+                        dataset: {
+                            type: 'CoreEvent'
+                        }
                     });
                     break;
                 }

@@ -18,9 +18,11 @@ const ControlBar = ({
     duration,
     volume,
     muted,
+    playbackSpeed,
     subtitlesTracks,
     audioTracks,
     metaItem,
+    nextVideo,
     onPlayRequested,
     onPauseRequested,
     onMuteRequested,
@@ -29,6 +31,8 @@ const ControlBar = ({
     onSeekRequested,
     onToggleSubtitlesMenu,
     onToggleInfoMenu,
+    onToggleSpeedMenu,
+    onToggleVideosMenu,
     onToggleOptionsMenu,
     ...props
 }) => {
@@ -40,6 +44,12 @@ const ControlBar = ({
     }, []);
     const onInfoButtonMouseDown = React.useCallback((event) => {
         event.nativeEvent.infoMenuClosePrevented = true;
+    }, []);
+    const onSpeedButtonMouseDown = React.useCallback((event) => {
+        event.nativeEvent.speedMenuClosePrevented = true;
+    }, []);
+    const onVideosButtonMouseDown = React.useCallback((event) => {
+        event.nativeEvent.videosMenuClosePrevented = true;
     }, []);
     const onOptionsButtonMouseDown = React.useCallback((event) => {
         event.nativeEvent.optionsMenuClosePrevented = true;
@@ -55,6 +65,15 @@ const ControlBar = ({
             }
         }
     }, [paused, onPlayRequested, onPauseRequested]);
+    const onNextVideoButtonClick = React.useCallback(() => {
+        if (nextVideo !== null && typeof nextVideo.deepLinks === 'object') {
+            if (nextVideo.deepLinks.player !== null) {
+                window.location.replace(nextVideo.deepLinks.player);
+            } else if (nextVideo.deepLinks.metaDetailsStreams !== null) {
+                window.location.replace(nextVideo.deepLinks.metaDetailsStreams);
+            }
+        }
+    }, [nextVideo]);
     const onMuteButtonClick = React.useCallback(() => {
         if (muted) {
             if (typeof onUnmuteRequested === 'function') {
@@ -76,6 +95,16 @@ const ControlBar = ({
             onToggleInfoMenu();
         }
     }, [onToggleInfoMenu]);
+    const onSpeedButtonClick = React.useCallback(() => {
+        if (typeof onToggleSpeedMenu === 'function') {
+            onToggleSpeedMenu();
+        }
+    }, [onToggleSpeedMenu]);
+    const onVideosButtonClick = React.useCallback(() => {
+        if (typeof onToggleVideosMenu === 'function') {
+            onToggleVideosMenu();
+        }
+    }, [onToggleVideosMenu]);
     const onOptionsButtonClick = React.useCallback(() => {
         if (typeof onToggleOptionsMenu === 'function') {
             onToggleOptionsMenu();
@@ -105,6 +134,14 @@ const ControlBar = ({
                 <Button className={classnames(styles['control-bar-button'], { 'disabled': typeof paused !== 'boolean' })} title={paused ? 'Play' : 'Pause'} tabIndex={-1} onClick={onPlayPauseButtonClick}>
                     <Icon className={styles['icon']} icon={typeof paused !== 'boolean' || paused ? 'ic_play' : 'ic_pause'} />
                 </Button>
+                {
+                    nextVideo !== null ?
+                        <Button className={classnames(styles['control-bar-button'])} title={'Next Video'} tabIndex={-1} onClick={onNextVideoButtonClick}>
+                            <Icon className={styles['icon']} icon={'ic_play_next'} />
+                        </Button>
+                        :
+                        null
+                }
                 <Button className={classnames(styles['control-bar-button'], { 'disabled': typeof muted !== 'boolean' })} title={muted ? 'Unmute' : 'Mute'} tabIndex={-1} onClick={onMuteButtonClick}>
                     <Icon
                         className={styles['icon']}
@@ -127,6 +164,9 @@ const ControlBar = ({
                     <Icon className={styles['icon']} icon={'ic_more'} />
                 </Button>
                 <div className={classnames(styles['control-bar-buttons-menu-container'], { 'open': buttonsMenuOpen })}>
+                    <Button className={classnames(styles['control-bar-button'], { 'disabled': playbackSpeed === null })} tabIndex={-1} onMouseDown={onSpeedButtonMouseDown} onClick={onSpeedButtonClick}>
+                        <Icon className={styles['icon']} icon={'ic_speedometer'} />
+                    </Button>
                     <Button className={classnames(styles['control-bar-button'], 'disabled')} tabIndex={-1}>
                         <Icon className={styles['icon']} icon={'ic_network'} />
                     </Button>
@@ -139,9 +179,14 @@ const ControlBar = ({
                     <Button className={classnames(styles['control-bar-button'], { 'disabled': (!Array.isArray(subtitlesTracks) || subtitlesTracks.length === 0) && (!Array.isArray(audioTracks) || audioTracks.length === 0) })} tabIndex={-1} onMouseDown={onSubtitlesButtonMouseDown} onClick={onSubtitlesButtonClick}>
                         <Icon className={styles['icon']} icon={'ic_sub'} />
                     </Button>
-                    <Button className={classnames(styles['control-bar-button'], 'disabled')} tabIndex={-1}>
-                        <Icon className={styles['icon']} icon={'ic_videos'} />
-                    </Button>
+                    {
+                        metaItem?.content?.videos?.length > 0 ?
+                            <Button className={styles['control-bar-button']} tabIndex={-1} onMouseDown={onVideosButtonMouseDown} onClick={onVideosButtonClick}>
+                                <Icon className={styles['icon']} icon={'ic_videos'} />
+                            </Button>
+                            :
+                            null
+                    }
                     <Button className={styles['control-bar-button']} tabIndex={-1} onMouseDown={onOptionsButtonMouseDown} onClick={onOptionsButtonClick}>
                         <Icon className={styles['icon']} icon={'ic_more'} />
                     </Button>
@@ -158,9 +203,11 @@ ControlBar.propTypes = {
     duration: PropTypes.number,
     volume: PropTypes.number,
     muted: PropTypes.bool,
+    playbackSpeed: PropTypes.number,
     subtitlesTracks: PropTypes.array,
     audioTracks: PropTypes.array,
     metaItem: PropTypes.object,
+    nextVideo: PropTypes.object,
     onPlayRequested: PropTypes.func,
     onPauseRequested: PropTypes.func,
     onMuteRequested: PropTypes.func,
@@ -169,7 +216,9 @@ ControlBar.propTypes = {
     onSeekRequested: PropTypes.func,
     onToggleSubtitlesMenu: PropTypes.func,
     onToggleInfoMenu: PropTypes.func,
-    onToggleOptionsMenu: PropTypes.func
+    onToggleSpeedMenu: PropTypes.func,
+    onToggleVideosMenu: PropTypes.func,
+    onToggleOptionsMenu: PropTypes.func,
 };
 
 module.exports = ControlBar;

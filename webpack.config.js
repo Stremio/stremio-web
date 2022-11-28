@@ -6,8 +6,10 @@ const webpack = require('webpack');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const WorkboxPlugin = require('workbox-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
+const colors = require('@stremio/stremio-colors');
 const pachageJson = require('./package.json');
 
 const COMMIT_HASH = execSync('git rev-parse HEAD').toString().trim();
@@ -187,8 +189,18 @@ module.exports = (env, argv) => ({
         new CleanWebpackPlugin({
             cleanOnceBeforeBuildPatterns: ['*']
         }),
+        argv.mode === 'production' && 
+            new WorkboxPlugin.GenerateSW({
+                maximumFileSizeToCacheInBytes: 20000000,
+                clientsClaim: true,
+                skipWaiting: true
+            }),
         new CopyWebpackPlugin({
-            patterns: [{ from: 'favicons', to: `${COMMIT_HASH}/favicons` }]
+            patterns: [
+                { from: 'favicons', to: `${COMMIT_HASH}/favicons` },
+                { from: 'images', to: `${COMMIT_HASH}/images` },
+                { from: 'manifest.json', to: `${COMMIT_HASH}/manifest.json` },
+            ]
         }),
         new MiniCssExtractPlugin({
             filename: `${COMMIT_HASH}/styles/[name].css`
@@ -197,7 +209,10 @@ module.exports = (env, argv) => ({
             template: './src/index.html',
             inject: false,
             scriptLoading: 'blocking',
-            faviconsPath: `${COMMIT_HASH}/favicons`
+            themeColor: colors.background,
+            faviconsPath: `${COMMIT_HASH}/favicons`,
+            imagesPath: `${COMMIT_HASH}/images`,
+            manifestPath: `${COMMIT_HASH}/manifest.json`,
         })
-    ]
+    ].filter(Boolean)
 });

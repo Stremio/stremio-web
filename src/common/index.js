@@ -31,13 +31,13 @@ const languageNames = require('./languageNames');
 const routesRegexp = require('./routesRegexp');
 const useAnimationFrame = require('./useAnimationFrame');
 const useBinaryState = require('./useBinaryState');
-const useDeepEqualMemo = require('./useDeepEqualMemo');
 const useFullscreen = require('./useFullscreen');
 const useLiveRef = require('./useLiveRef');
 const useModelState = require('./useModelState');
 const useOnScrollToBottom = require('./useOnScrollToBottom');
 const useProfile = require('./useProfile');
 const useStreamingServer = require('./useStreamingServer');
+const useTorrent = require('./useTorrent');
 
 module.exports = {
     AddonDetailsModal,
@@ -74,11 +74,11 @@ module.exports = {
     routesRegexp,
     useAnimationFrame,
     useBinaryState,
-    useDeepEqualMemo,
     useFullscreen,
     useLiveRef,
     useModelState,
     useOnScrollToBottom,
     useProfile,
-    useStreamingServer
+    useStreamingServer,
+    useTorrent
 };
