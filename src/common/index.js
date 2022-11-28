@@ -31,7 +31,6 @@ const languageNames = require('./languageNames');
 const routesRegexp = require('./routesRegexp');
 const useAnimationFrame = require('./useAnimationFrame');
 const useBinaryState = require('./useBinaryState');
-const useDeepEqualMemo = require('./useDeepEqualMemo');
 const useFullscreen = require('./useFullscreen');
 const useLiveRef = require('./useLiveRef');
 const useModelState = require('./useModelState');
@@ -75,7 +74,6 @@ module.exports = {
     routesRegexp,
     useAnimationFrame,
     useBinaryState,
-    useDeepEqualMemo,
     useFullscreen,
     useLiveRef,
     useModelState,

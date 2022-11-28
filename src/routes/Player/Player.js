@@ -44,6 +44,7 @@ const Player = ({ urlParams, queryParams }) => {
     const [speedMenuOpen, , closeSpeedMenu, toggleSpeedMenu] = useBinaryState(false);
     const [videosMenuOpen, , closeVideosMenu, toggleVideosMenu] = useBinaryState(false);
     const defaultSubtitlesSelected = React.useRef(false);
+    const defaultAudioTrackSelected = React.useRef(false);
     const [error, setError] = React.useState(null);
     const [videoState, setVideoState] = React.useReducer(
         (videoState, nextVideoState) => ({ ...videoState, ...nextVideoState }),
@@ -344,7 +345,19 @@ const Player = ({ urlParams, queryParams }) => {
         }
     }, [videoState.subtitlesTracks, videoState.extraSubtitlesTracks]);
     React.useEffect(() => {
+        if (!defaultAudioTrackSelected.current) {
+            const findTrackByLang = (tracks, lang) => tracks.find((track) => track.lang === lang || langs.where('1', track.lang)?.[2] === lang);
+            const audioTrack = findTrackByLang(videoState.audioTracks, settings.audioLanguage);
+
+            if (audioTrack && audioTrack.id) {
+                onAudioTrackSelected(audioTrack.id);
+                defaultAudioTrackSelected.current = true;
+            }
+        }
+    }, [videoState.audioTracks]);
+    React.useEffect(() => {
         defaultSubtitlesSelected.current = false;
+        defaultAudioTrackSelected.current = false;
     }, [videoState.stream]);
     React.useEffect(() => {
         if ((!Array.isArray(videoState.subtitlesTracks) || videoState.subtitlesTracks.length === 0) &&
