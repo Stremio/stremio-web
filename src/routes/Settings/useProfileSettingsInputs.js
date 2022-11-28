@@ -153,6 +153,31 @@ const useProfileSettingsInputs = (profile) => {
             });
         }
     }), [profile.settings]);
+    const nextVideoPopupDurationSelect = React.useMemo(() => ({
+        options: CONSTANTS.NEXT_VIDEO_POPUP_DURATIONS.map((duration) => ({
+            value: `${duration}`,
+            label: duration === 0 ? 'Disabled' : `${duration / 1000} seconds`
+        })),
+        selected: [`${profile.settings.nextVideoNotificationDuration}`],
+        renderLabelText: () => {
+            return profile.settings.nextVideoNotificationDuration === 0 ?
+                'Disabled'
+                :
+                `${profile.settings.nextVideoNotificationDuration / 1000} seconds`;
+        },
+        onSelect: (event) => {
+            core.transport.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'UpdateSettings',
+                    args: {
+                        ...profile.settings,
+                        nextVideoNotificationDuration: parseInt(event.value, 10)
+                    }
+                }
+            });
+        }
+    }), [profile.settings]);
     const bingeWatchingCheckbox = React.useMemo(() => ({
         checked: profile.settings.bingeWatching,
         onClick: () => {
@@ -237,6 +262,7 @@ const useProfileSettingsInputs = (profile) => {
         subtitlesOutlineColorInput,
         audioLanguageSelect,
         seekTimeDurationSelect,
+        nextVideoPopupDurationSelect,
         bingeWatchingCheckbox,
         playInBackgroundCheckbox,
         playInExternalPlayerCheckbox,

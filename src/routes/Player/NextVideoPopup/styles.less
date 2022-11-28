@@ -1,0 +1,124 @@
+// Copyright (C) 2017-2022 Smart code 203358507
+
+@import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
+
+.next-video-popup-container {
+    display: flex;
+    flex-direction: row;
+    height: 16rem;
+    width: 40rem;
+    animation: slide-fade-in 0.5s ease-in;
+
+    @keyframes slide-fade-in {
+        0% {
+            opacity: 0;
+            transform: translateX(calc(40rem + 2rem));
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .poster-container {
+        flex: 1 1 40%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: @color-background;
+
+        .poster-image {
+            flex: none;
+            width: 100%;
+            height: 100%;
+            object-position: center;
+            object-fit: cover;
+        }
+
+        .placeholder-icon {
+            flex: none;
+            width: 80%;
+            height: 50%;
+            fill: @color-background-light3-90;
+        }
+    }
+
+    .info-container {
+        flex: 1 1 70%;
+        display: flex;
+        flex-direction: column;
+
+        .details-container {
+            flex: auto;
+            padding: 1.5rem 1.5rem;
+
+            .name {
+                flex: none;
+                align-self: stretch;
+                max-height: 2.4em;
+                font-weight: 600;
+                margin-bottom: 0.5rem;
+                color: @color-surface-light5-90;
+            }
+
+            .description {
+                color: @color-surface-light5-50;
+            }
+        }
+
+        .buttons-container {
+            display: flex;
+            flex-direction: row;
+
+            .spacing {
+                flex: 0 0 50%;
+            }
+
+            .button-container {
+                flex: 0 0 50%;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+                height: 3.5rem;
+
+                &.play-button {
+                    background-color: @color-accent3;
+
+                    .icon {
+                        fill: @color-surface-light5-90;
+                    }
+
+                    .label {
+                        color: @color-surface-light5-90;
+                    }
+
+                    &:hover, &:focus {
+                        background-color: @color-accent3-light1;
+                    }
+                }
+
+                .icon {
+                    flex: none;
+                    width: 1.4rem;
+                    height: 1.4rem;
+                    margin-right: 1rem;
+                    fill: @color-secondaryvariant1-90;
+                }
+
+                .label {
+                    flex: none;
+                    max-height: 2.4em;
+                    font-size: 1.1rem;
+                    font-weight: 500;
+                    color: @color-secondaryvariant1-90;
+                }
+
+                &:hover, &:focus {
+                    background-color: @color-background-light2;
+                }
+            }
+        }
+    }
+}

@@ -11,6 +11,7 @@ const { HorizontalNavBar, Button, useFullscreen, useBinaryState, useToast, useSt
 const Icon = require('@stremio/stremio-icons/dom');
 const BufferingLoader = require('./BufferingLoader');
 const ControlBar = require('./ControlBar');
+const NextVideoPopup = require('./NextVideoPopup');
 const InfoMenu = require('./InfoMenu');
 const VideosMenu = require('./VideosMenu');
 const SubtitlesMenu = require('./SubtitlesMenu');
@@ -43,6 +44,8 @@ const Player = ({ urlParams, queryParams }) => {
     const [infoMenuOpen, , closeInfoMenu, toggleInfoMenu] = useBinaryState(false);
     const [speedMenuOpen, , closeSpeedMenu, toggleSpeedMenu] = useBinaryState(false);
     const [videosMenuOpen, , closeVideosMenu, toggleVideosMenu] = useBinaryState(false);
+    const [nextVideoPopupOpen, openNextVideoPopup, closeNextVideoPopup] = useBinaryState(false);
+    const nextVideoPopupDismissed = React.useRef(false);
     const defaultSubtitlesSelected = React.useRef(false);
     const defaultAudioTrackSelected = React.useRef(false);
     const [error, setError] = React.useState(null);
@@ -106,16 +109,11 @@ const Player = ({ urlParams, queryParams }) => {
         ended();
         pushToLibrary();
         if (player.nextVideo !== null) {
-            window.location.replace(
-                typeof player.nextVideo.deepLinks.player === 'string' ?
-                    player.nextVideo.deepLinks.player
-                    :
-                    player.nextVideo.deepLinks.metaDetailsStreams
-            );
+            onPlayNextVideoRequested();
         } else {
             window.history.back();
         }
-    }, [player.libraryItem, player.nextVideo]);
+    }, [player.nextVideo, onPlayNextVideoRequested]);
     const onError = React.useCallback((error) => {
         console.error('Player', error);
         if (error.critical) {
@@ -188,6 +186,20 @@ const Player = ({ urlParams, queryParams }) => {
     const onSubtitlesOffsetChanged = React.useCallback((offset) => {
         updateSettings({ subtitlesOffset: offset });
     }, [updateSettings]);
+    const onDismissNextVideoPopup = React.useCallback(() => {
+        closeNextVideoPopup();
+        nextVideoPopupDismissed.current = true;
+    }, []);
+    const onPlayNextVideoRequested = React.useCallback(() => {
+        if (player.nextVideo !== null) {
+            window.location.replace(
+                typeof player.nextVideo.deepLinks.player === 'string' ?
+                    player.nextVideo.deepLinks.player
+                    :
+                    player.nextVideo.deepLinks.metaDetailsStreams
+            );
+        }
+    }, [player.nextVideo]);
     const onVideoClick = React.useCallback(() => {
         if (videoState.paused !== null) {
             if (videoState.paused) {
@@ -329,6 +341,15 @@ const Player = ({ urlParams, queryParams }) => {
         }
     }, [videoState.paused]);
     React.useEffect(() => {
+        if (!!settings.bingeWatching && player.nextVideo !== null && !nextVideoPopupDismissed.current) {
+            if (videoState.time !== null && videoState.duration !== null && videoState.time < videoState.duration && (videoState.duration - videoState.time) <= settings.nextVideoNotificationDuration) {
+                openNextVideoPopup();
+            } else {
+                closeNextVideoPopup();
+            }
+        }
+    }, [player.nextVideo, videoState.time, videoState.duration]);
+    React.useEffect(() => {
         if (!defaultSubtitlesSelected.current) {
             const findTrackByLang = (tracks, lang) => tracks.find((track) => track.lang === lang || langs.where('1', track.lang)?.[2] === lang);
 
@@ -358,6 +379,7 @@ const Player = ({ urlParams, queryParams }) => {
     React.useEffect(() => {
         defaultSubtitlesSelected.current = false;
         defaultAudioTrackSelected.current = false;
+        nextVideoPopupDismissed.current = false;
     }, [videoState.stream]);
     React.useEffect(() => {
         if ((!Array.isArray(videoState.subtitlesTracks) || videoState.subtitlesTracks.length === 0) &&
@@ -504,6 +526,7 @@ const Player = ({ urlParams, queryParams }) => {
                     closeInfoMenu();
                     closeSpeedMenu();
                     closeVideosMenu();
+                    onDismissNextVideoPopup();
                     break;
                 }
             }
@@ -523,7 +546,7 @@ const Player = ({ urlParams, queryParams }) => {
         };
     }, []);
     return (
-        <div className={classnames(styles['player-container'], { [styles['immersed']]: immersed && !casting && videoState.paused !== null && !videoState.paused && !subtitlesMenuOpen && !infoMenuOpen && !speedMenuOpen && !videosMenuOpen })}
+        <div className={classnames(styles['player-container'], { [styles['immersed']]: immersed && !casting && videoState.paused !== null && !videoState.paused && !subtitlesMenuOpen && !infoMenuOpen && !speedMenuOpen && !videosMenuOpen && !nextVideoPopupOpen })}
             onMouseDown={onContainerMouseDown}
             onMouseMove={onContainerMouseMove}
             onMouseOver={onContainerMouseMove}
@@ -606,6 +629,18 @@ const Player = ({ urlParams, queryParams }) => {
                 onMouseMove={onBarMouseMove}
                 onMouseOver={onBarMouseMove}
             />
+            {
+                nextVideoPopupOpen ?
+                    <NextVideoPopup
+                        className={classnames(styles['layer'], styles['menu-layer'])}
+                        metaItem={player.metaItem !== null && player.metaItem.type === 'Ready' ? player.metaItem.content : null}
+                        nextVideo={player.nextVideo}
+                        onDismiss={onDismissNextVideoPopup}
+                        onPlayNextVideoRequested={onPlayNextVideoRequested}
+                    />
+                    :
+                    null
+            }
             {
                 subtitlesMenuOpen ?
                     <SubtitlesMenu
