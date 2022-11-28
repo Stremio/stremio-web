@@ -112,6 +112,25 @@ const useProfileSettingsInputs = (profile) => {
             });
         }
     }), [profile.settings]);
+    const audioLanguageSelect = React.useMemo(() => ({
+        options: Object.keys(languageNames).map((code) => ({
+            value: code,
+            label: languageNames[code]
+        })),
+        selected: [profile.settings.audioLanguage],
+        onSelect: (event) => {
+            core.transport.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'UpdateSettings',
+                    args: {
+                        ...profile.settings,
+                        audioLanguage: event.value
+                    }
+                }
+            });
+        }
+    }), [profile.settings]);
     const seekTimeDurationSelect = React.useMemo(() => ({
         options: CONSTANTS.SEEK_TIME_DURATIONS.map((size) => ({
             value: `${size}`,
@@ -216,6 +235,7 @@ const useProfileSettingsInputs = (profile) => {
         subtitlesTextColorInput,
         subtitlesBackgroundColorInput,
         subtitlesOutlineColorInput,
+        audioLanguageSelect,
         seekTimeDurationSelect,
         bingeWatchingCheckbox,
         playInBackgroundCheckbox,
