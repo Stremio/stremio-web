@@ -328,7 +328,7 @@ const Player = ({ urlParams, queryParams }) => {
         }
     }, [videoState.paused]);
     React.useEffect(() => {
-        if (defaultSubtitlesSelected.current === false) {
+        if (!defaultSubtitlesSelected.current) {
             const findTrackByLang = (tracks, lang) => tracks.find((track) => track.lang === lang || langs.where('1', track.lang)?.[2] === lang);
 
             const subtitlesTrack = findTrackByLang(videoState.subtitlesTracks, settings.subtitlesLanguage);
@@ -342,7 +342,10 @@ const Player = ({ urlParams, queryParams }) => {
                 defaultSubtitlesSelected.current = true;
             }
         }
-    }, [videoState.subtitlesTracks, videoState.extraSubtitlesTracks, settings.subtitlesLanguage]);
+    }, [videoState.subtitlesTracks, videoState.extraSubtitlesTracks]);
+    React.useEffect(() => {
+        defaultSubtitlesSelected.current = false;
+    }, [videoState.stream]);
     React.useEffect(() => {
         if ((!Array.isArray(videoState.subtitlesTracks) || videoState.subtitlesTracks.length === 0) &&
             (!Array.isArray(videoState.extraSubtitlesTracks) || videoState.extraSubtitlesTracks.length === 0) &&
