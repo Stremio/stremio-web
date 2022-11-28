@@ -381,6 +381,7 @@ const Player = ({ urlParams, queryParams }) => {
     React.useEffect(() => {
         defaultSubtitlesSelected.current = false;
         defaultAudioTrackSelected.current = false;
+        nextVideoPopupDismissed.current = false;
     }, [videoState.stream]);
     React.useEffect(() => {
         if ((!Array.isArray(videoState.subtitlesTracks) || videoState.subtitlesTracks.length === 0) &&
