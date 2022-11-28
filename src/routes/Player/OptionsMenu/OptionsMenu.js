@@ -5,12 +5,12 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('@stremio/stremio-icons/dom');
 const { Button, useStreamingServer, useToast } = require('stremio/common');
-const { useServices } = require('stremio/services');
+// const { useServices } = require('stremio/services');
 const styles = require('./styles');
 
 const OptionsMenu = ({ className, stream }) => {
     const streamingServer = useStreamingServer();
-    const { core } = useServices();
+    // const { core } = useServices();
     const toast = useToast();
     const streamUrl = React.useMemo(() => {
         return stream !== null ?
@@ -54,20 +54,20 @@ const OptionsMenu = ({ className, stream }) => {
             window.open(streamUrl);
         }
     }, [streamUrl]);
-    const onExternalPlayerButtonClick = React.useCallback(() => {
-        if (streamUrl !== null) {
-            core.transport.dispatch({
-                action: 'StreamingServer',
-                args: {
-                    action: 'PlayOnDevice',
-                    args: {
-                        device: 'vlc',
-                        source: streamUrl,
-                    }
-                }
-            });
-        }
-    }, [streamUrl]);
+    // const onExternalPlayerButtonClick = React.useCallback(() => {
+    //     if (streamUrl !== null) {
+    //         core.transport.dispatch({
+    //             action: 'StreamingServer',
+    //             args: {
+    //                 action: 'PlayOnDevice',
+    //                 args: {
+    //                     device: 'vlc',
+    //                     source: streamUrl,
+    //                 }
+    //             }
+    //         });
+    //     }
+    // }, [streamUrl]);
     const onMouseDown = React.useCallback((event) => {
         event.nativeEvent.optionsMenuClosePrevented = true;
     }, []);
@@ -81,10 +81,10 @@ const OptionsMenu = ({ className, stream }) => {
                 <Icon className={styles['icon']} icon={'ic_downloads'} />
                 <div className={styles['label']}>Download Video</div>
             </Button>
-            <Button className={classnames(styles['option-container'], { 'disabled': stream === null })} disabled={stream === null} onClick={onExternalPlayerButtonClick}>
+            {/* <Button className={classnames(styles['option-container'], { 'disabled': stream === null })} disabled={stream === null} onClick={onExternalPlayerButtonClick}>
                 <Icon className={styles['icon']} icon={'ic_vlc'} />
                 <div className={styles['label']}>Play in External Player</div>
-            </Button>
+            </Button> */}
         </div>
     );
 };
