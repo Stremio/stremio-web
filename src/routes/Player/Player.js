@@ -679,7 +679,7 @@ const Player = ({ urlParams, queryParams }) => {
                 optionsMenuOpen ?
                     <OptionsMenu
                         className={classnames(styles['layer'], styles['menu-layer'])}
-                        stream={videoState.stream}
+                        stream={player.selected.stream}
                     />
                     :
                     null
