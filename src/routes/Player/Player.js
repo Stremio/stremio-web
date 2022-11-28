@@ -341,13 +341,11 @@ const Player = ({ urlParams, queryParams }) => {
         }
     }, [videoState.paused]);
     React.useEffect(() => {
-        if (nextVideoPopupDismissed.current === false) {
-            if (videoState.time !== null && !isNaN(videoState.time) && videoState.duration !== null && !isNaN(videoState.duration)) {
-                if (videoState.time < videoState.duration && (videoState.duration - videoState.time) <= (35 * 1000)) {
-                    openNextVideoPopup();
-                } else {
-                    closeNextVideoPopup();
-                }
+        if (!nextVideoPopupDismissed.current) {
+            if (videoState.time !== null && videoState.duration !== null && videoState.time < videoState.duration && (videoState.duration - videoState.time) <= (35 * 1000)) {
+                openNextVideoPopup();
+            } else {
+                closeNextVideoPopup();
             }
         }
     }, [videoState.time, videoState.duration]);
@@ -632,7 +630,7 @@ const Player = ({ urlParams, queryParams }) => {
                 onMouseOver={onBarMouseMove}
             />
             {
-                !subtitlesMenuOpen && !infoMenuOpen && !videosMenuOpen && nextVideoPopupOpen ?
+                nextVideoPopupOpen ?
                     <NextVideoPopup
                         className={classnames(styles['layer'], styles['menu-layer'])}
                         metaItem={player.metaItem !== null && player.metaItem.type === 'Ready' ? player.metaItem.content : null}
