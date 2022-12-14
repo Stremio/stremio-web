@@ -3,6 +3,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
+const { useTranslation } = require('react-i18next');
 const Icon = require('@stremio/stremio-icons/dom');
 const { AddonDetailsModal, Button, Image, Multiselect, MainNavBars, TextInput, SearchBar, SharePrompt, ModalDialog, useBinaryState, withCoreSuspender } = require('stremio/common');
 const Addon = require('./Addon');
@@ -13,6 +14,7 @@ const useSelectableInputs = require('./useSelectableInputs');
 const styles = require('./styles');
 
 const Addons = ({ urlParams, queryParams }) => {
+    const { t } = useTranslation();
     const installedAddons = useInstalledAddons(urlParams);
     const remoteAddons = useRemoteAddons(urlParams);
     const [addonDetailsTransportUrl, setAddonDetailsTransportUrl] = useAddonDetailsTransportUrl(urlParams, queryParams);
@@ -92,7 +94,7 @@ const Addons = ({ urlParams, queryParams }) => {
                     <div className={styles['spacing']} />
                     <SearchBar
                         className={styles['search-bar']}
-                        title={'Search addons'}
+                        title={t('ADDON_SEARCH')}
                         value={search}
                         onChange={searchInputOnChange}
                     />
@@ -212,7 +214,7 @@ const Addons = ({ urlParams, queryParams }) => {
                 sharedAddon !== null ?
                     <ModalDialog
                         className={styles['share-modal-container']}
-                        title={'Share Addon'}
+                        title={t('SHARE_ADDON')}
                         onCloseRequest={clearSharedAddon}>
                         <div className={styles['title-container']}>
                             <Image

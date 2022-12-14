@@ -3,6 +3,7 @@
 const React = require('react');
 const classnames = require('classnames');
 const debounce = require('lodash.debounce');
+const { useTranslation } = require('react-i18next');
 const { MainNavBars, MetaRow, LibItem, MetaItem, StreamingServerWarning, useStreamingServer, withCoreSuspender, getVisibleChildrenRange } = require('stremio/common');
 const useBoard = require('./useBoard');
 const useContinueWatchingPreview = require('./useContinueWatchingPreview');
@@ -11,6 +12,7 @@ const styles = require('./styles');
 const THRESHOLD = 5;
 
 const Board = () => {
+    const { t } = useTranslation();
     const streamingServer = useStreamingServer();
     const continueWatchingPreview = useContinueWatchingPreview();
     const [board, loadBoardRows] = useBoard();
@@ -42,7 +44,7 @@ const Board = () => {
                         continueWatchingPreview.libraryItems.length > 0 ?
                             <MetaRow
                                 className={classnames(styles['board-row'], styles['continue-watching-row'], 'animation-fade-in')}
-                                title={'Continue Watching'}
+                                title={t('BOARD_CONTINUE_WATCHING')}
                                 items={continueWatchingPreview.libraryItems}
                                 itemComponent={LibItem}
                                 deepLinks={continueWatchingPreview.deepLinks}
