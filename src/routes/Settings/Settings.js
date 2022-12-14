@@ -3,6 +3,7 @@
 const React = require('react');
 const classnames = require('classnames');
 const throttle = require('lodash.throttle');
+const { useTranslation } = require('react-i18next');
 const Icon = require('@stremio/stremio-icons/dom');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
@@ -17,6 +18,7 @@ const STREAMING_SECTION = 'streaming';
 const SHORTCUTS_SECTION = 'shortcuts';
 
 const Settings = () => {
+    const { t } = useTranslation();
     const { core } = useServices();
     const { routeFocused } = useRouteFocused();
     const profile = useProfile();
@@ -138,17 +140,17 @@ const Settings = () => {
         <MainNavBars className={styles['settings-container']} route={'settings'}>
             <div className={classnames(styles['settings-content'], 'animation-fade-in')}>
                 <div className={styles['side-menu-container']}>
-                    <Button className={classnames(styles['side-menu-button'], { [styles['selected']]: selectedSectionId === GENERAL_SECTION })} title={'General'} data-section={GENERAL_SECTION} onClick={sideMenuButtonOnClick}>
-                        General
+                    <Button className={classnames(styles['side-menu-button'], { [styles['selected']]: selectedSectionId === GENERAL_SECTION })} title={ t('SETTINGS_NAV_GENERAL') } data-section={GENERAL_SECTION} onClick={sideMenuButtonOnClick}>
+                        { t('SETTINGS_NAV_GENERAL') }
                     </Button>
-                    <Button className={classnames(styles['side-menu-button'], { [styles['selected']]: selectedSectionId === PLAYER_SECTION })} title={'Player'} data-section={PLAYER_SECTION} onClick={sideMenuButtonOnClick}>
-                        Player
+                    <Button className={classnames(styles['side-menu-button'], { [styles['selected']]: selectedSectionId === PLAYER_SECTION })} title={ t('SETTINGS_NAV_PLAYER') }data-section={PLAYER_SECTION} onClick={sideMenuButtonOnClick}>
+                        { t('SETTINGS_NAV_PLAYER') }
                     </Button>
-                    <Button className={classnames(styles['side-menu-button'], { [styles['selected']]: selectedSectionId === STREAMING_SECTION })} title={'Streaming server'} data-section={STREAMING_SECTION} onClick={sideMenuButtonOnClick}>
-                        Streaming server
+                    <Button className={classnames(styles['side-menu-button'], { [styles['selected']]: selectedSectionId === STREAMING_SECTION })} title={ t('SETTINGS_NAV_STREAMING') } data-section={STREAMING_SECTION} onClick={sideMenuButtonOnClick}>
+                        { t('SETTINGS_NAV_STREAMING') }
                     </Button>
-                    <Button className={classnames(styles['side-menu-button'], { [styles['selected']]: selectedSectionId === SHORTCUTS_SECTION })} title={'Shortcuts'} data-section={SHORTCUTS_SECTION} onClick={sideMenuButtonOnClick}>
-                        Shortcuts
+                    <Button className={classnames(styles['side-menu-button'], { [styles['selected']]: selectedSectionId === SHORTCUTS_SECTION })} title={ t('SETTINGS_NAV_SHORTCUTS') } data-section={SHORTCUTS_SECTION} onClick={sideMenuButtonOnClick}>
+                        { t('SETTINGS_NAV_SHORTCUTS') }
                     </Button>
                     <div className={styles['spacing']} />
                     <div className={styles['version-info-label']} title={process.env.VERSION}>App Version: {process.env.VERSION}</div>
@@ -161,7 +163,7 @@ const Settings = () => {
                 </div>
                 <div ref={sectionsContainerRef} className={styles['sections-container']} onScroll={sectionsContainerOnScorll}>
                     <div ref={generalSectionRef} className={styles['section-container']}>
-                        <div className={styles['section-title']}>General</div>
+                        <div className={styles['section-title']}>{ t('SETTINGS_NAV_GENERAL') }</div>
                         <div className={classnames(styles['option-container'], styles['user-info-option-container'])}>
                             <div
                                 className={styles['avatar-container']}
@@ -207,7 +209,6 @@ const Settings = () => {
                             </div>
                             <Multiselect
                                 className={classnames(styles['option-input-container'], styles['multiselect-container'])}
-                                disabled={true}
                                 tabIndex={-1}
                                 {...interfaceLanguageSelect}
                             />
@@ -266,7 +267,7 @@ const Settings = () => {
                         </div>
                     </div>
                     <div ref={playerSectionRef} className={styles['section-container']}>
-                        <div className={styles['section-title']}>Player</div>
+                        <div className={styles['section-title']}>{ t('SETTINGS_NAV_PLAYER') }</div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
                                 <div className={styles['label']}>Subtitles language</div>
@@ -384,15 +385,15 @@ const Settings = () => {
                         </div>
                     </div>
                     <div ref={streamingServerSectionRef} className={styles['section-container']}>
-                        <div className={styles['section-title']}>Streaming Server</div>
+                        <div className={styles['section-title']}>{ t('SETTINGS_NAV_STREAMING') }</div>
                         <div className={styles['option-container']}>
                             <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Reload'} onClick={reloadStreamingServer}>
-                                <div className={styles['label']}>Reload</div>
+                                <div className={styles['label']}>{ t('RELOAD') }</div>
                             </Button>
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Status</div>
+                                <div className={styles['label']}>{ t('STATUS') }</div>
                             </div>
                             <div className={classnames(styles['option-input-container'], styles['info-container'])}>
                                 <div className={styles['label']}>
@@ -452,10 +453,10 @@ const Settings = () => {
                         }
                     </div>
                     <div ref={shortcutsSectionRef} className={styles['section-container']}>
-                        <div className={styles['section-title']}>Shortcuts</div>
+                        <div className={styles['section-title']}>{ t('SETTINGS_NAV_SHORTCUTS') }</div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Play / Pause</div>
+                                <div className={styles['label']}>{ t('SETTINGS_SHORTCUT_PLAY_PAUSE') }</div>
                             </div>
                             <div className={classnames(styles['option-input-container'], styles['shortcut-container'])}>
                                 <kbd>Space</kbd>
@@ -487,7 +488,7 @@ const Settings = () => {
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Volume Up</div>
+                                <div className={styles['label']}>{ t('SETTINGS_SHORTCUT_VOLUME_UP') }</div>
                             </div>
                             <div className={classnames(styles['option-input-container'], styles['shortcut-container'])}>
                                 <kbd>↑</kbd>
@@ -495,7 +496,7 @@ const Settings = () => {
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Volume Down</div>
+                                <div className={styles['label']}>{ t('SETTINGS_SHORTCUT_VOLUME_DOWN') }</div>
                             </div>
                             <div className={classnames(styles['option-input-container'], styles['shortcut-container'])}>
                                 <kbd>↓</kbd>
@@ -545,7 +546,7 @@ const Settings = () => {
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Close Menu or Modal</div>
+                                <div className={styles['label']}>{ t('SETTINGS_SHORTCUT_EXIT_BACK') }</div>
                             </div>
                             <div className={classnames(styles['option-input-container'], styles['shortcut-container'])}>
                                 <kbd>Esc</kbd>

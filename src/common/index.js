@@ -27,6 +27,7 @@ const comparatorWithPriorities = require('./comparatorWithPriorities');
 const CONSTANTS = require('./CONSTANTS');
 const { withCoreSuspender, useCoreSuspender } = require('./CoreSuspender');
 const getVisibleChildrenRange = require('./getVisibleChildrenRange');
+const interfaceLanguages = require('./interfaceLanguages');
 const languageNames = require('./languageNames');
 const routesRegexp = require('./routesRegexp');
 const useAnimationFrame = require('./useAnimationFrame');
@@ -70,6 +71,7 @@ module.exports = {
     withCoreSuspender,
     useCoreSuspender,
     getVisibleChildrenRange,
+    interfaceLanguages,
     languageNames,
     routesRegexp,
     useAnimationFrame,

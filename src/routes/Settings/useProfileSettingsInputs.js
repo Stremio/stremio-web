@@ -2,17 +2,19 @@
 
 const React = require('react');
 const { useServices } = require('stremio/services');
-const { CONSTANTS, languageNames } = require('stremio/common');
+const { CONSTANTS, interfaceLanguages, languageNames } = require('stremio/common');
 
 const useProfileSettingsInputs = (profile) => {
     const { core } = useServices();
     // TODO combine those useMemo in one
     const interfaceLanguageSelect = React.useMemo(() => ({
-        options: Object.keys(languageNames).map((code) => ({
-            value: code,
-            label: languageNames[code]
+        options: interfaceLanguages.map(({ name, codes }) => ({
+            value: codes[0],
+            label: name,
         })),
-        selected: [profile.settings.interfaceLanguage],
+        selected: [
+            interfaceLanguages.find(({ codes }) => codes[1] === profile.settings.interfaceLanguage)?.codes?.[0] || profile.settings.interfaceLanguage
+        ],
         onSelect: (event) => {
             core.transport.dispatch({
                 action: 'Ctx',

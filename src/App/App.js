@@ -2,6 +2,7 @@
 
 require('spatial-navigation-polyfill');
 const React = require('react');
+const { useTranslation } = require('react-i18next');
 const { Router } = require('stremio-router');
 const { Core, Shell, Chromecast, DragAndDrop, KeyboardShortcuts, ServicesProvider } = require('stremio/services');
 const { NotFound } = require('stremio/routes');
@@ -13,6 +14,7 @@ const routerViewsConfig = require('./routerViewsConfig');
 const styles = require('./styles');
 
 const App = () => {
+    const { i18n } = useTranslation();
     const onPathNotMatch = React.useCallback(() => {
         return NotFound;
     }, []);
@@ -90,6 +92,21 @@ const App = () => {
         };
     }, []);
     React.useEffect(() => {
+        const onCoreEvent = ({ event, args }) => {
+            switch (event) {
+                case 'SettingsUpdated': {
+                    if (args && args.settings && typeof args.settings.interfaceLanguage === 'string') {
+                        i18n.changeLanguage(args.settings.interfaceLanguage);
+                    }
+                    break;
+                }
+            }
+        };
+        const onCtxState = (state) => {
+            if (state && state.profile && state.profile.settings && typeof state.profile.settings.interfaceLanguage === 'string') {
+                i18n.changeLanguage(state.profile.settings.interfaceLanguage);
+            }
+        };
         if (services.core.active) {
             services.core.transport.dispatch({
                 action: 'Ctx',
@@ -109,7 +126,15 @@ const App = () => {
                     action: 'SyncLibraryWithAPI'
                 }
             });
+            services.core.transport.on('CoreEvent', onCoreEvent);
+            services.core.transport
+                .getState('ctx')
+                .then(onCtxState)
+                .catch((e) => console.error(e));
         }
+        return () => {
+            services.core.transport.off('CoreEvent', onCoreEvent);
+        };
     }, [initialized]);
     return (
         <React.StrictMode>

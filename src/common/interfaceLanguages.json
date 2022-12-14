@@ -1,0 +1,150 @@
+[
+    {
+        "name": "العربية",
+        "codes": ["ar-AR", "ara"]
+    },
+    {
+        "name": "български език",
+        "codes": ["bg-BG", "bul"]
+    },
+    {
+        "name": "català",
+        "codes": ["ca-CA", "cat"]
+    },
+    {
+        "name": "čeština",
+        "codes": ["cs-CZ", "ces"]
+    },
+    {
+        "name": "dansk",
+        "codes": ["da-DK", "dan"]
+    },
+    {
+        "name": "Deutsch",
+        "codes": ["de-DE", "deu"]
+    },
+    {
+        "name": "ελληνικά",
+        "codes": ["el-GR", "ell"]
+    },
+    {
+        "name": "English",
+        "codes": ["en-US", "eng"]
+    },
+    {
+        "name": "Esperanto",
+        "codes": ["eo-EO", "epo"]
+    },
+    {
+        "name": "español",
+        "codes": ["es-ES", "spa"]
+    },
+    {
+        "name": "euskara",
+        "codes": ["eu-ES", "eus"]
+    },
+    {
+        "name": "فارسی",
+        "codes": ["fa-IR", "fas"]
+    },
+    {
+        "name": "Français",
+        "codes": ["fr-FR", "fre"]
+    },
+    {
+        "name": "עברית",
+        "codes": ["he-IL", "heb"]
+    },
+    {
+        "name": "हिन्दी",
+        "codes": ["hi-IN", "hin"]
+    },
+    {
+        "name": "hrvatski jezik",
+        "codes": ["hr-HR", "hrv"]
+    },
+    {
+        "name": "magyar",
+        "codes": ["hu-HU", "hun"]
+    },
+    {
+        "name": "Bahasa Indonesia",
+        "codes": ["id-ID", "ind"]
+    },
+    {
+        "name": "italiano",
+        "codes": ["it-IT", "ita"]
+    },
+    {
+        "name": "македонски јазик",
+        "codes": ["mk-MK", "mkd"]
+    },
+    {
+        "name": "ဗမာစာ",
+        "codes": ["my-BM", "mya"]
+    },
+    {
+        "name": "Norsk bokmål",
+        "codes": ["nb-NO", "nob"]
+    },
+    {
+        "name": "Nederlands",
+        "codes": ["nl-NL", "nld"]
+    },
+    {
+        "name": "Norsk nynorsk",
+        "codes": ["nn-NO", "nno"]
+    },
+    {
+        "name": "język polski",
+        "codes": ["pl-PL", "pol"]
+    },
+    {
+        "name": "português Brazil",
+        "codes": ["pt-BR", "por"]
+    },
+    {
+        "name": "português",
+        "codes": ["pt-PT", "por"]
+    },
+    {
+        "name": "русский язык",
+        "codes": ["ru-RU", "rus"]
+    },
+    {
+        "name": "Svenska",
+        "codes": ["sv-SE", "swe"]
+    },
+    {
+        "name": "slovenski jezik",
+        "codes": ["sl-SL", "slv"]
+    },
+    {
+        "name": "српски језик",
+        "codes": ["sr-RS", "srp"]
+    },
+    {
+        "name": "తెలుగు",
+        "codes": ["te-IN", "tel"]
+    },
+    {
+        "name": "Türkçe",
+        "codes": ["tr-TR", "tur"]
+    },
+    {
+        "name": "українська мова",
+        "codes": ["uk-UA", "ukr"]
+    },
+    {
+        "name": "中文(中华人民共和国)",
+        "codes": ["zh-CN", "zho"]
+    },
+    {
+        "name": "中文(香港特别行政區)",
+        "codes": ["zh-HK", "zho"]
+    },
+    {
+        "name": "中文(台灣)",
+        "codes": ["zh-TW", "zho"]
+    }
+]
