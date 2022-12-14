@@ -233,7 +233,7 @@ const Settings = () => {
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Calendar</div>
+                                <div className={styles['label']}>{ t('Calendar') }</div>
                             </div>
                             <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Subscribe'} disabled={true} tabIndex={-1} onClick={subscribeCalendarOnClick}>
                                 <Icon className={styles['icon']} icon={'ic_calendar'} />
@@ -241,13 +241,13 @@ const Settings = () => {
                             </Button>
                         </div>
                         <div className={styles['option-container']}>
-                            <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={'Export user data'} disabled={true} tabIndex={-1} onClick={exportDataOnClick}>
-                                <div className={styles['label']}>Export user data</div>
+                            <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={t('SETTINGS_DATA_EXPORT')} disabled={true} tabIndex={-1} onClick={exportDataOnClick}>
+                                <div className={styles['label']}>{ t('SETTINGS_DATA_EXPORT') }</div>
                             </Button>
                         </div>
                         <div className={styles['option-container']}>
-                            <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={'Contact support'} target={'_blank'} href={'https://stremio.zendesk.com/hc/en-us'}>
-                                <div className={styles['label']}>Contact support</div>
+                            <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={t('SETTINGS_SUPPORT')} target={'_blank'} href={'https://stremio.zendesk.com/hc/en-us'}>
+                                <div className={styles['label']}>{ t('SETTINGS_SUPPORT') }</div>
                             </Button>
                         </div>
                         <div className={styles['option-container']}>
@@ -256,13 +256,13 @@ const Settings = () => {
                             </Button>
                         </div>
                         <div className={styles['option-container']}>
-                            <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={'Terms of Service'} target={'_blank'} href={'https://www.stremio.com/tos'}>
-                                <div className={styles['label']}>Terms of Service</div>
+                            <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={t('TERMS_OF_SERVICE')} target={'_blank'} href={'https://www.stremio.com/tos'}>
+                                <div className={styles['label']}>{ t('TERMS_OF_SERVICE') }</div>
                             </Button>
                         </div>
                         <div className={styles['option-container']}>
-                            <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={'Privacy Policy'} target={'_blank'} href={'https://www.stremio.com/privacy'}>
-                                <div className={styles['label']}>Privacy Policy</div>
+                            <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={t('PRIVACY_POLICY')} target={'_blank'} href={'https://www.stremio.com/privacy'}>
+                                <div className={styles['label']}>{ t('PRIVACY_POLICY') }</div>
                             </Button>
                         </div>
                     </div>
@@ -270,7 +270,7 @@ const Settings = () => {
                         <div className={styles['section-title']}>{ t('SETTINGS_NAV_PLAYER') }</div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Subtitles language</div>
+                                <div className={styles['label']}>{ t('SETTINGS_SUBTITLES_LANGUAGE') }</div>
                             </div>
                             <Multiselect
                                 className={classnames(styles['option-input-container'], styles['multiselect-container'])}
@@ -279,7 +279,7 @@ const Settings = () => {
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Subtitles size</div>
+                                <div className={styles['label']}>{ t('SETTINGS_SUBTITLES_SIZE') }</div>
                             </div>
                             <Multiselect
                                 className={classnames(styles['option-input-container'], styles['multiselect-container'])}
@@ -288,7 +288,7 @@ const Settings = () => {
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Subtitles text color</div>
+                                <div className={styles['label']}>{ t('SETTINGS_SUBTITLES_COLOR') }</div>
                             </div>
                             <ColorInput
                                 className={classnames(styles['option-input-container'], styles['color-input-container'])}
@@ -297,7 +297,7 @@ const Settings = () => {
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Subtitles background color</div>
+                                <div className={styles['label']}>{ t('SETTINGS_SUBTITLES_COLOR_BACKGROUND') }</div>
                             </div>
                             <ColorInput
                                 className={classnames(styles['option-input-container'], styles['color-input-container'])}
@@ -306,7 +306,7 @@ const Settings = () => {
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Subtitles outline color</div>
+                                <div className={styles['label']}>{ t('SETTINGS_SUBTITLES_COLOR_OUTLINE') }</div>
                             </div>
                             <ColorInput
                                 className={classnames(styles['option-input-container'], styles['color-input-container'])}
@@ -315,7 +315,7 @@ const Settings = () => {
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Audio Language</div>
+                                <div className={styles['label']}>{ t('SETTINGS_DEFAULT_AUDIO_TRACK') }</div>
                             </div>
                             <Multiselect
                                 className={classnames(styles['option-input-container'], styles['multiselect-container'])}
@@ -333,7 +333,7 @@ const Settings = () => {
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Auto-play next episode</div>
+                                <div className={styles['label']}>{ t('AUTO_PLAY') }</div>
                             </div>
                             <Checkbox
                                 className={classnames(styles['option-input-container'], styles['checkbox-container'])}
@@ -374,7 +374,7 @@ const Settings = () => {
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Hardware-accelerated decoding</div>
+                                <div className={styles['label']}>{ t('SETTINGS_HWDEC') }</div>
                             </div>
                             <Checkbox
                                 className={classnames(styles['option-input-container'], styles['checkbox-container'])}
@@ -520,7 +520,7 @@ const Settings = () => {
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Toggle Fullscreen</div>
+                                <div className={styles['label']}>{ t('SETTINGS_SHORTCUT_FULLSCREEN') }</div>
                             </div>
                             <div className={classnames(styles['option-input-container'], styles['shortcut-container'])}>
                                 <kbd>F</kbd>

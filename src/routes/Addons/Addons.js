@@ -31,13 +31,13 @@ const Addons = ({ urlParams, queryParams }) => {
         return [
             {
                 className: styles['cancel-button'],
-                label: 'Cancel',
+                label: t('BUTTON_CANCEL'),
                 props: {
                     onClick: closeAddAddonModal
                 }
             },
             {
-                label: 'Add',
+                label: t('ADDON_ADD'),
                 props: {
                     onClick: addAddonOnSubmit
                 }
