@@ -1,14 +1,24 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
 const React = require('react');
+const { useTranslation } = require('react-i18next');
 
-const mapSelectableInputs = (library) => {
+const translateOption = (t, option, translateKeyPrefix = '') => {
+    const translateKey = `${translateKeyPrefix}${option}`;
+    const translateValue = t(translateKey);
+    if (translateKey !== translateValue) {
+        return translateValue;
+    }
+    return option.charAt(0).toUpperCase() + option.slice(1);
+};
+
+const mapSelectableInputs = (library, t) => {
     const typeSelect = {
         title: 'Select type',
         options: library.selectable.types
             .map(({ type, deepLinks }) => ({
                 value: deepLinks.library,
-                label: type === null ? 'All' : type
+                label: type === null ? 'All' : translateOption(t, type, 'TYPE_')
             })),
         selected: library.selectable.types
             .filter(({ selected }) => selected)
@@ -22,7 +32,7 @@ const mapSelectableInputs = (library) => {
         options: library.selectable.sorts
             .map(({ sort, deepLinks }) => ({
                 value: deepLinks.library,
-                label: sort
+                label: translateOption(t, sort)
             })),
         selected: library.selectable.sorts
             .filter(({ selected }) => selected)
@@ -49,8 +59,9 @@ const mapSelectableInputs = (library) => {
 };
 
 const useSelectableInputs = (library) => {
+    const { t } = useTranslation();
     const selectableInputs = React.useMemo(() => {
-        return mapSelectableInputs(library);
+        return mapSelectableInputs(library, t);
     }, [library]);
     return selectableInputs;
 };
