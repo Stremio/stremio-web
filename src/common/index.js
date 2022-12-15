@@ -30,6 +30,7 @@ const getVisibleChildrenRange = require('./getVisibleChildrenRange');
 const interfaceLanguages = require('./interfaceLanguages');
 const languageNames = require('./languageNames');
 const routesRegexp = require('./routesRegexp');
+const translateOption = require('./translateOption');
 const useAnimationFrame = require('./useAnimationFrame');
 const useBinaryState = require('./useBinaryState');
 const useFullscreen = require('./useFullscreen');
@@ -74,6 +75,7 @@ module.exports = {
     interfaceLanguages,
     languageNames,
     routesRegexp,
+    translateOption,
     useAnimationFrame,
     useBinaryState,
     useFullscreen,

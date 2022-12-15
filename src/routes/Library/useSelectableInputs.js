@@ -2,15 +2,7 @@
 
 const React = require('react');
 const { useTranslation } = require('react-i18next');
-
-const translateOption = (t, option, translateKeyPrefix = '') => {
-    const translateKey = `${translateKeyPrefix}${option}`;
-    const translateValue = t(translateKey);
-    if (translateKey !== translateValue) {
-        return translateValue;
-    }
-    return option.charAt(0).toUpperCase() + option.slice(1);
-};
+const { translateOption } = require('stremio/common');
 
 const mapSelectableInputs = (library, t) => {
     const typeSelect = {
@@ -18,7 +10,7 @@ const mapSelectableInputs = (library, t) => {
         options: library.selectable.types
             .map(({ type, deepLinks }) => ({
                 value: deepLinks.library,
-                label: type === null ? t('TYPE_ALL') : translateOption(t, type, 'TYPE_')
+                label: type === null ? t('TYPE_ALL') : translateOption(type, 'TYPE_')
             })),
         selected: library.selectable.types
             .filter(({ selected }) => selected)
@@ -32,7 +24,7 @@ const mapSelectableInputs = (library, t) => {
         options: library.selectable.sorts
             .map(({ sort, deepLinks }) => ({
                 value: deepLinks.library,
-                label: translateOption(t, sort)
+                label: translateOption(sort)
             })),
         selected: library.selectable.sorts
             .filter(({ selected }) => selected)

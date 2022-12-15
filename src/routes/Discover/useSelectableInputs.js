@@ -2,15 +2,7 @@
 
 const React = require('react');
 const { useTranslation } = require('react-i18next');
-
-const translateOption = (t, option, translateKeyPrefix = '') => {
-    const translateKey = `${translateKeyPrefix}${option}`;
-    const translateValue = t(`${translateKeyPrefix}${option}`);
-    if (translateKey !== translateValue) {
-        return translateValue;
-    }
-    return option.charAt(0).toUpperCase() + option.slice(1);
-};
+const { translateOption } = require('stremio/common');
 
 const mapSelectableInputs = (discover, t) => {
     const typeSelect = {
@@ -18,13 +10,13 @@ const mapSelectableInputs = (discover, t) => {
         options: discover.selectable.types
             .map(({ type, deepLinks }) => ({
                 value: deepLinks.discover,
-                label: translateOption(t, type, 'TYPE_')
+                label: translateOption(type, 'TYPE_')
             })),
         selected: discover.selectable.types
             .filter(({ selected }) => selected)
             .map(({ deepLinks }) => deepLinks.discover),
         renderLabelText: discover.selected !== null ?
-            () => translateOption(t, discover.selected.request.path.type, 'TYPE_')
+            () => translateOption(discover.selected.request.path.type, 'TYPE_')
             :
             null,
         onSelect: (event) => {
@@ -58,7 +50,7 @@ const mapSelectableInputs = (discover, t) => {
         title: `Select ${name}`,
         isRequired: isRequired,
         options: options.map(({ value, deepLinks }) => ({
-            label: typeof value === 'string' ? translateOption(t, value) : t('NONE'),
+            label: typeof value === 'string' ? translateOption(value) : t('NONE'),
             value: JSON.stringify({
                 href: deepLinks.discover,
                 value
