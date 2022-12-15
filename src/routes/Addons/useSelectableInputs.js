@@ -1,7 +1,20 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
-const { t } = require('i18next');
 const React = require('react');
+const { t } = require('i18next');
+
+const translateOption = (option, translateKeyPrefix = '') => {
+    const translateKey = `${translateKeyPrefix}${option}`;
+    const translateKeyUppercase = translateKey.toUpperCase();
+    const translateValue = t(translateKey);
+    const translateValueUppercase = t(translateKeyUppercase);
+    if (translateKey !== translateValue) {
+        return translateValue;
+    } else if (translateKeyUppercase !== translateValueUppercase) {
+        return translateValueUppercase;
+    }
+    return option.charAt(0).toUpperCase() + option.slice(1);
+};
 
 const mapSelectableInputs = (installedAddons, remoteAddons) => {
     const catalogSelect = {
@@ -10,8 +23,8 @@ const mapSelectableInputs = (installedAddons, remoteAddons) => {
             .concat(installedAddons.selectable.catalogs)
             .map(({ name, deepLinks }) => ({
                 value: deepLinks.addons,
-                label: name,
-                title: name
+                label: translateOption(name, 'ADDON_'),
+                title: translateOption(name, 'ADDON_'),
             })),
         selected: remoteAddons.selectable.catalogs
             .concat(installedAddons.selectable.catalogs)
@@ -21,7 +34,7 @@ const mapSelectableInputs = (installedAddons, remoteAddons) => {
             () => {
                 const selectableCatalog = remoteAddons.selectable.catalogs
                     .find(({ id }) => id === remoteAddons.selected.request.path.id);
-                return selectableCatalog ? selectableCatalog.name : remoteAddons.selected.request.path.id;
+                return selectableCatalog ? translateOption(selectableCatalog.name, 'ADDON_') : remoteAddons.selected.request.path.id;
             }
             :
             null,
@@ -34,12 +47,12 @@ const mapSelectableInputs = (installedAddons, remoteAddons) => {
         options: installedAddons.selected !== null ?
             installedAddons.selectable.types.map(({ type, deepLinks }) => ({
                 value: deepLinks.addons,
-                label: type !== null ? type : t('TYPE_ALL')
+                label: type !== null ? translateOption(type, 'TYPE_') : t('TYPE_ALL')
             }))
             :
             remoteAddons.selectable.types.map(({ type, deepLinks }) => ({
                 value: deepLinks.addons,
-                label: type
+                label: translateOption(type, 'TYPE_')
             })),
         selected: installedAddons.selected !== null ?
             installedAddons.selectable.types
@@ -54,10 +67,10 @@ const mapSelectableInputs = (installedAddons, remoteAddons) => {
                 installedAddons.selected.request.type === null ?
                     t('TYPE_ALL')
                     :
-                    installedAddons.selected.request.type
+                    translateOption(installedAddons.selected.request.type, 'TYPE_')
                 :
                 remoteAddons.selected !== null ?
-                    remoteAddons.selected.request.path.type
+                    translateOption(remoteAddons.selected.request.path.type, 'TYPE_')
                     :
                     typeSelect.title;
         },
