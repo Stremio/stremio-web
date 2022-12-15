@@ -6,6 +6,7 @@ const classnames = require('classnames');
 const { Button, CONSTANTS, comparatorWithPriorities, languageNames } = require('stremio/common');
 const DiscreteSelectInput = require('./DiscreteSelectInput');
 const styles = require('./styles');
+const { t } = require('i18next');
 
 const ORIGIN_PRIORITIES = {
     'EMBEDDED': 2,
@@ -174,8 +175,8 @@ const SubtitlesMenu = React.memo((props) => {
             <div className={styles['languages-container']}>
                 <div className={styles['languages-header']}>Subtitles Languages</div>
                 <div className={styles['languages-list']}>
-                    <Button title={'Off'} className={classnames(styles['language-option'], { 'selected': selectedSubtitlesLanguage === null })} onClick={subtitlesLanguageOnClick}>
-                        <div className={styles['language-label']}>Off</div>
+                    <Button title={t('OFF')} className={classnames(styles['language-option'], { 'selected': selectedSubtitlesLanguage === null })} onClick={subtitlesLanguageOnClick}>
+                        <div className={styles['language-label']}>{ t('OFF') }</div>
                         {
                             selectedSubtitlesLanguage === null ?
                                 <div className={styles['icon']} />
@@ -225,14 +226,14 @@ const SubtitlesMenu = React.memo((props) => {
                 <div className={styles['settings-header']}>Subtitles Settings</div>
                 <DiscreteSelectInput
                     className={styles['discrete-input']}
-                    label={'Delay'}
+                    label={t('DELAY')}
                     value={typeof props.selectedExtraSubtitlesTrackId === 'string' && props.extraSubtitlesDelay !== null && !isNaN(props.extraSubtitlesDelay) ? `${(props.extraSubtitlesDelay / 1000).toFixed(2)}s` : '--'}
                     disabled={typeof props.selectedExtraSubtitlesTrackId !== 'string' || props.extraSubtitlesDelay === null || isNaN(props.extraSubtitlesDelay)}
                     onChange={onSubtitlesDelayChanged}
                 />
                 <DiscreteSelectInput
                     className={styles['discrete-input']}
-                    label={'Size'}
+                    label={t('SIZE')}
                     value={
                         typeof props.selectedSubtitlesTrackId === 'string' ?
                             props.subtitlesSize !== null && !isNaN(props.subtitlesSize) ? `${props.subtitlesSize}%` : '--'
