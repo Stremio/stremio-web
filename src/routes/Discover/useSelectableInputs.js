@@ -1,20 +1,30 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
 const React = require('react');
+const { useTranslation } = require('react-i18next');
 
-const mapSelectableInputs = (discover) => {
+const translateOption = (t, option, translateKeyPrefix = '') => {
+    const translateKey = `${translateKeyPrefix}${option}`;
+    const translateValue = t(`${translateKeyPrefix}${option}`);
+    if (translateKey !== translateValue) {
+        return translateValue;
+    }
+    return option.charAt(0).toUpperCase() + option.slice(1);
+};
+
+const mapSelectableInputs = (discover, t) => {
     const typeSelect = {
         title: 'Select type',
         options: discover.selectable.types
             .map(({ type, deepLinks }) => ({
                 value: deepLinks.discover,
-                label: type
+                label: translateOption(t, type, 'TYPE_')
             })),
         selected: discover.selectable.types
             .filter(({ selected }) => selected)
             .map(({ deepLinks }) => deepLinks.discover),
         renderLabelText: discover.selected !== null ?
-            () => discover.selected.request.path.type
+            () => translateOption(t, discover.selected.request.path.type, 'TYPE_')
             :
             null,
         onSelect: (event) => {
@@ -48,7 +58,7 @@ const mapSelectableInputs = (discover) => {
         title: `Select ${name}`,
         isRequired: isRequired,
         options: options.map(({ value, deepLinks }) => ({
-            label: typeof value === 'string' ? value : 'None',
+            label: typeof value === 'string' ? translateOption(t, value) : t('NONE'),
             value: JSON.stringify({
                 href: deepLinks.discover,
                 value
@@ -73,8 +83,9 @@ const mapSelectableInputs = (discover) => {
 };
 
 const useSelectableInputs = (discover) => {
+    const { t } = useTranslation();
     const selectableInputs = React.useMemo(() => {
-        return mapSelectableInputs(discover);
+        return mapSelectableInputs(discover, t);
     }, [discover.selected, discover.selectable]);
     return selectableInputs;
 };
