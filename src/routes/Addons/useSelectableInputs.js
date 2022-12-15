@@ -1,10 +1,11 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
+const { t } = require('i18next');
 const React = require('react');
 
 const mapSelectableInputs = (installedAddons, remoteAddons) => {
     const catalogSelect = {
-        title: 'Select catalog',
+        title: t('SELECT_CATALOG'),
         options: remoteAddons.selectable.catalogs
             .concat(installedAddons.selectable.catalogs)
             .map(({ name, deepLinks }) => ({
@@ -29,11 +30,11 @@ const mapSelectableInputs = (installedAddons, remoteAddons) => {
         }
     };
     const typeSelect = {
-        title: 'Select type',
+        title: t('SELECT_TYPE'),
         options: installedAddons.selected !== null ?
             installedAddons.selectable.types.map(({ type, deepLinks }) => ({
                 value: deepLinks.addons,
-                label: type !== null ? type : 'All'
+                label: type !== null ? type : t('TYPE_ALL')
             }))
             :
             remoteAddons.selectable.types.map(({ type, deepLinks }) => ({
@@ -51,7 +52,7 @@ const mapSelectableInputs = (installedAddons, remoteAddons) => {
         renderLabelText: () => {
             return installedAddons.selected !== null ?
                 installedAddons.selected.request.type === null ?
-                    'All'
+                    t('TYPE_ALL')
                     :
                     installedAddons.selected.request.type
                 :

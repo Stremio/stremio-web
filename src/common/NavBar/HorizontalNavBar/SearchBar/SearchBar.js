@@ -48,7 +48,7 @@ const SearchBar = ({ className, query, active }) => {
                         ref={searchInputRef}
                         className={styles['search-input']}
                         type={'text'}
-                        placeholder={t('SEARCH_PLACEHOLDER')}
+                        placeholder={t('SEARCH_OR_PASTE_LINK')}
                         defaultValue={query}
                         tabIndex={-1}
                         onChange={queryInputOnChange}
@@ -56,7 +56,7 @@ const SearchBar = ({ className, query, active }) => {
                     />
                     :
                     <div className={styles['search-input']}>
-                        <div className={styles['placeholder-label']}>{ t('SEARCH_PLACEHOLDER') }</div>
+                        <div className={styles['placeholder-label']}>{ t('SEARCH_OR_PASTE_LINK') }</div>
                     </div>
             }
             <Button className={styles['submit-button-container']} tabIndex={-1} onClick={queryInputOnSubmit}>
@@ -77,7 +77,7 @@ const SearchBarFallback = ({ className }) => {
     return (
         <label className={classnames(className, styles['search-bar-container'])}>
             <div className={styles['search-input']}>
-                <div className={styles['placeholder-label']}>{ t('SEARCH_PLACEHOLDER') }</div>
+                <div className={styles['placeholder-label']}>{ t('SEARCH_OR_PASTE_LINK') }</div>
             </div>
             <Button className={styles['submit-button-container']} tabIndex={-1}>
                 <Icon className={styles['icon']} icon={'ic_search_link'} />

@@ -14,7 +14,7 @@ const translateOption = (t, option, translateKeyPrefix = '') => {
 
 const mapSelectableInputs = (discover, t) => {
     const typeSelect = {
-        title: 'Select type',
+        title: t('SELECT_TYPE'),
         options: discover.selectable.types
             .map(({ type, deepLinks }) => ({
                 value: deepLinks.discover,
@@ -32,7 +32,7 @@ const mapSelectableInputs = (discover, t) => {
         }
     };
     const catalogSelect = {
-        title: 'Select catalog',
+        title: t('SELECT_CATALOG'),
         options: discover.selectable.catalogs
             .map(({ name, addon, deepLinks }) => ({
                 value: deepLinks.discover,

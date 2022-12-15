@@ -57,8 +57,8 @@ const StreamsList = ({ className, ...props }) => {
             options: [
                 {
                     value: ALL_ADDONS_KEY,
-                    label: 'All',
-                    title: 'All'
+                    label: t('ALL_ADDONS'),
+                    title: t('ALL_ADDONS')
                 },
                 ...Object.keys(streamsByAddon).map((transportUrl) => ({
                     value: transportUrl,

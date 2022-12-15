@@ -10,6 +10,7 @@ const SeekBar = require('./SeekBar');
 const VolumeSlider = require('./VolumeSlider');
 const styles = require('./styles');
 const { useBinaryState } = require('stremio/common');
+const { t } = require('i18next');
 
 const ControlBar = ({
     className,
@@ -122,18 +123,18 @@ const ControlBar = ({
                 onSeekRequested={onSeekRequested}
             />
             <div className={styles['control-bar-buttons-container']}>
-                <Button className={classnames(styles['control-bar-button'], { 'disabled': typeof paused !== 'boolean' })} title={paused ? 'Play' : 'Pause'} tabIndex={-1} onClick={onPlayPauseButtonClick}>
+                <Button className={classnames(styles['control-bar-button'], { 'disabled': typeof paused !== 'boolean' })} title={paused ? t('PLAYER_PLAY') : t('PLAYER_PAUSE')} tabIndex={-1} onClick={onPlayPauseButtonClick}>
                     <Icon className={styles['icon']} icon={typeof paused !== 'boolean' || paused ? 'ic_play' : 'ic_pause'} />
                 </Button>
                 {
                     nextVideo !== null ?
-                        <Button className={classnames(styles['control-bar-button'])} title={'Next Video'} tabIndex={-1} onClick={onNextVideoButtonClick}>
+                        <Button className={classnames(styles['control-bar-button'])} title={t('PLAYER_NEXT_VIDEO')} tabIndex={-1} onClick={onNextVideoButtonClick}>
                             <Icon className={styles['icon']} icon={'ic_play_next'} />
                         </Button>
                         :
                         null
                 }
-                <Button className={classnames(styles['control-bar-button'], { 'disabled': typeof muted !== 'boolean' })} title={muted ? 'Unmute' : 'Mute'} tabIndex={-1} onClick={onMuteButtonClick}>
+                <Button className={classnames(styles['control-bar-button'], { 'disabled': typeof muted !== 'boolean' })} title={muted ? t('PLAYER_UNMUTE') : t('PLAYER_MUTE')} tabIndex={-1} onClick={onMuteButtonClick}>
                     <Icon
                         className={styles['icon']}
                         icon={

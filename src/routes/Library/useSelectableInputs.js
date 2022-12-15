@@ -14,11 +14,11 @@ const translateOption = (t, option, translateKeyPrefix = '') => {
 
 const mapSelectableInputs = (library, t) => {
     const typeSelect = {
-        title: 'Select type',
+        title: t('SELECT_TYPE'),
         options: library.selectable.types
             .map(({ type, deepLinks }) => ({
                 value: deepLinks.library,
-                label: type === null ? 'All' : translateOption(t, type, 'TYPE_')
+                label: type === null ? t('TYPE_ALL') : translateOption(t, type, 'TYPE_')
             })),
         selected: library.selectable.types
             .filter(({ selected }) => selected)
@@ -28,7 +28,7 @@ const mapSelectableInputs = (library, t) => {
         }
     };
     const sortSelect = {
-        title: 'Select sort',
+        title: t('SELECT_SORT'),
         options: library.selectable.sorts
             .map(({ sort, deepLinks }) => ({
                 value: deepLinks.library,

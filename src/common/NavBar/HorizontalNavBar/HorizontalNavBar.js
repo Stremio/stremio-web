@@ -10,6 +10,7 @@ const useFullscreen = require('stremio/common/useFullscreen');
 const SearchBar = require('./SearchBar');
 const NavMenu = require('./NavMenu');
 const styles = require('./styles');
+const { t } = require('i18next');
 
 const HorizontalNavBar = React.memo(({ className, route, query, title, backButton, searchBar, addonsButton, fullscreenButton, navMenu, ...props }) => {
     const backButtonOnClick = React.useCallback(() => {
@@ -54,7 +55,7 @@ const HorizontalNavBar = React.memo(({ className, route, query, title, backButto
             <div className={styles['spacing']} />
             {
                 addonsButton ?
-                    <Button className={styles['button-container']} href={'#/addons'} title={'Addons'} tabIndex={-1}>
+                    <Button className={styles['button-container']} href={'#/addons'} title={t('ADDONS')} tabIndex={-1}>
                         <Icon className={styles['icon']} icon={'ic_addons'} />
                     </Button>
                     :
@@ -62,7 +63,7 @@ const HorizontalNavBar = React.memo(({ className, route, query, title, backButto
             }
             {
                 fullscreenButton ?
-                    <Button className={styles['button-container']} title={fullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'} tabIndex={-1} onClick={fullscreen ? exitFullscreen : requestFullscreen}>
+                    <Button className={styles['button-container']} title={fullscreen ? t('EXIT_FULLSCREEN') : t('ENTER_FULLSCREEN')} tabIndex={-1} onClick={fullscreen ? exitFullscreen : requestFullscreen}>
                         <Icon className={styles['icon']} icon={fullscreen ? 'ic_exit_fullscreen' : 'ic_fullscreen'} />
                     </Button>
                     :

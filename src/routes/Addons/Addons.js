@@ -80,9 +80,9 @@ const Addons = ({ urlParams, queryParams }) => {
         <MainNavBars className={styles['addons-container']} route={'addons'}>
             <div className={styles['addons-content']}>
                 <div className={styles['selectable-inputs-container']}>
-                    <Button className={styles['add-button-container']} title={'Add addon'} onClick={openAddAddonModal}>
+                    <Button className={styles['add-button-container']} title={t('ADD_ADDON')} onClick={openAddAddonModal}>
                         <Icon className={styles['icon']} icon={'ic_plus'} />
-                        <div className={styles['add-button-label']}>Add addon</div>
+                        <div className={styles['add-button-label']}>{ t('ADD_ADDON') }</div>
                     </Button>
                     {selectInputs.map((selectInput, index) => (
                         <Multiselect
@@ -194,15 +194,15 @@ const Addons = ({ urlParams, queryParams }) => {
                 addAddonModalOpen ?
                     <ModalDialog
                         className={styles['add-addon-modal-container']}
-                        title={'Add addon'}
+                        title={t('ADD_ADDON')}
                         buttons={addAddonModalButtons}
                         onCloseRequest={closeAddAddonModal}>
-                        <div className={styles['notice']}>You can add an addon via an external link, which will appear under Installed addons.</div>
+                        <div className={styles['notice']}>{ t('ADD_ADDON_DESCRIPTION') }</div>
                         <TextInput
                             ref={addAddonUrlInputRef}
                             className={styles['addon-url-input']}
                             type={'text'}
-                            placeholder={'Paste addon URL'}
+                            placeholder={t('PASTE_ADDON_URL')}
                             autoFocus={true}
                             onSubmit={addAddonOnSubmit}
                         />

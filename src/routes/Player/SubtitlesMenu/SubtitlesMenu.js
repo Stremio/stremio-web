@@ -173,7 +173,7 @@ const SubtitlesMenu = React.memo((props) => {
                     null
             }
             <div className={styles['languages-container']}>
-                <div className={styles['languages-header']}>Subtitles Languages</div>
+                <div className={styles['languages-header']}>{ t('PLAYER_SUBTITLES_LANGUAGES') }</div>
                 <div className={styles['languages-list']}>
                     <Button title={t('OFF')} className={classnames(styles['language-option'], { 'selected': selectedSubtitlesLanguage === null })} onClick={subtitlesLanguageOnClick}>
                         <div className={styles['language-label']}>{ t('OFF') }</div>
@@ -198,7 +198,7 @@ const SubtitlesMenu = React.memo((props) => {
                 </div>
             </div>
             <div className={styles['variants-container']}>
-                <div className={styles['variants-header']}>Subtitles Variants</div>
+                <div className={styles['variants-header']}>{ t('PLAYER_SUBTITLES_VARIANTS') }</div>
                 {
                     subtitlesTracksForLanguage.length > 0 ?
                         <div className={styles['variants-list']}>
@@ -217,7 +217,7 @@ const SubtitlesMenu = React.memo((props) => {
                         :
                         <div className={styles['no-variants-container']}>
                             <div className={styles['no-variants-label']}>
-                                Subtitles are disabled
+                                { t('PLAYER_SUBTITLES_DISABLED') }
                             </div>
                         </div>
                 }
@@ -256,7 +256,7 @@ const SubtitlesMenu = React.memo((props) => {
                 />
                 <DiscreteSelectInput
                     className={styles['discrete-input']}
-                    label={'Vertical position'}
+                    label={t('PLAYER_SUBTITLES_VERTICAL_POSIITON')}
                     value={
                         typeof props.selectedSubtitlesTrackId === 'string' ?
                             props.subtitlesOffset !== null && !isNaN(props.subtitlesOffset) ? `${props.subtitlesOffset}%` : '--'

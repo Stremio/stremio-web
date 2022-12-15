@@ -48,7 +48,7 @@ const NavMenuContent = ({ onClick }) => {
                     }}
                 />
                 <div className={styles['email-container']}>
-                    <div className={styles['email-label']}>{profile.auth === null ? 'Anonymous user' : profile.auth.user.email}</div>
+                    <div className={styles['email-label']}>{profile.auth === null ? t('ANONYMOUS_USER') : profile.auth.user.email}</div>
                 </div>
                 <Button className={styles['logout-button-container']} title={profile.auth === null ? `${t('LOG_IN')} / ${t('SIGN_UP')}` : t('LOG_OUT')} href={'#/intro'} onClick={logoutButtonOnClick}>
                     <div className={styles['logout-label']}>{profile.auth === null ? `${t('LOG_IN')} / ${t('SIGN_UP')}` : t('LOG_OUT')}</div>

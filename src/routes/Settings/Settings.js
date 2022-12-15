@@ -182,22 +182,22 @@ const Settings = () => {
                                 </div>
                                 {
                                     profile.auth !== null ?
-                                        <Button className={styles['logout-button-container']} title={'Log out'} href={'#/intro'} onClick={logoutButtonOnClick}>
-                                            <div className={styles['logout-label']}>Log out</div>
+                                        <Button className={styles['logout-button-container']} title={ t('LOG_OUT') } href={'#/intro'} onClick={logoutButtonOnClick}>
+                                            <div className={styles['logout-label']}>{ t('LOG_OUT') }</div>
                                         </Button>
                                         :
                                         null
                                 }
                             </div>
                             <Button className={styles['user-panel-container']} title={'User panel'} target={'_blank'} href={'https://www.stremio.com/acc-settings'}>
-                                <div className={styles['user-panel-label']}>User Panel</div>
+                                <div className={styles['user-panel-label']}>{ t('USER_PANEL') }</div>
                             </Button>
                         </div>
                         {
                             profile.auth === null ?
                                 <div className={styles['option-container']}>
-                                    <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Log in / Sign up'} href={'#/intro'} onClick={logoutButtonOnClick}>
-                                        <div className={styles['label']}>Log in / Sign up</div>
+                                    <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={`${t('LOG_IN')} / ${t('SIGN_UP')}`} href={'#/intro'} onClick={logoutButtonOnClick}>
+                                        <div className={styles['label']}>{ t('LOG_IN') } / { t('SIGN_UP') }</div>
                                     </Button>
                                 </div>
                                 :
@@ -205,7 +205,7 @@ const Settings = () => {
                         }
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Interface language</div>
+                                <div className={styles['label']}>{ t('SETTINGS_INTERFACE_LANGUAGE') }</div>
                             </div>
                             <Multiselect
                                 className={classnames(styles['option-input-container'], styles['multiselect-container'])}
@@ -219,7 +219,7 @@ const Settings = () => {
                             </div>
                             <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Authenticate'} disabled={true} tabIndex={-1} onClick={authenticateTraktOnClick}>
                                 <Icon className={styles['icon']} icon={'ic_trakt'} />
-                                <div className={styles['label']}>Authenticate</div>
+                                <div className={styles['label']}>{ t('SETTINGS_TRAKT_AUTHENTICATE') }</div>
                             </Button>
                         </div>
                         <div className={styles['option-container']}>
@@ -228,7 +228,7 @@ const Settings = () => {
                             </div>
                             <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Import'} disabled={true} tabIndex={-1} onClick={importFacebookOnClick}>
                                 <Icon className={styles['icon']} icon={'ic_facebook'} />
-                                <div className={styles['label']}>Import</div>
+                                <div className={styles['label']}>{ t('SETTINGS_FACEBOOK_IMPORT') }</div>
                             </Button>
                         </div>
                         <div className={styles['option-container']}>
@@ -237,7 +237,7 @@ const Settings = () => {
                             </div>
                             <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Subscribe'} disabled={true} tabIndex={-1} onClick={subscribeCalendarOnClick}>
                                 <Icon className={styles['icon']} icon={'ic_calendar'} />
-                                <div className={styles['label']}>Subscribe</div>
+                                <div className={styles['label']}>{ t('SETTINGS_CALENDAR_SUBSCRIBE') }</div>
                             </Button>
                         </div>
                         <div className={styles['option-container']}>
@@ -504,7 +504,7 @@ const Settings = () => {
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Toggle Subtitles Menu</div>
+                                <div className={styles['label']}>{ t('SETTINGS_SHORTCUT_MENU_SUBTITLES') }</div>
                             </div>
                             <div className={classnames(styles['option-input-container'], styles['shortcut-container'])}>
                                 <kbd>S</kbd>
@@ -512,7 +512,7 @@ const Settings = () => {
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Toggle Info Menu</div>
+                                <div className={styles['label']}>{ t('SETTINGS_SHORTCUT_MENU_INFO') }</div>
                             </div>
                             <div className={classnames(styles['option-input-container'], styles['shortcut-container'])}>
                                 <kbd>I</kbd>
@@ -528,7 +528,7 @@ const Settings = () => {
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Navigate Between Menus</div>
+                                <div className={styles['label']}>{ t('SETTINGS_SHORTCUT_NAVIGATE_MENUS') }</div>
                             </div>
                             <div className={classnames(styles['option-input-container'], styles['shortcut-container'])}>
                                 <kbd>1</kbd>
@@ -538,7 +538,7 @@ const Settings = () => {
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Go to Search</div>
+                                <div className={styles['label']}>{ t('SETTINGS_SHORTCUT_GO_TO_SEARCH') }</div>
                             </div>
                             <div className={classnames(styles['option-input-container'], styles['shortcut-container'])}>
                                 <kbd>0</kbd>
