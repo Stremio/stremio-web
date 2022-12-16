@@ -51,11 +51,11 @@ const StreamingServerWarning = ({ className }) => {
     return (
         <div className={classnames(className, styles['warning-container'])}>
             <div className={styles['warning-statement']}>{ t('SETTINGS_SERVER_UNAVAILABLE') }</div>
-            <Button className={styles['warning-button']} title={'Later'} onClick={onLaterClick} tabIndex={-1}>
-                <div className={styles['warning-label']}>Later</div>
+            <Button className={styles['warning-button']} title={t('WARNING_STREAMING_SERVER_LATER')} onClick={onLaterClick} tabIndex={-1}>
+                <div className={styles['warning-label']}>{ t('WARNING_STREAMING_SERVER_LATER') }</div>
             </Button>
-            <Button className={styles['warning-button']} title={'Dismiss'} onClick={onDismissClick} tabIndex={-1}>
-                <div className={styles['warning-label']}>Dismiss</div>
+            <Button className={styles['warning-button']} title={t('WARNING_STREAMING_SERVER_DISMISS')} onClick={onDismissClick} tabIndex={-1}>
+                <div className={styles['warning-label']}>{ t('WARNING_STREAMING_SERVER_DISMISS') }</div>
             </Button>
         </div>
     );

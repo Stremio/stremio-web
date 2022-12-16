@@ -1,10 +1,12 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
 const React = require('react');
+const { useTranslation } = require('react-i18next');
 const { useServices } = require('stremio/services');
 const { CONSTANTS, interfaceLanguages, languageNames } = require('stremio/common');
 
 const useProfileSettingsInputs = (profile) => {
+    const { t } = useTranslation();
     const { core } = useServices();
     // TODO combine those useMemo in one
     const interfaceLanguageSelect = React.useMemo(() => ({
@@ -136,11 +138,11 @@ const useProfileSettingsInputs = (profile) => {
     const seekTimeDurationSelect = React.useMemo(() => ({
         options: CONSTANTS.SEEK_TIME_DURATIONS.map((size) => ({
             value: `${size}`,
-            label: `${size / 1000} seconds`
+            label: `${size / 1000} ${t('SECONDS')}`
         })),
         selected: [`${profile.settings.seekTimeDuration}`],
         renderLabelText: () => {
-            return `${profile.settings.seekTimeDuration / 1000} seconds`;
+            return `${profile.settings.seekTimeDuration / 1000} ${t('SECONDS')}`;
         },
         onSelect: (event) => {
             core.transport.dispatch({
@@ -158,14 +160,14 @@ const useProfileSettingsInputs = (profile) => {
     const nextVideoPopupDurationSelect = React.useMemo(() => ({
         options: CONSTANTS.NEXT_VIDEO_POPUP_DURATIONS.map((duration) => ({
             value: `${duration}`,
-            label: duration === 0 ? 'Disabled' : `${duration / 1000} seconds`
+            label: duration === 0 ? 'Disabled' : `${duration / 1000} ${t('SECONDS')}`
         })),
         selected: [`${profile.settings.nextVideoNotificationDuration}`],
         renderLabelText: () => {
             return profile.settings.nextVideoNotificationDuration === 0 ?
                 'Disabled'
                 :
-                `${profile.settings.nextVideoNotificationDuration / 1000} seconds`;
+                `${profile.settings.nextVideoNotificationDuration / 1000} ${t('SECONDS')}`;
         },
         onSelect: (event) => {
             core.transport.dispatch({

@@ -324,7 +324,7 @@ const Settings = () => {
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Rewind & Fast-forward duration</div>
+                                <div className={styles['label']}>{ t('SETTINGS_REWIND_FAST_FORWARD_DURATION') }</div>
                             </div>
                             <Multiselect
                                 className={classnames(styles['option-input-container'], styles['multiselect-container'])}
@@ -342,7 +342,7 @@ const Settings = () => {
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Next video popup duration</div>
+                                <div className={styles['label']}>{ t('SETTINGS_NEXT_VIDEO_POPUP_DURATION') }</div>
                             </div>
                             <Multiselect
                                 className={classnames(styles['option-input-container'], styles['multiselect-container'])}
@@ -352,7 +352,7 @@ const Settings = () => {
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Play in background</div>
+                                <div className={styles['label']}>{ t('SETTINGS_PLAY_IN_BACKGROUND') }</div>
                             </div>
                             <Checkbox
                                 className={classnames(styles['option-input-container'], styles['checkbox-container'])}
@@ -363,7 +363,7 @@ const Settings = () => {
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Play in external player</div>
+                                <div className={styles['label']}>{ t('SETTINGS_PLAY_IN_EXTERNAL_PLAYER') }</div>
                             </div>
                             <Checkbox
                                 className={classnames(styles['option-input-container'], styles['checkbox-container'])}
@@ -402,10 +402,10 @@ const Settings = () => {
                                             'NotLoaded'
                                             :
                                             streamingServer.settings.type === 'Ready' ?
-                                                'Online'
+                                                t('SETTINGS_SERVER_STATUS_ONLINE')
                                                 :
                                                 streamingServer.settings.type === 'Error' ?
-                                                    `Error: (${streamingServer.settings.content})`
+                                                    `${t('SETTINGS_SERVER_STATUS_ERROR')}: (${streamingServer.settings.content})`
                                                     :
                                                     streamingServer.settings.type
                                     }
@@ -427,7 +427,7 @@ const Settings = () => {
                             cacheSizeSelect !== null ?
                                 <div className={styles['option-container']}>
                                     <div className={styles['option-name-container']}>
-                                        <div className={styles['label']}>Cache size</div>
+                                        <div className={styles['label']}>{ t('SETTINGS_SERVER_CACHE_SIZE') }</div>
                                     </div>
                                     <Multiselect
                                         className={classnames(styles['option-input-container'], styles['multiselect-container'])}
@@ -441,7 +441,7 @@ const Settings = () => {
                             torrentProfileSelect !== null ?
                                 <div className={styles['option-container']}>
                                     <div className={styles['option-name-container']}>
-                                        <div className={styles['label']}>Torrent profile</div>
+                                        <div className={styles['label']}>{ t('SETTINGS_SERVER_TORRENT_PROFILE') }</div>
                                     </div>
                                     <Multiselect
                                         className={classnames(styles['option-input-container'], styles['multiselect-container'])}
@@ -459,29 +459,29 @@ const Settings = () => {
                                 <div className={styles['label']}>{ t('SETTINGS_SHORTCUT_PLAY_PAUSE') }</div>
                             </div>
                             <div className={classnames(styles['option-input-container'], styles['shortcut-container'])}>
-                                <kbd>Space</kbd>
+                                <kbd>{ t('SETTINGS_SHORTCUT_SPACE') }</kbd>
                             </div>
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Seek Forward</div>
+                                <div className={styles['label']}>{ t('SETTINGS_SHORTCUT_SEEK_FORWARD') }</div>
                             </div>
                             <div className={classnames(styles['option-input-container'], styles['shortcut-container'])}>
                                 <kbd>→</kbd>
-                                <div className={styles['label']}>or</div>
-                                <kbd>⇧ Shift</kbd>
+                                <div className={styles['label']}>{ t('SETTINGS_SHORTCUT_OR') }</div>
+                                <kbd>⇧ { t('SETTINGS_SHORTCUT_SHIFT') }</kbd>
                                 <div className={styles['label']}>+</div>
                                 <kbd>→</kbd>
                             </div>
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Seek Backward</div>
+                                <div className={styles['label']}>{ t('SETTINGS_SHORTCUT_SEEK_BACKWARD') }</div>
                             </div>
                             <div className={classnames(styles['option-input-container'], styles['shortcut-container'])}>
                                 <kbd>←</kbd>
-                                <div className={styles['label']}>or</div>
-                                <kbd>⇧ Shift</kbd>
+                                <div className={styles['label']}>{ t('SETTINGS_SHORTCUT_OR') }</div>
+                                <kbd>⇧ { t('SETTINGS_SHORTCUT_SHIFT') }</kbd>
                                 <div className={styles['label']}>+</div>
                                 <kbd>←</kbd>
                             </div>
@@ -532,7 +532,7 @@ const Settings = () => {
                             </div>
                             <div className={classnames(styles['option-input-container'], styles['shortcut-container'])}>
                                 <kbd>1</kbd>
-                                <div className={styles['label']}>to</div>
+                                <div className={styles['label']}>{ t('SETTINGS_SHORTCUT_TO') }</div>
                                 <kbd>5</kbd>
                             </div>
                         </div>
@@ -549,7 +549,7 @@ const Settings = () => {
                                 <div className={styles['label']}>{ t('SETTINGS_SHORTCUT_EXIT_BACK') }</div>
                             </div>
                             <div className={classnames(styles['option-input-container'], styles['shortcut-container'])}>
-                                <kbd>Esc</kbd>
+                                <kbd>{ t('SETTINGS_SHORTCUT_ESC') }</kbd>
                             </div>
                         </div>
                     </div>
@@ -559,7 +559,7 @@ const Settings = () => {
                 configureServerUrlModalOpen ?
                     <ModalDialog
                         className={styles['configure-server-url-modal-container']}
-                        title={'Configure streaming server url'}
+                        title={t('SETTINGS_SERVER_CONFIGURE_TITLE')}
                         buttons={configureServerUrlModalButtons}
                         onCloseRequest={closeConfigureServerUrlModal}>
                         <TextInput
@@ -567,7 +567,7 @@ const Settings = () => {
                             className={styles['server-url-input']}
                             type={'text'}
                             defaultValue={streamingServerUrlInput.value}
-                            placeholder={'Enter a streaming server url'}
+                            placeholder={t('SETTINGS_SERVER_CONFIGURE_INPUT')}
                             onSubmit={configureServerUrlOnSubmit}
                         />
                     </ModalDialog>
