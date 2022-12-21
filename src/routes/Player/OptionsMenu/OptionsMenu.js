@@ -14,16 +14,12 @@ const OptionsMenu = ({ className, stream }) => {
     const toast = useToast();
     const streamUrl = React.useMemo(() => {
         return stream !== null ?
-            typeof stream.url === 'string' ?
-                stream.url
+            stream.deepLinks &&
+            stream.deepLinks.externalPlayer &&
+            typeof stream.deepLinks.externalPlayer.download === 'string' ?
+                stream.deepLinks.externalPlayer.download
                 :
-                typeof stream.infoHash === 'string' &&
-                typeof stream.fileIdx === 'number' &&
-                typeof streamingServer.selected === 'object' &&
-                typeof streamingServer.selected.transportUrl === 'string' ?
-                    `${streamingServer.selected.transportUrl}${stream.infoHash}/${stream.fileIdx}`
-                    :
-                    null
+                null
             :
             null;
     }, [stream, streamingServer]);
