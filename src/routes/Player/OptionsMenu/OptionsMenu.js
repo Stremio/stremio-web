@@ -39,7 +39,7 @@ const OptionsMenu = ({ className, stream }) => {
                     toast.show({
                         type: 'error',
                         title: 'Error',
-                        message: 'Failed to copy stream link. Try to enable your browser permission.',
+                        message: `Failed to copy stream link: ${streamUrl}`,
                         timeout: 3000
                     });
                 });
