@@ -13,6 +13,7 @@ const BufferingLoader = require('./BufferingLoader');
 const ControlBar = require('./ControlBar');
 const NextVideoPopup = require('./NextVideoPopup');
 const InfoMenu = require('./InfoMenu');
+const OptionsMenu = require('./OptionsMenu');
 const VideosMenu = require('./VideosMenu');
 const SubtitlesMenu = require('./SubtitlesMenu');
 const SpeedMenu = require('./SpeedMenu');
@@ -40,6 +41,7 @@ const Player = ({ urlParams, queryParams }) => {
     });
     const [immersed, setImmersed] = React.useState(true);
     const setImmersedDebounced = React.useCallback(debounce(setImmersed, 3000), []);
+    const [optionsMenuOpen, , closeOptionsMenu, toggleOptionsMenu] = useBinaryState(false);
     const [subtitlesMenuOpen, , closeSubtitlesMenu, toggleSubtitlesMenu] = useBinaryState(false);
     const [infoMenuOpen, , closeInfoMenu, toggleInfoMenu] = useBinaryState(false);
     const [speedMenuOpen, , closeSpeedMenu, toggleSpeedMenu] = useBinaryState(false);
@@ -215,6 +217,9 @@ const Player = ({ urlParams, queryParams }) => {
         toggleFullscreen();
     }, [toggleFullscreen]);
     const onContainerMouseDown = React.useCallback((event) => {
+        if (!event.nativeEvent.optionsMenuClosePrevented) {
+            closeOptionsMenu();
+        }
         if (!event.nativeEvent.subtitlesMenuClosePrevented) {
             closeSubtitlesMenu();
         }
@@ -439,7 +444,7 @@ const Player = ({ urlParams, queryParams }) => {
         const onKeyDown = (event) => {
             switch (event.code) {
                 case 'Space': {
-                    if (!subtitlesMenuOpen && !infoMenuOpen && !videosMenuOpen && !speedMenuOpen&& videoState.paused !== null) {
+                    if (!subtitlesMenuOpen && !infoMenuOpen && !videosMenuOpen && !speedMenuOpen && !optionsMenuOpen && videoState.paused !== null) {
                         if (videoState.paused) {
                             onPlayRequested();
                         } else {
@@ -450,7 +455,7 @@ const Player = ({ urlParams, queryParams }) => {
                     break;
                 }
                 case 'ArrowRight': {
-                    if (!subtitlesMenuOpen && !infoMenuOpen && !videosMenuOpen && !speedMenuOpen && videoState.time !== null) {
+                    if (!subtitlesMenuOpen && !infoMenuOpen && !videosMenuOpen && !speedMenuOpen && !optionsMenuOpen && videoState.time !== null) {
                         const seekTimeMultiplier = event.shiftKey ? 3 : 1;
                         onSeekRequested(videoState.time + (settings.seekTimeDuration * seekTimeMultiplier));
                     }
@@ -458,7 +463,7 @@ const Player = ({ urlParams, queryParams }) => {
                     break;
                 }
                 case 'ArrowLeft': {
-                    if (!subtitlesMenuOpen && !infoMenuOpen && !videosMenuOpen && !speedMenuOpen && videoState.time !== null) {
+                    if (!subtitlesMenuOpen && !infoMenuOpen && !videosMenuOpen && !speedMenuOpen && !optionsMenuOpen && videoState.time !== null) {
                         const seekTimeMultiplier = event.shiftKey ? 3 : 1;
                         onSeekRequested(videoState.time - (settings.seekTimeDuration * seekTimeMultiplier));
                     }
@@ -466,20 +471,21 @@ const Player = ({ urlParams, queryParams }) => {
                     break;
                 }
                 case 'ArrowUp': {
-                    if (!subtitlesMenuOpen && !infoMenuOpen && !videosMenuOpen && !speedMenuOpen && videoState.volume !== null) {
+                    if (!subtitlesMenuOpen && !infoMenuOpen && !videosMenuOpen && !speedMenuOpen && !optionsMenuOpen && videoState.volume !== null) {
                         onVolumeChangeRequested(videoState.volume + 5);
                     }
 
                     break;
                 }
                 case 'ArrowDown': {
-                    if (!subtitlesMenuOpen && !infoMenuOpen && !videosMenuOpen && !speedMenuOpen && videoState.volume !== null) {
+                    if (!subtitlesMenuOpen && !infoMenuOpen && !videosMenuOpen && !speedMenuOpen && !optionsMenuOpen && videoState.volume !== null) {
                         onVolumeChangeRequested(videoState.volume - 5);
                     }
 
                     break;
                 }
                 case 'KeyS': {
+                    closeOptionsMenu();
                     closeInfoMenu();
                     closeSpeedMenu();
                     closeVideosMenu();
@@ -492,6 +498,7 @@ const Player = ({ urlParams, queryParams }) => {
                     break;
                 }
                 case 'KeyI': {
+                    closeOptionsMenu();
                     closeSubtitlesMenu();
                     closeSpeedMenu();
                     closeVideosMenu();
@@ -502,6 +509,7 @@ const Player = ({ urlParams, queryParams }) => {
                     break;
                 }
                 case 'KeyR': {
+                    closeOptionsMenu();
                     closeInfoMenu();
                     closeSubtitlesMenu();
                     closeVideosMenu();
@@ -512,6 +520,7 @@ const Player = ({ urlParams, queryParams }) => {
                     break;
                 }
                 case 'KeyV': {
+                    closeOptionsMenu();
                     closeInfoMenu();
                     closeSubtitlesMenu();
                     closeSpeedMenu();
@@ -522,6 +531,7 @@ const Player = ({ urlParams, queryParams }) => {
                     break;
                 }
                 case 'Escape': {
+                    closeOptionsMenu();
                     closeSubtitlesMenu();
                     closeInfoMenu();
                     closeSpeedMenu();
@@ -537,7 +547,7 @@ const Player = ({ urlParams, queryParams }) => {
         return () => {
             window.removeEventListener('keydown', onKeyDown);
         };
-    }, [player.metaItem, settings.seekTimeDuration, routeFocused, subtitlesMenuOpen, infoMenuOpen, videosMenuOpen, speedMenuOpen, videoState.paused, videoState.time, videoState.volume, videoState.audioTracks, videoState.subtitlesTracks, videoState.extraSubtitlesTracks, videoState.playbackSpeed, toggleSubtitlesMenu, toggleInfoMenu, toggleVideosMenu]);
+    }, [player.metaItem, settings.seekTimeDuration, routeFocused, subtitlesMenuOpen, infoMenuOpen, videosMenuOpen, speedMenuOpen, optionsMenuOpen, videoState.paused, videoState.time, videoState.volume, videoState.audioTracks, videoState.subtitlesTracks, videoState.extraSubtitlesTracks, videoState.playbackSpeed, toggleSubtitlesMenu, toggleInfoMenu, toggleVideosMenu]);
     React.useLayoutEffect(() => {
         return () => {
             setImmersedDebounced.cancel();
@@ -546,7 +556,7 @@ const Player = ({ urlParams, queryParams }) => {
         };
     }, []);
     return (
-        <div className={classnames(styles['player-container'], { [styles['immersed']]: immersed && !casting && videoState.paused !== null && !videoState.paused && !subtitlesMenuOpen && !infoMenuOpen && !speedMenuOpen && !videosMenuOpen && !nextVideoPopupOpen })}
+        <div className={classnames(styles['player-container'], { [styles['immersed']]: immersed && !casting && videoState.paused !== null && !videoState.paused && !subtitlesMenuOpen && !infoMenuOpen && !speedMenuOpen && !videosMenuOpen && !nextVideoPopupOpen && !optionsMenuOpen })}
             onMouseDown={onContainerMouseDown}
             onMouseMove={onContainerMouseMove}
             onMouseOver={onContainerMouseMove}
@@ -591,7 +601,7 @@ const Player = ({ urlParams, queryParams }) => {
                     null
             }
             {
-                subtitlesMenuOpen || infoMenuOpen || videosMenuOpen || speedMenuOpen ?
+                subtitlesMenuOpen || infoMenuOpen || videosMenuOpen || speedMenuOpen || optionsMenuOpen ?
                     <div className={styles['layer']} />
                     :
                     null
@@ -622,6 +632,7 @@ const Player = ({ urlParams, queryParams }) => {
                 onUnmuteRequested={onUnmuteRequested}
                 onVolumeChangeRequested={onVolumeChangeRequested}
                 onSeekRequested={onSeekRequested}
+                onToggleOptionsMenu={toggleOptionsMenu}
                 onToggleSubtitlesMenu={toggleSubtitlesMenu}
                 onToggleInfoMenu={toggleInfoMenu}
                 onToggleSpeedMenu={toggleSpeedMenu}
@@ -695,6 +706,15 @@ const Player = ({ urlParams, queryParams }) => {
                         className={classnames(styles['layer'], styles['menu-layer'])}
                         metaItem={player.metaItem !== null && player.metaItem.type === 'Ready' ? player.metaItem.content : null}
                         seriesInfo={player.seriesInfo}
+                    />
+                    :
+                    null
+            }
+            {
+                optionsMenuOpen ?
+                    <OptionsMenu
+                        className={classnames(styles['layer'], styles['menu-layer'])}
+                        stream={player.selected.stream}
                     />
                     :
                     null
