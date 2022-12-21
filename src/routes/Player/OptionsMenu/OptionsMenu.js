@@ -4,12 +4,11 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('@stremio/stremio-icons/dom');
-const { Button, useStreamingServer, useToast } = require('stremio/common');
+const { Button, useToast } = require('stremio/common');
 // const { useServices } = require('stremio/services');
 const styles = require('./styles');
 
 const OptionsMenu = ({ className, stream }) => {
-    const streamingServer = useStreamingServer();
     // const { core } = useServices();
     const toast = useToast();
     const streamUrl = React.useMemo(() => {
@@ -22,7 +21,7 @@ const OptionsMenu = ({ className, stream }) => {
                 null
             :
             null;
-    }, [stream, streamingServer]);
+    }, [stream]);
     const onCopyStreamButtonClick = React.useCallback(() => {
         if (streamUrl !== null) {
             navigator.clipboard.writeText(streamUrl)
