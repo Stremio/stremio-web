@@ -21,7 +21,7 @@ const Settings = () => {
     const { core } = useServices();
     const { routeFocused } = useRouteFocused();
     const profile = useProfile();
-    const dataExport = useDataExport();
+    const [dataExport, loadDataExport] = useDataExport();
     const streamingServer = useStreamingServer();
     const {
         interfaceLanguageSelect,
@@ -84,10 +84,8 @@ const Settings = () => {
         // TODO
     }, []);
     const exportDataOnClick = React.useCallback(() => {
-        if (dataExport.exportUrl !== null && typeof dataExport.exportUrl === 'string') {
-            window.open(dataExport.exportUrl);
-        }
-    }, [dataExport.exportUrl]);
+        loadDataExport();
+    }, []);
     const reloadStreamingServer = React.useCallback(() => {
         core.transport.dispatch({
             action: 'StreamingServer',
@@ -132,6 +130,11 @@ const Settings = () => {
     const sectionsContainerOnScorll = React.useCallback(throttle(() => {
         updateSelectedSectionId();
     }, 50), []);
+    React.useEffect(() => {
+        if (dataExport.exportUrl !== null && typeof dataExport.exportUrl === 'string') {
+            window.open(dataExport.exportUrl);
+        }
+    }, [dataExport.exportUrl]);
     React.useLayoutEffect(() => {
         if (routeFocused) {
             updateSelectedSectionId();
@@ -244,7 +247,7 @@ const Settings = () => {
                             </Button>
                         </div>
                         <div className={styles['option-container']}>
-                            <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={'Export user data'} disabled={dataExport.exportUrl === null} tabIndex={-1} onClick={exportDataOnClick}>
+                            <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={'Export user data'} tabIndex={-1} onClick={exportDataOnClick}>
                                 <div className={styles['label']}>Export user data</div>
                             </Button>
                         </div>

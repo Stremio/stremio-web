@@ -1,6 +1,7 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
 const React = require('react');
+const { useServices } = require('stremio/services');
 const { useModelState } = require('stremio/common');
 
 const map = (dataExport) => ({
@@ -12,13 +13,20 @@ const map = (dataExport) => ({
 });
 
 const useDataExport = () => {
-    const action = React.useMemo(() => ({
-        action: 'Load',
-        args: {
-            model: 'DataExport',
-        }
-    }), []);
-    return useModelState({ model: 'data_export', action, map });
+    const { core } = useServices();
+    const loadDataExport = React.useCallback(() => {
+        core.transport.dispatch({
+            action: 'Load',
+            args: {
+                model: 'DataExport',
+            }
+        }, 'data_export');
+    }, []);
+    const dataExport = useModelState({ model: 'data_export', map });
+    return [
+        dataExport,
+        loadDataExport
+    ];
 };
 
 module.exports = useDataExport;
