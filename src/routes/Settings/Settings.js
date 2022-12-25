@@ -9,6 +9,7 @@ const { useServices } = require('stremio/services');
 const { Button, Checkbox, MainNavBars, Multiselect, ColorInput, TextInput, ModalDialog, useProfile, useStreamingServer, useBinaryState, withCoreSuspender } = require('stremio/common');
 const useProfileSettingsInputs = require('./useProfileSettingsInputs');
 const useStreamingServerSettingsInputs = require('./useStreamingServerSettingsInputs');
+const useDataExport = require('./useDataExport');
 const styles = require('./styles');
 
 const GENERAL_SECTION = 'general';
@@ -20,6 +21,7 @@ const Settings = () => {
     const { core } = useServices();
     const { routeFocused } = useRouteFocused();
     const profile = useProfile();
+    const [dataExport, loadDataExport] = useDataExport();
     const streamingServer = useStreamingServer();
     const {
         interfaceLanguageSelect,
@@ -82,7 +84,7 @@ const Settings = () => {
         // TODO
     }, []);
     const exportDataOnClick = React.useCallback(() => {
-        // TODO
+        loadDataExport();
     }, []);
     const reloadStreamingServer = React.useCallback(() => {
         core.transport.dispatch({
@@ -128,6 +130,11 @@ const Settings = () => {
     const sectionsContainerOnScorll = React.useCallback(throttle(() => {
         updateSelectedSectionId();
     }, 50), []);
+    React.useEffect(() => {
+        if (dataExport.exportUrl !== null && typeof dataExport.exportUrl === 'string') {
+            window.open(dataExport.exportUrl);
+        }
+    }, [dataExport.exportUrl]);
     React.useLayoutEffect(() => {
         if (routeFocused) {
             updateSelectedSectionId();
@@ -240,7 +247,7 @@ const Settings = () => {
                             </Button>
                         </div>
                         <div className={styles['option-container']}>
-                            <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={'Export user data'} disabled={true} tabIndex={-1} onClick={exportDataOnClick}>
+                            <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={'Export user data'} tabIndex={-1} onClick={exportDataOnClick}>
                                 <div className={styles['label']}>Export user data</div>
                             </Button>
                         </div>
