@@ -19,6 +19,10 @@ const ServicesToaster = () => {
                         break;
                     }
 
+                    if (args.source.event === 'AddonInstalled' && args.source.args.transport_url.startsWith('https://www.strem.io/trakt/addon')) {
+                        break;
+                    }
+
                     toast.show({
                         type: 'error',
                         title: args.source.event,
