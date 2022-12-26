@@ -75,8 +75,11 @@ const Settings = () => {
         });
     }, []);
     const authenticateTraktOnClick = React.useCallback(() => {
-        // TODO
-    }, []);
+        if (profile.auth !== null && profile.auth.user !== null && profile.auth.user.trakt === null && typeof profile.auth.user._id === 'string') {
+            const auth_url = `https://www.strem.io/trakt/auth/${profile.auth.user._id}`;
+            window.open(auth_url);
+        }
+    }, [profile.auth]);
     const importFacebookOnClick = React.useCallback(() => {
         // TODO
     }, []);
@@ -130,6 +133,16 @@ const Settings = () => {
     const sectionsContainerOnScorll = React.useCallback(throttle(() => {
         updateSelectedSectionId();
     }, 50), []);
+    React.useEffect(() => {
+        if (profile.auth !== null && profile.auth.user !== null && profile.auth.user.trakt !== null) {
+            core.transport.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'InstallTraktAddon'
+                }
+            });
+        }
+    }, [profile.auth]);
     React.useEffect(() => {
         if (dataExport.exportUrl !== null && typeof dataExport.exportUrl === 'string') {
             window.open(dataExport.exportUrl);
@@ -223,9 +236,10 @@ const Settings = () => {
                             <div className={styles['option-name-container']}>
                                 <div className={styles['label']}>Trakt Scrobbling</div>
                             </div>
-                            <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Authenticate'} disabled={true} tabIndex={-1} onClick={authenticateTraktOnClick}>
+                            <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Authenticate'} disabled={profile.auth === null || (profile.auth.user !== null && profile.auth.user.trakt !== null)} tabIndex={-1} onClick={authenticateTraktOnClick}>
                                 <Icon className={styles['icon']} icon={'ic_trakt'} />
-                                <div className={styles['label']}>Authenticate</div>
+                                <div className={styles['label']}>
+                                    { profile.auth !== null && profile.auth.user !== null && profile.auth.user.trakt !== null ? 'Authenticated' : 'Authenticate' }</div>
                             </Button>
                         </div>
                         <div className={styles['option-container']}>
