@@ -6,7 +6,7 @@ const throttle = require('lodash.throttle');
 const Icon = require('@stremio/stremio-icons/dom');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
-const { Button, Checkbox, MainNavBars, Multiselect, ColorInput, TextInput, ModalDialog, useProfile, useStreamingServer, useBinaryState, withCoreSuspender } = require('stremio/common');
+const { Button, Checkbox, MainNavBars, Multiselect, ColorInput, TextInput, ModalDialog, useProfile, useStreamingServer, useBinaryState, withCoreSuspender, useToast } = require('stremio/common');
 const useProfileSettingsInputs = require('./useProfileSettingsInputs');
 const useStreamingServerSettingsInputs = require('./useStreamingServerSettingsInputs');
 const useDataExport = require('./useDataExport');
@@ -23,6 +23,7 @@ const Settings = () => {
     const profile = useProfile();
     const [dataExport, loadDataExport] = useDataExport();
     const streamingServer = useStreamingServer();
+    const toast = useToast();
     const {
         interfaceLanguageSelect,
         subtitlesLanguageSelect,
@@ -78,7 +79,14 @@ const Settings = () => {
         // TODO
     }, []);
     const subscribeCalendarOnClick = React.useCallback(() => {
-        // TODO
+        const url = `webcal://www.strem.io/calendar/${profile.auth.user._id}.ics`;
+        window.open(url);
+        toast.show({
+            type: 'success',
+            title: 'Calendar has been added to your default caldendar app',
+            timeout: 25000
+        });
+        //Stremio 4 emits not documented event subscribeCalendar
     }, []);
     const exportDataOnClick = React.useCallback(() => {
         loadDataExport();
@@ -229,7 +237,7 @@ const Settings = () => {
                             <div className={styles['option-name-container']}>
                                 <div className={styles['label']}>Calendar</div>
                             </div>
-                            <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Subscribe'} disabled={true} tabIndex={-1} onClick={subscribeCalendarOnClick}>
+                            <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Subscribe'} disabled={!(profile.auth && profile.auth.user && profile.auth.user._id)} tabIndex={-1} onClick={subscribeCalendarOnClick}>
                                 <Icon className={styles['icon']} icon={'ic_calendar'} />
                                 <div className={styles['label']}>Subscribe</div>
                             </Button>
