@@ -78,10 +78,17 @@ const Settings = () => {
             }
         });
     }, []);
-    const authenticateTraktOnClick = React.useCallback(() => {
+    const toggleTraktOnClick = React.useCallback(() => {
         if (!isTraktAuthenticated && profile.auth !== null && profile.auth.user !== null && typeof profile.auth.user._id === 'string') {
             window.open(`https://www.strem.io/trakt/auth/${profile.auth.user._id}`);
             setTraktAuthStarted(true);
+        } else {
+            core.transport.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'LogoutTrakt'
+                }
+            });
         }
     }, [isTraktAuthenticated, profile.auth]);
     const importFacebookOnClick = React.useCallback(() => {
@@ -253,10 +260,11 @@ const Settings = () => {
                             <div className={styles['option-name-container']}>
                                 <div className={styles['label']}>Trakt Scrobbling</div>
                             </div>
-                            <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Authenticate'} disabled={profile.auth === null || (profile.auth.user !== null && profile.auth.user.trakt !== null)} tabIndex={-1} onClick={authenticateTraktOnClick}>
+                            <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Authenticate'} disabled={profile.auth === null} tabIndex={-1} onClick={toggleTraktOnClick}>
                                 <Icon className={styles['icon']} icon={'ic_trakt'} />
                                 <div className={styles['label']}>
-                                    { profile.auth !== null && profile.auth.user !== null && profile.auth.user.trakt !== null ? 'Authenticated' : 'Authenticate' }</div>
+                                    { profile.auth.user !== null && profile.auth.user.trakt !== null ? 'Log out' : 'Authenticate' }
+                                </div>
                             </Button>
                         </div>
                         <div className={styles['option-container']}>
