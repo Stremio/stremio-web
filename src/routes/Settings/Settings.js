@@ -91,9 +91,6 @@ const Settings = () => {
             });
         }
     }, [isTraktAuthenticated, profile.auth]);
-    const importFacebookOnClick = React.useCallback(() => {
-        // TODO
-    }, []);
     const subscribeCalendarOnClick = React.useCallback(() => {
         // TODO
     }, []);
@@ -265,15 +262,6 @@ const Settings = () => {
                                 <div className={styles['label']}>
                                     { profile.auth.user !== null && profile.auth.user.trakt !== null ? 'Log out' : 'Authenticate' }
                                 </div>
-                            </Button>
-                        </div>
-                        <div className={styles['option-container']}>
-                            <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Facebook</div>
-                            </div>
-                            <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Import'} disabled={true} tabIndex={-1} onClick={importFacebookOnClick}>
-                                <Icon className={styles['icon']} icon={'ic_facebook'} />
-                                <div className={styles['label']}>Import</div>
                             </Button>
                         </div>
                         <div className={styles['option-container']}>
