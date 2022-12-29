@@ -51,7 +51,8 @@ const Settings = () => {
     }, [streamingServerUrlInput]);
     const [traktAuthStarted, setTraktAuthStarted] = React.useState(false);
     const isTraktAuthenticated = React.useMemo(() => {
-        return profile.auth !== null && profile.auth.user !== null && profile.auth.user.trakt !== null;
+        return profile.auth !== null && profile.auth.user !== null && profile.auth.user.trakt !== null &&
+            (Date.now() / 1000) < (profile.auth.user.trakt.created_at + profile.auth.user.trakt.expires_in);
     }, [profile.auth]);
     const configureServerUrlModalButtons = React.useMemo(() => {
         return [
