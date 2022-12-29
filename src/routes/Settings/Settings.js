@@ -162,19 +162,7 @@ const Settings = () => {
             updateSelectedSectionId();
         }
         closeConfigureServerUrlModal();
-        const onWindowFocus = () => {
-            if (!isTraktAuthenticated && traktAuthStarted) {
-                core.transport.dispatch({
-                    action: 'Ctx',
-                    args: {
-                        action: 'PullUserFromAPI'
-                    }
-                });
-            }
-        };
-        window.addEventListener('focus', onWindowFocus);
-        return () => window.removeEventListener('focus', onWindowFocus);
-    }, [routeFocused, isTraktAuthenticated, traktAuthStarted]);
+    }, [routeFocused]);
     return (
         <MainNavBars className={styles['settings-container']} route={'settings'}>
             <div className={classnames(styles['settings-content'], 'animation-fade-in')}>
