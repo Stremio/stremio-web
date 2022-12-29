@@ -49,6 +49,10 @@ const Settings = () => {
         streamingServerUrlInput.onChange(configureServerUrlInputRef.current.value);
         closeConfigureServerUrlModal();
     }, [streamingServerUrlInput]);
+    const [traktAuthStarted, setTraktAuthStarted] = React.useState(false);
+    const isTraktAuthenticated = React.useMemo(() => {
+        return profile.auth !== null && profile.auth.user !== null && profile.auth.user.trakt !== null;
+    }, [profile.auth]);
     const configureServerUrlModalButtons = React.useMemo(() => {
         return [
             {
@@ -75,11 +79,11 @@ const Settings = () => {
         });
     }, []);
     const authenticateTraktOnClick = React.useCallback(() => {
-        if (profile.auth !== null && profile.auth.user !== null && profile.auth.user.trakt === null && typeof profile.auth.user._id === 'string') {
-            const auth_url = `https://www.strem.io/trakt/auth/${profile.auth.user._id}`;
-            window.open(auth_url);
+        if (!isTraktAuthenticated && profile.auth !== null && profile.auth.user !== null && typeof profile.auth.user._id === 'string') {
+            window.open(`https://www.strem.io/trakt/auth/${profile.auth.user._id}`);
+            setTraktAuthStarted(true);
         }
-    }, [profile.auth]);
+    }, [isTraktAuthenticated, profile.auth]);
     const importFacebookOnClick = React.useCallback(() => {
         // TODO
     }, []);
@@ -134,15 +138,16 @@ const Settings = () => {
         updateSelectedSectionId();
     }, 50), []);
     React.useEffect(() => {
-        if (profile.auth !== null && profile.auth.user !== null && profile.auth.user.trakt !== null) {
+        if (isTraktAuthenticated && traktAuthStarted) {
             core.transport.dispatch({
                 action: 'Ctx',
                 args: {
                     action: 'InstallTraktAddon'
                 }
             });
+            setTraktAuthStarted(false);
         }
-    }, [profile.auth]);
+    }, [isTraktAuthenticated, traktAuthStarted]);
     React.useEffect(() => {
         if (dataExport.exportUrl !== null && typeof dataExport.exportUrl === 'string') {
             window.open(dataExport.exportUrl);
@@ -153,7 +158,19 @@ const Settings = () => {
             updateSelectedSectionId();
         }
         closeConfigureServerUrlModal();
-    }, [routeFocused]);
+        const onWindowFocus = () => {
+            if (!isTraktAuthenticated && traktAuthStarted) {
+                core.transport.dispatch({
+                    action: 'Ctx',
+                    args: {
+                        action: 'PullUserFromAPI'
+                    }
+                });
+            }
+        };
+        window.addEventListener('focus', onWindowFocus);
+        return () => window.removeEventListener('focus', onWindowFocus);
+    }, [routeFocused, isTraktAuthenticated, traktAuthStarted]);
     return (
         <MainNavBars className={styles['settings-container']} route={'settings'}>
             <div className={classnames(styles['settings-content'], 'animation-fade-in')}>
