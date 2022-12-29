@@ -90,7 +90,7 @@ const App = () => {
         };
     }, []);
     React.useEffect(() => {
-        if (services.core.active) {
+        const onWindowFocus = () => {
             services.core.transport.dispatch({
                 action: 'Ctx',
                 args: {
@@ -109,7 +109,12 @@ const App = () => {
                     action: 'SyncLibraryWithAPI'
                 }
             });
+        };
+        if (services.core.active) {
+            onWindowFocus();
+            window.addEventListener('focus', onWindowFocus);
         }
+        return () => window.removeEventListener('focus', onWindowFocus);
     }, [initialized]);
     return (
         <React.StrictMode>

@@ -50,6 +50,11 @@ const Settings = () => {
         streamingServerUrlInput.onChange(configureServerUrlInputRef.current.value);
         closeConfigureServerUrlModal();
     }, [streamingServerUrlInput]);
+    const [traktAuthStarted, setTraktAuthStarted] = React.useState(false);
+    const isTraktAuthenticated = React.useMemo(() => {
+        return profile.auth !== null && profile.auth.user !== null && profile.auth.user.trakt !== null &&
+            (Date.now() / 1000) < (profile.auth.user.trakt.created_at + profile.auth.user.trakt.expires_in);
+    }, [profile.auth]);
     const configureServerUrlModalButtons = React.useMemo(() => {
         return [
             {
@@ -75,9 +80,19 @@ const Settings = () => {
             }
         });
     }, []);
-    const authenticateTraktOnClick = React.useCallback(() => {
-        // TODO
-    }, []);
+    const toggleTraktOnClick = React.useCallback(() => {
+        if (!isTraktAuthenticated && profile.auth !== null && profile.auth.user !== null && typeof profile.auth.user._id === 'string') {
+            window.open(`https://www.strem.io/trakt/auth/${profile.auth.user._id}`);
+            setTraktAuthStarted(true);
+        } else {
+            core.transport.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'LogoutTrakt'
+                }
+            });
+        }
+    }, [isTraktAuthenticated, profile.auth]);
     const subscribeCalendarOnClick = React.useCallback(() => {
         const url = `webcal://www.strem.io/calendar/${profile.auth.user._id}.ics`;
         window.open(url);
@@ -135,6 +150,17 @@ const Settings = () => {
     const sectionsContainerOnScorll = React.useCallback(throttle(() => {
         updateSelectedSectionId();
     }, 50), []);
+    React.useEffect(() => {
+        if (isTraktAuthenticated && traktAuthStarted) {
+            core.transport.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'InstallTraktAddon'
+                }
+            });
+            setTraktAuthStarted(false);
+        }
+    }, [isTraktAuthenticated, traktAuthStarted]);
     React.useEffect(() => {
         if (dataExport.exportUrl !== null && typeof dataExport.exportUrl === 'string') {
             window.open(dataExport.exportUrl);
@@ -228,9 +254,11 @@ const Settings = () => {
                             <div className={styles['option-name-container']}>
                                 <div className={styles['label']}>Trakt Scrobbling</div>
                             </div>
-                            <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Authenticate'} disabled={true} tabIndex={-1} onClick={authenticateTraktOnClick}>
+                            <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Authenticate'} disabled={profile.auth === null} tabIndex={-1} onClick={toggleTraktOnClick}>
                                 <Icon className={styles['icon']} icon={'ic_trakt'} />
-                                <div className={styles['label']}>Authenticate</div>
+                                <div className={styles['label']}>
+                                    { profile.auth.user !== null && profile.auth.user.trakt !== null ? 'Log out' : 'Authenticate' }
+                                </div>
                             </Button>
                         </div>
                         <div className={styles['option-container']}>
