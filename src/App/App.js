@@ -91,28 +91,29 @@ const App = () => {
     }, []);
     React.useEffect(() => {
         const onWindowFocus = () => {
-            if (services.core.active) {
-                services.core.transport.dispatch({
-                    action: 'Ctx',
-                    args: {
-                        action: 'PullAddonsFromAPI'
-                    }
-                });
-                services.core.transport.dispatch({
-                    action: 'Ctx',
-                    args: {
-                        action: 'PullUserFromAPI'
-                    }
-                });
-                services.core.transport.dispatch({
-                    action: 'Ctx',
-                    args: {
-                        action: 'SyncLibraryWithAPI'
-                    }
-                });
-            }
+            services.core.transport.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'PullAddonsFromAPI'
+                }
+            });
+            services.core.transport.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'PullUserFromAPI'
+                }
+            });
+            services.core.transport.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'SyncLibraryWithAPI'
+                }
+            });
         };
-        window.addEventListener('focus', onWindowFocus);
+        if (services.core.active) {
+            onWindowFocus();
+            window.addEventListener('focus', onWindowFocus);
+        }
         return () => window.removeEventListener('focus', onWindowFocus);
     }, [initialized]);
     return (
