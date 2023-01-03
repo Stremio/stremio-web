@@ -32,7 +32,7 @@ const map = (player) => ({
         player.metaItem,
 });
 
-const usePlayer = (urlParams) => {
+const usePlayer = (urlParams, videoParams) => {
     const { core } = useServices();
     const { decodeStream } = useCoreSuspender();
     const stream = decodeStream(urlParams.stream);
@@ -44,6 +44,7 @@ const usePlayer = (urlParams) => {
                     model: 'Player',
                     args: {
                         stream,
+                        videoParams,
                         streamRequest: typeof urlParams.streamTransportUrl === 'string' && typeof urlParams.type === 'string' && typeof urlParams.videoId === 'string' ?
                             {
                                 base: urlParams.streamTransportUrl,
@@ -85,7 +86,7 @@ const usePlayer = (urlParams) => {
                 action: 'Unload'
             };
         }
-    }, [urlParams]);
+    }, [urlParams, videoParams]);
     const timeChanged = React.useCallback((time, duration, device) => {
         core.transport.dispatch({
             action: 'Player',

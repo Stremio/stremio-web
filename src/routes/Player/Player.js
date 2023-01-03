@@ -30,7 +30,39 @@ const Player = ({ urlParams, queryParams }) => {
             queryParams.has('maxAudioChannels') ? parseInt(queryParams.get('maxAudioChannels'), 10) : null
         ];
     }, [queryParams]);
-    const [player, timeChanged, pausedChanged, ended, pushToLibrary] = usePlayer(urlParams);
+    const [videoState, setVideoState] = React.useReducer(
+        (videoState, nextVideoState) => ({ ...videoState, ...nextVideoState }),
+        {
+            manifest: null,
+            stream: null,
+            paused: null,
+            time: null,
+            duration: null,
+            buffering: null,
+            volume: null,
+            muted: null,
+            playbackSpeed: null,
+            videoParams: null,
+            audioTracks: [],
+            selectedAudioTrackId: null,
+            subtitlesTracks: [],
+            selectedSubtitlesTrackId: null,
+            subtitlesOffset: null,
+            subtitlesSize: null,
+            subtitlesTextColor: null,
+            subtitlesBackgroundColor: null,
+            subtitlesOutlineColor: null,
+            extraSubtitlesTracks: [],
+            selectedExtraSubtitlesTrackId: null,
+            extraSubtitlesSize: null,
+            extraSubtitlesDelay: null,
+            extraSubtitlesOffset: null,
+            extraSubtitlesTextColor: null,
+            extraSubtitlesBackgroundColor: null,
+            extraSubtitlesOutlineColor: null
+        }
+    );
+    const [player, timeChanged, pausedChanged, ended, pushToLibrary] = usePlayer(urlParams, videoState.videoParams);
     const [settings, updateSettings] = useSettings();
     const streamingServer = useStreamingServer();
     const routeFocused = useRouteFocused();
@@ -51,37 +83,6 @@ const Player = ({ urlParams, queryParams }) => {
     const defaultSubtitlesSelected = React.useRef(false);
     const defaultAudioTrackSelected = React.useRef(false);
     const [error, setError] = React.useState(null);
-    const [videoState, setVideoState] = React.useReducer(
-        (videoState, nextVideoState) => ({ ...videoState, ...nextVideoState }),
-        {
-            manifest: null,
-            stream: null,
-            paused: null,
-            time: null,
-            duration: null,
-            buffering: null,
-            volume: null,
-            muted: null,
-            playbackSpeed: null,
-            audioTracks: [],
-            selectedAudioTrackId: null,
-            subtitlesTracks: [],
-            selectedSubtitlesTrackId: null,
-            subtitlesOffset: null,
-            subtitlesSize: null,
-            subtitlesTextColor: null,
-            subtitlesBackgroundColor: null,
-            subtitlesOutlineColor: null,
-            extraSubtitlesTracks: [],
-            selectedExtraSubtitlesTrackId: null,
-            extraSubtitlesSize: null,
-            extraSubtitlesDelay: null,
-            extraSubtitlesOffset: null,
-            extraSubtitlesTextColor: null,
-            extraSubtitlesBackgroundColor: null,
-            extraSubtitlesOutlineColor: null
-        }
-    );
     const videoRef = React.useRef(null);
     const dispatch = React.useCallback((action, options) => {
         if (videoRef.current !== null) {
