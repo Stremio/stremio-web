@@ -22,7 +22,7 @@ const OptionsMenu = ({ className, stream, playbackDevices }) => {
             :
             null;
     }, [stream]);
-    const externalPlayers = React.useMemo(() => {
+    const externalDevices = React.useMemo(() => {
         return playbackDevices.filter(({ type }) => type === 'external');
     }, [playbackDevices]);
     const onCopyStreamButtonClick = React.useCallback(() => {
@@ -52,7 +52,7 @@ const OptionsMenu = ({ className, stream, playbackDevices }) => {
             window.open(streamUrl);
         }
     }, [streamUrl]);
-    const onExternalPlayRequested = React.useCallback((deviceId) => {
+    const onExternalDeviceRequested = React.useCallback((deviceId) => {
         if (streamUrl !== null) {
             core.transport.dispatch({
                 action: 'StreamingServer',
@@ -84,14 +84,14 @@ const OptionsMenu = ({ className, stream, playbackDevices }) => {
                 onClick={onDownloadVideoButtonClick}
             />
             {
-                !stream.infoHash && externalPlayers.map(({ id, name }) => (
+                !stream.infoHash && externalDevices.map(({ id, name }) => (
                     <Option
                         key={id}
                         icon={'ic_vlc'}
                         label={`Play in ${name}`}
-                        playerId={id}
+                        deviceId={id}
                         disabled={stream === null}
-                        onClick={onExternalPlayRequested}
+                        onClick={onExternalDeviceRequested}
                     />
                 ))
             }
