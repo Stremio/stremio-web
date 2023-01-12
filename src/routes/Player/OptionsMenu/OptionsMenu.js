@@ -80,7 +80,7 @@ const OptionsMenu = ({ className, stream, playbackDevices }) => {
                 <div className={styles['label']}>Download Video</div>
             </Button>
             {
-                externalPlayers.map(({ id, name }) => (
+                !stream.infoHash && externalPlayers.map(({ id, name }) => (
                     <ExternalPlayerButton
                         key={id}
                         id={id}
