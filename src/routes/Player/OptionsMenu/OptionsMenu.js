@@ -3,9 +3,9 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const Icon = require('@stremio/stremio-icons/dom');
-const { Button, useToast } = require('stremio/common');
+const { useToast } = require('stremio/common');
 const { useServices } = require('stremio/services');
+const Option = require('./Option');
 const styles = require('./styles');
 
 const OptionsMenu = ({ className, stream, playbackDevices }) => {
@@ -71,22 +71,27 @@ const OptionsMenu = ({ className, stream, playbackDevices }) => {
     }, []);
     return (
         <div className={classnames(className, styles['options-menu-container'])} onMouseDown={onMouseDown}>
-            <Button className={classnames(styles['option-container'], { 'disabled': stream === null })} disabled={stream === null} onClick={onCopyStreamButtonClick}>
-                <Icon className={styles['icon']} icon={'ic_link'} />
-                <div className={styles['label']}>Copy Stream Link</div>
-            </Button>
-            <Button className={classnames(styles['option-container'], { 'disabled': stream === null })} disabled={stream === null}onClick={onDownloadVideoButtonClick}>
-                <Icon className={styles['icon']} icon={'ic_downloads'} />
-                <div className={styles['label']}>Download Video</div>
-            </Button>
+            <Option
+                icon={'ic_link'}
+                label={'Copy Stream Link'}
+                disabled={stream === null}
+                onClick={onCopyStreamButtonClick}
+            />
+            <Option
+                icon={'ic_downloads'}
+                label={'Download Video'}
+                disabled={stream === null}
+                onClick={onDownloadVideoButtonClick}
+            />
             {
                 !stream.infoHash && externalPlayers.map(({ id, name }) => (
-                    <ExternalPlayerButton
+                    <Option
                         key={id}
-                        id={id}
-                        name={name}
+                        icon={'ic_vlc'}
+                        label={`Play in ${name}`}
+                        playerId={id}
                         disabled={stream === null}
-                        onExternalPlayRequested={onExternalPlayRequested}
+                        onClick={onExternalPlayRequested}
                     />
                 ))
             }
@@ -98,27 +103,6 @@ OptionsMenu.propTypes = {
     className: PropTypes.string,
     stream: PropTypes.object,
     playbackDevices: PropTypes.array
-};
-
-const ExternalPlayerButton = ({ id, name, disabled, onExternalPlayRequested }) => {
-    const onClick = React.useCallback(() => {
-        if (typeof onExternalPlayRequested === 'function') {
-            onExternalPlayRequested(id);
-        }
-    }, [onExternalPlayRequested, id]);
-    return (
-        <Button className={classnames(styles['option-container'], { 'disabled': disabled })} disabled={disabled} onClick={onClick}>
-            <Icon className={styles['icon']} icon={'ic_vlc'} />
-            <div className={styles['label']}>Play in {name}</div>
-        </Button>
-    );
-};
-
-ExternalPlayerButton.propTypes = {
-    id: PropTypes.string,
-    name: PropTypes.string,
-    disabled: PropTypes.bool,
-    onExternalPlayRequested: PropTypes.func,
 };
 
 module.exports = OptionsMenu;
