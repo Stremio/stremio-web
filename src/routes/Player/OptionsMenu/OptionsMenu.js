@@ -5,11 +5,11 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('@stremio/stremio-icons/dom');
 const { Button, useToast } = require('stremio/common');
-// const { useServices } = require('stremio/services');
+const { useServices } = require('stremio/services');
 const styles = require('./styles');
 
-const OptionsMenu = ({ className, stream }) => {
-    // const { core } = useServices();
+const OptionsMenu = ({ className, stream, playbackDevices }) => {
+    const { core } = useServices();
     const toast = useToast();
     const streamUrl = React.useMemo(() => {
         return stream !== null ?
@@ -22,6 +22,9 @@ const OptionsMenu = ({ className, stream }) => {
             :
             null;
     }, [stream]);
+    const externalPlayers = React.useMemo(() => {
+        return playbackDevices.filter(({ type }) => type === 'external');
+    }, [playbackDevices]);
     const onCopyStreamButtonClick = React.useCallback(() => {
         if (streamUrl !== null) {
             navigator.clipboard.writeText(streamUrl)
@@ -49,20 +52,20 @@ const OptionsMenu = ({ className, stream }) => {
             window.open(streamUrl);
         }
     }, [streamUrl]);
-    // const onExternalPlayerButtonClick = React.useCallback(() => {
-    //     if (streamUrl !== null) {
-    //         core.transport.dispatch({
-    //             action: 'StreamingServer',
-    //             args: {
-    //                 action: 'PlayOnDevice',
-    //                 args: {
-    //                     device: 'vlc',
-    //                     source: streamUrl,
-    //                 }
-    //             }
-    //         });
-    //     }
-    // }, [streamUrl]);
+    const onExternalPlayRequested = React.useCallback((deviceId) => {
+        if (streamUrl !== null) {
+            core.transport.dispatch({
+                action: 'StreamingServer',
+                args: {
+                    action: 'PlayOnDevice',
+                    args: {
+                        device: deviceId,
+                        source: streamUrl,
+                    }
+                }
+            });
+        }
+    }, [streamUrl]);
     const onMouseDown = React.useCallback((event) => {
         event.nativeEvent.optionsMenuClosePrevented = true;
     }, []);
@@ -76,17 +79,46 @@ const OptionsMenu = ({ className, stream }) => {
                 <Icon className={styles['icon']} icon={'ic_downloads'} />
                 <div className={styles['label']}>Download Video</div>
             </Button>
-            {/* <Button className={classnames(styles['option-container'], { 'disabled': stream === null })} disabled={stream === null} onClick={onExternalPlayerButtonClick}>
-                <Icon className={styles['icon']} icon={'ic_vlc'} />
-                <div className={styles['label']}>Play in External Player</div>
-            </Button> */}
+            {
+                externalPlayers.map(({ id, name }) => (
+                    <ExternalPlayerButton
+                        key={id}
+                        id={id}
+                        name={name}
+                        disabled={stream === null}
+                        onExternalPlayRequested={onExternalPlayRequested}
+                    />
+                ))
+            }
         </div>
     );
 };
 
 OptionsMenu.propTypes = {
     className: PropTypes.string,
-    stream: PropTypes.object
+    stream: PropTypes.object,
+    playbackDevices: PropTypes.array
+};
+
+const ExternalPlayerButton = ({ id, name, disabled, onExternalPlayRequested }) => {
+    const onClick = React.useCallback(() => {
+        if (typeof onExternalPlayRequested === 'function') {
+            onExternalPlayRequested(id);
+        }
+    }, [onExternalPlayRequested, id]);
+    return (
+        <Button className={classnames(styles['option-container'], { 'disabled': disabled })} disabled={disabled} onClick={onClick}>
+            <Icon className={styles['icon']} icon={'ic_vlc'} />
+            <div className={styles['label']}>Play in {name}</div>
+        </Button>
+    );
+};
+
+ExternalPlayerButton.propTypes = {
+    id: PropTypes.string,
+    name: PropTypes.string,
+    disabled: PropTypes.bool,
+    onExternalPlayRequested: PropTypes.func,
 };
 
 module.exports = OptionsMenu;

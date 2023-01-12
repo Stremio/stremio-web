@@ -715,6 +715,7 @@ const Player = ({ urlParams, queryParams }) => {
                     <OptionsMenu
                         className={classnames(styles['layer'], styles['menu-layer'])}
                         stream={player.selected.stream}
+                        playbackDevices={streamingServer.playbackDevices !== null && streamingServer.playbackDevices.type === 'Ready' ? streamingServer.playbackDevices.content : []}
                     />
                     :
                     null
