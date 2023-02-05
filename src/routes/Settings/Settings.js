@@ -594,6 +594,7 @@ const Settings = () => {
                         onCloseRequest={closeConfigureServerUrlModal}>
                         <TextInput
                             ref={configureServerUrlInputRef}
+                            autoFocus={true}
                             className={styles['server-url-input']}
                             type={'text'}
                             defaultValue={streamingServerUrlInput.value}
