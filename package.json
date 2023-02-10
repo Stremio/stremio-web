@@ -31,7 +31,7 @@
         "lodash.isequal": "4.5.0",
         "lodash.throttle": "4.1.1",
         "magnet-uri": "6.2.0",
-        "prop-types": "15.7.2",
+        "prop-types": "15.8.1",
         "react": "18.2.0",
         "react-dom": "18.2.0",
         "react-focus-lock": "2.9.1",
