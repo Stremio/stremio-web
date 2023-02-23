@@ -53,16 +53,18 @@ const TORRENT_PROFILES = {
 
 const useStreamingServerSettingsInputs = (streamingServer) => {
     const { core } = useServices();
-    // TODO combine those useMemo in one
-    const cacheSizeSelect = React.useMemo(() => {
-        if (streamingServer.settings === null || streamingServer.settings.type !== 'Ready') {
-            return null;
-        }
 
-        return {
+    return React.useMemo(() => {
+        if (streamingServer.settings === null || streamingServer.settings.type !== 'Ready') {
+            return {
+                cacheSizeSelect: null,
+                torrentProfileSelect: null,
+            };
+        }
+        const cacheSizeSelect = {
             options: CACHE_SIZES.map((size) => ({
                 label: cacheSizeToString(size),
-                value: JSON.stringify(size)
+                value: JSON.stringify(size),
             })),
             selected: [JSON.stringify(streamingServer.settings.content.cacheSize)],
             renderLabelText: () => {
@@ -75,45 +77,51 @@ const useStreamingServerSettingsInputs = (streamingServer) => {
                         action: 'UpdateSettings',
                         args: {
                             ...streamingServer.settings.content,
-                            cacheSize: JSON.parse(event.value)
-                        }
-                    }
+                            cacheSize: JSON.parse(event.value),
+                        },
+                    },
                 });
-            }
+            },
         };
-    }, [streamingServer.settings]);
-    const torrentProfileSelect = React.useMemo(() => {
-        if (streamingServer.settings === null || streamingServer.settings.type !== 'Ready') {
-            return null;
-        }
-
         const selectedTorrentProfile = {
             btDownloadSpeedHardLimit: streamingServer.settings.content.btDownloadSpeedHardLimit,
             btDownloadSpeedSoftLimit: streamingServer.settings.content.btDownloadSpeedSoftLimit,
             btHandshakeTimeout: streamingServer.settings.content.btHandshakeTimeout,
             btMaxConnections: streamingServer.settings.content.btMaxConnections,
             btMinPeersForStable: streamingServer.settings.content.btMinPeersForStable,
-            btRequestTimeout: streamingServer.settings.content.btRequestTimeout
+            btRequestTimeout: streamingServer.settings.content.btRequestTimeout,
         };
         const isCustomTorrentProfileSelected = Object.values(TORRENT_PROFILES).every((torrentProfile) => {
             return !isEqual(torrentProfile, selectedTorrentProfile);
         });
-        return {
+        const torrentProfileSelect = {
             options: Object.keys(TORRENT_PROFILES)
                 .map((profileName) => ({
                     label: profileName,
-                    value: JSON.stringify(TORRENT_PROFILES[profileName])
+                    value: JSON.stringify(TORRENT_PROFILES[profileName]),
                 }))
                 .concat(
-                    isCustomTorrentProfileSelected ?
-                        [{
-                            label: 'custom',
-                            value: JSON.stringify(selectedTorrentProfile)
-                        }]
-                        :
-                        []
+                    isCustomTorrentProfileSelected
+                        ? [
+                            {
+                                label: 'custom',
+                                value: JSON.stringify(selectedTorrentProfile),
+                            },
+                        ]
+                        : [],
                 ),
-            selected: [JSON.stringify(selectedTorrentProfile)],
+            selected: [
+                JSON.stringify(
+                    Object.keys(TORRENT_PROFILES).find((profileName) =>
+                        isEqual(TORRENT_PROFILES[profileName], selectedTorrentProfile),
+                    ) || selectedTorrentProfile,
+                ),
+            ],
+            renderLabelText: () => {
+                return Object.keys(TORRENT_PROFILES).find((profileName) =>
+                    isEqual(TORRENT_PROFILES[profileName], selectedTorrentProfile),
+                ) || 'custom';
+            },
             onSelect: (event) => {
                 core.transport.dispatch({
                     action: 'StreamingServer',
@@ -121,14 +129,17 @@ const useStreamingServerSettingsInputs = (streamingServer) => {
                         action: 'UpdateSettings',
                         args: {
                             ...streamingServer.settings.content,
-                            ...JSON.parse(event.value)
-                        }
-                    }
+                            ...JSON.parse(event.value),
+                        },
+                    },
                 });
-            }
+            },
         };
-    }, [streamingServer.settings]);
-    return { cacheSizeSelect, torrentProfileSelect };
+        return {
+            cacheSizeSelect,
+            torrentProfileSelect,
+        };
+    }, [streamingServer.settings, core]);
 };
 
 module.exports = useStreamingServerSettingsInputs;
