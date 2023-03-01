@@ -11,6 +11,8 @@ const CredentialsTextInput = require('./CredentialsTextInput');
 const ConsentCheckbox = require('./ConsentCheckbox');
 const PasswordResetModal = require('./PasswordResetModal');
 const useFacebookToken = require('./useFacebookToken');
+const useProfile = require('stremio/common/useProfile');
+const { withCoreSuspender } = require('stremio/common/CoreSuspender');
 const styles = require('./styles');
 
 const SIGNUP_FORM = 'signup';
@@ -18,6 +20,7 @@ const LOGIN_FORM = 'login';
 
 const Intro = ({ queryParams }) => {
     const { core } = useServices();
+    const profile = useProfile();
     const routeFocused = useRouteFocused();
     const getFacebookToken = useFacebookToken();
     const emailRef = React.useRef(null);
@@ -29,6 +32,7 @@ const Intro = ({ queryParams }) => {
     const errorRef = React.useRef(null);
     const [passwordRestModalOpen, openPasswordRestModal, closePasswordResetModal] = useBinaryState(false);
     const [loaderModalOpen, openLoaderModal, closeLoaderModal] = useBinaryState(false);
+
     const [state, dispatch] = React.useReducer(
         (state, action) => {
             switch (action.type) {
@@ -278,6 +282,12 @@ const Intro = ({ queryParams }) => {
             core.transport.off('CoreEvent', onCoreEvent);
         };
     }, [routeFocused]);
+
+    if(profile?.auth?.key) {
+        window.location = '/';
+        return;
+    }
+
     return (
         <div className={styles['intro-container']}>
             <div className={styles['form-container']}>
@@ -411,4 +421,4 @@ Intro.propTypes = {
     queryParams: PropTypes.instanceOf(URLSearchParams)
 };
 
-module.exports = Intro;
+module.exports = withCoreSuspender(Intro);
