@@ -589,7 +589,7 @@ const Player = ({ urlParams, queryParams }) => {
                     <div className={classnames(styles['layer'], styles['error-layer'])}>
                         <div className={styles['error-label']} title={error.message}>{error.message}</div>
                         {
-                            player.selected !== null && player.selected.stream && player.selected.stream.deepLinks && player.selected.stream.deepLinks.externalPlayer ?
+                            player.selected !== null ?
                                 <Button className={styles['playlist-button']} title={'Open in external player'} href={player.selected.stream.deepLinks.externalPlayer.href} download={player.selected.stream.deepLinks.externalPlayer.fileName} target={'_blank'}>
                                     <Icon className={styles['icon']} icon={'ic_downloads'} />
                                     <div className={styles['label']}>Open in external player</div>
