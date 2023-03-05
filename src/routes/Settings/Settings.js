@@ -257,7 +257,7 @@ const Settings = () => {
                             <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Authenticate'} disabled={profile.auth === null} tabIndex={-1} onClick={toggleTraktOnClick}>
                                 <Icon className={styles['icon']} icon={'ic_trakt'} />
                                 <div className={styles['label']}>
-                                    { profile.auth.user !== null && profile.auth.user.trakt !== null ? 'Log out' : 'Authenticate' }
+                                    { profile.auth !== null && profile.auth.user !== null && profile.auth.user.trakt !== null ? 'Log out' : 'Authenticate' }
                                 </div>
                             </Button>
                         </div>
