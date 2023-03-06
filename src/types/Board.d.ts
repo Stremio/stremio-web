@@ -1,0 +1,1 @@
+type Board = CatalogsWithExtra;

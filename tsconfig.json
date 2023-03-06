@@ -1,0 +1,20 @@
+{
+    "compilerOptions": {
+        "lib": ["DOM", "DOM.Iterable"],
+        "jsx": "preserve",
+        "rootDir": "./src",
+        "moduleResolution": "node",
+        "baseUrl": ".",
+        "paths": {
+            "stremio/*": ["src/*"],
+        },
+        "resolveJsonModule": true,
+        "allowJs": true,
+        "checkJs": false,
+        "noEmit": true,
+        "strict": false
+    },
+    "include": [
+        "./src",
+    ],
+}
