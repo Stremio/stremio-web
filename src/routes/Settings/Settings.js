@@ -7,9 +7,10 @@ const { useTranslation } = require('react-i18next');
 const Icon = require('@stremio/stremio-icons/dom');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
-const { Button, Checkbox, MainNavBars, Multiselect, ColorInput, TextInput, ModalDialog, useProfile, useStreamingServer, useBinaryState, withCoreSuspender } = require('stremio/common');
+const { Button, Checkbox, MainNavBars, Multiselect, ColorInput, TextInput, ModalDialog, useProfile, useStreamingServer, useBinaryState, withCoreSuspender, useToast } = require('stremio/common');
 const useProfileSettingsInputs = require('./useProfileSettingsInputs');
 const useStreamingServerSettingsInputs = require('./useStreamingServerSettingsInputs');
+const useDataExport = require('./useDataExport');
 const styles = require('./styles');
 
 const GENERAL_SECTION = 'general';
@@ -22,7 +23,9 @@ const Settings = () => {
     const { core } = useServices();
     const { routeFocused } = useRouteFocused();
     const profile = useProfile();
+    const [dataExport, loadDataExport] = useDataExport();
     const streamingServer = useStreamingServer();
+    const toast = useToast();
     const {
         interfaceLanguageSelect,
         subtitlesLanguageSelect,
@@ -49,6 +52,11 @@ const Settings = () => {
         streamingServerUrlInput.onChange(configureServerUrlInputRef.current.value);
         closeConfigureServerUrlModal();
     }, [streamingServerUrlInput]);
+    const [traktAuthStarted, setTraktAuthStarted] = React.useState(false);
+    const isTraktAuthenticated = React.useMemo(() => {
+        return profile.auth !== null && profile.auth.user !== null && profile.auth.user.trakt !== null &&
+            (Date.now() / 1000) < (profile.auth.user.trakt.created_at + profile.auth.user.trakt.expires_in);
+    }, [profile.auth]);
     const configureServerUrlModalButtons = React.useMemo(() => {
         return [
             {
@@ -74,17 +82,31 @@ const Settings = () => {
             }
         });
     }, []);
-    const authenticateTraktOnClick = React.useCallback(() => {
-        // TODO
-    }, []);
-    const importFacebookOnClick = React.useCallback(() => {
-        // TODO
-    }, []);
+    const toggleTraktOnClick = React.useCallback(() => {
+        if (!isTraktAuthenticated && profile.auth !== null && profile.auth.user !== null && typeof profile.auth.user._id === 'string') {
+            window.open(`https://www.strem.io/trakt/auth/${profile.auth.user._id}`);
+            setTraktAuthStarted(true);
+        } else {
+            core.transport.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'LogoutTrakt'
+                }
+            });
+        }
+    }, [isTraktAuthenticated, profile.auth]);
     const subscribeCalendarOnClick = React.useCallback(() => {
-        // TODO
+        const url = `webcal://www.strem.io/calendar/${profile.auth.user._id}.ics`;
+        window.open(url);
+        toast.show({
+            type: 'success',
+            title: 'Calendar has been added to your default caldendar app',
+            timeout: 25000
+        });
+        //Stremio 4 emits not documented event subscribeCalendar
     }, []);
     const exportDataOnClick = React.useCallback(() => {
-        // TODO
+        loadDataExport();
     }, []);
     const reloadStreamingServer = React.useCallback(() => {
         core.transport.dispatch({
@@ -130,6 +152,22 @@ const Settings = () => {
     const sectionsContainerOnScorll = React.useCallback(throttle(() => {
         updateSelectedSectionId();
     }, 50), []);
+    React.useEffect(() => {
+        if (isTraktAuthenticated && traktAuthStarted) {
+            core.transport.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'InstallTraktAddon'
+                }
+            });
+            setTraktAuthStarted(false);
+        }
+    }, [isTraktAuthenticated, traktAuthStarted]);
+    React.useEffect(() => {
+        if (dataExport.exportUrl !== null && typeof dataExport.exportUrl === 'string') {
+            window.open(dataExport.exportUrl);
+        }
+    }, [dataExport.exportUrl]);
     React.useLayoutEffect(() => {
         if (routeFocused) {
             updateSelectedSectionId();
@@ -217,31 +255,24 @@ const Settings = () => {
                             <div className={styles['option-name-container']}>
                                 <div className={styles['label']}>Trakt Scrobbling</div>
                             </div>
-                            <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Authenticate'} disabled={true} tabIndex={-1} onClick={authenticateTraktOnClick}>
+                            <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Authenticate'} disabled={profile.auth === null} tabIndex={-1} onClick={toggleTraktOnClick}>
                                 <Icon className={styles['icon']} icon={'ic_trakt'} />
-                                <div className={styles['label']}>{ t('SETTINGS_TRAKT_AUTHENTICATE') }</div>
-                            </Button>
-                        </div>
-                        <div className={styles['option-container']}>
-                            <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Facebook</div>
-                            </div>
-                            <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Import'} disabled={true} tabIndex={-1} onClick={importFacebookOnClick}>
-                                <Icon className={styles['icon']} icon={'ic_facebook'} />
-                                <div className={styles['label']}>{ t('SETTINGS_FACEBOOK_IMPORT') }</div>
+                                <div className={styles['label']}>
+                                    { profile.auth !== null && profile.auth.user !== null && profile.auth.user.trakt !== null ? t('LOG_OUT') : t('SETTINGS_TRAKT_AUTHENTICATE') }
+                                </div>
                             </Button>
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
                                 <div className={styles['label']}>{ t('Calendar') }</div>
                             </div>
-                            <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Subscribe'} disabled={true} tabIndex={-1} onClick={subscribeCalendarOnClick}>
+                            <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Subscribe'} disabled={!(profile.auth && profile.auth.user && profile.auth.user._id)} tabIndex={-1} onClick={subscribeCalendarOnClick}>
                                 <Icon className={styles['icon']} icon={'ic_calendar'} />
                                 <div className={styles['label']}>{ t('SETTINGS_CALENDAR_SUBSCRIBE') }</div>
                             </Button>
                         </div>
                         <div className={styles['option-container']}>
-                            <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={t('SETTINGS_DATA_EXPORT')} disabled={true} tabIndex={-1} onClick={exportDataOnClick}>
+                            <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={t('SETTINGS_DATA_EXPORT')} tabIndex={-1} onClick={exportDataOnClick}>
                                 <div className={styles['label']}>{ t('SETTINGS_DATA_EXPORT') }</div>
                             </Button>
                         </div>
@@ -564,6 +595,7 @@ const Settings = () => {
                         onCloseRequest={closeConfigureServerUrlModal}>
                         <TextInput
                             ref={configureServerUrlInputRef}
+                            autoFocus={true}
                             className={styles['server-url-input']}
                             type={'text'}
                             defaultValue={streamingServerUrlInput.value}

@@ -107,7 +107,7 @@ const App = () => {
                 i18n.changeLanguage(state.profile.settings.interfaceLanguage);
             }
         };
-        if (services.core.active) {
+        const onWindowFocus = () => {
             services.core.transport.dispatch({
                 action: 'Ctx',
                 args: {
@@ -126,6 +126,10 @@ const App = () => {
                     action: 'SyncLibraryWithAPI'
                 }
             });
+        };
+        if (services.core.active) {
+            onWindowFocus();
+            window.addEventListener('focus', onWindowFocus);
             services.core.transport.on('CoreEvent', onCoreEvent);
             services.core.transport
                 .getState('ctx')
@@ -133,6 +137,7 @@ const App = () => {
                 .catch((e) => console.error(e));
         }
         return () => {
+            window.removeEventListener('focus', onWindowFocus);
             services.core.transport.off('CoreEvent', onCoreEvent);
         };
     }, [initialized]);

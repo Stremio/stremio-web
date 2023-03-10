@@ -34,6 +34,7 @@ const ControlBar = ({
     onToggleInfoMenu,
     onToggleSpeedMenu,
     onToggleVideosMenu,
+    onToggleOptionsMenu,
     ...props
 }) => {
     const { chromecast } = useServices();
@@ -50,6 +51,9 @@ const ControlBar = ({
     }, []);
     const onVideosButtonMouseDown = React.useCallback((event) => {
         event.nativeEvent.videosMenuClosePrevented = true;
+    }, []);
+    const onOptionsButtonMouseDown = React.useCallback((event) => {
+        event.nativeEvent.optionsMenuClosePrevented = true;
     }, []);
     const onPlayPauseButtonClick = React.useCallback(() => {
         if (paused) {
@@ -102,6 +106,11 @@ const ControlBar = ({
             onToggleVideosMenu();
         }
     }, [onToggleVideosMenu]);
+    const onOptionsButtonClick = React.useCallback(() => {
+        if (typeof onToggleOptionsMenu === 'function') {
+            onToggleOptionsMenu();
+        }
+    }, [onToggleOptionsMenu]);
     const onChromecastButtonClick = React.useCallback(() => {
         chromecast.transport.requestSession();
     }, []);
@@ -179,6 +188,9 @@ const ControlBar = ({
                             :
                             null
                     }
+                    <Button className={styles['control-bar-button']} tabIndex={-1} onMouseDown={onOptionsButtonMouseDown} onClick={onOptionsButtonClick}>
+                        <Icon className={styles['icon']} icon={'ic_more'} />
+                    </Button>
                 </div>
             </div>
         </div>
@@ -206,7 +218,8 @@ ControlBar.propTypes = {
     onToggleSubtitlesMenu: PropTypes.func,
     onToggleInfoMenu: PropTypes.func,
     onToggleSpeedMenu: PropTypes.func,
-    onToggleVideosMenu: PropTypes.func
+    onToggleVideosMenu: PropTypes.func,
+    onToggleOptionsMenu: PropTypes.func,
 };
 
 module.exports = ControlBar;
