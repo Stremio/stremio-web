@@ -3,6 +3,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
+const { t } = require('i18next');
 const Image = require('stremio/common/Image');
 const SearchBar = require('stremio/common/SearchBar');
 const SeasonsBar = require('./SeasonsBar');
@@ -62,7 +63,7 @@ const VideosList = ({ className, metaItem, season, seasonOnSelect }) => {
                 !metaItem || metaItem.content.type === 'Loading' ?
                     <React.Fragment>
                         <SeasonsBar.Placeholder className={styles['seasons-bar']} />
-                        <SearchBar.Placeholder className={styles['search-bar']} title={'Search videos'} />
+                        <SearchBar.Placeholder className={styles['search-bar']} title={t('SEARCH_VIDEOS')} />
                         <div className={styles['videos-scroll-container']}>
                             <Video.Placeholder />
                             <Video.Placeholder />
@@ -92,7 +93,7 @@ const VideosList = ({ className, metaItem, season, seasonOnSelect }) => {
                             }
                             <SearchBar
                                 className={styles['search-bar']}
-                                title={'Search videos'}
+                                title={t('SEARCH_VIDEOS')}
                                 value={search}
                                 onChange={searchInputOnChange}
                             />

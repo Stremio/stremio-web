@@ -82,7 +82,7 @@ const StreamsList = ({ className, ...props }) => {
                     props.streams.every((streams) => streams.content.type === 'Err') ?
                         <div className={styles['message-container']}>
                             <Image className={styles['image']} src={require('/images/empty.png')} alt={' '} />
-                            <div className={styles['label']}>No streams were found!</div>
+                            <div className={styles['label']}>{t('NO_STREAM')}</div>
                         </div>
                         :
                         filteredStreams.length === 0 ?
