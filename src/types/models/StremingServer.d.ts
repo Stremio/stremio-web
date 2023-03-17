@@ -1,3 +1,17 @@
+type Torrent = [
+    {
+        extra: any[],
+        id: string,
+        resource: string,
+        type: string,
+    },
+    {
+        metaDetailsStreams: string | null,
+        metaDetailsVideos: string | null,
+        player: string | null,
+    }
+];
+
 type StreamingServerSettings = {
     appPath: string,
     btDownloadSpeedHardLimit: number,

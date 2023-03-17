@@ -1,3 +1,8 @@
+interface LibraryItemLibrary extends LibraryItem {
+    progress: number,
+    deepLinks: LibraryItemDeepLinks,
+}
+
 type LibraryDeepLinks = {
     library: string,
 }
@@ -7,12 +12,12 @@ type LibraryPage = {
 } | null;
 
 type Library = {
-    catalog: LibraryItem[],
+    catalog: LibraryItemLibrary[],
     selectable: {
         nextPage: LibraryPage,
         prevPage: LibraryPage,
-        sorts: SortOption<LibraryDeepLinks>[],
-        types: TypeOption<LibraryDeepLinks>[],
+        sorts: SelectableSort<LibraryDeepLinks>[],
+        types: SelectableType<LibraryDeepLinks>[],
     },
     selected: {
         request: {

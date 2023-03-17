@@ -1,8 +1,8 @@
 type RemoteAddons = {
     catalog: Catalog<Loadable<Addon[]>>,
     selectable: {
-        catalogs: CatalogOption<AddonsDeepLinks>[],
-        types: TypeOption<AddonsDeepLinks>[],
+        catalogs: SelectableCatalog<AddonsDeepLinks>[],
+        types: SelectableType<AddonsDeepLinks>[],
     },
     selected: {
         request: ResourceRequest,

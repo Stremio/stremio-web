@@ -1,3 +1,9 @@
+interface MetaItemMetaDetails extends MetaItem {
+    inLibrary: boolean,
+    watched: boolean,
+    deepLinks: MetaItemDeepLinks,
+}
+
 type MetaDetails = {
     metaExtensions: {
         url: string,
@@ -6,7 +12,7 @@ type MetaDetails = {
     }[],
     metaItem: {
         addon: Addon,
-        content: Loadable<MetaItem>,
+        content: Loadable<MetaItemMetaDetails>,
     } | null,
     selected: {
         metaPath: ResourceRequestPath,
