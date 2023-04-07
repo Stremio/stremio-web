@@ -11,23 +11,20 @@ const styles = require('./styles');
 const OptionsMenu = ({ className, stream, playbackDevices }) => {
     const { core } = useServices();
     const toast = useToast();
-    const streamUrl = React.useMemo(() => {
+    const [streamingUrl, downloadUrl] = React.useMemo(() => {
         return stream !== null ?
             stream.deepLinks &&
             stream.deepLinks.externalPlayer &&
-            typeof stream.deepLinks.externalPlayer.download === 'string' ?
-                stream.deepLinks.externalPlayer.download
-                :
-                null
+            [stream.deepLinks.externalPlayer.streaming, stream.deepLinks.externalPlayer.download]
             :
-            null;
+            [null, null];
     }, [stream]);
     const externalDevices = React.useMemo(() => {
         return playbackDevices.filter(({ type }) => type === 'external');
     }, [playbackDevices]);
     const onCopyStreamButtonClick = React.useCallback(() => {
-        if (streamUrl !== null) {
-            navigator.clipboard.writeText(streamUrl)
+        if (streamingUrl || downloadUrl) {
+            navigator.clipboard.writeText(streamingUrl || downloadUrl)
                 .then(() => {
                     toast.show({
                         type: 'success',
@@ -41,50 +38,60 @@ const OptionsMenu = ({ className, stream, playbackDevices }) => {
                     toast.show({
                         type: 'error',
                         title: 'Error',
-                        message: `Failed to copy stream link: ${streamUrl}`,
+                        message: `Failed to copy stream link: ${streamingUrl || downloadUrl}`,
                         timeout: 3000
                     });
                 });
         }
-    }, [streamUrl]);
+    }, [streamingUrl, downloadUrl]);
     const onDownloadVideoButtonClick = React.useCallback(() => {
-        if (streamUrl !== null) {
-            window.open(streamUrl);
+        if (streamingUrl || downloadUrl) {
+            window.open(streamingUrl || downloadUrl);
         }
-    }, [streamUrl]);
+    }, [streamingUrl, downloadUrl]);
     const onExternalDeviceRequested = React.useCallback((deviceId) => {
-        if (streamUrl !== null) {
+        if (streamingUrl) {
             core.transport.dispatch({
                 action: 'StreamingServer',
                 args: {
                     action: 'PlayOnDevice',
                     args: {
                         device: deviceId,
-                        source: streamUrl,
+                        source: streamingUrl,
                     }
                 }
             });
         }
-    }, [streamUrl]);
+    }, [streamingUrl]);
     const onMouseDown = React.useCallback((event) => {
         event.nativeEvent.optionsMenuClosePrevented = true;
     }, []);
     return (
         <div className={classnames(className, styles['options-menu-container'])} onMouseDown={onMouseDown}>
-            <Option
-                icon={'ic_link'}
-                label={'Copy Stream Link'}
-                disabled={stream === null}
-                onClick={onCopyStreamButtonClick}
-            />
-            <Option
-                icon={'ic_downloads'}
-                label={'Download Video'}
-                disabled={stream === null}
-                onClick={onDownloadVideoButtonClick}
-            />
             {
-                !stream.infoHash && externalDevices.map(({ id, name }) => (
+                streamingUrl || downloadUrl ?
+                    <Option
+                        icon={'ic_link'}
+                        label={'Copy Stream Link'}
+                        disabled={stream === null}
+                        onClick={onCopyStreamButtonClick}
+                    />
+                    :
+                    null
+            }
+            {
+                streamingUrl || downloadUrl ?
+                    <Option
+                        icon={'ic_downloads'}
+                        label={'Download Video'}
+                        disabled={stream === null}
+                        onClick={onDownloadVideoButtonClick}
+                    />
+                    :
+                    null
+            }
+            {
+                streamingUrl && externalDevices.map(({ id, name }) => (
                     <Option
                         key={id}
                         icon={'ic_vlc'}
