@@ -1,4 +1,8 @@
-type PlayerVideo = Video & {
+type LibraryItemPlayer = Pick<LibraryItem, '_id'> & {
+    state: Pick<LibraryItemState, 'timeOffset' | 'video_id'>,
+};
+
+type VideoPlayer = Video & {
     upcomming: boolean,
     watched: boolean,
     progress: boolean | null,
@@ -6,12 +10,8 @@ type PlayerVideo = Video & {
     deepLinks: VideoDeepLinks,
 };
 
-type PlayerMetaItem = Video & {
-    videos: PlayerVideo[],
-};
-
-type NextVideo = Video & {
-    deepLinks: VideoDeepLinks,
+type MetaItemPlayer = MetaItemPreview & {
+    videos: VideoPlayer[],
 };
 
 type SelectedStream = Stream & {
@@ -27,9 +27,9 @@ type Subtitle = {
 
 type Player = {
     addon: Addon | null,
-    libraryItem: LibraryItem | null,
-    metaItem: Loadable<PlayerMetaItem> | null,
-    nextVideo: NextVideo | null,
+    libraryItem: LibraryItemPlayer | null,
+    metaItem: Loadable<MetaItemPlayer> | null,
+    nextVideo: VideoPlayer | null,
     selected: {
         stream: SelectedStream,
         metaRequest: ResourceRequest,
