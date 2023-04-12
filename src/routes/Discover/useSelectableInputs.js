@@ -47,7 +47,7 @@ const mapSelectableInputs = (discover, t) => {
         }
     };
     const extraSelects = discover.selectable.extra.map(({ name, isRequired, options }) => ({
-        title: `Select ${name}`,
+        title: translateOption(name, 'SELECT_'),
         isRequired: isRequired,
         options: options.map(({ value, deepLinks }) => ({
             label: typeof value === 'string' ? translateOption(value) : t('NONE'),
@@ -63,7 +63,7 @@ const mapSelectableInputs = (discover, t) => {
                 value
             })),
         renderLabelText: options.some(({ selected, value }) => selected && value === null) ?
-            () => `Select ${name}`
+            () => translateOption(name, 'SELECT_')
             :
             null,
         onSelect: (event) => {
