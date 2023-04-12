@@ -24,7 +24,7 @@ const mapSelectableInputs = (library, t) => {
         options: library.selectable.sorts
             .map(({ sort, deepLinks }) => ({
                 value: deepLinks.library,
-                label: translateOption(sort)
+                label: translateOption(sort, 'SORT_')
             })),
         selected: library.selectable.sorts
             .filter(({ selected }) => selected)
