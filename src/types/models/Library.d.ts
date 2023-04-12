@@ -1,11 +1,11 @@
-interface LibraryItemLibrary extends LibraryItem {
+type LibraryItemLibrary = LibraryItem & {
     progress: number,
     deepLinks: LibraryItemDeepLinks,
-}
+};
 
 type LibraryDeepLinks = {
     library: string,
-}
+};
 
 type LibraryPage = {
     deepLinks: LibraryDeepLinks,

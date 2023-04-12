@@ -1,8 +1,8 @@
-interface MetaItemMetaDetails extends MetaItem {
+type MetaItemMetaDetails = MetaItem & {
     inLibrary: boolean,
     watched: boolean,
     deepLinks: MetaItemDeepLinks,
-}
+};
 
 type MetaDetails = {
     metaExtensions: {

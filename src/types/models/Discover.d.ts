@@ -2,15 +2,15 @@ type DiscoverDeepLinks = {
     discover: string,
 };
 
-interface MetaItemPreviewDiscover extends MetaItemPreview {
+type MetaItemPreviewDiscover = MetaItemPreview & {
     inLibrary: boolean,
     deepLinks: MetaItemDeepLinks,
-}
+};
 
-interface DiscoverCatalogOption<T> extends SelectableCatalog<T> {
+type DiscoverCatalogOption<T> = SelectableCatalog<T> & {
     id: string,
     addon: Addon,
-}
+};
 
 type Discover = {
     catalog: Catalog<Loadable<MetaItemPreviewDiscover[]>> | null,

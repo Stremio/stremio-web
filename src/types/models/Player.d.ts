@@ -1,22 +1,22 @@
-interface PlayerVideo extends Video {
+type PlayerVideo = Video & {
     upcomming: boolean,
     watched: boolean,
     progress: boolean | null,
     scheduled: boolean,
     deepLinks: VideoDeepLinks,
-}
+};
 
-interface PlayerMetaItem extends Video {
+type PlayerMetaItem = Video & {
     videos: PlayerVideo[],
-}
+};
 
-interface NextVideo extends Video {
+type NextVideo = Video & {
     deepLinks: VideoDeepLinks,
-}
+};
 
-interface SelectedStream extends Stream {
+type SelectedStream = Stream & {
     deepLinks: StreamDeepLinks,
-}
+};
 
 type Subtitle = {
     id: string,

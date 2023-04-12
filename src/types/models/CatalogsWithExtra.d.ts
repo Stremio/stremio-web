@@ -1,6 +1,6 @@
-interface MetaItemPreviewCatalogsWithExtra extends MetaItemPreview {
+type MetaItemPreviewCatalogsWithExtra = MetaItemPreview & {
     deepLinks: MetaItemDeepLinks,
-}
+};
 
 type CatalogsWithExtra = {
     catalogs: Catalog<Loadable<MetaItemPreviewCatalogsWithExtra[]>, DiscoverDeepLinks>[] | null,

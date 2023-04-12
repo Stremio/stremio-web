@@ -1,6 +1,6 @@
-interface UrlParams extends Record<string, string> {
+type UrlParams = Record<string, string> & {
     path: string,
-}
+};
 
 type LoadableError = string | {
     type: string,

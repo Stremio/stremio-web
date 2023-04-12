@@ -21,7 +21,7 @@ type MetaItemPreview = {
     behaviorHints: BehaviorHints,
 };
 
-interface MetaItem extends MetaItemPreview {
+type MetaItem = MetaItemPreview & {
     videos: Video[],
 }
 
