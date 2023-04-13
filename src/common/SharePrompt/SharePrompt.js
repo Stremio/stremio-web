@@ -3,6 +3,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
+const { useTranslation } = require('react-i18next');
 const Icon = require('@stremio/stremio-icons/dom');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
@@ -11,6 +12,7 @@ const TextInput = require('stremio/common/TextInput');
 const styles = require('./styles');
 
 const SharePrompt = ({ className, url }) => {
+    const { t } = useTranslation();
     const { core } = useServices();
     const inputRef = React.useRef(null);
     const routeFocused = useRouteFocused();
@@ -62,7 +64,7 @@ const SharePrompt = ({ className, url }) => {
                 />
                 <Button className={styles['copy-button']} title={'Copy to clipboard'} onClick={copyToClipboard}>
                     <Icon className={styles['icon']} icon={'ic_link'} />
-                    <div className={styles['label']}>Copy</div>
+                    <div className={styles['label']}>{ t('COPY') }</div>
                 </Button>
             </div>
         </div>

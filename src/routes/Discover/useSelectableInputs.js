@@ -1,20 +1,22 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
 const React = require('react');
+const { useTranslation } = require('react-i18next');
+const { translateOption } = require('stremio/common');
 
-const mapSelectableInputs = (discover) => {
+const mapSelectableInputs = (discover, t) => {
     const typeSelect = {
-        title: 'Select type',
+        title: t('SELECT_TYPE'),
         options: discover.selectable.types
             .map(({ type, deepLinks }) => ({
                 value: deepLinks.discover,
-                label: type
+                label: translateOption(type, 'TYPE_')
             })),
         selected: discover.selectable.types
             .filter(({ selected }) => selected)
             .map(({ deepLinks }) => deepLinks.discover),
         renderLabelText: discover.selected !== null ?
-            () => discover.selected.request.path.type
+            () => translateOption(discover.selected.request.path.type, 'TYPE_')
             :
             null,
         onSelect: (event) => {
@@ -22,7 +24,7 @@ const mapSelectableInputs = (discover) => {
         }
     };
     const catalogSelect = {
-        title: 'Select catalog',
+        title: t('SELECT_CATALOG'),
         options: discover.selectable.catalogs
             .map(({ name, addon, deepLinks }) => ({
                 value: deepLinks.discover,
@@ -45,10 +47,10 @@ const mapSelectableInputs = (discover) => {
         }
     };
     const extraSelects = discover.selectable.extra.map(({ name, isRequired, options }) => ({
-        title: `Select ${name}`,
+        title: translateOption(name, 'SELECT_'),
         isRequired: isRequired,
         options: options.map(({ value, deepLinks }) => ({
-            label: typeof value === 'string' ? value : 'None',
+            label: typeof value === 'string' ? translateOption(value) : t('NONE'),
             value: JSON.stringify({
                 href: deepLinks.discover,
                 value
@@ -61,7 +63,7 @@ const mapSelectableInputs = (discover) => {
                 value
             })),
         renderLabelText: options.some(({ selected, value }) => selected && value === null) ?
-            () => `Select ${name}`
+            () => translateOption(name, 'SELECT_')
             :
             null,
         onSelect: (event) => {
@@ -73,8 +75,9 @@ const mapSelectableInputs = (discover) => {
 };
 
 const useSelectableInputs = (discover) => {
+    const { t } = useTranslation();
     const selectableInputs = React.useMemo(() => {
-        return mapSelectableInputs(discover);
+        return mapSelectableInputs(discover, t);
     }, [discover.selected, discover.selectable]);
     return selectableInputs;
 };

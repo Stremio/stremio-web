@@ -4,12 +4,14 @@ const React = require('react');
 const { useServices } = require('stremio/services');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
+const { useTranslation } = require('react-i18next');
 const Button = require('stremio/common/Button');
 const useProfile = require('stremio/common/useProfile');
 const { withCoreSuspender } = require('stremio/common/CoreSuspender');
 const styles = require('./styles');
 
 const StreamingServerWarning = ({ className }) => {
+    const { t } = useTranslation();
     const { core } = useServices();
     const profile = useProfile();
     const onLaterClick = React.useCallback(() => {
@@ -48,12 +50,12 @@ const StreamingServerWarning = ({ className }) => {
 
     return (
         <div className={classnames(className, styles['warning-container'])}>
-            <div className={styles['warning-statement']}>Streaming server is not available.</div>
-            <Button className={styles['warning-button']} title={'Later'} onClick={onLaterClick} tabIndex={-1}>
-                <div className={styles['warning-label']}>Later</div>
+            <div className={styles['warning-statement']}>{ t('SETTINGS_SERVER_UNAVAILABLE') }</div>
+            <Button className={styles['warning-button']} title={t('WARNING_STREAMING_SERVER_LATER')} onClick={onLaterClick} tabIndex={-1}>
+                <div className={styles['warning-label']}>{ t('WARNING_STREAMING_SERVER_LATER') }</div>
             </Button>
-            <Button className={styles['warning-button']} title={'Dismiss'} onClick={onDismissClick} tabIndex={-1}>
-                <div className={styles['warning-label']}>Dismiss</div>
+            <Button className={styles['warning-button']} title={t('WARNING_STREAMING_SERVER_DISMISS')} onClick={onDismissClick} tabIndex={-1}>
+                <div className={styles['warning-label']}>{ t('WARNING_STREAMING_SERVER_DISMISS') }</div>
             </Button>
         </div>
     );

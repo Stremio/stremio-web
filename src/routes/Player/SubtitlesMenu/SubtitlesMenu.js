@@ -6,6 +6,7 @@ const classnames = require('classnames');
 const { Button, CONSTANTS, comparatorWithPriorities, languageNames } = require('stremio/common');
 const DiscreteSelectInput = require('./DiscreteSelectInput');
 const styles = require('./styles');
+const { t } = require('i18next');
 
 const ORIGIN_PRIORITIES = {
     'EMBEDDED': 2,
@@ -172,10 +173,10 @@ const SubtitlesMenu = React.memo((props) => {
                     null
             }
             <div className={styles['languages-container']}>
-                <div className={styles['languages-header']}>Subtitles Languages</div>
+                <div className={styles['languages-header']}>{ t('PLAYER_SUBTITLES_LANGUAGES') }</div>
                 <div className={styles['languages-list']}>
-                    <Button title={'Off'} className={classnames(styles['language-option'], { 'selected': selectedSubtitlesLanguage === null })} onClick={subtitlesLanguageOnClick}>
-                        <div className={styles['language-label']}>Off</div>
+                    <Button title={t('OFF')} className={classnames(styles['language-option'], { 'selected': selectedSubtitlesLanguage === null })} onClick={subtitlesLanguageOnClick}>
+                        <div className={styles['language-label']}>{ t('OFF') }</div>
                         {
                             selectedSubtitlesLanguage === null ?
                                 <div className={styles['icon']} />
@@ -197,7 +198,7 @@ const SubtitlesMenu = React.memo((props) => {
                 </div>
             </div>
             <div className={styles['variants-container']}>
-                <div className={styles['variants-header']}>Subtitles Variants</div>
+                <div className={styles['variants-header']}>{ t('PLAYER_SUBTITLES_VARIANTS') }</div>
                 {
                     subtitlesTracksForLanguage.length > 0 ?
                         <div className={styles['variants-list']}>
@@ -216,7 +217,7 @@ const SubtitlesMenu = React.memo((props) => {
                         :
                         <div className={styles['no-variants-container']}>
                             <div className={styles['no-variants-label']}>
-                                Subtitles are disabled
+                                { t('PLAYER_SUBTITLES_DISABLED') }
                             </div>
                         </div>
                 }
@@ -225,14 +226,14 @@ const SubtitlesMenu = React.memo((props) => {
                 <div className={styles['settings-header']}>Subtitles Settings</div>
                 <DiscreteSelectInput
                     className={styles['discrete-input']}
-                    label={'Delay'}
+                    label={t('DELAY')}
                     value={typeof props.selectedExtraSubtitlesTrackId === 'string' && props.extraSubtitlesDelay !== null && !isNaN(props.extraSubtitlesDelay) ? `${(props.extraSubtitlesDelay / 1000).toFixed(2)}s` : '--'}
                     disabled={typeof props.selectedExtraSubtitlesTrackId !== 'string' || props.extraSubtitlesDelay === null || isNaN(props.extraSubtitlesDelay)}
                     onChange={onSubtitlesDelayChanged}
                 />
                 <DiscreteSelectInput
                     className={styles['discrete-input']}
-                    label={'Size'}
+                    label={t('SIZE')}
                     value={
                         typeof props.selectedSubtitlesTrackId === 'string' ?
                             props.subtitlesSize !== null && !isNaN(props.subtitlesSize) ? `${props.subtitlesSize}%` : '--'
@@ -255,7 +256,7 @@ const SubtitlesMenu = React.memo((props) => {
                 />
                 <DiscreteSelectInput
                     className={styles['discrete-input']}
-                    label={'Vertical position'}
+                    label={t('PLAYER_SUBTITLES_VERTICAL_POSIITON')}
                     value={
                         typeof props.selectedSubtitlesTrackId === 'string' ?
                             props.subtitlesOffset !== null && !isNaN(props.subtitlesOffset) ? `${props.subtitlesOffset}%` : '--'

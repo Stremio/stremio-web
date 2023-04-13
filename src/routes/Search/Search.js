@@ -4,6 +4,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const debounce = require('lodash.debounce');
+const { useTranslation } = require('react-i18next');
 const Icon = require('@stremio/stremio-icons/dom');
 const { Image, MainNavBars, MetaRow, MetaItem, withCoreSuspender, getVisibleChildrenRange } = require('stremio/common');
 const useSearch = require('./useSearch');
@@ -12,6 +13,7 @@ const styles = require('./styles');
 const THRESHOLD = 100;
 
 const Search = ({ queryParams }) => {
+    const { t } = useTranslation();
     const [search, loadSearchRows] = useSearch(queryParams);
     const query = React.useMemo(() => {
         return search.selected !== null ?
@@ -50,11 +52,11 @@ const Search = ({ queryParams }) => {
                         <div className={classnames(styles['search-hints-container'], 'animation-fade-in')}>
                             <div className={styles['search-hint-container']}>
                                 <Icon className={styles['icon']} icon={'ic_movies'} />
-                                <div className={styles['label']}>Search for movies, series, YouTube and TV channels</div>
+                                <div className={styles['label']}>{ t('SEARCH_EXPLANATION_CONTENT') }</div>
                             </div>
                             <div className={styles['search-hint-container']}>
                                 <Icon className={styles['icon']} icon={'ic_actor'} />
-                                <div className={styles['label']}>Search for actors, directors and writers</div>
+                                <div className={styles['label']}>{ t('SEARCH_EXPLANATION_PEOPLE') }</div>
                             </div>
                         </div>
                         :
@@ -65,7 +67,7 @@ const Search = ({ queryParams }) => {
                                     src={require('/images/empty.png')}
                                     alt={' '}
                                 />
-                                <div className={styles['message-label']}>No addons were requested for catalogs!</div>
+                                <div className={styles['message-label']}>{ t('STREMIO_TV_SEARCH_NO_ADDONS') }</div>
                             </div>
                             :
                             search.catalogs.map((catalog, index) => {

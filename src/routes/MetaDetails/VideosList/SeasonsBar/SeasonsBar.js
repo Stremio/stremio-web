@@ -3,6 +3,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
+const { t } = require('i18next');
 const Icon = require('@stremio/stremio-icons/dom');
 const { Button, Multiselect } = require('stremio/common');
 const SeasonsBarPlaceholder = require('./SeasonsBarPlaceholder');
@@ -12,7 +13,7 @@ const SeasonsBar = ({ className, seasons, season, onSelect }) => {
     const options = React.useMemo(() => {
         return seasons.map((season) => ({
             value: String(season),
-            label: season > 0 ? `Season ${season}` : 'Specials'
+            label: season > 0 ? `${t('SEASON')} ${season}` : t('SPECIAL')
         }));
     }, [seasons]);
     const selected = React.useMemo(() => {
@@ -53,7 +54,7 @@ const SeasonsBar = ({ className, seasons, season, onSelect }) => {
             </Button>
             <Multiselect
                 className={styles['seasons-popup-label-container']}
-                title={season > 0 ? `Season ${season}` : 'Specials'}
+                title={season > 0 ? `${t('SEASON')} ${season}` : t('SPECIAL')}
                 direction={'bottom-left'}
                 options={options}
                 selected={selected}

@@ -3,6 +3,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
+const { useTranslation } = require('react-i18next');
 const Icon = require('@stremio/stremio-icons/dom');
 const { Button, Image, Multiselect } = require('stremio/common');
 const { useServices } = require('stremio/services');
@@ -12,6 +13,7 @@ const styles = require('./styles');
 const ALL_ADDONS_KEY = 'ALL';
 
 const StreamsList = ({ className, ...props }) => {
+    const { t } = useTranslation();
     const { core } = useServices();
     const [selectedAddon, setSelectedAddon] = React.useState(ALL_ADDONS_KEY);
     const onAddonSelected = React.useCallback((event) => {
@@ -55,8 +57,8 @@ const StreamsList = ({ className, ...props }) => {
             options: [
                 {
                     value: ALL_ADDONS_KEY,
-                    label: 'All',
-                    title: 'All'
+                    label: t('ALL_ADDONS'),
+                    title: t('ALL_ADDONS')
                 },
                 ...Object.keys(streamsByAddon).map((transportUrl) => ({
                     value: transportUrl,
@@ -80,7 +82,7 @@ const StreamsList = ({ className, ...props }) => {
                     props.streams.every((streams) => streams.content.type === 'Err') ?
                         <div className={styles['message-container']}>
                             <Image className={styles['image']} src={require('/images/empty.png')} alt={' '} />
-                            <div className={styles['label']}>No streams were found!</div>
+                            <div className={styles['label']}>{t('NO_STREAM')}</div>
                         </div>
                         :
                         filteredStreams.length === 0 ?
@@ -115,9 +117,9 @@ const StreamsList = ({ className, ...props }) => {
                                 </div>
                             </React.Fragment>
             }
-            <Button className={styles['install-button-container']} title={'Install Addons'} href={'#/addons'}>
+            <Button className={styles['install-button-container']} title={t('ADDON_CATALOGUE_MORE')} href={'#/addons'}>
                 <Icon className={styles['icon']} icon={'ic_addons'} />
-                <div className={styles['label']}>Install Addons</div>
+                <div className={styles['label']}>{ t('ADDON_CATALOGUE_MORE') }</div>
             </Button>
         </div>
     );

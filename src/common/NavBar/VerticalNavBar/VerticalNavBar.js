@@ -3,10 +3,12 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
+const { useTranslation } = require('react-i18next');
 const NavTabButton = require('./NavTabButton');
 const styles = require('./styles');
 
 const VerticalNavBar = React.memo(({ className, selected, tabs }) => {
+    const { t } = useTranslation();
     return (
         <nav className={classnames(className, styles['vertical-nav-bar-container'])}>
             {
@@ -19,7 +21,7 @@ const VerticalNavBar = React.memo(({ className, selected, tabs }) => {
                             href={tab.href}
                             logo={tab.logo}
                             icon={tab.icon}
-                            label={tab.label}
+                            label={t(tab.label)}
                             onClick={tab.onClick}
                         />
                     ))
