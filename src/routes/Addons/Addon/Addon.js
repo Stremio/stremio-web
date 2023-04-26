@@ -103,7 +103,12 @@ const Addon = ({ className, id, name, version, logo, description, types, behavio
                             :
                             null
                     }
-                    <Button className={installed ? styles['uninstall-button-container'] : styles['install-button-container']} title={installed ? t('ADDON_UNINSTALL') : behaviorHints.configurationRequired ? t('ADDON_CONFIGURE') : t('ADDON_INSTALL')} tabIndex={-1} onClick={toggleButtonOnClick}>
+                    <Button
+                        className={installed ? styles['uninstall-button-container'] : styles['install-button-container']}
+                        title={installed ? t('ADDON_UNINSTALL') : behaviorHints.configurationRequired ? t('ADDON_CONFIGURE') : t('ADDON_INSTALL')}
+                        tabIndex={-1}
+                        onClick={!installed && behaviorHints.configurationRequired ? configureButtonOnClick : toggleButtonOnClick}
+                    >
                         <div className={styles['label']}>{installed ? t('ADDON_UNINSTALL') : behaviorHints.configurationRequired ? t('ADDON_CONFIGURE') : t('ADDON_INSTALL')}</div>
                     </Button>
                 </div>
