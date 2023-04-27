@@ -4,6 +4,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const AColorPicker = require('a-color-picker');
+const { useTranslation } = require('react-i18next');
 const Button = require('stremio/common/Button');
 const ModalDialog = require('stremio/common/ModalDialog');
 const useBinaryState = require('stremio/common/useBinaryState');
@@ -16,6 +17,7 @@ const parseColor = (value) => {
 };
 
 const ColorInput = ({ className, value, dataset, onChange, ...props }) => {
+    const { t } = useTranslation();
     const [modalOpen, openModal, closeModal] = useBinaryState(false);
     const [tempValue, setTempValue] = React.useState(() => {
         return parseColor(value);
@@ -69,11 +71,11 @@ const ColorInput = ({ className, value, dataset, onChange, ...props }) => {
         setTempValue(parseColor(value));
     }, [value, modalOpen]);
     return (
-        <Button title={isTransparent ? 'Transparent' : value} {...props} style={labelButtonStyle} className={classnames(className, styles['color-input-container'])} onClick={labelButtonOnClick}>
+        <Button title={isTransparent ? t('BUTTON_COLOR_TRANSPARENT') : value} {...props} style={labelButtonStyle} className={classnames(className, styles['color-input-container'])} onClick={labelButtonOnClick}>
             {
                 isTransparent ?
                     <div className={styles['transparent-label-container']}>
-                        <div className={styles['transparent-label']}>Transparent</div>
+                        <div className={styles['transparent-label']}>{ t('BUTTON_COLOR_TRANSPARENT') }</div>
                     </div>
                     :
                     null

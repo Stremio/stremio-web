@@ -25,6 +25,7 @@
         "eventemitter3": "4.0.7",
         "filter-invalid-dom-props": "2.1.0",
         "hat": "0.0.3",
+        "i18next": "^22.4.3",
         "langs": "^2.0.0",
         "lodash.debounce": "4.0.8",
         "lodash.intersection": "4.4.0",
@@ -35,8 +36,10 @@
         "react": "18.2.0",
         "react-dom": "18.2.0",
         "react-focus-lock": "2.9.1",
+        "react-i18next": "^12.1.1",
         "react-is": "18.2.0",
         "spatial-navigation-polyfill": "git+https://git@github.com/Stremio/spatial-navigation.git#64871b1422466f5f45d24ebc8bbd315b2ebab6a6",
+        "stremio-translations": "git+https://git@github.com/Stremio/stremio-translations.git#ef047329f5bcb0a8f96008fca05c68b449b34cb1",
         "url": "0.11.0"
     },
     "devDependencies": {

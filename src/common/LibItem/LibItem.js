@@ -4,29 +4,35 @@ const React = require('react');
 const { useServices } = require('stremio/services');
 const PropTypes = require('prop-types');
 const MetaItem = require('stremio/common/MetaItem');
+const { t } = require('i18next');
 
 const OPTIONS = [
-    { label: 'Play', value: 'play' },
-    { label: 'Details', value: 'details' },
-    { label: 'Dismiss', value: 'dismiss' },
-    { label: 'Remove', value: 'remove' },
+    { label: 'LIBRARY_PLAY', value: 'play' },
+    { label: 'LIBRARY_DETAILS', value: 'details' },
+    { label: 'LIBRARY_RESUME_DISMISS', value: 'dismiss' },
+    { label: 'LIBRARY_REMOVE', value: 'remove' },
 ];
 
 const LibItem = ({ _id, removable, ...props }) => {
     const { core } = useServices();
     const options = React.useMemo(() => {
-        return OPTIONS.filter(({ value }) => {
-            switch (value) {
-                case 'play':
-                    return props.deepLinks && typeof props.deepLinks.player === 'string';
-                case 'details':
-                    return props.deepLinks && (typeof props.deepLinks.metaDetailsVideos === 'string' || typeof props.deepLinks.metaDetailsStreams === 'string');
-                case 'dismiss':
-                    return typeof _id === 'string' && props.progress !== null && !isNaN(props.progress);
-                case 'remove':
-                    return typeof _id === 'string' && removable;
-            }
-        });
+        return OPTIONS
+            .filter(({ value }) => {
+                switch (value) {
+                    case 'play':
+                        return props.deepLinks && typeof props.deepLinks.player === 'string';
+                    case 'details':
+                        return props.deepLinks && (typeof props.deepLinks.metaDetailsVideos === 'string' || typeof props.deepLinks.metaDetailsStreams === 'string');
+                    case 'dismiss':
+                        return typeof _id === 'string' && props.progress !== null && !isNaN(props.progress);
+                    case 'remove':
+                        return typeof _id === 'string' && removable;
+                }
+            })
+            .map((option) => ({
+                ...option,
+                label: t(option.label)
+            }));
     }, [_id, removable, props.progress, props.deepLinks]);
     const optionOnSelect = React.useCallback((event) => {
         if (typeof props.optionOnSelect === 'function') {

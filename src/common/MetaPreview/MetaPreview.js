@@ -4,6 +4,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const UrlUtils = require('url');
+const { useTranslation } = require('react-i18next');
 const Icon = require('@stremio/stremio-icons/dom');
 const Button = require('stremio/common/Button');
 const Image = require('stremio/common/Image');
@@ -24,6 +25,7 @@ const ALLOWED_LINK_REDIRECTS = [
 ];
 
 const MetaPreview = ({ className, compact, name, logo, background, runtime, releaseInfo, released, description, deepLinks, links, trailerStreams, inLibrary, toggleInLibrary }) => {
+    const { t } = useTranslation();
     const [shareModalOpen, openShareModal, closeShareModal] = useBinaryState(false);
     const linksGroups = React.useMemo(() => {
         return Array.isArray(links) ?
@@ -192,7 +194,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                         <ActionButton
                             className={styles['action-button']}
                             icon={inLibrary ? 'ic_removelib' : 'ic_addlib'}
-                            label={inLibrary ? 'Remove from Library' : 'Add to library'}
+                            label={inLibrary ? t('REMOVE_FROM_LIB') : t('ADD_TO_LIB')}
                             tabIndex={compact ? -1 : 0}
                             onClick={toggleInLibrary}
                         />
@@ -204,7 +206,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                         <ActionButton
                             className={styles['action-button']}
                             icon={'ic_movies'}
-                            label={'Trailer'}
+                            label={t('TRAILER')}
                             tabIndex={compact ? -1 : 0}
                             href={trailerHref}
                         />
@@ -216,7 +218,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                         <ActionButton
                             className={styles['action-button']}
                             icon={'ic_play'}
-                            label={'Show'}
+                            label={t('SHOW')}
                             tabIndex={compact ? -1 : 0}
                             href={showHref}
                         />
@@ -229,13 +231,13 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                             <ActionButton
                                 className={styles['action-button']}
                                 icon={'ic_share'}
-                                label={'Share'}
+                                label={t('CTX_SHARE')}
                                 tabIndex={compact ? -1 : 0}
                                 onClick={openShareModal}
                             />
                             {
                                 shareModalOpen ?
-                                    <ModalDialog title={'Share'} onCloseRequest={closeShareModal}>
+                                    <ModalDialog title={t('CTX_SHARE')} onCloseRequest={closeShareModal}>
                                         <SharePrompt
                                             className={styles['share-prompt']}
                                             url={linksGroups.get(CONSTANTS.SHARE_LINK_CATEGORY).href}

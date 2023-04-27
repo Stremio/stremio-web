@@ -3,12 +3,14 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
+const { useTranslation } = require('react-i18next');
 const Option = require('./Option');
 const styles = require('./styles');
 
 const RATES = Array.from(Array(8).keys(), (n) => n * 0.25 + 0.25).reverse();
 
 const SpeedMenu = ({ className, playbackSpeed, onPlaybackSpeedChanged }) => {
+    const { t } = useTranslation();
     const onMouseDown = React.useCallback((event) => {
         event.nativeEvent.speedMenuClosePrevented = true;
     }, []);
@@ -20,7 +22,7 @@ const SpeedMenu = ({ className, playbackSpeed, onPlaybackSpeedChanged }) => {
     return (
         <div className={classnames(className, styles['speed-menu-container'])} onMouseDown={onMouseDown}>
             <div className={styles['title']}>
-                Playback Speed
+                { t('PLAYBACK_SPEED') }
             </div>
             <div className={styles['options-container']}>
                 {

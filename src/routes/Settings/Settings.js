@@ -3,6 +3,7 @@
 const React = require('react');
 const classnames = require('classnames');
 const throttle = require('lodash.throttle');
+const { useTranslation } = require('react-i18next');
 const Icon = require('@stremio/stremio-icons/dom');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
@@ -18,6 +19,7 @@ const STREAMING_SECTION = 'streaming';
 const SHORTCUTS_SECTION = 'shortcuts';
 
 const Settings = () => {
+    const { t } = useTranslation();
     const { core } = useServices();
     const { routeFocused } = useRouteFocused();
     const profile = useProfile();
@@ -176,17 +178,17 @@ const Settings = () => {
         <MainNavBars className={styles['settings-container']} route={'settings'}>
             <div className={classnames(styles['settings-content'], 'animation-fade-in')}>
                 <div className={styles['side-menu-container']}>
-                    <Button className={classnames(styles['side-menu-button'], { [styles['selected']]: selectedSectionId === GENERAL_SECTION })} title={'General'} data-section={GENERAL_SECTION} onClick={sideMenuButtonOnClick}>
-                        General
+                    <Button className={classnames(styles['side-menu-button'], { [styles['selected']]: selectedSectionId === GENERAL_SECTION })} title={ t('SETTINGS_NAV_GENERAL') } data-section={GENERAL_SECTION} onClick={sideMenuButtonOnClick}>
+                        { t('SETTINGS_NAV_GENERAL') }
                     </Button>
-                    <Button className={classnames(styles['side-menu-button'], { [styles['selected']]: selectedSectionId === PLAYER_SECTION })} title={'Player'} data-section={PLAYER_SECTION} onClick={sideMenuButtonOnClick}>
-                        Player
+                    <Button className={classnames(styles['side-menu-button'], { [styles['selected']]: selectedSectionId === PLAYER_SECTION })} title={ t('SETTINGS_NAV_PLAYER') }data-section={PLAYER_SECTION} onClick={sideMenuButtonOnClick}>
+                        { t('SETTINGS_NAV_PLAYER') }
                     </Button>
-                    <Button className={classnames(styles['side-menu-button'], { [styles['selected']]: selectedSectionId === STREAMING_SECTION })} title={'Streaming server'} data-section={STREAMING_SECTION} onClick={sideMenuButtonOnClick}>
-                        Streaming server
+                    <Button className={classnames(styles['side-menu-button'], { [styles['selected']]: selectedSectionId === STREAMING_SECTION })} title={ t('SETTINGS_NAV_STREAMING') } data-section={STREAMING_SECTION} onClick={sideMenuButtonOnClick}>
+                        { t('SETTINGS_NAV_STREAMING') }
                     </Button>
-                    <Button className={classnames(styles['side-menu-button'], { [styles['selected']]: selectedSectionId === SHORTCUTS_SECTION })} title={'Shortcuts'} data-section={SHORTCUTS_SECTION} onClick={sideMenuButtonOnClick}>
-                        Shortcuts
+                    <Button className={classnames(styles['side-menu-button'], { [styles['selected']]: selectedSectionId === SHORTCUTS_SECTION })} title={ t('SETTINGS_NAV_SHORTCUTS') } data-section={SHORTCUTS_SECTION} onClick={sideMenuButtonOnClick}>
+                        { t('SETTINGS_NAV_SHORTCUTS') }
                     </Button>
                     <div className={styles['spacing']} />
                     <div className={styles['version-info-label']} title={process.env.VERSION}>App Version: {process.env.VERSION}</div>
@@ -199,7 +201,7 @@ const Settings = () => {
                 </div>
                 <div ref={sectionsContainerRef} className={styles['sections-container']} onScroll={sectionsContainerOnScorll}>
                     <div ref={generalSectionRef} className={styles['section-container']}>
-                        <div className={styles['section-title']}>General</div>
+                        <div className={styles['section-title']}>{ t('SETTINGS_NAV_GENERAL') }</div>
                         <div className={classnames(styles['option-container'], styles['user-info-option-container'])}>
                             <div
                                 className={styles['avatar-container']}
@@ -218,22 +220,22 @@ const Settings = () => {
                                 </div>
                                 {
                                     profile.auth !== null ?
-                                        <Button className={styles['logout-button-container']} title={'Log out'} href={'#/intro'} onClick={logoutButtonOnClick}>
-                                            <div className={styles['logout-label']}>Log out</div>
+                                        <Button className={styles['logout-button-container']} title={ t('LOG_OUT') } href={'#/intro'} onClick={logoutButtonOnClick}>
+                                            <div className={styles['logout-label']}>{ t('LOG_OUT') }</div>
                                         </Button>
                                         :
                                         null
                                 }
                             </div>
                             <Button className={styles['user-panel-container']} title={'User panel'} target={'_blank'} href={'https://www.stremio.com/acc-settings'}>
-                                <div className={styles['user-panel-label']}>User Panel</div>
+                                <div className={styles['user-panel-label']}>{ t('USER_PANEL') }</div>
                             </Button>
                         </div>
                         {
                             profile.auth === null ?
                                 <div className={styles['option-container']}>
-                                    <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Log in / Sign up'} href={'#/intro'} onClick={logoutButtonOnClick}>
-                                        <div className={styles['label']}>Log in / Sign up</div>
+                                    <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={`${t('LOG_IN')} / ${t('SIGN_UP')}`} href={'#/intro'} onClick={logoutButtonOnClick}>
+                                        <div className={styles['label']}>{ t('LOG_IN') } / { t('SIGN_UP') }</div>
                                     </Button>
                                 </div>
                                 :
@@ -241,11 +243,10 @@ const Settings = () => {
                         }
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Interface language</div>
+                                <div className={styles['label']}>{ t('SETTINGS_INTERFACE_LANGUAGE') }</div>
                             </div>
                             <Multiselect
                                 className={classnames(styles['option-input-container'], styles['multiselect-container'])}
-                                disabled={true}
                                 tabIndex={-1}
                                 {...interfaceLanguageSelect}
                             />
@@ -257,27 +258,27 @@ const Settings = () => {
                             <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Authenticate'} disabled={profile.auth === null} tabIndex={-1} onClick={toggleTraktOnClick}>
                                 <Icon className={styles['icon']} icon={'ic_trakt'} />
                                 <div className={styles['label']}>
-                                    { profile.auth !== null && profile.auth.user !== null && profile.auth.user.trakt !== null ? 'Log out' : 'Authenticate' }
+                                    { profile.auth !== null && profile.auth.user !== null && profile.auth.user.trakt !== null ? t('LOG_OUT') : t('SETTINGS_TRAKT_AUTHENTICATE') }
                                 </div>
                             </Button>
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Calendar</div>
+                                <div className={styles['label']}>{ t('Calendar') }</div>
                             </div>
                             <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Subscribe'} disabled={!(profile.auth && profile.auth.user && profile.auth.user._id)} tabIndex={-1} onClick={subscribeCalendarOnClick}>
                                 <Icon className={styles['icon']} icon={'ic_calendar'} />
-                                <div className={styles['label']}>Subscribe</div>
+                                <div className={styles['label']}>{ t('SETTINGS_CALENDAR_SUBSCRIBE') }</div>
                             </Button>
                         </div>
                         <div className={styles['option-container']}>
-                            <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={'Export user data'} tabIndex={-1} onClick={exportDataOnClick}>
-                                <div className={styles['label']}>Export user data</div>
+                            <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={t('SETTINGS_DATA_EXPORT')} tabIndex={-1} onClick={exportDataOnClick}>
+                                <div className={styles['label']}>{ t('SETTINGS_DATA_EXPORT') }</div>
                             </Button>
                         </div>
                         <div className={styles['option-container']}>
-                            <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={'Contact support'} target={'_blank'} href={'https://stremio.zendesk.com/hc/en-us'}>
-                                <div className={styles['label']}>Contact support</div>
+                            <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={t('SETTINGS_SUPPORT')} target={'_blank'} href={'https://stremio.zendesk.com/hc/en-us'}>
+                                <div className={styles['label']}>{ t('SETTINGS_SUPPORT') }</div>
                             </Button>
                         </div>
                         <div className={styles['option-container']}>
@@ -286,21 +287,21 @@ const Settings = () => {
                             </Button>
                         </div>
                         <div className={styles['option-container']}>
-                            <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={'Terms of Service'} target={'_blank'} href={'https://www.stremio.com/tos'}>
-                                <div className={styles['label']}>Terms of Service</div>
+                            <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={t('TERMS_OF_SERVICE')} target={'_blank'} href={'https://www.stremio.com/tos'}>
+                                <div className={styles['label']}>{ t('TERMS_OF_SERVICE') }</div>
                             </Button>
                         </div>
                         <div className={styles['option-container']}>
-                            <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={'Privacy Policy'} target={'_blank'} href={'https://www.stremio.com/privacy'}>
-                                <div className={styles['label']}>Privacy Policy</div>
+                            <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={t('PRIVACY_POLICY')} target={'_blank'} href={'https://www.stremio.com/privacy'}>
+                                <div className={styles['label']}>{ t('PRIVACY_POLICY') }</div>
                             </Button>
                         </div>
                     </div>
                     <div ref={playerSectionRef} className={styles['section-container']}>
-                        <div className={styles['section-title']}>Player</div>
+                        <div className={styles['section-title']}>{ t('SETTINGS_NAV_PLAYER') }</div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Subtitles language</div>
+                                <div className={styles['label']}>{ t('SETTINGS_SUBTITLES_LANGUAGE') }</div>
                             </div>
                             <Multiselect
                                 className={classnames(styles['option-input-container'], styles['multiselect-container'])}
@@ -309,7 +310,7 @@ const Settings = () => {
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Subtitles size</div>
+                                <div className={styles['label']}>{ t('SETTINGS_SUBTITLES_SIZE') }</div>
                             </div>
                             <Multiselect
                                 className={classnames(styles['option-input-container'], styles['multiselect-container'])}
@@ -318,7 +319,7 @@ const Settings = () => {
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Subtitles text color</div>
+                                <div className={styles['label']}>{ t('SETTINGS_SUBTITLES_COLOR') }</div>
                             </div>
                             <ColorInput
                                 className={classnames(styles['option-input-container'], styles['color-input-container'])}
@@ -327,7 +328,7 @@ const Settings = () => {
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Subtitles background color</div>
+                                <div className={styles['label']}>{ t('SETTINGS_SUBTITLES_COLOR_BACKGROUND') }</div>
                             </div>
                             <ColorInput
                                 className={classnames(styles['option-input-container'], styles['color-input-container'])}
@@ -336,7 +337,7 @@ const Settings = () => {
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Subtitles outline color</div>
+                                <div className={styles['label']}>{ t('SETTINGS_SUBTITLES_COLOR_OUTLINE') }</div>
                             </div>
                             <ColorInput
                                 className={classnames(styles['option-input-container'], styles['color-input-container'])}
@@ -345,7 +346,7 @@ const Settings = () => {
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Audio Language</div>
+                                <div className={styles['label']}>{ t('SETTINGS_DEFAULT_AUDIO_TRACK') }</div>
                             </div>
                             <Multiselect
                                 className={classnames(styles['option-input-container'], styles['multiselect-container'])}
@@ -354,7 +355,7 @@ const Settings = () => {
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Rewind & Fast-forward duration</div>
+                                <div className={styles['label']}>{ t('SETTINGS_REWIND_FAST_FORWARD_DURATION') }</div>
                             </div>
                             <Multiselect
                                 className={classnames(styles['option-input-container'], styles['multiselect-container'])}
@@ -363,7 +364,7 @@ const Settings = () => {
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Auto-play next episode</div>
+                                <div className={styles['label']}>{ t('AUTO_PLAY') }</div>
                             </div>
                             <Checkbox
                                 className={classnames(styles['option-input-container'], styles['checkbox-container'])}
@@ -372,7 +373,7 @@ const Settings = () => {
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Next video popup duration</div>
+                                <div className={styles['label']}>{ t('SETTINGS_NEXT_VIDEO_POPUP_DURATION') }</div>
                             </div>
                             <Multiselect
                                 className={classnames(styles['option-input-container'], styles['multiselect-container'])}
@@ -382,7 +383,7 @@ const Settings = () => {
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Play in background</div>
+                                <div className={styles['label']}>{ t('SETTINGS_PLAY_IN_BACKGROUND') }</div>
                             </div>
                             <Checkbox
                                 className={classnames(styles['option-input-container'], styles['checkbox-container'])}
@@ -393,7 +394,7 @@ const Settings = () => {
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Play in external player</div>
+                                <div className={styles['label']}>{ t('SETTINGS_PLAY_IN_EXTERNAL_PLAYER') }</div>
                             </div>
                             <Checkbox
                                 className={classnames(styles['option-input-container'], styles['checkbox-container'])}
@@ -404,7 +405,7 @@ const Settings = () => {
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Hardware-accelerated decoding</div>
+                                <div className={styles['label']}>{ t('SETTINGS_HWDEC') }</div>
                             </div>
                             <Checkbox
                                 className={classnames(styles['option-input-container'], styles['checkbox-container'])}
@@ -415,15 +416,15 @@ const Settings = () => {
                         </div>
                     </div>
                     <div ref={streamingServerSectionRef} className={styles['section-container']}>
-                        <div className={styles['section-title']}>Streaming Server</div>
+                        <div className={styles['section-title']}>{ t('SETTINGS_NAV_STREAMING') }</div>
                         <div className={styles['option-container']}>
                             <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Reload'} onClick={reloadStreamingServer}>
-                                <div className={styles['label']}>Reload</div>
+                                <div className={styles['label']}>{ t('RELOAD') }</div>
                             </Button>
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Status</div>
+                                <div className={styles['label']}>{ t('STATUS') }</div>
                             </div>
                             <div className={classnames(styles['option-input-container'], styles['info-container'])}>
                                 <div className={styles['label']}>
@@ -432,10 +433,10 @@ const Settings = () => {
                                             'NotLoaded'
                                             :
                                             streamingServer.settings.type === 'Ready' ?
-                                                'Online'
+                                                t('SETTINGS_SERVER_STATUS_ONLINE')
                                                 :
                                                 streamingServer.settings.type === 'Error' ?
-                                                    `Error: (${streamingServer.settings.content})`
+                                                    `${t('SETTINGS_SERVER_STATUS_ERROR')}: (${streamingServer.settings.content})`
                                                     :
                                                     streamingServer.settings.type
                                     }
@@ -457,7 +458,7 @@ const Settings = () => {
                             cacheSizeSelect !== null ?
                                 <div className={styles['option-container']}>
                                     <div className={styles['option-name-container']}>
-                                        <div className={styles['label']}>Cache size</div>
+                                        <div className={styles['label']}>{ t('SETTINGS_SERVER_CACHE_SIZE') }</div>
                                     </div>
                                     <Multiselect
                                         className={classnames(styles['option-input-container'], styles['multiselect-container'])}
@@ -471,7 +472,7 @@ const Settings = () => {
                             torrentProfileSelect !== null ?
                                 <div className={styles['option-container']}>
                                     <div className={styles['option-name-container']}>
-                                        <div className={styles['label']}>Torrent profile</div>
+                                        <div className={styles['label']}>{ t('SETTINGS_SERVER_TORRENT_PROFILE') }</div>
                                     </div>
                                     <Multiselect
                                         className={classnames(styles['option-input-container'], styles['multiselect-container'])}
@@ -483,42 +484,42 @@ const Settings = () => {
                         }
                     </div>
                     <div ref={shortcutsSectionRef} className={styles['section-container']}>
-                        <div className={styles['section-title']}>Shortcuts</div>
+                        <div className={styles['section-title']}>{ t('SETTINGS_NAV_SHORTCUTS') }</div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Play / Pause</div>
+                                <div className={styles['label']}>{ t('SETTINGS_SHORTCUT_PLAY_PAUSE') }</div>
                             </div>
                             <div className={classnames(styles['option-input-container'], styles['shortcut-container'])}>
-                                <kbd>Space</kbd>
+                                <kbd>{ t('SETTINGS_SHORTCUT_SPACE') }</kbd>
                             </div>
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Seek Forward</div>
+                                <div className={styles['label']}>{ t('SETTINGS_SHORTCUT_SEEK_FORWARD') }</div>
                             </div>
                             <div className={classnames(styles['option-input-container'], styles['shortcut-container'])}>
                                 <kbd>→</kbd>
-                                <div className={styles['label']}>or</div>
-                                <kbd>⇧ Shift</kbd>
+                                <div className={styles['label']}>{ t('SETTINGS_SHORTCUT_OR') }</div>
+                                <kbd>⇧ { t('SETTINGS_SHORTCUT_SHIFT') }</kbd>
                                 <div className={styles['label']}>+</div>
                                 <kbd>→</kbd>
                             </div>
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Seek Backward</div>
+                                <div className={styles['label']}>{ t('SETTINGS_SHORTCUT_SEEK_BACKWARD') }</div>
                             </div>
                             <div className={classnames(styles['option-input-container'], styles['shortcut-container'])}>
                                 <kbd>←</kbd>
-                                <div className={styles['label']}>or</div>
-                                <kbd>⇧ Shift</kbd>
+                                <div className={styles['label']}>{ t('SETTINGS_SHORTCUT_OR') }</div>
+                                <kbd>⇧ { t('SETTINGS_SHORTCUT_SHIFT') }</kbd>
                                 <div className={styles['label']}>+</div>
                                 <kbd>←</kbd>
                             </div>
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Volume Up</div>
+                                <div className={styles['label']}>{ t('SETTINGS_SHORTCUT_VOLUME_UP') }</div>
                             </div>
                             <div className={classnames(styles['option-input-container'], styles['shortcut-container'])}>
                                 <kbd>↑</kbd>
@@ -526,7 +527,7 @@ const Settings = () => {
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Volume Down</div>
+                                <div className={styles['label']}>{ t('SETTINGS_SHORTCUT_VOLUME_DOWN') }</div>
                             </div>
                             <div className={classnames(styles['option-input-container'], styles['shortcut-container'])}>
                                 <kbd>↓</kbd>
@@ -534,7 +535,7 @@ const Settings = () => {
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Toggle Subtitles Menu</div>
+                                <div className={styles['label']}>{ t('SETTINGS_SHORTCUT_MENU_SUBTITLES') }</div>
                             </div>
                             <div className={classnames(styles['option-input-container'], styles['shortcut-container'])}>
                                 <kbd>S</kbd>
@@ -542,7 +543,7 @@ const Settings = () => {
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Toggle Info Menu</div>
+                                <div className={styles['label']}>{ t('SETTINGS_SHORTCUT_MENU_INFO') }</div>
                             </div>
                             <div className={classnames(styles['option-input-container'], styles['shortcut-container'])}>
                                 <kbd>I</kbd>
@@ -550,7 +551,7 @@ const Settings = () => {
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Toggle Fullscreen</div>
+                                <div className={styles['label']}>{ t('SETTINGS_SHORTCUT_FULLSCREEN') }</div>
                             </div>
                             <div className={classnames(styles['option-input-container'], styles['shortcut-container'])}>
                                 <kbd>F</kbd>
@@ -558,17 +559,17 @@ const Settings = () => {
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Navigate Between Menus</div>
+                                <div className={styles['label']}>{ t('SETTINGS_SHORTCUT_NAVIGATE_MENUS') }</div>
                             </div>
                             <div className={classnames(styles['option-input-container'], styles['shortcut-container'])}>
                                 <kbd>1</kbd>
-                                <div className={styles['label']}>to</div>
+                                <div className={styles['label']}>{ t('SETTINGS_SHORTCUT_TO') }</div>
                                 <kbd>5</kbd>
                             </div>
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Go to Search</div>
+                                <div className={styles['label']}>{ t('SETTINGS_SHORTCUT_GO_TO_SEARCH') }</div>
                             </div>
                             <div className={classnames(styles['option-input-container'], styles['shortcut-container'])}>
                                 <kbd>0</kbd>
@@ -576,10 +577,10 @@ const Settings = () => {
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Close Menu or Modal</div>
+                                <div className={styles['label']}>{ t('SETTINGS_SHORTCUT_EXIT_BACK') }</div>
                             </div>
                             <div className={classnames(styles['option-input-container'], styles['shortcut-container'])}>
-                                <kbd>Esc</kbd>
+                                <kbd>{ t('SETTINGS_SHORTCUT_ESC') }</kbd>
                             </div>
                         </div>
                     </div>
@@ -589,7 +590,7 @@ const Settings = () => {
                 configureServerUrlModalOpen ?
                     <ModalDialog
                         className={styles['configure-server-url-modal-container']}
-                        title={'Configure streaming server url'}
+                        title={t('SETTINGS_SERVER_CONFIGURE_TITLE')}
                         buttons={configureServerUrlModalButtons}
                         onCloseRequest={closeConfigureServerUrlModal}>
                         <TextInput
@@ -598,7 +599,7 @@ const Settings = () => {
                             className={styles['server-url-input']}
                             type={'text'}
                             defaultValue={streamingServerUrlInput.value}
-                            placeholder={'Enter a streaming server url'}
+                            placeholder={t('SETTINGS_SERVER_CONFIGURE_INPUT')}
                             onSubmit={configureServerUrlOnSubmit}
                         />
                     </ModalDialog>
