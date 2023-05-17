@@ -29,7 +29,7 @@ const InfoMenu = ({ className, ...props }) => {
                         className={styles['meta-preview']}
                         compact={true}
                         name={metaItem.name}
-                        logo={metaItem.logo}
+                        logo={metaItem.poster}
                         runtime={metaItem.runtime}
                         releaseInfo={metaItem.releaseInfo}
                         released={metaItem.released}
