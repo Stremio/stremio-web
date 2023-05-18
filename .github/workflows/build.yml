@@ -24,6 +24,6 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build
-          destination_dir: ${{ github.ref_name != 'development' && github.ref_name || '') }}
+          destination_dir: ${{ github.ref_name != 'development' && github.ref_name || '' }}
           keep_files: true
           allow_empty_commit: true
