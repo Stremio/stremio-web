@@ -1,6 +1,9 @@
 name: Build
 
-on: push
+on:
+  push:
+    branches:
+      - '*'
 
 jobs:
   build:
@@ -15,12 +18,15 @@ jobs:
       - name: Test
         run: npm test
       - name: Lint
-        run: npm run lint
+        run: npm run lint && echo ${{ github.ref_name }}
+  pages:
+    runs-on: ubuntu-latest
+    steps:
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build
-          destination_dir: ${{ github.head_ref }}
+          destination_dir: ${{ github.ref_name }}
           enable_jekyll: true
           allow_empty_commit: true
