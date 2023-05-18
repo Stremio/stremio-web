@@ -18,7 +18,7 @@ jobs:
       - name: Test
         run: npm test
       - name: Lint
-        run: npm run lint && echo ${{ github.ref_name }}
+        run: npm run lint
   pages:
     needs: build
     runs-on: ubuntu-latest
