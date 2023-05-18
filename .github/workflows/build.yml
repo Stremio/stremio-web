@@ -29,5 +29,5 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build
           destination_dir: ${{ github.ref_name }}
-          enable_jekyll: true
+          keep_files: true
           allow_empty_commit: true
