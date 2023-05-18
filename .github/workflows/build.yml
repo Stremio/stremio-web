@@ -20,6 +20,7 @@ jobs:
       - name: Lint
         run: npm run lint && echo ${{ github.ref_name }}
   pages:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Deploy to GitHub Pages
