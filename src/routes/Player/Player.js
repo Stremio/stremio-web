@@ -23,7 +23,7 @@ const useSettings = require('./useSettings');
 const styles = require('./styles');
 
 const Player = ({ urlParams, queryParams }) => {
-    const { chromecast, shell } = useServices();
+    const { chromecast, shell, core } = useServices();
     const [forceTranscoding, maxAudioChannels] = React.useMemo(() => {
         return [
             queryParams.has('forceTranscoding'),
@@ -428,11 +428,18 @@ const Player = ({ urlParams, queryParams }) => {
                 );
             }
         };
+        const onCoreEvent = ({ event }) => {
+            if (event === 'PlayingOnDevice') {
+                onPauseRequested();
+            }
+        };
         chromecast.on('stateChanged', onChromecastServiceStateChange);
+        core.transport.on('CoreEvent', onCoreEvent);
         onChromecastServiceStateChange();
         return () => {
             toast.removeFilter(toastFilter);
             chromecast.off('stateChanged', onChromecastServiceStateChange);
+            core.transport.off('CoreEvent', onCoreEvent);
             if (chromecast.active) {
                 chromecast.transport.off(
                     cast.framework.CastContextEventType.CAST_STATE_CHANGED,
@@ -716,6 +723,7 @@ const Player = ({ urlParams, queryParams }) => {
                     <OptionsMenu
                         className={classnames(styles['layer'], styles['menu-layer'])}
                         stream={player.selected.stream}
+                        playbackDevices={streamingServer.playbackDevices !== null && streamingServer.playbackDevices.type === 'Ready' ? streamingServer.playbackDevices.content : []}
                     />
                     :
                     null

@@ -50,6 +50,14 @@ const ServicesToaster = () => {
                     });
                     break;
                 }
+                case 'PlayingOnDevice': {
+                    toast.show({
+                        type: 'success',
+                        title: `Stream opened in ${args.device}`,
+                        timeout: 4000
+                    });
+                    break;
+                }
             }
         };
         const onDragAndDropError = (error) => {
