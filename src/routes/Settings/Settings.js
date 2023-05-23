@@ -210,9 +210,9 @@ const Settings = () => {
                                         `url('${require('/images/anonymous.png')}')`
                                         :
                                         profile.auth.user.avatar ?
-                                        `url('${profile.auth.user.avatar}')`
-                                        :
-                                        `url('${require('/images/default_avatar.png')}')` 
+                                            `url('${profile.auth.user.avatar}')`
+                                            :
+                                            `url('${require('/images/default_avatar.png')}')`
                                 }}
                             />
                             <div className={styles['email-logout-container']}>
