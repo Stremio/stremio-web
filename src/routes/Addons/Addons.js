@@ -58,6 +58,9 @@ const Addons = ({ urlParams, queryParams }) => {
     const onAddonToggle = React.useCallback((event) => {
         setAddonDetailsTransportUrl(event.dataset.addon.transportUrl);
     }, [setAddonDetailsTransportUrl]);
+    const onAddonConfigure = React.useCallback((event) => {
+        window.open(event.dataset.addon.transportUrl.replace('manifest.json', 'configure'));
+    }, []);
     const closeAddonDetails = React.useCallback(() => {
         setAddonDetailsTransportUrl(null);
     }, [setAddonDetailsTransportUrl]);
@@ -128,8 +131,10 @@ const Addons = ({ urlParams, queryParams }) => {
                                                     logo={addon.manifest.logo}
                                                     description={addon.manifest.description}
                                                     types={addon.manifest.types}
+                                                    behaviorHints={addon.manifest.behaviorHints}
                                                     installed={addon.installed}
                                                     onToggle={onAddonToggle}
+                                                    onConfigure={onAddonConfigure}
                                                     onShare={onAddonShare}
                                                     dataset={{ addon }}
                                                 />
@@ -162,8 +167,10 @@ const Addons = ({ urlParams, queryParams }) => {
                                                         logo={addon.manifest.logo}
                                                         description={addon.manifest.description}
                                                         types={addon.manifest.types}
+                                                        behaviorHints={addon.manifest.behaviorHints}
                                                         installed={addon.installed}
                                                         onToggle={onAddonToggle}
+                                                        onConfigure={onAddonConfigure}
                                                         onShare={onAddonShare}
                                                         dataset={{ addon }}
                                                     />

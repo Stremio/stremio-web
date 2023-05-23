@@ -8,7 +8,7 @@ const Icon = require('@stremio/stremio-icons/dom');
 const { Button, Image } = require('stremio/common');
 const styles = require('./styles');
 
-const Addon = ({ className, id, name, version, logo, description, types, installed, onToggle, onShare, dataset }) => {
+const Addon = ({ className, id, name, version, logo, description, types, behaviorHints, installed, onToggle, onConfigure, onShare, dataset }) => {
     const { t } = useTranslation();
     const toggleButtonOnClick = React.useCallback((event) => {
         if (typeof onToggle === 'function') {
@@ -20,6 +20,16 @@ const Addon = ({ className, id, name, version, logo, description, types, install
             });
         }
     }, [onToggle, dataset]);
+    const configureButtonOnClick = React.useCallback((event) => {
+        if (typeof onConfigure === 'function') {
+            onConfigure({
+                type: 'configure',
+                nativeEvent: event.nativeEvent,
+                reactEvent: event,
+                dataset: dataset
+            });
+        }
+    }, [onConfigure, dataset]);
     const shareButtonOnClick = React.useCallback((event) => {
         if (typeof onShare === 'function') {
             onShare({
@@ -84,9 +94,24 @@ const Addon = ({ className, id, name, version, logo, description, types, install
                 }
             </div>
             <div className={styles['buttons-container']}>
-                <Button className={installed ? styles['uninstall-button-container'] : styles['install-button-container']} title={installed ? t('ADDON_UNINSTALL') : t('ADDON_INSTALL')} tabIndex={-1} onClick={toggleButtonOnClick}>
-                    <div className={styles['label']}>{installed ? t('ADDON_UNINSTALL') : t('ADDON_INSTALL')}</div>
-                </Button>
+                <div className={styles['action-buttons-container']}>
+                    {
+                        !behaviorHints.configurationRequired && behaviorHints.configurable ?
+                            <Button className={styles['configure-button-container']} title={t('ADDON_CONFIGURE')} tabIndex={-1} onClick={configureButtonOnClick}>
+                                <Icon className={styles['icon']} icon={'ic_settings'} />
+                            </Button>
+                            :
+                            null
+                    }
+                    <Button
+                        className={installed ? styles['uninstall-button-container'] : styles['install-button-container']}
+                        title={installed ? t('ADDON_UNINSTALL') : behaviorHints.configurationRequired ? t('ADDON_CONFIGURE') : t('ADDON_INSTALL')}
+                        tabIndex={-1}
+                        onClick={!installed && behaviorHints.configurationRequired ? configureButtonOnClick : toggleButtonOnClick}
+                    >
+                        <div className={styles['label']}>{installed ? t('ADDON_UNINSTALL') : behaviorHints.configurationRequired ? t('ADDON_CONFIGURE') : t('ADDON_INSTALL')}</div>
+                    </Button>
+                </div>
                 <Button className={styles['share-button-container']} title={t('SHARE_ADDON')} tabIndex={-1} onClick={shareButtonOnClick}>
                     <Icon className={styles['icon']} icon={'ic_share'} />
                     <div className={styles['label']}>{ t('SHARE_ADDON') }</div>
@@ -104,8 +129,15 @@ Addon.propTypes = {
     logo: PropTypes.string,
     description: PropTypes.string,
     types: PropTypes.arrayOf(PropTypes.string),
+    behaviorHints: PropTypes.shape({
+        adult: PropTypes.bool,
+        configurable: PropTypes.bool,
+        configurationRequired: PropTypes.bool,
+        p2p: PropTypes.bool,
+    }),
     installed: PropTypes.bool,
     onToggle: PropTypes.func,
+    onConfigure: PropTypes.func,
     onShare: PropTypes.func,
     dataset: PropTypes.object
 };

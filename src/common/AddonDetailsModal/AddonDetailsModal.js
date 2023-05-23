@@ -59,6 +59,27 @@ const AddonDetailsModal = ({ transportUrl, onCloseRequest }) => {
                 }
             }
         };
+        const configureButton = addonDetails.remoteAddon !== null &&
+            addonDetails.remoteAddon.content.type === 'Ready' &&
+            addonDetails.remoteAddon.content.content.manifest.behaviorHints.configurable ?
+            {
+                className: styles['configure-button'],
+                label: 'Configure',
+                props: {
+                    onClick: (event) => {
+                        window.open(transportUrl.replace('manifest.json', 'configure'));
+                        if (typeof onCloseRequest === 'function') {
+                            onCloseRequest({
+                                type: 'configure',
+                                reactEvent: event,
+                                nativeEvent: event.nativeEvent
+                            });
+                        }
+                    }
+                }
+            }
+            :
+            null;
         const toggleButton = addonDetails.localAddon !== null ?
             {
                 className: styles['uninstall-button'],
@@ -109,7 +130,7 @@ const AddonDetailsModal = ({ transportUrl, onCloseRequest }) => {
                 }
                 :
                 null;
-        return toggleButton !== null ? [cancelButton, toggleButton] : [cancelButton];
+        return toggleButton !== null ? configureButton ? [cancelButton, configureButton, toggleButton] : [cancelButton, toggleButton] : [cancelButton];
     }, [addonDetails, onCloseRequest]);
     return (
         <ModalDialog className={styles['addon-details-modal-container']} title={'Stremio addon'} buttons={modalButtons} onCloseRequest={onCloseRequest}>

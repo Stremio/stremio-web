@@ -89,25 +89,33 @@
 
     .buttons-container {
         flex: none;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
         width: 17rem;
 
-        .install-button-container, .uninstall-button-container, .share-button-container {
+        .action-buttons-container {
+            flex: auto;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .install-button-container, .configure-button-container, .uninstall-button-container, .share-button-container {
+            flex: auto;
             display: flex;
             flex-direction: row;
             align-items: center;
             justify-content: center;
+            gap: 1rem;
             height: 4rem;
             padding: 0 1rem;
-
-            &:not(:first-child) {
-                margin-top: 1rem;
-            }
 
             .icon {
                 flex: none;
                 width: 2rem;
                 height: 2rem;
-                margin-right: 1rem;
             }
 
             .label {
@@ -130,6 +138,19 @@
 
             .label {
                 color: @color-surface-light5;
+            }
+        }
+
+        .configure-button-container {
+            flex: none;
+            background-color: @color-accent3;
+
+            &:hover {
+                background-color: @color-accent3-light2;
+            }
+
+            .icon {
+                fill: @color-surface-light5;
             }
         }
 
@@ -187,13 +208,9 @@
             align-items: center;
             justify-content: space-between;
 
-            .install-button-container, .uninstall-button-container, .share-button-container {
-                &:not(:first-child) {
-                    margin-top: 0;
-                }
-            }
-
             .share-button-container {
+                flex: none;
+
                 .icon {
                     margin-right: 0;
                 }
