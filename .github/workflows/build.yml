@@ -1,6 +1,9 @@
 name: Build
 
-on: push
+on:
+  push:
+    branches:
+      - '*'
 
 jobs:
   build:
@@ -9,11 +12,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Install NPM dependencies
-        run: npm install
+        run: npm ci
       - name: Build
         run: npm run build
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v2
+      - name: Test
+        run: npm test
+      - name: Lint
+        run: npm run lint
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          name: stremio-web
-          path: build
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build
+          destination_dir: ${{ github.ref_name != 'development' && github.ref_name || '' }}
+          allow_empty_commit: true
