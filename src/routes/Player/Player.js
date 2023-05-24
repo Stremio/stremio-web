@@ -5,6 +5,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const debounce = require('lodash.debounce');
 const langs = require('langs');
+const { useTranslation } = require('react-i18next');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
 const { HorizontalNavBar, Button, useFullscreen, useBinaryState, useToast, useStreamingServer, withCoreSuspender } = require('stremio/common');
@@ -23,6 +24,7 @@ const useSettings = require('./useSettings');
 const styles = require('./styles');
 
 const Player = ({ urlParams, queryParams }) => {
+    const { t } = useTranslation();
     const { chromecast, shell, core } = useServices();
     const [forceTranscoding, maxAudioChannels] = React.useMemo(() => {
         return [
@@ -124,7 +126,7 @@ const Player = ({ urlParams, queryParams }) => {
         } else {
             toast.show({
                 type: 'error',
-                title: 'Error',
+                title: t('ERROR'),
                 message: error.message,
                 timeout: 3000
             });
@@ -133,16 +135,16 @@ const Player = ({ urlParams, queryParams }) => {
     const onSubtitlesTrackLoaded = React.useCallback(() => {
         toast.show({
             type: 'success',
-            title: 'Subtitles loaded',
-            message: 'Embedded subtitles loaded',
+            title: t('PLAYER_SUBTITLES_LOADED'),
+            message: t('PLAYER_SUBTITLES_LOADED_EMBEDDED'),
             timeout: 3000
         });
     }, []);
     const onExtraSubtitlesTrackLoaded = React.useCallback((track) => {
         toast.show({
             type: 'success',
-            title: 'Subtitles loaded',
-            message: track.exclusive ? 'Exclusice subtitles loaded' : `Subtitles from ${track.origin} loaded`,
+            title: t('PLAYER_SUBTITLES_LOADED'),
+            message: track.exclusive ? t('PLAYER_SUBTITLES_LOADED_EXCLUSIVE') : t('PLAYER_SUBTITLES_LOADED_ORIGIN', { origin: track.origin }),
             timeout: 3000
         });
     }, []);
@@ -597,9 +599,9 @@ const Player = ({ urlParams, queryParams }) => {
                         <div className={styles['error-label']} title={error.message}>{error.message}</div>
                         {
                             player.selected !== null ?
-                                <Button className={styles['playlist-button']} title={'Open in external player'} href={player.selected.stream.deepLinks.externalPlayer.href} download={player.selected.stream.deepLinks.externalPlayer.fileName} target={'_blank'}>
+                                <Button className={styles['playlist-button']} title={t('PLAYER_OPEN_IN_EXTERNAL')} href={player.selected.stream.deepLinks.externalPlayer.href} download={player.selected.stream.deepLinks.externalPlayer.fileName} target={'_blank'}>
                                     <Icon className={styles['icon']} icon={'ic_downloads'} />
-                                    <div className={styles['label']}>Open in external player</div>
+                                    <div className={styles['label']}>{t('PLAYER_OPEN_IN_EXTERNAL')}</div>
                                 </Button>
                                 :
                                 null

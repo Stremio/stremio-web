@@ -3,12 +3,14 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
+const { useTranslation } = require('react-i18next');
 const { useToast } = require('stremio/common');
 const { useServices } = require('stremio/services');
 const Option = require('./Option');
 const styles = require('./styles');
 
 const OptionsMenu = ({ className, stream, playbackDevices }) => {
+    const { t } = useTranslation();
     const { core } = useServices();
     const toast = useToast();
     const [streamingUrl, downloadUrl] = React.useMemo(() => {
@@ -29,7 +31,7 @@ const OptionsMenu = ({ className, stream, playbackDevices }) => {
                     toast.show({
                         type: 'success',
                         title: 'Copied',
-                        message: 'Stream link was copied to your clipboard',
+                        message: t('PLAYER_COPY_STREAM_SUCCESS'),
                         timeout: 3000
                     });
                 })
@@ -37,8 +39,8 @@ const OptionsMenu = ({ className, stream, playbackDevices }) => {
                     console.error(e);
                     toast.show({
                         type: 'error',
-                        title: 'Error',
-                        message: `Failed to copy stream link: ${streamingUrl || downloadUrl}`,
+                        title: t('Error'),
+                        message: `${t('PLAYER_COPY_STREAM_ERROR')}: ${streamingUrl || downloadUrl}`,
                         timeout: 3000
                     });
                 });
@@ -72,7 +74,7 @@ const OptionsMenu = ({ className, stream, playbackDevices }) => {
                 streamingUrl || downloadUrl ?
                     <Option
                         icon={'ic_link'}
-                        label={'Copy Stream Link'}
+                        label={t('CTX_COPY_STREAM_LINK')}
                         disabled={stream === null}
                         onClick={onCopyStreamButtonClick}
                     />
@@ -83,7 +85,7 @@ const OptionsMenu = ({ className, stream, playbackDevices }) => {
                 streamingUrl || downloadUrl ?
                     <Option
                         icon={'ic_downloads'}
-                        label={'Download Video'}
+                        label={t('CTX_DOWNLOAD_VIDEO')}
                         disabled={stream === null}
                         onClick={onDownloadVideoButtonClick}
                     />
@@ -95,7 +97,7 @@ const OptionsMenu = ({ className, stream, playbackDevices }) => {
                     <Option
                         key={id}
                         icon={'ic_vlc'}
-                        label={`Play in ${name}`}
+                        label={t('PLAYER_PLAY_IN', { device: name })}
                         deviceId={id}
                         disabled={stream === null}
                         onClick={onExternalDeviceRequested}
