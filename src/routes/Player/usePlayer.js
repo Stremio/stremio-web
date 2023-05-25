@@ -69,7 +69,7 @@ const usePlayer = (urlParams, videoParams) => {
                             }
                             :
                             null,
-                        subtitlesPath: typeof urlParams.type === 'string' && typeof urlParams.videoId === 'string' ?
+                        subtitlesPath: videoParams !== null && typeof urlParams.type === 'string' && typeof urlParams.videoId === 'string' ?
                             {
                                 resource: 'subtitles',
                                 type: urlParams.type,
