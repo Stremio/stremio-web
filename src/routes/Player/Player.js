@@ -64,7 +64,7 @@ const Player = ({ urlParams, queryParams }) => {
             extraSubtitlesOutlineColor: null
         }
     );
-    const [player, timeChanged, pausedChanged, ended, pushToLibrary] = usePlayer(urlParams, videoState.videoParams);
+    const [player, timeChanged, pausedChanged, ended] = usePlayer(urlParams, videoState.videoParams);
     const [settings, updateSettings] = useSettings();
     const streamingServer = useStreamingServer();
     const routeFocused = useRouteFocused();
@@ -112,7 +112,6 @@ const Player = ({ urlParams, queryParams }) => {
     }, []);
     const onEnded = React.useCallback(() => {
         ended();
-        pushToLibrary();
         if (player.nextVideo !== null) {
             onPlayNextVideoRequested();
         } else {
@@ -407,14 +406,6 @@ const Player = ({ urlParams, queryParams }) => {
             closeSpeedMenu();
         }
     }, [videoState.playbackSpeed]);
-    React.useEffect(() => {
-        const intervalId = setInterval(() => {
-            pushToLibrary();
-        }, 30000);
-        return () => {
-            clearInterval(intervalId);
-        };
-    }, []);
     React.useEffect(() => {
         const toastFilter = (item) => item?.dataset?.type === 'CoreEvent';
         toast.addFilter(toastFilter);
