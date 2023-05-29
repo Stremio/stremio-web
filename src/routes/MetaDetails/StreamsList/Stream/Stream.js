@@ -46,7 +46,7 @@ const Stream = ({ className, addonName, name, description, thumbnail, progress, 
         } else if (profile.settings.playerType === 'external') {
             toast.show({
                 type: 'success',
-                title: `Stream opened in external player`,
+                title: 'Stream opened in external player',
                 timeout: 4000
             });
         }
