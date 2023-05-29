@@ -401,7 +401,6 @@ const Settings = () => {
                             </div>
                             <Checkbox
                                 className={classnames(styles['option-input-container'], styles['checkbox-container'])}
-                                disabled={true}
                                 tabIndex={-1}
                                 {...playInExternalPlayerCheckbox}
                             />
