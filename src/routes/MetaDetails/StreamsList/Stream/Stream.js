@@ -12,7 +12,7 @@ const Stream = ({ className, addonName, name, description, thumbnail, progress, 
     const profile = useProfile();
     const href = React.useMemo(() => {
         return deepLinks ?
-            profile.settings.playInExternalPlayer ?
+            profile.settings.playerType === 'external' ?
                 deepLinks.externalPlayer.vlc[isMobile() || 'desktop'] || deepLinks.externalPlayer.href
                 :
                 typeof deepLinks.player === 'string' ?
