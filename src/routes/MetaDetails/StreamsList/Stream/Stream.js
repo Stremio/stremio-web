@@ -13,8 +13,8 @@ const Stream = ({ className, addonName, name, description, thumbnail, progress, 
     const profile = useProfile();
     const streamingServer = useStreamingServer();
     const { core } = useServices();
-    const haveStreamingServer = streamingServer.settings !== null && streamingServer.settings.type === 'Ready';
     const href = React.useMemo(() => {
+        const haveStreamingServer = streamingServer.settings !== null && streamingServer.settings.type === 'Ready';
         return deepLinks ?
             profile.settings.playerType === 'external' ?
                 platform.isMobile() || !haveStreamingServer ?
@@ -27,7 +27,7 @@ const Stream = ({ className, addonName, name, description, thumbnail, progress, 
                     null
             :
             null;
-    }, [deepLinks, haveStreamingServer]);
+    }, [deepLinks, streamingServer]);
     const onClick = React.useCallback((e) => {
         if (href === null) {
             // link does not lead to the player, it is expected to
