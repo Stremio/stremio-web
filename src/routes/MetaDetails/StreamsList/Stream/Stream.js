@@ -16,7 +16,7 @@ const Stream = ({ className, addonName, name, description, thumbnail, progress, 
         return deepLinks ?
             profile.settings.playerType === 'external' ?
                 platform.isMobile() || !haveStreamingServer ?
-                    deepLinks.externalPlayer.vlc[platform.name] || deepLinks.externalPlayer.streaming
+                    (deepLinks.externalPlayer.vlc || {})[platform.name] || deepLinks.externalPlayer.href
                     : 'javascript:void(0);' // handled in StreamsList.js onClick
                 :
                 typeof deepLinks.player === 'string' ?
@@ -26,11 +26,16 @@ const Stream = ({ className, addonName, name, description, thumbnail, progress, 
             :
             null;
     }, [deepLinks]);
+    const forceDownload = React.useMemo(() => {
+        // we only do this in one case to force the download
+        // of a M3U playlist generated in the browser
+        return href === deepLinks.externalPlayer.href ? 'playlist.m3u' : false
+    }, [href]);
     const renderThumbnailFallback = React.useCallback(() => (
         <Icon className={styles['placeholder-icon']} icon={'ic_broken_link'} />
     ), []);
     return (
-        <Button href={href} {...props} className={classnames(className, styles['stream-container'])} title={addonName}>
+        <Button href={href} download={forceDownload} {...props} className={classnames(className, styles['stream-container'])} title={addonName}>
             {
                 typeof thumbnail === 'string' && thumbnail.length > 0 ?
                     <div className={styles['thumbnail-container']} title={name || addonName}>
@@ -77,7 +82,7 @@ Stream.propTypes = {
                 android: PropTypes.string,
                 desktop: PropTypes.string
             },
-            streaming: PropTypes.string
+            href: PropTypes.string
         })
     })
 };
