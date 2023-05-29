@@ -4,16 +4,20 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('@stremio/stremio-icons/dom');
-const { Button, Image, PlayIconCircleCentered, useProfile, isMobile } = require('stremio/common');
+const { Button, Image, PlayIconCircleCentered, useProfile, isMobile, useStreamingServer } = require('stremio/common');
 const StreamPlaceholder = require('./StreamPlaceholder');
 const styles = require('./styles');
 
 const Stream = ({ className, addonName, name, description, thumbnail, progress, deepLinks, ...props }) => {
     const profile = useProfile();
+    const streamingServer = useStreamingServer();
+    const haveStreamingServer = streamingServer.settings !== null && streamingServer.settings.type === 'Ready';
     const href = React.useMemo(() => {
         return deepLinks ?
             profile.settings.playerType === 'external' ?
-                deepLinks.externalPlayer.vlc[isMobile() || 'desktop'] || deepLinks.externalPlayer.href
+                isMobile() || !haveStreamingServer ?
+                    deepLinks.externalPlayer.vlc[isMobile()] || deepLinks.externalPlayer.streaming
+                    : 'javascript:void(0);' // handled in StreamsList.js onClick
                 :
                 typeof deepLinks.player === 'string' ?
                     deepLinks.player
@@ -73,7 +77,7 @@ Stream.propTypes = {
                 android: PropTypes.string,
                 desktop: PropTypes.string
             },
-            href: PropTypes.string
+            streaming: PropTypes.string
         })
     })
 };

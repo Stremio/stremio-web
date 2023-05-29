@@ -27,13 +27,28 @@ const StreamsList = ({ className, ...props }) => {
                     addon: streams.addon,
                     streams: streams.content.content.map((stream) => ({
                         ...stream,
-                        onClick: () => {
-                            core.transport.analytics({
-                                event: 'StreamClicked',
-                                args: {
-                                    stream
-                                }
-                            });
+                        onClick: (e) => {
+                            if (e.target.getAttribute('href') === 'javascript:void(0);') {
+                                // link does not lead to the player, it is expected to
+                                // open with local video player through the streaming server
+                                core.transport.dispatch({
+                                    action: 'StreamingServer',
+                                    args: {
+                                        action: 'PlayOnDevice',
+                                        args: {
+                                            device: 'vlc',
+                                            source: stream.deepLinks.externalPlayer.streaming
+                                        }
+                                    }
+                                });
+                            } else {
+                                core.transport.analytics({
+                                    event: 'StreamClicked',
+                                    args: {
+                                        stream
+                                    }
+                                });
+                            }
                         },
                         addonName: streams.addon.manifest.name
                     }))
