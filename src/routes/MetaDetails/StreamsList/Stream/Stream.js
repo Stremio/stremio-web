@@ -15,8 +15,8 @@ const Stream = ({ className, addonName, name, description, thumbnail, progress, 
     const href = React.useMemo(() => {
         return deepLinks ?
             profile.settings.playerType === 'external' ?
-                isMobile() || !haveStreamingServer ?
-                    deepLinks.externalPlayer.vlc[isMobile()] || deepLinks.externalPlayer.streaming
+                isMobile.check() || !haveStreamingServer ?
+                    deepLinks.externalPlayer.vlc[isMobile.platform] || deepLinks.externalPlayer.streaming
                     : 'javascript:void(0);' // handled in StreamsList.js onClick
                 :
                 typeof deepLinks.player === 'string' ?
