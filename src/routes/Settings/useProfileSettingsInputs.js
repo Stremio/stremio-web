@@ -213,7 +213,7 @@ const useProfileSettingsInputs = (profile) => {
         }
     }), [profile.settings]);
     const playInExternalPlayerCheckbox = React.useMemo(() => ({
-        checked: profile.settings.playInExternalPlayer,
+        checked: profile.settings.playerType === 'external',
         onClick: () => {
             core.transport.dispatch({
                 action: 'Ctx',
@@ -221,7 +221,7 @@ const useProfileSettingsInputs = (profile) => {
                     action: 'UpdateSettings',
                     args: {
                         ...profile.settings,
-                        playInExternalPlayer: !profile.settings.playInExternalPlayer
+                        playerType: profile.settings.playerType !== 'external' ? 'external' : 'internal'
                     }
                 }
             });
