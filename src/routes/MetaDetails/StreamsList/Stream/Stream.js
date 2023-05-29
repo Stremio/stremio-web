@@ -5,19 +5,21 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('@stremio/stremio-icons/dom');
 const { Button, Image, PlayIconCircleCentered, useProfile, platform, useStreamingServer } = require('stremio/common');
+const { useServices } = require('stremio/services');
 const StreamPlaceholder = require('./StreamPlaceholder');
 const styles = require('./styles');
 
 const Stream = ({ className, addonName, name, description, thumbnail, progress, deepLinks, ...props }) => {
     const profile = useProfile();
     const streamingServer = useStreamingServer();
+    const { core } = useServices();
     const haveStreamingServer = streamingServer.settings !== null && streamingServer.settings.type === 'Ready';
     const href = React.useMemo(() => {
         return deepLinks ?
             profile.settings.playerType === 'external' ?
                 platform.isMobile() || !haveStreamingServer ?
                     (deepLinks.externalPlayer.vlc || {})[platform.name] || deepLinks.externalPlayer.href
-                    : 'javascript:void(0);' // handled in StreamsList.js onClick
+                    : 'javascript:void(0);'
                 :
                 typeof deepLinks.player === 'string' ?
                     deepLinks.player
@@ -26,16 +28,33 @@ const Stream = ({ className, addonName, name, description, thumbnail, progress, 
             :
             null;
     }, [deepLinks]);
+    const onClick = React.useCallback((e) => {
+        if (e.target.closest('a').getAttribute('href') === 'javascript:void(0);') {
+            // link does not lead to the player, it is expected to
+            // open with local video player through the streaming server
+            core.transport.dispatch({
+                action: 'StreamingServer',
+                args: {
+                    action: 'PlayOnDevice',
+                    args: {
+                        device: 'vlc',
+                        source: deepLinks.externalPlayer.streaming
+                    }
+                }
+            });
+        }
+        props.onClick(e);
+    }, [deepLinks, props.onClick]);
     const forceDownload = React.useMemo(() => {
         // we only do this in one case to force the download
         // of a M3U playlist generated in the browser
-        return href === deepLinks.externalPlayer.href ? 'playlist.m3u' : false
+        return href === deepLinks.externalPlayer.href ? 'playlist.m3u' : false;
     }, [href]);
     const renderThumbnailFallback = React.useCallback(() => (
         <Icon className={styles['placeholder-icon']} icon={'ic_broken_link'} />
     ), []);
     return (
-        <Button href={href} download={forceDownload} {...props} className={classnames(className, styles['stream-container'])} title={addonName}>
+        <Button href={href} download={forceDownload} {...props} onClick={onClick} className={classnames(className, styles['stream-container'])} title={addonName}>
             {
                 typeof thumbnail === 'string' && thumbnail.length > 0 ?
                     <div className={styles['thumbnail-container']} title={name || addonName}>
@@ -82,9 +101,11 @@ Stream.propTypes = {
                 android: PropTypes.string,
                 desktop: PropTypes.string
             },
-            href: PropTypes.string
+            href: PropTypes.string,
+            streaming: PropTypes.string
         })
-    })
+    }),
+    onClick: PropTypes.func
 };
 
 module.exports = Stream;
