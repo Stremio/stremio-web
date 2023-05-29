@@ -4,7 +4,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const Icon = require('@stremio/stremio-icons/dom');
-const { Button, Image, PlayIconCircleCentered, useProfile, platform, useStreamingServer } = require('stremio/common');
+const { Button, Image, PlayIconCircleCentered, useProfile, platform, useStreamingServer, useToast } = require('stremio/common');
 const { useServices } = require('stremio/services');
 const StreamPlaceholder = require('./StreamPlaceholder');
 const styles = require('./styles');
@@ -13,6 +13,7 @@ const Stream = ({ className, addonName, name, description, thumbnail, progress, 
     const profile = useProfile();
     const streamingServer = useStreamingServer();
     const { core } = useServices();
+    const toast = useToast();
     const href = React.useMemo(() => {
         const haveStreamingServer = streamingServer.settings !== null && streamingServer.settings.type === 'Ready';
         return deepLinks ?
@@ -27,7 +28,7 @@ const Stream = ({ className, addonName, name, description, thumbnail, progress, 
                     null
             :
             null;
-    }, [deepLinks, streamingServer]);
+    }, [deepLinks, profile, streamingServer]);
     const onClick = React.useCallback((e) => {
         if (href === null) {
             // link does not lead to the player, it is expected to
@@ -42,9 +43,15 @@ const Stream = ({ className, addonName, name, description, thumbnail, progress, 
                     }
                 }
             });
+        } else if (profile.settings.playerType === 'external') {
+            toast.show({
+                type: 'success',
+                title: `Stream opened in external player`,
+                timeout: 4000
+            });
         }
         props.onClick(e);
-    }, [href, deepLinks, props.onClick]);
+    }, [href, deepLinks, props.onClick, profile, toast]);
     const forceDownload = React.useMemo(() => {
         // we only do this in one case to force the download
         // of a M3U playlist generated in the browser
