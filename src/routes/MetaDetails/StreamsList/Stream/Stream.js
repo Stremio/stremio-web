@@ -27,7 +27,7 @@ const Stream = ({ className, addonName, name, description, thumbnail, progress, 
                     null
             :
             null;
-    }, [deepLinks]);
+    }, [deepLinks, haveStreamingServer]);
     const onClick = React.useCallback((e) => {
         if (href === null) {
             // link does not lead to the player, it is expected to
