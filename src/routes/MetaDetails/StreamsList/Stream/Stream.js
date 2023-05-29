@@ -19,7 +19,7 @@ const Stream = ({ className, addonName, name, description, thumbnail, progress, 
             profile.settings.playerType === 'external' ?
                 platform.isMobile() || !haveStreamingServer ?
                     (deepLinks.externalPlayer.vlc || {})[platform.name] || deepLinks.externalPlayer.href
-                    : 'javascript:void(0);'
+                    : null
                 :
                 typeof deepLinks.player === 'string' ?
                     deepLinks.player
@@ -29,7 +29,7 @@ const Stream = ({ className, addonName, name, description, thumbnail, progress, 
             null;
     }, [deepLinks]);
     const onClick = React.useCallback((e) => {
-        if (e.target.closest('a').getAttribute('href') === 'javascript:void(0);') {
+        if (href === null) {
             // link does not lead to the player, it is expected to
             // open with local video player through the streaming server
             core.transport.dispatch({
@@ -44,7 +44,7 @@ const Stream = ({ className, addonName, name, description, thumbnail, progress, 
             });
         }
         props.onClick(e);
-    }, [deepLinks, props.onClick]);
+    }, [href, deepLinks, props.onClick]);
     const forceDownload = React.useMemo(() => {
         // we only do this in one case to force the download
         // of a M3U playlist generated in the browser
