@@ -48,7 +48,7 @@ const Stream = ({ className, addonName, name, description, thumbnail, progress, 
     const forceDownload = React.useMemo(() => {
         // we only do this in one case to force the download
         // of a M3U playlist generated in the browser
-        return href === deepLinks.externalPlayer.href ? 'playlist.m3u' : false;
+        return href === deepLinks.externalPlayer.href ? deepLinks.externalPlayer.fileName : false;
     }, [href]);
     const renderThumbnailFallback = React.useCallback(() => (
         <Icon className={styles['placeholder-icon']} icon={'ic_broken_link'} />
@@ -102,7 +102,8 @@ Stream.propTypes = {
                 desktop: PropTypes.string
             },
             href: PropTypes.string,
-            streaming: PropTypes.string
+            streaming: PropTypes.string,
+            fileName: PropTypes.string
         })
     }),
     onClick: PropTypes.func
