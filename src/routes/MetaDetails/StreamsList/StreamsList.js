@@ -41,14 +41,13 @@ const StreamsList = ({ className, ...props }) => {
                                         }
                                     }
                                 });
-                            } else {
-                                core.transport.analytics({
-                                    event: 'StreamClicked',
-                                    args: {
-                                        stream
-                                    }
-                                });
                             }
+                            core.transport.analytics({
+                                event: 'StreamClicked',
+                                args: {
+                                    stream
+                                }
+                            });
                         },
                         addonName: streams.addon.manifest.name
                     }))
