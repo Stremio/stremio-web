@@ -35,10 +35,10 @@ const Settings = () => {
         subtitlesOutlineColorInput,
         audioLanguageSelect,
         seekTimeDurationSelect,
+        playInExternalPlayerSelect,
         nextVideoPopupDurationSelect,
         bingeWatchingCheckbox,
         playInBackgroundCheckbox,
-        playInExternalPlayerCheckbox,
         hardwareDecodingCheckbox,
         streamingServerUrlInput
     } = useProfileSettingsInputs(profile);
@@ -399,10 +399,9 @@ const Settings = () => {
                             <div className={styles['option-name-container']}>
                                 <div className={styles['label']}>{ t('SETTINGS_PLAY_IN_EXTERNAL_PLAYER') }</div>
                             </div>
-                            <Checkbox
-                                className={classnames(styles['option-input-container'], styles['checkbox-container'])}
-                                tabIndex={-1}
-                                {...playInExternalPlayerCheckbox}
+                            <Multiselect
+                                className={classnames(styles['option-input-container'], styles['multiselect-container'])}
+                                {...playInExternalPlayerSelect}
                             />
                         </div>
                         <div className={styles['option-container']}>
