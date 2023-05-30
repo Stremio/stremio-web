@@ -103,14 +103,16 @@ Stream.propTypes = {
     deepLinks: PropTypes.shape({
         player: PropTypes.string,
         externalPlayer: PropTypes.shape({
-            vlc: {
-                ios: PropTypes.string,
-                android: PropTypes.string,
-                desktop: PropTypes.string
-            },
-            href: PropTypes.string,
-            streaming: PropTypes.string,
-            fileName: PropTypes.string
+            openPlayer: PropTypes.shape({
+                vlc: {
+                    ios: PropTypes.string,
+                    android: PropTypes.string,
+                    desktop: PropTypes.string
+                },
+                href: PropTypes.string,
+                streaming: PropTypes.string,
+                fileName: PropTypes.string
+            })
         })
     }),
     onClick: PropTypes.func
