@@ -19,7 +19,7 @@ const Stream = ({ className, addonName, name, description, thumbnail, progress, 
         return deepLinks ?
             profile.settings.playerType && profile.settings.playerType !== 'internal' ?
                 platform.isMobile() || !haveStreamingServer ?
-                    (deepLinks.externalPlayer[profile.settings.playerType] || {})[platform.name] || deepLinks.externalPlayer.href
+                    (deepLinks.externalPlayer.openPlayer[profile.settings.playerType] || {})[platform.name] || deepLinks.externalPlayer.href
                     : null
                 :
                 typeof deepLinks.player === 'string' ?
