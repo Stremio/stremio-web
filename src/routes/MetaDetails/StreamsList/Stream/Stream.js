@@ -103,15 +103,52 @@ Stream.propTypes = {
     deepLinks: PropTypes.shape({
         player: PropTypes.string,
         externalPlayer: PropTypes.shape({
+            href: PropTypes.string,
+            fileName: PropTypes.string,
+            streaming: PropTypes.string,
             openPlayer: PropTypes.shape({
+                choose: {
+                    ios: PropTypes.string,
+                    android: PropTypes.string,
+                    windows: PropTypes.string,
+                    macos: PropTypes.string,
+                    linux: PropTypes.string
+                },
                 vlc: {
                     ios: PropTypes.string,
                     android: PropTypes.string,
-                    desktop: PropTypes.string
+                    windows: PropTypes.string,
+                    macos: PropTypes.string,
+                    linux: PropTypes.string
                 },
-                href: PropTypes.string,
-                streaming: PropTypes.string,
-                fileName: PropTypes.string
+                outplayer: {
+                    ios: PropTypes.string,
+                    android: PropTypes.string,
+                    windows: PropTypes.string,
+                    macos: PropTypes.string,
+                    linux: PropTypes.string
+                },
+                infuse: {
+                    ios: PropTypes.string,
+                    android: PropTypes.string,
+                    windows: PropTypes.string,
+                    macos: PropTypes.string,
+                    linux: PropTypes.string
+                },
+                justplayer: {
+                    ios: PropTypes.string,
+                    android: PropTypes.string,
+                    windows: PropTypes.string,
+                    macos: PropTypes.string,
+                    linux: PropTypes.string
+                },
+                mxplayer: {
+                    ios: PropTypes.string,
+                    android: PropTypes.string,
+                    windows: PropTypes.string,
+                    macos: PropTypes.string,
+                    linux: PropTypes.string
+                },
             })
         })
     }),
