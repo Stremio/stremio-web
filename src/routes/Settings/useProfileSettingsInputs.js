@@ -158,7 +158,7 @@ const useProfileSettingsInputs = (profile) => {
         }
     }), [profile.settings]);
     const playInExternalPlayerSelect = React.useMemo(() => ({
-        options: externalPlayerOptions.map(opt => {
+        options: externalPlayerOptions.map((opt) => {
             opt.label = t(opt.label);
             return opt;
         }),
