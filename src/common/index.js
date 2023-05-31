@@ -40,6 +40,8 @@ const useOnScrollToBottom = require('./useOnScrollToBottom');
 const useProfile = require('./useProfile');
 const useStreamingServer = require('./useStreamingServer');
 const useTorrent = require('./useTorrent');
+const platform = require('./platform');
+const externalPlayerOptions = require('./externalPlayerOptions');
 
 module.exports = {
     AddonDetailsModal,
@@ -84,5 +86,7 @@ module.exports = {
     useOnScrollToBottom,
     useProfile,
     useStreamingServer,
-    useTorrent
+    useTorrent,
+    platform,
+    externalPlayerOptions,
 };
