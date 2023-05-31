@@ -51,7 +51,7 @@ const StreamingServerWarning = ({ className }) => {
     return (
         <div className={classnames(className, styles['warning-container'])}>
             <div className={styles['warning-statement']}>{ t('SETTINGS_SERVER_UNAVAILABLE') }</div>
-            <a href="https://www.stremio.com/download-service" target="_blank">
+            <a href="https://www.stremio.com/download-service" target="_blank" rel="noreferrer">
                 <Button className={styles['warning-button']} title={t('SERVICE_INSTALL')} tabIndex={-1}>
                     <div className={styles['warning-label']}>{ t('SERVICE_INSTALL') }</div>
                 </Button>
