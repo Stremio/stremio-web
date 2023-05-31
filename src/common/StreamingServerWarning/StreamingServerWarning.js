@@ -51,11 +51,16 @@ const StreamingServerWarning = ({ className }) => {
     return (
         <div className={classnames(className, styles['warning-container'])}>
             <div className={styles['warning-statement']}>{ t('SETTINGS_SERVER_UNAVAILABLE') }</div>
+            <a href="https://www.stremio.com/download-service" target="_blank" rel="noreferrer">
+                <Button className={styles['warning-button']} title={t('SERVICE_INSTALL')} tabIndex={-1}>
+                    <div className={styles['warning-label']}>{ t('SERVICE_INSTALL') }</div>
+                </Button>
+            </a>
             <Button className={styles['warning-button']} title={t('WARNING_STREAMING_SERVER_LATER')} onClick={onLaterClick} tabIndex={-1}>
                 <div className={styles['warning-label']}>{ t('WARNING_STREAMING_SERVER_LATER') }</div>
             </Button>
-            <Button className={styles['warning-button']} title={t('WARNING_STREAMING_SERVER_DISMISS')} onClick={onDismissClick} tabIndex={-1}>
-                <div className={styles['warning-label']}>{ t('WARNING_STREAMING_SERVER_DISMISS') }</div>
+            <Button className={styles['warning-button']} title={t('DONT_SHOW_AGAIN')} onClick={onDismissClick} tabIndex={-1}>
+                <div className={styles['warning-label']}>{ t('DONT_SHOW_AGAIN') }</div>
             </Button>
         </div>
     );
