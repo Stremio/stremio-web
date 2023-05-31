@@ -2,7 +2,7 @@
 
 const platform = require('./platform');
 
-let options = [{ label: 'Disabled', value: 'internal' }];
+let options = [{ label: 'EXTERNAL_PLAYER_DISABLED', value: 'internal' }];
 
 if (platform.name === 'ios') {
     options = options.concat([
@@ -12,7 +12,7 @@ if (platform.name === 'ios') {
     ]);
 } else if (platform.name === 'android') {
     options = options.concat([
-        { label: 'Allow Choosing', value: 'choose' },
+        { label: 'EXTERNAL_PLAYER_ALLOW_CHOOSING', value: 'choose' },
         { label: 'VLC', value: 'vlc' },
         { label: 'Just Player', value: 'justplayer' },
         { label: 'MX Player', value: 'mxplayer' }
