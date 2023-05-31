@@ -1,10 +1,24 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
-const Bowser = require('bowser');
+const userAgent = window.navigator.userAgent;
+const platform = window.navigator?.userAgentData?.platform || window.navigator?.platform;
+const macosPlatforms = ['Macintosh', 'MacIntel', 'MacPPC', 'Mac68K'];
+const windowsPlatforms = ['Win32', 'Win64', 'Windows', 'WinCE'];
+const iosPlatforms = ['iPhone', 'iPad', 'iPod'];
 
-const browser = Bowser.parse(window.navigator?.userAgent || '');
+let name = null;
 
-const name = (browser?.os?.name || 'unknown').toLowerCase();
+if (macosPlatforms.includes(platform)) {
+    name = 'macos';
+} else if (iosPlatforms.includes(platform)) {
+    name = 'ios';
+} else if (windowsPlatforms.includes(platform)) {
+    name = 'windows';
+} else if (/Android/.test(userAgent)) {
+    name = 'android';
+} else if (/Linux/.test(platform)) {
+    name = 'linux';
+}
 
 module.exports = {
     name,

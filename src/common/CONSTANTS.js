@@ -55,5 +55,5 @@ module.exports = {
     SHARE_LINK_CATEGORY,
     WRITERS_LINK_CATEGORY,
     TYPE_PRIORITIES,
-    ICON_FOR_TYPE
+    ICON_FOR_TYPE,
 };
