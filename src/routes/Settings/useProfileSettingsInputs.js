@@ -3,7 +3,7 @@
 const React = require('react');
 const { useTranslation } = require('react-i18next');
 const { useServices } = require('stremio/services');
-const { CONSTANTS, interfaceLanguages, languageNames } = require('stremio/common');
+const { CONSTANTS, interfaceLanguages, languageNames, externalPlayerOptions } = require('stremio/common');
 
 const useProfileSettingsInputs = (profile) => {
     const { t } = useTranslation();
@@ -157,6 +157,25 @@ const useProfileSettingsInputs = (profile) => {
             });
         }
     }), [profile.settings]);
+    const playInExternalPlayerSelect = React.useMemo(() => ({
+        options: externalPlayerOptions.map((opt) => {
+            opt.label = t(opt.label);
+            return opt;
+        }),
+        selected: [`${profile.settings.playerType || 'internal'}`],
+        onSelect: (event) => {
+            core.transport.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'UpdateSettings',
+                    args: {
+                        ...profile.settings,
+                        playerType: event.value
+                    }
+                }
+            });
+        }
+    }), [profile.settings]);
     const nextVideoPopupDurationSelect = React.useMemo(() => ({
         options: CONSTANTS.NEXT_VIDEO_POPUP_DURATIONS.map((duration) => ({
             value: `${duration}`,
@@ -212,21 +231,6 @@ const useProfileSettingsInputs = (profile) => {
             });
         }
     }), [profile.settings]);
-    const playInExternalPlayerCheckbox = React.useMemo(() => ({
-        checked: profile.settings.playInExternalPlayer,
-        onClick: () => {
-            core.transport.dispatch({
-                action: 'Ctx',
-                args: {
-                    action: 'UpdateSettings',
-                    args: {
-                        ...profile.settings,
-                        playInExternalPlayer: !profile.settings.playInExternalPlayer
-                    }
-                }
-            });
-        }
-    }), [profile.settings]);
     const hardwareDecodingCheckbox = React.useMemo(() => ({
         checked: profile.settings.hardwareDecoding,
         onClick: () => {
@@ -266,10 +270,10 @@ const useProfileSettingsInputs = (profile) => {
         subtitlesOutlineColorInput,
         audioLanguageSelect,
         seekTimeDurationSelect,
+        playInExternalPlayerSelect,
         nextVideoPopupDurationSelect,
         bingeWatchingCheckbox,
         playInBackgroundCheckbox,
-        playInExternalPlayerCheckbox,
         hardwareDecodingCheckbox,
         streamingServerUrlInput
     };
