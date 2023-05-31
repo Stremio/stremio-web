@@ -111,7 +111,6 @@ const StreamsList = ({ className, ...props }) => {
                                             thumbnail={stream.thumbnail}
                                             progress={stream.progress}
                                             deepLinks={stream.deepLinks}
-                                            onClick={stream.onClick}
                                         />
                                     ))}
                                 </div>

@@ -41,7 +41,6 @@ const useProfile = require('./useProfile');
 const useStreamingServer = require('./useStreamingServer');
 const useTorrent = require('./useTorrent');
 const platform = require('./platform');
-const externalPlayerOptions = require('./externalPlayerOptions');
 
 module.exports = {
     AddonDetailsModal,
@@ -88,5 +87,4 @@ module.exports = {
     useStreamingServer,
     useTorrent,
     platform,
-    externalPlayerOptions,
 };

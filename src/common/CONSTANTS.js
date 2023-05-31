@@ -39,6 +39,15 @@ const ICON_FOR_TYPE = new Map([
     ['podcast', 'ic_podcast'],
     ['other', 'ic_movies'],
 ]);
+const EXTERNAL_PLAYERS = [
+    { id: null, name: 'EXTERNAL_PLAYER_DISABLED' },
+    { id: 'choose', name: 'EXTERNAL_PLAYER_ALLOW_CHOOSING', platforms: ['android'] },
+    { id: 'vlc', name: 'VLC', platforms: ['android', 'ios', 'windows', 'macos', 'linux'] },
+    { id: 'outplayer', name: 'Outplayer', platforms: ['ios'] },
+    { id: 'infuse', name: 'Infuse', platforms: ['ios'] },
+    { id: 'justplayer', name: 'Just Player', platforms: ['android'] },
+    { id: 'mxplayer', name: 'MX Player', platforms: ['android'] },
+];
 
 module.exports = {
     CHROMECAST_RECEIVER_APP_ID,
@@ -55,5 +64,6 @@ module.exports = {
     SHARE_LINK_CATEGORY,
     WRITERS_LINK_CATEGORY,
     TYPE_PRIORITIES,
-    ICON_FOR_TYPE
+    ICON_FOR_TYPE,
+    EXTERNAL_PLAYERS,
 };
