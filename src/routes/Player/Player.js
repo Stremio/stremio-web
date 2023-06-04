@@ -41,6 +41,7 @@ const Player = ({ urlParams, queryParams }) => {
             time: null,
             duration: null,
             buffering: null,
+            buffered: null,
             volume: null,
             muted: null,
             playbackSpeed: null,
@@ -626,6 +627,7 @@ const Player = ({ urlParams, queryParams }) => {
                 paused={videoState.paused}
                 time={videoState.time}
                 duration={videoState.duration}
+                buffered={videoState.buffered}
                 volume={videoState.volume}
                 muted={videoState.muted}
                 playbackSpeed={videoState.playbackSpeed}

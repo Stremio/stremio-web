@@ -17,7 +17,7 @@ html.active-slider-within {
     cursor: pointer;
 
     &:hover, &:global(.active) {
-        .track-before {
+        .track-after {
             background-color: @color-primary-light5;
         }
     }
@@ -29,7 +29,7 @@ html.active-slider-within {
             background-color: @color-surface-dark5;
         }
 
-        .track-before {
+        .track-after {
             background-color: @color-surface;
         }
 
@@ -52,18 +52,28 @@ html.active-slider-within {
     }
 
     .track {
+        z-index: 0;
         flex: 1;
         height: var(--track-size);
-        background-color: @color-primary-dark3;
+        background-color: @color-surface-light5-20;
     }
 
     .track-before {
+        z-index: 1;
+        flex: none;
+        height: var(--track-size);
+        background-color: @color-surface-light5-10;
+    }
+
+    .track-after {
+        z-index: 2;
         flex: none;
         height: var(--track-size);
         background-color: @color-primary-light3;
     }
 
     .thumb {
+        z-index: 3;
         flex: none;
         width: var(--thumb-size);
         height: var(--thumb-size);
