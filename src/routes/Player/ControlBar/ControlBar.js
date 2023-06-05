@@ -24,6 +24,8 @@ const ControlBar = ({
     audioTracks,
     metaItem,
     nextVideo,
+    stream,
+    statistics,
     onPlayRequested,
     onPauseRequested,
     onMuteRequested,
@@ -35,6 +37,7 @@ const ControlBar = ({
     onToggleSpeedMenu,
     onToggleVideosMenu,
     onToggleOptionsMenu,
+    onToggleStatisticsMenu,
     ...props
 }) => {
     const { chromecast } = useServices();
@@ -54,6 +57,9 @@ const ControlBar = ({
     }, []);
     const onOptionsButtonMouseDown = React.useCallback((event) => {
         event.nativeEvent.optionsMenuClosePrevented = true;
+    }, []);
+    const onStatisticsButtonMouseDown = React.useCallback((event) => {
+        event.nativeEvent.statisticsMenuClosePrevented = true;
     }, []);
     const onPlayPauseButtonClick = React.useCallback(() => {
         if (paused) {
@@ -111,6 +117,11 @@ const ControlBar = ({
             onToggleOptionsMenu();
         }
     }, [onToggleOptionsMenu]);
+    const onStatisticsButtonClick = React.useCallback(() => {
+        if (typeof onToggleStatisticsMenu === 'function') {
+            onToggleStatisticsMenu();
+        }
+    }, [onToggleStatisticsMenu]);
     const onChromecastButtonClick = React.useCallback(() => {
         chromecast.transport.requestSession();
     }, []);
@@ -165,11 +176,11 @@ const ControlBar = ({
                     <Icon className={styles['icon']} icon={'ic_more'} />
                 </Button>
                 <div className={classnames(styles['control-bar-buttons-menu-container'], { 'open': buttonsMenuOpen })}>
+                    <Button className={classnames(styles['control-bar-button'], { 'disabled': statistics === null || statistics.type === 'Err' || stream === null || typeof stream.infoHash !== 'string' || typeof stream.fileIdx !== 'number' })} tabIndex={-1} onMouseDown={onStatisticsButtonMouseDown} onClick={onStatisticsButtonClick}>
+                        <Icon className={styles['icon']} icon={'ic_network'} />
+                    </Button>
                     <Button className={classnames(styles['control-bar-button'], { 'disabled': playbackSpeed === null })} tabIndex={-1} onMouseDown={onSpeedButtonMouseDown} onClick={onSpeedButtonClick}>
                         <Icon className={styles['icon']} icon={'ic_speedometer'} />
-                    </Button>
-                    <Button className={classnames(styles['control-bar-button'], 'disabled')} tabIndex={-1}>
-                        <Icon className={styles['icon']} icon={'ic_network'} />
                     </Button>
                     <Button className={classnames(styles['control-bar-button'], { 'disabled': metaItem === null || metaItem.type !== 'Ready' })} tabIndex={-1} onMouseDown={onInfoButtonMouseDown} onClick={onInfoButtonClick}>
                         <Icon className={styles['icon']} icon={'ic_info'} />
@@ -209,6 +220,8 @@ ControlBar.propTypes = {
     audioTracks: PropTypes.array,
     metaItem: PropTypes.object,
     nextVideo: PropTypes.object,
+    stream: PropTypes.object,
+    statistics: PropTypes.object,
     onPlayRequested: PropTypes.func,
     onPauseRequested: PropTypes.func,
     onMuteRequested: PropTypes.func,
@@ -220,6 +233,7 @@ ControlBar.propTypes = {
     onToggleSpeedMenu: PropTypes.func,
     onToggleVideosMenu: PropTypes.func,
     onToggleOptionsMenu: PropTypes.func,
+    onToggleStatisticsMenu: PropTypes.func,
 };
 
 module.exports = ControlBar;
