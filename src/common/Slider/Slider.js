@@ -8,11 +8,11 @@ const useAnimationFrame = require('stremio/common/useAnimationFrame');
 const useLiveRef = require('stremio/common/useLiveRef');
 const styles = require('./styles');
 
-const Slider = ({ className, value, progress, minimumValue, maximumValue, disabled, onSlide, onComplete }) => {
+const Slider = ({ className, value, buffered, minimumValue, maximumValue, disabled, onSlide, onComplete }) => {
     const minimumValueRef = useLiveRef(minimumValue !== null && !isNaN(minimumValue) ? minimumValue : 0);
     const maximumValueRef = useLiveRef(maximumValue !== null && !isNaN(maximumValue) ? maximumValue : 100);
     const valueRef = useLiveRef(value !== null && !isNaN(value) ? Math.min(maximumValueRef.current, Math.max(minimumValueRef.current, value)) : 0);
-    const progressRef = useLiveRef(progress !== null && !isNaN(progress) ? Math.min(maximumValueRef.current, Math.max(minimumValueRef.current, progress)) : 0);
+    const bufferedRef = useLiveRef(buffered !== null && !isNaN(buffered) ? Math.min(maximumValueRef.current, Math.max(minimumValueRef.current, buffered)) : 0);
     const onSlideRef = useLiveRef(onSlide);
     const onCompleteRef = useLiveRef(onComplete);
     const sliderContainerRef = React.useRef(null);
@@ -96,14 +96,14 @@ const Slider = ({ className, value, progress, minimumValue, maximumValue, disabl
         };
     }, []);
     const thumbPosition = Math.max(0, Math.min(1, (valueRef.current - minimumValueRef.current) / (maximumValueRef.current - minimumValueRef.current)));
-    const progressPosition = Math.max(0, Math.min(1, (progressRef.current - minimumValueRef.current) / (maximumValueRef.current - minimumValueRef.current)));
+    const bufferedPosition = Math.max(0, Math.min(1, (bufferedRef.current - minimumValueRef.current) / (maximumValueRef.current - minimumValueRef.current)));
     return (
         <div ref={sliderContainerRef} className={classnames(className, styles['slider-container'], { 'disabled': disabled })} onMouseDown={onMouseDown}>
             <div className={styles['layer']}>
                 <div className={styles['track']} />
             </div>
             <div className={styles['layer']}>
-                <div className={styles['track-before']} style={{ width: `calc(100% * ${progressPosition})` }} />
+                <div className={styles['track-before']} style={{ width: `calc(100% * ${bufferedPosition})` }} />
             </div>
             <div className={styles['layer']}>
                 <div className={styles['track-after']} style={{ width: `calc(100% * ${thumbPosition})` }} />
@@ -120,7 +120,7 @@ const Slider = ({ className, value, progress, minimumValue, maximumValue, disabl
 Slider.propTypes = {
     className: PropTypes.string,
     value: PropTypes.number,
-    progress: PropTypes.number,
+    buffered: PropTypes.number,
     minimumValue: PropTypes.number,
     maximumValue: PropTypes.number,
     disabled: PropTypes.bool,

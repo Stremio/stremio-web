@@ -49,7 +49,7 @@ const SeekBar = ({ className, time, duration, buffered, onSeekRequested }) => {
                         :
                         0
                 }
-                progress={buffered}
+                buffered={buffered}
                 minimumValue={0}
                 maximumValue={duration}
                 disabled={disabled}
