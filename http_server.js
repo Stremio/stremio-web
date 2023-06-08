@@ -2,8 +2,8 @@
 
 // Copyright (C) 2017-2023 Smart code 203358507
 
-const INDEX_CACHE = 1600;
-const ASSETS_CACHE = 3600;
+const INDEX_CACHE = 7200;
+const ASSETS_CACHE = 2629744;
 const HTTP_PORT = 8080;
 
 const express = require('express');
