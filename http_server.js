@@ -13,7 +13,7 @@ const build_path = path.resolve(__dirname, 'build');
 const index_path = path.join(build_path, 'index.html');
 
 express().use(express.static(build_path, {
-    setHeaders: function(res, path) {
+    setHeaders: (res, path) => {
         if (path === index_path) res.set('cache-control', `public, max-age: ${INDEX_CACHE}`);
         else res.set('cache-control', `public, max-age: ${ASSETS_CACHE}`);
     }
