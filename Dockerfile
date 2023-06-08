@@ -14,7 +14,6 @@ RUN mkdir -p /var/www/stremio-web
 WORKDIR /var/www/stremio-web
 COPY . /var/www/stremio-web
 RUN npm install 
-RUN npm install -g http-server
 
 # Bundle app source
 WORKDIR /var/www/stremio-web
@@ -22,4 +21,4 @@ WORKDIR /var/www/stremio-web
 RUN npm run build 
 
 EXPOSE 8080
-CMD ["http-server", "/var/www/stremio-web/build/", "-p", "8080", "-d", "false"]
+CMD ["node", "http_server.js"]
