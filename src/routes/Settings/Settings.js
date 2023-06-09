@@ -4,7 +4,7 @@ const React = require('react');
 const classnames = require('classnames');
 const throttle = require('lodash.throttle');
 const { useTranslation } = require('react-i18next');
-const Icon = require('@stremio/stremio-icons/dom');
+const { default: Icon } = require('@stremio/stremio-icons/react');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
 const { Button, Checkbox, MainNavBars, Multiselect, ColorInput, TextInput, ModalDialog, useProfile, useStreamingServer, useBinaryState, withCoreSuspender, useToast } = require('stremio/common');
@@ -259,7 +259,7 @@ const Settings = () => {
                                 <div className={styles['label']}>Trakt Scrobbling</div>
                             </div>
                             <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Authenticate'} disabled={profile.auth === null} tabIndex={-1} onClick={toggleTraktOnClick}>
-                                <Icon className={styles['icon']} icon={'ic_trakt'} />
+                                <Icon className={styles['icon']} name={'trakt'} />
                                 <div className={styles['label']}>
                                     { profile.auth !== null && profile.auth.user !== null && profile.auth.user.trakt !== null ? t('LOG_OUT') : t('SETTINGS_TRAKT_AUTHENTICATE') }
                                 </div>
@@ -270,7 +270,7 @@ const Settings = () => {
                                 <div className={styles['label']}>{ t('Calendar') }</div>
                             </div>
                             <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Subscribe'} disabled={!(profile.auth && profile.auth.user && profile.auth.user._id)} tabIndex={-1} onClick={subscribeCalendarOnClick}>
-                                <Icon className={styles['icon']} icon={'ic_calendar'} />
+                                <Icon className={styles['icon']} name={'calendar'} />
                                 <div className={styles['label']}>{ t('SETTINGS_CALENDAR_SUBSCRIBE') }</div>
                             </Button>
                         </div>
@@ -451,7 +451,7 @@ const Settings = () => {
                             <div className={classnames(styles['option-input-container'], styles['configure-input-container'])}>
                                 <div className={styles['label']} title={streamingServerUrlInput.value}>{streamingServerUrlInput.value}</div>
                                 <Button className={styles['configure-button-container']} title={'Configure server url'} onClick={openConfigureServerUrlModal}>
-                                    <Icon className={styles['icon']} icon={'ic_settings'} />
+                                    <Icon className={styles['icon']} name={'settings'} />
                                 </Button>
                             </div>
                         </div>

@@ -5,7 +5,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const UrlUtils = require('url');
 const { useTranslation } = require('react-i18next');
-const Icon = require('@stremio/stremio-icons/dom');
+const { default: Icon } = require('@stremio/stremio-icons/react');
 const Button = require('stremio/common/Button');
 const Image = require('stremio/common/Image');
 const ModalDialog = require('stremio/common/ModalDialog');
@@ -147,7 +147,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                                         target={'_blank'}
                                         {...(compact ? { tabIndex: -1 } : null)}
                                     >
-                                        <Icon className={styles['icon']} icon={'ic_imdbnoframe'} />
+                                        <Icon className={styles['icon']} name={'imdb'} />
                                         <div className={styles['label']}>{linksGroups.get(CONSTANTS.IMDB_LINK_CATEGORY).label}</div>
                                     </Button>
                                     :
@@ -193,7 +193,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                     typeof toggleInLibrary === 'function' ?
                         <ActionButton
                             className={styles['action-button']}
-                            icon={inLibrary ? 'ic_removelib' : 'ic_addlib'}
+                            icon={inLibrary ? 'remove-from-library' : 'add-to-library'}
                             label={inLibrary ? t('REMOVE_FROM_LIB') : t('ADD_TO_LIB')}
                             tabIndex={compact ? -1 : 0}
                             onClick={toggleInLibrary}
@@ -205,7 +205,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                     typeof trailerHref === 'string' ?
                         <ActionButton
                             className={styles['action-button']}
-                            icon={'ic_movies'}
+                            icon={'trailer'}
                             label={t('TRAILER')}
                             tabIndex={compact ? -1 : 0}
                             href={trailerHref}
@@ -217,7 +217,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                     typeof showHref === 'string' && compact ?
                         <ActionButton
                             className={styles['action-button']}
-                            icon={'ic_play'}
+                            icon={'play'}
                             label={t('SHOW')}
                             tabIndex={compact ? -1 : 0}
                             href={showHref}
@@ -230,7 +230,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                         <React.Fragment>
                             <ActionButton
                                 className={styles['action-button']}
-                                icon={'ic_share'}
+                                icon={'share'}
                                 label={t('CTX_SHARE')}
                                 tabIndex={compact ? -1 : 0}
                                 onClick={openShareModal}

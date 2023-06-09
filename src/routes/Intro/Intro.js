@@ -3,7 +3,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const Icon = require('@stremio/stremio-icons/dom');
+const { default: Icon } = require('@stremio/stremio-icons/react');
 const { Modal, useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
 const { Button, Image, useBinaryState } = require('stremio/common');
@@ -283,10 +283,10 @@ const Intro = ({ queryParams }) => {
             <div className={styles['form-container']}>
                 <div className={styles['logo-container']}>
                     <Image className={styles['logo']} src={require('/images/stremio_symbol.png')} alt={' '} />
-                    <Icon className={styles['name']} icon={'ic_stremio'} />
+                    <Icon className={styles['name']} name={'ic_stremio'} />
                 </div>
                 <Button className={classnames(styles['form-button'], styles['facebook-button'])} onClick={loginWithFacebook}>
-                    <Icon className={styles['icon']} icon={'ic_facebook'} />
+                    <Icon className={styles['icon']} name={'facebook'} />
                     <div className={styles['label']}>Continue with Facebook</div>
                 </Button>
                 {
@@ -396,7 +396,7 @@ const Intro = ({ queryParams }) => {
                 loaderModalOpen ?
                     <Modal className={styles['loading-modal-container']}>
                         <div className={styles['loader-container']}>
-                            <Icon className={styles['icon']} icon={'ic_user'} />
+                            <Icon className={styles['icon']} name={'person'} />
                             <div className={styles['label']}>Authenticating...</div>
                         </div>
                     </Modal>

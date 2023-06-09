@@ -5,7 +5,7 @@ const ReactIs = require('react-is');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { useTranslation } = require('react-i18next');
-const Icon = require('@stremio/stremio-icons/dom');
+const { default: Icon } = require('@stremio/stremio-icons/react');
 const Button = require('stremio/common/Button');
 const CONSTANTS = require('stremio/common/CONSTANTS');
 const MetaRowPlaceholder = require('./MetaRowPlaceholder');
@@ -28,7 +28,7 @@ const MetaRow = ({ className, title, message, items, itemComponent, deepLinks })
                             deepLinks && (typeof deepLinks.discover === 'string' || typeof deepLinks.library === 'string') ?
                                 <Button className={styles['see-all-container']} title={t('BUTTON_SEE_ALL')} href={deepLinks.discover || deepLinks.library} tabIndex={-1}>
                                     <div className={styles['label']}>{ t('BUTTON_SEE_ALL') }</div>
-                                    <Icon className={styles['icon']} icon={'ic_arrow_thin_right'} />
+                                    <Icon className={styles['icon']} name={'chevron-forward'} />
                                 </Button>
                                 :
                                 null

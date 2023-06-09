@@ -3,7 +3,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const Icon = require('@stremio/stremio-icons/dom');
+const { default: Icon } = require('@stremio/stremio-icons/react');
 const NotFound = require('stremio/routes/NotFound');
 const { Button, DelayedRenderer, Multiselect, MainNavBars, LibItem, Image, ModalDialog, PaginationInput, useProfile, routesRegexp, useBinaryState, withCoreSuspender } = require('stremio/common');
 const useLibrary = require('./useLibrary');
@@ -64,7 +64,7 @@ const Library = ({ model, urlParams, queryParams }) => {
                                     <PaginationInput label={'1'} className={classnames(styles['pagination-input'], styles['pagination-input-placeholder'])} />
                             }
                             <Button className={styles['filter-container']} title={'All filters'} onClick={openInputsModal}>
-                                <Icon className={styles['filter-icon']} icon={'ic_filter'} />
+                                <Icon className={styles['filter-icon']} name={'filters'} />
                             </Button>
                         </div>
                         :

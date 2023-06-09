@@ -4,7 +4,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { useTranslation } = require('react-i18next');
-const Icon = require('@stremio/stremio-icons/dom');
+const { default: Icon } = require('@stremio/stremio-icons/react');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
 const Button = require('stremio/common/Button');
@@ -44,11 +44,11 @@ const SharePrompt = ({ className, url }) => {
         <div className={classnames(className, styles['share-prompt-container'])}>
             <div className={styles['buttons-container']}>
                 <Button className={classnames(styles['button-container'], styles['facebook-button'])} title={'Facebook'} href={`https://www.facebook.com/sharer/sharer.php?u=${url}`} target={'_blank'}>
-                    <Icon className={styles['icon']} icon={'ic_facebook'} />
+                    <Icon className={styles['icon']} name={'facebook'} />
                     <div className={styles['label']}>Facebook</div>
                 </Button>
                 <Button className={classnames(styles['button-container'], styles['twitter-button'])} title={'Twitter'} href={`https://twitter.com/home?status=${url}`} target={'_blank'}>
-                    <Icon className={styles['icon']} icon={'ic_twitter'} />
+                    <Icon className={styles['icon']} name={'ic_twitter'} />
                     <div className={styles['label']}>Twitter</div>
                 </Button>
             </div>
@@ -63,7 +63,7 @@ const SharePrompt = ({ className, url }) => {
                     tabIndex={-1}
                 />
                 <Button className={styles['copy-button']} title={'Copy to clipboard'} onClick={copyToClipboard}>
-                    <Icon className={styles['icon']} icon={'ic_link'} />
+                    <Icon className={styles['icon']} name={'link'} />
                     <div className={styles['label']}>{ t('COPY') }</div>
                 </Button>
             </div>

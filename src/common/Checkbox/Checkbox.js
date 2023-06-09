@@ -3,7 +3,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const Icon = require('@stremio/stremio-icons/dom');
+const { default: Icon } = require('@stremio/stremio-icons/react');
 const Button = require('stremio/common/Button');
 const styles = require('./styles');
 
@@ -13,10 +13,10 @@ const Checkbox = React.forwardRef(({ className, checked, children, ...props }, r
             {
                 checked ?
                     <svg className={styles['icon']} viewBox={'0 0 100 100'}>
-                        <Icon x={'10'} y={'10'} width={'80'} height={'80'} icon={'ic_check'} />
+                        <Icon x={'10'} y={'10'} width={'80'} height={'80'} name={'checkmark'} />
                     </svg>
                     :
-                    <Icon className={styles['icon']} icon={'ic_box_empty'} />
+                    <Icon className={styles['icon']} name={'ic_box_empty'} />
             }
             {children}
         </Button>

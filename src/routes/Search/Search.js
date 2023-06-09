@@ -5,7 +5,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const debounce = require('lodash.debounce');
 const { useTranslation } = require('react-i18next');
-const Icon = require('@stremio/stremio-icons/dom');
+const { default: Icon } = require('@stremio/stremio-icons/react');
 const { Image, MainNavBars, MetaRow, MetaItem, withCoreSuspender, getVisibleChildrenRange } = require('stremio/common');
 const useSearch = require('./useSearch');
 const styles = require('./styles');
@@ -51,11 +51,11 @@ const Search = ({ queryParams }) => {
                     query === null ?
                         <div className={classnames(styles['search-hints-container'], 'animation-fade-in')}>
                             <div className={styles['search-hint-container']}>
-                                <Icon className={styles['icon']} icon={'ic_movies'} />
+                                <Icon className={styles['icon']} name={'movies'} />
                                 <div className={styles['label']}>{ t('SEARCH_EXPLANATION_CONTENT') }</div>
                             </div>
                             <div className={styles['search-hint-container']}>
-                                <Icon className={styles['icon']} icon={'ic_actor'} />
+                                <Icon className={styles['icon']} name={'actor'} />
                                 <div className={styles['label']}>{ t('SEARCH_EXPLANATION_PEOPLE') }</div>
                             </div>
                         </div>

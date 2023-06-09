@@ -27,17 +27,17 @@ const TYPE_PRIORITIES = {
     other: -Infinity
 };
 const ICON_FOR_TYPE = new Map([
-    ['movie', 'ic_movies'],
-    ['series', 'ic_series'],
-    ['channel', 'ic_channels'],
-    ['tv', 'ic_tv'],
+    ['movie', 'movies'],
+    ['series', 'series'],
+    ['channel', 'channels'],
+    ['tv', 'tv'],
     ['book', 'ic_book'],
     ['game', 'ic_games'],
     ['music', 'ic_music'],
     ['adult', 'ic_adult'],
     ['radio', 'ic_radio'],
     ['podcast', 'ic_podcast'],
-    ['other', 'ic_movies'],
+    ['other', 'movies'],
 ]);
 
 module.exports = {

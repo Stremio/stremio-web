@@ -73,7 +73,7 @@ const OptionsMenu = ({ className, stream, playbackDevices }) => {
             {
                 streamingUrl || downloadUrl ?
                     <Option
-                        icon={'ic_link'}
+                        icon={'link'}
                         label={t('CTX_COPY_STREAM_LINK')}
                         disabled={stream === null}
                         onClick={onCopyStreamButtonClick}
@@ -96,7 +96,7 @@ const OptionsMenu = ({ className, stream, playbackDevices }) => {
                 streamingUrl && externalDevices.map(({ id, name }) => (
                     <Option
                         key={id}
-                        icon={'ic_vlc'}
+                        icon={'vlc'}
                         label={t('PLAYER_PLAY_IN', { device: name })}
                         deviceId={id}
                         disabled={stream === null}

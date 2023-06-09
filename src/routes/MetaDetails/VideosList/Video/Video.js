@@ -5,7 +5,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { useServices } = require('stremio/services');
 const { useRouteFocused } = require('stremio-router');
-const Icon = require('@stremio/stremio-icons/dom');
+const { default: Icon } = require('@stremio/stremio-icons/react');
 const { Button, Image, Popup, useBinaryState } = require('stremio/common');
 const VideoPlaceholder = require('./VideoPlaceholder');
 const styles = require('./styles');
@@ -71,7 +71,7 @@ const Video = ({ className, id, title, thumbnail, episode, released, upcoming, w
                                 renderFallback={() => (
                                     <Icon
                                         className={styles['placeholder-icon']}
-                                        icon={'ic_stremio_tray'}
+                                        name={'symbol'}
                                     />
                                 )}
                             />

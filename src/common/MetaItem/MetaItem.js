@@ -4,7 +4,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const filterInvalidDOMProps = require('filter-invalid-dom-props').default;
-const Icon = require('@stremio/stremio-icons/dom');
+const { default: Icon } = require('@stremio/stremio-icons/react');
 const Button = require('stremio/common/Button');
 const Image = require('stremio/common/Image');
 const Multiselect = require('stremio/common/Multiselect');
@@ -56,11 +56,11 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, playI
     const renderPosterFallback = React.useCallback(() => (
         <Icon
             className={styles['placeholder-icon']}
-            icon={ICON_FOR_TYPE.has(type) ? ICON_FOR_TYPE.get(type) : ICON_FOR_TYPE.get('other')}
+            name={ICON_FOR_TYPE.has(type) ? ICON_FOR_TYPE.get(type) : ICON_FOR_TYPE.get('other')}
         />
     ), [type]);
     const renderMenuLabelContent = React.useCallback(() => (
-        <Icon className={styles['icon']} icon={'ic_more'} />
+        <Icon className={styles['icon']} name={'more-vertical'} />
     ), []);
     return (
         <Button title={name} href={href} {...filterInvalidDOMProps(props)} className={classnames(className, styles['meta-item-container'], styles['poster-shape-poster'], styles[`poster-shape-${posterShape}`], { 'active': menuOpen })} onClick={metaItemOnClick}>

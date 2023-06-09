@@ -3,7 +3,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const Icon = require('@stremio/stremio-icons/dom');
+const { default: Icon } = require('@stremio/stremio-icons/react');
 const Button = require('stremio/common/Button');
 const Image = require('stremio/common/Image');
 const styles = require('./styles');
@@ -11,7 +11,7 @@ const styles = require('./styles');
 const NavTabButton = ({ className, logo, icon, label, href, selected, onClick }) => {
     const renderLogoFallback = React.useCallback(() => (
         typeof icon === 'string' && icon.length > 0 ?
-            <Icon className={styles['icon']} icon={icon} />
+            <Icon className={styles['icon']} name={icon} />
             :
             null
     ), [icon]);
@@ -27,7 +27,7 @@ const NavTabButton = ({ className, logo, icon, label, href, selected, onClick })
                     />
                     :
                     typeof icon === 'string' && icon.length > 0 ?
-                        <Icon className={styles['icon']} icon={icon} />
+                        <Icon className={styles['icon']} name={icon} />
                         :
                         null
             }
