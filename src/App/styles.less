@@ -1,8 +1,12 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
-@import (inline, once, css) '~stremio/common/roboto.css';
 @import (reference) '~stremio/common/screen-sizes.less';
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
+
+@font-face {
+    font-family: 'PlusJakartaSans';
+    src: url('/fonts/PlusJakartaSans.ttf') format('truetype');
+}
 
 :global {
     @import (once, less) '~stremio/common/animations.less';
@@ -70,7 +74,7 @@ html {
     height: 100%;
     min-width: 640px;
     min-height: 480px;
-    font-family: 'Roboto', 'sans-serif';
+    font-family: 'PlusJakartaSans', 'sans-serif';
     overflow: auto;
 
     body {
