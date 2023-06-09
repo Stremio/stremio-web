@@ -13,6 +13,7 @@ const Icon = require('@stremio/stremio-icons/dom');
 const BufferingLoader = require('./BufferingLoader');
 const ControlBar = require('./ControlBar');
 const NextVideoPopup = require('./NextVideoPopup');
+const StatisticsMenu = require('./StatisticsMenu');
 const InfoMenu = require('./InfoMenu');
 const OptionsMenu = require('./OptionsMenu');
 const VideosMenu = require('./VideosMenu');
@@ -81,6 +82,7 @@ const Player = ({ urlParams, queryParams }) => {
     const [speedMenuOpen, , closeSpeedMenu, toggleSpeedMenu] = useBinaryState(false);
     const [videosMenuOpen, , closeVideosMenu, toggleVideosMenu] = useBinaryState(false);
     const [nextVideoPopupOpen, openNextVideoPopup, closeNextVideoPopup] = useBinaryState(false);
+    const [statisticsMenuOpen, , closeStatisticsMenu, toggleStatisticsMenu] = useBinaryState(false);
     const nextVideoPopupDismissed = React.useRef(false);
     const defaultSubtitlesSelected = React.useRef(false);
     const defaultAudioTrackSelected = React.useRef(false);
@@ -234,6 +236,9 @@ const Player = ({ urlParams, queryParams }) => {
         if (!event.nativeEvent.videosMenuClosePrevented) {
             closeVideosMenu();
         }
+        if (!event.nativeEvent.statisticsMenuClosePrevented) {
+            closeStatisticsMenu();
+        }
     }, []);
     const onContainerMouseMove = React.useCallback((event) => {
         setImmersed(false);
@@ -357,6 +362,26 @@ const Player = ({ urlParams, queryParams }) => {
         }
     }, [player.nextVideo, videoState.time, videoState.duration]);
     React.useEffect(() => {
+        if (player.selected && player.selected.stream && typeof player.selected.stream.infoHash === 'string' && typeof player.selected.stream.fileIdx === 'number') {
+            const { infoHash, fileIdx } = player.selected.stream;
+            const getStatistics = () => {
+                core.transport.dispatch({
+                    action: 'StreamingServer',
+                    args: {
+                        action: 'GetStatistics',
+                        args: {
+                            infoHash,
+                            fileIdx,
+                        }
+                    }
+                });
+            };
+            getStatistics();
+            const statisticsInterval = setInterval(getStatistics, 5000);
+            return () => clearInterval(statisticsInterval);
+        }
+    }, [player.selected]);
+    React.useEffect(() => {
         if (!defaultSubtitlesSelected.current) {
             const findTrackByLang = (tracks, lang) => tracks.find((track) => track.lang === lang || langs.where('1', track.lang)?.[2] === lang);
 
@@ -445,7 +470,7 @@ const Player = ({ urlParams, queryParams }) => {
         const onKeyDown = (event) => {
             switch (event.code) {
                 case 'Space': {
-                    if (!subtitlesMenuOpen && !infoMenuOpen && !videosMenuOpen && !speedMenuOpen && !optionsMenuOpen && videoState.paused !== null) {
+                    if (!subtitlesMenuOpen && !infoMenuOpen && !videosMenuOpen && !speedMenuOpen && !optionsMenuOpen && !statisticsMenuOpen && videoState.paused !== null) {
                         if (videoState.paused) {
                             onPlayRequested();
                         } else {
@@ -456,7 +481,7 @@ const Player = ({ urlParams, queryParams }) => {
                     break;
                 }
                 case 'ArrowRight': {
-                    if (!subtitlesMenuOpen && !infoMenuOpen && !videosMenuOpen && !speedMenuOpen && !optionsMenuOpen && videoState.time !== null) {
+                    if (!subtitlesMenuOpen && !infoMenuOpen && !videosMenuOpen && !speedMenuOpen && !optionsMenuOpen && !statisticsMenuOpen && videoState.time !== null) {
                         const seekTimeMultiplier = event.shiftKey ? 3 : 1;
                         onSeekRequested(videoState.time + (settings.seekTimeDuration * seekTimeMultiplier));
                     }
@@ -464,7 +489,7 @@ const Player = ({ urlParams, queryParams }) => {
                     break;
                 }
                 case 'ArrowLeft': {
-                    if (!subtitlesMenuOpen && !infoMenuOpen && !videosMenuOpen && !speedMenuOpen && !optionsMenuOpen && videoState.time !== null) {
+                    if (!subtitlesMenuOpen && !infoMenuOpen && !videosMenuOpen && !speedMenuOpen && !optionsMenuOpen && !statisticsMenuOpen && videoState.time !== null) {
                         const seekTimeMultiplier = event.shiftKey ? 3 : 1;
                         onSeekRequested(videoState.time - (settings.seekTimeDuration * seekTimeMultiplier));
                     }
@@ -472,14 +497,14 @@ const Player = ({ urlParams, queryParams }) => {
                     break;
                 }
                 case 'ArrowUp': {
-                    if (!subtitlesMenuOpen && !infoMenuOpen && !videosMenuOpen && !speedMenuOpen && !optionsMenuOpen && videoState.volume !== null) {
+                    if (!subtitlesMenuOpen && !infoMenuOpen && !videosMenuOpen && !speedMenuOpen && !optionsMenuOpen && !statisticsMenuOpen && videoState.volume !== null) {
                         onVolumeChangeRequested(videoState.volume + 5);
                     }
 
                     break;
                 }
                 case 'ArrowDown': {
-                    if (!subtitlesMenuOpen && !infoMenuOpen && !videosMenuOpen && !speedMenuOpen && !optionsMenuOpen && videoState.volume !== null) {
+                    if (!subtitlesMenuOpen && !infoMenuOpen && !videosMenuOpen && !speedMenuOpen && !optionsMenuOpen && !statisticsMenuOpen && videoState.volume !== null) {
                         onVolumeChangeRequested(videoState.volume - 5);
                     }
 
@@ -490,6 +515,7 @@ const Player = ({ urlParams, queryParams }) => {
                     closeInfoMenu();
                     closeSpeedMenu();
                     closeVideosMenu();
+                    closeStatisticsMenu();
                     if ((Array.isArray(videoState.subtitlesTracks) && videoState.subtitlesTracks.length > 0) ||
                         (Array.isArray(videoState.extraSubtitlesTracks) && videoState.extraSubtitlesTracks.length > 0) ||
                         (Array.isArray(videoState.audioTracks) && videoState.audioTracks.length > 0)) {
@@ -503,6 +529,7 @@ const Player = ({ urlParams, queryParams }) => {
                     closeSubtitlesMenu();
                     closeSpeedMenu();
                     closeVideosMenu();
+                    closeStatisticsMenu();
                     if (player.metaItem !== null && player.metaItem.type === 'Ready') {
                         toggleInfoMenu();
                     }
@@ -514,6 +541,7 @@ const Player = ({ urlParams, queryParams }) => {
                     closeInfoMenu();
                     closeSubtitlesMenu();
                     closeVideosMenu();
+                    closeStatisticsMenu();
                     if (videoState.playbackSpeed !== null) {
                         toggleSpeedMenu();
                     }
@@ -525,8 +553,21 @@ const Player = ({ urlParams, queryParams }) => {
                     closeInfoMenu();
                     closeSubtitlesMenu();
                     closeSpeedMenu();
+                    closeStatisticsMenu();
                     if (player.metaItem !== null && player.metaItem.type === 'Ready') {
                         toggleVideosMenu();
+                    }
+
+                    break;
+                }
+                case 'KeyD': {
+                    closeOptionsMenu();
+                    closeInfoMenu();
+                    closeSubtitlesMenu();
+                    closeSpeedMenu();
+                    closeVideosMenu();
+                    if (streamingServer.statistics !== null && streamingServer.statistics.type !== 'Err' && player.selected && typeof player.selected.stream.infoHash === 'string' && typeof player.selected.stream.fileIdx === 'number') {
+                        toggleStatisticsMenu();
                     }
 
                     break;
@@ -537,6 +578,7 @@ const Player = ({ urlParams, queryParams }) => {
                     closeInfoMenu();
                     closeSpeedMenu();
                     closeVideosMenu();
+                    closeStatisticsMenu();
                     onDismissNextVideoPopup();
                     break;
                 }
@@ -548,7 +590,7 @@ const Player = ({ urlParams, queryParams }) => {
         return () => {
             window.removeEventListener('keydown', onKeyDown);
         };
-    }, [player.metaItem, settings.seekTimeDuration, routeFocused, subtitlesMenuOpen, infoMenuOpen, videosMenuOpen, speedMenuOpen, optionsMenuOpen, videoState.paused, videoState.time, videoState.volume, videoState.audioTracks, videoState.subtitlesTracks, videoState.extraSubtitlesTracks, videoState.playbackSpeed, toggleSubtitlesMenu, toggleInfoMenu, toggleVideosMenu]);
+    }, [player.metaItem, player.selected, streamingServer.statistics, settings.seekTimeDuration, routeFocused, subtitlesMenuOpen, infoMenuOpen, videosMenuOpen, speedMenuOpen, optionsMenuOpen, statisticsMenuOpen, videoState.paused, videoState.time, videoState.volume, videoState.audioTracks, videoState.subtitlesTracks, videoState.extraSubtitlesTracks, videoState.playbackSpeed, toggleSubtitlesMenu, toggleInfoMenu, toggleVideosMenu, toggleStatisticsMenu]);
     React.useLayoutEffect(() => {
         return () => {
             setImmersedDebounced.cancel();
@@ -557,7 +599,7 @@ const Player = ({ urlParams, queryParams }) => {
         };
     }, []);
     return (
-        <div className={classnames(styles['player-container'], { [styles['immersed']]: immersed && !casting && videoState.paused !== null && !videoState.paused && !subtitlesMenuOpen && !infoMenuOpen && !speedMenuOpen && !videosMenuOpen && !nextVideoPopupOpen && !optionsMenuOpen })}
+        <div className={classnames(styles['player-container'], { [styles['immersed']]: immersed && !casting && videoState.paused !== null && !videoState.paused && !subtitlesMenuOpen && !infoMenuOpen && !speedMenuOpen && !videosMenuOpen && !nextVideoPopupOpen && !optionsMenuOpen && !statisticsMenuOpen })}
             onMouseDown={onContainerMouseDown}
             onMouseMove={onContainerMouseMove}
             onMouseOver={onContainerMouseMove}
@@ -608,7 +650,7 @@ const Player = ({ urlParams, queryParams }) => {
                     null
             }
             {
-                subtitlesMenuOpen || infoMenuOpen || videosMenuOpen || speedMenuOpen || optionsMenuOpen ?
+                subtitlesMenuOpen || infoMenuOpen || videosMenuOpen || speedMenuOpen || optionsMenuOpen || statisticsMenuOpen ?
                     <div className={styles['layer']} />
                     :
                     null
@@ -633,6 +675,8 @@ const Player = ({ urlParams, queryParams }) => {
                 audioTracks={videoState.audioTracks}
                 metaItem={player.metaItem}
                 nextVideo={player.nextVideo}
+                stream={player.selected !== null ? player.selected.stream : null}
+                statistics={streamingServer.statistics}
                 onPlayRequested={onPlayRequested}
                 onPauseRequested={onPauseRequested}
                 onMuteRequested={onMuteRequested}
@@ -644,6 +688,7 @@ const Player = ({ urlParams, queryParams }) => {
                 onToggleInfoMenu={toggleInfoMenu}
                 onToggleSpeedMenu={toggleSpeedMenu}
                 onToggleVideosMenu={toggleVideosMenu}
+                onToggleStatisticsMenu={toggleStatisticsMenu}
                 onMouseMove={onBarMouseMove}
                 onMouseOver={onBarMouseMove}
             />
@@ -655,6 +700,16 @@ const Player = ({ urlParams, queryParams }) => {
                         nextVideo={player.nextVideo}
                         onDismiss={onDismissNextVideoPopup}
                         onPlayNextVideoRequested={onPlayNextVideoRequested}
+                    />
+                    :
+                    null
+            }
+            {
+                statisticsMenuOpen ?
+                    <StatisticsMenu
+                        className={classnames(styles['layer'], styles['menu-layer'])}
+                        stream={player.selected !== null ? player.selected.stream : null}
+                        statistics={streamingServer.statistics}
                     />
                     :
                     null
