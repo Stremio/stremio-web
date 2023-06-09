@@ -9,7 +9,7 @@ const { Slider } = require('stremio/common');
 const formatTime = require('./formatTime');
 const styles = require('./styles');
 
-const SeekBar = ({ className, time, duration, onSeekRequested }) => {
+const SeekBar = ({ className, time, duration, buffered, onSeekRequested }) => {
     const disabled = time === null || isNaN(time) || duration === null || isNaN(duration);
     const routeFocused = useRouteFocused();
     const [seekTime, setSeekTime] = React.useState(null);
@@ -49,6 +49,7 @@ const SeekBar = ({ className, time, duration, onSeekRequested }) => {
                         :
                         0
                 }
+                buffered={buffered}
                 minimumValue={0}
                 maximumValue={duration}
                 disabled={disabled}
@@ -64,6 +65,7 @@ SeekBar.propTypes = {
     className: PropTypes.string,
     time: PropTypes.number,
     duration: PropTypes.number,
+    buffered: PropTypes.number,
     onSeekRequested: PropTypes.func
 };
 

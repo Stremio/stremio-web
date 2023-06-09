@@ -4,7 +4,7 @@
 
 :import('~stremio/common/Slider/styles.less') {
     slider-track: track;
-    slider-track-before: track-before;
+    slider-track-after: track-after;
 }
 
 .volume-slider:not(:global(.disabled)) {
@@ -12,12 +12,12 @@
         background-color: @color-surface-dark5;
     }
 
-    .slider-track-before {
+    .slider-track-after {
         background-color: @color-surface-light3;
     }
 
     &:hover, &:global(.active) {
-        .slider-track-before {
+        .slider-track-after {
             background-color: @color-surface-light5;
         }
     }

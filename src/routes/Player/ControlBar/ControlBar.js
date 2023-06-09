@@ -17,6 +17,7 @@ const ControlBar = ({
     paused,
     time,
     duration,
+    buffered,
     volume,
     muted,
     playbackSpeed,
@@ -140,6 +141,7 @@ const ControlBar = ({
                 className={styles['seek-bar']}
                 time={time}
                 duration={duration}
+                buffered={buffered}
                 onSeekRequested={onSeekRequested}
             />
             <div className={styles['control-bar-buttons-container']}>
@@ -213,6 +215,7 @@ ControlBar.propTypes = {
     paused: PropTypes.bool,
     time: PropTypes.number,
     duration: PropTypes.number,
+    buffered: PropTypes.number,
     volume: PropTypes.number,
     muted: PropTypes.bool,
     playbackSpeed: PropTypes.number,
