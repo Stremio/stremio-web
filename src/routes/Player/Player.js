@@ -585,11 +585,24 @@ const Player = ({ urlParams, queryParams }) => {
                 }
             }
         };
+        const onWheel = ({ deltaY }) => {
+            if (deltaY > 0) {
+                if (!subtitlesMenuOpen && !infoMenuOpen && !videosMenuOpen && !speedMenuOpen && !optionsMenuOpen && !statisticsMenuOpen && videoState.volume !== null) {
+                    onVolumeChangeRequested(videoState.volume - 5);
+                }
+            } else {
+                if (!subtitlesMenuOpen && !infoMenuOpen && !videosMenuOpen && !speedMenuOpen && !optionsMenuOpen && !statisticsMenuOpen && videoState.volume !== null) {
+                    onVolumeChangeRequested(videoState.volume + 5);
+                }
+            }
+        };
         if (routeFocused) {
             window.addEventListener('keydown', onKeyDown);
+            window.addEventListener('wheel', onWheel);
         }
         return () => {
             window.removeEventListener('keydown', onKeyDown);
+            window.removeEventListener('wheel', onWheel);
         };
     }, [player.metaItem, player.selected, streamingServer.statistics, settings.seekTimeDuration, routeFocused, subtitlesMenuOpen, infoMenuOpen, videosMenuOpen, speedMenuOpen, optionsMenuOpen, statisticsMenuOpen, videoState.paused, videoState.time, videoState.volume, videoState.audioTracks, videoState.subtitlesTracks, videoState.extraSubtitlesTracks, videoState.playbackSpeed, toggleSubtitlesMenu, toggleInfoMenu, toggleVideosMenu, toggleStatisticsMenu]);
     React.useLayoutEffect(() => {
