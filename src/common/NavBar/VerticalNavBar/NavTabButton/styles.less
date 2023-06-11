@@ -1,50 +1,66 @@
 // Copyright (C) 2017-2022 Smart code 203358507
 
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
+@import (reference) '~stremio/common/screen-sizes.less';
 
 .nav-tab-button-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: @color-background-dark1;
+    background-color: transparent;
+    border-radius: 0.75rem;
 
     &:hover {
-        background-color: @color-background-light2;
+        background-color: var(--primary-overlay-color);
+
+        .label {
+            opacity: 0.6;
+        }
     }
 
     &:global(.selected) {
-        background-color: @color-secondaryvariant1-dark5;
-
-        &:hover {
-            background-color: @color-secondaryvariant1-dark4;
-        }
-
         .icon {
-            color: @color-surface-light5-90;
-        }
-
-        .label {
-            color: @color-surface-light5-90;
+            opacity: 1;
+            color: var(--primary-accent-color);
         }
     }
 
     .icon, .logo {
         flex: none;
-        width: 1.7rem;
-        height: 1.7rem;
+        width: 2.2rem;
+        height: 2.2rem;
         margin-bottom: 0.5rem;
-        color: @color-secondary-light5-90;
+    }
+
+    .icon {
+        color: var(--primary-foreground-color);
+        opacity: 0.2;
     }
 
     .label {
         flex: none;
         max-height: 2.4em;
         padding: 0 0.2rem;
-        font-size: 0.9rem;
+        font-size: 0.8rem;
         font-weight: 500;
         letter-spacing: 0.01rem;
         text-align: center;
-        color: @color-secondaryvariant1-90;
+        color: var(--primary-foreground-color);
+        opacity: 0;
+    }
+}
+
+@media only screen and (max-width: @minimum) {
+    .nav-tab-button-container {
+        .label {
+            opacity: 0.2;
+        }
+
+        &:global(.selected) {
+            .label {
+                opacity: 0.6;
+            }
+        }
     }
 }

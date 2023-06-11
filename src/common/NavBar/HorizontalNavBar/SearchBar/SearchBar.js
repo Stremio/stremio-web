@@ -60,7 +60,7 @@ const SearchBar = ({ className, query, active }) => {
                     </div>
             }
             <Button className={styles['submit-button-container']} tabIndex={-1} onClick={queryInputOnSubmit}>
-                <Icon className={styles['icon']} name={'ic_search_link'} />
+                <Icon className={styles['icon']} name={'search'} />
             </Button>
         </label>
     );
@@ -80,7 +80,7 @@ const SearchBarFallback = ({ className }) => {
                 <div className={styles['placeholder-label']}>{ t('SEARCH_OR_PASTE_LINK') }</div>
             </div>
             <Button className={styles['submit-button-container']} tabIndex={-1}>
-                <Icon className={styles['icon']} name={'ic_search_link'} />
+                <Icon className={styles['icon']} name={'search'} />
             </Button>
         </label>
     );

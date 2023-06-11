@@ -45,36 +45,36 @@ const HorizontalNavBar = React.memo(({ className, route, query, title, backButto
                     :
                     null
             }
-            <div className={styles['spacing']} />
             {
                 searchBar ?
                     <SearchBar className={styles['search-bar']} query={query} active={route === 'search'} />
                     :
                     null
             }
-            <div className={styles['spacing']} />
-            {
-                addonsButton ?
-                    <Button className={styles['button-container']} href={'#/addons'} title={t('ADDONS')} tabIndex={-1}>
-                        <Icon className={styles['icon']} name={'addons'} />
-                    </Button>
-                    :
-                    null
-            }
-            {
-                fullscreenButton ?
-                    <Button className={styles['button-container']} title={fullscreen ? t('EXIT_FULLSCREEN') : t('ENTER_FULLSCREEN')} tabIndex={-1} onClick={fullscreen ? exitFullscreen : requestFullscreen}>
-                        <Icon className={styles['icon']} name={fullscreen ? 'minimize' : 'maximize'} />
-                    </Button>
-                    :
-                    null
-            }
-            {
-                navMenu ?
-                    <NavMenu renderLabel={renderNavMenuLabel} />
-                    :
-                    null
-            }
+            <div className={styles['buttons-container']}>
+                {
+                    addonsButton ?
+                        <Button className={styles['button-container']} href={'#/addons'} title={t('ADDONS')} tabIndex={-1}>
+                            <Icon className={styles['icon']} name={'addons'} />
+                        </Button>
+                        :
+                        null
+                }
+                {
+                    fullscreenButton ?
+                        <Button className={styles['button-container']} title={fullscreen ? t('EXIT_FULLSCREEN') : t('ENTER_FULLSCREEN')} tabIndex={-1} onClick={fullscreen ? exitFullscreen : requestFullscreen}>
+                            <Icon className={styles['icon']} name={fullscreen ? 'minimize' : 'maximize'} />
+                        </Button>
+                        :
+                        null
+                }
+                {
+                    navMenu ?
+                        <NavMenu renderLabel={renderNavMenuLabel} />
+                        :
+                        null
+                }
+            </div>
         </nav>
     );
 });

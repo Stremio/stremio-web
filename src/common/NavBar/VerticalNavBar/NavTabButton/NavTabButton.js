@@ -27,7 +27,7 @@ const NavTabButton = ({ className, logo, icon, label, href, selected, onClick })
                     />
                     :
                     typeof icon === 'string' && icon.length > 0 ?
-                        <Icon className={styles['icon']} name={icon} />
+                        <Icon className={styles['icon']} name={selected ? icon : `${icon}-outline`} />
                         :
                         null
             }

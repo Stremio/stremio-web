@@ -4,8 +4,12 @@
 @import (reference) '~stremio/common/screen-sizes.less';
 
 .vertical-nav-bar-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
     width: var(--vertical-nav-bar-size);
-    background-color: @color-background-dark1;
+    background-color: transparent;
     overflow-y: auto;
     scrollbar-width: none;
 
@@ -14,8 +18,8 @@
     }
 
     .nav-tab-button {
-        width: var(--vertical-nav-bar-size);
-        height: var(--vertical-nav-bar-size);
+        width: calc(var(--vertical-nav-bar-size) - 1.5rem);
+        height: calc(var(--vertical-nav-bar-size) - 1.5rem);
 
         &:first-child {
             margin-top: 1rem;
@@ -29,11 +33,11 @@
 
 @media only screen and (max-width: @minimum) {
     .vertical-nav-bar-container {
-        display: flex;
         flex-direction: row;
         justify-content: space-between;
         height: var(--vertical-nav-bar-size);
         width: 100%;
+        padding: 0 1rem;
         overflow-y: hidden;
         overflow-x: auto;
 
