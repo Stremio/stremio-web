@@ -9,12 +9,13 @@
         align-items: center;
         justify-content: flex-end;
         padding: 0 1rem;
-        margin-bottom: 1rem;
+        margin-bottom: 0.5rem;
 
         .title-container {
             flex: 1;
             max-height: 2.4em;
-            font-size: 1.8rem;
+            font-size: 1.6rem;
+            font-weight: 500;
             color: var(--color-placeholder-text);
 
             &:empty {
@@ -39,15 +40,14 @@
             .label {
                 flex: 0 1 auto;
                 max-height: 1.2em;
-                font-size: 1.3rem;
+                font-size: 1rem;
                 font-weight: 500;
-                text-transform: uppercase;
                 color: var(--color-placeholder-text);
             }
 
             .icon {
                 flex: none;
-                height: 1.3rem;
+                height: 1rem;
                 margin-left: 0.5rem;
                 color: var(--color-placeholder-text);
             }
@@ -68,6 +68,7 @@
             }
 
             .poster-container {
+                border-radius: var(--border-radius);
                 padding-bottom: calc(100% * var(--poster-shape-ratio));
                 background-color: var(--color-placeholder-background);
             }
@@ -76,12 +77,14 @@
                 display: flex;
                 flex-direction: row;
                 align-items: center;
+                justify-content: center;
                 height: 2.8rem;
 
                 .title-label {
                     flex: none;
                     width: 60%;
                     height: 1.2rem;
+                    border-radius: var(--border-radius);
                     background-color: var(--color-placeholder-background);
                 }
             }
