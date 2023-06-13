@@ -25,6 +25,8 @@
     --color-placeholder: #60606080;
     --color-placeholder-text: @color-surface-50;
     --color-placeholder-background: @color-surface-dark5-20;
+    --primary-background-color: rgba(12, 11, 17, 1);
+    --secondary-background-color: rgba(26, 23, 62, 1);
     --primary-foreground-color: rgba(255, 255, 255, 1);
     --primary-overlay-color: rgba(255, 255, 255, 0.1);
     --primary-accent-color: rgb(123, 91, 245);
@@ -83,6 +85,7 @@ html {
     body {
         width: 100%;
         height: 100%;
+        background: linear-gradient(41deg, var(--primary-background-color) 0%, var(--secondary-background-color) 100%);
 
         :global(#app) {
             position: relative;
