@@ -31,6 +31,7 @@
     --primary-foreground-color: rgba(255, 255, 255, 1);
     --primary-overlay-color: rgba(255, 255, 255, 0.1);
     --primary-accent-color: rgb(123, 91, 245);
+    --secondary-accent-color: rgba(34, 179, 101, 1);
     --border-radius: 0.75rem;
 }
 
@@ -52,7 +53,7 @@
     overflow: hidden;
     word-break: break-word;
     scrollbar-width: thin;
-    scrollbar-color: @color-secondaryvariant2-light1 @color-background-dark2;
+    scrollbar-color: var(--primary-overlay-color) transparent;
 }
 
 ::-webkit-scrollbar {
@@ -61,15 +62,16 @@
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: @color-secondaryvariant2-light1;
+    border-radius: var(--scroll-bar-size);
+    background-color: var(--primary-overlay-color);
 
     &:hover {
-        background-color: @color-secondaryvariant2-light2;
+        background-color: var(--primary-accent-color);
     }
 }
 
 ::-webkit-scrollbar-track {
-    background-color: @color-background-dark2;
+    background-color: transparent;
 }
 
 svg {

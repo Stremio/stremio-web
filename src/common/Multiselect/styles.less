@@ -11,16 +11,14 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding: 0 1rem;
-    background-color: @color-background;
+    height: 2.75rem;
+    padding: 0 1.5rem;
+    border-radius: 2.75rem;
+    background-color: var(--primary-overlay-color);
 
     &:global(.active) {
-        .label {
-            color: @color-surface-light5-90;
-        }
-
         .icon {
-            color: @color-surface-light5-90;
+            transform: rotate(180deg);
         }
     }
 
@@ -28,7 +26,7 @@
         flex: 1;
         max-height: 2.4em;
         font-weight: 500;
-        color: @color-secondaryvariant1-90;
+        color: var(--primary-foreground-color);
     }
 
     .icon {
@@ -36,7 +34,8 @@
         width: 1rem;
         height: 1rem;
         margin-left: 1rem;
-        color: @color-secondaryvariant1-90;
+        color: var(--primary-foreground-color);
+        opacity: 0.4;
     }
 
     .popup-menu-container {
@@ -46,12 +45,14 @@
 
 .modal-container, .popup-menu-container {
     .menu-container {
+        border-radius: var(--border-radius);
+        background-color: var(--tertiary-background-color);
+
         .option-container {
             display: flex;
             flex-direction: row;
             align-items: center;
             padding: 1rem;
-            background-color: @color-background;
 
             &:global(.selected) {
                 .icon {
@@ -60,13 +61,13 @@
             }
 
             &:hover, &:focus {
-                background-color: @color-background-light2;
+                background-color: var(--primary-overlay-color);
             }
 
             .label {
                 flex: 1;
                 max-height: 4.8em;
-                color: @color-surface-light5-90;
+                color: var(--primary-foreground-color);
             }
 
             .icon {
@@ -76,7 +77,8 @@
                 height: 0.5rem;
                 border-radius: 100%;
                 margin-left: 1rem;
-                background-color: @color-accent3-90;
+                background-color: var(--secondary-accent-color);
+                opacity: 1;
             }
         }
 

@@ -43,20 +43,19 @@
 
     .select-input-container {
         flex: 0 0 auto;
-        height: 3.5rem;
         margin: 1em 1em 0 1em;
         background: none;
 
         &:hover, &:focus, &:global(.active) {
-            background-color: @color-background;
+            background-color: var(--primary-overlay-color);
         }
 
         & >.multiselect-label {
-            color: @color-surface-light5-90;
+            color: var(--primary-foreground-color);
         }
 
         & >.multiselect-icon {
-            color: @color-surface-light5-90;
+            color: var(--primary-foreground-color);
         }
 
         .multiselect-menu-container {
