@@ -4,10 +4,12 @@
 
 .meta-links-container {
     .label-container {
-        margin-bottom: 0.2rem;
+        margin-bottom: 0.75rem;
         text-transform: uppercase;
-        font-weight: 500;
-        color: @color-surface-dark3-90;
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: var(--primary-foreground-color);
+        opacity: 0.3;
     }
 
     .links-container {
@@ -19,15 +21,18 @@
             flex-grow: 0;
             flex-shrink: 1;
             flex-basis: auto;
-            margin-right: 0.5rem;
-            margin-bottom: 0.2rem;
-            padding: 0.3rem 0.5rem;
+            margin-right: 0.75rem;
+            margin-bottom: 0.75rem;
+            padding: 0.4rem 1.25rem;
             white-space: nowrap;
             text-overflow: ellipsis;
             border-radius: 2rem;
             border: var(--focus-outline-size) solid transparent;
-            color: @color-surface-light2-90;
-            background-color: @color-surface-light5-20;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--primary-foreground-color);
+            background-color: var(--primary-overlay-color);
+            backdrop-filter: blur(5px);
 
             &:hover, &:focus {
                 background-color: @color-surface-light5-30;

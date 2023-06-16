@@ -147,20 +147,12 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                                         target={'_blank'}
                                         {...(compact ? { tabIndex: -1 } : null)}
                                     >
-                                        <Icon className={styles['icon']} name={'imdb'} />
                                         <div className={styles['label']}>{linksGroups.get(CONSTANTS.IMDB_LINK_CATEGORY).label}</div>
+                                        <Icon className={styles['icon']} name={'imdb'} />
                                     </Button>
                                     :
                                     null
                             }
-                        </div>
-                        :
-                        null
-                }
-                {
-                    compact && typeof name === 'string' && name.length > 0 ?
-                        <div className={styles['name-container']}>
-                            {name}
                         </div>
                         :
                         null
@@ -194,7 +186,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                         <ActionButton
                             className={styles['action-button']}
                             icon={inLibrary ? 'remove-from-library' : 'add-to-library'}
-                            label={inLibrary ? t('REMOVE_FROM_LIB') : t('ADD_TO_LIB')}
+                            label={compact ? null : inLibrary ? t('REMOVE_FROM_LIB') : t('ADD_TO_LIB')}
                             tabIndex={compact ? -1 : 0}
                             onClick={toggleInLibrary}
                         />
@@ -206,7 +198,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                         <ActionButton
                             className={styles['action-button']}
                             icon={'trailer'}
-                            label={t('TRAILER')}
+                            label={compact ? null : t('TRAILER')}
                             tabIndex={compact ? -1 : 0}
                             href={trailerHref}
                         />
@@ -231,7 +223,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                             <ActionButton
                                 className={styles['action-button']}
                                 icon={'share'}
-                                label={t('CTX_SHARE')}
+                                tooltip={t('CTX_SHARE')}
                                 tabIndex={compact ? -1 : 0}
                                 onClick={openShareModal}
                             />

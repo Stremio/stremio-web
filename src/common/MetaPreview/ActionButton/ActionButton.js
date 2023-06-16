@@ -9,7 +9,7 @@ const styles = require('./styles');
 
 const ActionButton = ({ className, icon, label, ...props }) => {
     return (
-        <Button title={label} {...props} className={classnames(className, styles['action-button-container'])}>
+        <Button title={label} {...props} className={classnames(className, styles['action-button-container'], { 'wide': typeof label === 'string' })}>
             {
                 typeof icon === 'string' && icon.length > 0 ?
                     <div className={styles['icon-container']}>
