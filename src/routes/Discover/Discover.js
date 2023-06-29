@@ -13,10 +13,10 @@ const styles = require('./styles');
 const SCROLL_TO_BOTTOM_TRESHOLD = 400;
 
 function uniqueItems(metas) {
-    return metas.reduce((p,c) => {
-        if (!p.find(el => (el.id === c.id))) p.push(c)
-        return p
-    }, [])
+    return metas.reduce((p, c) => {
+        if (!p.find((el) => (el.id === c.id))) p.push(c);
+        return p;
+    }, []);
 }
 
 const Discover = ({ urlParams, queryParams }) => {
