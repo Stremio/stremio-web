@@ -12,6 +12,13 @@ const styles = require('./styles');
 
 const SCROLL_TO_BOTTOM_TRESHOLD = 400;
 
+function uniqueItems(metas) {
+    return metas.reduce((p,c) => {
+        if (!p.find(el => (el.id === c.id))) p.push(c)
+        return p
+    }, [])
+}
+
 const Discover = ({ urlParams, queryParams }) => {
     const { core } = useServices();
     const [discover, loadNextPage] = useDiscover(urlParams, queryParams);
@@ -134,7 +141,7 @@ const Discover = ({ urlParams, queryParams }) => {
                                     </div>
                                     :
                                     <div className={classnames(styles['meta-items-container'], 'animation-fade-in')} onScroll={onScroll} onFocusCapture={metaItemsOnFocusCapture}>
-                                        {discover.catalog.content.content.map((metaItem, index) => (
+                                        {uniqueItems(discover.catalog.content.content).map((metaItem, index) => (
                                             <MetaItem
                                                 key={index}
                                                 className={classnames({ 'selected': selectedMetaItemIndex === index })}
