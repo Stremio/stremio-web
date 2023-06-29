@@ -19,6 +19,7 @@ const Discover = ({ urlParams, queryParams }) => {
     const [inputsModalOpen, openInputsModal, closeInputsModal] = useBinaryState(false);
     const [addonModalOpen, openAddonModal, closeAddonModal] = useBinaryState(false);
     const [selectedMetaItemIndex, setSelectedMetaItemIndex] = React.useState(0);
+    const metasContainerRef = React.useRef(null);
     const selectedMetaItem = React.useMemo(() => {
         return discover.catalog !== null &&
             discover.catalog.content.type === 'Ready' &&
@@ -75,6 +76,11 @@ const Discover = ({ urlParams, queryParams }) => {
         closeAddonModal();
         setSelectedMetaItemIndex(0);
     }, [discover.selected]);
+    const scrollUpOnChange = React.useCallback((onSelect, event) => {
+        if ((metasContainerRef || {}).current || {})
+            metasContainerRef.current.scrollTo(0, 0);
+        onSelect(event);
+    }, []);
     return (
         <MainNavBars className={styles['discover-container']} route={'discover'}>
             <div className={styles['discover-content']}>
@@ -88,7 +94,7 @@ const Discover = ({ urlParams, queryParams }) => {
                                 options={options}
                                 selected={selected}
                                 renderLabelText={renderLabelText}
-                                onSelect={onSelect}
+                                onSelect={scrollUpOnChange.bind(null, onSelect)}
                             />
                         ))}
                         <Button className={styles['filter-container']} title={'All filters'} onClick={openInputsModal}>
@@ -133,7 +139,7 @@ const Discover = ({ urlParams, queryParams }) => {
                                         ))}
                                     </div>
                                     :
-                                    <div className={classnames(styles['meta-items-container'], 'animation-fade-in')} onScroll={onScroll} onFocusCapture={metaItemsOnFocusCapture}>
+                                    <div className={classnames(styles['meta-items-container'], 'animation-fade-in')} ref={metasContainerRef} onScroll={onScroll} onFocusCapture={metaItemsOnFocusCapture}>
                                         {discover.catalog.content.content.map((metaItem, index) => (
                                             <MetaItem
                                                 key={index}
@@ -186,7 +192,7 @@ const Discover = ({ urlParams, queryParams }) => {
                                 options={options}
                                 selected={selected}
                                 renderLabelText={renderLabelText}
-                                onSelect={onSelect}
+                                onSelect={scrollUpOnChange.bind(null, onSelect)}
                             />
                         ))}
                     </ModalDialog>
