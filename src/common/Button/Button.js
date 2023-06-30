@@ -13,7 +13,7 @@ const Button = React.forwardRef(({ className, href, disabled, children, onLongPr
                 //alert('longpress detected');
                 onLongPress();
             }
-        }, 600); // values less than 600 will cause an artifact of previous menus staying on screen.
+        }, 650); // an artifact of previous menus staying on the screen will happen on Safari if the timeout was set to 600 and less, and 650 for PWA.
     };
     const onTouchEnd = function () {
         clearTimeout(pressTimer);
