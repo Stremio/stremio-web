@@ -29,6 +29,9 @@ const Video = ({ className, id, title, thumbnail, episode, released, upcoming, w
             toggleMenu();
         }
     }, [toggleMenu]);
+    const popupLabelOnLongPress = React.useCallback(() => {
+        toggleMenu();
+    }, [toggleMenu]);
     const popupMenuOnContextMenu = React.useCallback((event) => {
         event.nativeEvent.togglePopupPrevented = true;
     }, []);
@@ -168,6 +171,7 @@ const Video = ({ className, id, title, thumbnail, episode, released, upcoming, w
             onCloseRequest={closeMenu}
             renderLabel={renderLabel}
             renderMenu={renderMenu}
+            onLongPress={popupLabelOnLongPress}
         />
     );
 };

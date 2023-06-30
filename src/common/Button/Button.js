@@ -5,7 +5,19 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const styles = require('./styles');
 
-const Button = React.forwardRef(({ className, href, disabled, children, ...props }, ref) => {
+const Button = React.forwardRef(({ className, href, disabled, children, onLongPress, ...props }, ref) => {
+    let pressTimer = null;
+    const onTouchStart = function () {
+        pressTimer = setTimeout(function () {
+            if (typeof onLongPress === 'function') {
+                //alert('longpress detected');
+                onLongPress();
+            }
+        }, 600); // values less than 600 will cause an artifact of previous menus staying on screen.
+    };
+    const onTouchEnd = function () {
+        clearTimeout(pressTimer);
+    };
     const onKeyDown = React.useCallback((event) => {
         if (typeof props.onKeyDown === 'function') {
             props.onKeyDown(event);
@@ -36,7 +48,9 @@ const Button = React.forwardRef(({ className, href, disabled, children, ...props
             className: classnames(className, styles['button-container'], { 'disabled': disabled }),
             href,
             onKeyDown,
-            onMouseDown
+            onMouseDown,
+            onTouchStart,
+            onTouchEnd,
         },
         children
     );
@@ -50,7 +64,8 @@ Button.propTypes = {
     disabled: PropTypes.bool,
     children: PropTypes.node,
     onKeyDown: PropTypes.func,
-    onMouseDown: PropTypes.func
+    onMouseDown: PropTypes.func,
+    onLongPress: PropTypes.func,
 };
 
 module.exports = Button;
