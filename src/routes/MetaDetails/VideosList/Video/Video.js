@@ -3,6 +3,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
+const { t } = require('i18next');
 const { useServices } = require('stremio/services');
 const { useRouteFocused } = require('stremio-router');
 const Icon = require('@stremio/stremio-icons/dom');
@@ -137,10 +138,10 @@ const Video = ({ className, id, title, thumbnail, episode, released, upcoming, w
         return (
             <div className={styles['context-menu-content']} onContextMenu={popupMenuOnContextMenu} onClick={popupMenuOnClick}>
                 <Button className={styles['context-menu-option-container']} title={'Watch'}>
-                    <div className={styles['context-menu-option-label']}>Watch</div>
+                    <div className={styles['context-menu-option-label']}>{t('CTX_WATCH')}</div>
                 </Button>
                 <Button className={styles['context-menu-option-container']} title={watched ? 'Mark as non-watched' : 'Mark as watched'} onClick={toggleWatchedOnClick}>
-                    <div className={styles['context-menu-option-label']}>{watched ? 'Mark as non-watched' : 'Mark as watched'}</div>
+                    <div className={styles['context-menu-option-label']}>{watched ? t('CTX_MARK_NON_WATCHED') : t('CTX_MARK_WATCHED')}</div>
                 </Button>
             </div>
         );
