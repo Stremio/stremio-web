@@ -28,9 +28,6 @@ const Popup = ({ open, direction, renderLabel, renderMenu, dataset, onCloseReque
     const menuOnMouseDown = React.useCallback((event) => {
         event.nativeEvent.closePopupPrevented = true;
     }, []);
-    const menuOnTouchStart = React.useCallback((event) => {
-        event.nativeEvent.closePopupPrevented = true;
-    }, []);
     React.useEffect(() => {
         const onCloseEvent = (event) => {
             if (!event.closePopupPrevented && typeof onCloseRequest === 'function') {
@@ -109,7 +106,7 @@ const Popup = ({ open, direction, renderLabel, renderMenu, dataset, onCloseReque
         ref: labelRef,
         className: classnames(styles['label-container'], props.className, { 'active': open }),
         children: open ?
-            <FocusLock ref={menuRef} className={classnames(styles['menu-container'], { [styles[`menu-direction-${autoDirection}`]]: !direction }, { [styles[`menu-direction-${direction}`]]: direction })} autoFocus={false} lockProps={{ onMouseDown: menuOnMouseDown, ontouchstart: menuOnTouchStart }}>
+            <FocusLock ref={menuRef} className={classnames(styles['menu-container'], { [styles[`menu-direction-${autoDirection}`]]: !direction }, { [styles[`menu-direction-${direction}`]]: direction })} autoFocus={false} lockProps={{ onMouseDown: menuOnMouseDown}}>
                 {renderMenu()}
             </FocusLock>
             :
