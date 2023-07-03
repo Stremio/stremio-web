@@ -9,6 +9,7 @@ const { NotFound } = require('stremio/routes');
 const { ToastProvider, CONSTANTS } = require('stremio/common');
 const ServicesToaster = require('./ServicesToaster');
 const DeepLinkHandler = require('./DeepLinkHandler');
+const DefaultSettingsHandler = require('./DefaultSettingsHandler');
 const ErrorDialog = require('./ErrorDialog');
 const routerViewsConfig = require('./routerViewsConfig');
 const styles = require('./styles');
@@ -152,6 +153,7 @@ const App = () => {
                             <ToastProvider className={styles['toasts-container']}>
                                 <ServicesToaster />
                                 <DeepLinkHandler />
+                                <DefaultSettingsHandler />
                                 <Router
                                     className={styles['router']}
                                     viewsConfig={routerViewsConfig}
