@@ -30,7 +30,8 @@ const Video = ({ className, id, title, thumbnail, episode, released, upcoming, w
             toggleMenu();
         }
     }, [toggleMenu]);
-    const popupLabelOnLongPress = React.useCallback(() => {
+    const popupLabelOnLongPress = React.useCallback((event) => {
+        event.preventDefault();
         toggleMenu();
     }, [toggleMenu]);
     const popupMenuOnContextMenu = React.useCallback((event) => {
