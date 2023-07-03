@@ -42,7 +42,12 @@ const Popup = ({ open, direction, renderLabel, renderMenu, dataset, onCloseReque
                             onCloseRequest(closeEvent);
                         }
                         break;
-                    case 'mousedown' || 'touchstart':
+                    case 'mousedown':
+                        if (event.target !== document.documentElement && !labelRef.current.contains(event.target)) {
+                            onCloseRequest(closeEvent);
+                        }
+                        break;
+                    case 'touchstart':
                         if (event.target !== document.documentElement && !labelRef.current.contains(event.target)) {
                             onCloseRequest(closeEvent);
                         }
@@ -106,7 +111,7 @@ const Popup = ({ open, direction, renderLabel, renderMenu, dataset, onCloseReque
         ref: labelRef,
         className: classnames(styles['label-container'], props.className, { 'active': open }),
         children: open ?
-            <FocusLock ref={menuRef} className={classnames(styles['menu-container'], { [styles[`menu-direction-${autoDirection}`]]: !direction }, { [styles[`menu-direction-${direction}`]]: direction })} autoFocus={false} lockProps={{ onMouseDown: menuOnMouseDown}}>
+            <FocusLock ref={menuRef} className={classnames(styles['menu-container'], { [styles[`menu-direction-${autoDirection}`]]: !direction }, { [styles[`menu-direction-${direction}`]]: direction })} autoFocus={false} lockProps={{ onMouseDown: menuOnMouseDown }}>
                 {renderMenu()}
             </FocusLock>
             :
