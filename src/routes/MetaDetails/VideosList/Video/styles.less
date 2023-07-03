@@ -12,11 +12,6 @@
 }
 
 .video-container {
-    // IOS specific 
-    // prevents showing the default context-menu when long pressing an anchor in safari.
-    -webkit-touch-callout: none !important; 
-    // prevents user from selecting text from a div on long pressing in safari.
-    -webkit-user-select: none!important; 
 
     display: flex;
     flex-direction: row;
@@ -33,6 +28,7 @@
         flex: none;
 
         .thumbnail {
+            pointer-events: none;
             display: block;
             width: 7.5rem;
             height: 5rem;

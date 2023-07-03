@@ -28,6 +28,9 @@ const Popup = ({ open, direction, renderLabel, renderMenu, dataset, onCloseReque
     const menuOnMouseDown = React.useCallback((event) => {
         event.nativeEvent.closePopupPrevented = true;
     }, []);
+    const menuOnTouchStart = React.useCallback((event) => {
+        event.nativeEvent.closePopupPrevented = true;
+    }, []);
     React.useEffect(() => {
         const onCloseEvent = (event) => {
             if (!event.closePopupPrevented && typeof onCloseRequest === 'function') {
@@ -42,7 +45,7 @@ const Popup = ({ open, direction, renderLabel, renderMenu, dataset, onCloseReque
                             onCloseRequest(closeEvent);
                         }
                         break;
-                    case 'mousedown':
+                    case 'mousedown' || 'touchstart':
                         if (event.target !== document.documentElement && !labelRef.current.contains(event.target)) {
                             onCloseRequest(closeEvent);
                         }
@@ -53,10 +56,12 @@ const Popup = ({ open, direction, renderLabel, renderMenu, dataset, onCloseReque
         if (routeFocused && open) {
             window.addEventListener('keydown', onCloseEvent);
             window.addEventListener('mousedown', onCloseEvent);
+            window.addEventListener('touchstart', onCloseEvent);
         }
         return () => {
             window.removeEventListener('keydown', onCloseEvent);
             window.removeEventListener('mousedown', onCloseEvent);
+            window.removeEventListener('touchstart', onCloseEvent);
         };
     }, [routeFocused, open, onCloseRequest, dataset]);
     React.useLayoutEffect(() => {
@@ -104,7 +109,7 @@ const Popup = ({ open, direction, renderLabel, renderMenu, dataset, onCloseReque
         ref: labelRef,
         className: classnames(styles['label-container'], props.className, { 'active': open }),
         children: open ?
-            <FocusLock ref={menuRef} className={classnames(styles['menu-container'], { [styles[`menu-direction-${autoDirection}`]]: !direction }, { [styles[`menu-direction-${direction}`]]: direction })} autoFocus={false} lockProps={{ onMouseDown: menuOnMouseDown }}>
+            <FocusLock ref={menuRef} className={classnames(styles['menu-container'], { [styles[`menu-direction-${autoDirection}`]]: !direction }, { [styles[`menu-direction-${direction}`]]: direction })} autoFocus={false} lockProps={{ onMouseDown: menuOnMouseDown, ontouchstart: menuOnTouchStart }}>
                 {renderMenu()}
             </FocusLock>
             :
