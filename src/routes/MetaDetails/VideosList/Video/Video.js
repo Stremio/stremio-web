@@ -32,7 +32,7 @@ const Video = ({ className, id, title, thumbnail, episode, released, upcoming, w
     }, [toggleMenu]);
     const popupLabelOnLongPress = React.useCallback((event) => {
         if (!event.nativeEvent.togglePopupPrevented && !event.nativeEvent.ctrlKey) {
-            event.preventDefault();
+            if (event.cancelable) event.preventDefault();
             toggleMenu();
         }
     }, [toggleMenu]);
