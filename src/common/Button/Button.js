@@ -14,8 +14,7 @@ const Button = React.forwardRef(({ className, href, disabled, children, onLongPr
             }
         }, 650); // an artifact of previous menus staying on the screen will happen on Safari if the timeout was set to 600 and less, and 650 for PWA.
     };
-    const onTouchEnd = function (event) {
-        //event.preventDefault();
+    const onTouchEnd = function () {
         clearTimeout(pressTimer);
     };
     const onKeyDown = React.useCallback((event) => {
