@@ -6,17 +6,17 @@ const classnames = require('classnames');
 const styles = require('./styles');
 
 const Button = React.forwardRef(({ className, href, disabled, children, onLongPress, ...props }, ref) => {
-    let pressTimer = null;
-    const onTouchStart = function (event) {
-        pressTimer = setTimeout(function () {
+    const longPressTimeout = React.useRef(null);
+    const onTouchStart = React.useCallback((event) => {
+        longPressTimeout.current = setTimeout(function () {
             if (typeof onLongPress === 'function') {
                 onLongPress(event);
             }
         }, 650); // an artifact of previous menus staying on the screen will happen on Safari if the timeout was set to 600 and less, and 650 for PWA.
-    };
-    const onTouchEnd = function () {
-        clearTimeout(pressTimer);
-    };
+    }, [onLongPress]);
+    const onTouchEnd = React.useCallback(() => {
+        clearTimeout(longPressTimeout.current);
+    }, []);
     const onKeyDown = React.useCallback((event) => {
         if (typeof props.onKeyDown === 'function') {
             props.onKeyDown(event);
