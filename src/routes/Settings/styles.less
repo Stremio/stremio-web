@@ -39,17 +39,26 @@
             .side-menu-button {
                 flex: none;
                 align-self: stretch;
-                padding: 1rem;
+                display: flex;
+                align-items: center;
+                height: 4rem;
+                border-radius: 4rem;
+                padding: 2rem;
+                margin-bottom: 0.5rem;
                 font-size: 1.1rem;
-                color: @color-secondaryvariant1-90;
+                font-weight: 500;
+                color: var(--primary-foreground-color);
+                opacity: 0.4;
 
                 &.selected {
-                    background-color: @color-background;
-                    color: @color-surface-light5-90;
+                    font-weight: 600;
+                    color: var(--primary-foreground-color);
+                    background-color: var(--primary-overlay-color);
+                    opacity: 1;
                 }
 
                 &:hover {
-                    background-color: @color-background-light1;
+                    background-color: var(--primary-overlay-color);
                 }
             }
 
@@ -60,7 +69,7 @@
             .version-info-label {
                 flex: 0 1 auto;
                 margin: 0.5rem 0;
-                color: @color-secondaryvariant1-90;
+                color: var(--primary-overlay-color);
             }
         }
 
@@ -77,7 +86,7 @@
                 overflow: visible;
 
                 &:not(:last-child) {
-                    border-bottom: thin solid @color-secondaryvariant1-90;
+                    border-bottom: thin solid var(--primary-overlay-color);
                 }
 
                 .section-title {
@@ -86,7 +95,7 @@
                     font-size: 1.8rem;
                     line-height: 3.4rem;
                     margin-bottom: 1rem;
-                    color: @color-surface-light5-90;
+                    color: var(--primary-foreground-color);
                 }
 
                 .option-container {
@@ -104,12 +113,12 @@
                     }
 
                     &.user-info-option-container {
-                        height: 6rem;
+                        height: 5.5rem;
 
                         .avatar-container {
                             flex: none;
                             align-self: stretch;
-                            width: 6rem;
+                            width: 5.5rem;
                             margin-right: 1rem;
                             border-radius: 50%;
                             background-size: cover;
@@ -118,6 +127,7 @@
                             background-origin: content-box;
                             background-clip: content-box;
                             opacity: 0.9;
+                            background-color: var(--primary-overlay-color);
                         }
 
                         .email-logout-container {
@@ -139,8 +149,8 @@
                                 .email-label {
                                     flex: 1;
                                     font-size: 1.1rem;
-                                    max-height: 2.4em;
-                                    color: @color-surface-light5-90;
+                                    color: var(--primary-foreground-color);
+                                    opacity: 0.7;
                                 }
                             }
 
@@ -151,15 +161,13 @@
                                     outline: none;
 
                                     .logout-label {
-                                        color: @color-surface-light5-90;
                                         text-decoration: underline;
                                     }
                                 }
 
                                 .logout-label {
                                     flex: 1;
-                                    max-height: 1.2em;
-                                    color: @color-surface-90;
+                                    color: var(--primary-accent-color);
                                 }
                             }
                         }
@@ -171,11 +179,13 @@
                             align-items: center;
                             width: 10rem;
                             height: 3.5rem;
+                            border-radius: 3.5rem;
                             margin-left: 1rem;
-                            background-color: @color-accent3;
+                            background-color: var(--secondary-accent-color);
 
                             &:hover {
-                                background-color: @color-accent3-light1;
+                                box-shadow: 0 0 0 0.15rem var(--secondary-accent-color) inset;
+                                background-color: transparent;
                             }
 
                             .user-panel-label {
@@ -184,7 +194,7 @@
                                 padding: 0 0.5rem;
                                 font-weight: 500;
                                 text-align: center;
-                                color: @color-surface-light5-90;
+                                color: var(--primary-foreground-color);
                             }
                         }
                     }
@@ -200,7 +210,7 @@
                             width: 1.5rem;
                             height: 1.5rem;
                             margin-right: 0.5rem;
-                            color: @color-surface-light5-90;
+                            color: var(--primary-foreground-color);
                         }
 
                         .label {
@@ -208,7 +218,7 @@
                             flex-shrink: 1;
                             flex-basis: auto;
                             line-height: 1.5rem;
-                            color: @color-surface-light5-90;
+                            color: var(--primary-foreground-color);
                         }
                     }
 
@@ -223,10 +233,13 @@
 
                         &.button-container {
                             justify-content: center;
-                            background-color: @color-accent3;
+                            height: 3.5rem;
+                            border-radius: 3.5rem;
+                            background-color: var(--secondary-accent-color);
 
                             &:hover {
-                                background-color: @color-accent3-light1;
+                                box-shadow: 0 0 0 0.15rem var(--secondary-accent-color) inset;
+                                background-color: transparent;
                             }
 
                             .label {
@@ -249,6 +262,10 @@
                         &.link-container {
                             flex: 0 1 auto;
                             padding: 1rem 0;
+                            
+                            .label {
+                                color: var(--primary-accent-color);
+                            }
 
                             &:hover {
                                 .label {
@@ -296,14 +313,16 @@
                                 flex: none;
                                 width: 3rem;
                                 height: 3rem;
+                                border-radius: 100%;
                                 display: flex;
                                 flex-direction: row;
                                 align-items: center;
                                 justify-content: center;
-                                background-color: @color-accent3;
+                                background-color: var(--secondary-accent-color);
 
                                 &:hover {
-                                    background-color: @color-accent3-light1;
+                                    box-shadow: 0 0 0 0.15rem var(--secondary-accent-color) inset;
+                                    background-color: transparent;
                                 }
 
                                 .icon {
@@ -311,7 +330,7 @@
                                     width: 1rem;
                                     height: 1rem;
                                     margin: 0;
-                                    color: @color-surface-light5-90;
+                                    color: var(--primary-foreground-color);
                                 }
                             }
                         }
@@ -328,16 +347,16 @@
                                 line-height: 2.5rem;
                                 padding: 0 1rem;
                                 font-weight: 500;
-                                color: @color-secondaryvariant1-90;
+                                color: var(--primary-foreground-color);
                                 border-radius: 0.25em;
-                                box-shadow: 0 4px 0 1px @color-background-40;
-                                background-color: @color-background;
+                                box-shadow: 0 4px 0 1px var(--tertiary-background-color);
+                                background-color: var(--primary-overlay-color);
                             }
 
                             .label {
                                 margin: 0 1rem;
                                 white-space: nowrap;
-                                color: @color-secondaryvariant1-90;
+                                color: var(--primary-foreground-color);
                             }
                         }
                     }
@@ -354,33 +373,37 @@
         .server-url-input {
             width: 100%;
             padding: 1rem;
-            color: @color-surface-dark5;
-            outline: var(--focus-outline-size) solid @color-surface-light2;
+            color: var(--primary-foreground-color);
+            border-radius: var(--border-radius);
+            background-color: var(--primary-overlay-color);
+            outline: var(--focus-outline-size) solid var(--primary-overlay-color);
             outline-offset: calc(-1 * var(--focus-outline-size));
 
             &:hover {
-                outline-color: @color-surface-light4;
+                outline-color: var(--primary-foreground-color);
             }
 
             &:focus {
-                outline-color: @color-background-dark5;
+                outline-color: var(--primary-foreground-color);
             }
         }
     }
 
     .cancel-button {
         background-color: transparent;
+        opacity: 0.3;
 
         &:hover {
-            background-color: @color-surface-light3;
+            box-shadow: 0 0 0 0.15rem var(--primary-foreground-color) inset;
+            opacity: 1;
         }
 
         &:focus {
-            outline-color: @color-background-dark5;
+            outline-color: var(--primary-foreground-color);
         }
 
         .cancel-button-label {
-            color: @color-surface-dark2;
+            color: var(--primary-foreground-color);
         }
     }
 }

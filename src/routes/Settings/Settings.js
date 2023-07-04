@@ -201,7 +201,6 @@ const Settings = () => {
                 </div>
                 <div ref={sectionsContainerRef} className={styles['sections-container']} onScroll={sectionsContainerOnScorll}>
                     <div ref={generalSectionRef} className={styles['section-container']}>
-                        <div className={styles['section-title']}>{ t('SETTINGS_NAV_GENERAL') }</div>
                         <div className={classnames(styles['option-container'], styles['user-info-option-container'])}>
                             <div
                                 className={styles['avatar-container']}
