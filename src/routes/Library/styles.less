@@ -59,15 +59,16 @@
                 display: none;
                 align-items: center;
                 justify-content: center;
-                width: 3.5rem;
-                height: 3.5rem;
-                background-color: @color-background;
+                width: 3rem;
+                height: 3rem;
+                border-radius: var(--border-radius);
+                background-color: var(--primary-overlay-color);
 
                 .filter-icon {
                     flex: none;
                     width: 1.4rem;
                     height: 1.4rem;
-                    color: @color-secondaryvariant1-90;
+                    color: var(--primary-foreground-color);
                 }
             }
 
@@ -77,7 +78,7 @@
 
             .pagination-input {
                 flex: none;
-                height: 3.5rem;
+                height: 3rem;
                 margin-left: 1.5rem;
 
                 &.pagination-input-placeholder {
@@ -85,18 +86,18 @@
 
                     .pagination-prev-button-container, .pagination-next-button-container {
                         .pagination-button-icon {
-                            color: @color-surface-dark5-90;
+                            color: var(--primary-overlay-color);
                         }
                     }
 
                     .pagination-label {
-                        color: @color-surface-dark5-90;
+                        color: var(--primary-overlay-color);
                     }
                 }
 
                 .pagination-prev-button-container, .pagination-next-button-container {
-                    width: 3.5rem;
-                    height: 3.5rem;
+                    width: 3rem;
+                    height: 3rem;
 
                     .pagination-button-icon {
                         width: 1rem;
@@ -131,13 +132,15 @@
                     align-items: center;
                     justify-content: center;
                     width: 20rem;
-                    min-height: 4rem;
+                    height: 3.5rem;
+                    border-radius: 3.5rem;
                     padding: 0.5rem 1rem;
                     margin-bottom: 1rem;
-                    background-color: @color-accent3;
+                    background-color: var(--secondary-accent-color);
 
                     &:hover {
-                        background-color: @color-accent3-light1;
+                        box-shadow: 0 0 0 0.15rem var(--secondary-accent-color) inset;
+                        background-color: transparent;
                     }
 
                     .label {
@@ -147,7 +150,7 @@
                         max-height: 4.8em;
                         font-size: 1.2rem;
                         font-weight: 700;
-                        color: @color-surface-light5-90;
+                        color: var(--primary-foreground-color);
                         text-align: center;
                     }
                 }
@@ -157,7 +160,7 @@
                 flex: none;
                 width: 12rem;
                 height: 12rem;
-                margin-bottom: 1rem;
+                margin-bottom: 2rem;
                 object-fit: contain;
                 object-position: center;
                 opacity: 0.9;
@@ -165,9 +168,11 @@
 
             .message-label {
                 flex: none;
-                font-size: 2.5rem;
+                margin-bottom: 2rem;
+                font-size: 2rem;
+                font-weight: 400;
                 text-align: center;
-                color: @color-secondaryvariant2-light1-90;
+                color: var(--primary-foreground-color);
             }
         }
 
