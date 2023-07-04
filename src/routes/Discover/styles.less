@@ -74,16 +74,16 @@
                     display: none;
                     align-items: center;
                     justify-content: center;
-                    width: 3.5rem;
-                    height: 3.5rem;
-                    margin-left: 1.5rem;
-                    background-color: @color-background;
+                    width: 3rem;
+                    height: 3rem;
+                    border-radius: var(--border-radius);
+                    background-color: var(--primary-overlay-color);
 
                     .filter-icon {
                         flex: none;
                         width: 1.4rem;
                         height: 1.4rem;
-                        color: @color-secondaryvariant1-90;
+                        color: var(--primary-foreground-color);
                     }
                 }
             }
@@ -102,7 +102,7 @@
                     margin-bottom: 1rem;
                     font-size: 1.4rem;
                     text-align: center;
-                    color: @color-surface-light5-90;
+                    color: var(--primary-foreground-color);
                 }
 
                 .install-button {
@@ -110,17 +110,22 @@
                     min-width: 10rem;
                     max-width: 15rem;
                     padding: 1rem;
-                    background-color: @color-accent3;
+                    background-color: var(--secondary-accent-color);
 
                     &:hover {
-                        background-color: @color-accent3-light1;
+                        box-shadow: 0 0 0 0.15rem var(--secondary-accent-color) inset;
+                        background-color: transparent;
+                    }
+
+                    &:focus {
+                        outline-color: var(--primary-foreground-color);
                     }
 
                     .label {
                         max-height: 2.4em;
                         font-weight: 500;
                         text-align: center;
-                        color: @color-surface-light5-90;
+                        color: var(--primary-foreground-color);
                     }
                 }
             }
@@ -150,9 +155,10 @@
 
                 .message-label {
                     flex: none;
-                    font-size: 2.5rem;
+                    font-size: 2rem;
+                    font-weight: 400;
                     text-align: center;
-                    color: @color-secondaryvariant2-light1-90;
+                    color: var(--primary-foreground-color);
                 }
             }
 
@@ -199,7 +205,8 @@
             flex: none;
             align-self: stretch;
             width: 28rem;
-            background-color: @color-background-dark3;
+            border-radius: var(--border-radius) 0 0 var(--border-radius);
+            background-color: var(--tertiary-background-color);
         }
     }
 }
@@ -222,47 +229,6 @@
                     max-height: calc(3.2rem * 4);
                     overflow: auto;
                 }
-            }
-        }
-    }
-}
-
-.multiselect-modal-container {
-    .multiselect-menu-container {
-        width: 15rem;
-        max-height: calc(3.2rem * 7);
-        overflow-y: auto;
-        scrollbar-color: @color-surface-light1 @color-surface-light4;
-
-        ::-webkit-scrollbar-thumb {
-            background-color: @color-surface-light1;
-
-            &:hover {
-                background-color: @color-surface-light2;
-            }
-        }
-
-        ::-webkit-scrollbar-track {
-            background-color: @color-surface-light4;
-        }
-
-        .multiselect-option-container {
-            background: none;
-
-            &:hover, &:focus {
-                background-color: @color-surface-light3;
-            }
-
-            &:focus {
-                outline-color: @color-background-dark2;
-            }
-
-            .multiselect-label {
-                color: @color-background-dark2-90;
-            }
-
-            .multiselect-icon {
-                color: @color-background-dark2-90;
             }
         }
     }
@@ -394,7 +360,7 @@
                     justify-content: space-between;
 
                     .select-input {
-                        &:nth-child(n+3) {
+                        &:nth-child(n+2) {
                             display: none;
 
                             &~.filter-container {
