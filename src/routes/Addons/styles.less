@@ -48,26 +48,27 @@
                 flex-direction: row;
                 align-items: center;
                 justify-content: center;
-                width: 10rem;
-                height: 3.5rem;
+                height: 3rem;
                 margin-right: 1.5rem;
-                padding: 0 1rem;
-                background-color: @color-accent3;
+                padding: 0 1.5rem;
+                border-radius: 3rem;
+                background-color: var(--secondary-accent-color);
 
                 &:hover {
-                    background-color: @color-accent3-light2;
+                    box-shadow: 0 0 0 0.1rem var(--secondary-accent-color) inset;
+                    background-color: transparent;
                 }
 
                 &:focus {
-                    outline-color: @color-surface-light5;
+                    outline-color: var(--primary-foreground-color);
                 }
 
                 .icon {
                     flex: none;
                     width: 1.2rem;
                     height: 1.2rem;
-                    margin-right: 1rem;
-                    color: @color-surface-light5;
+                    margin-right: 0.5rem;
+                    color: var(--primary-foreground-color);
                 }
 
                 .add-button-label {
@@ -75,8 +76,9 @@
                     flex-shrink: 1;
                     flex-basis: auto;
                     max-height: 2.4em;
-                    font-size: 1.1rem;
-                    color: @color-surface-light5;
+                    font-size: 1rem;
+                    font-weight: 700;
+                    color: var(--primary-foreground-color);
                 }
             }
 
@@ -107,15 +109,16 @@
                 display: none;
                 align-items: center;
                 justify-content: center;
-                width: 3.5rem;
-                height: 3.5rem;
-                background-color: @color-background;
+                width: 3rem;
+                height: 3rem;
+                border-radius: var(--border-radius);
+                background-color: var(--primary-overlay-color);
 
                 .filter-icon {
                     flex: none;
                     width: 1.4rem;
                     height: 1.4rem;
-                    color: @color-secondaryvariant1-90;
+                    color: var(--primary-foreground-color);
                 }
             }
         }
@@ -125,7 +128,7 @@
             align-self: stretch;
             padding: 0 1.5rem;
             font-size: 2rem;
-            color: @color-surface-light5;
+            color: var(--primary-foreground-color);
         }
 
         .addons-list-container {
@@ -151,7 +154,7 @@
             overflow: visible;
 
             .select-input-container {
-                height: 3.5rem;
+                height: 3rem;
 
                 &:not(:last-child) {
                     margin-bottom: 1rem;
@@ -168,39 +171,43 @@
         .notice {
             margin-bottom: 1.5rem;
             font-size: 1rem;
-            color: @color-background-dark5-90;
+            color: var(--primary-foreground-color);
         }
 
         .addon-url-input {
             width: 100%;
             padding: 1rem;
-            color: @color-surface-dark5;
-            outline: var(--focus-outline-size) solid @color-surface-light2;
+            color: var(--primary-foreground-color);
+            border-radius: var(--border-radius);
+            background-color: var(--primary-overlay-color);
+            outline: var(--focus-outline-size) solid var(--primary-overlay-color);
             outline-offset: calc(-1 * var(--focus-outline-size));
 
             &:hover {
-                outline-color: @color-surface-light4;
+                outline-color: var(--primary-foreground-color);
             }
 
             &:focus {
-                outline-color: @color-background-dark5;
+                outline-color: var(--primary-foreground-color);
             }
         }
     }
 
     .cancel-button {
         background-color: transparent;
+        opacity: 0.3;
 
         &:hover {
-            background-color: @color-surface-light3;
+            box-shadow: 0 0 0 0.15rem var(--primary-foreground-color) inset;
+            opacity: 1;
         }
 
         &:focus {
-            outline-color: @color-background-dark5;
+            outline-color: var(--primary-foreground-color);
         }
 
         .cancel-button-label {
-            color: @color-surface-dark2;
+            color: var(--primary-foreground-color);
         }
     }
 }
@@ -228,7 +235,7 @@
             }
 
             .icon {
-                color: @color-secondaryvariant1-light3;
+                color: var(--primary-foreground-color);
             }
 
             .name-container {
@@ -246,7 +253,7 @@
                     flex-basis: auto;
                     margin-right: 0.5rem;
                     font-size: 1.6rem;
-                    color: @color-background-dark5-90;
+                    color: var(--primary-foreground-color);
                 }
 
                 .version {
@@ -254,7 +261,7 @@
                     flex-shrink: 1;
                     flex-basis: auto;
                     margin-top: 0.5rem;
-                    color: @color-background-dark5-60;
+                    color: var(--primary-foreground-color);
                 }
             }
         }
@@ -270,11 +277,10 @@
         .addons-content {
             .selectable-inputs-container {
                 .add-button-container {
+                    z-index: 1;
                     position: fixed;
                     right: 0;
                     bottom: calc(3rem + var(--horizontal-nav-bar-size));
-                    box-shadow: 0 1.35rem 2.7rem @color-background-dark5-40,
-                        0 1.1rem 0.85rem @color-background-dark5-20;
                 }
 
                 .select-input-container {

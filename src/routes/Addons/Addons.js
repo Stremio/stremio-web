@@ -83,10 +83,6 @@ const Addons = ({ urlParams, queryParams }) => {
         <MainNavBars className={styles['addons-container']} route={'addons'}>
             <div className={styles['addons-content']}>
                 <div className={styles['selectable-inputs-container']}>
-                    <Button className={styles['add-button-container']} title={t('ADD_ADDON')} onClick={openAddAddonModal}>
-                        <Icon className={styles['icon']} name={'add'} />
-                        <div className={styles['add-button-label']}>{ t('ADD_ADDON') }</div>
-                    </Button>
                     {selectInputs.map((selectInput, index) => (
                         <Multiselect
                             {...selectInput}
@@ -95,6 +91,10 @@ const Addons = ({ urlParams, queryParams }) => {
                         />
                     ))}
                     <div className={styles['spacing']} />
+                    <Button className={styles['add-button-container']} title={t('ADD_ADDON')} onClick={openAddAddonModal}>
+                        <Icon className={styles['icon']} name={'add'} />
+                        <div className={styles['add-button-label']}>{ t('ADD_ADDON') }</div>
+                    </Button>
                     <SearchBar
                         className={styles['search-bar']}
                         title={t('ADDON_SEARCH')}
