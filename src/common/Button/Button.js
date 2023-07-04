@@ -4,20 +4,10 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const styles = require('./styles');
+const { useLongPress } = require('use-long-press');
 
 const Button = React.forwardRef(({ className, href, disabled, children, onLongPress, ...props }, ref) => {
-    const longPressTimeout = React.useRef(null);
-    const onTouchStart = React.useCallback((event) => {
-        longPressTimeout.current = setTimeout(function () {
-            clearTimeout(longPressTimeout.current);
-            if (typeof onLongPress === 'function') {
-                onLongPress(event);
-            }
-        }, 500);
-    }, [onLongPress]);
-    const onTouchEnd = React.useCallback(() => {
-        clearTimeout(longPressTimeout.current);
-    }, []);
+    const longPress = useLongPress(onLongPress);
     const onKeyDown = React.useCallback((event) => {
         if (typeof props.onKeyDown === 'function') {
             props.onKeyDown(event);
@@ -49,8 +39,7 @@ const Button = React.forwardRef(({ className, href, disabled, children, onLongPr
             href,
             onKeyDown,
             onMouseDown,
-            onTouchStart,
-            onTouchEnd,
+            ...longPress()
         },
         children
     );
