@@ -50,12 +50,14 @@ const NavMenuContent = ({ onClick }) => {
                                 `url('${require('/images/default_avatar.png')}')`
                     }}
                 />
-                <div className={styles['email-container']}>
-                    <div className={styles['email-label']}>{profile.auth === null ? t('ANONYMOUS_USER') : profile.auth.user.email}</div>
+                <div className={styles['user-info-details']}>
+                    <div className={styles['email-container']}>
+                        <div className={styles['email-label']}>{profile.auth === null ? t('ANONYMOUS_USER') : profile.auth.user.email}</div>
+                    </div>
+                    <Button className={styles['logout-button-container']} title={profile.auth === null ? `${t('LOG_IN')} / ${t('SIGN_UP')}` : t('LOG_OUT')} href={'#/intro'} onClick={logoutButtonOnClick}>
+                        <div className={styles['logout-label']}>{profile.auth === null ? `${t('LOG_IN')} / ${t('SIGN_UP')}` : t('LOG_OUT')}</div>
+                    </Button>
                 </div>
-                <Button className={styles['logout-button-container']} title={profile.auth === null ? `${t('LOG_IN')} / ${t('SIGN_UP')}` : t('LOG_OUT')} href={'#/intro'} onClick={logoutButtonOnClick}>
-                    <div className={styles['logout-label']}>{profile.auth === null ? `${t('LOG_IN')} / ${t('SIGN_UP')}` : t('LOG_OUT')}</div>
-                </Button>
             </div>
             <div className={styles['nav-menu-section']}>
                 <Button className={styles['nav-menu-option-container']} title={fullscreen ? t('EXIT_FULLSCREEN') : t('ENTER_FULLSCREEN')} onClick={fullscreen ? exitFullscreen : requestFullscreen}>
