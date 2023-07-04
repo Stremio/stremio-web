@@ -6,25 +6,31 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    height: 4rem;
+    height: 3.5rem;
+    border-radius: var(--border-radius);
+    margin-bottom: 0.5rem;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
 
     .icon {
         flex: none;
         width: 1.4rem;
         height: 1.4rem;
         margin: 1.3rem;
-        color: @color-surface-light5-90;
+        color: var(--primary-foreground-color);
     }
 
     .label {
         flex: 1;
         max-height: 2.4em;
         font-weight: 400;
-        color: @color-surface-light5-90;
+        color: var(--primary-foreground-color);
     }
 
     &:hover {
-        background-color: @color-background-light2;
+        background-color: var(--primary-overlay-color);
     }
 
     &:global(.disabled) {

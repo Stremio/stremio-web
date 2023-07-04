@@ -8,7 +8,7 @@
 
     .seek-bar {
         --track-size: 0.5rem;
-        --thumb-size: 1.5rem;
+        --thumb-size: 1.3rem;
 
         height: 2.5rem;
     }
@@ -21,31 +21,30 @@
         .control-bar-button {
             flex: none;
             width: 4rem;
-            height: 4rem;
+            height: 5rem;
             display: flex;
             justify-content: center;
             align-items: center;
 
             &:global(.disabled) {
                 .icon {
-                    color: @color-surface;
+                    opacity: 0.5;
                 }
             }
 
             .icon {
                 flex: none;
-                width: 3rem;
-                height: 2rem;
-                color: @color-surface-light5;
+                width: 2.5rem;
+                height: 2.5rem;
+                color: var(--primary-foreground-color);
             }
         }
 
         .volume-slider {
-            --track-size: 0.4rem;
-            --thumb-size: 1.3rem;
+            --track-size: 0.35rem;
+            --thumb-size: 1rem;
 
-            flex: 0 1 16rem;
-            min-width: 10rem;
+            flex: 0 1 10rem;
             height: 4rem;
             margin: 0 1rem;
         }
@@ -64,9 +63,9 @@
 
             .icon {
                 flex: none;
-                width: 3rem;
-                height: 2rem;
-                color: @color-surface-light5;
+                width: 2.5rem;
+                height: 2.5rem;
+                color: var(--primary-foreground-color);
             }
         }
 
@@ -105,7 +104,8 @@
                 bottom: 4.5rem;
                 flex-direction: column;
                 padding: 0.5rem;
-                background-color: @color-background-dark1;
+                border-radius: var(--border-radius);
+                background-color: var(--tertiary-background-color);
                 box-shadow: 0 1.35rem 2.7rem @color-background-dark5-40,
                     0 1.1rem 0.85rem @color-background-dark5-20;
 

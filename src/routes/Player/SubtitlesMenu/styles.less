@@ -3,7 +3,7 @@
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
 
 .subtitles-menu-container {
-    height: 23rem;
+    height: 25rem;
     display: flex;
     flex-direction: row;
 
@@ -16,32 +16,35 @@
         .languages-header, .variants-header, .settings-header {
             flex: none;
             align-self: stretch;
-            max-height: 2.4em;
-            margin: 1rem;
-            font-weight: 600;
-            color: @color-surface-light5-90;
+            padding: 1.5rem 2rem;
+            font-weight: 700;
+            color: var(--primary-foreground-color);
         }
 
         .languages-list, .variants-list {
             flex: 1;
             align-self: stretch;
             overflow-y: auto;
+            padding: 0 1rem;
 
             .language-option, .variant-option {
                 display: flex;
                 flex-direction: row;
                 align-items: center;
-                padding: 1rem 1.5rem;
+                height: 3.5rem;
+                padding: 0 1.5rem;
+                margin-bottom: 0.5rem;
+                border-radius: var(--border-radius);
 
                 &:global(.selected), &:hover {
-                    background-color: @color-background;
+                    background-color: var(--primary-overlay-color);
                 }
 
                 .language-label, .variant-label {
                     flex: 1;
                     max-height: 2.4em;
                     font-size: 1.1rem;
-                    color: @color-surface-light5-90;
+                    color: var(--primary-foreground-color);
                 }
 
                 .icon {
@@ -50,18 +53,18 @@
                     height: 0.5rem;
                     border-radius: 100%;
                     margin-left: 1rem;
-                    background-color: @color-accent3-90;
+                    background-color: var(--secondary-accent-color);
                 }
             }
         }
     }
 
     .languages-container {
-        width: 12rem;
+        width: 16rem;
     }
 
     .variants-container {
-        width: 12rem;
+        width: 16rem;
 
         .no-variants-container {
             flex: 1;
@@ -71,20 +74,20 @@
             .no-variants-label {
                 max-height: 4.8em;
                 font-weight: 500;
-                color: @color-surface-90;
+                color: var(--primary-foreground-color);
             }
         }
     }
 
     .subtitles-settings-container {
-        width: 16rem;
+        width: 17rem;
 
         .spacing {
             flex: 1;
         }
 
         .discrete-input {
-            margin: 0 1.5rem 1rem;
+            padding: 0 1.5rem 1rem;
         }
 
         .advanced-button {
@@ -94,14 +97,14 @@
             margin: 0 1.5rem 1rem;
             white-space: nowrap;
             text-overflow: ellipsis;
-            color: @color-surface-light5-90;
+            color: var(--primary-foreground-color);
 
             &:hover {
                 text-decoration: underline;
             }
 
             &:global(.disabled) {
-                color: @color-surface-90;
+                opacity: 0.4;
             }
         }
     }

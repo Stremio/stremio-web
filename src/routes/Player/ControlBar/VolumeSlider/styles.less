@@ -9,16 +9,16 @@
 
 .volume-slider:not(:global(.disabled)) {
     .slider-track {
-        background-color: @color-surface-dark5;
+        background-color: var(--primary-overlay-color);
     }
 
     .slider-track-after {
-        background-color: @color-surface-light3;
+        background-color: var(--primary-foreground-color);
     }
 
     &:hover, &:global(.active) {
         .slider-track-after {
-            background-color: @color-surface-light5;
+            background-color: var(--primary-foreground-color);
         }
     }
 }

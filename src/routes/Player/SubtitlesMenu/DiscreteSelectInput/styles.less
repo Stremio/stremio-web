@@ -5,7 +5,7 @@
 .discrete-input-container {
     &:global(.disabled) {
         .header {
-            color: @color-surface-90;
+            color: var(--primary-foreground-color);
         }
 
         .input-container {
@@ -14,38 +14,39 @@
     }
 
     .header {
-        max-height: 2.4em;
         margin-bottom: 0.5rem;
-        color: @color-surface-light5-90;
+        color: var(--primary-foreground-color);
+        opacity: 0.6;
     }
 
     .input-container {
         display: flex;
         flex-direction: row;
         align-items: center;
-        background: @color-background;
+        border-radius: 3.5rem;
+        background: var(--primary-overlay-color);
 
         .button-container {
             flex: none;
-            width: 3rem;
-            height: 3rem;
+            width: 3.5rem;
+            height: 3.5rem;
             padding: 1rem;
-            background-color: @color-background-light2;
+            border-radius: 100%;
+            background-color: var(--primary-overlay-color);
 
             .icon {
                 display: block;
                 width: 100%;
                 height: 100%;
-                color: @color-surface-light5-90;
+                color: var(--primary-foreground-color);
             }
         }
 
         .option-label {
             flex: 1;
-            max-height: 2.4em;
             font-weight: 500;
             text-align: center;
-            color: @color-surface-light5-90;
+            color: var(--primary-foreground-color);
         }
     }
 }
