@@ -23,7 +23,7 @@
                 flex: none;
                 height: 1.2rem;
                 margin-right: 1rem;
-                color: @color-surface-light5-90;
+                color: var(--primary-foreground-color);
             }
 
             .label {
@@ -34,13 +34,15 @@
                 font-size: 1.1rem;
                 font-weight: 500;
                 text-align: center;
-                color: @color-surface-light5-90;
+                color: var(--primary-foreground-color);
             }
         }
 
         .facebook-button, .twitter-button {
+            border-radius: var(--border-radius);
+
             &:focus {
-                outline-color: @color-background-dark5;
+                outline-color: var(--primary-foreground-color);
             }
         }
 
@@ -57,7 +59,8 @@
         display: flex;
         flex-direction: row;
         margin-top: 1rem;
-        background-color: @color-surface-light2;
+        border-radius: var(--border-radius);
+        background-color: var(--primary-overlay-color);
 
         .url-text-input {
             flex: 1;
@@ -65,7 +68,7 @@
             padding: 1rem;
             font-size: 1.1rem;
             text-align: center;
-            color: @color-background-dark5;
+            color: var(--primary-foreground-color);
         }
 
         .copy-button {
@@ -77,14 +80,16 @@
             justify-content: center;
             width: 8rem;
             padding: 1rem;
-            background-color: @color-accent3;
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+            background-color: var(--secondary-accent-color);
 
             &:hover {
-                background-color: @color-accent3-light1;
+                box-shadow: 0 0 0 0.15rem var(--secondary-accent-color) inset;
+                background-color: transparent;
             }
 
             &:focus {
-                outline-color: @color-background-dark5;
+                outline-color: var(--primary-foreground-color);
             }
 
             .icon {
@@ -92,7 +97,7 @@
                 width: 1.2rem;
                 height: 1.2rem;
                 margin-right: 0.5rem;
-                color: @color-surface-light5-90;
+                color: var(--primary-foreground-color);
             }
 
             .label {
@@ -101,7 +106,7 @@
                 flex-basis: auto;
                 max-height: 2.4em;
                 font-size: 1.1rem;
-                color: @color-surface-light5-90;
+                color: var(--primary-foreground-color);
             }
         }
     }
