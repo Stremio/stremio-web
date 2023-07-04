@@ -16,26 +16,9 @@ html.active-slider-within {
     overflow: visible;
     cursor: pointer;
 
-    &:hover, &:global(.active) {
-        .track-after {
-            background-color: @color-primary-light5;
-        }
-    }
-
     &:global(.disabled) {
         pointer-events: none;
-
-        .track {
-            background-color: @color-surface-dark5;
-        }
-
-        .track-after {
-            background-color: @color-surface;
-        }
-
-        .thumb {
-            fill: @color-surface;
-        }
+        opacity: 0.5;
     }
 
     .layer {
@@ -55,21 +38,24 @@ html.active-slider-within {
         z-index: 0;
         flex: 1;
         height: var(--track-size);
-        background-color: @color-surface-light5-20;
+        border-radius: var(--track-size);
+        background-color: var(--primary-overlay-color);
     }
 
     .track-before {
         z-index: 1;
         flex: none;
         height: var(--track-size);
-        background-color: @color-surface-light5-10;
+        border-radius: var(--track-size);
+        background-color: var(--primary-overlay-color);
     }
 
     .track-after {
         z-index: 2;
         flex: none;
         height: var(--track-size);
-        background-color: @color-primary-light3;
+        border-radius: var(--track-size);
+        background-color: var(--primary-foreground-color);
     }
 
     .thumb {
@@ -78,6 +64,6 @@ html.active-slider-within {
         width: var(--thumb-size);
         height: var(--thumb-size);
         transform: translateX(-50%);
-        fill: @color-surface-light5;
+        fill: var(--primary-foreground-color);
     }
 }
