@@ -36,7 +36,7 @@ const Video = ({ className, id, title, thumbnail, episode, released, upcoming, w
             toggleMenu();
         }
     }, [toggleMenu]);
-    const popupMenuOnLongPress = React.useCallback((event) => {
+    const popupMenuOTouchStart = React.useCallback((event) => {
         event.nativeEvent.togglePopupPrevented = true;
     }, []);
     const popupMenuOnContextMenu = React.useCallback((event) => {
@@ -142,7 +142,7 @@ const Video = ({ className, id, title, thumbnail, episode, released, upcoming, w
     }, []);
     const renderMenu = React.useMemo(() => function renderMenu() {
         return (
-            <div className={styles['context-menu-content']} onTouchStart={popupMenuOnLongPress} onContextMenu={popupMenuOnContextMenu} onClick={popupMenuOnClick}>
+            <div className={styles['context-menu-content']} onTouchStart={popupMenuOTouchStart} onContextMenu={popupMenuOnContextMenu} onClick={popupMenuOnClick}>
                 <Button className={styles['context-menu-option-container']} title={'Watch'}>
                     <div className={styles['context-menu-option-label']}>{t('CTX_WATCH')}</div>
                 </Button>

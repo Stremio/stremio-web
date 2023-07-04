@@ -9,6 +9,7 @@ const Button = React.forwardRef(({ className, href, disabled, children, onLongPr
     const longPressTimeout = React.useRef(null);
     const onTouchStart = React.useCallback((event) => {
         longPressTimeout.current = setTimeout(function () {
+            clearTimeout(longPressTimeout.current);
             if (typeof onLongPress === 'function') {
                 onLongPress(event);
             }
