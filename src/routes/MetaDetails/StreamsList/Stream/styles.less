@@ -11,22 +11,26 @@
 .stream-container {
     display: flex;
     flex-direction: row;
-    align-items: center;
     flex-wrap: wrap;
-    padding: 0.5rem 1rem;
+    align-items: center;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    border-radius: var(--border-radius);
 
     &:hover, &:focus {
-        background-color: @color-background;
+        background-color: var(--primary-overlay-color);
     }
 
     &:hover, &:focus, &:global(.selected) {
         .play-icon {
+            opacity: 1;
+
             .play-icon-circle-centered-background {
-                fill: @color-accent4-90;
+                fill: var(--secondary-accent-color);
             }
 
             .play-icon-circle-centered-icon {
-                fill: @color-surface-light5-90;
+                fill: var(--primary-foreground-color);
             }
         }
     }
@@ -36,19 +40,21 @@
 
         .thumbnail {
             display: block;
-            width: 5rem;
             height: 5rem;
-            object-fit: contain;
+            width: 8rem;
+            object-fit: cover;
             object-position: center;
             opacity: 0.9;
         }
 
         .placeholder-icon {
             display: block;
-            width: 5rem;
             height: 5rem;
-            padding: 0.5rem;
-            color: @color-secondaryvariant1-light3-90;
+            width: 8rem;
+            padding: 1rem;
+            color: var(--primary-foreground-color);
+            background-color: var(--primary-overlay-color);
+            opacity: 0.25;
         }
 
         .addon-name {
@@ -56,49 +62,48 @@
             max-height: 3.6em;
             font-size: 1.1rem;
             text-align: center;
-            color: @color-surface-light5-90;
+            color: var(--primary-foreground-color);
         }
     }
 
     .info-container {
         flex: 1;
         max-height: 3.6em;
-        margin: 0.5rem 1rem;
-        white-space: pre;
-        color: @color-surface-light5-90;
+        padding: 0 0.5rem 0 1.5rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        color: var(--primary-foreground-color);
     }
 
     .play-icon {
         flex: none;
         width: 3.5rem;
         height: 5rem;
+        opacity: 0;
 
         .play-icon-circle-centered-background {
             fill: none;
         }
 
         .play-icon-circle-centered-icon {
-            fill: @color-surface-dark5-90;
+            fill: var(--primary-foreground-color);
         }
     }
 
     .progress-bar-container {
         flex: 0 0 100%;
-        background-color: @color-background-light2;
+        background-color: var(--primary-accent-color);
 
         .progress-bar {
             height: 0.5rem;
-            background-color: @color-primaryvariant1;
+            background-color: var(--primary-foreground-color);
         }
     }
 }
 
 @media only screen and (max-width: @minimum) {
     .stream-container {
-        &:hover, &focus {
-            background-color: @color-surface-light5-20;
-        }
-
         .thumbnail-container, .addon-name-container {
             .addon-name {
                 font-weight: 500;
@@ -107,7 +112,7 @@
 
         .play-icon {
             .play-icon-circle-centered-icon {
-                fill: @color-surface-light5-90;
+                fill: var(--primary-foreground-color);
             }
         }
     }

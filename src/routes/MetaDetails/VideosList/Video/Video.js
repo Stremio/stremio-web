@@ -110,6 +110,7 @@ const Video = ({ className, id, title, thumbnail, episode, released, upcoming, w
                             {
                                 watched ?
                                     <div className={styles['watched-container']}>
+                                        <Icon className={styles['flag-icon']} name={'eye'} />
                                         <div className={styles['flag-label']}>Watched</div>
                                     </div>
                                     :

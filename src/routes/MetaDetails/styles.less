@@ -20,6 +20,7 @@
     background-color: transparent;
 
     .nav-bar {
+        z-index: 1;
         flex: none;
         align-self: stretch;
     }
@@ -38,7 +39,7 @@
         }
 
         .background-image-layer {
-            position: absolute;
+            position: fixed;
             top: 0;
             right: 0;
             bottom: 0;
@@ -52,7 +53,8 @@
                 bottom: 0;
                 left: 0;
                 z-index: 1;
-                background: @color-background-dark2-70;
+                background: var(--tertiary-background-color);
+                opacity: 0.7;
                 content: "";
             }
 
@@ -90,7 +92,7 @@
                 align-self: stretch;
                 font-size: 2rem;
                 text-align: center;
-                color: @color-secondaryvariant2-light1-90;
+                color: var(--primary-foreground-color);
             }
         }
 
@@ -104,9 +106,11 @@
         }
 
         .videos-list, .streams-list {
-            flex: 0 0 26.5rem;
+            flex: 0 0 28rem;
             align-self: stretch;
-            background-color: @color-background-dark5-70;
+            border-radius: var(--border-radius) 0 0 var(--border-radius);
+            background-color: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(15px);
         }
     }
 }

@@ -13,6 +13,7 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
     padding: 1rem;
     overflow: visible;
 
@@ -22,21 +23,16 @@
         flex-direction: row;
         align-items: center;
         width: 6.5rem;
-        height: 3.5rem;
+        height: 3rem;
+        border-radius: 3rem;
         padding: 0.5rem;
 
         &:hover, &:focus {
-            .label {
-                color: @color-surface-light2-90;
-            }
-
-            .icon {
-                color: @color-surface-light2-90;
-            }
+            background-color: var(--primary-overlay-color);
         }
 
         &:focus {
-            background-color: @color-surface-light5-10;
+            background-color: var(--primary-foreground-color);
         }
 
         &>:first-child {
@@ -48,14 +44,14 @@
             max-height: 1.2em;
             font-weight: 500;
             text-align: center;
-            color: @color-surface-90;
+            color: var(--primary-foreground-color);
         }
 
         .icon {
             flex: none;
             width: 1.5rem;
             height: 1.5rem;
-            color: @color-surface-90;
+            color: var(--primary-foreground-color);
         }
     }
 
@@ -84,7 +80,7 @@
 
 @media only screen and (max-width: @minimum) {
     .seasons-bar-container {
-        padding-top: 0;
+        height: 6rem;
 
         .seasons-popup-label-container {
             .multiselect-menu-container {
