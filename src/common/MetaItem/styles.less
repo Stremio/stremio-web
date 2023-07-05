@@ -147,13 +147,13 @@
         .title-label {
             flex: 1;
             max-height: 2.4em;
-            padding-left: 0.5rem;
+            padding-left: 1.5rem;
             font-weight: 600;
             text-align: center;
             color: var(--primary-foreground-color);
 
             &:only-child {
-                padding-right: 0.5rem;
+                padding: 0 0.5rem;
             }
         }
 
@@ -164,6 +164,7 @@
             padding: 1rem 0;
             background-color: transparent;
             opacity: 0;
+            transform: translateX(1rem);
             transition: opacity 0.1s ease-out;
 
             .icon {

@@ -12,7 +12,7 @@
         align-items: center;
         justify-content: flex-end;
         padding: 0 1rem;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.25rem;
 
         .title-container {
             flex: 1;
@@ -28,15 +28,14 @@
             flex-direction: row;
             align-items: center;
             max-width: 12rem;
-            padding: 0.2rem;
+            height: 2.5rem;
+            padding: 0 0.5rem 0 1rem;
+            border-radius: 2.5rem;
             opacity: 0.6;
 
-            &:focus {
+            &:hover, &:focus {
                 outline: none;
-                background-color: @color-background-light3;
-            }
-
-            &:hover {
+                background-color: var(--primary-overlay-color);
                 opacity: 1;
             }
 
