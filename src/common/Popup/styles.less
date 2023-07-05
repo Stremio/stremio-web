@@ -3,6 +3,10 @@
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
 
 .label-container {
+    // IOS specific 
+    // prevents showing the default context-menu when long pressing an anchor in safari.
+    -webkit-touch-callout: none !important;
+
     position: relative;
     overflow: visible;
 

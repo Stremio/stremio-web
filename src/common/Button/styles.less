@@ -3,10 +3,6 @@
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
 
 .button-container {
-    // IOS specific 
-    // prevents showing the default context-menu when long pressing an anchor in safari.
-    -webkit-touch-callout: none !important;
-
     outline-width: var(--focus-outline-size);
     outline-color: @color-surface-light5;
     outline-offset: calc(-1 * var(--focus-outline-size));
