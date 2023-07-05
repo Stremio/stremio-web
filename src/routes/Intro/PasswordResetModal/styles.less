@@ -15,16 +15,13 @@
         .credentials-text-input {
             width: 100%;
             padding: 1rem;
-            color: @color-surface-dark5;
-            outline: var(--focus-outline-size) solid @color-surface-light2-90;
+            border-radius: var(--border-radius);
             outline-offset: calc(-1 * var(--focus-outline-size));
-
-            &:hover {
-                outline-color: @color-surface-light4-90;
-            }
-
-            &:focus {
-                outline-color: @color-background-dark5-90;
+            color: var(--primary-foreground-color);
+            background: var(--primary-overlay-color);
+            
+            &:hover, &:focus {
+                outline: var(--focus-outline-size) solid var(--primary-overlay-color);
             }
         }
     }
@@ -39,16 +36,12 @@
     .cancel-button {
         background-color: transparent;
 
-        &:hover {
-            background-color: @color-surface-light3;
-        }
-
-        &:focus {
-            outline-color: @color-background-dark5-90;
+        &:hover, &:focus {
+            outline-color: var(--primary-foreground-color);
         }
 
         .cancel-button-label {
-            color: @color-surface-dark4-90;
+            color: var(--primary-foreground-color);
         }
     }
 }
