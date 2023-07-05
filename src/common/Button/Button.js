@@ -8,6 +8,9 @@ const { useLongPress } = require('use-long-press');
 
 const Button = React.forwardRef(({ className, href, disabled, children, onLongPress, ...props }, ref) => {
     const longPress = useLongPress(onLongPress);
+    // exoposing them to make it easier to know which handlers are exported,
+    // in case a change to one of them is needed in the future.
+    const {onPointerDown, onPointerMove, onPointerUp, onPointerLeave} = longPress();
     const onKeyDown = React.useCallback((event) => {
         if (typeof props.onKeyDown === 'function') {
             props.onKeyDown(event);
@@ -39,7 +42,7 @@ const Button = React.forwardRef(({ className, href, disabled, children, onLongPr
             href,
             onKeyDown,
             onMouseDown,
-            ...longPress()
+            onPointerDown, onPointerMove, onPointerUp, onPointerLeave
         },
         children
     );
