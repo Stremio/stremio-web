@@ -21,21 +21,20 @@ const Video = ({ className, id, title, thumbnail, episode, released, upcoming, w
             toggleMenu();
         }
     }, []);
-    const popupLabelOnKeyDown = React.useCallback((event) => {
-        event.nativeEvent.buttonClickPrevented = true;
-    }, []);
     const popupLabelOnContextMenu = React.useCallback((event) => {
         if (!event.nativeEvent.togglePopupPrevented && !event.nativeEvent.ctrlKey) {
             event.preventDefault();
-            toggleMenu();
+            if (event.nativeEvent.pointerType === 'mouse') {
+                toggleMenu();
+            }
         }
     }, [toggleMenu]);
     const popupLabelOnLongPress = React.useCallback((event) => {
-        if (event.pointerType !== 'mouse' && !event.nativeEvent.togglePopupPrevented) {
+        if (event.nativeEvent.pointerType !== 'mouse' && !event.nativeEvent.togglePopupPrevented) {
             toggleMenu();
         }
     }, [toggleMenu]);
-    const popupMenuOTouchStart = React.useCallback((event) => {
+    const popupMenuOnPointerDown = React.useCallback((event) => {
         event.nativeEvent.togglePopupPrevented = true;
     }, []);
     const popupMenuOnContextMenu = React.useCallback((event) => {
@@ -43,6 +42,9 @@ const Video = ({ className, id, title, thumbnail, episode, released, upcoming, w
     }, []);
     const popupMenuOnClick = React.useCallback((event) => {
         event.nativeEvent.togglePopupPrevented = true;
+    }, []);
+    const popupMenuOnKeyDown = React.useCallback((event) => {
+        event.nativeEvent.buttonClickPrevented = true;
     }, []);
     const toggleWatchedOnClick = React.useCallback((event) => {
         event.preventDefault();
@@ -141,7 +143,7 @@ const Video = ({ className, id, title, thumbnail, episode, released, upcoming, w
     }, []);
     const renderMenu = React.useMemo(() => function renderMenu() {
         return (
-            <div className={styles['context-menu-content']} onTouchStart={popupMenuOTouchStart} onContextMenu={popupMenuOnContextMenu} onClick={popupMenuOnClick}>
+            <div className={styles['context-menu-content']} onPointerDown={popupMenuOnPointerDown} onContextMenu={popupMenuOnContextMenu} onClick={popupMenuOnClick} onKeyDown={popupMenuOnKeyDown}>
                 <Button className={styles['context-menu-option-container']} title={'Watch'}>
                     <div className={styles['context-menu-option-label']}>{t('CTX_WATCH')}</div>
                 </Button>
@@ -171,13 +173,12 @@ const Video = ({ className, id, title, thumbnail, episode, released, upcoming, w
             href={href}
             {...props}
             onClick={popupLabelOnClick}
-            onKeyDown={popupLabelOnKeyDown}
+            onLongPress={popupLabelOnLongPress}
             onContextMenu={popupLabelOnContextMenu}
             open={menuOpen}
             onCloseRequest={closeMenu}
             renderLabel={renderLabel}
             renderMenu={renderMenu}
-            onLongPress={popupLabelOnLongPress}
         />
     );
 };

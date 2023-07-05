@@ -13,8 +13,11 @@ const Button = React.forwardRef(({ className, href, disabled, children, onLongPr
             props.onKeyDown(event);
         }
 
-        if (event.key === 'Enter' && !event.nativeEvent.buttonClickPrevented) {
-            event.currentTarget.click();
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            if (!event.nativeEvent.buttonClickPrevented) {
+                event.currentTarget.click();
+            }
         }
     }, [props.onKeyDown]);
     const onMouseDown = React.useCallback((event) => {
