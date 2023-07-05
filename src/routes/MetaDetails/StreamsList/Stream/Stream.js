@@ -9,7 +9,7 @@ const { useServices } = require('stremio/services');
 const StreamPlaceholder = require('./StreamPlaceholder');
 const styles = require('./styles');
 
-const Stream = ({ className, addonName, name, description, thumbnail, progress, deepLinks, ...props }) => {
+const Stream = ({ className, videoId, addonName, name, description, thumbnail, progress, deepLinks, ...props }) => {
     const profile = useProfile();
     const streamingServer = useStreamingServer();
     const { core } = useServices();
@@ -29,10 +29,22 @@ const Stream = ({ className, addonName, name, description, thumbnail, progress, 
             :
             null;
     }, [deepLinks, profile, streamingServer]);
-    const onClick = React.useCallback((e) => {
+    const markVideoAsWatched = React.useCallback(() => {
+        if (typeof videoId === 'string') {
+            core.transport.dispatch({
+                action: 'MetaDetails',
+                args: {
+                    action: 'MarkVideoAsWatched',
+                    args: [videoId, true]
+                }
+            });
+        }
+    }, [videoId]);
+    const onClick = React.useCallback((event) => {
         if (href === null) {
             // link does not lead to the player, it is expected to
             // open with local video player through the streaming server
+            markVideoAsWatched();
             core.transport.dispatch({
                 action: 'StreamingServer',
                 args: {
@@ -43,15 +55,18 @@ const Stream = ({ className, addonName, name, description, thumbnail, progress, 
                     }
                 }
             });
-        } else if (profile.settings.playerType === 'external') {
+        } else if (profile.settings.playerType !== 'internal') {
+            markVideoAsWatched();
             toast.show({
                 type: 'success',
                 title: 'Stream opened in external player',
                 timeout: 4000
             });
         }
-        props.onClick(e);
-    }, [href, deepLinks, props.onClick, profile, toast]);
+        if (typeof props.onClick === 'function') {
+            props.onClick(event);
+        }
+    }, [href, deepLinks, props.onClick, profile, toast, markVideoAsWatched]);
     const forceDownload = React.useMemo(() => {
         // we only do this in one case to force the download
         // of a M3U playlist generated in the browser
@@ -95,6 +110,7 @@ Stream.Placeholder = StreamPlaceholder;
 
 Stream.propTypes = {
     className: PropTypes.string,
+    videoId: PropTypes.string,
     addonName: PropTypes.string,
     name: PropTypes.string,
     description: PropTypes.string,

@@ -12,7 +12,7 @@ const styles = require('./styles');
 
 const ALL_ADDONS_KEY = 'ALL';
 
-const StreamsList = ({ className, ...props }) => {
+const StreamsList = ({ className, video, ...props }) => {
     const { t } = useTranslation();
     const { core } = useServices();
     const [selectedAddon, setSelectedAddon] = React.useState(ALL_ADDONS_KEY);
@@ -105,6 +105,7 @@ const StreamsList = ({ className, ...props }) => {
                                     {filteredStreams.map((stream, index) => (
                                         <Stream
                                             key={index}
+                                            videoId={video?.id}
                                             addonName={stream.addonName}
                                             name={stream.name}
                                             description={stream.description}
@@ -119,7 +120,7 @@ const StreamsList = ({ className, ...props }) => {
             }
             <Button className={styles['install-button-container']} title={t('ADDON_CATALOGUE_MORE')} href={'#/addons'}>
                 <Icon className={styles['icon']} icon={'ic_addons'} />
-                <div className={styles['label']}>{ t('ADDON_CATALOGUE_MORE') }</div>
+                <div className={styles['label']}>{t('ADDON_CATALOGUE_MORE')}</div>
             </Button>
         </div>
     );
@@ -127,7 +128,8 @@ const StreamsList = ({ className, ...props }) => {
 
 StreamsList.propTypes = {
     className: PropTypes.string,
-    streams: PropTypes.arrayOf(PropTypes.object).isRequired
+    streams: PropTypes.arrayOf(PropTypes.object).isRequired,
+    video: PropTypes.object
 };
 
 module.exports = StreamsList;

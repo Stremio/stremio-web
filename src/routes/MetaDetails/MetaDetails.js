@@ -150,6 +150,7 @@ const MetaDetails = ({ urlParams, queryParams }) => {
                         <StreamsList
                             className={styles['streams-list']}
                             streams={metaDetails.streams}
+                            video={video}
                         />
                         :
                         metaPath !== null ?
