@@ -10,29 +10,30 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 0;
+    border-radius: var(--border-radius);
 
     &:focus {
         outline: none;
-        background-color: @color-surface-light5-20;
+        background-color: var(--primary-overlay-color);
     }
 
-    .checkbox-icon {
-        flex: none;
-        width: 1.2rem;
-        height: 1.2rem;
-        color: @color-surface-dark5;
+    &:global(.checked) {
+        .label {
+            opacity: 1;
+        }
     }
 
     .label {
         flex: 1;
-        margin-left: 0.5rem;
+        margin-left: 1rem;
         font-size: 0.9rem;
-        color: @color-surface-90;
+        color: var(--primary-foreground-color);
+        opacity: 0.6;
 
         .link {
             font-size: 0.9rem;
-            color: @color-surface-light5-90;
+            color: var(--primary-accent-color);
 
             &:hover {
                 text-decoration: underline;
