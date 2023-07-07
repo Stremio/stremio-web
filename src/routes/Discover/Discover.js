@@ -19,7 +19,12 @@ const Discover = ({ urlParams, queryParams }) => {
     const [inputsModalOpen, openInputsModal, closeInputsModal] = useBinaryState(false);
     const [addonModalOpen, openAddonModal, closeAddonModal] = useBinaryState(false);
     const [selectedMetaItemIndex, setSelectedMetaItemIndex] = React.useState(0);
-    const metasContainerRef = React.useRef(null);
+    const metasContainerRef = React.useRef();
+    React.useEffect(() => {
+        if (discover.catalog?.content.type === 'Loading') {
+            metasContainerRef.current.scrollTop = 0;
+        }
+    }, [discover.catalog]);
     const selectedMetaItem = React.useMemo(() => {
         return discover.catalog !== null &&
             discover.catalog.content.type === 'Ready' &&
@@ -76,11 +81,6 @@ const Discover = ({ urlParams, queryParams }) => {
         closeAddonModal();
         setSelectedMetaItemIndex(0);
     }, [discover.selected]);
-    const scrollUpOnChange = React.useCallback((onSelect, event) => {
-        if ((metasContainerRef || {}).current || {})
-            metasContainerRef.current.scrollTo(0, 0);
-        onSelect(event);
-    }, []);
     return (
         <MainNavBars className={styles['discover-container']} route={'discover'}>
             <div className={styles['discover-content']}>
@@ -94,7 +94,7 @@ const Discover = ({ urlParams, queryParams }) => {
                                 options={options}
                                 selected={selected}
                                 renderLabelText={renderLabelText}
-                                onSelect={scrollUpOnChange.bind(null, onSelect)}
+                                onSelect={onSelect}
                             />
                         ))}
                         <Button className={styles['filter-container']} title={'All filters'} onClick={openInputsModal}>
@@ -128,7 +128,7 @@ const Discover = ({ urlParams, queryParams }) => {
                                 </div>
                                 :
                                 discover.catalog.content.type === 'Loading' ?
-                                    <div className={classnames(styles['meta-items-container'], 'animation-fade-in')}>
+                                    <div ref={metasContainerRef} className={classnames(styles['meta-items-container'], 'animation-fade-in')}>
                                         {Array(CONSTANTS.CATALOG_PAGE_SIZE).fill(null).map((_, index) => (
                                             <div key={index} className={styles['meta-item-placeholder']}>
                                                 <div className={styles['poster-container']} />
@@ -139,7 +139,7 @@ const Discover = ({ urlParams, queryParams }) => {
                                         ))}
                                     </div>
                                     :
-                                    <div className={classnames(styles['meta-items-container'], 'animation-fade-in')} ref={metasContainerRef} onScroll={onScroll} onFocusCapture={metaItemsOnFocusCapture}>
+                                    <div ref={metasContainerRef} className={classnames(styles['meta-items-container'], 'animation-fade-in')} onScroll={onScroll} onFocusCapture={metaItemsOnFocusCapture}>
                                         {discover.catalog.content.content.map((metaItem, index) => (
                                             <MetaItem
                                                 key={index}
@@ -192,7 +192,7 @@ const Discover = ({ urlParams, queryParams }) => {
                                 options={options}
                                 selected={selected}
                                 renderLabelText={renderLabelText}
-                                onSelect={scrollUpOnChange.bind(null, onSelect)}
+                                onSelect={onSelect}
                             />
                         ))}
                     </ModalDialog>
