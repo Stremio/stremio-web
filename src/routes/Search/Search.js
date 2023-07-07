@@ -55,7 +55,7 @@ const Search = ({ queryParams }) => {
                                 <div className={styles['label']}>{ t('SEARCH_EXPLANATION_CONTENT') }</div>
                             </div>
                             <div className={styles['search-hint-container']}>
-                                <Icon className={styles['icon']} name={'actor'} />
+                                <Icon className={styles['icon']} name={'actors'} />
                                 <div className={styles['label']}>{ t('SEARCH_EXPLANATION_PEOPLE') }</div>
                             </div>
                         </div>
