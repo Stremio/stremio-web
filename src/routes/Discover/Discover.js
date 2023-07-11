@@ -170,6 +170,7 @@ const Discover = ({ urlParams, queryParams }) => {
                             released={selectedMetaItem.released}
                             description={selectedMetaItem.description}
                             deepLinks={selectedMetaItem.deepLinks}
+                            links={selectedMetaItem.links}
                             trailerStreams={selectedMetaItem.trailerStreams}
                             inLibrary={selectedMetaItem.inLibrary}
                             toggleInLibrary={selectedMetaItem.inLibrary ? removeFromLibrary : addToLibrary}
