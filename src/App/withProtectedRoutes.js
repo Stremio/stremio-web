@@ -13,7 +13,7 @@ const withProtectedRoutes = (Component) => {
                 window.location = '#/intro';
             }
             previousProfileRef.current = profile;
-        }, [profile])
+        }, [profile]);
         const onRouteChange = React.useCallback((routeConfig) => {
             if (profile.auth !== null && routeConfig.component === Intro) {
                 window.location.replace('#/');
