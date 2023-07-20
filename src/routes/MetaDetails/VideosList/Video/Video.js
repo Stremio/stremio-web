@@ -24,7 +24,7 @@ const Video = ({ className, id, title, thumbnail, episode, released, upcoming, w
     const popupLabelOnContextMenu = React.useCallback((event) => {
         if (!event.nativeEvent.togglePopupPrevented && !event.nativeEvent.ctrlKey) {
             event.preventDefault();
-            if (event.nativeEvent.pointerType === 'mouse' || event.nativeEvent.button === 2) {
+            if (event.nativeEvent.pointerType === 'mouse' || (event.nativeEvent.button === 2 && event.nativeEvent.button === 0)) {
                 toggleMenu();
             }
         }
@@ -173,6 +173,7 @@ const Video = ({ className, id, title, thumbnail, episode, released, upcoming, w
             href={href}
             {...props}
             onClick={popupLabelOnClick}
+            onLongPress={popupLabelOnLongPress}
             onContextMenu={popupLabelOnContextMenu}
             onLongPress={popupLabelOnLongPress}
             open={menuOpen}
