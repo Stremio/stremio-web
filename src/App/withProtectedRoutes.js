@@ -16,7 +16,7 @@ const withProtectedRoutes = (Component) => {
         return (
             <Component {...props} onRouteChange={onRouteChange} />
         );
-    }
+    };
 };
 
 module.exports = withProtectedRoutes;
