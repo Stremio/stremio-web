@@ -175,7 +175,6 @@ const Video = ({ className, id, title, thumbnail, episode, released, upcoming, w
             onClick={popupLabelOnClick}
             onLongPress={popupLabelOnLongPress}
             onContextMenu={popupLabelOnContextMenu}
-            onLongPress={popupLabelOnLongPress}
             open={menuOpen}
             onCloseRequest={closeMenu}
             renderLabel={renderLabel}
