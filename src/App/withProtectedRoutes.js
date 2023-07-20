@@ -7,6 +7,13 @@ const { useProfile } = require('stremio/common');
 const withProtectedRoutes = (Component) => {
     return function withProtectedRoutes(props) {
         const profile = useProfile();
+        const previousProfileRef = React.useRef(null);
+        React.useEffect(() => {
+            if (previousProfileRef.current?.auth !== null && profile.auth === null) {
+                window.location = '#/intro';
+            }
+            previousProfileRef.current = profile;
+        }, [profile])
         const onRouteChange = React.useCallback((routeConfig) => {
             if (profile.auth !== null && routeConfig.component === Intro) {
                 window.location.replace('#/');

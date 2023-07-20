@@ -97,10 +97,6 @@ const App = () => {
     React.useEffect(() => {
         const onCoreEvent = ({ event, args }) => {
             switch (event) {
-                case 'UserLoggedOut': {
-                    window.location = '#/intro';
-                    break;
-                }
                 case 'SettingsUpdated': {
                     if (args && args.settings && typeof args.settings.interfaceLanguage === 'string') {
                         i18n.changeLanguage(args.settings.interfaceLanguage);
