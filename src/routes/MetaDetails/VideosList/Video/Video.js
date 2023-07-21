@@ -15,18 +15,17 @@ const Video = ({ className, id, title, thumbnail, episode, released, upcoming, w
     const { core } = useServices();
     const routeFocused = useRouteFocused();
     const [menuOpen, , closeMenu, toggleMenu] = useBinaryState(false);
-    const popupLabelOnClick = React.useCallback((event) => {
-        if (!event.nativeEvent.togglePopupPrevented && event.nativeEvent.ctrlKey) {
-            event.preventDefault();
-            toggleMenu();
+    const popupLabelOnMouseUp = React.useCallback((event) => {
+        if (!event.nativeEvent.togglePopupPrevented) {
+            if (event.nativeEvent.ctrlKey || event.nativeEvent.button === 2) {
+                event.preventDefault();
+                toggleMenu();
+            }
         }
     }, []);
     const popupLabelOnContextMenu = React.useCallback((event) => {
         if (!event.nativeEvent.togglePopupPrevented && !event.nativeEvent.ctrlKey) {
             event.preventDefault();
-            if (event.nativeEvent.pointerType === 'mouse') {
-                toggleMenu();
-            }
         }
     }, [toggleMenu]);
     const popupLabelOnLongPress = React.useCallback((event) => {
@@ -172,7 +171,7 @@ const Video = ({ className, id, title, thumbnail, episode, released, upcoming, w
             scheduled={scheduled}
             href={href}
             {...props}
-            onClick={popupLabelOnClick}
+            onMouseUp={popupLabelOnMouseUp}
             onLongPress={popupLabelOnLongPress}
             onContextMenu={popupLabelOnContextMenu}
             open={menuOpen}
