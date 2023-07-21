@@ -7,12 +7,12 @@ const { useProfile } = require('stremio/common');
 const withProtectedRoutes = (Component) => {
     return function withProtectedRoutes(props) {
         const profile = useProfile();
-        const previousProfileRef = React.useRef(null);
+        const previousAuthRef = React.useRef(profile.auth);
         React.useEffect(() => {
-            if (previousProfileRef.current?.auth !== null && profile.auth === null) {
+            if (previousAuthRef.current !== null && profile.auth === null) {
                 window.location = '#/intro';
             }
-            previousProfileRef.current = profile;
+            previousAuthRef.current = profile.auth;
         }, [profile]);
         const onRouteChange = React.useCallback((routeConfig) => {
             if (profile.auth !== null && routeConfig.component === Intro) {
