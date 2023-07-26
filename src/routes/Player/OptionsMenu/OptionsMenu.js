@@ -84,7 +84,7 @@ const OptionsMenu = ({ className, stream, playbackDevices }) => {
             {
                 streamingUrl || downloadUrl ?
                     <Option
-                        icon={'ic_downloads'}
+                        icon={'download'}
                         label={t('CTX_DOWNLOAD_VIDEO')}
                         disabled={stream === null}
                         onClick={onDownloadVideoButtonClick}
