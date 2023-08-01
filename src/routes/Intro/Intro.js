@@ -386,9 +386,14 @@ const Intro = ({ queryParams }) => {
                             :
                             null
                     }
-                    <Button className={classnames(styles['form-button'], styles['guest-login-button'])} onClick={loginAsGuest}>
-                        <div className={styles['label']}>GUEST LOGIN</div>
-                    </Button>
+                    {
+                        state.form === SIGNUP_FORM ?
+                            <Button className={classnames(styles['form-button'], styles['guest-login-button'])} onClick={loginAsGuest}>
+                                <div className={styles['label']}>GUEST LOGIN</div>
+                            </Button>
+                            :
+                            null
+                    }
                 </div>
             </div>
             {
