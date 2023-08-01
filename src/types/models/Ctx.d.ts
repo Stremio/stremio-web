@@ -42,16 +42,10 @@ type Profile = {
     settings: Settings,
 };
 
-type VideoNotification = {
-    meta_id: string,
-    video_id: string,
-    video: Video,
-};
-
 type Notifications = {
     uid: string,
     created: string,
-    items: Record<string, VideoNotification[]>,
+    items: Record<string, Video[]>,
 };
 
 type Ctx = {
