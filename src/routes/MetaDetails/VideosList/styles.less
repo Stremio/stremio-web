@@ -6,6 +6,7 @@
 .videos-list-container {
     display: flex;
     flex-direction: column;
+    padding-top: 0.5rem;
 
     .message-container {
         flex: 1;
@@ -35,9 +36,22 @@
         }
     }
 
+    .notifications-checkbox {
+        flex: none;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 1rem;
+        height: 3rem;
+        padding: 0 1.5rem;
+        color: @color-surface-light5-90;
+    }
+
     .seasons-bar {
         flex: none;
         align-self: stretch;
+        margin: 0.5rem 1rem 1rem 1rem;
     }
 
     .search-bar {
