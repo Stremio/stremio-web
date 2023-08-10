@@ -144,12 +144,6 @@ const Intro = ({ queryParams }) => {
             dispatch({ type: 'error', error: 'You must accept the Terms of Service' });
             return;
         }
-        core.transport.dispatch({
-            action: 'Ctx',
-            args: {
-                action: 'Logout'
-            }
-        });
         window.location = '#/';
     }, [state.termsAccepted]);
     const signup = React.useCallback(() => {

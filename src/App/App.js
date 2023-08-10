@@ -6,13 +6,16 @@ const { useTranslation } = require('react-i18next');
 const { Router } = require('stremio-router');
 const { Core, Shell, Chromecast, DragAndDrop, KeyboardShortcuts, ServicesProvider } = require('stremio/services');
 const { NotFound } = require('stremio/routes');
-const { ToastProvider, CONSTANTS } = require('stremio/common');
+const { ToastProvider, CONSTANTS, withCoreSuspender } = require('stremio/common');
 const ServicesToaster = require('./ServicesToaster');
 const DeepLinkHandler = require('./DeepLinkHandler');
 const DefaultSettingsHandler = require('./DefaultSettingsHandler');
 const ErrorDialog = require('./ErrorDialog');
+const withProtectedRoutes = require('./withProtectedRoutes');
 const routerViewsConfig = require('./routerViewsConfig');
 const styles = require('./styles');
+
+const RouterWithProtectedRoutes = withCoreSuspender(withProtectedRoutes(Router));
 
 const App = () => {
     const { i18n } = useTranslation();
@@ -154,7 +157,7 @@ const App = () => {
                                 <ServicesToaster />
                                 <DeepLinkHandler />
                                 <DefaultSettingsHandler />
-                                <Router
+                                <RouterWithProtectedRoutes
                                     className={styles['router']}
                                     viewsConfig={routerViewsConfig}
                                     onPathNotMatch={onPathNotMatch}
