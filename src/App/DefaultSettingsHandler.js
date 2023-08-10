@@ -5,7 +5,6 @@ const {
     withCoreSuspender,
     useProfile,
 } = require('stremio/common');
-const useProfileSettingsInputs = require('stremio/routes/Settings/useProfileSettingsInputs');
 const { useServices } = require('stremio/services');
 
 const DefaultSettingsHandler = () => {
@@ -13,12 +12,19 @@ const DefaultSettingsHandler = () => {
 
     const profile = useProfile();
 
-    const { streamingServerUrlInput } = useProfileSettingsInputs(profile);
-
     React.useEffect(() => {
         const searchParams = new URLSearchParams(window.location.search);
         if (searchParams.has('streamingServerUrl')) {
-            streamingServerUrlInput.onChange(searchParams.get('streamingServerUrl'));
+            core.transport.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'UpdateSettings',
+                    args: {
+                        ...profile.settings,
+                        streamingServerUrl: searchParams.get('streamingServerUrl')
+                    }
+                }
+            });
             setTimeout(() => {
                 core.transport.dispatch({
                     action: 'StreamingServer',
@@ -26,7 +32,7 @@ const DefaultSettingsHandler = () => {
                         action: 'Reload'
                     }
                 });
-            }, 2000);
+            }, 1000);
         }
     }, []);
 
