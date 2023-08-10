@@ -74,6 +74,13 @@ const LibItem = ({ _id, removable, ...props }) => {
                                 args: _id
                             }
                         });
+                        core.transport.dispatch({
+                            action: 'Ctx',
+                            args: {
+                                action: 'DismissNotificationItem',
+                                args: _id
+                            }
+                        });
                     }
 
                     break;
