@@ -129,6 +129,12 @@ const App = () => {
                     action: 'SyncLibraryWithAPI'
                 }
             });
+            services.core.transport.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'PullNotifications'
+                }
+            });
         };
         if (services.core.active) {
             onWindowFocus();
