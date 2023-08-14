@@ -13,7 +13,7 @@ const useBinaryState = require('stremio/common/useBinaryState');
 const { ICON_FOR_TYPE } = require('stremio/common/CONSTANTS');
 const styles = require('./styles');
 
-const MetaItem = React.memo(({ className, type, name, poster, posterShape, playIcon, progress, options, deepLinks, dataset, optionOnSelect, ...props }) => {
+const MetaItem = React.memo(({ className, type, name, poster, posterShape, playIcon, progress, newVideos, options, deepLinks, dataset, optionOnSelect, ...props }) => {
     const [menuOpen, onMenuOpen, onMenuClose] = useBinaryState(false);
     const href = React.useMemo(() => {
         return deepLinks ?
@@ -89,6 +89,18 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, playI
                         :
                         null
                 }
+                {
+                    newVideos > 0 ?
+                        <div className={styles['new-videos']}>
+                            <div className={styles['layer']} />
+                            <div className={styles['layer']} />
+                            <div className={styles['layer']}>
+                                +{newVideos}
+                            </div>
+                        </div>
+                        :
+                        null
+                }
             </div>
             {
                 (typeof name === 'string' && name.length > 0) || (Array.isArray(options) && options.length > 0) ?
@@ -129,6 +141,7 @@ MetaItem.propTypes = {
     posterShape: PropTypes.oneOf(['poster', 'landscape', 'square']),
     playIcon: PropTypes.bool,
     progress: PropTypes.number,
+    newVideos: PropTypes.number,
     options: PropTypes.array,
     deepLinks: PropTypes.shape({
         metaDetailsVideos: PropTypes.string,
