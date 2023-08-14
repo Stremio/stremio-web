@@ -61,6 +61,17 @@ const MetaDetails = ({ urlParams, queryParams }) => {
             }
         });
     }, [metaDetails]);
+    const toggleNotifications = React.useCallback(() => {
+        if (metaDetails.libraryItem) {
+            core.transport.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'ToggleLibraryItemNotifications',
+                    args: [metaDetails.libraryItem._id, !metaDetails.libraryItem.state.noNotif],
+                }
+            });
+        }
+    }, [metaDetails.libraryItem]);
     const seasonOnSelect = React.useCallback((event) => {
         setSeason(event.value);
     }, [setSeason]);
@@ -157,8 +168,10 @@ const MetaDetails = ({ urlParams, queryParams }) => {
                             <VideosList
                                 className={styles['videos-list']}
                                 metaItem={metaDetails.metaItem}
+                                libraryItem={metaDetails.libraryItem}
                                 season={season}
                                 seasonOnSelect={seasonOnSelect}
+                                toggleNotifications={toggleNotifications}
                             />
                             :
                             null

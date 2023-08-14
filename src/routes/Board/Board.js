@@ -16,7 +16,7 @@ const Board = () => {
     const streamingServer = useStreamingServer();
     const continueWatchingPreview = useContinueWatchingPreview();
     const [board, loadBoardRows] = useBoard();
-    const boardCatalogsOffset = continueWatchingPreview.libraryItems.length > 0 ? 1 : 0;
+    const boardCatalogsOffset = continueWatchingPreview.items.length > 0 ? 1 : 0;
     const scrollContainerRef = React.useRef();
     const onVisibleRangeChange = React.useCallback(() => {
         const range = getVisibleChildrenRange(scrollContainerRef.current);
@@ -41,11 +41,11 @@ const Board = () => {
             <MainNavBars className={styles['board-content-container']} route={'board'}>
                 <div ref={scrollContainerRef} className={styles['board-content']} onScroll={onScroll}>
                     {
-                        continueWatchingPreview.libraryItems.length > 0 ?
+                        continueWatchingPreview.items.length > 0 ?
                             <MetaRow
                                 className={classnames(styles['board-row'], styles['continue-watching-row'], 'animation-fade-in')}
                                 title={t('BOARD_CONTINUE_WATCHING')}
-                                items={continueWatchingPreview.libraryItems}
+                                items={continueWatchingPreview.items}
                                 itemComponent={LibItem}
                                 deepLinks={continueWatchingPreview.deepLinks}
                             />

@@ -42,6 +42,19 @@ type Profile = {
     settings: Settings,
 };
 
+type Notifications = {
+    uid: string,
+    created: string,
+    items: Record<string, NotificationItem[]>,
+};
+
+type NotificationItem = {
+    metaId: string,
+    videoId: string,
+    videoReleased: string,
+}
+
 type Ctx = {
     profile: Profile,
+    notifications: Notifications,
 };
