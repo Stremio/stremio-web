@@ -55,7 +55,7 @@ const Stream = ({ className, videoId, addonName, name, description, thumbnail, p
                     }
                 }
             });
-        } else if (profile.settings.playerType !== 'internal') {
+        } else if (profile.settings.playerType && profile.settings.playerType !== 'internal') {
             markVideoAsWatched();
             toast.show({
                 type: 'success',
