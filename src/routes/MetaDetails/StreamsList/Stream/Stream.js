@@ -123,48 +123,48 @@ Stream.propTypes = {
             fileName: PropTypes.string,
             streaming: PropTypes.string,
             openPlayer: PropTypes.shape({
-                choose: {
+                choose: PropTypes.shape({
                     ios: PropTypes.string,
                     android: PropTypes.string,
                     windows: PropTypes.string,
                     macos: PropTypes.string,
                     linux: PropTypes.string
-                },
-                vlc: {
+                }),
+                vlc: PropTypes.shape({
                     ios: PropTypes.string,
                     android: PropTypes.string,
                     windows: PropTypes.string,
                     macos: PropTypes.string,
                     linux: PropTypes.string
-                },
-                outplayer: {
+                }),
+                outplayer: PropTypes.shape({
                     ios: PropTypes.string,
                     android: PropTypes.string,
                     windows: PropTypes.string,
                     macos: PropTypes.string,
                     linux: PropTypes.string
-                },
-                infuse: {
+                }),
+                infuse: PropTypes.shape({
                     ios: PropTypes.string,
                     android: PropTypes.string,
                     windows: PropTypes.string,
                     macos: PropTypes.string,
                     linux: PropTypes.string
-                },
-                justplayer: {
+                }),
+                justplayer: PropTypes.shape({
                     ios: PropTypes.string,
                     android: PropTypes.string,
                     windows: PropTypes.string,
                     macos: PropTypes.string,
                     linux: PropTypes.string
-                },
-                mxplayer: {
+                }),
+                mxplayer: PropTypes.shape({
                     ios: PropTypes.string,
                     android: PropTypes.string,
                     windows: PropTypes.string,
                     macos: PropTypes.string,
                     linux: PropTypes.string
-                },
+                }),
             })
         })
     }),
