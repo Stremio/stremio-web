@@ -106,6 +106,7 @@ const StreamsList = ({ className, video, ...props }) => {
                                         <Stream
                                             key={index}
                                             videoId={video?.id}
+                                            videoReleased={video?.released}
                                             addonName={stream.addonName}
                                             name={stream.name}
                                             description={stream.description}
