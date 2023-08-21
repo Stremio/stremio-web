@@ -9,7 +9,7 @@ const { useServices } = require('stremio/services');
 const StreamPlaceholder = require('./StreamPlaceholder');
 const styles = require('./styles');
 
-const Stream = ({ className, videoId, addonName, name, description, thumbnail, progress, deepLinks, ...props }) => {
+const Stream = ({ className, videoId, videoReleased, addonName, name, description, thumbnail, progress, deepLinks, ...props }) => {
     const profile = useProfile();
     const streamingServer = useStreamingServer();
     const { core } = useServices();
@@ -35,11 +35,11 @@ const Stream = ({ className, videoId, addonName, name, description, thumbnail, p
                 action: 'MetaDetails',
                 args: {
                     action: 'MarkVideoAsWatched',
-                    args: [videoId, true]
+                    args: [{ id: videoId, released: videoReleased }, true]
                 }
             });
         }
-    }, [videoId]);
+    }, [videoId, videoReleased]);
     const onClick = React.useCallback((event) => {
         if (href === null) {
             // link does not lead to the player, it is expected to
@@ -111,6 +111,7 @@ Stream.Placeholder = StreamPlaceholder;
 Stream.propTypes = {
     className: PropTypes.string,
     videoId: PropTypes.string,
+    videoReleased: PropTypes.instanceOf(Date),
     addonName: PropTypes.string,
     name: PropTypes.string,
     description: PropTypes.string,

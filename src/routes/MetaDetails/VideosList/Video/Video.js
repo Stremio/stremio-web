@@ -52,10 +52,10 @@ const Video = ({ className, id, title, thumbnail, episode, released, upcoming, w
             action: 'MetaDetails',
             args: {
                 action: 'MarkVideoAsWatched',
-                args: [id, !watched]
+                args: [{ id, released }, !watched]
             }
         });
-    }, [id, watched]);
+    }, [id, released, watched]);
     const href = React.useMemo(() => {
         return deepLinks ?
             typeof deepLinks.player === 'string' ?
