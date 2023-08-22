@@ -53,12 +53,12 @@
                 &.selected {
                     font-weight: 600;
                     color: var(--primary-foreground-color);
-                    background-color: var(--primary-overlay-color);
+                    background-color: var(--overlay-color);
                     opacity: 1;
                 }
 
                 &:hover {
-                    background-color: var(--primary-overlay-color);
+                    background-color: var(--overlay-color);
                 }
             }
 
@@ -69,7 +69,7 @@
             .version-info-label {
                 flex: 0 1 auto;
                 margin: 0.5rem 0;
-                color: var(--primary-overlay-color);
+                color: var(--overlay-color);
             }
         }
 
@@ -86,7 +86,7 @@
                 overflow: visible;
 
                 &:not(:last-child) {
-                    border-bottom: thin solid var(--primary-overlay-color);
+                    border-bottom: thin solid var(--overlay-color);
                 }
 
                 .section-title {
@@ -181,7 +181,7 @@
                             height: 3.5rem;
                             border-radius: 3.5rem;
                             margin-left: 1rem;
-                            background-color: var(--primary-overlay-color);
+                            background-color: var(--overlay-color);
 
                             &:hover {
                                 outline: var(--focus-outline-size) solid var(--primary-foreground-color);
@@ -235,7 +235,7 @@
                             justify-content: center;
                             height: 3.5rem;
                             border-radius: 3.5rem;
-                            background-color: var(--primary-overlay-color);
+                            background-color: var(--overlay-color);
 
                             &:hover {
                                 outline: var(--focus-outline-size) solid var(--primary-foreground-color);
@@ -318,7 +318,7 @@
                                 flex-direction: row;
                                 align-items: center;
                                 justify-content: center;
-                                background-color: var(--primary-overlay-color);
+                                background-color: var(--overlay-color);
 
                                 &:hover {
                                     outline: var(--focus-outline-size) solid var(--primary-foreground-color);
@@ -349,8 +349,8 @@
                                 font-weight: 500;
                                 color: var(--primary-foreground-color);
                                 border-radius: 0.25em;
-                                box-shadow: 0 4px 0 1px var(--tertiary-background-color);
-                                background-color: var(--primary-overlay-color);
+                                box-shadow: 0 4px 0 1px var(--modal-background-color);
+                                background-color: var(--overlay-color);
                             }
 
                             .label {
@@ -375,8 +375,8 @@
             padding: 1rem;
             color: var(--primary-foreground-color);
             border-radius: var(--border-radius);
-            background-color: var(--primary-overlay-color);
-            outline: var(--focus-outline-size) solid var(--primary-overlay-color);
+            background-color: var(--overlay-color);
+            outline: var(--focus-outline-size) solid var(--overlay-color);
             outline-offset: calc(-1 * var(--focus-outline-size));
 
             &:hover {

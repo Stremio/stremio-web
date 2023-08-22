@@ -28,13 +28,13 @@
     --color-placeholder-background: @color-surface-dark5-20;
     --primary-background-color: rgba(12, 11, 17, 1);
     --secondary-background-color: rgba(26, 23, 62, 1);
-    --tertiary-background-color: rgba(15, 13, 32, 1);
     --primary-foreground-color: rgba(255, 255, 255, 0.9);
     --secondary-foreground-color: rgb(12, 11, 17, 1);
-    --primary-overlay-color: rgba(255, 255, 255, 0.05);
     --primary-accent-color: rgb(123, 91, 245);
     --secondary-accent-color: rgba(34, 179, 101, 1);
     --tertiary-accent-color: rgba(246, 199, 0, 1);
+    --overlay-color: rgba(255, 255, 255, 0.05);
+    --modal-background-color: rgba(15, 13, 32, 1);
     --border-radius: 0.75rem;
 }
 
@@ -55,7 +55,7 @@
     overflow: hidden;
     word-break: break-word;
     scrollbar-width: thin;
-    scrollbar-color: var(--primary-overlay-color) transparent;
+    scrollbar-color: var(--overlay-color) transparent;
 }
 
 ::-webkit-scrollbar {
@@ -65,7 +65,7 @@
 
 ::-webkit-scrollbar-thumb {
     border-radius: var(--scroll-bar-size);
-    background-color: var(--primary-overlay-color);
+    background-color: var(--overlay-color);
 
     &:hover {
         background-color: var(--primary-accent-color);

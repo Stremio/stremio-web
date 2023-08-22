@@ -46,18 +46,6 @@
         left: -10px;
         z-index: -1;
 
-        &::after {
-            position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            z-index: 1;
-            background: var(--tertiary-background-color);
-            opacity: 0.8;
-            content: "";
-        }
-
         .background-image {
             display: block;
             width: 100%;
@@ -65,6 +53,7 @@
             object-fit: cover;
             object-position: center;
             filter: blur(10px);
+            opacity: 0.3;
         }
     }
 
