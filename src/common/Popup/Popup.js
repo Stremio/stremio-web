@@ -1,4 +1,4 @@
-// Copyright (C) 2017-2022 Smart code 203358507
+// Copyright (C) 2017-2023 Smart code 203358507
 
 const React = require('react');
 const PropTypes = require('prop-types');
@@ -47,16 +47,23 @@ const Popup = ({ open, direction, renderLabel, renderMenu, dataset, onCloseReque
                             onCloseRequest(closeEvent);
                         }
                         break;
+                    case 'pointerdown':
+                        if (event.target !== document.documentElement && !labelRef.current.contains(event.target)) {
+                            onCloseRequest(closeEvent);
+                        }
+                        break;
                 }
             }
         };
         if (routeFocused && open) {
             window.addEventListener('keydown', onCloseEvent);
             window.addEventListener('mousedown', onCloseEvent);
+            window.addEventListener('pointerdown', onCloseEvent);
         }
         return () => {
             window.removeEventListener('keydown', onCloseEvent);
             window.removeEventListener('mousedown', onCloseEvent);
+            window.removeEventListener('pointerdown', onCloseEvent);
         };
     }, [routeFocused, open, onCloseRequest, dataset]);
     React.useLayoutEffect(() => {

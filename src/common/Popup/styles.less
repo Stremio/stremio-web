@@ -1,8 +1,12 @@
-// Copyright (C) 2017-2022 Smart code 203358507
+// Copyright (C) 2017-2023 Smart code 203358507
 
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
 
 .label-container {
+    // IOS specific 
+    // prevents showing the default context-menu when long pressing an anchor in safari.
+    -webkit-touch-callout: none !important;
+
     position: relative;
     overflow: visible;
 

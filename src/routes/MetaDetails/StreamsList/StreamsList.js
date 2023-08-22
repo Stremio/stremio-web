@@ -1,4 +1,4 @@
-// Copyright (C) 2017-2022 Smart code 203358507
+// Copyright (C) 2017-2023 Smart code 203358507
 
 const React = require('react');
 const PropTypes = require('prop-types');
@@ -12,7 +12,7 @@ const styles = require('./styles');
 
 const ALL_ADDONS_KEY = 'ALL';
 
-const StreamsList = ({ className, ...props }) => {
+const StreamsList = ({ className, video, ...props }) => {
     const { t } = useTranslation();
     const { core } = useServices();
     const [selectedAddon, setSelectedAddon] = React.useState(ALL_ADDONS_KEY);
@@ -105,6 +105,8 @@ const StreamsList = ({ className, ...props }) => {
                                     {filteredStreams.map((stream, index) => (
                                         <Stream
                                             key={index}
+                                            videoId={video?.id}
+                                            videoReleased={video?.released}
                                             addonName={stream.addonName}
                                             name={stream.name}
                                             description={stream.description}
@@ -127,7 +129,8 @@ const StreamsList = ({ className, ...props }) => {
 
 StreamsList.propTypes = {
     className: PropTypes.string,
-    streams: PropTypes.arrayOf(PropTypes.object).isRequired
+    streams: PropTypes.arrayOf(PropTypes.object).isRequired,
+    video: PropTypes.object
 };
 
 module.exports = StreamsList;

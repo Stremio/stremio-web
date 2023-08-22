@@ -1,8 +1,9 @@
-// Copyright (C) 2017-2022 Smart code 203358507
+// Copyright (C) 2017-2023 Smart code 203358507
 
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
+const { t } = require('i18next');
 const { useServices } = require('stremio/services');
 const { useRouteFocused } = require('stremio-router');
 const { default: Icon } = require('@stremio/stremio-icons/react');
@@ -14,26 +15,35 @@ const Video = ({ className, id, title, thumbnail, episode, released, upcoming, w
     const { core } = useServices();
     const routeFocused = useRouteFocused();
     const [menuOpen, , closeMenu, toggleMenu] = useBinaryState(false);
-    const popupLabelOnClick = React.useCallback((event) => {
-        if (!event.nativeEvent.togglePopupPrevented && event.nativeEvent.ctrlKey) {
-            event.preventDefault();
-            toggleMenu();
+    const popupLabelOnMouseUp = React.useCallback((event) => {
+        if (!event.nativeEvent.togglePopupPrevented) {
+            if (event.nativeEvent.ctrlKey || event.nativeEvent.button === 2) {
+                event.preventDefault();
+                toggleMenu();
+            }
         }
-    }, []);
-    const popupLabelOnKeyDown = React.useCallback((event) => {
-        event.nativeEvent.buttonClickPrevented = true;
     }, []);
     const popupLabelOnContextMenu = React.useCallback((event) => {
         if (!event.nativeEvent.togglePopupPrevented && !event.nativeEvent.ctrlKey) {
             event.preventDefault();
+        }
+    }, [toggleMenu]);
+    const popupLabelOnLongPress = React.useCallback((event) => {
+        if (event.nativeEvent.pointerType !== 'mouse' && !event.nativeEvent.togglePopupPrevented) {
             toggleMenu();
         }
     }, [toggleMenu]);
+    const popupMenuOnPointerDown = React.useCallback((event) => {
+        event.nativeEvent.togglePopupPrevented = true;
+    }, []);
     const popupMenuOnContextMenu = React.useCallback((event) => {
         event.nativeEvent.togglePopupPrevented = true;
     }, []);
     const popupMenuOnClick = React.useCallback((event) => {
         event.nativeEvent.togglePopupPrevented = true;
+    }, []);
+    const popupMenuOnKeyDown = React.useCallback((event) => {
+        event.nativeEvent.buttonClickPrevented = true;
     }, []);
     const toggleWatchedOnClick = React.useCallback((event) => {
         event.preventDefault();
@@ -42,10 +52,10 @@ const Video = ({ className, id, title, thumbnail, episode, released, upcoming, w
             action: 'MetaDetails',
             args: {
                 action: 'MarkVideoAsWatched',
-                args: [id, !watched]
+                args: [{ id, released }, !watched]
             }
         });
-    }, [id, watched]);
+    }, [id, released, watched]);
     const href = React.useMemo(() => {
         return deepLinks ?
             typeof deepLinks.player === 'string' ?
@@ -133,12 +143,12 @@ const Video = ({ className, id, title, thumbnail, episode, released, upcoming, w
     }, []);
     const renderMenu = React.useMemo(() => function renderMenu() {
         return (
-            <div className={styles['context-menu-content']} onContextMenu={popupMenuOnContextMenu} onClick={popupMenuOnClick}>
+            <div className={styles['context-menu-content']} onPointerDown={popupMenuOnPointerDown} onContextMenu={popupMenuOnContextMenu} onClick={popupMenuOnClick} onKeyDown={popupMenuOnKeyDown}>
                 <Button className={styles['context-menu-option-container']} title={'Watch'}>
-                    <div className={styles['context-menu-option-label']}>Watch</div>
+                    <div className={styles['context-menu-option-label']}>{t('CTX_WATCH')}</div>
                 </Button>
                 <Button className={styles['context-menu-option-container']} title={watched ? 'Mark as non-watched' : 'Mark as watched'} onClick={toggleWatchedOnClick}>
-                    <div className={styles['context-menu-option-label']}>{watched ? 'Mark as non-watched' : 'Mark as watched'}</div>
+                    <div className={styles['context-menu-option-label']}>{watched ? t('CTX_MARK_NON_WATCHED') : t('CTX_MARK_WATCHED')}</div>
                 </Button>
             </div>
         );
@@ -162,8 +172,8 @@ const Video = ({ className, id, title, thumbnail, episode, released, upcoming, w
             scheduled={scheduled}
             href={href}
             {...props}
-            onClick={popupLabelOnClick}
-            onKeyDown={popupLabelOnKeyDown}
+            onMouseUp={popupLabelOnMouseUp}
+            onLongPress={popupLabelOnLongPress}
             onContextMenu={popupLabelOnContextMenu}
             open={menuOpen}
             onCloseRequest={closeMenu}

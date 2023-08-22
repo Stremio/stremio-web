@@ -1,4 +1,4 @@
-// Copyright (C) 2017-2022 Smart code 203358507
+// Copyright (C) 2017-2023 Smart code 203358507
 
 const AddonDetailsModal = require('./AddonDetailsModal');
 const Button = require('./Button');
@@ -36,6 +36,7 @@ const useBinaryState = require('./useBinaryState');
 const useFullscreen = require('./useFullscreen');
 const useLiveRef = require('./useLiveRef');
 const useModelState = require('./useModelState');
+const useNotifications = require('./useNotifications');
 const useOnScrollToBottom = require('./useOnScrollToBottom');
 const useProfile = require('./useProfile');
 const useStreamingServer = require('./useStreamingServer');
@@ -83,6 +84,7 @@ module.exports = {
     useFullscreen,
     useLiveRef,
     useModelState,
+    useNotifications,
     useOnScrollToBottom,
     useProfile,
     useStreamingServer,

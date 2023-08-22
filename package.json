@@ -15,7 +15,7 @@
         "@babel/runtime": "7.16.0",
         "@sentry/browser": "6.13.3",
         "@stremio/stremio-colors": "5.0.1",
-        "@stremio/stremio-core-web": "0.44.18",
+        "@stremio/stremio-core-web": "0.44.22",
         "@stremio/stremio-icons": "5.0.0-beta.3",
         "@stremio/stremio-video": "0.0.24",
         "a-color-picker": "1.2.1",
@@ -38,9 +38,10 @@
         "react-focus-lock": "2.9.1",
         "react-i18next": "^12.1.1",
         "react-is": "18.2.0",
-        "spatial-navigation-polyfill": "git+https://git@github.com/Stremio/spatial-navigation.git#64871b1422466f5f45d24ebc8bbd315b2ebab6a6",
-        "stremio-translations": "git+https://git@github.com/Stremio/stremio-translations.git#92675658de92113c5888cf5e57003e468e8b8c9c",
-        "url": "0.11.0"
+        "spatial-navigation-polyfill": "https://github.com/Stremio/spatial-navigation.git#64871b1422466f5f45d24ebc8bbd315b2ebab6a6",
+        "stremio-translations": "https://github.com/Stremio/stremio-translations.git#35911ab6fbe83c34dc57268686fd9e0257d796b3",
+        "url": "0.11.0",
+        "use-long-press": "^3.1.5"
     },
     "devDependencies": {
         "@babel/core": "7.16.0",

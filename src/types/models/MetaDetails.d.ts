@@ -14,6 +14,7 @@ type MetaDetails = {
         addon: Addon,
         content: Loadable<MetaItemMetaDetails>,
     } | null,
+    libraryItem: LibraryItem | null,
     selected: {
         metaPath: ResourceRequestPath,
         streamPath: ResourceRequestPath,

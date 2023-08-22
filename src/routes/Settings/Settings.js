@@ -1,4 +1,4 @@
-// Copyright (C) 2017-2022 Smart code 203358507
+// Copyright (C) 2017-2023 Smart code 203358507
 
 const React = require('react');
 const classnames = require('classnames');
@@ -222,7 +222,7 @@ const Settings = () => {
                                 </div>
                                 {
                                     profile.auth !== null ?
-                                        <Button className={styles['logout-button-container']} title={ t('LOG_OUT') } href={'#/intro'} onClick={logoutButtonOnClick}>
+                                        <Button className={styles['logout-button-container']} title={ t('LOG_OUT') } onClick={logoutButtonOnClick}>
                                             <div className={styles['logout-label']}>{ t('LOG_OUT') }</div>
                                         </Button>
                                         :
@@ -236,7 +236,7 @@ const Settings = () => {
                         {
                             profile.auth === null ?
                                 <div className={styles['option-container']}>
-                                    <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={`${t('LOG_IN')} / ${t('SIGN_UP')}`} href={'#/intro'} onClick={logoutButtonOnClick}>
+                                    <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={`${t('LOG_IN')} / ${t('SIGN_UP')}`} href={'#/intro'}>
                                         <div className={styles['label']}>{ t('LOG_IN') } / { t('SIGN_UP') }</div>
                                     </Button>
                                 </div>

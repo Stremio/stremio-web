@@ -1,4 +1,4 @@
-// Copyright (C) 2017-2022 Smart code 203358507
+// Copyright (C) 2017-2023 Smart code 203358507
 
 const React = require('react');
 const PropTypes = require('prop-types');
@@ -61,6 +61,17 @@ const MetaDetails = ({ urlParams, queryParams }) => {
             }
         });
     }, [metaDetails]);
+    const toggleNotifications = React.useCallback(() => {
+        if (metaDetails.libraryItem) {
+            core.transport.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'ToggleLibraryItemNotifications',
+                    args: [metaDetails.libraryItem._id, !metaDetails.libraryItem.state.noNotif],
+                }
+            });
+        }
+    }, [metaDetails.libraryItem]);
     const seasonOnSelect = React.useCallback((event) => {
         setSeason(event.value);
     }, [setSeason]);
@@ -150,14 +161,17 @@ const MetaDetails = ({ urlParams, queryParams }) => {
                         <StreamsList
                             className={styles['streams-list']}
                             streams={metaDetails.streams}
+                            video={video}
                         />
                         :
                         metaPath !== null ?
                             <VideosList
                                 className={styles['videos-list']}
                                 metaItem={metaDetails.metaItem}
+                                libraryItem={metaDetails.libraryItem}
                                 season={season}
                                 seasonOnSelect={seasonOnSelect}
+                                toggleNotifications={toggleNotifications}
                             />
                             :
                             null
