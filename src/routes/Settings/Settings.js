@@ -202,32 +202,34 @@ const Settings = () => {
                 <div ref={sectionsContainerRef} className={styles['sections-container']} onScroll={sectionsContainerOnScorll}>
                     <div ref={generalSectionRef} className={styles['section-container']}>
                         <div className={classnames(styles['option-container'], styles['user-info-option-container'])}>
-                            <div
-                                className={styles['avatar-container']}
-                                style={{
-                                    backgroundImage: profile.auth === null ?
-                                        `url('${require('/images/anonymous.png')}')`
-                                        :
-                                        profile.auth.user.avatar ?
-                                            `url('${profile.auth.user.avatar}')`
+                            <div className={styles['user-info-content']}>
+                                <div
+                                    className={styles['avatar-container']}
+                                    style={{
+                                        backgroundImage: profile.auth === null ?
+                                            `url('${require('/images/anonymous.png')}')`
                                             :
-                                            `url('${require('/images/default_avatar.png')}')`
-                                }}
-                            />
-                            <div className={styles['email-logout-container']}>
-                                <div className={styles['email-label-container']} title={profile.auth === null ? 'Anonymous user' : profile.auth.user.email}>
-                                    <div className={styles['email-label']}>
-                                        {profile.auth === null ? 'Anonymous user' : profile.auth.user.email}
+                                            profile.auth.user.avatar ?
+                                                `url('${profile.auth.user.avatar}')`
+                                                :
+                                                `url('${require('/images/default_avatar.png')}')`
+                                    }}
+                                />
+                                <div className={styles['email-logout-container']}>
+                                    <div className={styles['email-label-container']} title={profile.auth === null ? 'Anonymous user' : profile.auth.user.email}>
+                                        <div className={styles['email-label']}>
+                                            {profile.auth === null ? 'Anonymous user' : profile.auth.user.email}
+                                        </div>
                                     </div>
+                                    {
+                                        profile.auth !== null ?
+                                            <Button className={styles['logout-button-container']} title={ t('LOG_OUT') } onClick={logoutButtonOnClick}>
+                                                <div className={styles['logout-label']}>{ t('LOG_OUT') }</div>
+                                            </Button>
+                                            :
+                                            null
+                                    }
                                 </div>
-                                {
-                                    profile.auth !== null ?
-                                        <Button className={styles['logout-button-container']} title={ t('LOG_OUT') } onClick={logoutButtonOnClick}>
-                                            <div className={styles['logout-label']}>{ t('LOG_OUT') }</div>
-                                        </Button>
-                                        :
-                                        null
-                                }
                             </div>
                             <Button className={styles['user-panel-container']} title={'User panel'} target={'_blank'} href={'https://www.stremio.com/acc-settings'}>
                                 <div className={styles['user-panel-label']}>{ t('USER_PANEL') }</div>
