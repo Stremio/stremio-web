@@ -61,7 +61,7 @@ const Library = ({ model, urlParams, queryParams }) => {
                                 paginationInput !== null ?
                                     <PaginationInput {...paginationInput} className={styles['pagination-input']} />
                                     :
-                                    <PaginationInput label={'1'} className={classnames(styles['pagination-input'], styles['pagination-input-placeholder'])} />
+                                    null
                             }
                             <Button className={styles['filter-container']} title={'All filters'} onClick={openInputsModal}>
                                 <Icon className={styles['filter-icon']} name={'filters'} />
