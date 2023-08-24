@@ -409,12 +409,23 @@
     }
 }
 
+@media only screen and (max-width: @xsmall) {
+    .settings-container {
+        .settings-content {
+            .side-menu-container {
+                display: none;
+            }
+        }
+    }
+}
+
 @media only screen and (max-width: @minimum) {
     .settings-container {
         .settings-content {
             flex-direction: column-reverse;
 
             .side-menu-container {
+                display: flex;
                 width: 100%;
                 padding: 0 1rem;
 
