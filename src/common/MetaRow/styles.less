@@ -12,13 +12,14 @@
         align-items: center;
         justify-content: flex-end;
         padding: 0 1rem;
-        margin-bottom: 1rem;
+        margin-bottom: 0.25rem;
 
         .title-container {
             flex: 1;
             max-height: 2.4em;
-            font-size: 1.8rem;
-            color: @color-secondaryvariant2-light1-90;
+            font-size: 1.6rem;
+            font-weight: 500;
+            color: var(--primary-foreground-color);
         }
 
         .see-all-container {
@@ -27,46 +28,40 @@
             flex-direction: row;
             align-items: center;
             max-width: 12rem;
-            padding: 0.2rem;
+            height: 2.5rem;
+            padding: 0 0.5rem 0 1rem;
+            border-radius: 2.5rem;
+            opacity: 0.6;
 
-            &:focus {
+            &:hover, &:focus {
                 outline: none;
-                background-color: @color-background-light3;
-            }
-
-            &:hover {
-                .label {
-                    color: @color-secondaryvariant2-light2-90;
-                }
-
-                .icon {
-                    fill: @color-secondaryvariant2-light2-90;
-                }
+                background-color: var(--overlay-color);
+                opacity: 1;
             }
 
             .label {
                 flex: 0 1 auto;
                 max-height: 1.2em;
-                font-size: 1.3rem;
+                font-size: 1rem;
                 font-weight: 500;
-                text-transform: uppercase;
-                color: @color-secondaryvariant2-light1-90;
+                color: var(--primary-foreground-color);
             }
 
             .icon {
                 flex: none;
-                height: 1.3rem;
+                height: 1.5rem;
                 margin-left: 0.5rem;
-                fill: @color-secondaryvariant2-light1-90;
+                color: var(--primary-foreground-color);
             }
         }
     }
 
     .message-container {
         max-height: 3.6em;
-        padding: 0 1rem;
+        padding: 0 0.5rem;
         font-size: 1.3rem;
-        color: @color-secondaryvariant2-light1-90;
+        color: var(--primary-foreground-color);
+        opacity: 0.6;
     }
 
     .meta-items-container {
@@ -76,10 +71,6 @@
         overflow: visible;
 
         .meta-item {
-            &:not(:first-child) {
-                margin-left: 0.5rem;
-            }
-
             &.poster-shape-poster {
                 flex: calc(1 / var(--poster-shape-ratio));
             }

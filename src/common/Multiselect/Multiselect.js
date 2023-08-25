@@ -3,7 +3,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const Icon = require('@stremio/stremio-icons/dom');
+const { default: Icon } = require('@stremio/stremio-icons/react');
 const Button = require('stremio/common/Button');
 const Popup = require('stremio/common/Popup');
 const ModalDialog = require('stremio/common/ModalDialog');
@@ -104,7 +104,7 @@ const Multiselect = ({ className, mode, direction, title, disabled, dataset, ren
                                         title
                             }
                         </div>
-                        <Icon className={styles['icon']} icon={'ic_arrow_thin_down'} />
+                        <Icon className={styles['icon']} name={'caret-down'} />
                     </React.Fragment>
             }
             {children}

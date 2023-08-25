@@ -12,34 +12,14 @@
     flex-direction: row;
     align-items: center;
 
-    &:hover, &:global(.active) {
-        .slider:not(:global(.disabled)) {
-            .slider-thumb {
-                fill: @color-surface-light5;
-            }
-        }
-    }
-
-    &:hover {
-        .slider:not(:global(.disabled)) {
-            .slider-track-after {
-                transition: background-color 0s 100ms;
-            }
-
-            .slider-thumb {
-                transition: fill 0s 100ms;
-            }
-        }
-    }
-
     .label {
         flex: none;
-        max-width: 5rem;
+        width: 5rem;
         white-space: nowrap;
         text-overflow: ellipsis;
         direction: rtl;
-        text-align: left;
-        color: @color-surface-light5;
+        text-align: center;
+        color: var(--primary-foreground-color);
     }
 
     .slider {
@@ -47,8 +27,12 @@
         align-self: stretch;
         margin: 0 var(--thumb-size);
 
+        .slider-track-after {
+            background-color: var(--primary-accent-color);
+        }
+
         .slider-thumb {
-            fill: transparent;
+            fill: var(--primary-accent-color);
         }
     }
 }

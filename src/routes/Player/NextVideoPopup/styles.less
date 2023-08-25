@@ -26,7 +26,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        background-color: @color-background;
+        background-color: var(--overlay-color);
 
         .poster-image {
             flex: none;
@@ -40,7 +40,7 @@
             flex: none;
             width: 80%;
             height: 50%;
-            fill: @color-background-light3-90;
+            color: var(--primary-foreground-color);
         }
     }
 
@@ -57,13 +57,14 @@
                 flex: none;
                 align-self: stretch;
                 max-height: 2.4em;
-                font-weight: 600;
+                font-weight: 700;
                 margin-bottom: 0.5rem;
-                color: @color-surface-light5-90;
+                color: var(--primary-foreground-color);
             }
 
             .description {
-                color: @color-surface-light5-50;
+                color: var(--primary-foreground-color);
+                opacity: 0.5;
             }
         }
 
@@ -84,18 +85,20 @@
                 height: 3.5rem;
 
                 &.play-button {
-                    background-color: @color-accent3;
+                    border-radius: 0 0 var(--border-radius) 0;
+                    background-color: var(--secondary-accent-color);
 
                     .icon {
-                        fill: @color-surface-light5-90;
+                        color: var(--primary-foreground-color);
                     }
 
                     .label {
-                        color: @color-surface-light5-90;
+                        color: var(--primary-foreground-color);
                     }
 
-                    &:hover, &:focus {
-                        background-color: @color-accent3-light1;
+                    &:hover {
+                        outline: var(--focus-outline-size) solid var(--secondary-accent-color);
+                        background-color: transparent;
                     }
                 }
 
@@ -104,7 +107,7 @@
                     width: 1.4rem;
                     height: 1.4rem;
                     margin-right: 1rem;
-                    fill: @color-secondaryvariant1-90;
+                    color: var(--primary-foreground-color);
                 }
 
                 .label {
@@ -112,11 +115,11 @@
                     max-height: 2.4em;
                     font-size: 1.1rem;
                     font-weight: 500;
-                    color: @color-secondaryvariant1-90;
+                    color: var(--primary-foreground-color);
                 }
 
                 &:hover, &:focus {
-                    background-color: @color-background-light2;
+                    background-color: var(--overlay-color);
                 }
             }
         }

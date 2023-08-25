@@ -3,7 +3,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const Icon = require('@stremio/stremio-icons/dom');
+const { default: Icon } = require('@stremio/stremio-icons/react');
 const { Button, Image, PlayIconCircleCentered, useProfile, platform, useStreamingServer, useToast } = require('stremio/common');
 const { useServices } = require('stremio/services');
 const StreamPlaceholder = require('./StreamPlaceholder');
@@ -73,7 +73,7 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
         return href === deepLinks.externalPlayer.href ? deepLinks.externalPlayer.fileName : false;
     }, [href]);
     const renderThumbnailFallback = React.useCallback(() => (
-        <Icon className={styles['placeholder-icon']} icon={'ic_broken_link'} />
+        <Icon className={styles['placeholder-icon']} name={'ic_broken_link'} />
     ), []);
     return (
         <Button href={href} download={forceDownload} {...props} onClick={onClick} className={classnames(className, styles['stream-container'])} title={addonName}>

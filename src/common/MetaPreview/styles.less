@@ -13,12 +13,11 @@
         .meta-info-container {
             .logo, .logo-placeholder {
                 width: 100%;
-                height: 8rem;
-                background-color: @color-surface-dark5-10;
+                height: 6rem;
             }
 
             .runtime-release-info-container {
-                justify-content: space-evenly;
+                justify-content: space-between;
 
                 .runtime-label, .release-info-label {
                     margin: 1rem 0.4rem;
@@ -31,8 +30,7 @@
         }
 
         .action-buttons-container {
-            justify-content: space-evenly;
-            padding: 0;
+            justify-content: space-between;
 
             .action-button:not(:last-child) {
                 margin-right: 0;
@@ -48,32 +46,20 @@
         left: -10px;
         z-index: -1;
 
-        &::after {
-            position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            z-index: 1;
-            background: @color-background-dark2-60;
-            content: "";
-        }
-
         .background-image {
             display: block;
             width: 100%;
             height: 100%;
             object-fit: cover;
             object-position: center;
-            opacity: 0.9;
-            filter: blur(5px);
+            filter: blur(10px);
+            opacity: 0.3;
         }
     }
 
     .meta-info-container {
         flex: 1;
         align-self: stretch;
-        padding: 0 2rem;
         overflow-y: auto;
 
         &:not(:hover) {
@@ -87,11 +73,11 @@
         .logo, .logo-placeholder {
             display: block;
             max-width: 100%;
-            margin: 2rem 0;
+            margin-bottom: 2rem;
         }
 
         .logo {
-            height: 8rem;
+            height: 9rem;
             object-fit: contain;
             object-position: center;
         }
@@ -110,10 +96,10 @@
 
             .runtime-label, .release-info-label {
                 flex: 0 1 auto;
-                margin-right: 2rem;
-                margin-bottom: 0.5rem;
-                font-size: 1.4rem;
-                color: @color-surface-light5-90;
+                margin-right: 3rem;
+                font-size: 1.25rem;
+                font-weight: 600;
+                color: var(--primary-foreground-color);
             }
 
             .imdb-button-container {
@@ -121,55 +107,41 @@
                 display: flex;
                 flex-direction: row;
                 align-items: center;
-                margin-bottom: 0.5rem;
-                padding: 0.3rem 1rem;
                 border-radius: 2.5rem;
-                border: var(--focus-outline-size) solid transparent;
-                background-color: @color-surface-light5-20;
-
-                &:hover, &:focus {
-                    background-color: @color-surface-light5-30;
-                }
 
                 &:focus {
                     outline: none;
                     border: var(--focus-outline-size) solid @color-surface-light5;
                 }
 
+                .label {
+                    flex: 0 1 auto;
+                    margin-right: 1rem;
+                    font-size: 1.25rem;
+                    font-weight: 600;
+                    color: var(--primary-foreground-color);
+                }
+
                 .icon {
                     flex: none;
                     width: 3rem;
-                    height: 1.1rem;
-                    margin-right: 1rem;
-                    fill: @color-surface-90;
-                }
-
-                .label {
-                    flex: 0 1 auto;
-                    max-height: 1.2em;
-                    font-size: 1.6rem;
-                    font-weight: 500;
-                    color: @color-surface-light5-90;
+                    height: 3rem;
+                    color: var(--color-imdb);
                 }
             }
-        }
-
-        .name-container {
-            margin-top: 1rem;
-            font-size: 1.5rem;
-            color: @color-surface-light5-90;
         }
 
         .description-container {
             max-height: 6em;
             margin-top: 1rem;
-            font-size: 1.1rem;
-            line-height: 1.5em;
-            color: @color-surface-light5-90;
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 2em;
+            color: var(--primary-foreground-color);
         }
 
         .meta-links {
-            margin-top: 1rem;
+            margin-top: 1.5rem;
         }
     }
 
@@ -180,16 +152,21 @@
         flex-direction: row;
         flex-wrap: wrap;
         max-height: 10rem;
-        padding: 0 2rem;
 
         .action-button {
             flex: none;
-            width: 6rem;
-            height: 6rem;
-            margin: 2rem 0;
+            width: 4rem;
+            height: 4rem;
+            margin-bottom: 1rem;
+
+            &:global(.wide) {
+                width: auto;
+                padding: 0 2rem;
+                border-radius: 4rem;
+            }
 
             &:not(:last-child) {
-                margin-right: 2rem;
+                margin-right: 1rem;
             }
         }
     }
@@ -202,32 +179,27 @@
 @media only screen and (max-width: @minimum) {
     .meta-preview-container {
         .meta-info-container {
-            padding: 0 1.5rem;
-
             .logo {
-                margin: 1em 0;
+                margin: 2rem auto;
+            }
+
+            .runtime-release-info-container {
+                justify-content: space-between;
+
+                .runtime-label, .release-info-label {
+                    margin: 0;
+                }
             }
         }
 
         .action-buttons-container {
             flex-wrap: nowrap;
-            padding: 0 1.5rem;
+            margin-top: 3rem;
             overflow-x: visible;
             scrollbar-width: none;
 
             &::-webkit-scrollbar {
                 display: none;
-            }
-
-            .action-button {
-                width: auto;
-                height: 4rem;
-                max-width: 60%;
-                margin: 1rem 0;
-
-                &:not(:last-child) {
-                    margin-right: 1rem;
-                }
             }
         }
     }

@@ -12,6 +12,8 @@
     nav-bar-icon: icon;
 }
 
+@background-color: rgba(0, 0, 0, 1);
+
 html:not(.active-slider-within) {
     .player-container.immersed {
         cursor: none;
@@ -28,7 +30,7 @@ html:not(.active-slider-within) {
     z-index: 0;
     width: 100%;
     height: 100%;
-    background-color: @color-background-dark5;
+    background-color: @background-color;
 
     .layer {
         position: absolute;
@@ -43,14 +45,14 @@ html:not(.active-slider-within) {
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background-color: @color-background-dark5;
+            background-color: @background-color;
 
             .error-label {
                 flex: 0 1 auto;
                 padding: 0 8rem;
                 max-height: 4.8em;
                 font-size: 2rem;
-                color: @color-surface-light5-90;
+                color: var(--primary-foreground-color);
                 text-align: center;
             }
 
@@ -60,7 +62,7 @@ html:not(.active-slider-within) {
                 max-height: 4.8em;
                 font-size: 1.3rem;
                 margin-top: 0.8rem;
-                color: @color-surface-light5-90;
+                color: var(--primary-foreground-color);
                 text-align: center;            
             }
 
@@ -70,13 +72,14 @@ html:not(.active-slider-within) {
                 flex-direction: row;
                 align-items: center;
                 height: 3.5rem;
-                max-width: 16rem;
+                border-radius: 3.5rem;
                 margin-top: 1.5rem;
-                padding: 0.5rem 1rem;
-                background-color: @color-accent3;
+                padding: 0 2rem;
+                background-color: var(--secondary-accent-color);
 
-                &:hover, &:focus {
-                    background-color: @color-accent3-light1;
+                &:hover {
+                    outline: var(--focus-outline-size) solid var(--secondary-accent-color);
+                    background-color: transparent;
                 }
 
                 .icon {
@@ -84,7 +87,7 @@ html:not(.active-slider-within) {
                     width: 1.5rem;
                     height: 1.5rem;
                     margin-right: 1rem;
-                    fill: @color-surface-light5-90;
+                    color: var(--primary-foreground-color);
                 }
 
                 .label {
@@ -92,7 +95,7 @@ html:not(.active-slider-within) {
                     max-height: 2.4em;
                     font-size: 1.1rem;
                     font-weight: 500;
-                    color: @color-surface-light5-90;
+                    color: var(--primary-foreground-color);
                     text-align: center;
                 }
             }
@@ -119,12 +122,12 @@ html:not(.active-slider-within) {
                 }
 
                 .nav-bar-icon {
-                    fill: @color-surface-light5;
+                    color: var(--primary-foreground-color);
                 }
             }
 
             .nav-bar-title {
-                color: @color-surface-light5;
+                color: var(--primary-foreground-color);
             }
         }
 
@@ -150,9 +153,11 @@ html:not(.active-slider-within) {
             bottom: 8rem;
             max-height: calc(100% - 13.5rem);
             max-width: calc(100% - 4rem);
-            background-color: @color-background-dark1;
+            border-radius: var(--border-radius);
+            background-color: var(--modal-background-color);
             box-shadow: 0 1.35rem 2.7rem @color-background-dark5-40,
                 0 1.1rem 0.85rem @color-background-dark5-20;
+            backdrop-filter: blur(15px);
             overflow: auto;
         }
     }

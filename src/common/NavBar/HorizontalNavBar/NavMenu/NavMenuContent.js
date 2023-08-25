@@ -4,7 +4,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { useTranslation } = require('react-i18next');
-const Icon = require('@stremio/stremio-icons/dom');
+const { default: Icon } = require('@stremio/stremio-icons/react');
 const { useServices } = require('stremio/services');
 const Button = require('stremio/common/Button');
 const useFullscreen = require('stremio/common/useFullscreen');
@@ -50,34 +50,36 @@ const NavMenuContent = ({ onClick }) => {
                                 `url('${require('/images/default_avatar.png')}')`
                     }}
                 />
-                <div className={styles['email-container']}>
-                    <div className={styles['email-label']}>{profile.auth === null ? t('ANONYMOUS_USER') : profile.auth.user.email}</div>
+                <div className={styles['user-info-details']}>
+                    <div className={styles['email-container']}>
+                        <div className={styles['email-label']}>{profile.auth === null ? t('ANONYMOUS_USER') : profile.auth.user.email}</div>
+                    </div>
+                    <Button className={styles['logout-button-container']} title={profile.auth === null ? `${t('LOG_IN')} / ${t('SIGN_UP')}` : t('LOG_OUT')} href={profile.auth === null ? '#/intro' : null} onClick={profile.auth !== null ? logoutButtonOnClick : null}>
+                        <div className={styles['logout-label']}>{profile.auth === null ? `${t('LOG_IN')} / ${t('SIGN_UP')}` : t('LOG_OUT')}</div>
+                    </Button>
                 </div>
-                <Button className={styles['logout-button-container']} title={profile.auth === null ? `${t('LOG_IN')} / ${t('SIGN_UP')}` : t('LOG_OUT')} href={profile.auth === null ? '#/intro' : null} onClick={profile.auth !== null ? logoutButtonOnClick : null}>
-                    <div className={styles['logout-label']}>{profile.auth === null ? `${t('LOG_IN')} / ${t('SIGN_UP')}` : t('LOG_OUT')}</div>
-                </Button>
             </div>
             <div className={styles['nav-menu-section']}>
                 <Button className={styles['nav-menu-option-container']} title={fullscreen ? t('EXIT_FULLSCREEN') : t('ENTER_FULLSCREEN')} onClick={fullscreen ? exitFullscreen : requestFullscreen}>
-                    <Icon className={styles['icon']} icon={fullscreen ? 'ic_exit_fullscreen' : 'ic_fullscreen'} />
+                    <Icon className={styles['icon']} name={fullscreen ? 'minimize' : 'maximize'} />
                     <div className={styles['nav-menu-option-label']}>{fullscreen ? t('EXIT_FULLSCREEN') : t('ENTER_FULLSCREEN')}</div>
                 </Button>
             </div>
             <div className={styles['nav-menu-section']}>
                 <Button className={styles['nav-menu-option-container']} title={ t('SETTINGS') } href={'#/settings'}>
-                    <Icon className={styles['icon']} icon={'ic_settings'} />
+                    <Icon className={styles['icon']} name={'settings'} />
                     <div className={styles['nav-menu-option-label']}>{ t('SETTINGS') }</div>
                 </Button>
                 <Button className={styles['nav-menu-option-container']} title={ t('ADDONS') } href={'#/addons'}>
-                    <Icon className={styles['icon']} icon={'ic_addons'} />
+                    <Icon className={styles['icon']} name={'addons'} />
                     <div className={styles['nav-menu-option-label']}>{ t('ADDONS') }</div>
                 </Button>
                 <Button className={styles['nav-menu-option-container']} title={ t('PLAY_URL_MAGNET_LINK') } onClick={onPlayMagnetLinkClick}>
-                    <Icon className={styles['icon']} icon={'ic_magnet'} />
+                    <Icon className={styles['icon']} name={'magnet-link'} />
                     <div className={styles['nav-menu-option-label']}>{ t('PLAY_URL_MAGNET_LINK') }</div>
                 </Button>
                 <Button className={styles['nav-menu-option-container']} title={ t('HELP_FEEDBACK') } href={'https://stremio.zendesk.com/'} target={'_blank'}>
-                    <Icon className={styles['icon']} icon={'ic_help'} />
+                    <Icon className={styles['icon']} name={'help'} />
                     <div className={styles['nav-menu-option-label']}>{ t('HELP_FEEDBACK') }</div>
                 </Button>
             </div>

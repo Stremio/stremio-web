@@ -4,100 +4,94 @@
 @import (reference) '~stremio/common/screen-sizes.less';
 
 .nav-menu-container {
-    width: 20rem;
+    width: 22rem;
     max-height: calc(100vh - var(--horizontal-nav-bar-size));
     overflow-y: auto;
-    background-color: @color-background-dark1;
+    border-radius: var(--border-radius);
+    background-color: var(--modal-background-color);
 
     .user-info-container {
-        display: grid;
-        height: 7rem;
-        grid-template-columns: 7rem 1fr;
-        grid-template-rows: 50% 50%;
-        grid-template-areas:
-            "avatar-area email-area"
-            "avatar-area logout-button-area";
+        display: flex;
+        padding: 1.5rem 1rem;
 
         .avatar-container {
-            grid-area: avatar-area;
-            padding: 1rem;
+            flex: none;
+            height: 4rem;
+            width: 4rem;
             border-radius: 50%;
             background-size: cover;
             background-repeat: no-repeat;
             background-position: center;
             background-origin: content-box;
             background-clip: content-box;
+            background-color: var(--primary-foreground-color);
             opacity: 0.9;
         }
 
-        .email-container {
-            grid-area: email-area;
+        .user-info-details {
+            flex: auto;
             display: flex;
-            flex-direction: row;
-            align-items: center;
-            padding: 1rem 1rem 0 0;
+            flex-direction: column;
+            justify-content: center;
+            margin-left: 1rem;
 
-            .email-label {
-                flex: 1;
-                max-height: 2.4em;
-                color: @color-surface-light5-90;
-            }
-        }
+            .email-container {
+                flex: none;
+                margin-bottom: 0.5rem;
 
-        .logout-button-container {
-            grid-area: logout-button-area;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            padding: 0 1rem 1rem 0;
-
-            &:hover, &:focus {
-                outline: none;
-
-                .logout-label {
-                    color: @color-surface-light5-90;
-                    text-decoration: underline;
+                .email-label {
+                    flex: 1;
+                    color: var(--primary-foreground-color);
                 }
             }
 
-            .logout-label {
-                flex: 1;
-                max-height: 2.4em;
-                color: @color-surface-light3-90;
+            .logout-button-container {
+                flex: none;
+
+                &:hover, &:focus {
+                    outline: none;
+
+                    .logout-label {
+                        text-decoration: underline;
+                    }
+                }
+
+                .logout-label {
+                    flex: 1;
+                    font-size: 0.9rem;
+                    font-weight: 500;
+                    color: var(--primary-foreground-color);
+                }
             }
         }
     }
 
     .nav-menu-section {
-        border-top: thin solid @color-surface-light5-20;
+        border-top: thin solid var(--overlay-color);
 
         .nav-menu-option-container {
             display: flex;
             flex-direction: row;
             align-items: center;
             height: 4rem;
+            padding: 0 1.5rem;
 
             &:hover {
-                background-color: @color-background-light2;
+                background-color: var(--overlay-color);
             }
 
             .icon {
                 flex: none;
-                width: 1.4rem;
-                height: 1.4rem;
-                margin: 1.3rem;
-                fill: @color-secondaryvariant2-light1-90;
+                width: 2rem;
+                height: 2rem;
+                margin-right: 1rem;
+                color: var(--primary-foreground-color);
+                opacity: 0.3;
             }
 
             .nav-menu-option-label {
                 flex: 1;
-                max-height: 2.4em;
-                padding-right: 1.3rem;
-                color: @color-surface-light5-90;
-
-                &:only-child {
-                    padding-left: 1.3rem;
-                }
+                color: var(--primary-foreground-color);
             }
         }
     }

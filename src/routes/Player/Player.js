@@ -9,7 +9,7 @@ const { useTranslation } = require('react-i18next');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
 const { HorizontalNavBar, Button, useFullscreen, useBinaryState, useToast, useStreamingServer, withCoreSuspender } = require('stremio/common');
-const Icon = require('@stremio/stremio-icons/dom');
+const { default: Icon } = require('@stremio/stremio-icons/react');
 const BufferingLoader = require('./BufferingLoader');
 const ControlBar = require('./ControlBar');
 const NextVideoPopup = require('./NextVideoPopup');
@@ -653,7 +653,7 @@ const Player = ({ urlParams, queryParams }) => {
                         {
                             player.selected !== null ?
                                 <Button className={styles['playlist-button']} title={t('PLAYER_OPEN_IN_EXTERNAL')} href={player.selected.stream.deepLinks.externalPlayer.href} download={player.selected.stream.deepLinks.externalPlayer.fileName} target={'_blank'}>
-                                    <Icon className={styles['icon']} icon={'ic_downloads'} />
+                                    <Icon className={styles['icon']} name={'ic_downloads'} />
                                     <div className={styles['label']}>{t('PLAYER_OPEN_IN_EXTERNAL')}</div>
                                 </Button>
                                 :

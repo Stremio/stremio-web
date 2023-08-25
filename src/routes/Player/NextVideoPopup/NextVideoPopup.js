@@ -3,7 +3,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const Icon = require('@stremio/stremio-icons/dom');
+const { default: Icon } = require('@stremio/stremio-icons/react');
 const { Image, Button, CONSTANTS } = require('stremio/common');
 const styles = require('./styles');
 
@@ -26,7 +26,7 @@ const NextVideoPopup = ({ className, metaItem, nextVideo, onDismiss, onPlayNextV
         return metaItem !== null && typeof metaItem.type === 'string' ?
             <Icon
                 className={styles['placeholder-icon']}
-                icon={CONSTANTS.ICON_FOR_TYPE.has(metaItem.type) ? CONSTANTS.ICON_FOR_TYPE.get(metaItem.type) : CONSTANTS.ICON_FOR_TYPE.get('other')}
+                name={CONSTANTS.ICON_FOR_TYPE.has(metaItem.type) ? CONSTANTS.ICON_FOR_TYPE.get(metaItem.type) : CONSTANTS.ICON_FOR_TYPE.get('other')}
             />
             :
             null;
@@ -78,11 +78,11 @@ const NextVideoPopup = ({ className, metaItem, nextVideo, onDismiss, onPlayNextV
                 </div>
                 <div className={styles['buttons-container']}>
                     <Button className={styles['button-container']} onClick={onDismissButtonClick}>
-                        <Icon className={styles['icon']} icon={'ic_x'} />
+                        <Icon className={styles['icon']} name={'close'} />
                         <div className={styles['label']}>Dismiss</div>
                     </Button>
                     <Button ref={watchNowButtonRef} className={classnames(styles['button-container'], styles['play-button'])} onClick={onWatchNowButtonClick}>
-                        <Icon className={styles['icon']} icon={'ic_play'} />
+                        <Icon className={styles['icon']} name={'play'} />
                         <div className={styles['label']}>Watch Now</div>
                     </Button>
                 </div>

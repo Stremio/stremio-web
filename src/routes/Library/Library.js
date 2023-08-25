@@ -3,7 +3,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const Icon = require('@stremio/stremio-icons/dom');
+const { default: Icon } = require('@stremio/stremio-icons/react');
 const NotFound = require('stremio/routes/NotFound');
 const { Button, DelayedRenderer, Multiselect, MainNavBars, LibItem, Image, ModalDialog, PaginationInput, useProfile, routesRegexp, useBinaryState, withCoreSuspender } = require('stremio/common');
 const useLibrary = require('./useLibrary');
@@ -61,10 +61,10 @@ const Library = ({ model, urlParams, queryParams }) => {
                                 paginationInput !== null ?
                                     <PaginationInput {...paginationInput} className={styles['pagination-input']} />
                                     :
-                                    <PaginationInput label={'1'} className={classnames(styles['pagination-input'], styles['pagination-input-placeholder'])} />
+                                    null
                             }
                             <Button className={styles['filter-container']} title={'All filters'} onClick={openInputsModal}>
-                                <Icon className={styles['filter-icon']} icon={'ic_filter'} />
+                                <Icon className={styles['filter-icon']} name={'filters'} />
                             </Button>
                         </div>
                         :
@@ -78,10 +78,10 @@ const Library = ({ model, urlParams, queryParams }) => {
                                 src={require('/images/anonymous.png')}
                                 alt={' '}
                             />
+                            <div className={styles['message-label']}>Library is only available for logged in users!</div>
                             <Button className={styles['login-button-container']} href={'#/intro'}>
                                 <div className={styles['label']}>LOG IN</div>
                             </Button>
-                            <div className={styles['message-label']}>Library is only available for logged in users!</div>
                         </div>
                         :
                         library.selected === null ?

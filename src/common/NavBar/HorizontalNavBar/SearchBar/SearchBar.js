@@ -4,7 +4,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { useTranslation } = require('react-i18next');
-const Icon = require('@stremio/stremio-icons/dom');
+const { default: Icon } = require('@stremio/stremio-icons/react');
 const { useRouteFocused } = require('stremio-router');
 const Button = require('stremio/common/Button');
 const TextInput = require('stremio/common/TextInput');
@@ -60,7 +60,7 @@ const SearchBar = ({ className, query, active }) => {
                     </div>
             }
             <Button className={styles['submit-button-container']} tabIndex={-1} onClick={queryInputOnSubmit}>
-                <Icon className={styles['icon']} icon={'ic_search_link'} />
+                <Icon className={styles['icon']} name={'search'} />
             </Button>
         </label>
     );
@@ -80,7 +80,7 @@ const SearchBarFallback = ({ className }) => {
                 <div className={styles['placeholder-label']}>{ t('SEARCH_OR_PASTE_LINK') }</div>
             </div>
             <Button className={styles['submit-button-container']} tabIndex={-1}>
-                <Icon className={styles['icon']} icon={'ic_search_link'} />
+                <Icon className={styles['icon']} name={'search'} />
             </Button>
         </label>
     );

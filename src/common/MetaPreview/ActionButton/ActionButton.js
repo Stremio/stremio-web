@@ -3,17 +3,17 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const Icon = require('@stremio/stremio-icons/dom');
+const { default: Icon } = require('@stremio/stremio-icons/react');
 const Button = require('stremio/common/Button');
 const styles = require('./styles');
 
 const ActionButton = ({ className, icon, label, ...props }) => {
     return (
-        <Button title={label} {...props} className={classnames(className, styles['action-button-container'])}>
+        <Button title={label} {...props} className={classnames(className, styles['action-button-container'], { 'wide': typeof label === 'string' })}>
             {
                 typeof icon === 'string' && icon.length > 0 ?
                     <div className={styles['icon-container']}>
-                        <Icon className={styles['icon']} icon={icon} />
+                        <Icon className={styles['icon']} name={icon} />
                     </div>
                     :
                     null

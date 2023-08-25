@@ -10,38 +10,24 @@
     .addon-details-container, .addon-details-message-container {
         width: 40rem;
         max-width: 100%;
-    }
-
-    .install-button, .uninstall-button, .cancel-button {
-        .label {
-            font-size: 1.2rem;
-            font-weight: 500;
-        }
-    }
-
-    .uninstall-button, .cancel-button {
-        &:focus {
-            outline-color: @color-background-dark5;
-        }
+        color: var(--primary-foreground-color);
     }
 
     .cancel-button {
         background-color: transparent;
+        opacity: 0.3;
 
         &:hover {
-            background-color: @color-surface-light3;
+            outline: var(--focus-outline-size) solid var(--primary-foreground-color);
+            opacity: 1;
         }
 
-        .label {
-            color: @color-surface-dark2;
+        &:focus {
+            outline-color: var(--primary-foreground-color);
         }
-    }
 
-    .uninstall-button {
-        background-color: @color-accent2;
-
-        &:hover {
-            background-color: @color-accent2-light2;
+        .cancel-button-label {
+            color: var(--primary-foreground-color);
         }
     }
 }

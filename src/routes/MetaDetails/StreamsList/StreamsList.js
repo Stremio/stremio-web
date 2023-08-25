@@ -4,7 +4,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { useTranslation } = require('react-i18next');
-const Icon = require('@stremio/stremio-icons/dom');
+const { default: Icon } = require('@stremio/stremio-icons/react');
 const { Button, Image, Multiselect } = require('stremio/common');
 const { useServices } = require('stremio/services');
 const Stream = require('./Stream');
@@ -120,8 +120,8 @@ const StreamsList = ({ className, video, ...props }) => {
                             </React.Fragment>
             }
             <Button className={styles['install-button-container']} title={t('ADDON_CATALOGUE_MORE')} href={'#/addons'}>
-                <Icon className={styles['icon']} icon={'ic_addons'} />
-                <div className={styles['label']}>{t('ADDON_CATALOGUE_MORE')}</div>
+                <Icon className={styles['icon']} name={'addons'} />
+                <div className={styles['label']}>{ t('ADDON_CATALOGUE_MORE') }</div>
             </Button>
         </div>
     );

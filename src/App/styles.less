@@ -1,8 +1,12 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
-@import (inline, once, css) '~stremio/common/roboto.css';
 @import (reference) '~stremio/common/screen-sizes.less';
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
+
+@font-face {
+    font-family: 'PlusJakartaSans';
+    src: url('/fonts/PlusJakartaSans.ttf') format('truetype');
+}
 
 :global {
     @import (once, less) '~stremio/common/animations.less';
@@ -13,14 +17,25 @@
     --landscape-shape-ratio: 0.5625;
     --poster-shape-ratio: 1.464;
     --scroll-bar-size: 6px;
-    --horizontal-nav-bar-size: 4rem;
-    --vertical-nav-bar-size: 5.2rem;
+    --horizontal-nav-bar-size: 5.5rem;
+    --vertical-nav-bar-size: 6rem;
     --focus-outline-size: 2px;
-    --color-facebook: #4267b2;
+    --color-facebook: #1877F1;
     --color-twitter: #1DA1F2;
+    --color-imdb: #f5c518;
     --color-placeholder: #60606080;
     --color-placeholder-text: @color-surface-50;
     --color-placeholder-background: @color-surface-dark5-20;
+    --primary-background-color: rgba(12, 11, 17, 1);
+    --secondary-background-color: rgba(26, 23, 62, 1);
+    --primary-foreground-color: rgba(255, 255, 255, 0.9);
+    --secondary-foreground-color: rgb(12, 11, 17, 1);
+    --primary-accent-color: rgb(123, 91, 245);
+    --secondary-accent-color: rgba(34, 179, 101, 1);
+    --tertiary-accent-color: rgba(246, 199, 0, 1);
+    --overlay-color: rgba(255, 255, 255, 0.05);
+    --modal-background-color: rgba(15, 13, 32, 1);
+    --border-radius: 0.75rem;
 }
 
 * {
@@ -28,7 +43,6 @@
     padding: 0;
     box-sizing: border-box;
     font-size: 1rem;
-    line-height: 1.2em;
     font-family: inherit;
     border: none;
     outline: none;
@@ -41,7 +55,7 @@
     overflow: hidden;
     word-break: break-word;
     scrollbar-width: thin;
-    scrollbar-color: @color-secondaryvariant2-light1 @color-background-dark2;
+    scrollbar-color: var(--overlay-color) transparent;
 }
 
 ::-webkit-scrollbar {
@@ -50,15 +64,16 @@
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: @color-secondaryvariant2-light1;
+    border-radius: var(--scroll-bar-size);
+    background-color: var(--overlay-color);
 
     &:hover {
-        background-color: @color-secondaryvariant2-light2;
+        background-color: var(--primary-accent-color);
     }
 }
 
 ::-webkit-scrollbar-track {
-    background-color: @color-background-dark2;
+    background-color: transparent;
 }
 
 svg {
@@ -70,12 +85,13 @@ html {
     height: 100%;
     min-width: 640px;
     min-height: 480px;
-    font-family: 'Roboto', 'sans-serif';
+    font-family: 'PlusJakartaSans', 'sans-serif';
     overflow: auto;
 
     body {
         width: 100%;
         height: 100%;
+        background: linear-gradient(41deg, var(--primary-background-color) 0%, var(--secondary-background-color) 100%);
 
         :global(#app) {
             position: relative;

@@ -5,7 +5,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const UrlUtils = require('url');
 const { useTranslation } = require('react-i18next');
-const Icon = require('@stremio/stremio-icons/dom');
+const { default: Icon } = require('@stremio/stremio-icons/react');
 const Button = require('stremio/common/Button');
 const Image = require('stremio/common/Image');
 const ModalDialog = require('stremio/common/ModalDialog');
@@ -147,20 +147,12 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                                         target={'_blank'}
                                         {...(compact ? { tabIndex: -1 } : null)}
                                     >
-                                        <Icon className={styles['icon']} icon={'ic_imdbnoframe'} />
                                         <div className={styles['label']}>{linksGroups.get(CONSTANTS.IMDB_LINK_CATEGORY).label}</div>
+                                        <Icon className={styles['icon']} name={'imdb'} />
                                     </Button>
                                     :
                                     null
                             }
-                        </div>
-                        :
-                        null
-                }
-                {
-                    compact && typeof name === 'string' && name.length > 0 ?
-                        <div className={styles['name-container']}>
-                            {name}
                         </div>
                         :
                         null
@@ -193,8 +185,8 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                     typeof toggleInLibrary === 'function' ?
                         <ActionButton
                             className={styles['action-button']}
-                            icon={inLibrary ? 'ic_removelib' : 'ic_addlib'}
-                            label={inLibrary ? t('REMOVE_FROM_LIB') : t('ADD_TO_LIB')}
+                            icon={inLibrary ? 'remove-from-library' : 'add-to-library'}
+                            label={compact ? null : inLibrary ? t('REMOVE_FROM_LIB') : t('ADD_TO_LIB')}
                             tabIndex={compact ? -1 : 0}
                             onClick={toggleInLibrary}
                         />
@@ -205,8 +197,8 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                     typeof trailerHref === 'string' ?
                         <ActionButton
                             className={styles['action-button']}
-                            icon={'ic_movies'}
-                            label={t('TRAILER')}
+                            icon={'trailer'}
+                            label={compact ? null : t('TRAILER')}
                             tabIndex={compact ? -1 : 0}
                             href={trailerHref}
                         />
@@ -217,7 +209,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                     typeof showHref === 'string' && compact ?
                         <ActionButton
                             className={styles['action-button']}
-                            icon={'ic_play'}
+                            icon={'play'}
                             label={t('SHOW')}
                             tabIndex={compact ? -1 : 0}
                             href={showHref}
@@ -230,8 +222,8 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                         <React.Fragment>
                             <ActionButton
                                 className={styles['action-button']}
-                                icon={'ic_share'}
-                                label={t('CTX_SHARE')}
+                                icon={'share'}
+                                tooltip={t('CTX_SHARE')}
                                 tabIndex={compact ? -1 : 0}
                                 onClick={openShareModal}
                             />

@@ -277,8 +277,6 @@ const SubtitlesMenu = React.memo((props) => {
                     }
                     onChange={onSubtitlesOffsetChanged}
                 />
-                <div className={styles['spacing']} />
-                <Button className={classnames(styles['advanced-button'], 'disabled')} title={'Advanced'}>Advanced</Button>
             </div>
         </div>
     );

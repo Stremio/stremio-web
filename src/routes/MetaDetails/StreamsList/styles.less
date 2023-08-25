@@ -37,26 +37,25 @@
             flex: none;
             font-size: 1.4rem;
             text-align: center;
-            color: @color-secondaryvariant2-light1-90;
+            color: var(--primary-foreground-color);
         }
     }
 
     .select-input-container {
         flex: 0 0 auto;
-        height: 3.5rem;
         margin: 1em 1em 0 1em;
         background: none;
 
         &:hover, &:focus, &:global(.active) {
-            background-color: @color-background;
+            background-color: var(--overlay-color);
         }
 
         & >.multiselect-label {
-            color: @color-surface-light5-90;
+            color: var(--primary-foreground-color);
         }
 
         & >.multiselect-icon {
-            fill: @color-surface-light5-90;
+            color: var(--primary-foreground-color);
         }
 
         .multiselect-menu-container {
@@ -66,9 +65,10 @@
     }
 
     .streams-container {
-        flex: 0 1 auto;
+        flex: 1 1 auto;
         align-self: stretch;
         margin-top: 1rem;
+        padding: 0 1rem;
         overflow-y: auto;
     }
 
@@ -81,10 +81,12 @@
         justify-content: center;
         margin: 1rem;
         padding: 1.5rem 1rem;
-        background-color: @color-accent3;
+        border-radius: var(--border-radius);
+        background-color: var(--secondary-accent-color);
 
-        &:hover, &:focus {
-            background-color: @color-accent3-light1;
+        &:hover {
+            outline: var(--focus-outline-size) solid var(--secondary-accent-color);
+            background-color: transparent;
         }
 
         .icon {
@@ -92,16 +94,16 @@
             width: 2rem;
             height: 2rem;
             margin-right: 1rem;
-            fill: @color-surface-light5-90;
+            color: var(--primary-foreground-color);
         }
 
         .label {
             flex: 0 1 auto;
             font-size: 1.5rem;
-            font-weight: 500;
+            font-weight: 700;
             max-height: 3.6em;
             text-align: center;
-            color: @color-surface-light5-90;
+            color: var(--primary-foreground-color);
         }
     }
 }

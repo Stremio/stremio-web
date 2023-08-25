@@ -8,14 +8,14 @@
     flex-direction: row;
     align-items: flex-start;
     padding: 1.5rem;
-    background-color: @color-background;
+    border-radius: var(--border-radius);
+    background-color: var(--overlay-color);
     cursor: inherit;
 
     .logo-container {
         flex: none;
-        width: 6rem;
-        height: 6rem;
-        background-color: @color-background-light1;
+        width: 8rem;
+        height: 8rem;
 
         .logo {
             display: block;
@@ -31,7 +31,7 @@
             width: 100%;
             height: 100%;
             padding: 1rem;
-            fill: @color-secondaryvariant1-light3;
+            color: var(--primary-foreground-color);
         }
     }
 
@@ -52,7 +52,7 @@
             padding: 0 0.5rem;
             max-height: 3.6em;
             font-size: 1.6rem;
-            color: @color-surface-light5-90;
+            color: var(--primary-foreground-color);
         }
 
         .version-container {
@@ -62,7 +62,8 @@
             margin-top: 0.5rem;
             padding: 0 0.5rem;
             max-height: 2.4em;
-            color: @color-surface-light5-60;
+            color: var(--primary-foreground-color);
+            opacity: 0.6;
         }
 
         .types-container {
@@ -72,8 +73,9 @@
             margin-top: 0.5rem;
             padding: 0 0.5rem;
             max-height: 2.4em;
-            color: @color-surface-light5-40;
+            color: var(--primary-foreground-color);
             text-transform: capitalize;
+            opacity: 0.4;
         }
 
         .description-container {
@@ -83,7 +85,7 @@
             margin-top: 0.5rem;
             padding: 0 0.5rem;
             max-height: 4.8em;
-            color: @color-surface-light5-90;
+            color: var(--primary-foreground-color);
         }
     }
 
@@ -109,8 +111,9 @@
             align-items: center;
             justify-content: center;
             gap: 1rem;
-            height: 4rem;
+            height: 3.5rem;
             padding: 0 1rem;
+            border-radius: 4rem;
 
             .icon {
                 flex: none;
@@ -123,68 +126,70 @@
                 flex-shrink: 1;
                 flex-basis: auto;
                 max-height: 2.4em;
-                font-size: 1.2rem;
-                font-weight: 500;
+                font-size: 1.1rem;
+                font-weight: 700;
                 text-align: center;
             }
         }
 
         .install-button-container {
-            background-color: @color-accent3;
+            background-color: var(--secondary-accent-color);
 
             &:hover {
-                background-color: @color-accent3-light2;
+                outline: var(--focus-outline-size) solid var(--secondary-accent-color);
+                background-color: transparent;
             }
 
             .label {
-                color: @color-surface-light5;
+                color: var(--primary-foreground-color)
             }
         }
 
         .configure-button-container {
             flex: none;
-            background-color: @color-accent3;
+            background-color: var(--secondary-accent-color);
 
             &:hover {
-                background-color: @color-accent3-light2;
+                outline: var(--focus-outline-size) solid var(--secondary-accent-color);
+                background-color: transparent;
             }
 
             .icon {
-                fill: @color-surface-light5;
+                color: var(--primary-foreground-color)
             }
         }
 
         .uninstall-button-container {
-            outline-color: @color-background-light3;
+            outline-color: var(--primary-foreground-color);
             outline-style: solid;
+            opacity: 0.3;
 
             &:hover {
-                background-color: @color-background-light2;
+                opacity: 1;
             }
 
             .label {
-                color: @color-surface-light5-90;
+                color: var(--primary-foreground-color);
             }
         }
 
         .share-button-container {
-            &:hover {
-                .icon {
-                    fill: @color-secondaryvariant1-light1;
-                }
+            opacity: 0.9;
 
+            &:hover {
                 .label {
                     text-decoration: underline;
-                    color: @color-secondaryvariant1-light2;
                 }
             }
 
             .icon {
-                fill: @color-secondaryvariant1-dark1-60;
+                height: 1.5rem;
+                width: 1.5rem;
+                color: var(--primary-foreground-color);
             }
 
             .label {
-                color: @color-secondaryvariant1-90;
+                color: var(--primary-foreground-color);
             }
         }
     }

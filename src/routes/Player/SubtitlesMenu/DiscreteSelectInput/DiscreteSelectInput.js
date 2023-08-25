@@ -3,7 +3,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const Icon = require('@stremio/stremio-icons/dom');
+const { default: Icon } = require('@stremio/stremio-icons/react');
 const { Button } = require('stremio/common');
 const styles = require('./styles');
 
@@ -24,11 +24,11 @@ const DiscreteSelectInput = ({ className, value, label, disabled, dataset, onCha
             <div className={styles['header']}>{label}</div>
             <div className={styles['input-container']} title={disabled ? `${label} is not configurable` : null}>
                 <Button className={classnames(styles['button-container'], { 'disabled': disabled })} data-type={'decrement'} onClick={buttonOnClick}>
-                    <Icon className={styles['icon']} icon={'ic_minus'} />
+                    <Icon className={styles['icon']} name={'remove'} />
                 </Button>
                 <div className={styles['option-label']} title={value}>{value}</div>
                 <Button className={classnames(styles['button-container'], { 'disabled': disabled })} data-type={'increment'} onClick={buttonOnClick}>
-                    <Icon className={styles['icon']} icon={'ic_plus'} />
+                    <Icon className={styles['icon']} name={'add'} />
                 </Button>
             </div>
         </div>

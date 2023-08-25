@@ -7,11 +7,11 @@ const { VerticalNavBar, HorizontalNavBar } = require('stremio/common/NavBar');
 const styles = require('./styles');
 
 const TABS = [
-    { id: 'board', label: 'Board', icon: 'ic_board', href: '#/' },
-    { id: 'discover', label: 'Discover', icon: 'ic_discover', href: '#/discover' },
-    { id: 'library', label: 'Library', icon: 'ic_library', href: '#/library' },
-    { id: 'settings', label: 'SETTINGS', icon: 'ic_settings', href: '#/settings' },
-    { id: 'addons', label: 'ADDONS', icon: 'ic_addons', href: '#/addons' }
+    { id: 'board', label: 'Board', icon: 'home', href: '#/' },
+    { id: 'discover', label: 'Discover', icon: 'discover', href: '#/discover' },
+    { id: 'library', label: 'Library', icon: 'library', href: '#/library' },
+    { id: 'addons', label: 'ADDONS', icon: 'addons', href: '#/addons' },
+    { id: 'settings', label: 'SETTINGS', icon: 'settings', href: '#/settings' },
 ];
 
 const MainNavBars = React.memo(({ className, route, query, children }) => {
