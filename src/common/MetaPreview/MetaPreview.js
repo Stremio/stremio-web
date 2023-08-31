@@ -95,8 +95,8 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
         return trailerStreams[0].deepLinks.player;
     }, [trailerStreams]);
     const renderLogoFallback = React.useCallback(() => (
-        <div className={styles['logo-placeholder']}>{!compact ? name : null}</div>
-    ), [compact, name]);
+        <div className={styles['logo-placeholder']}>{name}</div>
+    ), [name]);
     return (
         <div className={classnames(className, styles['meta-preview-container'], { [styles['compact']]: compact })}>
             {
