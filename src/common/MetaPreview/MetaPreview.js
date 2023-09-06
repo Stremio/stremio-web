@@ -174,10 +174,10 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                     })
                     .map((category, index) => (
                         <MetaLinks
-                        key={index}
-                        className={styles['meta-links']}
-                        label={category}
-                        links={linksGroups.get(category)}
+                            key={index}
+                            className={styles['meta-links']}
+                            label={category}
+                            links={linksGroups.get(category)}
                         />
                     ))
                 }
@@ -185,9 +185,9 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                     !compact && typeof description === 'string' && description.length > 0 ? 
                         <div className={styles['description-container']}>
                             <div className={styles['label-container']}>
-                                Summary
+                                {t("SUMMARY")}
                             </div>
-                            {description}
+                                {description}
                             </div>
                         :
                         null
