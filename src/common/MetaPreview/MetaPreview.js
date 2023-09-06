@@ -191,7 +191,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                         </div>
                         :
                         null
-                 }
+                }
             </div>
             <div className={styles['action-buttons-container']}>
                 {
