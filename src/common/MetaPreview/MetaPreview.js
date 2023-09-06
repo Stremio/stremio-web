@@ -187,8 +187,8 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                             <div className={styles['label-container']}>
                                 {t("SUMMARY")}
                             </div>
-                                {description}
-                            </div>
+                            {description}
+                        </div>
                         :
                         null
                  }
