@@ -165,18 +165,18 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                     }
                 {
                     Array.from(linksGroups.keys())
-                        .filter((category) => {
-                            return category !== CONSTANTS.IMDB_LINK_CATEGORY &&
-                                category !== CONSTANTS.SHARE_LINK_CATEGORY &&
-                                category !== CONSTANTS.WRITERS_LINK_CATEGORY;
-                        })
-                        .map((category, index) => (
-                            <MetaLinks
-                                key={index}
-                                className={styles['meta-links']}
-                                label={category}
-                                links={linksGroups.get(category)}
-                            />
+                    .filter((category) => {
+                        return category !== CONSTANTS.IMDB_LINK_CATEGORY &&
+                        category !== CONSTANTS.SHARE_LINK_CATEGORY &&
+                        category !== CONSTANTS.WRITERS_LINK_CATEGORY;
+                    })
+                    .map((category, index) => (
+                        <MetaLinks
+                        key={index}
+                        className={styles['meta-links']}
+                        label={category}
+                        links={linksGroups.get(category)}
+                        />
                         ))
                     }
                     {
