@@ -157,28 +157,34 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                         :
                         null
                 }
-                {
-                    typeof description === 'string' && description.length > 0 ?
-                        <div className={styles['description-container']}>{description}</div>
-                        :
-                        null
-                }
+                  {
+                         compact && typeof description === 'string' && description.length > 0 ?
+                            <div className={styles['description-container']}>{description}</div>
+                            :
+                            null
+                    }
                 {
                     Array.from(linksGroups.keys())
-                        .filter((category) => {
-                            return category !== CONSTANTS.IMDB_LINK_CATEGORY &&
-                                category !== CONSTANTS.SHARE_LINK_CATEGORY &&
-                                category !== CONSTANTS.WRITERS_LINK_CATEGORY;
-                        })
-                        .map((category, index) => (
-                            <MetaLinks
-                                key={index}
-                                className={styles['meta-links']}
-                                label={category}
-                                links={linksGroups.get(category)}
-                            />
+                    .filter((category) => {
+                        return category !== CONSTANTS.IMDB_LINK_CATEGORY &&
+                        category !== CONSTANTS.SHARE_LINK_CATEGORY &&
+                        category !== CONSTANTS.WRITERS_LINK_CATEGORY;
+                    })
+                    .map((category, index) => (
+                        <MetaLinks
+                        key={index}
+                        className={styles['meta-links']}
+                        label={category}
+                        links={linksGroups.get(category)}
+                        />
                         ))
-                }
+                    }
+                    {
+                         !compact && typeof description === 'string' && description.length > 0 ?
+                            <div className={styles['description-container']}>{description}</div>
+                            :
+                            null
+                    }
             </div>
             <div className={styles['action-buttons-container']}>
                 {
