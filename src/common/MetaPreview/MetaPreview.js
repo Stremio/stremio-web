@@ -159,7 +159,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                 }
                 {
                     compact && typeof description === 'string' && description.length > 0 ?
-                        <div className={styles['description-container']}>         
+                        <div className={styles['description-container']}>
                             {description}
                         </div>
                         :
@@ -182,7 +182,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                         ))
                 }
                 {
-                    !compact && typeof description === 'string' && description.length > 0 ? 
+                    !compact && typeof description === 'string' && description.length > 0 ?
                         <div className={styles['description-container']}>
                             <div className={styles['label-container']}>
                                 {t('SUMMARY')}
