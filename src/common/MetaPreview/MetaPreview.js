@@ -157,12 +157,14 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                         :
                         null
                 }
-                  {
-                         compact && typeof description === 'string' && description.length > 0 ?
-                            <div className={styles['description-container']}>{description}</div>
-                            :
-                            null
-                    }
+                {
+                    compact && typeof description === 'string' && description.length > 0 ?
+                        <div className={styles['description-container']}>         
+                            {description}
+                        </div>
+                        :
+                        null
+                }
                 {
                     Array.from(linksGroups.keys())
                     .filter((category) => {
@@ -177,14 +179,19 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                         label={category}
                         links={linksGroups.get(category)}
                         />
-                        ))
-                    }
-                    {
-                         !compact && typeof description === 'string' && description.length > 0 ?
-                            <div className={styles['description-container']}>{description}</div>
-                            :
-                            null
-                    }
+                    ))
+                }
+                {
+                    !compact && typeof description === 'string' && description.length > 0 ? 
+                        <div className={styles['description-container']}>
+                            <div className={styles['label-container']}>
+                                Summary
+                            </div>
+                            {description}
+                            </div>
+                        :
+                        null
+                 }
             </div>
             <div className={styles['action-buttons-container']}>
                 {
