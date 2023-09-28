@@ -19,7 +19,7 @@ const HorizontalNavBar = React.memo(({ className, route, query, title, backButto
     const [fullscreen, requestFullscreen, exitFullscreen] = useFullscreen();
     const renderNavMenuLabel = React.useCallback(({ ref, className, onClick, children, }) => (
         <Button ref={ref} className={classnames(className, styles['button-container'], styles['menu-button-container'])} tabIndex={-1} onClick={onClick}>
-            <Icon className={styles['icon']} name={'more-vertical'} />
+            <Icon className={styles['icon']} name={'person-outline'} />
             {children}
         </Button>
     ), []);
@@ -55,7 +55,7 @@ const HorizontalNavBar = React.memo(({ className, route, query, title, backButto
                 {
                     addonsButton ?
                         <Button className={styles['button-container']} href={'#/addons'} title={t('ADDONS')} tabIndex={-1}>
-                            <Icon className={styles['icon']} name={'addons'} />
+                            <Icon className={styles['icon']} name={'addons-outline'} />
                         </Button>
                         :
                         null
