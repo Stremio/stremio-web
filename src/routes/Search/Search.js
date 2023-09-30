@@ -51,24 +51,24 @@ const Search = ({ queryParams }) => {
                     query === null ?
                         <div className={classnames(styles['search-hints-wrapper'])}>
                             <div className={classnames(styles['search-hints-title-container'], 'animation-fade-in')}>
-                                <div className={styles['search-hints-title']}>{t('SEARCH_HINTS_TITLE')}</div>
+                                <div className={styles['search-hints-title']}>{t('SEARCH_ANYTHING')}</div>
                             </div>
                             <div className={classnames(styles['search-hints-container'], 'animation-fade-in')}>
                                 <div className={styles['search-hint-container']}>
                                     <Icon className={styles['icon']} name={'trailer'} />
-                                    <div className={styles['label']}>{t('SEARCH_HINTS_CONTENT')}</div>
+                                    <div className={styles['label']}>{t('SEARCH_CATEGORIES')}</div>
                                 </div>
                                 <div className={styles['search-hint-container']}>
                                     <Icon className={styles['icon']} name={'actors'} />
-                                    <div className={styles['label']}>{t('SEARCH_HINTS_ACTORS')}</div>
+                                    <div className={styles['label']}>{t('SEARCH_PERSONS')}</div>
                                 </div>
                                 <div className={styles['search-hint-container']}>
                                     <Icon className={styles['icon']} name={'link'} />
-                                    <div className={styles['label']}>{t('SEARCH_HINTS_LINKS')}</div>
+                                    <div className={styles['label']}>{t('SEARCH_PROTOCOLS')}</div>
                                 </div>
                                 <div className={styles['search-hint-container']}>
                                     <Icon className={styles['icon']} name={'imdb-outline'} />
-                                    <div className={styles['label']}>{t('SEARCH_HINTS_IMDB')}</div>
+                                    <div className={styles['label']}>{t('SEARCH_TYPES')}</div>
                                 </div>
                             </div>
                         </div>
