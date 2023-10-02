@@ -19,6 +19,9 @@ const StreamsList = ({ className, video, ...props }) => {
     const onAddonSelected = React.useCallback((event) => {
         setSelectedAddon(event.value);
     }, []);
+    const backButtonOnClick = React.useCallback(() => {
+        window.history.back();
+    }, []);
     const streamsByAddon = React.useMemo(() => {
         return props.streams
             .filter((streams) => streams.content.type === 'Ready')
@@ -92,15 +95,32 @@ const StreamsList = ({ className, video, ...props }) => {
                             </div>
                             :
                             <React.Fragment>
-                                {
-                                    Object.keys(streamsByAddon).length > 1 ?
-                                        <Multiselect
-                                            {...selectableOptions}
-                                            className={styles['select-input-container']}
-                                        />
+                                <div className={styles['select-choices-wrapper']}>
+                                    { video ? (
+                                        <React.Fragment>
+                                            <Button className={classnames(styles['button-container'], styles['back-button-container'])} tabIndex={-1} onClick={backButtonOnClick}>
+                                                <Icon className={styles['icon']} name={'chevron-back'} />
+                                            </Button>
+                                            <div className={styles['episode-title']}>
+                                                {`S${video?.season}E${video?.episode} ${(video?.title)?.toLowerCase()?.replace(/\b\w/g, (char) => char.toUpperCase())}
+`}
+                                            </div>
+                                        </React.Fragment>
+                                    )
                                         :
                                         null
-                                }
+                                    }
+                                    {
+                                        Object.keys(streamsByAddon).length > 1 ? (
+                                            <Multiselect
+                                                {...selectableOptions}
+                                                className={styles['select-input-container']}
+                                            />
+                                        )
+                                            :
+                                            null
+                                    }
+                                </div>
                                 <div className={styles['streams-container']}>
                                     {filteredStreams.map((stream, index) => (
                                         <Stream
