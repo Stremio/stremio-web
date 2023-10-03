@@ -1,3 +1,5 @@
+// Copyright (C) 2017-2023 Smart code 203358507
+
 const parseTorrent = (description) => {
     const isEmoji = (str) => {
         const emojiRegex = /[\uD83C][\uDDE6-\uDDFF][\uD83C][\uDDE6-\uDDFF]/g;
