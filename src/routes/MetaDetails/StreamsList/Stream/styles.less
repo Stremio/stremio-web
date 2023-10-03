@@ -70,26 +70,39 @@
         flex: 1;
         max-height: 3.6em;
         padding: 0 0.5rem 0 1.5rem;
-        display: -webkit-box;
+        display: flex;
+        flex-direction: column;
         -webkit-line-clamp: 3;
         -webkit-box-orient: vertical;
         color: var(--primary-foreground-color);
         white-space: pre;
+
+        .stream-name { 
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .stream-properties {
+            display: flex;
+            flex-direction: row;
+            .icon {
+                width: 1em;
+                height: 1em;
+                padding: 0;
+                color: var(--primary-foreground-color);
+                background-color: transparent;
+            }
+        }
     }
 
-    .play-icon {
+    .icon {
         flex: none;
-        width: 3.5rem;
-        height: 5rem;
-        opacity: 0;
-
-        .play-icon-circle-centered-background {
-            fill: none;
-        }
-
-        .play-icon-circle-centered-icon {
-            fill: var(--primary-foreground-color);
-        }
+        width: 3rem;
+        height: 3rem;
+        padding: 0.7rem;
+        border-radius: 50%;
+        color: var(--primary-foreground-color);
+        background-color: var(--secondary-accent-color);
     }
 
     .progress-bar-container {

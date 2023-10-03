@@ -1,0 +1,45 @@
+.info-container {
+    flex: 1;
+    max-height: 3.6em;
+    padding: 0 0.5rem 0 1.5rem;
+    display: flex;
+    flex-direction: column;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    color: var(--primary-foreground-color);
+    white-space: pre;
+
+    .stream-name { 
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .stream-properties {
+        display: flex;
+        flex-direction: row;
+        gap: 0 0.5em;
+        flex-wrap: wrap;
+        .property-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            align-items: center;
+            color: var(--primary-foreground-color);
+            .icon {
+                width: 1em;
+                height: 1em;
+                padding: 0;
+                color: var(--primary-foreground-color);
+                background-color: transparent;
+            }
+            .property {
+                opacity: 0.9;
+            }
+            .overflow {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+    }
+}
