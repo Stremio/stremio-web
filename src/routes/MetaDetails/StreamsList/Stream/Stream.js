@@ -4,20 +4,16 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { default: Icon } = require('@stremio/stremio-icons/react');
-const { Button, Image, useProfile, platform, useStreamingServer, useToast } = require('stremio/common');
+const { Button, Image, PlayIconCircleCentered, useProfile, platform, useStreamingServer, useToast } = require('stremio/common');
 const { useServices } = require('stremio/services');
 const StreamPlaceholder = require('./StreamPlaceholder');
 const styles = require('./styles');
-const parseTorrentInfo = require('./parseTorrentInfo');
-const StreamInfo = require('./StreamInfo');
 
 const Stream = ({ className, videoId, videoReleased, addonName, name, description, thumbnail, progress, deepLinks, ...props }) => {
     const profile = useProfile();
     const streamingServer = useStreamingServer();
     const { core } = useServices();
     const toast = useToast();
-    const torrentInfo = parseTorrentInfo(description);
-    const {streamName, streamSeeders, streamSize, streamProvider, streamFlags } = torrentInfo;
     const href = React.useMemo(() => {
         const haveStreamingServer = streamingServer.settings !== null && streamingServer.settings.type === 'Ready';
         return deepLinks ?
@@ -83,7 +79,7 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
         <Button href={href} download={forceDownload} {...props} onClick={onClick} className={classnames(className, styles['stream-container'])} title={addonName}>
             {
                 typeof thumbnail === 'string' && thumbnail.length > 0 ?
-                    <div className={styles['thumbnail-container']} title={name?.replace(/\|/g, '') || addonName?.replace(/\|/g, '')}>
+                    <div className={styles['thumbnail-container']} title={name || addonName}>
                         <Image
                             className={styles['thumbnail']}
                             src={thumbnail}
@@ -92,23 +88,12 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
                         />
                     </div>
                     :
-                    <div className={styles['addon-name-container']} title={name?.replace(/\|/g, '') || addonName?.replace(/\|/g, '')}>
-                        <div className={styles['addon-name']}>{name?.replace(/\|/g, '') || addonName?.replace(/\|/g, '')}</div>
+                    <div className={styles['addon-name-container']} title={name || addonName}>
+                        <div className={styles['addon-name']}>{name || addonName}</div>
                     </div>
             }
-            {
-                typeof description === 'string' && description.length > 0 ?
-                    <StreamInfo
-                        streamName={streamName}
-                        streamProvider={streamProvider}
-                        streamSeeders={streamSeeders}
-                        streamSize={streamSize}
-                        streamFlags={streamFlags}
-                    />
-                    :
-                    null
-            }
-            <Icon className={styles['icon']} name={'play'} />
+            <div className={styles['info-container']} title={description}>{description}</div>
+            <PlayIconCircleCentered className={styles['play-icon']} />
             {
                 progress !== null && !isNaN(progress) && progress > 0 ?
                     <div className={styles['progress-bar-container']}>
