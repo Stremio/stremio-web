@@ -159,7 +159,9 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                 }
                 {
                     compact && typeof description === 'string' && description.length > 0 ?
-                        <div className={styles['description-container']}>{description}</div>
+                        <div className={styles['description-container']}>
+                            {description}
+                        </div>
                         :
                         null
                 }
@@ -178,6 +180,17 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                                 links={linksGroups.get(category)}
                             />
                         ))
+                }
+                {
+                    !compact && typeof description === 'string' && description.length > 0 ?
+                        <div className={styles['description-container']}>
+                            <div className={styles['label-container']}>
+                                {t('SUMMARY')}
+                            </div>
+                            {description}
+                        </div>
+                        :
+                        null
                 }
             </div>
             <div className={styles['action-buttons-container']}>
