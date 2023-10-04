@@ -631,7 +631,7 @@ const Player = ({ urlParams, queryParams }) => {
             />
             {
                 videoState.buffering ?
-                    <BufferingLoader className={styles['layer']} />
+                    <BufferingLoader className={styles['layer']} logo={player?.metaItem?.content?.logo} />
                     :
                     null
             }
