@@ -6,23 +6,29 @@ FROM node:$NODE_VERSION AS base
 # Meta
 LABEL Description="Stremio Web" Vendor="Smart Code OOD" Version="1.0.0"
 
-RUN apk update && apk upgrade && \
-    apk add --no-cache git
 RUN mkdir -p /var/www/stremio-web
 WORKDIR /var/www/stremio-web
 
 # Install app dependencies
 FROM base AS prebuild
 
+RUN apk update && apk upgrade && \
+    apk add --no-cache git
+
+RUN mkdir -p /var/www/stremio-web
 WORKDIR /var/www/stremio-web
-COPY ./package*.json ./
+
+COPY . .
 RUN npm install
+RUN npm run build
 
 # Bundle app source
-FROM prebuild AS final
+FROM base AS final
 
 WORKDIR /var/www/stremio-web
 COPY . .
-RUN npm run build
+COPY --from=prebuild /var/www/stremio-web/node_modules ./node_modules
+COPY --from=prebuild /var/www/stremio-web/build ./build
+
 EXPOSE 8080
 CMD ["node", "http_server.js"]
