@@ -14,10 +14,7 @@ FROM base AS prebuild
 
 RUN apk update && apk upgrade && \
     apk add --no-cache git
-
-RUN mkdir -p /var/www/stremio-web
 WORKDIR /var/www/stremio-web
-
 COPY . .
 RUN npm install
 RUN npm run build
