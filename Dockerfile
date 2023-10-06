@@ -1,24 +1,28 @@
 # Stremio Node 14.x
-FROM stremio/node-base:fermium
+# the node version for running Stremio Web
+ARG NODE_VERSION=15-alpine
+FROM node:$NODE_VERSION AS base
 
 # Meta
 LABEL Description="Stremio Web" Vendor="Smart Code OOD" Version="1.0.0"
 
-# Update GitHub remote host key
-RUN echo "github.com ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEmKSENjQEezOmxkZMy7opKgwFB9nkt5YRrYMjNuG5N87uRgg6CLrbo5wAdT/y6v0mKV0U2w0WZ2YB/++Tpockg=" >> ~/.ssh/known_hosts
-
-# Create app directory
+RUN apk update && apk upgrade && \
+    apk add --no-cache git
 RUN mkdir -p /var/www/stremio-web
+WORKDIR /var/www/stremio-web
 
 # Install app dependencies
+FROM base AS prebuild
+
 WORKDIR /var/www/stremio-web
-COPY . /var/www/stremio-web
-RUN npm install 
+COPY ./package*.json ./
+RUN npm install
 
 # Bundle app source
+FROM prebuild AS final
+
 WORKDIR /var/www/stremio-web
-
-RUN npm run build 
-
+COPY . .
+RUN npm run build
 EXPOSE 8080
 CMD ["node", "http_server.js"]
