@@ -196,6 +196,12 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
             <div className={styles['action-buttons-container']}>
                 <div className={styles['action-button-wrapper']}>
                     {
+                        typeof toggleInLibrary === 'function' && compact ?
+                            <div className={styles['label']}>{inLibrary ? t('REMOVE_FROM_LIB') : t('ADD_TO_LIB')}</div>
+                            :
+                            null
+                    }
+                    {
                         typeof toggleInLibrary === 'function' ?
                             <ActionButton
                                 className={styles['action-button']}
@@ -207,14 +213,14 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                             :
                             null
                     }
+                </div>
+                <div className={styles['action-button-wrapper']}>
                     {
-                        typeof toggleInLibrary === 'function' && compact ?
-                            <div className={styles['label']}>{inLibrary ? t('REMOVE_FROM_LIB') : t('ADD_TO_LIB')}</div>
+                        typeof trailerHref === 'string' && compact ?
+                            <div className={styles['label']}>{t('WATCH_TRAILER')}</div>
                             :
                             null
                     }
-                </div>
-                <div className={styles['action-button-wrapper']}>
                     {
                         typeof trailerHref === 'string' ?
                             <ActionButton
@@ -227,17 +233,11 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                             :
                             null
                     }
-                    {
-                        typeof trailerHref === 'string' && compact ?
-                            <div className={styles['label']}>{t('WATCH_TRAILER')}</div>
-                            :
-                            null
-                    }
                 </div>
                 {
                     typeof showHref === 'string' && compact ?
                         <ActionButton
-                            className={`${styles['action-button']} ${styles['show-button']}`}
+                            className={classnames(styles['action-button'], styles['show-button'])}
                             icon={'play'}
                             label={t('SHOW')}
                             tabIndex={compact ? -1 : 0}

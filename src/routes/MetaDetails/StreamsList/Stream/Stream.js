@@ -83,7 +83,7 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
         <Button href={href} download={forceDownload} {...props} onClick={onClick} className={classnames(className, styles['stream-container'])} title={addonName}>
             {
                 typeof thumbnail === 'string' && thumbnail.length > 0 ?
-                    <div className={styles['thumbnail-container']} title={name?.replace(/\|/g, '') || addonName?.replace(/\|/g, '')}>
+                    <div className={styles['thumbnail-container']} title={name || addonName}>
                         <Image
                             className={styles['thumbnail']}
                             src={thumbnail}
@@ -92,8 +92,8 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
                         />
                     </div>
                     :
-                    <div className={styles['addon-name-container']} title={name?.replace(/\|/g, '') || addonName?.replace(/\|/g, '')}>
-                        <div className={styles['addon-name']}>{name?.replace(/\|/g, '') || addonName?.replace(/\|/g, '')}</div>
+                    <div className={styles['addon-name-container']} title={name || addonName}>
+                        <div className={styles['addon-name']}>{name || addonName}</div>
                     </div>
             }
             {
