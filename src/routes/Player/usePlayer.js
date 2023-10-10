@@ -86,6 +86,15 @@ const usePlayer = (urlParams) => {
             };
         }
     }, [urlParams]);
+    const videoParamsChanged = React.useCallback((videoParams) => {
+        core.transport.dispatch({
+            action: 'Player',
+            args: {
+                action: 'VideoParamsChanged',
+                args: { videoParams }
+            }
+        }, 'player');
+    }, []);
     const timeChanged = React.useCallback((time, duration, device) => {
         core.transport.dispatch({
             action: 'Player',
@@ -113,7 +122,7 @@ const usePlayer = (urlParams) => {
         }, 'player');
     }, []);
     const player = useModelState({ model: 'player', action, map });
-    return [player, timeChanged, pausedChanged, ended];
+    return [player, videoParamsChanged, timeChanged, pausedChanged, ended];
 };
 
 module.exports = usePlayer;

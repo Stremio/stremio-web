@@ -33,7 +33,7 @@ const Player = ({ urlParams, queryParams }) => {
             queryParams.has('maxAudioChannels') ? parseInt(queryParams.get('maxAudioChannels'), 10) : null
         ];
     }, [queryParams]);
-    const [player, timeChanged, pausedChanged, ended] = usePlayer(urlParams);
+    const [player, videoParamsChanged, timeChanged, pausedChanged, ended] = usePlayer(urlParams);
     const [settings, updateSettings] = useSettings();
     const streamingServer = useStreamingServer();
     const routeFocused = useRouteFocused();
@@ -68,6 +68,7 @@ const Player = ({ urlParams, queryParams }) => {
             volume: null,
             muted: null,
             playbackSpeed: null,
+            videoParams: null,
             audioTracks: [],
             selectedAudioTrackId: null,
             subtitlesTracks: [],
@@ -352,6 +353,9 @@ const Player = ({ urlParams, queryParams }) => {
             pausedChanged(videoState.paused);
         }
     }, [videoState.paused]);
+    React.useEffect(() => {
+        videoParamsChanged(videoState.videoParams);
+    }, [videoState.videoParams]);
     React.useEffect(() => {
         if (!!settings.bingeWatching && player.nextVideo !== null && !nextVideoPopupDismissed.current) {
             if (videoState.time !== null && videoState.duration !== null && videoState.time < videoState.duration && (videoState.duration - videoState.time) <= settings.nextVideoNotificationDuration) {
