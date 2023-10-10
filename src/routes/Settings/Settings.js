@@ -438,7 +438,7 @@ const Settings = () => {
                                                 t('SETTINGS_SERVER_STATUS_ONLINE')
                                                 :
                                                 streamingServer.settings.type === 'Err' ?
-                                                    `${t('SETTINGS_SERVER_STATUS_ERROR')}: (${streamingServer.settings.content?.message || "Unknown"})`
+                                                    t('SETTINGS_SERVER_STATUS_ERROR')
                                                     :
                                                     streamingServer.settings.type
                                     }
