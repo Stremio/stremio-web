@@ -156,6 +156,7 @@
         align-self: stretch;
         display: flex;
         flex-direction: row;
+        align-items: flex-end;
         max-height: 10rem;
         padding-top: 2rem;
         flex-wrap: wrap;
@@ -166,9 +167,10 @@
             flex-direction: column;
             justify-content: flex-start;
             align-items: center;
+            position: relative;
+            gap: 1rem 0;
         
             .label {
-                opacity: 0; 
                 transition: opacity 0.3s ease; 
                 max-width: 6rem;
                 text-align: center;

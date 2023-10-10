@@ -102,8 +102,7 @@ const StreamsList = ({ className, video, ...props }) => {
                                                 <Icon className={styles['icon']} name={'chevron-back'} />
                                             </Button>
                                             <div className={styles['episode-title']}>
-                                                {`S${video?.season}E${video?.episode} ${(video?.title)?.toLowerCase()?.replace(/\b\w/g, (char) => char.toUpperCase())}
-`}
+                                                {`S${video?.season}E${video?.episode} ${(video?.title)}`}
                                             </div>
                                         </React.Fragment>
                                     )
