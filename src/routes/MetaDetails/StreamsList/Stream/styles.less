@@ -3,6 +3,11 @@
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
 @import (reference) '~stremio/common/screen-sizes.less';
 
+:import('~stremio/common/PlayIconCircleCentered/styles.less') {
+    play-icon-circle-centered-background: background;
+    play-icon-circle-centered-icon: icon;
+}
+
 .stream-container {
     display: flex;
     flex-direction: row;
@@ -17,8 +22,16 @@
     }
 
     &:hover, &:focus, &:global(.selected) {
-        .icon {
+        .play-icon {
             opacity: 1;
+
+            .play-icon-circle-centered-background {
+                fill: var(--secondary-accent-color);
+            }
+
+            .play-icon-circle-centered-icon {
+                fill: var(--primary-foreground-color);
+            }
         }
     }
 
@@ -57,7 +70,6 @@
         flex: 1;
         max-height: 3.6em;
         padding: 0 0.5rem 0 1.5rem;
-        opacity: 0.6;
         display: flex;
         flex-direction: column;
         -webkit-line-clamp: 3;
@@ -89,7 +101,6 @@
         height: 3rem;
         padding: 0.7rem;
         border-radius: 50%;
-        opacity: 0;
         color: var(--primary-foreground-color);
         background-color: var(--secondary-accent-color);
     }
@@ -110,6 +121,12 @@
         .thumbnail-container, .addon-name-container {
             .addon-name {
                 font-weight: 500;
+            }
+        }
+
+        .play-icon {
+            .play-icon-circle-centered-icon {
+                fill: var(--primary-foreground-color);
             }
         }
     }
