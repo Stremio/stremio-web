@@ -158,9 +158,9 @@
         flex-direction: row;
         align-items: flex-end;
         max-height: 10rem;
-        padding-top: 2rem;
         flex-wrap: wrap;
         overflow-x: visible;
+        padding-top: 3.5rem;
 
         .action-button-wrapper {
             display: flex;
@@ -168,16 +168,23 @@
             justify-content: flex-start;
             align-items: center;
             gap: 1rem 0;
-        
+            position: relative;
+            overflow: visible;
             .label {
+                position: absolute;
+                top: -3rem;
+                left: 0;
+                opacity: 0;
                 transition: opacity 0.3s ease; 
-                max-width: 6rem;
                 text-align: center;
                 color: var(--primary-foreground-color);
-                opacity: 0;
             }
-
-             &:not(:last-child) {
+            
+            &.action-button-wrapper:first-of-type > .label {
+                min-width: 6rem;
+                left: -25%;
+            }
+            &:not(:last-child) {
                 margin-right: 1rem;
             }
             .label:has(~ .action-button:hover) {
