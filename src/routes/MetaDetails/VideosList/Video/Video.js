@@ -92,7 +92,7 @@ const Video = ({ className, id, title, thumbnail, episode, released, upcoming, w
                 <div className={styles['info-container']}>
                     <div className={styles['title-container']}>
                         {episode !== null && !isNaN(episode) ? `${episode}. ` : null}
-                        {typeof title === 'string' && title.length > 0 ? title.toLowerCase().replace(/\b\w/g, (char) => char.toUpperCase()) : id}
+                        {typeof title === 'string' && title.length > 0 ? title : id}
                     </div>
                     <div className={styles['flex-row-container']}>
                         {
