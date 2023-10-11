@@ -13,7 +13,8 @@
     flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
-    padding: 0.5rem;
+    gap: 1rem;
+    padding: 0.5rem 1rem;
     margin-bottom: 0.5rem;
     border-radius: var(--border-radius);
 
@@ -35,8 +36,11 @@
         }
     }
 
-    .thumbnail-container, .addon-name-container {
+    .info-container {
         flex: none;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
 
         .thumbnail {
             display: block;
@@ -58,17 +62,27 @@
         }
 
         .addon-name {
-            width: 5rem;
+            width: 7rem;
             max-height: 3.6em;
             font-size: 1.1rem;
-            text-align: center;
+            text-align: left;
             color: var(--primary-foreground-color);
+        }
+
+        .progress-bar-container {
+            flex: 0 0 100%;
+            border-radius: 0.75rem;
+            background-color: var(--overlay-color);
+
+            .progress-bar {
+                height: 0.4rem;
+                background-color: var(--primary-accent-color);
+            }
         }
     }
 
-    .info-container {
+    .description-container {
         flex: 1;
-        max-height: 3.6em;
         padding: 0 0.5rem 0 1.5rem;
         display: -webkit-box;
         -webkit-line-clamp: 3;
@@ -89,16 +103,6 @@
 
         .play-icon-circle-centered-icon {
             fill: var(--primary-foreground-color);
-        }
-    }
-
-    .progress-bar-container {
-        flex: 0 0 100%;
-        background-color: var(--primary-accent-color);
-
-        .progress-bar {
-            height: 0.5rem;
-            background-color: var(--primary-foreground-color);
         }
     }
 }
