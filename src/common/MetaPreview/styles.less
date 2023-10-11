@@ -167,7 +167,6 @@
             flex-direction: column;
             justify-content: flex-start;
             align-items: center;
-            position: relative;
             gap: 1rem 0;
         
             .label {
@@ -181,11 +180,12 @@
              &:not(:last-child) {
                 margin-right: 1rem;
             }
-
-            &:hover .label { 
-                opacity: 0.7; 
+            .label:has(~ .action-button:hover) {
+                opacity: 0.7;
             }
         }
+    
+        
         
         .action-button {
             flex: none;
