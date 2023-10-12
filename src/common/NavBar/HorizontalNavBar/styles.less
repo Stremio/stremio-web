@@ -9,7 +9,7 @@
     align-items: center;
     justify-content: space-between;
     height: var(--horizontal-nav-bar-size);
-    padding-right: 1rem;
+    padding-right: min(1rem, calc(1rem - env(safe-area-inset-right)));
     background-color: transparent;
     overflow: visible;
 

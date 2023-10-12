@@ -226,7 +226,7 @@
             position: absolute;
             left: 0;
             right: 0;
-            bottom: var(--vertical-nav-bar-size);
+            bottom: calc(var(--vertical-nav-bar-size) + env(safe-area-inset-bottom));
             height: 4rem;
         }
     }

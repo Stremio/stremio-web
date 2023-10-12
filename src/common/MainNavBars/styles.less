@@ -5,6 +5,7 @@
 .main-nav-bars-container {
     position: relative;
     z-index: 0;
+    margin: 0 env(safe-area-inset-right) 0 env(safe-area-inset-left);
 
     .horizontal-nav-bar {
         position: absolute;
@@ -36,7 +37,7 @@
     .main-nav-bars-container {
         .nav-content-container {
             left: 0;
-            bottom: var(--vertical-nav-bar-size);
+            bottom: calc(var(--vertical-nav-bar-size) + env(safe-area-inset-bottom));
         }
 
         .vertical-nav-bar {
