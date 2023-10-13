@@ -33,6 +33,28 @@ const Player = ({ urlParams, queryParams }) => {
             queryParams.has('maxAudioChannels') ? parseInt(queryParams.get('maxAudioChannels'), 10) : null
         ];
     }, [queryParams]);
+    const [player, videoParamsChanged, timeChanged, pausedChanged, ended] = usePlayer(urlParams);
+    const [settings, updateSettings] = useSettings();
+    const streamingServer = useStreamingServer();
+    const routeFocused = useRouteFocused();
+    const toast = useToast();
+    const [, , , toggleFullscreen] = useFullscreen();
+    const [casting, setCasting] = React.useState(() => {
+        return chromecast.active && chromecast.transport.getCastState() === cast.framework.CastState.CONNECTED;
+    });
+    const [immersed, setImmersed] = React.useState(true);
+    const setImmersedDebounced = React.useCallback(debounce(setImmersed, 3000), []);
+    const [optionsMenuOpen, , closeOptionsMenu, toggleOptionsMenu] = useBinaryState(false);
+    const [subtitlesMenuOpen, , closeSubtitlesMenu, toggleSubtitlesMenu] = useBinaryState(false);
+    const [infoMenuOpen, , closeInfoMenu, toggleInfoMenu] = useBinaryState(false);
+    const [speedMenuOpen, , closeSpeedMenu, toggleSpeedMenu] = useBinaryState(false);
+    const [videosMenuOpen, , closeVideosMenu, toggleVideosMenu] = useBinaryState(false);
+    const [nextVideoPopupOpen, openNextVideoPopup, closeNextVideoPopup] = useBinaryState(false);
+    const [statisticsMenuOpen, , closeStatisticsMenu, toggleStatisticsMenu] = useBinaryState(false);
+    const nextVideoPopupDismissed = React.useRef(false);
+    const defaultSubtitlesSelected = React.useRef(false);
+    const defaultAudioTrackSelected = React.useRef(false);
+    const [error, setError] = React.useState(null);
     const [videoState, setVideoState] = React.useReducer(
         (videoState, nextVideoState) => ({ ...videoState, ...nextVideoState }),
         {
@@ -66,28 +88,6 @@ const Player = ({ urlParams, queryParams }) => {
             extraSubtitlesOutlineColor: null
         }
     );
-    const [player, timeChanged, pausedChanged, ended] = usePlayer(urlParams, videoState.videoParams);
-    const [settings, updateSettings] = useSettings();
-    const streamingServer = useStreamingServer();
-    const routeFocused = useRouteFocused();
-    const toast = useToast();
-    const [, , , toggleFullscreen] = useFullscreen();
-    const [casting, setCasting] = React.useState(() => {
-        return chromecast.active && chromecast.transport.getCastState() === cast.framework.CastState.CONNECTED;
-    });
-    const [immersed, setImmersed] = React.useState(true);
-    const setImmersedDebounced = React.useCallback(debounce(setImmersed, 3000), []);
-    const [optionsMenuOpen, , closeOptionsMenu, toggleOptionsMenu] = useBinaryState(false);
-    const [subtitlesMenuOpen, , closeSubtitlesMenu, toggleSubtitlesMenu] = useBinaryState(false);
-    const [infoMenuOpen, , closeInfoMenu, toggleInfoMenu] = useBinaryState(false);
-    const [speedMenuOpen, , closeSpeedMenu, toggleSpeedMenu] = useBinaryState(false);
-    const [videosMenuOpen, , closeVideosMenu, toggleVideosMenu] = useBinaryState(false);
-    const [nextVideoPopupOpen, openNextVideoPopup, closeNextVideoPopup] = useBinaryState(false);
-    const [statisticsMenuOpen, , closeStatisticsMenu, toggleStatisticsMenu] = useBinaryState(false);
-    const nextVideoPopupDismissed = React.useRef(false);
-    const defaultSubtitlesSelected = React.useRef(false);
-    const defaultAudioTrackSelected = React.useRef(false);
-    const [error, setError] = React.useState(null);
     const videoRef = React.useRef(null);
     const dispatch = React.useCallback((action, options) => {
         if (videoRef.current !== null) {
@@ -353,6 +353,9 @@ const Player = ({ urlParams, queryParams }) => {
             pausedChanged(videoState.paused);
         }
     }, [videoState.paused]);
+    React.useEffect(() => {
+        videoParamsChanged(videoState.videoParams);
+    }, [videoState.videoParams]);
     React.useEffect(() => {
         if (!!settings.bingeWatching && player.nextVideo !== null && !nextVideoPopupDismissed.current) {
             if (videoState.time !== null && videoState.duration !== null && videoState.time < videoState.duration && (videoState.duration - videoState.time) <= settings.nextVideoNotificationDuration) {
