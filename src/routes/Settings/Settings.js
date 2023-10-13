@@ -437,8 +437,8 @@ const Settings = () => {
                                             streamingServer.settings.type === 'Ready' ?
                                                 t('SETTINGS_SERVER_STATUS_ONLINE')
                                                 :
-                                                streamingServer.settings.type === 'Error' ?
-                                                    `${t('SETTINGS_SERVER_STATUS_ERROR')}: (${streamingServer.settings.content})`
+                                                streamingServer.settings.type === 'Err' ?
+                                                    t('SETTINGS_SERVER_STATUS_ERROR')
                                                     :
                                                     streamingServer.settings.type
                                     }
