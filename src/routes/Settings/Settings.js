@@ -300,14 +300,15 @@ const Settings = () => {
                                 <div className={styles['label']}>{ t('PRIVACY_POLICY') }</div>
                             </Button>
                         </div>
-                        { profile.auth !== null && profile.auth.user !== null && typeof profile.auth.user.email === 'string' ?
-                            <div className={styles['option-container']}>
-                                <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={t('RESET_PASSWORD')} target={'_blank'} href={`https://www.strem.io/reset-password/${profile.auth.user.email}`}>
-                                    <div className={styles['label']}>{ t('RESET_PASSWORD') }</div>
-                                </Button>
-                            </div>
-                            :
-                            null
+                        {
+                            profile.auth !== null && profile.auth.user !== null && typeof profile.auth.user.email === 'string' ?
+                                <div className={styles['option-container']}>
+                                    <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={t('RESET_PASSWORD')} target={'_blank'} href={`https://www.strem.io/reset-password/${profile.auth.user.email}`}>
+                                        <div className={styles['label']}>{ t('RESET_PASSWORD') }</div>
+                                    </Button>
+                                </div>
+                                :
+                                null
                         }
                     </div>
                     <div ref={playerSectionRef} className={styles['section-container']}>
