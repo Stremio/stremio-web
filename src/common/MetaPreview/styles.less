@@ -188,8 +188,10 @@
             &:not(:last-child) {
                 margin-right: 1rem;
             }
-            .label:has(~ .action-button:hover) {
-                opacity: 0.7;
+            &:hover {
+                .label {
+                    opacity: 0.7;
+                }
             }
         }
     
