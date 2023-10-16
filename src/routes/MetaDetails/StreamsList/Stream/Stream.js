@@ -8,16 +8,12 @@ const { Button, Image, useProfile, platform, useStreamingServer, useToast } = re
 const { useServices } = require('stremio/services');
 const StreamPlaceholder = require('./StreamPlaceholder');
 const styles = require('./styles');
-const parseTorrentInfo = require('./parseTorrentInfo');
-const StreamInfo = require('./StreamInfo');
 
 const Stream = ({ className, videoId, videoReleased, addonName, name, description, thumbnail, progress, deepLinks, ...props }) => {
     const profile = useProfile();
     const streamingServer = useStreamingServer();
     const { core } = useServices();
     const toast = useToast();
-    const torrentInfo = parseTorrentInfo(description);
-    const {streamName, streamSeeders, streamSize, streamProvider, streamFlags } = torrentInfo;
     const href = React.useMemo(() => {
         const haveStreamingServer = streamingServer.settings !== null && streamingServer.settings.type === 'Ready';
         return deepLinks ?
@@ -98,13 +94,7 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
             }
             {
                 typeof description === 'string' && description.length > 0 ?
-                    <StreamInfo
-                        streamName={streamName}
-                        streamProvider={streamProvider}
-                        streamSeeders={streamSeeders}
-                        streamSize={streamSize}
-                        streamFlags={streamFlags}
-                    />
+                    <div className={styles['info-container']}>{description}</div>
                     :
                     null
             }

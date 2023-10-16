@@ -24,7 +24,7 @@
 
     .thumbnail-container, .addon-name-container {
         flex: none;
-
+        overflow: visible;
         .thumbnail {
             display: block;
             height: 5rem;
@@ -46,13 +46,24 @@
 
         .addon-name {
             width: 5rem;
-            max-height: 3.6em;
-            font-size: 1.1rem;
+            font-size: 0.9rem;
             text-align: center;
             color: var(--primary-foreground-color);
         }
     }
-
+    .info-container {
+        flex: 1;
+        padding: 0 0.5rem 0 1.5rem;
+        display: flex;
+        flex-direction: column;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        white-space: pre;
+        overflow-y: visible;
+        text-overflow: ellipsis;
+        color: var(--primary-foreground-color);
+    }
+    
     .icon {
         flex: none;
         width: 3rem;
@@ -74,7 +85,13 @@
         }
     }
 }
-
+@media only screen and (max-width: @small) {
+    .stream-container {
+       .info-container {
+        font-size: 0.9rem;
+       }
+    }
+}
 @media only screen and (max-width: @minimum) {
     .stream-container {
         .thumbnail-container, .addon-name-container {
