@@ -71,7 +71,7 @@ const NavMenuContent = ({ onClick }) => {
                     <div className={styles['nav-menu-option-label']}>{ t('SETTINGS') }</div>
                 </Button>
                 <Button className={styles['nav-menu-option-container']} title={ t('ADDONS') } href={'#/addons'}>
-                    <Icon className={styles['icon']} name={'addons'} />
+                    <Icon className={styles['icon']} name={'addons-outline'} />
                     <div className={styles['nav-menu-option-label']}>{ t('ADDONS') }</div>
                 </Button>
                 <Button className={styles['nav-menu-option-container']} title={ t('PLAY_URL_MAGNET_LINK') } onClick={onPlayMagnetLinkClick}>

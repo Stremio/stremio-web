@@ -156,9 +156,33 @@
         align-self: stretch;
         display: flex;
         flex-direction: row;
+        align-items: flex-end;
+        max-height: 15rem;
         flex-wrap: wrap;
-        max-height: 10rem;
+        padding-top: 3.5rem;
+        overflow: visible;
 
+        .label {
+            position: absolute;
+            top: -3rem;
+            left: 0;
+            opacity: 0;
+            transition: opacity 0.3s ease; 
+            text-align: center;
+            color: var(--primary-foreground-color);
+            overflow: visible;
+        }
+
+        &:not(:last-child) {
+            margin-right: 1rem;
+        }
+
+        &:hover {
+            .label {
+                opacity: 0.7;
+            }
+        }
+    
         .action-button {
             flex: none;
             width: 4rem;
@@ -173,6 +197,13 @@
 
             &:not(:last-child) {
                 margin-right: 1rem;
+            }
+
+            &.show-button {
+                &:hover, &:focus {
+                    background-color: var( --secondary-accent-color);
+                    outline: none;
+                }
             }
         }
     }
@@ -198,16 +229,16 @@
             }
         }
 
-        .action-buttons-container {
-            flex-wrap: nowrap;
-            margin-top: 3rem;
-            overflow-x: visible;
-            scrollbar-width: none;
-
-            &::-webkit-scrollbar {
-                display: none;
+            .action-buttons-container {
+                flex-shrink: 0;
+                margin-top: 3rem;
+                overflow: visible;
+                scrollbar-width: none;
+    
+                &::-webkit-scrollbar {
+                    display: none;
+                }
             }
-        }
     }
 
     .share-prompt {

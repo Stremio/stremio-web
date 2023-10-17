@@ -41,26 +41,70 @@
         }
     }
 
-    .select-input-container {
-        flex: 0 0 auto;
+    .select-choices-wrapper {
+        display: flex;
+        align-items: center;
+        z-index: 1;
         margin: 1em 1em 0 1em;
-        background: none;
+        gap: 0 0.5em;
+        overflow: visible;
 
-        &:hover, &:focus, &:global(.active) {
-            background-color: var(--overlay-color);
+        .back-button-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 0.5em;
+            padding: 1em;
+            max-height: 3em;
+
+            .icon {
+                width: 1.5em;
+                height: 1.5em;
+                color: var(--primary-foreground-color);
+                opacity: 0.6;
+            }
+
+            &:hover, &:global(.active) {
+                background-color: var(--overlay-color);
+                opacity: 1;
+    
+                .icon {
+                    color: var(--primary-foreground-color);
+                    opacity: 0.8;
+                }
+            }
         }
 
-        & >.multiselect-label {
+        .episode-title {
+            min-width: 45%;
             color: var(--primary-foreground-color);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        & >.multiselect-icon {
-            color: var(--primary-foreground-color);
-        }
+        .select-input-container {
+            min-width: 40%;
+            flex: 0 0 auto;
+            flex-grow: 1;
+            background: none;
 
-        .multiselect-menu-container {
-            max-height: calc(3.2rem * 7);
-            overflow: auto;
+            &:hover, &:focus, &:global(.active) {
+                background-color: var(--overlay-color);
+            }
+    
+            & >.multiselect-label {
+                color: var(--primary-foreground-color);
+            }
+    
+            & >.multiselect-icon {
+                color: var(--primary-foreground-color);
+            }
+    
+            .multiselect-menu-container {
+                max-height: calc(3.2rem * 7);
+                overflow: auto;
+            }
         }
     }
 
@@ -83,6 +127,7 @@
         padding: 1.5rem 1rem;
         border-radius: var(--border-radius);
         background-color: var(--secondary-accent-color);
+        border-radius: 3rem;
 
         &:hover {
             outline: var(--focus-outline-size) solid var(--secondary-accent-color);

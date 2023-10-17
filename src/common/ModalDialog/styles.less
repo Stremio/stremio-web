@@ -19,6 +19,7 @@
         padding: 0 2rem;
         border-radius: var(--border-radius);
         background-color: var(--modal-background-color);
+        box-shadow: var(--outer-glow);
 
         .close-button-container {
             position: absolute;
@@ -33,11 +34,13 @@
                 display: block;
                 width: 100%;
                 height: 100%;
-                color: var(--overlay-color);
+                color: var(--primary-foreground-color);
+                opacity: 0.4;
             }
 
             &:hover, &:focus {
                 .icon {
+                    opacity: 1;
                     color: var(--primary-foreground-color);
                 }
             }
@@ -61,6 +64,7 @@
             flex: 1;
             align-self: stretch;
             overflow-y: auto;
+            padding: 2rem 0;
 
             &:last-child {
                 margin-bottom: 2rem;
@@ -80,7 +84,6 @@
         }
     }
 }
-
 .action-button {
     flex: 1;
     display: flex;
@@ -93,8 +96,8 @@
     background-color: var(--secondary-accent-color);
 
     &:hover {
-        outline: var(--focus-outline-size) solid var(--secondary-accent-color);
         background-color: transparent;
+        outline: var(--focus-outline-size) solid var(--secondary-accent-color);
     }
 
     &:focus {
@@ -123,6 +126,7 @@
         text-align: center;
         color: var(--primary-foreground-color);
     }
+
 }
 
 @media only screen and (max-width: @minimum) {

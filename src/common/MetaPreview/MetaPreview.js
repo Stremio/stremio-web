@@ -199,7 +199,8 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                         <ActionButton
                             className={styles['action-button']}
                             icon={inLibrary ? 'remove-from-library' : 'add-to-library'}
-                            label={compact ? null : inLibrary ? t('REMOVE_FROM_LIB') : t('ADD_TO_LIB')}
+                            label={inLibrary ? t('REMOVE_FROM_LIB') : t('ADD_TO_LIB')}
+                            tooltip={compact}
                             tabIndex={compact ? -1 : 0}
                             onClick={toggleInLibrary}
                         />
@@ -211,9 +212,10 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                         <ActionButton
                             className={styles['action-button']}
                             icon={'trailer'}
-                            label={compact ? null : t('TRAILER')}
+                            label={t('TRAILER')}
                             tabIndex={compact ? -1 : 0}
                             href={trailerHref}
+                            tooltip={compact}
                         />
                         :
                         null
@@ -221,7 +223,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                 {
                     typeof showHref === 'string' && compact ?
                         <ActionButton
-                            className={styles['action-button']}
+                            className={classnames(styles['action-button'], styles['show-button'])}
                             icon={'play'}
                             label={t('SHOW')}
                             tabIndex={compact ? -1 : 0}

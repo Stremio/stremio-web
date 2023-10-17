@@ -4,7 +4,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { default: Icon } = require('@stremio/stremio-icons/react');
-const { Button, Image, PlayIconCircleCentered, useProfile, platform, useStreamingServer, useToast } = require('stremio/common');
+const { Button, Image, useProfile, platform, useStreamingServer, useToast } = require('stremio/common');
 const { useServices } = require('stremio/services');
 const StreamPlaceholder = require('./StreamPlaceholder');
 const styles = require('./styles');
@@ -92,8 +92,13 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
                         <div className={styles['addon-name']}>{name || addonName}</div>
                     </div>
             }
-            <div className={styles['info-container']} title={description}>{description}</div>
-            <PlayIconCircleCentered className={styles['play-icon']} />
+            {
+                typeof description === 'string' && description.length > 0 ?
+                    <div className={styles['info-container']}>{description}</div>
+                    :
+                    null
+            }
+            <Icon className={styles['icon']} name={'play'} />
             {
                 progress !== null && !isNaN(progress) && progress > 0 ?
                     <div className={styles['progress-bar-container']}>
