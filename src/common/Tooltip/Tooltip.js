@@ -13,11 +13,11 @@ const Tooltip = ({ label, position, margin }) => {
     const id = React.useRef(createId());
     const element = React.useRef(null);
 
-    const show = () => {
+    const onMouseEnter = () => {
         tooltip.toggle(id.current, true);
     };
 
-    const hide = () => {
+    const onMouseLeave = () => {
         tooltip.toggle(id.current, false);
     };
 
@@ -32,15 +32,15 @@ const Tooltip = ({ label, position, margin }) => {
                 parent: parentElement,
             });
 
-            parentElement.addEventListener('mouseenter', show);
-            parentElement.addEventListener('mouseleave', hide);
+            parentElement.addEventListener('mouseenter', onMouseEnter);
+            parentElement.addEventListener('mouseleave', onMouseLeave);
         }
 
         return () => {
             if (element.current && element.current.parentElement) {
                 const parentElement = element.current.parentElement;
-                parentElement.removeEventListener('mouseenter', show);
-                parentElement.removeEventListener('mouseleave', hide);
+                parentElement.removeEventListener('mouseenter', onMouseEnter);
+                parentElement.removeEventListener('mouseleave', onMouseLeave);
 
                 tooltip.remove(id.current);
             }
