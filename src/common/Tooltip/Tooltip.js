@@ -45,7 +45,7 @@ const Tooltip = ({ label, position, margin }) => {
                 tooltip.remove(id.current);
             }
         };
-    }, []);
+    }, [label]);
 
     return (
         <div ref={element} className={styles['tooltip']} />
