@@ -300,6 +300,26 @@ const Settings = () => {
                                 <div className={styles['label']}>{ t('PRIVACY_POLICY') }</div>
                             </Button>
                         </div>
+                        {
+                            profile.auth !== null && profile.auth.user !== null && typeof profile.auth.user.email === 'string' ?
+                                <div className={styles['option-container']}>
+                                    <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={t('RESET_PASSWORD')} target={'_blank'} href={`https://www.strem.io/reset-password/${profile.auth.user.email}`}>
+                                        <div className={styles['label']}>{ t('RESET_PASSWORD') }</div>
+                                    </Button>
+                                </div>
+                                :
+                                null
+                        }
+                        {
+                            profile.auth !== null && profile.auth.user !== null ?
+                                <div className={styles['option-container']}>
+                                    <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={t('SETTINGS_ACC_DELETE')} target={'_blank'} href={'https://stremio.zendesk.com/hc/en-us/articles/360021428911-How-to-delete-my-account'}>
+                                        <div className={styles['label']}>{ t('SETTINGS_ACC_DELETE') }</div>
+                                    </Button>
+                                </div>
+                                :
+                                null
+                        }
                     </div>
                     <div ref={playerSectionRef} className={styles['section-container']}>
                         <div className={styles['section-title']}>{ t('SETTINGS_NAV_PLAYER') }</div>

@@ -49,14 +49,27 @@ const Search = ({ queryParams }) => {
             <div ref={scrollContainerRef} className={styles['search-content']} onScroll={onScroll}>
                 {
                     query === null ?
-                        <div className={classnames(styles['search-hints-container'], 'animation-fade-in')}>
-                            <div className={styles['search-hint-container']}>
-                                <Icon className={styles['icon']} name={'movies'} />
-                                <div className={styles['label']}>{ t('SEARCH_EXPLANATION_CONTENT') }</div>
+                        <div className={classnames(styles['search-hints-wrapper'])}>
+                            <div className={classnames(styles['search-hints-title-container'], 'animation-fade-in')}>
+                                <div className={styles['search-hints-title']}>{t('SEARCH_ANYTHING')}</div>
                             </div>
-                            <div className={styles['search-hint-container']}>
-                                <Icon className={styles['icon']} name={'actors'} />
-                                <div className={styles['label']}>{ t('SEARCH_EXPLANATION_PEOPLE') }</div>
+                            <div className={classnames(styles['search-hints-container'], 'animation-fade-in')}>
+                                <div className={styles['search-hint-container']}>
+                                    <Icon className={styles['icon']} name={'trailer'} />
+                                    <div className={styles['label']}>{t('SEARCH_CATEGORIES')}</div>
+                                </div>
+                                <div className={styles['search-hint-container']}>
+                                    <Icon className={styles['icon']} name={'actors'} />
+                                    <div className={styles['label']}>{t('SEARCH_PERSONS')}</div>
+                                </div>
+                                <div className={styles['search-hint-container']}>
+                                    <Icon className={styles['icon']} name={'link'} />
+                                    <div className={styles['label']}>{t('SEARCH_PROTOCOLS')}</div>
+                                </div>
+                                <div className={styles['search-hint-container']}>
+                                    <Icon className={styles['icon']} name={'imdb-outline'} />
+                                    <div className={styles['label']}>{t('SEARCH_TYPES')}</div>
+                                </div>
                             </div>
                         </div>
                         :
