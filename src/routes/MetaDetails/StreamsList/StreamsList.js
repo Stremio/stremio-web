@@ -96,26 +96,25 @@ const StreamsList = ({ className, video, ...props }) => {
                             :
                             <React.Fragment>
                                 <div className={styles['select-choices-wrapper']}>
-                                    { video ? (
-                                        <React.Fragment>
-                                            <Button className={classnames(styles['button-container'], styles['back-button-container'])} tabIndex={-1} onClick={backButtonOnClick}>
-                                                <Icon className={styles['icon']} name={'chevron-back'} />
-                                            </Button>
-                                            <div className={styles['episode-title']}>
-                                                {`S${video?.season}E${video?.episode} ${(video?.title)}`}
-                                            </div>
-                                        </React.Fragment>
-                                    )
-                                        :
-                                        null
+                                    {
+                                        video ?
+                                            <React.Fragment>
+                                                <Button className={classnames(styles['button-container'], styles['back-button-container'])} tabIndex={-1} onClick={backButtonOnClick}>
+                                                    <Icon className={styles['icon']} name={'chevron-back'} />
+                                                </Button>
+                                                <div className={styles['episode-title']}>
+                                                    {`S${video?.season}E${video?.episode} ${(video?.title)}`}
+                                                </div>
+                                            </React.Fragment>
+                                            :
+                                            null
                                     }
                                     {
-                                        Object.keys(streamsByAddon).length > 1 ? (
+                                        Object.keys(streamsByAddon).length > 1 ?
                                             <Multiselect
                                                 {...selectableOptions}
                                                 className={styles['select-input-container']}
                                             />
-                                        )
                                             :
                                             null
                                     }

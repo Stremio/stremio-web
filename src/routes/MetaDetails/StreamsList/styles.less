@@ -40,6 +40,7 @@
             color: var(--primary-foreground-color);
         }
     }
+
     .select-choices-wrapper {
         display: flex;
         align-items: center;
@@ -55,12 +56,14 @@
             border-radius: 0.5em;
             padding: 1em;
             max-height: 3em;
+
             .icon {
                 width: 1.5em;
                 height: 1.5em;
                 color: var(--primary-foreground-color);
                 opacity: 0.6;
             }
+
             &:hover, &:global(.active) {
                 background-color: var(--overlay-color);
                 opacity: 1;
@@ -85,6 +88,7 @@
             flex: 0 0 auto;
             flex-grow: 1;
             background: none;
+
             &:hover, &:focus, &:global(.active) {
                 background-color: var(--overlay-color);
             }

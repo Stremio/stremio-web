@@ -25,6 +25,7 @@
     .thumbnail-container, .addon-name-container {
         flex: none;
         overflow: visible;
+
         .thumbnail {
             display: block;
             height: 5rem;
@@ -51,6 +52,7 @@
             color: var(--primary-foreground-color);
         }
     }
+
     .info-container {
         flex: 1;
         padding: 0 0.5rem 0 1.5rem;
@@ -85,13 +87,15 @@
         }
     }
 }
+
 @media only screen and (max-width: @small) {
     .stream-container {
-       .info-container {
-        font-size: 0.9rem;
-       }
+        .info-container {
+            font-size: 0.9rem;
+        }
     }
 }
+
 @media only screen and (max-width: @minimum) {
     .stream-container {
         .thumbnail-container, .addon-name-container {
