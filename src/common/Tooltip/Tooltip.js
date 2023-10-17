@@ -21,7 +21,7 @@ const Tooltip = ({ label, position, margin }) => {
         tooltip.toggle(id.current, false);
     };
 
-    React.useEffect(() => {
+    React.useLayoutEffect(() => {
         if (element.current && element.current.parentElement) {
             const parentElement = element.current.parentElement;
             tooltip.add({
