@@ -310,6 +310,16 @@ const Settings = () => {
                                 :
                                 null
                         }
+                        {
+                            profile.auth !== null && profile.auth.user !== null ?
+                                <div className={styles['option-container']}>
+                                    <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={t('SETTINGS_ACC_DELETE')} target={'_blank'} href={'https://stremio.zendesk.com/hc/en-us/articles/360021428911-How-to-delete-my-account'}>
+                                        <div className={styles['label']}>{ t('SETTINGS_ACC_DELETE') }</div>
+                                    </Button>
+                                </div>
+                                :
+                                null
+                        }
                     </div>
                     <div ref={playerSectionRef} className={styles['section-container']}>
                         <div className={styles['section-title']}>{ t('SETTINGS_NAV_PLAYER') }</div>
