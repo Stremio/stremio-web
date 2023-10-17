@@ -90,9 +90,14 @@ const NavMenuContent = ({ onClick }) => {
                 <Button className={styles['nav-menu-option-container']} title={ t('PRIVACY_POLICY') } href={'https://www.stremio.com/privacy'} target={'_blank'}>
                     <div className={styles['nav-menu-option-label']}>{ t('PRIVACY_POLICY') }</div>
                 </Button>
-                <Button className={styles['nav-menu-option-container']} title={ t('ABOUT_STREMIO') } href={'https://www.stremio.com/'} target={'_blank'}>
-                    <div className={styles['nav-menu-option-label']}>{ t('ABOUT_STREMIO') }</div>
-                </Button>
+                {
+                    profile.auth !== null ?
+                        <Button className={styles['nav-menu-option-container']} title={ t('USER_PANEL') } href={'https://www.stremio.com/acc-settings'} target={'_blank'}>
+                            <div className={styles['nav-menu-option-label']}>{ t('USER_PANEL') }</div>
+                        </Button>
+                        :
+                        null
+                }
             </div>
         </div>
     );
