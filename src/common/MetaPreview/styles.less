@@ -162,41 +162,30 @@
         padding-top: 3.5rem;
         overflow: visible;
 
-        .action-button-wrapper {
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: center;
-            gap: 1rem 0;
-            position: relative;
+        .label {
+            position: absolute;
+            top: -3rem;
+            left: 0;
+            opacity: 0;
+            transition: opacity 0.3s ease; 
+            text-align: center;
+            color: var(--primary-foreground-color);
             overflow: visible;
+        }
+        
+        &.action-button-wrapper:first-of-type > .label {
+            min-width: 6rem;
+            left: -25%;
+        }
+        &:not(:last-child) {
+            margin-right: 1rem;
+        }
+        &:hover {
             .label {
-                position: absolute;
-                top: -3rem;
-                left: 0;
-                opacity: 0;
-                transition: opacity 0.3s ease; 
-                text-align: center;
-                color: var(--primary-foreground-color);
-                overflow: visible;
-            }
-            
-            &.action-button-wrapper:first-of-type > .label {
-                min-width: 6rem;
-                left: -25%;
-            }
-            &:not(:last-child) {
-                margin-right: 1rem;
-            }
-            &:hover {
-                .label {
-                    opacity: 0.7;
-                }
+                opacity: 0.7;
             }
         }
     
-        
-        
         .action-button {
             flex: none;
             width: 4rem;

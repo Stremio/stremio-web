@@ -194,46 +194,32 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                 }
             </div>
             <div className={styles['action-buttons-container']}>
-                <div className={styles['action-button-wrapper']}>
-                    {
-                        typeof toggleInLibrary === 'function' && compact ?
-                            <div className={styles['label']}>{inLibrary ? t('REMOVE_FROM_LIB') : t('ADD_TO_LIB')}</div>
-                            :
-                            null
-                    }
-                    {
-                        typeof toggleInLibrary === 'function' ?
-                            <ActionButton
-                                className={styles['action-button']}
-                                icon={inLibrary ? 'remove-from-library' : 'add-to-library'}
-                                label={compact ? null : inLibrary ? t('REMOVE_FROM_LIB') : t('ADD_TO_LIB')}
-                                tabIndex={compact ? -1 : 0}
-                                onClick={toggleInLibrary}
-                            />
-                            :
-                            null
-                    }
-                </div>
-                <div className={styles['action-button-wrapper']}>
-                    {
-                        typeof trailerHref === 'string' && compact ?
-                            <div className={styles['label']}>{t('WATCH_TRAILER')}</div>
-                            :
-                            null
-                    }
-                    {
-                        typeof trailerHref === 'string' ?
-                            <ActionButton
-                                className={styles['action-button']}
-                                icon={'trailer'}
-                                label={compact ? null : t('TRAILER')}
-                                tabIndex={compact ? -1 : 0}
-                                href={trailerHref}
-                            />
-                            :
-                            null
-                    }
-                </div>
+                {
+                    typeof toggleInLibrary === 'function' ?
+                        <ActionButton
+                            className={styles['action-button']}
+                            icon={inLibrary ? 'remove-from-library' : 'add-to-library'}
+                            label={inLibrary ? t('REMOVE_FROM_LIB') : t('ADD_TO_LIB')}
+                            tooltip={compact}
+                            tabIndex={compact ? -1 : 0}
+                            onClick={toggleInLibrary}
+                        />
+                        :
+                        null
+                }
+                {
+                    typeof trailerHref === 'string' ?
+                        <ActionButton
+                            className={styles['action-button']}
+                            icon={'trailer'}
+                            label={t('TRAILER')}
+                            tabIndex={compact ? -1 : 0}
+                            href={trailerHref}
+                            tooltip={compact}
+                        />
+                        :
+                        null
+                }
                 {
                     typeof showHref === 'string' && compact ?
                         <ActionButton
