@@ -13,8 +13,10 @@
 .tooltip-container {
     position: fixed;
     visibility: hidden;
+    opacity: 0;
 
     &:global(.active) {
         visibility: visible;
+        opacity: 1;
     }
 }
