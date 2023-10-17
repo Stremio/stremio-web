@@ -23,6 +23,7 @@ const SharePrompt = require('./SharePrompt');
 const Slider = require('./Slider');
 const TextInput = require('./TextInput');
 const { ToastProvider, useToast } = require('./Toast');
+const { TooltipProvider, Tooltip } = require('./Tooltip');
 const comparatorWithPriorities = require('./comparatorWithPriorities');
 const CONSTANTS = require('./CONSTANTS');
 const { withCoreSuspender, useCoreSuspender } = require('./CoreSuspender');
@@ -70,6 +71,8 @@ module.exports = {
     TextInput,
     ToastProvider,
     useToast,
+    TooltipProvider,
+    Tooltip,
     comparatorWithPriorities,
     CONSTANTS,
     withCoreSuspender,

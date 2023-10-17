@@ -1,0 +1,22 @@
+// Copyright (C) 2017-2023 Smart code 203358507
+
+.tooltip {
+    z-index: -1;
+    visibility: hidden;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.tooltip-container {
+    position: fixed;
+    visibility: hidden;
+    opacity: 0;
+
+    &:global(.active) {
+        visibility: visible;
+        opacity: 1;
+    }
+}
