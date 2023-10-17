@@ -170,6 +170,16 @@ const Player = ({ urlParams, queryParams }) => {
     const onSeekRequested = React.useCallback((time) => {
         dispatch({ type: 'setProp', propName: 'time', propValue: time });
     }, []);
+    const onForwardClick = React.useCallback(() => {
+        if(videoState.time !== null) {
+            dispatch({ type: 'setProp', propName: 'time', propValue: videoState.time + 10 * 1000 });
+        }
+    }, [videoState.time]);
+    const onBackwardClick = React.useCallback(() => {
+        if(videoState.time !== null) {
+            dispatch({ type: 'setProp', propName: 'time', propValue: videoState.time - 10 * 1000 });
+        }
+    }, [videoState.time]);
     const onPlaybackSpeedChanged = React.useCallback((rate) => {
         dispatch({ type: 'setProp', propName: 'playbackSpeed', propValue: rate });
     }, []);
@@ -709,6 +719,8 @@ const Player = ({ urlParams, queryParams }) => {
                 onToggleStatisticsMenu={toggleStatisticsMenu}
                 onMouseMove={onBarMouseMove}
                 onMouseOver={onBarMouseMove}
+                onForwardClick={onForwardClick}
+                onBackwardClick={onBackwardClick}
             />
             {
                 nextVideoPopupOpen ?

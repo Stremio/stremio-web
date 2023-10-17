@@ -39,6 +39,8 @@ const ControlBar = ({
     onToggleVideosMenu,
     onToggleOptionsMenu,
     onToggleStatisticsMenu,
+    onForwardClick,
+    onBackwardClick,
     ...props
 }) => {
     const { chromecast } = useServices();
@@ -73,6 +75,16 @@ const ControlBar = ({
             }
         }
     }, [paused, onPlayRequested, onPauseRequested]);
+    const onForwardButtonClick = React.useCallback(() => {
+        if (typeof onForwardClick === 'function') {
+            onForwardClick();
+        }
+    }, [onForwardClick]);
+    const onBackwardButtonClick = React.useCallback(() => {
+        if (typeof onBackwardClick === 'function') {
+            onBackwardClick();
+        }
+    }, [onBackwardClick]);
     const onNextVideoButtonClick = React.useCallback(() => {
         if (nextVideo !== null && typeof nextVideo.deepLinks === 'object') {
             if (nextVideo.deepLinks.player !== null) {
@@ -147,6 +159,12 @@ const ControlBar = ({
             <div className={styles['control-bar-buttons-container']}>
                 <Button className={classnames(styles['control-bar-button'], { 'disabled': typeof paused !== 'boolean' })} title={paused ? t('PLAYER_PLAY') : t('PLAYER_PAUSE')} tabIndex={-1} onClick={onPlayPauseButtonClick}>
                     <Icon className={styles['icon']} name={typeof paused !== 'boolean' || paused ? 'play' : 'pause'} />
+                </Button>
+                <Button className={classnames(styles['control-bar-button'], { 'disabled': typeof paused !== 'boolean' })} title={'-10s'} tabIndex={-1} onClick={onBackwardButtonClick}>
+                    <Icon className={styles['icon']} name={typeof paused !== 'boolean' || 'chevron-back'} />
+                </Button>
+                <Button className={classnames(styles['control-bar-button'], { 'disabled': typeof paused !== 'boolean' })} title={'+10s'} tabIndex={-1} onClick={onForwardButtonClick}>
+                    <Icon className={styles['icon']} name={typeof paused !== 'boolean' || 'chevron-forward'} />
                 </Button>
                 {
                     nextVideo !== null ?
@@ -237,6 +255,8 @@ ControlBar.propTypes = {
     onToggleVideosMenu: PropTypes.func,
     onToggleOptionsMenu: PropTypes.func,
     onToggleStatisticsMenu: PropTypes.func,
+    onBackwardClick: PropTypes.func,
+    onForwardClick: PropTypes.func,
 };
 
 module.exports = ControlBar;
