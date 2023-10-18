@@ -149,7 +149,7 @@ const Settings = () => {
             behavior: 'smooth'
         });
     }, []);
-    const sectionsContainerOnScorll = React.useCallback(throttle(() => {
+    const sectionsContainerOnScroll = React.useCallback(throttle(() => {
         updateSelectedSectionId();
     }, 50), []);
     React.useEffect(() => {
@@ -199,7 +199,7 @@ const Settings = () => {
                             null
                     }
                 </div>
-                <div ref={sectionsContainerRef} className={styles['sections-container']} onScroll={sectionsContainerOnScorll}>
+                <div ref={sectionsContainerRef} className={styles['sections-container']} onScroll={sectionsContainerOnScroll}>
                     <div ref={generalSectionRef} className={styles['section-container']}>
                         <div className={classnames(styles['option-container'], styles['user-info-option-container'])}>
                             <div className={styles['user-info-content']}>
@@ -231,9 +231,6 @@ const Settings = () => {
                                     }
                                 </div>
                             </div>
-                            <Button className={styles['user-panel-container']} title={'User panel'} target={'_blank'} href={'https://www.stremio.com/acc-settings'}>
-                                <div className={styles['user-panel-label']}>{ t('USER_PANEL') }</div>
-                            </Button>
                         </div>
                         {
                             profile.auth === null ?
@@ -245,6 +242,76 @@ const Settings = () => {
                                 :
                                 null
                         }
+                    </div>
+                    <div ref={generalSectionRef} className={styles['section-container']}>
+                        <div className={classnames(styles['option-container'], styles['compact-margin'])}>
+                            <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={t('SETTINGS_DATA_EXPORT')} tabIndex={-1} onClick={exportDataOnClick}>
+                                <div className={styles['label']}>{ t('SETTINGS_DATA_EXPORT') }</div>
+                            </Button>
+                        </div>
+                        {
+                            profile.auth !== null && profile.auth.user !== null && typeof profile.auth.user._id === 'string' ?
+                                <div className={classnames(styles['option-container'], styles['compact-margin'])}>
+                                    <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={t('SETTINGS_SUBSCRIBE_CALENDAR')} tabIndex={-1} onClick={subscribeCalendarOnClick}>
+                                        <div className={styles['label']}>{ t('SETTINGS_SUBSCRIBE_CALENDAR') }</div>
+                                    </Button>
+                                </div>
+                                :
+                                null
+                        }
+                        <div className={classnames(styles['option-container'], styles['compact-margin'])}>
+                            <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={t('SETTINGS_SUPPORT')} target={'_blank'} href={'https://stremio.zendesk.com/hc/en-us'}>
+                                <div className={styles['label']}>{ t('SETTINGS_SUPPORT') }</div>
+                            </Button>
+                        </div>
+                        <div className={classnames(styles['option-container'], styles['compact-margin'])}>
+                            <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={'Source code'} target={'_blank'} href={`https://github.com/stremio/stremio-web/tree/${process.env.COMMIT_HASH}`}>
+                                <div className={styles['label']}>Source code</div>
+                            </Button>
+                        </div>
+                        <div className={classnames(styles['option-container'], styles['compact-margin'])}>
+                            <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={t('TERMS_OF_SERVICE')} target={'_blank'} href={'https://www.stremio.com/tos'}>
+                                <div className={styles['label']}>{ t('TERMS_OF_SERVICE') }</div>
+                            </Button>
+                        </div>
+                        <div className={classnames(styles['option-container'], styles['compact-margin'])}>
+                            <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={t('PRIVACY_POLICY')} target={'_blank'} href={'https://www.stremio.com/privacy'}>
+                                <div className={styles['label']}>{ t('PRIVACY_POLICY') }</div>
+                            </Button>
+                        </div>
+                        {
+                            profile.auth !== null && profile.auth.user !== null ?
+                                <div className={classnames(styles['option-container'], styles['compact-margin'])}>
+                                    <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={t('SETTINGS_ACC_DELETE')} target={'_blank'} href={'https://stremio.zendesk.com/hc/en-us/articles/360021428911-How-to-delete-my-account'}>
+                                        <div className={styles['label']}>{ t('SETTINGS_ACC_DELETE') }</div>
+                                    </Button>
+                                </div>
+                                :
+                                null
+                        }
+                        {
+                            profile.auth !== null && profile.auth.user !== null && typeof profile.auth.user.email === 'string' ?
+                                <div className={styles['option-container']}>
+                                    <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={t('SETTINGS_CHANGE_PASSWORD')} target={'_blank'} href={`https://www.strem.io/reset-password/${profile.auth.user.email}`}>
+                                        <div className={styles['label']}>{ t('SETTINGS_CHANGE_PASSWORD') }</div>
+                                    </Button>
+                                </div>
+                                :
+                                null
+                        }
+                        <div className={styles['option-container']}>
+                            <div className={classnames(styles['option-name-container'], styles['trakt-icon'])}>
+                                <Icon className={styles['icon']} name={'trakt'} />
+                                <div className={styles['label']}>Trakt Scrobbling</div>
+                            </div>
+                            <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Authenticate'} disabled={profile.auth === null} tabIndex={-1} onClick={toggleTraktOnClick}>
+                                <div className={styles['label']}>
+                                    { profile.auth !== null && profile.auth.user !== null && profile.auth.user.trakt !== null ? t('LOG_OUT') : t('SETTINGS_TRAKT_AUTHENTICATE') }
+                                </div>
+                            </Button>
+                        </div>
+                    </div>
+                    <div ref={playerSectionRef} className={styles['section-container']}>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
                                 <div className={styles['label']}>{ t('SETTINGS_INTERFACE_LANGUAGE') }</div>
@@ -255,71 +322,6 @@ const Settings = () => {
                                 {...interfaceLanguageSelect}
                             />
                         </div>
-                        <div className={styles['option-container']}>
-                            <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Trakt Scrobbling</div>
-                            </div>
-                            <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Authenticate'} disabled={profile.auth === null} tabIndex={-1} onClick={toggleTraktOnClick}>
-                                <Icon className={styles['icon']} name={'trakt'} />
-                                <div className={styles['label']}>
-                                    { profile.auth !== null && profile.auth.user !== null && profile.auth.user.trakt !== null ? t('LOG_OUT') : t('SETTINGS_TRAKT_AUTHENTICATE') }
-                                </div>
-                            </Button>
-                        </div>
-                        <div className={styles['option-container']}>
-                            <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>{ t('Calendar') }</div>
-                            </div>
-                            <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Subscribe'} disabled={!(profile.auth && profile.auth.user && profile.auth.user._id)} tabIndex={-1} onClick={subscribeCalendarOnClick}>
-                                <Icon className={styles['icon']} name={'calendar'} />
-                                <div className={styles['label']}>{ t('SETTINGS_CALENDAR_SUBSCRIBE') }</div>
-                            </Button>
-                        </div>
-                        <div className={styles['option-container']}>
-                            <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={t('SETTINGS_DATA_EXPORT')} tabIndex={-1} onClick={exportDataOnClick}>
-                                <div className={styles['label']}>{ t('SETTINGS_DATA_EXPORT') }</div>
-                            </Button>
-                        </div>
-                        <div className={styles['option-container']}>
-                            <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={t('SETTINGS_SUPPORT')} target={'_blank'} href={'https://stremio.zendesk.com/hc/en-us'}>
-                                <div className={styles['label']}>{ t('SETTINGS_SUPPORT') }</div>
-                            </Button>
-                        </div>
-                        <div className={styles['option-container']}>
-                            <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={'Source code'} target={'_blank'} href={`https://github.com/stremio/stremio-web/tree/${process.env.COMMIT_HASH}`}>
-                                <div className={styles['label']}>Source code</div>
-                            </Button>
-                        </div>
-                        <div className={styles['option-container']}>
-                            <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={t('TERMS_OF_SERVICE')} target={'_blank'} href={'https://www.stremio.com/tos'}>
-                                <div className={styles['label']}>{ t('TERMS_OF_SERVICE') }</div>
-                            </Button>
-                        </div>
-                        <div className={styles['option-container']}>
-                            <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={t('PRIVACY_POLICY')} target={'_blank'} href={'https://www.stremio.com/privacy'}>
-                                <div className={styles['label']}>{ t('PRIVACY_POLICY') }</div>
-                            </Button>
-                        </div>
-                        {
-                            profile.auth !== null && profile.auth.user !== null && typeof profile.auth.user.email === 'string' ?
-                                <div className={styles['option-container']}>
-                                    <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={t('RESET_PASSWORD')} target={'_blank'} href={`https://www.strem.io/reset-password/${profile.auth.user.email}`}>
-                                        <div className={styles['label']}>{ t('RESET_PASSWORD') }</div>
-                                    </Button>
-                                </div>
-                                :
-                                null
-                        }
-                        {
-                            profile.auth !== null && profile.auth.user !== null ?
-                                <div className={styles['option-container']}>
-                                    <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={t('SETTINGS_ACC_DELETE')} target={'_blank'} href={'https://stremio.zendesk.com/hc/en-us/articles/360021428911-How-to-delete-my-account'}>
-                                        <div className={styles['label']}>{ t('SETTINGS_ACC_DELETE') }</div>
-                                    </Button>
-                                </div>
-                                :
-                                null
-                        }
                     </div>
                     <div ref={playerSectionRef} className={styles['section-container']}>
                         <div className={styles['section-title']}>{ t('SETTINGS_NAV_PLAYER') }</div>

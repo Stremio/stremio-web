@@ -108,6 +108,9 @@
                     margin-bottom: 2rem;
                     overflow: visible;
 
+                    &.compact-margin {
+                        margin-bottom: 0.5rem;
+                    }
                     &:last-child {
                         margin-bottom: 0;
                     }
@@ -221,6 +224,13 @@
                             line-height: 1.5rem;
                             color: var(--primary-foreground-color);
                         }
+                        &.trakt-icon {
+                            .icon {
+                                width: 3rem;
+                                height: 3rem;
+                                color:#ff0000
+                            }
+                        }
                     }
 
                     .option-name-container {
@@ -262,7 +272,7 @@
 
                         &.link-container {
                             flex: 0 1 auto;
-                            padding: 1rem 0;
+                            padding: 0;
                             
                             .label {
                                 color: var(--primary-accent-color);
