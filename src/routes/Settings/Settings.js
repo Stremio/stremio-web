@@ -243,7 +243,7 @@ const Settings = () => {
                                 null
                         }
                     </div>
-                    <div ref={generalSectionRef} className={styles['section-container']}>
+                    <div className={styles['section-container']}>
                         <div className={classnames(styles['option-container'], styles['compact-margin'])}>
                             <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={t('SETTINGS_DATA_EXPORT')} tabIndex={-1} onClick={exportDataOnClick}>
                                 <div className={styles['label']}>{ t('SETTINGS_DATA_EXPORT') }</div>
@@ -311,7 +311,7 @@ const Settings = () => {
                             </Button>
                         </div>
                     </div>
-                    <div ref={playerSectionRef} className={styles['section-container']}>
+                    <div className={styles['section-container']}>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
                                 <div className={styles['label']}>{ t('SETTINGS_UI_LANGUAGE') }</div>
