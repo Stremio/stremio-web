@@ -10,7 +10,7 @@ const { Tooltip } = require('stremio/common/Tooltip');
 
 const ActionButton = ({ className, icon, label, tooltip, ...props }) => {
     return (
-        <Button title={label} {...props} className={classnames(className, styles['action-button-container'], { 'wide': typeof label === 'string' && !tooltip })}>
+        <Button title={tooltip ? '' : label} {...props} className={classnames(className, styles['action-button-container'], { 'wide': typeof label === 'string' && !tooltip })}>
             {
                 tooltip === true ?
                     <Tooltip label={label} position={'top'} />

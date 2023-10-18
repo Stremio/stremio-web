@@ -77,36 +77,33 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
     ), []);
     return (
         <Button href={href} download={forceDownload} {...props} onClick={onClick} className={classnames(className, styles['stream-container'])} title={addonName}>
-            {
-                typeof thumbnail === 'string' && thumbnail.length > 0 ?
-                    <div className={styles['thumbnail-container']} title={name || addonName}>
-                        <Image
-                            className={styles['thumbnail']}
-                            src={thumbnail}
-                            alt={' '}
-                            renderFallback={renderThumbnailFallback}
-                        />
-                    </div>
-                    :
-                    <div className={styles['addon-name-container']} title={name || addonName}>
-                        <div className={styles['addon-name']}>{name || addonName}</div>
-                    </div>
-            }
-            {
-                typeof description === 'string' && description.length > 0 ?
-                    <div className={styles['info-container']}>{description}</div>
-                    :
-                    null
-            }
+            <div className={styles['info-container']}>
+                {
+                    typeof thumbnail === 'string' && thumbnail.length > 0 ?
+                        <div className={styles['thumbnail-container']} title={name || addonName}>
+                            <Image
+                                className={styles['thumbnail']}
+                                src={thumbnail}
+                                alt={' '}
+                                renderFallback={renderThumbnailFallback}
+                            />
+                        </div>
+                        :
+                        <div className={styles['addon-name-container']} title={name || addonName}>
+                            <div className={styles['addon-name']}>{name || addonName}</div>
+                        </div>
+                }
+                {
+                    progress !== null && !isNaN(progress) && progress > 0 ?
+                        <div className={styles['progress-bar-container']}>
+                            <div className={styles['progress-bar']} style={{ width: `${progress}%` }} />
+                        </div>
+                        :
+                        null
+                }
+            </div>
+            <div className={styles['description-container']} title={description}>{description}</div>
             <Icon className={styles['icon']} name={'play'} />
-            {
-                progress !== null && !isNaN(progress) && progress > 0 ?
-                    <div className={styles['progress-bar-container']}>
-                        <div className={styles['progress-bar']} style={{ width: `${Math.min(progress, 1) * 100}%` }} />
-                    </div>
-                    :
-                    null
-            }
         </Button>
     );
 };
