@@ -314,7 +314,7 @@ const Settings = () => {
                     <div ref={playerSectionRef} className={styles['section-container']}>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>{ t('SETTINGS_INTERFACE_LANGUAGE') }</div>
+                                <div className={styles['label']}>{ t('SETTINGS_UI_LANGUAGE') }</div>
                             </div>
                             <Multiselect
                                 className={classnames(styles['option-input-container'], styles['multiselect-container'])}
