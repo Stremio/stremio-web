@@ -8,7 +8,8 @@
     flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
-    padding: 0.5rem;
+    gap: 1rem;
+    padding: 0.5rem 1rem;
     margin-bottom: 0.5rem;
     border-radius: var(--border-radius);
 
@@ -22,9 +23,11 @@
         }
     }
 
-    .thumbnail-container, .addon-name-container {
+    .info-container {
         flex: none;
-        overflow: visible;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
 
         .thumbnail {
             display: block;
@@ -46,16 +49,27 @@
         }
 
         .addon-name {
-            width: 5rem;
-            font-size: 0.9rem;
-            text-align: center;
+            width: 7rem;
+            max-height: 3.6em;
+            font-size: 1.1rem;
+            text-align: left;
             color: var(--primary-foreground-color);
+        }
+
+        .progress-bar-container {
+            flex: 0 0 100%;
+            border-radius: var(--border-radius);
+            background-color: var(--overlay-color);
+
+            .progress-bar {
+                height: 0.4rem;
+                background-color: var(--primary-accent-color);
+            }
         }
     }
 
-    .info-container {
+    .description-container {
         flex: 1;
-        padding: 0 0.5rem 0 1.5rem;
         display: flex;
         flex-direction: column;
         -webkit-line-clamp: 3;
@@ -76,21 +90,11 @@
         color: var(--primary-foreground-color);
         background-color: var(--secondary-accent-color);
     }
-
-    .progress-bar-container {
-        flex: 0 0 100%;
-        background-color: var(--primary-accent-color);
-
-        .progress-bar {
-            height: 0.5rem;
-            background-color: var(--primary-foreground-color);
-        }
-    }
 }
 
 @media only screen and (max-width: @small) {
     .stream-container {
-        .info-container {
+        .description-container {
             font-size: 0.9rem;
         }
     }
@@ -98,7 +102,7 @@
 
 @media only screen and (max-width: @minimum) {
     .stream-container {
-        .thumbnail-container, .addon-name-container {
+        .info-container {
             .addon-name {
                 font-weight: 500;
             }

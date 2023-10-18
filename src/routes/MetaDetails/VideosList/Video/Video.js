@@ -85,6 +85,14 @@ const Video = ({ className, id, title, thumbnail, episode, released, upcoming, w
                                     />
                                 )}
                             />
+                            {
+                                progress !== null && !isNaN(progress) && progress > 0 ?
+                                    <div className={styles['progress-bar-container']}>
+                                        <div className={styles['progress-bar']} style={{ width: `${progress}%` }} />
+                                    </div>
+                                    :
+                                    null
+                            }
                         </div>
                         :
                         null
@@ -129,14 +137,6 @@ const Video = ({ className, id, title, thumbnail, episode, released, upcoming, w
                         </div>
                     </div>
                 </div>
-                {
-                    progress !== null && !isNaN(progress) && progress > 0 ?
-                        <div className={styles['progress-bar-container']}>
-                            <div className={styles['progress-bar']} style={{ width: `${Math.min(progress, 1) * 100}%` }} />
-                        </div>
-                        :
-                        null
-                }
                 {children}
             </Button>
         );
