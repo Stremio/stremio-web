@@ -108,6 +108,10 @@
                     margin-bottom: 2rem;
                     overflow: visible;
 
+                    &.link-container {
+                        margin-bottom: 0.5rem;
+                    }
+                    
                     &:last-child {
                         margin-bottom: 0;
                     }
@@ -127,6 +131,7 @@
                                 height: 5rem;
                                 width: 5rem;
                                 margin-right: 1rem;
+                                border: 2px solid var(--primary-accent-color);
                                 border-radius: 50%;
                                 background-size: cover;
                                 background-repeat: no-repeat;
@@ -221,6 +226,14 @@
                             line-height: 1.5rem;
                             color: var(--primary-foreground-color);
                         }
+
+                        &.trakt-icon {
+                            .icon {
+                                width: 3rem;
+                                height: 3rem;
+                                color: var(--color-trakt);
+                            }
+                        }
                     }
 
                     .option-name-container {
@@ -260,9 +273,9 @@
                             }
                         }
 
-                        &.link-container {
+                        &.link-input-container {
                             flex: 0 1 auto;
-                            padding: 1rem 0;
+                            padding: 0;
                             
                             .label {
                                 color: var(--primary-accent-color);
