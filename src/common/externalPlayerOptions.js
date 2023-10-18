@@ -7,7 +7,8 @@ let options = [{ label: 'EXTERNAL_PLAYER_DISABLED', value: 'internal' }];
 if (platform.name === 'ios') {
     options = options.concat([
         { label: 'VLC', value: 'vlc' },
-        { label: 'Outplayer', value: 'outplayer' }
+        { label: 'Outplayer', value: 'outplayer' },
+        { label: 'Infuse', value: 'infuse' }
     ]);
 } else if (platform.name === 'android') {
     options = options.concat([
