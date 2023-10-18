@@ -238,7 +238,8 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                             <ActionButton
                                 className={styles['action-button']}
                                 icon={'share'}
-                                tooltip={t('CTX_SHARE')}
+                                label={t('CTX_SHARE')}
+                                tooltip={true}
                                 tabIndex={compact ? -1 : 0}
                                 onClick={openShareModal}
                             />
