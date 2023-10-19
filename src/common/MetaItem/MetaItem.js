@@ -3,17 +3,18 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
+const { useTranslation } = require('react-i18next');
 const filterInvalidDOMProps = require('filter-invalid-dom-props').default;
 const { default: Icon } = require('@stremio/stremio-icons/react');
 const Button = require('stremio/common/Button');
 const Image = require('stremio/common/Image');
 const Multiselect = require('stremio/common/Multiselect');
-const PlayIconCircleCentered = require('stremio/common/PlayIconCircleCentered');
 const useBinaryState = require('stremio/common/useBinaryState');
 const { ICON_FOR_TYPE } = require('stremio/common/CONSTANTS');
 const styles = require('./styles');
 
-const MetaItem = React.memo(({ className, type, name, poster, posterShape, playIcon, progress, newVideos, options, deepLinks, dataset, optionOnSelect, ...props }) => {
+const MetaItem = React.memo(({ className, type, name, poster, posterShape, progress, newVideos, options, deepLinks, dataset, optionOnSelect, onDismissClick, onPosterClick, onPlayClick, ...props }) => {
+    const { t } = useTranslation();
     const [menuOpen, onMenuOpen, onMenuClose] = useBinaryState(false);
     const href = React.useMemo(() => {
         return deepLinks ?
@@ -65,7 +66,16 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, playI
     return (
         <Button title={name} href={href} {...filterInvalidDOMProps(props)} className={classnames(className, styles['meta-item-container'], styles['poster-shape-poster'], styles[`poster-shape-${posterShape}`], { 'active': menuOpen })} onClick={metaItemOnClick}>
             <div className={styles['poster-container']}>
-                <div className={styles['poster-image-layer']}>
+                {
+                    onDismissClick ?
+                        <div title={t('LIBRARY_RESUME_DISMISS')} className={styles['dismiss-icon-layer']} onClick={onDismissClick}>
+                            <Icon className={styles['dismiss-icon']} name={'close'} />
+                            <div className={styles['dismiss-icon-backdrop']} />
+                        </div>
+                        :
+                        null
+                }
+                <div className={styles['poster-image-layer']} onClick={onPosterClick}>
                     <Image
                         className={styles['poster-image']}
                         src={poster}
@@ -74,9 +84,10 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, playI
                     />
                 </div>
                 {
-                    playIcon ?
-                        <div className={styles['play-icon-layer']}>
-                            <PlayIconCircleCentered className={styles['play-icon']} />
+                    onPlayClick ?
+                        <div title={t('CONTINUE_WATCHING')} className={styles['play-icon-layer']} onClick={onPlayClick}>
+                            <Icon className={styles['play-icon']} name={'play'} />
+                            <div className={styles['play-icon-background']} />
                         </div>
                         :
                         null
@@ -96,7 +107,10 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, playI
                             <div className={styles['layer']} />
                             <div className={styles['layer']} />
                             <div className={styles['layer']}>
-                                +{newVideos}
+                                <Icon className={styles['icon']} name={'add'} />
+                                <div className={styles['label']}>
+                                    {newVideos}
+                                </div>
                             </div>
                         </div>
                         :
@@ -140,7 +154,6 @@ MetaItem.propTypes = {
     name: PropTypes.string,
     poster: PropTypes.string,
     posterShape: PropTypes.oneOf(['poster', 'landscape', 'square']),
-    playIcon: PropTypes.bool,
     progress: PropTypes.number,
     newVideos: PropTypes.number,
     options: PropTypes.array,
@@ -151,7 +164,10 @@ MetaItem.propTypes = {
     }),
     dataset: PropTypes.object,
     optionOnSelect: PropTypes.func,
-    onClick: PropTypes.func
+    onPosterClick: PropTypes.func,
+    onDismissClick: PropTypes.func,
+    onPlayClick: PropTypes.func,
+    onClick: PropTypes.func,
 };
 
 module.exports = MetaItem;

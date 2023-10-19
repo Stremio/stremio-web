@@ -4,7 +4,6 @@ const React = require('react');
 const { useServices } = require('stremio/services');
 const PropTypes = require('prop-types');
 const MetaItem = require('stremio/common/MetaItem');
-const useNotifications = require('stremio/common/useNotifications');
 const { t } = require('i18next');
 
 const OPTIONS = [
@@ -16,11 +15,6 @@ const OPTIONS = [
 
 const LibItem = ({ _id, removable, ...props }) => {
     const { core } = useServices();
-    const notifications = useNotifications();
-    const newVideos = React.useMemo(() => {
-        const count = notifications.items?.[_id]?.length ?? 0;
-        return Math.min(Math.max(count, 0), 99);
-    }, [_id, notifications.items]);
     const options = React.useMemo(() => {
         return OPTIONS
             .filter(({ value }) => {
@@ -104,7 +98,6 @@ const LibItem = ({ _id, removable, ...props }) => {
     return (
         <MetaItem
             {...props}
-            newVideos={newVideos}
             options={options}
             optionOnSelect={optionOnSelect}
         />
