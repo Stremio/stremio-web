@@ -54,7 +54,6 @@ const VolumeSlider = ({ className, volume, onVolumeChangeRequested }) => {
             disabled={disabled}
             onSlide={onSlide}
             onComplete={onComplete}
-            backgroundCircleStyle={'background-circle-light'}
         />
     );
 };

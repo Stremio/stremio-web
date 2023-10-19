@@ -5,6 +5,7 @@
 :import('~stremio/common/Slider/styles.less') {
     slider-track: track;
     slider-track-after: track-after;
+    slider-thumb-background-circle: background-circle;
 }
 
 .volume-slider:not(:global(.disabled)) {
@@ -20,5 +21,10 @@
         .slider-track-after {
             background-color: var(--primary-foreground-color);
         }
+    }
+
+    .slider-thumb-background-circle {
+        fill: var(--primary-foreground-color);
+        filter: brightness(100%);
     }
 }

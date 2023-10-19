@@ -55,7 +55,6 @@ const SeekBar = ({ className, time, duration, buffered, onSeekRequested }) => {
                 disabled={disabled}
                 onSlide={onSlide}
                 onComplete={onComplete}
-                backgroundCircleStyle={'background-circle'}
             />
             <div className={styles['label']}>{formatTime(duration)}</div>
         </div>
