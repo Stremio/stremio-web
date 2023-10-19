@@ -65,9 +65,15 @@ html.active-slider-within {
         height: var(--thumb-size);
         transform: translateX(-50%);
         fill: var(--primary-foreground-color);
-    }
-    .background-circle {
-        filter: brightness(130%);
-        fill: var(--primary-accent-color);
+        
+        .background-circle {
+            fill: var(--primary-accent-color);
+            filter: brightness(130%);
+        }
+
+        .background-circle-light {
+            fill: var(--primary-foreground-color);
+        }
+
     }
 }

@@ -8,7 +8,7 @@ const useAnimationFrame = require('stremio/common/useAnimationFrame');
 const useLiveRef = require('stremio/common/useLiveRef');
 const styles = require('./styles');
 
-const Slider = ({ className, value, buffered, minimumValue, maximumValue, disabled, onSlide, onComplete }) => {
+const Slider = ({ className, value, buffered, minimumValue, maximumValue, disabled, onSlide, onComplete, backgroundCircleStyle }) => {
     const minimumValueRef = useLiveRef(minimumValue !== null && !isNaN(minimumValue) ? minimumValue : 0);
     const maximumValueRef = useLiveRef(maximumValue !== null && !isNaN(maximumValue) ? maximumValue : 100);
     const valueRef = useLiveRef(value !== null && !isNaN(value) ? Math.min(maximumValueRef.current, Math.max(minimumValueRef.current, value)) : 0);
@@ -110,7 +110,7 @@ const Slider = ({ className, value, buffered, minimumValue, maximumValue, disabl
             </div>
             <div className={styles['layer']}>
                 <svg className={styles['thumb']} style={{ marginLeft: `calc(100% * ${thumbPosition})` }} viewBox={'0 0 10 10'}>
-                    <circle cx={'5'} cy={'5'} r={'4'} className={styles['background-circle']} />
+                    <circle cx={'5'} cy={'5'} r={'4'} className={styles[backgroundCircleStyle]} />
                     <circle cx={'5'} cy={'5'} r={'2.5'} />
                 </svg>
             </div>
@@ -126,7 +126,8 @@ Slider.propTypes = {
     maximumValue: PropTypes.number,
     disabled: PropTypes.bool,
     onSlide: PropTypes.func,
-    onComplete: PropTypes.func
+    onComplete: PropTypes.func,
+    backgroundCircleStyle: PropTypes.string
 };
 
 module.exports = Slider;
