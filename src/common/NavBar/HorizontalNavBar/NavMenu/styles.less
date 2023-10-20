@@ -3,99 +3,114 @@
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
 @import (reference) '~stremio/common/screen-sizes.less';
 
-.nav-menu-container {
-    width: 22rem;
-    max-height: calc(100vh - var(--horizontal-nav-bar-size));
-    overflow-y: auto;
-    border-radius: var(--border-radius);
-    background-color: var(--modal-background-color);
+:import('~stremio/common/NavBar/HorizontalNavBar/styles.less') {
+    wrapper-container: buttons-container;
+}
 
-    .user-info-container {
-        display: flex;
-        padding: 1.5rem 1rem;
+:import('~stremio/common/Popup/styles.less') {
+    navmenu-wrapper-container: menu-container;
+}
 
-        .avatar-container {
-            flex: none;
-            height: 4rem;
-            width: 4rem;
-            border-radius: 50%;
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-position: center;
-            background-origin: content-box;
-            background-clip: content-box;
-            background-color: var(--primary-foreground-color);
-            opacity: 0.9;
-        }
+.wrapper-container {
+    .navmenu-wrapper-container {
+        margin-top: 1rem;
 
-        .user-info-details {
-            flex: auto;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            margin-left: 1rem;
+        .nav-menu-container {
+            width: 22rem;
+            max-height: calc(100vh - var(--horizontal-nav-bar-size));
+            overflow-y: auto;
+            border-radius: var(--border-radius);
+            background-color: var(--modal-background-color);
 
-            .email-container {
-                flex: none;
-                margin-bottom: 0.5rem;
+            .user-info-container {
+                display: flex;
+                padding: 1.5rem 1rem;
 
-                .email-label {
-                    flex: 1;
-                    color: var(--primary-foreground-color);
+                .avatar-container {
+                    flex: none;
+                    height: 4rem;
+                    width: 4rem;
+                    border-radius: 50%;
+                    background-size: cover;
+                    background-repeat: no-repeat;
+                    background-position: center;
+                    background-origin: content-box;
+                    background-clip: content-box;
+                    background-color: var(--primary-foreground-color);
+                    opacity: 0.9;
                 }
-            }
 
-            .logout-button-container {
-                flex: none;
+                .user-info-details {
+                    flex: auto;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    margin-left: 1rem;
 
-                &:hover, &:focus {
-                    outline: none;
+                    .email-container {
+                        flex: none;
+                        margin-bottom: 0.5rem;
 
-                    .logout-label {
-                        text-decoration: underline;
+                        .email-label {
+                            flex: 1;
+                            color: var(--primary-foreground-color);
+                        }
+                    }
+
+                    .logout-button-container {
+                        flex: none;
+
+                        &:hover, &:focus {
+                            outline: none;
+
+                            .logout-label {
+                                text-decoration: underline;
+                            }
+                        }
+
+                        .logout-label {
+                            flex: 1;
+                            font-size: 0.9rem;
+                            font-weight: 500;
+                            color: var(--primary-foreground-color);
+                        }
                     }
                 }
+            }
 
-                .logout-label {
-                    flex: 1;
-                    font-size: 0.9rem;
-                    font-weight: 500;
-                    color: var(--primary-foreground-color);
+            .nav-menu-section {
+                border-top: thin solid var(--overlay-color);
+
+                .nav-menu-option-container {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    height: 4rem;
+                    padding: 0 1.5rem;
+
+                    &:hover {
+                        background-color: var(--overlay-color);
+                    }
+
+                    .icon {
+                        flex: none;
+                        width: 2rem;
+                        height: 2rem;
+                        margin-right: 1rem;
+                        color: var(--primary-foreground-color);
+                        opacity: 0.3;
+                    }
+
+                    .nav-menu-option-label {
+                        flex: 1;
+                        color: var(--primary-foreground-color);
+                    }
                 }
-            }
-        }
-    }
-
-    .nav-menu-section {
-        border-top: thin solid var(--overlay-color);
-
-        .nav-menu-option-container {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            height: 4rem;
-            padding: 0 1.5rem;
-
-            &:hover {
-                background-color: var(--overlay-color);
-            }
-
-            .icon {
-                flex: none;
-                width: 2rem;
-                height: 2rem;
-                margin-right: 1rem;
-                color: var(--primary-foreground-color);
-                opacity: 0.3;
-            }
-
-            .nav-menu-option-label {
-                flex: 1;
-                color: var(--primary-foreground-color);
             }
         }
     }
 }
+
 
 @media only screen and (max-width: @minimum) {
     .nav-menu-container {
