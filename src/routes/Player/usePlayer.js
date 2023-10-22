@@ -32,7 +32,7 @@ const map = (player) => ({
         player.metaItem,
 });
 
-const usePlayer = (urlParams, videoParams) => {
+const usePlayer = (urlParams) => {
     const { core } = useServices();
     const { decodeStream } = useCoreSuspender();
     const stream = decodeStream(urlParams.stream);
@@ -44,7 +44,6 @@ const usePlayer = (urlParams, videoParams) => {
                     model: 'Player',
                     args: {
                         stream,
-                        videoParams,
                         streamRequest: typeof urlParams.streamTransportUrl === 'string' && typeof urlParams.type === 'string' && typeof urlParams.videoId === 'string' ?
                             {
                                 base: urlParams.streamTransportUrl,
@@ -86,7 +85,16 @@ const usePlayer = (urlParams, videoParams) => {
                 action: 'Unload'
             };
         }
-    }, [urlParams, videoParams]);
+    }, [urlParams]);
+    const videoParamsChanged = React.useCallback((videoParams) => {
+        core.transport.dispatch({
+            action: 'Player',
+            args: {
+                action: 'VideoParamsChanged',
+                args: { videoParams }
+            }
+        }, 'player');
+    }, []);
     const timeChanged = React.useCallback((time, duration, device) => {
         core.transport.dispatch({
             action: 'Player',
@@ -114,6 +122,10 @@ const usePlayer = (urlParams, videoParams) => {
         }, 'player');
     }, []);
     const player = useModelState({ model: 'player', action, map });
+    // Hotfix for compatability between latest stremio-core and current stremio-web
+    React.useInsertionEffect(() => {
+        videoParamsChanged({});
+    }, [action]);
     return [player, timeChanged, pausedChanged, ended];
 };
 
