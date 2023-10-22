@@ -4,6 +4,7 @@ const React = require('react');
 const classnames = require('classnames');
 const debounce = require('lodash.debounce');
 const { useTranslation } = require('react-i18next');
+const { translateOption } = require('stremio/common');
 const { MainNavBars, MetaRow, LibItem, MetaItem, StreamingServerWarning, useStreamingServer, withCoreSuspender, getVisibleChildrenRange } = require('stremio/common');
 const useBoard = require('./useBoard');
 const useContinueWatchingPreview = require('./useContinueWatchingPreview');
@@ -53,13 +54,16 @@ const Board = () => {
                             null
                     }
                     {board.catalogs.map((catalog, index) => {
+                        let titleList = catalog.title.split(" ")
+                        titleList.push(translateOption(titleList.pop().toLocaleLowerCase(), 'TYPE_'));
+                        let title=titleList.join(" ")
                         switch (catalog.content?.type) {
                             case 'Ready': {
                                 return (
                                     <MetaRow
                                         key={index}
                                         className={classnames(styles['board-row'], styles[`board-row-${catalog.content.content[0].posterShape}`], 'animation-fade-in')}
-                                        title={catalog.title}
+                                        title={title}
                                         items={catalog.content.content}
                                         itemComponent={MetaItem}
                                         deepLinks={catalog.deepLinks}
@@ -71,7 +75,7 @@ const Board = () => {
                                     <MetaRow
                                         key={index}
                                         className={classnames(styles['board-row'], 'animation-fade-in')}
-                                        title={catalog.title}
+                                        title={title}
                                         message={catalog.content.content}
                                         deepLinks={catalog.deepLinks}
                                     />
@@ -82,7 +86,7 @@ const Board = () => {
                                     <MetaRow.Placeholder
                                         key={index}
                                         className={classnames(styles['board-row'], styles['board-row-poster'], 'animation-fade-in')}
-                                        title={catalog.title}
+                                        title={title}
                                         deepLinks={catalog.deepLinks}
                                     />
                                 );
