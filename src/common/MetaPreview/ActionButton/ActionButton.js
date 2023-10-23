@@ -6,7 +6,7 @@ const classnames = require('classnames');
 const { default: Icon } = require('@stremio/stremio-icons/react');
 const Button = require('stremio/common/Button');
 const styles = require('./styles');
-const { Tooltip } = require('stremio/common/Tooltip');
+const { Tooltip } = require('stremio/common/Tooltips');
 
 const ActionButton = ({ className, icon, label, tooltip, ...props }) => {
     return (

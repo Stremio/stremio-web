@@ -2,24 +2,34 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const useTooltip = require('./useTooltip');
+const useTooltip = require('../useTooltip');
 const styles = require('./styles');
 
 const createId = () => (Math.random() + 1).toString(36).substring(7);
 
-const Tooltip = ({ label, position, margin }) => {
+const Tooltip = ({ label, position, margin = 15 }) => {
     const tooltip = useTooltip();
 
     const id = React.useRef(createId());
     const element = React.useRef(null);
 
     const onMouseEnter = () => {
-        tooltip.toggle(id.current, true);
+        tooltip.update(id.current, {
+            active: true,
+        });
     };
 
     const onMouseLeave = () => {
-        tooltip.toggle(id.current, false);
+        tooltip.update(id.current, {
+            active: false,
+        });
     };
+
+    React.useEffect(() => {
+        tooltip.update(id.current, {
+            label,
+        });
+    }, [label]);
 
     React.useLayoutEffect(() => {
         if (element.current && element.current.parentElement) {
@@ -45,14 +55,12 @@ const Tooltip = ({ label, position, margin }) => {
                 tooltip.remove(id.current);
             }
         };
-    }, [label]);
+    }, []);
 
     return (
-        <div ref={element} className={styles['tooltip']} />
+        <div ref={element} className={styles['tooltip-placeholder']} />
     );
 };
-
-Tooltip.displayName = 'Tooltip';
 
 Tooltip.propTypes = {
     label: PropTypes.string.isRequired,
