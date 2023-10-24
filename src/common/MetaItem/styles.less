@@ -82,6 +82,14 @@
         background-color: var(--overlay-color);
         border-radius: var(--border-radius);
 
+        &:global(.poster-change-cursor) {
+            .poster-image-layer {
+                &:hover {
+                    cursor: zoom-in;
+                }
+            }
+        }
+
         .dismiss-icon-layer {
             z-index: -2;
             position: absolute;
@@ -145,10 +153,6 @@
                 height: 50%;
                 color: var(--primary-foreground-color);
                 opacity: 0.2;
-            }
-
-            &:hover {
-                cursor: zoom-in;
             }
         }
 

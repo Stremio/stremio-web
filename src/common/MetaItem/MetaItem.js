@@ -13,7 +13,7 @@ const useBinaryState = require('stremio/common/useBinaryState');
 const { ICON_FOR_TYPE } = require('stremio/common/CONSTANTS');
 const styles = require('./styles');
 
-const MetaItem = React.memo(({ className, type, name, poster, posterShape, progress, newVideos, options, deepLinks, dataset, optionOnSelect, onDismissClick, onPosterClick, onPlayClick, ...props }) => {
+const MetaItem = React.memo(({ className, type, name, poster, posterShape, posterChangeCursor, progress, newVideos, options, deepLinks, dataset, optionOnSelect, onDismissClick, onPlayClick, ...props }) => {
     const { t } = useTranslation();
     const [menuOpen, onMenuOpen, onMenuClose] = useBinaryState(false);
     const href = React.useMemo(() => {
@@ -65,7 +65,7 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, progr
     ), []);
     return (
         <Button title={name} href={href} {...filterInvalidDOMProps(props)} className={classnames(className, styles['meta-item-container'], styles['poster-shape-poster'], styles[`poster-shape-${posterShape}`], { 'active': menuOpen })} onClick={metaItemOnClick}>
-            <div className={styles['poster-container']}>
+            <div className={classnames(styles['poster-container'], { 'poster-change-cursor': posterChangeCursor })}>
                 {
                     onDismissClick ?
                         <div title={t('LIBRARY_RESUME_DISMISS')} className={styles['dismiss-icon-layer']} onClick={onDismissClick}>
@@ -75,7 +75,7 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, progr
                         :
                         null
                 }
-                <div className={styles['poster-image-layer']} onClick={onPosterClick}>
+                <div className={styles['poster-image-layer']}>
                     <Image
                         className={styles['poster-image']}
                         src={poster}
@@ -155,6 +155,7 @@ MetaItem.propTypes = {
     name: PropTypes.string,
     poster: PropTypes.string,
     posterShape: PropTypes.oneOf(['poster', 'landscape', 'square']),
+    posterChangeCursor: PropTypes.bool,
     progress: PropTypes.number,
     newVideos: PropTypes.number,
     options: PropTypes.array,
@@ -165,7 +166,6 @@ MetaItem.propTypes = {
     }),
     dataset: PropTypes.object,
     optionOnSelect: PropTypes.func,
-    onPosterClick: PropTypes.func,
     onDismissClick: PropTypes.func,
     onPlayClick: PropTypes.func,
     onClick: PropTypes.func,

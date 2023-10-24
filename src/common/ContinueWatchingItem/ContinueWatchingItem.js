@@ -15,22 +15,21 @@ const ContinueWatchingItem = ({ _id, deepLinks, ...props }) => {
         return Math.min(Math.max(count, 0), 99);
     }, [_id, notifications.items]);
 
-    const onPosterClick = React.useCallback((event) => {
-        event.preventDefault();
-        if (deepLinks?.metaDetailsVideos) {
-            window.location = deepLinks?.metaDetailsVideos;
+    const onClick = React.useCallback(() => {
+        if (deepLinks?.metaDetailsVideos ?? deepLinks?.metaDetailsStreams) {
+            window.location = deepLinks?.metaDetailsVideos ?? deepLinks?.metaDetailsStreams;
         }
     }, [deepLinks]);
 
     const onPlayClick = React.useCallback((event) => {
-        event.preventDefault();
+        event.stopPropagation();
         if (deepLinks?.player ?? deepLinks?.metaDetailsStreams ?? deepLinks?.metaDetailsVideos) {
             window.location = deepLinks?.player ?? deepLinks?.metaDetailsStreams ?? deepLinks?.metaDetailsVideos;
         }
     }, [deepLinks]);
 
     const onDismissClick = React.useCallback((event) => {
-        event.preventDefault();
+        event.stopPropagation();
         if (typeof _id === 'string') {
             core.transport.dispatch({
                 action: 'Ctx',
@@ -52,8 +51,9 @@ const ContinueWatchingItem = ({ _id, deepLinks, ...props }) => {
     return (
         <LibItem
             {...props}
+            posterChangeCursor={true}
             newVideos={newVideos}
-            onPosterClick={onPosterClick}
+            onClick={onClick}
             onPlayClick={onPlayClick}
             onDismissClick={onDismissClick}
         />
