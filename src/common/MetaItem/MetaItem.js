@@ -87,6 +87,7 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, progr
                     onPlayClick ?
                         <div title={t('CONTINUE_WATCHING')} className={styles['play-icon-layer']} onClick={onPlayClick}>
                             <Icon className={styles['play-icon']} name={'play'} />
+                            <div className={styles['play-icon-outer']} />
                             <div className={styles['play-icon-background']} />
                         </div>
                         :

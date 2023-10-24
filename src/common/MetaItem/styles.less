@@ -18,7 +18,7 @@
     play-icon-circle-centered-icon: icon;
 }
 
-@play-icon-size: 3.75rem;
+@play-icon-size: 4rem;
 
 .meta-item-container {
     padding: 1rem;
@@ -40,7 +40,9 @@
             }
 
             .play-icon-layer {
-                color: var(--secondary-accent-color);
+                .play-icon-outer {
+                    color: transparent;
+                }
 
                 .play-icon-background {
                     background-color: var(--secondary-accent-color);
@@ -162,17 +164,27 @@
             justify-content: center;
             height: @play-icon-size;
             width: @play-icon-size;
-            color: var(--primary-foreground-color);
-            box-shadow: 0 0 0 0.15rem currentColor;
-            border-radius: 100%;
-            transition: color 0.1s ease-in;
+            transition: transform 0.1s ease-out;
 
             .play-icon {
-                z-index: 1;
+                z-index: 2;
                 position: relative;
-                height: 2rem;
-                width: 2rem;
+                height: 2.25rem;
+                width: 2.25rem;
                 color: var(--primary-foreground-color);
+            }
+
+            .play-icon-outer {
+                z-index: 1;
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                color: var(--primary-foreground-color);
+                box-shadow: 0 0 0 0.15rem currentColor inset;
+                border-radius: 100%;
+                transition: color 0.1s ease-in;
             }
 
             .play-icon-background {
@@ -183,8 +195,13 @@
                 left: 0;
                 right: 0;
                 background-color: var(--primary-background-color);
+                border-radius: 100%;
                 opacity: 0.4;
                 transition: all 0.1s ease-in;
+            }
+
+            &:hover {
+                transform: scale(1.075);
             }
         }
 
