@@ -109,10 +109,9 @@ const Slider = ({ className, value, buffered, minimumValue, maximumValue, disabl
                 <div className={styles['track-after']} style={{ width: `calc(100% * ${thumbPosition})` }} />
             </div>
             <div className={styles['layer']}>
-                <svg className={styles['thumb']} style={{ marginLeft: `calc(100% * ${thumbPosition})` }} viewBox={'0 0 10 10'}>
-                    <circle cx={'5'} cy={'5'} r={'4'} className={styles['background-circle']} />
+                <div className={styles['thumb']} style={{ marginLeft: `calc(100% * ${thumbPosition})` }} viewBox={'0 0 10 10'}>
                     <circle cx={'5'} cy={'5'} r={'2.5'} />
-                </svg>
+                </div>
             </div>
         </div>
     );
