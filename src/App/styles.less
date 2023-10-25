@@ -129,7 +129,11 @@ html {
                 border-radius: var(--border-radius);
                 background-color: var(--modal-background-color);
                 box-shadow: var(--outer-glow);
-                transition: opacity 0.25s ease-out;
+                transition: opacity 0.1s ease-out;
+
+                &:global(.active) {
+                    transition-delay: 0.25s;
+                }
             }
 
             .router {

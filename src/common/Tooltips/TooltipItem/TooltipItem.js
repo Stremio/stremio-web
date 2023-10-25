@@ -7,52 +7,47 @@ const styles = require('./styles');
 
 const TooltipItem = React.memo(({ className, active, label, position, margin, parent }) => {
     const ref = React.useRef(null);
-    const timeout = React.useRef(null);
 
-    const [style, setStyle] = React.useState({});
+    const [style, setStyle] = React.useState(null);
+
+    const onTransitionEnd = React.useCallback(() => {
+        if (!active) {
+            setStyle(null);
+        }
+    }, [active]);
 
     React.useEffect(() => {
-        clearTimeout(timeout.current);
+        if (!ref.current) return setStyle(null);
 
-        timeout.current = setTimeout(() => {
-            if (active && ref.current) {
-                const tooltipBounds = ref.current.getBoundingClientRect();
-                const parentBounds = parent.getBoundingClientRect();
+        const tooltipBounds = ref.current.getBoundingClientRect();
+        const parentBounds = parent.getBoundingClientRect();
 
-                switch (position) {
-                    case 'top':
-                        return setStyle({
-                            top: `${parentBounds.top - tooltipBounds.height - margin}px`,
-                            left: `${(parentBounds.left + (parentBounds.width / 2)) - (tooltipBounds.width / 2)}px`,
-                        });
-                    case 'bottom':
-                        return setStyle({
-                            top: `${parentBounds.top + parentBounds.height + margin}px`,
-                            left: `${(parentBounds.left + (parentBounds.width / 2)) - (tooltipBounds.width / 2)}px`,
-                        });
-                    case 'left':
-                        return setStyle({
-                            top: `${parentBounds.top + (parentBounds.height / 2) - (tooltipBounds.height / 2)}px`,
-                            left: `${(parentBounds.left - tooltipBounds.width - margin)}px`,
-                        });
-                    case 'right':
-                        return setStyle({
-                            top: `${parentBounds.top + (parentBounds.height / 2) - (tooltipBounds.height / 2)}px`,
-                            left: `${(parentBounds.left + parentBounds.width + margin)}px`,
-                        });
-                }
-            }
-        });
-
-        return () => clearTimeout(timeout.current);
+        switch (position) {
+            case 'top':
+                return setStyle({
+                    top: `${parentBounds.top - tooltipBounds.height - margin}px`,
+                    left: `${(parentBounds.left + (parentBounds.width / 2)) - (tooltipBounds.width / 2)}px`,
+                });
+            case 'bottom':
+                return setStyle({
+                    top: `${parentBounds.top + parentBounds.height + margin}px`,
+                    left: `${(parentBounds.left + (parentBounds.width / 2)) - (tooltipBounds.width / 2)}px`,
+                });
+            case 'left':
+                return setStyle({
+                    top: `${parentBounds.top + (parentBounds.height / 2) - (tooltipBounds.height / 2)}px`,
+                    left: `${(parentBounds.left - tooltipBounds.width - margin)}px`,
+                });
+            case 'right':
+                return setStyle({
+                    top: `${parentBounds.top + (parentBounds.height / 2) - (tooltipBounds.height / 2)}px`,
+                    left: `${(parentBounds.left + parentBounds.width + margin)}px`,
+                });
+        }
     }, [active, position, margin, parent, label]);
 
     return (
-        <div
-            ref={ref}
-            className={classNames(className, styles['tooltip-item'], { 'active': active })}
-            style={style}
-        >
+        <div ref={ref} className={classNames(className, styles['tooltip-item'], { 'active': active })} style={style} onTransitionEnd={onTransitionEnd}>
             { label }
         </div>
     );
