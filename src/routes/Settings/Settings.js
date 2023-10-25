@@ -608,6 +608,37 @@ const Settings = () => {
                             </div>
                         </div>
                     </div>
+                    <div className={classnames(styles['section-container'], styles['versions-section-container'])}>
+                        <div className={styles['option-container']}>
+                            <div className={styles['option-name-container']}>
+                                <div className={styles['label']}>
+                                    App Version
+                                </div>
+                            </div>
+                            <div className={classnames(styles['option-input-container'], styles['info-container'])}>
+                                <div className={styles['label']}>
+                                    {process.env.VERSION}
+                                </div>
+                            </div>
+                        </div>
+                        {
+                            streamingServer.settings !== null && streamingServer.settings.type === 'Ready' ?
+                                <div className={styles['option-container']}>
+                                    <div className={styles['option-name-container']}>
+                                        <div className={styles['label']}>
+                                            Server Version
+                                        </div>
+                                    </div>
+                                    <div className={classnames(styles['option-input-container'], styles['info-container'])}>
+                                        <div className={styles['label']}>
+                                            {streamingServer.settings.content.serverVersion}
+                                        </div>
+                                    </div>
+                                </div>
+                                :
+                                null
+                        }
+                    </div>
                 </div>
             </div>
             {
