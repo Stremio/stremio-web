@@ -377,6 +377,10 @@
                     }
                 }
             }
+
+            .versions-section-container {
+                display: none;
+            }
         }
     }
 }
@@ -429,6 +433,12 @@
             .side-menu-container {
                 display: none;
             }
+
+            .sections-container {
+                .versions-section-container {
+                    display: flex;
+                }
+            }
         }
     }
 }
@@ -439,18 +449,7 @@
             flex-direction: column-reverse;
 
             .side-menu-container {
-                display: flex;
-                width: 100%;
-                padding: 0 1rem;
-
-                .side-menu-button {
-                    display: none;
-                }
-
-                .version-info-label {
-                    width: 100%;
-                    text-align: end;
-                }
+                display: none;
             }
 
             .sections-container {
@@ -465,6 +464,10 @@
                             width: 100% !important;
                         }
                     }
+                }
+
+                .versions-section-container {
+                    display: flex;
                 }
             }
         }
