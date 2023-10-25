@@ -611,7 +611,7 @@ const Settings = () => {
                     <div className={classnames(styles['section-container'], styles['versions-section-container'])}>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']} title={process.env.VERSION}>
+                                <div className={styles['label']}>
                                     App Version
                                 </div>
                             </div>
@@ -625,7 +625,7 @@ const Settings = () => {
                             streamingServer.settings !== null && streamingServer.settings.type === 'Ready' ?
                                 <div className={styles['option-container']}>
                                     <div className={styles['option-name-container']}>
-                                        <div className={styles['label']} title={process.env.VERSION}>
+                                        <div className={styles['label']}>
                                             Server Version
                                         </div>
                                     </div>
