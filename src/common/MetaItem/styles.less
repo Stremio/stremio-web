@@ -18,6 +18,8 @@
     play-icon-circle-centered-icon: icon;
 }
 
+@play-icon-size: 4rem;
+
 .meta-item-container {
     padding: 1rem;
     overflow: visible;
@@ -28,7 +30,25 @@
 
         .poster-container {
             box-shadow: 0 0 0 0.2rem var(--primary-foreground-color);
-            transform: scale(1.05);
+
+            .dismiss-icon-layer {
+                opacity: 1;
+            }
+
+            .poster-image-layer {
+                transform: scale(1.05);
+            }
+
+            .play-icon-layer {
+                .play-icon-outer {
+                    color: transparent;
+                }
+
+                .play-icon-background {
+                    background-color: var(--secondary-accent-color);
+                    opacity: 1;
+                }
+            }
         }
 
         .title-bar-container {
@@ -61,7 +81,49 @@
         z-index: 0;
         background-color: var(--overlay-color);
         border-radius: var(--border-radius);
-        transition: all 0.1s ease-out;
+
+        &:global(.poster-change-cursor) {
+            .poster-image-layer {
+                &:hover {
+                    cursor: zoom-in;
+                }
+            }
+        }
+
+        .dismiss-icon-layer {
+            z-index: -2;
+            position: absolute;
+            top: 0.5rem;
+            left: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 1.5rem;
+            width: 1.5rem;
+            border-radius: 100%;
+            opacity: 0;
+            transition: opacity 0.1s ease-in;
+
+            .dismiss-icon {
+                z-index: 1;
+                position: relative;
+                height: 1.25rem;
+                width: 1.25rem;
+                color: var(--primary-foreground-color);
+                opacity: 0.8;
+            }
+
+            .dismiss-icon-backdrop {
+                z-index: 0;
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background-color: var(--primary-background-color);
+                opacity: 0.6;
+            }
+        }
 
         .poster-image-layer {
             position: absolute;
@@ -74,6 +136,7 @@
             flex-direction: row;
             align-items: center;
             justify-content: center;
+            transition: transform 0.1s ease-out;
 
             .poster-image {
                 flex: none;
@@ -94,27 +157,55 @@
         }
 
         .play-icon-layer {
-            position: absolute;
-            top: 30%;
-            right: 0;
-            bottom: 30%;
-            left: 0;
             z-index: -2;
-            overflow: visible;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-top: calc(@play-icon-size / -2);
+            margin-left: calc(@play-icon-size / -2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: @play-icon-size;
+            width: @play-icon-size;
+            transition: transform 0.1s ease-out;
 
             .play-icon {
-                display: block;
-                width: 100%;
-                height: 100%;
-                filter: drop-shadow(0 0 0.5rem @color-background);
+                z-index: 2;
+                position: relative;
+                height: 2.25rem;
+                width: 2.25rem;
+                color: var(--primary-foreground-color);
+            }
 
-                .play-icon-circle-centered-background {
-                    color: @color-accent4-90;
-                }
+            .play-icon-outer {
+                z-index: 1;
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                color: var(--primary-foreground-color);
+                box-shadow: 0 0 0 0.15rem currentColor inset;
+                border-radius: 100%;
+                transition: color 0.1s ease-in;
+            }
 
-                .play-icon-circle-centered-icon {
-                    color: @color-surface-light5-90;
-                }
+            .play-icon-background {
+                z-index: 0;
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background-color: var(--primary-background-color);
+                border-radius: 100%;
+                opacity: 0.4;
+                transition: all 0.1s ease-in;
+            }
+
+            &:hover {
+                transform: scale(1.1);
             }
         }
 
@@ -157,12 +248,9 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                height: 1.6rem;
-                width: 2.75rem;
+                height: 1.25rem;
+                width: 2.25rem;
                 border-radius: 0.25rem;
-                font-size: 1rem;
-                font-weight: 600;
-                color: var(--secondary-foreground-color);
 
                 &:nth-child(1) {
                     top: 0.5rem;
@@ -182,6 +270,18 @@
                     top: 1rem;
                     right: 1rem;
                     background-color: var(--primary-foreground-color);
+                }
+
+                .icon {
+                    height: 0.8rem;
+                    width: 0.8rem;
+                    color: var(--primary-accent-color);
+                }
+
+                .label {
+                    font-size: 0.8rem;
+                    font-weight: 600;
+                    color: var(--primary-accent-color);
                 }
             }
         }
