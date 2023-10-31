@@ -15,7 +15,7 @@
         "@babel/runtime": "7.16.0",
         "@sentry/browser": "6.13.3",
         "@stremio/stremio-colors": "5.0.1",
-        "@stremio/stremio-core-web": "0.44.25",
+        "@stremio/stremio-core-web": "0.44.28",
         "@stremio/stremio-icons": "5.0.0-beta.3",
         "@stremio/stremio-video": "0.0.25-rc.2",
         "a-color-picker": "1.2.1",

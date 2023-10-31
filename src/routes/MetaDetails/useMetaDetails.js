@@ -56,7 +56,8 @@ const useMetaDetails = (urlParams) => {
                                 extra: []
                             }
                             :
-                            null
+                            null,
+                        guessStream: true,
                     }
                 }
             };

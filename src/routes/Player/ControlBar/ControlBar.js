@@ -29,6 +29,7 @@ const ControlBar = ({
     statistics,
     onPlayRequested,
     onPauseRequested,
+    onNextVideoRequested,
     onMuteRequested,
     onUnmuteRequested,
     onVolumeChangeRequested,
@@ -74,14 +75,10 @@ const ControlBar = ({
         }
     }, [paused, onPlayRequested, onPauseRequested]);
     const onNextVideoButtonClick = React.useCallback(() => {
-        if (nextVideo !== null && typeof nextVideo.deepLinks === 'object') {
-            if (nextVideo.deepLinks.player !== null) {
-                window.location.replace(nextVideo.deepLinks.player);
-            } else if (nextVideo.deepLinks.metaDetailsStreams !== null) {
-                window.location.replace(nextVideo.deepLinks.metaDetailsStreams);
-            }
+        if (nextVideo !== null && typeof onNextVideoRequested === 'function') {
+            onNextVideoRequested();
         }
-    }, [nextVideo]);
+    }, [nextVideo, onNextVideoRequested]);
     const onMuteButtonClick = React.useCallback(() => {
         if (muted) {
             if (typeof onUnmuteRequested === 'function') {
@@ -227,6 +224,7 @@ ControlBar.propTypes = {
     statistics: PropTypes.object,
     onPlayRequested: PropTypes.func,
     onPauseRequested: PropTypes.func,
+    onNextVideoRequested: PropTypes.func,
     onMuteRequested: PropTypes.func,
     onUnmuteRequested: PropTypes.func,
     onVolumeChangeRequested: PropTypes.func,
