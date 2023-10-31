@@ -487,16 +487,16 @@ const Player = ({ urlParams, queryParams }) => {
                 }
                 case 'ArrowRight': {
                     if (!subtitlesMenuOpen && !infoMenuOpen && !videosMenuOpen && !speedMenuOpen && !optionsMenuOpen && !statisticsMenuOpen && videoState.time !== null) {
-                        const seekTimeMultiplier = event.shiftKey ? 3 : 1;
-                        onSeekRequested(videoState.time + (settings.seekTimeDuration * seekTimeMultiplier));
+                        const seekDuration = event.shiftKey ? settings.seekShortTimeDuration : settings.seekTimeDuration;
+                        onSeekRequested(videoState.time + seekDuration);
                     }
 
                     break;
                 }
                 case 'ArrowLeft': {
                     if (!subtitlesMenuOpen && !infoMenuOpen && !videosMenuOpen && !speedMenuOpen && !optionsMenuOpen && !statisticsMenuOpen && videoState.time !== null) {
-                        const seekTimeMultiplier = event.shiftKey ? 3 : 1;
-                        onSeekRequested(videoState.time - (settings.seekTimeDuration * seekTimeMultiplier));
+                        const seekDuration = event.shiftKey ? settings.seekShortTimeDuration : settings.seekTimeDuration;
+                        onSeekRequested(videoState.time - seekDuration);
                     }
 
                     break;
@@ -608,7 +608,7 @@ const Player = ({ urlParams, queryParams }) => {
             window.removeEventListener('keydown', onKeyDown);
             window.removeEventListener('wheel', onWheel);
         };
-    }, [player.metaItem, player.selected, streamingServer.statistics, settings.seekTimeDuration, routeFocused, subtitlesMenuOpen, infoMenuOpen, videosMenuOpen, speedMenuOpen, optionsMenuOpen, statisticsMenuOpen, videoState.paused, videoState.time, videoState.volume, videoState.audioTracks, videoState.subtitlesTracks, videoState.extraSubtitlesTracks, videoState.playbackSpeed, toggleSubtitlesMenu, toggleInfoMenu, toggleVideosMenu, toggleStatisticsMenu]);
+    }, [player.metaItem, player.selected, streamingServer.statistics, settings.seekTimeDuration, settings.seekShortTimeDuration, routeFocused, subtitlesMenuOpen, infoMenuOpen, videosMenuOpen, speedMenuOpen, optionsMenuOpen, statisticsMenuOpen, videoState.paused, videoState.time, videoState.volume, videoState.audioTracks, videoState.subtitlesTracks, videoState.extraSubtitlesTracks, videoState.playbackSpeed, toggleSubtitlesMenu, toggleInfoMenu, toggleVideosMenu, toggleStatisticsMenu]);
     React.useLayoutEffect(() => {
         return () => {
             setImmersedDebounced.cancel();

@@ -143,7 +143,7 @@ const useProfileSettingsInputs = (profile) => {
                 args: {
                     action: 'UpdateSettings',
                     args: {
-                        escExistFullscreen: !profile.settings.escExitFullscreen
+                        escExitFullscreen: !profile.settings.escExitFullscreen
                     }
                 }
             });
@@ -173,7 +173,7 @@ const useProfileSettingsInputs = (profile) => {
         }
     }), [profile.settings]);
     const seekShortTimeDurationSelect = React.useMemo(() => ({
-        options: CONSTANTS.SEEK_SHORT_TIME_DURATIONS.map((size) => ({
+        options: CONSTANTS.SEEK_TIME_DURATIONS.map((size) => ({
             value: `${size}`,
             label: `${size / 1000} ${t('SECONDS')}`
         })),
