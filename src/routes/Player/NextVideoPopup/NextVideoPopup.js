@@ -7,7 +7,7 @@ const { default: Icon } = require('@stremio/stremio-icons/react');
 const { Image, Button, CONSTANTS } = require('stremio/common');
 const styles = require('./styles');
 
-const NextVideoPopup = ({ className, metaItem, nextVideo, onDismiss, onPlayNextVideoRequested }) => {
+const NextVideoPopup = ({ className, metaItem, nextVideo, onDismiss, onNextVideoRequested }) => {
     const watchNowButtonRef = React.useRef(null);
     const [animationEnded, setAnimationEnded] = React.useState(false);
     const videoName = React.useMemo(() => {
@@ -37,10 +37,10 @@ const NextVideoPopup = ({ className, metaItem, nextVideo, onDismiss, onPlayNextV
         }
     }, [onDismiss]);
     const onWatchNowButtonClick = React.useCallback(() => {
-        if (typeof onPlayNextVideoRequested === 'function') {
-            onPlayNextVideoRequested();
+        if (typeof onNextVideoRequested === 'function') {
+            onNextVideoRequested();
         }
-    }, [onPlayNextVideoRequested]);
+    }, [onNextVideoRequested]);
     React.useLayoutEffect(() => {
         if (animationEnded === true && watchNowButtonRef.current !== null) {
             watchNowButtonRef.current.focus();
@@ -96,7 +96,7 @@ NextVideoPopup.propTypes = {
     metaItem: PropTypes.object,
     nextVideo: PropTypes.object,
     onDismiss: PropTypes.func,
-    onPlayNextVideoRequested: PropTypes.func
+    onNextVideoRequested: PropTypes.func
 };
 
 module.exports = NextVideoPopup;

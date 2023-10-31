@@ -116,11 +116,11 @@ const Player = ({ urlParams, queryParams }) => {
     const onEnded = React.useCallback(() => {
         ended();
         if (player.nextVideo !== null) {
-            onPlayNextVideoRequested();
+            onNextVideoRequested();
         } else {
             window.history.back();
         }
-    }, [player.nextVideo, onPlayNextVideoRequested]);
+    }, [player.nextVideo, onNextVideoRequested]);
     const onError = React.useCallback((error) => {
         console.error('Player', error);
         if (error.critical) {
@@ -197,14 +197,15 @@ const Player = ({ urlParams, queryParams }) => {
         closeNextVideoPopup();
         nextVideoPopupDismissed.current = true;
     }, []);
-    const onPlayNextVideoRequested = React.useCallback(() => {
+    const onNextVideoRequested = React.useCallback(() => {
         if (player.nextVideo !== null) {
-            window.location.replace(
-                typeof player.nextVideo.deepLinks.player === 'string' ?
-                    player.nextVideo.deepLinks.player
-                    :
-                    player.nextVideo.deepLinks.metaDetailsStreams
-            );
+            const deepLinks = player.nextVideo.deepLinks;
+            if (deepLinks.metaDetailsStreams && deepLinks.player) {
+                window.location.replace(deepLinks.metaDetailsStreams);
+                window.location.href = deepLinks.player;
+            } else {
+                window.location.replace(deepLinks.player ?? deepLinks.metaDetailsStreams);
+            }
         }
     }, [player.nextVideo]);
     const onVideoClick = React.useCallback(() => {
@@ -697,6 +698,7 @@ const Player = ({ urlParams, queryParams }) => {
                 statistics={streamingServer.statistics}
                 onPlayRequested={onPlayRequested}
                 onPauseRequested={onPauseRequested}
+                onNextVideoRequested={onNextVideoRequested}
                 onMuteRequested={onMuteRequested}
                 onUnmuteRequested={onUnmuteRequested}
                 onVolumeChangeRequested={onVolumeChangeRequested}
@@ -717,7 +719,7 @@ const Player = ({ urlParams, queryParams }) => {
                         metaItem={player.metaItem !== null && player.metaItem.type === 'Ready' ? player.metaItem.content : null}
                         nextVideo={player.nextVideo}
                         onDismiss={onDismissNextVideoPopup}
-                        onPlayNextVideoRequested={onPlayNextVideoRequested}
+                        onNextVideoRequested={onNextVideoRequested}
                     />
                     :
                     null
