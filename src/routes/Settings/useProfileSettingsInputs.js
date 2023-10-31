@@ -143,6 +143,7 @@ const useProfileSettingsInputs = (profile) => {
                 args: {
                     action: 'UpdateSettings',
                     args: {
+                        ...profile.settings,
                         escExitFullscreen: !profile.settings.escExitFullscreen
                     }
                 }
