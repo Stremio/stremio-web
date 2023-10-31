@@ -35,6 +35,8 @@ const Settings = () => {
         subtitlesOutlineColorInput,
         audioLanguageSelect,
         seekTimeDurationSelect,
+        seekShortTimeDurationSelect,
+        escExitFullscreenCheckbox,
         playInExternalPlayerSelect,
         nextVideoPopupDurationSelect,
         bingeWatchingCheckbox,
@@ -57,6 +59,7 @@ const Settings = () => {
         return profile.auth !== null && profile.auth.user !== null && profile.auth.user.trakt !== null &&
             (Date.now() / 1000) < (profile.auth.user.trakt.created_at + profile.auth.user.trakt.expires_in);
     }, [profile.auth]);
+    console.log(profile.settings)
     const configureServerUrlModalButtons = React.useMemo(() => {
         return [
             {
@@ -336,6 +339,15 @@ const Settings = () => {
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
+                                <div className={styles['label']}>{ t('SETTINGS_FULLSCREEN_EXIT') }</div>
+                            </div>
+                            <Checkbox
+                                className={classnames(styles['option-input-container'], styles['checkbox-container'])}
+                                {...escExitFullscreenCheckbox}
+                            />
+                        </div>
+                        <div className={styles['option-container']}>
+                            <div className={styles['option-name-container']}>
                                 <div className={styles['label']}>{ t('SETTINGS_SUBTITLES_SIZE') }</div>
                             </div>
                             <Multiselect
@@ -381,11 +393,20 @@ const Settings = () => {
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>{ t('SETTINGS_REWIND_FAST_FORWARD_DURATION') }</div>
+                                <div className={styles['label']}>{ t('SETTINGS_SEEK_KEY') }</div>
                             </div>
                             <Multiselect
                                 className={classnames(styles['option-input-container'], styles['multiselect-container'])}
                                 {...seekTimeDurationSelect}
+                            />
+                        </div>
+                        <div className={styles['option-container']}>
+                            <div className={styles['option-name-container']}>
+                                <div className={styles['label']}>{ t('SETTINGS_SEEK_KEY_SHIFT') }</div>
+                            </div>
+                            <Multiselect
+                                className={classnames(styles['option-input-container'], styles['multiselect-container'])}
+                                {...seekShortTimeDurationSelect}
                             />
                         </div>
                         <div className={styles['option-container']}>

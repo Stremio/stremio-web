@@ -25,6 +25,8 @@ type Settings = {
     secondaryAudioLanguage: string | null,
     secondarySubtitlesLanguage: string | null,
     seekTimeDuration: number,
+    escExitFullscreen: boolean,
+    seekShortTimeDuration: number,
     streamingServerUrl: string,
     streamingServerWarningDismissed: Date | null,
     subtitlesBackgroundColor: string,
