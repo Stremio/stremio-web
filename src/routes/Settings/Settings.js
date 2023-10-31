@@ -59,7 +59,6 @@ const Settings = () => {
         return profile.auth !== null && profile.auth.user !== null && profile.auth.user.trakt !== null &&
             (Date.now() / 1000) < (profile.auth.user.trakt.created_at + profile.auth.user.trakt.expires_in);
     }, [profile.auth]);
-    console.log(profile.settings)
     const configureServerUrlModalButtons = React.useMemo(() => {
         return [
             {
