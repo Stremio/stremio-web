@@ -20,7 +20,7 @@ const SHORTCUTS_SECTION = 'shortcuts';
 
 const Settings = () => {
     const { t } = useTranslation();
-    const { core } = useServices();
+    const { core, shell } = useServices();
     const { routeFocused } = useRouteFocused();
     const profile = useProfile();
     const [dataExport, loadDataExport] = useDataExport();
@@ -336,15 +336,20 @@ const Settings = () => {
                                 {...subtitlesLanguageSelect}
                             />
                         </div>
-                        <div className={styles['option-container']}>
-                            <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>{ t('SETTINGS_FULLSCREEN_EXIT') }</div>
-                            </div>
-                            <Checkbox
-                                className={classnames(styles['option-input-container'], styles['checkbox-container'])}
-                                {...escExitFullscreenCheckbox}
-                            />
-                        </div>
+                        {
+                            shell.active ?
+                                <div className={styles['option-container']}>
+                                    <div className={styles['option-name-container']}>
+                                        <div className={styles['label']}>{ t('SETTINGS_FULLSCREEN_EXIT') }</div>
+                                    </div>
+                                    <Checkbox
+                                        className={classnames(styles['option-input-container'], styles['checkbox-container'])}
+                                        {...escExitFullscreenCheckbox}
+                                    />
+                                </div>
+                                :
+                                null
+                        }
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
                                 <div className={styles['label']}>{ t('SETTINGS_SUBTITLES_SIZE') }</div>
