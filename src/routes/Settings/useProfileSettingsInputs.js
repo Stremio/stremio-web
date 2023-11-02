@@ -135,6 +135,22 @@ const useProfileSettingsInputs = (profile) => {
             });
         }
     }), [profile.settings]);
+    const escExitFullscreenCheckbox = React.useMemo(() => ({
+        checked: profile.settings.escExitFullscreen,
+        onClick: () => {
+            core.transport.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'UpdateSettings',
+                    args: {
+                        ...profile.settings,
+                        escExitFullscreen: !profile.settings.escExitFullscreen
+                    }
+                }
+            });
+        }
+    }), [profile.settings]);
+
     const seekTimeDurationSelect = React.useMemo(() => ({
         options: CONSTANTS.SEEK_TIME_DURATIONS.map((size) => ({
             value: `${size}`,
@@ -152,6 +168,28 @@ const useProfileSettingsInputs = (profile) => {
                     args: {
                         ...profile.settings,
                         seekTimeDuration: parseInt(event.value, 10)
+                    }
+                }
+            });
+        }
+    }), [profile.settings]);
+    const seekShortTimeDurationSelect = React.useMemo(() => ({
+        options: CONSTANTS.SEEK_TIME_DURATIONS.map((size) => ({
+            value: `${size}`,
+            label: `${size / 1000} ${t('SECONDS')}`
+        })),
+        selected: [`${profile.settings.seekShortTimeDuration}`],
+        renderLabelText: () => {
+            return `${profile.settings.seekShortTimeDuration / 1000} ${t('SECONDS')}`;
+        },
+        onSelect: (event) => {
+            core.transport.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'UpdateSettings',
+                    args: {
+                        ...profile.settings,
+                        seekShortTimeDuration: parseInt(event.value, 10)
                     }
                 }
             });
@@ -269,7 +307,9 @@ const useProfileSettingsInputs = (profile) => {
         subtitlesBackgroundColorInput,
         subtitlesOutlineColorInput,
         audioLanguageSelect,
+        escExitFullscreenCheckbox,
         seekTimeDurationSelect,
+        seekShortTimeDurationSelect,
         playInExternalPlayerSelect,
         nextVideoPopupDurationSelect,
         bingeWatchingCheckbox,

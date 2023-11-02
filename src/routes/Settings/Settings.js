@@ -20,7 +20,7 @@ const SHORTCUTS_SECTION = 'shortcuts';
 
 const Settings = () => {
     const { t } = useTranslation();
-    const { core } = useServices();
+    const { core, shell } = useServices();
     const { routeFocused } = useRouteFocused();
     const profile = useProfile();
     const [dataExport, loadDataExport] = useDataExport();
@@ -35,6 +35,8 @@ const Settings = () => {
         subtitlesOutlineColorInput,
         audioLanguageSelect,
         seekTimeDurationSelect,
+        seekShortTimeDurationSelect,
+        escExitFullscreenCheckbox,
         playInExternalPlayerSelect,
         nextVideoPopupDurationSelect,
         bingeWatchingCheckbox,
@@ -334,6 +336,20 @@ const Settings = () => {
                                 {...subtitlesLanguageSelect}
                             />
                         </div>
+                        {
+                            shell.active ?
+                                <div className={styles['option-container']}>
+                                    <div className={styles['option-name-container']}>
+                                        <div className={styles['label']}>{ t('SETTINGS_FULLSCREEN_EXIT') }</div>
+                                    </div>
+                                    <Checkbox
+                                        className={classnames(styles['option-input-container'], styles['checkbox-container'])}
+                                        {...escExitFullscreenCheckbox}
+                                    />
+                                </div>
+                                :
+                                null
+                        }
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
                                 <div className={styles['label']}>{ t('SETTINGS_SUBTITLES_SIZE') }</div>
@@ -381,11 +397,20 @@ const Settings = () => {
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>{ t('SETTINGS_REWIND_FAST_FORWARD_DURATION') }</div>
+                                <div className={styles['label']}>{ t('SETTINGS_SEEK_KEY') }</div>
                             </div>
                             <Multiselect
                                 className={classnames(styles['option-input-container'], styles['multiselect-container'])}
                                 {...seekTimeDurationSelect}
+                            />
+                        </div>
+                        <div className={styles['option-container']}>
+                            <div className={styles['option-name-container']}>
+                                <div className={styles['label']}>{ t('SETTINGS_SEEK_KEY_SHIFT') }</div>
+                            </div>
+                            <Multiselect
+                                className={classnames(styles['option-input-container'], styles['multiselect-container'])}
+                                {...seekShortTimeDurationSelect}
                             />
                         </div>
                         <div className={styles['option-container']}>
