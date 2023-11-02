@@ -97,6 +97,7 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
                     progress !== null && !isNaN(progress) && progress > 0 ?
                         <div className={styles['progress-bar-container']}>
                             <div className={styles['progress-bar']} style={{ width: `${progress}%` }} />
+                            <div className={styles['progress-bar-background']} />
                         </div>
                         :
                         null
