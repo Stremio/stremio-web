@@ -29,7 +29,7 @@
     .thumbnail-container {
         flex: none;
         position: relative;
-        border-radius: var(--border-radius);
+        border-radius: 0.3rem;
         overflow: hidden;
 
         .thumbnail {
@@ -55,13 +55,27 @@
 
         .progress-bar-container {
             position: absolute;
-            bottom: 0;
-            width: 100%;
-            background-color: var(--overlay-color);
+            bottom: 0.5rem;
+            left: 0.5rem;
+            right: 0.5rem;
+            border-radius: var(--border-radius);
 
             .progress-bar {
+                z-index: 1;
+                position: relative;
                 height: 0.4rem;
                 background-color: var(--primary-accent-color);
+            }
+
+            .progress-bar-background {
+                z-index: 0;
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background-color: var(--primary-foreground-color);
+                opacity: 0.2;
             }
         }
     }
