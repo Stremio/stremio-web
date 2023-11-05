@@ -285,13 +285,13 @@ const Player = ({ urlParams, queryParams }) => {
                         :
                         0,
                     forceTranscoding: forceTranscoding || casting,
-                    maxAudioChannels: typeof maxAudioChannels === 'number' ?
-                        maxAudioChannels
+                    mediaCapabilities: typeof maxAudioChannels === 'number' ?
+                        {
+                            mp4: { maxAudioChannels },
+                            'matroska,webm': { maxAudioChannels }
+                        }
                         :
-                        window.chrome ?
-                            2
-                            :
-                            null,
+                        null,
                     streamingServerURL: streamingServer.baseUrl.type === 'Ready' ?
                         casting ?
                             streamingServer.baseUrl.content
