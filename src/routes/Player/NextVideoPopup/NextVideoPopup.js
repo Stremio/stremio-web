@@ -7,7 +7,7 @@ const { default: Icon } = require('@stremio/stremio-icons/react');
 const { Image, Button, CONSTANTS } = require('stremio/common');
 const styles = require('./styles');
 
-const NextVideoPopup = ({ className, metaItem, nextVideo, onDismiss, onNextVideoRequested }) => {
+const NextVideoPopup = ({ className, metaItem, nextVideo, onDismiss, onNextVideoRequested, title }) => {
     const watchNowButtonRef = React.useRef(null);
     const [animationEnded, setAnimationEnded] = React.useState(false);
     const videoName = React.useMemo(() => {
@@ -62,6 +62,14 @@ const NextVideoPopup = ({ className, metaItem, nextVideo, onDismiss, onNextVideo
                     {
                         typeof videoName === 'string' ?
                             <div className={styles['name']}>
+                                <span className={styles['label']}>Next on</span> { title?.split('-')[0]?.trim() }
+                            </div>
+                            :
+                            null
+                    }
+                    {
+                        typeof videoName === 'string' ?
+                            <div className={styles['title']}>
                                 { videoName }
                             </div>
                             :
@@ -77,7 +85,7 @@ const NextVideoPopup = ({ className, metaItem, nextVideo, onDismiss, onNextVideo
                     }
                 </div>
                 <div className={styles['buttons-container']}>
-                    <Button className={styles['button-container']} onClick={onDismissButtonClick}>
+                    <Button className={classnames(styles['button-container'], styles['dismiss'])} onClick={onDismissButtonClick}>
                         <Icon className={styles['icon']} name={'close'} />
                         <div className={styles['label']}>Dismiss</div>
                     </Button>
@@ -95,6 +103,7 @@ NextVideoPopup.propTypes = {
     className: PropTypes.string,
     metaItem: PropTypes.object,
     nextVideo: PropTypes.object,
+    title: PropTypes.string,
     onDismiss: PropTypes.func,
     onNextVideoRequested: PropTypes.func
 };

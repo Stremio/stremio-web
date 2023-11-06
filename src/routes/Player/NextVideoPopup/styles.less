@@ -5,8 +5,7 @@
 .next-video-popup-container {
     display: flex;
     flex-direction: row;
-    height: 16rem;
-    width: 40rem;
+    width: 50rem;
     animation: slide-fade-in 0.5s ease-in;
 
     @keyframes slide-fade-in {
@@ -22,7 +21,7 @@
     }
 
     .poster-container {
-        flex: 1 1 40%;
+        flex: 1 1 45%;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -45,19 +44,32 @@
     }
 
     .info-container {
-        flex: 1 1 70%;
+        flex: 1 1 55%;
         display: flex;
         flex-direction: column;
 
         .details-container {
             flex: auto;
-            padding: 1.5rem 1.5rem;
+            padding: 2rem;
 
             .name {
                 flex: none;
                 align-self: stretch;
                 max-height: 2.4em;
                 font-weight: 700;
+                margin-bottom: 1.5rem;
+                color: var(--primary-accent-color);
+
+                .label {
+                    color: var(--primary-foreground-color);
+                }
+            }
+
+            .title {
+                flex: none;
+                align-self: stretch;
+                max-height: 2.4em;
+                font-weight: 500;
                 margin-bottom: 0.5rem;
                 color: var(--primary-foreground-color);
             }
@@ -65,28 +77,33 @@
             .description {
                 color: var(--primary-foreground-color);
                 opacity: 0.5;
+                max-width: 80%;
+                padding: 0.5rem 0;
             }
         }
 
         .buttons-container {
             display: flex;
             flex-direction: row;
+            padding: 0 1rem 2rem;
 
             .spacing {
                 flex: 0 0 50%;
             }
 
             .button-container {
-                flex: 0 0 50%;
+                flex: 0 0 45%;
                 display: flex;
                 flex-direction: row;
                 align-items: center;
                 justify-content: center;
                 height: 3.5rem;
+                padding: 0 0.5rem;
+                margin-left: 1rem;
+                border-radius: 1.75rem;
 
                 &.play-button {
-                    border-radius: 0 0 var(--border-radius) 0;
-                    background-color: var(--secondary-accent-color);
+                    background-color: var(--primary-accent-color);
 
                     .icon {
                         color: var(--primary-foreground-color);
@@ -97,7 +114,7 @@
                     }
 
                     &:hover {
-                        outline: var(--focus-outline-size) solid var(--secondary-accent-color);
+                        outline: var(--focus-outline-size) solid var(--primary-accent-color);
                         background-color: transparent;
                     }
                 }
@@ -116,6 +133,10 @@
                     font-size: 1.1rem;
                     font-weight: 500;
                     color: var(--primary-foreground-color);
+                }
+
+                &.dismiss {
+                    opacity: 0.6;
                 }
 
                 &:hover, &:focus {

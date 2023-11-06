@@ -720,6 +720,7 @@ const Player = ({ urlParams, queryParams }) => {
                         nextVideo={player.nextVideo}
                         onDismiss={onDismissNextVideoPopup}
                         onNextVideoRequested={onNextVideoRequested}
+                        title={player?.title}
                     />
                     :
                     null
