@@ -103,7 +103,6 @@ NextVideoPopup.propTypes = {
     className: PropTypes.string,
     metaItem: PropTypes.object,
     nextVideo: PropTypes.object,
-    title: PropTypes.string,
     onDismiss: PropTypes.func,
     onNextVideoRequested: PropTypes.func
 };
