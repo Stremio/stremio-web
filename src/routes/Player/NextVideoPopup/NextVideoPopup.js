@@ -7,7 +7,7 @@ const { default: Icon } = require('@stremio/stremio-icons/react');
 const { Image, Button, CONSTANTS } = require('stremio/common');
 const styles = require('./styles');
 
-const NextVideoPopup = ({ className, metaItem, nextVideo, onDismiss, onNextVideoRequested, title }) => {
+const NextVideoPopup = ({ className, metaItem, nextVideo, onDismiss, onNextVideoRequested }) => {
     const watchNowButtonRef = React.useRef(null);
     const [animationEnded, setAnimationEnded] = React.useState(false);
     const videoName = React.useMemo(() => {
@@ -62,7 +62,7 @@ const NextVideoPopup = ({ className, metaItem, nextVideo, onDismiss, onNextVideo
                     {
                         typeof videoName === 'string' ?
                             <div className={styles['name']}>
-                                <span className={styles['label']}>Next on</span> { title?.split('-')[0]?.trim() }
+                                <span className={styles['label']}>Next on</span> { metaItem.name }
                             </div>
                             :
                             null
