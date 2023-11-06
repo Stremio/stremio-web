@@ -60,7 +60,7 @@ const NextVideoPopup = ({ className, metaItem, nextVideo, onDismiss, onNextVideo
             <div className={styles['info-container']}>
                 <div className={styles['details-container']}>
                     {
-                        typeof videoName === 'string' ?
+                        typeof metaItem?.name === 'string' ?
                             <div className={styles['name']}>
                                 <span className={styles['label']}>Next on</span> { metaItem.name }
                             </div>
