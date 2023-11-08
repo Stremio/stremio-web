@@ -152,7 +152,7 @@ module.exports = (env, argv) => ({
         host: '0.0.0.0',
         static: false,
         hot: false,
-        https: true,
+        server: 'https',
         liveReload: false
     },
     optimization: {
