@@ -41,6 +41,28 @@
         }
     }
 
+    .addons-loading-container {
+        display: flex;
+        z-index: 1;
+        overflow: visible;
+        margin: 2em 1em 0 1em;
+        gap: 1em;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        .addons-loading {
+            color: var(--primary-foreground-color);
+            font-size: 1rem;
+        }
+
+        .addons-loading-bar {
+            width: 90%;
+            height: 0.3em;
+            border-radius: var(--border-radius);
+            background-color: var(--primary-accent-color);
+        }
+    }
     .select-choices-wrapper {
         display: flex;
         align-items: center;

@@ -9,7 +9,6 @@ const { Button, Image, Multiselect } = require('stremio/common');
 const { useServices } = require('stremio/services');
 const Stream = require('./Stream');
 const styles = require('./styles');
-
 const ALL_ADDONS_KEY = 'ALL';
 
 const StreamsList = ({ className, video, ...props }) => {
@@ -22,6 +21,10 @@ const StreamsList = ({ className, video, ...props }) => {
     const backButtonOnClick = React.useCallback(() => {
         window.history.back();
     }, []);
+    const countLoadingStreams = () => {
+        return props.streams.filter((stream) => stream.content.type === 'Loading').length;
+    };
+    const loadingAddonsCount = countLoadingStreams();
     const streamsByAddon = React.useMemo(() => {
         return props.streams
             .filter((streams) => streams.content.type === 'Ready')
@@ -95,6 +98,17 @@ const StreamsList = ({ className, video, ...props }) => {
                             </div>
                             :
                             <React.Fragment>
+                                {
+                                    loadingAddonsCount > 0 ?
+                                        <div className={styles['addons-loading-container']}>
+                                            <div className={styles['addons-loading']}>
+                                                {loadingAddonsCount} {t('MOBILE_ADDONS_LOADING')}
+                                            </div>
+                                            <span className={styles['addons-loading-bar']}></span>
+                                        </div>
+                                        :
+                                        null
+                                }
                                 <div className={styles['select-choices-wrapper']}>
                                     {
                                         video ?
@@ -148,7 +162,7 @@ const StreamsList = ({ className, video, ...props }) => {
 StreamsList.propTypes = {
     className: PropTypes.string,
     streams: PropTypes.arrayOf(PropTypes.object).isRequired,
-    video: PropTypes.object
+    video: PropTypes.object,
 };
 
 module.exports = StreamsList;
