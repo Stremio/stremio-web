@@ -327,6 +327,10 @@ const Settings = () => {
                     </div>
                     <div ref={playerSectionRef} className={styles['section-container']}>
                         <div className={styles['section-title']}>{ t('SETTINGS_NAV_PLAYER') }</div>
+                        <div className={styles['section-subtitle-wrapper']}>
+                            <Icon className={styles['icon']} name={'subtitles'} />
+                            <div className={styles['section-subtitle']}>{t('SETTINGS_SECTION_SUBTITLES')}</div>
+                        </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
                                 <div className={styles['label']}>{ t('SETTINGS_SUBTITLES_LANGUAGE') }</div>
@@ -386,6 +390,12 @@ const Settings = () => {
                                 {...subtitlesOutlineColorInput}
                             />
                         </div>
+                    </div>
+                    <div className={styles['section-container']}>
+                        <div className={styles['section-subtitle-wrapper']}>
+                            <Icon className={styles['icon']} name={'volume-medium'} />
+                            <div className={styles['section-subtitle']}>{t('SETTINGS_SECTION_AUDIO')}</div>
+                        </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
                                 <div className={styles['label']}>{ t('SETTINGS_DEFAULT_AUDIO_TRACK') }</div>
@@ -394,6 +404,12 @@ const Settings = () => {
                                 className={classnames(styles['option-input-container'], styles['multiselect-container'])}
                                 {...audioLanguageSelect}
                             />
+                        </div>
+                    </div>
+                    <div className={styles['section-container']}>
+                        <div className={styles['section-subtitle-wrapper']}>
+                            <Icon className={styles['icon']} name={'remote'} />
+                            <div className={styles['section-subtitle']}>{t('SETTINGS_SECTION_CONTROLS')}</div>
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
@@ -415,6 +431,23 @@ const Settings = () => {
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
+                                <div className={styles['label']}>{ t('SETTINGS_PLAY_IN_BACKGROUND') }</div>
+                            </div>
+                            <Checkbox
+                                className={classnames(styles['option-input-container'], styles['checkbox-container'])}
+                                disabled={true}
+                                tabIndex={-1}
+                                {...playInBackgroundCheckbox}
+                            />
+                        </div>
+                    </div>
+                    <div className={styles['section-container']}>
+                        <div className={styles['section-subtitle-wrapper']}>
+                            <Icon className={styles['icon']} name={'play'} />
+                            <div className={styles['section-subtitle']}>{t('SETTINGS_SECTION_AUTO_PLAY')}</div>
+                        </div>
+                        <div className={styles['option-container']}>
+                            <div className={styles['option-name-container']}>
                                 <div className={styles['label']}>{ t('AUTO_PLAY') }</div>
                             </div>
                             <Checkbox
@@ -432,16 +465,11 @@ const Settings = () => {
                                 {...nextVideoPopupDurationSelect}
                             />
                         </div>
-                        <div className={styles['option-container']}>
-                            <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>{ t('SETTINGS_PLAY_IN_BACKGROUND') }</div>
-                            </div>
-                            <Checkbox
-                                className={classnames(styles['option-input-container'], styles['checkbox-container'])}
-                                disabled={true}
-                                tabIndex={-1}
-                                {...playInBackgroundCheckbox}
-                            />
+                    </div>
+                    <div className={styles['section-container']}>
+                        <div className={styles['section-subtitle-wrapper']}>
+                            <Icon className={styles['icon']} name={'glasses'} />
+                            <div className={styles['section-subtitle']}>{t('SETTINGS_SECTION_ADVANCED')}</div>
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
