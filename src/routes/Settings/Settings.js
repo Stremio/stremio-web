@@ -327,7 +327,7 @@ const Settings = () => {
                     </div>
                     <div ref={playerSectionRef} className={styles['section-container']}>
                         <div className={styles['section-title']}>{ t('SETTINGS_NAV_PLAYER') }</div>
-                        <div className={styles['section-subtitle-wrapper']}>
+                        <div className={styles['section-category-container']}>
                             <Icon className={styles['icon']} name={'subtitles'} />
                             <div className={styles['section-subtitle']}>{t('SETTINGS_SECTION_SUBTITLES')}</div>
                         </div>
@@ -392,7 +392,7 @@ const Settings = () => {
                         </div>
                     </div>
                     <div className={styles['section-container']}>
-                        <div className={styles['section-subtitle-wrapper']}>
+                        <div className={styles['section-category-container']}>
                             <Icon className={styles['icon']} name={'volume-medium'} />
                             <div className={styles['section-subtitle']}>{t('SETTINGS_SECTION_AUDIO')}</div>
                         </div>
@@ -407,7 +407,7 @@ const Settings = () => {
                         </div>
                     </div>
                     <div className={styles['section-container']}>
-                        <div className={styles['section-subtitle-wrapper']}>
+                        <div className={styles['section-category-container']}>
                             <Icon className={styles['icon']} name={'remote'} />
                             <div className={styles['section-subtitle']}>{t('SETTINGS_SECTION_CONTROLS')}</div>
                         </div>
@@ -442,7 +442,7 @@ const Settings = () => {
                         </div>
                     </div>
                     <div className={styles['section-container']}>
-                        <div className={styles['section-subtitle-wrapper']}>
+                        <div className={styles['section-category-container']}>
                             <Icon className={styles['icon']} name={'play'} />
                             <div className={styles['section-subtitle']}>{t('SETTINGS_SECTION_AUTO_PLAY')}</div>
                         </div>
@@ -467,7 +467,7 @@ const Settings = () => {
                         </div>
                     </div>
                     <div className={styles['section-container']}>
-                        <div className={styles['section-subtitle-wrapper']}>
+                        <div className={styles['section-category-container']}>
                             <Icon className={styles['icon']} name={'glasses'} />
                             <div className={styles['section-subtitle']}>{t('SETTINGS_SECTION_ADVANCED')}</div>
                         </div>
