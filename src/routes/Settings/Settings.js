@@ -329,7 +329,7 @@ const Settings = () => {
                         <div className={styles['section-title']}>{ t('SETTINGS_NAV_PLAYER') }</div>
                         <div className={styles['section-category-container']}>
                             <Icon className={styles['icon']} name={'subtitles'} />
-                            <div className={styles['section-subtitle']}>{t('SETTINGS_SECTION_SUBTITLES')}</div>
+                            <div className={styles['label']}>{t('SETTINGS_SECTION_SUBTITLES')}</div>
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
@@ -394,7 +394,7 @@ const Settings = () => {
                     <div className={styles['section-container']}>
                         <div className={styles['section-category-container']}>
                             <Icon className={styles['icon']} name={'volume-medium'} />
-                            <div className={styles['section-subtitle']}>{t('SETTINGS_SECTION_AUDIO')}</div>
+                            <div className={styles['label']}>{t('SETTINGS_SECTION_AUDIO')}</div>
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
@@ -409,7 +409,7 @@ const Settings = () => {
                     <div className={styles['section-container']}>
                         <div className={styles['section-category-container']}>
                             <Icon className={styles['icon']} name={'remote'} />
-                            <div className={styles['section-subtitle']}>{t('SETTINGS_SECTION_CONTROLS')}</div>
+                            <div className={styles['label']}>{t('SETTINGS_SECTION_CONTROLS')}</div>
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
@@ -444,7 +444,7 @@ const Settings = () => {
                     <div className={styles['section-container']}>
                         <div className={styles['section-category-container']}>
                             <Icon className={styles['icon']} name={'play'} />
-                            <div className={styles['section-subtitle']}>{t('SETTINGS_SECTION_AUTO_PLAY')}</div>
+                            <div className={styles['label']}>{t('SETTINGS_SECTION_AUTO_PLAY')}</div>
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
@@ -469,7 +469,7 @@ const Settings = () => {
                     <div className={styles['section-container']}>
                         <div className={styles['section-category-container']}>
                             <Icon className={styles['icon']} name={'glasses'} />
-                            <div className={styles['section-subtitle']}>{t('SETTINGS_SECTION_ADVANCED')}</div>
+                            <div className={styles['label']}>{t('SETTINGS_SECTION_ADVANCED')}</div>
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
