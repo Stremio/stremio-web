@@ -9,6 +9,7 @@ const { Button, Image, Multiselect } = require('stremio/common');
 const { useServices } = require('stremio/services');
 const Stream = require('./Stream');
 const styles = require('./styles');
+
 const ALL_ADDONS_KEY = 'ALL';
 
 const StreamsList = ({ className, video, ...props }) => {
@@ -162,7 +163,7 @@ const StreamsList = ({ className, video, ...props }) => {
 StreamsList.propTypes = {
     className: PropTypes.string,
     streams: PropTypes.arrayOf(PropTypes.object).isRequired,
-    video: PropTypes.object,
+    video: PropTypes.object
 };
 
 module.exports = StreamsList;
