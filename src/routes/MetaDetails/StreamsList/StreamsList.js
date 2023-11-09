@@ -22,6 +22,9 @@ const StreamsList = ({ className, video, ...props }) => {
     const backButtonOnClick = React.useCallback(() => {
         window.history.back();
     }, []);
+    const countLoadingAddons = React.useMemo(() => {
+        return props.streams.filter((stream) => stream.content.type === 'Loading').length;
+    }, [props.streams]);
     const streamsByAddon = React.useMemo(() => {
         return props.streams
             .filter((streams) => streams.content.type === 'Ready')
@@ -95,6 +98,17 @@ const StreamsList = ({ className, video, ...props }) => {
                             </div>
                             :
                             <React.Fragment>
+                                {
+                                    countLoadingAddons > 0 ?
+                                        <div className={styles['addons-loading-container']}>
+                                            <div className={styles['addons-loading']}>
+                                                {countLoadingAddons} {t('MOBILE_ADDONS_LOADING')}
+                                            </div>
+                                            <span className={styles['addons-loading-bar']}></span>
+                                        </div>
+                                        :
+                                        null
+                                }
                                 <div className={styles['select-choices-wrapper']}>
                                     {
                                         video ?
