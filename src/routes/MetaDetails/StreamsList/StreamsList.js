@@ -98,17 +98,6 @@ const StreamsList = ({ className, video, ...props }) => {
                             </div>
                             :
                             <React.Fragment>
-                                {
-                                    countLoadingAddons > 0 ?
-                                        <div className={styles['addons-loading-container']}>
-                                            <div className={styles['addons-loading']}>
-                                                {countLoadingAddons} {t('MOBILE_ADDONS_LOADING')}
-                                            </div>
-                                            <span className={styles['addons-loading-bar']}></span>
-                                        </div>
-                                        :
-                                        null
-                                }
                                 <div className={styles['select-choices-wrapper']}>
                                     {
                                         video ?
@@ -148,13 +137,24 @@ const StreamsList = ({ className, video, ...props }) => {
                                             onClick={stream.onClick}
                                         />
                                     ))}
+                                    <Button className={styles['install-button-container']} title={t('ADDON_CATALOGUE_MORE')} href={'#/addons'}>
+                                        <Icon className={styles['icon']} name={'addons'} />
+                                        <div className={styles['label']}>{ t('ADDON_CATALOGUE_MORE') }</div>
+                                    </Button>
                                 </div>
                             </React.Fragment>
             }
-            <Button className={styles['install-button-container']} title={t('ADDON_CATALOGUE_MORE')} href={'#/addons'}>
-                <Icon className={styles['icon']} name={'addons'} />
-                <div className={styles['label']}>{ t('ADDON_CATALOGUE_MORE') }</div>
-            </Button>
+            {
+                countLoadingAddons > 0 ?
+                    <div className={styles['addons-loading-container']}>
+                        <div className={styles['addons-loading']}>
+                            {countLoadingAddons} {t('MOBILE_ADDONS_LOADING')}
+                        </div>
+                        <span className={styles['addons-loading-bar']}></span>
+                    </div>
+                    :
+                    null
+            }
         </div>
     );
 };
