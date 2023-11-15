@@ -76,6 +76,12 @@ const StreamsList = ({ className, video, ...props }) => {
             onSelect: onAddonSelected
         };
     }, [streamsByAddon, selectedAddon]);
+    const streamsContainerRef = React.useRef(null);
+    const scrollToTop = () => {
+        if (streamsContainerRef.current) {
+            streamsContainerRef.current.scrollTo(0, 0);
+        }
+    };
     return (
         <div className={classnames(className, styles['streams-list-container'])}>
             {
@@ -122,7 +128,7 @@ const StreamsList = ({ className, video, ...props }) => {
                                             null
                                     }
                                 </div>
-                                <div className={styles['streams-container']}>
+                                <div className={styles['streams-container']} ref={streamsContainerRef}>
                                     {filteredStreams.map((stream, index) => (
                                         <Stream
                                             key={index}
@@ -137,6 +143,9 @@ const StreamsList = ({ className, video, ...props }) => {
                                             onClick={stream.onClick}
                                         />
                                     ))}
+                                    <div className={styles['icon-wrapper']} onClick={scrollToTop}>
+                                        <Icon className={styles['icon']} name={'chevron-up'} />
+                                    </div>
                                     <Button className={styles['install-button-container']} title={t('ADDON_CATALOGUE_MORE')} href={'#/addons'}>
                                         <Icon className={styles['icon']} name={'addons'} />
                                         <div className={styles['label']}>{ t('ADDON_CATALOGUE_MORE') }</div>
