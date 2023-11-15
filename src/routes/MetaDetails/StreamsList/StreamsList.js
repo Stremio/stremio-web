@@ -78,7 +78,7 @@ const StreamsList = ({ className, video, ...props }) => {
     }, [streamsByAddon, selectedAddon]);
     const streamsContainerRef = React.useRef(null);
     const scrollToTop = () => {
-        if (streamsContainerRef.current) {
+        if (streamsContainerRef?.current) {
             streamsContainerRef.current.scrollTo(0, 0);
         }
     };
@@ -143,13 +143,21 @@ const StreamsList = ({ className, video, ...props }) => {
                                             onClick={stream.onClick}
                                         />
                                     ))}
-                                    <div className={styles['icon-wrapper']} onClick={scrollToTop}>
-                                        <Icon className={styles['icon']} name={'chevron-up'} />
-                                    </div>
-                                    <Button className={styles['install-button-container']} title={t('ADDON_CATALOGUE_MORE')} href={'#/addons'}>
-                                        <Icon className={styles['icon']} name={'addons'} />
-                                        <div className={styles['label']}>{ t('ADDON_CATALOGUE_MORE') }</div>
-                                    </Button>
+                                    {
+                                        streamsContainerRef?.current?.scrollHeight > streamsContainerRef?.current?.clientHeight ?
+                                            <React.Fragment>
+                                                <div className={styles['icon-wrapper']} onClick={scrollToTop}>
+                                                    <Icon className={styles['icon']} name={'chevron-up'} />
+                                                    <div className={styles['label']}>Back to Top</div>
+                                                </div>
+                                                <Button className={styles['install-button-container']} title={t('ADDON_CATALOGUE_MORE')} href={'#/addons'}>
+                                                    <Icon className={styles['icon']} name={'addons'} />
+                                                    <div className={styles['label']}>{ t('ADDON_CATALOGUE_MORE') }</div>
+                                                </Button>
+                                            </React.Fragment>
+                                            :
+                                            null
+                                    }
                                 </div>
                             </React.Fragment>
             }
@@ -161,6 +169,15 @@ const StreamsList = ({ className, video, ...props }) => {
                         </div>
                         <span className={styles['addons-loading-bar']}></span>
                     </div>
+                    :
+                    null
+            }
+            {
+                streamsContainerRef?.current?.scrollHeight <= streamsContainerRef?.current?.clientHeight && countLoadingAddons === 0 ?
+                    <Button className={styles['install-button-container']} title={t('ADDON_CATALOGUE_MORE')} href={'#/addons'}>
+                        <Icon className={styles['icon']} name={'addons'} />
+                        <div className={styles['label']}>{ t('ADDON_CATALOGUE_MORE') }</div>
+                    </Button>
                     :
                     null
             }

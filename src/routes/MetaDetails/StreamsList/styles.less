@@ -143,12 +143,24 @@
             width: 100%;
             justify-content: center;
             align-items: center;
+            gap: 0 0.5rem;
+            opacity: 0.7;
+            transition: opacity 0.1s ease-in-out;
+            cursor: pointer;
 
             .icon {
                 color: var(--primary-foreground-color);
                 width: 2rem;
                 height: 2rem;
-                cursor: pointer;
+            }
+
+            .label {
+                font-size: 0.9rem;
+                color: var(--primary-foreground-color);
+            }
+
+            &:hover {
+                opacity: 1;
             }
         }
     }
