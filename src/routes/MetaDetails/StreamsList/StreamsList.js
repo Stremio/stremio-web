@@ -16,6 +16,9 @@ const StreamsList = ({ className, video, ...props }) => {
     const { t } = useTranslation();
     const { core } = useServices();
     const [selectedAddon, setSelectedAddon] = React.useState(ALL_ADDONS_KEY);
+    const streamsContainerRef = React.useRef(null);
+    const [isScrollable, setIsScrollable] = React.useState(false);
+    const [showBackToTop, setShowBackToTop] = React.useState(false);
     const onAddonSelected = React.useCallback((event) => {
         setSelectedAddon(event.value);
     }, []);
@@ -76,10 +79,33 @@ const StreamsList = ({ className, video, ...props }) => {
             onSelect: onAddonSelected
         };
     }, [streamsByAddon, selectedAddon]);
-    const streamsContainerRef = React.useRef(null);
+    const handleScroll = () => {
+        if (streamsContainerRef.current) {
+            const { scrollTop, scrollHeight, clientHeight } = streamsContainerRef.current;
+            const isScrollable = scrollHeight - clientHeight > 0;
+            setShowBackToTop(scrollTop > 50);
+            setIsScrollable(isScrollable);
+        }
+    };
+    React.useEffect(() => {
+        const container = streamsContainerRef.current;
+        handleScroll();
+        if (container) {
+            container.addEventListener('scroll', handleScroll);
+        }
+        return () => {
+            if (container) {
+                container.removeEventListener('scroll', handleScroll);
+            }
+        };
+    }, [streamsByAddon, selectedAddon]);
+
     const scrollToTop = () => {
-        if (streamsContainerRef?.current) {
-            streamsContainerRef.current.scrollTo(0, 0);
+        if (streamsContainerRef.current) {
+            streamsContainerRef.current.scroll({
+                top: 0,
+                behavior: 'smooth'
+            });
         }
     };
     return (
@@ -128,6 +154,10 @@ const StreamsList = ({ className, video, ...props }) => {
                                             null
                                     }
                                 </div>
+                                <div className={classnames(styles['to-top-wrapper'], showBackToTop ? styles['active'] : null)} onClick={scrollToTop}>
+                                    <Icon className={styles['icon']} name={'chevron-up'} />
+                                    <div className={styles['label']}>Back to Top</div>
+                                </div>
                                 <div className={styles['streams-container']} ref={streamsContainerRef}>
                                     {filteredStreams.map((stream, index) => (
                                         <Stream
@@ -144,12 +174,9 @@ const StreamsList = ({ className, video, ...props }) => {
                                         />
                                     ))}
                                     {
-                                        streamsContainerRef?.current?.scrollHeight > streamsContainerRef?.current?.clientHeight ?
+                                        isScrollable && countLoadingAddons === 0 ?
                                             <React.Fragment>
-                                                <div className={styles['icon-wrapper']} onClick={scrollToTop}>
-                                                    <Icon className={styles['icon']} name={'chevron-up'} />
-                                                    <div className={styles['label']}>Back to Top</div>
-                                                </div>
+                                                <hr className={styles['line']} />
                                                 <Button className={styles['install-button-container']} title={t('ADDON_CATALOGUE_MORE')} href={'#/addons'}>
                                                     <Icon className={styles['icon']} name={'addons'} />
                                                     <div className={styles['label']}>{ t('ADDON_CATALOGUE_MORE') }</div>
@@ -173,7 +200,7 @@ const StreamsList = ({ className, video, ...props }) => {
                     null
             }
             {
-                streamsContainerRef?.current?.scrollHeight <= streamsContainerRef?.current?.clientHeight && countLoadingAddons === 0 ?
+                !isScrollable && countLoadingAddons === 0 ?
                     <Button className={styles['install-button-container']} title={t('ADDON_CATALOGUE_MORE')} href={'#/addons'}>
                         <Icon className={styles['icon']} name={'addons'} />
                         <div className={styles['label']}>{ t('ADDON_CATALOGUE_MORE') }</div>
