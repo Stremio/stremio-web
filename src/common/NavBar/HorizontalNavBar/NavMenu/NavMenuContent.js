@@ -9,6 +9,7 @@ const { useServices } = require('stremio/services');
 const Button = require('stremio/common/Button');
 const useFullscreen = require('stremio/common/useFullscreen');
 const useProfile = require('stremio/common/useProfile');
+const usePWA = require('stremio/common/usePWA');
 const useTorrent = require('stremio/common/useTorrent');
 const { withCoreSuspender } = require('stremio/common/CoreSuspender');
 const styles = require('./styles');
@@ -19,6 +20,7 @@ const NavMenuContent = ({ onClick }) => {
     const profile = useProfile();
     const { createTorrentFromMagnet } = useTorrent();
     const [fullscreen, requestFullscreen, exitFullscreen] = useFullscreen();
+    const isPWA = usePWA();
     const logoutButtonOnClick = React.useCallback(() => {
         core.transport.dispatch({
             action: 'Ctx',
@@ -59,12 +61,17 @@ const NavMenuContent = ({ onClick }) => {
                     </Button>
                 </div>
             </div>
-            <div className={styles['nav-menu-section']}>
-                <Button className={styles['nav-menu-option-container']} title={fullscreen ? t('EXIT_FULLSCREEN') : t('ENTER_FULLSCREEN')} onClick={fullscreen ? exitFullscreen : requestFullscreen}>
-                    <Icon className={styles['icon']} name={fullscreen ? 'minimize' : 'maximize'} />
-                    <div className={styles['nav-menu-option-label']}>{fullscreen ? t('EXIT_FULLSCREEN') : t('ENTER_FULLSCREEN')}</div>
-                </Button>
-            </div>
+            {
+                !isPWA ?
+                    <div className={styles['nav-menu-section']}>
+                        <Button className={styles['nav-menu-option-container']} title={fullscreen ? t('EXIT_FULLSCREEN') : t('ENTER_FULLSCREEN')} onClick={fullscreen ? exitFullscreen : requestFullscreen}>
+                            <Icon className={styles['icon']} name={fullscreen ? 'minimize' : 'maximize'} />
+                            <div className={styles['nav-menu-option-label']}>{fullscreen ? t('EXIT_FULLSCREEN') : t('ENTER_FULLSCREEN')}</div>
+                        </Button>
+                    </div>
+                    :
+                    null
+            }
             <div className={styles['nav-menu-section']}>
                 <Button className={styles['nav-menu-option-container']} title={ t('SETTINGS') } href={'#/settings'}>
                     <Icon className={styles['icon']} name={'settings'} />
