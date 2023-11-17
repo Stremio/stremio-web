@@ -154,10 +154,6 @@ const StreamsList = ({ className, video, ...props }) => {
                                             null
                                     }
                                 </div>
-                                <div className={classnames(styles['to-top-wrapper'], showBackToTop ? styles['active'] : null)} onClick={scrollToTop}>
-                                    <Icon className={styles['icon']} name={'chevron-up'} />
-                                    <div className={styles['label']}>Back to Top</div>
-                                </div>
                                 <div className={styles['streams-container']} ref={streamsContainerRef}>
                                     {filteredStreams.map((stream, index) => (
                                         <Stream
@@ -188,6 +184,10 @@ const StreamsList = ({ className, video, ...props }) => {
                                 </div>
                             </React.Fragment>
             }
+            <div className={classnames(styles['to-top-wrapper'], showBackToTop ? styles['active'] : null)} onClick={scrollToTop}>
+                <Icon className={styles['icon']} name={'chevron-up'} />
+                <div className={styles['label']}>Back to Top</div>
+            </div>
             {
                 countLoadingAddons > 0 ?
                     <div className={styles['addons-loading-container']}>
