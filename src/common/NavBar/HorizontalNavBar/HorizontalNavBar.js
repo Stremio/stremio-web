@@ -7,6 +7,7 @@ const { default: Icon } = require('@stremio/stremio-icons/react');
 const Button = require('stremio/common/Button');
 const Image = require('stremio/common/Image');
 const useFullscreen = require('stremio/common/useFullscreen');
+const usePWA = require('stremio/common/usePWA');
 const SearchBar = require('./SearchBar');
 const NavMenu = require('./NavMenu');
 const styles = require('./styles');
@@ -17,6 +18,7 @@ const HorizontalNavBar = React.memo(({ className, route, query, title, backButto
         window.history.back();
     }, []);
     const [fullscreen, requestFullscreen, exitFullscreen] = useFullscreen();
+    const isPWA = usePWA();
     const renderNavMenuLabel = React.useCallback(({ ref, className, onClick, children, }) => (
         <Button ref={ref} className={classnames(className, styles['button-container'], styles['menu-button-container'])} tabIndex={-1} onClick={onClick}>
             <Icon className={styles['icon']} name={'person-outline'} />
@@ -61,7 +63,7 @@ const HorizontalNavBar = React.memo(({ className, route, query, title, backButto
                         null
                 }
                 {
-                    fullscreenButton ?
+                    !isPWA && fullscreenButton ?
                         <Button className={styles['button-container']} title={fullscreen ? t('EXIT_FULLSCREEN') : t('ENTER_FULLSCREEN')} tabIndex={-1} onClick={fullscreen ? exitFullscreen : requestFullscreen}>
                             <Icon className={styles['icon']} name={fullscreen ? 'minimize' : 'maximize'} />
                         </Button>
