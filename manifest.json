@@ -34,7 +34,7 @@
     "start_url": "https://web.stremio.com",
     "scope": "https://web.stremio.com",
     "display": "standalone",
-    "orientation": "natural",
+    "orientation": "any",
     "theme_color": "#2a2843",
     "background_color": "#161523"
 }
