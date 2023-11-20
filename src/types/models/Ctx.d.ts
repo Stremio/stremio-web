@@ -56,7 +56,10 @@ type NotificationItem = {
     videoReleased: string,
 }
 
+type SearchHistory = string[];
+
 type Ctx = {
     profile: Profile,
     notifications: Notifications,
+    searchHistory: SearchHistory,
 };
