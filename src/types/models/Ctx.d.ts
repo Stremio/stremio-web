@@ -28,6 +28,7 @@ type Settings = {
     seekTimeDuration: number,
     seekShortTimeDuration: number,
     streamingServerUrl: string,
+    remoteHttps: string | null,
     streamingServerWarningDismissed: Date | null,
     subtitlesBackgroundColor: string,
     subtitlesBold: boolean,

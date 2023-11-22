@@ -45,6 +45,8 @@ const Settings = () => {
         streamingServerUrlInput
     } = useProfileSettingsInputs(profile);
     const {
+        streamingServerRemoteUrlInput,
+        remoteEndpointSelect,
         cacheSizeSelect,
         torrentProfileSelect
     } = useStreamingServerSettingsInputs(streamingServer);
@@ -531,6 +533,33 @@ const Settings = () => {
                                 </Button>
                             </div>
                         </div>
+                        {
+                            streamingServerRemoteUrlInput.value !== null ?
+                                <div className={styles['option-container']}>
+                                    <div className={styles['option-name-container']}>
+                                        <div className={styles['label']}>Remote url</div>
+                                    </div>
+                                    <div className={classnames(styles['option-input-container'], styles['configure-input-container'])}>
+                                        <div className={styles['label']} title={streamingServerRemoteUrlInput.value}>{streamingServerRemoteUrlInput.value}</div>
+                                    </div>
+                                </div>
+                                :
+                                null
+                        }
+                        {
+                            remoteEndpointSelect !== null ?
+                                <div className={styles['option-container']}>
+                                    <div className={styles['option-name-container']}>
+                                        <div className={styles['label']}>{ t('SETTINGS_HTTPS_ENDPOINT') }</div>
+                                    </div>
+                                    <Multiselect
+                                        className={classnames(styles['option-input-container'], styles['multiselect-container'])}
+                                        {...remoteEndpointSelect}
+                                    />
+                                </div>
+                                :
+                                null
+                        }
                         {
                             cacheSizeSelect !== null ?
                                 <div className={styles['option-container']}>

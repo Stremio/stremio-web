@@ -14,17 +14,13 @@ const Multiselect = ({ className, mode, direction, title, disabled, dataset, ren
     const [menuOpen, , closeMenu, toggleMenu] = useBinaryState(false);
     const options = React.useMemo(() => {
         return Array.isArray(props.options) ?
-            props.options.filter((option) => {
-                return option && typeof option.value === 'string';
-            })
+            props.options
             :
             [];
     }, [props.options]);
     const selected = React.useMemo(() => {
         return Array.isArray(props.selected) ?
-            props.selected.filter((value) => {
-                return typeof value === 'string';
-            })
+            props.selected
             :
             [];
     }, [props.selected]);
@@ -161,7 +157,7 @@ Multiselect.propTypes = {
     direction: PropTypes.any,
     title: PropTypes.string,
     options: PropTypes.arrayOf(PropTypes.shape({
-        value: PropTypes.string.isRequired,
+        value: PropTypes.string,
         title: PropTypes.string,
         label: PropTypes.string
     })),
