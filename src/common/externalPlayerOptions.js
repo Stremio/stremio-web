@@ -19,7 +19,8 @@ if (platform.name === 'ios') {
 } else if (platform.name === 'macos') {
     options = options.concat([
         { label: 'IINA', value: 'iina' },
-        { label: 'mpv', value: 'mpv' }
+        { label: 'mpv', value: 'mpv' },
+        { label: 'VLC', value: 'vlc' }
     ]);
 } else if (['windows', 'linux'].includes(platform.name)) {
     options = options.concat([

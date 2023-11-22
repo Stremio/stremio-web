@@ -16,11 +16,11 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
     const toast = useToast();
     const href = React.useMemo(() => {
         if (!deepLinks) return null;
-        
+
         if (profile.settings.playerType && profile.settings.playerType !== 'internal') {
             return (deepLinks.externalPlayer.openPlayer || {})[platform.name] || deepLinks.externalPlayer.href;
         }
-    
+
         return typeof deepLinks.player === 'string' ? deepLinks.player : null;
     }, [deepLinks, profile, streamingServer]);
     const markVideoAsWatched = React.useCallback(() => {
