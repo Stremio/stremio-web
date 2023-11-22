@@ -173,6 +173,10 @@ const StreamsList = ({ className, video, ...props }) => {
                                         isScrollable && countLoadingAddons === 0 ?
                                             <React.Fragment>
                                                 <hr className={styles['line']} />
+                                                <div className={classnames(styles['to-top-wrapper'], showBackToTop ? styles['active'] : null)} onClick={scrollToTop}>
+                                                    <Icon className={styles['icon']} name={'chevron-up'} />
+                                                    <div className={styles['label']}>Back to Top</div>
+                                                </div>
                                                 <Button className={styles['install-button-container']} title={t('ADDON_CATALOGUE_MORE')} href={'#/addons'}>
                                                     <Icon className={styles['icon']} name={'addons'} />
                                                     <div className={styles['label']}>{ t('ADDON_CATALOGUE_MORE') }</div>
@@ -184,21 +188,12 @@ const StreamsList = ({ className, video, ...props }) => {
                                 </div>
                             </React.Fragment>
             }
-            <div className={classnames(styles['to-top-wrapper'], showBackToTop ? styles['active'] : null)} onClick={scrollToTop}>
-                <Icon className={styles['icon']} name={'chevron-up'} />
-                <div className={styles['label']}>Back to Top</div>
+            <div className={classnames(styles['addons-loading-container'], countLoadingAddons > 0 ? styles['active'] : null)}>
+                <div className={styles['addons-loading']}>
+                    {countLoadingAddons} {t('MOBILE_ADDONS_LOADING')}
+                </div>
+                <span className={styles['addons-loading-bar']}></span>
             </div>
-            {
-                countLoadingAddons > 0 ?
-                    <div className={styles['addons-loading-container']}>
-                        <div className={styles['addons-loading']}>
-                            {countLoadingAddons} {t('MOBILE_ADDONS_LOADING')}
-                        </div>
-                        <span className={styles['addons-loading-bar']}></span>
-                    </div>
-                    :
-                    null
-            }
             {
                 !isScrollable && countLoadingAddons === 0 ?
                     <Button className={styles['install-button-container']} title={t('ADDON_CATALOGUE_MORE')} href={'#/addons'}>

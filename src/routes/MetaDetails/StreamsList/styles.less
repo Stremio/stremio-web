@@ -45,11 +45,16 @@
         display: flex;
         z-index: 1;
         overflow: visible;
-        margin: 2em 1em;
+        margin: 0;
         gap: 1em;
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        max-height: 0rem;
+        min-height: 0rem;
+        opacity: 0;
+        transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out, min-height 0.5s ease-in-out, margin 0.5s ease-in-out;
+        overflow: hidden;
 
         .addons-loading {
             color: var(--primary-foreground-color);
@@ -61,6 +66,13 @@
             height: 0.3em;
             border-radius: var(--border-radius);
             background-color: var(--primary-accent-color);
+        }
+
+        &.active {
+            min-height: 3rem;
+            max-height: 3rem;
+            margin: 2em 1em;
+            opacity: 1;
         }
     }
 
@@ -140,48 +152,39 @@
         opacity: 0.2;
     }
 
-    .to-top-wrapper {
-        display: flex;
-        width: 100%;
-        justify-content: center;
-        align-items: center;
-        gap: 0 0.5rem;
-        cursor: pointer;
-        max-height: 0rem;
-        min-height: 0rem;
-        opacity: 0;
-        transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out, min-height 0.5s ease-in-out;
-        overflow: hidden;
-    
-        .icon {
-            color: var(--primary-foreground-color);
-            width: 2rem;
-            height: 2rem;
-        }
-    
-        .label {
-            font-size: 0.9rem;
-            color: var(--primary-foreground-color);
-        }
-        
-        &.active {
-            min-height: 3rem;
-            max-height: 3rem;
-            opacity: 0.7;
-        }
-    
-        &:hover {
-            opacity: 1; 
-        }
-    }
-    
-
     .streams-container {
         flex: 1 1 auto;
         align-self: stretch;
         margin-top: 1rem;
         padding: 0 1rem;
         overflow-y: auto;
+
+        .to-top-wrapper {
+            display: flex;
+            width: 100%;
+            justify-content: center;
+            align-items: center;
+            gap: 0 0.5rem;
+            opacity: 0.7;
+            transition: opacity 0.5s ease-in-out;
+            cursor: pointer;
+            overflow: hidden;
+        
+            .icon {
+                color: var(--primary-foreground-color);
+                width: 2rem;
+                height: 2rem;
+            }
+        
+            .label {
+                font-size: 0.9rem;
+                color: var(--primary-foreground-color);
+            }
+
+            &:hover {
+               opacity: 1;
+            }
+        }    
     }
 
     .install-button-container {
