@@ -82,7 +82,7 @@ const StreamsList = ({ className, video, ...props }) => {
                 props.streams.length === 0 ?
                     <div className={styles['message-container']}>
                         <Image className={styles['image']} src={require('/images/empty.png')} alt={' '} />
-                        <div className={styles['label']}>No addons were requested for streams!</div>
+                        <div className={styles['label']}>No stream requests to addons were made!</div>
                     </div>
                     :
                     props.streams.every((streams) => streams.content.type === 'Err') ?
@@ -150,11 +150,14 @@ const StreamsList = ({ className, video, ...props }) => {
                                     ))}
                                 </div>
                             </React.Fragment>
-            }
+            },
+            { props.streams.length == 0 ?
             <Button className={styles['install-button-container']} title={t('ADDON_CATALOGUE_MORE')} href={'#/addons'}>
                 <Icon className={styles['icon']} name={'addons'} />
                 <div className={styles['label']}>{ t('ADDON_CATALOGUE_MORE') }</div>
             </Button>
+                : ""
+            }
         </div>
     );
 };
