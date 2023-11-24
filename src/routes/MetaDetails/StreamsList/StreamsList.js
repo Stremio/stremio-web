@@ -17,8 +17,8 @@ const StreamsList = ({ className, video, ...props }) => {
     const { core } = useServices();
     const [selectedAddon, setSelectedAddon] = React.useState(ALL_ADDONS_KEY);
     const streamsContainerRef = React.useRef(null);
+    const scrollHeightRef = React.useRef(null);
     const [isScrollable, setIsScrollable] = React.useState(false);
-    const [showBackToTop, setShowBackToTop] = React.useState(false);
     const onAddonSelected = React.useCallback((event) => {
         setSelectedAddon(event.value);
     }, []);
@@ -79,25 +79,13 @@ const StreamsList = ({ className, video, ...props }) => {
             onSelect: onAddonSelected
         };
     }, [streamsByAddon, selectedAddon]);
-    const handleScroll = () => {
-        if (streamsContainerRef.current) {
-            const { scrollTop, scrollHeight, clientHeight } = streamsContainerRef.current;
-            const isScrollable = scrollHeight - clientHeight > 0;
-            setShowBackToTop(scrollTop > 50);
+    React.useLayoutEffect(() => {
+        const container = streamsContainerRef.current;
+        if (container) {
+            scrollHeightRef.current = container.scrollHeight;
+            const isScrollable = scrollHeightRef.current > container.clientHeight;
             setIsScrollable(isScrollable);
         }
-    };
-    React.useEffect(() => {
-        const container = streamsContainerRef.current;
-        handleScroll();
-        if (container) {
-            container.addEventListener('scroll', handleScroll);
-        }
-        return () => {
-            if (container) {
-                container.removeEventListener('scroll', handleScroll);
-            }
-        };
     }, [streamsByAddon, selectedAddon]);
 
     const scrollToTop = () => {
@@ -173,7 +161,7 @@ const StreamsList = ({ className, video, ...props }) => {
                                         isScrollable && countLoadingAddons === 0 ?
                                             <React.Fragment>
                                                 <hr className={styles['line']} />
-                                                <div className={classnames(styles['to-top-wrapper'], showBackToTop ? styles['active'] : null)} onClick={scrollToTop}>
+                                                <div className={classnames(styles['to-top-wrapper'], isScrollable ? styles['active'] : null)} onClick={scrollToTop}>
                                                     <Icon className={styles['icon']} name={'chevron-up'} />
                                                     <div className={styles['label']}>Back to Top</div>
                                                 </div>
