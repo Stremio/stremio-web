@@ -289,7 +289,10 @@ const Player = ({ urlParams, queryParams }) => {
                     maxAudioChannels: typeof maxAudioChannels === 'number' ?
                         maxAudioChannels
                         :
-                        null,
+                        settings.surroundSound ? 
+                            32
+                            :
+                            2,
                     streamingServerURL: streamingServer.baseUrl.type === 'Ready' ?
                         casting ?
                             streamingServer.baseUrl.content
