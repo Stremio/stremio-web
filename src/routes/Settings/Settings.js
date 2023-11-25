@@ -34,6 +34,7 @@ const Settings = () => {
         subtitlesBackgroundColorInput,
         subtitlesOutlineColorInput,
         audioLanguageSelect,
+        surroundSoundCheckbox,
         seekTimeDurationSelect,
         seekShortTimeDurationSelect,
         escExitFullscreenCheckbox,
@@ -403,6 +404,16 @@ const Settings = () => {
                             <Multiselect
                                 className={classnames(styles['option-input-container'], styles['multiselect-container'])}
                                 {...audioLanguageSelect}
+                            />
+                        </div>
+                        <div className={styles['option-container']}>
+                            <div className={styles['option-name-container']}>
+                                <div className={styles['label']}>{ t('SETTINGS_SURROUND_SOUND') }</div>
+                            </div>
+                            <Checkbox
+                                className={classnames(styles['option-input-container'], styles['checkbox-container'])}
+                                tabIndex={-1}
+                                {...surroundSoundCheckbox}
                             />
                         </div>
                     </div>

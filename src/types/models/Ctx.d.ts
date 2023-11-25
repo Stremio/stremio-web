@@ -37,6 +37,7 @@ type Settings = {
     subtitlesOutlineColor: string,
     subtitlesSize: number,
     subtitlesTextColor: string,
+    surroundSound: boolean,
 };
 
 type Profile = {
