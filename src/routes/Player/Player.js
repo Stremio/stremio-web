@@ -19,11 +19,12 @@ const OptionsMenu = require('./OptionsMenu');
 const VideosMenu = require('./VideosMenu');
 const SubtitlesMenu = require('./SubtitlesMenu');
 const SpeedMenu = require('./SpeedMenu');
-const Video = require('./Video');
 const usePlayer = require('./usePlayer');
 const useSettings = require('./useSettings');
 const useStatistics = require('./useStatistics');
+const useVideo = require('./useVideo');
 const styles = require('./styles');
+const Video = require('./Video');
 
 const Player = ({ urlParams, queryParams }) => {
     const { t } = useTranslation();
@@ -34,18 +35,23 @@ const Player = ({ urlParams, queryParams }) => {
             queryParams.has('maxAudioChannels') ? parseInt(queryParams.get('maxAudioChannels'), 10) : null
         ];
     }, [queryParams]);
+
     const [player, videoParamsChanged, timeChanged, pausedChanged, ended] = usePlayer(urlParams);
     const [settings, updateSettings] = useSettings();
     const streamingServer = useStreamingServer();
     const statistics = useStatistics(player, streamingServer);
+    const video = useVideo();
     const routeFocused = useRouteFocused();
     const toast = useToast();
-    const [, , , toggleFullscreen] = useFullscreen();
+
     const [casting, setCasting] = React.useState(() => {
         return chromecast.active && chromecast.transport.getCastState() === cast.framework.CastState.CONNECTED;
     });
+
     const [immersed, setImmersed] = React.useState(true);
     const setImmersedDebounced = React.useCallback(debounce(setImmersed, 3000), []);
+    const [, , , toggleFullscreen] = useFullscreen();
+
     const [optionsMenuOpen, , closeOptionsMenu, toggleOptionsMenu] = useBinaryState(false);
     const [subtitlesMenuOpen, , closeSubtitlesMenu, toggleSubtitlesMenu] = useBinaryState(false);
     const [infoMenuOpen, , closeInfoMenu, toggleInfoMenu] = useBinaryState(false);
@@ -53,68 +59,25 @@ const Player = ({ urlParams, queryParams }) => {
     const [videosMenuOpen, , closeVideosMenu, toggleVideosMenu] = useBinaryState(false);
     const [nextVideoPopupOpen, openNextVideoPopup, closeNextVideoPopup] = useBinaryState(false);
     const [statisticsMenuOpen, , closeStatisticsMenu, toggleStatisticsMenu] = useBinaryState(false);
+
     const nextVideoPopupDismissed = React.useRef(false);
     const defaultSubtitlesSelected = React.useRef(false);
     const defaultAudioTrackSelected = React.useRef(false);
     const [error, setError] = React.useState(null);
-    const [videoState, setVideoState] = React.useReducer(
-        (videoState, nextVideoState) => ({ ...videoState, ...nextVideoState }),
-        {
-            manifest: null,
-            stream: null,
-            paused: null,
-            time: null,
-            duration: null,
-            buffering: null,
-            buffered: null,
-            volume: null,
-            muted: null,
-            playbackSpeed: null,
-            videoParams: null,
-            audioTracks: [],
-            selectedAudioTrackId: null,
-            subtitlesTracks: [],
-            selectedSubtitlesTrackId: null,
-            subtitlesOffset: null,
-            subtitlesSize: null,
-            subtitlesTextColor: null,
-            subtitlesBackgroundColor: null,
-            subtitlesOutlineColor: null,
-            extraSubtitlesTracks: [],
-            selectedExtraSubtitlesTrackId: null,
-            extraSubtitlesSize: null,
-            extraSubtitlesDelay: null,
-            extraSubtitlesOffset: null,
-            extraSubtitlesTextColor: null,
-            extraSubtitlesBackgroundColor: null,
-            extraSubtitlesOutlineColor: null
-        }
-    );
-    const videoRef = React.useRef(null);
-    const dispatch = React.useCallback((action, options) => {
-        if (videoRef.current !== null) {
-            videoRef.current.dispatch(action, options);
-        }
-    }, []);
-    const onImplementationChanged = React.useCallback((manifest) => {
-        setVideoState({ manifest });
-        manifest.props.forEach((propName) => {
-            dispatch({ type: 'observeProp', propName });
-        });
-        dispatch({ type: 'setProp', propName: 'subtitlesSize', propValue: settings.subtitlesSize });
-        dispatch({ type: 'setProp', propName: 'subtitlesOffset', propValue: settings.subtitlesOffset });
-        dispatch({ type: 'setProp', propName: 'subtitlesTextColor', propValue: settings.subtitlesTextColor });
-        dispatch({ type: 'setProp', propName: 'subtitlesBackgroundColor', propValue: settings.subtitlesBackgroundColor });
-        dispatch({ type: 'setProp', propName: 'subtitlesOutlineColor', propValue: settings.subtitlesOutlineColor });
-        dispatch({ type: 'setProp', propName: 'extraSubtitlesSize', propValue: settings.subtitlesSize });
-        dispatch({ type: 'setProp', propName: 'extraSubtitlesOffset', propValue: settings.subtitlesOffset });
-        dispatch({ type: 'setProp', propName: 'extraSubtitlesTextColor', propValue: settings.subtitlesTextColor });
-        dispatch({ type: 'setProp', propName: 'extraSubtitlesBackgroundColor', propValue: settings.subtitlesBackgroundColor });
-        dispatch({ type: 'setProp', propName: 'extraSubtitlesOutlineColor', propValue: settings.subtitlesOutlineColor });
+
+    const onImplementationChanged = React.useCallback(() => {
+        video.setProp('subtitlesSize', settings.subtitlesSize);
+        video.setProp('subtitlesOffset', settings.subtitlesOffset);
+        video.setProp('subtitlesTextColor', settings.subtitlesTextColor);
+        video.setProp('subtitlesBackgroundColor', settings.subtitlesBackgroundColor);
+        video.setProp('subtitlesOutlineColor', settings.subtitlesOutlineColor);
+        video.setProp('extraSubtitlesSize', settings.subtitlesSize);
+        video.setProp('extraSubtitlesOffset', settings.subtitlesOffset);
+        video.setProp('extraSubtitlesTextColor', settings.subtitlesTextColor);
+        video.setProp('extraSubtitlesBackgroundColor', settings.subtitlesBackgroundColor);
+        video.setProp('extraSubtitlesOutlineColor', settings.subtitlesOutlineColor);
     }, [settings.subtitlesSize, settings.subtitlesOffset, settings.subtitlesTextColor, settings.subtitlesBackgroundColor, settings.subtitlesOutlineColor]);
-    const onPropChanged = React.useCallback((propName, propValue) => {
-        setVideoState({ [propName]: propValue });
-    }, []);
+
     const onEnded = React.useCallback(() => {
         ended();
         if (player.nextVideo !== null) {
@@ -123,6 +86,7 @@ const Player = ({ urlParams, queryParams }) => {
             window.history.back();
         }
     }, [player.nextVideo, onNextVideoRequested]);
+
     const onError = React.useCallback((error) => {
         console.error('Player', error);
         if (error.critical) {
@@ -136,6 +100,7 @@ const Player = ({ urlParams, queryParams }) => {
             });
         }
     }, []);
+
     const onSubtitlesTrackLoaded = React.useCallback(() => {
         toast.show({
             type: 'success',
@@ -144,6 +109,7 @@ const Player = ({ urlParams, queryParams }) => {
             timeout: 3000
         });
     }, []);
+
     const onExtraSubtitlesTrackLoaded = React.useCallback((track) => {
         toast.show({
             type: 'success',
@@ -152,53 +118,69 @@ const Player = ({ urlParams, queryParams }) => {
             timeout: 3000
         });
     }, []);
+
     const onPlayRequested = React.useCallback(() => {
-        dispatch({ type: 'setProp', propName: 'paused', propValue: false });
+        video.setProp('paused', false);
     }, []);
+
     const onPlayRequestedDebounced = React.useCallback(debounce(onPlayRequested, 200), []);
+
     const onPauseRequested = React.useCallback(() => {
-        dispatch({ type: 'setProp', propName: 'paused', propValue: true });
+        video.setProp('paused', true);
     }, []);
+
     const onPauseRequestedDebounced = React.useCallback(debounce(onPauseRequested, 200), []);
     const onMuteRequested = React.useCallback(() => {
-        dispatch({ type: 'setProp', propName: 'muted', propValue: true });
+        video.setProp('muted', true);
     }, []);
+
     const onUnmuteRequested = React.useCallback(() => {
-        dispatch({ type: 'setProp', propName: 'muted', propValue: false });
+        video.setProp('muted', false);
     }, []);
+
     const onVolumeChangeRequested = React.useCallback((volume) => {
-        dispatch({ type: 'setProp', propName: 'volume', propValue: volume });
+        video.setProp('volume', volume);
     }, []);
+
     const onSeekRequested = React.useCallback((time) => {
-        dispatch({ type: 'setProp', propName: 'time', propValue: time });
+        video.setProp('time', time);
     }, []);
+
     const onPlaybackSpeedChanged = React.useCallback((rate) => {
-        dispatch({ type: 'setProp', propName: 'playbackSpeed', propValue: rate });
+        video.setProp('playbackSpeed', rate);
     }, []);
+
     const onSubtitlesTrackSelected = React.useCallback((id) => {
-        dispatch({ type: 'setProp', propName: 'selectedSubtitlesTrackId', propValue: id });
-        dispatch({ type: 'setProp', propName: 'selectedExtraSubtitlesTrackId', propValue: null });
+        video.setProp('selectedSubtitlesTrackId', id);
+        video.setProp('selectedExtraSubtitlesTrackId', null);
     }, []);
+
     const onExtraSubtitlesTrackSelected = React.useCallback((id) => {
-        dispatch({ type: 'setProp', propName: 'selectedSubtitlesTrackId', propValue: null });
-        dispatch({ type: 'setProp', propName: 'selectedExtraSubtitlesTrackId', propValue: id });
+        video.setProp('selectedSubtitlesTrackId', null);
+        video.setProp('selectedExtraSubtitlesTrackId', id);
     }, []);
+
     const onAudioTrackSelected = React.useCallback((id) => {
-        dispatch({ type: 'setProp', propName: 'selectedAudioTrackId', propValue: id });
+        video.setProp('selectedAudioTrackId', id);
     }, []);
+
     const onExtraSubtitlesDelayChanged = React.useCallback((delay) => {
-        dispatch({ type: 'setProp', propName: 'extraSubtitlesDelay', propValue: delay });
+        video.setProp('extraSubtitlesDelay', delay);
     }, []);
+
     const onSubtitlesSizeChanged = React.useCallback((size) => {
         updateSettings({ subtitlesSize: size });
     }, [updateSettings]);
+
     const onSubtitlesOffsetChanged = React.useCallback((offset) => {
         updateSettings({ subtitlesOffset: offset });
     }, [updateSettings]);
+
     const onDismissNextVideoPopup = React.useCallback(() => {
         closeNextVideoPopup();
         nextVideoPopupDismissed.current = true;
     }, []);
+
     const onNextVideoRequested = React.useCallback(() => {
         if (player.nextVideo !== null) {
             const deepLinks = player.nextVideo.deepLinks;
@@ -210,20 +192,23 @@ const Player = ({ urlParams, queryParams }) => {
             }
         }
     }, [player.nextVideo]);
+
     const onVideoClick = React.useCallback(() => {
-        if (videoState.paused !== null) {
-            if (videoState.paused) {
+        if (video.state.paused !== null) {
+            if (video.state.paused) {
                 onPlayRequestedDebounced();
             } else {
                 onPauseRequestedDebounced();
             }
         }
-    }, [videoState.paused]);
+    }, [video.state.paused]);
+
     const onVideoDoubleClick = React.useCallback(() => {
         onPlayRequestedDebounced.cancel();
         onPauseRequestedDebounced.cancel();
         toggleFullscreen();
     }, [toggleFullscreen]);
+
     const onContainerMouseDown = React.useCallback((event) => {
         if (!event.nativeEvent.optionsMenuClosePrevented) {
             closeOptionsMenu();
@@ -244,6 +229,7 @@ const Player = ({ urlParams, queryParams }) => {
             closeStatisticsMenu();
         }
     }, []);
+
     const onContainerMouseMove = React.useCallback((event) => {
         setImmersed(false);
         if (!event.nativeEvent.immersePrevented) {
@@ -252,125 +238,130 @@ const Player = ({ urlParams, queryParams }) => {
             setImmersedDebounced.cancel();
         }
     }, []);
+
     const onContainerMouseLeave = React.useCallback(() => {
         setImmersedDebounced.cancel();
         setImmersed(true);
     }, []);
+
     const onBarMouseMove = React.useCallback((event) => {
         event.nativeEvent.immersePrevented = true;
     }, []);
+
     React.useEffect(() => {
         setError(null);
         if (player.selected === null) {
-            dispatch({ type: 'command', commandName: 'unload' });
+            video.unload();
         } else if (streamingServer.baseUrl !== null && streamingServer.baseUrl.type !== 'Loading' &&
             (player.selected.metaRequest === null || (player.metaItem !== null && player.metaItem.type !== 'Loading'))) {
-            dispatch({
-                type: 'command',
-                commandName: 'load',
-                commandArgs: {
-                    stream: {
-                        ...player.selected.stream,
-                        subtitles: Array.isArray(player.selected.stream.subtitles) ?
-                            player.selected.stream.subtitles.map((subtitles) => ({
-                                ...subtitles,
-                                label: subtitles.url
-                            }))
-                            :
-                            []
-                    },
-                    autoplay: true,
-                    time: player.libraryItem !== null &&
-                        player.selected.streamRequest !== null &&
-                        player.selected.streamRequest.path !== null &&
-                        player.libraryItem.state.video_id === player.selected.streamRequest.path.id ?
-                        player.libraryItem.state.timeOffset
+            video.load({
+                stream: {
+                    ...player.selected.stream,
+                    subtitles: Array.isArray(player.selected.stream.subtitles) ?
+                        player.selected.stream.subtitles.map((subtitles) => ({
+                            ...subtitles,
+                            label: subtitles.url
+                        }))
                         :
-                        0,
-                    forceTranscoding: forceTranscoding || casting,
-                    maxAudioChannels: typeof maxAudioChannels === 'number' ?
-                        maxAudioChannels
+                        []
+                },
+                autoplay: true,
+                time: player.libraryItem !== null &&
+                    player.selected.streamRequest !== null &&
+                    player.selected.streamRequest.path !== null &&
+                    player.libraryItem.state.video_id === player.selected.streamRequest.path.id ?
+                    player.libraryItem.state.timeOffset
+                    :
+                    0,
+                forceTranscoding: forceTranscoding || casting,
+                maxAudioChannels: typeof maxAudioChannels === 'number' ?
+                    maxAudioChannels
+                    :
+                    null,
+                streamingServerURL: streamingServer.baseUrl.type === 'Ready' ?
+                    casting ?
+                        streamingServer.baseUrl.content
                         :
-                        null,
-                    streamingServerURL: streamingServer.baseUrl.type === 'Ready' ?
-                        casting ?
-                            streamingServer.baseUrl.content
-                            :
-                            streamingServer.selected.transportUrl
-                        :
-                        null,
-                    seriesInfo: player.seriesInfo
-                }
+                        streamingServer.selected.transportUrl
+                    :
+                    null,
+                seriesInfo: player.seriesInfo
             }, {
                 chromecastTransport: chromecast.active ? chromecast.transport : null,
                 shellTransport: shell.active ? shell.transport : null,
             });
         }
     }, [streamingServer.baseUrl, player.selected, player.metaItem, forceTranscoding, maxAudioChannels, casting]);
+
     React.useEffect(() => {
-        if (videoState.stream !== null) {
-            dispatch({
-                type: 'command',
-                commandName: 'addExtraSubtitlesTracks',
-                commandArgs: {
-                    tracks: player.subtitles.map((subtitles) => ({
-                        ...subtitles,
-                        label: subtitles.url
-                    }))
-                }
-            });
+        if (video.state.stream !== null) {
+            const tracks = player.subtitles.map((subtitles) => ({
+                ...subtitles,
+                label: subtitles.url
+            }));
+            video.addExtraSubtitlesTracks(tracks);
         }
-    }, [player.subtitles, videoState.stream]);
+    }, [player.subtitles, video.state.stream]);
+
     React.useEffect(() => {
-        dispatch({ type: 'setProp', propName: 'subtitlesSize', propValue: settings.subtitlesSize });
-        dispatch({ type: 'setProp', propName: 'extraSubtitlesSize', propValue: settings.subtitlesSize });
+        video.setProp('subtitlesSize', settings.subtitlesSize);
+        video.setProp('extraSubtitlesSize', settings.subtitlesSize);
     }, [settings.subtitlesSize]);
+
     React.useEffect(() => {
-        dispatch({ type: 'setProp', propName: 'subtitlesOffset', propValue: settings.subtitlesOffset });
-        dispatch({ type: 'setProp', propName: 'extraSubtitlesOffset', propValue: settings.subtitlesOffset });
+        video.setProp('subtitlesOffset', settings.subtitlesOffset);
+        video.setProp('extraSubtitlesOffset', settings.subtitlesOffset);
     }, [settings.subtitlesOffset]);
+
     React.useEffect(() => {
-        dispatch({ type: 'setProp', propName: 'subtitlesTextColor', propValue: settings.subtitlesTextColor });
-        dispatch({ type: 'setProp', propName: 'extraSubtitlesTextColor', propValue: settings.subtitlesTextColor });
+        video.setProp('subtitlesTextColor', settings.subtitlesTextColor);
+        video.setProp('extraSubtitlesTextColor', settings.subtitlesTextColor);
     }, [settings.subtitlesTextColor]);
+
     React.useEffect(() => {
-        dispatch({ type: 'setProp', propName: 'subtitlesBackgroundColor', propValue: settings.subtitlesBackgroundColor });
-        dispatch({ type: 'setProp', propName: 'extraSubtitlesBackgroundColor', propValue: settings.subtitlesBackgroundColor });
+        video.setProp('subtitlesBackgroundColor', settings.subtitlesBackgroundColor);
+        video.setProp('extraSubtitlesBackgroundColor', settings.subtitlesBackgroundColor);
     }, [settings.subtitlesBackgroundColor]);
+
     React.useEffect(() => {
-        dispatch({ type: 'setProp', propName: 'subtitlesOutlineColor', propValue: settings.subtitlesOutlineColor });
-        dispatch({ type: 'setProp', propName: 'extraSubtitlesOutlineColor', propValue: settings.subtitlesOutlineColor });
+        video.setProp('subtitlesOutlineColor', settings.subtitlesOutlineColor);
+        video.setProp('extraSubtitlesOutlineColor', settings.subtitlesOutlineColor);
     }, [settings.subtitlesOutlineColor]);
+
     React.useEffect(() => {
-        if (videoState.time !== null && !isNaN(videoState.time) &&
-            videoState.duration !== null && !isNaN(videoState.duration) &&
-            videoState.manifest !== null && typeof videoState.manifest.name === 'string') {
-            timeChanged(videoState.time, videoState.duration, videoState.manifest.name);
+        if (video.state.time !== null && !isNaN(video.state.time) &&
+            video.state.duration !== null && !isNaN(video.state.duration) &&
+            video.state.manifest !== null && typeof video.state.manifest.name === 'string') {
+            timeChanged(video.state.time, video.state.duration, video.state.manifest.name);
         }
-    }, [videoState.time, videoState.duration, videoState.manifest]);
+    }, [video.state.time, video.state.duration, video.state.manifest]);
+
     React.useEffect(() => {
-        if (videoState.paused !== null) {
-            pausedChanged(videoState.paused);
+        if (video.state.paused !== null) {
+            pausedChanged(video.state.paused);
         }
-    }, [videoState.paused]);
+    }, [video.state.paused]);
+
     React.useEffect(() => {
-        videoParamsChanged(videoState.videoParams);
-    }, [videoState.videoParams]);
+        videoParamsChanged(video.state.videoParams);
+    }, [video.state.videoParams]);
+
     React.useEffect(() => {
         if (!!settings.bingeWatching && player.nextVideo !== null && !nextVideoPopupDismissed.current) {
-            if (videoState.time !== null && videoState.duration !== null && videoState.time < videoState.duration && (videoState.duration - videoState.time) <= settings.nextVideoNotificationDuration) {
+            if (video.state.time !== null && video.state.duration !== null && video.state.time < video.state.duration && (video.state.duration - video.state.time) <= settings.nextVideoNotificationDuration) {
                 openNextVideoPopup();
             } else {
                 closeNextVideoPopup();
             }
         }
-    }, [player.nextVideo, videoState.time, videoState.duration]);
+    }, [player.nextVideo, video.state.time, video.state.duration]);
+
     React.useEffect(() => {
         if (!defaultSubtitlesSelected.current) {
             const findTrackByLang = (tracks, lang) => tracks.find((track) => track.lang === lang || langs.where('1', track.lang)?.[2] === lang);
 
-            const subtitlesTrack = findTrackByLang(videoState.subtitlesTracks, settings.subtitlesLanguage);
-            const extraSubtitlesTrack = findTrackByLang(videoState.extraSubtitlesTracks, settings.subtitlesLanguage);
+            const subtitlesTrack = findTrackByLang(video.state.subtitlesTracks, settings.subtitlesLanguage);
+            const extraSubtitlesTrack = findTrackByLang(video.state.extraSubtitlesTracks, settings.subtitlesLanguage);
 
             if (subtitlesTrack && subtitlesTrack.id) {
                 onSubtitlesTrackSelected(subtitlesTrack.id);
@@ -380,41 +371,47 @@ const Player = ({ urlParams, queryParams }) => {
                 defaultSubtitlesSelected.current = true;
             }
         }
-    }, [videoState.subtitlesTracks, videoState.extraSubtitlesTracks]);
+    }, [video.state.subtitlesTracks, video.state.extraSubtitlesTracks]);
+
     React.useEffect(() => {
         if (!defaultAudioTrackSelected.current) {
             const findTrackByLang = (tracks, lang) => tracks.find((track) => track.lang === lang || langs.where('1', track.lang)?.[2] === lang);
-            const audioTrack = findTrackByLang(videoState.audioTracks, settings.audioLanguage);
+            const audioTrack = findTrackByLang(video.state.audioTracks, settings.audioLanguage);
 
             if (audioTrack && audioTrack.id) {
                 onAudioTrackSelected(audioTrack.id);
                 defaultAudioTrackSelected.current = true;
             }
         }
-    }, [videoState.audioTracks]);
+    }, [video.state.audioTracks]);
+
     React.useEffect(() => {
         defaultSubtitlesSelected.current = false;
         defaultAudioTrackSelected.current = false;
         nextVideoPopupDismissed.current = false;
-    }, [videoState.stream]);
+    }, [video.state.stream]);
+
     React.useEffect(() => {
-        if ((!Array.isArray(videoState.subtitlesTracks) || videoState.subtitlesTracks.length === 0) &&
-            (!Array.isArray(videoState.extraSubtitlesTracks) || videoState.extraSubtitlesTracks.length === 0) &&
-            (!Array.isArray(videoState.audioTracks) || videoState.audioTracks.length === 0)) {
+        if ((!Array.isArray(video.state.subtitlesTracks) || video.state.subtitlesTracks.length === 0) &&
+            (!Array.isArray(video.state.extraSubtitlesTracks) || video.state.extraSubtitlesTracks.length === 0) &&
+            (!Array.isArray(video.state.audioTracks) || video.state.audioTracks.length === 0)) {
             closeSubtitlesMenu();
         }
-    }, [videoState.audioTracks, videoState.subtitlesTracks, videoState.extraSubtitlesTracks]);
+    }, [video.state.audioTracks, video.state.subtitlesTracks, video.state.extraSubtitlesTracks]);
+
     React.useEffect(() => {
         if (player.metaItem === null || player.metaItem.type !== 'Ready') {
             closeInfoMenu();
             closeVideosMenu();
         }
     }, [player.metaItem]);
+
     React.useEffect(() => {
-        if (videoState.playbackSpeed === null) {
+        if (video.state.playbackSpeed === null) {
             closeSpeedMenu();
         }
-    }, [videoState.playbackSpeed]);
+    }, [video.state.playbackSpeed]);
+
     React.useEffect(() => {
         const toastFilter = (item) => item?.dataset?.type === 'CoreEvent';
         toast.addFilter(toastFilter);
@@ -450,12 +447,13 @@ const Player = ({ urlParams, queryParams }) => {
             }
         };
     }, []);
+
     React.useLayoutEffect(() => {
         const onKeyDown = (event) => {
             switch (event.code) {
                 case 'Space': {
-                    if (!subtitlesMenuOpen && !infoMenuOpen && !videosMenuOpen && !speedMenuOpen && !optionsMenuOpen && !statisticsMenuOpen && videoState.paused !== null) {
-                        if (videoState.paused) {
+                    if (!subtitlesMenuOpen && !infoMenuOpen && !videosMenuOpen && !speedMenuOpen && !optionsMenuOpen && !statisticsMenuOpen && video.state.paused !== null) {
+                        if (video.state.paused) {
                             onPlayRequested();
                         } else {
                             onPauseRequested();
@@ -465,31 +463,31 @@ const Player = ({ urlParams, queryParams }) => {
                     break;
                 }
                 case 'ArrowRight': {
-                    if (!subtitlesMenuOpen && !infoMenuOpen && !videosMenuOpen && !speedMenuOpen && !optionsMenuOpen && !statisticsMenuOpen && videoState.time !== null) {
+                    if (!subtitlesMenuOpen && !infoMenuOpen && !videosMenuOpen && !speedMenuOpen && !optionsMenuOpen && !statisticsMenuOpen && video.state.time !== null) {
                         const seekDuration = event.shiftKey ? settings.seekShortTimeDuration : settings.seekTimeDuration;
-                        onSeekRequested(videoState.time + seekDuration);
+                        onSeekRequested(video.state.time + seekDuration);
                     }
 
                     break;
                 }
                 case 'ArrowLeft': {
-                    if (!subtitlesMenuOpen && !infoMenuOpen && !videosMenuOpen && !speedMenuOpen && !optionsMenuOpen && !statisticsMenuOpen && videoState.time !== null) {
+                    if (!subtitlesMenuOpen && !infoMenuOpen && !videosMenuOpen && !speedMenuOpen && !optionsMenuOpen && !statisticsMenuOpen && video.state.time !== null) {
                         const seekDuration = event.shiftKey ? settings.seekShortTimeDuration : settings.seekTimeDuration;
-                        onSeekRequested(videoState.time - seekDuration);
+                        onSeekRequested(video.state.time - seekDuration);
                     }
 
                     break;
                 }
                 case 'ArrowUp': {
-                    if (!subtitlesMenuOpen && !infoMenuOpen && !videosMenuOpen && !speedMenuOpen && !optionsMenuOpen && !statisticsMenuOpen && videoState.volume !== null) {
-                        onVolumeChangeRequested(videoState.volume + 5);
+                    if (!subtitlesMenuOpen && !infoMenuOpen && !videosMenuOpen && !speedMenuOpen && !optionsMenuOpen && !statisticsMenuOpen && video.state.volume !== null) {
+                        onVolumeChangeRequested(video.state.volume + 5);
                     }
 
                     break;
                 }
                 case 'ArrowDown': {
-                    if (!subtitlesMenuOpen && !infoMenuOpen && !videosMenuOpen && !speedMenuOpen && !optionsMenuOpen && !statisticsMenuOpen && videoState.volume !== null) {
-                        onVolumeChangeRequested(videoState.volume - 5);
+                    if (!subtitlesMenuOpen && !infoMenuOpen && !videosMenuOpen && !speedMenuOpen && !optionsMenuOpen && !statisticsMenuOpen && video.state.volume !== null) {
+                        onVolumeChangeRequested(video.state.volume - 5);
                     }
 
                     break;
@@ -500,9 +498,9 @@ const Player = ({ urlParams, queryParams }) => {
                     closeSpeedMenu();
                     closeVideosMenu();
                     closeStatisticsMenu();
-                    if ((Array.isArray(videoState.subtitlesTracks) && videoState.subtitlesTracks.length > 0) ||
-                        (Array.isArray(videoState.extraSubtitlesTracks) && videoState.extraSubtitlesTracks.length > 0) ||
-                        (Array.isArray(videoState.audioTracks) && videoState.audioTracks.length > 0)) {
+                    if ((Array.isArray(video.state.subtitlesTracks) && video.state.subtitlesTracks.length > 0) ||
+                        (Array.isArray(video.state.extraSubtitlesTracks) && video.state.extraSubtitlesTracks.length > 0) ||
+                        (Array.isArray(video.state.audioTracks) && video.state.audioTracks.length > 0)) {
                         toggleSubtitlesMenu();
                     }
 
@@ -526,7 +524,7 @@ const Player = ({ urlParams, queryParams }) => {
                     closeSubtitlesMenu();
                     closeVideosMenu();
                     closeStatisticsMenu();
-                    if (videoState.playbackSpeed !== null) {
+                    if (video.state.playbackSpeed !== null) {
                         toggleSpeedMenu();
                     }
 
@@ -570,12 +568,12 @@ const Player = ({ urlParams, queryParams }) => {
         };
         const onWheel = ({ deltaY }) => {
             if (deltaY > 0) {
-                if (!subtitlesMenuOpen && !infoMenuOpen && !videosMenuOpen && !speedMenuOpen && !optionsMenuOpen && !statisticsMenuOpen && videoState.volume !== null) {
-                    onVolumeChangeRequested(videoState.volume - 5);
+                if (!subtitlesMenuOpen && !infoMenuOpen && !videosMenuOpen && !speedMenuOpen && !optionsMenuOpen && !statisticsMenuOpen && video.state.volume !== null) {
+                    onVolumeChangeRequested(video.state.volume - 5);
                 }
             } else {
-                if (!subtitlesMenuOpen && !infoMenuOpen && !videosMenuOpen && !speedMenuOpen && !optionsMenuOpen && !statisticsMenuOpen && videoState.volume !== null) {
-                    onVolumeChangeRequested(videoState.volume + 5);
+                if (!subtitlesMenuOpen && !infoMenuOpen && !videosMenuOpen && !speedMenuOpen && !optionsMenuOpen && !statisticsMenuOpen && video.state.volume !== null) {
+                    onVolumeChangeRequested(video.state.volume + 5);
                 }
             }
         };
@@ -587,7 +585,24 @@ const Player = ({ urlParams, queryParams }) => {
             window.removeEventListener('keydown', onKeyDown);
             window.removeEventListener('wheel', onWheel);
         };
-    }, [player.metaItem, player.selected, streamingServer.statistics, settings.seekTimeDuration, settings.seekShortTimeDuration, routeFocused, subtitlesMenuOpen, infoMenuOpen, videosMenuOpen, speedMenuOpen, optionsMenuOpen, statisticsMenuOpen, videoState.paused, videoState.time, videoState.volume, videoState.audioTracks, videoState.subtitlesTracks, videoState.extraSubtitlesTracks, videoState.playbackSpeed, toggleSubtitlesMenu, toggleInfoMenu, toggleVideosMenu, toggleStatisticsMenu]);
+    }, [player.metaItem, player.selected, streamingServer.statistics, settings.seekTimeDuration, settings.seekShortTimeDuration, routeFocused, subtitlesMenuOpen, infoMenuOpen, videosMenuOpen, speedMenuOpen, optionsMenuOpen, statisticsMenuOpen, video.state.paused, video.state.time, video.state.volume, video.state.audioTracks, video.state.subtitlesTracks, video.state.extraSubtitlesTracks, video.state.playbackSpeed, toggleSubtitlesMenu, toggleInfoMenu, toggleVideosMenu, toggleStatisticsMenu]);
+
+    React.useEffect(() => {
+        video.events.on('error', onError);
+        video.events.on('ended', onEnded);
+        video.events.on('subtitlesTrackLoaded', onSubtitlesTrackLoaded);
+        video.events.on('extraSubtitlesTrackLoaded', onExtraSubtitlesTrackLoaded);
+        video.events.on('implementationChanged', onImplementationChanged);
+
+        return () => {
+            video.events.off('error', onError);
+            video.events.off('ended', onEnded);
+            video.events.off('subtitlesTrackLoaded', onSubtitlesTrackLoaded);
+            video.events.off('extraSubtitlesTrackLoaded', onExtraSubtitlesTrackLoaded);
+            video.events.off('implementationChanged', onImplementationChanged);
+        };
+    }, []);
+
     React.useLayoutEffect(() => {
         return () => {
             setImmersedDebounced.cancel();
@@ -595,30 +610,25 @@ const Player = ({ urlParams, queryParams }) => {
             onPauseRequestedDebounced.cancel();
         };
     }, []);
+
     return (
-        <div className={classnames(styles['player-container'], { [styles['immersed']]: immersed && !casting && videoState.paused !== null && !videoState.paused && !subtitlesMenuOpen && !infoMenuOpen && !speedMenuOpen && !videosMenuOpen && !nextVideoPopupOpen && !optionsMenuOpen && !statisticsMenuOpen })}
+        <div className={classnames(styles['player-container'], { [styles['immersed']]: immersed && !casting && video.state.paused !== null && !video.state.paused && !subtitlesMenuOpen && !infoMenuOpen && !speedMenuOpen && !videosMenuOpen && !nextVideoPopupOpen && !optionsMenuOpen && !statisticsMenuOpen })}
             onMouseDown={onContainerMouseDown}
             onMouseMove={onContainerMouseMove}
             onMouseOver={onContainerMouseMove}
             onMouseLeave={onContainerMouseLeave}>
-            <Video
-                ref={videoRef}
+            <div
+                ref={video.containerElement}
                 className={styles['layer']}
-                onEnded={onEnded}
-                onError={onError}
-                onPropValue={onPropChanged}
-                onPropChanged={onPropChanged}
-                onSubtitlesTrackLoaded={onSubtitlesTrackLoaded}
-                onExtraSubtitlesTrackLoaded={onExtraSubtitlesTrackLoaded}
-                onImplementationChanged={onImplementationChanged}
             />
             {
-                videoState.buffering ?
+                video.state.buffering ?
                     <BufferingLoader className={styles['layer']} logo={player?.metaItem?.content?.logo} />
                     :
                     null
             }
-            <div
+            <Video
+                ref={video.containerElement}
                 className={styles['layer']}
                 onClick={onVideoClick}
                 onDoubleClick={onVideoDoubleClick}
@@ -662,15 +672,15 @@ const Player = ({ urlParams, queryParams }) => {
             />
             <ControlBar
                 className={classnames(styles['layer'], styles['control-bar-layer'])}
-                paused={videoState.paused}
-                time={videoState.time}
-                duration={videoState.duration}
-                buffered={videoState.buffered}
-                volume={videoState.volume}
-                muted={videoState.muted}
-                playbackSpeed={videoState.playbackSpeed}
-                subtitlesTracks={videoState.subtitlesTracks.concat(videoState.extraSubtitlesTracks)}
-                audioTracks={videoState.audioTracks}
+                paused={video.state.paused}
+                time={video.state.time}
+                duration={video.state.duration}
+                buffered={video.state.buffered}
+                volume={video.state.volume}
+                muted={video.state.muted}
+                playbackSpeed={video.state.playbackSpeed}
+                subtitlesTracks={video.state.subtitlesTracks.concat(video.state.extraSubtitlesTracks)}
+                audioTracks={video.state.audioTracks}
                 metaItem={player.metaItem}
                 nextVideo={player.nextVideo}
                 stream={player.selected !== null ? player.selected.stream : null}
@@ -716,17 +726,17 @@ const Player = ({ urlParams, queryParams }) => {
                 subtitlesMenuOpen ?
                     <SubtitlesMenu
                         className={classnames(styles['layer'], styles['menu-layer'])}
-                        audioTracks={videoState.audioTracks}
-                        selectedAudioTrackId={videoState.selectedAudioTrackId}
-                        subtitlesTracks={videoState.subtitlesTracks}
-                        selectedSubtitlesTrackId={videoState.selectedSubtitlesTrackId}
-                        subtitlesOffset={videoState.subtitlesOffset}
-                        subtitlesSize={videoState.subtitlesSize}
-                        extraSubtitlesTracks={videoState.extraSubtitlesTracks}
-                        selectedExtraSubtitlesTrackId={videoState.selectedExtraSubtitlesTrackId}
-                        extraSubtitlesOffset={videoState.extraSubtitlesOffset}
-                        extraSubtitlesDelay={videoState.extraSubtitlesDelay}
-                        extraSubtitlesSize={videoState.extraSubtitlesSize}
+                        audioTracks={video.state.audioTracks}
+                        selectedAudioTrackId={video.state.selectedAudioTrackId}
+                        subtitlesTracks={video.state.subtitlesTracks}
+                        selectedSubtitlesTrackId={video.state.selectedSubtitlesTrackId}
+                        subtitlesOffset={video.state.subtitlesOffset}
+                        subtitlesSize={video.state.subtitlesSize}
+                        extraSubtitlesTracks={video.state.extraSubtitlesTracks}
+                        selectedExtraSubtitlesTrackId={video.state.selectedExtraSubtitlesTrackId}
+                        extraSubtitlesOffset={video.state.extraSubtitlesOffset}
+                        extraSubtitlesDelay={video.state.extraSubtitlesDelay}
+                        extraSubtitlesSize={video.state.extraSubtitlesSize}
                         onSubtitlesTrackSelected={onSubtitlesTrackSelected}
                         onExtraSubtitlesTrackSelected={onExtraSubtitlesTrackSelected}
                         onAudioTrackSelected={onAudioTrackSelected}
@@ -754,7 +764,7 @@ const Player = ({ urlParams, queryParams }) => {
                 speedMenuOpen ?
                     <SpeedMenu
                         className={classnames(styles['layer'], styles['menu-layer'])}
-                        playbackSpeed={videoState.playbackSpeed}
+                        playbackSpeed={video.state.playbackSpeed}
                         onPlaybackSpeedChanged={onPlaybackSpeedChanged}
                     />
                     :
