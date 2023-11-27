@@ -180,16 +180,17 @@ const Player = ({ urlParams, queryParams }) => {
         dispatch({ type: 'setProp', propName: 'selectedSubtitlesTrackId', propValue: id });
         dispatch({ type: 'setProp', propName: 'selectedExtraSubtitlesTrackId', propValue: null });
         streamStateChanged({
-            subtitleTrackId: id,
-            extraSubtitleTrackId: null,
+            subtitleTrack: { type: 'Embedded', id }
+            // extraSubtitleTrackId: null,
         });
     }, [streamStateChanged]);
     const onExtraSubtitlesTrackSelected = React.useCallback((id) => {
         dispatch({ type: 'setProp', propName: 'selectedSubtitlesTrackId', propValue: null });
         dispatch({ type: 'setProp', propName: 'selectedExtraSubtitlesTrackId', propValue: id });
         streamStateChanged({
-            subtitleTrackId: null,
-            extraSubtitleTrackId: id,
+            subtitleTrack: { type: 'External', id }
+            // subtitleTrackId: null,
+            // extraSubtitleTrackId: id,
         });
     }, []);
     const onAudioTrackSelected = React.useCallback((id) => {
