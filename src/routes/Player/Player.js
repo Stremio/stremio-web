@@ -33,7 +33,7 @@ const Player = ({ urlParams, queryParams }) => {
             queryParams.has('maxAudioChannels') ? parseInt(queryParams.get('maxAudioChannels'), 10) : null
         ];
     }, [queryParams]);
-    const [player, videoParamsChanged, timeChanged, pausedChanged, ended] = usePlayer(urlParams);
+    const [player, videoParamsChanged, timeChanged, pausedChanged, streamStateChanged, ended] = usePlayer(urlParams);
     const [settings, updateSettings] = useSettings();
     const streamingServer = useStreamingServer();
     const routeFocused = useRouteFocused();
@@ -172,21 +172,38 @@ const Player = ({ urlParams, queryParams }) => {
     }, []);
     const onPlaybackSpeedChanged = React.useCallback((rate) => {
         dispatch({ type: 'setProp', propName: 'playbackSpeed', propValue: rate });
-    }, []);
+        streamStateChanged({
+            playbackSpeed: rate,
+        });
+    }, [streamStateChanged]);
     const onSubtitlesTrackSelected = React.useCallback((id) => {
         dispatch({ type: 'setProp', propName: 'selectedSubtitlesTrackId', propValue: id });
         dispatch({ type: 'setProp', propName: 'selectedExtraSubtitlesTrackId', propValue: null });
-    }, []);
+        streamStateChanged({
+            subtitleTrackId: id,
+            extraSubtitleTrackId: null,
+        });
+    }, [streamStateChanged]);
     const onExtraSubtitlesTrackSelected = React.useCallback((id) => {
         dispatch({ type: 'setProp', propName: 'selectedSubtitlesTrackId', propValue: null });
         dispatch({ type: 'setProp', propName: 'selectedExtraSubtitlesTrackId', propValue: id });
+        streamStateChanged({
+            subtitleTrackId: null,
+            extraSubtitleTrackId: id,
+        });
     }, []);
     const onAudioTrackSelected = React.useCallback((id) => {
         dispatch({ type: 'setProp', propName: 'selectedAudioTrackId', propValue: id });
-    }, []);
+        streamStateChanged({
+            audioTrackId: id,
+        });
+    }, [streamStateChanged]);
     const onExtraSubtitlesDelayChanged = React.useCallback((delay) => {
         dispatch({ type: 'setProp', propName: 'extraSubtitlesDelay', propValue: delay });
-    }, []);
+        streamStateChanged({
+            subtitleDelay: delay,
+        });
+    }, [streamStateChanged]);
     const onSubtitlesSizeChanged = React.useCallback((size) => {
         updateSettings({ subtitlesSize: size });
     }, [updateSettings]);
@@ -415,6 +432,26 @@ const Player = ({ urlParams, queryParams }) => {
         defaultAudioTrackSelected.current = false;
         nextVideoPopupDismissed.current = false;
     }, [videoState.stream]);
+    React.useEffect(() => {
+        if (videoState.stream !== null && player.streamState) {
+            const { subtitleTrackId, extraSubtitleTrackId, subtitleDelay, audioTrackId, playbackSpeed } = player.streamState;
+            if (subtitleTrackId) {
+                dispatch({ type: 'setProp', propName: 'selectedSubtitlesTrackId', propValue: subtitleTrackId });
+            }
+            if (extraSubtitleTrackId) {
+                dispatch({ type: 'setProp', propName: 'selectedExtraSubtitlesTrackId', propValue: extraSubtitleTrackId });
+            }
+            if (subtitleDelay) {
+                dispatch({ type: 'setProp', propName: 'extraSubtitlesDelay', propValue: subtitleDelay });
+            }
+            if (audioTrackId) {
+                dispatch({ type: 'setProp', propName: 'selectedAudioTrackId', propValue: audioTrackId });
+            }
+            if (playbackSpeed) {
+                dispatch({ type: 'setProp', propName: 'playbackSpeed', propValue: playbackSpeed });
+            }
+        }
+    }, [videoState.stream, player.streamState, videoState.selectedSubtitlesTrackId, videoState.selectedExtraSubtitlesTrackId, videoState.extraSubtitlesDelay, videoState.selectedAudioTrackId, videoState.playbackSpeed]);
     React.useEffect(() => {
         if ((!Array.isArray(videoState.subtitlesTracks) || videoState.subtitlesTracks.length === 0) &&
             (!Array.isArray(videoState.extraSubtitlesTracks) || videoState.extraSubtitlesTracks.length === 0) &&
