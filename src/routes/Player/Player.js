@@ -22,6 +22,7 @@ const SpeedMenu = require('./SpeedMenu');
 const Video = require('./Video');
 const usePlayer = require('./usePlayer');
 const useSettings = require('./useSettings');
+const useStatistics = require('./useStatistics');
 const styles = require('./styles');
 
 const Player = ({ urlParams, queryParams }) => {
@@ -36,6 +37,7 @@ const Player = ({ urlParams, queryParams }) => {
     const [player, videoParamsChanged, timeChanged, pausedChanged, ended] = usePlayer(urlParams);
     const [settings, updateSettings] = useSettings();
     const streamingServer = useStreamingServer();
+    const statistics = useStatistics(player, streamingServer);
     const routeFocused = useRouteFocused();
     const toast = useToast();
     const [, , , toggleFullscreen] = useFullscreen();
@@ -364,26 +366,6 @@ const Player = ({ urlParams, queryParams }) => {
         }
     }, [player.nextVideo, videoState.time, videoState.duration]);
     React.useEffect(() => {
-        if (player.selected && player.selected.stream && typeof player.selected.stream.infoHash === 'string' && typeof player.selected.stream.fileIdx === 'number') {
-            const { infoHash, fileIdx } = player.selected.stream;
-            const getStatistics = () => {
-                core.transport.dispatch({
-                    action: 'StreamingServer',
-                    args: {
-                        action: 'GetStatistics',
-                        args: {
-                            infoHash,
-                            fileIdx,
-                        }
-                    }
-                });
-            };
-            getStatistics();
-            const statisticsInterval = setInterval(getStatistics, 5000);
-            return () => clearInterval(statisticsInterval);
-        }
-    }, [player.selected]);
-    React.useEffect(() => {
         if (!defaultSubtitlesSelected.current) {
             const findTrackByLang = (tracks, lang) => tracks.find((track) => track.lang === lang || langs.where('1', track.lang)?.[2] === lang);
 
@@ -692,7 +674,7 @@ const Player = ({ urlParams, queryParams }) => {
                 metaItem={player.metaItem}
                 nextVideo={player.nextVideo}
                 stream={player.selected !== null ? player.selected.stream : null}
-                statistics={streamingServer.statistics}
+                statistics={statistics}
                 onPlayRequested={onPlayRequested}
                 onPauseRequested={onPauseRequested}
                 onNextVideoRequested={onNextVideoRequested}
@@ -725,8 +707,7 @@ const Player = ({ urlParams, queryParams }) => {
                 statisticsMenuOpen ?
                     <StatisticsMenu
                         className={classnames(styles['layer'], styles['menu-layer'])}
-                        stream={player.selected !== null ? player.selected.stream : null}
-                        statistics={streamingServer.statistics}
+                        {...statistics}
                     />
                     :
                     null
