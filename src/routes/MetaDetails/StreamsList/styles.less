@@ -15,6 +15,7 @@
 
     .message-container {
         flex: 0 1 auto;
+        flex-grow: 1;
         align-self: stretch;
         display: flex;
         flex-direction: column;
@@ -45,7 +46,6 @@
         display: flex;
         z-index: 1;
         overflow: visible;
-        margin: 0;
         gap: 1em;
         flex-direction: column;
         justify-content: center;
@@ -53,8 +53,9 @@
         max-height: 0rem;
         min-height: 0rem;
         opacity: 0;
-        transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out, min-height 0.5s ease-in-out, margin 0.5s ease-in-out;
+        margin: 0;
         overflow: hidden;
+        transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out, min-height 0.5s ease-in-out, margin 0.5s ease-in-out;
 
         .addons-loading {
             color: var(--primary-foreground-color);
@@ -71,8 +72,8 @@
         &.active {
             min-height: 3rem;
             max-height: 3rem;
-            margin: 2em 1em;
             opacity: 1;
+            margin: 2em 1em;
         }
     }
 

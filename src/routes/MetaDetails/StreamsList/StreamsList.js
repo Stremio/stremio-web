@@ -19,6 +19,15 @@ const StreamsList = ({ className, video, ...props }) => {
     const streamsContainerRef = React.useRef(null);
     const scrollHeightRef = React.useRef(null);
     const [isScrollable, setIsScrollable] = React.useState(false);
+    const [isActive, setIsActive] = React.useState(false);
+    React.useEffect(() => {
+        if (countLoadingAddons > 0) {
+            const timer = setTimeout(() => setIsActive(true), 300);
+            return () => clearTimeout(timer);
+        } else {
+            setIsActive(false);
+        }
+    }, [countLoadingAddons]);
     const onAddonSelected = React.useCallback((event) => {
         setSelectedAddon(event.value);
     }, []);
@@ -161,7 +170,7 @@ const StreamsList = ({ className, video, ...props }) => {
                                         isScrollable && countLoadingAddons === 0 ?
                                             <React.Fragment>
                                                 <hr className={styles['line']} />
-                                                <div className={classnames(styles['to-top-wrapper'], isScrollable ? styles['active'] : null)} onClick={scrollToTop}>
+                                                <div className={styles['to-top-wrapper']} onClick={scrollToTop}>
                                                     <Icon className={styles['icon']} name={'chevron-up'} />
                                                     <div className={styles['label']}>Back to Top</div>
                                                 </div>
@@ -176,7 +185,7 @@ const StreamsList = ({ className, video, ...props }) => {
                                 </div>
                             </React.Fragment>
             }
-            <div className={classnames(styles['addons-loading-container'], countLoadingAddons > 0 ? styles['active'] : null)}>
+            <div className={classnames(styles['addons-loading-container'], { [styles.active]: countLoadingAddons > 0 && isActive })}>
                 <div className={styles['addons-loading']}>
                     {countLoadingAddons} {t('MOBILE_ADDONS_LOADING')}
                 </div>
