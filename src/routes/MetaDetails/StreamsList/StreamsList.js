@@ -17,7 +17,6 @@ const StreamsList = ({ className, video, ...props }) => {
     const { core } = useServices();
     const [selectedAddon, setSelectedAddon] = React.useState(ALL_ADDONS_KEY);
     const streamsContainerRef = React.useRef(null);
-    const scrollHeightRef = React.useRef(null);
     const [isScrollable, setIsScrollable] = React.useState(false);
     const [isActive, setIsActive] = React.useState(false);
     React.useEffect(() => {
@@ -91,11 +90,10 @@ const StreamsList = ({ className, video, ...props }) => {
     React.useLayoutEffect(() => {
         const container = streamsContainerRef.current;
         if (container) {
-            scrollHeightRef.current = container.scrollHeight;
-            const isScrollable = scrollHeightRef.current > container.clientHeight;
+            const isScrollable = container.scrollHeight > container.clientHeight;
             setIsScrollable(isScrollable);
         }
-    }, [streamsByAddon, selectedAddon]);
+    }, [filteredStreams]);
     const scrollToTop = () => {
         if (streamsContainerRef.current) {
             streamsContainerRef.current.scroll({
