@@ -101,7 +101,8 @@ const SubtitlesMenu = React.memo((props) => {
             if (props.extraSubtitlesDelay !== null && !isNaN(props.extraSubtitlesDelay)) {
                 const extraDelay = props.extraSubtitlesDelay + delta;
                 if (typeof props.onExtraSubtitlesDelayChanged === 'function') {
-                    props.onExtraSubtitlesDelayChanged(extraDelay);
+                    const id = props.selectedExtraSubtitlesTrackId;
+                    props.onExtraSubtitlesDelayChanged(id, extraDelay);
                 }
             }
         }
