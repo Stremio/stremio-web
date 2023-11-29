@@ -96,7 +96,6 @@ const StreamsList = ({ className, video, ...props }) => {
             setIsScrollable(isScrollable);
         }
     }, [streamsByAddon, selectedAddon]);
-
     const scrollToTop = () => {
         if (streamsContainerRef.current) {
             streamsContainerRef.current.scroll({
