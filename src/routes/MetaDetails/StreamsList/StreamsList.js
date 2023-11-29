@@ -18,13 +18,13 @@ const StreamsList = ({ className, video, ...props }) => {
     const [selectedAddon, setSelectedAddon] = React.useState(ALL_ADDONS_KEY);
     const streamsContainerRef = React.useRef(null);
     const [isScrollable, setIsScrollable] = React.useState(false);
-    const [isActive, setIsActive] = React.useState(false);
+    const [loadingAddonsActive, setLoadingAddonsActive] = React.useState(false);
     React.useEffect(() => {
         if (countLoadingAddons > 0) {
-            const timer = setTimeout(() => setIsActive(true), 300);
+            const timer = setTimeout(() => setLoadingAddonsActive(true), 300);
             return () => clearTimeout(timer);
         } else {
-            setIsActive(false);
+            setLoadingAddonsActive(false);
         }
     }, [countLoadingAddons]);
     const onAddonSelected = React.useCallback((event) => {
@@ -182,7 +182,7 @@ const StreamsList = ({ className, video, ...props }) => {
                                 </div>
                             </React.Fragment>
             }
-            <div className={classnames(styles['addons-loading-container'], { [styles.active]: countLoadingAddons > 0 && isActive })}>
+            <div className={classnames(styles['addons-loading-container'], { [styles.active]: countLoadingAddons > 0 && loadingAddonsActive })}>
                 <div className={styles['addons-loading']}>
                     {countLoadingAddons} {t('MOBILE_ADDONS_LOADING')}
                 </div>
