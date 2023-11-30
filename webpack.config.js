@@ -9,6 +9,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
+const WebpackPwaManifest = require('webpack-pwa-manifest');
 const colors = require('@stremio/stremio-colors');
 const pachageJson = require('./package.json');
 
@@ -199,7 +200,6 @@ module.exports = (env, argv) => ({
             patterns: [
                 { from: 'favicons', to: `${COMMIT_HASH}/favicons` },
                 { from: 'images', to: `${COMMIT_HASH}/images` },
-                { from: 'manifest.json', to: `manifest.json` },
             ]
         }),
         new MiniCssExtractPlugin({
@@ -212,7 +212,37 @@ module.exports = (env, argv) => ({
             themeColor: colors.background,
             faviconsPath: `${COMMIT_HASH}/favicons`,
             imagesPath: `${COMMIT_HASH}/images`,
-            manifestPath: `manifest.json`,
-        })
+        }),
+        new WebpackPwaManifest({
+            name: 'Stremio Web',
+            short_name: 'Stremio',
+            description: 'Freedom To Stream',
+            background_color: '#161523',
+            theme_color: '#2a2843',
+            orientation: 'any',
+            display: 'standalone',
+            start_url: './',
+            scope: './',
+            publicPath: './',
+            icons: [
+                {
+                    src: 'images/icon.png',
+                    sizes: [196, 512],
+                    ios: true
+                },
+                {
+                    src: 'images/maskable_icon.png',
+                    sizes: [196, 512],
+                    purpose: 'maskable',
+                    destination: path.join(COMMIT_HASH, 'images', 'maskable')
+                },
+                {
+                    src: 'favicons/favicon.ico',
+                    sizes: [64, 32, 24, 16]
+                }
+            ].map(icon => ({ ...icon, destination: icon.destination ?? path.join(COMMIT_HASH, 'images') })),
+            fingerprints: false,
+            ios: true
+        }),
     ].filter(Boolean)
 });

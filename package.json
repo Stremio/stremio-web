@@ -69,6 +69,7 @@
         "webpack": "5.61.0",
         "webpack-cli": "4.9.1",
         "webpack-dev-server": "^4.7.4",
+        "webpack-pwa-manifest": "^4.3.0",
         "workbox-webpack-plugin": "^6.5.3"
     }
 }
