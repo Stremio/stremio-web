@@ -340,14 +340,14 @@ const Player = ({ urlParams, queryParams }) => {
         dispatch({ type: 'setProp', propName: 'extraSubtitlesOutlineColor', propValue: settings.subtitlesOutlineColor });
     }, [settings.subtitlesOutlineColor]);
     React.useEffect(() => {
-        if (videoState.time !== null && !isNaN(videoState.time) &&
+        if (videoState.time !== null && !isNaN(videoState.time) && videoState.time !== 0 &&
             videoState.duration !== null && !isNaN(videoState.duration) &&
             videoState.manifest !== null && typeof videoState.manifest.name === 'string') {
             timeChanged(videoState.time, videoState.duration, videoState.manifest.name);
         }
     }, [videoState.time, videoState.duration, videoState.manifest]);
     React.useEffect(() => {
-        if (videoState.paused !== null) {
+        if (videoState.paused !== null && videoState.time !== null && !isNaN(videoState.time) && videoState.time !== 0) {
             pausedChanged(videoState.paused);
         }
     }, [videoState.paused]);
