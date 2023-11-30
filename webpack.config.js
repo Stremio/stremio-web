@@ -199,7 +199,7 @@ module.exports = (env, argv) => ({
             patterns: [
                 { from: 'favicons', to: `${COMMIT_HASH}/favicons` },
                 { from: 'images', to: `${COMMIT_HASH}/images` },
-                { from: 'manifest.json', to: `${COMMIT_HASH}/manifest.json` },
+                { from: 'manifest.json', to: `manifest.json` },
             ]
         }),
         new MiniCssExtractPlugin({
@@ -212,7 +212,7 @@ module.exports = (env, argv) => ({
             themeColor: colors.background,
             faviconsPath: `${COMMIT_HASH}/favicons`,
             imagesPath: `${COMMIT_HASH}/images`,
-            manifestPath: `${COMMIT_HASH}/manifest.json`,
+            manifestPath: `manifest.json`,
         })
     ].filter(Boolean)
 });
