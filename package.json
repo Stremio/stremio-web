@@ -39,7 +39,7 @@
         "react-i18next": "^12.1.1",
         "react-is": "18.2.0",
         "spatial-navigation-polyfill": "git+ssh://git@github.com/Stremio/spatial-navigation.git#64871b1422466f5f45d24ebc8bbd315b2ebab6a6",
-        "stremio-translations": "git+ssh://git@github.com/Stremio/stremio-translations.git#9c91862cdf8f1f0fb54df870807cd6af18679a89",
+        "stremio-translations": "git+ssh://git@github.com/Stremio/stremio-translations.git#dfc69f753d34954ad06a8a799b54b0303b43ca76",
         "url": "0.11.0",
         "use-long-press": "^3.1.5"
     },
