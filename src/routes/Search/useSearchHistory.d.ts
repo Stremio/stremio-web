@@ -1,2 +1,2 @@
-declare const useSearchHistory: () => SearchHistory;
+declare const useSearchHistory: () => { items: SearchHistory, clear: () => {} };
 export = useSearchHistory;
