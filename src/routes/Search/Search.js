@@ -8,7 +8,6 @@ const { useTranslation } = require('react-i18next');
 const { default: Icon } = require('@stremio/stremio-icons/react');
 const { Image, MainNavBars, MetaRow, MetaItem, withCoreSuspender, getVisibleChildrenRange } = require('stremio/common');
 const useSearch = require('./useSearch');
-const useSearchHistory = require('./useSearchHistory');
 const styles = require('./styles');
 
 const THRESHOLD = 100;
@@ -16,8 +15,6 @@ const THRESHOLD = 100;
 const Search = ({ queryParams }) => {
     const { t } = useTranslation();
     const [search, loadSearchRows] = useSearch(queryParams);
-    const searchHistory = useSearchHistory();
-    console.log(searchHistory);
     const query = React.useMemo(() => {
         return search.selected !== null ?
             search.selected.extra.reduceRight((query, [name, value]) => {

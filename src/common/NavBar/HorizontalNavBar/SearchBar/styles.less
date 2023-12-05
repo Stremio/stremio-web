@@ -9,6 +9,8 @@
     height: var(--search-bar-size);
     border-radius: var(--search-bar-size);
     background-color: var(--overlay-color);
+    position: relative;
+    overflow: visible;
 
     .search-input {
         flex: 1;
@@ -44,6 +46,65 @@
             height: 1.7rem;
             color: var(--primary-foreground-color);
             opacity: 0.6;
+        }
+    }
+
+    .search-history {
+        position: absolute;
+        width: 100%;
+        height: auto;
+        top: 100%;
+        left: 0;
+        z-index: 10;
+        padding: 1rem;
+        background-color: var(--modal-background-color);
+        border-radius: var(--border-radius);
+        
+        .search-history-actions {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            opacity: 0.8;
+            margin-bottom: 1rem;
+
+            .search-history-label {
+                font-size: 0.8rem;
+                color: var(--primary-foreground-color);
+            }
+
+            .search-history-clear {
+                cursor: pointer;
+                color: var(--primary-foreground-color);
+                font-size: 0.8rem;
+
+                &:hover {
+                    opacity: 0.6;
+                }
+            }
+        }
+
+        .search-history-items {
+            width: 90%;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            flex-direction: column;
+            gap: 0.5rem 0
+;
+            .search-history-item {
+                color: var(--primary-foreground-color);
+                text-align: left;
+                text-decoration: none;
+                padding: 0.5rem 1rem;
+                border-radius: var(--border-radius);
+                width: 100%;
+                cursor: pointer;
+
+                &:hover {
+                    background-color: var(--secondary-background-color);
+                }
+            }
         }
     }
 }
