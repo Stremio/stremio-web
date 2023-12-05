@@ -33,7 +33,7 @@ const Player = ({ urlParams, queryParams }) => {
             queryParams.has('maxAudioChannels') ? parseInt(queryParams.get('maxAudioChannels'), 10) : null
         ];
     }, [queryParams]);
-    const [player, videoParamsChanged, timeChanged, pausedChanged, ended] = usePlayer(urlParams);
+    const [player, videoParamsChanged, timeChanged, pausedChanged, ended, nextVideo] = usePlayer(urlParams);
     const [settings, updateSettings] = useSettings();
     const streamingServer = useStreamingServer();
     const routeFocused = useRouteFocused();
@@ -199,6 +199,8 @@ const Player = ({ urlParams, queryParams }) => {
     }, []);
     const onNextVideoRequested = React.useCallback(() => {
         if (player.nextVideo !== null) {
+            nextVideo();
+
             const deepLinks = player.nextVideo.deepLinks;
             if (deepLinks.metaDetailsStreams && deepLinks.player) {
                 window.location.replace(deepLinks.metaDetailsStreams);
