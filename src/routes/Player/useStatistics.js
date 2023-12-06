@@ -51,7 +51,7 @@ const useStatistics = (player, streamingServer) => {
     const getStatistics = React.useCallback(() => {
         if (stream) {
             const { infoHash, fileIdx } = stream;
-            if (infoHash !== null && fileIdx !== null) {
+            if (typeof infoHash === 'string' && typeof fileIdx === 'number') {
                 core.transport.dispatch({
                     action: 'StreamingServer',
                     args: {
