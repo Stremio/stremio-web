@@ -21,6 +21,7 @@ const SearchBar = ({ className, query, active }) => {
     const [inputValue, setInputValue] = React.useState(query || '');
     const [historyActive, setHistoryActive] = React.useState(true);
     const searchInputRef = React.useRef(null);
+    const searchHistoryRef = React.useRef(null);
     const searchBarOnClick = React.useCallback(() => {
         if (!active) {
             window.location = '#/search';
@@ -28,17 +29,22 @@ const SearchBar = ({ className, query, active }) => {
     }, [active]);
     const queryInputOnChange = React.useCallback(() => {
         setInputValue(searchInputRef.current.value);
-        setHistoryActive(true);
         try {
             createTorrentFromMagnet(searchInputRef.current.value);
             // eslint-disable-next-line no-empty
         } catch { }
     }, []);
-    const queryInputOnSubmit = React.useCallback(() => {
+    const queryInputOnSubmit = React.useCallback((event) => {
         if (searchInputRef.current !== null) {
-            const queryParams = new URLSearchParams([['search', searchInputRef.current.value]]);
-            window.location = `#/search?${queryParams.toString()}`;
-            setHistoryActive(false);
+            const searchValue = event.target.innerText ? event.target.innerText : searchInputRef.current.value;
+            if (searchValue) {
+                const queryParams = new URLSearchParams([['search', searchValue]]);
+                window.location = `#/search?${queryParams.toString()}`;
+                setInputValue(searchValue);
+                if (event.key === 'Enter') {
+                    setHistoryActive(false);
+                }
+            }
         }
     }, []);
     React.useEffect(() => {
@@ -51,15 +57,17 @@ const SearchBar = ({ className, query, active }) => {
         setInputValue('');
         window.location = '#/search';
     }, []);
-    const historyInputSearch = React.useCallback((event) => {
-        const queryParams = new URLSearchParams([['search', event.target.innerText]]);
-        window.location = `#/search?${queryParams.toString()}`;
-        setHistoryActive(false);
-
-    }, []);
+    const handleBlur = (event) => {
+        if (!searchHistoryRef?.current?.contains(event.relatedTarget)) {
+            setHistoryActive(false);
+        }
+    };
+    const handleClick = () => {
+        setHistoryActive((prev) => !prev);
+    };
 
     return (
-        <label className={classnames(className, styles['search-bar-container'], { 'active': active })} onClick={searchBarOnClick}>
+        <label className={classnames(className, styles['search-bar-container'], { 'active': active })} onClick={searchBarOnClick} onBlur={handleBlur}>
             {
                 active ?
                     <TextInput
@@ -72,6 +80,7 @@ const SearchBar = ({ className, query, active }) => {
                         tabIndex={-1}
                         onChange={queryInputOnChange}
                         onSubmit={queryInputOnSubmit}
+                        onClick={handleClick}
                     />
                     :
                     <div className={styles['search-input']}>
@@ -84,13 +93,13 @@ const SearchBar = ({ className, query, active }) => {
                         <Icon className={styles['icon']} name={'close'} />
                     </Button>
                     :
-                    <Button className={styles['submit-button-container']} tabIndex={-1} onClick={queryInputOnSubmit}>
+                    <Button className={styles['submit-button-container']} tabIndex={-1}>
                         <Icon className={styles['icon']} name={'search'} />
                     </Button>
             }
             {
                 searchHistory.items.length > 0 && historyActive && active ?
-                    <div className={styles['search-history']}>
+                    <div className={styles['search-history']} onBlur={handleBlur} ref={searchHistoryRef}>
                         <div className={styles['search-history-actions']}>
                             <div className={styles['search-history-label']}>{t('STREMIO_TV_SEARCH_HISTORY_TITLE')}</div>
                             <button className={styles['search-history-clear']} onClick={() => searchHistory.clear()}>{t('CLEAR_HISTORY')}</button>
@@ -98,7 +107,7 @@ const SearchBar = ({ className, query, active }) => {
                         <div className={styles['search-history-items']}>
                             {searchHistory.items.slice(0, 8).map((item, index) => {
                                 return (
-                                    <button key={index} className={styles['search-history-item']} onClick={historyInputSearch}>{item}</button>
+                                    <button key={index} className={styles['search-history-item']} onClick={queryInputOnSubmit}>{item}</button>
                                 );
                             })}
                         </div>
