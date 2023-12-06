@@ -6,15 +6,8 @@ const { useServices } = require('stremio/services');
 const useStatistics = (player, streamingServer) => {
     const { core } = useServices();
 
-    const statistics = React.useMemo(() => {
-        return streamingServer.statistics?.type === 'Ready' ?
-            streamingServer.statistics.content
-            :
-            null;
-    }, [streamingServer.statistics]);
-
     const stream = React.useMemo(() => {
-        return player?.selected?.stream ?
+        return player.selected?.stream ?
             player.selected.stream
             :
             null;
@@ -26,6 +19,13 @@ const useStatistics = (player, streamingServer) => {
             :
             null;
     }, [stream]);
+
+    const statistics = React.useMemo(() => {
+        return streamingServer.statistics?.type === 'Ready' ?
+            streamingServer.statistics.content
+            :
+            null;
+    }, [streamingServer.statistics]);
 
     const peers = React.useMemo(() => {
         return statistics?.peers ?
@@ -48,10 +48,10 @@ const useStatistics = (player, streamingServer) => {
             0;
     }, [statistics]);
 
-    React.useEffect(() => {
+    const getStatistics = React.useCallback(() => {
         if (stream) {
             const { infoHash, fileIdx } = stream;
-            const getStatistics = () => {
+            if (infoHash !== null && fileIdx !== null) {
                 core.transport.dispatch({
                     action: 'StreamingServer',
                     args: {
@@ -62,13 +62,15 @@ const useStatistics = (player, streamingServer) => {
                         }
                     }
                 });
-            };
-            getStatistics();
-
-            const statisticsInterval = setInterval(getStatistics, 5000);
-            return () => clearInterval(statisticsInterval);
+            }
         }
     }, [stream]);
+
+    React.useEffect(() => {
+        getStatistics();
+        const interval = setInterval(getStatistics, 5000);
+        return () => clearInterval(interval);
+    }, [getStatistics]);
 
     return {
         infoHash,
