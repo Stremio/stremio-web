@@ -12,6 +12,7 @@ const useTorrent = require('stremio/common/useTorrent');
 const { withCoreSuspender } = require('stremio/common/CoreSuspender');
 const styles = require('./styles');
 const useSearchHistory = require('../../../../routes/Search/useSearchHistory');
+const useLocalSearch = require('./useLocalSearch');
 
 const SearchBar = ({ className, query, active }) => {
     const { t } = useTranslation();
@@ -19,6 +20,7 @@ const SearchBar = ({ className, query, active }) => {
     const searchHistory = useSearchHistory();
     const { createTorrentFromMagnet } = useTorrent();
     const [inputValue, setInputValue] = React.useState(query || '');
+    const localSearch = useLocalSearch(inputValue);
     const [historyActive, setHistoryActive] = React.useState(true);
     const searchInputRef = React.useRef(null);
     const searchHistoryRef = React.useRef(null);
@@ -29,6 +31,7 @@ const SearchBar = ({ className, query, active }) => {
     }, [active]);
     const queryInputOnChange = React.useCallback(() => {
         setInputValue(searchInputRef.current.value);
+        localSearch.dispatchSearch();
         try {
             createTorrentFromMagnet(searchInputRef.current.value);
             // eslint-disable-next-line no-empty
