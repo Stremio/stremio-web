@@ -36,7 +36,7 @@ const Player = ({ urlParams, queryParams }) => {
         ];
     }, [queryParams]);
 
-    const [player, videoParamsChanged, timeChanged, pausedChanged, ended] = usePlayer(urlParams);
+    const [player, videoParamsChanged, timeChanged, pausedChanged, ended, nextVideo] = usePlayer(urlParams);
     const [settings, updateSettings] = useSettings();
     const streamingServer = useStreamingServer();
     const statistics = useStatistics(player, streamingServer);
@@ -196,6 +196,8 @@ const Player = ({ urlParams, queryParams }) => {
 
     const onNextVideoRequested = React.useCallback(() => {
         if (player.nextVideo !== null) {
+            nextVideo();
+
             const deepLinks = player.nextVideo.deepLinks;
             if (deepLinks.metaDetailsStreams && deepLinks.player) {
                 window.location.replace(deepLinks.metaDetailsStreams);
