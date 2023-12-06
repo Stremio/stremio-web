@@ -8,9 +8,9 @@ const langs = require('langs');
 const { useTranslation } = require('react-i18next');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
-const { HorizontalNavBar, Button, useFullscreen, useBinaryState, useToast, useStreamingServer, withCoreSuspender } = require('stremio/common');
-const { default: Icon } = require('@stremio/stremio-icons/react');
+const { HorizontalNavBar, useFullscreen, useBinaryState, useToast, useStreamingServer, withCoreSuspender } = require('stremio/common');
 const BufferingLoader = require('./BufferingLoader');
+const Error = require('./Error');
 const ControlBar = require('./ControlBar');
 const NextVideoPopup = require('./NextVideoPopup');
 const StatisticsMenu = require('./StatisticsMenu');
@@ -622,24 +622,11 @@ const Player = ({ urlParams, queryParams }) => {
             />
             {
                 error !== null ?
-                    <div className={classnames(styles['layer'], styles['error-layer'])}>
-                        <div className={styles['error-label']} title={error.message}>{error.message}</div>
-                        {
-                            error.code === 2 ?
-                                <div className={styles['error-sub']} title={t('EXTERNAL_PLAYER_HINT')}>{t('EXTERNAL_PLAYER_HINT')}</div>
-                                :
-                                null
-                        }
-                        {
-                            player.selected !== null ?
-                                <Button className={styles['playlist-button']} title={t('PLAYER_OPEN_IN_EXTERNAL')} href={player.selected.stream.deepLinks.externalPlayer.href} download={player.selected.stream.deepLinks.externalPlayer.fileName} target={'_blank'}>
-                                    <Icon className={styles['icon']} name={'ic_downloads'} />
-                                    <div className={styles['label']}>{t('PLAYER_OPEN_IN_EXTERNAL')}</div>
-                                </Button>
-                                :
-                                null
-                        }
-                    </div>
+                    <Error
+                        className={styles['layer']}
+                        stream={video.state.stream}
+                        {...error}
+                    />
                     :
                     null
             }
