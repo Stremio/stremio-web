@@ -62,7 +62,7 @@ const NavMenuContent = ({ onClick }) => {
                 </div>
             </div>
             {
-                !isIOSPWA && !isAndroidPWA ?
+                document.fullscreenEnabled && !isAndroidPWA ?
                     <div className={styles['nav-menu-section']}>
                         <Button className={styles['nav-menu-option-container']} title={fullscreen ? t('EXIT_FULLSCREEN') : t('ENTER_FULLSCREEN')} onClick={fullscreen ? exitFullscreen : requestFullscreen}>
                             <Icon className={styles['icon']} name={fullscreen ? 'minimize' : 'maximize'} />

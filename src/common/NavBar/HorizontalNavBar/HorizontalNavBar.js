@@ -18,7 +18,6 @@ const HorizontalNavBar = React.memo(({ className, route, query, title, backButto
         window.history.back();
     }, []);
     const [fullscreen, requestFullscreen, exitFullscreen] = useFullscreen();
-    const [isIOSPWA] = usePWA();
     const renderNavMenuLabel = React.useCallback(({ ref, className, onClick, children, }) => (
         <Button ref={ref} className={classnames(className, styles['button-container'], styles['menu-button-container'])} tabIndex={-1} onClick={onClick}>
             <Icon className={styles['icon']} name={'person-outline'} />
@@ -63,7 +62,7 @@ const HorizontalNavBar = React.memo(({ className, route, query, title, backButto
                         null
                 }
                 {
-                    !isIOSPWA && fullscreenButton ?
+                    document.fullscreenEnabled && fullscreenButton ?
                         <Button className={styles['button-container']} title={fullscreen ? t('EXIT_FULLSCREEN') : t('ENTER_FULLSCREEN')} tabIndex={-1} onClick={fullscreen ? exitFullscreen : requestFullscreen}>
                             <Icon className={styles['icon']} name={fullscreen ? 'minimize' : 'maximize'} />
                         </Button>
