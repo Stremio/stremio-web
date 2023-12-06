@@ -7,9 +7,16 @@ const useModelState = require('../../../../common/useModelState');
 const useLocalSearch = (query) => {
     const { core } = useServices();
 
-    const { searchResults } = useModelState({ model: 'local_search' });
+    const action = React.useMemo(() => ({
+        action: 'Load',
+        args: {
+            model: 'LocalSearch',
+        }
+    }), []);
 
-    const dispatchSearch = React.useCallback(() => {
+    const { searchResults } = useModelState({ model: 'local_search', action });
+
+    const dispatchSearch = React.useEffect(() => {
         core.transport.dispatch({
             action: 'Search',
             args: {
@@ -17,7 +24,7 @@ const useLocalSearch = (query) => {
                 args: {
                     searchQuery: query,
                     maxResults: 5
-                },
+                }
             },
         });
     }, [query]);

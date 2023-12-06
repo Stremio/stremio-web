@@ -60,22 +60,27 @@
         background-color: var(--modal-background-color);
         border-radius: var(--border-radius);
         
+        .search-history-label {
+            font-size: 0.9rem;
+            color: var(--primary-foreground-color);
+        }
+
         .search-history-actions {
             display: flex;
             justify-content: space-between;
             width: 100%;
             opacity: 0.8;
-            margin-bottom: 1rem;
+            padding-bottom: 1rem;
 
             .search-history-label {
-                font-size: 0.8rem;
+                font-size: 0.9rem;
                 color: var(--primary-foreground-color);
             }
 
             .search-history-clear {
                 cursor: pointer;
                 color: var(--primary-foreground-color);
-                font-size: 0.8rem;
+                font-size: 0.9rem;
 
                 &:hover {
                     opacity: 0.6;
@@ -84,14 +89,21 @@
         }
 
         .search-history-items {
-            width: 90%;
+            width: 100;
             margin: 0 auto;
             display: flex;
             justify-content: center;
             align-items: flex-start;
             flex-direction: column;
 
+            .search-history-label {
+                font-size: 0.9rem;
+                color: var(--primary-foreground-color);
+                margin: 1rem 0;
+            }
+
             .search-history-item {
+                width: 90%;
                 color: var(--primary-foreground-color);
                 text-align: left;
                 text-decoration: none;
