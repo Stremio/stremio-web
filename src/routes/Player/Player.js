@@ -57,8 +57,21 @@ const Player = ({ urlParams, queryParams }) => {
     const [infoMenuOpen, , closeInfoMenu, toggleInfoMenu] = useBinaryState(false);
     const [speedMenuOpen, , closeSpeedMenu, toggleSpeedMenu] = useBinaryState(false);
     const [videosMenuOpen, , closeVideosMenu, toggleVideosMenu] = useBinaryState(false);
-    const [nextVideoPopupOpen, openNextVideoPopup, closeNextVideoPopup] = useBinaryState(false);
     const [statisticsMenuOpen, , closeStatisticsMenu, toggleStatisticsMenu] = useBinaryState(false);
+    const [nextVideoPopupOpen, openNextVideoPopup, closeNextVideoPopup] = useBinaryState(false);
+
+    const menusOpen = React.useMemo(() => {
+        return optionsMenuOpen || subtitlesMenuOpen || infoMenuOpen || speedMenuOpen || videosMenuOpen || statisticsMenuOpen;
+    }, [optionsMenuOpen, subtitlesMenuOpen, infoMenuOpen, speedMenuOpen, videosMenuOpen, statisticsMenuOpen]);
+
+    const closeMenus = React.useCallback(() => {
+        closeOptionsMenu();
+        closeSubtitlesMenu();
+        closeInfoMenu();
+        closeSpeedMenu();
+        closeVideosMenu();
+        closeStatisticsMenu();
+    }, []);
 
     const nextVideoPopupDismissed = React.useRef(false);
     const defaultSubtitlesSelected = React.useRef(false);
@@ -452,7 +465,7 @@ const Player = ({ urlParams, queryParams }) => {
         const onKeyDown = (event) => {
             switch (event.code) {
                 case 'Space': {
-                    if (!subtitlesMenuOpen && !infoMenuOpen && !videosMenuOpen && !speedMenuOpen && !optionsMenuOpen && !statisticsMenuOpen && video.state.paused !== null) {
+                    if (!menusOpen && video.state.paused !== null) {
                         if (video.state.paused) {
                             onPlayRequested();
                         } else {
@@ -463,7 +476,7 @@ const Player = ({ urlParams, queryParams }) => {
                     break;
                 }
                 case 'ArrowRight': {
-                    if (!subtitlesMenuOpen && !infoMenuOpen && !videosMenuOpen && !speedMenuOpen && !optionsMenuOpen && !statisticsMenuOpen && video.state.time !== null) {
+                    if (!menusOpen && video.state.time !== null) {
                         const seekDuration = event.shiftKey ? settings.seekShortTimeDuration : settings.seekTimeDuration;
                         onSeekRequested(video.state.time + seekDuration);
                     }
@@ -471,7 +484,7 @@ const Player = ({ urlParams, queryParams }) => {
                     break;
                 }
                 case 'ArrowLeft': {
-                    if (!subtitlesMenuOpen && !infoMenuOpen && !videosMenuOpen && !speedMenuOpen && !optionsMenuOpen && !statisticsMenuOpen && video.state.time !== null) {
+                    if (!menusOpen && video.state.time !== null) {
                         const seekDuration = event.shiftKey ? settings.seekShortTimeDuration : settings.seekTimeDuration;
                         onSeekRequested(video.state.time - seekDuration);
                     }
@@ -479,25 +492,21 @@ const Player = ({ urlParams, queryParams }) => {
                     break;
                 }
                 case 'ArrowUp': {
-                    if (!subtitlesMenuOpen && !infoMenuOpen && !videosMenuOpen && !speedMenuOpen && !optionsMenuOpen && !statisticsMenuOpen && video.state.volume !== null) {
+                    if (!menusOpen && video.state.volume !== null) {
                         onVolumeChangeRequested(video.state.volume + 5);
                     }
 
                     break;
                 }
                 case 'ArrowDown': {
-                    if (!subtitlesMenuOpen && !infoMenuOpen && !videosMenuOpen && !speedMenuOpen && !optionsMenuOpen && !statisticsMenuOpen && video.state.volume !== null) {
+                    if (!menusOpen && video.state.volume !== null) {
                         onVolumeChangeRequested(video.state.volume - 5);
                     }
 
                     break;
                 }
                 case 'KeyS': {
-                    closeOptionsMenu();
-                    closeInfoMenu();
-                    closeSpeedMenu();
-                    closeVideosMenu();
-                    closeStatisticsMenu();
+                    closeMenus();
                     if ((Array.isArray(video.state.subtitlesTracks) && video.state.subtitlesTracks.length > 0) ||
                         (Array.isArray(video.state.extraSubtitlesTracks) && video.state.extraSubtitlesTracks.length > 0) ||
                         (Array.isArray(video.state.audioTracks) && video.state.audioTracks.length > 0)) {
@@ -507,11 +516,7 @@ const Player = ({ urlParams, queryParams }) => {
                     break;
                 }
                 case 'KeyI': {
-                    closeOptionsMenu();
-                    closeSubtitlesMenu();
-                    closeSpeedMenu();
-                    closeVideosMenu();
-                    closeStatisticsMenu();
+                    closeMenus();
                     if (player.metaItem !== null && player.metaItem.type === 'Ready') {
                         toggleInfoMenu();
                     }
@@ -519,11 +524,7 @@ const Player = ({ urlParams, queryParams }) => {
                     break;
                 }
                 case 'KeyR': {
-                    closeOptionsMenu();
-                    closeInfoMenu();
-                    closeSubtitlesMenu();
-                    closeVideosMenu();
-                    closeStatisticsMenu();
+                    closeMenus();
                     if (video.state.playbackSpeed !== null) {
                         toggleSpeedMenu();
                     }
@@ -531,11 +532,7 @@ const Player = ({ urlParams, queryParams }) => {
                     break;
                 }
                 case 'KeyV': {
-                    closeOptionsMenu();
-                    closeInfoMenu();
-                    closeSubtitlesMenu();
-                    closeSpeedMenu();
-                    closeStatisticsMenu();
+                    closeMenus();
                     if (player.metaItem !== null && player.metaItem.type === 'Ready') {
                         toggleVideosMenu();
                     }
@@ -543,11 +540,7 @@ const Player = ({ urlParams, queryParams }) => {
                     break;
                 }
                 case 'KeyD': {
-                    closeOptionsMenu();
-                    closeInfoMenu();
-                    closeSubtitlesMenu();
-                    closeSpeedMenu();
-                    closeVideosMenu();
+                    closeMenus();
                     if (streamingServer.statistics !== null && streamingServer.statistics.type !== 'Err' && player.selected && typeof player.selected.stream.infoHash === 'string' && typeof player.selected.stream.fileIdx === 'number') {
                         toggleStatisticsMenu();
                     }
@@ -555,24 +548,18 @@ const Player = ({ urlParams, queryParams }) => {
                     break;
                 }
                 case 'Escape': {
-                    closeOptionsMenu();
-                    closeSubtitlesMenu();
-                    closeInfoMenu();
-                    closeSpeedMenu();
-                    closeVideosMenu();
-                    closeStatisticsMenu();
-                    onDismissNextVideoPopup();
+                    closeMenus();
                     break;
                 }
             }
         };
         const onWheel = ({ deltaY }) => {
             if (deltaY > 0) {
-                if (!subtitlesMenuOpen && !infoMenuOpen && !videosMenuOpen && !speedMenuOpen && !optionsMenuOpen && !statisticsMenuOpen && video.state.volume !== null) {
+                if (!menusOpen && video.state.volume !== null) {
                     onVolumeChangeRequested(video.state.volume - 5);
                 }
             } else {
-                if (!subtitlesMenuOpen && !infoMenuOpen && !videosMenuOpen && !speedMenuOpen && !optionsMenuOpen && !statisticsMenuOpen && video.state.volume !== null) {
+                if (!menusOpen && video.state.volume !== null) {
                     onVolumeChangeRequested(video.state.volume + 5);
                 }
             }
@@ -585,7 +572,7 @@ const Player = ({ urlParams, queryParams }) => {
             window.removeEventListener('keydown', onKeyDown);
             window.removeEventListener('wheel', onWheel);
         };
-    }, [player.metaItem, player.selected, streamingServer.statistics, settings.seekTimeDuration, settings.seekShortTimeDuration, routeFocused, subtitlesMenuOpen, infoMenuOpen, videosMenuOpen, speedMenuOpen, optionsMenuOpen, statisticsMenuOpen, video.state.paused, video.state.time, video.state.volume, video.state.audioTracks, video.state.subtitlesTracks, video.state.extraSubtitlesTracks, video.state.playbackSpeed, toggleSubtitlesMenu, toggleInfoMenu, toggleVideosMenu, toggleStatisticsMenu]);
+    }, [player.metaItem, player.selected, streamingServer.statistics, settings.seekTimeDuration, settings.seekShortTimeDuration, routeFocused, menusOpen, video.state.paused, video.state.time, video.state.volume, video.state.audioTracks, video.state.subtitlesTracks, video.state.extraSubtitlesTracks, video.state.playbackSpeed, toggleSubtitlesMenu, toggleInfoMenu, toggleVideosMenu, toggleStatisticsMenu]);
 
     React.useEffect(() => {
         video.events.on('error', onError);
@@ -612,7 +599,7 @@ const Player = ({ urlParams, queryParams }) => {
     }, []);
 
     return (
-        <div className={classnames(styles['player-container'], { [styles['immersed']]: immersed && !casting && video.state.paused !== null && !video.state.paused && !subtitlesMenuOpen && !infoMenuOpen && !speedMenuOpen && !videosMenuOpen && !nextVideoPopupOpen && !optionsMenuOpen && !statisticsMenuOpen })}
+        <div className={classnames(styles['player-container'], { [styles['immersed']]: immersed && !casting && video.state.paused !== null && !video.state.paused && !menusOpen && !nextVideoPopupOpen })}
             onMouseDown={onContainerMouseDown}
             onMouseMove={onContainerMouseMove}
             onMouseOver={onContainerMouseMove}
@@ -657,7 +644,7 @@ const Player = ({ urlParams, queryParams }) => {
                     null
             }
             {
-                subtitlesMenuOpen || infoMenuOpen || videosMenuOpen || speedMenuOpen || optionsMenuOpen || statisticsMenuOpen ?
+                menusOpen ?
                     <div className={styles['layer']} />
                     :
                     null
