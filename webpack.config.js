@@ -10,7 +10,6 @@ const WorkboxPlugin = require('workbox-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const WebpackPwaManifest = require('webpack-pwa-manifest');
-const colors = require('@stremio/stremio-colors');
 const pachageJson = require('./package.json');
 
 const COMMIT_HASH = execSync('git rev-parse HEAD').toString().trim();
@@ -200,6 +199,7 @@ module.exports = (env, argv) => ({
             patterns: [
                 { from: 'favicons', to: `${COMMIT_HASH}/favicons` },
                 { from: 'images', to: `${COMMIT_HASH}/images` },
+                { from: 'screenshots/*.webp', to: `${COMMIT_HASH}` },
             ]
         }),
         new MiniCssExtractPlugin({
@@ -209,7 +209,6 @@ module.exports = (env, argv) => ({
             template: './src/index.html',
             inject: false,
             scriptLoading: 'blocking',
-            themeColor: colors.background,
             faviconsPath: `${COMMIT_HASH}/favicons`,
             imagesPath: `${COMMIT_HASH}/images`,
         }),
@@ -221,26 +220,30 @@ module.exports = (env, argv) => ({
             theme_color: '#2a2843',
             orientation: 'any',
             display: 'standalone',
-            start_url: './',
+            display_override: ['standalone'],
             scope: './',
+            start_url: './',
             publicPath: './',
             icons: [
                 {
                     src: 'images/icon.png',
+                    destination: `${COMMIT_HASH}/images`,
                     sizes: [196, 512],
-                    ios: true
+                    purpose: 'any',
+                    ios: true,
                 },
                 {
                     src: 'images/maskable_icon.png',
+                    destination: `${COMMIT_HASH}/images`,
                     sizes: [196, 512],
                     purpose: 'maskable',
-                    destination: path.join(COMMIT_HASH, 'images', 'maskable')
                 },
                 {
                     src: 'favicons/favicon.ico',
-                    sizes: [64, 32, 24, 16]
+                    destination: `${COMMIT_HASH}/favicons`,
+                    sizes: [256],
                 }
-            ].map(icon => ({ ...icon, destination: icon.destination ?? path.join(COMMIT_HASH, 'images') })),
+            ],
             fingerprints: false,
             ios: true
         }),
