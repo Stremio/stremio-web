@@ -244,6 +244,22 @@ module.exports = (env, argv) => ({
                     sizes: [256],
                 }
             ],
+            screenshots : [
+                {
+                    src: `${COMMIT_HASH}/screenshots/board_wide.webp`,
+                    sizes: '1440x900',
+                    type: 'image/webp',
+                    form_factor: 'wide',
+                    label: 'Homescreen of Stremio'
+                },
+                {
+                    src: `${COMMIT_HASH}/screenshots/board_narrow.webp`,
+                    sizes: '414x896',
+                    type: 'image/webp',
+                    form_factor: 'narrow',
+                    label: 'Homescreen of Stremio'
+                }
+            ],
             fingerprints: false,
             ios: true
         }),
