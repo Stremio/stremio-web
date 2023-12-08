@@ -27,11 +27,8 @@ const styles = require('./styles');
 const Player = ({ urlParams, queryParams }) => {
     const { t } = useTranslation();
     const { chromecast, shell, core } = useServices();
-    const [forceTranscoding, maxAudioChannels] = React.useMemo(() => {
-        return [
-            queryParams.has('forceTranscoding'),
-            queryParams.has('maxAudioChannels') ? parseInt(queryParams.get('maxAudioChannels'), 10) : null
-        ];
+    const forceTranscoding = React.useMemo(() => {
+        return queryParams.has('forceTranscoding');
     }, [queryParams]);
     const [player, videoParamsChanged, timeChanged, pausedChanged, ended, nextVideo] = usePlayer(urlParams);
     const [settings, updateSettings] = useSettings();
@@ -288,10 +285,7 @@ const Player = ({ urlParams, queryParams }) => {
                         :
                         0,
                     forceTranscoding: forceTranscoding || casting,
-                    maxAudioChannels: typeof maxAudioChannels === 'number' ?
-                        maxAudioChannels
-                        :
-                        null,
+                    maxAudioChannels: settings.surroundSound ? 32 : 2,
                     streamingServerURL: streamingServer.baseUrl.type === 'Ready' ?
                         casting ?
                             streamingServer.baseUrl.content
@@ -306,7 +300,7 @@ const Player = ({ urlParams, queryParams }) => {
                 shellTransport: shell.active ? shell.transport : null,
             });
         }
-    }, [streamingServer.baseUrl, player.selected, player.metaItem, forceTranscoding, maxAudioChannels, casting]);
+    }, [streamingServer.baseUrl, player.selected, player.metaItem, forceTranscoding, casting]);
     React.useEffect(() => {
         if (videoState.stream !== null) {
             dispatch({
