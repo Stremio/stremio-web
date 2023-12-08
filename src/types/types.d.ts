@@ -54,7 +54,9 @@ type BehaviorHints = {
 type PosterShape = 'square' | 'landscape' | 'poster' | null; 
 
 type Catalog<T, D = any> = {
-    title?: string,
+    label?: string,
+    name?: string,
+    type?: string,
     content: T,
     installed?: boolean,
     deepLinks?: D,

@@ -2,7 +2,7 @@
 
 const React = require('react');
 const { useTranslation } = require('react-i18next');
-const { translateOption } = require('stremio/common');
+const { translateOption, translateCatalog } = require('stremio/common');
 
 const mapSelectableInputs = (discover, t) => {
     const typeSelect = {
@@ -26,9 +26,9 @@ const mapSelectableInputs = (discover, t) => {
     const catalogSelect = {
         title: t('SELECT_CATALOG'),
         options: discover.selectable.catalogs
-            .map(({ name, addon, deepLinks }) => ({
+            .map(({ id, name, addon, deepLinks }) => ({
                 value: deepLinks.discover,
-                label: name,
+                label: translateCatalog({ addon, id, name }),
                 title: `${name} (${addon.manifest.name})`
             })),
         selected: discover.selectable.catalogs
@@ -38,7 +38,7 @@ const mapSelectableInputs = (discover, t) => {
             () => {
                 const selectableCatalog = discover.selectable.catalogs
                     .find(({ id }) => id === discover.selected.request.path.id);
-                return selectableCatalog ? selectableCatalog.name : discover.selected.request.path.id;
+                return selectableCatalog ? translateCatalog(selectableCatalog, false) : discover.selected.request.path.id;
             }
             :
             null,

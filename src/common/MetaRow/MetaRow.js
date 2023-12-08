@@ -8,35 +8,36 @@ const { useTranslation } = require('react-i18next');
 const { default: Icon } = require('@stremio/stremio-icons/react');
 const Button = require('stremio/common/Button');
 const CONSTANTS = require('stremio/common/CONSTANTS');
+const translateCatalog = require('stremio/common/translateCatalog');
 const MetaRowPlaceholder = require('./MetaRowPlaceholder');
 const styles = require('./styles');
 
-const MetaRow = ({ className, title, message, items, itemComponent, deepLinks }) => {
+const MetaRow = ({ className, title, catalog, message, items, itemComponent, deepLinks }) => {
     const { t } = useTranslation();
+
+    const catalogTitle = React.useMemo(() => {
+        return title ?? translateCatalog(catalog);
+    }, [title, catalog]);
+
     return (
         <div className={classnames(className, styles['meta-row-container'])}>
-            {
-                (typeof title === 'string' && title.length > 0) || (deepLinks && (typeof deepLinks.discover === 'string' || typeof deepLinks.library === 'string')) ?
-                    <div className={styles['header-container']}>
-                        {
-                            typeof title === 'string' && title.length > 0 ?
-                                <div className={styles['title-container']} title={title}>{title}</div>
-                                :
-                                null
-                        }
-                        {
-                            deepLinks && (typeof deepLinks.discover === 'string' || typeof deepLinks.library === 'string') ?
-                                <Button className={styles['see-all-container']} title={t('BUTTON_SEE_ALL')} href={deepLinks.discover || deepLinks.library} tabIndex={-1}>
-                                    <div className={styles['label']}>{ t('BUTTON_SEE_ALL') }</div>
-                                    <Icon className={styles['icon']} name={'chevron-forward'} />
-                                </Button>
-                                :
-                                null
-                        }
-                    </div>
-                    :
-                    null
-            }
+            <div className={styles['header-container']}>
+                {
+                    typeof catalogTitle === 'string' && catalogTitle.length > 0 ?
+                        <div className={styles['title-container']} title={catalogTitle}>{catalogTitle}</div>
+                        :
+                        null
+                }
+                {
+                    deepLinks && (typeof deepLinks.discover === 'string' || typeof deepLinks.library === 'string') ?
+                        <Button className={styles['see-all-container']} title={t('BUTTON_SEE_ALL')} href={deepLinks.discover || deepLinks.library} tabIndex={-1}>
+                            <div className={styles['label']}>{ t('BUTTON_SEE_ALL') }</div>
+                            <Icon className={styles['icon']} name={'chevron-forward'} />
+                        </Button>
+                        :
+                        null
+                }
+            </div>
             {
                 typeof message === 'string' && message.length > 0 ?
                     <div className={styles['message-container']} title={message}>{message}</div>
@@ -69,6 +70,17 @@ MetaRow.propTypes = {
     className: PropTypes.string,
     title: PropTypes.string,
     message: PropTypes.string,
+    catalog: PropTypes.shape({
+        id: PropTypes.string,
+        name: PropTypes.string,
+        type: PropTypes.string,
+        addon: PropTypes.shape({
+            manifest: PropTypes.shape({
+                id: PropTypes.string,
+                name: PropTypes.string,
+            }),
+        }),
+    }),
     items: PropTypes.arrayOf(PropTypes.shape({
         posterShape: PropTypes.string
     })),

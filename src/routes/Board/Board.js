@@ -59,10 +59,9 @@ const Board = () => {
                                     <MetaRow
                                         key={index}
                                         className={classnames(styles['board-row'], styles[`board-row-${catalog.content.content[0].posterShape}`], 'animation-fade-in')}
-                                        title={catalog.title}
+                                        catalog={catalog}
                                         items={catalog.content.content}
                                         itemComponent={MetaItem}
-                                        deepLinks={catalog.deepLinks}
                                     />
                                 );
                             }
@@ -71,9 +70,8 @@ const Board = () => {
                                     <MetaRow
                                         key={index}
                                         className={classnames(styles['board-row'], 'animation-fade-in')}
-                                        title={catalog.title}
+                                        catalog={catalog}
                                         message={catalog.content.content}
-                                        deepLinks={catalog.deepLinks}
                                     />
                                 );
                             }
@@ -82,7 +80,7 @@ const Board = () => {
                                     <MetaRow.Placeholder
                                         key={index}
                                         className={classnames(styles['board-row'], styles['board-row-poster'], 'animation-fade-in')}
-                                        title={catalog.title}
+                                        catalog={catalog}
                                         deepLinks={catalog.deepLinks}
                                     />
                                 );

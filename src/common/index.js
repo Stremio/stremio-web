@@ -33,6 +33,7 @@ const interfaceLanguages = require('./interfaceLanguages.json');
 const languageNames = require('./languageNames.json');
 const routesRegexp = require('./routesRegexp');
 const translateOption = require('./translateOption');
+const translateCatalog = require('./translateCatalog');
 const useAnimationFrame = require('./useAnimationFrame');
 const useBinaryState = require('./useBinaryState');
 const useFullscreen = require('./useFullscreen');
@@ -84,6 +85,7 @@ module.exports = {
     languageNames,
     routesRegexp,
     translateOption,
+    translateCatalog,
     useAnimationFrame,
     useBinaryState,
     useFullscreen,
