@@ -14,8 +14,8 @@ const index_path = path.join(build_path, 'index.html');
 
 express().use(express.static(build_path, {
     setHeaders: (res, path) => {
-        if (path === index_path) res.set('cache-control', `public, max-age: ${INDEX_CACHE}`);
-        else res.set('cache-control', `public, max-age: ${ASSETS_CACHE}`);
+        if (path === index_path) res.set('Cache-Control', `public, max-age=${INDEX_CACHE}`)
+        else res.set('Cache-Control', `public, max-age=${ASSETS_CACHE}`);
     }
 })).all('*', (_req, res) => {
     // TODO: better 404 page

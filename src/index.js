@@ -8,7 +8,7 @@ if (typeof process.env.SENTRY_DSN === 'string') {
 const Bowser = require('bowser');
 const browser = Bowser.parse(window.navigator?.userAgent || '');
 if (browser?.platform?.type === 'desktop') {
-    document.querySelector('meta[name="viewport"]')?.setAttribute('content', '');
+    document.querySelector('meta[name="viewport"]')?.setAttribute('content', 'width=device-width, initial-scale=1');
 }
 
 const React = require('react');
