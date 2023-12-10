@@ -9,7 +9,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
-const colors = require('@stremio/stremio-colors');
+const WebpackPwaManifest = require('webpack-pwa-manifest');
 const pachageJson = require('./package.json');
 
 const COMMIT_HASH = execSync('git rev-parse HEAD').toString().trim();
@@ -199,7 +199,7 @@ module.exports = (env, argv) => ({
             patterns: [
                 { from: 'favicons', to: `${COMMIT_HASH}/favicons` },
                 { from: 'images', to: `${COMMIT_HASH}/images` },
-                { from: 'manifest.json', to: `${COMMIT_HASH}/manifest.json` },
+                { from: 'screenshots/*.webp', to: `${COMMIT_HASH}` },
             ]
         }),
         new MiniCssExtractPlugin({
@@ -209,10 +209,59 @@ module.exports = (env, argv) => ({
             template: './src/index.html',
             inject: false,
             scriptLoading: 'blocking',
-            themeColor: colors.background,
             faviconsPath: `${COMMIT_HASH}/favicons`,
             imagesPath: `${COMMIT_HASH}/images`,
-            manifestPath: `${COMMIT_HASH}/manifest.json`,
-        })
+        }),
+        new WebpackPwaManifest({
+            name: 'Stremio Web',
+            short_name: 'Stremio',
+            description: 'Freedom To Stream',
+            background_color: '#161523',
+            theme_color: '#2a2843',
+            orientation: 'any',
+            display: 'standalone',
+            display_override: ['standalone'],
+            scope: './',
+            start_url: './',
+            publicPath: './',
+            icons: [
+                {
+                    src: 'images/icon.png',
+                    destination: `${COMMIT_HASH}/images`,
+                    sizes: [196, 512],
+                    purpose: 'any',
+                    ios: true,
+                },
+                {
+                    src: 'images/maskable_icon.png',
+                    destination: `${COMMIT_HASH}/images`,
+                    sizes: [196, 512],
+                    purpose: 'maskable',
+                },
+                {
+                    src: 'favicons/favicon.ico',
+                    destination: `${COMMIT_HASH}/favicons`,
+                    sizes: [256],
+                }
+            ],
+            screenshots : [
+                {
+                    src: `${COMMIT_HASH}/screenshots/board_wide.webp`,
+                    sizes: '1440x900',
+                    type: 'image/webp',
+                    form_factor: 'wide',
+                    label: 'Homescreen of Stremio'
+                },
+                {
+                    src: `${COMMIT_HASH}/screenshots/board_narrow.webp`,
+                    sizes: '414x896',
+                    type: 'image/webp',
+                    form_factor: 'narrow',
+                    label: 'Homescreen of Stremio'
+                }
+            ],
+            fingerprints: false,
+            ios: true
+        }),
     ].filter(Boolean)
 });
