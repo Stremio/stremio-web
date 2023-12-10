@@ -54,10 +54,6 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, poste
             });
         }
     }, [dataset, optionOnSelect]);
-    const [loading, setLoading] = React.useState(true);
-    const onImageLoad = React.useCallback(() => {
-        setLoading(!loading);
-    }, [loading]);
     const renderPosterFallback = React.useCallback(() => (
         <Icon
             className={styles['placeholder-icon']}
@@ -85,7 +81,6 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, poste
                         src={poster}
                         alt={' '}
                         renderFallback={renderPosterFallback}
-                        onLoad={onImageLoad}
                     />
                 </div>
                 {

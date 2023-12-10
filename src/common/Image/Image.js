@@ -3,11 +3,6 @@ const PropTypes = require('prop-types');
 
 const Image = ({ className, src, alt, fallbackSrc, renderFallback, ...props }) => {
     const [broken, setBroken] = React.useState(false);
-    const [loaded, setLoaded] = React.useState(false);
-
-    const onLoad = React.useCallback(() => {
-        setLoaded(true);
-    }, []);
 
     const onError = React.useCallback((event) => {
         if (typeof props.onError === 'function') {
@@ -19,7 +14,6 @@ const Image = ({ className, src, alt, fallbackSrc, renderFallback, ...props }) =
 
     React.useLayoutEffect(() => {
         setBroken(false);
-        setLoaded(false);
     }, [src]);
 
     return (
@@ -34,12 +28,8 @@ const Image = ({ className, src, alt, fallbackSrc, renderFallback, ...props }) =
                 className={className}
                 src={src}
                 alt={alt}
-                onLoad={onLoad}
                 onError={onError}
-                style={{
-                    opacity: loaded ? 1 : 0,
-                    transition: 'opacity 0.3s'
-                }}
+                draggable={false}
             />
     );
 };
