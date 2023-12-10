@@ -19,6 +19,7 @@ const NotFound = () => {
                     className={styles['not-found-image']}
                     src={require('/images/empty.png')}
                     alt={' '}
+                    draggable={false}
                 />
                 <div className={styles['not-found-label']}>Page not found!</div>
             </div>
