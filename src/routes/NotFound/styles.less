@@ -3,15 +3,24 @@
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
 
 .not-found-container {
-    display: flex;
-    flex-direction: column;
     width: 100%;
     height: 100%;
     background-color: transparent;
 
-    .nav-bar {
-        flex: none;
-        align-self: stretch;
+    .nav-bar-horizontal {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+    }
+    .nav-bar-vertical {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+    .not-found-vertical-window {
+        display: flex;
+        flex-direction: row;
+        height: 100%;
     }
 
     .not-found-content {

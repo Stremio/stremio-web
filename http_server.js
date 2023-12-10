@@ -12,12 +12,21 @@ const path = require('path');
 const build_path = path.resolve(__dirname, 'build');
 const index_path = path.join(build_path, 'index.html');
 
-express().use(express.static(build_path, {
+const app = express();
+
+app.use(express.static(build_path, {
     setHeaders: (res, path) => {
-        if (path === index_path) res.set('cache-control', `public, max-age: ${INDEX_CACHE}`);
-        else res.set('cache-control', `public, max-age: ${ASSETS_CACHE}`);
-    }
-})).all('*', (_req, res) => {
-    // TODO: better 404 page
-    res.status(404).send('<h1>404! Page not found</h1>');
-}).listen(HTTP_PORT, () => console.info(`Server listening on port: ${HTTP_PORT}`));
+        if (path === index_path) {
+            res.set('Cache-Control', `max-age=${INDEX_CACHE}, must-revalidate, public`);
+        } else {
+            res.set('Cache-Control', `max-age=${ASSETS_CACHE}, must-revalidate, public`);
+        }
+    },
+    fallthrough: true
+}));
+
+app.use((_req, res) => {
+    res.status(404).sendFile(index_path);
+});
+
+app.listen(HTTP_PORT, () => console.info(`Server listening on port: ${HTTP_PORT}`));
