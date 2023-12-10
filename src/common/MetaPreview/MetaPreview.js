@@ -94,6 +94,10 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
 
         return trailerStreams[0].deepLinks.player;
     }, [trailerStreams]);
+    const [loading, setLoading] = React.useState(false);
+    const onImageLoad = React.useCallback(() => {
+        setLoading(!loading);
+    }, [loading]);
     const renderLogoFallback = React.useCallback(() => (
         <div className={styles['logo-placeholder']}>{name}</div>
     ), [name]);
@@ -116,6 +120,7 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                             alt={' '}
                             title={name}
                             renderFallback={renderLogoFallback}
+                            onLoad={onImageLoad}
                         />
                         :
                         renderLogoFallback()
