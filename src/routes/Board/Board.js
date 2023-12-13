@@ -8,6 +8,7 @@ const { MainNavBars, MetaRow, ContinueWatchingItem, MetaItem, StreamingServerWar
 const useBoard = require('./useBoard');
 const useContinueWatchingPreview = require('./useContinueWatchingPreview');
 const styles = require('./styles');
+const SeasonalNotification = require('stremio/common/SeasonalNotification/SeasonalNotification');
 
 const THRESHOLD = 5;
 
@@ -38,6 +39,7 @@ const Board = () => {
     }, [board.catalogs, onVisibleRangeChange]);
     return (
         <div className={styles['board-container']}>
+            <SeasonalNotification imgUrl='https://i.postimg.cc/k5KFNyYH/Group-2395-2x.png' alt='Christmas' />
             <MainNavBars className={styles['board-content-container']} route={'board'}>
                 <div ref={scrollContainerRef} className={styles['board-content']} onScroll={onScroll}>
                     {
