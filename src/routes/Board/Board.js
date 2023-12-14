@@ -4,11 +4,11 @@ const React = require('react');
 const classnames = require('classnames');
 const debounce = require('lodash.debounce');
 const { useTranslation } = require('react-i18next');
-const { MainNavBars, MetaRow, ContinueWatchingItem, MetaItem, StreamingServerWarning, useStreamingServer, withCoreSuspender, getVisibleChildrenRange } = require('stremio/common');
+const { MainNavBars, MetaRow, ContinueWatchingItem, MetaItem, StreamingServerWarning, useStreamingServer, withCoreSuspender, getVisibleChildrenRange, ModalDialog, Button, useBinaryState } = require('stremio/common');
 const useBoard = require('./useBoard');
 const useContinueWatchingPreview = require('./useContinueWatchingPreview');
 const styles = require('./styles');
-const SeasonalNotification = require('stremio/common/SeasonalNotification/SeasonalNotification');
+const useFetchModalData = require('./useFetchModalData');
 
 const THRESHOLD = 5;
 
@@ -19,6 +19,8 @@ const Board = () => {
     const [board, loadBoardRows] = useBoard();
     const boardCatalogsOffset = continueWatchingPreview.items.length > 0 ? 1 : 0;
     const scrollContainerRef = React.useRef();
+    const { notificationModalData, isModalDataLoading } = useFetchModalData();
+    const [isNotificationModalOpen, , closeNotificationModal, ] = useBinaryState(true);
     const onVisibleRangeChange = React.useCallback(() => {
         const range = getVisibleChildrenRange(scrollContainerRef.current);
         if (range === null) {
@@ -39,7 +41,38 @@ const Board = () => {
     }, [board.catalogs, onVisibleRangeChange]);
     return (
         <div className={styles['board-container']}>
-            <SeasonalNotification imgUrl='https://i.postimg.cc/k5KFNyYH/Group-2395-2x.png' alt='Christmas' />
+            {
+                isNotificationModalOpen && notificationModalData && !isModalDataLoading ?
+                    <ModalDialog className={styles['notification-modal']} title={'Notification Modal'} onCloseRequest={closeNotificationModal}>
+                        {
+                            notificationModalData.imageUrl ?
+                                <img className={styles['notification-image']} style={{ width: '95%', height: '95%' }} src={notificationModalData.imageUrl} />
+                                :
+                                null
+                        }
+                        <div className={styles['info-container']}>
+                            <div className={styles['title-container']}>
+                                {
+                                    notificationModalData.title ?
+                                        <div className={styles['title']}>{notificationModalData.title}</div>
+                                        :
+                                        null
+                                }
+                                {
+                                    notificationModalData.message ?
+                                        <div className={styles['notification-label']}>{notificationModalData.message}</div>
+                                        :
+                                        null
+                                }
+                            </div>
+                            <Button className={styles['action-button']}>
+                                <div className={styles['label']}>Learn more</div>
+                            </Button>
+                        </div>
+                    </ModalDialog>
+                    :
+                    null
+            }
             <MainNavBars className={styles['board-content-container']} route={'board'}>
                 <div ref={scrollContainerRef} className={styles['board-content']} onScroll={onScroll}>
                     {
