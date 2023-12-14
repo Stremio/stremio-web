@@ -260,8 +260,7 @@ const Player = ({ urlParams, queryParams }) => {
         setError(null);
         if (player.selected === null) {
             dispatch({ type: 'command', commandName: 'unload' });
-        } else if (streamingServer.baseUrl !== null && streamingServer.baseUrl.type !== 'Loading' &&
-            (player.selected.metaRequest === null || (player.metaItem !== null && player.metaItem.type !== 'Loading'))) {
+        } else if (streamingServer.baseUrl !== null && (player.selected.metaRequest === null || (player.metaItem !== null && player.metaItem.type !== 'Loading'))) {
             dispatch({
                 type: 'command',
                 commandName: 'load',
@@ -286,9 +285,9 @@ const Player = ({ urlParams, queryParams }) => {
                         0,
                     forceTranscoding: forceTranscoding || casting,
                     maxAudioChannels: settings.surroundSound ? 32 : 2,
-                    streamingServerURL: streamingServer.baseUrl.type === 'Ready' ?
+                    streamingServerURL: streamingServer.baseUrl ?
                         casting ?
-                            streamingServer.baseUrl.content
+                            streamingServer.baseUrl
                             :
                             streamingServer.selected.transportUrl
                         :
