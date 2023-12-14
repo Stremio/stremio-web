@@ -36,7 +36,7 @@ const SeasonalNotification = () => {
                     </div>
                     {
                         notificationModalData.addon.manifestUrl ?
-                            <Button className={styles['action-button']} href={notificationModalData.addon.manifestUrl}>
+                            <Button className={styles['action-button']} href={`#/addons?addon=${encodeURIComponent(notificationModalData.addon.manifestUrl)}`} onClick={closeNotificationModal}>
                                 <div className={styles['button-label']}>Learn more</div>
                             </Button>
                             :
