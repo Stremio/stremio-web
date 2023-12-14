@@ -8,7 +8,7 @@ const { MainNavBars, MetaRow, ContinueWatchingItem, MetaItem, StreamingServerWar
 const useBoard = require('./useBoard');
 const useContinueWatchingPreview = require('./useContinueWatchingPreview');
 const styles = require('./styles');
-const useFetchModalData = require('./useFetchModalData');
+const useFetchNotificationData = require('./useFetchNotificationData');
 
 const THRESHOLD = 5;
 
@@ -19,8 +19,8 @@ const Board = () => {
     const [board, loadBoardRows] = useBoard();
     const boardCatalogsOffset = continueWatchingPreview.items.length > 0 ? 1 : 0;
     const scrollContainerRef = React.useRef();
-    const { notificationModalData, isModalDataLoading } = useFetchModalData();
-    const [isNotificationModalOpen, , closeNotificationModal, ] = useBinaryState(true);
+    const { notificationModalData, isModalDataLoading } = useFetchNotificationData();
+    const [isNotificationModalOpen, , closeNotificationModal] = useBinaryState(true);
     const onVisibleRangeChange = React.useCallback(() => {
         const range = getVisibleChildrenRange(scrollContainerRef.current);
         if (range === null) {
@@ -65,9 +65,14 @@ const Board = () => {
                                         null
                                 }
                             </div>
-                            <Button className={styles['action-button']}>
-                                <div className={styles['label']}>Learn more</div>
-                            </Button>
+                            {
+                                notificationModalData.addon.manifestUrl ?
+                                    <Button className={styles['action-button']} href={notificationModalData.addon.manifestUrl}>
+                                        <div className={styles['label']}>Learn more</div>
+                                    </Button>
+                                    :
+                                    null
+                            }
                         </div>
                     </ModalDialog>
                     :

@@ -2,7 +2,7 @@
 
 const React = require('react');
 
-const useFetchModalData = () => {
+const useFetchNotificationData = () => {
     const [notificationModalData, setNotificationModalData] = React.useState(null);
     const [isLoading, setIsLoading] = React.useState(false);
 
@@ -38,4 +38,4 @@ const useFetchModalData = () => {
     return { notificationModalData, isLoading };
 };
 
-module.exports = useFetchModalData;
+module.exports = useFetchNotificationData;
