@@ -2,41 +2,55 @@
 
 const React = require('react');
 const styles = require('./styles');
-const { Button, ModalDialog } = require('..');
-const useBinaryState = require('stremio/common/useBinaryState');
-const useFetchNotificationData = require('./useFetchNotificationData');
+const Button = require('stremio/common/Button');
+const ModalDialog = require('stremio/common/ModalDialog');
+const useEvents = require('./useEvents');
 
 const EventModal = () => {
-    const { notificationModalData, isModalDataLoading } = useFetchNotificationData();
-    const [isNotificationModalOpen, , closeNotificationModal] = useBinaryState(true);
+    const { events, pullEvents, dismissEvent } = useEvents();
+
+    const modal = React.useMemo(() => {
+        return events?.modal?.type === 'Ready' ?
+            events.modal.content
+            :
+            null;
+    }, [events]);
+
+    const onCloseRequest = React.useCallback(() => {
+        modal?.id && dismissEvent(modal.id);
+    }, [modal]);
+
+    React.useEffect(() => {
+        pullEvents();
+    }, []);
 
     return (
-        notificationModalData !== null && !isModalDataLoading && isNotificationModalOpen ?
-            <ModalDialog className={styles['notification-modal']} onCloseRequest={closeNotificationModal}>
+        modal !== null ?
+            <ModalDialog className={styles['notification-modal']} onCloseRequest={onCloseRequest}>
                 {
-                    notificationModalData.imageUrl ?
-                        <img className={styles['notification-image']} src={notificationModalData.imageUrl} />
+                    modal.imageUrl ?
+                        <img className={styles['notification-image']} src={modal.imageUrl} />
                         :
                         null
                 }
                 <div className={styles['info-container']}>
                     <div className={styles['title-container']}>
                         {
-                            notificationModalData.title ?
-                                <div className={styles['title']}>{notificationModalData.title}</div>
+                            modal.title ?
+                                <div className={styles['title']}>{modal.title}</div>
                                 :
                                 null
                         }
                         {
-                            notificationModalData.message ?
-                                <div className={styles['notification-label']}>{notificationModalData.message}</div>
+                            modal.message ?
+                                <div className={styles['notification-label']}>{modal.message}</div>
                                 :
                                 null
                         }
                     </div>
                     {
-                        notificationModalData.addon.manifestUrl ?
-                            <Button className={styles['action-button']} href={`#/addons?addon=${encodeURIComponent(notificationModalData.addon.manifestUrl)}`} onClick={closeNotificationModal}>
+                        modal.addon.manifestUrl ?
+                            <Button className={styles['action-button']} href={`#/addons?addon=${encodeURIComponent(modal.addon.manifestUrl)}`} onClick={onCloseRequest}>
                                 <div className={styles['button-label']}>Learn more</div>
                             </Button>
                             :
