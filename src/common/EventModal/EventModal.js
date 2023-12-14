@@ -2,11 +2,11 @@
 
 const React = require('react');
 const styles = require('./styles');
-const { Button, ModalDialog } = require('../../common');
+const { Button, ModalDialog } = require('..');
 const useBinaryState = require('stremio/common/useBinaryState');
 const useFetchNotificationData = require('./useFetchNotificationData');
 
-const SeasonalNotification = () => {
+const EventModal = () => {
     const { notificationModalData, isModalDataLoading } = useFetchNotificationData();
     const [isNotificationModalOpen, , closeNotificationModal] = useBinaryState(true);
 
@@ -49,4 +49,4 @@ const SeasonalNotification = () => {
     );
 };
 
-module.exports = SeasonalNotification;
+module.exports = EventModal;

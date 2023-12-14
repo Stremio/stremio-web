@@ -5,10 +5,10 @@ const classnames = require('classnames');
 const debounce = require('lodash.debounce');
 const { useTranslation } = require('react-i18next');
 const { MainNavBars, MetaRow, ContinueWatchingItem, MetaItem, StreamingServerWarning, useStreamingServer, withCoreSuspender, getVisibleChildrenRange } = require('stremio/common');
+const EventModal = require('stremio/common/EventModal/EventModal');
 const useBoard = require('./useBoard');
 const useContinueWatchingPreview = require('./useContinueWatchingPreview');
 const styles = require('./styles');
-const SeasonalNotification = require('stremio/common/SeasonalNotification/SeasonalNotification');
 
 const THRESHOLD = 5;
 
@@ -39,7 +39,7 @@ const Board = () => {
     }, [board.catalogs, onVisibleRangeChange]);
     return (
         <div className={styles['board-container']}>
-            <SeasonalNotification />
+            <EventModal />
             <MainNavBars className={styles['board-content-container']} route={'board'}>
                 <div ref={scrollContainerRef} className={styles['board-content']} onScroll={onScroll}>
                     {
