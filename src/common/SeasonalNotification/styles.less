@@ -1,0 +1,96 @@
+// Copyright (C) 2017-2023 Smart code 203358507
+
+@import (reference) '~stremio/common/screen-sizes.less';
+
+:import('~stremio/common/ModalDialog/styles.less') {
+    modal-dialog-content: modal-dialog-content;
+    modal-dialog-container: modal-dialog-container;
+}
+
+.notification-modal {
+    .modal-dialog-container {
+        overflow: visible;
+        max-width: 45rem;
+
+        .modal-dialog-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow: visible;
+    
+            .notification-image {
+                width: 100%;
+                height: 100%;
+                margin-top: -10rem;
+            }
+        
+            .info-container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                padding: 1rem 4rem;
+                margin-top: -7rem;
+        
+                .title-container {
+                    .title {
+                        color: var(--primary-foreground-color);
+                        font-size: 1.325rem;
+                        text-align: center;
+                        margin-bottom: 2rem;
+                        padding: 0 6rem;
+                    }
+        
+                    .notification-label {
+                        color: var(--primary-foreground-color);
+                        font-size: 1rem;
+                        text-align: center;
+                        opacity: 0.5;
+                        margin-bottom: 3rem;
+                    }
+                }
+        
+        
+                .action-button {
+                    background-color: var(--primary-foreground-color);
+                    border: 2px solid var(--primary-foreground-color);
+                    padding: 0.8rem 1.5rem;
+                    border-radius: 2rem;
+        
+                    .button-label {
+                        color: var(--primary-accent-color);
+                        font-size: 1rem;
+                    }
+        
+                    &:hover {
+                        background-color: transparent;
+                    }
+                }
+            }
+        }
+    }
+
+    @media only screen and (max-width: @minimum) {
+        .modal-dialog-container {
+            .modal-dialog-content {
+                .notification-image {
+                    height: 125%;
+                    width: 125%;
+                }
+
+                .info-container {
+                    .title-container {
+                        .title {
+                            padding: 0rem;
+                            font-size: 1rem;
+                        }
+
+                        .notification-label {
+                            font-size: 0.875rem;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
