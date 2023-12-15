@@ -121,8 +121,16 @@ const usePlayer = (urlParams) => {
             }
         }, 'player');
     }, []);
+    const nextVideo = React.useCallback(() => {
+        core.transport.dispatch({
+            action: 'Player',
+            args: {
+                action: 'NextVideo'
+            }
+        }, 'player');
+    }, []);
     const player = useModelState({ model: 'player', action, map });
-    return [player, videoParamsChanged, timeChanged, pausedChanged, ended];
+    return [player, videoParamsChanged, timeChanged, pausedChanged, ended, nextVideo];
 };
 
 module.exports = usePlayer;

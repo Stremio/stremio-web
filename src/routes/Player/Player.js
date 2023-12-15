@@ -27,13 +27,10 @@ const styles = require('./styles');
 const Player = ({ urlParams, queryParams }) => {
     const { t } = useTranslation();
     const { chromecast, shell, core } = useServices();
-    const [forceTranscoding, maxAudioChannels] = React.useMemo(() => {
-        return [
-            queryParams.has('forceTranscoding'),
-            queryParams.has('maxAudioChannels') ? parseInt(queryParams.get('maxAudioChannels'), 10) : null
-        ];
+    const forceTranscoding = React.useMemo(() => {
+        return queryParams.has('forceTranscoding');
     }, [queryParams]);
-    const [player, videoParamsChanged, timeChanged, pausedChanged, ended] = usePlayer(urlParams);
+    const [player, videoParamsChanged, timeChanged, pausedChanged, ended, nextVideo] = usePlayer(urlParams);
     const [settings, updateSettings] = useSettings();
     const streamingServer = useStreamingServer();
     const routeFocused = useRouteFocused();
@@ -199,6 +196,8 @@ const Player = ({ urlParams, queryParams }) => {
     }, []);
     const onNextVideoRequested = React.useCallback(() => {
         if (player.nextVideo !== null) {
+            nextVideo();
+
             const deepLinks = player.nextVideo.deepLinks;
             if (deepLinks.metaDetailsStreams && deepLinks.player) {
                 window.location.replace(deepLinks.metaDetailsStreams);
@@ -261,8 +260,7 @@ const Player = ({ urlParams, queryParams }) => {
         setError(null);
         if (player.selected === null) {
             dispatch({ type: 'command', commandName: 'unload' });
-        } else if (streamingServer.baseUrl !== null && streamingServer.baseUrl.type !== 'Loading' &&
-            (player.selected.metaRequest === null || (player.metaItem !== null && player.metaItem.type !== 'Loading'))) {
+        } else if (streamingServer.baseUrl !== null && (player.selected.metaRequest === null || (player.metaItem !== null && player.metaItem.type !== 'Loading'))) {
             dispatch({
                 type: 'command',
                 commandName: 'load',
@@ -286,13 +284,10 @@ const Player = ({ urlParams, queryParams }) => {
                         :
                         0,
                     forceTranscoding: forceTranscoding || casting,
-                    maxAudioChannels: typeof maxAudioChannels === 'number' ?
-                        maxAudioChannels
-                        :
-                        null,
-                    streamingServerURL: streamingServer.baseUrl.type === 'Ready' ?
+                    maxAudioChannels: settings.surroundSound ? 32 : 2,
+                    streamingServerURL: streamingServer.baseUrl ?
                         casting ?
-                            streamingServer.baseUrl.content
+                            streamingServer.baseUrl
                             :
                             streamingServer.selected.transportUrl
                         :
@@ -304,7 +299,7 @@ const Player = ({ urlParams, queryParams }) => {
                 shellTransport: shell.active ? shell.transport : null,
             });
         }
-    }, [streamingServer.baseUrl, player.selected, player.metaItem, forceTranscoding, maxAudioChannels, casting]);
+    }, [streamingServer.baseUrl, player.selected, player.metaItem, forceTranscoding, casting]);
     React.useEffect(() => {
         if (videoState.stream !== null) {
             dispatch({
