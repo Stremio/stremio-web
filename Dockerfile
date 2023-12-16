@@ -1,31 +1,20 @@
-# Stremio Node 14.x
-# the node version for running Stremio Web
-ARG NODE_VERSION=15-alpine
-FROM node:$NODE_VERSION AS base
+FROM node:alpine AS build
+WORKDIR /web
 
-# Meta
+RUN apk add --no-cache git
+
+COPY package.json package-lock.json ./
+RUN npm install
+COPY . .
+RUN npm run build
+RUN echo '{"configs":[{"path":"*","fileExtension":"*","headers":[{"key":"cache-control","value":"public, max-age=7200"}]}]}' >> headerConfig.json
+
+FROM pierrezemb/gostatic:latest
+
 LABEL Description="Stremio Web" Vendor="Smart Code OOD" Version="1.0.0"
 
-RUN mkdir -p /var/www/stremio-web
-WORKDIR /var/www/stremio-web
-
-# Install app dependencies
-FROM base AS prebuild
-
-RUN apk update && apk upgrade && \
-    apk add --no-cache git
-WORKDIR /var/www/stremio-web
-COPY . .
-RUN npm install
-RUN npm run build
-
-# Bundle app source
-FROM base AS final
-
-WORKDIR /var/www/stremio-web
-COPY . .
-COPY --from=prebuild /var/www/stremio-web/node_modules ./node_modules
-COPY --from=prebuild /var/www/stremio-web/build ./build
+COPY --from=build /web/build/ /srv/http/
+COPY --from=build /web/headerConfig.json /config/
 
 EXPOSE 8080
-CMD ["node", "http_server.js"]
+ENTRYPOINT ["/goStatic","-port","8080"]
