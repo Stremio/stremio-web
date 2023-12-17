@@ -59,7 +59,7 @@ const useStreamingServerSettingsInputs = (streamingServer) => {
         value: streamingServer.remoteUrl,
     }), [streamingServer.remoteUrl]);
 
-    const remoteEndpointSelect= React.useMemo(() => {
+    const remoteEndpointSelect = React.useMemo(() => {
         if (streamingServer.settings?.type !== 'Ready' || streamingServer.networkInfo?.type !== 'Ready') {
             return null;
         }

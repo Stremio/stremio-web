@@ -121,6 +121,16 @@ const Settings = () => {
             }
         });
     }, []);
+    const onCopyRemoteUrlClick = React.useCallback(() => {
+        if (streamingServer.remoteUrl) {
+            navigator.clipboard.writeText(streamingServer.remoteUrl);
+            toast.show({
+                type: 'success',
+                title: 'Successfully copied remote url to clipboard',
+                timeout: 2500,
+            });
+        }
+    }, [streamingServer.remoteUrl]);
     const sectionsContainerRef = React.useRef(null);
     const generalSectionRef = React.useRef(null);
     const playerSectionRef = React.useRef(null);
@@ -552,6 +562,9 @@ const Settings = () => {
                                     </div>
                                     <div className={classnames(styles['option-input-container'], styles['configure-input-container'])}>
                                         <div className={styles['label']} title={streamingServerRemoteUrlInput.value}>{streamingServerRemoteUrlInput.value}</div>
+                                        <Button className={styles['configure-button-container']} title={'Copy remote url'} onClick={onCopyRemoteUrlClick}>
+                                            <Icon className={styles['icon']} name={'link'} />
+                                        </Button>
                                     </div>
                                 </div>
                                 :
