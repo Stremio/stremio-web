@@ -93,6 +93,12 @@ type Statistics = {
     swarmSize: number,
 };
 
+type PlaybackDevice = {
+    id: string,
+    name: string,
+    type: string,
+};
+
 type Selected = {
     transportUrl: string,
     statistics: {
@@ -102,9 +108,11 @@ type Selected = {
 };
 
 type StreamingServer = {
-    baseUrl: Loadable<string> | null,
+    baseUrl: string | null,
+    remoteUrl: string | null,
     selected: Selected | null,
     settings: Loadable<StreamingServerSettings> | null,
     torrent: [string, Loadable<Torrent>] | null,
     statistics: Loadable<Statistics> | null,
+    playbackDevices: Loadable<PlaybackDevice[]> | null,
 };
