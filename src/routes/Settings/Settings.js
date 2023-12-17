@@ -558,7 +558,7 @@ const Settings = () => {
                                 null
                         }
                         {
-                            remoteEndpointSelect !== null ?
+                            profile.auth !== null && profile.auth.user !== null && remoteEndpointSelect !== null ?
                                 <div className={styles['option-container']}>
                                     <div className={styles['option-name-container']}>
                                         <div className={styles['label']}>{ t('SETTINGS_HTTPS_ENDPOINT') }</div>
