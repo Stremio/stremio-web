@@ -38,8 +38,8 @@
         "react-focus-lock": "2.9.1",
         "react-i18next": "^12.1.1",
         "react-is": "18.2.0",
-        "spatial-navigation-polyfill": "git+ssh://git@github.com/Stremio/spatial-navigation.git#64871b1422466f5f45d24ebc8bbd315b2ebab6a6",
-        "stremio-translations": "git+ssh://git@github.com/Stremio/stremio-translations.git#13c8241ca262541813ce0e2df4ff3e289fbd391b",
+        "spatial-navigation-polyfill": "github:Stremio/spatial-navigation#64871b1422466f5f45d24ebc8bbd315b2ebab6a6",
+        "stremio-translations": "github:Stremio/stremio-translations#13c8241ca262541813ce0e2df4ff3e289fbd391b",
         "url": "0.11.0",
         "use-long-press": "^3.1.5"
     },
