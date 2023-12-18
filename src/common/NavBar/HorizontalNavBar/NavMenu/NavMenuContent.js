@@ -20,7 +20,7 @@ const NavMenuContent = ({ onClick }) => {
     const profile = useProfile();
     const { createTorrentFromMagnet } = useTorrent();
     const [fullscreen, requestFullscreen, exitFullscreen] = useFullscreen();
-    const isPWA = usePWA();
+    const [isIOSPWA, isAndroidPWA] = usePWA();
     const logoutButtonOnClick = React.useCallback(() => {
         core.transport.dispatch({
             action: 'Ctx',
@@ -62,7 +62,7 @@ const NavMenuContent = ({ onClick }) => {
                 </div>
             </div>
             {
-                !isPWA ?
+                !isIOSPWA && !isAndroidPWA ?
                     <div className={styles['nav-menu-section']}>
                         <Button className={styles['nav-menu-option-container']} title={fullscreen ? t('EXIT_FULLSCREEN') : t('ENTER_FULLSCREEN')} onClick={fullscreen ? exitFullscreen : requestFullscreen}>
                             <Icon className={styles['icon']} name={fullscreen ? 'minimize' : 'maximize'} />

@@ -6,7 +6,7 @@ const usePWA = () => {
     const isPWA = React.useMemo(() => {
         const isIOSPWA = window.navigator.standalone;
         const isAndroidPWA = window.matchMedia('(display-mode: standalone)').matches;
-        return isIOSPWA || isAndroidPWA;
+        return [isIOSPWA, isAndroidPWA];
     }, []);
     return isPWA;
 };

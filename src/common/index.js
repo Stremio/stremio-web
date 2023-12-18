@@ -45,6 +45,7 @@ const useStreamingServer = require('./useStreamingServer');
 const useTorrent = require('./useTorrent');
 const platform = require('./platform');
 const externalPlayerOptions = require('./externalPlayerOptions');
+const EventModal = require('./EventModal');
 
 module.exports = {
     AddonDetailsModal,
@@ -96,4 +97,5 @@ module.exports = {
     useTorrent,
     platform,
     externalPlayerOptions,
+    EventModal,
 };
