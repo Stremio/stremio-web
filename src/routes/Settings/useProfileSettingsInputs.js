@@ -213,14 +213,12 @@ const useProfileSettingsInputs = (profile) => {
     const playInExternalPlayerSelect = React.useMemo(() => ({
         options: externalPlayerOptions.map((opt) => ({
             value: opt.value,
-            label: t(opt.label)
+            label: t(opt.label),
         })),
-        selected: [`${profile.settings.playerType || 'internal'}`],
+        selected: [profile.settings.playerType],
         renderLabelText: () => {
-            const selectedLabel = externalPlayerOptions.find(
-                (opt) => opt.value === profile.settings.playerType
-            )?.label;
-            return t(selectedLabel);
+            const selectedOption = externalPlayerOptions.find(({ value }) => value === profile.settings.playerType);
+            return selectedOption ? t(selectedOption.label, { defaultValue: selectedOption.label }) : profile.settings.playerType;
         },
         onSelect: (event) => {
             core.transport.dispatch({
