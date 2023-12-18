@@ -51,7 +51,7 @@ const Player = ({ urlParams, queryParams }) => {
     const nextVideoPopupDismissed = React.useRef(false);
     const defaultSubtitlesSelected = React.useRef(false);
     const defaultAudioTrackSelected = React.useRef(false);
-    const controlBar = React.useRef(null);
+    const controlBarRef = React.useRef(null);
     const [controlBarHeight, setControlBarHeight] = React.useState(0);
 
     const [error, setError] = React.useState(null);
@@ -267,10 +267,11 @@ const Player = ({ urlParams, queryParams }) => {
     }, []);
 
     React.useEffect(() => {
-        if(controlBarHeight.current) {
-            setControlBarHeight(controlBarHeight.current.clientHeight);
+        if(controlBarRef.current.clientHeight) {
+            const height = controlBarRef.current.clientHeight;
+            setControlBarHeight(height);
         }
-    }, []);
+    }, [controlBarRef?.current]);
     React.useEffect(() => {
         setError(null);
         if (player.selected === null) {
@@ -478,6 +479,7 @@ const Player = ({ urlParams, queryParams }) => {
             }
         };
     }, []);
+    console.log(controlBarHeight)
     React.useLayoutEffect(() => {
         const onKeyDown = (event) => {
             switch (event.code) {
@@ -688,7 +690,6 @@ const Player = ({ urlParams, queryParams }) => {
                 onMouseMove={onBarMouseMove}
                 onMouseOver={onBarMouseMove}
             />
-            <div ref={controlBar}>
             <ControlBar
                 className={classnames(styles['layer'], styles['control-bar-layer'])}
                 paused={videoState.paused}
@@ -719,8 +720,8 @@ const Player = ({ urlParams, queryParams }) => {
                 onToggleStatisticsMenu={toggleStatisticsMenu}
                 onMouseMove={onBarMouseMove}
                 onMouseOver={onBarMouseMove}
+                ref={controlBarRef}
             />
-            </div>
             {
                 nextVideoPopupOpen ?
                     <NextVideoPopup
