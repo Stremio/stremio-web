@@ -16,7 +16,13 @@ if (platform.name === 'ios') {
         { label: 'Just Player', value: 'justplayer' },
         { label: 'MX Player', value: 'mxplayer' }
     ]);
-} else if (['windows', 'macos', 'linux'].includes(platform.name)) {
+} else if (platform.name === 'macos') {
+    options = options.concat([
+        { label: 'IINA', value: 'iina' },
+        { label: 'mpv', value: 'mpv' },
+        { label: 'VLC', value: 'vlc' }
+    ]);
+} else if (['windows', 'linux'].includes(platform.name)) {
     options = options.concat([
         { label: 'VLC', value: 'vlc' }
     ]);
