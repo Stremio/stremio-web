@@ -51,6 +51,9 @@ const Player = ({ urlParams, queryParams }) => {
     const nextVideoPopupDismissed = React.useRef(false);
     const defaultSubtitlesSelected = React.useRef(false);
     const defaultAudioTrackSelected = React.useRef(false);
+    const controlBar = React.useRef(null);
+    const [controlBarHeight, setControlBarHeight] = React.useState(0);
+
     const [error, setError] = React.useState(null);
     const [videoState, setVideoState] = React.useReducer(
         (videoState, nextVideoState) => ({ ...videoState, ...nextVideoState }),
@@ -251,10 +254,22 @@ const Player = ({ urlParams, queryParams }) => {
     }, []);
     const onContainerMouseLeave = React.useCallback(() => {
         setImmersedDebounced.cancel();
+        // TODO: Move subtitles position down
+        dispatch({ type: 'setProp', propName: 'subtitlesOffset', propValue: settings.subtitlesOffset + controlBarHeight });
+        dispatch({ type: 'setProp', propName: 'extraSubtitlesOffset', propValue: settings.subtitlesOffset + controlBarHeight });
         setImmersed(true);
     }, []);
     const onBarMouseMove = React.useCallback((event) => {
+        // TODO: move subtitles up
+        dispatch({ type: 'setProp', propName: 'subtitlesOffset', propValue: settings.subtitlesOffset });
+        dispatch({ type: 'setProp', propName: 'extraSubtitlesOffset', propValue: settings.subtitlesOffset });
         event.nativeEvent.immersePrevented = true;
+    }, []);
+
+    React.useEffect(() => {
+        if(controlBarHeight.current) {
+            setControlBarHeight(controlBarHeight.current.clientHeight);
+        }
     }, []);
     React.useEffect(() => {
         setError(null);
@@ -673,6 +688,7 @@ const Player = ({ urlParams, queryParams }) => {
                 onMouseMove={onBarMouseMove}
                 onMouseOver={onBarMouseMove}
             />
+            <div ref={controlBar}>
             <ControlBar
                 className={classnames(styles['layer'], styles['control-bar-layer'])}
                 paused={videoState.paused}
@@ -704,6 +720,7 @@ const Player = ({ urlParams, queryParams }) => {
                 onMouseMove={onBarMouseMove}
                 onMouseOver={onBarMouseMove}
             />
+            </div>
             {
                 nextVideoPopupOpen ?
                     <NextVideoPopup
