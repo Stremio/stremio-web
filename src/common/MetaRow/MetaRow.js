@@ -4,19 +4,18 @@ const React = require('react');
 const ReactIs = require('react-is');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const { useTranslation } = require('react-i18next');
 const { default: Icon } = require('@stremio/stremio-icons/react');
 const Button = require('stremio/common/Button');
 const CONSTANTS = require('stremio/common/CONSTANTS');
-const translateCatalog = require('stremio/common/translateCatalog');
+const useTranslate = require('stremio/common/useTranslate');
 const MetaRowPlaceholder = require('./MetaRowPlaceholder');
 const styles = require('./styles');
 
 const MetaRow = ({ className, title, catalog, message, items, itemComponent, deepLinks }) => {
-    const { t } = useTranslation();
+    const t = useTranslate();
 
     const catalogTitle = React.useMemo(() => {
-        return title ?? translateCatalog(catalog);
+        return title ?? t.catalogTitle(catalog);
     }, [title, catalog]);
 
     return (
@@ -30,8 +29,8 @@ const MetaRow = ({ className, title, catalog, message, items, itemComponent, dee
                 }
                 {
                     deepLinks && (typeof deepLinks.discover === 'string' || typeof deepLinks.library === 'string') ?
-                        <Button className={styles['see-all-container']} title={t('BUTTON_SEE_ALL')} href={deepLinks.discover || deepLinks.library} tabIndex={-1}>
-                            <div className={styles['label']}>{ t('BUTTON_SEE_ALL') }</div>
+                        <Button className={styles['see-all-container']} title={t.string('BUTTON_SEE_ALL')} href={deepLinks.discover || deepLinks.library} tabIndex={-1}>
+                            <div className={styles['label']}>{ t.string('BUTTON_SEE_ALL') }</div>
                             <Icon className={styles['icon']} name={'chevron-forward'} />
                         </Button>
                         :

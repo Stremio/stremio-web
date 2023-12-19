@@ -1,22 +1,21 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 const React = require('react');
-const { useTranslation } = require('react-i18next');
-const { translateOption, translateCatalog } = require('stremio/common');
+const { useTranslate } = require('stremio/common');
 
 const mapSelectableInputs = (discover, t) => {
     const typeSelect = {
-        title: t('SELECT_TYPE'),
+        title: t.string('SELECT_TYPE'),
         options: discover.selectable.types
             .map(({ type, deepLinks }) => ({
                 value: deepLinks.discover,
-                label: translateOption(type, 'TYPE_')
+                label: t.stringWithPrefix(type, 'TYPE_')
             })),
         selected: discover.selectable.types
             .filter(({ selected }) => selected)
             .map(({ deepLinks }) => deepLinks.discover),
         renderLabelText: discover.selected !== null ?
-            () => translateOption(discover.selected.request.path.type, 'TYPE_')
+            () => t.stringWithPrefix(discover.selected.request.path.type, 'TYPE_')
             :
             null,
         onSelect: (event) => {
@@ -24,11 +23,11 @@ const mapSelectableInputs = (discover, t) => {
         }
     };
     const catalogSelect = {
-        title: t('SELECT_CATALOG'),
+        title: t.string('SELECT_CATALOG'),
         options: discover.selectable.catalogs
             .map(({ id, name, addon, deepLinks }) => ({
                 value: deepLinks.discover,
-                label: translateCatalog({ addon, id, name }),
+                label: t.catalogTitle({ addon, id, name }),
                 title: `${name} (${addon.manifest.name})`
             })),
         selected: discover.selectable.catalogs
@@ -38,7 +37,7 @@ const mapSelectableInputs = (discover, t) => {
             () => {
                 const selectableCatalog = discover.selectable.catalogs
                     .find(({ id }) => id === discover.selected.request.path.id);
-                return selectableCatalog ? translateCatalog(selectableCatalog, false) : discover.selected.request.path.id;
+                return selectableCatalog ? t.catalogTitle(selectableCatalog, false) : discover.selected.request.path.id;
             }
             :
             null,
@@ -47,10 +46,10 @@ const mapSelectableInputs = (discover, t) => {
         }
     };
     const extraSelects = discover.selectable.extra.map(({ name, isRequired, options }) => ({
-        title: translateOption(name, 'SELECT_'),
+        title: t.stringWithPrefix(name, 'SELECT_'),
         isRequired: isRequired,
         options: options.map(({ value, deepLinks }) => ({
-            label: typeof value === 'string' ? translateOption(value) : t('NONE'),
+            label: typeof value === 'string' ? t.stringWithPrefix(value) : t.string('NONE'),
             value: JSON.stringify({
                 href: deepLinks.discover,
                 value
@@ -63,7 +62,7 @@ const mapSelectableInputs = (discover, t) => {
                 value
             })),
         renderLabelText: options.some(({ selected, value }) => selected && value === null) ?
-            () => translateOption(name, 'SELECT_')
+            () => t.stringWithPrefix(name, 'SELECT_')
             :
             null,
         onSelect: (event) => {
@@ -75,7 +74,7 @@ const mapSelectableInputs = (discover, t) => {
 };
 
 const useSelectableInputs = (discover) => {
-    const { t } = useTranslation();
+    const t = useTranslate();
     const selectableInputs = React.useMemo(() => {
         return mapSelectableInputs(discover, t);
     }, [discover.selected, discover.selectable]);
