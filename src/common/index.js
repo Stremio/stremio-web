@@ -44,7 +44,6 @@ const useProfile = require('./useProfile');
 const useStreamingServer = require('./useStreamingServer');
 const useTorrent = require('./useTorrent');
 const platform = require('./platform');
-const externalPlayerOptions = require('./externalPlayerOptions');
 const EventModal = require('./EventModal');
 
 module.exports = {
@@ -96,6 +95,5 @@ module.exports = {
     useStreamingServer,
     useTorrent,
     platform,
-    externalPlayerOptions,
     EventModal,
 };

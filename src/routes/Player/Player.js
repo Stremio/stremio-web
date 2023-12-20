@@ -260,7 +260,7 @@ const Player = ({ urlParams, queryParams }) => {
         setError(null);
         if (player.selected === null) {
             dispatch({ type: 'command', commandName: 'unload' });
-        } else if (streamingServer.baseUrl !== null && (player.selected.metaRequest === null || (player.metaItem !== null && player.metaItem.type !== 'Loading'))) {
+        } else if ((player.selected.metaRequest === null || (player.metaItem !== null && player.metaItem.type !== 'Loading'))) {
             dispatch({
                 type: 'command',
                 commandName: 'load',
@@ -647,8 +647,14 @@ const Player = ({ urlParams, queryParams }) => {
                                 null
                         }
                         {
-                            player.selected !== null ?
-                                <Button className={styles['playlist-button']} title={t('PLAYER_OPEN_IN_EXTERNAL')} href={player.selected.stream.deepLinks.externalPlayer.href} download={player.selected.stream.deepLinks.externalPlayer.fileName} target={'_blank'}>
+                            player.selected?.stream?.deepLinks?.externalPlayer?.playlist !== null ?
+                                <Button
+                                    className={styles['playlist-button']}
+                                    title={t('PLAYER_OPEN_IN_EXTERNAL')}
+                                    href={player.selected.stream.deepLinks.externalPlayer.playlist}
+                                    download={player.selected.stream.deepLinks.externalPlayer.fileName}
+                                    target={'_blank'}
+                                >
                                     <Icon className={styles['icon']} name={'ic_downloads'} />
                                     <div className={styles['label']}>{t('PLAYER_OPEN_IN_EXTERNAL')}</div>
                                 </Button>
