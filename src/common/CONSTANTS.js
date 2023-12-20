@@ -81,11 +81,6 @@ const EXTERNAL_PLAYERS = [
         value: 'outplayer',
         platforms: ['ios'],
     },
-    {
-        label: 'Infuse',
-        value: 'infuse',
-        platforms: ['ios'],
-    },
 ];
 
 module.exports = {
