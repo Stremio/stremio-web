@@ -167,10 +167,6 @@ const StreamsList = ({ className, video, ...props }) => {
                                         isScrollable && countLoadingAddons === 0 ?
                                             <React.Fragment>
                                                 <hr className={styles['line']} />
-                                                <div className={styles['to-top-wrapper']} onClick={scrollToTop}>
-                                                    <Icon className={styles['icon']} name={'chevron-up'} />
-                                                    <div className={styles['label']}>Back to Top</div>
-                                                </div>
                                                 <Button className={styles['install-button-container']} title={t('ADDON_CATALOGUE_MORE')} href={'#/addons'}>
                                                     <Icon className={styles['icon']} name={'addons'} />
                                                     <div className={styles['label']}>{ t('ADDON_CATALOGUE_MORE') }</div>
@@ -194,6 +190,15 @@ const StreamsList = ({ className, video, ...props }) => {
                         <Icon className={styles['icon']} name={'addons'} />
                         <div className={styles['label']}>{ t('ADDON_CATALOGUE_MORE') }</div>
                     </Button>
+                    :
+                    null
+            }
+            {
+                isScrollable && countLoadingAddons === 0 ?
+                    <div className={styles['to-top-wrapper']} onClick={scrollToTop}>
+                        <Icon className={styles['icon']} name={'chevron-up'} />
+                        <div className={styles['label']}>Back to Top</div>
+                    </div>
                     :
                     null
             }
