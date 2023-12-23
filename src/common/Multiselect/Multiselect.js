@@ -14,13 +14,17 @@ const Multiselect = ({ className, mode, direction, title, disabled, dataset, ren
     const [menuOpen, , closeMenu, toggleMenu] = useBinaryState(false);
     const options = React.useMemo(() => {
         return Array.isArray(props.options) ?
-            props.options
+            props.options.filter((option) => {
+                return option && (typeof option.value === 'string' || option.value === null);
+            })
             :
             [];
     }, [props.options]);
     const selected = React.useMemo(() => {
         return Array.isArray(props.selected) ?
-            props.selected
+            props.selected.filter((value) => {
+                return typeof value === 'string' || value === null;
+            })
             :
             [];
     }, [props.selected]);

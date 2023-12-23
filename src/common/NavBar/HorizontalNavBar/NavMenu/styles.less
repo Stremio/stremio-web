@@ -3,6 +3,15 @@
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
 @import (reference) '~stremio/common/screen-sizes.less';
 
+:import('~stremio/common/Popup/styles.less') {
+    popup-menu-container: menu-container;
+}
+
+.nav-menu-popup-label {
+    .popup-menu-container {
+        margin-top: 1rem;
+    }
+}
 .nav-menu-container {
     width: 22rem;
     max-height: calc(100vh - var(--horizontal-nav-bar-size));
