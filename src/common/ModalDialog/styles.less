@@ -84,6 +84,7 @@
         }
     }
 }
+
 .action-button {
     flex: 1;
     display: flex;
@@ -116,7 +117,7 @@
         color: var(--primary-foreground-color);
     }
 
-    .label {
+    .label, .small-label {
         flex-grow: 0;
         flex-shrink: 1;
         flex-basis: auto;
@@ -126,7 +127,6 @@
         text-align: center;
         color: var(--primary-foreground-color);
     }
-
 }
 
 @media only screen and (max-width: @minimum) {
@@ -137,6 +137,13 @@
             max-width: initial;
             z-index: 0;
             padding: 0 1.5rem;
+        }
+    }
+
+    .action-button {
+        .small-label {
+            font-size: 0.688rem;
+            font-weight: 600;
         }
     }
 }

@@ -84,7 +84,7 @@ const ModalDialog = ({ className, title, buttons, children, dataset, onCloseRequ
                                     }
                                     {
                                         typeof label === 'string' && label.length > 0 ?
-                                            <div className={styles['label']}>{label}</div>
+                                            <div className={classnames(buttons.length > 2 ? styles['small-label'] : styles['label'])}>{label}</div>
                                             :
                                             null
                                     }
