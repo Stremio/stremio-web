@@ -14,63 +14,79 @@ const styles = require('./styles');
 const useSearchHistory = require('../../../../routes/Search/useSearchHistory');
 const useLocalSearch = require('./useLocalSearch');
 
-const SearchBar = ({ className, query, active }) => {
+const SearchBar = React.memo(({ className, query, active }) => {
     const { t } = useTranslation();
     const routeFocused = useRouteFocused();
     const searchHistory = useSearchHistory();
     const { createTorrentFromMagnet } = useTorrent();
-    const [inputValue, setInputValue] = React.useState(query || '');
-    const localSearch = useLocalSearch(inputValue);
-    const [historyActive, setHistoryActive] = React.useState(true);
+    const [showHistory, setShowHistory] = React.useState(false);
+    const [currentQuery, setCurrentQuery] = React.useState(query || '');
+    const localSearch = useLocalSearch(currentQuery);
     const searchInputRef = React.useRef(null);
     const searchHistoryRef = React.useRef(null);
+
     const searchBarOnClick = React.useCallback(() => {
         if (!active) {
             window.location = '#/search';
         }
     }, [active]);
+
     const queryInputOnChange = React.useCallback(() => {
-        setInputValue(searchInputRef.current.value);
-        localSearch.dispatchSearch();
+        const value = searchInputRef.current.value;
+        setCurrentQuery(value);
+        setShowHistory(true);
         try {
-            createTorrentFromMagnet(searchInputRef.current.value);
-            // eslint-disable-next-line no-empty
-        } catch { }
-    }, []);
-    const queryInputOnSubmit = React.useCallback((event) => {
-        if (searchInputRef.current !== null) {
-            const searchValue = event.target.innerText ? event.target.innerText : searchInputRef.current.value;
-            if (searchValue) {
-                const queryParams = new URLSearchParams([['search', searchValue]]);
-                window.location = `#/search?${queryParams.toString()}`;
-                setInputValue(searchValue);
-                if (event.key === 'Enter') {
-                    setHistoryActive(false);
-                }
-            }
+            createTorrentFromMagnet(value);
+        } catch (error) {
+            console.error('Failed to create torrent from magnet:', error);
+        }
+    }, [createTorrentFromMagnet]);
+
+    const queryInputOnSubmit = React.useCallback((searchValue, event) => {
+        event.preventDefault();
+        if (searchInputRef.current && searchValue) {
+            window.location.hash = searchValue;
+            setShowHistory(false);
         }
     }, []);
+
+    const queryInputClear = React.useCallback(() => {
+        searchInputRef.current.value = '';
+        window.location.hash = '/search';
+    }, []);
+
     React.useEffect(() => {
         if (routeFocused && active) {
             searchInputRef.current.focus();
         }
-    }, [routeFocused, active, query]);
-    const queryInputClear = React.useCallback(() => {
-        searchInputRef.current.value = '';
-        setInputValue('');
-        window.location = '#/search';
-    }, []);
-    const handleBlur = (event) => {
-        if (!searchHistoryRef?.current?.contains(event.relatedTarget)) {
-            setHistoryActive(false);
-        }
+    }, [routeFocused, active]);
+
+    const renderSearchHistoryItems = () => {
+        return (
+            <div className={styles['search-history-results']}>
+                {searchHistory.items.slice(0, 8).map((item, index) => (
+                    <a key={index} className={styles['search-history-item']} onClick={(e) => queryInputOnSubmit(`/search?search=${item.query}`, e)}>
+                        {item.query}
+                    </a>
+                ))}
+            </div>
+        );
     };
-    const handleClick = () => {
-        setHistoryActive((prev) => !prev);
+    const renderLocalSearchItems = () => {
+        return (
+            <div className={styles['search-history-results']}>
+                <div className={styles['search-history-label']}>{ t('Recommendations') }</div>
+                {localSearch.searchResults.map((item, index) => (
+                    <a key={index} className={styles['search-history-item']} onClick={(e) => queryInputOnSubmit(`/search?search=${item.name}`, e)}>
+                        {item.name}
+                    </a>
+                ))}
+            </div>
+        );
     };
 
     return (
-        <label className={classnames(className, styles['search-bar-container'], { 'active': active })} onClick={searchBarOnClick} onBlur={handleBlur}>
+        <label className={classnames(className, styles['search-bar-container'], { 'active': active })} onClick={searchBarOnClick}>
             {
                 active ?
                     <TextInput
@@ -82,70 +98,66 @@ const SearchBar = ({ className, query, active }) => {
                         defaultValue={query}
                         tabIndex={-1}
                         onChange={queryInputOnChange}
-                        onSubmit={queryInputOnSubmit}
-                        onClick={handleClick}
+                        onSubmit={(e) => queryInputOnSubmit(e.target.value, e)}
                     />
                     :
                     <div className={styles['search-input']}>
-                        <div className={styles['placeholder-label']}>{t('SEARCH_OR_PASTE_LINK')}</div>
+                        <div className={styles['placeholder-label']}>{ t('SEARCH_OR_PASTE_LINK') }</div>
                     </div>
             }
             {
-                inputValue ?
+                currentQuery ?
                     <Button className={styles['submit-button-container']} onClick={queryInputClear}>
                         <Icon className={styles['icon']} name={'close'} />
                     </Button>
                     :
-                    <Button className={styles['submit-button-container']} tabIndex={-1}>
+                    <Button className={styles['submit-button-container']}>
                         <Icon className={styles['icon']} name={'search'} />
                     </Button>
             }
             {
-                historyActive && active ?
-                    <div className={styles['search-history']} onBlur={handleBlur} ref={searchHistoryRef}>
+                showHistory ?
+                    <div className={styles['search-history']} ref={searchHistoryRef}>
                         {
                             localSearch.searchResults.length === 0 && searchHistory.items.length === 0 ?
-                                <div className={styles['search-history-label']}>{t('Start typing ...')}</div>
+                                <div className={styles['search-history-label']}>{ t('Start typing ...') }</div>
                                 :
                                 null
                         }
-                        <div className={styles['search-history-actions']}>
+                        {
+                            searchHistory.items.length > 0 ?
+                                <div className={styles['search-history-actions']}>
+                                    <div className={styles['search-history-label']}>{ t('STREMIO_TV_SEARCH_HISTORY_TITLE') }</div>
+                                    <button className={styles['search-history-clear']} onClick={searchHistory.clear}>
+                                        {t('CLEAR_HISTORY')}
+                                    </button>
+                                </div>
+                                :
+                                null
+                        }
+                        <div className={styles['search-history-items']}>
                             {
                                 searchHistory.items.length > 0 ?
-                                    <React.Fragment>
-                                        <div className={styles['search-history-label']}>{t('STREMIO_TV_SEARCH_HISTORY_TITLE')}</div>
-                                        <button className={styles['search-history-clear']} onClick={() => searchHistory.clear()}>{t('CLEAR_HISTORY')}</button>
-                                    </React.Fragment>
+                                    renderSearchHistoryItems()
                                     :
                                     null
                             }
-                        </div>
-                        <div className={styles['search-history-items']}>
-                            {searchHistory.items.slice(0, 8).map((item, index) => {
-                                return (
-                                    <button key={index} className={styles['search-history-item']} onClick={queryInputOnSubmit}>{item}</button>
-                                );
-                            })}
                             {
                                 localSearch.searchResults.length > 0 ?
-                                    <div className={styles['search-history-label']}>{t('Recommendations')}</div>
+                                    renderLocalSearchItems()
                                     :
                                     null
                             }
-                            {localSearch.searchResults.map((item, index) => {
-                                return (
-                                    <button key={index} className={styles['search-history-item']} onClick={queryInputOnSubmit}>{item.name}</button>
-                                );
-                            })}
                         </div>
                     </div>
                     :
                     null
             }
         </label>
-
     );
-};
+});
+
+SearchBar.displayName = 'SearchBar';
 
 SearchBar.propTypes = {
     className: PropTypes.string,
