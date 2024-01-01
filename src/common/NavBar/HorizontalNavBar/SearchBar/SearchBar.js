@@ -23,12 +23,26 @@ const SearchBar = React.memo(({ className, query, active }) => {
     const [currentQuery, setCurrentQuery] = React.useState(query || '');
     const localSearch = useLocalSearch(currentQuery);
     const searchInputRef = React.useRef(null);
+    const labelRef = React.useRef(null);
 
     const searchBarOnClick = React.useCallback(() => {
         if (!active) {
             window.location = '#/search';
         }
     }, [active]);
+
+    const searchHistoryOnClose = React.useCallback((event) => {
+        if (showHistory && labelRef.current && !labelRef.current.contains(event.target)) {
+            setShowHistory(false);
+        }
+    }, [showHistory]);
+
+    React.useEffect(() => {
+        document.addEventListener('mousedown', searchHistoryOnClose);
+        return () => {
+            document.removeEventListener('mousedown', searchHistoryOnClose);
+        };
+    }, [searchHistoryOnClose]);
 
     const queryInputOnChange = React.useCallback(() => {
         const value = searchInputRef.current.value;
@@ -43,6 +57,7 @@ const SearchBar = React.memo(({ className, query, active }) => {
 
     const queryInputOnSubmit = React.useCallback((searchValue, event) => {
         event.preventDefault();
+        setCurrentQuery(searchValue);
         if (searchInputRef.current && searchValue) {
             window.location.hash = searchValue;
             setShowHistory(false);
@@ -51,6 +66,7 @@ const SearchBar = React.memo(({ className, query, active }) => {
 
     const queryInputClear = React.useCallback(() => {
         searchInputRef.current.value = '';
+        setCurrentQuery('');
         window.location.hash = '/search';
     }, []);
 
@@ -85,7 +101,7 @@ const SearchBar = React.memo(({ className, query, active }) => {
     };
 
     return (
-        <label className={classnames(className, styles['search-bar-container'], { 'active': active })} onClick={searchBarOnClick}>
+        <label className={classnames(className, styles['search-bar-container'], { 'active': active })} onClick={searchBarOnClick} ref={labelRef}>
             {
                 active ?
                     <TextInput
@@ -97,7 +113,8 @@ const SearchBar = React.memo(({ className, query, active }) => {
                         defaultValue={query}
                         tabIndex={-1}
                         onChange={queryInputOnChange}
-                        onSubmit={(e) => queryInputOnSubmit(e.target.value, e)}
+                        onSubmit={(e) => queryInputOnSubmit(`/search?search=${e.target.value}`, e)}
+                        onClick={() => setShowHistory(true)}
                     />
                     :
                     <div className={styles['search-input']}>
@@ -105,7 +122,7 @@ const SearchBar = React.memo(({ className, query, active }) => {
                     </div>
             }
             {
-                currentQuery ?
+                currentQuery.length > 0 ?
                     <Button className={styles['submit-button-container']} onClick={queryInputClear}>
                         <Icon className={styles['icon']} name={'close'} />
                     </Button>
