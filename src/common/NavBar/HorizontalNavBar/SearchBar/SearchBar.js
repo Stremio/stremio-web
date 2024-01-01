@@ -23,7 +23,6 @@ const SearchBar = React.memo(({ className, query, active }) => {
     const [currentQuery, setCurrentQuery] = React.useState(query || '');
     const localSearch = useLocalSearch(currentQuery);
     const searchInputRef = React.useRef(null);
-    const searchHistoryRef = React.useRef(null);
 
     const searchBarOnClick = React.useCallback(() => {
         if (!active) {
@@ -117,7 +116,7 @@ const SearchBar = React.memo(({ className, query, active }) => {
             }
             {
                 showHistory ?
-                    <div className={styles['search-history']} ref={searchHistoryRef}>
+                    <div className={styles['search-history']}>
                         {
                             localSearch.searchResults.length === 0 && searchHistory.items.length === 0 ?
                                 <div className={styles['search-history-label']}>{ t('Start typing ...') }</div>
