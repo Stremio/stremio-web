@@ -137,13 +137,16 @@
             max-width: initial;
             z-index: 0;
             padding: 0 1.5rem;
-        }
-    }
 
-    .action-button {
-        .small-label {
-            font-size: 0.688rem;
-            font-weight: 600;
+            .buttons-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        .action-button {
+            text-overflow: ellipsis;
+            width: 100%;
         }
     }
 }
