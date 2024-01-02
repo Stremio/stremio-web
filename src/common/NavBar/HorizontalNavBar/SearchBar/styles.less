@@ -49,7 +49,7 @@
         }
     }
 
-    .search-history {
+    .menu-container {
         position: absolute;
         width: 100%;
         height: auto;
@@ -60,22 +60,17 @@
         background-color: var(--modal-background-color);
         border-radius: var(--border-radius);
         
-        .search-history-label {
+        .label {
             font-size: 0.9rem;
             color: var(--primary-foreground-color);
         }
 
-        .search-history-actions {
+        .title {
             display: flex;
             justify-content: space-between;
             width: 100%;
             opacity: 0.8;
             padding-bottom: 1rem;
-
-            .search-history-label {
-                font-size: 0.9rem;
-                color: var(--primary-foreground-color);
-            }
 
             .search-history-clear {
                 cursor: pointer;
@@ -88,24 +83,24 @@
             }
         }
 
-        .search-history-items {
+        .content {
             width: 100%;
             margin: 0 auto;
             display: flex;
             justify-content: center;
             align-items: flex-start;
             flex-direction: column;
+            gap: 1.5rem;
 
-            .search-history-results {
+            .items {
                 width: 100%;
                 margin: 0 auto;
                 display: flex;
                 justify-content: center;
                 align-items: flex-start;
                 flex-direction: column;
-                padding-bottom: 1rem;
     
-                .search-history-item {
+                .item {
                     width: 90%;
                     color: var(--primary-foreground-color);
                     text-align: left;
@@ -121,12 +116,6 @@
                     }
                 }
             }
-            .search-history-label {
-                font-size: 0.9rem;
-                color: var(--primary-foreground-color);
-                margin-bottom: 1rem;
-            }
-
         }
     }
 }

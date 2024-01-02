@@ -2,9 +2,9 @@
 
 const React = require('react');
 const { useServices } = require('stremio/services');
-const useModelState = require('../../../../common/useModelState');
+const useModelState = require('stremio/common/useModelState');
 
-const useLocalSearch = (query) => {
+const useLocalSearch = () => {
     const { core } = useServices();
 
     const action = React.useMemo(() => ({
@@ -14,9 +14,9 @@ const useLocalSearch = (query) => {
         }
     }), []);
 
-    const { searchResults } = useModelState({ model: 'local_search', action });
+    const { items } = useModelState({ model: 'local_search', action });
 
-    const dispatchSearch = React.useEffect(() => {
+    const search = React.useCallback((query) => {
         core.transport.dispatch({
             action: 'Search',
             args: {
@@ -27,11 +27,11 @@ const useLocalSearch = (query) => {
                 }
             },
         });
-    }, [query]);
+    }, []);
 
     return {
-        searchResults,
-        dispatchSearch
+        items,
+        search,
     };
 };
 

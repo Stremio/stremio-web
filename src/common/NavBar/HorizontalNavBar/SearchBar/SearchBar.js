@@ -3,6 +3,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
+const debounce = require('lodash.debounce');
 const { useTranslation } = require('react-i18next');
 const { default: Icon } = require('@stremio/stremio-icons/react');
 const { useRouteFocused } = require('stremio-router');
@@ -10,20 +11,22 @@ const Button = require('stremio/common/Button');
 const TextInput = require('stremio/common/TextInput');
 const useTorrent = require('stremio/common/useTorrent');
 const { withCoreSuspender } = require('stremio/common/CoreSuspender');
-const styles = require('./styles');
-const useSearchHistory = require('../../../../routes/Search/useSearchHistory');
+const useSearchHistory = require('./useSearchHistory');
 const useLocalSearch = require('./useLocalSearch');
+const styles = require('./styles');
 
 const SearchBar = React.memo(({ className, query, active }) => {
     const { t } = useTranslation();
     const routeFocused = useRouteFocused();
     const searchHistory = useSearchHistory();
+    const localSearch = useLocalSearch();
     const { createTorrentFromMagnet } = useTorrent();
+
     const [showHistory, setShowHistory] = React.useState(false);
     const [currentQuery, setCurrentQuery] = React.useState(query || '');
-    const localSearch = useLocalSearch(currentQuery);
+
     const searchInputRef = React.useRef(null);
-    const labelRef = React.useRef(null);
+    const containerRef = React.useRef(null);
 
     const searchBarOnClick = React.useCallback(() => {
         if (!active) {
@@ -32,7 +35,7 @@ const SearchBar = React.memo(({ className, query, active }) => {
     }, [active]);
 
     const searchHistoryOnClose = React.useCallback((event) => {
-        if (showHistory && labelRef.current && !labelRef.current.contains(event.target)) {
+        if (showHistory && containerRef.current && !containerRef.current.contains(event.target)) {
             setShowHistory(false);
         }
     }, [showHistory]);
@@ -70,38 +73,28 @@ const SearchBar = React.memo(({ className, query, active }) => {
         window.location.hash = '/search';
     }, []);
 
+    const updateLocalSearchDebounced = React.useCallback(debounce((query) => {
+        localSearch.search(query);
+    }, 250), []);
+
+    React.useEffect(() => {
+        updateLocalSearchDebounced(currentQuery);
+    }, [currentQuery]);
+
     React.useEffect(() => {
         if (routeFocused && active) {
             searchInputRef.current.focus();
         }
     }, [routeFocused, active]);
 
-    const renderSearchHistoryItems = () => {
-        return (
-            <div className={styles['search-history-results']}>
-                {searchHistory.items.slice(0, 8).map((item, index) => (
-                    <a key={index} className={styles['search-history-item']} onClick={(e) => queryInputOnSubmit(`/search?search=${item.query}`, e)}>
-                        {item.query}
-                    </a>
-                ))}
-            </div>
-        );
-    };
-    const renderLocalSearchItems = () => {
-        return (
-            <div className={styles['search-history-results']}>
-                <div className={styles['search-history-label']}>{ t('Recommendations') }</div>
-                {localSearch.searchResults.map((item, index) => (
-                    <a key={index} className={styles['search-history-item']} onClick={(e) => queryInputOnSubmit(`/search?search=${item.name}`, e)}>
-                        {item.name}
-                    </a>
-                ))}
-            </div>
-        );
-    };
+    React.useEffect(() => {
+        return () => {
+            updateLocalSearchDebounced.cancel();
+        };
+    }, []);
 
     return (
-        <label className={classnames(className, styles['search-bar-container'], { 'active': active })} onClick={searchBarOnClick} ref={labelRef}>
+        <div className={classnames(className, styles['search-bar-container'], { 'active': active })} onClick={searchBarOnClick} ref={containerRef}>
             {
                 active ?
                     <TextInput
@@ -133,34 +126,48 @@ const SearchBar = React.memo(({ className, query, active }) => {
             }
             {
                 showHistory ?
-                    <div className={styles['search-history']}>
+                    <div className={styles['menu-container']}>
                         {
-                            localSearch.searchResults.length === 0 && searchHistory.items.length === 0 ?
-                                <div className={styles['search-history-label']}>{ t('Start typing ...') }</div>
+                            localSearch.items.length === 0 && searchHistory.items.length === 0 ?
+                                <div className={styles['label']}>{ t('Start typing ...') }</div>
                                 :
                                 null
                         }
-                        {
-                            searchHistory.items.length > 0 ?
-                                <div className={styles['search-history-actions']}>
-                                    <div className={styles['search-history-label']}>{ t('STREMIO_TV_SEARCH_HISTORY_TITLE') }</div>
-                                    <button className={styles['search-history-clear']} onClick={searchHistory.clear}>
-                                        {t('CLEAR_HISTORY')}
-                                    </button>
-                                </div>
-                                :
-                                null
-                        }
-                        <div className={styles['search-history-items']}>
+                        <div className={styles['content']}>
                             {
-                                searchHistory.items.length > 0 ?
-                                    renderSearchHistoryItems()
+                                searchHistory?.items?.length > 0 ?
+                                    <div className={styles['items']}>
+                                        <div className={styles['title']}>
+                                            <div className={styles['label']}>{ t('STREMIO_TV_SEARCH_HISTORY_TITLE') }</div>
+                                            <button className={styles['search-history-clear']} onClick={searchHistory.clear}>
+                                                { t('CLEAR_HISTORY') }
+                                            </button>
+                                        </div>
+                                        {
+                                            searchHistory.items.slice(0, 8).map(({ query, deepLinks }, index) => (
+                                                <Button key={index} className={styles['item']} href={deepLinks.search}>
+                                                    {query}
+                                                </Button>
+                                            ))
+                                        }
+                                    </div>
                                     :
                                     null
                             }
                             {
-                                localSearch.searchResults.length > 0 ?
-                                    renderLocalSearchItems()
+                                localSearch?.items?.length ?
+                                    <div className={styles['items']}>
+                                        <div className={styles['title']}>
+                                            <div className={styles['label']}>{ t('Recommendations') }</div>
+                                        </div>
+                                        {
+                                            localSearch.items.map(({ query, deepLinks }, index) => (
+                                                <Button key={index} className={styles['item']} href={deepLinks.search}>
+                                                    {query}
+                                                </Button>
+                                            ))
+                                        }
+                                    </div>
                                     :
                                     null
                             }
@@ -169,7 +176,7 @@ const SearchBar = React.memo(({ className, query, active }) => {
                     :
                     null
             }
-        </label>
+        </div>
     );
 });
 
