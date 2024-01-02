@@ -13,7 +13,7 @@ const useBinaryState = require('stremio/common/useBinaryState');
 const { ICON_FOR_TYPE } = require('stremio/common/CONSTANTS');
 const styles = require('./styles');
 
-const MetaItem = React.memo(({ className, type, name, poster, posterShape, posterChangeCursor, progress, newVideos, options, deepLinks, dataset, optionOnSelect, onDismissClick, onPlayClick, ...props }) => {
+const MetaItem = React.memo(({ className, type, name, poster, posterShape, posterChangeCursor, progress, newVideos, options, deepLinks, dataset, optionOnSelect, onDismissClick, onPlayClick, watched, ...props }) => {
     const { t } = useTranslation();
     const [menuOpen, onMenuOpen, onMenuClose] = useBinaryState(false);
     const href = React.useMemo(() => {
@@ -71,6 +71,14 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, poste
                         <div title={t('LIBRARY_RESUME_DISMISS')} className={styles['dismiss-icon-layer']} onClick={onDismissClick}>
                             <Icon className={styles['dismiss-icon']} name={'close'} />
                             <div className={styles['dismiss-icon-backdrop']} />
+                        </div>
+                        :
+                        null
+                }
+                {
+                    watched ?
+                        <div className={styles['watched-icon-layer']}>
+                            <Icon className={styles['watched-icon']} name={'checkmark'} />
                         </div>
                         :
                         null
@@ -169,6 +177,7 @@ MetaItem.propTypes = {
     onDismissClick: PropTypes.func,
     onPlayClick: PropTypes.func,
     onClick: PropTypes.func,
+    watched: PropTypes.bool
 };
 
 module.exports = MetaItem;
