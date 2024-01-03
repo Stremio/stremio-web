@@ -40,6 +40,49 @@ const ICON_FOR_TYPE = new Map([
     ['other', 'movies'],
 ]);
 
+const EXTERNAL_PLAYERS = [
+    {
+        label: 'EXTERNAL_PLAYER_DISABLED',
+        value: null,
+        platforms: ['ios', 'android', 'windows', 'linux', 'macos'],
+    },
+    {
+        label: 'EXTERNAL_PLAYER_ALLOW_CHOOSING',
+        value: 'choose',
+        platforms: ['android'],
+    },
+    {
+        label: 'VLC',
+        value: 'vlc',
+        platforms: ['ios', 'android'],
+    },
+    {
+        label: 'MPV',
+        value: 'mpv',
+        platforms: ['macos'],
+    },
+    {
+        label: 'IINA',
+        value: 'iina',
+        platforms: ['macos'],
+    },
+    {
+        label: 'MX Player',
+        value: 'mxplayer',
+        platforms: ['android'],
+    },
+    {
+        label: 'Just Player',
+        value: 'justplayer',
+        platforms: ['android'],
+    },
+    {
+        label: 'Outplayer',
+        value: 'outplayer',
+        platforms: ['ios'],
+    },
+];
+
 module.exports = {
     CHROMECAST_RECEIVER_APP_ID,
     SUBTITLES_SIZES,
@@ -55,5 +98,6 @@ module.exports = {
     SHARE_LINK_CATEGORY,
     WRITERS_LINK_CATEGORY,
     TYPE_PRIORITIES,
-    ICON_FOR_TYPE
+    ICON_FOR_TYPE,
+    EXTERNAL_PLAYERS,
 };

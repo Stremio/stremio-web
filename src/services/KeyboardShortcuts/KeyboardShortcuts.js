@@ -35,12 +35,12 @@ function KeyboardShortcuts() {
             }
             case 'Digit4': {
                 event.preventDefault();
-                window.location = '#/settings';
+                window.location = '#/addons';
                 break;
             }
             case 'Digit5': {
                 event.preventDefault();
-                window.location = '#/addons';
+                window.location = '#/settings';
                 break;
             }
             case 'Backspace': {
