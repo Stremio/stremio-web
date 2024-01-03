@@ -14,6 +14,7 @@ const { withCoreSuspender } = require('stremio/common/CoreSuspender');
 const useSearchHistory = require('./useSearchHistory');
 const useLocalSearch = require('./useLocalSearch');
 const styles = require('./styles');
+const useBinaryState = require('stremio/common/useBinaryState');
 
 const SearchBar = React.memo(({ className, query, active }) => {
     const { t } = useTranslation();
@@ -22,7 +23,7 @@ const SearchBar = React.memo(({ className, query, active }) => {
     const localSearch = useLocalSearch();
     const { createTorrentFromMagnet } = useTorrent();
 
-    const [showHistory, setShowHistory] = React.useState(false);
+    const [historyOpen, openHistory, closeHistory, ] = useBinaryState(false);
     const [currentQuery, setCurrentQuery] = React.useState(query || '');
 
     const searchInputRef = React.useRef(null);
@@ -35,10 +36,10 @@ const SearchBar = React.memo(({ className, query, active }) => {
     }, [active]);
 
     const searchHistoryOnClose = React.useCallback((event) => {
-        if (showHistory && containerRef.current && !containerRef.current.contains(event.target)) {
-            setShowHistory(false);
+        if (historyOpen && containerRef.current && !containerRef.current.contains(event.target)) {
+            closeHistory();
         }
-    }, [showHistory]);
+    }, [historyOpen]);
 
     React.useEffect(() => {
         document.addEventListener('mousedown', searchHistoryOnClose);
@@ -50,7 +51,7 @@ const SearchBar = React.memo(({ className, query, active }) => {
     const queryInputOnChange = React.useCallback(() => {
         const value = searchInputRef.current.value;
         setCurrentQuery(value);
-        setShowHistory(true);
+        openHistory();
         try {
             createTorrentFromMagnet(value);
         } catch (error) {
@@ -63,7 +64,7 @@ const SearchBar = React.memo(({ className, query, active }) => {
         setCurrentQuery(searchValue);
         if (searchInputRef.current && searchValue) {
             window.location.hash = searchValue;
-            setShowHistory(false);
+            closeHistory();
         }
     }, []);
 
@@ -107,7 +108,7 @@ const SearchBar = React.memo(({ className, query, active }) => {
                         tabIndex={-1}
                         onChange={queryInputOnChange}
                         onSubmit={(e) => queryInputOnSubmit(`/search?search=${e.target.value}`, e)}
-                        onClick={() => setShowHistory(true)}
+                        onClick={openHistory}
                     />
                     :
                     <div className={styles['search-input']}>
@@ -125,7 +126,7 @@ const SearchBar = React.memo(({ className, query, active }) => {
                     </Button>
             }
             {
-                showHistory ?
+                historyOpen ?
                     <div className={styles['menu-container']}>
                         {
                             localSearch.items.length === 0 && searchHistory.items.length === 0 ?
@@ -145,7 +146,7 @@ const SearchBar = React.memo(({ className, query, active }) => {
                                         </div>
                                         {
                                             searchHistory.items.slice(0, 8).map(({ query, deepLinks }, index) => (
-                                                <Button key={index} className={styles['item']} href={deepLinks.search}>
+                                                <Button key={index} className={styles['item']} href={deepLinks.search} onClick={closeHistory}>
                                                     {query}
                                                 </Button>
                                             ))
@@ -162,7 +163,7 @@ const SearchBar = React.memo(({ className, query, active }) => {
                                         </div>
                                         {
                                             localSearch.items.map(({ query, deepLinks }, index) => (
-                                                <Button key={index} className={styles['item']} href={deepLinks.search}>
+                                                <Button key={index} className={styles['item']} href={deepLinks.search} onClick={closeHistory}>
                                                     {query}
                                                 </Button>
                                             ))
