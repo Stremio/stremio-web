@@ -127,7 +127,7 @@ const SearchBar = React.memo(({ className, query, active }) => {
                     </Button>
             }
             {
-                historyOpen && searchHistory?.items?.length > 0 || localSearch?.items?.length > 0 ?
+                historyOpen && (searchHistory?.items?.length || localSearch?.items?.length) ?
                     <div className={styles['menu-container']}>
                         {
                             searchHistory?.items?.length > 0 ?
