@@ -57,7 +57,17 @@ type NotificationItem = {
     videoReleased: string,
 }
 
+type SearchHistoryItem = {
+    query: string,
+    deepLinks: {
+        search: string,
+    },
+};
+
+type SearchHistory = SearchHistoryItem[];
+
 type Ctx = {
     profile: Profile,
     notifications: Notifications,
+    searchHistory: SearchHistory,
 };

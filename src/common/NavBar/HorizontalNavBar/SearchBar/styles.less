@@ -9,6 +9,8 @@
     height: var(--search-bar-size);
     border-radius: var(--search-bar-size);
     background-color: var(--overlay-color);
+    position: relative;
+    overflow: visible;
 
     .search-input {
         flex: 1;
@@ -44,6 +46,72 @@
             height: 1.7rem;
             color: var(--primary-foreground-color);
             opacity: 0.6;
+        }
+    }
+
+    .menu-container {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        height: auto;
+        z-index: 10;
+        padding: 1rem;
+        margin: 0 auto;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 1.5rem;
+        background-color: var(--modal-background-color);
+        border-radius: var(--border-radius);
+        
+        .label {
+            font-size: 0.9rem;
+            color: var(--primary-foreground-color);
+        }
+
+        .title {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            opacity: 0.8;
+            padding-bottom: 1rem;
+
+            .search-history-clear {
+                cursor: pointer;
+                color: var(--primary-foreground-color);
+                font-size: 0.9rem;
+
+                &:hover {
+                    opacity: 0.6;
+                }
+            }
+        }
+
+        .items {
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            flex-direction: column;
+
+            .item {
+                width: 90%;
+                color: var(--primary-foreground-color);
+                text-align: left;
+                text-decoration: none;
+                padding: 0.5rem 1rem;
+                border-radius: var(--border-radius);
+                width: 100%;
+                cursor: pointer;
+                z-index: 10;
+
+                &:hover {
+                    background-color: var(--secondary-background-color);
+                }
+            }
         }
     }
 }
