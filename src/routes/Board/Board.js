@@ -45,9 +45,8 @@ const Board = () => {
                             <MetaRow
                                 className={classnames(styles['board-row'], styles['continue-watching-row'], 'animation-fade-in')}
                                 title={t('BOARD_CONTINUE_WATCHING')}
-                                items={continueWatchingPreview.items}
+                                catalog={continueWatchingPreview}
                                 itemComponent={ContinueWatchingItem}
-                                deepLinks={continueWatchingPreview.deepLinks}
                             />
                             :
                             null
@@ -60,7 +59,6 @@ const Board = () => {
                                         key={index}
                                         className={classnames(styles['board-row'], styles[`board-row-${catalog.content.content[0].posterShape}`], 'animation-fade-in')}
                                         catalog={catalog}
-                                        items={catalog.content.content}
                                         itemComponent={MetaItem}
                                     />
                                 );
@@ -81,7 +79,6 @@ const Board = () => {
                                         key={index}
                                         className={classnames(styles['board-row'], styles['board-row-poster'], 'animation-fade-in')}
                                         catalog={catalog}
-                                        deepLinks={catalog.deepLinks}
                                     />
                                 );
                             }

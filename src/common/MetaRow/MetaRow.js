@@ -11,12 +11,20 @@ const useTranslate = require('stremio/common/useTranslate');
 const MetaRowPlaceholder = require('./MetaRowPlaceholder');
 const styles = require('./styles');
 
-const MetaRow = ({ className, title, catalog, message, items, itemComponent, deepLinks }) => {
+const MetaRow = ({ className, title, catalog, message, itemComponent }) => {
     const t = useTranslate();
 
     const catalogTitle = React.useMemo(() => {
         return title ?? t.catalogTitle(catalog);
     }, [title, catalog]);
+
+    const items = React.useMemo(() => {
+        return catalog?.items ?? catalog?.content?.content;
+    }, [catalog]);
+
+    const href = React.useMemo(() => {
+        return catalog?.deepLinks?.discover ?? catalog?.deepLinks?.library;
+    }, [catalog]);
 
     return (
         <div className={classnames(className, styles['meta-row-container'])}>
@@ -28,8 +36,8 @@ const MetaRow = ({ className, title, catalog, message, items, itemComponent, dee
                         null
                 }
                 {
-                    deepLinks && (typeof deepLinks.discover === 'string' || typeof deepLinks.library === 'string') ?
-                        <Button className={styles['see-all-container']} title={t.string('BUTTON_SEE_ALL')} href={deepLinks.discover || deepLinks.library} tabIndex={-1}>
+                    href ?
+                        <Button className={styles['see-all-container']} title={t.string('BUTTON_SEE_ALL')} href={href} tabIndex={-1}>
                             <div className={styles['label']}>{ t.string('BUTTON_SEE_ALL') }</div>
                             <Icon className={styles['icon']} name={'chevron-forward'} />
                         </Button>
@@ -79,15 +87,23 @@ MetaRow.propTypes = {
                 name: PropTypes.string,
             }),
         }),
+        content: PropTypes.shape({
+            content: PropTypes.oneOfType([
+                PropTypes.string,
+                PropTypes.arrayOf(PropTypes.shape({
+                    posterShape: PropTypes.string,
+                })),
+            ]),
+        }),
+        items: PropTypes.arrayOf(PropTypes.shape({
+            posterShape: PropTypes.string,
+        })),
+        deepLinks: PropTypes.shape({
+            discover: PropTypes.string,
+            library: PropTypes.string,
+        }),
     }),
-    items: PropTypes.arrayOf(PropTypes.shape({
-        posterShape: PropTypes.string
-    })),
     itemComponent: PropTypes.elementType,
-    deepLinks: PropTypes.shape({
-        discover: PropTypes.string,
-        library: PropTypes.string
-    })
 };
 
 module.exports = MetaRow;
