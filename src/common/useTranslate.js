@@ -1,3 +1,5 @@
+// Copyright (C) 2017-2023 Smart code 203358507
+
 const { useCallback } = require('react');
 const { useTranslation } = require('react-i18next');
 
