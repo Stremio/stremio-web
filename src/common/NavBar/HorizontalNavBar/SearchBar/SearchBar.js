@@ -127,53 +127,45 @@ const SearchBar = React.memo(({ className, query, active }) => {
                     </Button>
             }
             {
-                historyOpen ?
+                historyOpen && searchHistory?.items?.length > 0 || localSearch?.items?.length > 0 ?
                     <div className={styles['menu-container']}>
                         {
-                            localSearch.items.length === 0 && searchHistory.items.length === 0 ?
-                                <div className={styles['label']}>{ t('Start typing ...') }</div>
+                            searchHistory?.items?.length > 0 ?
+                                <div className={styles['items']}>
+                                    <div className={styles['title']}>
+                                        <div className={styles['label']}>{ t('STREMIO_TV_SEARCH_HISTORY_TITLE') }</div>
+                                        <button className={styles['search-history-clear']} onClick={searchHistory.clear}>
+                                            { t('CLEAR_HISTORY') }
+                                        </button>
+                                    </div>
+                                    {
+                                        searchHistory.items.slice(0, 8).map(({ query, deepLinks }, index) => (
+                                            <Button key={index} className={styles['item']} href={deepLinks.search} onClick={closeHistory}>
+                                                {query}
+                                            </Button>
+                                        ))
+                                    }
+                                </div>
                                 :
                                 null
                         }
-                        <div className={styles['content']}>
-                            {
-                                searchHistory?.items?.length > 0 ?
-                                    <div className={styles['items']}>
-                                        <div className={styles['title']}>
-                                            <div className={styles['label']}>{ t('STREMIO_TV_SEARCH_HISTORY_TITLE') }</div>
-                                            <button className={styles['search-history-clear']} onClick={searchHistory.clear}>
-                                                { t('CLEAR_HISTORY') }
-                                            </button>
-                                        </div>
-                                        {
-                                            searchHistory.items.slice(0, 8).map(({ query, deepLinks }, index) => (
-                                                <Button key={index} className={styles['item']} href={deepLinks.search} onClick={closeHistory}>
-                                                    {query}
-                                                </Button>
-                                            ))
-                                        }
+                        {
+                            localSearch?.items?.length ?
+                                <div className={styles['items']}>
+                                    <div className={styles['title']}>
+                                        <div className={styles['label']}>{ t('Recommendations') }</div>
                                     </div>
-                                    :
-                                    null
-                            }
-                            {
-                                localSearch?.items?.length ?
-                                    <div className={styles['items']}>
-                                        <div className={styles['title']}>
-                                            <div className={styles['label']}>{ t('Recommendations') }</div>
-                                        </div>
-                                        {
-                                            localSearch.items.map(({ query, deepLinks }, index) => (
-                                                <Button key={index} className={styles['item']} href={deepLinks.search} onClick={closeHistory}>
-                                                    {query}
-                                                </Button>
-                                            ))
-                                        }
-                                    </div>
-                                    :
-                                    null
-                            }
-                        </div>
+                                    {
+                                        localSearch.items.map(({ query, deepLinks }, index) => (
+                                            <Button key={index} className={styles['item']} href={deepLinks.search} onClick={closeHistory}>
+                                                {query}
+                                            </Button>
+                                        ))
+                                    }
+                                </div>
+                                :
+                                null
+                        }
                     </div>
                     :
                     null
