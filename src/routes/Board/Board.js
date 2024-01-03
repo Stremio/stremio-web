@@ -46,9 +46,8 @@ const Board = () => {
                             <MetaRow
                                 className={classnames(styles['board-row'], styles['continue-watching-row'], 'animation-fade-in')}
                                 title={t('BOARD_CONTINUE_WATCHING')}
-                                items={continueWatchingPreview.items}
+                                catalog={continueWatchingPreview}
                                 itemComponent={ContinueWatchingItem}
-                                deepLinks={continueWatchingPreview.deepLinks}
                             />
                             :
                             null
@@ -60,10 +59,8 @@ const Board = () => {
                                     <MetaRow
                                         key={index}
                                         className={classnames(styles['board-row'], styles[`board-row-${catalog.content.content[0].posterShape}`], 'animation-fade-in')}
-                                        title={catalog.title}
-                                        items={catalog.content.content}
+                                        catalog={catalog}
                                         itemComponent={MetaItem}
-                                        deepLinks={catalog.deepLinks}
                                     />
                                 );
                             }
@@ -72,9 +69,8 @@ const Board = () => {
                                     <MetaRow
                                         key={index}
                                         className={classnames(styles['board-row'], 'animation-fade-in')}
-                                        title={catalog.title}
+                                        catalog={catalog}
                                         message={catalog.content.content}
-                                        deepLinks={catalog.deepLinks}
                                     />
                                 );
                             }
@@ -83,8 +79,7 @@ const Board = () => {
                                     <MetaRow.Placeholder
                                         key={index}
                                         className={classnames(styles['board-row'], styles['board-row-poster'], 'animation-fade-in')}
-                                        title={catalog.title}
-                                        deepLinks={catalog.deepLinks}
+                                        catalog={catalog}
                                     />
                                 );
                             }
