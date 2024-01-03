@@ -59,8 +59,9 @@ const SearchBar = React.memo(({ className, query, active }) => {
         }
     }, [createTorrentFromMagnet]);
 
-    const queryInputOnSubmit = React.useCallback((searchValue, event) => {
+    const queryInputOnSubmit = React.useCallback((event) => {
         event.preventDefault();
+        const searchValue = `/search?search=${event.target.value}`;
         setCurrentQuery(searchValue);
         if (searchInputRef.current && searchValue) {
             window.location.hash = searchValue;
@@ -107,7 +108,7 @@ const SearchBar = React.memo(({ className, query, active }) => {
                         defaultValue={query}
                         tabIndex={-1}
                         onChange={queryInputOnChange}
-                        onSubmit={(e) => queryInputOnSubmit(`/search?search=${e.target.value}`, e)}
+                        onSubmit={queryInputOnSubmit}
                         onClick={openHistory}
                     />
                     :
