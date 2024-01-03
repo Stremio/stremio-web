@@ -16,7 +16,7 @@ const MetaRow = ({ className, title, catalog, message, itemComponent }) => {
 
     const catalogTitle = React.useMemo(() => {
         return title ?? t.catalogTitle(catalog);
-    }, [title, catalog]);
+    }, [title, catalog, t.catalogTitle]);
 
     const items = React.useMemo(() => {
         return catalog?.items ?? catalog?.content?.content;

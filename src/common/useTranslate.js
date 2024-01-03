@@ -1,20 +1,21 @@
+const { useCallback } = require('react');
 const { useTranslation } = require('react-i18next');
 
 const useTranslate = () => {
     const { t } = useTranslation();
 
-    const string = (key) => t(key);
+    const string = useCallback((key) => t(key), [t]);
 
-    const stringWithPrefix = (value, prefix, fallback = null) => {
+    const stringWithPrefix = useCallback((value, prefix, fallback = null) => {
         const key = `${prefix}${value}`;
         const defaultValue = fallback ?? value.charAt(0).toUpperCase() + value.slice(1);
 
         return t(key, {
             defaultValue,
         });
-    };
+    }, [t]);
 
-    const catalogTitle = ({ addon, id, name, type } = {}, withType = true) => {
+    const catalogTitle = useCallback(({ addon, id, name, type } = {}, withType = true) => {
         if (addon && id && name) {
             const partialKey = `${addon.manifest.id}/${id}`;
             const translatedName = stringWithPrefix(partialKey, 'CATALOG_', name);
@@ -28,7 +29,7 @@ const useTranslate = () => {
         }
 
         return null;
-    };
+    }, [stringWithPrefix]);
 
     return {
         string,
