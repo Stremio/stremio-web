@@ -70,6 +70,10 @@ const Player = ({ urlParams, queryParams }) => {
         closeStatisticsMenu();
     }, []);
 
+    const overlayHidden = React.useMemo(() => {
+        return immersed && !casting && video.state.paused !== null && !video.state.paused && !menusOpen && !nextVideoPopupOpen;
+    }, [immersed, casting, video.state.paused, menusOpen, nextVideoPopupOpen]);
+
     const nextVideoPopupDismissed = React.useRef(false);
     const defaultSubtitlesSelected = React.useRef(false);
     const defaultAudioTrackSelected = React.useRef(false);
@@ -593,7 +597,7 @@ const Player = ({ urlParams, queryParams }) => {
     }, []);
 
     return (
-        <div className={classnames(styles['player-container'], { [styles['immersed']]: immersed && !casting && video.state.paused !== null && !video.state.paused && !menusOpen && !nextVideoPopupOpen })}
+        <div className={classnames(styles['player-container'], { [styles['overlayHidden']]: overlayHidden })}
             onMouseDown={onContainerMouseDown}
             onMouseMove={onContainerMouseMove}
             onMouseOver={onContainerMouseMove}
