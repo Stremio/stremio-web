@@ -1,6 +1,7 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 const React = require('react');
+const { useTranslation } = require('react-i18next');
 const isEqual = require('lodash.isequal');
 const { useServices } = require('stremio/services');
 
@@ -53,6 +54,7 @@ const TORRENT_PROFILES = {
 
 const useStreamingServerSettingsInputs = (streamingServer) => {
     const { core } = useServices();
+    const { t } = useTranslation();
     // TODO combine those useMemo in one
 
     const streamingServerRemoteUrlInput = React.useMemo(() => ({
@@ -67,7 +69,7 @@ const useStreamingServerSettingsInputs = (streamingServer) => {
         return {
             options: [
                 {
-                    label: 'Disabled',
+                    label: t('SETTINGS_DISABLED'),
                     value: null,
                 },
                 ...streamingServer.networkInfo.content.availableInterfaces.map((address) => ({

@@ -126,7 +126,7 @@ const Settings = () => {
             navigator.clipboard.writeText(streamingServer.remoteUrl);
             toast.show({
                 type: 'success',
-                title: 'Successfully copied remote url to clipboard',
+                title: t('SETTINGS_REMOTE_URL_COPIED'),
                 timeout: 2500,
             });
         }
@@ -558,11 +558,11 @@ const Settings = () => {
                             streamingServerRemoteUrlInput.value !== null ?
                                 <div className={styles['option-container']}>
                                     <div className={styles['option-name-container']}>
-                                        <div className={styles['label']}>Remote url</div>
+                                        <div className={styles['label']}>{t('SETTINGS_REMOTE_URL')}</div>
                                     </div>
                                     <div className={classnames(styles['option-input-container'], styles['configure-input-container'])}>
                                         <div className={styles['label']} title={streamingServerRemoteUrlInput.value}>{streamingServerRemoteUrlInput.value}</div>
-                                        <Button className={styles['configure-button-container']} title={'Copy remote url'} onClick={onCopyRemoteUrlClick}>
+                                        <Button className={styles['configure-button-container']} title={t('SETTINGS_COPY_REMOTE_URL')} onClick={onCopyRemoteUrlClick}>
                                             <Icon className={styles['icon']} name={'link'} />
                                         </Button>
                                     </div>
