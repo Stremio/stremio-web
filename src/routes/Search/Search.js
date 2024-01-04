@@ -90,10 +90,8 @@ const Search = ({ queryParams }) => {
                                             <MetaRow
                                                 key={index}
                                                 className={classnames(styles['search-row'], styles[`search-row-${catalog.content.content[0].posterShape}`], 'animation-fade-in')}
-                                                title={catalog.title}
-                                                items={catalog.content.content}
+                                                catalog={catalog}
                                                 itemComponent={MetaItem}
-                                                deepLinks={catalog.deepLinks}
                                             />
                                         );
                                     }
@@ -102,9 +100,8 @@ const Search = ({ queryParams }) => {
                                             <MetaRow
                                                 key={index}
                                                 className={classnames(styles['search-row'], 'animation-fade-in')}
-                                                title={catalog.title}
+                                                catalog={catalog}
                                                 message={catalog.content.content}
-                                                deepLinks={catalog.deepLinks}
                                             />
                                         );
                                     }
@@ -113,8 +110,7 @@ const Search = ({ queryParams }) => {
                                             <MetaRow.Placeholder
                                                 key={index}
                                                 className={classnames(styles['search-row'], styles['search-row-poster'], 'animation-fade-in')}
-                                                title={catalog.title}
-                                                deepLinks={catalog.deepLinks}
+                                                catalog={catalog}
                                             />
                                         );
                                     }
