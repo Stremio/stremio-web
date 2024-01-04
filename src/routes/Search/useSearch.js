@@ -32,14 +32,15 @@ const useSearch = (queryParams) => {
     //     };
     // }, [queryParams.get('search')]);
     const action = React.useMemo(() => {
-        if (queryParams.has('search') && queryParams.get('search').length > 0) {
+        const query = queryParams.get('search') ?? queryParams.get('query');
+        if (query?.length > 0) {
             return {
                 action: 'Load',
                 args: {
                     model: 'CatalogsWithExtra',
                     args: {
                         extra: [
-                            ['search', queryParams.get('search')]
+                            ['search', query]
                         ]
                     }
                 }
