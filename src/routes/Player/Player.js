@@ -602,9 +602,11 @@ const Player = ({ urlParams, queryParams }) => {
             onMouseMove={onContainerMouseMove}
             onMouseOver={onContainerMouseMove}
             onMouseLeave={onContainerMouseLeave}>
-            <div
+            <Video
                 ref={video.containerElement}
                 className={styles['layer']}
+                onClick={onVideoClick}
+                onDoubleClick={onVideoDoubleClick}
             />
             {
                 video.state.buffering ?
@@ -612,12 +614,6 @@ const Player = ({ urlParams, queryParams }) => {
                     :
                     null
             }
-            <Video
-                ref={video.containerElement}
-                className={styles['layer']}
-                onClick={onVideoClick}
-                onDoubleClick={onVideoDoubleClick}
-            />
             {
                 error !== null ?
                     <Error
