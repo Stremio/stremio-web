@@ -29,11 +29,8 @@ const Video = require('./Video');
 const Player = ({ urlParams, queryParams }) => {
     const { t } = useTranslation();
     const { chromecast, shell, core } = useServices();
-    const [forceTranscoding, maxAudioChannels] = React.useMemo(() => {
-        return [
-            queryParams.has('forceTranscoding'),
-            queryParams.has('maxAudioChannels') ? parseInt(queryParams.get('maxAudioChannels'), 10) : null
-        ];
+    const forceTranscoding = React.useMemo(() => {
+        return queryParams.has('forceTranscoding');
     }, [queryParams]);
 
     const [player, videoParamsChanged, timeChanged, pausedChanged, ended, nextVideo] = usePlayer(urlParams);
@@ -267,8 +264,7 @@ const Player = ({ urlParams, queryParams }) => {
         setError(null);
         if (player.selected === null) {
             video.unload();
-        } else if (streamingServer.baseUrl !== null && streamingServer.baseUrl.type !== 'Loading' &&
-            (player.selected.metaRequest === null || (player.metaItem !== null && player.metaItem.type !== 'Loading'))) {
+        } else if (player.selected.metaRequest === null || (player.metaItem !== null && player.metaItem.type !== 'Loading')) {
             video.load({
                 stream: {
                     ...player.selected.stream,
@@ -289,13 +285,10 @@ const Player = ({ urlParams, queryParams }) => {
                     :
                     0,
                 forceTranscoding: forceTranscoding || casting,
-                maxAudioChannels: typeof maxAudioChannels === 'number' ?
-                    maxAudioChannels
-                    :
-                    null,
-                streamingServerURL: streamingServer.baseUrl.type === 'Ready' ?
+                maxAudioChannels: settings.surroundSound ? 32 : 2,
+                streamingServerURL: streamingServer.baseUrl ?
                     casting ?
-                        streamingServer.baseUrl.content
+                        streamingServer.baseUrl
                         :
                         streamingServer.selected.transportUrl
                     :
@@ -306,8 +299,7 @@ const Player = ({ urlParams, queryParams }) => {
                 shellTransport: shell.active ? shell.transport : null,
             });
         }
-    }, [streamingServer.baseUrl, player.selected, player.metaItem, forceTranscoding, maxAudioChannels, casting]);
-
+    }, [streamingServer.baseUrl, player.selected, player.metaItem, forceTranscoding, casting]);
     React.useEffect(() => {
         if (video.state.stream !== null) {
             const tracks = player.subtitles.map((subtitles) => ({

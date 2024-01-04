@@ -15,7 +15,7 @@ const Multiselect = ({ className, mode, direction, title, disabled, dataset, ren
     const options = React.useMemo(() => {
         return Array.isArray(props.options) ?
             props.options.filter((option) => {
-                return option && typeof option.value === 'string';
+                return option && (typeof option.value === 'string' || option.value === null);
             })
             :
             [];
@@ -23,7 +23,7 @@ const Multiselect = ({ className, mode, direction, title, disabled, dataset, ren
     const selected = React.useMemo(() => {
         return Array.isArray(props.selected) ?
             props.selected.filter((value) => {
-                return typeof value === 'string';
+                return typeof value === 'string' || value === null;
             })
             :
             [];
@@ -161,7 +161,7 @@ Multiselect.propTypes = {
     direction: PropTypes.any,
     title: PropTypes.string,
     options: PropTypes.arrayOf(PropTypes.shape({
-        value: PropTypes.string.isRequired,
+        value: PropTypes.string,
         title: PropTypes.string,
         label: PropTypes.string
     })),

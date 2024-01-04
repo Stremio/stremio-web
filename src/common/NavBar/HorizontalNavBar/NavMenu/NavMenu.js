@@ -7,6 +7,7 @@ const { useRouteFocused } = require('stremio-router');
 const Popup = require('stremio/common/Popup');
 const useBinaryState = require('stremio/common/useBinaryState');
 const NavMenuContent = require('./NavMenuContent');
+const styles = require('./styles.less');
 
 const NavMenu = (props) => {
     const routeFocused = useRouteFocused();
@@ -42,6 +43,7 @@ const NavMenu = (props) => {
             onCloseRequest={closeMenu}
             renderLabel={renderLabel}
             renderMenu={renderMenu}
+            className={styles['nav-menu-popup-label']}
         />
     );
 };

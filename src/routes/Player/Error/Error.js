@@ -11,6 +11,13 @@ const styles = require('./styles');
 const Error = ({ className, code, message, stream }) => {
     const { t } = useTranslation();
 
+    const [playlist, fileName] = React.useMemo(() => {
+        return [
+            stream?.deepLinks?.externalPlayer?.playlist,
+            stream?.deepLinks?.externalPlayer?.fileName,
+        ];
+    }, [stream]);
+
     return (
         <div className={classNames(className, styles['error'])}>
             <div className={styles['error-label']} title={message}>{message}</div>
@@ -21,8 +28,14 @@ const Error = ({ className, code, message, stream }) => {
                     null
             }
             {
-                stream !== null ?
-                    <Button className={styles['playlist-button']} title={t('PLAYER_OPEN_IN_EXTERNAL')} href={stream.deepLinks.externalPlayer.href} download={stream.deepLinks.externalPlayer.fileName} target={'_blank'}>
+                playlist && fileName ?
+                    <Button
+                        className={styles['playlist-button']}
+                        title={t('PLAYER_OPEN_IN_EXTERNAL')}
+                        href={playlist}
+                        download={fileName}
+                        target={'_blank'}
+                    >
                         <Icon className={styles['icon']} name={'ic_downloads'} />
                         <div className={styles['label']}>{t('PLAYER_OPEN_IN_EXTERNAL')}</div>
                     </Button>

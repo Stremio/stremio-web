@@ -131,7 +131,7 @@ Search.propTypes = {
 };
 
 const SearchFallback = ({ queryParams }) => (
-    <MainNavBars className={styles['search-container']} route={'search'} query={queryParams.get('search')} />
+    <MainNavBars className={styles['search-container']} route={'search'} query={queryParams.get('search') ?? queryParams.get('query')} />
 );
 
 SearchFallback.propTypes = Search.propTypes;
