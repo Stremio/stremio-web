@@ -46,6 +46,8 @@ const Settings = () => {
         streamingServerUrlInput
     } = useProfileSettingsInputs(profile);
     const {
+        streamingServerRemoteUrlInput,
+        remoteEndpointSelect,
         cacheSizeSelect,
         torrentProfileSelect
     } = useStreamingServerSettingsInputs(streamingServer);
@@ -119,6 +121,16 @@ const Settings = () => {
             }
         });
     }, []);
+    const onCopyRemoteUrlClick = React.useCallback(() => {
+        if (streamingServer.remoteUrl) {
+            navigator.clipboard.writeText(streamingServer.remoteUrl);
+            toast.show({
+                type: 'success',
+                title: t('SETTINGS_REMOTE_URL_COPIED'),
+                timeout: 2500,
+            });
+        }
+    }, [streamingServer.remoteUrl]);
     const sectionsContainerRef = React.useRef(null);
     const generalSectionRef = React.useRef(null);
     const playerSectionRef = React.useRef(null);
@@ -542,6 +554,36 @@ const Settings = () => {
                                 </Button>
                             </div>
                         </div>
+                        {
+                            streamingServerRemoteUrlInput.value !== null ?
+                                <div className={styles['option-container']}>
+                                    <div className={styles['option-name-container']}>
+                                        <div className={styles['label']}>{t('SETTINGS_REMOTE_URL')}</div>
+                                    </div>
+                                    <div className={classnames(styles['option-input-container'], styles['configure-input-container'])}>
+                                        <div className={styles['label']} title={streamingServerRemoteUrlInput.value}>{streamingServerRemoteUrlInput.value}</div>
+                                        <Button className={styles['configure-button-container']} title={t('SETTINGS_COPY_REMOTE_URL')} onClick={onCopyRemoteUrlClick}>
+                                            <Icon className={styles['icon']} name={'link'} />
+                                        </Button>
+                                    </div>
+                                </div>
+                                :
+                                null
+                        }
+                        {
+                            profile.auth !== null && profile.auth.user !== null && remoteEndpointSelect !== null ?
+                                <div className={styles['option-container']}>
+                                    <div className={styles['option-name-container']}>
+                                        <div className={styles['label']}>{ t('SETTINGS_HTTPS_ENDPOINT') }</div>
+                                    </div>
+                                    <Multiselect
+                                        className={classnames(styles['option-input-container'], styles['multiselect-container'])}
+                                        {...remoteEndpointSelect}
+                                    />
+                                </div>
+                                :
+                                null
+                        }
                         {
                             cacheSizeSelect !== null ?
                                 <div className={styles['option-container']}>
