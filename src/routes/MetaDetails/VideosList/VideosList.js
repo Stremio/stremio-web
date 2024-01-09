@@ -37,11 +37,11 @@ const VideosList = ({ className, metaItem, libraryItem, season, seasonOnSelect, 
 
         const nonSpecialSeasons = seasons.filter((season) => season !== 0);
         if (nonSpecialSeasons.length > 0) {
-            return nonSpecialSeasons[nonSpecialSeasons.length - 1];
+            return nonSpecialSeasons[0];
         }
 
         if (seasons.length > 0) {
-            return seasons[seasons.length - 1];
+            return seasons[0];
         }
 
         return null;
