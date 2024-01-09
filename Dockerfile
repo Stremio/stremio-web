@@ -1,6 +1,6 @@
 # Stremio Node 14.x
 # the node version for running Stremio Web
-ARG NODE_VERSION=15-alpine
+ARG NODE_VERSION=20-alpine
 FROM node:$NODE_VERSION AS base
 
 # Meta

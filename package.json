@@ -1,7 +1,7 @@
 {
     "name": "stremio",
     "displayName": "Stremio",
-    "version": "5.0.0-beta.0",
+    "version": "5.0.0-beta.4",
     "author": "Smart Code OOD",
     "private": true,
     "license": "gpl-2.0",
@@ -15,7 +15,7 @@
         "@babel/runtime": "7.16.0",
         "@sentry/browser": "6.13.3",
         "@stremio/stremio-colors": "5.0.1",
-        "@stremio/stremio-core-web": "0.45.0",
+        "@stremio/stremio-core-web": "0.46.0",
         "@stremio/stremio-icons": "5.0.0-beta.3",
         "@stremio/stremio-video": "0.0.26",
         "a-color-picker": "1.2.1",
@@ -38,8 +38,8 @@
         "react-focus-lock": "2.9.1",
         "react-i18next": "^12.1.1",
         "react-is": "18.2.0",
-        "spatial-navigation-polyfill": "git+ssh://git@github.com/Stremio/spatial-navigation.git#64871b1422466f5f45d24ebc8bbd315b2ebab6a6",
-        "stremio-translations": "git+ssh://git@github.com/Stremio/stremio-translations.git#8e30d9961402a7389f1a6209d9dab5592f32c9d7",
+        "spatial-navigation-polyfill": "github:Stremio/spatial-navigation#64871b1422466f5f45d24ebc8bbd315b2ebab6a6",
+        "stremio-translations": "github:Stremio/stremio-translations#12b1307f95249496960d2a257b371db5700721e6",
         "url": "0.11.0",
         "use-long-press": "^3.1.5"
     },

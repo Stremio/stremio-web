@@ -3,7 +3,7 @@
 const React = require('react');
 const { useTranslation } = require('react-i18next');
 const { useServices } = require('stremio/services');
-const { CONSTANTS, interfaceLanguages, languageNames, externalPlayerOptions } = require('stremio/common');
+const { CONSTANTS, interfaceLanguages, languageNames, platform } = require('stremio/common');
 
 const useProfileSettingsInputs = (profile) => {
     const { t } = useTranslation();
@@ -211,11 +211,17 @@ const useProfileSettingsInputs = (profile) => {
         }
     }), [profile.settings]);
     const playInExternalPlayerSelect = React.useMemo(() => ({
-        options: externalPlayerOptions.map((opt) => {
-            opt.label = t(opt.label);
-            return opt;
-        }),
-        selected: [`${profile.settings.playerType || 'internal'}`],
+        options: CONSTANTS.EXTERNAL_PLAYERS
+            .filter(({ platforms }) => platforms.includes(platform.name))
+            .map(({ label, value }) => ({
+                value,
+                label: t(label),
+            })),
+        selected: [profile.settings.playerType],
+        renderLabelText: () => {
+            const selectedOption = CONSTANTS.EXTERNAL_PLAYERS.find(({ value }) => value === profile.settings.playerType);
+            return selectedOption ? t(selectedOption.label, { defaultValue: selectedOption.label }) : profile.settings.playerType;
+        },
         onSelect: (event) => {
             core.transport.dispatch({
                 action: 'Ctx',

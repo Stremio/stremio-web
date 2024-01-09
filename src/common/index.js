@@ -32,7 +32,6 @@ const getVisibleChildrenRange = require('./getVisibleChildrenRange');
 const interfaceLanguages = require('./interfaceLanguages.json');
 const languageNames = require('./languageNames.json');
 const routesRegexp = require('./routesRegexp');
-const translateOption = require('./translateOption');
 const useAnimationFrame = require('./useAnimationFrame');
 const useBinaryState = require('./useBinaryState');
 const useFullscreen = require('./useFullscreen');
@@ -43,8 +42,9 @@ const useOnScrollToBottom = require('./useOnScrollToBottom');
 const useProfile = require('./useProfile');
 const useStreamingServer = require('./useStreamingServer');
 const useTorrent = require('./useTorrent');
+const useTranslate = require('./useTranslate');
 const platform = require('./platform');
-const externalPlayerOptions = require('./externalPlayerOptions');
+const EventModal = require('./EventModal');
 
 module.exports = {
     AddonDetailsModal,
@@ -83,7 +83,6 @@ module.exports = {
     interfaceLanguages,
     languageNames,
     routesRegexp,
-    translateOption,
     useAnimationFrame,
     useBinaryState,
     useFullscreen,
@@ -94,6 +93,7 @@ module.exports = {
     useProfile,
     useStreamingServer,
     useTorrent,
+    useTranslate,
     platform,
-    externalPlayerOptions,
+    EventModal,
 };
