@@ -45,6 +45,7 @@ const Player = ({ urlParams, queryParams }) => {
         return chromecast.active && chromecast.transport.getCastState() === cast.framework.CastState.CONNECTED;
     });
 
+    const [originalSubtitlesOffset, setOriginalSubtitlesOffset] = React.useState(settings.subtitlesOffset);
     const [immersed, setImmersed] = React.useState(true);
     const setImmersedDebounced = React.useCallback(debounce(setImmersed, 3000), []);
     const [, , , toggleFullscreen] = useFullscreen();
@@ -187,6 +188,7 @@ const Player = ({ urlParams, queryParams }) => {
     }, [updateSettings]);
 
     const onSubtitlesOffsetChanged = React.useCallback((offset) => {
+        if (offset > 10) setOriginalSubtitlesOffset(offset);
         updateSettings({ subtitlesOffset: offset });
     }, [updateSettings]);
 
@@ -248,17 +250,25 @@ const Player = ({ urlParams, queryParams }) => {
 
     const onContainerMouseMove = React.useCallback((event) => {
         setImmersed(false);
+        if (settings.subtitlesOffset < 10) {
+            setOriginalSubtitlesOffset(settings.subtitlesOffset);
+            const dynamicOffset = Math.min(window.innerHeight * 0.1, 10);
+            updateSettings({ subtitlesOffset: dynamicOffset });
+        }
         if (!event.nativeEvent.immersePrevented) {
             setImmersedDebounced(true);
         } else {
             setImmersedDebounced.cancel();
         }
-    }, []);
+    }, [settings.subtitlesOffset]);
 
     const onContainerMouseLeave = React.useCallback(() => {
         setImmersedDebounced.cancel();
         setImmersed(true);
-    }, []);
+        if (settings.subtitlesOffset !== originalSubtitlesOffset) {
+            updateSettings({ subtitlesOffset: originalSubtitlesOffset });
+        }
+    }, [originalSubtitlesOffset, settings.subtitlesOffset]);
 
     const onBarMouseMove = React.useCallback((event) => {
         event.nativeEvent.immersePrevented = true;
