@@ -78,6 +78,8 @@ const Player = ({ urlParams, queryParams }) => {
     const nextVideoPopupDismissed = React.useRef(false);
     const defaultSubtitlesSelected = React.useRef(false);
     const defaultAudioTrackSelected = React.useRef(false);
+    const controlBarRef = React.createRef();
+
     const [error, setError] = React.useState(null);
 
     const onImplementationChanged = React.useCallback(() => {
@@ -187,11 +189,6 @@ const Player = ({ urlParams, queryParams }) => {
         updateSettings({ subtitlesSize: size });
     }, [updateSettings]);
 
-    const onSubtitlesOffsetChanged = React.useCallback((offset) => {
-        if (offset > 10) setOriginalSubtitlesOffset(offset);
-        updateSettings({ subtitlesOffset: offset });
-    }, [updateSettings]);
-
     const onDismissNextVideoPopup = React.useCallback(() => {
         closeNextVideoPopup();
         nextVideoPopupDismissed.current = true;
@@ -248,11 +245,19 @@ const Player = ({ urlParams, queryParams }) => {
         }
     }, []);
 
+    const onSubtitlesOffsetChanged = React.useCallback((offset) => {
+        if (offset > 10) setOriginalSubtitlesOffset(offset);
+        updateSettings({ subtitlesOffset: offset });
+    }, [updateSettings]);
+
     const onContainerMouseMove = React.useCallback((event) => {
         setImmersed(false);
-        if (settings.subtitlesOffset < 10) {
+        if (settings.subtitlesOffset < 10 && !immersed) {
             setOriginalSubtitlesOffset(settings.subtitlesOffset);
-            const dynamicOffset = Math.min(window.innerHeight * 0.1, 10);
+            const px = controlBarRef?.current?.offsetHeight;
+            const windowHeight = window.innerHeight;
+            const dynamicOffset = Math.max(10, Math.max(0, Math.round((px / windowHeight) * 100)));
+            console.log(dynamicOffset)
             updateSettings({ subtitlesOffset: dynamicOffset });
         }
         if (!event.nativeEvent.immersePrevented) {
@@ -678,6 +683,7 @@ const Player = ({ urlParams, queryParams }) => {
                 onToggleStatisticsMenu={toggleStatisticsMenu}
                 onMouseMove={onBarMouseMove}
                 onMouseOver={onBarMouseMove}
+                ref={controlBarRef}
             />
             {
                 nextVideoPopupOpen ?
