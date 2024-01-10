@@ -157,11 +157,13 @@ const Player = ({ urlParams, queryParams }) => {
 
     const onVolumeChangeRequested = React.useCallback((volume) => {
         video.setProp('volume', volume);
-        openVolumeChangeIndicator();
+        if (immersed && !menusOpen) {
+            openVolumeChangeIndicator();
+        }
 
         if (volumeChangeTimeout.current) clearTimeout(volumeChangeTimeout.current);
         volumeChangeTimeout.current = setTimeout(closeVolumeChangeIndicator, 1500);
-    }, [openVolumeChangeIndicator, closeVolumeChangeIndicator]);
+    }, [immersed, menusOpen]);
 
     const onSeekRequested = React.useCallback((time) => {
         video.setProp('time', time);
