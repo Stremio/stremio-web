@@ -188,6 +188,10 @@ const Player = ({ urlParams, queryParams }) => {
         updateSettings({ subtitlesSize: size });
     }, [updateSettings]);
 
+    const onSubtitlesOffsetChanged = React.useCallback((offset) => {
+        updateSettings({ subtitlesOffset: offset });
+    }, [updateSettings]);
+
     const onDismissNextVideoPopup = React.useCallback(() => {
         closeNextVideoPopup();
         nextVideoPopupDismissed.current = true;
@@ -243,10 +247,6 @@ const Player = ({ urlParams, queryParams }) => {
             closeStatisticsMenu();
         }
     }, []);
-
-    const onSubtitlesOffsetChanged = React.useCallback((offset) => {
-        updateSettings({ subtitlesOffset: offset });
-    }, [updateSettings]);
 
     const onContainerMouseMove = React.useCallback((event) => {
         setImmersed(false);
