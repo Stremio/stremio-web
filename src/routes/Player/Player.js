@@ -462,11 +462,11 @@ const Player = ({ urlParams, queryParams }) => {
     }, []);
 
     React.useEffect(() => {
-        const controlbarLayerHeight = Math.round((controlBarRef.current.offsetHeight / window.innerHeight) * 100);
-        if(controlBarRef.current !== null && video.state.subtitlesOffset < controlbarLayerHeight) {
-            updateSettings({ subtitlesOffset: controlbarLayerHeight });
+        const controlBarLayerHeight = Math.round((controlBarRef.current.offsetHeight / window.innerHeight) * 100);
+        if(controlBarRef.current !== null && video.state.subtitlesOffset < controlBarLayerHeight) {
+            updateSettings({ subtitlesOffset: controlBarLayerHeight });
         } else if (controlBarRef.current === null) {
-            updateSettings({ subtitlesOffset: video.state.subtitlesOffset - controlbarLayerHeight });
+            updateSettings({ subtitlesOffset: video.state.subtitlesOffset - controlBarLayerHeight });
         }
     }, [controlBarRef, video.state.subtitlesOffset]);
 
