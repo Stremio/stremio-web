@@ -45,7 +45,6 @@ const Player = ({ urlParams, queryParams }) => {
         return chromecast.active && chromecast.transport.getCastState() === cast.framework.CastState.CONNECTED;
     });
 
-    const [originalSubtitlesOffset, setOriginalSubtitlesOffset] = React.useState(settings.subtitlesOffset);
     const [immersed, setImmersed] = React.useState(true);
     const setImmersedDebounced = React.useCallback(debounce(setImmersed, 3000), []);
     const [, , , toggleFullscreen] = useFullscreen();
@@ -246,34 +245,22 @@ const Player = ({ urlParams, queryParams }) => {
     }, []);
 
     const onSubtitlesOffsetChanged = React.useCallback((offset) => {
-        if (offset > 10) setOriginalSubtitlesOffset(offset);
         updateSettings({ subtitlesOffset: offset });
     }, [updateSettings]);
 
     const onContainerMouseMove = React.useCallback((event) => {
         setImmersed(false);
-        if (settings.subtitlesOffset < 10 && !immersed) {
-            setOriginalSubtitlesOffset(settings.subtitlesOffset);
-            const px = controlBarRef?.current?.offsetHeight;
-            const windowHeight = window.innerHeight;
-            const dynamicOffset = Math.max(10, Math.max(0, Math.round((px / windowHeight) * 100)));
-            console.log(dynamicOffset)
-            updateSettings({ subtitlesOffset: dynamicOffset });
-        }
         if (!event.nativeEvent.immersePrevented) {
             setImmersedDebounced(true);
         } else {
             setImmersedDebounced.cancel();
         }
-    }, [settings.subtitlesOffset]);
+    }, []);
 
     const onContainerMouseLeave = React.useCallback(() => {
         setImmersedDebounced.cancel();
         setImmersed(true);
-        if (settings.subtitlesOffset !== originalSubtitlesOffset) {
-            updateSettings({ subtitlesOffset: originalSubtitlesOffset });
-        }
-    }, [originalSubtitlesOffset, settings.subtitlesOffset]);
+    }, []);
 
     const onBarMouseMove = React.useCallback((event) => {
         event.nativeEvent.immersePrevented = true;
@@ -473,6 +460,15 @@ const Player = ({ urlParams, queryParams }) => {
             }
         };
     }, []);
+
+    React.useEffect(() => {
+        const controlbarLayerHeight = Math.round((controlBarRef.current.offsetHeight / window.innerHeight) * 100);
+        if(controlBarRef.current !== null && video.state.subtitlesOffset < controlbarLayerHeight) {
+            updateSettings({ subtitlesOffset: controlbarLayerHeight });
+        } else if (controlBarRef.current === null) {
+            updateSettings({ subtitlesOffset: video.state.subtitlesOffset - controlbarLayerHeight });
+        }
+    }, [controlBarRef, video.state.subtitlesOffset]);
 
     React.useLayoutEffect(() => {
         const onKeyDown = (event) => {
