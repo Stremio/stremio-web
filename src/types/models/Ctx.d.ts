@@ -28,6 +28,7 @@ type Settings = {
     seekTimeDuration: number,
     seekShortTimeDuration: number,
     streamingServerUrl: string,
+    remoteHttps: string | null,
     streamingServerWarningDismissed: Date | null,
     subtitlesBackgroundColor: string,
     subtitlesBold: boolean,
@@ -57,7 +58,17 @@ type NotificationItem = {
     videoReleased: string,
 }
 
+type SearchHistoryItem = {
+    query: string,
+    deepLinks: {
+        search: string,
+    },
+};
+
+type SearchHistory = SearchHistoryItem[];
+
 type Ctx = {
     profile: Profile,
     notifications: Notifications,
+    searchHistory: SearchHistory,
 };

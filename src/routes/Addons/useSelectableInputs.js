@@ -1,18 +1,17 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 const React = require('react');
-const { t } = require('i18next');
-const { translateOption } = require('stremio/common');
+const { useTranslate } = require('stremio/common');
 
-const mapSelectableInputs = (installedAddons, remoteAddons) => {
+const mapSelectableInputs = (installedAddons, remoteAddons, t) => {
     const catalogSelect = {
-        title: t('SELECT_CATALOG'),
+        title: t.string('SELECT_CATALOG'),
         options: remoteAddons.selectable.catalogs
             .concat(installedAddons.selectable.catalogs)
             .map(({ name, deepLinks }) => ({
                 value: deepLinks.addons,
-                label: translateOption(name, 'ADDON_'),
-                title: translateOption(name, 'ADDON_'),
+                label: t.stringWithPrefix(name, 'ADDON_'),
+                title: t.stringWithPrefix(name, 'ADDON_'),
             })),
         selected: remoteAddons.selectable.catalogs
             .concat(installedAddons.selectable.catalogs)
@@ -22,7 +21,7 @@ const mapSelectableInputs = (installedAddons, remoteAddons) => {
             () => {
                 const selectableCatalog = remoteAddons.selectable.catalogs
                     .find(({ id }) => id === remoteAddons.selected.request.path.id);
-                return selectableCatalog ? translateOption(selectableCatalog.name, 'ADDON_') : remoteAddons.selected.request.path.id;
+                return selectableCatalog ? t.stringWithPrefix(selectableCatalog.name, 'ADDON_') : remoteAddons.selected.request.path.id;
             }
             :
             null,
@@ -31,16 +30,16 @@ const mapSelectableInputs = (installedAddons, remoteAddons) => {
         }
     };
     const typeSelect = {
-        title: t('SELECT_TYPE'),
+        title: t.string('SELECT_TYPE'),
         options: installedAddons.selected !== null ?
             installedAddons.selectable.types.map(({ type, deepLinks }) => ({
                 value: deepLinks.addons,
-                label: type !== null ? translateOption(type, 'TYPE_') : t('TYPE_ALL')
+                label: type !== null ? t.stringWithPrefix(type, 'TYPE_') : t.string('TYPE_ALL')
             }))
             :
             remoteAddons.selectable.types.map(({ type, deepLinks }) => ({
                 value: deepLinks.addons,
-                label: translateOption(type, 'TYPE_')
+                label: t.stringWithPrefix(type, 'TYPE_')
             })),
         selected: installedAddons.selected !== null ?
             installedAddons.selectable.types
@@ -53,12 +52,12 @@ const mapSelectableInputs = (installedAddons, remoteAddons) => {
         renderLabelText: () => {
             return installedAddons.selected !== null ?
                 installedAddons.selected.request.type === null ?
-                    t('TYPE_ALL')
+                    t.string('TYPE_ALL')
                     :
-                    translateOption(installedAddons.selected.request.type, 'TYPE_')
+                    t.stringWithPrefix(installedAddons.selected.request.type, 'TYPE_')
                 :
                 remoteAddons.selected !== null ?
-                    translateOption(remoteAddons.selected.request.path.type, 'TYPE_')
+                    t.stringWithPrefix(remoteAddons.selected.request.path.type, 'TYPE_')
                     :
                     typeSelect.title;
         },
@@ -70,8 +69,9 @@ const mapSelectableInputs = (installedAddons, remoteAddons) => {
 };
 
 const useSelectableInputs = (installedAddons, remoteAddons) => {
+    const t = useTranslate();
     const selectableInputs = React.useMemo(() => {
-        return mapSelectableInputs(installedAddons, remoteAddons);
+        return mapSelectableInputs(installedAddons, remoteAddons, t);
     }, [installedAddons, remoteAddons]);
     return selectableInputs;
 };

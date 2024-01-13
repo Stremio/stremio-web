@@ -5,28 +5,7 @@ const classNames = require('classnames');
 const PropTypes = require('prop-types');
 const styles = require('./styles.less');
 
-const StatisticsMenu = ({ className, stream, statistics }) => {
-    const peers = React.useMemo(() => {
-        return statistics.type === 'Ready' && statistics.content?.peers ?
-            statistics.content.peers
-            :
-            0;
-    }, [statistics]);
-
-    const speed = React.useMemo(() => {
-        return statistics.type === 'Ready' && statistics.content?.downloadSpeed ?
-            (statistics.content.downloadSpeed / 1000 / 1000).toFixed(2)
-            :
-            0;
-    }, [statistics]);
-
-    const completed = React.useMemo(() => {
-        return statistics.type === 'Ready' && statistics.content?.streamProgress ?
-            (statistics.content.streamProgress * 100).toFixed(2)
-            :
-            0;
-    }, [statistics]);
-
+const StatisticsMenu = ({ className, peers, speed, completed, infoHash }) => {
     return (
         <div className={classNames(className, styles['statistics-menu-container'])}>
             <div className={styles['title']}>
@@ -63,7 +42,7 @@ const StatisticsMenu = ({ className, stream, statistics }) => {
                     Info Hash
                 </div>
                 <div className={styles['value']}>
-                    { stream.infoHash }
+                    { infoHash }
                 </div>
             </div>
         </div>
@@ -72,8 +51,10 @@ const StatisticsMenu = ({ className, stream, statistics }) => {
 
 StatisticsMenu.propTypes = {
     className: PropTypes.string,
-    stream: PropTypes.object,
-    statistics: PropTypes.object,
+    peers: PropTypes.number,
+    speed: PropTypes.number,
+    completed: PropTypes.number,
+    infoHash: PropTypes.string,
 };
 
 module.exports = StatisticsMenu;

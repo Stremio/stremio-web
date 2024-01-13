@@ -90,36 +90,6 @@ const ControlBar = ({
             }
         }
     }, [muted, onMuteRequested, onUnmuteRequested]);
-    const onSubtitlesButtonClick = React.useCallback(() => {
-        if (typeof onToggleSubtitlesMenu === 'function') {
-            onToggleSubtitlesMenu();
-        }
-    }, [onToggleSubtitlesMenu]);
-    const onInfoButtonClick = React.useCallback(() => {
-        if (typeof onToggleInfoMenu === 'function') {
-            onToggleInfoMenu();
-        }
-    }, [onToggleInfoMenu]);
-    const onSpeedButtonClick = React.useCallback(() => {
-        if (typeof onToggleSpeedMenu === 'function') {
-            onToggleSpeedMenu();
-        }
-    }, [onToggleSpeedMenu]);
-    const onVideosButtonClick = React.useCallback(() => {
-        if (typeof onToggleVideosMenu === 'function') {
-            onToggleVideosMenu();
-        }
-    }, [onToggleVideosMenu]);
-    const onOptionsButtonClick = React.useCallback(() => {
-        if (typeof onToggleOptionsMenu === 'function') {
-            onToggleOptionsMenu();
-        }
-    }, [onToggleOptionsMenu]);
-    const onStatisticsButtonClick = React.useCallback(() => {
-        if (typeof onToggleStatisticsMenu === 'function') {
-            onToggleStatisticsMenu();
-        }
-    }, [onToggleStatisticsMenu]);
     const onChromecastButtonClick = React.useCallback(() => {
         chromecast.transport.requestSession();
     }, []);
@@ -175,30 +145,30 @@ const ControlBar = ({
                     <Icon className={styles['icon']} name={'more-vertical'} />
                 </Button>
                 <div className={classnames(styles['control-bar-buttons-menu-container'], { 'open': buttonsMenuOpen })}>
-                    <Button className={classnames(styles['control-bar-button'], { 'disabled': statistics === null || statistics.type === 'Err' || stream === null || typeof stream.infoHash !== 'string' || typeof stream.fileIdx !== 'number' })} tabIndex={-1} onMouseDown={onStatisticsButtonMouseDown} onClick={onStatisticsButtonClick}>
+                    <Button className={classnames(styles['control-bar-button'], { 'disabled': statistics === null || statistics.type === 'Err' || stream === null || typeof stream.infoHash !== 'string' || typeof stream.fileIdx !== 'number' })} tabIndex={-1} onMouseDown={onStatisticsButtonMouseDown} onClick={onToggleStatisticsMenu}>
                         <Icon className={styles['icon']} name={'network'} />
                     </Button>
-                    <Button className={classnames(styles['control-bar-button'], { 'disabled': playbackSpeed === null })} tabIndex={-1} onMouseDown={onSpeedButtonMouseDown} onClick={onSpeedButtonClick}>
+                    <Button className={classnames(styles['control-bar-button'], { 'disabled': playbackSpeed === null })} tabIndex={-1} onMouseDown={onSpeedButtonMouseDown} onClick={onToggleSpeedMenu}>
                         <Icon className={styles['icon']} name={'speed'} />
                     </Button>
-                    <Button className={classnames(styles['control-bar-button'], { 'disabled': metaItem === null || metaItem.type !== 'Ready' })} tabIndex={-1} onMouseDown={onInfoButtonMouseDown} onClick={onInfoButtonClick}>
+                    <Button className={classnames(styles['control-bar-button'], { 'disabled': metaItem === null || metaItem.type !== 'Ready' })} tabIndex={-1} onMouseDown={onInfoButtonMouseDown} onClick={onToggleInfoMenu}>
                         <Icon className={styles['icon']} name={'about'} />
                     </Button>
                     <Button className={classnames(styles['control-bar-button'], { 'disabled': !chromecastServiceActive })} tabIndex={-1} onClick={onChromecastButtonClick}>
                         <Icon className={styles['icon']} name={'cast'} />
                     </Button>
-                    <Button className={classnames(styles['control-bar-button'], { 'disabled': (!Array.isArray(subtitlesTracks) || subtitlesTracks.length === 0) && (!Array.isArray(audioTracks) || audioTracks.length === 0) })} tabIndex={-1} onMouseDown={onSubtitlesButtonMouseDown} onClick={onSubtitlesButtonClick}>
+                    <Button className={classnames(styles['control-bar-button'], { 'disabled': (!Array.isArray(subtitlesTracks) || subtitlesTracks.length === 0) && (!Array.isArray(audioTracks) || audioTracks.length === 0) })} tabIndex={-1} onMouseDown={onSubtitlesButtonMouseDown} onClick={onToggleSubtitlesMenu}>
                         <Icon className={styles['icon']} name={'subtitles'} />
                     </Button>
                     {
                         metaItem?.content?.videos?.length > 0 ?
-                            <Button className={styles['control-bar-button']} tabIndex={-1} onMouseDown={onVideosButtonMouseDown} onClick={onVideosButtonClick}>
+                            <Button className={styles['control-bar-button']} tabIndex={-1} onMouseDown={onVideosButtonMouseDown} onClick={onToggleVideosMenu}>
                                 <Icon className={styles['icon']} name={'episodes'} />
                             </Button>
                             :
                             null
                     }
-                    <Button className={styles['control-bar-button']} tabIndex={-1} onMouseDown={onOptionsButtonMouseDown} onClick={onOptionsButtonClick}>
+                    <Button className={styles['control-bar-button']} tabIndex={-1} onMouseDown={onOptionsButtonMouseDown} onClick={onToggleOptionsMenu}>
                         <Icon className={styles['icon']} name={'more-horizontal'} />
                     </Button>
                 </div>
