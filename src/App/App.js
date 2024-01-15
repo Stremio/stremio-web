@@ -146,10 +146,8 @@ const App = () => {
                 .catch((e) => console.error(e));
         }
         return () => {
-            if (services.core.active) {
-                window.removeEventListener('focus', onWindowFocus);
-                services.core.transport.off('CoreEvent', onCoreEvent);
-            }
+            window.removeEventListener('focus', onWindowFocus);
+            services.core.transport?.off('CoreEvent', onCoreEvent);
         };
     }, [initialized]);
     return (
