@@ -57,8 +57,6 @@ const Player = ({ urlParams, queryParams }) => {
     const [videosMenuOpen, , closeVideosMenu, toggleVideosMenu] = useBinaryState(false);
     const [statisticsMenuOpen, , closeStatisticsMenu, toggleStatisticsMenu] = useBinaryState(false);
     const [nextVideoPopupOpen, openNextVideoPopup, closeNextVideoPopup] = useBinaryState(false);
-    const [volumeChangeIndicatorOpen, openVolumeChangeIndicator, closeVolumeChangeIndicator] = useBinaryState(false);
-    const volumeChangeTimeout = React.useRef(null);
 
     const menusOpen = React.useMemo(() => {
         return optionsMenuOpen || subtitlesMenuOpen || infoMenuOpen || speedMenuOpen || videosMenuOpen || statisticsMenuOpen;
@@ -157,13 +155,7 @@ const Player = ({ urlParams, queryParams }) => {
 
     const onVolumeChangeRequested = React.useCallback((volume) => {
         video.setProp('volume', volume);
-        if (immersed && !menusOpen) {
-            openVolumeChangeIndicator();
-        }
-
-        if (volumeChangeTimeout.current) clearTimeout(volumeChangeTimeout.current);
-        volumeChangeTimeout.current = setTimeout(closeVolumeChangeIndicator, 1500);
-    }, [immersed, menusOpen]);
+    }, []);
 
     const onSeekRequested = React.useCallback((time) => {
         video.setProp('time', time);
@@ -433,12 +425,6 @@ const Player = ({ urlParams, queryParams }) => {
     }, [video.state.playbackSpeed]);
 
     React.useEffect(() => {
-        return () => {
-            if (volumeChangeTimeout.current) clearTimeout(volumeChangeTimeout.current);
-        };
-    }, []);
-
-    React.useEffect(() => {
         const toastFilter = (item) => item?.dataset?.type === 'CoreEvent';
         toast.addFilter(toastFilter);
         const onCastStateChange = () => {
@@ -646,11 +632,13 @@ const Player = ({ urlParams, queryParams }) => {
                     null
             }
             {
-                volumeChangeIndicatorOpen ?
+                immersed ?
                     <VolumeChangeIndicator
                         muted={video.state.muted}
                         volume={video.state.volume}
                         onVolumeChangeRequested={onVolumeChangeRequested}
+                        immersed={immersed}
+                        menusOpen={menusOpen}
                     />
                     :
                     null
