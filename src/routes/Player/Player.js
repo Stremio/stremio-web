@@ -632,13 +632,11 @@ const Player = ({ urlParams, queryParams }) => {
                     null
             }
             {
-                immersed ?
+                video.state.volume !== null && overlayHidden ?
                     <VolumeChangeIndicator
                         muted={video.state.muted}
                         volume={video.state.volume}
                         onVolumeChangeRequested={onVolumeChangeRequested}
-                        immersed={immersed}
-                        menusOpen={menusOpen}
                     />
                     :
                     null

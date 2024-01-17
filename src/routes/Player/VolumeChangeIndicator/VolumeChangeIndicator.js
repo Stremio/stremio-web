@@ -8,23 +8,26 @@ const PropTypes = require('prop-types');
 const styles = require('./styles');
 const { useBinaryState } = require('stremio/common');
 
-const VolumeChangeIndicator = React.memo(({ muted, onVolumeChangeRequested, volume, menusOpen, immersed }) => {
-
+const VolumeChangeIndicator = React.memo(({ muted, onVolumeChangeRequested, volume }) => {
     const [volumeIndicatorOpen, openVolumeIndicator, closeVolumeIndicator] = useBinaryState(false);
     const volumeChangeTimeout = React.useRef(null);
+    const prevVolume = React.useRef(volume);
 
     React.useEffect(() => {
-        if (immersed && !menusOpen) openVolumeIndicator();
+        if (prevVolume.current !== volume) {
+            openVolumeIndicator();
+            if (volumeChangeTimeout.current) clearTimeout(volumeChangeTimeout.current);
+            volumeChangeTimeout.current = setTimeout(closeVolumeIndicator, 1500);
+        }
 
-        if (volumeChangeTimeout.current) clearTimeout(volumeChangeTimeout.current);
-        volumeChangeTimeout.current = setTimeout(closeVolumeIndicator, 1500);
-    }, [volume, menusOpen, immersed]);
+        prevVolume.current = volume;
+    }, [volume]);
 
     React.useEffect(() => {
         return () => {
             if (volumeChangeTimeout.current) clearTimeout(volumeChangeTimeout.current);
         };
-    }, [volume]);
+    }, []);
 
     return (
         <React.Fragment>
@@ -54,9 +57,5 @@ module.exports = VolumeChangeIndicator;
 VolumeChangeIndicator.propTypes = {
     muted: PropTypes.bool,
     onVolumeChangeRequested: PropTypes.func,
-    volume: PropTypes.number,
-    menusOpen: PropTypes.bool,
-    immersed: PropTypes.bool,
-    openVolumeIndicator: PropTypes.func,
-    closeVolumeIndicator: PropTypes.func
+    volume: PropTypes.number
 };
