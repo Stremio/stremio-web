@@ -7,6 +7,7 @@ const { useTranslation } = require('react-i18next');
 const { default: Icon } = require('@stremio/stremio-icons/react');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
+const useToast = require('stremio/common/Toast/useToast');
 const Button = require('stremio/common/Button');
 const TextInput = require('stremio/common/TextInput');
 const styles = require('./styles');
@@ -14,6 +15,7 @@ const styles = require('./styles');
 const SharePrompt = ({ className, url }) => {
     const { t } = useTranslation();
     const { core } = useServices();
+    const toast = useToast();
     const inputRef = React.useRef(null);
     const routeFocused = useRouteFocused();
     const selectInputContent = React.useCallback(() => {
@@ -25,6 +27,11 @@ const SharePrompt = ({ className, url }) => {
         if (inputRef.current !== null) {
             inputRef.current.select();
             document.execCommand('copy');
+            toast.show({
+                type: 'success',
+                title: 'Copied to clipboard',
+                timeout: 3000,
+            });
         }
     }, []);
     React.useEffect(() => {
