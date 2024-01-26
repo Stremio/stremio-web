@@ -45,11 +45,12 @@ const SharePrompt = ({ className, url }) => {
             <div className={styles['buttons-container']}>
                 <Button className={classnames(styles['button-container'], styles['facebook-button'])} title={'Facebook'} href={`https://www.facebook.com/sharer/sharer.php?u=${url}`} target={'_blank'}>
                     <Icon className={styles['icon']} name={'facebook'} />
-                    <div className={styles['label']}>Facebook</div>
                 </Button>
-                <Button className={classnames(styles['button-container'], styles['twitter-button'])} title={'Twitter'} href={`https://twitter.com/home?status=${url}`} target={'_blank'}>
-                    <Icon className={styles['icon']} name={'ic_twitter'} />
-                    <div className={styles['label']}>Twitter</div>
+                <Button className={classnames(styles['button-container'], styles['x-button'])} title={'X (Twitter)'} href={`https://twitter.com/intent/tweet?text=${url}`} target={'_blank'}>
+                    <Icon className={styles['icon']} name={'x'} />
+                </Button>
+                <Button className={classnames(styles['button-container'], styles['reddit-button'])} title={'Reddit'} href={`https://www.reddit.com/submit?url=${url}`} target={'_blank'}>
+                    <Icon className={styles['icon']} name={'reddit'} />
                 </Button>
             </div>
             <div className={styles['url-container']}>

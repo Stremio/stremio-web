@@ -21,24 +21,12 @@
 
             .icon {
                 flex: none;
-                height: 1.2rem;
-                margin-right: 1rem;
-                color: var(--primary-foreground-color);
-            }
-
-            .label {
-                flex-grow: 0;
-                flex-shrink: 1;
-                flex-basis: auto;
-                max-height: 2.4em;
-                font-size: 1.1rem;
-                font-weight: 500;
-                text-align: center;
+                height: 1.5rem;
                 color: var(--primary-foreground-color);
             }
         }
 
-        .facebook-button, .twitter-button {
+        .facebook-button, .x-button, .reddit-button {
             border-radius: var(--border-radius);
 
             &:focus {
@@ -50,8 +38,12 @@
             background-color: var(--color-facebook);
         }
 
-        .twitter-button {
-            background-color: var(--color-twitter);
+        .x-button {
+            background-color: var(--color-x);
+        }
+
+        .reddit-button {
+            background-color: var(--color-reddit);
         }
     }
 
