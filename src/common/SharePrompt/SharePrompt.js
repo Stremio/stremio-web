@@ -47,7 +47,7 @@ const SharePrompt = ({ className, url }) => {
                     <Icon className={styles['icon']} name={'facebook'} />
                     <div className={styles['label']}>Facebook</div>
                 </Button>
-                <Button className={classnames(styles['button-container'], styles['twitter-button'])} title={'Twitter'} href={`https://twitter.com/home?status=${url}`} target={'_blank'}>
+                <Button className={classnames(styles['button-container'], styles['twitter-button'])} title={'Twitter'} href={`https://twitter.com/intent/tweet?text=${url}`} target={'_blank'}>
                     <Icon className={styles['icon']} name={'ic_twitter'} />
                     <div className={styles['label']}>Twitter</div>
                 </Button>
