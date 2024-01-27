@@ -4,7 +4,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { t } = require('i18next');
-const Icon = require('@stremio/stremio-icons/dom');
+const { default: Icon } = require('@stremio/stremio-icons/react');
 const { Button, Multiselect } = require('stremio/common');
 const SeasonsBarPlaceholder = require('./SeasonsBarPlaceholder');
 const styles = require('./styles');
@@ -49,7 +49,7 @@ const SeasonsBar = ({ className, seasons, season, onSelect }) => {
     return (
         <div className={classnames(className, styles['seasons-bar-container'])}>
             <Button className={styles['prev-season-button']} title={'Previous season'} data-action={'prev'} onClick={prevNextButtonOnClick}>
-                <Icon className={styles['icon']} icon={'ic_arrow_thin_left'} />
+                <Icon className={styles['icon']} name={'chevron-back'} />
                 <div className={styles['label']}>Prev</div>
             </Button>
             <Multiselect
@@ -62,7 +62,7 @@ const SeasonsBar = ({ className, seasons, season, onSelect }) => {
             />
             <Button className={styles['next-season-button']} title={'Next season'} data-action={'next'} onClick={prevNextButtonOnClick}>
                 <div className={styles['label']}>Next</div>
-                <Icon className={styles['icon']} icon={'ic_arrow_thin_right'} />
+                <Icon className={styles['icon']} name={'chevron-forward'} />
             </Button>
         </div>
     );

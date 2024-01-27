@@ -3,7 +3,6 @@
 .meta-preview-placeholder-container {
     display: flex;
     flex-direction: column;
-    padding: 2rem;
 
     .meta-info-container {
         flex: 1;
@@ -13,6 +12,7 @@
             width: 20rem;
             height: 8rem;
             max-width: 100%;
+            border-radius: var(--border-radius);
             background-color: var(--color-placeholder-background);
         }
 
@@ -26,34 +26,15 @@
                 flex-basis: 5rem;
                 height: 1.4rem;
                 margin-right: 1rem;
+                border-radius: var(--border-radius);
                 background-color: var(--color-placeholder-background);
             }
 
             .release-info-container {
                 flex-basis: 5rem;
                 height: 1.4rem;
+                border-radius: var(--border-radius);
                 background-color: var(--color-placeholder-background);
-            }
-        }
-
-        .description-container {
-            margin: 1rem 0;
-
-            .description-label-container {
-                background-color: var(--color-placeholder-background);
-
-                &:nth-child(1) {
-                    width: 20rem;
-                    height: 1.4rem;
-                    max-width: 80%;
-                }
-
-                &:nth-child(2) {
-                    width: 26rem;
-                    height: 4.6rem;
-                    max-width: 80%;
-                    margin-top: 1rem;
-                }
             }
         }
 
@@ -64,6 +45,7 @@
                 width: 6.5rem;
                 height: 1.6rem;
                 max-width: 100%;
+                border-radius: var(--border-radius);
                 background-color: var(--color-placeholder-background);
             }
 
@@ -72,6 +54,7 @@
                 height: 1.2rem;
                 max-width: 100%;
                 margin-top: 0.2rem;
+                border-radius: var(--border-radius);
                 background-color: var(--color-placeholder-background);
             }
         }
@@ -81,32 +64,9 @@
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
-        max-height: 6rem;
-
-        .action-button-container {
-            flex: none;
-            width: 6rem;
-            height: 6rem;
-            margin-right: 2rem;
-            background-color: var(--color-placeholder-background);
-
-            &:last-child {
-                margin-right: 0;
-            }
-
-            .action-button-icon {
-                width: 2rem;
-                height: 2rem;
-                margin: 1rem 2rem 0 2rem;
-                background-color: var(--color-placeholder-background);
-            }
-
-            .action-button-label {
-                width: 4rem;
-                height: 1.2rem;
-                margin: 0.9rem 1rem;
-                background-color: var(--color-placeholder-background);
-            }
-        }
+        height: 4rem;
+        margin-bottom: 1rem;
+        border-radius: 4rem;
+        background-color: var(--color-placeholder-background);
     }
 }

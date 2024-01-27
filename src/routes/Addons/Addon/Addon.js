@@ -4,7 +4,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { useTranslation } = require('react-i18next');
-const Icon = require('@stremio/stremio-icons/dom');
+const { default: Icon } = require('@stremio/stremio-icons/react');
 const { Button, Image } = require('stremio/common');
 const styles = require('./styles');
 
@@ -51,7 +51,7 @@ const Addon = ({ className, id, name, version, logo, description, types, behavio
         }
     }, [onToggle, dataset]);
     const renderLogoFallback = React.useCallback(() => (
-        <Icon className={styles['icon']} icon={'ic_addons'} />
+        <Icon className={styles['icon']} name={'addons'} />
     ), []);
     return (
         <Button className={classnames(className, styles['addon-container'])} onKeyDown={onKeyDown}>
@@ -98,7 +98,7 @@ const Addon = ({ className, id, name, version, logo, description, types, behavio
                     {
                         !behaviorHints.configurationRequired && behaviorHints.configurable ?
                             <Button className={styles['configure-button-container']} title={t('ADDON_CONFIGURE')} tabIndex={-1} onClick={configureButtonOnClick}>
-                                <Icon className={styles['icon']} icon={'ic_settings'} />
+                                <Icon className={styles['icon']} name={'settings'} />
                             </Button>
                             :
                             null
@@ -113,7 +113,7 @@ const Addon = ({ className, id, name, version, logo, description, types, behavio
                     </Button>
                 </div>
                 <Button className={styles['share-button-container']} title={t('SHARE_ADDON')} tabIndex={-1} onClick={shareButtonOnClick}>
-                    <Icon className={styles['icon']} icon={'ic_share'} />
+                    <Icon className={styles['icon']} name={'share'} />
                     <div className={styles['label']}>{ t('SHARE_ADDON') }</div>
                 </Button>
             </div>

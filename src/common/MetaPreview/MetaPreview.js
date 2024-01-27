@@ -5,7 +5,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const UrlUtils = require('url');
 const { useTranslation } = require('react-i18next');
-const Icon = require('@stremio/stremio-icons/dom');
+const { default: Icon } = require('@stremio/stremio-icons/react');
 const Button = require('stremio/common/Button');
 const Image = require('stremio/common/Image');
 const ModalDialog = require('stremio/common/ModalDialog');
@@ -95,8 +95,8 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
         return trailerStreams[0].deepLinks.player;
     }, [trailerStreams]);
     const renderLogoFallback = React.useCallback(() => (
-        <div className={styles['logo-placeholder']}>{!compact ? name : null}</div>
-    ), [compact, name]);
+        <div className={styles['logo-placeholder']}>{name}</div>
+    ), [name]);
     return (
         <div className={classnames(className, styles['meta-preview-container'], { [styles['compact']]: compact })}>
             {
@@ -147,8 +147,8 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                                         target={'_blank'}
                                         {...(compact ? { tabIndex: -1 } : null)}
                                     >
-                                        <Icon className={styles['icon']} icon={'ic_imdbnoframe'} />
                                         <div className={styles['label']}>{linksGroups.get(CONSTANTS.IMDB_LINK_CATEGORY).label}</div>
+                                        <Icon className={styles['icon']} name={'imdb'} />
                                     </Button>
                                     :
                                     null
@@ -158,16 +158,10 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                         null
                 }
                 {
-                    compact && typeof name === 'string' && name.length > 0 ?
-                        <div className={styles['name-container']}>
-                            {name}
-                        </div>
-                        :
-                        null
-                }
-                {
                     compact && typeof description === 'string' && description.length > 0 ?
-                        <div className={styles['description-container']}>{description}</div>
+                        <div className={styles['description-container']}>
+                            {description}
+                        </div>
                         :
                         null
                 }
@@ -187,14 +181,26 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                             />
                         ))
                 }
+                {
+                    !compact && typeof description === 'string' && description.length > 0 ?
+                        <div className={styles['description-container']}>
+                            <div className={styles['label-container']}>
+                                {t('SUMMARY')}
+                            </div>
+                            {description}
+                        </div>
+                        :
+                        null
+                }
             </div>
             <div className={styles['action-buttons-container']}>
                 {
                     typeof toggleInLibrary === 'function' ?
                         <ActionButton
                             className={styles['action-button']}
-                            icon={inLibrary ? 'ic_removelib' : 'ic_addlib'}
+                            icon={inLibrary ? 'remove-from-library' : 'add-to-library'}
                             label={inLibrary ? t('REMOVE_FROM_LIB') : t('ADD_TO_LIB')}
+                            tooltip={compact}
                             tabIndex={compact ? -1 : 0}
                             onClick={toggleInLibrary}
                         />
@@ -205,10 +211,11 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                     typeof trailerHref === 'string' ?
                         <ActionButton
                             className={styles['action-button']}
-                            icon={'ic_movies'}
+                            icon={'trailer'}
                             label={t('TRAILER')}
                             tabIndex={compact ? -1 : 0}
                             href={trailerHref}
+                            tooltip={compact}
                         />
                         :
                         null
@@ -216,8 +223,8 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                 {
                     typeof showHref === 'string' && compact ?
                         <ActionButton
-                            className={styles['action-button']}
-                            icon={'ic_play'}
+                            className={classnames(styles['action-button'], styles['show-button'])}
+                            icon={'play'}
                             label={t('SHOW')}
                             tabIndex={compact ? -1 : 0}
                             href={showHref}
@@ -230,8 +237,9 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                         <React.Fragment>
                             <ActionButton
                                 className={styles['action-button']}
-                                icon={'ic_share'}
+                                icon={'share'}
                                 label={t('CTX_SHARE')}
+                                tooltip={true}
                                 tabIndex={compact ? -1 : 0}
                                 onClick={openShareModal}
                             />

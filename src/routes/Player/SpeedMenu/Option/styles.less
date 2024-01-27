@@ -7,9 +7,11 @@
     flex-direction: row;
     align-items: center;
     padding: 0 1.5em;
+    margin-bottom: 0.5rem;
+    border-radius: var(--border-radius);
     
     &:global(.selected) {
-        background-color: @color-background;
+        background-color: var(--overlay-color);
 
         .icon {
             display: block;
@@ -17,13 +19,13 @@
     }
 
     &:hover, &:focus {
-        background-color: @color-background-light2;
+        background-color: var(--overlay-color);
     }
 
     .label {
         flex: 1;
         font-weight: 400;
-        color: @color-surface-light5-90;
+        color: var(--primary-foreground-color);
     }
 
     .icon {
@@ -33,6 +35,6 @@
         height: 0.5rem;
         border-radius: 100%;
         margin-left: 1rem;
-        background-color: @color-accent3-90;
+        background-color: var(--secondary-accent-color);
     }
 }

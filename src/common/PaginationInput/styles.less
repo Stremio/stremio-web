@@ -5,17 +5,18 @@
 .pagination-input-container {
     display: flex;
     flex-direction: row;
+    border-radius: var(--border-radius);
 
     .prev-button-container, .next-button-container {
         flex: none;
         display: flex;
         align-items: center;
         justify-content: center;
-        background-color: @color-background;
+        background-color: var(--overlay-color);
 
         .icon {
             display: block;
-            fill: @color-secondaryvariant1-90;
+            color: var(--primary-foreground-color);
         }
     }
 
@@ -25,7 +26,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background-color: @color-background-dark1;
+        background-color: var(--overlay-color);
 
         .label {
             flex: none;
@@ -35,7 +36,7 @@
             text-overflow: ellipsis;
             text-align: center;
             font-weight: 500;
-            color: @color-secondaryvariant1-90;
+            color: var(--primary-foreground-color);
         }
     }
 }

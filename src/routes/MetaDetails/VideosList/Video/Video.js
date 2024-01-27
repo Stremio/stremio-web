@@ -6,7 +6,7 @@ const classnames = require('classnames');
 const { t } = require('i18next');
 const { useServices } = require('stremio/services');
 const { useRouteFocused } = require('stremio-router');
-const Icon = require('@stremio/stremio-icons/dom');
+const { default: Icon } = require('@stremio/stremio-icons/react');
 const { Button, Image, Popup, useBinaryState } = require('stremio/common');
 const VideoPlaceholder = require('./VideoPlaceholder');
 const styles = require('./styles');
@@ -52,10 +52,10 @@ const Video = ({ className, id, title, thumbnail, episode, released, upcoming, w
             action: 'MetaDetails',
             args: {
                 action: 'MarkVideoAsWatched',
-                args: [id, !watched]
+                args: [{ id, released }, !watched]
             }
         });
-    }, [id, watched]);
+    }, [id, released, watched]);
     const href = React.useMemo(() => {
         return deepLinks ?
             typeof deepLinks.player === 'string' ?
@@ -81,10 +81,19 @@ const Video = ({ className, id, title, thumbnail, episode, released, upcoming, w
                                 renderFallback={() => (
                                     <Icon
                                         className={styles['placeholder-icon']}
-                                        icon={'ic_stremio_tray'}
+                                        name={'symbol'}
                                     />
                                 )}
                             />
+                            {
+                                progress !== null && !isNaN(progress) && progress > 0 ?
+                                    <div className={styles['progress-bar-container']}>
+                                        <div className={styles['progress-bar']} style={{ width: `${progress}%` }} />
+                                        <div className={styles['progress-bar-background']} />
+                                    </div>
+                                    :
+                                    null
+                            }
                         </div>
                         :
                         null
@@ -120,6 +129,7 @@ const Video = ({ className, id, title, thumbnail, episode, released, upcoming, w
                             {
                                 watched ?
                                     <div className={styles['watched-container']}>
+                                        <Icon className={styles['flag-icon']} name={'eye'} />
                                         <div className={styles['flag-label']}>Watched</div>
                                     </div>
                                     :
@@ -128,14 +138,6 @@ const Video = ({ className, id, title, thumbnail, episode, released, upcoming, w
                         </div>
                     </div>
                 </div>
-                {
-                    progress !== null && !isNaN(progress) && progress > 0 ?
-                        <div className={styles['progress-bar-container']}>
-                            <div className={styles['progress-bar']} style={{ width: `${Math.min(progress, 1) * 100}%` }} />
-                        </div>
-                        :
-                        null
-                }
                 {children}
             </Button>
         );

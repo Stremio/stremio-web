@@ -4,7 +4,7 @@ const React = require('react');
 const classnames = require('classnames');
 const throttle = require('lodash.throttle');
 const { useTranslation } = require('react-i18next');
-const Icon = require('@stremio/stremio-icons/dom');
+const { default: Icon } = require('@stremio/stremio-icons/react');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
 const { Button, Checkbox, MainNavBars, Multiselect, ColorInput, TextInput, ModalDialog, useProfile, useStreamingServer, useBinaryState, withCoreSuspender, useToast } = require('stremio/common');
@@ -20,7 +20,7 @@ const SHORTCUTS_SECTION = 'shortcuts';
 
 const Settings = () => {
     const { t } = useTranslation();
-    const { core } = useServices();
+    const { core, shell } = useServices();
     const { routeFocused } = useRouteFocused();
     const profile = useProfile();
     const [dataExport, loadDataExport] = useDataExport();
@@ -34,7 +34,10 @@ const Settings = () => {
         subtitlesBackgroundColorInput,
         subtitlesOutlineColorInput,
         audioLanguageSelect,
+        surroundSoundCheckbox,
         seekTimeDurationSelect,
+        seekShortTimeDurationSelect,
+        escExitFullscreenCheckbox,
         playInExternalPlayerSelect,
         nextVideoPopupDurationSelect,
         bingeWatchingCheckbox,
@@ -43,6 +46,8 @@ const Settings = () => {
         streamingServerUrlInput
     } = useProfileSettingsInputs(profile);
     const {
+        streamingServerRemoteUrlInput,
+        remoteEndpointSelect,
         cacheSizeSelect,
         torrentProfileSelect
     } = useStreamingServerSettingsInputs(streamingServer);
@@ -116,6 +121,16 @@ const Settings = () => {
             }
         });
     }, []);
+    const onCopyRemoteUrlClick = React.useCallback(() => {
+        if (streamingServer.remoteUrl) {
+            navigator.clipboard.writeText(streamingServer.remoteUrl);
+            toast.show({
+                type: 'success',
+                title: t('SETTINGS_REMOTE_URL_COPIED'),
+                timeout: 2500,
+            });
+        }
+    }, [streamingServer.remoteUrl]);
     const sectionsContainerRef = React.useRef(null);
     const generalSectionRef = React.useRef(null);
     const playerSectionRef = React.useRef(null);
@@ -149,7 +164,7 @@ const Settings = () => {
             behavior: 'smooth'
         });
     }, []);
-    const sectionsContainerOnScorll = React.useCallback(throttle(() => {
+    const sectionsContainerOnScroll = React.useCallback(throttle(() => {
         updateSelectedSectionId();
     }, 50), []);
     React.useEffect(() => {
@@ -199,40 +214,38 @@ const Settings = () => {
                             null
                     }
                 </div>
-                <div ref={sectionsContainerRef} className={styles['sections-container']} onScroll={sectionsContainerOnScorll}>
+                <div ref={sectionsContainerRef} className={styles['sections-container']} onScroll={sectionsContainerOnScroll}>
                     <div ref={generalSectionRef} className={styles['section-container']}>
-                        <div className={styles['section-title']}>{ t('SETTINGS_NAV_GENERAL') }</div>
                         <div className={classnames(styles['option-container'], styles['user-info-option-container'])}>
-                            <div
-                                className={styles['avatar-container']}
-                                style={{
-                                    backgroundImage: profile.auth === null ?
-                                        `url('${require('/images/anonymous.png')}')`
-                                        :
-                                        profile.auth.user.avatar ?
-                                            `url('${profile.auth.user.avatar}')`
+                            <div className={styles['user-info-content']}>
+                                <div
+                                    className={styles['avatar-container']}
+                                    style={{
+                                        backgroundImage: profile.auth === null ?
+                                            `url('${require('/images/anonymous.png')}')`
                                             :
-                                            `url('${require('/images/default_avatar.png')}')`
-                                }}
-                            />
-                            <div className={styles['email-logout-container']}>
-                                <div className={styles['email-label-container']} title={profile.auth === null ? 'Anonymous user' : profile.auth.user.email}>
-                                    <div className={styles['email-label']}>
-                                        {profile.auth === null ? 'Anonymous user' : profile.auth.user.email}
+                                            profile.auth.user.avatar ?
+                                                `url('${profile.auth.user.avatar}')`
+                                                :
+                                                `url('${require('/images/default_avatar.png')}')`
+                                    }}
+                                />
+                                <div className={styles['email-logout-container']}>
+                                    <div className={styles['email-label-container']} title={profile.auth === null ? 'Anonymous user' : profile.auth.user.email}>
+                                        <div className={styles['email-label']}>
+                                            {profile.auth === null ? 'Anonymous user' : profile.auth.user.email}
+                                        </div>
                                     </div>
+                                    {
+                                        profile.auth !== null ?
+                                            <Button className={styles['logout-button-container']} title={ t('LOG_OUT') } onClick={logoutButtonOnClick}>
+                                                <div className={styles['logout-label']}>{ t('LOG_OUT') }</div>
+                                            </Button>
+                                            :
+                                            null
+                                    }
                                 </div>
-                                {
-                                    profile.auth !== null ?
-                                        <Button className={styles['logout-button-container']} title={ t('LOG_OUT') } onClick={logoutButtonOnClick}>
-                                            <div className={styles['logout-label']}>{ t('LOG_OUT') }</div>
-                                        </Button>
-                                        :
-                                        null
-                                }
                             </div>
-                            <Button className={styles['user-panel-container']} title={'User panel'} target={'_blank'} href={'https://www.stremio.com/acc-settings'}>
-                                <div className={styles['user-panel-label']}>{ t('USER_PANEL') }</div>
-                            </Button>
                         </div>
                         {
                             profile.auth === null ?
@@ -244,9 +257,79 @@ const Settings = () => {
                                 :
                                 null
                         }
+                    </div>
+                    <div className={styles['section-container']}>
+                        <div className={classnames(styles['option-container'], styles['link-container'])}>
+                            <Button className={classnames(styles['option-input-container'], styles['link-input-container'])} title={t('SETTINGS_DATA_EXPORT')} tabIndex={-1} onClick={exportDataOnClick}>
+                                <div className={styles['label']}>{ t('SETTINGS_DATA_EXPORT') }</div>
+                            </Button>
+                        </div>
+                        {
+                            profile.auth !== null && profile.auth.user !== null && typeof profile.auth.user._id === 'string' ?
+                                <div className={classnames(styles['option-container'], styles['link-container'])}>
+                                    <Button className={classnames(styles['option-input-container'], styles['link-input-container'])} title={t('SETTINGS_SUBSCRIBE_CALENDAR')} tabIndex={-1} onClick={subscribeCalendarOnClick}>
+                                        <div className={styles['label']}>{ t('SETTINGS_SUBSCRIBE_CALENDAR') }</div>
+                                    </Button>
+                                </div>
+                                :
+                                null
+                        }
+                        <div className={classnames(styles['option-container'], styles['link-container'])}>
+                            <Button className={classnames(styles['option-input-container'], styles['link-input-container'])} title={t('SETTINGS_SUPPORT')} target={'_blank'} href={'https://stremio.zendesk.com/hc/en-us'}>
+                                <div className={styles['label']}>{ t('SETTINGS_SUPPORT') }</div>
+                            </Button>
+                        </div>
+                        <div className={classnames(styles['option-container'], styles['link-container'])}>
+                            <Button className={classnames(styles['option-input-container'], styles['link-input-container'])} title={'Source code'} target={'_blank'} href={`https://github.com/stremio/stremio-web/tree/${process.env.COMMIT_HASH}`}>
+                                <div className={styles['label']}>Source code</div>
+                            </Button>
+                        </div>
+                        <div className={classnames(styles['option-container'], styles['link-container'])}>
+                            <Button className={classnames(styles['option-input-container'], styles['link-input-container'])} title={t('TERMS_OF_SERVICE')} target={'_blank'} href={'https://www.stremio.com/tos'}>
+                                <div className={styles['label']}>{ t('TERMS_OF_SERVICE') }</div>
+                            </Button>
+                        </div>
+                        <div className={classnames(styles['option-container'], styles['link-container'])}>
+                            <Button className={classnames(styles['option-input-container'], styles['link-input-container'])} title={t('PRIVACY_POLICY')} target={'_blank'} href={'https://www.stremio.com/privacy'}>
+                                <div className={styles['label']}>{ t('PRIVACY_POLICY') }</div>
+                            </Button>
+                        </div>
+                        {
+                            profile.auth !== null && profile.auth.user !== null ?
+                                <div className={classnames(styles['option-container'], styles['link-container'])}>
+                                    <Button className={classnames(styles['option-input-container'], styles['link-input-container'])} title={t('SETTINGS_ACC_DELETE')} target={'_blank'} href={'https://stremio.zendesk.com/hc/en-us/articles/360021428911-How-to-delete-my-account'}>
+                                        <div className={styles['label']}>{ t('SETTINGS_ACC_DELETE') }</div>
+                                    </Button>
+                                </div>
+                                :
+                                null
+                        }
+                        {
+                            profile.auth !== null && profile.auth.user !== null && typeof profile.auth.user.email === 'string' ?
+                                <div className={styles['option-container']}>
+                                    <Button className={classnames(styles['option-input-container'], styles['link-input-container'])} title={t('SETTINGS_CHANGE_PASSWORD')} target={'_blank'} href={`https://www.strem.io/reset-password/${profile.auth.user.email}`}>
+                                        <div className={styles['label']}>{ t('SETTINGS_CHANGE_PASSWORD') }</div>
+                                    </Button>
+                                </div>
+                                :
+                                null
+                        }
+                        <div className={styles['option-container']}>
+                            <div className={classnames(styles['option-name-container'], styles['trakt-icon'])}>
+                                <Icon className={styles['icon']} name={'trakt'} />
+                                <div className={styles['label']}>Trakt Scrobbling</div>
+                            </div>
+                            <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Authenticate'} disabled={profile.auth === null} tabIndex={-1} onClick={toggleTraktOnClick}>
+                                <div className={styles['label']}>
+                                    { profile.auth !== null && profile.auth.user !== null && profile.auth.user.trakt !== null ? t('LOG_OUT') : t('SETTINGS_TRAKT_AUTHENTICATE') }
+                                </div>
+                            </Button>
+                        </div>
+                    </div>
+                    <div className={styles['section-container']}>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>{ t('SETTINGS_INTERFACE_LANGUAGE') }</div>
+                                <div className={styles['label']}>{ t('SETTINGS_UI_LANGUAGE') }</div>
                             </div>
                             <Multiselect
                                 className={classnames(styles['option-input-container'], styles['multiselect-container'])}
@@ -254,54 +337,13 @@ const Settings = () => {
                                 {...interfaceLanguageSelect}
                             />
                         </div>
-                        <div className={styles['option-container']}>
-                            <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Trakt Scrobbling</div>
-                            </div>
-                            <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Authenticate'} disabled={profile.auth === null} tabIndex={-1} onClick={toggleTraktOnClick}>
-                                <Icon className={styles['icon']} icon={'ic_trakt'} />
-                                <div className={styles['label']}>
-                                    { profile.auth !== null && profile.auth.user !== null && profile.auth.user.trakt !== null ? t('LOG_OUT') : t('SETTINGS_TRAKT_AUTHENTICATE') }
-                                </div>
-                            </Button>
-                        </div>
-                        <div className={styles['option-container']}>
-                            <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>{ t('Calendar') }</div>
-                            </div>
-                            <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Subscribe'} disabled={!(profile.auth && profile.auth.user && profile.auth.user._id)} tabIndex={-1} onClick={subscribeCalendarOnClick}>
-                                <Icon className={styles['icon']} icon={'ic_calendar'} />
-                                <div className={styles['label']}>{ t('SETTINGS_CALENDAR_SUBSCRIBE') }</div>
-                            </Button>
-                        </div>
-                        <div className={styles['option-container']}>
-                            <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={t('SETTINGS_DATA_EXPORT')} tabIndex={-1} onClick={exportDataOnClick}>
-                                <div className={styles['label']}>{ t('SETTINGS_DATA_EXPORT') }</div>
-                            </Button>
-                        </div>
-                        <div className={styles['option-container']}>
-                            <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={t('SETTINGS_SUPPORT')} target={'_blank'} href={'https://stremio.zendesk.com/hc/en-us'}>
-                                <div className={styles['label']}>{ t('SETTINGS_SUPPORT') }</div>
-                            </Button>
-                        </div>
-                        <div className={styles['option-container']}>
-                            <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={'Source code'} target={'_blank'} href={`https://github.com/stremio/stremio-web/tree/${process.env.COMMIT_HASH}`}>
-                                <div className={styles['label']}>Source code</div>
-                            </Button>
-                        </div>
-                        <div className={styles['option-container']}>
-                            <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={t('TERMS_OF_SERVICE')} target={'_blank'} href={'https://www.stremio.com/tos'}>
-                                <div className={styles['label']}>{ t('TERMS_OF_SERVICE') }</div>
-                            </Button>
-                        </div>
-                        <div className={styles['option-container']}>
-                            <Button className={classnames(styles['option-input-container'], styles['link-container'])} title={t('PRIVACY_POLICY')} target={'_blank'} href={'https://www.stremio.com/privacy'}>
-                                <div className={styles['label']}>{ t('PRIVACY_POLICY') }</div>
-                            </Button>
-                        </div>
                     </div>
                     <div ref={playerSectionRef} className={styles['section-container']}>
                         <div className={styles['section-title']}>{ t('SETTINGS_NAV_PLAYER') }</div>
+                        <div className={styles['section-category-container']}>
+                            <Icon className={styles['icon']} name={'subtitles'} />
+                            <div className={styles['label']}>{t('SETTINGS_SECTION_SUBTITLES')}</div>
+                        </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
                                 <div className={styles['label']}>{ t('SETTINGS_SUBTITLES_LANGUAGE') }</div>
@@ -311,6 +353,20 @@ const Settings = () => {
                                 {...subtitlesLanguageSelect}
                             />
                         </div>
+                        {
+                            shell.active ?
+                                <div className={styles['option-container']}>
+                                    <div className={styles['option-name-container']}>
+                                        <div className={styles['label']}>{ t('SETTINGS_FULLSCREEN_EXIT') }</div>
+                                    </div>
+                                    <Checkbox
+                                        className={classnames(styles['option-input-container'], styles['checkbox-container'])}
+                                        {...escExitFullscreenCheckbox}
+                                    />
+                                </div>
+                                :
+                                null
+                        }
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
                                 <div className={styles['label']}>{ t('SETTINGS_SUBTITLES_SIZE') }</div>
@@ -347,6 +403,12 @@ const Settings = () => {
                                 {...subtitlesOutlineColorInput}
                             />
                         </div>
+                    </div>
+                    <div className={styles['section-container']}>
+                        <div className={styles['section-category-container']}>
+                            <Icon className={styles['icon']} name={'volume-medium'} />
+                            <div className={styles['label']}>{t('SETTINGS_SECTION_AUDIO')}</div>
+                        </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
                                 <div className={styles['label']}>{ t('SETTINGS_DEFAULT_AUDIO_TRACK') }</div>
@@ -358,12 +420,54 @@ const Settings = () => {
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>{ t('SETTINGS_REWIND_FAST_FORWARD_DURATION') }</div>
+                                <div className={styles['label']}>{ t('SETTINGS_SURROUND_SOUND') }</div>
+                            </div>
+                            <Checkbox
+                                className={classnames(styles['option-input-container'], styles['checkbox-container'])}
+                                tabIndex={-1}
+                                {...surroundSoundCheckbox}
+                            />
+                        </div>
+                    </div>
+                    <div className={styles['section-container']}>
+                        <div className={styles['section-category-container']}>
+                            <Icon className={styles['icon']} name={'remote'} />
+                            <div className={styles['label']}>{t('SETTINGS_SECTION_CONTROLS')}</div>
+                        </div>
+                        <div className={styles['option-container']}>
+                            <div className={styles['option-name-container']}>
+                                <div className={styles['label']}>{ t('SETTINGS_SEEK_KEY') }</div>
                             </div>
                             <Multiselect
                                 className={classnames(styles['option-input-container'], styles['multiselect-container'])}
                                 {...seekTimeDurationSelect}
                             />
+                        </div>
+                        <div className={styles['option-container']}>
+                            <div className={styles['option-name-container']}>
+                                <div className={styles['label']}>{ t('SETTINGS_SEEK_KEY_SHIFT') }</div>
+                            </div>
+                            <Multiselect
+                                className={classnames(styles['option-input-container'], styles['multiselect-container'])}
+                                {...seekShortTimeDurationSelect}
+                            />
+                        </div>
+                        <div className={styles['option-container']}>
+                            <div className={styles['option-name-container']}>
+                                <div className={styles['label']}>{ t('SETTINGS_PLAY_IN_BACKGROUND') }</div>
+                            </div>
+                            <Checkbox
+                                className={classnames(styles['option-input-container'], styles['checkbox-container'])}
+                                disabled={true}
+                                tabIndex={-1}
+                                {...playInBackgroundCheckbox}
+                            />
+                        </div>
+                    </div>
+                    <div className={styles['section-container']}>
+                        <div className={styles['section-category-container']}>
+                            <Icon className={styles['icon']} name={'play'} />
+                            <div className={styles['label']}>{t('SETTINGS_SECTION_AUTO_PLAY')}</div>
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
@@ -384,16 +488,11 @@ const Settings = () => {
                                 {...nextVideoPopupDurationSelect}
                             />
                         </div>
-                        <div className={styles['option-container']}>
-                            <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>{ t('SETTINGS_PLAY_IN_BACKGROUND') }</div>
-                            </div>
-                            <Checkbox
-                                className={classnames(styles['option-input-container'], styles['checkbox-container'])}
-                                disabled={true}
-                                tabIndex={-1}
-                                {...playInBackgroundCheckbox}
-                            />
+                    </div>
+                    <div className={styles['section-container']}>
+                        <div className={styles['section-category-container']}>
+                            <Icon className={styles['icon']} name={'glasses'} />
+                            <div className={styles['label']}>{t('SETTINGS_SECTION_ADVANCED')}</div>
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
@@ -436,8 +535,8 @@ const Settings = () => {
                                             streamingServer.settings.type === 'Ready' ?
                                                 t('SETTINGS_SERVER_STATUS_ONLINE')
                                                 :
-                                                streamingServer.settings.type === 'Error' ?
-                                                    `${t('SETTINGS_SERVER_STATUS_ERROR')}: (${streamingServer.settings.content})`
+                                                streamingServer.settings.type === 'Err' ?
+                                                    t('SETTINGS_SERVER_STATUS_ERROR')
                                                     :
                                                     streamingServer.settings.type
                                     }
@@ -451,10 +550,40 @@ const Settings = () => {
                             <div className={classnames(styles['option-input-container'], styles['configure-input-container'])}>
                                 <div className={styles['label']} title={streamingServerUrlInput.value}>{streamingServerUrlInput.value}</div>
                                 <Button className={styles['configure-button-container']} title={'Configure server url'} onClick={openConfigureServerUrlModal}>
-                                    <Icon className={styles['icon']} icon={'ic_settings'} />
+                                    <Icon className={styles['icon']} name={'settings'} />
                                 </Button>
                             </div>
                         </div>
+                        {
+                            streamingServerRemoteUrlInput.value !== null ?
+                                <div className={styles['option-container']}>
+                                    <div className={styles['option-name-container']}>
+                                        <div className={styles['label']}>{t('SETTINGS_REMOTE_URL')}</div>
+                                    </div>
+                                    <div className={classnames(styles['option-input-container'], styles['configure-input-container'])}>
+                                        <div className={styles['label']} title={streamingServerRemoteUrlInput.value}>{streamingServerRemoteUrlInput.value}</div>
+                                        <Button className={styles['configure-button-container']} title={t('SETTINGS_COPY_REMOTE_URL')} onClick={onCopyRemoteUrlClick}>
+                                            <Icon className={styles['icon']} name={'link'} />
+                                        </Button>
+                                    </div>
+                                </div>
+                                :
+                                null
+                        }
+                        {
+                            profile.auth !== null && profile.auth.user !== null && remoteEndpointSelect !== null ?
+                                <div className={styles['option-container']}>
+                                    <div className={styles['option-name-container']}>
+                                        <div className={styles['label']}>{ t('SETTINGS_HTTPS_ENDPOINT') }</div>
+                                    </div>
+                                    <Multiselect
+                                        className={classnames(styles['option-input-container'], styles['multiselect-container'])}
+                                        {...remoteEndpointSelect}
+                                    />
+                                </div>
+                                :
+                                null
+                        }
                         {
                             cacheSizeSelect !== null ?
                                 <div className={styles['option-container']}>
@@ -584,6 +713,37 @@ const Settings = () => {
                                 <kbd>{ t('SETTINGS_SHORTCUT_ESC') }</kbd>
                             </div>
                         </div>
+                    </div>
+                    <div className={classnames(styles['section-container'], styles['versions-section-container'])}>
+                        <div className={styles['option-container']}>
+                            <div className={styles['option-name-container']}>
+                                <div className={styles['label']}>
+                                    App Version
+                                </div>
+                            </div>
+                            <div className={classnames(styles['option-input-container'], styles['info-container'])}>
+                                <div className={styles['label']}>
+                                    {process.env.VERSION}
+                                </div>
+                            </div>
+                        </div>
+                        {
+                            streamingServer.settings !== null && streamingServer.settings.type === 'Ready' ?
+                                <div className={styles['option-container']}>
+                                    <div className={styles['option-name-container']}>
+                                        <div className={styles['label']}>
+                                            Server Version
+                                        </div>
+                                    </div>
+                                    <div className={classnames(styles['option-input-container'], styles['info-container'])}>
+                                        <div className={styles['label']}>
+                                            {streamingServer.settings.content.serverVersion}
+                                        </div>
+                                    </div>
+                                </div>
+                                :
+                                null
+                        }
                     </div>
                 </div>
             </div>

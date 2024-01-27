@@ -2,18 +2,43 @@
 
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
 
+@height: 1.7rem;
+@width: 3.2rem;
+@thumb-margin: 0.5rem;
+
+@thumb-size: calc(@height - @thumb-margin);
+
 .checkbox-container {
-    &:global(.checked) {
-        .icon {
-            fill: @color-surface-light5;
-            background-color: @color-primaryvariant1;
+    position: relative;
+    
+    .toggle {
+        position: relative;
+        width: @width;
+        height: @height;
+        border-radius: @height;
+        background-color: var(--overlay-color);
+        transition: background-color 0.1s ease-in-out;
+
+        &::before {
+            content: "";
+            position: absolute;
+            height: @thumb-size;
+            width: @thumb-size;
+            top: calc(@thumb-margin / 2);
+            left: calc(@thumb-margin / 2);
+            border-radius: 50%;
+            background-color: var(--primary-foreground-color);
+            transition: transform 0.1s ease-in-out;
         }
     }
 
-    .icon {
-        display: block;
-        width: 1rem;
-        height: 1rem;
-        fill: @color-surface-light5;
+    &:global(.checked) {
+        .toggle {
+            background-color: var(--secondary-accent-color);
+
+            &::before {
+                transform: translateX(calc(@width - @thumb-size - @thumb-margin));
+            }
+        }
     }
 }

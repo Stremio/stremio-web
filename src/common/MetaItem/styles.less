@@ -18,14 +18,44 @@
     play-icon-circle-centered-icon: icon;
 }
 
+@play-icon-size: 4rem;
+
 .meta-item-container {
     padding: 1rem;
     overflow: visible;
 
     &:hover, &:focus, &:global(.active), &:global(.selected) {
         outline-style: none;
-        background-color: @color-background-light3;
         transition: background-color 100ms ease-out;
+
+        .poster-container {
+            box-shadow: 0 0 0 0.2rem var(--primary-foreground-color);
+
+            .dismiss-icon-layer {
+                opacity: 1;
+            }
+
+            .poster-image-layer {
+                transform: scale(1.05);
+            }
+
+            .play-icon-layer {
+                .play-icon-outer {
+                    color: transparent;
+                }
+
+                .play-icon-background {
+                    background-color: var(--secondary-accent-color);
+                    opacity: 1;
+                }
+            }
+        }
+
+        .title-bar-container {
+            .menu-label-container {
+                opacity: 1;
+            }
+        }
     }
 
     &.poster-shape-poster {
@@ -49,7 +79,71 @@
     .poster-container {
         position: relative;
         z-index: 0;
-        background-color: @color-background;
+        background-color: var(--overlay-color);
+        border-radius: var(--border-radius);
+
+        &:global(.poster-change-cursor) {
+            .poster-image-layer {
+                &:hover {
+                    cursor: zoom-in;
+                }
+            }
+        }
+
+        .dismiss-icon-layer {
+            z-index: -2;
+            position: absolute;
+            top: 0.5rem;
+            left: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 1.5rem;
+            width: 1.5rem;
+            border-radius: 100%;
+            opacity: 0;
+            transition: opacity 0.1s ease-in;
+
+            .dismiss-icon {
+                z-index: 1;
+                position: relative;
+                height: 1.25rem;
+                width: 1.25rem;
+                color: var(--primary-foreground-color);
+                opacity: 0.8;
+            }
+
+            .dismiss-icon-backdrop {
+                z-index: 0;
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background-color: var(--primary-background-color);
+                opacity: 0.6;
+            }
+        }
+
+        .watched-icon-layer {
+            position: absolute;
+            top: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 1.5rem;
+            height: 1.5rem;
+            background-color: var(--primary-accent-color);
+            border-radius: 50%;
+            margin: 0.5rem;
+
+            .watched-icon {
+                width: 0.75rem;
+                height: 0.75rem;
+                color: var(--primary-foreground-color);
+            }
+        }
 
         .poster-image-layer {
             position: absolute;
@@ -62,6 +156,7 @@
             flex-direction: row;
             align-items: center;
             justify-content: center;
+            transition: transform 0.1s ease-out;
 
             .poster-image {
                 flex: none;
@@ -76,46 +171,138 @@
                 flex: none;
                 width: 80%;
                 height: 50%;
-                fill: @color-background-light3-90;
+                color: var(--primary-foreground-color);
+                opacity: 0.2;
             }
         }
 
         .play-icon-layer {
-            position: absolute;
-            top: 30%;
-            right: 0;
-            bottom: 30%;
-            left: 0;
             z-index: -2;
-            overflow: visible;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-top: calc(@play-icon-size / -2);
+            margin-left: calc(@play-icon-size / -2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: @play-icon-size;
+            width: @play-icon-size;
+            transition: transform 0.1s ease-out;
 
             .play-icon {
-                display: block;
-                width: 100%;
-                height: 100%;
-                filter: drop-shadow(0 0 0.5rem @color-background);
+                z-index: 2;
+                position: relative;
+                height: 2.25rem;
+                width: 2.25rem;
+                color: var(--primary-foreground-color);
+            }
 
-                .play-icon-circle-centered-background {
-                    fill: @color-accent4-90;
-                }
+            .play-icon-outer {
+                z-index: 1;
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                color: var(--primary-foreground-color);
+                box-shadow: 0 0 0 0.15rem currentColor inset;
+                border-radius: 100%;
+                transition: color 0.1s ease-in;
+            }
 
-                .play-icon-circle-centered-icon {
-                    fill: @color-surface-light5-90;
-                }
+            .play-icon-background {
+                z-index: 0;
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background-color: var(--primary-background-color);
+                border-radius: 100%;
+                opacity: 0.4;
+                transition: all 0.1s ease-in;
+            }
+
+            &:hover {
+                transform: scale(1.1);
             }
         }
 
         .progress-bar-layer {
-            position: absolute;
-            right: 0;
-            bottom: 0;
-            left: 0;
             z-index: -1;
-            background-color: @color-background-light2;
+            position: absolute;
+            bottom: 1rem;
+            left: 1rem;
+            right: 1rem;
+            height: 0.45rem;
+            border-radius: 0.45rem;
+            overflow: hidden;
 
             .progress-bar {
-                height: 0.4rem;
-                background-color: @color-primaryvariant1;
+                position: relative;
+                height: 100%;
+                background-color: var(--primary-foreground-color);
+            }
+            
+            .progress-bar-background {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: var(--primary-foreground-color);
+                opacity: 0.3;
+            }
+        }
+
+        .new-videos {
+            z-index: -1;
+            position: absolute;
+            top: 0;
+            right: 0;
+            overflow: visible;
+
+            .layer {
+                position: absolute;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 1.25rem;
+                width: 2.25rem;
+                border-radius: 0.25rem;
+
+                &:nth-child(1) {
+                    top: 0.5rem;
+                    right: 0.5rem;
+                    background-color: var(--primary-foreground-color);
+                    opacity: 0.4;
+                }
+
+                &:nth-child(2) {
+                    top: 0.75rem;
+                    right: 0.75rem;
+                    background-color: var(--primary-foreground-color);
+                    opacity: 0.6;
+                }
+
+                &:nth-child(3) {
+                    top: 1rem;
+                    right: 1rem;
+                    background-color: var(--primary-foreground-color);
+                }
+
+                .icon {
+                    height: 0.8rem;
+                    width: 0.8rem;
+                    color: var(--primary-accent-color);
+                }
+
+                .label {
+                    font-size: 0.8rem;
+                    font-weight: 600;
+                    color: var(--primary-accent-color);
+                }
             }
         }
     }
@@ -124,52 +311,60 @@
         display: flex;
         flex-direction: row;
         align-items: center;
-        height: 2.8rem;
+        height: 4rem;
         overflow: visible;
 
         .title-label {
             flex: 1;
             max-height: 2.4em;
-            padding-left: 0.5rem;
-            color: @color-surface-light5-90;
+            padding-left: 1.5rem;
+            font-weight: 600;
+            text-align: center;
+            color: var(--primary-foreground-color);
 
             &:only-child {
-                padding-right: 0.5rem;
+                padding: 0 0.5rem;
             }
         }
 
         .menu-label-container {
+            z-index: 1;
             flex: none;
             width: 1.5rem;
-            height: 2.8rem;
+            height: 4rem;
             padding: 1rem 0;
             background-color: transparent;
+            opacity: 0;
+            transform: translateX(1rem);
+            transition: opacity 0.1s ease-out;
 
             .icon {
                 display: block;
                 width: 100%;
                 height: 100%;
-                fill: @color-surface-light1-90;
+                color: var(--primary-foreground-color);
+                opacity: 0.6;
             }
 
             .popup-menu-container {
                 width: auto;
 
                 .multiselect-menu-container {
-                    min-width: 6rem;
-                    max-width: 12rem;
+                    min-width: 8rem;
+                    max-width: 14rem;
 
                     .multiselect-option-container {
-                        padding: 0.5rem;
-                        background-color: @color-surface-light5;
+                        padding: 1rem 1.5rem;
 
                         &:hover, &:focus {
                             outline: none;
-                            background-color: @color-surface-light2;
+                            background-color: var(--overlay-color);
                         }
 
                         .multiselect-option-label {
-                            color: @color-background-dark5-90;
+                            font-weight: 500;
+                            color: var(--primary-foreground-color);
+                            opacity: 0.8;
                         }
                     }
                 }

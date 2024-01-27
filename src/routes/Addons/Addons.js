@@ -4,7 +4,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { useTranslation } = require('react-i18next');
-const Icon = require('@stremio/stremio-icons/dom');
+const { default: Icon } = require('@stremio/stremio-icons/react');
 const { AddonDetailsModal, Button, Image, Multiselect, MainNavBars, TextInput, SearchBar, SharePrompt, ModalDialog, useBinaryState, withCoreSuspender } = require('stremio/common');
 const Addon = require('./Addon');
 const useInstalledAddons = require('./useInstalledAddons');
@@ -72,7 +72,7 @@ const Addons = ({ urlParams, queryParams }) => {
             );
     }, [search]);
     const renderLogoFallback = React.useCallback(() => (
-        <Icon className={styles['icon']} icon={'ic_addons'} />
+        <Icon className={styles['icon']} name={'addons'} />
     ), []);
     React.useLayoutEffect(() => {
         closeAddAddonModal();
@@ -83,10 +83,6 @@ const Addons = ({ urlParams, queryParams }) => {
         <MainNavBars className={styles['addons-container']} route={'addons'}>
             <div className={styles['addons-content']}>
                 <div className={styles['selectable-inputs-container']}>
-                    <Button className={styles['add-button-container']} title={t('ADD_ADDON')} onClick={openAddAddonModal}>
-                        <Icon className={styles['icon']} icon={'ic_plus'} />
-                        <div className={styles['add-button-label']}>{ t('ADD_ADDON') }</div>
-                    </Button>
                     {selectInputs.map((selectInput, index) => (
                         <Multiselect
                             {...selectInput}
@@ -95,6 +91,10 @@ const Addons = ({ urlParams, queryParams }) => {
                         />
                     ))}
                     <div className={styles['spacing']} />
+                    <Button className={styles['add-button-container']} title={t('ADD_ADDON')} onClick={openAddAddonModal}>
+                        <Icon className={styles['icon']} name={'add'} />
+                        <div className={styles['add-button-label']}>{ t('ADD_ADDON') }</div>
+                    </Button>
                     <SearchBar
                         className={styles['search-bar']}
                         title={t('ADDON_SEARCH')}
@@ -102,7 +102,7 @@ const Addons = ({ urlParams, queryParams }) => {
                         onChange={searchInputOnChange}
                     />
                     <Button className={styles['filter-button']} title={'All filters'} onClick={openFiltersModal}>
-                        <Icon className={styles['filter-icon']} icon={'ic_filter'} />
+                        <Icon className={styles['filter-icon']} name={'filters'} />
                     </Button>
                 </div>
                 {

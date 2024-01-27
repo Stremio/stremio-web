@@ -9,7 +9,7 @@ const useMetaExtensionTabs = (metaExtensions) => {
                 id: extension.url,
                 label: extension.addon.manifest.name,
                 logo: extension.addon.manifest.logo,
-                icon: 'ic_addons',
+                icon: 'addons',
                 onClick: () => setSelected(extension)
             }));
     }, [metaExtensions]);

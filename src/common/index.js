@@ -4,6 +4,7 @@ const AddonDetailsModal = require('./AddonDetailsModal');
 const Button = require('./Button');
 const Checkbox = require('./Checkbox');
 const ColorInput = require('./ColorInput');
+const ContinueWatchingItem = require('./ContinueWatchingItem');
 const DelayedRenderer = require('./DelayedRenderer');
 const Image = require('./Image');
 const LibItem = require('./LibItem');
@@ -23,6 +24,7 @@ const SharePrompt = require('./SharePrompt');
 const Slider = require('./Slider');
 const TextInput = require('./TextInput');
 const { ToastProvider, useToast } = require('./Toast');
+const { TooltipProvider, Tooltip } = require('./Tooltips');
 const comparatorWithPriorities = require('./comparatorWithPriorities');
 const CONSTANTS = require('./CONSTANTS');
 const { withCoreSuspender, useCoreSuspender } = require('./CoreSuspender');
@@ -30,24 +32,26 @@ const getVisibleChildrenRange = require('./getVisibleChildrenRange');
 const interfaceLanguages = require('./interfaceLanguages.json');
 const languageNames = require('./languageNames.json');
 const routesRegexp = require('./routesRegexp');
-const translateOption = require('./translateOption');
 const useAnimationFrame = require('./useAnimationFrame');
 const useBinaryState = require('./useBinaryState');
 const useFullscreen = require('./useFullscreen');
 const useLiveRef = require('./useLiveRef');
 const useModelState = require('./useModelState');
+const useNotifications = require('./useNotifications');
 const useOnScrollToBottom = require('./useOnScrollToBottom');
 const useProfile = require('./useProfile');
 const useStreamingServer = require('./useStreamingServer');
 const useTorrent = require('./useTorrent');
+const useTranslate = require('./useTranslate');
 const platform = require('./platform');
-const externalPlayerOptions = require('./externalPlayerOptions');
+const EventModal = require('./EventModal');
 
 module.exports = {
     AddonDetailsModal,
     Button,
     Checkbox,
     ColorInput,
+    ContinueWatchingItem,
     DelayedRenderer,
     Image,
     LibItem,
@@ -69,6 +73,8 @@ module.exports = {
     TextInput,
     ToastProvider,
     useToast,
+    TooltipProvider,
+    Tooltip,
     comparatorWithPriorities,
     CONSTANTS,
     withCoreSuspender,
@@ -77,16 +83,17 @@ module.exports = {
     interfaceLanguages,
     languageNames,
     routesRegexp,
-    translateOption,
     useAnimationFrame,
     useBinaryState,
     useFullscreen,
     useLiveRef,
     useModelState,
+    useNotifications,
     useOnScrollToBottom,
     useProfile,
     useStreamingServer,
     useTorrent,
+    useTranslate,
     platform,
-    externalPlayerOptions,
+    EventModal,
 };

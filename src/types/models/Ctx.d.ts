@@ -18,6 +18,7 @@ type Settings = {
     autoFrameRateMatching: boolean,
     bingeWatching: boolean,
     hardwareDecoding: boolean,
+    escExitFullscreen: boolean,
     interfaceLanguage: string,
     nextVideoNotificationDuration: number,
     playInBackground: boolean,
@@ -25,7 +26,9 @@ type Settings = {
     secondaryAudioLanguage: string | null,
     secondarySubtitlesLanguage: string | null,
     seekTimeDuration: number,
+    seekShortTimeDuration: number,
     streamingServerUrl: string,
+    remoteHttps: string | null,
     streamingServerWarningDismissed: Date | null,
     subtitlesBackgroundColor: string,
     subtitlesBold: boolean,
@@ -35,6 +38,7 @@ type Settings = {
     subtitlesOutlineColor: string,
     subtitlesSize: number,
     subtitlesTextColor: string,
+    surroundSound: boolean,
 };
 
 type Profile = {
@@ -42,6 +46,29 @@ type Profile = {
     settings: Settings,
 };
 
+type Notifications = {
+    uid: string,
+    created: string,
+    items: Record<string, NotificationItem[]>,
+};
+
+type NotificationItem = {
+    metaId: string,
+    videoId: string,
+    videoReleased: string,
+}
+
+type SearchHistoryItem = {
+    query: string,
+    deepLinks: {
+        search: string,
+    },
+};
+
+type SearchHistory = SearchHistoryItem[];
+
 type Ctx = {
     profile: Profile,
+    notifications: Notifications,
+    searchHistory: SearchHistory,
 };

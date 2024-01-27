@@ -4,13 +4,15 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { t } = require('i18next');
-const Image = require('stremio/common/Image');
-const SearchBar = require('stremio/common/SearchBar');
+const { Image, SearchBar, Checkbox } = require('stremio/common');
 const SeasonsBar = require('./SeasonsBar');
 const Video = require('./Video');
 const styles = require('./styles');
 
-const VideosList = ({ className, metaItem, season, seasonOnSelect }) => {
+const VideosList = ({ className, metaItem, libraryItem, season, seasonOnSelect, toggleNotifications }) => {
+    const showNotificationsToggle = React.useMemo(() => {
+        return metaItem?.content?.content?.inLibrary && metaItem?.content?.content?.videos?.length;
+    }, [metaItem]);
     const videos = React.useMemo(() => {
         return metaItem && metaItem.content.type === 'Ready' ?
             metaItem.content.content.videos
@@ -81,6 +83,14 @@ const VideosList = ({ className, metaItem, season, seasonOnSelect }) => {
                         :
                         <React.Fragment>
                             {
+                                showNotificationsToggle && libraryItem ?
+                                    <Checkbox className={styles['notifications-checkbox']} checked={!libraryItem.state.noNotif} onClick={toggleNotifications}>
+                                        {t('DETAIL_RECEIVE_NOTIF_SERIES')}
+                                    </Checkbox>
+                                    :
+                                    null
+                            }
+                            {
                                 seasons.length > 0 ?
                                     <SeasonsBar
                                         className={styles['seasons-bar']}
@@ -133,8 +143,10 @@ const VideosList = ({ className, metaItem, season, seasonOnSelect }) => {
 VideosList.propTypes = {
     className: PropTypes.string,
     metaItem: PropTypes.object,
+    libraryItem: PropTypes.object,
     season: PropTypes.number,
-    seasonOnSelect: PropTypes.func
+    seasonOnSelect: PropTypes.func,
+    toggleNotifications: PropTypes.func,
 };
 
 module.exports = VideosList;

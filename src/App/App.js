@@ -6,7 +6,7 @@ const { useTranslation } = require('react-i18next');
 const { Router } = require('stremio-router');
 const { Core, Shell, Chromecast, DragAndDrop, KeyboardShortcuts, ServicesProvider } = require('stremio/services');
 const { NotFound } = require('stremio/routes');
-const { ToastProvider, CONSTANTS, withCoreSuspender } = require('stremio/common');
+const { ToastProvider, TooltipProvider, CONSTANTS, withCoreSuspender } = require('stremio/common');
 const ServicesToaster = require('./ServicesToaster');
 const DeepLinkHandler = require('./DeepLinkHandler');
 const DefaultSettingsHandler = require('./DefaultSettingsHandler');
@@ -130,6 +130,12 @@ const App = () => {
                     action: 'SyncLibraryWithAPI'
                 }
             });
+            services.core.transport.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'PullNotifications'
+                }
+            });
         };
         if (services.core.active) {
             onWindowFocus();
@@ -141,8 +147,10 @@ const App = () => {
                 .catch((e) => console.error(e));
         }
         return () => {
-            window.removeEventListener('focus', onWindowFocus);
-            services.core.transport.off('CoreEvent', onCoreEvent);
+            if (services.core.active) {
+                window.removeEventListener('focus', onWindowFocus);
+                services.core.transport.off('CoreEvent', onCoreEvent);
+            }
         };
     }, [initialized]);
     return (
@@ -154,14 +162,15 @@ const App = () => {
                             <ErrorDialog className={styles['error-container']} />
                             :
                             <ToastProvider className={styles['toasts-container']}>
-                                <ServicesToaster />
-                                <DeepLinkHandler />
-                                <DefaultSettingsHandler />
-                                <RouterWithProtectedRoutes
-                                    className={styles['router']}
-                                    viewsConfig={routerViewsConfig}
-                                    onPathNotMatch={onPathNotMatch}
-                                />
+                                <TooltipProvider className={styles['tooltip-container']}>
+                                    <ServicesToaster />
+                                    <DeepLinkHandler />
+                                    <RouterWithProtectedRoutes
+                                        className={styles['router']}
+                                        viewsConfig={routerViewsConfig}
+                                        onPathNotMatch={onPathNotMatch}
+                                    />
+                                </TooltipProvider>
                             </ToastProvider>
                         :
                         <div className={styles['loader-container']} />

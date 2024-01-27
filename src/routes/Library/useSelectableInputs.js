@@ -1,16 +1,15 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 const React = require('react');
-const { useTranslation } = require('react-i18next');
-const { translateOption } = require('stremio/common');
+const { useTranslate } = require('stremio/common');
 
 const mapSelectableInputs = (library, t) => {
     const typeSelect = {
-        title: t('SELECT_TYPE'),
+        title: t.string('SELECT_TYPE'),
         options: library.selectable.types
             .map(({ type, deepLinks }) => ({
                 value: deepLinks.library,
-                label: type === null ? t('TYPE_ALL') : translateOption(type, 'TYPE_')
+                label: type === null ? t.string('TYPE_ALL') : t.stringWithPrefix(type, 'TYPE_')
             })),
         selected: library.selectable.types
             .filter(({ selected }) => selected)
@@ -20,11 +19,11 @@ const mapSelectableInputs = (library, t) => {
         }
     };
     const sortSelect = {
-        title: t('SELECT_SORT'),
+        title: t.string('SELECT_SORT'),
         options: library.selectable.sorts
             .map(({ sort, deepLinks }) => ({
                 value: deepLinks.library,
-                label: translateOption(sort, 'SORT_')
+                label: t.stringWithPrefix(sort.toUpperCase(), 'SORT_')
             })),
         selected: library.selectable.sorts
             .filter(({ selected }) => selected)
@@ -51,7 +50,7 @@ const mapSelectableInputs = (library, t) => {
 };
 
 const useSelectableInputs = (library) => {
-    const { t } = useTranslation();
+    const t = useTranslate();
     const selectableInputs = React.useMemo(() => {
         return mapSelectableInputs(library, t);
     }, [library]);

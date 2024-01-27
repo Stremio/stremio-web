@@ -3,3 +3,4 @@
 /yarn.lock
 /npm-debug.log
 .DS_Store
+.prettierignore

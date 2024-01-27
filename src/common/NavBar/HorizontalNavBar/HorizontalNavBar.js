@@ -3,10 +3,11 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const Icon = require('@stremio/stremio-icons/dom');
+const { default: Icon } = require('@stremio/stremio-icons/react');
 const Button = require('stremio/common/Button');
 const Image = require('stremio/common/Image');
 const useFullscreen = require('stremio/common/useFullscreen');
+const usePWA = require('stremio/common/usePWA');
 const SearchBar = require('./SearchBar');
 const NavMenu = require('./NavMenu');
 const styles = require('./styles');
@@ -17,9 +18,10 @@ const HorizontalNavBar = React.memo(({ className, route, query, title, backButto
         window.history.back();
     }, []);
     const [fullscreen, requestFullscreen, exitFullscreen] = useFullscreen();
+    const [isIOSPWA] = usePWA();
     const renderNavMenuLabel = React.useCallback(({ ref, className, onClick, children, }) => (
         <Button ref={ref} className={classnames(className, styles['button-container'], styles['menu-button-container'])} tabIndex={-1} onClick={onClick}>
-            <Icon className={styles['icon']} icon={'ic_more'} />
+            <Icon className={styles['icon']} name={'person-outline'} />
             {children}
         </Button>
     ), []);
@@ -28,7 +30,7 @@ const HorizontalNavBar = React.memo(({ className, route, query, title, backButto
             {
                 backButton ?
                     <Button className={classnames(styles['button-container'], styles['back-button-container'])} tabIndex={-1} onClick={backButtonOnClick}>
-                        <Icon className={styles['icon']} icon={'ic_back_ios'} />
+                        <Icon className={styles['icon']} name={'chevron-back'} />
                     </Button>
                     :
                     <div className={styles['logo-container']}>
@@ -45,36 +47,36 @@ const HorizontalNavBar = React.memo(({ className, route, query, title, backButto
                     :
                     null
             }
-            <div className={styles['spacing']} />
             {
-                searchBar ?
+                searchBar && route !== 'addons' ?
                     <SearchBar className={styles['search-bar']} query={query} active={route === 'search'} />
                     :
                     null
             }
-            <div className={styles['spacing']} />
-            {
-                addonsButton ?
-                    <Button className={styles['button-container']} href={'#/addons'} title={t('ADDONS')} tabIndex={-1}>
-                        <Icon className={styles['icon']} icon={'ic_addons'} />
-                    </Button>
-                    :
-                    null
-            }
-            {
-                fullscreenButton ?
-                    <Button className={styles['button-container']} title={fullscreen ? t('EXIT_FULLSCREEN') : t('ENTER_FULLSCREEN')} tabIndex={-1} onClick={fullscreen ? exitFullscreen : requestFullscreen}>
-                        <Icon className={styles['icon']} icon={fullscreen ? 'ic_exit_fullscreen' : 'ic_fullscreen'} />
-                    </Button>
-                    :
-                    null
-            }
-            {
-                navMenu ?
-                    <NavMenu renderLabel={renderNavMenuLabel} />
-                    :
-                    null
-            }
+            <div className={styles['buttons-container']}>
+                {
+                    addonsButton ?
+                        <Button className={styles['button-container']} href={'#/addons'} title={t('ADDONS')} tabIndex={-1}>
+                            <Icon className={styles['icon']} name={'addons-outline'} />
+                        </Button>
+                        :
+                        null
+                }
+                {
+                    !isIOSPWA && fullscreenButton ?
+                        <Button className={styles['button-container']} title={fullscreen ? t('EXIT_FULLSCREEN') : t('ENTER_FULLSCREEN')} tabIndex={-1} onClick={fullscreen ? exitFullscreen : requestFullscreen}>
+                            <Icon className={styles['icon']} name={fullscreen ? 'minimize' : 'maximize'} />
+                        </Button>
+                        :
+                        null
+                }
+                {
+                    navMenu ?
+                        <NavMenu renderLabel={renderNavMenuLabel} />
+                        :
+                        null
+                }
+            </div>
         </nav>
     );
 });

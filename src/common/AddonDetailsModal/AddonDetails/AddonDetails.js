@@ -3,13 +3,13 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const Icon = require('@stremio/stremio-icons/dom');
+const { default: Icon } = require('@stremio/stremio-icons/react');
 const Image = require('stremio/common/Image');
 const styles = require('./styles');
 
 const AddonDetails = ({ className, id, name, version, logo, description, types, transportUrl, official }) => {
     const renderLogoFallback = React.useCallback(() => (
-        <Icon className={styles['icon']} icon={'ic_addons'} />
+        <Icon className={styles['icon']} name={'addons'} />
     ), []);
     return (
         <div className={classnames(className, styles['addon-details-container'])}>

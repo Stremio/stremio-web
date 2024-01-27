@@ -3,11 +3,11 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const Icon = require('@stremio/stremio-icons/dom');
+const { default: Icon } = require('@stremio/stremio-icons/react');
 const { Image, Button, CONSTANTS } = require('stremio/common');
 const styles = require('./styles');
 
-const NextVideoPopup = ({ className, metaItem, nextVideo, onDismiss, onPlayNextVideoRequested }) => {
+const NextVideoPopup = ({ className, metaItem, nextVideo, onDismiss, onNextVideoRequested }) => {
     const watchNowButtonRef = React.useRef(null);
     const [animationEnded, setAnimationEnded] = React.useState(false);
     const videoName = React.useMemo(() => {
@@ -26,7 +26,7 @@ const NextVideoPopup = ({ className, metaItem, nextVideo, onDismiss, onPlayNextV
         return metaItem !== null && typeof metaItem.type === 'string' ?
             <Icon
                 className={styles['placeholder-icon']}
-                icon={CONSTANTS.ICON_FOR_TYPE.has(metaItem.type) ? CONSTANTS.ICON_FOR_TYPE.get(metaItem.type) : CONSTANTS.ICON_FOR_TYPE.get('other')}
+                name={CONSTANTS.ICON_FOR_TYPE.has(metaItem.type) ? CONSTANTS.ICON_FOR_TYPE.get(metaItem.type) : CONSTANTS.ICON_FOR_TYPE.get('other')}
             />
             :
             null;
@@ -37,10 +37,10 @@ const NextVideoPopup = ({ className, metaItem, nextVideo, onDismiss, onPlayNextV
         }
     }, [onDismiss]);
     const onWatchNowButtonClick = React.useCallback(() => {
-        if (typeof onPlayNextVideoRequested === 'function') {
-            onPlayNextVideoRequested();
+        if (typeof onNextVideoRequested === 'function') {
+            onNextVideoRequested();
         }
-    }, [onPlayNextVideoRequested]);
+    }, [onNextVideoRequested]);
     React.useLayoutEffect(() => {
         if (animationEnded === true && watchNowButtonRef.current !== null) {
             watchNowButtonRef.current.focus();
@@ -60,8 +60,16 @@ const NextVideoPopup = ({ className, metaItem, nextVideo, onDismiss, onPlayNextV
             <div className={styles['info-container']}>
                 <div className={styles['details-container']}>
                     {
-                        typeof videoName === 'string' ?
+                        typeof metaItem?.name === 'string' ?
                             <div className={styles['name']}>
+                                <span className={styles['label']}>Next on</span> { metaItem.name }
+                            </div>
+                            :
+                            null
+                    }
+                    {
+                        typeof videoName === 'string' ?
+                            <div className={styles['title']}>
                                 { videoName }
                             </div>
                             :
@@ -77,12 +85,12 @@ const NextVideoPopup = ({ className, metaItem, nextVideo, onDismiss, onPlayNextV
                     }
                 </div>
                 <div className={styles['buttons-container']}>
-                    <Button className={styles['button-container']} onClick={onDismissButtonClick}>
-                        <Icon className={styles['icon']} icon={'ic_x'} />
+                    <Button className={classnames(styles['button-container'], styles['dismiss'])} onClick={onDismissButtonClick}>
+                        <Icon className={styles['icon']} name={'close'} />
                         <div className={styles['label']}>Dismiss</div>
                     </Button>
                     <Button ref={watchNowButtonRef} className={classnames(styles['button-container'], styles['play-button'])} onClick={onWatchNowButtonClick}>
-                        <Icon className={styles['icon']} icon={'ic_play'} />
+                        <Icon className={styles['icon']} name={'play'} />
                         <div className={styles['label']}>Watch Now</div>
                     </Button>
                 </div>
@@ -96,7 +104,7 @@ NextVideoPopup.propTypes = {
     metaItem: PropTypes.object,
     nextVideo: PropTypes.object,
     onDismiss: PropTypes.func,
-    onPlayNextVideoRequested: PropTypes.func
+    onNextVideoRequested: PropTypes.func
 };
 
 module.exports = NextVideoPopup;

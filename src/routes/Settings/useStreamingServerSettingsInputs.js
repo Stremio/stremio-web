@@ -1,6 +1,7 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 const React = require('react');
+const { useTranslation } = require('react-i18next');
 const isEqual = require('lodash.isequal');
 const { useServices } = require('stremio/services');
 
@@ -53,7 +54,45 @@ const TORRENT_PROFILES = {
 
 const useStreamingServerSettingsInputs = (streamingServer) => {
     const { core } = useServices();
+    const { t } = useTranslation();
     // TODO combine those useMemo in one
+
+    const streamingServerRemoteUrlInput = React.useMemo(() => ({
+        value: streamingServer.remoteUrl,
+    }), [streamingServer.remoteUrl]);
+
+    const remoteEndpointSelect = React.useMemo(() => {
+        if (streamingServer.settings?.type !== 'Ready' || streamingServer.networkInfo?.type !== 'Ready') {
+            return null;
+        }
+
+        return {
+            options: [
+                {
+                    label: t('SETTINGS_DISABLED'),
+                    value: null,
+                },
+                ...streamingServer.networkInfo.content.availableInterfaces.map((address) => ({
+                    label: address,
+                    value: address,
+                }))
+            ],
+            selected: [streamingServer.settings.content.remoteHttps],
+            onSelect: (event) => {
+                core.transport.dispatch({
+                    action: 'StreamingServer',
+                    args: {
+                        action: 'UpdateSettings',
+                        args: {
+                            ...streamingServer.settings.content,
+                            remoteHttps: event.value,
+                        }
+                    }
+                });
+            }
+        };
+    }, [streamingServer.settings, streamingServer.networkInfo]);
+
     const cacheSizeSelect = React.useMemo(() => {
         if (streamingServer.settings === null || streamingServer.settings.type !== 'Ready') {
             return null;
@@ -75,7 +114,7 @@ const useStreamingServerSettingsInputs = (streamingServer) => {
                         action: 'UpdateSettings',
                         args: {
                             ...streamingServer.settings.content,
-                            cacheSize: JSON.parse(event.value)
+                            cacheSize: JSON.parse(event.value),
                         }
                     }
                 });
@@ -121,14 +160,14 @@ const useStreamingServerSettingsInputs = (streamingServer) => {
                         action: 'UpdateSettings',
                         args: {
                             ...streamingServer.settings.content,
-                            ...JSON.parse(event.value)
+                            ...JSON.parse(event.value),
                         }
                     }
                 });
             }
         };
     }, [streamingServer.settings]);
-    return { cacheSizeSelect, torrentProfileSelect };
+    return { streamingServerRemoteUrlInput, remoteEndpointSelect, cacheSizeSelect, torrentProfileSelect };
 };
 
 module.exports = useStreamingServerSettingsInputs;

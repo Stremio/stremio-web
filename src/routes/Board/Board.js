@@ -4,7 +4,7 @@ const React = require('react');
 const classnames = require('classnames');
 const debounce = require('lodash.debounce');
 const { useTranslation } = require('react-i18next');
-const { MainNavBars, MetaRow, LibItem, MetaItem, StreamingServerWarning, useStreamingServer, withCoreSuspender, getVisibleChildrenRange } = require('stremio/common');
+const { MainNavBars, MetaRow, ContinueWatchingItem, MetaItem, StreamingServerWarning, useStreamingServer, withCoreSuspender, getVisibleChildrenRange, EventModal } = require('stremio/common');
 const useBoard = require('./useBoard');
 const useContinueWatchingPreview = require('./useContinueWatchingPreview');
 const styles = require('./styles');
@@ -16,7 +16,7 @@ const Board = () => {
     const streamingServer = useStreamingServer();
     const continueWatchingPreview = useContinueWatchingPreview();
     const [board, loadBoardRows] = useBoard();
-    const boardCatalogsOffset = continueWatchingPreview.libraryItems.length > 0 ? 1 : 0;
+    const boardCatalogsOffset = continueWatchingPreview.items.length > 0 ? 1 : 0;
     const scrollContainerRef = React.useRef();
     const onVisibleRangeChange = React.useCallback(() => {
         const range = getVisibleChildrenRange(scrollContainerRef.current);
@@ -38,16 +38,16 @@ const Board = () => {
     }, [board.catalogs, onVisibleRangeChange]);
     return (
         <div className={styles['board-container']}>
+            <EventModal />
             <MainNavBars className={styles['board-content-container']} route={'board'}>
                 <div ref={scrollContainerRef} className={styles['board-content']} onScroll={onScroll}>
                     {
-                        continueWatchingPreview.libraryItems.length > 0 ?
+                        continueWatchingPreview.items.length > 0 ?
                             <MetaRow
                                 className={classnames(styles['board-row'], styles['continue-watching-row'], 'animation-fade-in')}
                                 title={t('BOARD_CONTINUE_WATCHING')}
-                                items={continueWatchingPreview.libraryItems}
-                                itemComponent={LibItem}
-                                deepLinks={continueWatchingPreview.deepLinks}
+                                catalog={continueWatchingPreview}
+                                itemComponent={ContinueWatchingItem}
                             />
                             :
                             null
@@ -59,10 +59,8 @@ const Board = () => {
                                     <MetaRow
                                         key={index}
                                         className={classnames(styles['board-row'], styles[`board-row-${catalog.content.content[0].posterShape}`], 'animation-fade-in')}
-                                        title={catalog.title}
-                                        items={catalog.content.content}
+                                        catalog={catalog}
                                         itemComponent={MetaItem}
-                                        deepLinks={catalog.deepLinks}
                                     />
                                 );
                             }
@@ -71,9 +69,8 @@ const Board = () => {
                                     <MetaRow
                                         key={index}
                                         className={classnames(styles['board-row'], 'animation-fade-in')}
-                                        title={catalog.title}
+                                        catalog={catalog}
                                         message={catalog.content.content}
-                                        deepLinks={catalog.deepLinks}
                                     />
                                 );
                             }
@@ -82,8 +79,7 @@ const Board = () => {
                                     <MetaRow.Placeholder
                                         key={index}
                                         className={classnames(styles['board-row'], styles['board-row-poster'], 'animation-fade-in')}
-                                        title={catalog.title}
-                                        deepLinks={catalog.deepLinks}
+                                        catalog={catalog}
                                     />
                                 );
                             }

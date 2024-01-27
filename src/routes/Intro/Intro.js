@@ -3,7 +3,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const Icon = require('@stremio/stremio-icons/dom');
+const { default: Icon } = require('@stremio/stremio-icons/react');
 const { Modal, useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
 const { Button, Image, useBinaryState } = require('stremio/common');
@@ -274,111 +274,121 @@ const Intro = ({ queryParams }) => {
     }, [routeFocused]);
     return (
         <div className={styles['intro-container']}>
-            <div className={styles['form-container']}>
+            <div className={styles['background-container']} />
+            <div className={styles['heading-container']}>
                 <div className={styles['logo-container']}>
-                    <Image className={styles['logo']} src={require('/images/stremio_symbol.png')} alt={' '} />
-                    <Icon className={styles['name']} icon={'ic_stremio'} />
+                    <Image className={styles['logo']} src={require('/images/logo.png')} alt={' '} />
                 </div>
-                <Button className={classnames(styles['form-button'], styles['facebook-button'])} onClick={loginWithFacebook}>
-                    <Icon className={styles['icon']} icon={'ic_facebook'} />
-                    <div className={styles['label']}>Continue with Facebook</div>
-                </Button>
-                {
-                    state.form === SIGNUP_FORM ?
-                        <Button className={classnames(styles['form-button'], styles['login-form-button'])} onClick={switchFormOnClick}>
-                            Already have an account?
-                            {' '}
-                            <span className={styles['login-label']}>LOG IN</span>
-                        </Button>
-                        :
-                        null
-                }
-                <CredentialsTextInput
-                    ref={emailRef}
-                    className={styles['credentials-text-input']}
-                    type={'email'}
-                    placeholder={'Email'}
-                    value={state.email}
-                    onChange={emailOnChange}
-                    onSubmit={emailOnSubmit}
-                />
-                <CredentialsTextInput
-                    ref={passwordRef}
-                    className={styles['credentials-text-input']}
-                    type={'password'}
-                    placeholder={'Password'}
-                    value={state.password}
-                    onChange={passwordOnChange}
-                    onSubmit={passwordOnSubmit}
-                />
-                {
-                    state.form === SIGNUP_FORM ?
-                        <React.Fragment>
-                            <CredentialsTextInput
-                                ref={confirmPasswordRef}
-                                className={styles['credentials-text-input']}
-                                type={'password'}
-                                placeholder={'Confirm Password'}
-                                value={state.confirmPassword}
-                                onChange={confirmPasswordOnChange}
-                                onSubmit={confirmPasswordOnSubmit}
-                            />
-                            <ConsentCheckbox
-                                ref={termsRef}
-                                className={styles['consent-checkbox']}
-                                label={'I have read and agree with the Stremio'}
-                                link={'Terms and conditions'}
-                                href={'https://www.stremio.com/tos'}
-                                checked={state.termsAccepted}
-                                onToggle={toggleTermsAccepted}
-                            />
-                            <ConsentCheckbox
-                                ref={privacyPolicyRef}
-                                className={styles['consent-checkbox']}
-                                label={'I have read and agree with the Stremio'}
-                                link={'Privacy Policy'}
-                                href={'https://www.stremio.com/privacy'}
-                                checked={state.privacyPolicyAccepted}
-                                onToggle={togglePrivacyPolicyAccepted}
-                            />
-                            <ConsentCheckbox
-                                ref={marketingRef}
-                                className={styles['consent-checkbox']}
-                                label={'I agree to receive marketing communications from Stremio'}
-                                checked={state.marketingAccepted}
-                                onToggle={toggleMarketingAccepted}
-                            />
-                        </React.Fragment>
-                        :
-                        <div className={styles['forgot-password-link-container']}>
-                            <Button className={styles['forgot-password-link']} onClick={openPasswordRestModal}>Forgot password?</Button>
-                        </div>
-                }
-                {
-                    state.error.length > 0 ?
-                        <div ref={errorRef} className={styles['error-message']}>{state.error}</div>
-                        :
-                        null
-                }
-                <Button className={classnames(styles['form-button'], styles['submit-button'])} onClick={state.form === SIGNUP_FORM ? signup : loginWithEmail}>
-                    <div className={styles['label']}>{state.form === SIGNUP_FORM ? 'Sign up' : 'Log in'}</div>
-                </Button>
-                {
-                    state.form === SIGNUP_FORM ?
-                        <Button className={classnames(styles['form-button'], styles['guest-login-button'])} onClick={loginAsGuest}>
-                            <div className={styles['label']}>GUEST LOGIN</div>
-                        </Button>
-                        :
-                        null
-                }
-                {
-                    state.form === LOGIN_FORM ?
-                        <Button className={classnames(styles['form-button'], styles['signup-form-button'])} onClick={switchFormOnClick}>
-                            <div className={styles['label']}>SIGN UP WITH EMAIL</div>
-                        </Button>
-                        :
-                        null
-                }
+                <div className={styles['title-container']}>
+                    Freedom to Stream
+                </div>
+                <div className={styles['slogan-container']}>
+                    All the Video Content You Enjoy in One Place
+                </div>
+            </div>
+            <div className={styles['content-container']}>
+                <div className={styles['form-container']}>
+                    <CredentialsTextInput
+                        ref={emailRef}
+                        className={styles['credentials-text-input']}
+                        type={'email'}
+                        placeholder={'Email'}
+                        value={state.email}
+                        onChange={emailOnChange}
+                        onSubmit={emailOnSubmit}
+                    />
+                    <CredentialsTextInput
+                        ref={passwordRef}
+                        className={styles['credentials-text-input']}
+                        type={'password'}
+                        placeholder={'Password'}
+                        value={state.password}
+                        onChange={passwordOnChange}
+                        onSubmit={passwordOnSubmit}
+                    />
+                    {
+                        state.form === SIGNUP_FORM ?
+                            <React.Fragment>
+                                <CredentialsTextInput
+                                    ref={confirmPasswordRef}
+                                    className={styles['credentials-text-input']}
+                                    type={'password'}
+                                    placeholder={'Confirm Password'}
+                                    value={state.confirmPassword}
+                                    onChange={confirmPasswordOnChange}
+                                    onSubmit={confirmPasswordOnSubmit}
+                                />
+                                <ConsentCheckbox
+                                    ref={termsRef}
+                                    className={styles['consent-checkbox']}
+                                    label={'I have read and agree with the Stremio'}
+                                    link={'Terms and conditions'}
+                                    href={'https://www.stremio.com/tos'}
+                                    checked={state.termsAccepted}
+                                    onToggle={toggleTermsAccepted}
+                                />
+                                <ConsentCheckbox
+                                    ref={privacyPolicyRef}
+                                    className={styles['consent-checkbox']}
+                                    label={'I have read and agree with the Stremio'}
+                                    link={'Privacy Policy'}
+                                    href={'https://www.stremio.com/privacy'}
+                                    checked={state.privacyPolicyAccepted}
+                                    onToggle={togglePrivacyPolicyAccepted}
+                                />
+                                <ConsentCheckbox
+                                    ref={marketingRef}
+                                    className={styles['consent-checkbox']}
+                                    label={'I agree to receive marketing communications from Stremio'}
+                                    checked={state.marketingAccepted}
+                                    onToggle={toggleMarketingAccepted}
+                                />
+                            </React.Fragment>
+                            :
+                            <div className={styles['forgot-password-link-container']}>
+                                <Button className={styles['forgot-password-link']} onClick={openPasswordRestModal}>Forgot password?</Button>
+                            </div>
+                    }
+                    {
+                        state.error.length > 0 ?
+                            <div ref={errorRef} className={styles['error-message']}>{state.error}</div>
+                            :
+                            null
+                    }
+                    <Button className={classnames(styles['form-button'], styles['submit-button'])} onClick={state.form === SIGNUP_FORM ? signup : loginWithEmail}>
+                        <div className={styles['label']}>{state.form === SIGNUP_FORM ? 'Sign up' : 'Log in'}</div>
+                    </Button>
+                </div>
+                <div className={styles['options-container']}>
+                    <Button className={classnames(styles['form-button'], styles['facebook-button'])} onClick={loginWithFacebook}>
+                        <Icon className={styles['icon']} name={'facebook'} />
+                        <div className={styles['label']}>Continue with Facebook</div>
+                    </Button>
+                    {
+                        state.form === SIGNUP_FORM ?
+                            <Button className={classnames(styles['form-button'], styles['login-form-button'])} onClick={switchFormOnClick}>
+                                <div className={styles['label']}>LOG IN</div>
+                            </Button>
+                            :
+                            null
+                    }
+                    {
+                        state.form === LOGIN_FORM ?
+                            <Button className={classnames(styles['form-button'], styles['signup-form-button'])} onClick={switchFormOnClick}>
+                                <div className={styles['label']}>SIGN UP WITH EMAIL</div>
+                            </Button>
+                            :
+                            null
+                    }
+                    {
+                        state.form === SIGNUP_FORM ?
+                            <Button className={classnames(styles['form-button'], styles['guest-login-button'])} onClick={loginAsGuest}>
+                                <div className={styles['label']}>GUEST LOGIN</div>
+                            </Button>
+                            :
+                            null
+                    }
+                </div>
             </div>
             {
                 passwordRestModalOpen ?
@@ -390,7 +400,7 @@ const Intro = ({ queryParams }) => {
                 loaderModalOpen ?
                     <Modal className={styles['loading-modal-container']}>
                         <div className={styles['loader-container']}>
-                            <Icon className={styles['icon']} icon={'ic_user'} />
+                            <Icon className={styles['icon']} name={'person'} />
                             <div className={styles['label']}>Authenticating...</div>
                         </div>
                     </Modal>

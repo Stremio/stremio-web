@@ -5,7 +5,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const debounce = require('lodash.debounce');
 const { useTranslation } = require('react-i18next');
-const Icon = require('@stremio/stremio-icons/dom');
+const { default: Icon } = require('@stremio/stremio-icons/react');
 const { Image, MainNavBars, MetaRow, MetaItem, withCoreSuspender, getVisibleChildrenRange } = require('stremio/common');
 const useSearch = require('./useSearch');
 const styles = require('./styles');
@@ -49,14 +49,27 @@ const Search = ({ queryParams }) => {
             <div ref={scrollContainerRef} className={styles['search-content']} onScroll={onScroll}>
                 {
                     query === null ?
-                        <div className={classnames(styles['search-hints-container'], 'animation-fade-in')}>
-                            <div className={styles['search-hint-container']}>
-                                <Icon className={styles['icon']} icon={'ic_movies'} />
-                                <div className={styles['label']}>{ t('SEARCH_EXPLANATION_CONTENT') }</div>
+                        <div className={classnames(styles['search-hints-wrapper'])}>
+                            <div className={classnames(styles['search-hints-title-container'], 'animation-fade-in')}>
+                                <div className={styles['search-hints-title']}>{t('SEARCH_ANYTHING')}</div>
                             </div>
-                            <div className={styles['search-hint-container']}>
-                                <Icon className={styles['icon']} icon={'ic_actor'} />
-                                <div className={styles['label']}>{ t('SEARCH_EXPLANATION_PEOPLE') }</div>
+                            <div className={classnames(styles['search-hints-container'], 'animation-fade-in')}>
+                                <div className={styles['search-hint-container']}>
+                                    <Icon className={styles['icon']} name={'trailer'} />
+                                    <div className={styles['label']}>{t('SEARCH_CATEGORIES')}</div>
+                                </div>
+                                <div className={styles['search-hint-container']}>
+                                    <Icon className={styles['icon']} name={'actors'} />
+                                    <div className={styles['label']}>{t('SEARCH_PERSONS')}</div>
+                                </div>
+                                <div className={styles['search-hint-container']}>
+                                    <Icon className={styles['icon']} name={'link'} />
+                                    <div className={styles['label']}>{t('SEARCH_PROTOCOLS')}</div>
+                                </div>
+                                <div className={styles['search-hint-container']}>
+                                    <Icon className={styles['icon']} name={'imdb-outline'} />
+                                    <div className={styles['label']}>{t('SEARCH_TYPES')}</div>
+                                </div>
                             </div>
                         </div>
                         :
@@ -77,10 +90,8 @@ const Search = ({ queryParams }) => {
                                             <MetaRow
                                                 key={index}
                                                 className={classnames(styles['search-row'], styles[`search-row-${catalog.content.content[0].posterShape}`], 'animation-fade-in')}
-                                                title={catalog.title}
-                                                items={catalog.content.content}
+                                                catalog={catalog}
                                                 itemComponent={MetaItem}
-                                                deepLinks={catalog.deepLinks}
                                             />
                                         );
                                     }
@@ -89,9 +100,8 @@ const Search = ({ queryParams }) => {
                                             <MetaRow
                                                 key={index}
                                                 className={classnames(styles['search-row'], 'animation-fade-in')}
-                                                title={catalog.title}
+                                                catalog={catalog}
                                                 message={catalog.content.content}
-                                                deepLinks={catalog.deepLinks}
                                             />
                                         );
                                     }
@@ -100,8 +110,7 @@ const Search = ({ queryParams }) => {
                                             <MetaRow.Placeholder
                                                 key={index}
                                                 className={classnames(styles['search-row'], styles['search-row-poster'], 'animation-fade-in')}
-                                                title={catalog.title}
-                                                deepLinks={catalog.deepLinks}
+                                                catalog={catalog}
                                             />
                                         );
                                     }
@@ -118,7 +127,7 @@ Search.propTypes = {
 };
 
 const SearchFallback = ({ queryParams }) => (
-    <MainNavBars className={styles['search-container']} route={'search'} query={queryParams.get('search')} />
+    <MainNavBars className={styles['search-container']} route={'search'} query={queryParams.get('search') ?? queryParams.get('query')} />
 );
 
 SearchFallback.propTypes = Search.propTypes;

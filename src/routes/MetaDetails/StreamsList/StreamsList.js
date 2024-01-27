@@ -4,7 +4,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { useTranslation } = require('react-i18next');
-const Icon = require('@stremio/stremio-icons/dom');
+const { default: Icon } = require('@stremio/stremio-icons/react');
 const { Button, Image, Multiselect } = require('stremio/common');
 const { useServices } = require('stremio/services');
 const Stream = require('./Stream');
@@ -12,13 +12,19 @@ const styles = require('./styles');
 
 const ALL_ADDONS_KEY = 'ALL';
 
-const StreamsList = ({ className, ...props }) => {
+const StreamsList = ({ className, video, ...props }) => {
     const { t } = useTranslation();
     const { core } = useServices();
     const [selectedAddon, setSelectedAddon] = React.useState(ALL_ADDONS_KEY);
     const onAddonSelected = React.useCallback((event) => {
         setSelectedAddon(event.value);
     }, []);
+    const backButtonOnClick = React.useCallback(() => {
+        window.history.back();
+    }, []);
+    const countLoadingAddons = React.useMemo(() => {
+        return props.streams.filter((stream) => stream.content.type === 'Loading').length;
+    }, [props.streams]);
     const streamsByAddon = React.useMemo(() => {
         return props.streams
             .filter((streams) => streams.content.type === 'Ready')
@@ -93,18 +99,46 @@ const StreamsList = ({ className, ...props }) => {
                             :
                             <React.Fragment>
                                 {
-                                    Object.keys(streamsByAddon).length > 1 ?
-                                        <Multiselect
-                                            {...selectableOptions}
-                                            className={styles['select-input-container']}
-                                        />
+                                    countLoadingAddons > 0 ?
+                                        <div className={styles['addons-loading-container']}>
+                                            <div className={styles['addons-loading']}>
+                                                {countLoadingAddons} {t('MOBILE_ADDONS_LOADING')}
+                                            </div>
+                                            <span className={styles['addons-loading-bar']}></span>
+                                        </div>
                                         :
                                         null
                                 }
+                                <div className={styles['select-choices-wrapper']}>
+                                    {
+                                        video ?
+                                            <React.Fragment>
+                                                <Button className={classnames(styles['button-container'], styles['back-button-container'])} tabIndex={-1} onClick={backButtonOnClick}>
+                                                    <Icon className={styles['icon']} name={'chevron-back'} />
+                                                </Button>
+                                                <div className={styles['episode-title']}>
+                                                    {`S${video?.season}E${video?.episode} ${(video?.title)}`}
+                                                </div>
+                                            </React.Fragment>
+                                            :
+                                            null
+                                    }
+                                    {
+                                        Object.keys(streamsByAddon).length > 1 ?
+                                            <Multiselect
+                                                {...selectableOptions}
+                                                className={styles['select-input-container']}
+                                            />
+                                            :
+                                            null
+                                    }
+                                </div>
                                 <div className={styles['streams-container']}>
                                     {filteredStreams.map((stream, index) => (
                                         <Stream
                                             key={index}
+                                            videoId={video?.id}
+                                            videoReleased={video?.released}
                                             addonName={stream.addonName}
                                             name={stream.name}
                                             description={stream.description}
@@ -118,7 +152,7 @@ const StreamsList = ({ className, ...props }) => {
                             </React.Fragment>
             }
             <Button className={styles['install-button-container']} title={t('ADDON_CATALOGUE_MORE')} href={'#/addons'}>
-                <Icon className={styles['icon']} icon={'ic_addons'} />
+                <Icon className={styles['icon']} name={'addons'} />
                 <div className={styles['label']}>{ t('ADDON_CATALOGUE_MORE') }</div>
             </Button>
         </div>
@@ -127,7 +161,8 @@ const StreamsList = ({ className, ...props }) => {
 
 StreamsList.propTypes = {
     className: PropTypes.string,
-    streams: PropTypes.arrayOf(PropTypes.object).isRequired
+    streams: PropTypes.arrayOf(PropTypes.object).isRequired,
+    video: PropTypes.object
 };
 
 module.exports = StreamsList;

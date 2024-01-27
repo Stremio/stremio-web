@@ -3,7 +3,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const Icon = require('@stremio/stremio-icons/dom');
+const { default: Icon } = require('@stremio/stremio-icons/react');
 const Button = require('stremio/common/Button');
 const Popup = require('stremio/common/Popup');
 const ModalDialog = require('stremio/common/ModalDialog');
@@ -15,7 +15,7 @@ const Multiselect = ({ className, mode, direction, title, disabled, dataset, ren
     const options = React.useMemo(() => {
         return Array.isArray(props.options) ?
             props.options.filter((option) => {
-                return option && typeof option.value === 'string';
+                return option && (typeof option.value === 'string' || option.value === null);
             })
             :
             [];
@@ -23,7 +23,7 @@ const Multiselect = ({ className, mode, direction, title, disabled, dataset, ren
     const selected = React.useMemo(() => {
         return Array.isArray(props.selected) ?
             props.selected.filter((value) => {
-                return typeof value === 'string';
+                return typeof value === 'string' || value === null;
             })
             :
             [];
@@ -104,7 +104,7 @@ const Multiselect = ({ className, mode, direction, title, disabled, dataset, ren
                                         title
                             }
                         </div>
-                        <Icon className={styles['icon']} icon={'ic_arrow_thin_down'} />
+                        <Icon className={styles['icon']} name={'caret-down'} />
                     </React.Fragment>
             }
             {children}
@@ -161,7 +161,7 @@ Multiselect.propTypes = {
     direction: PropTypes.any,
     title: PropTypes.string,
     options: PropTypes.arrayOf(PropTypes.shape({
-        value: PropTypes.string.isRequired,
+        value: PropTypes.string,
         title: PropTypes.string,
         label: PropTypes.string
     })),

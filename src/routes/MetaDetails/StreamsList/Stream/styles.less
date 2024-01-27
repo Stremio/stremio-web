@@ -3,111 +3,127 @@
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
 @import (reference) '~stremio/common/screen-sizes.less';
 
-:import('~stremio/common/PlayIconCircleCentered/styles.less') {
-    play-icon-circle-centered-background: background;
-    play-icon-circle-centered-icon: icon;
-}
-
 .stream-container {
     display: flex;
     flex-direction: row;
-    align-items: center;
     flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
     padding: 0.5rem 1rem;
+    margin-bottom: 0.5rem;
+    border-radius: var(--border-radius);
 
     &:hover, &:focus {
-        background-color: @color-background;
+        background-color: var(--overlay-color);
     }
 
     &:hover, &:focus, &:global(.selected) {
-        .play-icon {
-            .play-icon-circle-centered-background {
-                fill: @color-accent4-90;
-            }
-
-            .play-icon-circle-centered-icon {
-                fill: @color-surface-light5-90;
-            }
+        .icon {
+            opacity: 1;
         }
     }
 
-    .thumbnail-container, .addon-name-container {
+    .info-container {
         flex: none;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
 
         .thumbnail {
             display: block;
-            width: 5rem;
             height: 5rem;
-            object-fit: contain;
+            width: 8rem;
+            object-fit: cover;
             object-position: center;
             opacity: 0.9;
         }
 
         .placeholder-icon {
             display: block;
-            width: 5rem;
             height: 5rem;
-            padding: 0.5rem;
-            fill: @color-secondaryvariant1-light3-90;
+            width: 8rem;
+            padding: 1rem;
+            color: var(--primary-foreground-color);
+            background-color: var(--overlay-color);
+            opacity: 0.25;
         }
 
         .addon-name {
-            width: 5rem;
+            width: 7rem;
             max-height: 3.6em;
             font-size: 1.1rem;
-            text-align: center;
-            color: @color-surface-light5-90;
+            text-align: left;
+            color: var(--primary-foreground-color);
+        }
+
+        .progress-bar-container {
+            flex: 0 0 100%;
+            position: relative;
+            border-radius: var(--border-radius);
+
+            .progress-bar {
+                z-index: 1;
+                position: relative;
+                height: 0.4rem;
+                background-color: var(--primary-accent-color);
+            }
+
+            .progress-bar-background {
+                z-index: 0;
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background-color: var(--primary-foreground-color);
+                opacity: 0.2;
+            }
         }
     }
 
-    .info-container {
+    .description-container {
         flex: 1;
-        max-height: 3.6em;
-        margin: 0.5rem 1rem;
+        display: flex;
+        flex-direction: column;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
         white-space: pre;
-        color: @color-surface-light5-90;
+        overflow-y: visible;
+        text-overflow: ellipsis;
+        color: var(--primary-foreground-color);
     }
-
-    .play-icon {
+    
+    .icon {
         flex: none;
-        width: 3.5rem;
-        height: 5rem;
-
-        .play-icon-circle-centered-background {
-            fill: none;
-        }
-
-        .play-icon-circle-centered-icon {
-            fill: @color-surface-dark5-90;
-        }
+        width: 3rem;
+        height: 3rem;
+        padding: 0.7rem;
+        border-radius: 50%;
+        opacity: 0;
+        color: var(--primary-foreground-color);
+        background-color: var(--secondary-accent-color);
     }
+}
 
-    .progress-bar-container {
-        flex: 0 0 100%;
-        background-color: @color-background-light2;
+@media only screen and (max-width: @small) {
+    .stream-container {
+        .description-container {
+            font-size: 0.9rem;
+        }
 
-        .progress-bar {
-            height: 0.5rem;
-            background-color: @color-primaryvariant1;
+        .info-container {
+            .addon-name {
+                font-size: 0.9rem;
+            }
         }
     }
 }
 
 @media only screen and (max-width: @minimum) {
     .stream-container {
-        &:hover, &focus {
-            background-color: @color-surface-light5-20;
-        }
-
-        .thumbnail-container, .addon-name-container {
+        .info-container {
             .addon-name {
                 font-weight: 500;
-            }
-        }
-
-        .play-icon {
-            .play-icon-circle-centered-icon {
-                fill: @color-surface-light5-90;
             }
         }
     }

@@ -7,9 +7,10 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: space-between;
     height: var(--horizontal-nav-bar-size);
     padding-right: 1rem;
-    background-color: @color-background;
+    background-color: transparent;
     overflow: visible;
 
     .logo-container {
@@ -30,8 +31,8 @@
         }
     }
 
-    .spacing {
-        flex: 1 0 0;
+    .back-button-container {
+        margin-left: 1rem;
     }
 
     .title {
@@ -44,19 +45,18 @@
         white-space: nowrap;
         text-overflow: ellipsis;
         color: @color-secondaryvariant2-light1-90;
-
-        &+.spacing {
-            display: none;
-        }
     }
 
     .search-bar {
-        flex: 2 0 9.5rem;
-        max-width: 30rem;
+        height: 3.25rem;
+        width: 30rem;
+    }
 
-        &+.spacing {
-            max-width: 11rem;
-        }
+    .buttons-container {
+        display: flex;
+        flex-direction: row;
+        gap: 0.5rem;
+        overflow: visible;
     }
 
     .button-container {
@@ -64,31 +64,27 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        width: var(--horizontal-nav-bar-size);
-        height: var(--horizontal-nav-bar-size);
-
-        &.back-button-container {
-            width: var(--vertical-nav-bar-size);
-            height: var(--horizontal-nav-bar-size);
-        }
-
-        &:hover {
-            background-color: @color-background-light2;
-        }
-
-        &:global(.active) {
-            background-color: @color-background-light3;
-
-            .icon {
-                fill: @color-surface-light5-90;
-            }
-        }
+        width: 3.5rem;
+        height: 3.5rem;
+        border-radius: 0.75rem;
+        opacity: 0.4;
 
         .icon {
             flex: none;
-            width: 1.7rem;
-            height: 1.7rem;
-            fill: @color-secondaryvariant2-light1-90;
+            width: 2rem;
+            height: 2rem;
+            color: var(--primary-foreground-color);
+            opacity: 0.6;
+        }
+
+        &:hover, &:global(.active) {
+            background-color: var(--overlay-color);
+            opacity: 1;
+
+            .icon {
+                color: var(--primary-foreground-color);
+                opacity: 0.8;
+            }
         }
     }
 }
@@ -102,16 +98,12 @@
             width: var(--horizontal-nav-bar-size);
         }
 
-        .search-bar {
-            margin: 0 0.5rem;
-        }
+        .button-container {
+            margin: 0 1rem;
 
-        .spacing {
-            display: none;
-        }
-
-        .button-container:not(.back-button-container):not(.menu-button-container) {
-            display: none;
+            &:not(.back-button-container):not(.menu-button-container) {
+                display: none;
+            }
         }
     }
 }
