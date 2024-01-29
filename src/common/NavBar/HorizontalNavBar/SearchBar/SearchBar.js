@@ -156,7 +156,9 @@ const SearchBar = React.memo(({ className, query, active }) => {
                                         <div className={styles['label']}>{ t('Recommendations') }</div>
                                     </div>
                                     {
-                                        localSearch.items.map(({ query, deepLinks }, index) => (
+                                        localSearch.items.slice(0, 8).filter((item, index, self) => {
+                                            return self.findIndex((t) => t.query === item.query) === index;
+                                        }).map(({ query, deepLinks }, index) => (
                                             <Button key={index} className={styles['item']} href={deepLinks.search} onClick={closeHistory}>
                                                 {query}
                                             </Button>
