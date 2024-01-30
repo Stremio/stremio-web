@@ -153,7 +153,7 @@ const SearchBar = React.memo(({ className, query, active }) => {
                             localSearch?.items?.length ?
                                 <div className={styles['items']}>
                                     <div className={styles['title']}>
-                                        <div className={styles['label']}>{ t('Recommendations') }</div>
+                                        <div className={styles['label']}>{ t('SEARCH_SUGGESTIONS') }</div>
                                     </div>
                                     {
                                         localSearch.items.map(({ query, deepLinks }, index) => (
