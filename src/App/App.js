@@ -9,7 +9,7 @@ const { NotFound } = require('stremio/routes');
 const { ToastProvider, TooltipProvider, CONSTANTS, withCoreSuspender } = require('stremio/common');
 const ServicesToaster = require('./ServicesToaster');
 const DeepLinkHandler = require('./DeepLinkHandler');
-const DefaultSettingsHandler = require('./DefaultSettingsHandler');
+const SearchParamsHandler = require('./SearchParamsHandler');
 const ErrorDialog = require('./ErrorDialog');
 const withProtectedRoutes = require('./withProtectedRoutes');
 const routerViewsConfig = require('./routerViewsConfig');
@@ -165,6 +165,7 @@ const App = () => {
                                 <TooltipProvider className={styles['tooltip-container']}>
                                     <ServicesToaster />
                                     <DeepLinkHandler />
+                                    <SearchParamsHandler />
                                     <RouterWithProtectedRoutes
                                         className={styles['router']}
                                         viewsConfig={routerViewsConfig}
