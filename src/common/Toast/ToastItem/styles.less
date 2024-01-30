@@ -5,7 +5,7 @@
 .toast-item-container {
     display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: flex-start;
     width: 25rem;
     margin-bottom: 1rem;
     overflow: visible;
@@ -15,7 +15,7 @@
     border-radius: var(--border-radius);
     border: 0.4px solid var(--primary-accent-color);
     backdrop-filter: blur(10px);
-    padding: 0.5rem 1rem;
+    padding: 1rem;
     &.success {
         .icon-container {
             .icon {
@@ -47,7 +47,7 @@
     .info-container {
         flex: 1;
         align-self: stretch;
-        padding: 1rem;
+        padding: 0 1rem;
 
         .title-container {
             font-size: 1.2rem;
@@ -68,14 +68,14 @@
     .close-button-container {
         width: 2rem;
         height: 2rem;
-        margin: 0.2rem;
         border-radius: 3px;
         
         .icon {
             display: block;
             width: 100%;
             height: 100%;
-            color: var(--overlay-color);
+            color: var(--primary-accent-color);
+            opacity: 0.3;
         }
 
         &:hover {
