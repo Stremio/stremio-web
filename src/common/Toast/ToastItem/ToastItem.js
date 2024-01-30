@@ -17,7 +17,7 @@ const ToastItem = ({ title, message, dataset, onSelect, onClose, ...props }) => 
     const icon = React.useMemo(() => {
         return typeof props.icon === 'string' ? props.icon :
             type === 'success' ? 'checkmark' :
-                type === 'error' ? 'warning' :
+                type === 'error' ? 'close' :
                     null;
     }, [type, props.icon]);
     const toastOnClick = React.useCallback((event) => {
