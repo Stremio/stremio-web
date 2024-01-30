@@ -5,45 +5,42 @@
 .toast-item-container {
     display: flex;
     flex-direction: row;
+    align-items: center;
     width: 25rem;
     margin-bottom: 1rem;
-    background-color: @color-surface-light4;
     overflow: visible;
-    box-shadow: 0 0.3rem 0.5rem @color-background-dark5-40,
-        0 0.6rem 1rem @color-background-dark5-20;
+    box-shadow: var(--outer-glow);
+    background-color: var(--modal-background-color);
     pointer-events: auto;
-
+    border-radius: var(--border-radius);
+    border: 0.4px solid var(--primary-accent-color);
+    backdrop-filter: blur(10px);
+    padding: 0.5rem 1rem;
     &.success {
         .icon-container {
-            background-color: @color-accent3;
-
             .icon {
-                color: @color-surface-light5-90;
+                color: @color-accent3;
             }
         }
     }
 
     &.error {
         .icon-container {
-            background-color: @color-accent2;
-
             .icon {
-                color: @color-surface-light5-90;
+                color: var(--color-trakt);
             }
         }
     }
 
     .icon-container {
-        flex: none;
-        align-self: stretch;
-        width: 2.5rem;
-        padding: 0.5rem;
+        border-radius: 3px;
+        background-color: var(--overlay-color);
 
         .icon {
             display: block;
             width: 100%;
             height: 100%;
-            color: @color-background-dark5-90;
+            max-width: 2rem;
         }
     }
 
@@ -54,6 +51,7 @@
 
         .title-container {
             font-size: 1.2rem;
+            color: var(--primary-foreground-color);
 
             &:not(:last-child) {
                 margin-bottom: 0.2rem;
@@ -62,25 +60,29 @@
 
         .message-container {
             font-size: 1.1rem;
+            color: var(--primary-foreground-color);
+            opacity: 0.8;
         }
     }
 
     .close-button-container {
-        flex: none;
-        align-self: flex-start;
         width: 2rem;
         height: 2rem;
         margin: 0.2rem;
-        padding: 0.5rem;
-
-        &:hover {
-            background-color: @color-surface-light2;
-        }
-
+        border-radius: 3px;
+        
         .icon {
             display: block;
             width: 100%;
             height: 100%;
+            color: var(--overlay-color);
+        }
+
+        &:hover {
+            .icon {
+                color: var(--primary-foreground-color);
+                opacity: 0.7;
+            }
         }
     }
 }
