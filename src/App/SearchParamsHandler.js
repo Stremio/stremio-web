@@ -14,7 +14,7 @@ const SearchParamsHandler = () => {
 
     const onLocationChange = () => {
         const { origin, hash, search } = window.location;
-        const { searchParams } = new URL(`${origin}${search.length ? search : hash.replace('#', '')}`);
+        const { searchParams } = new URL(`${origin}${hash.replace('#', '')}${search}`);
 
         setSearchParams((previousSearchParams) => {
             const currentSearchParams = Object.fromEntries(searchParams.entries());
