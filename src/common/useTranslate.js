@@ -19,7 +19,7 @@ const useTranslate = () => {
 
     const catalogTitle = useCallback(({ addon, id, name, type } = {}, withType = true) => {
         if (addon && id && name) {
-            const partialKey = `${addon.manifest.id}/${id}`;
+            const partialKey = `${addon.manifest.id.replaceAll('.', '_')}_${id}`;
             const translatedName = stringWithPrefix(partialKey, 'CATALOG_', name);
 
             if (type && withType) {
