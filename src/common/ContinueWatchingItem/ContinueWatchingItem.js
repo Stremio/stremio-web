@@ -3,17 +3,10 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const { useServices } = require('stremio/services');
-const useNotifications = require('stremio/common/useNotifications');
 const LibItem = require('stremio/common/LibItem');
 
-const ContinueWatchingItem = ({ _id, deepLinks, ...props }) => {
+const ContinueWatchingItem = ({ _id, notifications, deepLinks, ...props }) => {
     const { core } = useServices();
-    const notifications = useNotifications();
-
-    const newVideos = React.useMemo(() => {
-        const count = notifications.items?.[_id]?.length ?? 0;
-        return Math.min(Math.max(count, 0), 99);
-    }, [_id, notifications.items]);
 
     const onClick = React.useCallback(() => {
         if (deepLinks?.metaDetailsVideos ?? deepLinks?.metaDetailsStreams) {
@@ -51,8 +44,9 @@ const ContinueWatchingItem = ({ _id, deepLinks, ...props }) => {
     return (
         <LibItem
             {...props}
+            _id={_id}
             posterChangeCursor={true}
-            newVideos={newVideos}
+            notifications={notifications}
             onClick={onClick}
             onPlayClick={onPlayClick}
             onDismissClick={onDismissClick}
@@ -62,6 +56,7 @@ const ContinueWatchingItem = ({ _id, deepLinks, ...props }) => {
 
 ContinueWatchingItem.propTypes = {
     _id: PropTypes.string,
+    notifications: PropTypes.object,
     deepLinks: PropTypes.shape({
         metaDetailsVideos: PropTypes.string,
         metaDetailsStreams: PropTypes.string,

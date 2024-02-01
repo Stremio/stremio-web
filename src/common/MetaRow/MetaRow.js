@@ -11,7 +11,7 @@ const useTranslate = require('stremio/common/useTranslate');
 const MetaRowPlaceholder = require('./MetaRowPlaceholder');
 const styles = require('./styles');
 
-const MetaRow = ({ className, title, catalog, message, itemComponent }) => {
+const MetaRow = ({ className, title, catalog, message, itemComponent, notifications }) => {
     const t = useTranslate();
 
     const catalogTitle = React.useMemo(() => {
@@ -56,7 +56,8 @@ const MetaRow = ({ className, title, catalog, message, itemComponent }) => {
                                     return React.createElement(itemComponent, {
                                         ...item,
                                         key: index,
-                                        className: classnames(styles['meta-item'], styles['poster-shape-poster'], styles[`poster-shape-${item.posterShape}`])
+                                        className: classnames(styles['meta-item'], styles['poster-shape-poster'], styles[`poster-shape-${item.posterShape}`]),
+                                        notifications,
                                     });
                                 })
                                 :
@@ -104,6 +105,7 @@ MetaRow.propTypes = {
         }),
     }),
     itemComponent: PropTypes.elementType,
+    notifications: PropTypes.object,
 };
 
 module.exports = MetaRow;
