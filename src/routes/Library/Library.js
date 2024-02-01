@@ -5,7 +5,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { default: Icon } = require('@stremio/stremio-icons/react');
 const NotFound = require('stremio/routes/NotFound');
-const { Button, DelayedRenderer, Multiselect, MainNavBars, LibItem, Image, ModalDialog, PaginationInput, useProfile, routesRegexp, useBinaryState, withCoreSuspender } = require('stremio/common');
+const { Button, DelayedRenderer, Multiselect, MainNavBars, LibItem, Image, ModalDialog, PaginationInput, useProfile, useNotifications, routesRegexp, useBinaryState, withCoreSuspender } = require('stremio/common');
 const useLibrary = require('./useLibrary');
 const useSelectableInputs = require('./useSelectableInputs');
 const styles = require('./styles');
@@ -45,6 +45,7 @@ function withModel(Library) {
 
 const Library = ({ model, urlParams, queryParams }) => {
     const profile = useProfile();
+    const notifications = useNotifications();
     const library = useLibrary(model, urlParams, queryParams);
     const [typeSelect, sortSelect, paginationInput] = useSelectableInputs(library);
     const [inputsModalOpen, openInputsModal, closeInputsModal] = useBinaryState(false);
@@ -108,7 +109,7 @@ const Library = ({ model, urlParams, queryParams }) => {
                                 :
                                 <div className={classnames(styles['meta-items-container'], 'animation-fade-in')}>
                                     {library.catalog.map((libItem, index) => (
-                                        <LibItem {...libItem} removable={model === 'library'} key={index} />
+                                        <LibItem {...libItem} notifications={notifications} removable={model === 'library'} key={index} />
                                     ))}
                                 </div>
                 }

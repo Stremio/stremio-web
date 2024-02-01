@@ -4,7 +4,7 @@ const React = require('react');
 const classnames = require('classnames');
 const debounce = require('lodash.debounce');
 const { useTranslation } = require('react-i18next');
-const { MainNavBars, MetaRow, ContinueWatchingItem, MetaItem, StreamingServerWarning, useStreamingServer, withCoreSuspender, getVisibleChildrenRange, EventModal } = require('stremio/common');
+const { MainNavBars, MetaRow, ContinueWatchingItem, MetaItem, StreamingServerWarning, useStreamingServer, useNotifications, withCoreSuspender, getVisibleChildrenRange, EventModal } = require('stremio/common');
 const useBoard = require('./useBoard');
 const useContinueWatchingPreview = require('./useContinueWatchingPreview');
 const styles = require('./styles');
@@ -16,6 +16,7 @@ const Board = () => {
     const streamingServer = useStreamingServer();
     const continueWatchingPreview = useContinueWatchingPreview();
     const [board, loadBoardRows] = useBoard();
+    const notifications = useNotifications();
     const boardCatalogsOffset = continueWatchingPreview.items.length > 0 ? 1 : 0;
     const scrollContainerRef = React.useRef();
     const onVisibleRangeChange = React.useCallback(() => {
@@ -48,6 +49,7 @@ const Board = () => {
                                 title={t('BOARD_CONTINUE_WATCHING')}
                                 catalog={continueWatchingPreview}
                                 itemComponent={ContinueWatchingItem}
+                                notifications={notifications}
                             />
                             :
                             null

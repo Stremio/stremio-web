@@ -13,8 +13,12 @@ const OPTIONS = [
     { label: 'LIBRARY_REMOVE', value: 'remove' },
 ];
 
-const LibItem = ({ _id, removable, ...props }) => {
+const LibItem = ({ _id, removable, notifications, ...props }) => {
     const { core } = useServices();
+    const newVideos = React.useMemo(() => {
+        const count = notifications.items?.[_id]?.length ?? 0;
+        return Math.min(Math.max(count, 0), 99);
+    }, [_id, notifications]);
     const options = React.useMemo(() => {
         return OPTIONS
             .filter(({ value }) => {
@@ -98,6 +102,7 @@ const LibItem = ({ _id, removable, ...props }) => {
     return (
         <MetaItem
             {...props}
+            newVideos={newVideos}
             options={options}
             optionOnSelect={optionOnSelect}
         />
@@ -108,6 +113,7 @@ LibItem.propTypes = {
     _id: PropTypes.string,
     removable: PropTypes.bool,
     progress: PropTypes.number,
+    notifications: PropTypes.object,
     deepLinks: PropTypes.shape({
         metaDetailsVideos: PropTypes.string,
         metaDetailsStreams: PropTypes.string,
