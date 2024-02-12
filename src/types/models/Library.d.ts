@@ -17,14 +17,14 @@ type Library = {
         nextPage: LibraryPage,
         prevPage: LibraryPage,
         sorts: SelectableSort<LibraryDeepLinks>[],
-        stateFilters: SelectableStateFilter<LibraryDeepLinks>[],
+        watcheds: SelectableWatched<LibraryDeepLinks>[],
         types: SelectableType<LibraryDeepLinks>[],
     },
     selected: {
         request: {
             page: number,
             sort: string,
-            stateFilter: string,
+            watched: string,
             type: string | null,
         }
     } | null,
