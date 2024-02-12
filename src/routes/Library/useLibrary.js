@@ -12,6 +12,7 @@ const useLibrary = (model, urlParams, queryParams) => {
                 request: {
                     type: typeof urlParams.type === 'string' ? urlParams.type : null,
                     sort: queryParams.has('sort') ? queryParams.get('sort') : undefined,
+                    stateFilter: queryParams.has('stateFilter') ? queryParams.get('stateFilter') : undefined,
                     page: queryParams.has('page') ? parseInt(queryParams.get('page'), 10) : undefined
                 }
             }

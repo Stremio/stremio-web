@@ -47,7 +47,7 @@ const Library = ({ model, urlParams, queryParams }) => {
     const profile = useProfile();
     const notifications = useNotifications();
     const library = useLibrary(model, urlParams, queryParams);
-    const [typeSelect, sortSelect, paginationInput] = useSelectableInputs(library);
+    const [typeSelect, sortSelect,stateSelect, paginationInput] = useSelectableInputs(library);
     const [inputsModalOpen, openInputsModal, closeInputsModal] = useBinaryState(false);
     return (
         <MainNavBars className={styles['library-container']} route={model}>
@@ -57,6 +57,7 @@ const Library = ({ model, urlParams, queryParams }) => {
                         <div className={styles['selectable-inputs-container']}>
                             <Multiselect {...typeSelect} className={styles['select-input-container']} />
                             <Multiselect {...sortSelect} className={styles['select-input-container']} />
+                            <Multiselect {...stateSelect} className={styles['select-input-container']} />
                             <div className={styles['spacing']} />
                             {
                                 paginationInput !== null ?
@@ -119,6 +120,7 @@ const Library = ({ model, urlParams, queryParams }) => {
                     <ModalDialog title={'Library filters'} className={styles['selectable-inputs-modal']} onCloseRequest={closeInputsModal}>
                         <Multiselect {...typeSelect} className={styles['select-input-container']} />
                         <Multiselect {...sortSelect} className={styles['select-input-container']} />
+                        <Multiselect {...stateSelect} className={styles['select-input-container']} />
                     </ModalDialog>
                     :
                     null

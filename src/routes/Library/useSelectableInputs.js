@@ -32,6 +32,21 @@ const mapSelectableInputs = (library, t) => {
             window.location = event.value;
         }
     };
+    const stateSelect = {
+        title: t.string('SELECT_STATEFILTER'),
+        options: library.selectable.stateFilters
+            .map(({ stateFilter, deepLinks }) => ({
+                value: deepLinks.library,
+                label: t.stringWithPrefix(stateFilter.toUpperCase(), 'STATEFILTER_')
+            })),
+        selected: library.selectable.stateFilters
+            .filter(({ selected }) => selected)
+            .map(({ deepLinks }) => deepLinks.library),
+        onSelect: (event) => {
+            window.location = event.value;
+        }
+    };
+    
     const paginationInput = library.selectable.prevPage || library.selectable.nextPage ?
         {
             label: library.selected.request.page.toString(),
@@ -46,7 +61,7 @@ const mapSelectableInputs = (library, t) => {
         }
         :
         null;
-    return [typeSelect, sortSelect, paginationInput];
+    return [typeSelect, sortSelect,stateSelect, paginationInput];
 };
 
 const useSelectableInputs = (library) => {

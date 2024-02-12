@@ -10,6 +10,13 @@ type SelectableSort<T> = {
     deepLinks: T
 };
 
+type SelectableStateFilter<T> = {
+    stateFilter: string,
+    selected: boolean,
+    deepLinks: T
+};
+
+
 type SelectableExtra<T> = {
     isRequired: boolean,
     name: string,
