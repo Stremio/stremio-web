@@ -23,7 +23,7 @@ const mapSelectableInputs = (library, t) => {
         options: library.selectable.sorts
             .map(({ sort, deepLinks }) => ({
                 value: deepLinks.library,
-                label: t.stringWithPrefix(sort, 'SORT_')
+                label: t.stringWithPrefix(sort.toUpperCase(), 'SORT_')
             })),
         selected: library.selectable.sorts
             .filter(({ selected }) => selected)

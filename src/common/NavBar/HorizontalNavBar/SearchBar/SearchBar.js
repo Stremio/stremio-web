@@ -23,7 +23,7 @@ const SearchBar = React.memo(({ className, query, active }) => {
     const localSearch = useLocalSearch();
     const { createTorrentFromMagnet } = useTorrent();
 
-    const [historyOpen, openHistory, closeHistory, ] = useBinaryState(false);
+    const [historyOpen, openHistory, closeHistory, ] = useBinaryState(query === null ? true : false);
     const [currentQuery, setCurrentQuery] = React.useState(query || '');
 
     const searchInputRef = React.useRef(null);
@@ -153,7 +153,7 @@ const SearchBar = React.memo(({ className, query, active }) => {
                             localSearch?.items?.length ?
                                 <div className={styles['items']}>
                                     <div className={styles['title']}>
-                                        <div className={styles['label']}>{ t('Recommendations') }</div>
+                                        <div className={styles['label']}>{ t('SEARCH_SUGGESTIONS') }</div>
                                     </div>
                                     {
                                         localSearch.items.map(({ query, deepLinks }, index) => (

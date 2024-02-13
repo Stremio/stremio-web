@@ -9,7 +9,7 @@ const styles = require('./styles');
 
 const ToastItem = ({ title, message, dataset, onSelect, onClose, ...props }) => {
     const type = React.useMemo(() => {
-        return ['success', 'alert', 'error'].includes(props.type) ?
+        return ['success', 'alert', 'info', 'error'].includes(props.type) ?
             props.type
             :
             'success';
@@ -17,8 +17,9 @@ const ToastItem = ({ title, message, dataset, onSelect, onClose, ...props }) => 
     const icon = React.useMemo(() => {
         return typeof props.icon === 'string' ? props.icon :
             type === 'success' ? 'checkmark' :
-                type === 'error' ? 'warning' :
-                    null;
+                type === 'error' ? 'close' :
+                    type === 'info' ? 'about' :
+                        null;
     }, [type, props.icon]);
     const toastOnClick = React.useCallback((event) => {
         if (!event.nativeEvent.selectToastPrevented && typeof onSelect === 'function') {
@@ -81,7 +82,7 @@ const ToastItem = ({ title, message, dataset, onSelect, onClose, ...props }) => 
 };
 
 ToastItem.propTypes = {
-    type: PropTypes.oneOf(['success', 'alert', 'error']),
+    type: PropTypes.oneOf(['success', 'alert', 'info', 'error']),
     title: PropTypes.string,
     message: PropTypes.string,
     icon: PropTypes.string,

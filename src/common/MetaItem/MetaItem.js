@@ -76,7 +76,7 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, poste
                         null
                 }
                 {
-                    watched ?
+                    !newVideos && watched ?
                         <div className={styles['watched-icon-layer']}>
                             <Icon className={styles['watched-icon']} name={'checkmark'} />
                         </div>
