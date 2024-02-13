@@ -42,6 +42,7 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, poste
     }, [props.onClick]);
     const menuOnClick = React.useCallback((event) => {
         event.stopPropagation();
+        event.nativeEvent.selectPrevented = true;
     }, []);
     const menuOnSelect = React.useCallback((event) => {
         if (typeof optionOnSelect === 'function') {
