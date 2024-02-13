@@ -8,10 +8,18 @@ const PropTypes = require('prop-types');
 const styles = require('./styles');
 const { useBinaryState } = require('stremio/common');
 
-const VolumeChangeIndicator = React.memo(({ muted, onVolumeChangeRequested, volume }) => {
+const VolumeChangeIndicator = React.memo(({ muted, volume }) => {
     const [volumeIndicatorOpen, openVolumeIndicator, closeVolumeIndicator] = useBinaryState(false);
     const volumeChangeTimeout = React.useRef(null);
     const prevVolume = React.useRef(volume);
+
+    const iconName = React.useMemo(() => {
+        return typeof muted === 'boolean' && muted ? 'volume-mute' :
+            volume === null || isNaN(volume) ? 'volume-off' :
+                volume < 30 ? 'volume-low' :
+                    volume < 70 ? 'volume-medium' :
+                        'volume-high';
+    }, [muted, volume]);
 
     React.useEffect(() => {
         if (prevVolume.current !== volume) {
@@ -34,14 +42,8 @@ const VolumeChangeIndicator = React.memo(({ muted, onVolumeChangeRequested, volu
             {
                 volumeIndicatorOpen ?
                     <div className={classNames(styles['layer'], styles['volume-change-indicator'])}>
-                        <Icon name={
-                            (typeof muted === 'boolean' && muted) ? 'volume-mute' :
-                                (volume === null || isNaN(volume)) ? 'volume-off' :
-                                    volume < 30 ? 'volume-low' :
-                                        volume < 70 ? 'volume-medium' :
-                                            'volume-high'
-                        } className={styles['volume-icon']} />
-                        <VolumeSlider volume={volume} onVolumeChangeRequested={onVolumeChangeRequested} className={styles['volume-slider']} />
+                        <Icon name={iconName} className={styles['volume-icon']} />
+                        <VolumeSlider volume={volume} className={styles['volume-slider']} />
                     </div>
                     :
                     null
@@ -56,6 +58,5 @@ module.exports = VolumeChangeIndicator;
 
 VolumeChangeIndicator.propTypes = {
     muted: PropTypes.bool,
-    onVolumeChangeRequested: PropTypes.func,
     volume: PropTypes.number
 };

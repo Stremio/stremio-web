@@ -636,7 +636,6 @@ const Player = ({ urlParams, queryParams }) => {
                     <VolumeChangeIndicator
                         muted={video.state.muted}
                         volume={video.state.volume}
-                        onVolumeChangeRequested={onVolumeChangeRequested}
                     />
                     :
                     null
