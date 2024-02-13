@@ -10,6 +10,7 @@ const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
 const { HorizontalNavBar, useFullscreen, useBinaryState, useToast, useStreamingServer, withCoreSuspender } = require('stremio/common');
 const BufferingLoader = require('./BufferingLoader');
+const VolumeChangeIndicator = require('./VolumeChangeIndicator');
 const Error = require('./Error');
 const ControlBar = require('./ControlBar');
 const NextVideoPopup = require('./NextVideoPopup');
@@ -627,6 +628,15 @@ const Player = ({ urlParams, queryParams }) => {
             {
                 menusOpen ?
                     <div className={styles['layer']} />
+                    :
+                    null
+            }
+            {
+                video.state.volume !== null && overlayHidden ?
+                    <VolumeChangeIndicator
+                        muted={video.state.muted}
+                        volume={video.state.volume}
+                    />
                     :
                     null
             }
