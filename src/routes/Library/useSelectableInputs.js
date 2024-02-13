@@ -33,13 +33,13 @@ const mapSelectableInputs = (library, t) => {
         }
     };
     const stateSelect = {
-        title: t.string('SELECT_WATCHED'),
-        options: library.selectable.watcheds
+        title: t.string('SELECT_FILTER'),
+        options: library.selectable.filters
             .map(({ watched, deepLinks }) => ({
                 value: deepLinks.library,
-                label: t.stringWithPrefix(watched.toUpperCase(), 'WATCHED_')
+                label: t.stringWithPrefix(watched.toUpperCase(), 'FILTER_')
             })),
-        selected: library.selectable.watcheds
+        selected: library.selectable.filters
             .filter(({ selected }) => selected)
             .map(({ deepLinks }) => deepLinks.library),
         onSelect: (event) => {

@@ -10,8 +10,8 @@ type SelectableSort<T> = {
     deepLinks: T
 };
 
-type SelectableWatched<T> = {
-    watched: string,
+type SelectableFilter<T> = {
+    filter: string,
     selected: boolean,
     deepLinks: T
 };
