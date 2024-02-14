@@ -45,6 +45,9 @@ const useTorrent = require('./useTorrent');
 const useTranslate = require('./useTranslate');
 const platform = require('./platform');
 const EventModal = require('./EventModal');
+const { default: useOnClickOutside } = require('./useOnClickOutside');
+const { default: useKeyboardEvent } = require('./useKeyboardEvent');
+const { default: useMouseEvent } = require('./useMouseEvent');
 
 module.exports = {
     AddonDetailsModal,
@@ -96,4 +99,7 @@ module.exports = {
     useTranslate,
     platform,
     EventModal,
+    useOnClickOutside,
+    useKeyboardEvent,
+    useMouseEvent,
 };

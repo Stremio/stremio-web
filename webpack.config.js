@@ -28,6 +28,11 @@ module.exports = (env, argv) => ({
     module: {
         rules: [
             {
+                test: /\.(ts|tsx)$/,
+                exclude: /node_modules/,
+                use: 'ts-loader',
+            },
+            {
                 test: /\.js$/,
                 exclude: /node_modules/,
                 use: {
@@ -142,7 +147,7 @@ module.exports = (env, argv) => ({
         ]
     },
     resolve: {
-        extensions: ['.js', '.json', '.less', '.wasm'],
+        extensions: ['.tsx', '.ts', '.js', '.json', '.less', '.wasm'],
         alias: {
             'stremio': path.join(__dirname, 'src'),
             'stremio-router': path.join(__dirname, 'src', 'router')

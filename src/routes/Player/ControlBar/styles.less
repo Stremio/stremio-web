@@ -1,6 +1,5 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
-@import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
 @import (reference) '~stremio/common/screen-sizes.less';
 
 .control-bar-container {
@@ -17,28 +16,7 @@
         display: flex;
         flex-direction: row;
         align-items: center;
-
-        .control-bar-button {
-            flex: none;
-            width: 4rem;
-            height: 5rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-
-            &:global(.disabled) {
-                .icon {
-                    opacity: 0.5;
-                }
-            }
-
-            .icon {
-                flex: none;
-                width: 2.5rem;
-                height: 2.5rem;
-                color: var(--primary-foreground-color);
-            }
-        }
+        overflow: visible;
 
         .volume-slider {
             --track-size: 0.35rem;
@@ -53,26 +31,15 @@
             flex: 1;
         }
 
-        .control-bar-buttons-menu-button {
-            flex: none;
-            width: 4rem;
-            height: 4rem;
+        .menu-button {
             display: none;
-            justify-content: center;
-            align-items: center;
-
-            .icon {
-                flex: none;
-                width: 2.5rem;
-                height: 2.5rem;
-                color: var(--primary-foreground-color);
-            }
         }
 
-        .control-bar-buttons-menu-container {
+        .controls-menu-container {
             flex: none;
             display: flex;
             flex-direction: row;
+            overflow: visible;
         }
     }
 }
@@ -94,11 +61,11 @@
                 display: none;
             }
 
-            .control-bar-buttons-menu-button {
+            .menu-button {
                 display: flex;
             }
 
-            .control-bar-buttons-menu-container {
+            .controls-menu-container {
                 position: absolute;
                 right: 0.15rem;
                 bottom: 4.5rem;
@@ -106,8 +73,7 @@
                 padding: 0.5rem;
                 border-radius: var(--border-radius);
                 background-color: var(--modal-background-color);
-                box-shadow: 0 1.35rem 2.7rem @color-background-dark5-40,
-                    0 1.1rem 0.85rem @color-background-dark5-20;
+                box-shadow: 0 1.35rem 2.7rem rgba(0, 0, 0, 0.4), 0 1.1rem 0.85rem rgba(0, 0, 0, 0.2);
 
                 &:not(:global(.open)) {
                     display: none;

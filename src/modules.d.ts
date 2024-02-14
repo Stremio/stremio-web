@@ -1,2 +1,2 @@
 declare module '*';
-declare module 'classnames';
+declare module 'stremio/common';

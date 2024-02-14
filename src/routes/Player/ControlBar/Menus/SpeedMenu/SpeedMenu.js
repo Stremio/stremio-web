@@ -9,16 +9,19 @@ const styles = require('./styles');
 
 const RATES = Array.from(Array(8).keys(), (n) => n * 0.25 + 0.25).reverse();
 
-const SpeedMenu = ({ className, playbackSpeed, onPlaybackSpeedChanged }) => {
+const SpeedMenu = ({ className, playbackSpeed, onChange }) => {
     const { t } = useTranslation();
+
     const onMouseDown = React.useCallback((event) => {
         event.nativeEvent.speedMenuClosePrevented = true;
     }, []);
+
     const onOptionSelect = React.useCallback((value) => {
-        if (typeof onPlaybackSpeedChanged === 'function') {
-            onPlaybackSpeedChanged(value);
+        if (typeof onChange === 'function') {
+            onChange(value);
         }
-    }, [onPlaybackSpeedChanged]);
+    }, [onChange]);
+
     return (
         <div className={classnames(className, styles['speed-menu-container'])} onMouseDown={onMouseDown}>
             <div className={styles['title']}>
@@ -44,7 +47,7 @@ const SpeedMenu = ({ className, playbackSpeed, onPlaybackSpeedChanged }) => {
 SpeedMenu.propTypes = {
     className: PropTypes.string,
     playbackSpeed: PropTypes.number,
-    onPlaybackSpeedChanged: PropTypes.func,
+    onChange: PropTypes.func,
 };
 
 module.exports = SpeedMenu;

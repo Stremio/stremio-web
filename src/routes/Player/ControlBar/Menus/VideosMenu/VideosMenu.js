@@ -3,7 +3,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const Video = require('../../MetaDetails/VideosList/Video');
+const Video = require('../../../../MetaDetails/VideosList/Video');
 const styles = require('./styles');
 
 const VideosMenu = ({ className, metaItem, seriesInfo }) => {

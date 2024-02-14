@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "lib": ["DOM", "DOM.Iterable"],
-        "jsx": "preserve",
+        "jsx": "react",
         "rootDir": "./src",
         "moduleResolution": "node",
         "baseUrl": ".",
@@ -9,9 +9,10 @@
             "stremio/*": ["src/*"],
         },
         "resolveJsonModule": true,
+        "esModuleInterop": true,
         "allowJs": true,
         "checkJs": false,
-        "noEmit": true,
+        "noEmit": false,
         "strict": false
     },
     "include": [

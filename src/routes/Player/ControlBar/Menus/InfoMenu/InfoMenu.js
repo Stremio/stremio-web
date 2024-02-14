@@ -8,7 +8,7 @@ const classnames = require('classnames');
 const { MetaPreview, CONSTANTS } = require('stremio/common');
 const styles = require('./styles');
 
-const InfoMenu = ({ className, ...props }) => {
+const InfoMenu = ({ ...props }) => {
     const metaItem = React.useMemo(() => {
         return props.metaItem !== null ?
             {
@@ -22,7 +22,7 @@ const InfoMenu = ({ className, ...props }) => {
         event.nativeEvent.infoMenuClosePrevented = true;
     }, []);
     return (
-        <div className={classnames(className, styles['info-menu-container'])} onMouseDown={onMouseDown}>
+        <div className={classnames(styles['info-menu-container'])} onMouseDown={onMouseDown}>
             {
                 metaItem !== null ?
                     <MetaPreview
@@ -68,7 +68,6 @@ const InfoMenu = ({ className, ...props }) => {
 };
 
 InfoMenu.propTypes = {
-    className: PropTypes.string,
     metaItem: PropTypes.object,
     addon: PropTypes.object,
     stream: PropTypes.object
