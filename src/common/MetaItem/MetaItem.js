@@ -32,12 +32,10 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, poste
             null;
     }, [deepLinks]);
     const metaItemOnClick = React.useCallback((event) => {
-        if (typeof props.onClick === 'function') {
-            props.onClick(event);
-        }
-
         if (event.nativeEvent.selectPrevented) {
             event.preventDefault();
+        } else if (typeof props.onClick === 'function') {
+            props.onClick(event);
         }
     }, [props.onClick]);
     const menuOnClick = React.useCallback((event) => {
