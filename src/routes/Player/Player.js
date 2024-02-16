@@ -142,7 +142,7 @@ const Player = ({ urlParams, queryParams }) => {
         video.state.volume !== null && onVolumeChangeRequested(video.state.volume + 5);
     }, [video.state.volume]);
 
-    const onVolumeDereaseRequested = React.useCallback(() => {
+    const onVolumeDecreaseRequested = React.useCallback(() => {
         video.state.volume !== null && onVolumeChangeRequested(video.state.volume - 5);
     }, [video.state.volume]);
 
@@ -421,9 +421,9 @@ const Player = ({ urlParams, queryParams }) => {
     useKeyboardEvent('ArrowRight', onSeekForwardRequested, ignoreShortcuts);
     useKeyboardEvent('ArrowLeft', onSeekBackwardRequested, ignoreShortcuts);
     useKeyboardEvent('ArrowUp', onVolumeIncreaseRequested, ignoreShortcuts);
-    useKeyboardEvent('ArrowDown', onVolumeDereaseRequested, ignoreShortcuts);
+    useKeyboardEvent('ArrowDown', onVolumeDecreaseRequested, ignoreShortcuts);
     useMouseEvent('ScrollUp', onVolumeIncreaseRequested, ignoreShortcuts);
-    useMouseEvent('ScrollDown', onVolumeDereaseRequested, ignoreShortcuts);
+    useMouseEvent('ScrollDown', onVolumeDecreaseRequested, ignoreShortcuts);
 
     React.useEffect(() => {
         video.events.on('error', onError);
