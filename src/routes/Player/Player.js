@@ -41,7 +41,17 @@ const Player = ({ urlParams, queryParams }) => {
     const [,,, toggleFullscreen] = useFullscreen();
 
     const [areMenusOpen, setMenusState] = React.useState(false);
+    const [activeMenuId, setActiveMenuId] = React.useState(null);
+
     const [nextVideoPopupOpen, openNextVideoPopup, closeNextVideoPopup] = useBinaryState(false);
+
+    const toggleMenu = React.useCallback((id) => {
+        setActiveMenuId(id);
+    }, []);
+
+    React.useEffect(() => {
+        activeMenuId !== null ? setMenusState(true) : setMenusState(false);
+    }, [activeMenuId]);
 
     const ignoreShortcuts = React.useMemo(() => {
         return areMenusOpen || nextVideoPopupOpen;
@@ -518,10 +528,12 @@ const Player = ({ urlParams, queryParams }) => {
                 onAudioTrackSelected={onAudioTrackSelected}
                 onSubtitlesOffsetChanged={onSubtitlesOffsetChanged}
                 onSubtitlesSizeChanged={onSubtitlesSizeChanged}
+                onExtraSubtitlesSizeChanged={onSubtitlesSizeChanged}
                 onExtraSubtitlesDelayChanged={onExtraSubtitlesDelayChanged}
-                onMenuChange={setMenusState}
                 onMouseMove={onBarMouseMove}
                 onMouseOver={onBarMouseMove}
+                toggleMenu={toggleMenu}
+                activeMenuId={activeMenuId}
             />
             {
                 nextVideoPopupOpen ?

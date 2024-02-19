@@ -31,7 +31,9 @@ const ControlBar = ({
     onSubtitlesOffsetChanged,
     onSubtitlesSizeChanged,
     onExtraSubtitlesDelayChanged,
-    onMenuChange,
+    onExtraSubtitlesSizeChanged,
+    activeMenuId,
+    toggleMenu,
     ...props
 }) => {
     const { chromecast } = useServices();
@@ -89,6 +91,116 @@ const ControlBar = ({
                         'volume-high';
     }, [muted, volume]);
 
+    const menus = [
+        {
+            id: 'playPause',
+            icon: typeof paused !== 'boolean' || paused ? 'play' : 'pause',
+            title: paused ? t('PLAYER_PLAY') : t('PLAYER_PAUSE'),
+            disabled: typeof paused !== 'boolean',
+            onClick: onPlayPauseRequested,
+        },
+        nextVideo && {
+            id: 'nextVideo',
+            icon: 'next',
+            title: t('PLAYER_NEXT_VIDEO'),
+            disabled: typeof paused !== 'boolean',
+            onClick: onNextVideoRequested,
+            condition: nextVideo,
+        },
+        {
+            id: 'mute',
+            icon: muted ? 'volume-mute' : volumeIcon,
+            title: muted ? t('PLAYER_UNMUTE') : t('PLAYER_MUTE'),
+            onClick: onMuteButtonClick,
+        },
+    ].filter(Boolean);
+
+    const controlMenus = [
+        {
+            id: 'statistics',
+            icon: 'network',
+            disabled: !statistics || statistics.infoHash === null || !stream,
+            shortcut: 'KeyD',
+            component: StatisticsMenu,
+            props: statistics,
+        },
+        {
+            id: 'speed',
+            icon: 'speed',
+            disabled: !playbackSpeed,
+            shortcut: 'KeyR',
+            component: SpeedMenu,
+            props: {
+                playbackSpeed,
+                onChange: onPlaybackSpeedChangeRequested,
+            },
+        },
+        {
+            id: 'info',
+            icon: 'about',
+            disabled: !metaItem || !stream,
+            shortcut: 'KeyI',
+            component: InfoMenu,
+            props: {
+                stream,
+                addon,
+                metaItem,
+            },
+        },
+        {
+            id: 'chromecast',
+            icon: 'cast',
+            disabled: !chromecastServiceActive,
+            onClick: onChromecastButtonClick,
+        },
+        {
+            id: 'subtitles',
+            icon: 'subtitles',
+            disabled: tracks.length === 0,
+            shortcut: 'KeyS',
+            component: SubtitlesMenu,
+            props: {
+                subtitlesTracks,
+                extraSubtitlesTracks,
+                audioTracks,
+                selectedAudioTrackId,
+                selectedSubtitlesTrackId,
+                selectedExtraSubtitlesTrackId,
+                subtitlesOffset,
+                subtitlesSize,
+                extraSubtitlesOffset,
+                extraSubtitlesDelay,
+                extraSubtitlesSize,
+                onSubtitlesTrackSelected,
+                onExtraSubtitlesTrackSelected,
+                onAudioTrackSelected,
+                onSubtitlesOffsetChanged,
+                onSubtitlesSizeChanged,
+                onExtraSubtitlesDelayChanged,
+                onExtraSubtitlesSizeChanged
+            },
+        },
+        metaItem?.videos?.length > 0 && {
+            id: 'episodes',
+            icon: 'episodes',
+            shortcut: 'KeyV',
+            component: VideosMenu,
+            props: {
+                metaItem,
+                seriesInfo,
+            },
+        },
+        {
+            id: 'options',
+            icon: 'more-horizontal',
+            component: OptionsMenu,
+            props: {
+                stream,
+                playbackDevices,
+            },
+        },
+    ].filter(Boolean);
+
     React.useEffect(() => {
         const onStateChanged = () => setChromecastServiceActive(chromecast.active);
         chromecast.on('stateChanged', onStateChanged);
@@ -105,29 +217,20 @@ const ControlBar = ({
                 onSeekRequested={onSeekRequested}
             />
             <div className={styles['control-bar-buttons-container']}>
-                <Control
-                    icon={typeof paused !== 'boolean' || paused ? 'play' : 'pause'}
-                    title={paused ? t('PLAYER_PLAY') : t('PLAYER_PAUSE')}
-                    disabled={typeof paused !== 'boolean'}
-                    onClick={onPlayPauseRequested}
-                />
-                {
-                    nextVideo ?
-                        <Control
-                            disabled={typeof paused !== 'boolean'}
-                            icon={'next'}
-                            title={t('PLAYER_NEXT_VIDEO')}
-                            onClick={onNextVideoRequested}
-                        />
-                        :
-                        null
-                }
-                <Control
-                    disabled={typeof muted !== 'boolean'}
-                    icon={volumeIcon}
-                    title={muted ? t('PLAYER_UNMUTE') : t('PLAYER_MUTE')}
-                    onClick={onMuteButtonClick}
-                />
+                {menus.map((menu) => {
+                    const MenuComponent = menu.component;
+
+                    return (
+                        <Control {...menu} key={menu.id}>
+                            {
+                                MenuComponent ?
+                                    <MenuComponent {...menu.props} />
+                                    :
+                                    null
+                            }
+                        </Control>
+                    );
+                })}
                 <VolumeSlider
                     className={styles['volume-slider']}
                     volume={volume}
@@ -140,63 +243,28 @@ const ControlBar = ({
                     onClick={toogleMobileMenu}
                 />
                 <div className={classnames(styles['controls-menu-container'], { 'open': mobileMenuOpen })}>
-                    <Control icon={'network'} disabled={!statistics || statistics.infoHash === null || !stream} shortcut={'KeyD'} onMenuChange={onMenuChange}>
-                        <StatisticsMenu {...statistics} />
-                    </Control>
-                    <Control icon={'speed'} disabled={!playbackSpeed} shortcut={'KeyR'} onMenuChange={onMenuChange}>
-                        <SpeedMenu
-                            playbackSpeed={playbackSpeed}
-                            onChange={onPlaybackSpeedChangeRequested}
-                        />
-                    </Control>
-                    <Control icon={'about'} disabled={!metaItem || !stream} shortcut={'KeyI'} onMenuChange={onMenuChange}>
-                        <InfoMenu
-                            stream={stream}
-                            addon={addon}
-                            metaItem={metaItem}
-                        />
-                    </Control>
-                    <Control icon={'cast'} disabled={!chromecastServiceActive} onClick={onChromecastButtonClick} />
-                    <Control icon={'subtitles'} disabled={tracks.length === 0} shortcut={'KeyS'} onMenuChange={onMenuChange}>
-                        <SubtitlesMenu
-                            audioTracks={audioTracks}
-                            selectedAudioTrackId={selectedAudioTrackId}
-                            subtitlesTracks={subtitlesTracks}
-                            selectedSubtitlesTrackId={selectedSubtitlesTrackId}
-                            subtitlesOffset={subtitlesOffset}
-                            subtitlesSize={subtitlesSize}
-                            extraSubtitlesTracks={extraSubtitlesTracks}
-                            selectedExtraSubtitlesTrackId={selectedExtraSubtitlesTrackId}
-                            extraSubtitlesOffset={extraSubtitlesOffset}
-                            extraSubtitlesDelay={extraSubtitlesDelay}
-                            extraSubtitlesSize={extraSubtitlesSize}
-                            onSubtitlesTrackSelected={onSubtitlesTrackSelected}
-                            onExtraSubtitlesTrackSelected={onExtraSubtitlesTrackSelected}
-                            onAudioTrackSelected={onAudioTrackSelected}
-                            onSubtitlesOffsetChanged={onSubtitlesOffsetChanged}
-                            onSubtitlesSizeChanged={onSubtitlesSizeChanged}
-                            onExtraSubtitlesOffsetChanged={onSubtitlesOffsetChanged}
-                            onExtraSubtitlesDelayChanged={onExtraSubtitlesDelayChanged}
-                            onExtraSubtitlesSizeChanged={onSubtitlesSizeChanged}
-                        />
-                    </Control>
                     {
-                        metaItem?.videos?.length > 0 ?
-                            <Control icon={'episodes'} shortcut={'KeyV'} onMenuChange={onMenuChange}>
-                                <VideosMenu
-                                    metaItem={metaItem}
-                                    seriesInfo={seriesInfo}
-                                />
-                            </Control>
-                            :
-                            null
-                    }
-                    <Control icon={'more-horizontal'} onMenuChange={onMenuChange}>
-                        <OptionsMenu
-                            stream={stream}
-                            playbackDevices={playbackDevices}
-                        />
-                    </Control>
+                        controlMenus.map((controlMenu) => {
+                            const isMenuActive = activeMenuId === controlMenu.id;
+                            const ControlMenuComponent = controlMenu.component;
+
+                            return (
+                                <Control
+                                    {...controlMenu}
+                                    key={controlMenu.id}
+                                    isActive={isMenuActive}
+                                    toggleMenu={toggleMenu}
+                                >
+                                    {
+                                        ControlMenuComponent ?
+                                            <ControlMenuComponent {...controlMenu.props} />
+                                            :
+                                            null
+                                    }
+                                </Control>
+                            );
+                        }
+                        )}
                 </div>
             </div>
         </div>
@@ -221,7 +289,10 @@ ControlBar.propTypes = {
     onSubtitlesOffsetChanged: PropTypes.func,
     onSubtitlesSizeChanged: PropTypes.func,
     onExtraSubtitlesDelayChanged: PropTypes.func,
+    onExtraSubtitlesSizeChanged: PropTypes.func,
     onMenuChange: PropTypes.func,
+    activeMenuId: PropTypes.string,
+    toggleMenu: PropTypes.func,
 };
 
 module.exports = ControlBar;

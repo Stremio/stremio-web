@@ -1,65 +1,58 @@
 // Copyright (C) 2017-2024 Smart code 203358507
 
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useRef } from 'react';
 import classNames from 'classnames';
 import Icon from '@stremio/stremio-icons/react';
-import { Button, useBinaryState, useOnClickOutside, useKeyboardEvent } from 'stremio/common';
+import { Button, useOnClickOutside, useKeyboardEvent } from 'stremio/common';
 import styles from './styles.less';
 
 type Props = {
+    id: string;
     children?: JSX.Element,
     className?: string,
     disabled?: boolean,
     icon: string,
     title?: string,
     shortcut?: string,
-    onMenuChange?: (state: boolean) => void,
     onClick?: () => void,
+    isActive: boolean;
+    toggleMenu?: (id: string) => void;
 };
 
-const Control = ({ children, className, disabled, icon, title, shortcut, onMenuChange, onClick }: Props) => {
-    const ref = useRef(null);
-    const [menuOpen,, closeMenu, toggleMenu] = useBinaryState();
+const Control = ({ id, children, className, disabled, icon, title, shortcut, onClick, isActive, toggleMenu }: Props) => {
+    const ref = useRef<HTMLDivElement>(null);
 
-    const onButtonClick = () => {
-        toggleMenu();
-        onClick && onClick();
-    };
-
-    const onMenuClick = (event: React.MouseEvent<HTMLDivElement>) => {
-        event.stopPropagation();
+    const handleClick = () => {
+        onClick?.();
+        !isActive ? toggleMenu(id) : toggleMenu(null);
     };
 
     const onClickOutside = useCallback(() => {
-        menuOpen && closeMenu();
-    }, [menuOpen]);
+        if (isActive) toggleMenu?.(null);
+    }, [isActive, toggleMenu]);
 
-    useEffect(() => {
-        onMenuChange && onMenuChange(menuOpen);
-    }, [menuOpen, onMenuChange]);
+    const handleMenuClick = (e: { stopPropagation: () => void }) => {
+        e.stopPropagation();
+    }
 
     useOnClickOutside(ref, onClickOutside);
-    useKeyboardEvent('Escape', closeMenu);
-    shortcut && useKeyboardEvent(shortcut, toggleMenu);
+    useKeyboardEvent('Escape', onClickOutside);
+    shortcut && useKeyboardEvent(shortcut, handleClick); 
 
     return (
-        <Button
-            ref={ref}
-            className={classNames(className, styles['control-button'], { 'disabled': disabled })}
-            tabIndex={-1}
-            title={title}
-            onClick={onButtonClick}
-        >
-            <Icon className={styles['icon']} name={icon} />
+        <div ref={ref} className={classNames(className, styles['control-button'], { 'disabled': disabled })} title={title}>
+            <Button tabIndex={-1} onClick={handleClick}>
+                <Icon className={classNames(styles['icon'])} name={icon} />
+            </Button>
             {
-                children && menuOpen ?
-                    <div className={styles['menu-container']} onClick={onMenuClick}>
+                isActive && children ?
+                    <div className={styles['menu-container']} onClick={handleMenuClick}>
                         {children}
                     </div>
-                    :
+                    : 
                     null
             }
-        </Button>
+        </div>
     );
 };
 
