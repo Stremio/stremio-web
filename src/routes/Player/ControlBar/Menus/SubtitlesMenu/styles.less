@@ -1,6 +1,7 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
+@import (reference) '~stremio/common/screen-sizes.less';
 
 .subtitles-menu-container {
     height: 25rem;
@@ -88,6 +89,16 @@
 
         .discrete-input {
             padding: 0 1.5rem 1rem;
+        }
+    }
+
+    @media screen and (max-width: @minimum) {
+        height: 30rem;
+        flex-direction: column;
+        overflow: auto;
+
+        .variants-container, .languages-container {
+            width: 100%;
         }
     }
 }

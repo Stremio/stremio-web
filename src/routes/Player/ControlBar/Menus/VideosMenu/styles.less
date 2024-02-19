@@ -1,9 +1,16 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
+@import (reference) '~stremio/common/screen-sizes.less';
+
 .videos-menu-container {
     width: 25rem;
     max-height: 30rem;
     padding: 1rem;
     padding-bottom: 0;
     overflow: auto;
+
+    @media screen and (max-width: @minimum) {
+        max-width: 20rem;
+        max-height: 25rem;
+    }
 }

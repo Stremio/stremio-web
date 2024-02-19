@@ -1,5 +1,7 @@
 // Copyright (C) 2017-2024 Smart code 203358507
 
+@import (reference) '~stremio/common/screen-sizes.less';
+
 .control-button {
     flex: none;
     position: relative;
@@ -21,6 +23,10 @@
         width: 2.5rem;
         height: 2.5rem;
         color: var(--primary-foreground-color);
+
+        &:global(.active) {
+            color: var(--primary-accent-color);
+        }
     }
 
     .menu-container {
@@ -32,5 +38,12 @@
         box-shadow: 0 1.35rem 2.7rem rgba(0, 0, 0, 0.4), 0 1.1rem 0.85rem rgba(0, 0, 0, 0.2);
         backdrop-filter: blur(15px);
         overflow: hidden;
+    }
+
+    @media only screen and (max-width: @minimum) {
+        .menu-container {
+            right: 5rem;
+            bottom: 0;
+        }
     }
 }

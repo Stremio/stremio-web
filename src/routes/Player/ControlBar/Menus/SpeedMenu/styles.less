@@ -1,10 +1,11 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
+@import (reference) '~stremio/common/screen-sizes.less';
 
 .speed-menu-container {
     width: 14rem;
-    overflow: visible !important;
+    overflow: auto;
 
     .title {
         flex: none;
@@ -16,12 +17,14 @@
 
     .options-container {
         flex: 0 1 auto;
-        max-height: calc(3.2rem * 8);
         padding: 0 1rem 0.5rem;
-        overflow-y: auto;
         
         .option {
             height: 3.2rem;
         }
+    }
+
+    @media screen and (max-width: @minimum) {
+        max-height: 25rem;
     }
 }

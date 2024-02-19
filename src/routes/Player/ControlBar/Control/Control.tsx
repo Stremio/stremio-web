@@ -42,7 +42,7 @@ const Control = ({ id, children, className, disabled, icon, title, shortcut, onC
     return (
         <div ref={ref} className={classNames(className, styles['control-button'], { 'disabled': disabled })} title={title}>
             <Button tabIndex={-1} onClick={handleClick}>
-                <Icon className={classNames(styles['icon'])} name={icon} />
+                <Icon className={classNames(styles['icon'], {'active': isActive})} name={icon} />
             </Button>
             {
                 isActive && children ?
