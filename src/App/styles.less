@@ -178,5 +178,13 @@ html {
     html {
         min-width: inherit;
         min-height: inherit;
+
+        body {
+            :global(#app) {
+                .toasts-container {
+                    padding: 0 1rem;
+                }
+            }
+        }
     }
 }
