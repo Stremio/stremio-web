@@ -4,6 +4,7 @@ import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import classNames from 'classnames';
 import useKeyboardEvent from '../useKeyboardEvent';
+import useOnClickOutside from '../useOnClickOutside';
 import MenuContext from './MenuContext';
 import { type Menu } from './types';
 
@@ -70,6 +71,7 @@ const MenuProvider = ({ children, className }: Props) => {
     }, [active]);
 
     useKeyboardEvent('Escape', closeAll);
+    useOnClickOutside([container.current, active?.parent], closeAll);
 
     return (
         <MenuContext.Provider value={{ active, create, remove, render, toggle }}>
