@@ -3,11 +3,12 @@
 const React = require('react');
 const classNames = require('classnames');
 const PropTypes = require('prop-types');
+const { Menu } = require('stremio/common');
 const styles = require('./styles.less');
 
 const StatisticsMenu = ({ className, peers, speed, completed, infoHash }) => {
     return (
-        <div className={classNames(className, styles['statistics-menu-container'])}>
+        <Menu className={classNames(className, styles['statistics-menu-container'])} shortcut={'KeyD'}>
             <div className={styles['title']}>
                 Statistics
             </div>
@@ -45,7 +46,7 @@ const StatisticsMenu = ({ className, peers, speed, completed, infoHash }) => {
                     { infoHash }
                 </div>
             </div>
-        </div>
+        </Menu>
     );
 };
 

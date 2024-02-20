@@ -3,13 +3,11 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
+const { Menu } = require('stremio/common');
 const Video = require('../../../../MetaDetails/VideosList/Video');
 const styles = require('./styles');
 
 const VideosMenu = ({ className, metaItem, seriesInfo }) => {
-    const onMouseDown = React.useCallback((event) => {
-        event.nativeEvent.videosMenuClosePrevented = true;
-    }, []);
     const videos = React.useMemo(() => {
         return seriesInfo && typeof seriesInfo.season === 'number' && Array.isArray(metaItem.videos) ?
             metaItem.videos.filter(({ season }) => season === seriesInfo.season)
@@ -17,7 +15,7 @@ const VideosMenu = ({ className, metaItem, seriesInfo }) => {
             metaItem.videos;
     }, [metaItem, seriesInfo]);
     return (
-        <div className={classnames(className, styles['videos-menu-container'])} onMouseDown={onMouseDown}>
+        <Menu className={classnames(className, styles['videos-menu-container'])} shortcut={'KeyV'}>
             {
                 videos.map((video, index) => (
                     <Video
@@ -35,7 +33,7 @@ const VideosMenu = ({ className, metaItem, seriesInfo }) => {
                     />
                 ))
             }
-        </div>
+        </Menu>
     );
 };
 

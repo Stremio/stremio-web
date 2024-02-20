@@ -103,12 +103,12 @@ html {
             height: 100%;
 
             .toasts-container {
+                z-index: 2;
                 position: absolute;
                 top: calc(1.2 * var(--horizontal-nav-bar-size));
                 right: 0;
                 bottom: calc(1.2 * var(--horizontal-nav-bar-size));
                 left: auto;
-                z-index: 1;
                 padding: 0 calc(0.5 * var(--horizontal-nav-bar-size));
                 overflow-y: auto;
                 scrollbar-width: none;
@@ -120,6 +120,7 @@ html {
             }
 
             .tooltip-container {
+                z-index: 1;
                 height: 2.5rem;
                 display: flex;
                 align-items: center;
@@ -135,6 +136,15 @@ html {
                 &:global(.active) {
                     transition-delay: 0.25s;
                 }
+            }
+
+            .menu-container {
+                z-index: 1;
+                position: absolute;
+                border-radius: var(--border-radius);
+                background-color: var(--modal-background-color);
+                box-shadow: 0 1.35rem 2.7rem rgba(0, 0, 0, 0.4), 0 1.1rem 0.85rem rgba(0, 0, 0, 0.2);
+                backdrop-filter: blur(15px);
             }
 
             .router {

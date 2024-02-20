@@ -8,6 +8,7 @@ const langs = require('langs');
 const { useTranslation } = require('react-i18next');
 const { useServices } = require('stremio/services');
 const { HorizontalNavBar, useFullscreen, useBinaryState, useToast, useStreamingServer, useKeyboardEvent, useMouseEvent, withCoreSuspender } = require('stremio/common');
+const { default: useMenu } = require('stremio/common/Menu/useMenu');
 const BufferingLoader = require('./BufferingLoader');
 const VolumeChangeIndicator = require('./VolumeChangeIndicator');
 const Error = require('./Error');
@@ -26,6 +27,7 @@ const Player = ({ urlParams, queryParams }) => {
         return queryParams.has('forceTranscoding');
     }, [queryParams]);
 
+    const menu = useMenu();
     const [player, videoParamsChanged, timeChanged, pausedChanged, ended, nextVideo] = usePlayer(urlParams);
     const [settings, updateSettings] = useSettings();
     const streamingServer = useStreamingServer();
@@ -40,7 +42,7 @@ const Player = ({ urlParams, queryParams }) => {
     const setImmersedDebounced = React.useCallback(debounce(setImmersed, 3000), []);
     const [,,, toggleFullscreen] = useFullscreen();
 
-    const [areMenusOpen, setMenusState] = React.useState(false);
+    const areMenusOpen = React.useMemo(() => menu.active, [menu.active]);
     const [nextVideoPopupOpen, openNextVideoPopup, closeNextVideoPopup] = useBinaryState(false);
 
     const ignoreShortcuts = React.useMemo(() => {
@@ -519,7 +521,6 @@ const Player = ({ urlParams, queryParams }) => {
                 onSubtitlesOffsetChanged={onSubtitlesOffsetChanged}
                 onSubtitlesSizeChanged={onSubtitlesSizeChanged}
                 onExtraSubtitlesDelayChanged={onExtraSubtitlesDelayChanged}
-                onMenuChange={setMenusState}
                 onMouseMove={onBarMouseMove}
                 onMouseOver={onBarMouseMove}
             />

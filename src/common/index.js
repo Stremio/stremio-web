@@ -48,6 +48,7 @@ const EventModal = require('./EventModal');
 const { default: useOnClickOutside } = require('./useOnClickOutside');
 const { default: useKeyboardEvent } = require('./useKeyboardEvent');
 const { default: useMouseEvent } = require('./useMouseEvent');
+const { MenuProvider, Menu } = require('./Menu');
 
 module.exports = {
     AddonDetailsModal,
@@ -102,4 +103,6 @@ module.exports = {
     useOnClickOutside,
     useKeyboardEvent,
     useMouseEvent,
+    MenuProvider,
+    Menu,
 };

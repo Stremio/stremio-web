@@ -4,6 +4,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { useTranslation } = require('react-i18next');
+const { Menu } = require('stremio/common');
 const Option = require('./Option');
 const styles = require('./styles');
 
@@ -12,10 +13,6 @@ const RATES = Array.from(Array(8).keys(), (n) => n * 0.25 + 0.25).reverse();
 const SpeedMenu = ({ className, playbackSpeed, onChange }) => {
     const { t } = useTranslation();
 
-    const onMouseDown = React.useCallback((event) => {
-        event.nativeEvent.speedMenuClosePrevented = true;
-    }, []);
-
     const onOptionSelect = React.useCallback((value) => {
         if (typeof onChange === 'function') {
             onChange(value);
@@ -23,7 +20,7 @@ const SpeedMenu = ({ className, playbackSpeed, onChange }) => {
     }, [onChange]);
 
     return (
-        <div className={classnames(className, styles['speed-menu-container'])} onMouseDown={onMouseDown}>
+        <Menu className={classnames(className, styles['speed-menu-container'])} shortcut={'KeyR'} align={'right'}>
             <div className={styles['title']}>
                 { t('PLAYBACK_SPEED') }
             </div>
@@ -40,7 +37,7 @@ const SpeedMenu = ({ className, playbackSpeed, onChange }) => {
                     ))
                 }
             </div>
-        </div>
+        </Menu>
     );
 };
 

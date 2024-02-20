@@ -2,17 +2,17 @@
 
 import { useEffect } from 'react';
 
-const useOnClickOutside = (ref: React.MutableRefObject<HTMLElement>, handler: () => void) => {
+const useOnClickOutside = (ref: React.MutableRefObject<HTMLElement>, handler: () => void, ignore?: boolean) => {
     useEffect(() => {
         const onClickOutside = (event: MouseEvent) => {
             const element = event.target as Node;
             if (ref.current && !ref.current.contains(element)) {
-                handler();
+                !ignore && handler();
             }
         };
 
-        document.addEventListener('click', onClickOutside);
-        return () => document.removeEventListener('click', onClickOutside);
+        document.addEventListener('mouseup', onClickOutside);
+        return () => document.removeEventListener('mouseup', onClickOutside);
     }, [handler]);
 };
 

@@ -3,7 +3,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const { Button, CONSTANTS, comparatorWithPriorities, languageNames } = require('stremio/common');
+const { Button, Menu, CONSTANTS, comparatorWithPriorities, languageNames } = require('stremio/common');
 const DiscreteSelectInput = require('./DiscreteSelectInput');
 const styles = require('./styles');
 const { t } = require('i18next');
@@ -58,9 +58,6 @@ const SubtitlesMenu = React.memo((props) => {
             .filter(({ lang }) => lang === selectedSubtitlesLanguage)
             .sort((t1, t2) => comparatorWithPriorities(ORIGIN_PRIORITIES)(t1.origin, t2.origin));
     }, [props.subtitlesTracks, props.extraSubtitlesTracks, selectedSubtitlesLanguage]);
-    const onMouseDown = React.useCallback((event) => {
-        event.nativeEvent.subtitlesMenuClosePrevented = true;
-    }, []);
     const subtitlesLanguageOnClick = React.useCallback((event) => {
         const track = (Array.isArray(props.subtitlesTracks) ? props.subtitlesTracks : [])
             .concat(Array.isArray(props.extraSubtitlesTracks) ? props.extraSubtitlesTracks : [])
@@ -150,7 +147,7 @@ const SubtitlesMenu = React.memo((props) => {
         }
     }, [props.onAudioTrackSelected]);
     return (
-        <div className={classnames(props.className, styles['subtitles-menu-container'])} onMouseDown={onMouseDown}>
+        <Menu className={classnames(props.className, styles['subtitles-menu-container'])} shortcut={'KeyS'}>
             {
                 Array.isArray(props.audioTracks) && props.audioTracks.length > 1 ?
                     <div className={styles['languages-container']}>
@@ -278,7 +275,7 @@ const SubtitlesMenu = React.memo((props) => {
                     onChange={onSubtitlesOffsetChanged}
                 />
             </div>
-        </div>
+        </Menu>
     );
 });
 

@@ -5,7 +5,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 // const Stream = require('stremio/routes/MetaDetails/StreamsList/Stream');
 // const AddonDetails = require('stremio/common/AddonDetailsModal/AddonDetails');
-const { MetaPreview, CONSTANTS } = require('stremio/common');
+const { MetaPreview, Menu, CONSTANTS } = require('stremio/common');
 const styles = require('./styles');
 
 const InfoMenu = ({ ...props }) => {
@@ -18,11 +18,8 @@ const InfoMenu = ({ ...props }) => {
             :
             null;
     }, [props.metaItem]);
-    const onMouseDown = React.useCallback((event) => {
-        event.nativeEvent.infoMenuClosePrevented = true;
-    }, []);
     return (
-        <div className={classnames(styles['info-menu-container'])} onMouseDown={onMouseDown}>
+        <Menu className={classnames(styles['info-menu-container'])} shortcut={'KeyI'}>
             {
                 metaItem !== null ?
                     <MetaPreview
@@ -63,7 +60,7 @@ const InfoMenu = ({ ...props }) => {
                     :
                     null
             } */}
-        </div>
+        </Menu>
     );
 };
 

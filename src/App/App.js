@@ -14,6 +14,7 @@ const ErrorDialog = require('./ErrorDialog');
 const withProtectedRoutes = require('./withProtectedRoutes');
 const routerViewsConfig = require('./routerViewsConfig');
 const styles = require('./styles');
+const { MenuProvider } = require('stremio/common');
 
 const RouterWithProtectedRoutes = withCoreSuspender(withProtectedRoutes(Router));
 
@@ -163,14 +164,16 @@ const App = () => {
                             :
                             <ToastProvider className={styles['toasts-container']}>
                                 <TooltipProvider className={styles['tooltip-container']}>
-                                    <ServicesToaster />
-                                    <DeepLinkHandler />
-                                    <SearchParamsHandler />
-                                    <RouterWithProtectedRoutes
-                                        className={styles['router']}
-                                        viewsConfig={routerViewsConfig}
-                                        onPathNotMatch={onPathNotMatch}
-                                    />
+                                    <MenuProvider className={styles['menu-container']}>
+                                        <ServicesToaster />
+                                        <DeepLinkHandler />
+                                        <SearchParamsHandler />
+                                        <RouterWithProtectedRoutes
+                                            className={styles['router']}
+                                            viewsConfig={routerViewsConfig}
+                                            onPathNotMatch={onPathNotMatch}
+                                        />
+                                    </MenuProvider>
                                 </TooltipProvider>
                             </ToastProvider>
                         :

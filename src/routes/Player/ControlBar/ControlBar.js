@@ -31,7 +31,6 @@ const ControlBar = ({
     onSubtitlesOffsetChanged,
     onSubtitlesSizeChanged,
     onExtraSubtitlesDelayChanged,
-    onMenuChange,
     ...props
 }) => {
     const { chromecast } = useServices();
@@ -73,14 +72,6 @@ const ControlBar = ({
         return streamingServer.playbackDevices !== null && streamingServer.playbackDevices.type === 'Ready' ? streamingServer.playbackDevices.content : [];
     }, [streamingServer]);
 
-    const onMuteButtonClick = React.useCallback(() => {
-        muted ? onUnmuteRequested() : onMuteRequested();
-    }, [muted, onMuteRequested, onUnmuteRequested]);
-
-    const onChromecastButtonClick = React.useCallback(() => {
-        chromecast.transport.requestSession();
-    }, []);
-
     const volumeIcon = React.useMemo(() => {
         return (typeof muted === 'boolean' && muted) ? 'volume-mute' :
             (volume === null || isNaN(volume)) ? 'volume-off' :
@@ -88,6 +79,14 @@ const ControlBar = ({
                     volume < 70 ? 'volume-medium' :
                         'volume-high';
     }, [muted, volume]);
+
+    const onMuteButtonClick = React.useCallback(() => {
+        muted ? onUnmuteRequested() : onMuteRequested();
+    }, [muted, onMuteRequested, onUnmuteRequested]);
+
+    const onChromecastButtonClick = React.useCallback(() => {
+        chromecast.transport.requestSession();
+    }, []);
 
     React.useEffect(() => {
         const onStateChanged = () => setChromecastServiceActive(chromecast.active);
@@ -140,16 +139,21 @@ const ControlBar = ({
                     onClick={toogleMobileMenu}
                 />
                 <div className={classnames(styles['controls-menu-container'], { 'open': mobileMenuOpen })}>
-                    <Control icon={'network'} disabled={!statistics || statistics.infoHash === null || !stream} shortcut={'KeyD'} onMenuChange={onMenuChange}>
-                        <StatisticsMenu {...statistics} />
-                    </Control>
-                    <Control icon={'speed'} disabled={!playbackSpeed} shortcut={'KeyR'} onMenuChange={onMenuChange}>
+                    {
+                        statistics?.infoHash ?
+                            <Control icon={'network'}>
+                                <StatisticsMenu {...statistics} />
+                            </Control>
+                            :
+                            null
+                    }
+                    <Control icon={'speed'} disabled={!playbackSpeed}>
                         <SpeedMenu
                             playbackSpeed={playbackSpeed}
                             onChange={onPlaybackSpeedChangeRequested}
                         />
                     </Control>
-                    <Control icon={'about'} disabled={!metaItem || !stream} shortcut={'KeyI'} onMenuChange={onMenuChange}>
+                    <Control icon={'about'} disabled={!metaItem || !stream}>
                         <InfoMenu
                             stream={stream}
                             addon={addon}
@@ -157,7 +161,7 @@ const ControlBar = ({
                         />
                     </Control>
                     <Control icon={'cast'} disabled={!chromecastServiceActive} onClick={onChromecastButtonClick} />
-                    <Control icon={'subtitles'} disabled={tracks.length === 0} shortcut={'KeyS'} onMenuChange={onMenuChange}>
+                    <Control icon={'subtitles'} disabled={tracks.length === 0}>
                         <SubtitlesMenu
                             audioTracks={audioTracks}
                             selectedAudioTrackId={selectedAudioTrackId}
@@ -182,7 +186,7 @@ const ControlBar = ({
                     </Control>
                     {
                         metaItem?.videos?.length > 0 ?
-                            <Control icon={'episodes'} shortcut={'KeyV'} onMenuChange={onMenuChange}>
+                            <Control icon={'episodes'}>
                                 <VideosMenu
                                     metaItem={metaItem}
                                     seriesInfo={seriesInfo}
@@ -191,7 +195,7 @@ const ControlBar = ({
                             :
                             null
                     }
-                    <Control icon={'more-horizontal'} onMenuChange={onMenuChange}>
+                    <Control icon={'more-horizontal'}>
                         <OptionsMenu
                             stream={stream}
                             playbackDevices={playbackDevices}
