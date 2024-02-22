@@ -60,12 +60,13 @@ const MenuProvider = ({ children, className }: Props) => {
             const menu = container.current.getBoundingClientRect();
             const parent = active.parent.getBoundingClientRect();
 
-            const y = (parent.bottom + menu.height) > window.innerHeight ? 'top' : 'bottom';
-            const x = (parent.right + menu.width) > window.innerWidth ? 'left' : 'right';
+            const position = active.position;
+            const y = position ? position[0] : (parent.bottom + menu.height) > window.innerHeight ? 'top' : 'bottom';
+            const x = position ? position[1] : (parent.right + menu.width) > window.innerWidth ? 'left' : 'right';
 
             setStyle({
-                top: (active.position?.[0] ?? y) === 'top' ? parent.top - menu.height : parent.bottom,
-                left: (active.position?.[1] ?? x) === 'left' ? parent.right - menu.width : parent.left,
+                top: y === 'top' ? parent.top - menu.height : parent.bottom,
+                left: x === 'left' ? parent.right - menu.width : parent.left,
             });
         }
     }, [active]);
