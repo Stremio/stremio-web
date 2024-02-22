@@ -1,6 +1,6 @@
 // Copyright (C) 2017-2024 Smart code 203358507
 
-import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import classNames from 'classnames';
 import useKeyboardEvent from '../useKeyboardEvent';
@@ -69,6 +69,11 @@ const MenuProvider = ({ children, className }: Props) => {
             });
         }
     }, [active]);
+
+    useEffect(() => {
+        window.addEventListener('resize', closeAll);
+        return () => window.removeEventListener('resize', closeAll);
+    });
 
     useKeyboardEvent('Escape', closeAll);
     useOnClickOutside(container.current && active?.parent ? [container.current, active.parent] : [], closeAll);
