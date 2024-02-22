@@ -3,18 +3,19 @@
 import React, { useEffect, useRef } from 'react';
 import useMenu from './useMenu';
 import useKeyboardEvent from '../useKeyboardEvent';
+import type { MenuPosition } from './types';
 import styles from './styles.less';
 
 type Props = {
     children: JSX.Element,
     className: string,
     shortcut: string,
-    align: 'left' | 'right',
+    position: MenuPosition,
 };
 
 const createId = () => (Math.random() + 1).toString(36).substring(7);
 
-const Menu = ({ children, className, shortcut, align }: Props) => {    
+const Menu = ({ children, className, shortcut, position }: Props) => {    
     const menu = useMenu();
     
     const id = useRef(createId());
@@ -32,7 +33,7 @@ const Menu = ({ children, className, shortcut, align }: Props) => {
             id: id.current,
             className,
             parent,
-            align,
+            position,
         });
 
         return () => {

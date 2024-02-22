@@ -20,7 +20,7 @@ const SpeedMenu = ({ className, playbackSpeed, onChange }) => {
     }, [onChange]);
 
     return (
-        <Menu className={classnames(className, styles['speed-menu-container'])} shortcut={'KeyR'} align={'right'}>
+        <Menu className={classnames(className, styles['speed-menu-container'])} shortcut={'KeyR'} position={['top', 'left']}>
             <div className={styles['title']}>
                 { t('PLAYBACK_SPEED') }
             </div>
