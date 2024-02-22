@@ -17,7 +17,7 @@ const MenuProvider = ({ children, className }: Props) => {
     const container = useRef<HTMLDivElement>(null);
 
     const [menus, setMenus] = useState<Menu[]>([]);
-    const [style, setStyle] = useState<React.CSSProperties>(null);
+    const [style, setStyle] = useState<React.CSSProperties>({});
 
     const active = useMemo(() => menus.find(({ open }) => open), [menus]);
 
@@ -36,7 +36,7 @@ const MenuProvider = ({ children, className }: Props) => {
     };
 
     const render = (content: JSX.Element) => {
-        return createPortal(content, container.current);
+        return container.current && createPortal(content, container.current);
     };
 
     const toggle = (id: string) => {
@@ -54,7 +54,7 @@ const MenuProvider = ({ children, className }: Props) => {
     };
 
     useLayoutEffect(() => {
-        setStyle(null);
+        setStyle({});
 
         if (container.current && active) {
             const menu = container.current.getBoundingClientRect();
@@ -71,7 +71,7 @@ const MenuProvider = ({ children, className }: Props) => {
     }, [active]);
 
     useKeyboardEvent('Escape', closeAll);
-    useOnClickOutside([container.current, active?.parent], closeAll);
+    useOnClickOutside(container.current && active?.parent ? [container.current, active.parent] : [], closeAll);
 
     return (
         <MenuContext.Provider value={{ active, create, remove, render, toggle }}>

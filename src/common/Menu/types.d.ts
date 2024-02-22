@@ -4,6 +4,6 @@ export type Menu = {
     id: string,
     className: string,
     parent: HTMLElement,
-    position: MenuPosition,
+    position?: MenuPosition,
     open: boolean,
 };

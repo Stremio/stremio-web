@@ -13,7 +13,7 @@
         "allowJs": true,
         "checkJs": false,
         "noEmit": false,
-        "strict": false
+        "strict": true
     },
     "include": [
         "./src",
