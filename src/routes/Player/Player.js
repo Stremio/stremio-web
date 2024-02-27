@@ -462,13 +462,16 @@ const Player = ({ urlParams, queryParams }) => {
     }, []);
 
     React.useEffect(() => {
-        const controlBarLayerHeight = Math.round((controlBarRef?.current?.offsetHeight / window?.innerHeight) * 100);
-        if(controlBarRef.current !== null && video.state.subtitlesOffset < controlBarLayerHeight && controlBarLayerHeight !== null) {
+        let controlBarLayerHeight = Math.round((controlBarRef?.current?.offsetHeight / window?.innerHeight) * 100);
+
+        if(video.state.subtitlesOffset < controlBarLayerHeight / 2) {
+            if (immersed) controlBarLayerHeight = 0;
             updateSettings({ subtitlesOffset: video.state.subtitlesOffset + controlBarLayerHeight });
-        } else if (controlBarRef.current.offsetHeight === null || controlBarRef.current.offsetHeight === 0) {
+        } else {
+            controlBarLayerHeight = Math.round((controlBarRef?.current?.offsetHeight / window?.innerHeight) * 100);
             updateSettings({ subtitlesOffset: video.state.subtitlesOffset - controlBarLayerHeight });
         }
-    }, [controlBarRef, video.state.subtitlesOffset]);
+    }, [immersed]);
 
     React.useLayoutEffect(() => {
         const onKeyDown = (event) => {
