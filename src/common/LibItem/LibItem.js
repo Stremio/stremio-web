@@ -32,7 +32,7 @@ const LibItem = ({ _id, removable, notifications, watched, ...props }) => {
                     case 'details':
                         return props.deepLinks && (typeof props.deepLinks.metaDetailsVideos === 'string' || typeof props.deepLinks.metaDetailsStreams === 'string');
                     case 'watched':
-                        return typeof _id === 'string' && watched !== null;
+                        return props.deepLinks && (typeof props.deepLinks.metaDetailsVideos === 'string' || typeof props.deepLinks.metaDetailsStreams === 'string');
                     case 'dismiss':
                         return typeof _id === 'string' && props.progress !== null && !isNaN(props.progress);
                     case 'remove':
@@ -70,6 +70,22 @@ const LibItem = ({ _id, removable, notifications, watched, ...props }) => {
 
                     break;
                 }
+                case 'watched': {
+                    if (typeof _id === 'string') {
+                        core.transport.dispatch({
+                            action: 'Ctx',
+                            args: {
+                                action: 'LibraryItemMarkAsWatched',
+                                args: {
+                                    id: _id,
+                                    is_watched: !watched
+                                }
+                            }
+                        });
+                    }
+
+                    break;
+                }
                 case 'dismiss': {
                     if (typeof _id === 'string') {
                         core.transport.dispatch({
@@ -84,22 +100,6 @@ const LibItem = ({ _id, removable, notifications, watched, ...props }) => {
                             args: {
                                 action: 'DismissNotificationItem',
                                 args: _id
-                            }
-                        });
-                    }
-
-                    break;
-                }
-                case 'watched': {
-                    if (typeof _id === 'string') {
-                        core.transport.dispatch({
-                            action: 'Ctx',
-                            args: {
-                                action: 'LibraryItemMarkAsWatched',
-                                args: {
-                                    id: _id,
-                                    is_watched: !watched
-                                }
                             }
                         });
                     }
