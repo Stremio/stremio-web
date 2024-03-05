@@ -81,6 +81,11 @@ const EXTERNAL_PLAYERS = [
         value: 'outplayer',
         platforms: ['ios'],
     },
+    {
+        label: 'M3U Playlist',
+        value: 'm3u',
+        platforms: ['ios', 'android', 'windows', 'linux', 'macos'],
+    },
 ];
 
 module.exports = {
