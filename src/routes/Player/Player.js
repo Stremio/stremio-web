@@ -269,7 +269,8 @@ const Player = ({ urlParams, queryParams }) => {
         setError(null);
         if (player.selected === null) {
             video.unload();
-        } else if (player.selected.metaRequest === null || (player.metaItem !== null && player.metaItem.type !== 'Loading')) {
+        } else if (streamingServer.settings !== null && streamingServer.settings.type !== 'Loading' &&
+            (player.selected.metaRequest === null || (player.metaItem !== null && player.metaItem.type !== 'Loading'))) {
             video.load({
                 stream: {
                     ...player.selected.stream,
