@@ -19,6 +19,9 @@
         padding: 0 2rem;
         border-radius: var(--border-radius);
         background-color: var(--modal-background-color);
+        background-size: cover;
+        background-position: center;
+        background-blend-mode: overlay; // set to 'color' on desktop version
         box-shadow: var(--outer-glow);
 
         .close-button-container {
@@ -38,7 +41,8 @@
                 opacity: 0.4;
             }
 
-            &:hover, &:focus {
+            &:hover,
+            &:focus {
                 .icon {
                     opacity: 1;
                     color: var(--primary-foreground-color);

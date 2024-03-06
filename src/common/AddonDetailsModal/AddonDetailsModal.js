@@ -28,6 +28,7 @@ function withRemoteAndLocalAddon(AddonDetails) {
                 id={addon.manifest.id}
                 name={addon.manifest.name}
                 version={addon.manifest.version}
+                background={addon.manifest.background}
                 logo={addon.manifest.logo}
                 description={addon.manifest.description}
                 types={addon.manifest.types}
@@ -133,7 +134,7 @@ const AddonDetailsModal = ({ transportUrl, onCloseRequest }) => {
         return toggleButton !== null ? configureButton ? [cancelButton, configureButton, toggleButton] : [cancelButton, toggleButton] : [cancelButton];
     }, [addonDetails, onCloseRequest]);
     return (
-        <ModalDialog className={styles['addon-details-modal-container']} title={'Stremio addon'} buttons={modalButtons} onCloseRequest={onCloseRequest}>
+        <ModalDialog className={styles['addon-details-modal-container']} title={'Stremio addon'} buttons={modalButtons} onCloseRequest={onCloseRequest} background={addonDetails.remoteAddon?.content.type === 'Ready' ? addonDetails.remoteAddon.content.content.manifest.background || '' : ''}>
             {
                 addonDetails.selected === null ?
                     <div className={styles['addon-details-message-container']}>
