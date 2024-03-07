@@ -133,8 +133,11 @@ const AddonDetailsModal = ({ transportUrl, onCloseRequest }) => {
                 null;
         return toggleButton !== null ? configureButton ? [cancelButton, configureButton, toggleButton] : [cancelButton, toggleButton] : [cancelButton];
     }, [addonDetails, onCloseRequest]);
+    const modalBackground = React.useMemo(() => {
+        return addonDetails.remoteAddon?.content.type === 'Ready' ? addonDetails.remoteAddon.content.content.manifest.background : null;
+    }, [addonDetails.remoteAddon]);
     return (
-        <ModalDialog className={styles['addon-details-modal-container']} title={'Stremio addon'} buttons={modalButtons} onCloseRequest={onCloseRequest} background={addonDetails.remoteAddon?.content.type === 'Ready' ? addonDetails.remoteAddon.content.content.manifest.background || '' : ''}>
+        <ModalDialog className={styles['addon-details-modal-container']} title={'Stremio addon'} buttons={modalButtons} background={modalBackground} onCloseRequest={onCloseRequest}>
             {
                 addonDetails.selected === null ?
                     <div className={styles['addon-details-message-container']}>
