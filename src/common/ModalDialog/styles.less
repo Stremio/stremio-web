@@ -21,6 +21,18 @@
         background-color: var(--modal-background-color);
         box-shadow: var(--outer-glow);
 
+        .modal-dialog-background {
+            z-index: 0;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-size: cover;
+            background-position: center;
+            opacity: 0.1;
+        }
+
         .close-button-container {
             position: absolute;
             top: 0.5rem;
@@ -38,7 +50,8 @@
                 opacity: 0.4;
             }
 
-            &:hover, &:focus {
+            &:hover,
+            &:focus {
                 .icon {
                     opacity: 1;
                     color: var(--primary-foreground-color);
@@ -50,36 +63,43 @@
             }
         }
 
-        .title-container {
-            flex: 1 0 auto;
-            display: flex;
-            align-items: center;
-            height: 4.5rem;
-            font-size: 1.2rem;
-            font-weight: 500;
-            color: var(--primary-foreground-color);
-        }
-
         .modal-dialog-content {
-            flex: 1;
-            align-self: stretch;
-            overflow-y: auto;
-            padding: 2rem 0;
+            z-index: 1;
+            position: relative;
+            height: 100%;
+            width: 100%;
 
-            &:last-child {
-                margin-bottom: 2rem;
+            .title-container {
+                flex: 1 0 auto;
+                display: flex;
+                align-items: center;
+                height: 4.5rem;
+                font-size: 1.2rem;
+                font-weight: 500;
+                color: var(--primary-foreground-color);
             }
-        }
 
-        .buttons-container {
-            flex: none;
-            align-self: stretch;
-            display: flex;
-            flex-direction: row;
-            flex-wrap: wrap;
+            .modal-dialog-content {
+                flex: 1;
+                align-self: stretch;
+                overflow-y: auto;
+                padding: 2rem 0;
 
-            &:last-child {
-                margin: 2rem 0;
+                &:last-child {
+                    margin-bottom: 2rem;
+                }
+            }
+
+            .buttons-container {
+                flex: none;
+                align-self: stretch;
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+
+                &:last-child {
+                    margin: 2rem 0;
+                }
             }
         }
     }
