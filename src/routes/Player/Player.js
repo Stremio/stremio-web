@@ -201,8 +201,6 @@ const Player = ({ urlParams, queryParams }) => {
             nextVideo();
 
             const deepLinks = player.nextVideo.deepLinks;
-            // eslint-disable-next-line no-console
-            console.log(deepLinks);
             if (deepLinks.metaDetailsStreams && deepLinks.player) {
                 window.location.replace(deepLinks.metaDetailsStreams);
                 window.location.href = deepLinks.player;
@@ -599,11 +597,6 @@ const Player = ({ urlParams, queryParams }) => {
             onPauseRequestedDebounced.cancel();
         };
     }, []);
-
-    // eslint-disable-next-line no-console
-    console.log(player);
-    // eslint-disable-next-line no-console
-    console.log(video);
 
     return (
         <div className={classnames(styles['player-container'], { [styles['overlayHidden']]: overlayHidden })}
