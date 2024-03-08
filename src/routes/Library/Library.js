@@ -5,10 +5,12 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { default: Icon } = require('@stremio/stremio-icons/react');
 const NotFound = require('stremio/routes/NotFound');
-const { Button, DelayedRenderer, Multiselect, MainNavBars, LibItem, Image, ModalDialog, PaginationInput, useProfile, useNotifications, routesRegexp, useBinaryState, withCoreSuspender } = require('stremio/common');
+const { Button, DelayedRenderer, Multiselect, MainNavBars, LibItem, Image, ModalDialog, useProfile, useNotifications, routesRegexp, useOnScrollToBottom, useBinaryState, withCoreSuspender } = require('stremio/common');
 const useLibrary = require('./useLibrary');
 const useSelectableInputs = require('./useSelectableInputs');
 const styles = require('./styles');
+
+const SCROLL_TO_BOTTOM_TRESHOLD = 400;
 
 function withModel(Library) {
     const withModel = ({ urlParams, queryParams }) => {
@@ -46,9 +48,21 @@ function withModel(Library) {
 const Library = ({ model, urlParams, queryParams }) => {
     const profile = useProfile();
     const notifications = useNotifications();
-    const library = useLibrary(model, urlParams, queryParams);
-    const [typeSelect, sortSelect, paginationInput] = useSelectableInputs(library);
+    const [library, loadNextPage] = useLibrary(model, urlParams, queryParams);
+    const [typeSelect, sortSelect, hasNextPage] = useSelectableInputs(library);
     const [inputsModalOpen, openInputsModal, closeInputsModal] = useBinaryState(false);
+    const scrollContainerRef = React.useRef(null);
+    const onScrollToBottom = React.useCallback(() => {
+        if (hasNextPage) {
+            loadNextPage();
+        }
+    }, [hasNextPage, loadNextPage]);
+    const onScroll = useOnScrollToBottom(onScrollToBottom, SCROLL_TO_BOTTOM_TRESHOLD);
+    React.useLayoutEffect(() => {
+        if (library.selected && library.selected.request.page === 1) {
+            scrollContainerRef.current.scrollTop = 0;
+        }
+    }, [library.selected]);
     return (
         <MainNavBars className={styles['library-container']} route={model}>
             <div className={styles['library-content']}>
@@ -58,12 +72,6 @@ const Library = ({ model, urlParams, queryParams }) => {
                             <Multiselect {...typeSelect} className={styles['select-input-container']} />
                             <Multiselect {...sortSelect} className={styles['select-input-container']} />
                             <div className={styles['spacing']} />
-                            {
-                                paginationInput !== null ?
-                                    <PaginationInput {...paginationInput} className={styles['pagination-input']} />
-                                    :
-                                    null
-                            }
                             <Button className={styles['filter-container']} title={'All filters'} onClick={openInputsModal}>
                                 <Icon className={styles['filter-icon']} name={'filters'} />
                             </Button>
@@ -107,7 +115,7 @@ const Library = ({ model, urlParams, queryParams }) => {
                                     <div className={styles['message-label']}>Empty {model === 'library' ? 'Library' : 'Continue Watching'}</div>
                                 </div>
                                 :
-                                <div className={classnames(styles['meta-items-container'], 'animation-fade-in')}>
+                                <div ref={scrollContainerRef} className={classnames(styles['meta-items-container'], 'animation-fade-in')} onScroll={onScroll}>
                                     {library.catalog.map((libItem, index) => (
                                         <LibItem {...libItem} notifications={notifications} removable={model === 'library'} key={index} />
                                     ))}
