@@ -13,6 +13,7 @@ const SeekBar = ({ className, time, duration, buffered, onSeekRequested }) => {
     const disabled = time === null || isNaN(time) || duration === null || isNaN(duration);
     const routeFocused = useRouteFocused();
     const [seekTime, setSeekTime] = React.useState(null);
+    const [durationMode, setDurationMode] = React.useState('totalTime');
     const resetTimeDebounced = React.useCallback(debounce(() => {
         setSeekTime(null);
     }, 1500), []);
@@ -56,7 +57,9 @@ const SeekBar = ({ className, time, duration, buffered, onSeekRequested }) => {
                 onSlide={onSlide}
                 onComplete={onComplete}
             />
-            <div className={styles['label']}>{formatTime(duration)}</div>
+            <div className={styles['label']} onClick={() => {
+                durationMode === 'totalTime' ? setDurationMode('remainingTime') : setDurationMode('totalTime');
+            }}>{durationMode === 'totalTime' ? formatTime(duration) : formatTime(duration - time, '-')}</div>
         </div>
     );
 };
