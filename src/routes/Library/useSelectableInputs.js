@@ -32,21 +32,7 @@ const mapSelectableInputs = (library, t) => {
             window.location = event.value;
         }
     };
-    const paginationInput = library.selectable.prevPage || library.selectable.nextPage ?
-        {
-            label: library.selected.request.page.toString(),
-            onSelect: (event) => {
-                if (event.value === 'prev' && library.selectable.prevPage) {
-                    window.location = library.selectable.prevPage.deepLinks.library;
-                }
-                if (event.value === 'next' && library.selectable.nextPage) {
-                    window.location = library.selectable.nextPage.deepLinks.library;
-                }
-            }
-        }
-        :
-        null;
-    return [typeSelect, sortSelect, paginationInput];
+    return [typeSelect, sortSelect, library.selectable.nextPage];
 };
 
 const useSelectableInputs = (library) => {
