@@ -102,7 +102,7 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, poste
                 {
                     progress > 0 ?
                         <div className={styles['progress-bar-layer']}>
-                            <div className={styles['progress-bar']} style={{ width: `${Math.max(0, Math.min(1, progress)) * 100}%` }} />
+                            <div className={styles['progress-bar']} style={{ width: `${progress}%` }} />
                             <div className={styles['progress-bar-background']} />
                         </div>
                         :
