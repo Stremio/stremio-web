@@ -5,7 +5,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const debounce = require('lodash.debounce');
 const { useRouteFocused } = require('stremio-router');
-const { Slider } = require('stremio/common');
+const { Slider, Button } = require('stremio/common');
 const formatTime = require('./formatTime');
 const styles = require('./styles');
 
@@ -13,7 +13,13 @@ const SeekBar = ({ className, time, duration, buffered, onSeekRequested }) => {
     const disabled = time === null || isNaN(time) || duration === null || isNaN(duration);
     const routeFocused = useRouteFocused();
     const [seekTime, setSeekTime] = React.useState(null);
-    const [durationMode, setDurationMode] = React.useState('totalTime');
+
+    const DURATION_MODE_OPTIONS = {
+        'totalTime': 'totalTime',
+        'remainingTime': 'remainingTime'
+    };
+
+    const [durationMode, setDurationMode] = React.useState(DURATION_MODE_OPTIONS.totalTime);
     const resetTimeDebounced = React.useCallback(debounce(() => {
         setSeekTime(null);
     }, 1500), []);
@@ -57,9 +63,19 @@ const SeekBar = ({ className, time, duration, buffered, onSeekRequested }) => {
                 onSlide={onSlide}
                 onComplete={onComplete}
             />
-            <div className={styles['label']} onClick={() => {
-                durationMode === 'totalTime' ? setDurationMode('remainingTime') : setDurationMode('totalTime');
-            }}>{durationMode === 'totalTime' ? formatTime(duration) : formatTime(duration - time, '-')}</div>
+            <Button
+                onClick={() => {
+                    durationMode === DURATION_MODE_OPTIONS.totalTime
+                        ? setDurationMode(DURATION_MODE_OPTIONS.remainingTime)
+                        : setDurationMode(DURATION_MODE_OPTIONS.totalTime);
+                }}
+            >
+                <div className={styles['label']}>
+                    {durationMode === DURATION_MODE_OPTIONS.totalTime
+                        ? formatTime(duration)
+                        : formatTime(duration - time, '-')}
+                </div>
+            </Button>
         </div>
     );
 };
