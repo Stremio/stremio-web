@@ -16,32 +16,29 @@ const LibItem = ({ _id, removable, notifications, watched, ...props }) => {
     }, [_id, notifications]);
 
     const options = React.useMemo(() => {
-        const optionsList = [
+        return [
             { label: 'LIBRARY_PLAY', value: 'play' },
             { label: 'LIBRARY_DETAILS', value: 'details' },
             { label: 'LIBRARY_RESUME_DISMISS', value: 'dismiss' },
             { label: watched ? 'CTX_MARK_UNWATCHED' : 'CTX_MARK_WATCHED', value: 'watched' },
             { label: 'LIBRARY_REMOVE', value: 'remove' },
-        ];
-        return optionsList
-            .filter(({ value }) => {
-                switch (value) {
-                    case 'play':
-                        return props.deepLinks && typeof props.deepLinks.player === 'string';
-                    case 'details':
-                        return props.deepLinks && (typeof props.deepLinks.metaDetailsVideos === 'string' || typeof props.deepLinks.metaDetailsStreams === 'string');
-                    case 'watched':
-                        return props.deepLinks && (typeof props.deepLinks.metaDetailsVideos === 'string' || typeof props.deepLinks.metaDetailsStreams === 'string');
-                    case 'dismiss':
-                        return typeof _id === 'string' && props.progress !== null && !isNaN(props.progress);
-                    case 'remove':
-                        return typeof _id === 'string' && removable;
-                }
-            })
-            .map((option) => ({
-                ...option,
-                label: t(option.label)
-            }));
+        ].filter(({ value }) => {
+            switch (value) {
+                case 'play':
+                    return props.deepLinks && typeof props.deepLinks.player === 'string';
+                case 'details':
+                    return props.deepLinks && (typeof props.deepLinks.metaDetailsVideos === 'string' || typeof props.deepLinks.metaDetailsStreams === 'string');
+                case 'watched':
+                    return props.deepLinks && (typeof props.deepLinks.metaDetailsVideos === 'string' || typeof props.deepLinks.metaDetailsStreams === 'string');
+                case 'dismiss':
+                    return typeof _id === 'string' && props.progress !== null && !isNaN(props.progress);
+                case 'remove':
+                    return typeof _id === 'string' && removable;
+            }
+        }).map((option) => ({
+            ...option,
+            label: t(option.label)
+        }));
     }, [_id, removable, props.progress, props.deepLinks]);
 
     const optionOnSelect = React.useCallback((event) => {
