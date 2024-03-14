@@ -8,14 +8,6 @@ const { t } = require('i18next');
 
 const LibItem = ({ _id, removable, notifications, watched, ...props }) => {
 
-    const OPTIONS = React.useMemo(() => [
-        { label: 'LIBRARY_PLAY', value: 'play' },
-        { label: 'LIBRARY_DETAILS', value: 'details' },
-        { label: 'LIBRARY_RESUME_DISMISS', value: 'dismiss' },
-        { label: watched ? 'CTX_MARK_UNWATCHED' : 'CTX_MARK_WATCHED', value: 'watched' },
-        { label: 'LIBRARY_REMOVE', value: 'remove' },
-    ]);
-
     const { core } = useServices();
 
     const newVideos = React.useMemo(() => {
@@ -24,7 +16,14 @@ const LibItem = ({ _id, removable, notifications, watched, ...props }) => {
     }, [_id, notifications]);
 
     const options = React.useMemo(() => {
-        return OPTIONS
+        const optionsList = [
+            { label: 'LIBRARY_PLAY', value: 'play' },
+            { label: 'LIBRARY_DETAILS', value: 'details' },
+            { label: 'LIBRARY_RESUME_DISMISS', value: 'dismiss' },
+            { label: watched ? 'CTX_MARK_UNWATCHED' : 'CTX_MARK_WATCHED', value: 'watched' },
+            { label: 'LIBRARY_REMOVE', value: 'remove' },
+        ];
+        return optionsList
             .filter(({ value }) => {
                 switch (value) {
                     case 'play':
