@@ -9,7 +9,7 @@ const { default: Icon } = require('@stremio/stremio-icons/react');
 const { Modal } = require('stremio-router');
 const styles = require('./styles');
 
-const ModalDialog = ({ className, title, buttons, children, dataset, onCloseRequest, ...props }) => {
+const ModalDialog = ({ className, title, buttons, children, dataset, onCloseRequest, background, ...props }) => {
     const routeFocused = useRouteFocused();
     const modalsContainer = useModalsContainer();
     const modalContainerRef = React.useRef(null);
@@ -59,41 +59,44 @@ const ModalDialog = ({ className, title, buttons, children, dataset, onCloseRequ
     return (
         <Modal ref={modalContainerRef} {...props} className={classnames(className, styles['modal-container'])} onMouseDown={onModalContainerMouseDown}>
             <div className={styles['modal-dialog-container']} onMouseDown={onModalDialogContainerMouseDown}>
+                <div className={styles['modal-dialog-background']} style={{backgroundImage: `url('${background}')`}} />
                 <Button className={styles['close-button-container']} title={'Close'} onClick={closeButtonOnClick}>
                     <Icon className={styles['icon']} name={'close'} />
                 </Button>
-                {
-                    typeof title === 'string' && title.length > 0 ?
-                        <div className={styles['title-container']} title={title}>{title}</div>
-                        :
-                        null
-                }
                 <div className={styles['modal-dialog-content']}>
-                    {children}
+                    {
+                        typeof title === 'string' && title.length > 0 ?
+                            <div className={styles['title-container']} title={title}>{title}</div>
+                            :
+                            null
+                    }
+                    <div className={styles['modal-dialog-content']}>
+                        {children}
+                    </div>
+                    {
+                        Array.isArray(buttons) && buttons.length > 0 ?
+                            <div className={styles['buttons-container']}>
+                                {buttons.map(({ className, label, icon, props }, index) => (
+                                    <Button title={label} {...props} key={index} className={classnames(className, styles['action-button'])}>
+                                        {
+                                            typeof icon === 'string' && icon.length > 0 ?
+                                                <Icon className={styles['icon']} name={icon} />
+                                                :
+                                                null
+                                        }
+                                        {
+                                            typeof label === 'string' && label.length > 0 ?
+                                                <div className={styles['label']}>{label}</div>
+                                                :
+                                                null
+                                        }
+                                    </Button>
+                                ))}
+                            </div>
+                            :
+                            null
+                    }
                 </div>
-                {
-                    Array.isArray(buttons) && buttons.length > 0 ?
-                        <div className={styles['buttons-container']}>
-                            {buttons.map(({ className, label, icon, props }, index) => (
-                                <Button title={label} {...props} key={index} className={classnames(className, styles['action-button'])}>
-                                    {
-                                        typeof icon === 'string' && icon.length > 0 ?
-                                            <Icon className={styles['icon']} name={icon} />
-                                            :
-                                            null
-                                    }
-                                    {
-                                        typeof label === 'string' && label.length > 0 ?
-                                            <div className={styles['label']}>{label}</div>
-                                            :
-                                            null
-                                    }
-                                </Button>
-                            ))}
-                        </div>
-                        :
-                        null
-                }
             </div>
         </Modal>
     );
@@ -102,6 +105,7 @@ const ModalDialog = ({ className, title, buttons, children, dataset, onCloseRequ
 ModalDialog.propTypes = {
     className: PropTypes.string,
     title: PropTypes.string,
+    background: PropTypes.string,
     buttons: PropTypes.arrayOf(PropTypes.shape({
         className: PropTypes.string,
         label: PropTypes.string,

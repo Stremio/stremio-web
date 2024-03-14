@@ -7,13 +7,6 @@
     multiselect-menu-container: menu-container;
 }
 
-:import('~stremio/common/PaginationInput/styles.less') {
-    pagination-prev-button-container: prev-button-container;
-    pagination-next-button-container: next-button-container;
-    pagination-button-icon: icon;
-    pagination-label: label;
-}
-
 :import('~stremio/common/ModalDialog/styles.less') {
     selectable-inputs-modal-container: modal-dialog-container;
     selectable-inputs-modal-content: modal-dialog-content;
@@ -74,26 +67,6 @@
 
             .spacing {
                 flex: 1;
-            }
-
-            .pagination-input {
-                flex: none;
-                height: 3rem;
-                margin-left: 1.5rem;
-
-                .pagination-prev-button-container, .pagination-next-button-container {
-                    width: 3rem;
-                    height: 3rem;
-
-                    .pagination-button-icon {
-                        width: 1rem;
-                        height: 1rem;
-                    }
-                }
-
-                .pagination-label {
-                    width: 3rem;
-                }
             }
         }
 
@@ -275,10 +248,6 @@
 
                 .spacing {
                     display: none;
-                }
-
-                .pagination-input {
-                    margin-left: 0;
                 }
 
                 .filter-container {

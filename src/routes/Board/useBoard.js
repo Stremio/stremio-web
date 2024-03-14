@@ -22,7 +22,7 @@ const useBoard = () => {
             }
         }, 'board');
     }, []);
-    const board = useModelState({ model: 'board', timeout: 1500, action });
+    const board = useModelState({ model: 'board', action });
     return [board, loadRange];
 };
 
