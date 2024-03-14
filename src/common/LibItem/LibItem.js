@@ -8,7 +8,7 @@ const { t } = require('i18next');
 
 const LibItem = ({ _id, removable, notifications, watched, ...props }) => {
 
-    const OPTIONS = React.useMemo( () => [
+    const OPTIONS = React.useMemo(() => [
         { label: 'LIBRARY_PLAY', value: 'play' },
         { label: 'LIBRARY_DETAILS', value: 'details' },
         { label: 'LIBRARY_RESUME_DISMISS', value: 'dismiss' },
