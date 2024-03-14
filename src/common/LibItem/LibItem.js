@@ -39,7 +39,7 @@ const LibItem = ({ _id, removable, notifications, watched, ...props }) => {
             ...option,
             label: t(option.label)
         }));
-    }, [_id, removable, props.progress, props.deepLinks]);
+    }, [_id, removable, props.progress, props.deepLinks, watched]);
 
     const optionOnSelect = React.useCallback((event) => {
         if (typeof props.optionOnSelect === 'function') {
