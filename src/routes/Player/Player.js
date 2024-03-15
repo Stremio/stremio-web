@@ -47,6 +47,8 @@ const Player = ({ urlParams, queryParams }) => {
     });
 
     const [immersed, setImmersed] = React.useState(true);
+    const [userOffset, setUserOffset] = React.useState(video.state.subtitlesOffset);
+    const [offsetUpdatedNotImmersed, setOffsetUpdatedNotImmersed] = React.useState(false);
     const setImmersedDebounced = React.useCallback(debounce(setImmersed, 3000), []);
     const [, , , toggleFullscreen] = useFullscreen();
 
@@ -78,6 +80,8 @@ const Player = ({ urlParams, queryParams }) => {
     const nextVideoPopupDismissed = React.useRef(false);
     const defaultSubtitlesSelected = React.useRef(false);
     const defaultAudioTrackSelected = React.useRef(false);
+    const controlBarRef = React.createRef();
+
     const [error, setError] = React.useState(null);
 
     const onImplementationChanged = React.useCallback(() => {
@@ -188,7 +192,11 @@ const Player = ({ urlParams, queryParams }) => {
     }, [updateSettings]);
 
     const onSubtitlesOffsetChanged = React.useCallback((offset) => {
+        setUserOffset(offset);
         updateSettings({ subtitlesOffset: offset });
+        if (!immersed) {
+            setOffsetUpdatedNotImmersed(true);
+        }
     }, [updateSettings]);
 
     const onDismissNextVideoPopup = React.useCallback(() => {
@@ -461,6 +469,21 @@ const Player = ({ urlParams, queryParams }) => {
         };
     }, []);
 
+    React.useEffect(() => {
+        const controlBarLayerHeight = Math.round((controlBarRef?.current?.offsetHeight / window?.innerHeight) * 100);
+
+        if (!immersed) {
+            if (!offsetUpdatedNotImmersed) {
+                if (video.state.subtitlesOffset < controlBarLayerHeight) {
+                    updateSettings({ subtitlesOffset: controlBarLayerHeight });
+                }
+            }
+        } else {
+            updateSettings({ subtitlesOffset: userOffset });
+            setOffsetUpdatedNotImmersed(false);
+        }
+    }, [immersed, video.state.subtitlesOffset]);
+
     React.useLayoutEffect(() => {
         const onKeyDown = (event) => {
             switch (event.code) {
@@ -679,6 +702,7 @@ const Player = ({ urlParams, queryParams }) => {
                 onToggleStatisticsMenu={toggleStatisticsMenu}
                 onMouseMove={onBarMouseMove}
                 onMouseOver={onBarMouseMove}
+                ref={controlBarRef}
             />
             {
                 nextVideoPopupOpen ?

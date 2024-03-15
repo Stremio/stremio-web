@@ -12,7 +12,7 @@ const styles = require('./styles');
 const { useBinaryState } = require('stremio/common');
 const { t } = require('i18next');
 
-const ControlBar = ({
+const ControlBar = React.forwardRef(({
     className,
     paused,
     time,
@@ -41,7 +41,7 @@ const ControlBar = ({
     onToggleOptionsMenu,
     onToggleStatisticsMenu,
     ...props
-}) => {
+}, ref) => {
     const { chromecast } = useServices();
     const [chromecastServiceActive, setChromecastServiceActive] = React.useState(() => chromecast.active);
     const [buttonsMenuOpen, , , toogleButtonsMenu] = useBinaryState(false);
@@ -103,7 +103,7 @@ const ControlBar = ({
         };
     }, []);
     return (
-        <div {...props} className={classnames(className, styles['control-bar-container'])}>
+        <div {...props} className={classnames(className, styles['control-bar-container'])} ref={ref}>
             <SeekBar
                 className={styles['seek-bar']}
                 time={time}
@@ -175,7 +175,9 @@ const ControlBar = ({
             </div>
         </div>
     );
-};
+});
+
+ControlBar.displayName = 'ControlBar';
 
 ControlBar.propTypes = {
     className: PropTypes.string,
