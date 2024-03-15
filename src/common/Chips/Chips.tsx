@@ -16,6 +16,8 @@ type Props = {
     onSelect: (value: string) => {},
 };
 
+const SCROLL_THRESHOLD = 1;
+
 const Chips = memo(({ options, selected, onSelect }: Props) => {
     const ref = useRef<HTMLDivElement>(null);
     const [scrollPosition, setScrollPosition] = useState('left');
@@ -23,7 +25,10 @@ const Chips = memo(({ options, selected, onSelect }: Props) => {
     useEffect(() => {
         const onScroll = ({ target }: Event) => {
             const { scrollLeft, scrollWidth, offsetWidth} = target as HTMLDivElement;
-            const position = scrollLeft === 0 ? 'left' : scrollLeft + offsetWidth >= scrollWidth ? 'right' : 'center';
+            const position =
+                (scrollLeft - SCROLL_THRESHOLD) <= 0 ? 'left' :
+                    (scrollLeft + offsetWidth + SCROLL_THRESHOLD) >= scrollWidth ? 'right' :
+                        'center';
             setScrollPosition(position);
         };
 
