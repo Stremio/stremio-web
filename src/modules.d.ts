@@ -1,2 +1,3 @@
-declare module '*';
-declare module 'classnames';
+declare module '*.less';
+declare module 'stremio/common';
+declare module 'stremio/common/*';

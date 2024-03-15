@@ -3,6 +3,7 @@
 const AddonDetailsModal = require('./AddonDetailsModal');
 const Button = require('./Button');
 const Checkbox = require('./Checkbox');
+const { default: Chips } = require('./Chips');
 const ColorInput = require('./ColorInput');
 const ContinueWatchingItem = require('./ContinueWatchingItem');
 const DelayedRenderer = require('./DelayedRenderer');
@@ -50,6 +51,7 @@ module.exports = {
     AddonDetailsModal,
     Button,
     Checkbox,
+    Chips,
     ColorInput,
     ContinueWatchingItem,
     DelayedRenderer,

@@ -45,6 +45,11 @@ module.exports = (env, argv) => ({
                 }
             },
             {
+                test: /\.(ts|tsx)$/,
+                exclude: /node_modules/,
+                use: 'ts-loader',
+            },
+            {
                 test: /\.less$/,
                 exclude: /node_modules/,
                 use: [
@@ -142,10 +147,10 @@ module.exports = (env, argv) => ({
         ]
     },
     resolve: {
-        extensions: ['.js', '.json', '.less', '.wasm'],
+        extensions: ['.tsx', '.ts', '.js', '.json', '.less', '.wasm'],
         alias: {
-            'stremio': path.join(__dirname, 'src'),
-            'stremio-router': path.join(__dirname, 'src', 'router')
+            'stremio': path.resolve(__dirname, 'src'),
+            'stremio-router': path.resolve(__dirname, 'src', 'router')
         }
     },
     devServer: {
