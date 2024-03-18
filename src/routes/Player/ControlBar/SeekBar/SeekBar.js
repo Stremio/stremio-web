@@ -5,7 +5,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const debounce = require('lodash.debounce');
 const { useRouteFocused } = require('stremio-router');
-const { Slider, Button } = require('stremio/common');
+const { Slider, Button, useBinaryState } = require('stremio/common');
 const formatTime = require('./formatTime');
 const styles = require('./styles');
 
@@ -14,12 +14,7 @@ const SeekBar = ({ className, time, duration, buffered, onSeekRequested }) => {
     const routeFocused = useRouteFocused();
     const [seekTime, setSeekTime] = React.useState(null);
 
-    const DURATION_MODE_OPTIONS = {
-        'totalTime': 'totalTime',
-        'remainingTime': 'remainingTime'
-    };
-
-    const [durationMode, setDurationMode] = React.useState(DURATION_MODE_OPTIONS.totalTime);
+    const [remainingTimeMode,,, toggleRemainingTimeMode] = useBinaryState(false);
     const resetTimeDebounced = React.useCallback(debounce(() => {
         setSeekTime(null);
     }, 1500), []);
@@ -63,17 +58,11 @@ const SeekBar = ({ className, time, duration, buffered, onSeekRequested }) => {
                 onSlide={onSlide}
                 onComplete={onComplete}
             />
-            <Button
-                onClick={() => {
-                    durationMode === DURATION_MODE_OPTIONS.totalTime
-                        ? setDurationMode(DURATION_MODE_OPTIONS.remainingTime)
-                        : setDurationMode(DURATION_MODE_OPTIONS.totalTime);
-                }}
-            >
+            <Button onClick={toggleRemainingTimeMode}>
                 <div className={styles['label']}>
-                    {durationMode === DURATION_MODE_OPTIONS.totalTime
-                        ? formatTime(duration)
-                        : formatTime(duration - time, '-')}
+                    {remainingTimeMode
+                        ? formatTime(duration - time, '-')
+                        : formatTime(duration) }
                 </div>
             </Button>
         </div>
