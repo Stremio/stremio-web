@@ -60,7 +60,7 @@ const SeekBar = ({ className, time, duration, buffered, onSeekRequested }) => {
             />
             <Button onClick={toggleRemainingTimeMode}>
                 <div className={styles['label']}>
-                    {remainingTimeMode
+                    {remainingTimeMode && duration !== null && !isNaN(duration)
                         ? formatTime(duration - time, '-')
                         : formatTime(duration) }
                 </div>
