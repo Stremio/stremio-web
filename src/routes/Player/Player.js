@@ -199,24 +199,23 @@ const Player = ({ urlParams, queryParams }) => {
     const onNextVideoRequested = React.useCallback(() => {
         if (player.nextStream !== null) {
             nextVideo();
+
             const deepLinks = player.nextStream.deepLinks;
             if (player.nextVideo !== null) {
                 const videoDeepLinks = player.nextVideo.deepLinks;
                 if (videoDeepLinks.metaDetailsStreams) {
                     // make sure we add the meta details in the history
-                    window.location.replace(deepLinks.metaDetailsStreams);
+                    window.location.replace(videoDeepLinks.metaDetailsStreams);
                 }
             }
             // go to the next stream directly in the Player
             window.location.href = deepLinks.player;
-        }
-        if (player.nextVideo !== null) {
+        } else if (player.nextVideo !== null) {
             nextVideo();
 
             const deepLinks = player.nextVideo.deepLinks;
+
             if (deepLinks.metaDetailsStreams && deepLinks.player) {
-                console.log('DeepLinks.player: ' + deepLinks.player);
-                console.log('deepLinks.metaDetailsStreams: ' + deepLinks.metaDetailsStreams);
                 window.location.replace(deepLinks.metaDetailsStreams);
                 window.location.href = deepLinks.player;
             } else {
