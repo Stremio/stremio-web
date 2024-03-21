@@ -15,7 +15,7 @@
         "@babel/runtime": "7.16.0",
         "@sentry/browser": "6.13.3",
         "@stremio/stremio-colors": "5.0.1",
-        "@stremio/stremio-core-web": "file:../core-web",
+        "@stremio/stremio-core-web": "https://github.com/Stremio/stremio-core-web/releases/download/v0.47.1-player-next-video-deep-link/stremio-stremio-core-web-0.47.1.tgz",
         "@stremio/stremio-icons": "5.2.0",
         "@stremio/stremio-video": "0.0.38",
         "a-color-picker": "1.2.1",
