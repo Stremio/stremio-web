@@ -49,7 +49,8 @@ const Settings = () => {
         streamingServerRemoteUrlInput,
         remoteEndpointSelect,
         cacheSizeSelect,
-        torrentProfileSelect
+        torrentProfileSelect,
+        transcodingProfileSelect,
     } = useStreamingServerSettingsInputs(streamingServer);
     const [configureServerUrlModalOpen, openConfigureServerUrlModal, closeConfigureServerUrlModal] = useBinaryState(false);
     const configureServerUrlInputRef = React.useRef(null);
@@ -607,6 +608,20 @@ const Settings = () => {
                                     <Multiselect
                                         className={classnames(styles['option-input-container'], styles['multiselect-container'])}
                                         {...torrentProfileSelect}
+                                    />
+                                </div>
+                                :
+                                null
+                        }
+                        {
+                            transcodingProfileSelect !== null ?
+                                <div className={styles['option-container']}>
+                                    <div className={styles['option-name-container']}>
+                                        <div className={styles['label']}>{ t('SETTINGS_TRANSCODE_PROFILE') }</div>
+                                    </div>
+                                    <Multiselect
+                                        className={classnames(styles['option-input-container'], styles['multiselect-container'])}
+                                        {...transcodingProfileSelect}
                                     />
                                 </div>
                                 :
