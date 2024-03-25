@@ -1,0 +1,25 @@
+// Copyright (C) 2017-2024 Smart code 203358507
+
+@mask-width: 10%;
+
+.chips {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 1rem;
+    overflow-x: auto;
+
+    &.left {
+        mask-image: linear-gradient(90deg, rgba(0, 0, 0, 1) calc(100% - @mask-width), rgba(0, 0, 0, 0) 100%);
+    }
+
+    &.right {
+        mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) @mask-width);
+    }
+
+    &.center {
+        mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) @mask-width, rgba(0, 0, 0, 1) calc(100% - @mask-width), rgba(0, 0, 0, 0) 100%);
+    }
+}
