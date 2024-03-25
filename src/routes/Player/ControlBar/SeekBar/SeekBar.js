@@ -58,7 +58,7 @@ const SeekBar = ({ className, time, duration, buffered, onSeekRequested }) => {
                 onSlide={onSlide}
                 onComplete={onComplete}
             />
-            <Button onClick={toggleRemainingTimeMode}>
+            <Button onClick={toggleRemainingTimeMode} tabIndex={-1}>
                 <div className={styles['label']}>
                     {remainingTimeMode && duration !== null && !isNaN(duration)
                         ? formatTime(duration - time, '-')
