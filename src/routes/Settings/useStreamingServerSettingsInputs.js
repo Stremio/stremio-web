@@ -167,7 +167,38 @@ const useStreamingServerSettingsInputs = (streamingServer) => {
             }
         };
     }, [streamingServer.settings]);
-    return { streamingServerRemoteUrlInput, remoteEndpointSelect, cacheSizeSelect, torrentProfileSelect };
+    const transcodingProfileSelect = React.useMemo(() => {
+        if (streamingServer.settings?.type !== 'Ready' || streamingServer.deviceInfo?.type !== 'Ready') {
+            return null;
+        }
+
+        return {
+            options: [
+                {
+                    label: t('SETTINGS_DISABLED'),
+                    value: null,
+                },
+                ...streamingServer.deviceInfo.content.availableHardwareAccelerations.map((name) => ({
+                    label: name,
+                    value: name,
+                }))
+            ],
+            selected: [streamingServer.settings.content.transcodeProfile],
+            onSelect: (event) => {
+                core.transport.dispatch({
+                    action: 'StreamingServer',
+                    args: {
+                        action: 'UpdateSettings',
+                        args: {
+                            ...streamingServer.settings.content,
+                            transcodeProfile: event.value,
+                        }
+                    }
+                });
+            }
+        };
+    }, [streamingServer.settings, streamingServer.deviceInfo]);
+    return { streamingServerRemoteUrlInput, remoteEndpointSelect, cacheSizeSelect, torrentProfileSelect, transcodingProfileSelect };
 };
 
 module.exports = useStreamingServerSettingsInputs;
