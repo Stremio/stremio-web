@@ -3,9 +3,8 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const { default: Icon } = require('@stremio/stremio-icons/react');
 const NotFound = require('stremio/routes/NotFound');
-const { Button, DelayedRenderer, Multiselect, MainNavBars, LibItem, Image, ModalDialog, useProfile, useNotifications, routesRegexp, useOnScrollToBottom, useBinaryState, withCoreSuspender } = require('stremio/common');
+const { Button, Chips, DelayedRenderer, Multiselect, MainNavBars, LibItem, Image, useProfile, useNotifications, routesRegexp, useOnScrollToBottom, withCoreSuspender } = require('stremio/common');
 const useLibrary = require('./useLibrary');
 const useSelectableInputs = require('./useSelectableInputs');
 const styles = require('./styles');
@@ -49,8 +48,7 @@ const Library = ({ model, urlParams, queryParams }) => {
     const profile = useProfile();
     const notifications = useNotifications();
     const [library, loadNextPage] = useLibrary(model, urlParams, queryParams);
-    const [typeSelect, sortSelect, hasNextPage] = useSelectableInputs(library);
-    const [inputsModalOpen, openInputsModal, closeInputsModal] = useBinaryState(false);
+    const [typeSelect, sortChips, hasNextPage] = useSelectableInputs(library);
     const scrollContainerRef = React.useRef(null);
     const onScrollToBottom = React.useCallback(() => {
         if (hasNextPage) {
@@ -70,11 +68,7 @@ const Library = ({ model, urlParams, queryParams }) => {
                     model === 'continue_watching' || profile.auth !== null ?
                         <div className={styles['selectable-inputs-container']}>
                             <Multiselect {...typeSelect} className={styles['select-input-container']} />
-                            <Multiselect {...sortSelect} className={styles['select-input-container']} />
-                            <div className={styles['spacing']} />
-                            <Button className={styles['filter-container']} title={'All filters'} onClick={openInputsModal}>
-                                <Icon className={styles['filter-icon']} name={'filters'} />
-                            </Button>
+                            <Chips {...sortChips} className={styles['select-input-container']} />
                         </div>
                         :
                         null
@@ -122,15 +116,6 @@ const Library = ({ model, urlParams, queryParams }) => {
                                 </div>
                 }
             </div>
-            {
-                inputsModalOpen ?
-                    <ModalDialog title={'Library filters'} className={styles['selectable-inputs-modal']} onCloseRequest={closeInputsModal}>
-                        <Multiselect {...typeSelect} className={styles['select-input-container']} />
-                        <Multiselect {...sortSelect} className={styles['select-input-container']} />
-                    </ModalDialog>
-                    :
-                    null
-            }
         </MainNavBars>
     );
 };

@@ -3,7 +3,7 @@
 const fs = require('fs');
 const readdirp = require('readdirp');
 
-const COPYRIGHT_HEADER = /^\/\/ Copyright \(C\) 2017-2023 Smart code 203358507.*/;
+const COPYRIGHT_HEADER = /^\/\/ Copyright \(C\) 2017-\d{4} Smart code 203358507.*/;
 
 describe('copyright', () => {
     test('js', async () => {

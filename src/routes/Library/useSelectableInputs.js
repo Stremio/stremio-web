@@ -18,8 +18,7 @@ const mapSelectableInputs = (library, t) => {
             window.location = event.value;
         }
     };
-    const sortSelect = {
-        title: t.string('SELECT_SORT'),
+    const sortChips = {
         options: library.selectable.sorts
             .map(({ sort, deepLinks }) => ({
                 value: deepLinks.library,
@@ -28,11 +27,11 @@ const mapSelectableInputs = (library, t) => {
         selected: library.selectable.sorts
             .filter(({ selected }) => selected)
             .map(({ deepLinks }) => deepLinks.library),
-        onSelect: (event) => {
-            window.location = event.value;
+        onSelect: (value) => {
+            window.location = value;
         }
     };
-    return [typeSelect, sortSelect, library.selectable.nextPage];
+    return [typeSelect, sortChips, library.selectable.nextPage];
 };
 
 const useSelectableInputs = (library) => {
