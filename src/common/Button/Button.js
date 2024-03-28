@@ -6,7 +6,7 @@ const classnames = require('classnames');
 const styles = require('./styles');
 const { useLongPress } = require('use-long-press');
 
-const Button = React.forwardRef(({ className, href, disabled, children, onLongPress, tabIndex, ...props }, ref) => {
+const Button = React.forwardRef(({ className, href, disabled, children, onLongPress, ...props }, ref) => {
     const longPress = useLongPress(onLongPress, { detect: 'pointer' });
     const onKeyDown = React.useCallback((event) => {
         if (typeof props.onKeyDown === 'function') {
@@ -35,7 +35,7 @@ const Button = React.forwardRef(({ className, href, disabled, children, onLongPr
     return React.createElement(
         typeof href === 'string' && href.length > 0 ? 'a' : 'div',
         {
-            tabIndex: tabIndex ?? 0,
+            tabIndex: 0,
             ...props,
             ref,
             className: classnames(className, styles['button-container'], { 'disabled': disabled }),
@@ -53,7 +53,6 @@ Button.displayName = 'Button';
 Button.propTypes = {
     className: PropTypes.string,
     href: PropTypes.string,
-    tabIndex: PropTypes.number,
     disabled: PropTypes.bool,
     children: PropTypes.node,
     onKeyDown: PropTypes.func,
