@@ -31,7 +31,7 @@ const LibItem = ({ _id, removable, notifications, watched, ...props }) => {
                 case 'watched':
                     return props.deepLinks && (typeof props.deepLinks.metaDetailsVideos === 'string' || typeof props.deepLinks.metaDetailsStreams === 'string');
                 case 'dismiss':
-                    return typeof _id === 'string' && props.progress !== null && !isNaN(props.progress);
+                    return typeof _id === 'string' && props.progress !== null && !isNaN(props.progress) && props.progress > 0;
                 case 'remove':
                     return typeof _id === 'string' && removable;
             }
