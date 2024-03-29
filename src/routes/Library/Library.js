@@ -57,7 +57,7 @@ const Library = ({ model, urlParams, queryParams }) => {
     }, [hasNextPage, loadNextPage]);
     const onScroll = useOnScrollToBottom(onScrollToBottom, SCROLL_TO_BOTTOM_TRESHOLD);
     React.useLayoutEffect(() => {
-        if (profile.auth !== null && library.selected && library.selected.request.page === 1) {
+        if (profile.auth !== null && library.selected && library.selected.request.page === 1 && library.catalog.length !== 0 ) {
             scrollContainerRef.current.scrollTop = 0;
         }
     }, [profile.auth, library.selected]);
