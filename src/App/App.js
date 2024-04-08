@@ -71,7 +71,8 @@ const App = () => {
                     receiverApplicationId: CONSTANTS.CHROMECAST_RECEIVER_APP_ID,
                     autoJoinPolicy: chrome.cast.AutoJoinPolicy.PAGE_SCOPED,
                     resumeSavedSession: false,
-                    language: null
+                    language: null,
+                    androidReceiverCompatible: true
                 });
             }
         };
