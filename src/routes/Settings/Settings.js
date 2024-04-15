@@ -8,6 +8,7 @@ const { default: Icon } = require('@stremio/stremio-icons/react');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
 const { Button, Checkbox, MainNavBars, Multiselect, ColorInput, TextInput, ModalDialog, useProfile, useStreamingServer, useBinaryState, withCoreSuspender, useToast } = require('stremio/common');
+const historySync = require('stremio-history-sync');
 const useProfileSettingsInputs = require('./useProfileSettingsInputs');
 const useStreamingServerSettingsInputs = require('./useStreamingServerSettingsInputs');
 const useDataExport = require('./useDataExport');
@@ -100,6 +101,38 @@ const Settings = () => {
                 }
             });
         }
+    }, [isTraktAuthenticated, profile]);
+    const traktImportOnClick = React.useCallback(() => {
+        if ((localStorage.getItem('lastTraktImport') || 0) > Date.now() - (24 * 60 * 60 * 1000)) {
+            toast.show({
+                type: 'error',
+                title: 'You already used this action recently, try again later',
+                timeout: 25000
+            });
+            return;
+        }
+        localStorage.setItem('lastTraktImport', Date.now());
+        toast.show({
+            type: 'success',
+            title: 'Importing Trakt watched list...',
+            timeout: 25000
+        });
+        historySync.traktSync(profile.auth.key)
+            .then((res) =>
+                toast.show({
+                    type: 'success',
+                    title: `Success: ${res.length} items imported from trakt watched list. (${res.movies} movies & ${res.series} series)`,
+                    timeout: 25000
+                }))
+            .catch((e) => {
+                console.error(e);
+                localStorage.setItem('lastTraktImport', 0);
+                toast.show({
+                    type: 'error',
+                    title: 'Trakt Import failed, please try again later',
+                    timeout: 25000
+                });
+            });
     }, [isTraktAuthenticated, profile.auth]);
     const subscribeCalendarOnClick = React.useCallback(() => {
         const url = `webcal://www.strem.io/calendar/${profile.auth.user._id}.ics`;
@@ -325,6 +358,15 @@ const Settings = () => {
                                     { profile.auth !== null && profile.auth.user !== null && profile.auth.user.trakt !== null ? t('LOG_OUT') : t('SETTINGS_TRAKT_AUTHENTICATE') }
                                 </div>
                             </Button>
+                            {
+                                isTraktAuthenticated ?
+                                    <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Trakt Library Import'} disabled={profile.auth === null} tabIndex={-1} onClick={traktImportOnClick}>
+                                        <div className={styles['label']}>
+                                            { t('TRAKT_IMPORT_WATCHED') }
+                                        </div>
+                                    </Button>
+                                    : null
+                            }
                         </div>
                     </div>
                     <div className={styles['section-container']}>

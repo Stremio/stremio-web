@@ -39,6 +39,7 @@
         "react-i18next": "^12.1.1",
         "react-is": "18.2.0",
         "spatial-navigation-polyfill": "github:Stremio/spatial-navigation#64871b1422466f5f45d24ebc8bbd315b2ebab6a6",
+        "stremio-history-sync": "github:stremio/stremio-history-sync",
         "stremio-translations": "github:Stremio/stremio-translations#b13b3e2653bd0dcf644d2a20ffa32074fe6532dd",
         "url": "0.11.0",
         "use-long-press": "^3.1.5"
