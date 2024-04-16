@@ -1,0 +1,27 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/typescript-node
+{
+	"name": "Stremio Web dev container",
+	"image": "mcr.microsoft.com/devcontainers/typescript-node:1-20-bullseye",
+	"features": {
+		"ghcr.io/devcontainers/features/git:1": {},
+        "ghcr.io/devcontainers/features/git-lfs:1": {}
+	},
+	"forwardPorts": [8080],
+	"portsAttributes": {
+		"8080": {
+			"label": "Web Server",
+			"onAutoForward": "notify"
+		}
+	},
+	"postCreateCommand": "npm install",
+	"customizations": {
+        "vscode": {
+            "settings": {
+                "window.menuBarVisibility": "visible",
+                "files.autoSave" : "afterDelay",
+                "window.commandCenter": true
+            }
+        }
+    }
+}
