@@ -5,21 +5,17 @@
 	"image": "mcr.microsoft.com/devcontainers/typescript-node:1-20-bullseye",
 	"features": {
 		"ghcr.io/devcontainers/features/git:1": {},
-        "ghcr.io/devcontainers/features/git-lfs:1": {},
-		"ghcr.io/devcontainers/features/github-cli:1": {}
+        "ghcr.io/devcontainers/features/git-lfs:1": {}
 	},
 	"forwardPorts": [8080],
 	"portsAttributes": {
 		"8080": {
-			"label": "Web Server",
+			"label": "Web Server (don't forget to manually change this port to public in the Ports tab in VS Code to access it externally)",
 			"onAutoForward": "notify",
 			"protocol": "https"
 		}
 	},
-	"postCreateCommand": [
-		"gh codespace ports visibility 8080:public -c $CODESPACE_NAME",
-		"npm install"
-	],
+	"postCreateCommand": "npm install",
 	"customizations": {
         "vscode": {
             "settings": {
