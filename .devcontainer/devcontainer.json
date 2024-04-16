@@ -11,7 +11,8 @@
 	"portsAttributes": {
 		"8080": {
 			"label": "Web Server",
-			"onAutoForward": "notify"
+			"onAutoForward": "notify",
+			"protocol": "https"
 		}
 	},
 	"postCreateCommand": "npm install",
