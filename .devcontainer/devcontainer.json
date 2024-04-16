@@ -5,7 +5,8 @@
 	"image": "mcr.microsoft.com/devcontainers/typescript-node:1-20-bullseye",
 	"features": {
 		"ghcr.io/devcontainers/features/git:1": {},
-        "ghcr.io/devcontainers/features/git-lfs:1": {}
+        "ghcr.io/devcontainers/features/git-lfs:1": {},
+		"ghcr.io/devcontainers/features/github-cli:1": {}
 	},
 	"forwardPorts": [8080],
 	"portsAttributes": {
@@ -15,7 +16,10 @@
 			"protocol": "https"
 		}
 	},
-	"postCreateCommand": "npm install",
+	"postCreateCommand": [
+		"gh codespace ports visibility 8080:public -c $CODESPACE_NAME",
+		"npm install"
+	],
 	"customizations": {
         "vscode": {
             "settings": {
