@@ -20,10 +20,12 @@ jobs:
         run: npm test
       - name: Lint
         run: npm run lint
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Upload docs to GitHub Pages
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build
-          destination_dir: ${{ github.ref_name }}
-          allow_empty_commit: true
+          name: Stremio web
+          path: stremio-web
+      - name: Deploy docs to GitHub Pages
+        uses: actions/deploy-pages@v4
+        with:
+          artifact_name: stremio-web
