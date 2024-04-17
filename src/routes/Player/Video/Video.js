@@ -9,7 +9,10 @@ const MobileControlOverlay = require('./MobileControlOverlay');
 
 const isMobile = platform.isMobile();
 
-const Video = React.forwardRef(({ className, paused, overlayHidden, setOverlayVisibility, onPlayPause, toggleFullscreen, fullScreenActive, onSkip10Seconds, onGoBack10Seconds }, ref) => {
+const Video = React.forwardRef(({
+    className, paused, overlayHidden, setOverlayVisibility, onPlayPause, toggleFullscreen, fullScreenActive,
+    onSkip10Seconds, onGoBack10Seconds
+}, ref) => {
     if (isMobile) {
         return (
             <div className={classnames(className, styles['video-container'])}>
@@ -50,7 +53,7 @@ Video.propTypes = {
     toggleFullscreen: PropTypes.func,
     fullScreenActive: PropTypes.bool,
     onSkip10Seconds: PropTypes.func,
-    onGoBack10Seconds: PropTypes.func
+    onGoBack10Seconds: PropTypes.func,
 };
 
 module.exports = Video;

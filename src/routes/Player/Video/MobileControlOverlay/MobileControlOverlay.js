@@ -15,7 +15,6 @@ const middleGapExcludedFromSideGestures = 100;
 const MobileControlOverlay = ({ className, paused, visible, setVisibility, onPlayPause, onSlideUp, onSkip10Seconds, onGoBack10Seconds }) => {
     const ref = React.useRef();
     const buttonsRef = React.useRef();
-    let isDone = false;
 
     React.useLayoutEffect(() => {
         if (ref.current === undefined || ref.current === null)
@@ -26,6 +25,14 @@ const MobileControlOverlay = ({ className, paused, visible, setVisibility, onPla
         let lastTouchEndTime = 0;
         let lastTouchStartX = null;
         let lastTouchStartY = null;
+
+        let touchStartTime = 0;
+        let currentTouchStartX = null;
+        let currentTouchStartY = null;
+        let lastMoveX = null;
+        let lastMoveY = null;
+        let touchActive = false;
+        let isDone = false;
 
         function onDoubleTap(x, y) {
             const screenMiddleX = window.innerWidth / 2;
@@ -56,66 +63,105 @@ const MobileControlOverlay = ({ className, paused, visible, setVisibility, onPla
             // event.preventDefault();
 
             const touch = event.touches[0];
-            const touchStartTime = Date.now();
-            const currentTouchStartX = touch.clientX;
-            const currentTouchStartY = touch.clientY;
+            touchStartTime = Date.now();
+            currentTouchStartX = touch.clientX;
+            currentTouchStartY = touch.clientY;
+            lastMoveX = currentTouchStartX;
+            lastMoveY = currentTouchStartY;
+            touchActive = true;
+        }
 
-            function onTouchEnd(event) {
-                if (isDone) {
-                    tag.removeEventListener('touchend', onTouchEnd, {passive: false, capture: true});
-                    return;
-                }
+        function onDone() {
+            touchActive = false;
+        }
 
-                const touch = event.changedTouches[0];
-
-                const touchEndTime = Date.now();
-
-                const deltaX = touch.clientX - currentTouchStartX;
-                const deltaY = touch.clientY - currentTouchStartY;
-                const delta = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-
-                let triggeredAction = false;
-
-                if (delta < moveDeltaToBeConsideredGesture) {
-                    if (lastTouchStartX !== null && lastTouchStartY !== null) {
-                        const deltaX = currentTouchStartX - lastTouchStartX;
-                        const deltaY = currentTouchStartY - lastTouchStartY;
-                        const delta = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-
-                        if (!triggeredAction && delta < moveDeltaToBeConsideredGesture &&
-                            touchEndTime - lastTouchEndTime <= maxDelayBetweenTapsToBeConsideredDoubleTap
-                        ) {
-                            onDoubleTap(currentTouchStartX, currentTouchStartY);
-                            triggeredAction = true;
-                        }
-                    }
-
-                    if (!triggeredAction && touchEndTime - touchStartTime <= maxDelayToBeConsideredTap) {
-                        onSingleTap();
-                        triggeredAction = true;
-                    }
-                } else if (Math.abs(deltaY) > minMoveDeltaToBeConsideredDirectionGesture) {
-                    if (!triggeredAction && deltaY > 0) {
-                        onSlideUp();
-                        triggeredAction = true;
-                    }
-                }
-
-                lastTouchEndTime = touchEndTime;
-                lastTouchStartX = currentTouchStartX;
-                lastTouchStartY = currentTouchStartY;
-
-                tag.removeEventListener('touchend', onTouchEnd, {passive: false, capture: true});
+        function onTouchMove(event) {
+            if (isDone || !touchActive) {
+                onDone();
+                return;
             }
 
-            tag.addEventListener('touchend', onTouchEnd, {passive: false, capture: true});
+            const touch = event.touches[0];
+            lastMoveX = touch.clientX;
+            lastMoveY = touch.clientY;
+        }
+
+        function touchFinished(x, y) {
+            const touchEndTime = Date.now();
+
+            const deltaX = x - currentTouchStartX;
+            const deltaY = y - currentTouchStartY;
+            const delta = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+            let triggeredAction = false;
+
+            if (delta < moveDeltaToBeConsideredGesture) {
+                if (lastTouchStartX !== null && lastTouchStartY !== null) {
+                    const deltaX = currentTouchStartX - lastTouchStartX;
+                    const deltaY = currentTouchStartY - lastTouchStartY;
+                    const delta = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+                    if (!triggeredAction && delta < moveDeltaToBeConsideredGesture &&
+                        touchEndTime - lastTouchEndTime <= maxDelayBetweenTapsToBeConsideredDoubleTap
+                    ) {
+                        onDoubleTap(currentTouchStartX, currentTouchStartY);
+                        triggeredAction = true;
+                    }
+                }
+
+                if (!triggeredAction && touchEndTime - touchStartTime <= maxDelayToBeConsideredTap) {
+                    onSingleTap();
+                    triggeredAction = true;
+                }
+            } else if (Math.abs(deltaY) > minMoveDeltaToBeConsideredDirectionGesture) {
+                if (!triggeredAction && deltaY > 0) {
+                    onSlideUp();
+                    triggeredAction = true;
+                }
+            }
+
+            lastTouchEndTime = touchEndTime;
+            lastTouchStartX = currentTouchStartX;
+            lastTouchStartY = currentTouchStartY;
+        }
+
+        function onTouchCancel() {
+            if (isDone || !touchActive) {
+                onDone();
+                return;
+            }
+
+            if (lastMoveX !== null && lastMoveY !== null)
+                touchFinished(lastMoveX, lastMoveY);
+
+            onDone();
+        }
+
+        function onTouchEnd(event) {
+            if (isDone || !touchActive) {
+                onDone();
+                return;
+            }
+
+            const touch = event.changedTouches[0];
+
+            touchFinished(touch.clientX, touch.clientY);
+
+            onDone();
         }
 
         tag.addEventListener('touchstart', onTouchStart, {passive: false, capture: true});
+        tag.addEventListener('touchmove', onTouchMove, {passive: true});
+        tag.addEventListener('touchend', onTouchEnd, {passive: true});
+        tag.addEventListener('touchcancel', onTouchCancel, {passive: true});
 
         return () => {
             tag.removeEventListener('touchstart', onTouchStart, {passive: false, capture: true});
+            tag.removeEventListener('touchmove', onTouchMove, {passive: true});
+            tag.removeEventListener('touchend', onTouchEnd, {passive: true});
+            tag.removeEventListener('touchcancel', onTouchCancel, {passive: true});
             isDone = true;
+            touchActive = false;
         };
     }, []);
 
@@ -133,9 +179,12 @@ const MobileControlOverlay = ({ className, paused, visible, setVisibility, onPla
     return (
         <div className={classnames(className, styles['video-mobile-control-overlay'], { [styles['show']]: visible })} ref={ref}>
             <div className={styles['buttons']} ref={buttonsRef}>
-                <div className={styles['button']} onTouchEnd={onPlayPauseButtonTouchEnd}>
-                    <Icon className={styles['icon']} name={paused ? 'play' : 'pause'} />
-                </div>
+                {
+                    typeof paused === 'boolean' &&
+                    <div className={styles['button']} onTouchEnd={onPlayPauseButtonTouchEnd}>
+                        <Icon className={styles['icon']} name={paused ? 'play' : 'pause'} />
+                    </div>
+                }
             </div>
         </div>
     );

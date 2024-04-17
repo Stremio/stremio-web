@@ -41,6 +41,7 @@ const Player = ({ urlParams, queryParams }) => {
     const video = useVideo();
     const routeFocused = useRouteFocused();
     const toast = useToast();
+    const lastPlayTimeRef = React.useRef(null);
 
     const [casting, setCasting] = React.useState(() => {
         return chromecast.active && chromecast.transport.getCastState() === cast.framework.CastState.CONNECTED;
@@ -162,12 +163,18 @@ const Player = ({ urlParams, queryParams }) => {
     }, []);
 
     const seek10secondsForward = React.useCallback(() => {
-        onSeekRequested(video.state.time + 10 * 1000);
-    }, [video.state.time]);
+        if (lastPlayTimeRef.current !== null && !isNaN(lastPlayTimeRef.current)) {
+            lastPlayTimeRef.current += 10 * 1000;
+            onSeekRequested(lastPlayTimeRef.current);
+        }
+    }, [onSeekRequested]);
 
     const seek10secondsBackward = React.useCallback(() => {
-        onSeekRequested(video.state.time - 10 * 1000);
-    }, [video.state.time]);
+        if (lastPlayTimeRef.current !== null && !isNaN(lastPlayTimeRef.current)) {
+            lastPlayTimeRef.current -= 10 * 1000;
+            onSeekRequested(lastPlayTimeRef.current);
+        }
+    }, [onSeekRequested]);
 
     const onPlaybackSpeedChanged = React.useCallback((rate) => {
         video.setProp('playbackSpeed', rate);
@@ -354,6 +361,7 @@ const Player = ({ urlParams, queryParams }) => {
             video.state.duration !== null && !isNaN(video.state.duration) &&
             video.state.manifest !== null && typeof video.state.manifest.name === 'string') {
             timeChanged(video.state.time, video.state.duration, video.state.manifest.name);
+            lastPlayTimeRef.current = video.state.time;
         }
     }, [video.state.time, video.state.duration, video.state.manifest]);
 
