@@ -55,7 +55,7 @@ const MobileControlOverlay = ({ className, paused, visible, setHidden, onPlayPau
         let touchActive = false;
         let isDone = false;
 
-        function onDoubleTap(x, y) {
+        function onDoubleTap(x) {
             const screenMiddleX = window.innerWidth / 2;
 
             if (x < screenMiddleX - (middleGapExcludedFromSideGestures / 2)) {
