@@ -13,15 +13,37 @@
 }
 
 .library-container {
-    width: 100%;
     height: 100%;
     background-color: transparent;
 
     .library-content {
+        --selectable-inputs-assumed-height: 80px;
+        --top-overlay-size: var(--selectable-inputs-assumed-height);
+        --bottom-vertical-nav-bar-size: 0px;
+        --bottom-overlay-size: calc(var(--bottom-vertical-nav-bar-size) + env(safe-area-inset-bottom, 0px));
+        --overlap-size: 3rem;
+        --transparency-grandient-pad: 6rem;
+
         width: 100%;
-        height: 100%;
+        height: calc(100% + var(--bottom-overlay-size));
+        margin-bottom: calc(var(--bottom-overlay-size) * -1);
         display: flex;
         flex-direction: column;
+
+        .meta-items-container {
+            margin-top: calc(var(--selectable-inputs-assumed-height) * -1);
+            padding: 0 1.5rem;
+            padding-top: var(--selectable-inputs-assumed-height);
+            padding-bottom: var(--bottom-overlay-size, 0px);
+
+            mask: linear-gradient(
+                to bottom,
+                transparent calc(var(--top-overlay-size) - var(--overlap-size)),
+                black calc(var(--top-overlay-size) + var(--transparency-grandient-pad)),
+                black 100%
+            );
+            z-index: 1;
+        }
 
         .selectable-inputs-container {
             flex: none;
@@ -30,6 +52,7 @@
             flex-direction: row;
             padding: 1.5rem;
             overflow: visible;
+            z-index: 2;
 
             .select-input-container {
                 flex-grow: 0;
@@ -120,7 +143,6 @@
             grid-auto-rows: max-content;
             align-items: center;
             grid-gap: 0.5rem;
-            padding: 0 1.5rem;
             overflow-y: auto;
         }
     }
@@ -217,6 +239,8 @@
 @media only screen and (max-width: @minimum) {
     .library-container {
         .library-content {
+            --bottom-vertical-nav-bar-size: var(--vertical-nav-bar-size);
+
             .selectable-inputs-container {
                 justify-content: space-between;
             }

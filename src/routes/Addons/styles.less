@@ -22,16 +22,38 @@
 }
 
 .addons-container {
-    width: 100%;
     height: 100%;
     background-color: transparent;
 
     .addons-content {
+        --selectable-inputs-assumed-height: 84px;
+        --top-overlay-size: var(--selectable-inputs-assumed-height);
+        --bottom-vertical-nav-bar-size: 0px;
+        --bottom-overlay-size: calc(var(--bottom-vertical-nav-bar-size) + env(safe-area-inset-bottom, 0px));
+        --overlap-size: 3rem;
+        --transparency-grandient-pad: 6rem;
+
         width: 100%;
-        height: 100%;
+        height: calc(100% + var(--bottom-overlay-size));
+        margin-bottom: calc(var(--bottom-overlay-size) * -1);
         display: flex;
         flex-direction: column;
         align-self: stretch;
+
+        .addons-list-container {
+            margin-top: calc(var(--selectable-inputs-assumed-height) * -1);
+            padding: 0 1.5rem;
+            padding-top: var(--selectable-inputs-assumed-height);
+            padding-bottom: var(--bottom-overlay-size, 0px);
+
+            mask: linear-gradient(
+                to bottom,
+                transparent calc(var(--top-overlay-size) - var(--overlap-size)),
+                black calc(var(--top-overlay-size) + var(--transparency-grandient-pad)),
+                black 100%
+            );
+            z-index: 1;
+        }
 
         .selectable-inputs-container {
             flex: none;
@@ -41,6 +63,7 @@
             justify-content: space-between;
             padding: 1.5rem;
             overflow: visible;
+            z-index: 2;
 
             .add-button-container {
                 flex: none;
@@ -53,6 +76,7 @@
                 padding: 0 1.5rem;
                 border-radius: 3rem;
                 background-color: var(--secondary-accent-color);
+                z-index: 3;
 
                 &:hover {
                     outline: var(--focus-outline-size) solid var(--secondary-accent-color);
@@ -134,7 +158,6 @@
         .addons-list-container {
             flex: 1;
             align-self: stretch;
-            padding: 0 1.5rem;
             overflow-y: auto;
 
             .addon {
@@ -275,6 +298,8 @@
 @media only screen and (max-width: @minimum) {
     .addons-container {
         .addons-content {
+            --bottom-vertical-nav-bar-size: var(--vertical-nav-bar-size);
+
             .selectable-inputs-container {
                 .add-button-container {
                     z-index: 1;

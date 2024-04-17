@@ -5,6 +5,11 @@
 .main-nav-bars-container {
     position: relative;
     z-index: 0;
+    overflow: clip;
+    margin-left: env(safe-area-inset-left, 0px);
+    margin-right: env(safe-area-inset-right, 0px);
+    width: calc(100% - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px));
+    height: 100%;
 
     .horizontal-nav-bar {
         position: absolute;
@@ -17,18 +22,32 @@
     .vertical-nav-bar {
         position: absolute;
         top: var(--horizontal-nav-bar-size);
-        bottom: 0;
+        bottom: var(--calculated-bottom-safe-inset);
         left: 0;
         z-index: 1;
     }
 
     .nav-content-container {
         position: absolute;
-        top: var(--horizontal-nav-bar-size);
+        padding-top: calc(var(--horizontal-nav-bar-size) + env(safe-area-inset-top, 0px));
+        top: 0;
         right: 0;
         bottom: 0;
         left: var(--vertical-nav-bar-size);
         z-index: 0;
+        overflow: scroll;
+
+        --top-overlay-size: calc(var(--horizontal-nav-bar-size) + env(safe-area-inset-top, 0px));
+        --bottom-overlay-size: calc(var(--vertical-nav-bar-size) + var(--calculated-bottom-safe-inset, 0px));
+        --overlap-size: 3rem;
+        --transparency-grandient-pad: 6rem;
+
+        mask: linear-gradient(
+            to bottom,
+            transparent calc(var(--top-overlay-size) - var(--overlap-size)),
+            black calc(var(--top-overlay-size) + var(--transparency-grandient-pad)),
+            black 100%
+        );
     }
 }
 
@@ -36,7 +55,15 @@
     .main-nav-bars-container {
         .nav-content-container {
             left: 0;
-            bottom: var(--vertical-nav-bar-size);
+            padding-bottom: var(--vertical-nav-bar-size);
+
+            mask: linear-gradient(
+                to bottom,
+                transparent calc(var(--top-overlay-size) - var(--overlap-size)),
+                black calc(var(--top-overlay-size) + var(--transparency-grandient-pad)),
+                black calc(100% - var(--bottom-overlay-size) - var(--transparency-grandient-pad)),
+                transparent calc(100% - var(--bottom-overlay-size) + var(--overlap-size))
+            );
         }
 
         .vertical-nav-bar {
