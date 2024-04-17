@@ -23,8 +23,8 @@ jobs:
       - name: Upload docs to GitHub Pages
         uses: actions/upload-pages-artifact@v3
         with:
-          name: Stremio web
-          path: stremio-web
+          name: stremio-web
+          path: build
       - name: Deploy docs to GitHub Pages
         uses: actions/deploy-pages@v4
         with:
