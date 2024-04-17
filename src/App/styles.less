@@ -85,8 +85,8 @@ svg {
 }
 
 html {
-    width: ~"min(100lvw, calc(100% + env(safe-area-inset-right, 0px) + env(safe-area-inset-left, 0px)))";
-    height: ~"min(100lvh, calc(100% + env(safe-area-inset-top, 0px) + env(safe-area-inset-bottom, 0px)))";
+    width: ~"100svw";
+    height: ~"100svh";
     min-width: 640px;
     min-height: 480px;
     font-family: 'PlusJakartaSans', 'sans-serif';
@@ -96,8 +96,15 @@ html {
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
 
-    // iOS pads the bottom inset more than needed, so we deduce the actual inset size when using the webapp
-    --calculated-bottom-safe-inset: ~"min(env(safe-area-inset-bottom, 0px), max(16px, calc(100lvh - 100svh - env(safe-area-inset-top, 0px))))";
+    --calculated-bottom-safe-inset: 0px;
+
+    @media (display-mode: standalone) {
+        width: ~"100lvw";
+        height: ~"100lvh";
+
+        // iOS pads the bottom inset more than needed, so we deduce the actual inset size when using the webapp
+        --calculated-bottom-safe-inset: ~"min(env(safe-area-inset-bottom, 0px), max(16px, calc(100lvh - 100svh - env(safe-area-inset-top, 0px))))";
+    }
 
     body {
         width: 100%;
