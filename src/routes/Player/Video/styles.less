@@ -67,5 +67,31 @@
                 margin-bottom: 8px;
             }
         }
+
+        // iPad Pro 12.9" - portrait
+        @media only screen and (orientation: portrait) and (width: 1024px) {
+            &:after {
+                content: "";
+                display: block;
+                background-color: white;
+                border-radius: 8px;
+                height: 5px;
+                width: 312px;
+                margin-bottom: 8px;
+            }
+        }
+
+        // iPad Pro 12.9" - landscape
+        @media only screen and (orientation: landscape) and (width: 1366px) {
+            &:after {
+                content: "";
+                display: block;
+                background-color: white;
+                border-radius: 8px;
+                height: 5px;
+                width: 342.3px;
+                margin-bottom: 8px;
+            }
+        }
     }
 }
