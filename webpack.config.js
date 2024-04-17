@@ -266,7 +266,9 @@ module.exports = (env, argv) => ({
                 }
             ],
             fingerprints: false,
-            ios: true
+            ios: {
+                "apple-mobile-web-app-status-bar-style": "black-translucent"
+            }
         }),
     ].filter(Boolean)
 });
