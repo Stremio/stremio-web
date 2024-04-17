@@ -76,8 +76,23 @@ const MetaDetails = ({ urlParams, queryParams }) => {
         setSeason(event.value);
     }, [setSeason]);
     const renderBackgroundImageFallback = React.useCallback(() => null, []);
+
+    const canRenderBackground = metaPath !== null && metaDetails.metaItem !== null && metaDetails.metaItem.content.type !== 'Err' && metaDetails.metaItem.content.type !== 'Loading' &&
+        typeof metaDetails.metaItem.content.content.background === 'string' && metaDetails.metaItem.content.content.background.length > 0;
+
     return (
         <div className={styles['metadetails-container']}>
+            {
+                canRenderBackground &&
+                <div className={styles['background-image-layer']}>
+                    <Image
+                        className={styles['background-image']}
+                        src={metaDetails.metaItem.content.content.background}
+                        renderFallback={renderBackgroundImageFallback}
+                        alt={' '}
+                    />
+                </div>
+            }
             <HorizontalNavBar
                 className={styles['nav-bar']}
                 backButton={true}
@@ -121,20 +136,6 @@ const MetaDetails = ({ urlParams, queryParams }) => {
                                     <MetaPreview.Placeholder className={styles['meta-preview']} />
                                     :
                                     <React.Fragment>
-                                        {
-                                            typeof metaDetails.metaItem.content.content.background === 'string' &&
-                                                metaDetails.metaItem.content.content.background.length > 0 ?
-                                                <div className={styles['background-image-layer']}>
-                                                    <Image
-                                                        className={styles['background-image']}
-                                                        src={metaDetails.metaItem.content.content.background}
-                                                        renderFallback={renderBackgroundImageFallback}
-                                                        alt={' '}
-                                                    />
-                                                </div>
-                                                :
-                                                null
-                                        }
                                         <MetaPreview
                                             className={classnames(styles['meta-preview'], 'animation-fade-in')}
                                             name={metaDetails.metaItem.content.content.name}

@@ -11,11 +11,13 @@
     background-color: transparent;
     border-radius: 0.75rem;
 
-    &:hover {
-        background-color: var(--overlay-color);
+    @media (pointer: fine) {
+        &:hover {
+            background-color: var(--overlay-color);
 
-        .label {
-            opacity: 0.6;
+            .label {
+                opacity: 0.6;
+            }
         }
     }
 
