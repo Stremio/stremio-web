@@ -4,7 +4,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { useTranslation } = require('react-i18next');
-const { useToast } = require('stremio/common');
+const { useToast, platform } = require('stremio/common');
 const { useServices } = require('stremio/services');
 const Option = require('./Option');
 const styles = require('./styles');
@@ -65,6 +65,9 @@ const OptionsMenu = ({ className, stream, playbackDevices }) => {
             });
         }
     }, [streamingUrl]);
+    const opneInNplayer = React.useCallback(() => {
+        window.open('nplayer-' + streamingUrl, '_blank');
+    }, [streamingUrl]);
     const onMouseDown = React.useCallback((event) => {
         event.nativeEvent.optionsMenuClosePrevented = true;
     }, []);
@@ -91,6 +94,15 @@ const OptionsMenu = ({ className, stream, playbackDevices }) => {
                     />
                     :
                     null
+            }
+            {
+                platform.name === 'ios' &&
+                <Option
+                    icon={'play-outline'}
+                    label={'Open in nPlayer'}
+                    disabled={stream === null}
+                    onClick={opneInNplayer}
+                />
             }
             {
                 streamingUrl && externalDevices.map(({ id, name }) => (
