@@ -112,9 +112,9 @@ html {
 
             .toasts-container {
                 position: absolute;
-                top: calc(1.2 * var(--horizontal-nav-bar-size));
-                right: 0;
-                bottom: calc(1.2 * var(--horizontal-nav-bar-size));
+                top: calc(1.2 * var(--horizontal-nav-bar-size) + env(safe-area-inset-top, 0px));
+                right: env(safe-area-inset-right, 0px);
+                bottom: calc(1.2 * var(--horizontal-nav-bar-size) + var(--calculated-bottom-safe-inset));
                 left: auto;
                 z-index: 1;
                 padding: 0 calc(0.5 * var(--horizontal-nav-bar-size));

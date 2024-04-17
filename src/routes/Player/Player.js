@@ -48,7 +48,7 @@ const Player = ({ urlParams, queryParams }) => {
 
     const [immersed, setImmersed] = React.useState(true);
     const setImmersedDebounced = React.useCallback(debounce(setImmersed, 3000), []);
-    const [, , , toggleFullscreen] = useFullscreen();
+    const [fullScreenActive, , , toggleFullscreen] = useFullscreen();
 
     const [optionsMenuOpen, , closeOptionsMenu, toggleOptionsMenu] = useBinaryState(false);
     const [subtitlesMenuOpen, , closeSubtitlesMenu, toggleSubtitlesMenu] = useBinaryState(false);
@@ -161,6 +161,14 @@ const Player = ({ urlParams, queryParams }) => {
         video.setProp('time', time);
     }, []);
 
+    const seek10secondsForward = React.useCallback(() => {
+        onSeekRequested(video.state.time + 10 * 1000);
+    }, [video.state.time]);
+
+    const seek10secondsBackward = React.useCallback(() => {
+        onSeekRequested(video.state.time - 10 * 1000);
+    }, [video.state.time]);
+
     const onPlaybackSpeedChanged = React.useCallback((rate) => {
         video.setProp('playbackSpeed', rate);
     }, []);
@@ -210,7 +218,7 @@ const Player = ({ urlParams, queryParams }) => {
         }
     }, [player.nextVideo]);
 
-    const onVideoClick = React.useCallback(() => {
+    const onPlayPauseClick = React.useCallback(() => {
         if (video.state.paused !== null) {
             if (video.state.paused) {
                 onPlayRequestedDebounced();
@@ -220,7 +228,7 @@ const Player = ({ urlParams, queryParams }) => {
         }
     }, [video.state.paused]);
 
-    const onVideoDoubleClick = React.useCallback(() => {
+    const onToggleFullscreen = React.useCallback(() => {
         onPlayRequestedDebounced.cancel();
         onPauseRequestedDebounced.cancel();
         toggleFullscreen();
@@ -607,8 +615,14 @@ const Player = ({ urlParams, queryParams }) => {
             <Video
                 ref={video.containerElement}
                 className={styles['layer']}
-                onClick={onVideoClick}
-                onDoubleClick={onVideoDoubleClick}
+                onPlayPause={onPlayPauseClick}
+                toggleFullscreen={onToggleFullscreen}
+                fullScreenActive={fullScreenActive}
+                overlayHidden={overlayHidden || video.state.buffering}
+                setOverlayVisibility={setImmersed}
+                paused={video.state.paused}
+                onSkip10Seconds={seek10secondsForward}
+                onGoBack10Seconds={seek10secondsBackward}
             />
             {
                 video.state.buffering ?

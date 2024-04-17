@@ -20,7 +20,7 @@ html:not(.active-slider-within) {
 
         .nav-bar-layer, .control-bar-layer, .menu-layer {
             opacity: 0;
-            transition: opacity 200ms;
+            transition: opacity ease-in-out 200ms;
         }
     }
 }
@@ -44,6 +44,9 @@ html:not(.active-slider-within) {
             bottom: initial;
             background: transparent;
             overflow: visible;
+            margin-top: env(safe-area-inset-top, 0px);
+            padding-left: env(safe-area-inset-left, 0px);
+            padding-right: ~"max(1rem, env(safe-area-inset-right, 0px))";
 
             &::before {
                 position: absolute;
@@ -73,6 +76,7 @@ html:not(.active-slider-within) {
         &.control-bar-layer {
             top: initial;
             overflow: visible;
+            margin-bottom: var(--calculated-bottom-safe-inset, 0px);
 
             &::before {
                 position: absolute;

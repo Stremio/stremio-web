@@ -9,8 +9,11 @@ const { useServices } = require('stremio/services');
 const SeekBar = require('./SeekBar');
 const VolumeSlider = require('./VolumeSlider');
 const styles = require('./styles');
-const { useBinaryState } = require('stremio/common');
+const { useBinaryState, platform } = require('stremio/common');
 const { t } = require('i18next');
+const useSupportsVideoVolume = require('./useSupportsVideoVolume');
+
+const isMobile = platform.isMobile();
 
 const ControlBar = ({
     className,
@@ -43,6 +46,7 @@ const ControlBar = ({
     ...props
 }) => {
     const { chromecast } = useServices();
+    const supportsVideoVolume = useSupportsVideoVolume();
     const [chromecastServiceActive, setChromecastServiceActive] = React.useState(() => chromecast.active);
     const [buttonsMenuOpen, , , toogleButtonsMenu] = useBinaryState(false);
     const onSubtitlesButtonMouseDown = React.useCallback((event) => {
@@ -112,9 +116,12 @@ const ControlBar = ({
                 onSeekRequested={onSeekRequested}
             />
             <div className={styles['control-bar-buttons-container']}>
-                <Button className={classnames(styles['control-bar-button'], { 'disabled': typeof paused !== 'boolean' })} title={paused ? t('PLAYER_PLAY') : t('PLAYER_PAUSE')} tabIndex={-1} onClick={onPlayPauseButtonClick}>
-                    <Icon className={styles['icon']} name={typeof paused !== 'boolean' || paused ? 'play' : 'pause'} />
-                </Button>
+                {
+                    !isMobile &&
+                    <Button className={classnames(styles['control-bar-button'], { 'disabled': typeof paused !== 'boolean' })} title={paused ? t('PLAYER_PLAY') : t('PLAYER_PAUSE')} tabIndex={-1} onClick={onPlayPauseButtonClick}>
+                        <Icon className={styles['icon']} name={typeof paused !== 'boolean' || paused ? 'play' : 'pause'} />
+                    </Button>
+                }
                 {
                     nextVideo !== null ?
                         <Button className={classnames(styles['control-bar-button'])} title={t('PLAYER_NEXT_VIDEO')} tabIndex={-1} onClick={onNextVideoButtonClick}>
@@ -135,11 +142,14 @@ const ControlBar = ({
                         }
                     />
                 </Button>
-                <VolumeSlider
-                    className={styles['volume-slider']}
-                    volume={volume}
-                    onVolumeChangeRequested={onVolumeChangeRequested}
-                />
+                {
+                    supportsVideoVolume &&
+                    <VolumeSlider
+                        className={styles['volume-slider']}
+                        volume={volume}
+                        onVolumeChangeRequested={onVolumeChangeRequested}
+                    />
+                }
                 <div className={styles['spacing']} />
                 <Button className={styles['control-bar-buttons-menu-button']} onClick={toogleButtonsMenu}>
                     <Icon className={styles['icon']} name={'more-vertical'} />
