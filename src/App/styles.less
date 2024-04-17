@@ -99,8 +99,8 @@ html {
     --calculated-bottom-safe-inset: 0px;
 
     @media (display-mode: standalone) {
-        width: ~"100lvw";
-        height: ~"100lvh";
+        width: ~"max(100%, 100lvw)";
+        height: ~"max(100% 100lvh)";
 
         // iOS pads the bottom inset more than needed, so we deduce the actual inset size when using the webapp
         --calculated-bottom-safe-inset: ~"min(env(safe-area-inset-bottom, 0px), max(16px, calc(100lvh - 100svh - env(safe-area-inset-top, 0px))))";

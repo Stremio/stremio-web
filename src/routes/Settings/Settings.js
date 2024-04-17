@@ -147,7 +147,7 @@ const Settings = () => {
     const updateSelectedSectionId = React.useCallback(() => {
         const panelScrollPaddingTop = parseFloat(getComputedStyle(sectionsContainerRef.current).scrollPaddingTop) || 0;
 
-        if (sectionsContainerRef.current.scrollTop + sectionsContainerRef.current.clientHeight >= sectionsContainerRef.current.scrollHeight - 50) {
+        if (sectionsContainerRef.current.scrollTop + panelScrollPaddingTop + sectionsContainerRef.current.clientHeight >= sectionsContainerRef.current.scrollHeight - 50) {
             setSelectedSectionId(sections[sections.length - 1].id);
         } else {
             for (let i = sections.length - 1; i >= 0; i--) {
