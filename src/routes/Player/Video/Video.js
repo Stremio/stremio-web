@@ -10,7 +10,7 @@ const MobileControlOverlay = require('./MobileControlOverlay');
 const isMobile = platform.isMobile();
 
 const Video = React.forwardRef(({
-    className, paused, overlayHidden, setOverlayVisibility, onPlayPause, toggleFullscreen, fullScreenActive,
+    className, paused, overlayHidden, setOverlayHidden, onPlayPause, toggleFullscreen, fullScreenActive,
     onSkip10Seconds, onGoBack10Seconds
 }, ref) => {
     if (isMobile) {
@@ -19,7 +19,7 @@ const Video = React.forwardRef(({
                 <MobileControlOverlay
                     paused={paused}
                     visible={!overlayHidden}
-                    setVisibility={setOverlayVisibility}
+                    setHidden={setOverlayHidden}
                     onPlayPause={onPlayPause}
                     onSlideUp={
                         fullScreenActive
@@ -48,7 +48,7 @@ Video.propTypes = {
     className: PropTypes.string,
     paused: PropTypes.bool,
     overlayHidden: PropTypes.bool,
-    setOverlayVisibility: PropTypes.func,
+    setOverlayHidden: PropTypes.func,
     onPlayPause: PropTypes.func,
     toggleFullscreen: PropTypes.func,
     fullScreenActive: PropTypes.bool,

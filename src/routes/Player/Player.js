@@ -8,7 +8,7 @@ const langs = require('langs');
 const { useTranslation } = require('react-i18next');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
-const { HorizontalNavBar, useFullscreen, useBinaryState, useToast, useStreamingServer, withCoreSuspender } = require('stremio/common');
+const { HorizontalNavBar, useFullscreen, useBinaryState, useToast, useStreamingServer, withCoreSuspender, platform } = require('stremio/common');
 const BufferingLoader = require('./BufferingLoader');
 const VolumeChangeIndicator = require('./VolumeChangeIndicator');
 const Error = require('./Error');
@@ -26,6 +26,8 @@ const useStatistics = require('./useStatistics');
 const useVideo = require('./useVideo');
 const styles = require('./styles');
 const Video = require('./Video');
+
+const isMobile = platform.isMobile();
 
 const Player = ({ urlParams, queryParams }) => {
     const { t } = useTranslation();
@@ -73,7 +75,7 @@ const Player = ({ urlParams, queryParams }) => {
     }, []);
 
     const overlayHidden = React.useMemo(() => {
-        return immersed && !casting && video.state.paused !== null && !video.state.paused && !menusOpen && !nextVideoPopupOpen;
+        return immersed && !casting && video.state.paused !== null && !menusOpen && !nextVideoPopupOpen;
     }, [immersed, casting, video.state.paused, menusOpen, nextVideoPopupOpen]);
 
     const nextVideoPopupDismissed = React.useRef(false);
@@ -228,9 +230,15 @@ const Player = ({ urlParams, queryParams }) => {
     const onPlayPauseClick = React.useCallback(() => {
         if (video.state.paused !== null) {
             if (video.state.paused) {
-                onPlayRequestedDebounced();
+                if (isMobile)
+                    onPlayRequested();
+                else
+                    onPlayRequestedDebounced();
             } else {
-                onPauseRequestedDebounced();
+                if (isMobile)
+                    onPauseRequested();
+                else
+                    onPauseRequestedDebounced();
             }
         }
     }, [video.state.paused]);
@@ -263,6 +271,9 @@ const Player = ({ urlParams, queryParams }) => {
     }, []);
 
     const onContainerMouseMove = React.useCallback((event) => {
+        if (isMobile)
+            return;
+
         setImmersed(false);
         if (!event.nativeEvent.immersePrevented) {
             setImmersedDebounced(true);
@@ -272,6 +283,9 @@ const Player = ({ urlParams, queryParams }) => {
     }, []);
 
     const onContainerMouseLeave = React.useCallback(() => {
+        if (isMobile)
+            return;
+
         setImmersedDebounced.cancel();
         setImmersed(true);
     }, []);
@@ -627,7 +641,7 @@ const Player = ({ urlParams, queryParams }) => {
                 toggleFullscreen={onToggleFullscreen}
                 fullScreenActive={fullScreenActive}
                 overlayHidden={overlayHidden || video.state.buffering}
-                setOverlayVisibility={setImmersed}
+                setOverlayHidden={setImmersed}
                 paused={video.state.paused}
                 onSkip10Seconds={seek10secondsForward}
                 onGoBack10Seconds={seek10secondsBackward}

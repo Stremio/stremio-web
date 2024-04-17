@@ -12,9 +12,24 @@ const maxDelayToBeConsideredTap = 150;
 const maxDelayBetweenTapsToBeConsideredDoubleTap = 300;
 const middleGapExcludedFromSideGestures = 100;
 
-const MobileControlOverlay = ({ className, paused, visible, setVisibility, onPlayPause, onSlideUp, onSkip10Seconds, onGoBack10Seconds }) => {
+const MobileControlOverlay = ({ className, paused, visible, setHidden, onPlayPause, onSlideUp, onSkip10Seconds, onGoBack10Seconds }) => {
     const ref = React.useRef();
     const buttonsRef = React.useRef();
+
+    const pausedRef = React.useRef();
+    pausedRef.current = paused;
+
+    const setHiddenRef = React.useRef();
+    setHiddenRef.current = setHidden;
+
+    const onSlideUpRef = React.useRef();
+    onSlideUpRef.current = onSlideUp;
+
+    const onSkip10SecondsRef = React.useRef();
+    onSkip10SecondsRef.current = onSkip10Seconds;
+
+    const onGoBack10SecondsRef = React.useRef();
+    onGoBack10SecondsRef.current = onGoBack10Seconds;
 
     React.useLayoutEffect(() => {
         if (ref.current === undefined || ref.current === null)
@@ -39,19 +54,19 @@ const MobileControlOverlay = ({ className, paused, visible, setVisibility, onPla
 
             if (x < screenMiddleX - (middleGapExcludedFromSideGestures / 2)) {
                 if (onGoBack10Seconds instanceof Function)
-                    onGoBack10Seconds();
+                    onGoBack10SecondsRef.current();
 
-                setVisibility(false);
+                setHiddenRef.current(!pausedRef.current);
             } else if (x > screenMiddleX + (middleGapExcludedFromSideGestures / 2)) {
                 if (onSkip10Seconds instanceof Function)
-                    onSkip10Seconds();
+                    onSkip10SecondsRef.current();
 
-                setVisibility(false);
+                setHiddenRef.current(!pausedRef.current);
             }
         }
 
         function onSingleTap() {
-            setVisibility((visible) => !visible);
+            setHiddenRef.current((visible) => !visible);
         }
 
         function onTouchStart(event) {
@@ -115,7 +130,7 @@ const MobileControlOverlay = ({ className, paused, visible, setVisibility, onPla
                 }
             } else if (Math.abs(deltaY) > minMoveDeltaToBeConsideredDirectionGesture) {
                 if (!triggeredAction && deltaY > 0) {
-                    onSlideUp();
+                    onSlideUpRef.current();
                     triggeredAction = true;
                 }
             }
@@ -173,8 +188,9 @@ const MobileControlOverlay = ({ className, paused, visible, setVisibility, onPla
         const rect = event.currentTarget.getBoundingClientRect();
         if (touch.clientX >= rect.left && touch.clientX <= rect.right && touch.clientY >= rect.top && touch.clientY <= rect.bottom) {
             onPlayPause();
+            setHiddenRef.current(paused);
         }
-    }, [onPlayPause]);
+    }, [onPlayPause, paused]);
 
     return (
         <div className={classnames(className, styles['video-mobile-control-overlay'], { [styles['show']]: visible })} ref={ref}>
@@ -194,7 +210,7 @@ MobileControlOverlay.propTypes = {
     className: PropTypes.string,
     paused: PropTypes.bool,
     visible: PropTypes.bool,
-    setVisibility: PropTypes.func,
+    setHidden: PropTypes.func,
     onPlayPause: PropTypes.func,
     onSlideUp: PropTypes.func,
     onSkip10Seconds: PropTypes.func,

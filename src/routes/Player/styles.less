@@ -20,7 +20,7 @@ html:not(.active-slider-within) {
 
         .nav-bar-layer, .control-bar-layer, .menu-layer {
             opacity: 0;
-            transition: opacity ease-in-out 200ms;
+            transition: opacity ease-in-out 150ms;
         }
     }
 }
@@ -31,6 +31,10 @@ html:not(.active-slider-within) {
     width: 100%;
     height: 100%;
     background-color: @background-color;
+
+    .nav-bar-layer, .control-bar-layer, .menu-layer {
+        transition: opacity ease-in-out 200ms;
+    }
 
     .layer {
         position: absolute;
