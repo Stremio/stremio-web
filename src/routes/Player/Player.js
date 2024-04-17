@@ -294,6 +294,10 @@ const Player = ({ urlParams, queryParams }) => {
         event.nativeEvent.immersePrevented = true;
     }, []);
 
+    const toggleImmersion = React.useCallback(() => {
+        setImmersed((immersed) => !immersed);
+    }, [setImmersed]);
+
     React.useEffect(() => {
         setError(null);
         if (player.selected === null) {
@@ -648,7 +652,11 @@ const Player = ({ urlParams, queryParams }) => {
             />
             {
                 video.state.buffering ?
-                    <BufferingLoader className={styles['layer']} logo={player?.metaItem?.content?.logo} />
+                    <BufferingLoader
+                        className={styles['layer']}
+                        logo={player?.metaItem?.content?.logo}
+                        onClick={isMobile ? toggleImmersion : null}
+                    />
                     :
                     null
             }
