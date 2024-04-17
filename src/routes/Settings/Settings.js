@@ -145,11 +145,13 @@ const Settings = () => {
     ]), []);
     const [selectedSectionId, setSelectedSectionId] = React.useState(GENERAL_SECTION);
     const updateSelectedSectionId = React.useCallback(() => {
+        const panelScrollPaddingTop = parseFloat(getComputedStyle(sectionsContainerRef.current).scrollPaddingTop) || 0;
+
         if (sectionsContainerRef.current.scrollTop + sectionsContainerRef.current.clientHeight >= sectionsContainerRef.current.scrollHeight - 50) {
             setSelectedSectionId(sections[sections.length - 1].id);
         } else {
             for (let i = sections.length - 1; i >= 0; i--) {
-                if (sections[i].ref.current.offsetTop - sectionsContainerRef.current.offsetTop <= sectionsContainerRef.current.scrollTop) {
+                if (sections[i].ref.current.offsetTop - panelScrollPaddingTop - sectionsContainerRef.current.offsetTop <= sectionsContainerRef.current.scrollTop) {
                     setSelectedSectionId(sections[i].id);
                     break;
                 }
@@ -161,7 +163,7 @@ const Settings = () => {
             return section.id === event.currentTarget.dataset.section;
         });
         sectionsContainerRef.current.scrollTo({
-            top: section.ref.current.offsetTop - sectionsContainerRef.current.offsetTop,
+            top: section.ref.current.offsetTop - (parseFloat(getComputedStyle(sectionsContainerRef.current).scrollPaddingTop) || 0) - sectionsContainerRef.current.offsetTop,
             behavior: 'smooth'
         });
     }, []);
