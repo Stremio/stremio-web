@@ -7,14 +7,17 @@ const { default: Icon } = require('@stremio/stremio-icons/react');
 const styles = require('./styles');
 
 const moveDeltaToBeConsideredGesture = 10;
-const minMoveDeltaToBeConsideredDirectionGesture = 100;
+const minMoveDeltaToBeConsideredDirectionGesture = () => window.innerHeight / 2;
 const maxDelayToBeConsideredTap = 150;
 const maxDelayBetweenTapsToBeConsideredDoubleTap = 300;
 const middleGapExcludedFromSideGestures = 100;
 
-const MobileControlOverlay = ({ className, paused, visible, setHidden, onPlayPause, onSlideUp, onSkip10Seconds, onGoBack10Seconds }) => {
+const MobileControlOverlay = ({ className, paused, visible, setHidden, onPlayPause, onSlideUp, onSlideDown, onSkip10Seconds, onGoBack10Seconds }) => {
     const ref = React.useRef();
     const buttonsRef = React.useRef();
+
+    const visibleRef = React.useRef();
+    visibleRef.current = visible;
 
     const pausedRef = React.useRef();
     pausedRef.current = paused;
@@ -24,6 +27,9 @@ const MobileControlOverlay = ({ className, paused, visible, setHidden, onPlayPau
 
     const onSlideUpRef = React.useRef();
     onSlideUpRef.current = onSlideUp;
+
+    const onSlideDownRef = React.useRef();
+    onSlideDownRef.current = onSlideDown;
 
     const onSkip10SecondsRef = React.useRef();
     onSkip10SecondsRef.current = onSkip10Seconds;
@@ -75,7 +81,7 @@ const MobileControlOverlay = ({ className, paused, visible, setHidden, onPlayPau
             )
                 return;
 
-            // event.preventDefault();
+            event.preventDefault();
 
             const touch = event.touches[0];
             touchStartTime = Date.now();
@@ -128,9 +134,12 @@ const MobileControlOverlay = ({ className, paused, visible, setHidden, onPlayPau
                     onSingleTap();
                     triggeredAction = true;
                 }
-            } else if (Math.abs(deltaY) > minMoveDeltaToBeConsideredDirectionGesture) {
-                if (!triggeredAction && deltaY > 0) {
+            } else if (Math.abs(deltaY) > minMoveDeltaToBeConsideredDirectionGesture()) {
+                if (!triggeredAction && deltaY < 0) {
                     onSlideUpRef.current();
+                    triggeredAction = true;
+                } else if (!triggeredAction && deltaY > 0) {
+                    onSlideDownRef.current();
                     triggeredAction = true;
                 }
             }
@@ -190,6 +199,9 @@ const MobileControlOverlay = ({ className, paused, visible, setHidden, onPlayPau
             onPlayPause();
             setHiddenRef.current(paused);
         }
+
+        if (!visibleRef.current)
+            event.preventDefault();
     }, [onPlayPause, paused]);
 
     return (
@@ -213,6 +225,7 @@ MobileControlOverlay.propTypes = {
     setHidden: PropTypes.func,
     onPlayPause: PropTypes.func,
     onSlideUp: PropTypes.func,
+    onSlideDown: PropTypes.func,
     onSkip10Seconds: PropTypes.func,
     onGoBack10Seconds: PropTypes.func,
 };

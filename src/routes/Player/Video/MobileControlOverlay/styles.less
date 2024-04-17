@@ -17,6 +17,12 @@
     &.show {
         opacity: 1;
         transition: opacity ease-in-out 200ms;
+
+        .buttons .button {
+            &:active {
+                background-color: rgba(100, 100, 100, 0.24);
+            }
+        }
     }
 
     .buttons {
@@ -37,10 +43,6 @@
             transition: background-color ease-in-out 200ms;
             background-color: rgba(0,0,0,0.24);
             border-radius: 9999px;
-
-            &:active {
-                background-color: rgba(100, 100, 100, 0.24);
-            }
 
             .icon {
                 width: 2.5rem;

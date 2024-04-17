@@ -26,6 +26,11 @@ const Video = React.forwardRef(({
                             ? doNothing
                             : toggleFullscreen
                     }
+                    onSlideDown={
+                        fullScreenActive
+                            ? toggleFullscreen
+                            : doNothing
+                    }
                     fullScreenActive={fullScreenActive}
                     onSkip10Seconds={onSkip10Seconds}
                     onGoBack10Seconds={onGoBack10Seconds}
