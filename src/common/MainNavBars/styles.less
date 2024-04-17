@@ -6,9 +6,9 @@
     position: relative;
     z-index: 0;
     overflow: clip;
-    margin-left: env(safe-area-inset-left, 0px);
-    margin-right: env(safe-area-inset-right, 0px);
-    width: calc(100% - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px));
+    margin-left: var(--safe-area-inset-left, 0px);
+    margin-right: var(--safe-area-inset-right, 0px);
+    width: calc(100% - var(--safe-area-inset-left, 0px) - var(--safe-area-inset-right, 0px));
     height: 100%;
 
     .horizontal-nav-bar {
@@ -29,7 +29,7 @@
 
     .nav-content-container {
         position: absolute;
-        padding-top: calc(var(--horizontal-nav-bar-size) + env(safe-area-inset-top, 0px));
+        padding-top: calc(var(--horizontal-nav-bar-size) + var(--safe-area-inset-top, 0px));
         top: 0;
         right: 0;
         bottom: 0;
@@ -37,7 +37,7 @@
         z-index: 0;
         overflow: scroll;
 
-        --top-overlay-size: calc(var(--horizontal-nav-bar-size) + env(safe-area-inset-top, 0px));
+        --top-overlay-size: calc(var(--horizontal-nav-bar-size) + var(--safe-area-inset-top, 0px));
         --bottom-overlay-size: calc(var(--vertical-nav-bar-size) + var(--calculated-bottom-safe-inset, 0px));
         --overlap-size: 3rem;
         --transparency-grandient-pad: 6rem;

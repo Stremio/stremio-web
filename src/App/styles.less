@@ -96,11 +96,15 @@ html {
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
 
+    --safe-area-inset-top: env(safe-area-inset-top, 0px);
+    --safe-area-inset-right: env(safe-area-inset-right, 0px);
+    --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-area-inset-left: env(safe-area-inset-left, 0px);
     --calculated-bottom-safe-inset: 0px;
 
     @media (display-mode: standalone) {
         width: ~"max(100%, 100lvw)";
-        height: ~"max(100% 100lvh)";
+        height: ~"max(100%, 100lvh)";
 
         // iOS pads the bottom inset more than needed, so we deduce the actual inset size when using the webapp
         --calculated-bottom-safe-inset: ~"min(env(safe-area-inset-bottom, 0px), max(16px, calc(100lvh - 100svh - env(safe-area-inset-top, 0px))))";
@@ -119,8 +123,8 @@ html {
 
             .toasts-container {
                 position: absolute;
-                top: calc(1.2 * var(--horizontal-nav-bar-size) + env(safe-area-inset-top, 0px));
-                right: env(safe-area-inset-right, 0px);
+                top: calc(1.2 * var(--horizontal-nav-bar-size) + var(--safe-area-inset-top, 0px));
+                right: var(--safe-area-inset-right, 0px);
                 bottom: calc(1.2 * var(--horizontal-nav-bar-size) + var(--calculated-bottom-safe-inset, 0px));
                 left: auto;
                 z-index: 1;

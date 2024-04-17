@@ -12,7 +12,7 @@
     padding-right: 1rem;
     background-color: transparent;
     overflow: visible;
-    padding-top: env(safe-area-inset-top,0px);
+    padding-top: var(--safe-area-inset-top,0px);
     box-sizing: content-box;
 
     .logo-container {
@@ -34,7 +34,7 @@
     }
 
     .back-button-container {
-        margin-left: ~"max(0px, calc(1rem - env(safe-area-inset-left, 0px)))";
+        margin-left: ~"max(0px, calc(1rem - var(--safe-area-inset-left, 0px)))";
     }
 
     .title {
