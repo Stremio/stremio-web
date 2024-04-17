@@ -3,6 +3,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
+const usePageFocus = require('./usePageFocus');
 const styles = require('./styles');
 const {platform} = require('stremio/common');
 const MobileControlOverlay = require('./MobileControlOverlay');
@@ -13,9 +14,15 @@ const Video = React.forwardRef(({
     className, paused, overlayHidden, setOverlayHidden, onPlayPause, toggleFullscreen, fullScreenActive,
     onSkip10Seconds, onGoBack10Seconds
 }, ref) => {
+    const pageFocused = usePageFocus();
+
     if (isMobile) {
         return (
             <div className={classnames(className, styles['video-container'])}>
+                {
+                    platform.name === 'ios' &&
+                    <div className={classnames(styles['ios-system-navigation-pill-hide'], {hide: !overlayHidden || !pageFocused})} />
+                }
                 <MobileControlOverlay
                     paused={paused}
                     visible={!overlayHidden}

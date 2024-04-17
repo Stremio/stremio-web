@@ -21,4 +21,51 @@
             font-size: inherit;
         }
     }
+
+    // this workaround pains a white pill under the iOS navigation bar pill,
+    // causing it to invert its color to back and integrate with the background of most videos in this area
+    .ios-system-navigation-pill-hide {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        pointer-events: none;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+        transition: opacity 0.2s ease-out;
+
+        &.hide {
+            opacity: 0;
+        }
+
+        // only show a negative navigation pill for knows screen sizes
+        // iPhone 14/15 Plus/Promax - portrait
+        @media only screen and (orientation: portrait) and (width: 430px) {
+            &:after {
+                content: "";
+                display: block;
+                background-color: white;
+                border-radius: 8px;
+                height: 5px;
+                width: 151px;
+                margin-bottom: 8px;
+            }
+        }
+
+        // iPhone 14/15 Plus/Promax - landscape
+        @media only screen and (orientation: landscape) and (width: 932px) {
+            &:after {
+                content: "";
+                display: block;
+                background-color: white;
+                border-radius: 8px;
+                height: 5px;
+                width: 237px;
+                margin-bottom: 8px;
+            }
+        }
+    }
 }
