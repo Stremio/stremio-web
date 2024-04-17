@@ -1,3 +1,5 @@
+// Copyright (C) 2017-2023 Smart code 203358507
+
 let supportsVideoVolume = true;
 
 // on iOS Safari, the video volume is always 1, regardless of what is being set
