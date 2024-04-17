@@ -23,12 +23,12 @@ jobs:
         run: npm test
       - name: Lint
         run: npm run lint
-      - name: Upload docs to GitHub Pages
+      - name: Upload build to GitHub Pages
         uses: actions/upload-pages-artifact@v3
         with:
           name: stremio-web
           path: build
-      - name: Deploy docs to GitHub Pages
+      - name: Deploy build to GitHub Pages
         uses: actions/deploy-pages@v4
         with:
           artifact_name: stremio-web
