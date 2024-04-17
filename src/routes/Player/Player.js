@@ -51,7 +51,7 @@ const Player = ({ urlParams, queryParams }) => {
 
     const [immersed, setImmersed] = React.useState(true);
     const setImmersedDebounced = React.useCallback(debounce(setImmersed, 3000), []);
-    const [fullScreenActive, , , toggleFullscreen] = useFullscreen();
+    const [fullScreenActive, , , toggleFullscreen] = useFullscreen(video.containerElement);
 
     const [optionsMenuOpen, , closeOptionsMenu, toggleOptionsMenu] = useBinaryState(false);
     const [subtitlesMenuOpen, , closeSubtitlesMenu, toggleSubtitlesMenu] = useBinaryState(false);
