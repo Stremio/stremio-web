@@ -34,6 +34,7 @@
             margin-top: calc(var(--selectable-inputs-assumed-height) * -1);
             padding: 0 1.5rem;
             padding-top: var(--selectable-inputs-assumed-height);
+            scroll-padding-top: var(--selectable-inputs-assumed-height);
             padding-bottom: var(--bottom-overlay-size, 0px);
 
             mask: linear-gradient(
@@ -98,9 +99,11 @@
                     margin-bottom: 1rem;
                     background-color: var(--secondary-accent-color);
 
-                    &:hover {
-                        outline: var(--focus-outline-size) solid var(--secondary-accent-color);
-                        background-color: transparent;
+                    @media (pointer: fine) {
+                        &:hover {
+                            outline: var(--focus-outline-size) solid var(--secondary-accent-color);
+                            background-color: transparent;
+                        }
                     }
 
                     .label {

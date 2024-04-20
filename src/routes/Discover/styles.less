@@ -53,6 +53,7 @@
                 padding: 0 1.5rem;
                 padding-top: var(--selectable-inputs-assumed-height);
                 padding-bottom: var(--bottom-overlay-size, 0px);
+                scroll-padding-top: var(--selectable-inputs-assumed-height);
     
                 mask: linear-gradient(
                     to bottom,
@@ -136,9 +137,11 @@
                     padding: 1rem;
                     background-color: var(--secondary-accent-color);
 
-                    &:hover {
-                        outline: var(--focus-outline-size) solid var(--secondary-accent-color);
-                        background-color: transparent;
+                    @media (pointer: fine) {
+                        &:hover {
+                            outline: var(--focus-outline-size) solid var(--secondary-accent-color);
+                            background-color: transparent;
+                        }
                     }
 
                     &:focus {

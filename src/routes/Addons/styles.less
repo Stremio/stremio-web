@@ -45,6 +45,7 @@
             padding: 0 1.5rem;
             padding-top: var(--selectable-inputs-assumed-height);
             padding-bottom: var(--bottom-overlay-size, 0px);
+            scroll-padding-top: var(--selectable-inputs-assumed-height);
 
             mask: linear-gradient(
                 to bottom,
@@ -78,9 +79,11 @@
                 background-color: var(--secondary-accent-color);
                 z-index: 3;
 
-                &:hover {
-                    outline: var(--focus-outline-size) solid var(--secondary-accent-color);
-                    background-color: transparent;
+                @media (pointer: fine) {
+                    &:hover {
+                        outline: var(--focus-outline-size) solid var(--secondary-accent-color);
+                        background-color: transparent;
+                    }
                 }
 
                 &:focus {
@@ -206,8 +209,10 @@
             outline: var(--focus-outline-size) solid var(--overlay-color);
             outline-offset: calc(-1 * var(--focus-outline-size));
 
-            &:hover {
-                outline-color: var(--primary-foreground-color);
+            @media (pointer: fine) {
+                &:hover {
+                    outline-color: var(--primary-foreground-color);
+                }
             }
 
             &:focus {
@@ -220,9 +225,11 @@
         background-color: transparent;
         opacity: 0.3;
 
-        &:hover {
-            outline: var(--focus-outline-size) solid var(--primary-foreground-color);
-            opacity: 1;
+        @media (pointer: fine) {
+            &:hover {
+                outline: var(--focus-outline-size) solid var(--primary-foreground-color);
+                opacity: 1;
+            }
         }
 
         &:focus {
