@@ -48,6 +48,7 @@ const Player = ({ urlParams, queryParams }) => {
     const [casting, setCasting] = React.useState(() => {
         return chromecast.active && chromecast.transport.getCastState() === cast.framework.CastState.CONNECTED;
     });
+    const [airplayActive, setAirplayActive] = React.useState(false);
 
     const [immersed, setImmersed] = React.useState(true);
     const setImmersedDebounced = React.useCallback(debounce(setImmersed, 3000), []);
@@ -75,8 +76,8 @@ const Player = ({ urlParams, queryParams }) => {
     }, []);
 
     const overlayHidden = React.useMemo(() => {
-        return immersed && !casting && video.state.paused !== null && (!video.state.paused || isMobile) && !menusOpen && !nextVideoPopupOpen;
-    }, [immersed, casting, video.state.paused, menusOpen, nextVideoPopupOpen]);
+        return immersed && !casting && !airplayActive && video.state.paused !== null && (!video.state.paused || isMobile) && !menusOpen && !nextVideoPopupOpen;
+    }, [immersed, casting, airplayActive, video.state.paused, menusOpen, nextVideoPopupOpen]);
 
     const nextVideoPopupDismissed = React.useRef(false);
     const defaultSubtitlesSelected = React.useRef(false);
@@ -323,7 +324,7 @@ const Player = ({ urlParams, queryParams }) => {
                     player.libraryItem.state.timeOffset
                     :
                     0,
-                forceTranscoding: forceTranscoding || casting,
+                forceTranscoding: forceTranscoding || casting || airplayActive,
                 maxAudioChannels: settings.surroundSound ? 32 : 2,
                 streamingServerURL: streamingServer.baseUrl ?
                     casting ?
@@ -338,7 +339,7 @@ const Player = ({ urlParams, queryParams }) => {
                 shellTransport: shell.active ? shell.transport : null,
             });
         }
-    }, [streamingServer.baseUrl, player.selected, player.metaItem, forceTranscoding, casting]);
+    }, [streamingServer.baseUrl, player.selected, player.metaItem, forceTranscoding, casting, airplayActive]);
     React.useEffect(() => {
         if (video.state.stream !== null) {
             const tracks = player.subtitles.map((subtitles) => ({
@@ -709,6 +710,7 @@ const Player = ({ urlParams, queryParams }) => {
                 nextVideo={player.nextVideo}
                 stream={player.selected !== null ? player.selected.stream : null}
                 videoContainerElementRef={video.containerElement}
+                setAirplayActive={setAirplayActive}
                 statistics={statistics}
                 onPlayRequested={onPlayRequested}
                 onPauseRequested={onPauseRequested}

@@ -45,6 +45,7 @@ const ControlBar = ({
     onToggleOptionsMenu,
     onToggleStatisticsMenu,
     videoContainerElementRef,
+    setAirplayActive,
     ...props
 }) => {
     const { chromecast } = useServices();
@@ -52,6 +53,10 @@ const ControlBar = ({
     const [chromecastServiceActive, setChromecastServiceActive] = React.useState(() => chromecast.active);
     const [airplayAvailable, setAirplayAvailable] = React.useState(false);
     const [buttonsMenuOpen, , , toogleButtonsMenu] = useBinaryState(false);
+
+    const setAirplayActiveRef = React.useRef();
+    setAirplayActiveRef.current = setAirplayActive;
+
     const getVideoElement = React.useCallback(() => {
         if (videoContainerElementRef && videoContainerElementRef.current) {
             if (videoContainerElementRef.current instanceof HTMLVideoElement)
@@ -78,15 +83,23 @@ const ControlBar = ({
             }
         }
 
+        function airplayActiveChanged() {
+            if (setAirplayActiveRef.current)
+                setAirplayActiveRef.current(!!videoTag.webkitCurrentPlaybackTargetIsWireless);
+        }
+
         if (window.WebKitPlaybackTargetAvailabilityEvent) {
             videoTag.addEventListener('webkitplaybacktargetavailabilitychanged', onAirplayAvailabilityChanged);
+            videoTag.addEventListener('webkitcurrentplaybacktargetiswirelesschanged', airplayActiveChanged);
 
             setAirplayAvailable(!!videoTag.webkitWirelessVideoPlaybackDisabled);
+            airplayActiveChanged();
         }
 
         return () => {
             if (window.WebKitPlaybackTargetAvailabilityEvent) {
                 videoTag.removeEventListener('webkitplaybacktargetavailabilitychanged', onAirplayAvailabilityChanged);
+                videoTag.removeEventListener('webkitcurrentplaybacktargetiswirelesschanged', airplayActiveChanged);
             }
         };
     }, [getVideoElement()]);
@@ -273,6 +286,7 @@ ControlBar.propTypes = {
     onToggleOptionsMenu: PropTypes.func,
     onToggleStatisticsMenu: PropTypes.func,
     videoContainerElementRef: PropTypes.object,
+    setAirplayActive: PropTypes.func,
 };
 
 module.exports = ControlBar;
