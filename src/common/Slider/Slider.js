@@ -31,14 +31,20 @@ const Slider = ({ className, value, buffered, minimumValue, maximumValue, disabl
     const retainThumb = React.useCallback(() => {
         window.addEventListener('blur', onBlur);
         window.addEventListener('mouseup', onMouseUp);
+        window.addEventListener('touchend', releaseThumb);
+        window.addEventListener('touchcancel', releaseThumb);
         window.addEventListener('mousemove', onMouseMove);
+        window.addEventListener('touchmove', onTouchMove);
         document.documentElement.className = classnames(document.documentElement.className, styles['active-slider-within']);
     }, []);
     const releaseThumb = React.useCallback(() => {
         cancelThumbAnimation();
         window.removeEventListener('blur', onBlur);
         window.removeEventListener('mouseup', onMouseUp);
+        window.removeEventListener('touchend', releaseThumb);
+        window.removeEventListener('touchcancel', releaseThumb);
         window.removeEventListener('mousemove', onMouseMove);
+        window.removeEventListener('touchmove', onTouchMove);
         const classList = document.documentElement.className.split(' ');
         const classIndex = classList.indexOf(styles['active-slider-within']);
         if (classIndex !== -1) {
@@ -73,6 +79,14 @@ const Slider = ({ className, value, buffered, minimumValue, maximumValue, disabl
             }
         });
     }, []);
+    const onTouchMove = React.useCallback((event) => {
+        requestThumbAnimation(() => {
+            const value = calculateValueForMouseX(event.touches[0].clientX);
+            if (typeof onSlideRef.current === 'function') {
+                onSlideRef.current(value);
+            }
+        });
+    }, []);
     const onMouseDown = React.useCallback((event) => {
         if (event.button !== 0) {
             return;
@@ -85,20 +99,37 @@ const Slider = ({ className, value, buffered, minimumValue, maximumValue, disabl
 
         retainThumb();
     }, []);
+    const onTouchStart = React.useCallback((event) => {
+        if (event.touches.length !== 1) {
+            return;
+        }
+
+        const value = calculateValueForMouseX(event.touches[0].clientX);
+        if (typeof onSlideRef.current === 'function') {
+            onSlideRef.current(value);
+        }
+
+        retainThumb();
+    }, []);
     React.useLayoutEffect(() => {
         if (!routeFocused || disabled) {
             releaseThumb();
         }
     }, [routeFocused, disabled]);
     React.useLayoutEffect(() => {
+        sliderContainerRef.current.addEventListener('mousedown', onMouseDown, {passive: false, capture: true});
+        sliderContainerRef.current.addEventListener('touchstart', onTouchStart, {passive: false, capture: true});
+
         return () => {
+            sliderContainerRef.current.removeEventListener('mousedown', onMouseDown, {passive: false, capture: true});
+            sliderContainerRef.current.removeEventListener('touchstart', onTouchStart, {passive: false, capture: true});
             releaseThumb();
         };
     }, []);
     const thumbPosition = Math.max(0, Math.min(1, (valueRef.current - minimumValueRef.current) / (maximumValueRef.current - minimumValueRef.current)));
     const bufferedPosition = Math.max(0, Math.min(1, (bufferedRef.current - minimumValueRef.current) / (maximumValueRef.current - minimumValueRef.current)));
     return (
-        <div ref={sliderContainerRef} className={classnames(className, styles['slider-container'], { 'disabled': disabled })} onMouseDown={onMouseDown}>
+        <div ref={sliderContainerRef} className={classnames(className, styles['slider-container'], { 'disabled': disabled })}>
             <div className={styles['layer']}>
                 <div className={styles['track']} />
             </div>
