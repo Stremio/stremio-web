@@ -6,17 +6,51 @@
     }
 
     animation-timing-function: ease-in-out;
-    animation-duration: 100ms;
+    animation-duration: 350ms;
+
+    @media (prefers-reduced-motion) {
+        :local {
+            animation-name: fade-in-no-motion;
+        }
+    }
 }
 
 @keyframes fade-in {
     0% {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+
+    40% {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+
+    70% {
         opacity: 0.6;
-        transform: translateY(0.2vh);
+        transform: translateY(2px);
     }
 
     100% {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+@keyframes fade-in-no-motion {
+    0% {
+        opacity: 0;
+    }
+
+    40% {
+        opacity: 0;
+    }
+
+    70% {
+        opacity: 0.6;
+    }
+
+    100% {
+        opacity: 1;
     }
 }

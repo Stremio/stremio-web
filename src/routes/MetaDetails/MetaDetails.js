@@ -137,7 +137,7 @@ const MetaDetails = ({ urlParams, queryParams }) => {
                                     :
                                     <React.Fragment>
                                         <MetaPreview
-                                            className={classnames(styles['meta-preview'], 'animation-fade-in')}
+                                            className={classnames(styles['meta-preview'])}
                                             name={metaDetails.metaItem.content.content.name}
                                             logo={metaDetails.metaItem.content.content.logo}
                                             runtime={metaDetails.metaItem.content.content.runtime}
