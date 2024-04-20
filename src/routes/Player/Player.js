@@ -708,6 +708,7 @@ const Player = ({ urlParams, queryParams }) => {
                 metaItem={player.metaItem}
                 nextVideo={player.nextVideo}
                 stream={player.selected !== null ? player.selected.stream : null}
+                videoContainerElementRef={video.containerElement}
                 statistics={statistics}
                 onPlayRequested={onPlayRequested}
                 onPauseRequested={onPauseRequested}

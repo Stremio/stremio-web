@@ -12,6 +12,7 @@ const styles = require('./styles');
 const { useBinaryState, platform } = require('stremio/common');
 const { t } = require('i18next');
 const useSupportsVideoVolume = require('./useSupportsVideoVolume');
+const AirplayIconSVG = require('./icons/AirplayIconSVG');
 
 const isMobile = platform.isMobile();
 
@@ -43,12 +44,52 @@ const ControlBar = ({
     onToggleVideosMenu,
     onToggleOptionsMenu,
     onToggleStatisticsMenu,
+    videoContainerElementRef,
     ...props
 }) => {
     const { chromecast } = useServices();
     const supportsVideoVolume = useSupportsVideoVolume();
     const [chromecastServiceActive, setChromecastServiceActive] = React.useState(() => chromecast.active);
+    const [airplayAvailable, setAirplayAvailable] = React.useState(false);
     const [buttonsMenuOpen, , , toogleButtonsMenu] = useBinaryState(false);
+    const getVideoElement = React.useCallback(() => {
+        if (videoContainerElementRef && videoContainerElementRef.current) {
+            if (videoContainerElementRef.current instanceof HTMLVideoElement)
+                return videoContainerElementRef.current;
+            else
+                return videoContainerElementRef.current.querySelector('video');
+        }
+
+        return null;
+    }, [videoContainerElementRef]);
+    React.useLayoutEffect(() => {
+        const videoTag = getVideoElement();
+        if (!videoTag)
+            return;
+
+        function onAirplayAvailabilityChanged(event) {
+            switch (event.availability) {
+                case 'available':
+                    setAirplayAvailable(true);
+                    break;
+                case 'not-available':
+                    setAirplayAvailable(false);
+                    break;
+            }
+        }
+
+        if (window.WebKitPlaybackTargetAvailabilityEvent) {
+            videoTag.addEventListener('webkitplaybacktargetavailabilitychanged', onAirplayAvailabilityChanged);
+
+            setAirplayAvailable(!!videoTag.webkitWirelessVideoPlaybackDisabled);
+        }
+
+        return () => {
+            if (window.WebKitPlaybackTargetAvailabilityEvent) {
+                videoTag.removeEventListener('webkitplaybacktargetavailabilitychanged', onAirplayAvailabilityChanged);
+            }
+        };
+    }, [getVideoElement()]);
     const onSubtitlesButtonMouseDown = React.useCallback((event) => {
         event.nativeEvent.subtitlesMenuClosePrevented = true;
     }, []);
@@ -96,6 +137,13 @@ const ControlBar = ({
     }, [muted, onMuteRequested, onUnmuteRequested]);
     const onChromecastButtonClick = React.useCallback(() => {
         chromecast.transport.requestSession();
+    }, []);
+    const onAirplayButtonClick = React.useCallback(() => {
+        const videoTag = getVideoElement();
+        if (!videoTag)
+            return;
+
+        videoTag.webkitShowPlaybackTargetPicker();
     }, []);
     React.useEffect(() => {
         const onStateChanged = () => {
@@ -164,9 +212,18 @@ const ControlBar = ({
                     <Button className={classnames(styles['control-bar-button'], { 'disabled': metaItem === null || metaItem.type !== 'Ready' })} tabIndex={-1} onMouseDown={onInfoButtonMouseDown} onClick={onToggleInfoMenu}>
                         <Icon className={styles['icon']} name={'about'} />
                     </Button>
-                    <Button className={classnames(styles['control-bar-button'], { 'disabled': !chromecastServiceActive })} tabIndex={-1} onClick={onChromecastButtonClick}>
-                        <Icon className={styles['icon']} name={'cast'} />
-                    </Button>
+                    {
+                        (platform.name !== 'ios' || chromecastServiceActive) &&
+                        <Button className={classnames(styles['control-bar-button'], { 'disabled': !chromecastServiceActive })} tabIndex={-1} onClick={onChromecastButtonClick}>
+                            <Icon className={styles['icon']} name={'cast'} />
+                        </Button>
+                    }
+                    {
+                        (platform.name === 'ios' || airplayAvailable) &&
+                        <Button className={classnames(styles['control-bar-button'], { 'disabled': !airplayAvailable })} tabIndex={-1} onClick={onAirplayButtonClick}>
+                            <AirplayIconSVG className={styles['icon']} />
+                        </Button>
+                    }
                     <Button className={classnames(styles['control-bar-button'], { 'disabled': (!Array.isArray(subtitlesTracks) || subtitlesTracks.length === 0) && (!Array.isArray(audioTracks) || audioTracks.length === 0) })} tabIndex={-1} onMouseDown={onSubtitlesButtonMouseDown} onClick={onToggleSubtitlesMenu}>
                         <Icon className={styles['icon']} name={'subtitles'} />
                     </Button>
@@ -215,6 +272,7 @@ ControlBar.propTypes = {
     onToggleVideosMenu: PropTypes.func,
     onToggleOptionsMenu: PropTypes.func,
     onToggleStatisticsMenu: PropTypes.func,
+    videoContainerElementRef: PropTypes.object,
 };
 
 module.exports = ControlBar;
