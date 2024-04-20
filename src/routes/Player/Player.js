@@ -692,6 +692,7 @@ const Player = ({ urlParams, queryParams }) => {
                 fullscreenButton={true}
                 onMouseMove={onBarMouseMove}
                 onMouseOver={onBarMouseMove}
+                reducedTouchSurface
             />
             <ControlBar
                 className={classnames(styles['layer'], styles['control-bar-layer'])}

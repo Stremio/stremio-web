@@ -6,11 +6,11 @@ const classnames = require('classnames');
 const { default: Icon } = require('@stremio/stremio-icons/react');
 const styles = require('./styles');
 
-const moveDeltaToBeConsideredGesture = 10;
+const moveDeltaToBeConsideredGesture = 50;
 const minMoveDeltaToBeConsideredDirectionGesture = () => window.innerHeight / 2;
-const maxDelayToBeConsideredTap = 150;
-const maxDelayBetweenTapsToBeConsideredDoubleTap = 300;
-const middleGapExcludedFromSideGestures = 100;
+const maxDelayToBeConsideredTap = 250;
+const maxDelayBetweenTapsToBeConsideredDoubleTap = 650;
+const middleGapExcludedFromSideGestures = 150;
 
 const MobileControlOverlay = ({ className, paused, visible, setHidden, onPlayPause, onSlideUp, onSlideDown, onSkip10Seconds, onGoBack10Seconds }) => {
     const ref = React.useRef();
@@ -75,39 +75,25 @@ const MobileControlOverlay = ({ className, paused, visible, setHidden, onPlayPau
             setHiddenRef.current((visible) => !visible);
         }
 
-        function onTouchStart(event) {
-            if (buttonsRef.current !== undefined && buttonsRef.current !== null &&
-                Array.from(buttonsRef.current.children).some((button) => button !== undefined && button !== null && button.contains(event.target))
-            )
-                return;
+        function onDone() {
+            touchActive = false;
+        }
 
-            event.preventDefault();
-
-            const touch = event.touches[0];
+        function onFingerDown(x, y) {
             touchStartTime = Date.now();
-            currentTouchStartX = touch.clientX;
-            currentTouchStartY = touch.clientY;
+            currentTouchStartX = x;
+            currentTouchStartY = y;
             lastMoveX = currentTouchStartX;
             lastMoveY = currentTouchStartY;
             touchActive = true;
         }
 
-        function onDone() {
-            touchActive = false;
+        function onFingerMove(x, y) {
+            lastMoveX = x;
+            lastMoveY = y;
         }
 
-        function onTouchMove(event) {
-            if (isDone || !touchActive) {
-                onDone();
-                return;
-            }
-
-            const touch = event.touches[0];
-            lastMoveX = touch.clientX;
-            lastMoveY = touch.clientY;
-        }
-
-        function touchFinished(x, y) {
+        function onFingerUp(x, y) {
             const touchEndTime = Date.now();
 
             const deltaX = x - currentTouchStartX;
@@ -149,6 +135,28 @@ const MobileControlOverlay = ({ className, paused, visible, setHidden, onPlayPau
             lastTouchStartY = currentTouchStartY;
         }
 
+        function onTouchStart(event) {
+            if (buttonsRef.current !== undefined && buttonsRef.current !== null &&
+                Array.from(buttonsRef.current.children).some((button) => button !== undefined && button !== null && button.contains(event.target))
+            )
+                return;
+
+            event.preventDefault();
+
+            const touch = event.touches[0];
+            onFingerDown(touch.clientX, touch.clientY);
+        }
+
+        function onTouchMove(event) {
+            if (isDone || !touchActive) {
+                onDone();
+                return;
+            }
+
+            const touch = event.touches[0];
+            onFingerMove(touch.clientX, touch.clientY);
+        }
+
         function onTouchCancel() {
             if (isDone || !touchActive) {
                 onDone();
@@ -156,7 +164,7 @@ const MobileControlOverlay = ({ className, paused, visible, setHidden, onPlayPau
             }
 
             if (lastMoveX !== null && lastMoveY !== null)
-                touchFinished(lastMoveX, lastMoveY);
+                onFingerUp(lastMoveX, lastMoveY);
 
             onDone();
         }
@@ -169,7 +177,37 @@ const MobileControlOverlay = ({ className, paused, visible, setHidden, onPlayPau
 
             const touch = event.changedTouches[0];
 
-            touchFinished(touch.clientX, touch.clientY);
+            onFingerUp(touch.clientX, touch.clientY);
+
+            onDone();
+        }
+
+        function onMouseDown(event) {
+            if (buttonsRef.current !== undefined && buttonsRef.current !== null &&
+                Array.from(buttonsRef.current.children).some((button) => button !== undefined && button !== null && button.contains(event.target))
+            )
+                return;
+
+            event.preventDefault();
+            onFingerDown(event.clientX, event.clientY);
+        }
+
+        function onMouseMove(event) {
+            if (isDone || !touchActive) {
+                onDone();
+                return;
+            }
+
+            onFingerMove(event.clientX, event.clientY);
+        }
+
+        function onMouseUp(event) {
+            if (isDone || !touchActive) {
+                onDone();
+                return;
+            }
+
+            onFingerUp(event.clientX, event.clientY);
 
             onDone();
         }
@@ -178,12 +216,18 @@ const MobileControlOverlay = ({ className, paused, visible, setHidden, onPlayPau
         tag.addEventListener('touchmove', onTouchMove, {passive: true});
         tag.addEventListener('touchend', onTouchEnd, {passive: true});
         tag.addEventListener('touchcancel', onTouchCancel, {passive: true});
+        tag.addEventListener('mousedown', onMouseDown, {passive: false, capture: true});
+        tag.addEventListener('mousemove', onMouseMove, {passive: true});
+        tag.addEventListener('mouseup', onMouseUp, {passive: true});
 
         return () => {
             tag.removeEventListener('touchstart', onTouchStart, {passive: false, capture: true});
             tag.removeEventListener('touchmove', onTouchMove, {passive: true});
             tag.removeEventListener('touchend', onTouchEnd, {passive: true});
             tag.removeEventListener('touchcancel', onTouchCancel, {passive: true});
+            tag.removeEventListener('mousedown', onMouseDown, {passive: false, capture: true});
+            tag.removeEventListener('mousemove', onMouseMove, {passive: true});
+            tag.removeEventListener('mouseup', onMouseUp, {passive: true});
             isDone = true;
             touchActive = false;
         };
@@ -204,12 +248,26 @@ const MobileControlOverlay = ({ className, paused, visible, setHidden, onPlayPau
             event.preventDefault();
     }, [onPlayPause, paused]);
 
+    const onPlayPauseButtonMouseUp = React.useCallback((event) => {
+        // only call `onPlayPause` if the mouse was released on this button
+        // we use a mouse event to make the button press be instant and have no delay
+
+        const rect = event.currentTarget.getBoundingClientRect();
+        if (event.clientX >= rect.left && event.clientX <= rect.right && event.clientY >= rect.top && event.clientY <= rect.bottom) {
+            onPlayPause();
+            setHiddenRef.current(paused);
+        }
+
+        if (!visibleRef.current)
+            event.preventDefault();
+    }, [onPlayPause, paused]);
+
     return (
         <div className={classnames(className, styles['video-mobile-control-overlay'], { [styles['show']]: visible })} ref={ref}>
             <div className={styles['buttons']} ref={buttonsRef}>
                 {
                     typeof paused === 'boolean' &&
-                    <div className={styles['button']} onTouchEnd={onPlayPauseButtonTouchEnd}>
+                    <div className={styles['button']} onTouchEnd={onPlayPauseButtonTouchEnd} onMouseUp={onPlayPauseButtonMouseUp}>
                         <Icon className={styles['icon']} name={paused ? 'play' : 'pause'} />
                     </div>
                 }

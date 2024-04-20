@@ -15,6 +15,14 @@
     padding-top: var(--safe-area-inset-top,0px);
     box-sizing: content-box;
 
+    &.reduced-touch-surface {
+        pointer-events: none;
+
+        >* {
+            pointer-events: var(--initial-pointer-events, all);
+        }
+    }
+
     .logo-container {
         flex: none;
         display: flex;
@@ -47,6 +55,8 @@
         white-space: nowrap;
         text-overflow: ellipsis;
         color: @color-secondaryvariant2-light1-90;
+        pointer-events: none;
+        --initial-pointer-events: none;
     }
 
     .search-bar {
