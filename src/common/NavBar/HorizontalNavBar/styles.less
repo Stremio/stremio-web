@@ -69,7 +69,7 @@
         width: 3.5rem;
         height: 3.5rem;
         border-radius: 0.75rem;
-        opacity: 0.4;
+        opacity: 0.6;
 
         .icon {
             flex: none;
@@ -79,13 +79,23 @@
             opacity: 0.6;
         }
 
-        &:hover, &:global(.active) {
+        .active() {
             background-color: var(--overlay-color);
             opacity: 1;
 
             .icon {
                 color: var(--primary-foreground-color);
                 opacity: 0.8;
+            }
+        }
+
+        &:global(.active) {
+            .active();
+        }
+
+        @media (pointer: fine) {
+            &:hover {
+                .active();
             }
         }
     }

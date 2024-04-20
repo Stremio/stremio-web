@@ -18,12 +18,21 @@
             .label {
                 opacity: 0.6;
             }
+
+            &:global(.selected) {
+                .label {
+                    opacity: 1;
+                }
+            }
         }
     }
 
     &:global(.selected) {
         .icon {
             opacity: 1;
+        }
+
+        .icon, .label {
             color: var(--primary-accent-color);
         }
     }
@@ -37,7 +46,7 @@
 
     .icon {
         color: var(--primary-foreground-color);
-        opacity: 0.2;
+        opacity: 0.5;
     }
 
     .label {
@@ -61,12 +70,12 @@
 @media only screen and (max-width: @minimum) {
     .nav-tab-button-container {
         .label {
-            opacity: 0.2;
+            opacity: 0.6;
         }
 
         &:global(.selected) {
             .label {
-                opacity: 0.6;
+                opacity: 1;
             }
         }
     }
