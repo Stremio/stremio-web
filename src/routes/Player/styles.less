@@ -33,6 +33,12 @@ html:not(.active-slider-within) {
     height: 100%;
     background-color: @background-color;
 
+    &.mobile {
+        .nav-bar-layer {
+            height: 4.5rem;
+        }
+    }
+
     .nav-bar-layer, .control-bar-layer, .menu-layer {
         transition: opacity ease-in-out 200ms;
     }

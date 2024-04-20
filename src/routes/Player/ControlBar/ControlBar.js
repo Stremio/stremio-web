@@ -115,7 +115,7 @@ const ControlBar = ({
                 buffered={buffered}
                 onSeekRequested={onSeekRequested}
             />
-            <div className={styles['control-bar-buttons-container']}>
+            <div className={classnames(styles['control-bar-buttons-container'], {[styles['mobile']]: isMobile})}>
                 {
                     !isMobile &&
                     <Button className={classnames(styles['control-bar-button'], { 'disabled': typeof paused !== 'boolean' })} title={paused ? t('PLAYER_PLAY') : t('PLAYER_PAUSE')} tabIndex={-1} onClick={onPlayPauseButtonClick}>
