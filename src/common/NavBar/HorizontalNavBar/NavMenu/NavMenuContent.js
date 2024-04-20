@@ -38,7 +38,7 @@ const NavMenuContent = ({ onClick }) => {
         }
     }, []);
     return (
-        <div className={classnames(styles['nav-menu-container'], 'animation-fade-in')} onClick={onClick}>
+        <div className={classnames(styles['nav-menu-container'])} onClick={onClick}>
             <div className={styles['user-info-container']}>
                 <div
                     className={styles['avatar-container']}
