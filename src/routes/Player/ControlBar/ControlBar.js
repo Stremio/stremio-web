@@ -72,6 +72,8 @@ const ControlBar = ({
         if (!videoTag)
             return;
 
+        let updateAirplayStatusTimeout = null;
+
         function onAirplayAvailabilityChanged(event) {
             switch (event.availability) {
                 case 'available':
@@ -83,26 +85,58 @@ const ControlBar = ({
             }
         }
 
+        function updateAirplayActive() {
+            clearTimeout(updateAirplayStatusTimeout);
+
+            if (videoTag.webkitCurrentPlaybackTargetIsWireless) {
+                if (setAirplayActiveRef.current)
+                    setAirplayActiveRef.current(true);
+            } else {
+                updateAirplayStatusTimeout = setTimeout(() => {
+                    clearTimeout(updateAirplayStatusTimeout);
+
+                    if (typeof paused !== 'boolean' || paused || videoTag.paused)
+                        return;
+
+                    if (setAirplayActiveRef.current)
+                        setAirplayActiveRef.current(!!videoTag.webkitCurrentPlaybackTargetIsWireless);
+                }, 1000 * 5);
+            }
+        }
+
         function airplayActiveChanged() {
-            if (setAirplayActiveRef.current)
-                setAirplayActiveRef.current(!!videoTag.webkitCurrentPlaybackTargetIsWireless);
+            updateAirplayActive();
+        }
+
+        function onPlay() {
+            updateAirplayActive();
+        }
+
+        function onPause() {
+            clearTimeout(updateAirplayStatusTimeout);
         }
 
         if (window.WebKitPlaybackTargetAvailabilityEvent) {
             videoTag.addEventListener('webkitplaybacktargetavailabilitychanged', onAirplayAvailabilityChanged);
             videoTag.addEventListener('webkitcurrentplaybacktargetiswirelesschanged', airplayActiveChanged);
+            videoTag.addEventListener('play', onPlay);
+            videoTag.addEventListener('pause', onPause);
 
+            videoTag.disableRemotePlayback = false;
             setAirplayAvailable(!!videoTag.webkitWirelessVideoPlaybackDisabled);
-            airplayActiveChanged();
+            updateAirplayActive();
         }
 
         return () => {
+            clearTimeout(updateAirplayStatusTimeout);
             if (window.WebKitPlaybackTargetAvailabilityEvent) {
                 videoTag.removeEventListener('webkitplaybacktargetavailabilitychanged', onAirplayAvailabilityChanged);
                 videoTag.removeEventListener('webkitcurrentplaybacktargetiswirelesschanged', airplayActiveChanged);
+                videoTag.removeEventListener('play', onPlay);
+                videoTag.removeEventListener('pause', onPause);
             }
         };
-    }, [getVideoElement()]);
+    }, [getVideoElement(), paused]);
     const onSubtitlesButtonMouseDown = React.useCallback((event) => {
         event.nativeEvent.subtitlesMenuClosePrevented = true;
     }, []);
