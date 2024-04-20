@@ -15,6 +15,7 @@ const useSupportsVideoVolume = require('./useSupportsVideoVolume');
 const AirplayIconSVG = require('./icons/AirplayIconSVG');
 
 const isMobile = platform.isMobile();
+const browserSupportsAirplay = !!window.WebKitPlaybackTargetAvailabilityEvent;
 
 const ControlBar = ({
     className,
@@ -74,6 +75,11 @@ const ControlBar = ({
 
         let updateAirplayStatusTimeout = null;
 
+        function enableRemoteVideoPlayback() {
+            videoTag.webkitWirelessVideoPlaybackDisabled = false;
+            videoTag.setAttribute('x-webkit-airplay', 'allow');
+        }
+
         function onAirplayAvailabilityChanged(event) {
             switch (event.availability) {
                 case 'available':
@@ -91,6 +97,8 @@ const ControlBar = ({
             if (videoTag.webkitCurrentPlaybackTargetIsWireless) {
                 if (setAirplayActiveRef.current)
                     setAirplayActiveRef.current(true);
+
+                enableRemoteVideoPlayback();
             } else {
                 updateAirplayStatusTimeout = setTimeout(() => {
                     clearTimeout(updateAirplayStatusTimeout);
@@ -122,7 +130,7 @@ const ControlBar = ({
             videoTag.addEventListener('play', onPlay);
             videoTag.addEventListener('pause', onPause);
 
-            videoTag.disableRemotePlayback = false;
+            enableRemoteVideoPlayback();
             setAirplayAvailable(!!videoTag.webkitWirelessVideoPlaybackDisabled);
             updateAirplayActive();
         }
@@ -260,13 +268,13 @@ const ControlBar = ({
                         <Icon className={styles['icon']} name={'about'} />
                     </Button>
                     {
-                        (platform.name !== 'ios' || chromecastServiceActive) &&
+                        (!browserSupportsAirplay || chromecastServiceActive) &&
                         <Button className={classnames(styles['control-bar-button'], { 'disabled': !chromecastServiceActive })} tabIndex={-1} onClick={onChromecastButtonClick}>
                             <Icon className={styles['icon']} name={'cast'} />
                         </Button>
                     }
                     {
-                        (platform.name === 'ios' || airplayAvailable) &&
+                        (browserSupportsAirplay || airplayAvailable) &&
                         <Button className={classnames(styles['control-bar-button'], { 'disabled': !airplayAvailable })} tabIndex={-1} onClick={onAirplayButtonClick}>
                             <AirplayIconSVG className={styles['icon']} />
                         </Button>
