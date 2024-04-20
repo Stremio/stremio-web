@@ -177,9 +177,11 @@
             margin-right: 1rem;
         }
 
-        &:hover {
-            .label {
-                opacity: 0.7;
+        @media (pointer: fine) {
+            &:hover {
+                .label {
+                    opacity: 0.7;
+                }
             }
         }
     
@@ -200,9 +202,19 @@
             }
 
             &.show-button {
-                &:hover, &:focus {
+                .active() {
                     background-color: var( --secondary-accent-color);
                     outline: none;
+                }
+
+                &:focus {
+                    .active();
+                }
+
+                @media (pointer: fine) {
+                    &:hover {
+                        .active();
+                    }
                 }
             }
         }

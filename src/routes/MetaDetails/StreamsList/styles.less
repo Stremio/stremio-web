@@ -87,13 +87,23 @@
                 opacity: 0.6;
             }
 
-            &:hover, &:global(.active) {
+            .active() {
                 background-color: var(--overlay-color);
                 opacity: 1;
     
                 .icon {
                     color: var(--primary-foreground-color);
                     opacity: 0.8;
+                }
+            }
+
+            &:global(.active) {
+                .active();
+            }
+
+            @media (pointer: fine) {
+                &:hover {
+                    .active();
                 }
             }
         }
@@ -112,8 +122,18 @@
             flex-grow: 1;
             background: none;
 
-            &:hover, &:focus, &:global(.active) {
+            .active() {
                 background-color: var(--overlay-color);
+            }
+
+            &:focus, &:global(.active) {
+                .active();
+            }
+
+            @media (pointer: fine) {
+                &:hover {
+                    .active();
+                }
             }
     
             & >.multiselect-label {
@@ -152,9 +172,11 @@
         background-color: var(--secondary-accent-color);
         border-radius: 3rem;
 
-        &:hover {
-            outline: var(--focus-outline-size) solid var(--secondary-accent-color);
-            background-color: transparent;
+        @media (pointer: fine) {
+            &:hover {
+                outline: var(--focus-outline-size) solid var(--secondary-accent-color);
+                background-color: transparent;
+            }
         }
 
         .icon {

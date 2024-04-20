@@ -33,9 +33,11 @@
             margin-left: 0;
         }
 
-        &:hover {
-            .warning-label {
-                text-decoration: underline;
+        @media (pointer: fine) {
+            &:hover {
+                .warning-label {
+                    text-decoration: underline;
+                }
             }
         }
 
@@ -49,8 +51,10 @@
         }
     }
 
-    .warning-button:hover {
-        text-decoration: underline;
+    @media (pointer: fine) {
+        .warning-button:hover {
+            text-decoration: underline;
+        }
     }
 }
 

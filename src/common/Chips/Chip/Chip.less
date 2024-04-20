@@ -21,9 +21,11 @@
     user-select: none;
     overflow: hidden;
 
-    &:hover {
-        background-color: var(--overlay-color);
-        transition: background-color 0.1s ease-out;
+    @media (pointer: fine) {
+        &:hover {
+            background-color: var(--overlay-color);
+            transition: background-color 0.1s ease-out;
+        }
     }
 
     &.active {

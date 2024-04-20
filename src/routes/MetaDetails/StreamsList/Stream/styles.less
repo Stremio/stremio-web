@@ -13,13 +13,33 @@
     margin-bottom: 0.5rem;
     border-radius: var(--border-radius);
 
-    &:hover, &:focus {
+    .active() {
         background-color: var(--overlay-color);
     }
 
-    &:hover, &:focus, &:global(.selected) {
+    &:focus {
+        .active();
+    }
+
+    @media (pointer: fine) {
+        &:hover {
+            .active();
+        }
+    }
+
+    .selected() {
         .icon {
             opacity: 1;
+        }
+    }
+
+    &:focus, &:global(.selected) {
+        .selected();
+    }
+
+    @media (pointer: fine) {
+        &:hover {
+            .selected();
         }
     }
 

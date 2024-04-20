@@ -83,8 +83,10 @@
                 color: var(--primary-foreground-color);
                 font-size: 0.9rem;
 
-                &:hover {
-                    opacity: 0.6;
+                @media (pointer: fine) {
+                    &:hover {
+                        opacity: 0.6;
+                    }
                 }
             }
         }
@@ -108,8 +110,10 @@
                 cursor: pointer;
                 z-index: 10;
 
-                &:hover {
-                    background-color: var(--secondary-background-color);
+                @media (pointer: fine) {
+                    &:hover {
+                        background-color: var(--secondary-background-color);
+                    }
                 }
             }
         }

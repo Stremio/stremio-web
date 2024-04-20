@@ -134,9 +134,11 @@
         .install-button-container {
             background-color: var(--secondary-accent-color);
 
-            &:hover {
-                outline: var(--focus-outline-size) solid var(--secondary-accent-color);
-                background-color: transparent;
+            @media (pointer: fine) {
+                &:hover {
+                    outline: var(--focus-outline-size) solid var(--secondary-accent-color);
+                    background-color: transparent;
+                }
             }
 
             .label {
@@ -148,9 +150,11 @@
             flex: none;
             background-color: var(--secondary-accent-color);
 
-            &:hover {
-                outline: var(--focus-outline-size) solid var(--secondary-accent-color);
-                background-color: transparent;
+            @media (pointer: fine) {
+                &:hover {
+                    outline: var(--focus-outline-size) solid var(--secondary-accent-color);
+                    background-color: transparent;
+                }
             }
 
             .icon {
@@ -163,8 +167,10 @@
             outline-style: solid;
             opacity: 0.3;
 
-            &:hover {
-                opacity: 1;
+            @media (pointer: fine) {
+                &:hover {
+                    opacity: 1;
+                }
             }
 
             .label {
@@ -175,9 +181,11 @@
         .share-button-container {
             opacity: 0.9;
 
-            &:hover {
-                .label {
-                    text-decoration: underline;
+            @media (pointer: fine) {
+                &:hover {
+                    .label {
+                        text-decoration: underline;
+                    }
                 }
             }
 

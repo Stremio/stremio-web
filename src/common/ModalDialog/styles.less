@@ -51,11 +51,19 @@
                 opacity: 0.4;
             }
 
-            &:hover,
             &:focus {
                 .icon {
                     opacity: 1;
                     color: var(--primary-foreground-color);
+                }
+            }
+
+            @media (pointer: fine) {
+                &:hover {
+                    .icon {
+                        opacity: 1;
+                        color: var(--primary-foreground-color);
+                    }
                 }
             }
 
@@ -116,9 +124,11 @@
     padding: 1.2rem;
     background-color: var(--secondary-accent-color);
 
-    &:hover {
-        background-color: transparent;
-        outline: var(--focus-outline-size) solid var(--secondary-accent-color);
+    @media (pointer: fine) {
+        &:hover {
+            background-color: transparent;
+            outline: var(--focus-outline-size) solid var(--secondary-accent-color);
+        }
     }
 
     &:focus {

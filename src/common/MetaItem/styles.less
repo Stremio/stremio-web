@@ -85,8 +85,10 @@
 
         &:global(.poster-change-cursor) {
             .poster-image-layer {
-                &:hover {
-                    cursor: zoom-in;
+                @media (pointer: fine) {
+                    &:hover {
+                        cursor: zoom-in;
+                    }
                 }
             }
         }
@@ -225,8 +227,10 @@
                 transition: all 0.1s ease-in;
             }
 
-            &:hover {
-                transform: scale(1.1);
+            @media (pointer: fine) {
+                &:hover {
+                    transform: scale(1.1);
+                }
             }
         }
 
@@ -360,9 +364,19 @@
                     .multiselect-option-container {
                         padding: 1rem 1.5rem;
 
-                        &:hover, &:focus {
+                        .active() {
                             outline: none;
                             background-color: var(--overlay-color);
+                        }
+
+                        &:focus {
+                            .active();
+                        }
+
+                        @media (pointer: fine) {
+                            &:hover {
+                                .active();
+                            }
                         }
 
                         .multiselect-option-label {

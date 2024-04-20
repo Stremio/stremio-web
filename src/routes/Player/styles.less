@@ -64,8 +64,10 @@ html:not(.active-slider-within) {
             }
 
             .nav-bar-button-container {
-                &:hover {
-                    background: transparent;
+                @media (pointer: fine) {
+                    &:hover {
+                        background: transparent;
+                    }
                 }
 
                 .nav-bar-icon {

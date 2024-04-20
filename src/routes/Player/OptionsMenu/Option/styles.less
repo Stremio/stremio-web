@@ -30,8 +30,10 @@
         color: var(--primary-foreground-color);
     }
 
-    &:hover {
-        background-color: var(--overlay-color);
+    @media (pointer: fine) {
+        &:hover {
+            background-color: var(--overlay-color);
+        }
     }
 
     &:global(.disabled) {

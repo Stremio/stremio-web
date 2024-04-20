@@ -64,8 +64,10 @@
                     opacity: 1;
                 }
 
-                &:hover {
-                    background-color: var(--overlay-color);
+                @media (pointer: fine) {
+                    &:hover {
+                        background-color: var(--overlay-color);
+                    }
                 }
             }
 
@@ -199,11 +201,21 @@
                                 }
 
                                 .logout-button-container {
-                                    &:hover, &:focus {
+                                    .active() {
                                         outline: none;
 
                                         .logout-label {
                                             text-decoration: underline;
+                                        }
+                                    }
+
+                                    &:focus {
+                                        .active();
+                                    }
+
+                                    @media (pointer: fine) {
+                                        &:hover {
+                                            .active();
                                         }
                                     }
 
@@ -225,9 +237,11 @@
                             border-radius: 3.5rem;
                             background-color: var(--overlay-color);
 
-                            &:hover {
-                                outline: var(--focus-outline-size) solid var(--primary-foreground-color);
-                                background-color: transparent;
+                            @media (pointer: fine) {
+                                &:hover {
+                                    outline: var(--focus-outline-size) solid var(--primary-foreground-color);
+                                    background-color: transparent;
+                                }
                             }
 
                             .user-panel-label {
@@ -287,9 +301,11 @@
                             border-radius: 3.5rem;
                             background-color: var(--overlay-color);
 
-                            &:hover {
-                                outline: var(--focus-outline-size) solid var(--primary-foreground-color);
-                                background-color: transparent;
+                            @media (pointer: fine) {
+                                &:hover {
+                                    outline: var(--focus-outline-size) solid var(--primary-foreground-color);
+                                    background-color: transparent;
+                                }
                             }
 
                             .label {
@@ -317,9 +333,11 @@
                                 color: var(--primary-accent-color);
                             }
 
-                            &:hover {
-                                .label {
-                                    text-decoration: underline;
+                            @media (pointer: fine) {
+                                &:hover {
+                                    .label {
+                                        text-decoration: underline;
+                                    }
                                 }
                             }
                         }

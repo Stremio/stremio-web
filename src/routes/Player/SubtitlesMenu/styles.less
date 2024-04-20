@@ -36,8 +36,18 @@
                 margin-bottom: 0.5rem;
                 border-radius: var(--border-radius);
 
-                &:global(.selected), &:hover {
+                .active() {
                     background-color: var(--overlay-color);
+                }
+
+                &:global(.selected) {
+                    .active();
+                }
+
+                @media (pointer: fine) {
+                    &:hover {
+                        .active();
+                    }
                 }
 
                 .language-label, .variant-label {

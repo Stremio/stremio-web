@@ -18,8 +18,18 @@
         }
     }
 
-    &:hover, &:focus {
+    .active() {
         background-color: var(--overlay-color);
+    }
+
+    &:focus {
+        .active();
+    }
+
+    @media (pointer: fine) {
+        &:hover {
+            .active();
+        }
     }
 
     .label {

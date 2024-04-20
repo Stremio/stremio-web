@@ -39,9 +39,11 @@
         padding: 0 2rem;
         background-color: var(--secondary-accent-color);
 
-        &:hover {
-            outline: var(--focus-outline-size) solid var(--secondary-accent-color);
-            background-color: transparent;
+        @media (pointer: fine) {
+            &:hover {
+                outline: var(--focus-outline-size) solid var(--secondary-accent-color);
+                background-color: transparent;
+            }
         }
 
         .icon {

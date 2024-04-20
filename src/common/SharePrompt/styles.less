@@ -75,9 +75,11 @@
             border-radius: 0 var(--border-radius) var(--border-radius) 0;
             background-color: var(--secondary-accent-color);
 
-            &:hover {
-                outline: var(--focus-outline-size) solid var(--secondary-accent-color);
-                background-color: transparent;
+            @media (pointer: fine) {
+                &:hover {
+                    outline: var(--focus-outline-size) solid var(--secondary-accent-color);
+                    background-color: transparent;
+                }
             }
 
             &:focus {

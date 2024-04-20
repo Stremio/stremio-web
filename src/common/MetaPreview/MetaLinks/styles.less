@@ -34,8 +34,14 @@
             background-color: var(--overlay-color);
             backdrop-filter: blur(5px);
 
-            &:hover, &:focus {
+            &:focus {
                 background-color: @color-surface-light5-30;
+            }
+
+            @media (pointer: fine) {
+                &:hover {
+                    background-color: @color-surface-light5-30;
+                }
             }
 
             &:focus {

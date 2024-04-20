@@ -14,9 +14,19 @@
     backdrop-filter: blur(5px);
     transition: background-color 0.1s ease-out;
 
-    &:hover, &:focus {
+    .active() {
         outline: var(--focus-outline-size) solid var(--primary-foreground-color);
         background-color: transparent;
+    }
+
+    &:focus {
+        .active();
+    }
+
+    @media (pointer: fine) {
+        &:hover {
+            .active();
+        }
     }
 
     .icon-container {
