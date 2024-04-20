@@ -135,29 +135,37 @@ const MobileControlOverlay = ({ className, paused, visible, setHidden, onPlayPau
             lastTouchStartY = currentTouchStartY;
         }
 
-        function onTouchStart(event) {
+        function onPointerDown(event) {
             if (buttonsRef.current !== undefined && buttonsRef.current !== null &&
                 Array.from(buttonsRef.current.children).some((button) => button !== undefined && button !== null && button.contains(event.target))
             )
                 return;
 
             event.preventDefault();
-
-            const touch = event.touches[0];
-            onFingerDown(touch.clientX, touch.clientY);
+            onFingerDown(event.clientX, event.clientY);
         }
 
-        function onTouchMove(event) {
+        function onPointerMove(event) {
             if (isDone || !touchActive) {
                 onDone();
                 return;
             }
 
-            const touch = event.touches[0];
-            onFingerMove(touch.clientX, touch.clientY);
+            onFingerMove(event.clientX, event.clientY);
         }
 
-        function onTouchCancel() {
+        function onPointerUp(event) {
+            if (isDone || !touchActive) {
+                onDone();
+                return;
+            }
+
+            onFingerUp(event.clientX, event.clientY);
+
+            onDone();
+        }
+
+        function onPointerCancel() {
             if (isDone || !touchActive) {
                 onDone();
                 return;
@@ -169,87 +177,23 @@ const MobileControlOverlay = ({ className, paused, visible, setHidden, onPlayPau
             onDone();
         }
 
-        function onTouchEnd(event) {
-            if (isDone || !touchActive) {
-                onDone();
-                return;
-            }
-
-            const touch = event.changedTouches[0];
-
-            onFingerUp(touch.clientX, touch.clientY);
-
-            onDone();
-        }
-
-        function onMouseDown(event) {
-            if (buttonsRef.current !== undefined && buttonsRef.current !== null &&
-                Array.from(buttonsRef.current.children).some((button) => button !== undefined && button !== null && button.contains(event.target))
-            )
-                return;
-
-            event.preventDefault();
-            onFingerDown(event.clientX, event.clientY);
-        }
-
-        function onMouseMove(event) {
-            if (isDone || !touchActive) {
-                onDone();
-                return;
-            }
-
-            onFingerMove(event.clientX, event.clientY);
-        }
-
-        function onMouseUp(event) {
-            if (isDone || !touchActive) {
-                onDone();
-                return;
-            }
-
-            onFingerUp(event.clientX, event.clientY);
-
-            onDone();
-        }
-
-        tag.addEventListener('touchstart', onTouchStart, {passive: false, capture: true});
-        tag.addEventListener('touchmove', onTouchMove, {passive: true});
-        tag.addEventListener('touchend', onTouchEnd, {passive: true});
-        tag.addEventListener('touchcancel', onTouchCancel, {passive: true});
-        tag.addEventListener('mousedown', onMouseDown, {passive: false, capture: true});
-        tag.addEventListener('mousemove', onMouseMove, {passive: true});
-        tag.addEventListener('mouseup', onMouseUp, {passive: true});
+        tag.addEventListener('pointerdown', onPointerDown, {passive: false, capture: true});
+        tag.addEventListener('pointermove', onPointerMove, {passive: true});
+        tag.addEventListener('pointerup', onPointerUp, {passive: true});
+        tag.addEventListener('pointercancel', onPointerCancel, {passive: true});
 
         return () => {
-            tag.removeEventListener('touchstart', onTouchStart, {passive: false, capture: true});
-            tag.removeEventListener('touchmove', onTouchMove, {passive: true});
-            tag.removeEventListener('touchend', onTouchEnd, {passive: true});
-            tag.removeEventListener('touchcancel', onTouchCancel, {passive: true});
-            tag.removeEventListener('mousedown', onMouseDown, {passive: false, capture: true});
-            tag.removeEventListener('mousemove', onMouseMove, {passive: true});
-            tag.removeEventListener('mouseup', onMouseUp, {passive: true});
+            tag.removeEventListener('pointerdown', onPointerDown, {passive: false, capture: true});
+            tag.removeEventListener('pointermove', onPointerMove, {passive: true});
+            tag.removeEventListener('pointerup', onPointerUp, {passive: true});
+            tag.removeEventListener('pointercancel', onPointerCancel, {passive: true});
             isDone = true;
             touchActive = false;
         };
     }, []);
 
-    const onPlayPauseButtonTouchEnd = React.useCallback((event) => {
+    const onPlayPauseButtonPointerUp = React.useCallback((event) => {
         // only call `onPlayPause` if the finger was lift on this button
-        // we use a touch event to make the button press be instant and have no delay
-
-        const touch = event.changedTouches[0];
-        const rect = event.currentTarget.getBoundingClientRect();
-        if (touch.clientX >= rect.left && touch.clientX <= rect.right && touch.clientY >= rect.top && touch.clientY <= rect.bottom) {
-            onPlayPause();
-            setHiddenRef.current(paused);
-        }
-
-        if (!visibleRef.current)
-            event.preventDefault();
-    }, [onPlayPause, paused]);
-
-    const onPlayPauseButtonMouseUp = React.useCallback((event) => {
-        // only call `onPlayPause` if the mouse was released on this button
         // we use a mouse event to make the button press be instant and have no delay
 
         const rect = event.currentTarget.getBoundingClientRect();
@@ -267,7 +211,7 @@ const MobileControlOverlay = ({ className, paused, visible, setHidden, onPlayPau
             <div className={styles['buttons']} ref={buttonsRef}>
                 {
                     typeof paused === 'boolean' &&
-                    <div className={styles['button']} onTouchEnd={onPlayPauseButtonTouchEnd} onMouseUp={onPlayPauseButtonMouseUp}>
+                    <div className={styles['button']} onPointerUp={onPlayPauseButtonPointerUp}>
                         <Icon className={styles['icon']} name={paused ? 'play' : 'pause'} />
                     </div>
                 }
