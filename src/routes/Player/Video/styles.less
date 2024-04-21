@@ -6,7 +6,7 @@
     .video {
         // make sure subtitles are not rendered under unsafe area, such as screen notches or navigation bars
         width: calc(100% - var(--safe-area-inset-left, 0px) - var(--safe-area-inset-right, 0px));
-        height: calc(100% - var(--safe-area-inset-top, 0px) - var(--safe-area-inset-bottom, 0px));
+        height: calc(100% - var(--safe-area-inset-top, 0px) - var(--calculated-bottom-safe-inset, 0px));
         margin-top: var(--safe-area-inset-top, 0px);
         margin-left: var(--safe-area-inset-left, 0px);
         overflow: initial;
@@ -16,7 +16,7 @@
             // make sure the video itself does span under unsafe areas
             // the relevant safeguards will be applied using padding to the video depending on the orientation
             // we need !important because the video tag has a style attribute that sets the width and height to 100%
-            height: calc(100% + var(--safe-area-inset-top, 0px) + var(--safe-area-inset-bottom, 0px)) !important;
+            height: calc(100% + var(--safe-area-inset-top, 0px) + var(--calculated-bottom-safe-inset, 0px)) !important;
             width: calc(100% + var(--safe-area-inset-left, 0px) + var(--safe-area-inset-right, 0px)) !important;
             margin-top: calc(var(--safe-area-inset-top, 0px) * -1);
             margin-left: calc(var(--safe-area-inset-left, 0px) * -1);
@@ -29,6 +29,13 @@
             @media screen and (orientation: portrait) {
                 padding-top: var(--safe-area-inset-top, 0px);
                 padding-bottom: var(--calculated-bottom-safe-inset, 0px);
+            }
+
+            &::cue {
+                margin-top: var(--safe-area-inset-top, 0px);
+                margin-bottom: var(--calculated-bottom-safe-inset, 0px);
+                margin-left: var(--safe-area-inset-left, 0px);
+                margin-right: var(--safe-area-inset-right, 0px);
             }
         }
 

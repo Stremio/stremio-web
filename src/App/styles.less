@@ -100,7 +100,7 @@ html {
     --safe-area-inset-right: env(safe-area-inset-right, 0px);
     --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
     --safe-area-inset-left: env(safe-area-inset-left, 0px);
-    --calculated-bottom-safe-inset: 0px;
+    --calculated-bottom-safe-inset: var(--safe-area-inset-bottom);
 
     @media (display-mode: standalone) {
         width: ~"max(100%, 100lvw)";
