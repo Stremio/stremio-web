@@ -31,8 +31,8 @@ const Slider = ({ className, value, buffered, minimumValue, maximumValue, disabl
     const retainThumb = React.useCallback(() => {
         window.addEventListener('blur', onBlur);
         window.addEventListener('mouseup', onMouseUp);
-        window.addEventListener('touchend', releaseThumb);
-        window.addEventListener('touchcancel', releaseThumb);
+        window.addEventListener('touchend', onTouchEnd);
+        window.addEventListener('touchcancel', onTouchEnd);
         window.addEventListener('mousemove', onMouseMove);
         window.addEventListener('touchmove', onTouchMove);
         document.documentElement.className = classnames(document.documentElement.className, styles['active-slider-within']);
@@ -41,8 +41,8 @@ const Slider = ({ className, value, buffered, minimumValue, maximumValue, disabl
         cancelThumbAnimation();
         window.removeEventListener('blur', onBlur);
         window.removeEventListener('mouseup', onMouseUp);
-        window.removeEventListener('touchend', releaseThumb);
-        window.removeEventListener('touchcancel', releaseThumb);
+        window.removeEventListener('touchend', onTouchEnd);
+        window.removeEventListener('touchcancel', onTouchEnd);
         window.removeEventListener('mousemove', onMouseMove);
         window.removeEventListener('touchmove', onTouchMove);
         const classList = document.documentElement.className.split(' ');
@@ -110,6 +110,16 @@ const Slider = ({ className, value, buffered, minimumValue, maximumValue, disabl
         }
 
         retainThumb();
+    }, []);
+    const onTouchEnd = React.useCallback((event) => {
+        if (typeof onCompleteRef.current === 'function') {
+            if (event && event.touches && event.touches[0] && event.touches[0].clientX !== undefined)
+                onCompleteRef.current(event.touches[0].clientX);
+            else
+                onCompleteRef.current(valueRef.current);
+        }
+
+        releaseThumb();
     }, []);
     React.useLayoutEffect(() => {
         if (!routeFocused || disabled) {
