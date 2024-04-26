@@ -62,7 +62,7 @@ const Library = ({ model, urlParams, queryParams }) => {
         }
     }, [profile.auth, library.selected]);
     return (
-        <MainNavBars className={styles['library-container']} route={model}>
+        <MainNavBars className={styles['library-container']} route={model} noOverflow>
             <div className={styles['library-content']}>
                 {
                     model === 'continue_watching' || profile.auth !== null ?

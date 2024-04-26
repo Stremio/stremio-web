@@ -14,7 +14,7 @@ const TABS = [
     { id: 'settings', label: 'SETTINGS', icon: 'settings', href: '#/settings' },
 ];
 
-const MainNavBars = React.memo(({ className, route, query, children }) => {
+const MainNavBars = React.memo(({ className, route, query, noOverflow, children }) => {
     return (
         <div className={classnames(className, styles['main-nav-bars-container'])}>
             <HorizontalNavBar
@@ -32,7 +32,7 @@ const MainNavBars = React.memo(({ className, route, query, children }) => {
                 selected={route}
                 tabs={TABS}
             />
-            <div className={styles['nav-content-container']}>{children}</div>
+            <div className={classnames(styles['nav-content-container'], {[styles['no-overflow']]: noOverflow})}>{children}</div>
         </div>
     );
 });
@@ -43,7 +43,8 @@ MainNavBars.propTypes = {
     className: PropTypes.string,
     route: PropTypes.string,
     query: PropTypes.string,
-    children: PropTypes.node
+    noOverflow: PropTypes.bool,
+    children: PropTypes.node,
 };
 
 module.exports = MainNavBars;

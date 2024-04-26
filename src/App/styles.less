@@ -58,6 +58,16 @@
     box-shadow: none;
     overflow: hidden;
     word-break: break-word;
+
+    @supports not selector(::-webkit-scrollbar) {
+        scrollbar-width: thin;
+        scrollbar-color: var(--overlay-color) transparent;
+    }
+}
+
+html:global(.os-overlay-scrollbar) {
+    // this makes the browser ignore the custom scrollbar styles when it bahves as an overlay on this platform
+    // and fallbacks to using the OS scrollbar with the given properties when it's not an overlay scrollbar
     scrollbar-width: thin;
     scrollbar-color: var(--overlay-color) transparent;
 }
@@ -130,8 +140,11 @@ html {
                 z-index: 1;
                 padding: 0 calc(0.5 * var(--horizontal-nav-bar-size));
                 overflow-y: auto;
-                scrollbar-width: none;
                 pointer-events: none;
+
+                @supports not selector(::-webkit-scrollbar) {
+                    scrollbar-width: none;
+                }
 
                 &::-webkit-scrollbar {
                     display: none;

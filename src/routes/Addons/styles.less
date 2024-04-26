@@ -30,7 +30,7 @@
         --top-overlay-size: var(--selectable-inputs-assumed-height);
         --bottom-vertical-nav-bar-size: 0px;
         --bottom-overlay-size: var(--bottom-vertical-nav-bar-size);
-        --overlap-size: 2.5rem;
+        --overlap-size: 6rem;
         --transparency-grandient-pad: 3rem;
 
         width: 100%;
@@ -50,10 +50,17 @@
             mask: linear-gradient(
                 to bottom,
                 transparent calc(var(--top-overlay-size) - var(--overlap-size)),
+                rgba(0, 0, 0, 0.08) calc(var(--top-overlay-size) - (var(--overlap-size) / 2)),
+                rgba(0, 0, 0, 0.16) calc(var(--top-overlay-size) - (var(--overlap-size) / 3)),
                 black calc(var(--top-overlay-size) + var(--transparency-grandient-pad)),
                 black 100%
             );
             z-index: 1;
+
+            &::-webkit-scrollbar-track {
+                margin-top: var(--selectable-inputs-assumed-height);
+                margin-bottom: var(--bottom-overlay-size);
+            }
         }
 
         .selectable-inputs-container {

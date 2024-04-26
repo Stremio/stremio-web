@@ -6,7 +6,7 @@ const { useTranslation } = require('react-i18next');
 const { Router } = require('stremio-router');
 const { Core, Shell, Chromecast, DragAndDrop, KeyboardShortcuts, ServicesProvider } = require('stremio/services');
 const { NotFound } = require('stremio/routes');
-const { ToastProvider, TooltipProvider, CONSTANTS, withCoreSuspender } = require('stremio/common');
+const { ToastProvider, TooltipProvider, CONSTANTS, withCoreSuspender, platform } = require('stremio/common');
 const ServicesToaster = require('./ServicesToaster');
 const DeepLinkHandler = require('./DeepLinkHandler');
 const SearchParamsHandler = require('./SearchParamsHandler');
@@ -51,6 +51,14 @@ const App = () => {
         return () => {
             window.removeEventListener('hashchange', onLocationHashChange);
         };
+    }, []);
+    React.useEffect(() => {
+        // on mobile and macOS the scrollbars aren't visible when they're not being used,
+        // so we imitate this behavior on those platforms, and fallback to a custom scrollbar on other platforms
+        const osOverlayScrollbar = platform.isMobile() || platform.isMac();
+
+        if (osOverlayScrollbar)
+            document.documentElement.classList.add('os-overlay-scrollbar');
     }, []);
     React.useEffect(() => {
         const onCoreStateChanged = () => {

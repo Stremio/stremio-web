@@ -95,6 +95,11 @@
             scroll-padding-top: var(--top-overlay-size);
             isolation: isolate;
 
+            &::-webkit-scrollbar-track {
+                margin-top: var(--top-overlay-size);
+                margin-bottom: var(--bottom-overlay-size);
+            }
+
             .section-container {
                 display: flex;
                 flex-direction: column;

@@ -193,7 +193,7 @@ const Settings = () => {
         closeConfigureServerUrlModal();
     }, [routeFocused]);
     return (
-        <MainNavBars className={styles['settings-container']} route={'settings'}>
+        <MainNavBars className={styles['settings-container']} route={'settings'} noOverflow>
             <div className={classnames(styles['settings-content'], 'animation-fade-in')}>
                 <div className={styles['side-menu-container']}>
                     <Button className={classnames(styles['side-menu-button'], { [styles['selected']]: selectedSectionId === GENERAL_SECTION })} title={ t('SETTINGS_NAV_GENERAL') } data-section={GENERAL_SECTION} onClick={sideMenuButtonOnClick}>

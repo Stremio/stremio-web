@@ -80,7 +80,7 @@ const Addons = ({ urlParams, queryParams }) => {
         clearSharedAddon();
     }, [urlParams, queryParams]);
     return (
-        <MainNavBars className={styles['addons-container']} route={'addons'}>
+        <MainNavBars className={styles['addons-container']} route={'addons'} noOverflow>
             <div className={styles['addons-content']}>
                 <div className={styles['selectable-inputs-container']}>
                     {selectInputs.map((selectInput, index) => (

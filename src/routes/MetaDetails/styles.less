@@ -23,7 +23,7 @@
 
     --navbar-assumed-height: 84px;
     --top-overlay-size: var(--navbar-assumed-height);
-    --overlap-size: 3rem;
+    --overlap-size: 6rem;
     --transparency-grandient-pad: 6rem;
 
     .background-image-layer {
@@ -68,9 +68,15 @@
         mask: linear-gradient(
             to bottom,
             transparent calc(var(--top-overlay-size) - var(--overlap-size)),
+            rgba(0, 0, 0, 0.08) calc(var(--top-overlay-size) - (var(--overlap-size) / 2)),
+            rgba(0, 0, 0, 0.16) calc(var(--top-overlay-size) - (var(--overlap-size) / 3)),
             black calc(var(--top-overlay-size) + var(--transparency-grandient-pad)),
             black 100%
         );
+
+        &::-webkit-scrollbar-track {
+            margin-top: var(--navbar-assumed-height);
+        }
 
         .vertical-nav-bar {
             --vertical-nav-bar-size: 6rem;

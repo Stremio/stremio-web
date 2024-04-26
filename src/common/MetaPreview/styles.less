@@ -63,7 +63,13 @@
         overflow-y: auto;
 
         &:not(:hover) {
-            scrollbar-color: transparent transparent;
+            @supports not selector(::-webkit-scrollbar-thumb) {
+                scrollbar-color: transparent transparent;
+            }
+
+            html:global(.os-overlay-scrollbar) {
+                scrollbar-color: transparent transparent;
+            }
 
             &::-webkit-scrollbar-thumb, &::-webkit-scrollbar-track {
                 background-color: transparent;
@@ -245,7 +251,14 @@
                 flex-shrink: 0;
                 margin-top: 3rem;
                 overflow: visible;
-                scrollbar-width: none;
+
+                @supports not selector(::-webkit-scrollbar) {
+                    scrollbar-width: none;
+                }
+
+                html:global(.os-overlay-scrollbar) {
+                    scrollbar-width: none;
+                }
     
                 &::-webkit-scrollbar {
                     display: none;

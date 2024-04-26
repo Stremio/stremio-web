@@ -204,7 +204,14 @@
 
         .streams-container {
             margin-top: 0;
-            scrollbar-color: @color-surface-light5-20 transparent;
+
+            @supports not selector(::-webkit-scrollbar-thumb) {
+                scrollbar-color: @color-surface-light5-20 transparent;
+            }
+
+            html:global(.os-overlay-scrollbar) {
+                scrollbar-color: @color-surface-light5-20 transparent;
+            }
 
             &::-webkit-scrollbar-thumb {
                 background-color: @color-surface-light5-20;

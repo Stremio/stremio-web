@@ -19,10 +19,14 @@ const Bowser = require('bowser');
 const browser = Bowser.parse(window.navigator?.userAgent || '');
 
 const name = iOS() ? 'ios' : (browser?.os?.name || 'unknown').toLowerCase();
+const osName = browser?.os?.name || 'unknown';
 
 module.exports = {
     name,
     isMobile: () => {
         return name === 'ios' || name === 'android';
+    },
+    isMac: () => {
+        return osName === 'macOS';
     }
 };
