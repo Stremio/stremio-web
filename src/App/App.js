@@ -6,7 +6,7 @@ const { useTranslation } = require('react-i18next');
 const { Router } = require('stremio-router');
 const { Core, Shell, Chromecast, DragAndDrop, KeyboardShortcuts, ServicesProvider } = require('stremio/services');
 const { NotFound } = require('stremio/routes');
-const { ToastProvider, TooltipProvider, CONSTANTS, withCoreSuspender, platform } = require('stremio/common');
+const { ToastProvider, TooltipProvider, CONSTANTS, withCoreSuspender } = require('stremio/common');
 const ServicesToaster = require('./ServicesToaster');
 const DeepLinkHandler = require('./DeepLinkHandler');
 const SearchParamsHandler = require('./SearchParamsHandler');
@@ -53,12 +53,29 @@ const App = () => {
         };
     }, []);
     React.useEffect(() => {
-        // on mobile and macOS the scrollbars aren't visible when they're not being used,
-        // so we imitate this behavior on those platforms, and fallback to a custom scrollbar on other platforms
-        const osOverlayScrollbar = platform.isMobile() || platform.isMac();
+        // on some platforms, like mobile and macOS (with a trackpad), the scrollbars aren't visible when they're not being used,
+        // here we detect this behavior so we can immitate it with our custom scrollbar styles on those platforms
 
-        if (osOverlayScrollbar)
-            document.documentElement.classList.add('os-overlay-scrollbar');
+        const testTag = document.createElement('div');
+        testTag.classList.add('test-overlay-scrollbar');
+        testTag.style.width = '100px';
+        testTag.style.height = '100px';
+        testTag.style.overflow = 'scroll';
+        testTag.style.position = 'fixed';
+        testTag.style.top = '-200px';
+        testTag.style.left = '-200px';
+        testTag.style.opacity = '0';
+        testTag.style.pointerEvents = 'none';
+        testTag.style.scrollbarWidth = 'thin';
+
+        document.body.appendChild(testTag);
+
+        // checks whether the scrollbar actually takes space inside of the element
+        const osOverlayScrollbar = testTag.offsetWidth === testTag.clientWidth;
+
+        testTag.remove();
+
+        document.documentElement.classList.toggle('os-overlay-scrollbar', osOverlayScrollbar);
     }, []);
     React.useEffect(() => {
         const onCoreStateChanged = () => {
