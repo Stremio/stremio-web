@@ -9,7 +9,7 @@ const { useServices } = require('stremio/services');
 const Option = require('./Option');
 const styles = require('./styles');
 
-const OptionsMenu = ({ className, stream, playbackDevices }) => {
+const OptionsMenu = ({ className, stream, playbackDevices, videoFilenameRef }) => {
     const { t } = useTranslation();
     const { core } = useServices();
     const toast = useToast();
@@ -47,8 +47,32 @@ const OptionsMenu = ({ className, stream, playbackDevices }) => {
         }
     }, [streamingUrl, downloadUrl]);
     const onDownloadVideoButtonClick = React.useCallback(() => {
-        if (streamingUrl || downloadUrl) {
-            window.open(streamingUrl || downloadUrl);
+        if (streamingUrl && videoFilenameRef.current) {
+            const parsedUrl = new URL(streamingUrl);
+
+            if (parsedUrl.pathname.endsWith(encodeURIComponent(videoFilenameRef.current))) {
+                window.open(parsedUrl.href, '_blank');
+            } else {
+                if (!parsedUrl.pathname.endsWith('/'))
+                    parsedUrl.pathname += '/';
+
+                parsedUrl.pathname += encodeURIComponent(videoFilenameRef.current);
+
+                (async () => {
+                    try {
+                        // make sure that the streaming server supports adding the filename to the URL before opening this link
+                        const headRes = await fetch(parsedUrl.href, { method: 'HEAD' });
+                        if (headRes.ok)
+                            window.open(parsedUrl.href, '_blank');
+                        else
+                            window.open(streamingUrl, '_blank');
+                    } catch(err) {
+                        window.open(streamingUrl, '_blank');
+                    }
+                })();
+            }
+        } else if (streamingUrl || downloadUrl) {
+            window.open(streamingUrl || downloadUrl, '_blank');
         }
     }, [streamingUrl, downloadUrl]);
     const onExternalDeviceRequested = React.useCallback((deviceId) => {
@@ -123,7 +147,8 @@ const OptionsMenu = ({ className, stream, playbackDevices }) => {
 OptionsMenu.propTypes = {
     className: PropTypes.string,
     stream: PropTypes.object,
-    playbackDevices: PropTypes.array
+    playbackDevices: PropTypes.array,
+    videoFilenameRef: PropTypes.object
 };
 
 module.exports = OptionsMenu;
