@@ -44,7 +44,6 @@ const Player = ({ urlParams, queryParams }) => {
     const routeFocused = useRouteFocused();
     const toast = useToast();
     const lastPlayTimeRef = React.useRef(null);
-    const videoFilenameRef = React.useRef(null);
 
     const [casting, setCasting] = React.useState(() => {
         return chromecast.active && chromecast.transport.getCastState() === cast.framework.CastState.CONNECTED;
@@ -393,7 +392,6 @@ const Player = ({ urlParams, queryParams }) => {
 
     React.useEffect(() => {
         videoParamsChanged(video.state.videoParams);
-        videoFilenameRef.current = video.state.videoParams?.filename;
     }, [video.state.videoParams]);
 
     React.useEffect(() => {
@@ -815,7 +813,6 @@ const Player = ({ urlParams, queryParams }) => {
                         className={classnames(styles['layer'], styles['menu-layer'])}
                         stream={player.selected.stream}
                         playbackDevices={streamingServer.playbackDevices !== null && streamingServer.playbackDevices.type === 'Ready' ? streamingServer.playbackDevices.content : []}
-                        videoFilenameRef={videoFilenameRef}
                     />
                     :
                     null
