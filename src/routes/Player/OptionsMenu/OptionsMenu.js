@@ -132,7 +132,7 @@ const OptionsMenu = ({ className, stream, playbackDevices }) => {
                 !!(streamingUrl || downloadUrl) &&
                 <Option
                     icon={'link'}
-                    label={t('CTX_COPY_VIDEO_DOWNLOAD_LINK', {defaultValue: 'Copy download link'})}
+                    label={t('CTX_COPY_VIDEO_DOWNLOAD_LINK', {defaultValue: 'Copy video download link'})}
                     disabled={stream === null}
                     onClick={onCopyDownloadLinkButtonClick}
                 />
@@ -141,7 +141,7 @@ const OptionsMenu = ({ className, stream, playbackDevices }) => {
                 platform.name === 'ios' &&
                 <Option
                     icon={'play-outline'}
-                    label={t('PLAYER_PLAY_IN_NPLAYER', {defaultValue: 'Open in nPlayer'})}
+                    label={t('PLAYER_OPEN_IN_NPLAYER', {defaultValue: 'Open in nPlayer'})}
                     disabled={stream === null}
                     onClick={opneInNplayer}
                 />
