@@ -22,9 +22,12 @@
             margin-left: calc(var(--safe-area-inset-left, 0px) * -1);
 
             @media screen and (orientation: landscape) {
-                padding-left: var(--safe-area-inset-left, 0px);
-                padding-right: var(--safe-area-inset-right, 0px);
                 padding-bottom: var(--calculated-bottom-safe-inset, 0px);
+
+                // on most devices, the unsafe areas on the left and right are notches and don't interfere with the video that much
+                // so that padding is commented out
+                // padding-left: var(--safe-area-inset-left, 0px);
+                // padding-right: var(--safe-area-inset-right, 0px);
             }
 
             @media screen and (orientation: portrait) {

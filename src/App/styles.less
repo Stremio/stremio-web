@@ -95,8 +95,8 @@ svg {
 }
 
 html {
-    width: ~"100svw";
-    height: ~"100svh";
+    width: ~"calc(max(100svw, 100dvw))";
+    height: ~"calc(max(100svh, 100dvh))";
     min-width: 640px;
     min-height: 480px;
     font-family: 'PlusJakartaSans', 'sans-serif';
@@ -113,11 +113,11 @@ html {
     --calculated-bottom-safe-inset: var(--safe-area-inset-bottom);
 
     @media (display-mode: standalone) {
-        width: ~"max(100%, 100lvw)";
-        height: ~"max(100%, 100lvh)";
+        width: ~"calc(max(100%, 100lvw))";
+        height: ~"calc(max(100%, 100lvh))";
 
         // iOS pads the bottom inset more than needed, so we deduce the actual inset size when using the webapp
-        --calculated-bottom-safe-inset: ~"min(env(safe-area-inset-bottom, 0px), max(16px, calc(100lvh - 100svh - env(safe-area-inset-top, 0px))))";
+        --calculated-bottom-safe-inset: ~"calc(min(env(safe-area-inset-bottom, 0px), max(16px, calc(100lvh - 100svh - env(safe-area-inset-top, 0px)))))";
     }
 
     body {
