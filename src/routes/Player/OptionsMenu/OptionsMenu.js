@@ -24,6 +24,17 @@ const OptionsMenu = ({ className, stream, playbackDevices }) => {
     const externalDevices = React.useMemo(() => {
         return playbackDevices.filter(({ type }) => type === 'external');
     }, [playbackDevices]);
+    const downloadVideoLink = React.useMemo(() => {
+        if (streamingUrl) {
+            const parsedUrl = new URL(streamingUrl);
+            parsedUrl.searchParams.set('download', '1');
+            return parsedUrl.href;
+        } else if (downloadUrl) {
+            return downloadUrl;
+        }
+
+        return null;
+    }, [streamingUrl, downloadUrl]);
     const onCopyStreamButtonClick = React.useCallback(() => {
         if (streamingUrl || downloadUrl) {
             navigator.clipboard.writeText(streamingUrl || downloadUrl)
@@ -47,14 +58,32 @@ const OptionsMenu = ({ className, stream, playbackDevices }) => {
         }
     }, [streamingUrl, downloadUrl]);
     const onDownloadVideoButtonClick = React.useCallback(() => {
-        if (streamingUrl) {
-            const parsedUrl = new URL(streamingUrl);
-            parsedUrl.searchParams.set('download', '1');
-            window.open(parsedUrl.href, '_blank');
-        } else if (downloadUrl) {
-            window.open(downloadUrl, '_blank');
+        if (downloadVideoLink) {
+            window.open(downloadVideoLink, '_blank');
         }
-    }, [streamingUrl, downloadUrl]);
+    }, [downloadVideoLink]);
+    const onCopyDownloadLinkButtonClick = React.useCallback(() => {
+        if (downloadVideoLink) {
+            navigator.clipboard.writeText(downloadVideoLink)
+                .then(() => {
+                    toast.show({
+                        type: 'success',
+                        title: 'Copied',
+                        message: t('PLAYER_COPY_DOWNLOAD_LINK_SUCCESS', {defaultValue: 'Download link was copied to your clipboard'}),
+                        timeout: 3000
+                    });
+                })
+                .catch((e) => {
+                    console.error(e);
+                    toast.show({
+                        type: 'error',
+                        title: t('Error'),
+                        message: `${t('PLAYER_COPY_DOWNLOAD_LINK_ERROR', {defaultValue: 'Failed to copy download link'})}: ${downloadVideoLink}`,
+                        timeout: 3000
+                    });
+                });
+        }
+    }, [downloadVideoLink]);
     const onExternalDeviceRequested = React.useCallback((deviceId) => {
         if (streamingUrl) {
             core.transport.dispatch({
@@ -100,10 +129,19 @@ const OptionsMenu = ({ className, stream, playbackDevices }) => {
                     null
             }
             {
+                !!(streamingUrl || downloadUrl) &&
+                <Option
+                    icon={'link'}
+                    label={t('CTX_COPY_VIDEO_DOWNLOAD_LINK', {defaultValue: 'Copy download link'})}
+                    disabled={stream === null}
+                    onClick={onCopyDownloadLinkButtonClick}
+                />
+            }
+            {
                 platform.name === 'ios' &&
                 <Option
                     icon={'play-outline'}
-                    label={'Open in nPlayer'}
+                    label={t('PLAYER_PLAY_IN_NPLAYER', {defaultValue: 'Open in nPlayer'})}
                     disabled={stream === null}
                     onClick={opneInNplayer}
                 />
