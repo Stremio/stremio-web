@@ -533,7 +533,7 @@ const Player = ({ urlParams, queryParams }) => {
                 }
                 case 'KeyV': {
                     closeMenus();
-                    if (player.metaItem !== null && player.metaItem.type === 'Ready') {
+                    if (player.metaItem !== null && player.metaItem.type === 'Ready' && player.metaItem?.content?.videos?.length > 0) {
                         toggleVideosMenu();
                     }
 

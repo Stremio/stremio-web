@@ -696,6 +696,14 @@ const Settings = () => {
                         </div>
                         <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
+                                <div className={styles['label']}>{ t('SETTINGS_SHORTCUT_MENU_VIDEOS') }</div>
+                            </div>
+                            <div className={classnames(styles['option-input-container'], styles['shortcut-container'])}>
+                                <kbd>V</kbd>
+                            </div>
+                        </div>
+                        <div className={styles['option-container']}>
+                            <div className={styles['option-name-container']}>
                                 <div className={styles['label']}>{ t('SETTINGS_SHORTCUT_FULLSCREEN') }</div>
                             </div>
                             <div className={classnames(styles['option-input-container'], styles['shortcut-container'])}>
