@@ -40,10 +40,15 @@ html:not(.active-slider-within) {
         bottom: 0;
         z-index: 0;
 
+        &.buffering-layer {
+            z-index: 1;
+        }
+
         &.nav-bar-layer {
             bottom: initial;
             background: transparent;
             overflow: visible;
+            z-index: 2;
 
             &::before {
                 position: absolute;
@@ -73,6 +78,7 @@ html:not(.active-slider-within) {
         &.control-bar-layer {
             top: initial;
             overflow: visible;
+            z-index: 2;
 
             &::before {
                 position: absolute;

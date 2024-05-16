@@ -612,7 +612,15 @@ const Player = ({ urlParams, queryParams }) => {
             />
             {
                 video.state.buffering ?
-                    <BufferingLoader className={styles['layer']} logo={player?.metaItem?.content?.logo} />
+                    <BufferingLoader className={classnames(styles['layer'], styles['buffering-layer'])} logo={player?.metaItem?.content?.logo} />
+                    :
+                    null
+            }
+            {
+                !video.state.loaded ?
+                    <div className={styles['layer']}>
+                        <img src={player?.metaItem?.content?.background} />
+                    </div>
                     :
                     null
             }
