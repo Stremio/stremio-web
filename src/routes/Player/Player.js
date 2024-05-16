@@ -618,8 +618,8 @@ const Player = ({ urlParams, queryParams }) => {
             }
             {
                 !video.state.loaded ?
-                    <div className={styles['layer']}>
-                        <img src={player?.metaItem?.content?.background} />
+                    <div className={classnames(styles['layer'], styles['background-layer'])}>
+                        <img className={styles['image']} src={player?.metaItem?.content?.background} />
                     </div>
                     :
                     null
