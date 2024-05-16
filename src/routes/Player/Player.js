@@ -627,7 +627,7 @@ const Player = ({ urlParams, queryParams }) => {
             {
                 error !== null ?
                     <Error
-                        className={styles['layer']}
+                        className={classnames(styles['layer'], styles['error-layer'])}
                         stream={video.state.stream}
                         {...error}
                     />

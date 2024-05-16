@@ -40,8 +40,9 @@ html:not(.active-slider-within) {
         bottom: 0;
         z-index: 0;
 
-        &.buffering-layer {
+        &.buffering-layer, &.error-layer {
             z-index: 1;
+            background: transparent;
         }
 
         &.background-layer {
@@ -49,6 +50,7 @@ html:not(.active-slider-within) {
                 width: 100vw;
                 height: 100vh;
                 object-fit: cover;
+                opacity: 0.7;
             }
         }
 
