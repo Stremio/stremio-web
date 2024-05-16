@@ -34,13 +34,15 @@ const Player = ({ urlParams, queryParams }) => {
         return queryParams.has('forceTranscoding');
     }, [queryParams]);
 
-    const [player, videoParamsChanged, timeChanged, pausedChanged, ended, nextVideo] = usePlayer(urlParams);
+    const [player, videoParamsChanged, timeChanged, seek, pausedChanged, ended, nextVideo] = usePlayer(urlParams);
     const [settings, updateSettings] = useSettings();
     const streamingServer = useStreamingServer();
     const statistics = useStatistics(player, streamingServer);
     const video = useVideo();
     const routeFocused = useRouteFocused();
     const toast = useToast();
+
+    const [seeking, setSeeking] = React.useState(false);
 
     const [casting, setCasting] = React.useState(() => {
         return chromecast.active && chromecast.transport.getCastState() === cast.framework.CastState.CONNECTED;
@@ -136,6 +138,8 @@ const Player = ({ urlParams, queryParams }) => {
 
     const onPlayRequested = React.useCallback(() => {
         video.setProp('paused', false);
+        setSeeking(false);
+        console.log(`setSeeking to (PlayRequested - Space): false`);
     }, []);
 
     const onPlayRequestedDebounced = React.useCallback(debounce(onPlayRequested, 200), []);
@@ -159,6 +163,9 @@ const Player = ({ urlParams, queryParams }) => {
 
     const onSeekRequested = React.useCallback((time) => {
         video.setProp('time', time);
+
+        setSeeking(true);
+        console.log(`setSeeking to (SeekRequested): true`);
     }, []);
 
     const onPlaybackSpeedChanged = React.useCallback((rate) => {
@@ -342,10 +349,23 @@ const Player = ({ urlParams, queryParams }) => {
     }, [settings.subtitlesOutlineColor]);
 
     React.useEffect(() => {
+        if (seeking && video.state.buffered) {
+            console.log(`setSeeking to (on !video.state.buffering): false`);
+            setSeeking(false);
+        }
+    }, [video.state.buffering]);
+
+    React.useEffect(() => {
         if (video.state.time !== null && !isNaN(video.state.time) &&
             video.state.duration !== null && !isNaN(video.state.duration) &&
             video.state.manifest !== null && typeof video.state.manifest.name === 'string') {
-            timeChanged(video.state.time, video.state.duration, video.state.manifest.name);
+
+                if (seeking) {
+                    seek(video.state.time, video.state.duration, video.state.manifest.name)
+                    // timeChanged(video.state.time, video.state.duration, video.state.manifest.name);
+                } else {
+                    timeChanged(video.state.time, video.state.duration, video.state.manifest.name);
+                }
         }
     }, [video.state.time, video.state.duration, video.state.manifest]);
 
@@ -468,8 +488,12 @@ const Player = ({ urlParams, queryParams }) => {
                     if (!menusOpen && !nextVideoPopupOpen && video.state.paused !== null) {
                         if (video.state.paused) {
                             onPlayRequested();
+                            setSeeking(false);
+                            console.log(`setSeeking to (play requested - Space): false`);
                         } else {
                             onPauseRequested();
+                            setSeeking(false);
+                            console.log(`setSeeking to (pause requested - Space): false`);
                         }
                     }
 
