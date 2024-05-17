@@ -611,16 +611,16 @@ const Player = ({ urlParams, queryParams }) => {
                 onDoubleClick={onVideoDoubleClick}
             />
             {
-                (video.state.buffering || !video.state.loaded) && !error ?
-                    <BufferingLoader className={classnames(styles['layer'], styles['buffering-layer'])} logo={player?.metaItem?.content?.logo} />
-                    :
-                    null
-            }
-            {
                 !video.state.loaded ?
                     <div className={classnames(styles['layer'], styles['background-layer'])}>
                         <img className={styles['image']} src={player?.metaItem?.content?.background} />
                     </div>
+                    :
+                    null
+            }
+            {
+                (video.state.buffering || !video.state.loaded) && !error ?
+                    <BufferingLoader className={classnames(styles['layer'], styles['buffering-layer'])} logo={player?.metaItem?.content?.logo} />
                     :
                     null
             }
