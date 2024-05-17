@@ -349,8 +349,8 @@ const Player = ({ urlParams, queryParams }) => {
     }, [settings.subtitlesOutlineColor]);
 
     React.useEffect(() => {
-        if (seeking && video.state.buffered) {
-            console.log(`setSeeking to (on !video.state.buffering): false`);
+        if (seeking && video.state.buffering) {
+            console.log(`setSeeking to (on video.state.buffering): false`);
             setSeeking(false);
         }
     }, [video.state.buffering]);
