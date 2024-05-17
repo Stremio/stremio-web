@@ -143,7 +143,7 @@ const usePlayer = (urlParams) => {
     }, []);
 
     const player = useModelState({ model: 'player', action, map });
-    return [player, videoParamsChanged, timeChanged, pausedChanged, ended, nextVideo, seek];
+    return [player, videoParamsChanged, timeChanged, seek, pausedChanged, ended, nextVideo];
 };
 
 module.exports = usePlayer;
