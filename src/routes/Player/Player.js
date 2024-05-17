@@ -349,23 +349,18 @@ const Player = ({ urlParams, queryParams }) => {
     }, [settings.subtitlesOutlineColor]);
 
     React.useEffect(() => {
-        if (seeking && video.state.buffering) {
-            console.log(`setSeeking to (on video.state.buffering): false`);
-            setSeeking(false);
-        }
-    }, [video.state.buffering]);
-
-    React.useEffect(() => {
         if (video.state.time !== null && !isNaN(video.state.time) &&
             video.state.duration !== null && !isNaN(video.state.duration) &&
             video.state.manifest !== null && typeof video.state.manifest.name === 'string') {
 
-                if (seeking) {
-                    seek(video.state.time, video.state.duration, video.state.manifest.name)
-                    // timeChanged(video.state.time, video.state.duration, video.state.manifest.name);
-                } else {
-                    timeChanged(video.state.time, video.state.duration, video.state.manifest.name);
-                }
+            if (seeking) {
+                seek(video.state.time, video.state.duration, video.state.manifest.name)
+                setSeeking(false);
+                console.log(`setSeeking to (on video.state.time change): false`);
+
+            } else {
+                timeChanged(video.state.time, video.state.duration, video.state.manifest.name);
+            }
         }
     }, [video.state.time, video.state.duration, video.state.manifest]);
 
