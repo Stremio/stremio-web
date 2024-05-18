@@ -568,7 +568,7 @@ const Player = ({ urlParams, queryParams }) => {
                 }
                 case 'KeyV': {
                     closeMenus();
-                    if (player.metaItem !== null && player.metaItem.type === 'Ready') {
+                    if (player.metaItem !== null && player.metaItem.type === 'Ready' && player.metaItem?.content?.videos?.length > 0) {
                         toggleVideosMenu();
                     }
 
@@ -652,9 +652,17 @@ const Player = ({ urlParams, queryParams }) => {
                 onGoBack10Seconds={seek10secondsBackward}
             />
             {
-                video.state.buffering ?
+                !video.state.loaded ?
+                    <div className={classnames(styles['layer'], styles['background-layer'])} onClick={isMobile ? toggleImmersion : null}>
+                        <img className={styles['image']} src={player?.metaItem?.content?.background} />
+                    </div>
+                    :
+                    null
+            }
+            {
+                (video.state.buffering || !video.state.loaded) && !error ?
                     <BufferingLoader
-                        className={styles['layer']}
+                        className={classnames(styles['layer'], styles['buffering-layer'])}
                         logo={player?.metaItem?.content?.logo}
                         onClick={isMobile ? toggleImmersion : null}
                     />
@@ -664,7 +672,7 @@ const Player = ({ urlParams, queryParams }) => {
             {
                 error !== null ?
                     <Error
-                        className={styles['layer']}
+                        className={classnames(styles['layer'], styles['error-layer'])}
                         stream={video.state.stream}
                         {...error}
                     />

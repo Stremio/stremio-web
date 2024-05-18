@@ -51,6 +51,19 @@ html:not(.active-slider-within) {
         bottom: 0;
         z-index: 0;
 
+        &.buffering-layer, &.error-layer {
+            background: transparent;
+        }
+
+        &.background-layer {
+            .image {
+                width: 100vw;
+                height: 100vh;
+                object-fit: cover;
+                opacity: 0.6;
+            }
+        }
+
         &.nav-bar-layer {
             bottom: initial;
             background: transparent;
