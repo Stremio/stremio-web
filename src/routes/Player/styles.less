@@ -1,6 +1,7 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
+@import (reference) '~stremio/common/screen-sizes.less';
 
 :import('~stremio/common/Slider/styles.less') {
     active-slider-within: active-slider-within;
@@ -35,7 +36,9 @@ html:not(.active-slider-within) {
 
     &.mobile {
         .nav-bar-layer {
-            height: 4.5rem;
+            @media only screen and (max-height: @minimum) {
+                height: 4.5rem;
+            }
         }
     }
 
