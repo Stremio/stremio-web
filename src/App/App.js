@@ -137,6 +137,12 @@ const App = () => {
                     action: 'PullNotifications'
                 }
             });
+            services.core.transport.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'PullCalendar'
+                }
+            });
         };
         if (services.core.active) {
             onWindowFocus();
