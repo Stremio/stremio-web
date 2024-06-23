@@ -80,7 +80,7 @@ const useStreamingServerSettingsInputs = (streamingServer) => {
                     }
                 });
             }
-        }
+        };
     }, [streamingServer.settings]);
 
     const remoteEndpointSelect = React.useMemo(() => {
