@@ -160,7 +160,10 @@ const MetaDetails = ({ urlParams, queryParams }) => {
                     streamPath !== null ?
                         <StreamsList
                             className={styles['streams-list']}
+                            metaItem={metaDetails.metaItem}
                             streams={metaDetails.streams}
+                            season={season}
+                            seasonOnSelect={seasonOnSelect}
                             video={video}
                         />
                         :

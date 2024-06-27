@@ -9,13 +9,31 @@ const { Button, Image, Multiselect } = require('stremio/common');
 const { useServices } = require('stremio/services');
 const Stream = require('./Stream');
 const styles = require('./styles');
+const { default: EpisodePicker } = require('./EpisodePicker');
 
 const ALL_ADDONS_KEY = 'ALL';
 
-const StreamsList = ({ className, video, ...props }) => {
+const StreamsList = ({ className, video, metaItem, ...props }) => {
     const { t } = useTranslation();
     const { core } = useServices();
     const [selectedAddon, setSelectedAddon] = React.useState(ALL_ADDONS_KEY);
+    const videos = React.useMemo(() => {
+        return metaItem && metaItem.content.type === 'Ready' ?
+            metaItem.content.content.videos
+            :
+            [];
+    }, [metaItem]);
+    const seasons = React.useMemo(() => {
+        return videos
+            .map(({ season }) => season)
+            .filter((season, index, seasons) => {
+                return season !== null &&
+                    !isNaN(season) &&
+                    typeof season === 'number' &&
+                    seasons.indexOf(season) === index;
+            })
+            .sort((a, b) => (a || Number.MAX_SAFE_INTEGER) - (b || Number.MAX_SAFE_INTEGER));
+    }, [videos]);
     const onAddonSelected = React.useCallback((event) => {
         setSelectedAddon(event.value);
     }, []);
@@ -86,10 +104,18 @@ const StreamsList = ({ className, video, ...props }) => {
                     </div>
                     :
                     props.streams.every((streams) => streams.content.type === 'Err') ?
-                        <div className={styles['message-container']}>
-                            <Image className={styles['image']} src={require('/images/empty.png')} alt={' '} />
-                            <div className={styles['label']}>{t('NO_STREAM')}</div>
-                        </div>
+                        <React.Fragment>
+                            <EpisodePicker
+                                video={video}
+                                seasons={seasons}
+                                season={props.season}
+                                seasonOnSelect={props.seasonOnSelect}
+                            />
+                            <div className={styles['message-container']}>
+                                <Image className={styles['image']} src={require('/images/empty.png')} alt={' '} />
+                                <div className={styles['label']}>{t('NO_STREAM')}</div>
+                            </div>
+                        </React.Fragment>
                         :
                         filteredStreams.length === 0 ?
                             <div className={styles['streams-container']}>
@@ -162,6 +188,9 @@ const StreamsList = ({ className, video, ...props }) => {
 StreamsList.propTypes = {
     className: PropTypes.string,
     streams: PropTypes.arrayOf(PropTypes.object).isRequired,
+    metaItem: PropTypes.object,
+    season: PropTypes.number,
+    seasonOnSelect: PropTypes.func,
     video: PropTypes.object
 };
 

@@ -1,0 +1,40 @@
+// Copyright (C) 2017-2024 Smart code 203358507
+
+@import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
+@import (reference) '~stremio/common/screen-sizes.less';
+
+:import('~stremio/common/Multiselect/styles.less') {
+    multiselect-menu-container: menu-container;
+    multiselect-label: label;
+    multiselect-icon: icon;
+}
+
+.episode-selector-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 1rem;
+    overflow: visible;
+
+    .label-container {
+        flex: 0 1 auto;
+        background: none;
+
+        &:hover, &:focus, &:global(.active) {
+            background-color: var(--overlay-color);
+        }
+
+        &>.multiselect-label {
+            color: var(--primary-foreground-color);
+        }
+
+        &>.multiselect-icon {
+            color: var(--primary-foreground-color);
+        }
+
+        .multiselect-menu-container {
+            max-height: calc(3.2rem * 7);
+            overflow: auto;
+        }
+    }
+}
