@@ -6,6 +6,7 @@ import useCalendar from './useCalendar';
 import useSelectableInputs from './useSelectableInputs';
 import Table from './Table/Table';
 import List from './List/List';
+import Placeholder from './Placeholder/Placeholder';
 import styles from './Calendar.less';
 
 type Props = {
@@ -22,29 +23,34 @@ const Calendar = ({ urlParams }: Props) => {
 
     return (
         <MainNavBars className={styles['calendar']} route={'calendar'}>
-            <div className={styles['content']}>
-                <div className={styles['main']}>
-                    <div className={styles['inputs']}>
-                        {
-                            paginationInput !== null ?
-                                <PaginationInput {...paginationInput} className={styles['pagination-input']} />
-                                :
-                                null
-                        }
+            {
+                profile.auth !== null ?
+                    <div className={styles['content']}>
+                        <div className={styles['main']}>
+                            <div className={styles['inputs']}>
+                                {
+                                    paginationInput !== null ?
+                                        <PaginationInput {...paginationInput} className={styles['pagination-input']} />
+                                        :
+                                        null
+                                }
+                            </div>
+                            <Table
+                                items={calendar.items}
+                                monthInfo={calendar.monthInfo}
+                                onChange={setSelected}
+                            />
+                        </div>
+                        <List
+                            items={calendar.items}
+                            monthInfo={calendar.monthInfo}
+                            profile={profile}
+                            onChange={setSelected}
+                        />
                     </div>
-                    <Table
-                        items={calendar.items}
-                        monthInfo={calendar.monthInfo}
-                        onChange={setSelected}
-                    />
-                </div>
-                <List
-                    items={calendar.items}
-                    monthInfo={calendar.monthInfo}
-                    profile={profile}
-                    onChange={setSelected}
-                />
-            </div>
+                    :
+                    <Placeholder />
+            }
         </MainNavBars>
     );
 };
