@@ -19,7 +19,7 @@ jobs:
       - name: Zip build artifact
         run: zip -r stremio-web.zip ./build
       - name: Upload build artifact to GitHub release assets
-        uses: svenstaro/upload-release-action@v1-release
+        uses: svenstaro/upload-release-action@2.9.0
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: stremio-web.zip
