@@ -9,7 +9,6 @@ const { Button, Image, Multiselect } = require('stremio/common');
 const { useServices } = require('stremio/services');
 const Stream = require('./Stream');
 const styles = require('./styles');
-const { default: EpisodePicker } = require('./EpisodePicker');
 
 const ALL_ADDONS_KEY = 'ALL';
 
@@ -105,12 +104,7 @@ const StreamsList = ({ className, video, metaItem, ...props }) => {
                     :
                     props.streams.every((streams) => streams.content.type === 'Err') ?
                         <React.Fragment>
-                            <EpisodePicker
-                                video={video}
-                                seasons={seasons}
-                                season={props.season}
-                                seasonOnSelect={props.seasonOnSelect}
-                            />
+                            {/*  */}
                             <div className={styles['message-container']}>
                                 <Image className={styles['image']} src={require('/images/empty.png')} alt={' '} />
                                 <div className={styles['label']}>{t('NO_STREAM')}</div>
