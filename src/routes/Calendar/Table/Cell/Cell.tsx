@@ -27,7 +27,7 @@ const Cell = ({ today, date, items, onClick }: Props) => {
             <div className={styles['body']}>
                 {
                     items.map(({ id, name, poster, deepLinks }) => (
-                        <Button key={id} href={deepLinks.metaDetailsStreams}>
+                        <Button key={id} className={styles['item']} href={deepLinks.metaDetailsStreams}>
                             <Image
                                 className={styles['poster']}
                                 src={poster}

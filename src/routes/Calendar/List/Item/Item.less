@@ -32,11 +32,23 @@
             flex-direction: row;
             align-items: center;
             justify-content: space-between;
+            gap: 1rem;
             height: 3rem;
             padding: 0 1rem;
             font-size: 1rem;
             font-weight: 500;
             color: var(--primary-foreground-color);
+
+            .name {
+                flex: auto;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+            }
+
+            .info {
+                flex: none;
+            }
 
             &:hover {
                 background-color: var(--overlay-color);

@@ -1,5 +1,7 @@
 // Copyright (C) 2017-2024 Smart code 203358507
 
+@import (reference) '~stremio/common/screen-sizes.less';
+
 .list {
     flex: none;
     display: flex;
@@ -8,4 +10,16 @@
     width: 20rem;
     padding-right: 1rem;
     overflow-y: auto;
+}
+
+@media only screen and (max-width: @minimum) and (orientation: portrait) {
+    .list {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: @small) and (orientation: landscape) {
+    .list {
+        width: 15rem;
+    }
 }

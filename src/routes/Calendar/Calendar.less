@@ -1,5 +1,7 @@
 // Copyright (C) 2017-2024 Smart code 203358507
 
+@import (reference) '~stremio/common/screen-sizes.less';
+
 :import('~stremio/common/PaginationInput/styles.less') {
     pagination-prev-button-container: prev-button-container;
     pagination-next-button-container: next-button-container;
@@ -38,7 +40,6 @@
                 .pagination-input {
                     flex: none;
                     height: 3rem;
-                    margin-left: 1.5rem;
 
                     .pagination-prev-button-container, .pagination-next-button-container {
                         width: 3rem;
@@ -56,6 +57,22 @@
                     }
                 }
             }
+        }
+    }
+}
+
+@media only screen and (max-width: @minimum) {
+    .calendar {
+        .content {
+            padding: 0;
+        }
+    }
+}
+
+@media only screen and (max-width: @small) and (orientation: landscape) {
+    .calendar {
+        .content {
+            padding: 0 0 0 1rem;
         }
     }
 }

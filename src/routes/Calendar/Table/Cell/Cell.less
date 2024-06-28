@@ -30,6 +30,7 @@
     }
 
     .heading {
+        flex: none;
         position: relative;
         padding: 1rem;
 
@@ -48,15 +49,26 @@
     }
 
     .body {
+        flex: 1 1 auto;
         position: relative;
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        height: 6rem;
+        display: flex;
+        flex-direction: row;
+        gap: 1rem;
+        height: 0;
+        padding: 1rem;
+        overflow-x: scroll;
 
-        .poster {
+        .item {
+            flex: none;
             height: 100%;
-            width: 100%;
-            object-fit: cover;
+            aspect-ratio: 2 / 3;
+            border-radius: var(--border-radius);
+
+            .poster {
+                height: 100%;
+                width: 100%;
+                object-fit: cover;
+            }
         }
     }
 }
