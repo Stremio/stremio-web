@@ -24,6 +24,7 @@ jobs:
         run: npm run lint
       # Create recursivelly the destiantion dir with
       # "--parrents where no error if existing, make parent directories as needed."
+      if: ${{ github.actor != 'dependabot[bot]' }}
       - run: mkdir -p ./build/${{ github.ref_name }}
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
