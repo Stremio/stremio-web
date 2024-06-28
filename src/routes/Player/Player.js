@@ -533,7 +533,7 @@ const Player = ({ urlParams, queryParams }) => {
                 }
                 case 'KeyV': {
                     closeMenus();
-                    if (player.metaItem !== null && player.metaItem.type === 'Ready') {
+                    if (player.metaItem !== null && player.metaItem.type === 'Ready' && player.metaItem?.content?.videos?.length > 0) {
                         toggleVideosMenu();
                     }
 
@@ -611,15 +611,23 @@ const Player = ({ urlParams, queryParams }) => {
                 onDoubleClick={onVideoDoubleClick}
             />
             {
-                video.state.buffering ?
-                    <BufferingLoader className={styles['layer']} logo={player?.metaItem?.content?.logo} />
+                !video.state.loaded ?
+                    <div className={classnames(styles['layer'], styles['background-layer'])}>
+                        <img className={styles['image']} src={player?.metaItem?.content?.background} />
+                    </div>
+                    :
+                    null
+            }
+            {
+                (video.state.buffering || !video.state.loaded) && !error ?
+                    <BufferingLoader className={classnames(styles['layer'], styles['buffering-layer'])} logo={player?.metaItem?.content?.logo} />
                     :
                     null
             }
             {
                 error !== null ?
                     <Error
-                        className={styles['layer']}
+                        className={classnames(styles['layer'], styles['error-layer'])}
                         stream={video.state.stream}
                         {...error}
                     />
