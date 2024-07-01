@@ -1,4 +1,4 @@
-// Copyright (C) 2017-2023 Smart code 203358507
+// Copyright (C) 2017-2024 Smart code 203358507
 
 const React = require('react');
 const PropTypes = require('prop-types');
@@ -9,6 +9,7 @@ const { Button, Image, Multiselect } = require('stremio/common');
 const { useServices } = require('stremio/services');
 const Stream = require('./Stream');
 const styles = require('./styles');
+const { default: EpisodesBar } = require('../EpisodesBar');
 
 const ALL_ADDONS_KEY = 'ALL';
 
@@ -16,23 +17,6 @@ const StreamsList = ({ className, video, metaItem, ...props }) => {
     const { t } = useTranslation();
     const { core } = useServices();
     const [selectedAddon, setSelectedAddon] = React.useState(ALL_ADDONS_KEY);
-    const videos = React.useMemo(() => {
-        return metaItem && metaItem.content.type === 'Ready' ?
-            metaItem.content.content.videos
-            :
-            [];
-    }, [metaItem]);
-    const seasons = React.useMemo(() => {
-        return videos
-            .map(({ season }) => season)
-            .filter((season, index, seasons) => {
-                return season !== null &&
-                    !isNaN(season) &&
-                    typeof season === 'number' &&
-                    seasons.indexOf(season) === index;
-            })
-            .sort((a, b) => (a || Number.MAX_SAFE_INTEGER) - (b || Number.MAX_SAFE_INTEGER));
-    }, [videos]);
     const onAddonSelected = React.useCallback((event) => {
         setSelectedAddon(event.value);
     }, []);
@@ -65,6 +49,22 @@ const StreamsList = ({ className, video, metaItem, ...props }) => {
                 return streamsByAddon;
             }, {});
     }, [props.streams]);
+    const videos = React.useMemo(() => {
+        return metaItem && metaItem.content.type === 'Ready' ?
+            metaItem.content.content.videos
+            :
+            [];
+    }, [metaItem]);
+    const currSeason = React.useMemo(() => {
+        return video?.season;
+    }, [video]);
+    const episodes = React.useMemo(() => {
+        return videos
+            .filter(({ season }) => season === currSeason)
+            .map(({ episode }) => episode)
+            .sort((a, b) => a - b);
+    }, [videos, currSeason]);
+
     const filteredStreams = React.useMemo(() => {
         return selectedAddon === ALL_ADDONS_KEY ?
             Object.values(streamsByAddon).map(({ streams }) => streams).flat(1)
@@ -104,7 +104,6 @@ const StreamsList = ({ className, video, metaItem, ...props }) => {
                     :
                     props.streams.every((streams) => streams.content.type === 'Err') ?
                         <React.Fragment>
-                            {/*  */}
                             <div className={styles['message-container']}>
                                 <Image className={styles['image']} src={require('/images/empty.png')} alt={' '} />
                                 <div className={styles['label']}>{t('NO_STREAM')}</div>
@@ -126,6 +125,18 @@ const StreamsList = ({ className, video, metaItem, ...props }) => {
                                             </div>
                                             <span className={styles['addons-loading-bar']}></span>
                                         </div>
+                                        :
+                                        null
+                                }
+                                {
+                                    episodes.length > 0 ?
+                                        <EpisodesBar
+                                            className={styles['episodes-bar']}
+                                            episodes={episodes}
+                                            episode={props.episode}
+                                            onSelect={props.episodeOnSelect}
+
+                                        />
                                         :
                                         null
                                 }
@@ -182,10 +193,10 @@ const StreamsList = ({ className, video, metaItem, ...props }) => {
 StreamsList.propTypes = {
     className: PropTypes.string,
     streams: PropTypes.arrayOf(PropTypes.object).isRequired,
+    episode: PropTypes.number,
     metaItem: PropTypes.object,
-    season: PropTypes.number,
-    seasonOnSelect: PropTypes.func,
-    video: PropTypes.object
+    video: PropTypes.object,
+    episodeOnSelect: PropTypes.func
 };
 
 module.exports = StreamsList;

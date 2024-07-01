@@ -1,46 +1,45 @@
 // Copyright (C) 2017-2024 Smart code 203358507
 
-import React from 'react';
-import type { MouseEvent } from 'react';
-import classnames from 'classnames';
+import React, { MouseEvent } from 'react';
 import { t } from 'i18next';
-import Icon from '@stremio/stremio-icons/react';
-import { Button, Multiselect } from 'stremio/common';
-import SeasonsBarPlaceholder from './SeasonsBarPlaceholder';
-import type { OnSelectFunction, CustomSelectEvent } from './types';
+import { Multiselect, Button, Icon } from 'stremio/common';
+import { CustomSelectEvent, OnSelectFunction } from './types';
+import EpisodesBarPlaceholder from './EpisodesBarPlaceholder';
+import classnames from 'classnames';
 import styles from './styles.less';
 
 type Props = {
     className?: string;
-    seasons: number[];
-    season: number;
+    episodes: number[];
+    episode: number;
     onSelect?: OnSelectFunction;
 };
 
-const SeasonsBar = ({ className, seasons, season, onSelect }: Props) => {
+const EpisodesBar = ({ episodes, episode, className, onSelect }: Props) => {
+
     const options = React.useMemo(() => {
-        return seasons.map((season) => ({
-            value: String(season),
-            label: season > 0 ? `${t('SEASON')} ${season}` : t('SPECIAL')
+        return episodes.map((episode) => ({
+            value: String(episode),
+            label: `${t('EPISODE')} ${episode}`
         }));
-    }, [seasons]);
+    }, [episodes]);
 
     const selected = React.useMemo(() => {
-        return [String(season)];
-    }, [season]);
+        return [String(episode)];
+    }, [episode]);
 
     const prevNextButtonOnClick = React.useCallback((event: MouseEvent<HTMLButtonElement>) => {
         if (typeof onSelect === 'function') {
-            const seasonIndex = seasons.indexOf(season);
+            const episodeIndex = episodes.indexOf(episode);
             const isNextAction = event.currentTarget.dataset.action === 'next';
             const valueIndex = isNextAction
-                ? seasonIndex + 1 < seasons.length
-                    ? seasonIndex + 1
-                    : seasons.length - 1
-                : seasonIndex - 1 >= 0
-                ? seasonIndex - 1
+                ? episodeIndex + 1 < episodes.length
+                    ? episodeIndex + 1
+                    : episodes.length - 1
+                : episodeIndex - 1 >= 0
+                ? episodeIndex - 1
                 : 0;
-            const value = seasons[valueIndex];
+            const value = episodes[valueIndex];
 
             onSelect({
                 type: 'select',
@@ -49,9 +48,9 @@ const SeasonsBar = ({ className, seasons, season, onSelect }: Props) => {
                 nativeEvent: event.nativeEvent,
             });
         }
-    }, [season, seasons, onSelect]);
+    }, [episode, episodes, onSelect]);
 
-    const seasonOnSelect = React.useCallback((event: CustomSelectEvent) => {
+    const episodesOnSelect = React.useCallback((event: CustomSelectEvent) => {
         const value = Number(event.value);
         if (typeof onSelect === 'function') {
             onSelect({
@@ -62,21 +61,22 @@ const SeasonsBar = ({ className, seasons, season, onSelect }: Props) => {
             });
         }
     }, [onSelect]);
+
     return (
         <div className={classnames(className, styles['seasons-bar-container'])}>
-            <Button className={styles['prev-season-button']} title={'Previous season'} data-action={'prev'} onClick={prevNextButtonOnClick}>
+            <Button className={styles['prev-episode-button']} title={'Previous episode'} data-action={'prev'} onClick={prevNextButtonOnClick}>
                 <Icon className={styles['icon']} name={'chevron-back'} />
                 <div className={styles['label']}>Prev</div>
             </Button>
             <Multiselect
-                className={styles['seasons-popup-label-container']}
-                title={season > 0 ? `${t('SEASON')} ${season}` : t('SPECIAL')}
+                className={styles['episodes-popup-label-container']}
+                title={`${t('EPISODE')} ${episode}`}
                 direction={'bottom-left'}
                 options={options}
                 selected={selected}
-                onSelect={seasonOnSelect}
+                onSelect={episodesOnSelect}
             />
-            <Button className={styles['next-season-button']} title={'Next season'} data-action={'next'} onClick={prevNextButtonOnClick}>
+            <Button className={styles['next-episode-button']} title={'Next episode'} data-action={'next'} onClick={prevNextButtonOnClick}>
                 <div className={styles['label']}>Next</div>
                 <Icon className={styles['icon']} name={'chevron-forward'} />
             </Button>
@@ -84,6 +84,6 @@ const SeasonsBar = ({ className, seasons, season, onSelect }: Props) => {
     );
 };
 
-SeasonsBar.Placeholder = SeasonsBarPlaceholder;
+EpisodesBar.Placeholder = EpisodesBarPlaceholder;
 
-export default SeasonsBar;
+export default EpisodesBar;

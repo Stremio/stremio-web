@@ -9,6 +9,7 @@ const StreamsList = require('./StreamsList');
 const VideosList = require('./VideosList');
 const useMetaDetails = require('./useMetaDetails');
 const useSeason = require('./useSeason');
+const useEpisode = require('./useEpisode');
 const useMetaExtensionTabs = require('./useMetaExtensionTabs');
 const styles = require('./styles');
 
@@ -16,6 +17,7 @@ const MetaDetails = ({ urlParams, queryParams }) => {
     const { core } = useServices();
     const metaDetails = useMetaDetails(urlParams);
     const [season, setSeason] = useSeason(urlParams, queryParams);
+    const [episode, setEpisode] = useEpisode(urlParams, queryParams);
     const [tabs, metaExtension, clearMetaExtension] = useMetaExtensionTabs(metaDetails.metaExtensions);
     const [metaPath, streamPath] = React.useMemo(() => {
         return metaDetails.selected !== null ?
@@ -75,6 +77,10 @@ const MetaDetails = ({ urlParams, queryParams }) => {
     const seasonOnSelect = React.useCallback((event) => {
         setSeason(event.value);
     }, [setSeason]);
+    const episodeOnSelect = React.useCallback((event) => {
+        setEpisode(event.value);
+    }, [setEpisode]);
+
     const renderBackgroundImageFallback = React.useCallback(() => null, []);
     return (
         <div className={styles['metadetails-container']}>
@@ -162,8 +168,8 @@ const MetaDetails = ({ urlParams, queryParams }) => {
                             className={styles['streams-list']}
                             metaItem={metaDetails.metaItem}
                             streams={metaDetails.streams}
-                            season={season}
-                            seasonOnSelect={seasonOnSelect}
+                            episode={episode}
+                            episodeOnSelect={episodeOnSelect}
                             video={video}
                         />
                         :
