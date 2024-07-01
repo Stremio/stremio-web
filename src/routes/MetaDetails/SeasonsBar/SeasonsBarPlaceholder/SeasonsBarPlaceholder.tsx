@@ -1,12 +1,15 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const classnames = require('classnames');
-const { default: Icon } = require('@stremio/stremio-icons/react');
-const styles = require('./styles');
+import React from 'react';
+import classnames from 'classnames';
+import Icon from '@stremio/stremio-icons/react';
+import styles from './styles.less';
 
-const SeasonsBarPlaceholder = ({ className }) => {
+type Props = {
+    className?: string;
+};
+
+const SeasonsBarPlaceholder = ({ className }: Props) => {
     return (
         <div className={classnames(className, styles['seasons-bar-placeholder-container'])}>
             <div className={styles['prev-season-button']}>
@@ -25,8 +28,4 @@ const SeasonsBarPlaceholder = ({ className }) => {
     );
 };
 
-SeasonsBarPlaceholder.propTypes = {
-    className: PropTypes.string
-};
-
-module.exports = SeasonsBarPlaceholder;
+export default SeasonsBarPlaceholder;
