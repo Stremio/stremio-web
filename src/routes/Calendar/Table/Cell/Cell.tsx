@@ -2,7 +2,7 @@
 
 import React, { useMemo } from 'react';
 import classNames from 'classnames';
-import { Button, Image } from 'stremio/common';
+import { Button, Image, HorizontalScroll } from 'stremio/common';
 import styles from './Cell.less';
 
 type Props = {
@@ -37,7 +37,7 @@ const Cell = ({ selected, monthInfo, date, items, onClick }: Props) => {
                     {date.day}
                 </div>
             </div>
-            <div className={styles['body']}>
+            <HorizontalScroll className={styles['body']}>
                 {
                     items.map(({ id, name, poster, deepLinks }) => (
                         <Button key={id} className={styles['item']} href={deepLinks.metaDetailsStreams}>
@@ -49,7 +49,7 @@ const Cell = ({ selected, monthInfo, date, items, onClick }: Props) => {
                         </Button>
                     ))
                 }
-            </div>
+            </HorizontalScroll>
         </div>
     );
 };
