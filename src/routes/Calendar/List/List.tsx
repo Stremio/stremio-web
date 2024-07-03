@@ -6,12 +6,13 @@ import styles from './List.less';
 
 type Props = {
     items: CalendarItem[],
+    selected: CalendarDate | null,
     monthInfo: CalendarMonthInfo,
     profile: Profile,
     onChange: (date: CalendarDate) => void,
 };
 
-const List = ({ items, monthInfo, profile, onChange }: Props) => {
+const List = ({ items, selected, monthInfo, profile, onChange }: Props) => {
     const filteredItems = useMemo(() => {
         return items.filter(({ items }) => items.length);
     }, [items]);
@@ -23,7 +24,8 @@ const List = ({ items, monthInfo, profile, onChange }: Props) => {
                     <Item
                         key={item.date.day}
                         {...item}
-                        today={monthInfo.today}
+                        selected={selected}
+                        monthInfo={monthInfo}
                         profile={profile}
                         onClick={onChange}
                     />

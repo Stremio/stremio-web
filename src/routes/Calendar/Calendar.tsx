@@ -37,12 +37,14 @@ const Calendar = ({ urlParams }: Props) => {
                             </div>
                             <Table
                                 items={calendar.items}
+                                selected={selected}
                                 monthInfo={calendar.monthInfo}
                                 onChange={setSelected}
                             />
                         </div>
                         <List
                             items={calendar.items}
+                            selected={selected}
                             monthInfo={calendar.monthInfo}
                             profile={profile}
                             onChange={setSelected}

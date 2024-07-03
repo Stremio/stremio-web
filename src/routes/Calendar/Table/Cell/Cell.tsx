@@ -1,24 +1,37 @@
 // Copyright (C) 2017-2024 Smart code 203358507
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import classNames from 'classnames';
 import { Button, Image } from 'stremio/common';
 import styles from './Cell.less';
 
 type Props = {
-    today: number | null,
+    selected: CalendarDate | null,
+    monthInfo: CalendarMonthInfo,
     date: CalendarDate,
     items: CalendarContentItem[],
     onClick: (date: CalendarDate) => void,
 };
 
-const Cell = ({ today, date, items, onClick }: Props) => {
+const Cell = ({ selected, monthInfo, date, items, onClick }: Props) => {
+    const [active, today, past] = useMemo(() => {
+        const active = date.day === selected?.day;
+        const today = date.day === monthInfo.today;
+        const past = date.day < (monthInfo.today ?? 1);
+
+        return [active, today, past];
+    }, [selected, monthInfo, date]);
+
     const onCellClick = () => {
         onClick && onClick(date);
     };
 
     return (
-        <div className={classNames(styles['cell'], { 'current': today === date.day, 'past': date.day < (today ?? 1) })} key={date.day} onClick={onCellClick}>
+        <div
+            className={classNames(styles['cell'], { [styles['active']]: active, [styles['today']]: today, [styles['past']]: past })}
+            key={date.day}
+            onClick={onCellClick}
+        >
             <div className={styles['heading']}>
                 <div className={styles['day']}>
                     {date.day}

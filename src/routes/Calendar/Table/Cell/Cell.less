@@ -6,6 +6,9 @@
     flex-direction: column;
     justify-content: space-between;
     background-color: var(--overlay-color);
+    border: 0.15rem solid transparent;
+    overflow: hidden;
+    cursor: pointer;
 
     &:first-child {
         border-radius: var(--border-radius) 0 0 0;
@@ -13,20 +16,6 @@
 
     &:last-child {
         border-radius: 0 0 var(--border-radius) 0;
-    }
-
-    &:global(.current) {
-        .heading {
-            .day {
-                background-color: var(--primary-accent-color);
-            }
-        }
-    }
-
-    &:global(.past) {
-        .body {
-            opacity: 0.5;
-        }
     }
 
     .heading {
@@ -70,5 +59,27 @@
                 object-fit: cover;
             }
         }
+    }
+
+    &.today {
+        .heading {
+            .day {
+                background-color: var(--primary-accent-color);
+            }
+        }
+    }
+
+    &.past {
+        .body {
+            opacity: 0.5;
+        }
+    }
+
+    &.active {
+        border-color: var(--primary-foreground-color);
+    }
+
+    &:not(.active):hover {
+        border-color: var(--overlay-color);
     }
 }

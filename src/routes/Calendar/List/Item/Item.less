@@ -7,6 +7,7 @@
     flex-direction: column;
     background-color: var(--overlay-color);
     border-radius: var(--border-radius);
+    border: 0.15rem solid transparent;
 
     .heading {
         flex: none;
@@ -56,15 +57,23 @@
         }
     }
 
-    &:global(.current) {
+    &.today {
         .heading {
             background-color: var(--primary-accent-color);
         }
     }
 
-    &:global(.past) {
+    &.past {
         .body {
             opacity: 0.5;
         }
+    }
+
+    &.active {
+        border-color: var(--primary-foreground-color);
+    }
+
+    &:not(.active):hover {
+        border-color: var(--overlay-color);
     }
 }

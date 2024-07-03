@@ -9,11 +9,12 @@ const WEEK_DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Satu
 
 type Props = {
     items: CalendarItem[],
+    selected: CalendarDate | null,
     monthInfo: CalendarMonthInfo,
     onChange: (date: CalendarDate) => void,
 };
 
-const Table = ({ items, monthInfo, onChange }: Props) => {
+const Table = ({ items, selected, monthInfo, onChange }: Props) => {
     const { t } = useTranslation();
 
     const cellsOffset = useMemo(() => {
@@ -42,7 +43,8 @@ const Table = ({ items, monthInfo, onChange }: Props) => {
                         <Cell
                             key={item.date.day}
                             {...item}
-                            today={monthInfo.today}
+                            selected={selected}
+                            monthInfo={monthInfo}
                             onClick={onChange}
                         />
                     ))
