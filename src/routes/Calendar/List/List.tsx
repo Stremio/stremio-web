@@ -1,7 +1,7 @@
 // Copyright (C) 2017-2024 Smart code 203358507
 
 import React, { useMemo } from 'react';
-import Item from './Item/Item';
+import Item from './Item';
 import styles from './List.less';
 
 type Props = {
