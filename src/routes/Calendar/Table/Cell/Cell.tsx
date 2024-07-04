@@ -38,7 +38,7 @@ const Cell = ({ selected, monthInfo, date, items, onClick }: Props) => {
                     {date.day}
                 </div>
             </div>
-            <HorizontalScroll className={styles['body']}>
+            <HorizontalScroll className={styles['items']}>
                 {
                     items.map(({ id, name, poster, deepLinks }) => (
                         <Button key={id} className={styles['item']} href={deepLinks.metaDetailsStreams}>

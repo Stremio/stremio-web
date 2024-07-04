@@ -1,5 +1,7 @@
 // Copyright (C) 2017-2024 Smart code 203358507
 
+@import (reference) '~stremio/common/screen-sizes.less';
+
 .table {
     flex: auto;
     position: relative;
@@ -15,7 +17,7 @@
         grid-template-columns: repeat(7, 1fr);
         align-items: center;
 
-        .item {
+        .day {
             position: relative;
             padding: 0.5rem;
             font-size: 1rem;
@@ -24,6 +26,14 @@
             white-space: nowrap;
             text-overflow: ellipsis;
             overflow: hidden;
+
+            .long {
+                display: block;
+            }
+
+            .short {
+                display: none;
+            }
         }
     }
 
@@ -36,5 +46,21 @@
         grid-template-columns: repeat(7, 1fr);
         gap: 1px;
         border-radius: var(--border-radius);
+    }
+}
+
+@media only screen and (max-width: @xsmall) {
+    .table {
+        .week {
+            .day {
+                .long {
+                    display: none;
+                }
+
+                .short {
+                    display: block;
+                }
+            }
+        }
     }
 }

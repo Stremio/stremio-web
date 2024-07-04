@@ -26,8 +26,13 @@ const Table = ({ items, selected, monthInfo, onChange }: Props) => {
             <div className={styles['week']}>
                 {
                     WEEK_DAYS.map((day) => (
-                        <div className={styles['item']} key={day}>
-                            {t(day)}
+                        <div className={styles['day']} key={day}>
+                            <span className={styles['long']}>
+                                {t(day)}
+                            </span>
+                            <span className={styles['short']}>
+                                {t(day).slice(0, 3)}
+                            </span>
                         </div>
                     ))
                 }
