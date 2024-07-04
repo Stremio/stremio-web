@@ -28,9 +28,8 @@ const Cell = ({ selected, monthInfo, date, items, onClick }: Props) => {
     };
 
     return (
-        <div
+        <Button
             className={classNames(styles['cell'], { [styles['active']]: active, [styles['today']]: today, [styles['past']]: past })}
-            key={date.day}
             onClick={onCellClick}
         >
             <div className={styles['heading']}>
@@ -52,7 +51,7 @@ const Cell = ({ selected, monthInfo, date, items, onClick }: Props) => {
                     ))
                 }
             </HorizontalScroll>
-        </div>
+        </Button>
     );
 };
 
