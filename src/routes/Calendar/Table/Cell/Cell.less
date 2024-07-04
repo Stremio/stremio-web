@@ -48,14 +48,48 @@
 
         .item {
             flex: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             height: 100%;
             aspect-ratio: 2 / 3;
             border-radius: var(--border-radius);
 
+            .icon {
+                flex: none;
+                z-index: 1;
+                position: absolute;
+                width: 2rem;
+                height: 2rem;
+                padding: 0.5rem;
+                border-radius: 50%;
+                color: var(--primary-foreground-color);
+                background-color: var(--secondary-accent-color);
+                opacity: 0;
+            }
+
             .poster {
+                flex: auto;
+                z-index: 0;
+                position: relative;
                 height: 100%;
                 width: 100%;
                 object-fit: cover;
+                opacity: 1;
+            }
+
+            .icon, .poster {
+                transition: opacity 0.1s ease-out;
+            }
+
+            &:hover {
+                .icon {
+                    opacity: 1;
+                }
+
+                .poster {
+                    opacity: 0.5;
+                }
             }
         }
     }

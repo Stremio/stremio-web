@@ -49,10 +49,30 @@
 
             .info {
                 flex: none;
+                display: block;
+            }
+
+            .icon {
+                flex: none;
+                display: none;
+                width: 2rem;
+                height: 2rem;
+                padding: 0.5rem;
+                border-radius: 50%;
+                color: var(--primary-foreground-color);
+                background-color: var(--secondary-accent-color);
             }
 
             &:hover {
                 background-color: var(--overlay-color);
+
+                .info {
+                    display: none;
+                }
+
+                .icon {
+                    display: block;
+                }
             }
         }
     }

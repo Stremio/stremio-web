@@ -1,6 +1,7 @@
 // Copyright (C) 2017-2024 Smart code 203358507
 
 import React, { useEffect, useMemo, useRef } from 'react';
+import Icon from '@stremio/stremio-icons/react';
 import classNames from 'classnames';
 import { Button } from 'stremio/common';
 import useCalendarDate from '../../useCalendarDate';
@@ -58,6 +59,7 @@ const Item = ({ selected, monthInfo, date, items, profile, onClick }: Props) => 
                             <div className={styles['info']}>
                                 S{season}E{episode}
                             </div>
+                            <Icon className={styles['icon']} name={'play'} />
                         </Button>
                     ))
                 }

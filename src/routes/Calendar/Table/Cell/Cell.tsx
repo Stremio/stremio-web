@@ -1,6 +1,7 @@
 // Copyright (C) 2017-2024 Smart code 203358507
 
 import React, { useMemo } from 'react';
+import Icon from '@stremio/stremio-icons/react';
 import classNames from 'classnames';
 import { Button, Image, HorizontalScroll } from 'stremio/common';
 import styles from './Cell.less';
@@ -41,6 +42,7 @@ const Cell = ({ selected, monthInfo, date, items, onClick }: Props) => {
                 {
                     items.map(({ id, name, poster, deepLinks }) => (
                         <Button key={id} className={styles['item']} href={deepLinks.metaDetailsStreams}>
+                            <Icon className={styles['icon']} name={'play'} />
                             <Image
                                 className={styles['poster']}
                                 src={poster}
