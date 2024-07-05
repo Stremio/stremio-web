@@ -2,11 +2,11 @@
 
 import React, { useState } from 'react';
 import { MainNavBars, PaginationInput, useProfile, withCoreSuspender } from 'stremio/common';
+import Table from './Table';
+import List from './List';
+import Placeholder from './Placeholder';
 import useCalendar from './useCalendar';
 import useSelectableInputs from './useSelectableInputs';
-import Table from './Table/Table';
-import List from './List/List';
-import Placeholder from './Placeholder/Placeholder';
 import styles from './Calendar.less';
 
 type Props = {
