@@ -74,12 +74,18 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
         }
     }, [props.onClick, profile.settings, markVideoAsWatched]);
 
+    const onContextMenu = React.useCallback((event) => {
+        if (typeof props.onContextMenu === 'function') {
+            props.onContextMenu(event);
+        }
+    }, [props.onContextMenu]);
+
     const renderThumbnailFallback = React.useCallback(() => (
         <Icon className={styles['placeholder-icon']} name={'ic_broken_link'} />
     ), []);
 
     return (
-        <Button className={classnames(className, styles['stream-container'])} title={addonName} href={href} download={download} target={target} onClick={onClick}>
+        <Button className={classnames(className, styles['stream-container'])} title={addonName} href={href} download={download} target={target} onClick={onClick} onContextMenu={onContextMenu}>
             <div className={styles['info-container']}>
                 {
                     typeof thumbnail === 'string' && thumbnail.length > 0 ?
@@ -140,7 +146,8 @@ Stream.propTypes = {
             })
         })
     }),
-    onClick: PropTypes.func
+    onClick: PropTypes.func,
+    onContextMenu: PropTypes.func
 };
 
 module.exports = Stream;

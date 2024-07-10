@@ -5,7 +5,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { useTranslation } = require('react-i18next');
 const { default: Icon } = require('@stremio/stremio-icons/react');
-const { Button, Image, Multiselect } = require('stremio/common');
+const { Button, Image, Multiselect, useToast } = require('stremio/common');
 const { useServices } = require('stremio/services');
 const Stream = require('./Stream');
 const styles = require('./styles');
@@ -15,6 +15,7 @@ const ALL_ADDONS_KEY = 'ALL';
 const StreamsList = ({ className, video, ...props }) => {
     const { t } = useTranslation();
     const { core } = useServices();
+    const toast = useToast();
     const [selectedAddon, setSelectedAddon] = React.useState(ALL_ADDONS_KEY);
     const onAddonSelected = React.useCallback((event) => {
         setSelectedAddon(event.value);
@@ -40,6 +41,17 @@ const StreamsList = ({ className, video, ...props }) => {
                                     stream
                                 }
                             });
+                        },
+                        onContextMenu: (e) => {
+                            e.preventDefault();
+                            if(stream?.infoHash && navigator?.clipboard) {
+                                stream?.infoHash && navigator?.clipboard?.writeText(stream.infoHash);
+                                toast.show({
+                                    type: 'success',
+                                    title: 'Copied infohash to clipboard',
+                                    timeout: 4000
+                                });
+                            }
                         },
                         addonName: streams.addon.manifest.name
                     }))
@@ -146,6 +158,7 @@ const StreamsList = ({ className, video, ...props }) => {
                                             progress={stream.progress}
                                             deepLinks={stream.deepLinks}
                                             onClick={stream.onClick}
+                                            onContextMenu={stream.onContextMenu}
                                         />
                                     ))}
                                 </div>
