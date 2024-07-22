@@ -15,7 +15,7 @@ const styles = require('./styles');
 const UrlUtils = require('url');
 const CONSTANTS = require('stremio/common/CONSTANTS');
 
-const MetaItem = React.memo(({ className, type, name, poster, links, posterShape, posterChangeCursor, progress, newVideos, options, deepLinks, dataset, optionOnSelect, onDismissClick, onPlayClick, watched, ...props }) => {
+const MetaItem = React.memo(({ className, type, name, poster, posterShape, posterChangeCursor, progress, newVideos, options, deepLinks, dataset, optionOnSelect, onDismissClick, onPlayClick, watched, links, ...props }) => {
     const { t } = useTranslation();
     const [menuOpen, onMenuOpen, onMenuClose] = useBinaryState(false);
     const imdbLink = React.useMemo(() => {

@@ -146,7 +146,6 @@ const Discover = ({ urlParams, queryParams }) => {
                                                 className={classnames({ 'selected': selectedMetaItemIndex === index })}
                                                 type={metaItem.type}
                                                 name={metaItem.name}
-                                                links={metaItem.links}
                                                 poster={metaItem.poster}
                                                 posterShape={metaItem.posterShape}
                                                 playname={selectedMetaItemIndex === index}
