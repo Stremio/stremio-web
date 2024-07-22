@@ -211,7 +211,7 @@ MetaItem.propTypes = {
         category: PropTypes.string,
         name: PropTypes.string,
         url: PropTypes.string
-    })),
+    }))
 };
 
 module.exports = MetaItem;
