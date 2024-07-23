@@ -184,10 +184,10 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
     const renderMenu = function renderMenu() {
         return (
             <div className={styles['context-menu-content']} onPointerDown={popupMenuOnPointerDown} onContextMenu={popupMenuOnContextMenu} onClick={popupMenuOnClick} onKeyDown={popupMenuOnKeyDown}>
-                <Button className={styles['context-menu-option-container']} title={'Play'} onClick={onClick}>
+                <Button className={styles['context-menu-option-container']} title={t('CTX_PLAY')} onClick={onClick}>
                     <div className={styles['context-menu-option-label']}>{t('CTX_PLAY')}</div>
                 </Button>
-                {deepLinks?.externalPlayer?.download && <Button className={styles['context-menu-option-container']} title={'Magnetic Link'} onClick={copyMagneticLinkToClipboard}>
+                {deepLinks?.externalPlayer?.download && <Button className={styles['context-menu-option-container']} title={t('CTX_COPY_VIDEO_DOWNLOAD_LINK')} onClick={copyMagneticLinkToClipboard}>
                     <div className={styles['context-menu-option-label']}>{t('CTX_COPY_VIDEO_DOWNLOAD_LINK')}</div>
                 </Button>}
             </div>
