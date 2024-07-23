@@ -8,7 +8,6 @@ const { Button, Image, useProfile, platform, useToast, Popup, useBinaryState } =
 const { useServices } = require('stremio/services');
 const StreamPlaceholder = require('./StreamPlaceholder');
 const { t } = require('i18next');
-
 const styles = require('./styles');
 
 const Stream = ({ className, videoId, videoReleased, addonName, name, description, thumbnail, progress, deepLinks, ...props }) => {
@@ -112,11 +111,27 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
     const copyMagneticLinkToClipboard = React.useCallback((event) => {
         event.preventDefault();
         if (deepLinks?.externalPlayer?.download && navigator?.clipboard) {
-            navigator.clipboard.writeText(deepLinks.externalPlayer.download);
+            navigator.clipboard.writeText(deepLinks.externalPlayer.download)
+                .then(() => {
+                    toast.show({
+                        type: 'success',
+                        title: t('PLAYER_COPY_DOWNLOAD_LINK_SUCCESS'),
+                        timeout: 4000
+                    });
+                })
+                .catch(() => {
+                    toast.show({
+                        type: 'error',
+                        title: t('PLAYER_COPY_DOWNLOAD_LINK_ERROR'),
+                        timeout: 4000,
+                    });
+                });
+
+        } else {
             toast.show({
-                type: 'success',
-                title: t('PLAYER_COPY_DOWNLOAD_LINK_SUCCESS'),
-                timeout: 4000
+                type: 'error',
+                title: t('PLAYER_COPY_DOWNLOAD_LINK_ERROR'),
+                timeout: 4000,
             });
         }
         closeMenu();
