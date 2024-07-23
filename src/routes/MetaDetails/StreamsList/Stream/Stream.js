@@ -107,9 +107,7 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
         if (typeof props.onClick === 'function') {
             props.onClick(event);
         }
-    },
-    [props.onClick, profile.settings, markVideoAsWatched]
-    );
+    }, [props.onClick, profile.settings, markVideoAsWatched]);
 
     const copyMagneticLinkToClipboard = React.useCallback((event) => {
         event.preventDefault();
@@ -223,11 +221,11 @@ Stream.propTypes = {
                 android: PropTypes.string,
                 windows: PropTypes.string,
                 macos: PropTypes.string,
-                linux: PropTypes.string,
-            }),
-        }),
+                linux: PropTypes.string
+            })
+        })
     }),
-    onClick: PropTypes.func,
+    onClick: PropTypes.func
 };
 
 module.exports = Stream;
