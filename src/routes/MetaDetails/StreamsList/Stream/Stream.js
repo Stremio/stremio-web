@@ -221,7 +221,7 @@ Stream.propTypes = {
                 android: PropTypes.string,
                 windows: PropTypes.string,
                 macos: PropTypes.string,
-                linux: PropTypes.string
+                linux: PropTypes.string,
             })
         })
     }),
