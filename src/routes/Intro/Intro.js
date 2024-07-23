@@ -82,32 +82,13 @@ const Intro = ({ queryParams }) => {
         openLoaderModal();
         getFacebookToken()
             .then((accessToken) => {
-                return fetch('https://www.strem.io/fb-login-with-token/' + encodeURIComponent(accessToken))
-                    .then((resp) => resp.json())
-                    .catch(() => {
-                        throw new Error('Login failed at getting token from Stremio');
-                    })
-                    .then(({ user } = {}) => {
-                        if (!user || typeof user.email !== 'string' || typeof user.fbLoginToken !== 'string') {
-                            throw new Error('Login failed at getting token from Stremio');
-                        }
-
-                        return {
-                            email: user.email,
-                            password: user.fbLoginToken
-                        };
-                    });
-            })
-            .then(({ email, password }) => {
                 core.transport.dispatch({
                     action: 'Ctx',
                     args: {
                         action: 'Authenticate',
                         args: {
-                            type: 'Login',
-                            email,
-                            password,
-                            facebook: true
+                            type: 'Facebook',
+                            token: accessToken,
                         }
                     }
                 });
