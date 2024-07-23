@@ -6,6 +6,7 @@ const classnames = require('classnames');
 const { default: Icon } = require('@stremio/stremio-icons/react');
 const { Button, Image, useProfile, platform, useToast, Popup, useBinaryState } = require('stremio/common');
 const { useServices } = require('stremio/services');
+const { useRouteFocused } = require('stremio-router');
 const StreamPlaceholder = require('./StreamPlaceholder');
 const { t } = require('i18next');
 const styles = require('./styles');
@@ -14,8 +15,15 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
     const profile = useProfile();
     const toast = useToast();
     const { core } = useServices();
+    const routeFocused = useRouteFocused();
 
     const [menuOpen, , closeMenu, toggleMenu] = useBinaryState(false);
+
+    React.useEffect(() => {
+        if (!routeFocused) {
+            closeMenu();
+        }
+    }, [routeFocused]);
 
     const popupLabelOnMouseUp = React.useCallback((event) => {
         if (!event.nativeEvent.togglePopupPrevented) {
@@ -115,14 +123,14 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
                 .then(() => {
                     toast.show({
                         type: 'success',
-                        title: t('PLAYER_COPY_DOWNLOAD_LINK_SUCCESS'),
+                        title: t('PLAYER_COPY_STREAM_SUCCESS'),
                         timeout: 4000
                     });
                 })
                 .catch(() => {
                     toast.show({
                         type: 'error',
-                        title: t('PLAYER_COPY_DOWNLOAD_LINK_ERROR'),
+                        title: t('PLAYER_COPY_STREAM_ERROR'),
                         timeout: 4000,
                     });
                 });
@@ -130,7 +138,7 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
         } else {
             toast.show({
                 type: 'error',
-                title: t('PLAYER_COPY_DOWNLOAD_LINK_ERROR'),
+                title: t('PLAYER_COPY_STREAM_ERROR'),
                 timeout: 4000,
             });
         }
@@ -143,7 +151,7 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
 
     const renderLabel = React.useMemo(
         () =>
-            function renderLabel({ className, thumbnail, progress, children, ...props }) {
+            function renderLabel({ className, thumbnail, progress, addonName, name, description, children, ...props }) {
                 return (
                     <Button className={classnames(className, styles['stream-container'])} title={addonName} href={href} download={download} target={target} onClick={onClick} {...props}>
                         <div className={styles['info-container']}>
@@ -178,17 +186,17 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
                     </Button>
                 );
             },
-        []
+        [ thumbnail, progress, addonName, name, description ]
     );
 
     const renderMenu = function renderMenu() {
         return (
             <div className={styles['context-menu-content']} onPointerDown={popupMenuOnPointerDown} onContextMenu={popupMenuOnContextMenu} onClick={popupMenuOnClick} onKeyDown={popupMenuOnKeyDown}>
-                <Button className={styles['context-menu-option-container']} title={t('CTX_PLAY')} onClick={onClick}>
+                <Button className={styles['context-menu-option-container']} title={t('CTX_PLAY')}>
                     <div className={styles['context-menu-option-label']}>{t('CTX_PLAY')}</div>
                 </Button>
-                {deepLinks?.externalPlayer?.download && <Button className={styles['context-menu-option-container']} title={t('CTX_COPY_VIDEO_DOWNLOAD_LINK')} onClick={copyMagneticLinkToClipboard}>
-                    <div className={styles['context-menu-option-label']}>{t('CTX_COPY_VIDEO_DOWNLOAD_LINK')}</div>
+                {deepLinks?.externalPlayer?.download && <Button className={styles['context-menu-option-container']} title={t('CTX_COPY_STREAM_LINK')} onClick={copyMagneticLinkToClipboard}>
+                    <div className={styles['context-menu-option-label']}>{t('CTX_COPY_STREAM_LINK')}</div>
                 </Button>}
             </div>
         );
@@ -199,6 +207,9 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
             className={className}
             thumbnail={thumbnail}
             progress={progress}
+            addonName={addonName}
+            name={name}
+            description={description}
             href={href}
             {...props}
             onMouseUp={popupLabelOnMouseUp}
