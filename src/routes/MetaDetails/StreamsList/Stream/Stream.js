@@ -29,7 +29,6 @@ const Stream = ({
     thumbnail,
     progress,
     deepLinks,
-    infoHash,
     ...props
 }) => {
     const profile = useProfile();
@@ -123,10 +122,10 @@ const Stream = ({
         [props.onClick, profile.settings, markVideoAsWatched]
     );
 
-    const copyInfoHashToClipboard = React.useCallback((event) => {
+    const copyMagneticLinkToClipboard = React.useCallback((event) => {
         event.preventDefault();
-        if (infoHash && navigator?.clipboard) {
-            navigator?.clipboard?.writeText(infoHash);
+        if (deepLinks?.externalPlayer?.download && navigator?.clipboard) {
+            navigator.clipboard.writeText(deepLinks.externalPlayer.download);
             toast.show({
                 type: 'success',
                 title: t('PLAYER_COPY_DOWNLOAD_LINK_SUCCESS'),
@@ -207,8 +206,8 @@ const Stream = ({
                 <Button className={styles['context-menu-option-container']} title={'Play'} onClick={onClick}>
                     <div className={styles['context-menu-option-label']}>{t('CTX_PLAY')}</div>
                 </Button>
-                {infoHash && <Button className={styles['context-menu-option-container']} title={'infoHash'} onClick={copyInfoHashToClipboard}>
-                    <div className={styles['context-menu-option-label']}>{t('CTX_COPY_INFOHASH')}</div>
+                {deepLinks?.externalPlayer?.download && <Button className={styles['context-menu-option-container']} title={'Magnetic Link'} onClick={copyMagneticLinkToClipboard}>
+                    <div className={styles['context-menu-option-label']}>{t('CTX_COPY_VIDEO_DOWNLOAD_LINK')}</div>
                 </Button>}
             </div>
         );
@@ -261,7 +260,6 @@ Stream.propTypes = {
         }),
     }),
     onClick: PropTypes.func,
-    infoHash: PropTypes.string,
 };
 
 module.exports = Stream;

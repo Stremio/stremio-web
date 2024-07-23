@@ -151,7 +151,6 @@ const StreamsList = ({ className, video, ...props }) => {
                                 progress={stream.progress}
                                 deepLinks={stream.deepLinks}
                                 onClick={stream.onClick}
-                                infoHash={stream.infoHash}
                             />
                         ))}
                     </div>
