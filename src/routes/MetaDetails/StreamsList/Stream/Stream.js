@@ -186,7 +186,7 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
                     </Button>
                 );
             },
-        [ thumbnail, progress, addonName, name, description ]
+        []
     );
 
     const renderMenu = function renderMenu() {
