@@ -46,9 +46,18 @@ const SeasonsBar = ({ className, seasons, season, onSelect }) => {
             });
         }
     }, [onSelect]);
+
+    const [prevDisabled, nextDisabled] = React.useMemo(() => {
+        const currentIndex = seasons.indexOf(season);
+        return [
+            currentIndex === 0,
+            currentIndex === seasons.length - 1
+        ];
+    }, [season, seasons]);
+
     return (
         <div className={classnames(className, styles['seasons-bar-container'])}>
-            <Button className={styles['prev-season-button']} title={'Previous season'} data-action={'prev'} onClick={prevNextButtonOnClick}>
+            <Button className={classnames(styles['prev-season-button'], { 'disabled': prevDisabled })} title={'Previous season'} data-action={'prev'} onClick={prevNextButtonOnClick}>
                 <Icon className={styles['icon']} name={'chevron-back'} />
                 <div className={styles['label']}>Prev</div>
             </Button>
@@ -60,7 +69,7 @@ const SeasonsBar = ({ className, seasons, season, onSelect }) => {
                 selected={selected}
                 onSelect={seasonOnSelect}
             />
-            <Button className={styles['next-season-button']} title={'Next season'} data-action={'next'} onClick={prevNextButtonOnClick}>
+            <Button className={classnames(styles['next-season-button'], { 'disabled': nextDisabled })} title={'Next season'} data-action={'next'} onClick={prevNextButtonOnClick}>
                 <div className={styles['label']}>Next</div>
                 <Icon className={styles['icon']} name={'chevron-forward'} />
             </Button>
