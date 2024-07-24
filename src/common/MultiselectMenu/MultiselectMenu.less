@@ -1,0 +1,34 @@
+
+@border-radius: 2.75rem;
+
+.multiselect-menu {
+    background-color: var(--overlay-color);
+    position: relative;
+    min-width: 150px;
+    overflow: visible;
+    border-radius: @border-radius;
+    &.disabled {
+        pointer-events: none;
+        opacity: 0.3;
+    }
+
+    .multiselect-button {
+        color: var(--primary-foreground-color);
+        background-color: rgba(255, 255, 255, 0.05);
+        padding: 0.75rem 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0 0.5rem;
+        border-radius: @border-radius;
+
+        .icon {
+            width: 1.5rem;
+            color: var(--primary-foreground-color);
+
+            &.open {
+                transform: rotate(180deg);
+            }
+        }
+    }
+}
