@@ -69,7 +69,7 @@ const OptionsMenu = ({ className, stream, playbackDevices }) => {
                     toast.show({
                         type: 'success',
                         title: 'Copied',
-                        message: t('PLAYER_COPY_DOWNLOAD_LINK_SUCCESS', {defaultValue: 'Download link was copied to your clipboard'}),
+                        message: t('PLAYER_COPY_DOWNLOAD_LINK_SUCCESS'),
                         timeout: 3000
                     });
                 })
@@ -78,7 +78,7 @@ const OptionsMenu = ({ className, stream, playbackDevices }) => {
                     toast.show({
                         type: 'error',
                         title: t('Error'),
-                        message: `${t('PLAYER_COPY_DOWNLOAD_LINK_ERROR', {defaultValue: 'Failed to copy download link'})}: ${downloadVideoLink}`,
+                        message: `${t('PLAYER_COPY_DOWNLOAD_LINK_ERROR')}: ${downloadVideoLink}`,
                         timeout: 3000
                     });
                 });
@@ -132,7 +132,7 @@ const OptionsMenu = ({ className, stream, playbackDevices }) => {
                 !!(streamingUrl || downloadUrl) &&
                 <Option
                     icon={'link'}
-                    label={t('CTX_COPY_VIDEO_DOWNLOAD_LINK', {defaultValue: 'Copy video download link'})}
+                    label={t('CTX_COPY_VIDEO_DOWNLOAD_LINK')}
                     disabled={stream === null}
                     onClick={onCopyDownloadLinkButtonClick}
                 />
@@ -141,7 +141,7 @@ const OptionsMenu = ({ className, stream, playbackDevices }) => {
                 platform.name === 'ios' &&
                 <Option
                     icon={'play-outline'}
-                    label={t('PLAYER_OPEN_IN_NPLAYER', {defaultValue: 'Open in nPlayer'})}
+                    label={t('PLAYER_OPEN_IN_NPLAYER')}
                     disabled={stream === null}
                     onClick={opneInNplayer}
                 />
