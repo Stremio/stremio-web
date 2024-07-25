@@ -151,7 +151,7 @@ const Settings = () => {
             setSelectedSectionId(sections[sections.length - 1].id);
         } else {
             for (let i = sections.length - 1; i >= 0; i--) {
-                if (Math.floor(sections[i].ref.current.offsetTop) <= Math.ceil(sectionsContainerRef.current.scrollTop) + panelScrollPaddingTop + sectionsContainerRef.current.offsetTop) {
+                if (Math.floor(sections[i].ref.current.offsetTop) <= Math.ceil(sectionsContainerRef.current.scrollTop) + panelScrollPaddingTop + sectionsContainerRef.current.offsetTop + 1) {
                     setSelectedSectionId(sections[i].id);
                     break;
                 }
