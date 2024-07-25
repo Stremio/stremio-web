@@ -4,13 +4,18 @@ on:
   push:
     branches:
       - '**'
+  pull_request:
+    branches:
+      - '**'
+  # Allow manual dispatch in GH
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Install NPM dependencies
         run: npm ci
       - name: Build
@@ -19,10 +24,16 @@ jobs:
         run: npm test
       - name: Lint
         run: npm run lint
+      # Create recursivelly the destiantion dir with
+      # "--parrents where no error if existing, make parent directories as needed."
+      - run: mkdir -p ./build/${{ github.ref_name }}
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+        if: ${{ github.actor != 'dependabot[bot]' }}
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build
+          # in stremio, we use `feat/features-name` or `fix/this-bug`
+          # so we need a recursive creation of the destination dir
           destination_dir: ${{ github.ref_name }}
           allow_empty_commit: true
