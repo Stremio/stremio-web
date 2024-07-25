@@ -162,10 +162,11 @@ const Player = ({ urlParams, queryParams }) => {
     }, []);
 
     const onSeekRequested = React.useCallback((time) => {
-        video.setProp('time', time);
-
+        // first set seeking to true and then update time!
         setSeeking(true);
         console.log(`setSeeking to (SeekRequested): true`);
+
+        video.setProp('time', time);
     }, []);
 
     const onPlaybackSpeedChanged = React.useCallback((rate) => {
@@ -354,11 +355,12 @@ const Player = ({ urlParams, queryParams }) => {
             video.state.manifest !== null && typeof video.state.manifest.name === 'string') {
 
             if (seeking) {
-                seek(video.state.time, video.state.duration, video.state.manifest.name)
+                seek(video.state.time, video.state.duration, video.state.manifest.name);
                 setSeeking(false);
                 console.log(`setSeeking to (on video.state.time change): false`);
 
             } else {
+                console.log(`time changed!`);
                 timeChanged(video.state.time, video.state.duration, video.state.manifest.name);
             }
         }
