@@ -7,6 +7,7 @@ import Dropdown from './Dropdown';
 import classNames from 'classnames';
 import Icon from '@stremio/stremio-icons/react';
 import styles from './MultiselectMenu.less';
+import useOutsideClick from 'stremio/common/useOutsideClick';
 
 type Props = {
     className?: string,
@@ -18,7 +19,7 @@ type Props = {
 
 const MultiselectMenu = ({ className, title, options, selectedOption, onSelect }: Props) => {
     const [menuOpen, , closeMenu, toggleMenu] = useBinaryState(false);
-    const multiselectMenuRef = React.useRef<HTMLDivElement>(null);
+    const multiselectMenuRef = useOutsideClick(() => closeMenu());
     const [level, setLevel] = React.useState<number>(0);
 
     const onOptionSelect = (event: any) => {
