@@ -1,3 +1,5 @@
+// Copyright (C) 2017-2024 Smart code 203358507
+
 import { useEffect, useRef } from 'react';
 
 const useOutsideClick = (callback: () => void) => {
