@@ -30,8 +30,8 @@ jobs:
       # Create recursivelly the destiantion dir with
       # "--parrents where no error if existing, make parent directories as needed."
       - run: mkdir -p ./build/${{ github.ref_name }}
-      - name: Deploy to GitHub Pages
-        if: ${{ github.actor != 'dependabot[bot]' }}
+      - name: Deploy to GitHub Pages (multi-branch)
+        if: github.actor != 'dependabot[bot]' && env.GITHUB_PAGES_MULTI_BRANCH == 'true'
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
