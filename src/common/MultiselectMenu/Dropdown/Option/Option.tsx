@@ -9,7 +9,7 @@ import Icon from '@stremio/stremio-icons/react';
 type Props = {
     option: MultiselectMenuOption;
     selectedOption?: MultiselectMenuOption | null;
-    onSelect: (value: string) => void;
+    onSelect: (value: number) => void;
 };
 
 const Option = ({ option, selectedOption, onSelect }: Props) => {
@@ -32,7 +32,7 @@ const Option = ({ option, selectedOption, onSelect }: Props) => {
             }
             {
                 option.level ?
-                    <Icon name={'chevron-right'} className={styles['option-chevron']} />
+                    <Icon name={'caret-right'} className={styles['option-caret']} />
                     : null
             }
         </Button>

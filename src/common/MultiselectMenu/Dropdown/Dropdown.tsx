@@ -14,7 +14,7 @@ type Props = {
     menuOpen: boolean | (() => void);
     level: number;
     setLevel: (level: number) => void;
-    onSelect: (event: any) => void;
+    onSelect: (value: number) => void;
 };
 
 const Dropdown = ({ level, setLevel, options, onSelect, selectedOption, menuOpen }: Props) => {
@@ -25,11 +25,11 @@ const Dropdown = ({ level, setLevel, options, onSelect, selectedOption, menuOpen
     };
 
     return (
-        <div className={classNames(styles['dropdown'], { [styles['open']]: menuOpen })} role='listbox'>
+        <div className={classNames(styles['dropdown'], { [styles['open']]: menuOpen })} role={'listbox'}>
             {
                 level > 0 ?
                     <Button className={styles['back-button']} onClick={onBackButtonClick}>
-                        <Icon name={'chevron-left'} className={styles['back-button-icon']} />
+                        <Icon name={'caret-left'} className={styles['back-button-icon']} />
                         {t('BACK')}
                     </Button>
                 : null

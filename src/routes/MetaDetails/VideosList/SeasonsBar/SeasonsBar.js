@@ -36,8 +36,7 @@ const SeasonsBar = ({ className, seasons, season, onSelect }) => {
             });
         }
     }, [season, seasons, onSelect]);
-    const seasonOnSelect = React.useCallback((event) => {
-        const value = parseFloat(event.value);
+    const seasonOnSelect = React.useCallback((value) => {
         if (typeof onSelect === 'function') {
             onSelect({
                 type: 'select',

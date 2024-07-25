@@ -3,11 +3,11 @@
 @border-radius: 2.75rem;
 
 .multiselect-menu {
-    background-color: var(--overlay-color);
     position: relative;
-    min-width: 150px;
+    min-width: 8.5rem;
     overflow: visible;
     border-radius: @border-radius;
+
     &.disabled {
         pointer-events: none;
         opacity: 0.3;
@@ -15,7 +15,6 @@
 
     .multiselect-button {
         color: var(--primary-foreground-color);
-        background-color: rgba(255, 255, 255, 0.05);
         padding: 0.75rem 1.5rem;
         display: flex;
         justify-content: space-between;
@@ -24,12 +23,17 @@
         border-radius: @border-radius;
 
         .icon {
-            width: 1.5rem;
+            width: 1rem;
             color: var(--primary-foreground-color);
+            opacity: 0.6;
 
             &.open {
                 transform: rotate(180deg);
             }
         }
+    }
+
+    &:hover {
+        background-color: var(--overlay-color);
     }
 }
