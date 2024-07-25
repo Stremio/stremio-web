@@ -9,7 +9,7 @@ import Icon from '@stremio/stremio-icons/react';
 type Props = {
     option: MultiselectMenuOption;
     selectedOption?: MultiselectMenuOption | null;
-    onSelect: (option: MultiselectMenuOption) => void;
+    onSelect: (value: string) => void;
 };
 
 const Option = ({ option, selectedOption, onSelect }: Props) => {
@@ -20,7 +20,7 @@ const Option = ({ option, selectedOption, onSelect }: Props) => {
         <Button
             className={classNames(styles['option'], { [styles['selected']]: selected })}
             key={option.id}
-            onClick={(event: any) => onSelect(event)}
+            onClick={() => onSelect(option.value)}
             aria-selected={selected}
         >
             <div className={styles['label']}>{ option.label }</div>

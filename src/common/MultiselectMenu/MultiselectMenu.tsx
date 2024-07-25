@@ -13,7 +13,7 @@ type Props = {
     title?: string;
     options: MultiselectMenuOption[];
     selectedOption?: MultiselectMenuOption;
-    onSelect: () => void;
+    onSelect: (event: any) => void;
 };
 
 const MultiselectMenu = ({ className, title, options, selectedOption, onSelect }: Props) => {
@@ -21,8 +21,9 @@ const MultiselectMenu = ({ className, title, options, selectedOption, onSelect }
     const multiselectMenuRef = React.useRef<HTMLDivElement>(null);
     const [level, setLevel] = React.useState<number>(0);
 
-    const onOptionSelect = (option: MultiselectMenuOption) => {
-        option.level  ? setLevel(level + 1) : onSelect(), closeMenu();
+    const onOptionSelect = (event: any) => {
+        console.log(event.value);
+        level ? setLevel(level + 1) : onSelect(event), closeMenu();
     };
     
     return (

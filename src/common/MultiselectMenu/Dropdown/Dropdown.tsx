@@ -14,11 +14,12 @@ type Props = {
     menuOpen: boolean | (() => void);
     level: number;
     setLevel: (level: number) => void;
-    onSelect: (option: MultiselectMenuOption) => void;
+    onSelect: (event: any) => void;
 };
 
 const Dropdown = ({ level, setLevel, options, onSelect, selectedOption, menuOpen }: Props) => {
     const { t } = useTranslation();
+
     const onBackButtonClick = () => {
         setLevel(level - 1);
     };
@@ -36,8 +37,9 @@ const Dropdown = ({ level, setLevel, options, onSelect, selectedOption, menuOpen
             {
                 options
                     .filter((option: MultiselectMenuOption) => !option.hidden)
-                    .map((option: MultiselectMenuOption) => (
+                    .map((option: MultiselectMenuOption, index) => (
                         <Option
+                            key={index}
                             option={option}
                             onSelect={onSelect}
                             selectedOption={selectedOption}
