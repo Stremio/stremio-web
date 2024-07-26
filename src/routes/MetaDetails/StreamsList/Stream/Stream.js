@@ -147,9 +147,9 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
         <Icon className={styles['placeholder-icon']} name={'ic_broken_link'} />
     ), []);
 
-    const renderLabel = React.useMemo(() => function renderLabel({ className, thumbnail, progress, addonName, name, description, children, ...props }) {
+    const renderLabel = React.useMemo(() => function renderLabel({ className, children, ...props }) {
         return (
-            <Button className={classnames(className, styles['stream-container'])} title={addonName} href={href} download={download} target={target} onClick={onClick} {...props}>
+            <Button className={classnames(className, styles['stream-container'])} title={addonName} href={href} target={target} download={download} onClick={onClick} {...props}>
                 <div className={styles['info-container']}>
                     {
                         typeof thumbnail === 'string' && thumbnail.length > 0 ?
@@ -181,7 +181,7 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
                 {children}
             </Button>
         );
-    }, [onClick]);
+    }, [thumbnail, progress, addonName, name, description, href, target, download, onClick]);
 
     const renderMenu = React.useMemo(() => function renderMenu() {
         return (
@@ -208,13 +208,6 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
     return (
         <Popup
             className={className}
-            thumbnail={thumbnail}
-            progress={progress}
-            addonName={addonName}
-            name={name}
-            description={description}
-            href={href}
-            {...props}
             onMouseUp={popupLabelOnMouseUp}
             onLongPress={popupLabelOnLongPress}
             onContextMenu={popupLabelOnContextMenu}
