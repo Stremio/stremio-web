@@ -31,7 +31,7 @@ jobs:
       # "--parrents where no error if existing, make parent directories as needed."
       - run: mkdir -p ./build/${{ github.ref_name }}
       - name: Deploy to GitHub Pages (multi-branch)
-        if: github.actor != 'dependabot[bot]' && env.GITHUB_PAGES_MULTI_BRANCH == 'true'
+        if: github.event_name == 'push' && github.actor != 'dependabot[bot]' && env.GITHUB_PAGES_MULTI_BRANCH == 'true'
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -41,13 +41,13 @@ jobs:
           destination_dir: ${{ github.ref_name }}
           allow_empty_commit: true
       - name: Upload build to GitHub Pages
-        if: env.GITHUB_PAGES_MULTI_BRANCH != 'true'
+        if: github.event_name == 'push' && env.GITHUB_PAGES_MULTI_BRANCH != 'true'
         uses: actions/upload-pages-artifact@v3
         with:
           name: stremio-web
           path: build
       - name: Deploy build to GitHub Pages (single branch)
-        if: env.GITHUB_PAGES_MULTI_BRANCH != 'true'
+        if: github.event_name == 'push' && env.GITHUB_PAGES_MULTI_BRANCH != 'true'
         uses: actions/deploy-pages@v4
         with:
           artifact_name: stremio-web
