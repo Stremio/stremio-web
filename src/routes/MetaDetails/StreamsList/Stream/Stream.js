@@ -116,9 +116,13 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
         }
     }, [props.onClick, profile.settings, markVideoAsWatched]);
 
-    const copyMagneticLinkToClipboard = React.useCallback((event) => {
+    const streamLink = React.useMemo(() => {
+        return deepLinks?.externalPlayer?.download;
+    }, [deepLinks]);
+
+    const copyStreamLink = React.useCallback((event) => {
         event.preventDefault();
-        if (deepLinks?.externalPlayer?.download && navigator?.clipboard) {
+        if (streamLink && navigator?.clipboard) {
             navigator.clipboard.writeText(deepLinks.externalPlayer.download)
                 .then(() => {
                     toast.show({
@@ -143,7 +147,7 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
             });
         }
         closeMenu();
-    }, []);
+    }, [streamLink]);
 
     const renderThumbnailFallback = React.useCallback(() => (
         <Icon className={styles['placeholder-icon']} name={'ic_broken_link'} />
@@ -186,21 +190,23 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
                     </Button>
                 );
             },
-        []
+        [onClick]
     );
 
-    const renderMenu = function renderMenu() {
-        return (
-            <div className={styles['context-menu-content']} onPointerDown={popupMenuOnPointerDown} onContextMenu={popupMenuOnContextMenu} onClick={popupMenuOnClick} onKeyDown={popupMenuOnKeyDown}>
-                <Button className={styles['context-menu-option-container']} title={t('CTX_PLAY')}>
-                    <div className={styles['context-menu-option-label']}>{t('CTX_PLAY')}</div>
-                </Button>
-                {deepLinks?.externalPlayer?.download && <Button className={styles['context-menu-option-container']} title={t('CTX_COPY_STREAM_LINK')} onClick={copyMagneticLinkToClipboard}>
-                    <div className={styles['context-menu-option-label']}>{t('CTX_COPY_STREAM_LINK')}</div>
-                </Button>}
-            </div>
-        );
-    };
+    const renderMenu = React.useMemo(
+        () => {
+            return (
+                <div className={styles['context-menu-content']} onPointerDown={popupMenuOnPointerDown} onContextMenu={popupMenuOnContextMenu} onClick={popupMenuOnClick} onKeyDown={popupMenuOnKeyDown}>
+                    <Button className={styles['context-menu-option-container']} title={t('CTX_PLAY')}>
+                        <div className={styles['context-menu-option-label']}>{t('CTX_PLAY')}</div>
+                    </Button>
+                    {streamLink && <Button className={styles['context-menu-option-container']} title={t('CTX_COPY_STREAM_LINK')} onClick={copyStreamLink}>
+                        <div className={styles['context-menu-option-label']}>{t('CTX_COPY_STREAM_LINK')}</div>
+                    </Button>}
+                </div>
+            );
+        }, [copyStreamLink, onClick]
+    );
 
     return (
         <Popup
