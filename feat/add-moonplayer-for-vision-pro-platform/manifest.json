@@ -1,0 +1,61 @@
+{
+  "icons": [
+    {
+      "src": "./d0af5ca53d4871d44e88eb9a820f46967307c171/favicons/icon_256x256.ico",
+      "sizes": "256x256",
+      "type": "image/vnd.microsoft.icon"
+    },
+    {
+      "src": "./d0af5ca53d4871d44e88eb9a820f46967307c171/images/icon_512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "./d0af5ca53d4871d44e88eb9a820f46967307c171/images/icon_196x196.png",
+      "sizes": "196x196",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "./d0af5ca53d4871d44e88eb9a820f46967307c171/images/icon_512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./d0af5ca53d4871d44e88eb9a820f46967307c171/images/icon_196x196.png",
+      "sizes": "196x196",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "name": "Stremio Web",
+  "short_name": "Stremio",
+  "orientation": "any",
+  "display": "standalone",
+  "start_url": "./",
+  "description": "Freedom To Stream",
+  "background_color": "#161523",
+  "theme_color": "#2a2843",
+  "display_override": [
+    "standalone"
+  ],
+  "scope": "./",
+  "screenshots": [
+    {
+      "src": "d0af5ca53d4871d44e88eb9a820f46967307c171/screenshots/board_wide.webp",
+      "sizes": "1440x900",
+      "type": "image/webp",
+      "form_factor": "wide",
+      "label": "Homescreen of Stremio"
+    },
+    {
+      "src": "d0af5ca53d4871d44e88eb9a820f46967307c171/screenshots/board_narrow.webp",
+      "sizes": "414x896",
+      "type": "image/webp",
+      "form_factor": "narrow",
+      "label": "Homescreen of Stremio"
+    }
+  ]
+}
