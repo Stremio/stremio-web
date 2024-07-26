@@ -117,8 +117,8 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
     const copyStreamLink = React.useCallback((event) => {
         event.preventDefault();
         closeMenu();
-        if (streamLink && navigator?.clipboard) {
-            navigator.clipboard.writeText(deepLinks.externalPlayer.download)
+        if (streamLink) {
+            navigator.clipboard.writeText(streamLink)
                 .then(() => {
                     toast.show({
                         type: 'success',
@@ -133,13 +133,6 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
                         timeout: 4000,
                     });
                 });
-
-        } else {
-            toast.show({
-                type: 'error',
-                title: t('PLAYER_COPY_STREAM_ERROR'),
-                timeout: 4000,
-            });
         }
     }, [streamLink]);
 
