@@ -3,6 +3,14 @@
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
 @import (reference) '~stremio/common/screen-sizes.less';
 
+:import('~stremio/common/Popup/styles.less') {
+    context-menu-container: menu-container;
+    menu-direction-top-left: menu-direction-top-left;
+    menu-direction-bottom-left: menu-direction-bottom-left;
+    menu-direction-top-right: menu-direction-top-right;
+    menu-direction-bottom-right: menu-direction-bottom-right;
+}
+
 .stream-container {
     display: flex;
     flex-direction: row;
@@ -103,6 +111,33 @@
         color: var(--primary-foreground-color);
         background-color: var(--secondary-accent-color);
     }
+
+	.context-menu-container {
+		max-width: calc(90% - 1.5rem);
+		z-index: 2;
+	
+		.context-menu-content {
+			--spatial-navigation-contain: contain;
+	
+			.context-menu-option-container {
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				padding: 1rem 1.5rem;
+	
+				&:hover,
+				&:focus {
+					background-color: var(--overlay-color);
+				}
+	
+				.context-menu-option-label {
+					font-size: 1rem;
+					font-weight: 500;
+					color:var(--primary-foreground-color);
+				}
+			}
+		}
+	}
 }
 
 @media only screen and (max-width: @small) {
@@ -124,6 +159,28 @@
         .info-container {
             .addon-name {
                 font-weight: 500;
+            }
+        }
+
+		.context-menu-container {
+            &.menu-direction-top-left,
+            &.menu-direction-bottom-left {
+                right: 1.5rem;
+            }
+
+            &.menu-direction-top-right,
+            &.menu-direction-bottom-right {
+                left: 1.5rem;
+            }
+
+            &.menu-direction-top-left,
+            &.menu-direction-top-right {
+                bottom: 90%;
+            }
+
+            &.menu-direction-bottom-left,
+            &.menu-direction-bottom-right {
+                top: 90%;
             }
         }
     }

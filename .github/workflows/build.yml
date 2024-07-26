@@ -3,12 +3,17 @@ name: Build
 on:
   push:
     branches:
+      - development
+    tags-ignore:
       - '**'
   pull_request:
     branches:
-      - '**'
+      - development
   # Allow manual dispatch in GH
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build:
