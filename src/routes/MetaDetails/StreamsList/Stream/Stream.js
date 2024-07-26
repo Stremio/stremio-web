@@ -4,11 +4,11 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { default: Icon } = require('@stremio/stremio-icons/react');
+const { t } = require('i18next');
 const { Button, Image, useProfile, platform, useToast, Popup, useBinaryState } = require('stremio/common');
 const { useServices } = require('stremio/services');
 const { useRouteFocused } = require('stremio-router');
 const StreamPlaceholder = require('./StreamPlaceholder');
-const { t } = require('i18next');
 const styles = require('./styles');
 
 const Stream = ({ className, videoId, videoReleased, addonName, name, description, thumbnail, progress, deepLinks, ...props }) => {
@@ -18,12 +18,6 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
     const routeFocused = useRouteFocused();
 
     const [menuOpen, , closeMenu, toggleMenu] = useBinaryState(false);
-
-    React.useEffect(() => {
-        if (!routeFocused) {
-            closeMenu();
-        }
-    }, [routeFocused]);
 
     const popupLabelOnMouseUp = React.useCallback((event) => {
         if (!event.nativeEvent.togglePopupPrevented) {
@@ -89,6 +83,10 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
             null;
     }, [href, deepLinks]);
 
+    const streamLink = React.useMemo(() => {
+        return deepLinks?.externalPlayer?.download;
+    }, [deepLinks]);
+
     const markVideoAsWatched = React.useCallback(() => {
         if (typeof videoId === 'string') {
             core.transport.dispatch({
@@ -116,12 +114,9 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
         }
     }, [props.onClick, profile.settings, markVideoAsWatched]);
 
-    const streamLink = React.useMemo(() => {
-        return deepLinks?.externalPlayer?.download;
-    }, [deepLinks]);
-
     const copyStreamLink = React.useCallback((event) => {
         event.preventDefault();
+        closeMenu();
         if (streamLink && navigator?.clipboard) {
             navigator.clipboard.writeText(deepLinks.externalPlayer.download)
                 .then(() => {
@@ -146,68 +141,69 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
                 timeout: 4000,
             });
         }
-        closeMenu();
     }, [streamLink]);
 
     const renderThumbnailFallback = React.useCallback(() => (
         <Icon className={styles['placeholder-icon']} name={'ic_broken_link'} />
     ), []);
 
-    const renderLabel = React.useMemo(
-        () =>
-            function renderLabel({ className, thumbnail, progress, addonName, name, description, children, ...props }) {
-                return (
-                    <Button className={classnames(className, styles['stream-container'])} title={addonName} href={href} download={download} target={target} onClick={onClick} {...props}>
-                        <div className={styles['info-container']}>
-                            {
-                                typeof thumbnail === 'string' && thumbnail.length > 0 ?
-                                    <div className={styles['thumbnail-container']} title={name || addonName}>
-                                        <Image
-                                            className={styles['thumbnail']}
-                                            src={thumbnail}
-                                            alt={' '}
-                                            renderFallback={renderThumbnailFallback}
-                                        />
-                                    </div>
-                                    :
-                                    <div className={styles['addon-name-container']} title={name || addonName}>
-                                        <div className={styles['addon-name']}>{name || addonName}</div>
-                                    </div>
-                            }
-                            {
-                                progress !== null && !isNaN(progress) && progress > 0 ?
-                                    <div className={styles['progress-bar-container']}>
-                                        <div className={styles['progress-bar']} style={{ width: `${progress}%` }} />
-                                        <div className={styles['progress-bar-background']} />
-                                    </div>
-                                    :
-                                    null
-                            }
-                        </div>
-                        <div className={styles['description-container']} title={description}>{description}</div>
-                        <Icon className={styles['icon']} name={'play'} />
-                        {children}
-                    </Button>
-                );
-            },
-        [onClick]
-    );
+    const renderLabel = React.useMemo(() => function renderLabel({ className, thumbnail, progress, addonName, name, description, children, ...props }) {
+        return (
+            <Button className={classnames(className, styles['stream-container'])} title={addonName} href={href} download={download} target={target} onClick={onClick} {...props}>
+                <div className={styles['info-container']}>
+                    {
+                        typeof thumbnail === 'string' && thumbnail.length > 0 ?
+                            <div className={styles['thumbnail-container']} title={name || addonName}>
+                                <Image
+                                    className={styles['thumbnail']}
+                                    src={thumbnail}
+                                    alt={' '}
+                                    renderFallback={renderThumbnailFallback}
+                                />
+                            </div>
+                            :
+                            <div className={styles['addon-name-container']} title={name || addonName}>
+                                <div className={styles['addon-name']}>{name || addonName}</div>
+                            </div>
+                    }
+                    {
+                        progress !== null && !isNaN(progress) && progress > 0 ?
+                            <div className={styles['progress-bar-container']}>
+                                <div className={styles['progress-bar']} style={{ width: `${progress}%` }} />
+                                <div className={styles['progress-bar-background']} />
+                            </div>
+                            :
+                            null
+                    }
+                </div>
+                <div className={styles['description-container']} title={description}>{description}</div>
+                <Icon className={styles['icon']} name={'play'} />
+                {children}
+            </Button>
+        );
+    }, [onClick]);
 
-    const renderMenu = React.useMemo(
-        () =>
-            function renderMenu() {
-                return (
-                    <div className={styles['context-menu-content']} onPointerDown={popupMenuOnPointerDown} onContextMenu={popupMenuOnContextMenu} onClick={popupMenuOnClick} onKeyDown={popupMenuOnKeyDown}>
-                        <Button className={styles['context-menu-option-container']} title={t('CTX_PLAY')}>
-                            <div className={styles['context-menu-option-label']}>{t('CTX_PLAY')}</div>
-                        </Button>
-                        {streamLink && <Button className={styles['context-menu-option-container']} title={t('CTX_COPY_STREAM_LINK')} onClick={copyStreamLink}>
+    const renderMenu = React.useMemo(() => function renderMenu() {
+        return (
+            <div className={styles['context-menu-content']} onPointerDown={popupMenuOnPointerDown} onContextMenu={popupMenuOnContextMenu} onClick={popupMenuOnClick} onKeyDown={popupMenuOnKeyDown}>
+                <Button className={styles['context-menu-option-container']} title={t('CTX_PLAY')}>
+                    <div className={styles['context-menu-option-label']}>{t('CTX_PLAY')}</div>
+                </Button>
+                {
+                    streamLink &&
+                        <Button className={styles['context-menu-option-container']} title={t('CTX_COPY_STREAM_LINK')} onClick={copyStreamLink}>
                             <div className={styles['context-menu-option-label']}>{t('CTX_COPY_STREAM_LINK')}</div>
-                        </Button>}
-                    </div>
-                );
-            }, [copyStreamLink, onClick]
-    );
+                        </Button>
+                }
+            </div>
+        );
+    }, [copyStreamLink, onClick]);
+
+    React.useEffect(() => {
+        if (!routeFocused) {
+            closeMenu();
+        }
+    }, [routeFocused]);
 
     return (
         <Popup
