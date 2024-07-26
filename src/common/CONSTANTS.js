@@ -44,7 +44,7 @@ const EXTERNAL_PLAYERS = [
     {
         label: 'EXTERNAL_PLAYER_DISABLED',
         value: null,
-        platforms: ['ios', 'android', 'windows', 'linux', 'macos'],
+        platforms: ['ios', 'visionos', 'android', 'windows', 'linux', 'macos'],
     },
     {
         label: 'EXTERNAL_PLAYER_ALLOW_CHOOSING',
@@ -54,7 +54,7 @@ const EXTERNAL_PLAYERS = [
     {
         label: 'VLC',
         value: 'vlc',
-        platforms: ['ios', 'android'],
+        platforms: ['ios', 'visionos', 'android'],
     },
     {
         label: 'MPV',
@@ -79,12 +79,17 @@ const EXTERNAL_PLAYERS = [
     {
         label: 'Outplayer',
         value: 'outplayer',
-        platforms: ['ios'],
+        platforms: ['ios', 'visionos'],
+    },
+    {
+        label: 'Moonplayer',
+        value: 'moonplayer',
+        platforms: ['visionos'],
     },
     {
         label: 'M3U Playlist',
         value: 'm3u',
-        platforms: ['ios', 'android', 'windows', 'linux', 'macos'],
+        platforms: ['ios', 'visionos', 'android', 'windows', 'linux', 'macos'],
     },
 ];
 
