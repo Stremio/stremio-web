@@ -16,7 +16,7 @@
         "@babel/runtime": "7.16.0",
         "@sentry/browser": "6.13.3",
         "@stremio/stremio-colors": "5.0.1",
-        "@stremio/stremio-core-web": "0.47.7",
+        "@stremio/stremio-core-web": "https://stremio.github.io/stremio-core/stremio-core-web/feat/external-moonplayer-url-support-for-ios/dev/stremio-stremio-core-web-0.47.7.tgz",
         "@stremio/stremio-icons": "5.2.0",
         "@stremio/stremio-video": "0.0.38",
         "a-color-picker": "1.2.1",
