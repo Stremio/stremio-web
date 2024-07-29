@@ -18,6 +18,8 @@ const Bowser = require('bowser');
 
 const browser = Bowser.parse(window.navigator?.userAgent || '');
 
+// Edge case: iPad is included in this function
+// Keep in mind maxTouchPoints for Vision Pro might change in the future
 const isVisionProUser = () => {
     const isMacintosh = navigator.userAgent.includes('Macintosh');
     const hasFiveTouchPoints = navigator.maxTouchPoints === 5;
