@@ -29,7 +29,7 @@ jobs:
         run: npm run lint
       # Create recursivelly the destiantion dir with
       # "--parrents where no error if existing, make parent directories as needed."
-      - run: mkdir -p ./build/${{ github.ref_name }}
+      - run: mkdir -p ./build/${{ github.head_ref || github.ref_name }}
       - name: Deploy to GitHub Pages (multi-branch)
         if: github.event_name == 'push' && github.actor != 'dependabot[bot]' && env.GITHUB_PAGES_MULTI_BRANCH == 'true'
         uses: peaceiris/actions-gh-pages@v4
@@ -38,7 +38,7 @@ jobs:
           publish_dir: ./build
           # in stremio, we use `feat/features-name` or `fix/this-bug`
           # so we need a recursive creation of the destination dir
-          destination_dir: ${{ github.ref_name }}
+          destination_dir: ${{ github.head_ref || github.ref_name }}
           allow_empty_commit: true
       - name: Upload build to GitHub Pages
         if: github.event_name == 'push' && env.GITHUB_PAGES_MULTI_BRANCH != 'true'
