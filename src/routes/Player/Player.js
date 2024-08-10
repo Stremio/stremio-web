@@ -515,6 +515,18 @@ const Player = ({ urlParams, queryParams }) => {
 
                     break;
                 }
+                case 'KeyC': {
+                    if (!menusOpen && !nextVideoPopupOpen) {
+                        if (video.state.selectedSubtitlesTrackId !== null) {
+                            onSubtitlesTrackSelected(null);
+                        } else if (video.state.subtitlesTracks.length > 0) {
+                            onSubtitlesTrackSelected(video.state.subtitlesTracks[0].id);
+                        } else if (video.state.extraSubtitlesTracks.length > 0) {
+                            onExtraSubtitlesTrackSelected(video.state.extraSubtitlesTracks[0].id);
+                        }
+                    }
+                    break;
+                }
                 case 'KeyI': {
                     closeMenus();
                     if (player.metaItem !== null && player.metaItem.type === 'Ready') {
