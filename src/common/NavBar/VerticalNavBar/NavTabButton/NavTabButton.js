@@ -19,8 +19,8 @@ const NavTabButton = ({ className, logo, icon, label, href, selected, onClick })
         const scrollableElements = document.querySelectorAll('div');
 
         scrollableElements.forEach((element) => {
-            if (element.scrollHeight > element.clientHeight) {
-                element.scrollTo(0, 0);
+            if (element.scrollTop > 0) {
+                element.scrollTop = 0;
             }
         });
     };
