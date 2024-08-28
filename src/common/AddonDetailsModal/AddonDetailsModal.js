@@ -105,7 +105,9 @@ const AddonDetailsModal = ({ transportUrl, onCloseRequest }) => {
                 }
             }
             :
-            addonDetails.remoteAddon !== null && addonDetails.remoteAddon.content.type === 'Ready' ?
+            addonDetails.remoteAddon !== null &&
+            addonDetails.remoteAddon.content.type === 'Ready' &&
+            !addonDetails.remoteAddon.content.content.manifest.behaviorHints.configurationRequired ?
                 {
 
                     className: styles['install-button'],
@@ -131,7 +133,7 @@ const AddonDetailsModal = ({ transportUrl, onCloseRequest }) => {
                 }
                 :
                 null;
-        return toggleButton !== null ? configureButton ? [cancelButton, configureButton, toggleButton] : [cancelButton, toggleButton] : [cancelButton];
+        return configureButton && toggleButton ? [cancelButton, configureButton, toggleButton] : configureButton ? [cancelButton, configureButton] : toggleButton ? [cancelButton, toggleButton] : [cancelButton];
     }, [addonDetails, onCloseRequest]);
     const modalBackground = React.useMemo(() => {
         return addonDetails.remoteAddon?.content.type === 'Ready' ? addonDetails.remoteAddon.content.content.manifest.background : null;
