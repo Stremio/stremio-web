@@ -61,6 +61,28 @@ const useStreamingServerSettingsInputs = (streamingServer) => {
         value: streamingServer.remoteUrl,
     }), [streamingServer.remoteUrl]);
 
+    const proxyStreamsCheckbox = React.useMemo(() => {
+        if (streamingServer.settings?.type !== 'Ready') {
+            return null;
+        }
+
+        return {
+            checked: streamingServer.settings.content.proxyStreamsEnabled,
+            onClick: () => {
+                core.transport.dispatch({
+                    action: 'StreamingServer',
+                    args: {
+                        action: 'UpdateSettings',
+                        args: {
+                            ...streamingServer.settings.content,
+                            proxyStreamsEnabled: !streamingServer.settings.content.proxyStreamsEnabled
+                        }
+                    }
+                });
+            }
+        };
+    }, [streamingServer.settings]);
+
     const remoteEndpointSelect = React.useMemo(() => {
         if (streamingServer.settings?.type !== 'Ready' || streamingServer.networkInfo?.type !== 'Ready') {
             return null;
@@ -198,7 +220,7 @@ const useStreamingServerSettingsInputs = (streamingServer) => {
             }
         };
     }, [streamingServer.settings, streamingServer.deviceInfo]);
-    return { streamingServerRemoteUrlInput, remoteEndpointSelect, cacheSizeSelect, torrentProfileSelect, transcodingProfileSelect };
+    return { streamingServerRemoteUrlInput, proxyStreamsCheckbox, remoteEndpointSelect, cacheSizeSelect, torrentProfileSelect, transcodingProfileSelect };
 };
 
 module.exports = useStreamingServerSettingsInputs;

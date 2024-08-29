@@ -47,6 +47,7 @@ const Settings = () => {
     } = useProfileSettingsInputs(profile);
     const {
         streamingServerRemoteUrlInput,
+        proxyStreamsCheckbox,
         remoteEndpointSelect,
         cacheSizeSelect,
         torrentProfileSelect,
@@ -622,6 +623,21 @@ const Settings = () => {
                                     <Multiselect
                                         className={classnames(styles['option-input-container'], styles['multiselect-container'])}
                                         {...transcodingProfileSelect}
+                                    />
+                                </div>
+                                :
+                                null
+                        }
+                        {
+                            proxyStreamsCheckbox !== null ?
+                                <div className={styles['option-container']}>
+                                    <div className={styles['option-name-container']}>
+                                        <div className={styles['label']}>{ t('SETTINGS_PROXY_STREAMS') }</div>
+                                    </div>
+                                    <Checkbox
+                                        className={classnames(styles['option-input-container'], styles['checkbox-container'])}
+                                        tabIndex={-1}
+                                        {...proxyStreamsCheckbox}
                                     />
                                 </div>
                                 :
