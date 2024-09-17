@@ -26,7 +26,7 @@ const StreamsList = ({ className, video, ...props }) => {
                     `?${new URLSearchParams({'season': video.season})}`
                     :
                     null
-                ));
+            ));
         } else {
             window.history.back();
         }
