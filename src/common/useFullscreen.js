@@ -16,7 +16,7 @@ const useFullscreen = (videoElementRef) => {
 
     const [fullscreen, setFullscreen] = React.useState(() => {
         const videoElement = getVideoElement();
-        return document.fullscreenElement === document.documentElement || (videoElement && videoElement.webkitDisplayingFullscreen)
+        return document.fullscreenElement === document.documentElement || (videoElement && videoElement.webkitDisplayingFullscreen);
     });
     const requestFullscreen = React.useCallback(() => {
         if (document.documentElement.requestFullscreen) {
