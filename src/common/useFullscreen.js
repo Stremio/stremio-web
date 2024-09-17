@@ -14,32 +14,32 @@ const useFullscreen = (videoElementRef) => {
         return null;
     }, [videoElementRef]);
 
-    const videoElement = getVideoElement();
-    const [fullscreen, setFullscreen] = React.useState(document.fullscreenElement === document.documentElement || (videoElement && videoElement.webkitDisplayingFullscreen));
+    const [fullscreen, setFullscreen] = React.useState(() => {
+        const videoElement = getVideoElement();
+        return document.fullscreenElement === document.documentElement || (videoElement && videoElement.webkitDisplayingFullscreen)
+    });
     const requestFullscreen = React.useCallback(() => {
-        if (document.documentElement.requestFullscreen)
+        if (document.documentElement.requestFullscreen) {
             document.documentElement.requestFullscreen();
-        else {
-            const videoElement = getVideoElement();
-            if (videoElement && videoElement.webkitEnterFullscreen)
-                videoElement.webkitEnterFullscreen();
-        }
-    }, [videoElementRef]);
-    const exitFullscreen = React.useCallback(() => {
-        if (document.exitFullscreen)
-            document.exitFullscreen();
-        else {
-            const videoElement = getVideoElement();
-            if (videoElement && videoElement.webkitEnterFullscreen)
-                videoElement.webkitExitFullscreen();
-        }
-    }, [videoElementRef]);
-    const toggleFullscreen = React.useCallback(() => {
-        if (fullscreen) {
-            exitFullscreen();
         } else {
-            requestFullscreen();
+            const videoElement = getVideoElement();
+            if (videoElement && videoElement.webkitEnterFullscreen) {
+                videoElement.webkitEnterFullscreen();
+            }
         }
+    }, [getVideoElement]);
+    const exitFullscreen = React.useCallback(() => {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else {
+            const videoElement = getVideoElement();
+            if (videoElement && videoElement.webkitExitFullscreen) {
+                videoElement.webkitExitFullscreen();
+            }
+        }
+    }, [getVideoElement]);
+    const toggleFullscreen = React.useCallback(() => {
+        fullscreen ? exitFullscreen() : requestFullscreen();
     }, [fullscreen, exitFullscreen, requestFullscreen]);
     React.useEffect(() => {
         const videoElement = getVideoElement();
@@ -47,8 +47,8 @@ const useFullscreen = (videoElementRef) => {
         const onFullscreenChange = () => {
             setFullscreen(document.fullscreenElement === document.documentElement || (videoElement && videoElement.webkitDisplayingFullscreen));
         };
-        document.addEventListener('fullscreenchange', onFullscreenChange);
 
+        document.addEventListener('fullscreenchange', onFullscreenChange);
         if (videoElement && videoElement.addEventListener) {
             videoElement.addEventListener('webkitenterfullscreen', onFullscreenChange);
             videoElement.addEventListener('webkitendfullscreen', onFullscreenChange);
@@ -57,12 +57,13 @@ const useFullscreen = (videoElementRef) => {
         return () => {
             document.removeEventListener('fullscreenchange', onFullscreenChange);
 
-            if (videoElement && videoElement.addEventListener) {
+            if (videoElement && videoElement.removeEventListener) {
                 videoElement.removeEventListener('webkitenterfullscreen', onFullscreenChange);
                 videoElement.removeEventListener('webkitendfullscreen', onFullscreenChange);
             }
         };
     }, []);
+
     return [fullscreen, requestFullscreen, exitFullscreen, toggleFullscreen];
 };
 

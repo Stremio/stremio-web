@@ -83,15 +83,16 @@ const MetaDetails = ({ urlParams, queryParams }) => {
     return (
         <div className={styles['metadetails-container']}>
             {
-                canRenderBackground &&
-                <div className={styles['background-image-layer']}>
-                    <Image
-                        className={styles['background-image']}
-                        src={metaDetails.metaItem.content.content.background}
-                        renderFallback={renderBackgroundImageFallback}
-                        alt={' '}
-                    />
-                </div>
+                canRenderBackground
+                    ? <div className={styles['background-image-layer']}>
+                        <Image
+                            className={styles['background-image']}
+                            src={metaDetails.metaItem.content.content.background}
+                            renderFallback={renderBackgroundImageFallback}
+                            alt={' '}
+                        />
+                    </div>
+                    : null
             }
             <HorizontalNavBar
                 className={styles['nav-bar']}
