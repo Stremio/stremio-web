@@ -1,0 +1,29 @@
+// Copyright (C) 2017-2024 Smart code 203358507
+
+.option {
+    font-size: var(--font-size-normal);
+    color: var(--primary-foreground-color);
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    padding: 1rem;
+
+    .label {
+        flex: 1;
+        color: var(--primary-foreground-color);
+    }
+    
+    .icon {
+        flex: none;
+        width: 0.5rem;
+        height: 0.5rem;
+        border-radius: 100%;
+        margin-left: 1rem;
+        background-color: var(--secondary-accent-color);
+        opacity: 1;
+    }
+
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.15);
+    }
+}
