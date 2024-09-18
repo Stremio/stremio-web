@@ -1,6 +1,6 @@
 // Copyright (C) 2017-2024 Smart code 203358507
 
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import classNames from 'classnames';
 import Button from 'stremio/common/Button';
 import styles from './Option.less';
@@ -16,11 +16,15 @@ const Option = ({ option, selectedOption, onSelect }: Props) => {
     // consider using option.id === selectedOption?.id instead
     const selected = useMemo(() => option?.value === selectedOption?.value, [option, selectedOption]);
 
+    const handleClick = useCallback(() => {
+        onSelect(option.value);
+    }, [onSelect, option.value]);
+
     return (
         <Button
             className={classNames(styles['option'], { [styles['selected']]: selected })}
             key={option.id}
-            onClick={() => onSelect(option.value)}
+            onClick={handleClick}
             aria-selected={selected}
         >
             <div className={styles['label']}>{ option.label }</div>
