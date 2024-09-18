@@ -6,7 +6,7 @@ const classnames = require('classnames');
 const styles = require('./styles');
 const { useLongPress } = require('use-long-press');
 
-const Button = React.forwardRef(({ className, href, disabled, children, onLongPress, ...props }, ref) => {
+const Button = React.forwardRef(({ className, href, disabled, children, onLongPress, onDoubleClick, ...props }, ref) => {
     const longPress = useLongPress(onLongPress, { detect: 'pointer' });
     const onKeyDown = React.useCallback((event) => {
         if (typeof props.onKeyDown === 'function') {
@@ -42,6 +42,7 @@ const Button = React.forwardRef(({ className, href, disabled, children, onLongPr
             href,
             onKeyDown,
             onMouseDown,
+            onDoubleClick,
             ...longPress()
         },
         children
@@ -58,6 +59,7 @@ Button.propTypes = {
     onKeyDown: PropTypes.func,
     onMouseDown: PropTypes.func,
     onLongPress: PropTypes.func,
+    onDoubleClick: PropTypes.func
 };
 
 module.exports = Button;

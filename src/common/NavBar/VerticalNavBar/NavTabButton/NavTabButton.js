@@ -15,8 +15,17 @@ const NavTabButton = ({ className, logo, icon, label, href, selected, onClick })
             :
             null
     ), [icon]);
+    const onDoubleClick = () => {
+        const scrollableElements = document.querySelectorAll('div');
+
+        scrollableElements.forEach((element) => {
+            if (element.scrollTop > 0) {
+                element.scrollTop = 0;
+            }
+        });
+    };
     return (
-        <Button className={classnames(className, styles['nav-tab-button-container'], { 'selected': selected })} title={label} tabIndex={-1} href={href} onClick={onClick}>
+        <Button className={classnames(className, styles['nav-tab-button-container'], { 'selected': selected })} title={label} tabIndex={-1} href={href} onClick={onClick} onDoubleClick={onDoubleClick}>
             {
                 typeof logo === 'string' && logo.length > 0 ?
                     <Image
