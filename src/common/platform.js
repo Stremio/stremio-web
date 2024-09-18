@@ -1,8 +1,8 @@
-// Copyright (C) 2017-2023 Smart code 203358507
+// Copyright (C) 2017-2024 Smart code 203358507
 
 // this detects ipad properly in safari
 // while bowser does not
-function iOS() {
+const iOS = () => {
     return [
         'iPad Simulator',
         'iPhone Simulator',
@@ -11,14 +11,22 @@ function iOS() {
         'iPhone',
         'iPod'
     ].includes(navigator.platform)
-    || (navigator.userAgent.includes('Mac') && 'ontouchend' in document);
-}
+        || (navigator.userAgent.includes('Mac') && 'ontouchend' in document);
+};
 
 const Bowser = require('bowser');
 
 const browser = Bowser.parse(window.navigator?.userAgent || '');
 
-const name = iOS() ? 'ios' : (browser?.os?.name || 'unknown').toLowerCase();
+// Edge case: iPad is included in this function
+// Keep in mind maxTouchPoints for Vision Pro might change in the future
+const isVisionProUser = () => {
+    const isMacintosh = navigator.userAgent.includes('Macintosh');
+    const hasFiveTouchPoints = navigator.maxTouchPoints === 5;
+    return isMacintosh && hasFiveTouchPoints;
+};
+
+const name = isVisionProUser() ? 'visionos' : (iOS() ? 'ios' : (browser?.os?.name || 'unknown').toLowerCase());
 
 module.exports = {
     name,
