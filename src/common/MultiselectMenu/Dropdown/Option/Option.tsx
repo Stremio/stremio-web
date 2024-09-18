@@ -30,7 +30,7 @@ const Option = ({ option, selectedOption, onSelect }: Props) => {
             <div className={styles['label']}>{ option.label }</div>
             {
                 selected && !option.level ?
-                <div className={styles['icon']} />
+                    <div className={styles['icon']} />
                     : null
 
             }
