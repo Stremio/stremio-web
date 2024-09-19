@@ -1,12 +1,13 @@
 {
     "name": "stremio",
     "displayName": "Stremio",
-    "version": "5.0.0-beta.8",
+    "version": "5.0.0-beta.9",
     "author": "Smart Code OOD",
     "private": true,
     "license": "gpl-2.0",
     "scripts": {
         "start": "webpack serve --mode development",
+        "start-prod": "webpack serve --mode production",
         "build": "webpack --mode production",
         "test": "jest",
         "lint": "eslint src"
@@ -15,7 +16,7 @@
         "@babel/runtime": "7.16.0",
         "@sentry/browser": "6.13.3",
         "@stremio/stremio-colors": "5.0.1",
-        "@stremio/stremio-core-web": "0.47.2",
+        "@stremio/stremio-core-web": "0.47.8",
         "@stremio/stremio-icons": "5.2.0",
         "@stremio/stremio-video": "0.0.38",
         "a-color-picker": "1.2.1",
