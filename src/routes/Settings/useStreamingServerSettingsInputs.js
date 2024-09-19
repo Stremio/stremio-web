@@ -70,7 +70,7 @@ const useStreamingServerSettingsInputs = (streamingServer) => {
             options: [
                 {
                     label: t('SETTINGS_DISABLED'),
-                    value: null,
+                    value: '',
                 },
                 ...streamingServer.networkInfo.content.availableInterfaces.map((address) => ({
                     label: address,
