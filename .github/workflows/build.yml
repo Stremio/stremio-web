@@ -35,6 +35,7 @@ jobs:
       - name: Deploy to GitHub Pages
         if: ${{ github.actor != 'dependabot[bot]' }}
         uses: peaceiris/actions-gh-pages@v4
+        if: github.repository == 'Stremio/stremio-web'
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build
