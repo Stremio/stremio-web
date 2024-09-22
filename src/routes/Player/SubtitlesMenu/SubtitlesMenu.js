@@ -206,7 +206,12 @@ const SubtitlesMenu = React.memo((props) => {
                                 <Button key={index} title={track.label} className={classnames(styles['variant-option'], { 'selected': props.selectedSubtitlesTrackId === track.id || props.selectedExtraSubtitlesTrackId === track.id })} data-id={track.id} data-origin={track.origin} data-embedded={track.embedded} onClick={subtitlesTrackOnClick}>
                                     <div className={styles['variant-origin']}>
                                         {track.origin}
-                                        <div className={styles['variant-label']}>{track.label}</div>
+                                        {
+                                            typeof track.label === 'string' && !track.label.startsWith('http') ?
+                                                <div className={styles['variant-label']}>{track.label}</div>
+                                                :
+                                                null
+                                        }
                                     </div>
                                     {
                                         props.selectedSubtitlesTrackId === track.id || props.selectedExtraSubtitlesTrackId === track.id ?
