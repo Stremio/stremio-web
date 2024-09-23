@@ -1,6 +1,7 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 const AddonDetailsModal = require('./AddonDetailsModal');
+const { default: BottomSheet } = require('./BottomSheet');
 const Button = require('./Button');
 const Checkbox = require('./Checkbox');
 const { default: Chips } = require('./Chips');
@@ -50,6 +51,7 @@ const EventModal = require('./EventModal');
 
 module.exports = {
     AddonDetailsModal,
+    BottomSheet,
     Button,
     Checkbox,
     Chips,

@@ -1,11 +1,13 @@
 // Copyright (C) 2017-2024 Smart code 203358507
 
-import React, { useState } from 'react';
-import { MainNavBars, PaginationInput, useProfile, withCoreSuspender } from 'stremio/common';
+import React, { useMemo, useState } from 'react';
+import { MainNavBars, PaginationInput, BottomSheet, useProfile, withCoreSuspender } from 'stremio/common';
 import Table from './Table';
 import List from './List';
+import Details from './Details';
 import Placeholder from './Placeholder';
 import useCalendar from './useCalendar';
+import useCalendarDate from './useCalendarDate';
 import useSelectableInputs from './useSelectableInputs';
 import styles from './Calendar.less';
 
@@ -16,10 +18,13 @@ type Props = {
 const Calendar = ({ urlParams }: Props) => {
     const calendar = useCalendar(urlParams);
     const profile = useProfile();
-
+    
     const [paginationInput] = useSelectableInputs(calendar, profile);
+    const { toDayMonth } = useCalendarDate(profile);
 
     const [selected, setSelected] = useState<CalendarDate | null>(null);
+
+    const detailsTitle = useMemo(() => toDayMonth(selected), [selected]);
 
     return (
         <MainNavBars className={styles['calendar']} route={'calendar'}>
@@ -49,6 +54,12 @@ const Calendar = ({ urlParams }: Props) => {
                             profile={profile}
                             onChange={setSelected}
                         />
+                        <BottomSheet title={detailsTitle} show={selected}>
+                            <Details
+                                selected={selected}
+                                items={calendar.items}
+                            />
+                        </BottomSheet>
                     </div>
                     :
                     <Placeholder />

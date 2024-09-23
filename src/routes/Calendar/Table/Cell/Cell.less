@@ -105,6 +105,16 @@
         }
     }
 
+    .more {
+        display: none;
+        flex: none;
+        width: 2rem;
+        height: 2rem;
+        padding: 0.5rem;
+        align-self: center;
+        color: var(--primary-foreground-color);
+    }
+
     &.today {
         .heading {
             .day {
@@ -128,26 +138,14 @@
     }
 }
 
-@media only screen and (max-height: @small) {
-    .cell {
-        gap: 1rem;
-    }
-}
-
-@media only screen and (max-height: @xxsmall) {
+@media only screen and (orientation: portrait) {
     .cell {
         .items {
             display: none;
         }
-    }
-}
 
-@media only screen and (max-width: @minimum) and (orientation: portrait) {
-    .cell {
-        .items {
-            .item {
-                border-radius: 0.25rem;
-            }
+        .more {
+            display: flex;
         }
     }
 }
@@ -159,10 +157,6 @@
 
         .heading {
             padding: 0;
-        }
-
-        .items {
-            display: none;
         }
     }
 }

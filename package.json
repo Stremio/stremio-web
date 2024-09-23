@@ -50,6 +50,7 @@
         "@babel/preset-env": "7.16.0",
         "@babel/preset-react": "7.16.0",
         "@types/react": "^18.2.9",
+        "@types/react-dom": "^18.3.0",
         "babel-loader": "8.2.3",
         "clean-webpack-plugin": "4.0.0",
         "copy-webpack-plugin": "9.0.1",

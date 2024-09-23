@@ -51,6 +51,12 @@ const Cell = ({ selected, monthInfo, date, items, onClick }: Props) => {
                     ))
                 }
             </HorizontalScroll>
+            {
+                items.length > 0 ?
+                    <Icon className={styles['more']} name={'more-horizontal'} />
+                    :
+                    null
+            }
         </Button>
     );
 };
