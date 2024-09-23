@@ -16,6 +16,7 @@ const MetaPreview = require('./MetaPreview');
 const MetaRow = require('./MetaRow');
 const ModalDialog = require('./ModalDialog');
 const Multiselect = require('./Multiselect');
+const { default: MultiselectMenu } = require('./MultiselectMenu');
 const { HorizontalNavBar, VerticalNavBar } = require('./NavBar');
 const { default: HorizontalScroll } = require('./HorizontalScroll');
 const PaginationInput = require('./PaginationInput');
@@ -66,6 +67,7 @@ module.exports = {
     MetaRow,
     ModalDialog,
     Multiselect,
+    MultiselectMenu,
     HorizontalNavBar,
     HorizontalScroll,
     VerticalNavBar,

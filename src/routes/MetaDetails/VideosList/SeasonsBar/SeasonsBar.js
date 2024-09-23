@@ -5,9 +5,10 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { t } = require('i18next');
 const { default: Icon } = require('@stremio/stremio-icons/react');
-const { Button, Multiselect } = require('stremio/common');
+const { Button } = require('stremio/common');
 const SeasonsBarPlaceholder = require('./SeasonsBarPlaceholder');
 const styles = require('./styles');
+const { MultiselectMenu } = require('stremio/common');
 
 const SeasonsBar = ({ className, seasons, season, onSelect }) => {
     const options = React.useMemo(() => {
@@ -16,8 +17,8 @@ const SeasonsBar = ({ className, seasons, season, onSelect }) => {
             label: season > 0 ? `${t('SEASON')} ${season}` : t('SPECIAL')
         }));
     }, [seasons]);
-    const selected = React.useMemo(() => {
-        return [String(season)];
+    const selectedSeason = React.useMemo(() => {
+        return { label: String(season), value: String(season) };
     }, [season]);
     const prevNextButtonOnClick = React.useCallback((event) => {
         if (typeof onSelect === 'function') {
@@ -35,8 +36,7 @@ const SeasonsBar = ({ className, seasons, season, onSelect }) => {
             });
         }
     }, [season, seasons, onSelect]);
-    const seasonOnSelect = React.useCallback((event) => {
-        const value = parseFloat(event.value);
+    const seasonOnSelect = React.useCallback((value) => {
         if (typeof onSelect === 'function') {
             onSelect({
                 type: 'select',
@@ -46,21 +46,29 @@ const SeasonsBar = ({ className, seasons, season, onSelect }) => {
             });
         }
     }, [onSelect]);
+
+    const [prevDisabled, nextDisabled] = React.useMemo(() => {
+        const currentIndex = seasons.indexOf(season);
+        return [
+            currentIndex === 0,
+            currentIndex === seasons.length - 1
+        ];
+    }, [season, seasons]);
+
     return (
         <div className={classnames(className, styles['seasons-bar-container'])}>
-            <Button className={styles['prev-season-button']} title={'Previous season'} data-action={'prev'} onClick={prevNextButtonOnClick}>
+            <Button className={classnames(styles['prev-season-button'], { 'disabled': prevDisabled })} title={'Previous season'} data-action={'prev'} onClick={prevNextButtonOnClick}>
                 <Icon className={styles['icon']} name={'chevron-back'} />
                 <div className={styles['label']}>Prev</div>
             </Button>
-            <Multiselect
+            <MultiselectMenu
                 className={styles['seasons-popup-label-container']}
-                title={season > 0 ? `${t('SEASON')} ${season}` : t('SPECIAL')}
-                direction={'bottom-left'}
                 options={options}
-                selected={selected}
+                title={season > 0 ? `${t('SEASON')} ${season}` : t('SPECIAL')}
+                selectedOption={selectedSeason}
                 onSelect={seasonOnSelect}
             />
-            <Button className={styles['next-season-button']} title={'Next season'} data-action={'next'} onClick={prevNextButtonOnClick}>
+            <Button className={classnames(styles['next-season-button'], { 'disabled': nextDisabled })} title={'Next season'} data-action={'next'} onClick={prevNextButtonOnClick}>
                 <div className={styles['label']}>Next</div>
                 <Icon className={styles['icon']} name={'chevron-forward'} />
             </Button>

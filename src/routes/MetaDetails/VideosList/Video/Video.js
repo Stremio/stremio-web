@@ -56,17 +56,14 @@ const Video = ({ className, id, title, thumbnail, episode, released, upcoming, w
             }
         });
     }, [id, released, watched]);
-    const href = React.useMemo(() => {
-        return deepLinks ?
-            typeof deepLinks.player === 'string' ?
-                deepLinks.player
-                :
-                typeof deepLinks.metaDetailsStreams === 'string' ?
-                    deepLinks.metaDetailsStreams
-                    :
-                    null
-            :
-            null;
+    const videoButtonOnClick = React.useCallback(() => {
+        if (deepLinks) {
+            if (typeof deepLinks.player === 'string') {
+                window.location = deepLinks.player;
+            } else if (typeof deepLinks.metaDetailsStreams === 'string') {
+                window.location.replace(deepLinks.metaDetailsStreams);
+            }
+        }
     }, [deepLinks]);
     const renderLabel = React.useMemo(() => function renderLabel({ className, id, title, thumbnail, episode, released, upcoming, watched, progress, scheduled, children, ...props }) {
         return (
@@ -171,7 +168,7 @@ const Video = ({ className, id, title, thumbnail, episode, released, upcoming, w
             watched={watched}
             progress={progress}
             scheduled={scheduled}
-            href={href}
+            onClick={videoButtonOnClick}
             {...props}
             onMouseUp={popupLabelOnMouseUp}
             onLongPress={popupLabelOnLongPress}

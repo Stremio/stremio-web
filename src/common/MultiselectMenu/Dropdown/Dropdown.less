@@ -1,0 +1,30 @@
+// Copyright (C) 2017-2024 Smart code 203358507
+
+.dropdown {
+    background: var(--modal-background-color);
+    display: none;
+    position: absolute;
+    width: 100%;
+    top: 100%;
+    left: 0;
+    z-index: 10;
+    box-shadow: var(--outer-glow);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+
+    &.open {
+        display: block;
+    }
+
+    .back-button {
+        display: flex;
+        align-items: center;
+        gap: 0 0.5rem;
+        padding: 0.75rem;
+        color: var(--primary-foreground-color);
+
+        .back-button-icon {
+            width: 1.5rem;
+        }
+    }
+}
