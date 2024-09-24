@@ -28,9 +28,11 @@
     .heading {
         flex: none;
         position: relative;
+        display: flex;
         padding: 1rem 1rem 0 1rem;
 
         .day {
+            flex: none;
             position: relative;
             display: flex;
             align-items: center;
@@ -136,6 +138,12 @@
 
 @media only screen and (orientation: portrait) {
     .cell {
+        gap: 0;
+
+        .heading {
+            justify-content: center;
+        }
+
         .items {
             display: none;
         }
@@ -152,7 +160,21 @@
         align-items: center;
 
         .heading {
-            padding: 0;
+            padding: 0 0 0 1rem;
+        }
+    }
+}
+
+@media only screen and (max-height: @xsmall) and (orientation: landscape) {
+    .cell {
+        gap: 0;
+
+        .items {
+            display: none;
+        }
+
+        .more {
+            display: flex;
         }
     }
 }
