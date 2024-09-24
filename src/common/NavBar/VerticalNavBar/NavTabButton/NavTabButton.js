@@ -20,7 +20,7 @@ const NavTabButton = ({ className, logo, icon, label, href, selected, onClick })
 
         scrollableElements.forEach((element) => {
             if (element.scrollTop > 0) {
-                element.scrollTop = 0;
+                element.scrollTo({ top: 0, behavior: 'smooth' });
             }
         });
     };
