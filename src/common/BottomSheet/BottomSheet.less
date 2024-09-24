@@ -9,6 +9,8 @@
     bottom: 0;
     left: 0;
     right: 0;
+    display: flex;
+    justify-content: center;
 
     .backdrop {
         z-index: 0;
@@ -86,5 +88,13 @@
 @media only screen and (min-width: @xsmall) {
     .bottom-sheet {
         display: none;
+    }
+}
+
+@media only screen and (orientation: landscape) {
+    .bottom-sheet {
+        .container {
+            max-width: 90%;
+        }
     }
 }
