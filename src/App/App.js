@@ -165,14 +165,14 @@ const App = () => {
                             <PlatformProvider>
                                 <ToastProvider className={styles['toasts-container']}>
                                     <TooltipProvider className={styles['tooltip-container']}>
-                                            <ServicesToaster />
-                                            <DeepLinkHandler />
-                                            <SearchParamsHandler />
-                                            <RouterWithProtectedRoutes
-                                                className={styles['router']}
-                                                viewsConfig={routerViewsConfig}
-                                                onPathNotMatch={onPathNotMatch}
-                                            />
+                                        <ServicesToaster />
+                                        <DeepLinkHandler />
+                                        <SearchParamsHandler />
+                                        <RouterWithProtectedRoutes
+                                            className={styles['router']}
+                                            viewsConfig={routerViewsConfig}
+                                            onPathNotMatch={onPathNotMatch}
+                                        />
                                     </TooltipProvider>
                                 </ToastProvider>
                             </PlatformProvider>
