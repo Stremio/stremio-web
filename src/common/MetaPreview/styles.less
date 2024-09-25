@@ -63,7 +63,13 @@
         overflow-y: auto;
 
         &:not(:hover) {
-            scrollbar-color: transparent transparent;
+            @supports not selector(::-webkit-scrollbar-thumb) {
+                scrollbar-color: transparent transparent;
+            }
+
+            html:global(.os-overlay-scrollbar) {
+                scrollbar-color: transparent transparent;
+            }
 
             &::-webkit-scrollbar-thumb, &::-webkit-scrollbar-track {
                 background-color: transparent;
@@ -177,9 +183,11 @@
             margin-right: 1rem;
         }
 
-        &:hover {
-            .label {
-                opacity: 0.7;
+        @media (pointer: fine) {
+            &:hover {
+                .label {
+                    opacity: 0.7;
+                }
             }
         }
     
@@ -200,9 +208,19 @@
             }
 
             &.show-button {
-                &:hover, &:focus {
+                .active() {
                     background-color: var( --secondary-accent-color);
                     outline: none;
+                }
+
+                &:focus {
+                    .active();
+                }
+
+                @media (pointer: fine) {
+                    &:hover {
+                        .active();
+                    }
                 }
             }
         }
@@ -233,7 +251,14 @@
                 flex-shrink: 0;
                 margin-top: 3rem;
                 overflow: visible;
-                scrollbar-width: none;
+
+                @supports not selector(::-webkit-scrollbar) {
+                    scrollbar-width: none;
+                }
+
+                html:global(.os-overlay-scrollbar) {
+                    scrollbar-width: none;
+                }
     
                 &::-webkit-scrollbar {
                     display: none;

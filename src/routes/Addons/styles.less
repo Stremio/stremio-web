@@ -22,16 +22,46 @@
 }
 
 .addons-container {
-    width: 100%;
     height: 100%;
     background-color: transparent;
 
     .addons-content {
+        --selectable-inputs-assumed-height: 84px;
+        --top-overlay-size: var(--selectable-inputs-assumed-height);
+        --bottom-vertical-nav-bar-size: 0px;
+        --bottom-overlay-size: var(--bottom-vertical-nav-bar-size);
+        --overlap-size: 6rem;
+        --transparency-grandient-pad: 3rem;
+
         width: 100%;
-        height: 100%;
+        height: calc(100% + var(--bottom-overlay-size));
+        margin-bottom: calc(var(--bottom-overlay-size) * -1);
         display: flex;
         flex-direction: column;
         align-self: stretch;
+
+        .addons-list-container {
+            margin-top: calc(var(--selectable-inputs-assumed-height) * -1);
+            padding: 0 1.5rem;
+            padding-top: var(--selectable-inputs-assumed-height);
+            padding-bottom: var(--bottom-overlay-size, 0px);
+            scroll-padding-top: var(--selectable-inputs-assumed-height);
+
+            mask: linear-gradient(
+                to bottom,
+                transparent calc(var(--top-overlay-size) - var(--overlap-size)),
+                rgba(0, 0, 0, 0.08) calc(var(--top-overlay-size) - (var(--overlap-size) / 2)),
+                rgba(0, 0, 0, 0.16) calc(var(--top-overlay-size) - (var(--overlap-size) / 3)),
+                black calc(var(--top-overlay-size) + var(--transparency-grandient-pad)),
+                black 100%
+            );
+            z-index: 1;
+
+            &::-webkit-scrollbar-track {
+                margin-top: var(--selectable-inputs-assumed-height);
+                margin-bottom: var(--bottom-overlay-size);
+            }
+        }
 
         .selectable-inputs-container {
             flex: none;
@@ -41,6 +71,7 @@
             justify-content: space-between;
             padding: 1.5rem;
             overflow: visible;
+            z-index: 2;
 
             .add-button-container {
                 flex: none;
@@ -53,10 +84,13 @@
                 padding: 0 1.5rem;
                 border-radius: 3rem;
                 background-color: var(--secondary-accent-color);
+                z-index: 3;
 
-                &:hover {
-                    outline: var(--focus-outline-size) solid var(--secondary-accent-color);
-                    background-color: transparent;
+                @media (pointer: fine) {
+                    &:hover {
+                        outline: var(--focus-outline-size) solid var(--secondary-accent-color);
+                        background-color: transparent;
+                    }
                 }
 
                 &:focus {
@@ -134,7 +168,6 @@
         .addons-list-container {
             flex: 1;
             align-self: stretch;
-            padding: 0 1.5rem;
             overflow-y: auto;
 
             .addon {
@@ -183,8 +216,10 @@
             outline: var(--focus-outline-size) solid var(--overlay-color);
             outline-offset: calc(-1 * var(--focus-outline-size));
 
-            &:hover {
-                outline-color: var(--primary-foreground-color);
+            @media (pointer: fine) {
+                &:hover {
+                    outline-color: var(--primary-foreground-color);
+                }
             }
 
             &:focus {
@@ -197,9 +232,11 @@
         background-color: transparent;
         opacity: 0.3;
 
-        &:hover {
-            outline: var(--focus-outline-size) solid var(--primary-foreground-color);
-            opacity: 1;
+        @media (pointer: fine) {
+            &:hover {
+                outline: var(--focus-outline-size) solid var(--primary-foreground-color);
+                opacity: 1;
+            }
         }
 
         &:focus {
@@ -275,6 +312,8 @@
 @media only screen and (max-width: @minimum) {
     .addons-container {
         .addons-content {
+            --bottom-vertical-nav-bar-size: var(--vertical-nav-bar-size);
+
             .selectable-inputs-container {
                 .add-button-container {
                     z-index: 1;

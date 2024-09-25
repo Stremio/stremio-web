@@ -16,9 +16,19 @@
         background-color: var(--primary-foreground-color);
     }
 
-    &:hover, &:global(.active) {
+    .active() {
         .slider-track-after {
             background-color: var(--primary-foreground-color);
+        }
+    }
+
+    &:global(.active) {
+        .active();
+    }
+
+    @media (pointer: fine) {
+        &:hover {
+            .active();
         }
     }
 }

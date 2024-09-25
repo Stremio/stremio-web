@@ -12,14 +12,16 @@
 }
 
 .search-container {
-    width: 100%;
     height: 100%;
     background-color: transparent;
 
     .search-content {
         width: 100%;
-        height: 100%;
         overflow-y: auto;
+
+        &.hints {
+            height: 100%;
+        }
 
         .search-row {
             margin: 4rem 2rem;
@@ -284,7 +286,6 @@
             }
 
             .search-hints-wrapper {
-                margin-top: 4rem;
                 .search-hints-container {
                     padding: 4rem 2rem;
                     .search-hint-container {

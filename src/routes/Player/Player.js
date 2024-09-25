@@ -8,7 +8,7 @@ const langs = require('langs');
 const { useTranslation } = require('react-i18next');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
-const { HorizontalNavBar, useFullscreen, useBinaryState, useToast, useStreamingServer, withCoreSuspender } = require('stremio/common');
+const { HorizontalNavBar, useFullscreen, useBinaryState, useToast, useStreamingServer, withCoreSuspender, platform } = require('stremio/common');
 const BufferingLoader = require('./BufferingLoader');
 const VolumeChangeIndicator = require('./VolumeChangeIndicator');
 const Error = require('./Error');
@@ -27,6 +27,8 @@ const useVideo = require('./useVideo');
 const styles = require('./styles');
 const Video = require('./Video');
 
+const isMobile = platform.isMobile();
+
 const Player = ({ urlParams, queryParams }) => {
     const { t } = useTranslation();
     const { chromecast, shell, core } = useServices();
@@ -41,14 +43,16 @@ const Player = ({ urlParams, queryParams }) => {
     const video = useVideo();
     const routeFocused = useRouteFocused();
     const toast = useToast();
+    const lastPlayTimeRef = React.useRef(null);
 
     const [casting, setCasting] = React.useState(() => {
         return chromecast.active && chromecast.transport.getCastState() === cast.framework.CastState.CONNECTED;
     });
+    const [airplayActive, setAirplayActive] = React.useState(false);
 
     const [immersed, setImmersed] = React.useState(true);
     const setImmersedDebounced = React.useCallback(debounce(setImmersed, 3000), []);
-    const [, , , toggleFullscreen] = useFullscreen();
+    const [fullScreenActive, , , toggleFullscreen] = useFullscreen(video.containerElement);
 
     const [optionsMenuOpen, , closeOptionsMenu, toggleOptionsMenu] = useBinaryState(false);
     const [subtitlesMenuOpen, , closeSubtitlesMenu, toggleSubtitlesMenu] = useBinaryState(false);
@@ -72,8 +76,8 @@ const Player = ({ urlParams, queryParams }) => {
     }, []);
 
     const overlayHidden = React.useMemo(() => {
-        return immersed && !casting && video.state.paused !== null && !video.state.paused && !menusOpen && !nextVideoPopupOpen;
-    }, [immersed, casting, video.state.paused, menusOpen, nextVideoPopupOpen]);
+        return immersed && !casting && !airplayActive && video.state.paused !== null && (!video.state.paused || isMobile) && !menusOpen && !nextVideoPopupOpen;
+    }, [immersed, casting, airplayActive, video.state.paused, menusOpen, nextVideoPopupOpen]);
 
     const nextVideoPopupDismissed = React.useRef(false);
     const defaultSubtitlesSelected = React.useRef(false);
@@ -161,6 +165,20 @@ const Player = ({ urlParams, queryParams }) => {
         video.setProp('time', time);
     }, []);
 
+    const seek10secondsForward = React.useCallback(() => {
+        if (lastPlayTimeRef.current !== null && !isNaN(lastPlayTimeRef.current)) {
+            lastPlayTimeRef.current += 10 * 1000;
+            onSeekRequested(lastPlayTimeRef.current);
+        }
+    }, [onSeekRequested]);
+
+    const seek10secondsBackward = React.useCallback(() => {
+        if (lastPlayTimeRef.current !== null && !isNaN(lastPlayTimeRef.current)) {
+            lastPlayTimeRef.current -= 10 * 1000;
+            onSeekRequested(lastPlayTimeRef.current);
+        }
+    }, [onSeekRequested]);
+
     const onPlaybackSpeedChanged = React.useCallback((rate) => {
         video.setProp('playbackSpeed', rate);
     }, []);
@@ -210,17 +228,23 @@ const Player = ({ urlParams, queryParams }) => {
         }
     }, [player.nextVideo]);
 
-    const onVideoClick = React.useCallback(() => {
+    const onPlayPauseClick = React.useCallback(() => {
         if (video.state.paused !== null) {
             if (video.state.paused) {
-                onPlayRequestedDebounced();
+                if (isMobile)
+                    onPlayRequested();
+                else
+                    onPlayRequestedDebounced();
             } else {
-                onPauseRequestedDebounced();
+                if (isMobile)
+                    onPauseRequested();
+                else
+                    onPauseRequestedDebounced();
             }
         }
     }, [video.state.paused]);
 
-    const onVideoDoubleClick = React.useCallback(() => {
+    const onToggleFullscreen = React.useCallback(() => {
         onPlayRequestedDebounced.cancel();
         onPauseRequestedDebounced.cancel();
         toggleFullscreen();
@@ -248,6 +272,9 @@ const Player = ({ urlParams, queryParams }) => {
     }, []);
 
     const onContainerMouseMove = React.useCallback((event) => {
+        if (isMobile)
+            return;
+
         setImmersed(false);
         if (!event.nativeEvent.immersePrevented) {
             setImmersedDebounced(true);
@@ -257,6 +284,9 @@ const Player = ({ urlParams, queryParams }) => {
     }, []);
 
     const onContainerMouseLeave = React.useCallback(() => {
+        if (isMobile)
+            return;
+
         setImmersedDebounced.cancel();
         setImmersed(true);
     }, []);
@@ -264,6 +294,10 @@ const Player = ({ urlParams, queryParams }) => {
     const onBarMouseMove = React.useCallback((event) => {
         event.nativeEvent.immersePrevented = true;
     }, []);
+
+    const toggleImmersion = React.useCallback(() => {
+        setImmersed((immersed) => !immersed);
+    }, [setImmersed]);
 
     React.useEffect(() => {
         setError(null);
@@ -290,7 +324,7 @@ const Player = ({ urlParams, queryParams }) => {
                     player.libraryItem.state.timeOffset
                     :
                     0,
-                forceTranscoding: forceTranscoding || casting,
+                forceTranscoding: forceTranscoding || casting || airplayActive,
                 maxAudioChannels: settings.surroundSound ? 32 : 2,
                 streamingServerURL: streamingServer.baseUrl ?
                     casting ?
@@ -305,7 +339,7 @@ const Player = ({ urlParams, queryParams }) => {
                 shellTransport: shell.active ? shell.transport : null,
             });
         }
-    }, [streamingServer.baseUrl, player.selected, player.metaItem, forceTranscoding, casting]);
+    }, [streamingServer.baseUrl, player.selected, player.metaItem, forceTranscoding, casting, airplayActive]);
     React.useEffect(() => {
         if (video.state.stream !== null) {
             const tracks = player.subtitles.map((subtitles) => ({
@@ -346,6 +380,7 @@ const Player = ({ urlParams, queryParams }) => {
             video.state.duration !== null && !isNaN(video.state.duration) &&
             video.state.manifest !== null && typeof video.state.manifest.name === 'string') {
             timeChanged(video.state.time, video.state.duration, video.state.manifest.name);
+            lastPlayTimeRef.current = video.state.time;
         }
     }, [video.state.time, video.state.duration, video.state.manifest]);
 
@@ -599,7 +634,7 @@ const Player = ({ urlParams, queryParams }) => {
     }, []);
 
     return (
-        <div className={classnames(styles['player-container'], { [styles['overlayHidden']]: overlayHidden })}
+        <div className={classnames(styles['player-container'], { [styles['overlayHidden']]: overlayHidden, [styles['mobile']]: isMobile})}
             onMouseDown={onContainerMouseDown}
             onMouseMove={onContainerMouseMove}
             onMouseOver={onContainerMouseMove}
@@ -607,12 +642,18 @@ const Player = ({ urlParams, queryParams }) => {
             <Video
                 ref={video.containerElement}
                 className={styles['layer']}
-                onClick={onVideoClick}
-                onDoubleClick={onVideoDoubleClick}
+                onPlayPause={onPlayPauseClick}
+                toggleFullscreen={onToggleFullscreen}
+                fullScreenActive={fullScreenActive}
+                overlayHidden={overlayHidden || video.state.buffering}
+                setOverlayHidden={setImmersed}
+                paused={video.state.paused}
+                onSkip10Seconds={seek10secondsForward}
+                onGoBack10Seconds={seek10secondsBackward}
             />
             {
                 !video.state.loaded ?
-                    <div className={classnames(styles['layer'], styles['background-layer'])}>
+                    <div className={classnames(styles['layer'], styles['background-layer'])} onClick={isMobile ? toggleImmersion : null}>
                         <img className={styles['image']} src={player?.metaItem?.content?.background} />
                     </div>
                     :
@@ -620,7 +661,11 @@ const Player = ({ urlParams, queryParams }) => {
             }
             {
                 (video.state.buffering || !video.state.loaded) && !error ?
-                    <BufferingLoader className={classnames(styles['layer'], styles['buffering-layer'])} logo={player?.metaItem?.content?.logo} />
+                    <BufferingLoader
+                        className={classnames(styles['layer'], styles['buffering-layer'])}
+                        logo={player?.metaItem?.content?.logo}
+                        onClick={isMobile ? toggleImmersion : null}
+                    />
                     :
                     null
             }
@@ -656,6 +701,7 @@ const Player = ({ urlParams, queryParams }) => {
                 fullscreenButton={true}
                 onMouseMove={onBarMouseMove}
                 onMouseOver={onBarMouseMove}
+                reducedTouchSurface
             />
             <ControlBar
                 className={classnames(styles['layer'], styles['control-bar-layer'])}
@@ -671,6 +717,8 @@ const Player = ({ urlParams, queryParams }) => {
                 metaItem={player.metaItem}
                 nextVideo={player.nextVideo}
                 stream={player.selected !== null ? player.selected.stream : null}
+                videoContainerElementRef={video.containerElement}
+                setAirplayActive={setAirplayActive}
                 statistics={statistics}
                 onPlayRequested={onPlayRequested}
                 onPauseRequested={onPauseRequested}

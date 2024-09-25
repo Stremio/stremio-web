@@ -1,6 +1,7 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
+@import (reference) '~stremio/common/screen-sizes.less';
 
 :import('~stremio/common/Slider/styles.less') {
     active-slider-within: active-slider-within;
@@ -20,7 +21,8 @@ html:not(.active-slider-within) {
 
         .nav-bar-layer, .control-bar-layer, .menu-layer {
             opacity: 0;
-            transition: opacity 200ms;
+            pointer-events: none;
+            transition: opacity ease-in-out 150ms;
         }
     }
 }
@@ -31,6 +33,18 @@ html:not(.active-slider-within) {
     width: 100%;
     height: 100%;
     background-color: @background-color;
+
+    &.mobile {
+        .nav-bar-layer {
+            @media only screen and (max-height: @minimum) {
+                height: 4.5rem;
+            }
+        }
+    }
+
+    .nav-bar-layer, .control-bar-layer, .menu-layer {
+        transition: opacity ease-in-out 200ms;
+    }
 
     .layer {
         position: absolute;
@@ -57,6 +71,8 @@ html:not(.active-slider-within) {
             bottom: initial;
             background: transparent;
             overflow: visible;
+            padding-left: var(--safe-area-inset-left, 0px);
+            padding-right: ~"calc(max(1rem, var(--safe-area-inset-right, 0px)))";
 
             &::before {
                 position: absolute;
@@ -69,8 +85,10 @@ html:not(.active-slider-within) {
             }
 
             .nav-bar-button-container {
-                &:hover {
-                    background: transparent;
+                @media (pointer: fine) {
+                    &:hover {
+                        background: transparent;
+                    }
                 }
 
                 .nav-bar-icon {
@@ -86,6 +104,7 @@ html:not(.active-slider-within) {
         &.control-bar-layer {
             top: initial;
             overflow: visible;
+            margin-bottom: var(--calculated-bottom-safe-inset, 0px);
 
             &::before {
                 position: absolute;
@@ -109,7 +128,6 @@ html:not(.active-slider-within) {
             background-color: var(--modal-background-color);
             box-shadow: 0 1.35rem 2.7rem @color-background-dark5-40,
                 0 1.1rem 0.85rem @color-background-dark5-20;
-            backdrop-filter: blur(15px);
             overflow: auto;
         }
     }

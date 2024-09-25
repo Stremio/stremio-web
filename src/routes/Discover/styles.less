@@ -24,13 +24,20 @@
 }
 
 .discover-container {
-    width: 100%;
     height: 100%;
     background-color: transparent;
 
     .discover-content {
+        --selectable-inputs-assumed-height: 84px;
+        --top-overlay-size: var(--selectable-inputs-assumed-height);
+        --bottom-vertical-nav-bar-size: 0px;
+        --bottom-overlay-size: var(--bottom-vertical-nav-bar-size);
+        --overlap-size: 6rem;
+        --transparency-grandient-pad: 6rem;
+
         width: 100%;
-        height: 100%;
+        height: calc(100% + var(--bottom-overlay-size));
+        margin-bottom: calc(var(--bottom-overlay-size) * -1);
         display: flex;
         flex-direction: row;
 
@@ -39,6 +46,30 @@
             align-self: stretch;
             display: flex;
             flex-direction: column;
+            contain: strict;
+
+            .meta-items-container {
+                margin-top: calc(var(--selectable-inputs-assumed-height) * -1);
+                padding: 0 1.5rem;
+                padding-top: var(--selectable-inputs-assumed-height);
+                padding-bottom: var(--bottom-overlay-size, 0px);
+                scroll-padding-top: var(--selectable-inputs-assumed-height);
+    
+                mask: linear-gradient(
+                    to bottom,
+                    transparent calc(var(--top-overlay-size) - var(--overlap-size)),
+                    rgba(0, 0, 0, 0.08) calc(var(--top-overlay-size) - (var(--overlap-size) / 2)),
+                    rgba(0, 0, 0, 0.16) calc(var(--top-overlay-size) - (var(--overlap-size) / 3)),
+                    black calc(var(--top-overlay-size) + var(--transparency-grandient-pad)),
+                    black 100%
+                );
+                z-index: 1;
+
+                &::-webkit-scrollbar-track {
+                    margin-top: var(--selectable-inputs-assumed-height);
+                    margin-bottom: var(--bottom-overlay-size);
+                }
+            }
 
             .selectable-inputs-container {
                 flex: none;
@@ -47,6 +78,7 @@
                 flex-direction: row;
                 padding: 1.5rem;
                 overflow: visible;
+                z-index: 2;
 
                 .select-input {
                     flex: 0 1 15rem;
@@ -112,9 +144,11 @@
                     padding: 1rem;
                     background-color: var(--secondary-accent-color);
 
-                    &:hover {
-                        outline: var(--focus-outline-size) solid var(--secondary-accent-color);
-                        background-color: transparent;
+                    @media (pointer: fine) {
+                        &:hover {
+                            outline: var(--focus-outline-size) solid var(--secondary-accent-color);
+                            background-color: transparent;
+                        }
                     }
 
                     &:focus {
@@ -170,7 +204,6 @@
                 align-items: center;
                 grid-gap: 0.5rem;
                 margin-right: 1.5rem;
-                padding: 0 1.5rem;
                 overflow-y: auto;
 
                 .meta-item-placeholder {
@@ -356,6 +389,8 @@
 @media only screen and (max-width: @minimum) {
     .discover-container {
         .discover-content {
+            --bottom-vertical-nav-bar-size: var(--vertical-nav-bar-size);
+
             .catalog-container {
                 .selectable-inputs-container {
                     justify-content: space-between;

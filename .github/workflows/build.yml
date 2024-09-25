@@ -3,21 +3,19 @@ name: Build
 on:
   push:
     branches:
-      - development
-    tags-ignore:
       - '**'
   pull_request:
     branches:
-      - development
+      - '**'
   # Allow manual dispatch in GH
   workflow_dispatch:
-
-permissions:
-  contents: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -36,7 +34,7 @@ jobs:
       # Create recursivelly the destiantion dir with
       # "--parrents where no error if existing, make parent directories as needed."
       - run: mkdir -p ./build/${{ github.head_ref || github.ref_name }}
-      - name: Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages (multi-branch)
         if: github.repository == 'Stremio/stremio-web' && github.actor != 'dependabot[bot]'
         uses: peaceiris/actions-gh-pages@v4
         with:
@@ -46,3 +44,14 @@ jobs:
           # so we need a recursive creation of the destination dir
           destination_dir: ${{ github.head_ref || github.ref_name }}
           allow_empty_commit: true
+      - name: Upload build to GitHub Pages
+        if: github.event_name == 'push' && github.repository != 'Stremio/stremio-web'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          name: stremio-web
+          path: build
+      - name: Deploy build to GitHub Pages (single branch)
+        if: github.event_name == 'push' && github.repository != 'Stremio/stremio-web'
+        uses: actions/deploy-pages@v4
+        with:
+          artifact_name: stremio-web

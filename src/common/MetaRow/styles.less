@@ -33,10 +33,20 @@
             border-radius: 2.5rem;
             opacity: 0.6;
 
-            &:hover, &:focus {
+            .active() {
                 outline: none;
                 background-color: var(--overlay-color);
                 opacity: 1;
+            }
+
+            &:focus {
+                .active();
+            }
+
+            @media (pointer: fine) {
+                &:hover {
+                    .active();
+                }
             }
 
             .label {

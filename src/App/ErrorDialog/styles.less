@@ -53,9 +53,11 @@
             border-radius: 3.5rem;
             background-color: var(--overlay-color);
 
-            &:hover {
-                outline: var(--focus-outline-size) solid var(--primary-foreground-color);
-                background-color: transparent;
+            @media (pointer: fine) {
+                &:hover {
+                    outline: var(--focus-outline-size) solid var(--primary-foreground-color);
+                    background-color: transparent;
+                }
             }
 
             &:active {

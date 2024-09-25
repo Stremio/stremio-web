@@ -6,9 +6,9 @@ const classnames = require('classnames');
 const { Image } = require('stremio/common');
 const styles = require('./styles');
 
-const BufferingLoader = ({ className, logo }) => {
+const BufferingLoader = ({ className, logo, onClick }) => {
     return (
-        <div className={classnames(className, styles['buffering-loader-container'])}>
+        <div className={classnames(className, styles['buffering-loader-container'])} onClick={onClick}>
             <Image
                 className={styles['buffering-loader']}
                 src={logo}
@@ -21,7 +21,8 @@ const BufferingLoader = ({ className, logo }) => {
 
 BufferingLoader.propTypes = {
     className: PropTypes.string,
-    logo: PropTypes.string
+    logo: PropTypes.string,
+    onClick: PropTypes.func,
 };
 
 module.exports = BufferingLoader;

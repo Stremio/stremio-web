@@ -1,12 +1,116 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 .video-container {
+    background: black;
+
     .video {
-        width: 100%;
-        height: 100%;
+        // make sure subtitles are not rendered under unsafe area, such as screen notches or navigation bars
+        width: calc(100% - var(--safe-area-inset-left, 0px) - var(--safe-area-inset-right, 0px));
+        height: calc(100% - var(--safe-area-inset-top, 0px) - var(--calculated-bottom-safe-inset, 0px));
+        margin-top: var(--safe-area-inset-top, 0px);
+        margin-left: var(--safe-area-inset-left, 0px);
+        overflow: initial;
+        position: relative;
+
+        video {
+            // make sure the video itself does span under unsafe areas
+            // the relevant safeguards will be applied using padding to the video depending on the orientation
+            // we need !important because the video tag has a style attribute that sets the width and height to 100%
+            height: calc(100% + var(--safe-area-inset-top, 0px) + var(--calculated-bottom-safe-inset, 0px)) !important;
+            width: calc(100% + var(--safe-area-inset-left, 0px) + var(--safe-area-inset-right, 0px)) !important;
+            margin-top: calc(var(--safe-area-inset-top, 0px) * -1);
+            margin-left: calc(var(--safe-area-inset-left, 0px) * -1);
+
+            @media screen and (orientation: landscape) {
+                padding-bottom: var(--calculated-bottom-safe-inset, 0px);
+
+                // on most devices, the unsafe areas on the left and right are notches and don't interfere with the video that much
+                // so that padding is commented out
+                // padding-left: var(--safe-area-inset-left, 0px);
+                // padding-right: var(--safe-area-inset-right, 0px);
+            }
+
+            @media screen and (orientation: portrait) {
+                padding-top: var(--safe-area-inset-top, 0px);
+                padding-bottom: var(--calculated-bottom-safe-inset, 0px);
+            }
+        }
 
         * {
             font-size: inherit;
+        }
+    }
+
+    // this workaround pains a white pill under the iOS navigation bar pill,
+    // causing it to invert its color to back and integrate with the background of most videos in this area
+    .ios-system-navigation-pill-hide {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        pointer-events: none;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+        transition: opacity 0.2s ease-out;
+
+        &.hide {
+            opacity: 0;
+        }
+
+        // only show a negative navigation pill for knows screen sizes
+        // iPhone 14/15 Plus/Promax - portrait
+        @media only screen and (orientation: portrait) and (width: 430px) {
+            &:after {
+                content: "";
+                display: block;
+                background-color: white;
+                border-radius: 8px;
+                height: 5px;
+                width: 151px;
+                margin-bottom: 8px;
+            }
+        }
+
+        // iPhone 14/15 Plus/Promax - landscape
+        @media only screen and (orientation: landscape) and (width: 932px) {
+            &:after {
+                content: "";
+                display: block;
+                background-color: white;
+                border-radius: 8px;
+                height: 5px;
+                width: 237px;
+                margin-bottom: 8px;
+            }
+        }
+
+        // iPad Pro 12.9" - portrait
+        @media only screen and (orientation: portrait) and (width: 1024px) {
+            &:after {
+                content: "";
+                display: block;
+                background-color: white;
+                border-radius: 8px;
+                height: 5px;
+                width: 312px;
+                margin-bottom: 8px;
+            }
+        }
+
+        // iPad Pro 12.9" - landscape
+        @media only screen and (orientation: landscape) and (width: 1366px) {
+            &:after {
+                content: "";
+                display: block;
+                background-color: white;
+                border-radius: 8px;
+                height: 5px;
+                width: 342.3px;
+                margin-bottom: 8px;
+            }
         }
     }
 }

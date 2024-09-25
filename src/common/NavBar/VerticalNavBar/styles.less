@@ -11,7 +11,14 @@
     width: var(--vertical-nav-bar-size);
     background-color: transparent;
     overflow-y: auto;
-    scrollbar-width: none;
+
+    @supports not selector(::-webkit-scrollbar) {
+        scrollbar-width: none;
+    }
+
+    html:global(.os-overlay-scrollbar) {
+        scrollbar-width: none;
+    }
 
     &::-webkit-scrollbar {
         display: none;

@@ -20,10 +20,19 @@
     margin-bottom: 0.5rem;
     border-radius: var(--border-radius);
 
-    &:hover,
+    .active() {
+        background-color: var(--overlay-color);
+    }
+
     &:focus,
     &:global(.active) {
-        background-color: var(--overlay-color);
+        .active();
+    }
+
+    @media (pointer: fine) {
+        &:hover {
+            .active();
+        }
     }
 
     .thumbnail-container {
@@ -180,9 +189,18 @@
                 align-items: center;
                 padding: 1rem 1.5rem;
 
-                &:hover,
-                &:focus {
+                .active() {
                     background-color: var(--overlay-color);
+                }
+
+                &:focus {
+                    .active();
+                }
+
+                @media (pointer: fine) {
+                    &:hover {
+                        .active();
+                    }
                 }
 
                 .context-menu-option-label {

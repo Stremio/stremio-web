@@ -17,9 +17,11 @@
         background-color: transparent;
         opacity: 0.3;
 
-        &:hover {
-            outline: var(--focus-outline-size) solid var(--primary-foreground-color);
-            opacity: 1;
+        @media (pointer: fine) {
+            &:hover {
+                outline: var(--focus-outline-size) solid var(--primary-foreground-color);
+                opacity: 1;
+            }
         }
 
         &:focus {
@@ -34,9 +36,11 @@
     .uninstall-button {
         background-color: var(--overlay-color);
     
-        &:hover {
-            outline: var(--focus-outline-size) solid var(--overlay-color);
-            background-color: transparent;
+        @media (pointer: fine) {
+            &:hover {
+                outline: var(--focus-outline-size) solid var(--overlay-color);
+                background-color: transparent;
+            }
         }
 
         &:focus {

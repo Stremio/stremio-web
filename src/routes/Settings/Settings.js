@@ -145,11 +145,13 @@ const Settings = () => {
     ]), []);
     const [selectedSectionId, setSelectedSectionId] = React.useState(GENERAL_SECTION);
     const updateSelectedSectionId = React.useCallback(() => {
-        if (sectionsContainerRef.current.scrollTop + sectionsContainerRef.current.clientHeight >= sectionsContainerRef.current.scrollHeight - 50) {
+        const panelScrollPaddingTop = parseFloat(getComputedStyle(sectionsContainerRef.current).scrollPaddingTop) || 0;
+
+        if (sectionsContainerRef.current.scrollTop + panelScrollPaddingTop + sectionsContainerRef.current.clientHeight >= sectionsContainerRef.current.scrollHeight - 50) {
             setSelectedSectionId(sections[sections.length - 1].id);
         } else {
             for (let i = sections.length - 1; i >= 0; i--) {
-                if (sections[i].ref.current.offsetTop - sectionsContainerRef.current.offsetTop <= sectionsContainerRef.current.scrollTop) {
+                if (Math.floor(sections[i].ref.current.offsetTop) <= Math.ceil(sectionsContainerRef.current.scrollTop) + panelScrollPaddingTop + sectionsContainerRef.current.offsetTop + 1) {
                     setSelectedSectionId(sections[i].id);
                     break;
                 }
@@ -161,7 +163,7 @@ const Settings = () => {
             return section.id === event.currentTarget.dataset.section;
         });
         sectionsContainerRef.current.scrollTo({
-            top: section.ref.current.offsetTop - sectionsContainerRef.current.offsetTop,
+            top: section.ref.current.offsetTop - (parseFloat(getComputedStyle(sectionsContainerRef.current).scrollPaddingTop) || 0) - sectionsContainerRef.current.offsetTop,
             behavior: 'smooth'
         });
     }, []);
@@ -191,7 +193,7 @@ const Settings = () => {
         closeConfigureServerUrlModal();
     }, [routeFocused]);
     return (
-        <MainNavBars className={styles['settings-container']} route={'settings'}>
+        <MainNavBars className={styles['settings-container']} route={'settings'} noOverflow>
             <div className={classnames(styles['settings-content'], 'animation-fade-in')}>
                 <div className={styles['side-menu-container']}>
                     <Button className={classnames(styles['side-menu-button'], { [styles['selected']]: selectedSectionId === GENERAL_SECTION })} title={ t('SETTINGS_NAV_GENERAL') } data-section={GENERAL_SECTION} onClick={sideMenuButtonOnClick}>

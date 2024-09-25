@@ -112,11 +112,13 @@
                 color: var(--primary-foreground-color);
             }
 
-            &:hover {
-                background-color: var(--primary-foreground-color);
+            @media (pointer: fine) {
+                &:hover {
+                    background-color: var(--primary-foreground-color);
 
-                .label {
-                    color: var(--secondary-foreground-color);
+                    .label {
+                        color: var(--secondary-foreground-color);
+                    }
                 }
             }
         }
@@ -137,8 +139,18 @@
                 color: var(--primary-foreground-color);
                 background: var(--overlay-color);
 
-                &:hover, &:focus {
+                .active() {
                     outline: var(--focus-outline-size) solid var(--overlay-color);
+                }
+
+                &:focus {
+                    .active();
+                }
+
+                @media (pointer: fine) {
+                    &:hover {
+                        .active();
+                    }
                 }
             }
 
@@ -156,8 +168,10 @@
                     padding: 0.5rem 1rem;
                     color: var(--primary-foreground-color);
 
-                    &:hover {
-                        text-decoration: underline;
+                    @media (pointer: fine) {
+                        &:hover {
+                            text-decoration: underline;
+                        }
                     }
                 }
             }
@@ -178,10 +192,20 @@
 
             .facebook-button {
                 background: var(--color-facebook);
-                
-                &:hover, &:focus {
+
+                .active() {
                     outline: var(--focus-outline-size) solid var(--color-facebook);
                     background-color: transparent;
+                }
+
+                &:focus {
+                    .active();
+                }
+                
+                @media (pointer: fine) {
+                    &:hover {
+                        .active();
+                    }
                 }
             }
         }

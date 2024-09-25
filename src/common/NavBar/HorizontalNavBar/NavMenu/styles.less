@@ -57,11 +57,21 @@
             .logout-button-container {
                 flex: none;
 
-                &:hover, &:focus {
+                .active() {
                     outline: none;
 
                     .logout-label {
                         text-decoration: underline;
+                    }
+                }
+
+                &:focus {
+                    .active();
+                }
+
+                @media (pointer: fine) {
+                    &:hover {
+                        .active();
                     }
                 }
 
@@ -85,8 +95,10 @@
             height: 4rem;
             padding: 0 1.5rem;
 
-            &:hover {
-                background-color: var(--overlay-color);
+            @media (pointer: fine) {
+                &:hover {
+                    background-color: var(--overlay-color);
+                }
             }
 
             .icon {

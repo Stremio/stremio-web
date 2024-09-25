@@ -18,15 +18,22 @@
 }
 
 .settings-container {
-    width: 100%;
     height: 100%;
     background-color: transparent;
 
     .settings-content {
+        --top-overlay-size: var(--horizontal-nav-bar-size);
+        --bottom-vertical-nav-bar-size: 0px;
+        --bottom-overlay-size: var(--bottom-vertical-nav-bar-size);
+
         width: 100%;
-        height: 100%;
+        height: calc(100% + var(--bottom-overlay-size) + var(--top-overlay-size));
+        margin-bottom: calc(var(--bottom-overlay-size) * -1);
+        margin-top: calc(var(--top-overlay-size) * -1);
+        padding-top: var(--top-overlay-size);
         display: flex;
         flex-direction: row;
+        isolation: isolate;
 
         .side-menu-container {
             flex: none;
@@ -57,8 +64,10 @@
                     opacity: 1;
                 }
 
-                &:hover {
-                    background-color: var(--overlay-color);
+                @media (pointer: fine) {
+                    &:hover {
+                        background-color: var(--overlay-color);
+                    }
                 }
             }
 
@@ -79,6 +88,17 @@
             align-self: stretch;
             padding: 0 3rem;
             overflow-y: auto;
+            height: calc(100% + var(--top-overlay-size));
+            margin-top: calc(var(--top-overlay-size) * -1);
+            padding-top: var(--top-overlay-size);
+            padding-bottom: var(--bottom-overlay-size);
+            scroll-padding-top: var(--top-overlay-size);
+            isolation: isolate;
+
+            &::-webkit-scrollbar-track {
+                margin-top: var(--top-overlay-size);
+                margin-bottom: var(--bottom-overlay-size);
+            }
 
             .section-container {
                 display: flex;
@@ -186,11 +206,21 @@
                                 }
 
                                 .logout-button-container {
-                                    &:hover, &:focus {
+                                    .active() {
                                         outline: none;
 
                                         .logout-label {
                                             text-decoration: underline;
+                                        }
+                                    }
+
+                                    &:focus {
+                                        .active();
+                                    }
+
+                                    @media (pointer: fine) {
+                                        &:hover {
+                                            .active();
                                         }
                                     }
 
@@ -212,9 +242,11 @@
                             border-radius: 3.5rem;
                             background-color: var(--overlay-color);
 
-                            &:hover {
-                                outline: var(--focus-outline-size) solid var(--primary-foreground-color);
-                                background-color: transparent;
+                            @media (pointer: fine) {
+                                &:hover {
+                                    outline: var(--focus-outline-size) solid var(--primary-foreground-color);
+                                    background-color: transparent;
+                                }
                             }
 
                             .user-panel-label {
@@ -274,9 +306,11 @@
                             border-radius: 3.5rem;
                             background-color: var(--overlay-color);
 
-                            &:hover {
-                                outline: var(--focus-outline-size) solid var(--primary-foreground-color);
-                                background-color: transparent;
+                            @media (pointer: fine) {
+                                &:hover {
+                                    outline: var(--focus-outline-size) solid var(--primary-foreground-color);
+                                    background-color: transparent;
+                                }
                             }
 
                             .label {
@@ -304,9 +338,11 @@
                                 color: var(--primary-accent-color);
                             }
 
-                            &:hover {
-                                .label {
-                                    text-decoration: underline;
+                            @media (pointer: fine) {
+                                &:hover {
+                                    .label {
+                                        text-decoration: underline;
+                                    }
                                 }
                             }
                         }
@@ -470,12 +506,15 @@
         .settings-content {
             flex-direction: column-reverse;
 
+            --bottom-vertical-nav-bar-size: var(--vertical-nav-bar-size);
+
             .side-menu-container {
                 display: none;
             }
 
             .sections-container {
-                padding: 0 1.5rem;
+                padding-right: 1.5rem;
+                padding-left: 1.5rem;
 
                 .section-container {
                     .user-info-option-container {

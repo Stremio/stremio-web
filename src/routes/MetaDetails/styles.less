@@ -17,6 +17,34 @@
     flex-direction: column;
     width: 100%;
     height: 100%;
+    padding-left: var(--safe-area-inset-left, 0px);
+    padding-right: var(--safe-area-inset-right, 0px);
+    box-sizing: border-box;
+
+    --navbar-assumed-height: 84px;
+    --top-overlay-size: var(--navbar-assumed-height);
+    --overlap-size: 6rem;
+    --transparency-grandient-pad: 6rem;
+
+    .background-image-layer {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: -1;
+        background-color: var(--modal-background-color);
+
+        .background-image {
+            pointer-events: none; 
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top left;
+            opacity: 0.3;
+        }
+    }
 
     .nav-bar {
         z-index: 1;
@@ -32,29 +60,27 @@
         display: flex;
         flex-direction: row;
 
+        margin-top: calc(var(--navbar-assumed-height) * -1);
+        padding-top: var(--navbar-assumed-height);
+        scroll-padding-top: var(--navbar-assumed-height);
+        padding-bottom: var(--calculated-bottom-safe-inset, 0px);
+
+        mask: linear-gradient(
+            to bottom,
+            transparent calc(var(--top-overlay-size) - var(--overlap-size)),
+            rgba(0, 0, 0, 0.08) calc(var(--top-overlay-size) - (var(--overlap-size) / 2)),
+            rgba(0, 0, 0, 0.16) calc(var(--top-overlay-size) - (var(--overlap-size) / 3)),
+            black calc(var(--top-overlay-size) + var(--transparency-grandient-pad)),
+            black 100%
+        );
+
+        &::-webkit-scrollbar-track {
+            margin-top: var(--navbar-assumed-height);
+        }
+
         .vertical-nav-bar {
             --vertical-nav-bar-size: 6rem;
             flex: none;
-        }
-
-        .background-image-layer {
-            position: fixed;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            z-index: -1;
-            background-color: var(--modal-background-color);
-
-            .background-image {
-                pointer-events: none; 
-                display: block;
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                object-position: top left;
-                opacity: 0.3;
-            }
         }
 
         .meta-message-container {
@@ -91,6 +117,8 @@
             flex: 0 1 auto;
             align-self: stretch;
             padding: 0 4rem 2rem 4rem;
+
+            padding-left: ~"calc(max(1rem, calc(4rem - var(--safe-area-inset-left, 0px))))";
         }
 
         .spacing {

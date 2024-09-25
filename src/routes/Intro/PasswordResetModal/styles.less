@@ -19,9 +19,19 @@
             outline-offset: calc(-1 * var(--focus-outline-size));
             color: var(--primary-foreground-color);
             background: var(--overlay-color);
-            
-            &:hover, &:focus {
+
+            .active() {
                 outline: var(--focus-outline-size) solid var(--overlay-color);
+            }
+
+            &:focus {
+                .active();
+            }
+            
+            @media (pointer: fine) {
+                &:hover {
+                    .active();
+                }
             }
         }
     }
@@ -36,8 +46,18 @@
     .cancel-button {
         background-color: transparent;
 
-        &:hover, &:focus {
+        .active() {
             outline-color: var(--primary-foreground-color);
+        }
+
+        &:focus {
+            .active();
+        }
+
+        @media (pointer: fine) {
+            &:hover {
+                .active();
+            }
         }
 
         .cancel-button-label {

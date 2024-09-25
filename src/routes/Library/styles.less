@@ -13,15 +13,45 @@
 }
 
 .library-container {
-    width: 100%;
     height: 100%;
     background-color: transparent;
 
     .library-content {
+        --selectable-inputs-assumed-height: 80px;
+        --top-overlay-size: var(--selectable-inputs-assumed-height);
+        --bottom-vertical-nav-bar-size: 0px;
+        --bottom-overlay-size: var(--bottom-vertical-nav-bar-size);
+        --overlap-size: 6rem;
+        --transparency-grandient-pad: 6rem;
+
         width: 100%;
-        height: 100%;
+        height: calc(100% + var(--bottom-overlay-size));
+        margin-bottom: calc(var(--bottom-overlay-size) * -1);
         display: flex;
         flex-direction: column;
+
+        .meta-items-container {
+            margin-top: calc(var(--selectable-inputs-assumed-height) * -1);
+            padding: 0 1.5rem;
+            padding-top: var(--selectable-inputs-assumed-height);
+            scroll-padding-top: var(--selectable-inputs-assumed-height);
+            padding-bottom: var(--bottom-overlay-size, 0px);
+
+            mask: linear-gradient(
+                to bottom,
+                transparent calc(var(--top-overlay-size) - var(--overlap-size)),
+                rgba(0, 0, 0, 0.08) calc(var(--top-overlay-size) - (var(--overlap-size) / 2)),
+                rgba(0, 0, 0, 0.16) calc(var(--top-overlay-size) - (var(--overlap-size) / 3)),
+                black calc(var(--top-overlay-size) + var(--transparency-grandient-pad)),
+                black 100%
+            );
+            z-index: 1;
+
+            &::-webkit-scrollbar-track {
+                margin-top: var(--selectable-inputs-assumed-height);
+                margin-bottom: var(--bottom-overlay-size);
+            }
+        }
 
         .selectable-inputs-container {
             flex: none;
@@ -30,6 +60,7 @@
             flex-direction: row;
             padding: 1.5rem;
             overflow: visible;
+            z-index: 2;
 
             .select-input-container {
                 flex-grow: 0;
@@ -75,9 +106,11 @@
                     margin-bottom: 1rem;
                     background-color: var(--secondary-accent-color);
 
-                    &:hover {
-                        outline: var(--focus-outline-size) solid var(--secondary-accent-color);
-                        background-color: transparent;
+                    @media (pointer: fine) {
+                        &:hover {
+                            outline: var(--focus-outline-size) solid var(--secondary-accent-color);
+                            background-color: transparent;
+                        }
                     }
 
                     .label {
@@ -120,7 +153,6 @@
             grid-auto-rows: max-content;
             align-items: center;
             grid-gap: 0.5rem;
-            padding: 0 1.5rem;
             overflow-y: auto;
         }
     }
@@ -217,6 +249,8 @@
 @media only screen and (max-width: @minimum) {
     .library-container {
         .library-content {
+            --bottom-vertical-nav-bar-size: var(--vertical-nav-bar-size);
+
             .selectable-inputs-container {
                 justify-content: space-between;
             }

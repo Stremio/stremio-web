@@ -23,19 +23,25 @@
             flex-basis: auto;
             margin-right: 0.75rem;
             margin-bottom: 0.75rem;
-            padding: 0.4rem 1.25rem;
+            padding: calc(0.4rem + var(--focus-outline-size)) calc(1.25rem + var(--focus-outline-size));
             white-space: nowrap;
             text-overflow: ellipsis;
             border-radius: 2rem;
-            border: var(--focus-outline-size) solid transparent;
+            border: none;
             font-size: 1rem;
             font-weight: 500;
             color: var(--primary-foreground-color);
             background-color: var(--overlay-color);
             backdrop-filter: blur(5px);
 
-            &:hover, &:focus {
+            &:focus {
                 background-color: @color-surface-light5-30;
+            }
+
+            @media (pointer: fine) {
+                &:hover {
+                    background-color: @color-surface-light5-30;
+                }
             }
 
             &:focus {

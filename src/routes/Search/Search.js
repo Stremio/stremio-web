@@ -46,7 +46,7 @@ const Search = ({ queryParams }) => {
     }, [search.catalogs, onVisibleRangeChange]);
     return (
         <MainNavBars className={styles['search-container']} route={'search'} query={query}>
-            <div ref={scrollContainerRef} className={styles['search-content']} onScroll={onScroll}>
+            <div ref={scrollContainerRef} className={classnames(styles['search-content'], {[styles['hints']]: query === null})} onScroll={onScroll}>
                 {
                     query === null ?
                         <div className={classnames(styles['search-hints-wrapper'])}>

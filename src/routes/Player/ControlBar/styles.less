@@ -4,7 +4,8 @@
 @import (reference) '~stremio/common/screen-sizes.less';
 
 .control-bar-container {
-    padding: 0 1.5rem;
+    padding-left: ~"calc(max(1.5rem, var(--safe-area-inset-left, 0px)))";
+    padding-right: ~"calc(max(1.5rem, var(--safe-area-inset-right, 0px)))";
 
     .seek-bar {
         --track-size: 0.5rem;
@@ -17,6 +18,20 @@
         display: flex;
         flex-direction: row;
         align-items: center;
+
+        &.mobile {
+            margin-bottom: 4px;
+            margin-top: -4px;
+            
+            .control-bar-button {
+                height: 4rem;
+
+                .icon {
+                    width: 2rem;
+                    height: 2rem;
+                }
+            }
+        }
 
         .control-bar-button {
             flex: none;
@@ -37,6 +52,7 @@
                 width: 2.5rem;
                 height: 2.5rem;
                 color: var(--primary-foreground-color);
+                fill: currentColor;
             }
         }
 
@@ -66,6 +82,7 @@
                 width: 2.5rem;
                 height: 2.5rem;
                 color: var(--primary-foreground-color);
+                fill: currentColor;
             }
         }
 
@@ -78,39 +95,39 @@
 }
 
 @media only screen and (max-width: @minimum) {
-    .control-bar-container {
-        padding: 0;
-
-        .seek-bar {
-            margin: 0 1.5rem;
-        }
-
-        .control-bar-buttons-container {
-            position: relative;
-            padding: 0 0.5rem;
-            overflow: visible;
-
-            .volume-slider {
-                display: none;
+        .control-bar-container {
+            padding: 0;
+    
+            .seek-bar {
+                margin: 0 1.5rem;
             }
-
-            .control-bar-buttons-menu-button {
-                display: flex;
-            }
-
-            .control-bar-buttons-menu-container {
-                position: absolute;
-                right: 0.15rem;
-                bottom: 4.5rem;
-                flex-direction: column;
-                padding: 0.5rem;
-                border-radius: var(--border-radius);
-                background-color: var(--modal-background-color);
-                box-shadow: 0 1.35rem 2.7rem @color-background-dark5-40,
-                    0 1.1rem 0.85rem @color-background-dark5-20;
-
-                &:not(:global(.open)) {
+    
+            .control-bar-buttons-container {
+                position: relative;
+                padding: 0 0.5rem;
+                overflow: visible;
+    
+                .volume-slider {
                     display: none;
+                }
+    
+                .control-bar-buttons-menu-button {
+                    display: flex;
+                }
+    
+                .control-bar-buttons-menu-container {
+                    position: absolute;
+                    right: 0.15rem;
+                    bottom: 4.5rem;
+                    flex-direction: column;
+                    padding: 0.5rem;
+                    border-radius: var(--border-radius);
+                    background-color: var(--modal-background-color);
+                    box-shadow: 0 1.35rem 2.7rem @color-background-dark5-40,
+                        0 1.1rem 0.85rem @color-background-dark5-20;
+    
+                    &:not(:global(.open)) {
+                        display: none;
                 }
             }
         }

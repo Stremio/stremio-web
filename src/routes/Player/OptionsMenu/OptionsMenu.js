@@ -4,7 +4,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { useTranslation } = require('react-i18next');
-const { useToast } = require('stremio/common');
+const { useToast, platform } = require('stremio/common');
 const { useServices } = require('stremio/services');
 const Option = require('./Option');
 const styles = require('./styles');
@@ -24,6 +24,17 @@ const OptionsMenu = ({ className, stream, playbackDevices }) => {
     const externalDevices = React.useMemo(() => {
         return playbackDevices.filter(({ type }) => type === 'external');
     }, [playbackDevices]);
+    const downloadVideoLink = React.useMemo(() => {
+        if (streamingUrl) {
+            const parsedUrl = new URL(streamingUrl);
+            parsedUrl.searchParams.set('download', '1');
+            return parsedUrl.href;
+        } else if (downloadUrl) {
+            return downloadUrl;
+        }
+
+        return null;
+    }, [streamingUrl, downloadUrl]);
     const onCopyStreamButtonClick = React.useCallback(() => {
         if (streamingUrl || downloadUrl) {
             navigator.clipboard.writeText(streamingUrl || downloadUrl)
@@ -47,10 +58,32 @@ const OptionsMenu = ({ className, stream, playbackDevices }) => {
         }
     }, [streamingUrl, downloadUrl]);
     const onDownloadVideoButtonClick = React.useCallback(() => {
-        if (streamingUrl || downloadUrl) {
-            window.open(streamingUrl || downloadUrl);
+        if (downloadVideoLink) {
+            window.open(downloadVideoLink, '_blank');
         }
-    }, [streamingUrl, downloadUrl]);
+    }, [downloadVideoLink]);
+    const onCopyDownloadLinkButtonClick = React.useCallback(() => {
+        if (downloadVideoLink) {
+            navigator.clipboard.writeText(downloadVideoLink)
+                .then(() => {
+                    toast.show({
+                        type: 'success',
+                        title: 'Copied',
+                        message: t('PLAYER_COPY_DOWNLOAD_LINK_SUCCESS'),
+                        timeout: 3000
+                    });
+                })
+                .catch((e) => {
+                    console.error(e);
+                    toast.show({
+                        type: 'error',
+                        title: t('Error'),
+                        message: `${t('PLAYER_COPY_DOWNLOAD_LINK_ERROR')}: ${downloadVideoLink}`,
+                        timeout: 3000
+                    });
+                });
+        }
+    }, [downloadVideoLink]);
     const onExternalDeviceRequested = React.useCallback((deviceId) => {
         if (streamingUrl) {
             core.transport.dispatch({
@@ -64,6 +97,9 @@ const OptionsMenu = ({ className, stream, playbackDevices }) => {
                 }
             });
         }
+    }, [streamingUrl]);
+    const opneInNplayer = React.useCallback(() => {
+        window.open('nplayer-' + streamingUrl, '_blank');
     }, [streamingUrl]);
     const onMouseDown = React.useCallback((event) => {
         event.nativeEvent.optionsMenuClosePrevented = true;
@@ -91,6 +127,24 @@ const OptionsMenu = ({ className, stream, playbackDevices }) => {
                     />
                     :
                     null
+            }
+            {
+                !!(streamingUrl || downloadUrl) &&
+                <Option
+                    icon={'link'}
+                    label={t('CTX_COPY_VIDEO_DOWNLOAD_LINK')}
+                    disabled={stream === null}
+                    onClick={onCopyDownloadLinkButtonClick}
+                />
+            }
+            {
+                platform.name === 'ios' &&
+                <Option
+                    icon={'play-outline'}
+                    label={t('PLAYER_OPEN_IN_NPLAYER')}
+                    disabled={stream === null}
+                    onClick={opneInNplayer}
+                />
             }
             {
                 streamingUrl && externalDevices.map(({ id, name }) => (

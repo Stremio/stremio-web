@@ -53,6 +53,31 @@ const App = () => {
         };
     }, []);
     React.useEffect(() => {
+        // on some platforms, like mobile and macOS (with a trackpad), the scrollbars aren't visible when they're not being used,
+        // here we detect this behavior so we can immitate it with our custom scrollbar styles on those platforms
+
+        const testTag = document.createElement('div');
+        testTag.classList.add('test-overlay-scrollbar');
+        testTag.style.width = '100px';
+        testTag.style.height = '100px';
+        testTag.style.overflow = 'scroll';
+        testTag.style.position = 'fixed';
+        testTag.style.top = '-200px';
+        testTag.style.left = '-200px';
+        testTag.style.opacity = '0';
+        testTag.style.pointerEvents = 'none';
+        testTag.style.scrollbarWidth = 'thin';
+
+        document.body.appendChild(testTag);
+
+        // checks whether the scrollbar actually takes space inside of the element
+        const osOverlayScrollbar = testTag.offsetWidth === testTag.clientWidth;
+
+        testTag.remove();
+
+        document.documentElement.classList.toggle('os-overlay-scrollbar', osOverlayScrollbar);
+    }, []);
+    React.useEffect(() => {
         const onCoreStateChanged = () => {
             setInitialized(
                 (services.core.active || services.core.error instanceof Error) &&

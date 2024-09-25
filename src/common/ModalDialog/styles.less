@@ -51,11 +51,19 @@
                 opacity: 0.4;
             }
 
-            &:hover,
             &:focus {
                 .icon {
                     opacity: 1;
                     color: var(--primary-foreground-color);
+                }
+            }
+
+            @media (pointer: fine) {
+                &:hover {
+                    .icon {
+                        opacity: 1;
+                        color: var(--primary-foreground-color);
+                    }
                 }
             }
 
@@ -67,6 +75,7 @@
         .modal-dialog-content {
             z-index: 1;
             position: relative;
+            overflow-y: auto;
 
             .title-container {
                 flex: 1 0 auto;
@@ -115,9 +124,11 @@
     padding: 1.2rem;
     background-color: var(--secondary-accent-color);
 
-    &:hover {
-        background-color: transparent;
-        outline: var(--focus-outline-size) solid var(--secondary-accent-color);
+    @media (pointer: fine) {
+        &:hover {
+            background-color: transparent;
+            outline: var(--focus-outline-size) solid var(--secondary-accent-color);
+        }
     }
 
     &:focus {
@@ -157,9 +168,11 @@
             z-index: 0;
             padding: 0 1.5rem;
 
-            .buttons-container {
-                flex-direction: column;
-                gap: 1rem;
+            .modal-dialog-content {
+                .buttons-container {
+                    flex-direction: column;
+                    gap: 1rem;
+                }
             }
         }
 

@@ -9,8 +9,13 @@ const { useServices } = require('stremio/services');
 const SeekBar = require('./SeekBar');
 const VolumeSlider = require('./VolumeSlider');
 const styles = require('./styles');
-const { useBinaryState } = require('stremio/common');
+const { useBinaryState, platform } = require('stremio/common');
 const { t } = require('i18next');
+const useSupportsVideoVolume = require('./useSupportsVideoVolume');
+const AirplayIconSVG = require('./icons/AirplayIconSVG');
+
+const isMobile = platform.isMobile();
+const browserSupportsAirplay = !!window.WebKitPlaybackTargetAvailabilityEvent;
 
 const ControlBar = ({
     className,
@@ -40,11 +45,106 @@ const ControlBar = ({
     onToggleVideosMenu,
     onToggleOptionsMenu,
     onToggleStatisticsMenu,
+    videoContainerElementRef,
+    setAirplayActive,
     ...props
 }) => {
     const { chromecast } = useServices();
+    const supportsVideoVolume = useSupportsVideoVolume();
     const [chromecastServiceActive, setChromecastServiceActive] = React.useState(() => chromecast.active);
+    const [airplayAvailable, setAirplayAvailable] = React.useState(false);
     const [buttonsMenuOpen, , , toogleButtonsMenu] = useBinaryState(false);
+
+    const setAirplayActiveRef = React.useRef();
+    setAirplayActiveRef.current = setAirplayActive;
+
+    const getVideoElement = React.useCallback(() => {
+        if (videoContainerElementRef && videoContainerElementRef.current) {
+            if (videoContainerElementRef.current instanceof HTMLVideoElement)
+                return videoContainerElementRef.current;
+            else
+                return videoContainerElementRef.current.querySelector('video');
+        }
+
+        return null;
+    }, [videoContainerElementRef]);
+    React.useLayoutEffect(() => {
+        const videoTag = getVideoElement();
+        if (!videoTag)
+            return;
+
+        let updateAirplayStatusTimeout = null;
+
+        function enableRemoteVideoPlayback() {
+            videoTag.webkitWirelessVideoPlaybackDisabled = false;
+            videoTag.setAttribute('x-webkit-airplay', 'allow');
+        }
+
+        function onAirplayAvailabilityChanged(event) {
+            switch (event.availability) {
+                case 'available':
+                    setAirplayAvailable(true);
+                    break;
+                case 'not-available':
+                    setAirplayAvailable(false);
+                    break;
+            }
+        }
+
+        function updateAirplayActive() {
+            clearTimeout(updateAirplayStatusTimeout);
+
+            if (videoTag.webkitCurrentPlaybackTargetIsWireless) {
+                if (setAirplayActiveRef.current)
+                    setAirplayActiveRef.current(true);
+
+                enableRemoteVideoPlayback();
+            } else {
+                updateAirplayStatusTimeout = setTimeout(() => {
+                    clearTimeout(updateAirplayStatusTimeout);
+
+                    if (typeof paused !== 'boolean' || paused || videoTag.paused)
+                        return;
+
+                    if (setAirplayActiveRef.current)
+                        setAirplayActiveRef.current(!!videoTag.webkitCurrentPlaybackTargetIsWireless);
+                }, 1000 * 5);
+            }
+        }
+
+        function airplayActiveChanged() {
+            updateAirplayActive();
+        }
+
+        function onPlay() {
+            updateAirplayActive();
+        }
+
+        function onPause() {
+            clearTimeout(updateAirplayStatusTimeout);
+        }
+
+        if (window.WebKitPlaybackTargetAvailabilityEvent) {
+            videoTag.addEventListener('webkitplaybacktargetavailabilitychanged', onAirplayAvailabilityChanged);
+            videoTag.addEventListener('webkitcurrentplaybacktargetiswirelesschanged', airplayActiveChanged);
+            videoTag.addEventListener('play', onPlay);
+            videoTag.addEventListener('pause', onPause);
+
+            enableRemoteVideoPlayback();
+            setAirplayAvailable(!!videoTag.webkitWirelessVideoPlaybackDisabled);
+            updateAirplayActive();
+        }
+
+        return () => {
+            clearTimeout(updateAirplayStatusTimeout);
+            if (window.WebKitPlaybackTargetAvailabilityEvent) {
+                videoTag.removeEventListener('webkitplaybacktargetavailabilitychanged', onAirplayAvailabilityChanged);
+                videoTag.removeEventListener('webkitcurrentplaybacktargetiswirelesschanged', airplayActiveChanged);
+                videoTag.removeEventListener('play', onPlay);
+                videoTag.removeEventListener('pause', onPause);
+            }
+        };
+    }, [getVideoElement(), paused]);
     const onSubtitlesButtonMouseDown = React.useCallback((event) => {
         event.nativeEvent.subtitlesMenuClosePrevented = true;
     }, []);
@@ -93,6 +193,13 @@ const ControlBar = ({
     const onChromecastButtonClick = React.useCallback(() => {
         chromecast.transport.requestSession();
     }, []);
+    const onAirplayButtonClick = React.useCallback(() => {
+        const videoTag = getVideoElement();
+        if (!videoTag)
+            return;
+
+        videoTag.webkitShowPlaybackTargetPicker();
+    }, []);
     React.useEffect(() => {
         const onStateChanged = () => {
             setChromecastServiceActive(chromecast.active);
@@ -111,10 +218,13 @@ const ControlBar = ({
                 buffered={buffered}
                 onSeekRequested={onSeekRequested}
             />
-            <div className={styles['control-bar-buttons-container']}>
-                <Button className={classnames(styles['control-bar-button'], { 'disabled': typeof paused !== 'boolean' })} title={paused ? t('PLAYER_PLAY') : t('PLAYER_PAUSE')} tabIndex={-1} onClick={onPlayPauseButtonClick}>
-                    <Icon className={styles['icon']} name={typeof paused !== 'boolean' || paused ? 'play' : 'pause'} />
-                </Button>
+            <div className={classnames(styles['control-bar-buttons-container'], {[styles['mobile']]: isMobile})}>
+                {
+                    !isMobile &&
+                    <Button className={classnames(styles['control-bar-button'], { 'disabled': typeof paused !== 'boolean' })} title={paused ? t('PLAYER_PLAY') : t('PLAYER_PAUSE')} tabIndex={-1} onClick={onPlayPauseButtonClick}>
+                        <Icon className={styles['icon']} name={typeof paused !== 'boolean' || paused ? 'play' : 'pause'} />
+                    </Button>
+                }
                 {
                     nextVideo !== null ?
                         <Button className={classnames(styles['control-bar-button'])} title={t('PLAYER_NEXT_VIDEO')} tabIndex={-1} onClick={onNextVideoButtonClick}>
@@ -135,11 +245,14 @@ const ControlBar = ({
                         }
                     />
                 </Button>
-                <VolumeSlider
-                    className={styles['volume-slider']}
-                    volume={volume}
-                    onVolumeChangeRequested={onVolumeChangeRequested}
-                />
+                {
+                    supportsVideoVolume &&
+                    <VolumeSlider
+                        className={styles['volume-slider']}
+                        volume={volume}
+                        onVolumeChangeRequested={onVolumeChangeRequested}
+                    />
+                }
                 <div className={styles['spacing']} />
                 <Button className={styles['control-bar-buttons-menu-button']} onClick={toogleButtonsMenu}>
                     <Icon className={styles['icon']} name={'more-vertical'} />
@@ -154,9 +267,18 @@ const ControlBar = ({
                     <Button className={classnames(styles['control-bar-button'], { 'disabled': metaItem === null || metaItem.type !== 'Ready' })} tabIndex={-1} onMouseDown={onInfoButtonMouseDown} onClick={onToggleInfoMenu}>
                         <Icon className={styles['icon']} name={'about'} />
                     </Button>
-                    <Button className={classnames(styles['control-bar-button'], { 'disabled': !chromecastServiceActive })} tabIndex={-1} onClick={onChromecastButtonClick}>
-                        <Icon className={styles['icon']} name={'cast'} />
-                    </Button>
+                    {
+                        (!browserSupportsAirplay || chromecastServiceActive) &&
+                        <Button className={classnames(styles['control-bar-button'], { 'disabled': !chromecastServiceActive })} tabIndex={-1} onClick={onChromecastButtonClick}>
+                            <Icon className={styles['icon']} name={'cast'} />
+                        </Button>
+                    }
+                    {
+                        (browserSupportsAirplay || airplayAvailable) &&
+                        <Button className={classnames(styles['control-bar-button'], { 'disabled': !airplayAvailable })} tabIndex={-1} onClick={onAirplayButtonClick}>
+                            <AirplayIconSVG className={styles['icon']} />
+                        </Button>
+                    }
                     <Button className={classnames(styles['control-bar-button'], { 'disabled': (!Array.isArray(subtitlesTracks) || subtitlesTracks.length === 0) && (!Array.isArray(audioTracks) || audioTracks.length === 0) })} tabIndex={-1} onMouseDown={onSubtitlesButtonMouseDown} onClick={onToggleSubtitlesMenu}>
                         <Icon className={styles['icon']} name={'subtitles'} />
                     </Button>
@@ -205,6 +327,8 @@ ControlBar.propTypes = {
     onToggleVideosMenu: PropTypes.func,
     onToggleOptionsMenu: PropTypes.func,
     onToggleStatisticsMenu: PropTypes.func,
+    videoContainerElementRef: PropTypes.object,
+    setAirplayActive: PropTypes.func,
 };
 
 module.exports = ControlBar;
