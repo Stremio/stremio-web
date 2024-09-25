@@ -19,6 +19,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
       - name: Install NPM dependencies
         run: npm ci
       - name: Build
@@ -31,7 +35,7 @@ jobs:
       # "--parrents where no error if existing, make parent directories as needed."
       - run: mkdir -p ./build/${{ github.head_ref || github.ref_name }}
       - name: Deploy to GitHub Pages (multi-branch)
-        if: github.event_name == 'push' && github.actor != 'dependabot[bot]' && env.GITHUB_PAGES_MULTI_BRANCH == 'true'
+        if: github.repository == 'Stremio/stremio-web' && github.actor != 'dependabot[bot]'
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -41,13 +45,13 @@ jobs:
           destination_dir: ${{ github.head_ref || github.ref_name }}
           allow_empty_commit: true
       - name: Upload build to GitHub Pages
-        if: github.event_name == 'push' && env.GITHUB_PAGES_MULTI_BRANCH != 'true'
+        if: github.event_name == 'push' && github.repository != 'Stremio/stremio-web'
         uses: actions/upload-pages-artifact@v3
         with:
           name: stremio-web
           path: build
       - name: Deploy build to GitHub Pages (single branch)
-        if: github.event_name == 'push' && env.GITHUB_PAGES_MULTI_BRANCH != 'true'
+        if: github.event_name == 'push' && github.repository != 'Stremio/stremio-web'
         uses: actions/deploy-pages@v4
         with:
           artifact_name: stremio-web
