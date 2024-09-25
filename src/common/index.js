@@ -18,6 +18,7 @@ const Multiselect = require('./Multiselect');
 const { default: MultiselectMenu } = require('./MultiselectMenu');
 const { HorizontalNavBar, VerticalNavBar } = require('./NavBar');
 const PaginationInput = require('./PaginationInput');
+const { PlatformProvider, usePlatform } = require('./Platform');
 const PlayIconCircleCentered = require('./PlayIconCircleCentered');
 const Popup = require('./Popup');
 const SearchBar = require('./SearchBar');
@@ -68,6 +69,8 @@ module.exports = {
     HorizontalNavBar,
     VerticalNavBar,
     PaginationInput,
+    PlatformProvider,
+    usePlatform,
     PlayIconCircleCentered,
     Popup,
     SearchBar,
