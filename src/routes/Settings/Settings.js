@@ -11,6 +11,7 @@ const { Button, Checkbox, MainNavBars, Multiselect, ColorInput, TextInput, Modal
 const useProfileSettingsInputs = require('./useProfileSettingsInputs');
 const useStreamingServerSettingsInputs = require('./useStreamingServerSettingsInputs');
 const useDataExport = require('./useDataExport');
+const { name: platformName } = require('stremio/common/platform');
 const styles = require('./styles');
 
 const GENERAL_SECTION = 'general';
@@ -103,15 +104,16 @@ const Settings = () => {
         }
     }, [isTraktAuthenticated, profile.auth]);
     const subscribeCalendarOnClick = React.useCallback(() => {
-        const url = `webcal://www.strem.io/calendar/${profile.auth.user._id}.ics`;
+        const protocol = platformName === 'ios' ? 'webcal' : 'https';
+        const url = `${protocol}://www.strem.io/calendar/${profile.auth.user._id}.ics`;
         platform.openExternal(url);
         toast.show({
             type: 'success',
-            title: 'Calendar has been added to your default caldendar app',
+            title: platformName === 'ios' ? t('SETTINGS_SUBSCRIBE_CALENDAR_IOS_TOAST') : t('SETTINGS_SUBSCRIBE_CALENDAR_TOAST'),
             timeout: 25000
         });
-        //Stremio 4 emits not documented event subscribeCalendar
-    }, []);
+        // Stremio 4 emits not documented event subscribeCalendar
+    }, [profile.auth.user._id]);
     const exportDataOnClick = React.useCallback(() => {
         loadDataExport();
     }, []);
