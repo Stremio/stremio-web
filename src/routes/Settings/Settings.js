@@ -109,7 +109,7 @@ const Settings = () => {
         platform.openExternal(url);
         toast.show({
             type: 'success',
-            title: platformName === 'ios' ? t('SETTINGS_SUBSCRIBE_CALENDAR_IOS') : t('SETTINGS_SUBSCRIBE_CALENDAR'),
+            title: platformName === 'ios' ? t('SETTINGS_SUBSCRIBE_CALENDAR_IOS_TOAST') : t('SETTINGS_SUBSCRIBE_CALENDAR_TOAST'),
             timeout: 25000
         });
         // Stremio 4 emits not documented event subscribeCalendar
