@@ -103,8 +103,6 @@ const Settings = () => {
             });
         }
     }, [isTraktAuthenticated, profile.auth]);
-    const protocol = platformName === 'ios' ? 'webcal' : 'https';
-    const calendarUrl = `${protocol}://www.strem.io/calendar/${profile.auth.user._id}.ics`;
     const subscribeCalendarOnClick = React.useCallback(() => {
         const protocol = platformName === 'ios' ? 'webcal' : 'https';
         const url = `${protocol}://www.strem.io/calendar/${profile.auth.user._id}.ics`;
@@ -273,7 +271,7 @@ const Settings = () => {
                         {
                             profile.auth !== null && profile.auth.user !== null && typeof profile.auth.user._id === 'string' ?
                                 <div className={classnames(styles['option-container'], styles['link-container'])}>
-                                    <Button className={classnames(styles['option-input-container'], styles['link-input-container'])} title={t('SETTINGS_SUBSCRIBE_CALENDAR')} tabIndex={-1} onClick={subscribeCalendarOnClick} href={calendarUrl} target={'_blank'}>
+                                    <Button className={classnames(styles['option-input-container'], styles['link-input-container'])} title={t('SETTINGS_SUBSCRIBE_CALENDAR')} tabIndex={-1} onClick={subscribeCalendarOnClick}>
                                         <div className={styles['label']}>{ t('SETTINGS_SUBSCRIBE_CALENDAR') }</div>
                                     </Button>
                                 </div>
