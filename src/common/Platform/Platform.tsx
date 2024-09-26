@@ -16,23 +16,19 @@ const PlatformProvider = ({ children }: Props) => {
     const shell = useShell();
 
     const openExternal = (url: string) => {
-        let finalUrl = url;
         try {
-            const parsedUrl = new URL(url);
-            const hostname = parsedUrl.hostname;
-            const isWhitelisted = WHITELISTED_HOSTS.some((host: string) => hostname === host || hostname.endsWith('.' + host));
-            if (!isWhitelisted) {
-                finalUrl = 'https://www.stremio.com/warning#' + encodeURIComponent(url);
+            const { hostname } = new URL(url);
+            const isWhitelisted = WHITELISTED_HOSTS.some((host: string) => hostname.endsWith(host));
+            const finalUrl = !isWhitelisted ? 'https://www.stremio.com/warning#' + encodeURIComponent(url) : url;
+        
+            if (shell.active) {
+                shell.send('open-external', finalUrl);
+            } else {
+                window.open(finalUrl, '_blank');
             }
         } catch (e) {
-            finalUrl = 'https://www.stremio.com/warning#' + encodeURIComponent(url);
-        }
-
-        if (shell.active) {
-            shell.send('open-external', finalUrl);
-        } else {
-            window.open(finalUrl, '_blank');
-        }
+            console.error('Failed to parse external url:', e);
+        }        
     };
 
     return (
