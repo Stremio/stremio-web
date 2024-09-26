@@ -93,6 +93,8 @@ const EXTERNAL_PLAYERS = [
     },
 ];
 
+const WHITELISTED_HOSTS = ['www.stremio.com', 'blog.stremio.com', 'web.stremio.com', 'web.strem.io', 'stremio.zendesk.com', 'www.google.com', 'www.youtube.com', 'www.twitch.tv', 'twitter.com', 'www.netflix.com', 'www.adex.network', 'www.amazon.com', 'docs.google.com', 'blog.stremio.com', 'forms.gle'];
+
 module.exports = {
     CHROMECAST_RECEIVER_APP_ID,
     SUBTITLES_SIZES,
@@ -110,4 +112,5 @@ module.exports = {
     TYPE_PRIORITIES,
     ICON_FOR_TYPE,
     EXTERNAL_PLAYERS,
+    WHITELISTED_HOSTS,
 };
