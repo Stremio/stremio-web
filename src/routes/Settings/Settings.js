@@ -109,9 +109,7 @@ const Settings = () => {
         platform.openExternal(url);
         toast.show({
             type: 'success',
-            title: platformName === 'android' ?
-                'Calendar has been downloaded. Please open it in your calendar app.' :
-                'Calendar has been added to your default calendar app.',
+            title: platformName === 'ios' ? t('SETTINGS_SUBSCRIBE_CALENDAR_IOS') : t('SETTINGS_SUBSCRIBE_CALENDAR'),
             timeout: 25000
         });
         // Stremio 4 emits not documented event subscribeCalendar
