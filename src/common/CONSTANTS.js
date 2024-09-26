@@ -93,7 +93,7 @@ const EXTERNAL_PLAYERS = [
     },
 ];
 
-const WHITELISTED_HOSTS = ['www.stremio.com', 'blog.stremio.com', 'web.stremio.com', 'web.strem.io', 'stremio.zendesk.com', 'www.google.com', 'www.youtube.com', 'www.twitch.tv', 'twitter.com', 'www.netflix.com', 'www.adex.network', 'www.amazon.com', 'docs.google.com', 'blog.stremio.com', 'forms.gle'];
+const WHITELISTED_HOSTS = ['stremio.com', 'strem.io', 'stremio.zendesk.com', 'google.com', 'youtube.com', 'twitch.tv', 'twitter.com', 'netflix.com', 'adex.network', 'amazon.com', 'forms.gle'];
 
 module.exports = {
     CHROMECAST_RECEIVER_APP_ID,
