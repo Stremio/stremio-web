@@ -11,6 +11,7 @@ const { Button, Checkbox, MainNavBars, Multiselect, ColorInput, TextInput, Modal
 const useProfileSettingsInputs = require('./useProfileSettingsInputs');
 const useStreamingServerSettingsInputs = require('./useStreamingServerSettingsInputs');
 const useDataExport = require('./useDataExport');
+const { name: platformName } = require('stremio/common/platform');
 const styles = require('./styles');
 
 const GENERAL_SECTION = 'general';
@@ -102,16 +103,20 @@ const Settings = () => {
             });
         }
     }, [isTraktAuthenticated, profile.auth]);
+    const protocol = platformName === 'ios' ? 'webcal' : 'http';
+    const calendarUrl = `${protocol}://www.strem.io/calendar/${profile.auth.user._id}.ics`;
+    const calendarFileName = `${profile.auth.user._id}.ics`;
     const subscribeCalendarOnClick = React.useCallback(() => {
-        const url = `webcal://www.strem.io/calendar/${profile.auth.user._id}.ics`;
-        platform.openExternal(url);
+        platform.openExternal(calendarUrl);
         toast.show({
             type: 'success',
-            title: 'Calendar has been added to your default caldendar app',
+            title: platformName === 'android' ?
+                'Calendar has been downloaded. Please open it in your calendar app.' :
+                'Calendar has been added to your default calendar app.',
             timeout: 25000
         });
-        //Stremio 4 emits not documented event subscribeCalendar
-    }, []);
+        // Stremio 4 emits not documented event subscribeCalendar
+    }, [platformName, profile.auth.user._id, platform, toast]);
     const exportDataOnClick = React.useCallback(() => {
         loadDataExport();
     }, []);
@@ -269,7 +274,7 @@ const Settings = () => {
                         {
                             profile.auth !== null && profile.auth.user !== null && typeof profile.auth.user._id === 'string' ?
                                 <div className={classnames(styles['option-container'], styles['link-container'])}>
-                                    <Button className={classnames(styles['option-input-container'], styles['link-input-container'])} title={t('SETTINGS_SUBSCRIBE_CALENDAR')} tabIndex={-1} onClick={subscribeCalendarOnClick}>
+                                    <Button className={classnames(styles['option-input-container'], styles['link-input-container'])} title={t('SETTINGS_SUBSCRIBE_CALENDAR')} tabIndex={-1} onClick={subscribeCalendarOnClick} href={calendarUrl} download={calendarFileName}>
                                         <div className={styles['label']}>{ t('SETTINGS_SUBSCRIBE_CALENDAR') }</div>
                                     </Button>
                                 </div>
