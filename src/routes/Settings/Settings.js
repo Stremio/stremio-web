@@ -115,7 +115,7 @@ const Settings = () => {
             timeout: 25000
         });
         // Stremio 4 emits not documented event subscribeCalendar
-    }, [platformName, profile.auth.user._id, platform, toast]);
+    }, [profile.auth.user._id]);
     const exportDataOnClick = React.useCallback(() => {
         loadDataExport();
     }, []);
