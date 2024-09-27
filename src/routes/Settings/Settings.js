@@ -103,6 +103,8 @@ const Settings = () => {
         }
     }, [isTraktAuthenticated, profile.auth]);
     const subscribeCalendarOnClick = React.useCallback(() => {
+        if (!profile.auth) return;
+
         const protocol = platform.name === 'ios' ? 'webcal' : 'https';
         const url = `${protocol}://www.strem.io/calendar/${profile.auth.user._id}.ics`;
         platform.openExternal(url);
@@ -112,7 +114,7 @@ const Settings = () => {
             timeout: 25000
         });
         // Stremio 4 emits not documented event subscribeCalendar
-    }, [profile.auth.user._id]);
+    }, [profile.auth]);
     const exportDataOnClick = React.useCallback(() => {
         loadDataExport();
     }, []);
