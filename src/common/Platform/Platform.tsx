@@ -1,15 +1,18 @@
 import React, { createContext, useContext } from 'react';
-import useShell from './useShell';
 import { WHITELISTED_HOSTS } from 'stremio/common/CONSTANTS';
+import useShell from './useShell';
+import { name, isMobile } from './device';
 
 interface PlatformContext {
-    openExternal: (url: string) => void,
-};
+    name: string;
+    isMobile: boolean;
+    openExternal: (url: string) => void;
+}
 
 const PlatformContext = createContext<PlatformContext | null>(null);
 
 type Props = {
-    children: JSX.Element,
+    children: JSX.Element;
 };
 
 const PlatformProvider = ({ children }: Props) => {
@@ -19,8 +22,8 @@ const PlatformProvider = ({ children }: Props) => {
         try {
             const { hostname } = new URL(url);
             const isWhitelisted = WHITELISTED_HOSTS.some((host: string) => hostname.endsWith(host));
-            const finalUrl = !isWhitelisted ? 'https://www.stremio.com/warning#' + encodeURIComponent(url) : url;
-        
+            const finalUrl = !isWhitelisted ? `https://www.stremio.com/warning#${encodeURIComponent(url)}` : url;
+
             if (shell.active) {
                 shell.send('open-external', finalUrl);
             } else {
@@ -28,11 +31,11 @@ const PlatformProvider = ({ children }: Props) => {
             }
         } catch (e) {
             console.error('Failed to parse external url:', e);
-        }        
+        }
     };
 
     return (
-        <PlatformContext.Provider value={{ openExternal }}>
+        <PlatformContext.Provider value={{ openExternal, name, isMobile }}>
             {children}
         </PlatformContext.Provider>
     );
@@ -42,7 +45,7 @@ const usePlatform = () => {
     return useContext(PlatformContext);
 };
 
-export {
+export { 
     PlatformProvider,
-    usePlatform,
+    usePlatform
 };

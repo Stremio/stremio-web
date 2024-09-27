@@ -5,7 +5,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { default: Icon } = require('@stremio/stremio-icons/react');
 const { t } = require('i18next');
-const { Button, Image, useProfile, platform, useToast, Popup, useBinaryState } = require('stremio/common');
+const { Button, Image, useProfile, usePlatform, useToast, Popup, useBinaryState } = require('stremio/common');
 const { useServices } = require('stremio/services');
 const { useRouteFocused } = require('stremio-router');
 const StreamPlaceholder = require('./StreamPlaceholder');
@@ -14,6 +14,7 @@ const styles = require('./styles');
 const Stream = ({ className, videoId, videoReleased, addonName, name, description, thumbnail, progress, deepLinks, ...props }) => {
     const profile = useProfile();
     const toast = useToast();
+    const platform = usePlatform();
     const { core } = useServices();
     const routeFocused = useRouteFocused();
 
