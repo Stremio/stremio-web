@@ -3,7 +3,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const ModalDialog = require('stremio/common/ModalDialog');
-const { withCoreSuspender } = require('stremio/common/CoreSuspender');
+const { usePlatform, withCoreSuspender } = require('stremio/common/CoreSuspender');
 const { useServices } = require('stremio/services');
 const AddonDetailsWithRemoteAndLocalAddon = withRemoteAndLocalAddon(require('./AddonDetails'));
 const useAddonDetails = require('./useAddonDetails');
@@ -43,6 +43,7 @@ function withRemoteAndLocalAddon(AddonDetails) {
 
 const AddonDetailsModal = ({ transportUrl, onCloseRequest }) => {
     const { core } = useServices();
+    const platform = usePlatform();
     const addonDetails = useAddonDetails(transportUrl);
     const modalButtons = React.useMemo(() => {
         const cancelButton = {
@@ -68,7 +69,7 @@ const AddonDetailsModal = ({ transportUrl, onCloseRequest }) => {
                 label: 'Configure',
                 props: {
                     onClick: (event) => {
-                        window.open(transportUrl.replace('manifest.json', 'configure'));
+                        platform.openExternal(transportUrl.replace('manifest.json', 'configure'));
                         if (typeof onCloseRequest === 'function') {
                             onCloseRequest({
                                 type: 'configure',

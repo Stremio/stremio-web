@@ -18,6 +18,7 @@ const Multiselect = require('./Multiselect');
 const { default: MultiselectMenu } = require('./MultiselectMenu');
 const { HorizontalNavBar, VerticalNavBar } = require('./NavBar');
 const PaginationInput = require('./PaginationInput');
+const { PlatformProvider, usePlatform } = require('./Platform');
 const PlayIconCircleCentered = require('./PlayIconCircleCentered');
 const Popup = require('./Popup');
 const SearchBar = require('./SearchBar');
@@ -45,7 +46,6 @@ const useProfile = require('./useProfile');
 const useStreamingServer = require('./useStreamingServer');
 const useTorrent = require('./useTorrent');
 const useTranslate = require('./useTranslate');
-const platform = require('./platform');
 const EventModal = require('./EventModal');
 
 module.exports = {
@@ -68,6 +68,8 @@ module.exports = {
     HorizontalNavBar,
     VerticalNavBar,
     PaginationInput,
+    PlatformProvider,
+    usePlatform,
     PlayIconCircleCentered,
     Popup,
     SearchBar,
@@ -98,6 +100,5 @@ module.exports = {
     useStreamingServer,
     useTorrent,
     useTranslate,
-    platform,
     EventModal,
 };
