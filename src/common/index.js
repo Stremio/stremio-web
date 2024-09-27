@@ -46,7 +46,6 @@ const useProfile = require('./useProfile');
 const useStreamingServer = require('./useStreamingServer');
 const useTorrent = require('./useTorrent');
 const useTranslate = require('./useTranslate');
-const platform = require('./platform');
 const EventModal = require('./EventModal');
 
 module.exports = {
@@ -101,6 +100,5 @@ module.exports = {
     useStreamingServer,
     useTorrent,
     useTranslate,
-    platform,
     EventModal,
 };
