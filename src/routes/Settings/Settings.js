@@ -261,9 +261,14 @@ const Settings = () => {
                     </div>
                     <div className={styles['section-container']}>
                         <div className={classnames(styles['option-container'], styles['link-container'])}>
-                            <Button className={classnames(styles['option-input-container'], styles['link-input-container'])} title={t('SETTINGS_DATA_EXPORT')} tabIndex={-1} onClick={exportDataOnClick}>
-                                <div className={styles['label']}>{ t('SETTINGS_DATA_EXPORT') }</div>
-                            </Button>
+                            {
+                                profile.auth ?
+                                    <Button className={classnames(styles['option-input-container'], styles['link-input-container'])} title={t('SETTINGS_DATA_EXPORT')} tabIndex={-1} onClick={exportDataOnClick}>
+                                        <div className={styles['label']}>{ t('SETTINGS_DATA_EXPORT') }</div>
+                                    </Button>
+                                    :
+                                    null
+                            }
                         </div>
                         {
                             profile.auth !== null && profile.auth.user !== null && typeof profile.auth.user._id === 'string' ?
