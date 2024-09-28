@@ -52,11 +52,6 @@ const EXTERNAL_PLAYERS = [
         platforms: ['android'],
     },
     {
-        label: 'Infuse',
-        value: 'infuse',
-        platforms: ['ios', 'visionos'],
-    },
-    {
         label: 'VLC',
         value: 'vlc',
         platforms: ['ios', 'visionos', 'android'],
@@ -92,13 +87,16 @@ const EXTERNAL_PLAYERS = [
         platforms: ['visionos'],
     },
     {
+        label: 'Infuse',
+        value: 'infuse',
+        platforms: ['ios'],
+    },
+    {
         label: 'M3U Playlist',
         value: 'm3u',
         platforms: ['ios', 'visionos', 'android', 'windows', 'linux', 'macos'],
     },
 ];
-
-const WHITELISTED_HOSTS = ['stremio.com', 'strem.io', 'stremio.zendesk.com', 'google.com', 'youtube.com', 'twitch.tv', 'twitter.com', 'netflix.com', 'adex.network', 'amazon.com', 'forms.gle'];
 
 module.exports = {
     CHROMECAST_RECEIVER_APP_ID,
@@ -117,5 +115,4 @@ module.exports = {
     TYPE_PRIORITIES,
     ICON_FOR_TYPE,
     EXTERNAL_PLAYERS,
-    WHITELISTED_HOSTS,
 };
