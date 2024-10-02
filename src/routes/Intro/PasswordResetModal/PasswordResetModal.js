@@ -3,17 +3,18 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const { useRouteFocused } = require('stremio-router');
-const { ModalDialog } = require('stremio/common');
+const { ModalDialog, usePlatform } = require('stremio/common');
 const CredentialsTextInput = require('../CredentialsTextInput');
 const styles = require('./styles');
 
 const PasswordResetModal = ({ email, onCloseRequest }) => {
     const routeFocused = useRouteFocused();
+    const platform = usePlatform();
     const [error, setError] = React.useState('');
     const emailRef = React.useRef(null);
     const goToPasswordReset = React.useCallback(() => {
         emailRef.current.value.length > 0 && emailRef.current.validity.valid ?
-            window.open('https://www.strem.io/reset-password/' + emailRef.current.value, '_blank')
+            platform.openExternal('https://www.strem.io/reset-password/' + emailRef.current.value, '_blank')
             :
             setError('Invalid email');
     }, []);

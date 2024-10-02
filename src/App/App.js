@@ -6,7 +6,7 @@ const { useTranslation } = require('react-i18next');
 const { Router } = require('stremio-router');
 const { Core, Shell, Chromecast, DragAndDrop, KeyboardShortcuts, ServicesProvider } = require('stremio/services');
 const { NotFound } = require('stremio/routes');
-const { ToastProvider, TooltipProvider, CONSTANTS, withCoreSuspender } = require('stremio/common');
+const { PlatformProvider, ToastProvider, TooltipProvider, CONSTANTS, withCoreSuspender } = require('stremio/common');
 const ServicesToaster = require('./ServicesToaster');
 const DeepLinkHandler = require('./DeepLinkHandler');
 const SearchParamsHandler = require('./SearchParamsHandler');
@@ -162,18 +162,20 @@ const App = () => {
                         services.core.error instanceof Error ?
                             <ErrorDialog className={styles['error-container']} />
                             :
-                            <ToastProvider className={styles['toasts-container']}>
-                                <TooltipProvider className={styles['tooltip-container']}>
-                                    <ServicesToaster />
-                                    <DeepLinkHandler />
-                                    <SearchParamsHandler />
-                                    <RouterWithProtectedRoutes
-                                        className={styles['router']}
-                                        viewsConfig={routerViewsConfig}
-                                        onPathNotMatch={onPathNotMatch}
-                                    />
-                                </TooltipProvider>
-                            </ToastProvider>
+                            <PlatformProvider>
+                                <ToastProvider className={styles['toasts-container']}>
+                                    <TooltipProvider className={styles['tooltip-container']}>
+                                        <ServicesToaster />
+                                        <DeepLinkHandler />
+                                        <SearchParamsHandler />
+                                        <RouterWithProtectedRoutes
+                                            className={styles['router']}
+                                            viewsConfig={routerViewsConfig}
+                                            onPathNotMatch={onPathNotMatch}
+                                        />
+                                    </TooltipProvider>
+                                </ToastProvider>
+                            </PlatformProvider>
                         :
                         <div className={styles['loader-container']} />
                 }

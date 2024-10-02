@@ -3,11 +3,12 @@
 const React = require('react');
 const { useTranslation } = require('react-i18next');
 const { useServices } = require('stremio/services');
-const { CONSTANTS, interfaceLanguages, languageNames, platform } = require('stremio/common');
+const { CONSTANTS, usePlatform, interfaceLanguages, languageNames } = require('stremio/common');
 
 const useProfileSettingsInputs = (profile) => {
     const { t } = useTranslation();
     const { core } = useServices();
+    const platform = usePlatform();
     // TODO combine those useMemo in one
     const interfaceLanguageSelect = React.useMemo(() => ({
         options: interfaceLanguages.map(({ name, codes }) => ({

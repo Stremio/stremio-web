@@ -5,7 +5,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { useTranslation } = require('react-i18next');
 const { default: Icon } = require('@stremio/stremio-icons/react');
-const { AddonDetailsModal, Button, Image, Multiselect, MainNavBars, TextInput, SearchBar, SharePrompt, ModalDialog, useBinaryState, withCoreSuspender } = require('stremio/common');
+const { AddonDetailsModal, Button, Image, Multiselect, MainNavBars, TextInput, SearchBar, SharePrompt, ModalDialog, usePlatform, useBinaryState, withCoreSuspender } = require('stremio/common');
 const Addon = require('./Addon');
 const useInstalledAddons = require('./useInstalledAddons');
 const useRemoteAddons = require('./useRemoteAddons');
@@ -15,6 +15,7 @@ const styles = require('./styles');
 
 const Addons = ({ urlParams, queryParams }) => {
     const { t } = useTranslation();
+    const platform = usePlatform();
     const installedAddons = useInstalledAddons(urlParams);
     const remoteAddons = useRemoteAddons(urlParams);
     const [addonDetailsTransportUrl, setAddonDetailsTransportUrl] = useAddonDetailsTransportUrl(urlParams, queryParams);
@@ -59,7 +60,7 @@ const Addons = ({ urlParams, queryParams }) => {
         setAddonDetailsTransportUrl(event.dataset.addon.transportUrl);
     }, [setAddonDetailsTransportUrl]);
     const onAddonConfigure = React.useCallback((event) => {
-        window.open(event.dataset.addon.transportUrl.replace('manifest.json', 'configure'));
+        platform.openExternal(event.dataset.addon.transportUrl.replace('manifest.json', 'configure'));
     }, []);
     const closeAddonDetails = React.useCallback(() => {
         setAddonDetailsTransportUrl(null);
