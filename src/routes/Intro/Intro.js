@@ -1,6 +1,7 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 const React = require('react');
+const { useTranslation } = require('react-i18next');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { default: Icon } = require('@stremio/stremio-icons/react');
@@ -18,8 +19,9 @@ const LOGIN_FORM = 'login';
 
 const Intro = ({ queryParams }) => {
     const { core } = useServices();
+    const { t } = useTranslation();
     const routeFocused = useRouteFocused();
-    const startFacebookLogin = useFacebookLogin();
+    const [startFacebookLogin, stopFacebookLogin] = useFacebookLogin();
     const emailRef = React.useRef(null);
     const passwordRef = React.useRef(null);
     const confirmPasswordRef = React.useRef(null);
@@ -99,6 +101,10 @@ const Intro = ({ queryParams }) => {
                 closeLoaderModal();
                 dispatch({ type: 'error', error: error.message });
             });
+    }, []);
+    const cancelLoginWithFacebook = React.useCallback(() => {
+        stopFacebookLogin();
+        closeLoaderModal();
     }, []);
     const loginWithEmail = React.useCallback(() => {
         if (typeof state.email !== 'string' || state.email.length === 0 || !emailRef.current.validity.valid) {
@@ -385,6 +391,9 @@ const Intro = ({ queryParams }) => {
                         <div className={styles['loader-container']}>
                             <Icon className={styles['icon']} name={'person'} />
                             <div className={styles['label']}>Authenticating...</div>
+                            <Button className={styles['button']} onClick={cancelLoginWithFacebook}>
+                                {t('BUTTON_CANCEL')}
+                            </Button>
                         </div>
                     </Modal>
                     :

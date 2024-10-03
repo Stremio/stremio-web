@@ -26,7 +26,7 @@ const useFacebookLogin = () => {
     const platform = usePlatform();
     const timeout = useRef<NodeJS.Timeout | null>(null);
 
-    const startFacebookLogin = useCallback(() => {
+    const start = useCallback(() => {
         return new Promise((resolve, reject) => {
             const state = hat(128);
             let tries = 0;
@@ -51,13 +51,18 @@ const useFacebookLogin = () => {
         });
     }, []);
 
-    useEffect(() => {
-        return () => {
-            timeout.current && clearTimeout(timeout.current);
-        };
+    const stop = useCallback(() => {
+        timeout.current && clearTimeout(timeout.current);
     }, []);
 
-    return startFacebookLogin;
+    useEffect(() => {
+        return () => stop();
+    }, []);
+
+    return [
+        start,
+        stop,
+    ];
 };
 
 module.exports = useFacebookLogin;
