@@ -1,6 +1,6 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import hat from 'hat';
 import { usePlatform } from 'stremio/common';
 
@@ -24,16 +24,18 @@ const getCredentials = async (state: string) => {
 
 const useFacebookLogin = () => {
     const platform = usePlatform();
+    const started = useRef(false);
     const timeout = useRef<NodeJS.Timeout | null>(null);
 
-    const start = useCallback(() => {
-        return new Promise((resolve, reject) => {
-            const state = hat(128);
-            let tries = 0;
+    const start = useCallback(() => new Promise((resolve, reject) => {
+        started.current = true;
+        const state = hat(128);
+        let tries = 0;
 
-            platform.openExternal(`${STREMIO_URL}/login-fb/${state}`);
+        platform.openExternal(`${STREMIO_URL}/login-fb/${state}`);
 
-            const waitForCredentials = () => {
+        const waitForCredentials = () => {
+            if (started.current) {
                 timeout.current && clearTimeout(timeout.current);
                 timeout.current = setTimeout(() => {
                     if (tries >= MAX_TRIES)
@@ -45,13 +47,14 @@ const useFacebookLogin = () => {
                         .then(resolve)
                         .catch(waitForCredentials);
                 }, 1000);
-            };
+            }
+        };
 
-            waitForCredentials();
-        });
-    }, []);
+        waitForCredentials();
+    }), []);
 
     const stop = useCallback(() => {
+        started.current = false;
         timeout.current && clearTimeout(timeout.current);
     }, []);
 
