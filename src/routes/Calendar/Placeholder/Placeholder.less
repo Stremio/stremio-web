@@ -69,6 +69,7 @@
         padding: 0 5rem;
         font-size: 1.1rem;
         color: var(--primary-foreground-color);
+        text-align: center;
         border-radius: 3.5rem;
         background-color: var(--overlay-color);
 
@@ -81,10 +82,18 @@
 
 @media only screen and (max-width: @minimum) {
     .placeholder {
-        padding: 1rem;
+        padding: 1rem 2rem;
+
+        .image {
+            height: 10rem;
+        }
 
         .overview {
             flex-direction: column;
+        }
+
+        .button {
+            width: 100%;
         }
     }
 }
