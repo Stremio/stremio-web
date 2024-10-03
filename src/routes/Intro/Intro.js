@@ -10,7 +10,7 @@ const { Button, Image, useBinaryState } = require('stremio/common');
 const CredentialsTextInput = require('./CredentialsTextInput');
 const ConsentCheckbox = require('./ConsentCheckbox');
 const PasswordResetModal = require('./PasswordResetModal');
-const useFacebookToken = require('./useFacebookToken');
+const useFacebookLogin = require('./useFacebookLogin');
 const styles = require('./styles');
 
 const SIGNUP_FORM = 'signup';
@@ -19,7 +19,7 @@ const LOGIN_FORM = 'login';
 const Intro = ({ queryParams }) => {
     const { core } = useServices();
     const routeFocused = useRouteFocused();
-    const getFacebookToken = useFacebookToken();
+    const startFacebookLogin = useFacebookLogin();
     const emailRef = React.useRef(null);
     const passwordRef = React.useRef(null);
     const confirmPasswordRef = React.useRef(null);
@@ -80,15 +80,17 @@ const Intro = ({ queryParams }) => {
     );
     const loginWithFacebook = React.useCallback(() => {
         openLoaderModal();
-        getFacebookToken()
-            .then((accessToken) => {
+        startFacebookLogin()
+            .then(({ email, password }) => {
                 core.transport.dispatch({
                     action: 'Ctx',
                     args: {
                         action: 'Authenticate',
                         args: {
-                            type: 'Facebook',
-                            token: accessToken,
+                            type: 'Login',
+                            email,
+                            password,
+                            facebook: true
                         }
                     }
                 });
