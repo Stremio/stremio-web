@@ -34,13 +34,15 @@ const Player = ({ urlParams, queryParams }) => {
         return queryParams.has('forceTranscoding');
     }, [queryParams]);
 
-    const [player, videoParamsChanged, timeChanged, pausedChanged, ended, nextVideo] = usePlayer(urlParams);
+    const [player, videoParamsChanged, timeChanged, seek, pausedChanged, ended, nextVideo] = usePlayer(urlParams);
     const [settings, updateSettings] = useSettings();
     const streamingServer = useStreamingServer();
     const statistics = useStatistics(player, streamingServer);
     const video = useVideo();
     const routeFocused = useRouteFocused();
     const toast = useToast();
+
+    const [seeking, setSeeking] = React.useState(false);
 
     const [casting, setCasting] = React.useState(() => {
         return chromecast.active && chromecast.transport.getCastState() === cast.framework.CastState.CONNECTED;
@@ -136,6 +138,7 @@ const Player = ({ urlParams, queryParams }) => {
 
     const onPlayRequested = React.useCallback(() => {
         video.setProp('paused', false);
+        setSeeking(false);
     }, []);
 
     const onPlayRequestedDebounced = React.useCallback(debounce(onPlayRequested, 200), []);
@@ -158,6 +161,8 @@ const Player = ({ urlParams, queryParams }) => {
     }, []);
 
     const onSeekRequested = React.useCallback((time) => {
+        setSeeking(true);
+        console.log(`setSeeking to (SeekRequested): true`);
         video.setProp('time', time);
     }, []);
 
@@ -345,7 +350,10 @@ const Player = ({ urlParams, queryParams }) => {
         if (video.state.time !== null && !isNaN(video.state.time) &&
             video.state.duration !== null && !isNaN(video.state.duration) &&
             video.state.manifest !== null && typeof video.state.manifest.name === 'string') {
-            timeChanged(video.state.time, video.state.duration, video.state.manifest.name);
+            seeking ?
+                seek(video.state.time, video.state.duration, video.state.manifest.name)
+                :
+                timeChanged(video.state.time, video.state.duration, video.state.manifest.name);
         }
     }, [video.state.time, video.state.duration, video.state.manifest]);
 
@@ -468,6 +476,8 @@ const Player = ({ urlParams, queryParams }) => {
                     if (!menusOpen && !nextVideoPopupOpen && video.state.paused !== null) {
                         if (video.state.paused) {
                             onPlayRequested();
+                            setSeeking(false);
+                            console.log(`setSeeking to (play requested - Space): false`);
                         } else {
                             onPauseRequested();
                         }
@@ -553,6 +563,12 @@ const Player = ({ urlParams, queryParams }) => {
                 }
             }
         };
+        const onKeyUp = (event) => {
+            if (event.code === 'ArrowRight' || event.code === 'ArrowLeft') {
+                setSeeking(false);
+                console.log(`setSeeking to (key up - ArrowRight/ArrowLeft): false`);
+            }
+        };
         const onWheel = ({ deltaY }) => {
             if (deltaY > 0) {
                 if (!menusOpen && video.state.volume !== null) {
@@ -566,10 +582,12 @@ const Player = ({ urlParams, queryParams }) => {
         };
         if (routeFocused) {
             window.addEventListener('keydown', onKeyDown);
+            window.addEventListener('keyup', onKeyUp);
             window.addEventListener('wheel', onWheel);
         }
         return () => {
             window.removeEventListener('keydown', onKeyDown);
+            window.removeEventListener('keyup', onKeyUp);
             window.removeEventListener('wheel', onWheel);
         };
     }, [player.metaItem, player.selected, streamingServer.statistics, settings.seekTimeDuration, settings.seekShortTimeDuration, routeFocused, menusOpen, nextVideoPopupOpen, video.state.paused, video.state.time, video.state.volume, video.state.audioTracks, video.state.subtitlesTracks, video.state.extraSubtitlesTracks, video.state.playbackSpeed, toggleSubtitlesMenu, toggleInfoMenu, toggleVideosMenu, toggleStatisticsMenu]);
