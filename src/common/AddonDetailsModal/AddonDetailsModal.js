@@ -3,7 +3,8 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const ModalDialog = require('stremio/common/ModalDialog');
-const { usePlatform, withCoreSuspender } = require('stremio/common/CoreSuspender');
+const { withCoreSuspender } = require('stremio/common/CoreSuspender');
+const { usePlatform } = require('stremio/common/Platform');
 const { useServices } = require('stremio/services');
 const AddonDetailsWithRemoteAndLocalAddon = withRemoteAndLocalAddon(require('./AddonDetails'));
 const useAddonDetails = require('./useAddonDetails');
