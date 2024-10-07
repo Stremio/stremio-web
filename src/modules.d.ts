@@ -1,5 +1,5 @@
 declare module '*.less' {
-    const resource: { [key: string]: string };
+    const resource: Record<string, string>;
     export = resource;
 }
 
