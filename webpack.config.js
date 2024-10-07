@@ -194,7 +194,7 @@ module.exports = (env, argv) => ({
         new CleanWebpackPlugin({
             cleanOnceBeforeBuildPatterns: ['*']
         }),
-        argv.mode === 'production' && 
+        argv.mode === 'production' &&
             new WorkboxPlugin.GenerateSW({
                 maximumFileSizeToCacheInBytes: 20000000,
                 clientsClaim: true,

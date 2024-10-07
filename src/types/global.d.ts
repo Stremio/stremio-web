@@ -1,3 +1,5 @@
+/* eslint-disable no-var */
+
 interface QtTransport {
     send: (message: string) => void,
 }

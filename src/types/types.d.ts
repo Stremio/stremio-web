@@ -51,7 +51,7 @@ type BehaviorHints = {
     hasScheduledVideos: boolean,
 };
 
-type PosterShape = 'square' | 'landscape' | 'poster' | null; 
+type PosterShape = 'square' | 'landscape' | 'poster' | null;
 
 type Catalog<T, D = any> = {
     label?: string,

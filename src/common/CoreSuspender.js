@@ -37,6 +37,7 @@ const useCoreSuspender = () => {
     return React.useContext(CoreSuspenderContext);
 };
 
+// eslint-disable-next-line @typescript-eslint/no-empty-function
 const withCoreSuspender = (Component, Fallback = () => { }) => {
     return function withCoreSuspender(props) {
         const { core } = useServices();

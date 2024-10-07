@@ -17,7 +17,8 @@ const DelayedRenderer = ({ children, delay }) => {
 };
 
 DelayedRenderer.propTypes = {
-    children: PropTypes.node
+    children: PropTypes.node,
+    delay: PropTypes.number,
 };
 
 module.exports = DelayedRenderer;

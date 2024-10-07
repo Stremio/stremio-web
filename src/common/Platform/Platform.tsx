@@ -45,7 +45,7 @@ const usePlatform = () => {
     return useContext(PlatformContext);
 };
 
-export { 
+export {
     PlatformProvider,
     usePlatform
 };
