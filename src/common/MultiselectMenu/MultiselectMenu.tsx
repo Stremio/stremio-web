@@ -25,7 +25,7 @@ const MultiselectMenu = ({ className, title, options, selectedOption, onSelect }
     const onOptionSelect = (value: number) => {
         level ? setLevel(level + 1) : onSelect(value), closeMenu();
     };
-    
+
     return (
         <div className={classNames(styles['multiselect-menu'], className)} ref={multiselectMenuRef}>
             <Button
@@ -48,7 +48,7 @@ const MultiselectMenu = ({ className, title, options, selectedOption, onSelect }
                         menuOpen={menuOpen}
                         selectedOption={selectedOption}
                     />
-                : null
+                    : null
             }
         </div>
     );
