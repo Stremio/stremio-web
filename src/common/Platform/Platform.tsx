@@ -9,7 +9,7 @@ interface PlatformContext {
     openExternal: (url: string) => void;
 }
 
-const PlatformContext = createContext<PlatformContext | null>(null);
+const PlatformContext = createContext<PlatformContext>({} as PlatformContext);
 
 type Props = {
     children: JSX.Element;
