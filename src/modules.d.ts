@@ -1,3 +1,6 @@
-declare module '*.less';
-declare module 'stremio/common';
-declare module 'stremio/common/*';
+declare module '*.less' {
+    const resource: { [key: string]: string };
+    export = resource;
+}
+
+declare module 'stremio/common/Button';
