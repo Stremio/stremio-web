@@ -5,24 +5,11 @@ const PropTypes = require('prop-types');
 const { useServices } = require('stremio/services');
 const LibItem = require('stremio/common/LibItem');
 
-const ContinueWatchingItem = ({ _id, notifications, deepLinks, ...props }) => {
+const ContinueWatchingItem = ({ _id, notifications, ...props }) => {
     const { core } = useServices();
 
-    const onClick = React.useCallback(() => {
-        if (deepLinks?.metaDetailsVideos ?? deepLinks?.metaDetailsStreams) {
-            window.location = deepLinks?.metaDetailsVideos ?? deepLinks?.metaDetailsStreams;
-        }
-    }, [deepLinks]);
-
-    const onPlayClick = React.useCallback((event) => {
-        event.stopPropagation();
-        if (deepLinks?.player ?? deepLinks?.metaDetailsStreams ?? deepLinks?.metaDetailsVideos) {
-            window.location = deepLinks?.player ?? deepLinks?.metaDetailsStreams ?? deepLinks?.metaDetailsVideos;
-        }
-    }, [deepLinks]);
-
     const onDismissClick = React.useCallback((event) => {
-        event.stopPropagation();
+        event.preventDefault();
         if (typeof _id === 'string') {
             core.transport.dispatch({
                 action: 'Ctx',
@@ -47,8 +34,6 @@ const ContinueWatchingItem = ({ _id, notifications, deepLinks, ...props }) => {
             _id={_id}
             posterChangeCursor={true}
             notifications={notifications}
-            onClick={onClick}
-            onPlayClick={onPlayClick}
             onDismissClick={onDismissClick}
         />
     );

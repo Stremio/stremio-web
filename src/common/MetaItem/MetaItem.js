@@ -18,14 +18,14 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, poste
     const [menuOpen, onMenuOpen, onMenuClose] = useBinaryState(false);
     const href = React.useMemo(() => {
         return deepLinks ?
-            typeof deepLinks.player === 'string' ?
-                deepLinks.player
+            typeof deepLinks.metaDetailsStreams === 'string' ?
+                deepLinks.metaDetailsStreams
                 :
-                typeof deepLinks.metaDetailsStreams === 'string' ?
-                    deepLinks.metaDetailsStreams
+                typeof deepLinks.metaDetailsVideos === 'string' ?
+                    deepLinks.metaDetailsVideos
                     :
-                    typeof deepLinks.metaDetailsVideos === 'string' ?
-                        deepLinks.metaDetailsVideos
+                    typeof deepLinks.player === 'string' ?
+                        deepLinks.player
                         :
                         null
             :
