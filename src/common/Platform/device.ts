@@ -17,7 +17,7 @@ const isIOS = APPLE_MOBILE_DEVICES.includes(platform) || (userAgent.includes('Ma
 
 // Edge case: iPad is included in this function
 // Keep in mind maxTouchPoints for Vision Pro might change in the future
-const isVisionOS = userAgent.includes('Macintosh') || maxTouchPoints === 5;
+const isVisionOS = userAgent.includes('Macintosh') && maxTouchPoints === 5;
 
 const bowser = Bowser.getParser(userAgent);
 const os = bowser.getOSName().toLowerCase();
