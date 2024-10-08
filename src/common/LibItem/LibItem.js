@@ -29,7 +29,7 @@ const LibItem = ({ _id, removable, notifications, watched, ...props }) => {
                 case 'details':
                     return props.deepLinks && (typeof props.deepLinks.metaDetailsVideos === 'string' || typeof props.deepLinks.metaDetailsStreams === 'string');
                 case 'watched':
-                    return props.deepLinks && (typeof props.deepLinks.metaDetailsVideos === 'string' || typeof props.deepLinks.metaDetailsStreams === 'string');
+                    return typeof watched !== 'undefined' && props.deepLinks && (typeof props.deepLinks.metaDetailsVideos === 'string' || typeof props.deepLinks.metaDetailsStreams === 'string');
                 case 'dismiss':
                     return typeof _id === 'string' && props.progress !== null && !isNaN(props.progress) && props.progress > 0;
                 case 'remove':
@@ -119,6 +119,13 @@ const LibItem = ({ _id, removable, notifications, watched, ...props }) => {
         }
     }, [_id, props.deepLinks, props.optionOnSelect]);
 
+    const onPlayClick = React.useCallback((event) => {
+        if (props.deepLinks && typeof props.deepLinks.player === 'string') {
+            event.preventDefault();
+            window.location = props.deepLinks.player;
+        }
+    }, [props.deepLinks]);
+
     return (
         <MetaItem
             {...props}
@@ -126,6 +133,7 @@ const LibItem = ({ _id, removable, notifications, watched, ...props }) => {
             newVideos={newVideos}
             options={options}
             optionOnSelect={optionOnSelect}
+            onPlayClick={props.deepLinks && typeof props.deepLinks.player === 'string' ? onPlayClick : null}
         />
     );
 };
