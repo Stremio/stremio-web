@@ -13,6 +13,7 @@ const styles = require('./styles');
 
 const MetaRow = ({ className, title, catalog, message, itemComponent, notifications }) => {
     const t = useTranslate();
+    const [isHidden, setIsHidden] = React.useState(false);
 
     const catalogTitle = React.useMemo(() => {
         return title ?? t.catalogTitle(catalog);
@@ -37,10 +38,16 @@ const MetaRow = ({ className, title, catalog, message, itemComponent, notificati
                 }
                 {
                     href ?
-                        <Button className={styles['see-all-container']} title={t.string('BUTTON_SEE_ALL')} href={href} tabIndex={-1}>
-                            <div className={styles['label']}>{ t.string('BUTTON_SEE_ALL') }</div>
-                            <Icon className={styles['icon']} name={'chevron-forward'} />
-                        </Button>
+                        <div className={styles['meta-row-actions-container']}>
+                            <Button className={styles['see-all-container']} onClick={() => setIsHidden(!isHidden)}>
+                                <div className={styles['label']}>{isHidden ? 'Show' : 'Hide'}</div>
+                                <Icon className={styles['icon']} name={isHidden ? 'eye' : 'eye-off'} />
+                            </Button>
+                            <Button className={styles['see-all-container']} title={t.string('BUTTON_SEE_ALL')} href={href} tabIndex={-1}>
+                                <div className={styles['label']}>{t.string('BUTTON_SEE_ALL')}</div>
+                                <Icon className={styles['icon']} name={'chevron-forward'} />
+                            </Button>
+                        </div>
                         :
                         null
                 }
@@ -49,7 +56,7 @@ const MetaRow = ({ className, title, catalog, message, itemComponent, notificati
                 typeof message === 'string' && message.length > 0 ?
                     <div className={styles['message-container']} title={message}>{message}</div>
                     :
-                    <div className={styles['meta-items-container']}>
+                    !isHidden && <div className={styles['meta-items-container']}>
                         {
                             ReactIs.isValidElementType(itemComponent) ?
                                 items.slice(0, CONSTANTS.CATALOG_PREVIEW_SIZE).map((item, index) => {
