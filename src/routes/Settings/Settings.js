@@ -7,7 +7,7 @@ const { useTranslation } = require('react-i18next');
 const { default: Icon } = require('@stremio/stremio-icons/react');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
-const { Button, Checkbox, MainNavBars, Multiselect, ColorInput, TextInput, ModalDialog, useProfile, usePlatform, useStreamingServer, useBinaryState, withCoreSuspender, useToast } = require('stremio/common');
+const { Button, Checkbox, MainNavBars, Multiselect, ColorInput, TextInput, ModalDialog, useProfile, usePlatform, useStreamingServer, useBinaryState, withCoreSuspender, useToast, useModelState } = require('stremio/common');
 const useProfileSettingsInputs = require('./useProfileSettingsInputs');
 const useStreamingServerSettingsInputs = require('./useStreamingServerSettingsInputs');
 const useDataExport = require('./useDataExport');
@@ -194,6 +194,9 @@ const Settings = () => {
         }
         closeConfigureServerUrlModal();
     }, [routeFocused]);
+    const ctx = useModelState({ model: 'ctx' });
+    console.log(profile); // eslint-disable-line no-console
+    console.log(ctx); // eslint-disable-line no-console
     return (
         <MainNavBars className={styles['settings-container']} route={'settings'}>
             <div className={classnames(styles['settings-content'], 'animation-fade-in')}>
