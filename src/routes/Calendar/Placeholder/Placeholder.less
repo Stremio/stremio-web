@@ -1,0 +1,99 @@
+// Copyright (C) 2017-2024 Smart code 203358507
+
+@import (reference) '~stremio/common/screen-sizes.less';
+
+.placeholder {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    overflow-y: auto;
+
+    .title {
+        flex: none;
+        font-size: 1.75rem;
+        font-weight: 400;
+        text-align: center;
+        color: var(--primary-foreground-color);
+        margin-bottom: 1rem;
+        opacity: 0.5;
+    }
+
+    .image {
+        flex: none;
+        height: 14rem;
+        margin: 1.5rem 0;
+    }
+
+    .overview {
+        flex: none;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 4rem;
+        margin-bottom: 3rem;
+
+        .point {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 1.5rem;
+            width: 18rem;
+
+            .icon {
+                flex: none;
+                height: 3.25rem;
+                width: 3.25rem;
+                color: var(--primary-foreground-color);
+                opacity: 0.3;
+            }
+
+            .text {
+                flex: auto;
+                font-size: 1.1rem;
+                font-size: 500;
+                color: var(--primary-foreground-color);
+                opacity: 0.9;
+            }
+        }
+    }
+
+    .button {
+        flex: none;
+        justify-content: center;
+        height: 4rem;
+        line-height: 4rem;
+        padding: 0 5rem;
+        font-size: 1.1rem;
+        color: var(--primary-foreground-color);
+        text-align: center;
+        border-radius: 3.5rem;
+        background-color: var(--overlay-color);
+
+        &:hover {
+            outline: var(--focus-outline-size) solid var(--primary-foreground-color);
+            background-color: transparent;
+        }
+    }
+}
+
+@media only screen and (max-width: @minimum) {
+    .placeholder {
+        padding: 1rem 2rem;
+
+        .image {
+            height: 10rem;
+        }
+
+        .overview {
+            flex-direction: column;
+        }
+
+        .button {
+            width: 100%;
+        }
+    }
+}

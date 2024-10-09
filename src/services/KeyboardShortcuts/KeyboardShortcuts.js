@@ -35,10 +35,15 @@ function KeyboardShortcuts() {
             }
             case 'Digit4': {
                 event.preventDefault();
-                window.location = '#/addons';
+                window.location = '#/calendar';
                 break;
             }
             case 'Digit5': {
+                event.preventDefault();
+                window.location = '#/addons';
+                break;
+            }
+            case 'Digit6': {
                 event.preventDefault();
                 window.location = '#/settings';
                 break;

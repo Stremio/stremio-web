@@ -1,0 +1,100 @@
+// Copyright (C) 2017-2024 Smart code 203358507
+
+@import (reference) '~stremio/common/screen-sizes.less';
+
+.bottom-sheet {
+    z-index: 99;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+
+    .backdrop {
+        z-index: 0;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: var(--primary-background-color);
+        opacity: 0.8;
+        transition: opacity 0.1s ease-out;
+        cursor: pointer;
+    }
+
+    .container {
+        z-index: 1;
+        position: absolute;
+        bottom: 0;
+        max-height: calc(100% - var(--horizontal-nav-bar-size));
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        border-radius: 2rem 2rem 0 0;
+        background-color: var(--modal-background-color);
+        box-shadow: var(--outer-glow);
+        overflow: hidden;
+
+        &:not(.dragging) {
+            transition: transform 0.1s ease-out;
+        }
+
+        .heading {
+            position: relative;
+
+            .handle {
+                position: relative;
+                height: 2.5rem;
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+        
+                &::after {
+                    content: "";
+                    height: 0.3rem;
+                    width: 3rem;
+                    border-radius: 1rem;
+                    background-color: var(--primary-foreground-color);
+                    opacity: 0.3;
+                }
+            }
+        
+            .title {
+                position: relative;
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0 1rem;
+                padding-left: 1.5rem;
+                font-size: 1.25rem;
+                font-weight: 600;
+                color: var(--primary-foreground-color);
+            }
+        }
+
+        .content {
+            position: relative;
+            overflow-y: auto;
+        }
+    }
+}
+
+@media only screen and (min-width: @xsmall) {
+    .bottom-sheet {
+        display: none;
+    }
+}
+
+@media only screen and (orientation: landscape) {
+    .bottom-sheet {
+        .container {
+            max-width: 90%;
+        }
+    }
+}
