@@ -12,10 +12,32 @@ const Multiselect = require('stremio/common/Multiselect');
 const useBinaryState = require('stremio/common/useBinaryState');
 const { ICON_FOR_TYPE } = require('stremio/common/CONSTANTS');
 const styles = require('./styles');
+const UrlUtils = require('url');
+const CONSTANTS = require('stremio/common/CONSTANTS');
 
-const MetaItem = React.memo(({ className, type, name, poster, posterShape, posterChangeCursor, progress, newVideos, options, deepLinks, dataset, optionOnSelect, onDismissClick, onPlayClick, watched, ...props }) => {
+const MetaItem = React.memo(({ className, type, name, poster, posterShape, posterChangeCursor, progress, newVideos, options, deepLinks, dataset, optionOnSelect, onDismissClick, onPlayClick, watched, links, ...props }) => {
     const { t } = useTranslation();
     const [menuOpen, onMenuOpen, onMenuClose] = useBinaryState(false);
+    const imdbLink = React.useMemo(() => {
+        if (!Array.isArray(links)) {
+            return null;
+        }
+
+        const imdbLink = links.find((link) => {
+            if (!link || typeof link.category !== 'string' || typeof link.url !== 'string') {
+                return false;
+            }
+
+            const { hostname } = UrlUtils.parse(link.url);
+            return link.category === CONSTANTS.IMDB_LINK_CATEGORY && hostname === 'imdb.com';
+        });
+
+        return imdbLink ? {
+            label: imdbLink.name,
+            href: `https://www.stremio.com/warning#${encodeURIComponent(imdbLink.url)}`
+        } : null;
+    }, [links]);
+
     const href = React.useMemo(() => {
         return deepLinks ?
             typeof deepLinks.player === 'string' ?
@@ -131,6 +153,15 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, poste
                             {typeof name === 'string' && name.length > 0 ? name : ''}
                         </div>
                         {
+                            imdbLink ?
+                                <div className={styles['imdb-button-container']}>
+                                    <Icon className={styles['icon']} name={'imdb'} />
+                                    <div className={styles['label']}>{imdbLink.label}</div>
+                                </div>
+                                :
+                                null
+                        }
+                        {
                             Array.isArray(options) && options.length > 0 ?
                                 <Multiselect
                                     className={styles['menu-label-container']}
@@ -175,7 +206,12 @@ MetaItem.propTypes = {
     onDismissClick: PropTypes.func,
     onPlayClick: PropTypes.func,
     onClick: PropTypes.func,
-    watched: PropTypes.bool
+    watched: PropTypes.bool,
+    links: PropTypes.arrayOf(PropTypes.shape({
+        category: PropTypes.string,
+        name: PropTypes.string,
+        url: PropTypes.string
+    }))
 };
 
 module.exports = MetaItem;
