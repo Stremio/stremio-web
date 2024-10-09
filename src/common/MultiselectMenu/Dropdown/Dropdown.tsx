@@ -32,7 +32,7 @@ const Dropdown = ({ level, setLevel, options, onSelect, selectedOption, menuOpen
                         <Icon name={'caret-left'} className={styles['back-button-icon']} />
                         {t('BACK')}
                     </Button>
-                : null
+                    : null
             }
             {
                 options
@@ -45,7 +45,6 @@ const Dropdown = ({ level, setLevel, options, onSelect, selectedOption, menuOpen
                             selectedOption={selectedOption}
                         />
                     ))
-
 
             }
         </div>

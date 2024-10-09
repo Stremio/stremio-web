@@ -7,7 +7,7 @@ const { useTranslation } = require('react-i18next');
 const { default: Icon } = require('@stremio/stremio-icons/react');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
-const { Button, Checkbox, MainNavBars, Multiselect, ColorInput, TextInput, ModalDialog, useProfile, useStreamingServer, useBinaryState, withCoreSuspender, useToast } = require('stremio/common');
+const { Button, Checkbox, MainNavBars, Multiselect, ColorInput, TextInput, ModalDialog, useProfile, usePlatform, useStreamingServer, useBinaryState, withCoreSuspender, useToast } = require('stremio/common');
 const useProfileSettingsInputs = require('./useProfileSettingsInputs');
 const useStreamingServerSettingsInputs = require('./useStreamingServerSettingsInputs');
 const useDataExport = require('./useDataExport');
@@ -25,6 +25,7 @@ const Settings = () => {
     const profile = useProfile();
     const [dataExport, loadDataExport] = useDataExport();
     const streamingServer = useStreamingServer();
+    const platform = usePlatform();
     const toast = useToast();
     const {
         interfaceLanguageSelect,
@@ -90,7 +91,7 @@ const Settings = () => {
     }, []);
     const toggleTraktOnClick = React.useCallback(() => {
         if (!isTraktAuthenticated && profile.auth !== null && profile.auth.user !== null && typeof profile.auth.user._id === 'string') {
-            window.open(`https://www.strem.io/trakt/auth/${profile.auth.user._id}`);
+            platform.openExternal(`https://www.strem.io/trakt/auth/${profile.auth.user._id}`);
             setTraktAuthStarted(true);
         } else {
             core.transport.dispatch({
@@ -102,15 +103,18 @@ const Settings = () => {
         }
     }, [isTraktAuthenticated, profile.auth]);
     const subscribeCalendarOnClick = React.useCallback(() => {
-        const url = `webcal://www.strem.io/calendar/${profile.auth.user._id}.ics`;
-        window.open(url);
+        if (!profile.auth) return;
+
+        const protocol = platform.name === 'ios' ? 'webcal' : 'https';
+        const url = `${protocol}://www.strem.io/calendar/${profile.auth.user._id}.ics`;
+        platform.openExternal(url);
         toast.show({
             type: 'success',
-            title: 'Calendar has been added to your default caldendar app',
+            title: platform.name === 'ios' ? t('SETTINGS_SUBSCRIBE_CALENDAR_IOS_TOAST') : t('SETTINGS_SUBSCRIBE_CALENDAR_TOAST'),
             timeout: 25000
         });
-        //Stremio 4 emits not documented event subscribeCalendar
-    }, []);
+        // Stremio 4 emits not documented event subscribeCalendar
+    }, [profile.auth]);
     const exportDataOnClick = React.useCallback(() => {
         loadDataExport();
     }, []);
@@ -181,7 +185,7 @@ const Settings = () => {
     }, [isTraktAuthenticated, traktAuthStarted]);
     React.useEffect(() => {
         if (dataExport.exportUrl !== null && typeof dataExport.exportUrl === 'string') {
-            window.open(dataExport.exportUrl);
+            platform.openExternal(dataExport.exportUrl);
         }
     }, [dataExport.exportUrl]);
     React.useLayoutEffect(() => {
@@ -261,9 +265,14 @@ const Settings = () => {
                     </div>
                     <div className={styles['section-container']}>
                         <div className={classnames(styles['option-container'], styles['link-container'])}>
-                            <Button className={classnames(styles['option-input-container'], styles['link-input-container'])} title={t('SETTINGS_DATA_EXPORT')} tabIndex={-1} onClick={exportDataOnClick}>
-                                <div className={styles['label']}>{ t('SETTINGS_DATA_EXPORT') }</div>
-                            </Button>
+                            {
+                                profile.auth ?
+                                    <Button className={classnames(styles['option-input-container'], styles['link-input-container'])} title={t('SETTINGS_DATA_EXPORT')} tabIndex={-1} onClick={exportDataOnClick}>
+                                        <div className={styles['label']}>{ t('SETTINGS_DATA_EXPORT') }</div>
+                                    </Button>
+                                    :
+                                    null
+                            }
                         </div>
                         {
                             profile.auth !== null && profile.auth.user !== null && typeof profile.auth.user._id === 'string' ?

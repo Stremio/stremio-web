@@ -1,6 +1,6 @@
 const useCalendarDate = (profile: Profile) => {
     const toMonthYear = (calendarDate: CalendarDate | null): string => {
-        if (!calendarDate) return ``;
+        if (!calendarDate) return '';
 
         const date = new Date();
         date.setMonth(calendarDate.month - 1);
@@ -13,7 +13,7 @@ const useCalendarDate = (profile: Profile) => {
     };
 
     const toDayMonth = (calendarDate: CalendarDate | null): string => {
-        if (!calendarDate) return ``;
+        if (!calendarDate) return '';
 
         const date = new Date();
         date.setDate(calendarDate.day);

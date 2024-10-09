@@ -25,7 +25,7 @@ function DragAndDrop({ core }) {
                                 args: Array.from(new Uint8Array(torrent))
                             }
                         });
-                    } catch (error) {
+                    } catch (_error) {
                         events.emit('error', {
                             message: 'Failed to process file',
                             file: {

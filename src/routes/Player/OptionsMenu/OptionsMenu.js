@@ -4,7 +4,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { useTranslation } = require('react-i18next');
-const { useToast } = require('stremio/common');
+const { usePlatform, useToast } = require('stremio/common');
 const { useServices } = require('stremio/services');
 const Option = require('./Option');
 const styles = require('./styles');
@@ -12,6 +12,7 @@ const styles = require('./styles');
 const OptionsMenu = ({ className, stream, playbackDevices }) => {
     const { t } = useTranslation();
     const { core } = useServices();
+    const platform = usePlatform();
     const toast = useToast();
     const [streamingUrl, downloadUrl] = React.useMemo(() => {
         return stream !== null ?
@@ -48,7 +49,7 @@ const OptionsMenu = ({ className, stream, playbackDevices }) => {
     }, [streamingUrl, downloadUrl]);
     const onDownloadVideoButtonClick = React.useCallback(() => {
         if (streamingUrl || downloadUrl) {
-            window.open(streamingUrl || downloadUrl);
+            platform.openExternal(streamingUrl || downloadUrl);
         }
     }, [streamingUrl, downloadUrl]);
     const onExternalDeviceRequested = React.useCallback((deviceId) => {

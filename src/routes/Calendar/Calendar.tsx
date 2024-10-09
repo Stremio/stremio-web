@@ -18,7 +18,7 @@ type Props = {
 const Calendar = ({ urlParams }: Props) => {
     const calendar = useCalendar(urlParams);
     const profile = useProfile();
-    
+
     const [paginationInput] = useSelectableInputs(calendar, profile);
     const { toDayMonth } = useCalendarDate(profile);
 

@@ -45,6 +45,7 @@ function ShellTransport() {
 
     this.props = {};
 
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const shell = this;
     initialize()
         .then(() => {

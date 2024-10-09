@@ -1,5 +1,7 @@
 // Copyright (C) 2017-2024 Smart code 203358507
 
+@import (reference) '~stremio/common/screen-sizes.less';
+
 .dropdown {
     background: var(--modal-background-color);
     display: none;
@@ -14,6 +16,8 @@
 
     &.open {
         display: block;
+        max-height: calc(3.2rem * 10);
+        overflow: auto;
     }
 
     .back-button {
@@ -25,6 +29,14 @@
 
         .back-button-icon {
             width: 1.5rem;
+        }
+    }
+}
+
+@media only screen and (max-width: @minimum) {
+    .dropdown {
+        &.open {
+            max-height: calc(3.2rem * 7);
         }
     }
 }

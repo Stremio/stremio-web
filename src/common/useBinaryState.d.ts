@@ -1,4 +1,4 @@
-declare const useBinaryState: () => [
+declare const useBinaryState: (initialValue?: boolean) => [
     boolean,
     () => void,
     () => void,
