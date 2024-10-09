@@ -28,8 +28,8 @@
     .container {
         z-index: 1;
         position: absolute;
-        top: var(--horizontal-nav-bar-size);
-        height: 100%;
+        bottom: 0;
+        max-height: calc(100% - var(--horizontal-nav-bar-size));
         width: 100%;
         display: flex;
         flex-direction: column;
