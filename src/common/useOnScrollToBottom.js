@@ -5,7 +5,8 @@ const React = require('react');
 const useOnScrollToBottom = (cb, threshold = 0) => {
     const triggeredRef = React.useRef(false);
     const onScroll = React.useCallback((event) => {
-        if (event.target.scrollTop + event.target.clientHeight >= event.target.scrollHeight - threshold) {
+        if (event.target.scrollTop + event.target.clientHeight >= event.target.scrollHeight - threshold || 
+            event.target.clientHeight >= event.target.scrollHeight) {
             if (!triggeredRef.current) {
                 triggeredRef.current = true;
                 if (typeof cb === 'function') {
