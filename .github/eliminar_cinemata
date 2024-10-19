@@ -1,0 +1,49 @@
+(function() {
+
+	const token = JSON.parse(localStorage.getItem("profile")).auth.key;
+
+    const requestData = {
+        type: "AddonCollectionGet",
+        authKey: token,
+        update: true
+    };
+
+    fetch('https://api.strem.io/api/addonCollectionGet', {
+        method: 'POST',
+        body: JSON.stringify(requestData)
+    })
+    .then(response => response.json())
+    .then(data => {
+
+    if (data && data.result) {
+
+        let result = JSON.stringify(data.result).substring(1).replace(/"protected":true/g, '"protected":false').replace('"idPrefixes":["tmdb:"]', '"idPrefixes":["tmdb:","tt"]');
+            
+        const index = result.indexOf("}}],");
+            
+        if (index !== -1) {
+            result = result.substring(0, index + 3) + "}";
+        }
+
+		let addons = '{"type":"AddonCollectionSet","authKey":"' + token + '",' + result;
+
+		fetch('https://api.strem.io/api/addonCollectionSet', {
+    		method: 'POST',
+			body: addons 
+		})
+      	.then(response => response.text())
+      	.then(data => {
+      		console.log('Success:', data);
+      	})
+      	.catch((error) => {
+      		console.error('Error:', error);
+      	});
+
+        } else {
+            console.error('Error:', error);
+        }
+    })
+    .catch((error) => {
+        console.error('Erro:', error);
+    });
+})();
