@@ -8,13 +8,13 @@ const { useTranslation } = require('react-i18next');
 const { default: Icon } = require('@stremio/stremio-icons/react');
 const { useRouteFocused } = require('stremio-router');
 const Button = require('stremio/common/Button');
-const TextInput = require('stremio/common/TextInput');
 const useTorrent = require('stremio/common/useTorrent');
 const { withCoreSuspender } = require('stremio/common/CoreSuspender');
 const useSearchHistory = require('./useSearchHistory');
 const useLocalSearch = require('./useLocalSearch');
 const styles = require('./styles');
 const useBinaryState = require('stremio/common/useBinaryState');
+const { default: TextInput } = require('stremio/common/TextInput');
 
 const SearchBar = React.memo(({ className, query, active }) => {
     const { t } = useTranslation();

@@ -8,8 +8,8 @@ const { default: Icon } = require('@stremio/stremio-icons/react');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
 const useToast = require('stremio/common/Toast/useToast');
+const { default: TextInput } = require('../TextInput');
 const Button = require('stremio/common/Button');
-const TextInput = require('stremio/common/TextInput');
 const styles = require('./styles');
 
 const SharePrompt = ({ className, url }) => {

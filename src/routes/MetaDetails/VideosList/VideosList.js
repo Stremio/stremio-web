@@ -4,7 +4,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { t } = require('i18next');
-const { Image, SearchBar, Checkbox } = require('stremio/common');
+const { Image, SearchBar, Toggle } = require('stremio/common');
 const SeasonsBar = require('./SeasonsBar');
 const Video = require('./Video');
 const styles = require('./styles');
@@ -84,9 +84,9 @@ const VideosList = ({ className, metaItem, libraryItem, season, seasonOnSelect, 
                         <React.Fragment>
                             {
                                 showNotificationsToggle && libraryItem ?
-                                    <Checkbox className={styles['notifications-checkbox']} checked={!libraryItem.state.noNotif} onClick={toggleNotifications}>
+                                    <Toggle className={styles['notifications-toggle']} checked={!libraryItem.state.noNotif} onClick={toggleNotifications}>
                                         {t('DETAIL_RECEIVE_NOTIF_SERIES')}
-                                    </Checkbox>
+                                    </Toggle>
                                     :
                                     null
                             }

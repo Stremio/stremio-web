@@ -3,11 +3,11 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const { Button, Checkbox } = require('stremio/common');
+const { Button, Toggle } = require('stremio/common');
 const styles = require('./styles');
 
-const ConsentCheckbox = React.forwardRef(({ className, label, link, href, onToggle, ...props }, ref) => {
-    const checkboxOnClick = React.useCallback((event) => {
+const ConsentToggle = React.forwardRef(({ className, label, link, href, onToggle, ...props }, ref) => {
+    const toggleOnClick = React.useCallback((event) => {
         if (typeof props.onClick === 'function') {
             props.onClick(event);
         }
@@ -24,7 +24,7 @@ const ConsentCheckbox = React.forwardRef(({ className, label, link, href, onTogg
         event.nativeEvent.togglePrevented = true;
     }, []);
     return (
-        <Checkbox {...props} ref={ref} className={classnames(className, styles['consent-checkbox-container'])} onClick={checkboxOnClick}>
+        <Toggle {...props} ref={ref} className={classnames(className, styles['consent-toogle-container'])} onClick={toggleOnClick}>
             <div className={styles['label']}>
                 {label}
                 {' '}
@@ -37,13 +37,13 @@ const ConsentCheckbox = React.forwardRef(({ className, label, link, href, onTogg
                         null
                 }
             </div>
-        </Checkbox>
+        </Toggle>
     );
 });
 
-ConsentCheckbox.displayName = 'ConsentCheckbox';
+ConsentToggle.displayName = 'ConsentToggle';
 
-ConsentCheckbox.propTypes = {
+ConsentToggle.propTypes = {
     className: PropTypes.string,
     checked: PropTypes.bool,
     label: PropTypes.string,
@@ -53,4 +53,4 @@ ConsentCheckbox.propTypes = {
     onClick: PropTypes.func
 };
 
-module.exports = ConsentCheckbox;
+module.exports = ConsentToggle;

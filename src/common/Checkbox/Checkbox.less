@@ -1,0 +1,92 @@
+// Copyright (C) 2017-2024 Smart code 203358507
+
+.checkbox {
+    display: flex;
+    align-items: center;
+}
+
+.checkbox label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.checkbox-container {
+    position: relative;
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 2px solid var(--primary-accent-color);
+    border-radius: 0.25rem;
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s, border-color 0.2s;
+    cursor: pointer;
+    outline: none;
+    user-select: none;
+
+    &:focus {
+        outline: var(--focus-outline-size) solid var(--primary-accent-color);
+        outline-offset: 2px;
+    }
+
+    &:hover {
+        background-color: var(--overlay-color);
+    }
+}
+
+.checkbox-container input[type='checkbox'] {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    position: absolute;
+}
+
+.checkbox-icon {
+    color: var(--primary-foreground-color);
+    width: 1rem;
+}
+
+.checkbox-label {
+    margin-left: 0.75rem;
+    color: var(--primary-foreground-color);
+    font-size: 1rem;
+}
+
+.checkbox-checked .checkbox-container {
+    background-color: var(--primary-accent-color);
+    border-color: var(--primary-accent-color);
+}
+
+.checkbox-checked .checkbox-icon {
+    color: var(--secondary-foreground-color);
+}
+
+.checkbox-unchecked .checkbox-container {
+    background-color: transparent;
+    border-color: var(--primary-accent-color);
+}
+
+.checkbox-disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.checkbox-disabled .checkbox-container {
+    background-color: var(--overlay-color);
+    border-color: var(--overlay-color);
+}
+
+.checkbox-disabled .checkbox-label {
+    color: var(--primary-foreground-color);
+    opacity: 0.6;
+}
+
+.checkbox-error .checkbox-container {
+    border-color: var(--color-reddit);
+}
+
+.checkbox-error .checkbox-label {
+    color: var(--color-reddit);
+}

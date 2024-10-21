@@ -9,7 +9,7 @@ const { Modal, useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
 const { Button, Image, useBinaryState } = require('stremio/common');
 const CredentialsTextInput = require('./CredentialsTextInput');
-const ConsentCheckbox = require('./ConsentCheckbox');
+const ConsentToggle = require('./ConsentToggle');
 const PasswordResetModal = require('./PasswordResetModal');
 const useFacebookLogin = require('./useFacebookLogin');
 const styles = require('./styles');
@@ -54,7 +54,7 @@ const Intro = ({ queryParams }) => {
                         error: '',
                         [action.name]: action.value
                     };
-                case 'toggle-checkbox':
+                case 'toogle-checkbox':
                     return {
                         ...state,
                         error: '',
@@ -210,13 +210,13 @@ const Intro = ({ queryParams }) => {
         termsRef.current.focus();
     }, []);
     const toggleTermsAccepted = React.useCallback(() => {
-        dispatch({ type: 'toggle-checkbox', name: 'termsAccepted' });
+        dispatch({ type: 'toogle-checkbox', name: 'termsAccepted' });
     }, []);
     const togglePrivacyPolicyAccepted = React.useCallback(() => {
-        dispatch({ type: 'toggle-checkbox', name: 'privacyPolicyAccepted' });
+        dispatch({ type: 'toogle-checkbox', name: 'privacyPolicyAccepted' });
     }, []);
     const toggleMarketingAccepted = React.useCallback(() => {
-        dispatch({ type: 'toggle-checkbox', name: 'marketingAccepted' });
+        dispatch({ type: 'toogle-checkbox', name: 'marketingAccepted' });
     }, []);
     const switchFormOnClick = React.useCallback(() => {
         const queryParams = new URLSearchParams([['form', state.form === SIGNUP_FORM ? LOGIN_FORM : SIGNUP_FORM]]);
@@ -307,27 +307,27 @@ const Intro = ({ queryParams }) => {
                                     onChange={confirmPasswordOnChange}
                                     onSubmit={confirmPasswordOnSubmit}
                                 />
-                                <ConsentCheckbox
+                                <ConsentToggle
                                     ref={termsRef}
-                                    className={styles['consent-checkbox']}
+                                    className={styles['consent-toggle']}
                                     label={'I have read and agree with the Stremio'}
                                     link={'Terms and conditions'}
                                     href={'https://www.stremio.com/tos'}
                                     checked={state.termsAccepted}
                                     onToggle={toggleTermsAccepted}
                                 />
-                                <ConsentCheckbox
+                                <ConsentToggle
                                     ref={privacyPolicyRef}
-                                    className={styles['consent-checkbox']}
+                                    className={styles['consent-toggle']}
                                     label={'I have read and agree with the Stremio'}
                                     link={'Privacy Policy'}
                                     href={'https://www.stremio.com/privacy'}
                                     checked={state.privacyPolicyAccepted}
                                     onToggle={togglePrivacyPolicyAccepted}
                                 />
-                                <ConsentCheckbox
+                                <ConsentToggle
                                     ref={marketingRef}
-                                    className={styles['consent-checkbox']}
+                                    className={styles['consent-toggle']}
                                     label={'I agree to receive marketing communications from Stremio'}
                                     checked={state.marketingAccepted}
                                     onToggle={toggleMarketingAccepted}

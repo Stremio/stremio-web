@@ -7,11 +7,12 @@ const { useTranslation } = require('react-i18next');
 const { default: Icon } = require('@stremio/stremio-icons/react');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
-const { Button, Checkbox, MainNavBars, Multiselect, ColorInput, TextInput, ModalDialog, useProfile, usePlatform, useStreamingServer, useBinaryState, withCoreSuspender, useToast, useModelState } = require('stremio/common');
+const { Button, Toggle, MainNavBars, Multiselect, ColorInput, useProfile, usePlatform, useStreamingServer, withCoreSuspender, useToast } = require('stremio/common');
 const useProfileSettingsInputs = require('./useProfileSettingsInputs');
 const useStreamingServerSettingsInputs = require('./useStreamingServerSettingsInputs');
 const useDataExport = require('./useDataExport');
 const styles = require('./styles');
+const { default: URLsManager } = require('./URLsManager/URLsManager');
 
 const GENERAL_SECTION = 'general';
 const PLAYER_SECTION = 'player';
@@ -35,16 +36,15 @@ const Settings = () => {
         subtitlesBackgroundColorInput,
         subtitlesOutlineColorInput,
         audioLanguageSelect,
-        surroundSoundCheckbox,
+        surroundSoundToggle,
         seekTimeDurationSelect,
         seekShortTimeDurationSelect,
-        escExitFullscreenCheckbox,
+        escExitFullscreenToggle,
         playInExternalPlayerSelect,
         nextVideoPopupDurationSelect,
-        bingeWatchingCheckbox,
-        playInBackgroundCheckbox,
-        hardwareDecodingCheckbox,
-        streamingServerUrlInput
+        bingeWatchingToggle,
+        playInBackgroundToggle,
+        hardwareDecodingToggle,
     } = useProfileSettingsInputs(profile);
     const {
         streamingServerRemoteUrlInput,
@@ -53,34 +53,11 @@ const Settings = () => {
         torrentProfileSelect,
         transcodingProfileSelect,
     } = useStreamingServerSettingsInputs(streamingServer);
-    const [configureServerUrlModalOpen, openConfigureServerUrlModal, closeConfigureServerUrlModal] = useBinaryState(false);
-    const configureServerUrlInputRef = React.useRef(null);
-    const configureServerUrlOnSubmit = React.useCallback(() => {
-        streamingServerUrlInput.onChange(configureServerUrlInputRef.current.value);
-        closeConfigureServerUrlModal();
-    }, [streamingServerUrlInput]);
     const [traktAuthStarted, setTraktAuthStarted] = React.useState(false);
     const isTraktAuthenticated = React.useMemo(() => {
         return profile.auth !== null && profile.auth.user !== null && profile.auth.user.trakt !== null &&
             (Date.now() / 1000) < (profile.auth.user.trakt.created_at + profile.auth.user.trakt.expires_in);
     }, [profile.auth]);
-    const configureServerUrlModalButtons = React.useMemo(() => {
-        return [
-            {
-                className: styles['cancel-button'],
-                label: 'Cancel',
-                props: {
-                    onClick: closeConfigureServerUrlModal
-                }
-            },
-            {
-                label: 'Submit',
-                props: {
-                    onClick: configureServerUrlOnSubmit,
-                }
-            }
-        ];
-    }, [configureServerUrlOnSubmit]);
     const logoutButtonOnClick = React.useCallback(() => {
         core.transport.dispatch({
             action: 'Ctx',
@@ -117,14 +94,6 @@ const Settings = () => {
     }, [profile.auth]);
     const exportDataOnClick = React.useCallback(() => {
         loadDataExport();
-    }, []);
-    const reloadStreamingServer = React.useCallback(() => {
-        core.transport.dispatch({
-            action: 'StreamingServer',
-            args: {
-                action: 'Reload'
-            }
-        });
     }, []);
     const onCopyRemoteUrlClick = React.useCallback(() => {
         if (streamingServer.remoteUrl) {
@@ -192,11 +161,7 @@ const Settings = () => {
         if (routeFocused) {
             updateSelectedSectionId();
         }
-        closeConfigureServerUrlModal();
     }, [routeFocused]);
-    const ctx = useModelState({ model: 'ctx' });
-    console.log(profile); // eslint-disable-line no-console
-    console.log(ctx); // eslint-disable-line no-console
     return (
         <MainNavBars className={styles['settings-container']} route={'settings'}>
             <div className={classnames(styles['settings-content'], 'animation-fade-in')}>
@@ -372,9 +337,9 @@ const Settings = () => {
                                     <div className={styles['option-name-container']}>
                                         <div className={styles['label']}>{ t('SETTINGS_FULLSCREEN_EXIT') }</div>
                                     </div>
-                                    <Checkbox
-                                        className={classnames(styles['option-input-container'], styles['checkbox-container'])}
-                                        {...escExitFullscreenCheckbox}
+                                    <Toggle
+                                        className={classnames(styles['option-input-container'], styles['toogle-container'])}
+                                        {...escExitFullscreenToggle}
                                     />
                                 </div>
                                 :
@@ -435,10 +400,10 @@ const Settings = () => {
                             <div className={styles['option-name-container']}>
                                 <div className={styles['label']}>{ t('SETTINGS_SURROUND_SOUND') }</div>
                             </div>
-                            <Checkbox
-                                className={classnames(styles['option-input-container'], styles['checkbox-container'])}
+                            <Toggle
+                                className={classnames(styles['option-input-container'], styles['toogle-container'])}
                                 tabIndex={-1}
-                                {...surroundSoundCheckbox}
+                                {...surroundSoundToggle}
                             />
                         </div>
                     </div>
@@ -469,11 +434,11 @@ const Settings = () => {
                             <div className={styles['option-name-container']}>
                                 <div className={styles['label']}>{ t('SETTINGS_PLAY_IN_BACKGROUND') }</div>
                             </div>
-                            <Checkbox
-                                className={classnames(styles['option-input-container'], styles['checkbox-container'])}
+                            <Toggle
+                                className={classnames(styles['option-input-container'], styles['toogle-container'])}
                                 disabled={true}
                                 tabIndex={-1}
-                                {...playInBackgroundCheckbox}
+                                {...playInBackgroundToggle}
                             />
                         </div>
                     </div>
@@ -486,9 +451,9 @@ const Settings = () => {
                             <div className={styles['option-name-container']}>
                                 <div className={styles['label']}>{ t('AUTO_PLAY') }</div>
                             </div>
-                            <Checkbox
-                                className={classnames(styles['option-input-container'], styles['checkbox-container'])}
-                                {...bingeWatchingCheckbox}
+                            <Toggle
+                                className={classnames(styles['option-input-container'], styles['toogle-container'])}
+                                {...bingeWatchingToggle}
                             />
                         </div>
                         <div className={styles['option-container']}>
@@ -520,22 +485,18 @@ const Settings = () => {
                             <div className={styles['option-name-container']}>
                                 <div className={styles['label']}>{ t('SETTINGS_HWDEC') }</div>
                             </div>
-                            <Checkbox
-                                className={classnames(styles['option-input-container'], styles['checkbox-container'])}
+                            <Toggle
+                                className={classnames(styles['option-input-container'], styles['toogle-container'])}
                                 disabled={true}
                                 tabIndex={-1}
-                                {...hardwareDecodingCheckbox}
+                                {...hardwareDecodingToggle}
                             />
                         </div>
                     </div>
                     <div ref={streamingServerSectionRef} className={styles['section-container']}>
                         <div className={styles['section-title']}>{ t('SETTINGS_NAV_STREAMING') }</div>
-                        <div className={styles['option-container']}>
-                            <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Reload'} onClick={reloadStreamingServer}>
-                                <div className={styles['label']}>{ t('RELOAD') }</div>
-                            </Button>
-                        </div>
-                        <div className={styles['option-container']}>
+                        <URLsManager />
+                        {/* <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
                                 <div className={styles['label']}>{ t('STATUS') }</div>
                             </div>
@@ -555,8 +516,8 @@ const Settings = () => {
                                     }
                                 </div>
                             </div>
-                        </div>
-                        <div className={styles['option-container']}>
+                        </div> */}
+                        {/* <div className={styles['option-container']}>
                             <div className={styles['option-name-container']}>
                                 <div className={styles['label']}>Url</div>
                             </div>
@@ -566,7 +527,7 @@ const Settings = () => {
                                     <Icon className={styles['icon']} name={'settings'} />
                                 </Button>
                             </div>
-                        </div>
+                        </div> */}
                         {
                             streamingServerRemoteUrlInput.value !== null ?
                                 <div className={styles['option-container']}>
@@ -782,7 +743,7 @@ const Settings = () => {
                     </div>
                 </div>
             </div>
-            {
+            {/* {
                 configureServerUrlModalOpen ?
                     <ModalDialog
                         className={styles['configure-server-url-modal-container']}
@@ -801,7 +762,7 @@ const Settings = () => {
                     </ModalDialog>
                     :
                     null
-            }
+            } */}
         </MainNavBars>
     );
 };
