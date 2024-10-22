@@ -65,7 +65,7 @@ const ViewMode = ({ url, onDelete, onSelect }: ViewModeProps) => {
                 {
                     !defaultUrl ?
                         <Button className={styles['delete']} onClick={handleDelete}>
-                            <Icon name={'close'} className={styles['icon']} />
+                            <Icon name={'bin'} className={styles['icon']} />
                         </Button>
                         : null
                 }
