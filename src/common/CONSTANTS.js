@@ -1,6 +1,7 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 const CHROMECAST_RECEIVER_APP_ID = '1634F54B';
+const DEFAULT_STREAMING_SERVER_URL = 'http://127.0.0.1:11470/';
 const SUBTITLES_SIZES = [75, 100, 125, 150, 175, 200, 250];
 const SUBTITLES_FONTS = ['PlusJakartaSans', 'Arial', 'Halvetica', 'Times New Roman', 'Verdana', 'Courier', 'Lucida Console', 'sans-serif', 'serif', 'monospace'];
 const SEEK_TIME_DURATIONS = [3000, 5000, 10000, 15000, 20000, 30000];
@@ -97,6 +98,7 @@ const WHITELISTED_HOSTS = ['stremio.com', 'strem.io', 'stremio.zendesk.com', 'go
 
 module.exports = {
     CHROMECAST_RECEIVER_APP_ID,
+    DEFAULT_STREAMING_SERVER_URL,
     SUBTITLES_SIZES,
     SUBTITLES_FONTS,
     SEEK_TIME_DURATIONS,

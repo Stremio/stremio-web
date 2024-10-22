@@ -2,13 +2,14 @@
 
 import React, { useState, useCallback, ChangeEvent } from 'react';
 import { useProfile } from 'stremio/common';
+import { DEFAULT_STREAMING_SERVER_URL } from 'stremio/common/CONSTANTS';
+import { useTranslation } from 'react-i18next';
 import Button from 'stremio/common/Button';
 import useStreamingServer from 'stremio/common/useStreamingServer';
 import TextInput from 'stremio/common/TextInput';
 import Icon from '@stremio/stremio-icons/react';
 import styles from './Item.less';
 import classNames from 'classnames';
-import { useTranslation } from 'react-i18next';
 import Checkbox from 'stremio/common/Checkbox';
 
 type ViewModeProps = {
@@ -22,9 +23,11 @@ const ViewMode = ({ url, onDelete, onSelect }: ViewModeProps) => {
     const streamingServer = useStreamingServer();
     const profile = useProfile();
     const selected = profile.settings.streamingServerUrl === url;
+    const defaultUrl = url === DEFAULT_STREAMING_SERVER_URL;
 
     const handleDelete = () => {
         onDelete?.(url);
+        onSelect?.(DEFAULT_STREAMING_SERVER_URL);
     };
 
     const handleSelect = () => {
@@ -34,7 +37,7 @@ const ViewMode = ({ url, onDelete, onSelect }: ViewModeProps) => {
     return (
         <>
             <div className={styles['content']}>
-                <Checkbox value={selected} onChange={handleSelect} />
+                <Checkbox value={selected} onChange={handleSelect} disabled={selected} />
                 <div className={styles['label']}>{url}</div>
             </div>
             <div className={styles['actions']}>
@@ -59,9 +62,13 @@ const ViewMode = ({ url, onDelete, onSelect }: ViewModeProps) => {
                         </div>
                         : null
                 }
-                <Button className={styles['delete']} onClick={handleDelete}>
-                    <Icon name={'close'} className={styles['icon']} />
-                </Button>
+                {
+                    !defaultUrl ?
+                        <Button className={styles['delete']} onClick={handleDelete}>
+                            <Icon name={'close'} className={styles['icon']} />
+                        </Button>
+                        : null
+                }
             </div>
         </>
     );
