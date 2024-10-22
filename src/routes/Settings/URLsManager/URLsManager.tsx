@@ -47,7 +47,7 @@ const URLsManager = () => {
             <div className={styles['footer']}>
                 <Button label={'Add URL'} className={styles['add-url']} onClick={onAdd}>
                     <Icon name={'add'} className={styles['icon']} />
-                    { t('ADD_URL') }
+                    { t('SETTINGS_SERVER_ADD_URL') }
                 </Button>
                 <Button className={styles['reload']} title={'Reload'} onClick={actions.onReload}>
                     <Icon name={'reset'} className={styles['icon']} />

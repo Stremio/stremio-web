@@ -27,6 +27,7 @@ const ViewMode = ({ url, onDelete, onSelect }: ViewModeProps) => {
 
     const handleDelete = useCallback(() => {
         onDelete?.(url);
+        onSelect?.(DEFAULT_STREAMING_SERVER_URL);
     }, [url]);
 
     const handleSelect = useCallback(() => {
