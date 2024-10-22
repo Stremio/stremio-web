@@ -56,7 +56,7 @@ type NotificationItem = {
     metaId: string,
     videoId: string,
     videoReleased: string,
-}
+};
 
 type SearchHistoryItem = {
     query: string,

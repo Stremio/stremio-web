@@ -2,7 +2,7 @@ import globals from 'globals';
 import pluginJs from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import pluginReact from 'eslint-plugin-react';
-import stylistic from '@stylistic/eslint-plugin'
+import stylistic from '@stylistic/eslint-plugin';
 
 export default [
     pluginJs.configs.recommended,
@@ -83,6 +83,8 @@ export default [
             '@stylistic/space-before-blocks': 'error',
             '@stylistic/no-trailing-spaces': 'error',
             '@stylistic/func-call-spacing': 'error',
+            '@stylistic/semi': 'error',
+            '@stylistic/no-extra-semi': 'error',
             '@stylistic/eol-last': 'error',
             '@stylistic/no-multi-spaces': 'error',
             '@stylistic/no-multiple-empty-lines': ['error', {
