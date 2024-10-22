@@ -37,7 +37,7 @@ const ViewMode = ({ url, onDelete, onSelect }: ViewModeProps) => {
     return (
         <>
             <div className={styles['content']}>
-                <Checkbox value={selected} onChange={handleSelect} disabled={selected} />
+                <Checkbox className={styles['check']} value={selected} onChange={handleSelect} disabled={selected} />
                 <div className={styles['label']}>{url}</div>
             </div>
             <div className={styles['actions']}>

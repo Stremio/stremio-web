@@ -46,11 +46,10 @@ const Checkbox = ({ disabled, value, className, onChange, ariaLabel, error }: Pr
 
     return (
         <>
-            <div className={styles['checkbox']}>
+            <div className={classNames(styles['checkbox'], className)}>
                 <label>
                     <div
                         className={classNames({
-                            [styles[className || '']]: !!className,
                             [styles['checkbox-checked']]: isChecked,
                             [styles['checkbox-unchecked']]: !isChecked,
                             [styles['checkbox-error']]: isError,
