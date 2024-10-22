@@ -1,6 +1,6 @@
 // Copyright (C) 2017-2024 Smart code 203358507
 
-import React, { useState, useCallback, ChangeEvent } from 'react';
+import React, { useState, useCallback, ChangeEvent, useMemo } from 'react';
 import { useProfile } from 'stremio/common';
 import { DEFAULT_STREAMING_SERVER_URL } from 'stremio/common/CONSTANTS';
 import { useTranslation } from 'react-i18next';
@@ -22,17 +22,16 @@ const ViewMode = ({ url, onDelete, onSelect }: ViewModeProps) => {
     const { t } = useTranslation();
     const streamingServer = useStreamingServer();
     const profile = useProfile();
-    const selected = profile.settings.streamingServerUrl === url;
-    const defaultUrl = url === DEFAULT_STREAMING_SERVER_URL;
+    const selected = useMemo(() => profile.settings.streamingServerUrl === url, [url, profile.settings]);
+    const defaultUrl = useMemo(() => url === DEFAULT_STREAMING_SERVER_URL, [url]);
 
-    const handleDelete = () => {
+    const handleDelete = useCallback(() => {
         onDelete?.(url);
-        onSelect?.(DEFAULT_STREAMING_SERVER_URL);
-    };
+    }, [url]);
 
-    const handleSelect = () => {
+    const handleSelect = useCallback(() => {
         onSelect?.(url);
-    };
+    }, [url]);
 
     return (
         <>
@@ -82,11 +81,9 @@ type AddModeProps = {
 }
 
 const AddMode = ({ inputValue, handleValueChange, onAdd, onCancel }: AddModeProps) => {
-    const handleAdd = () => {
-        if (inputValue.trim()) {
-            onAdd?.(inputValue);
-        }
-    };
+    const handleAdd = useCallback(() => {
+        onAdd?.(inputValue);
+    }, [inputValue]);
 
     return (
         <>
@@ -94,6 +91,7 @@ const AddMode = ({ inputValue, handleValueChange, onAdd, onCancel }: AddModeProp
                 className={styles['input']}
                 value={inputValue}
                 onChange={handleValueChange}
+                onSubmit={handleAdd}
             />
             <div className={styles['actions']}>
                 <Button className={styles['add']} onClick={handleAdd}>
