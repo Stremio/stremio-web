@@ -1,6 +1,7 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 const AddonDetailsModal = require('./AddonDetailsModal');
+const { default: BottomSheet } = require('./BottomSheet');
 const Button = require('./Button');
 const Checkbox = require('./Checkbox');
 const { default: Chips } = require('./Chips');
@@ -17,6 +18,7 @@ const ModalDialog = require('./ModalDialog');
 const Multiselect = require('./Multiselect');
 const { default: MultiselectMenu } = require('./MultiselectMenu');
 const { HorizontalNavBar, VerticalNavBar } = require('./NavBar');
+const { default: HorizontalScroll } = require('./HorizontalScroll');
 const PaginationInput = require('./PaginationInput');
 const { PlatformProvider, usePlatform } = require('./Platform');
 const PlayIconCircleCentered = require('./PlayIconCircleCentered');
@@ -50,6 +52,7 @@ const EventModal = require('./EventModal');
 
 module.exports = {
     AddonDetailsModal,
+    BottomSheet,
     Button,
     Checkbox,
     Chips,
@@ -66,6 +69,7 @@ module.exports = {
     Multiselect,
     MultiselectMenu,
     HorizontalNavBar,
+    HorizontalScroll,
     VerticalNavBar,
     PaginationInput,
     PlatformProvider,

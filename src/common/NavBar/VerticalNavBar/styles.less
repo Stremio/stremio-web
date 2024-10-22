@@ -9,6 +9,7 @@
     align-items: center;
     gap: 1rem;
     width: var(--vertical-nav-bar-size);
+    padding: 1rem 0;
     background-color: transparent;
     overflow-y: auto;
     scrollbar-width: none;
@@ -20,14 +21,6 @@
     .nav-tab-button {
         width: calc(var(--vertical-nav-bar-size) - 1.5rem);
         height: calc(var(--vertical-nav-bar-size) - 1.5rem);
-
-        &:first-child {
-            margin-top: 1rem;
-        }
-
-        &:last-child {
-            margin-bottom: 1rem;
-        }
     }
 }
 
@@ -45,12 +38,18 @@
         .nav-tab-button {
             flex: none;
 
-            &:first-child {
-                margin-top: 0;
-            }
-    
             &:last-child {
-                margin-bottom: 0;
+                display: none;
+            }
+        }
+    }
+}
+
+@media only screen and (max-height: @minimum) {
+    .vertical-nav-bar-container {
+        .nav-tab-button {
+            &:last-child {
+                display: none;
             }
         }
     }

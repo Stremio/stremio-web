@@ -55,6 +55,7 @@
         "@stylistic/eslint-plugin-jsx": "^2.9.0",
         "@types/hat": "^0.0.4",
         "@types/react": "^18.2.9",
+        "@types/react-dom": "^18.3.0",
         "babel-loader": "8.2.3",
         "clean-webpack-plugin": "4.0.0",
         "copy-webpack-plugin": "9.0.1",
