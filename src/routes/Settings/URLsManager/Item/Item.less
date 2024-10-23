@@ -67,9 +67,9 @@
 
         .delete {
             position: absolute;
+            display: flex;
             right: 1.5rem;
             top: 50%; 
-            display: none;
             gap: 0.5rem;
             padding: 0.5rem 0.25rem;
             align-items: center;
@@ -79,20 +79,21 @@
             border-radius: var(--border-radius);
             transform: translateY(-50%);
             width: 3rem;
-            opacity: 0.6;
 
             .icon {
                 width: 1.5rem;
                 height: 1.5rem;
+                opacity: 0;
+                transition: 0.3s all ease-in-out;
                 color: var(--primary-foreground-color);
             }
 
             &:hover {
                 background-color: var(--overlay-color);
-                opacity: 1;
 
                 .icon {
                     color: var(--color-trakt);
+                    opacity: 1 !important;
                 }
             }
         }
@@ -176,7 +177,9 @@
     
         .actions {
             .delete {
-                display: flex;
+                .icon {
+                    opacity: 0.6;
+                }
             }
         }
     }

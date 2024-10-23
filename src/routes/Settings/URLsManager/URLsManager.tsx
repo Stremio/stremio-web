@@ -34,8 +34,8 @@ const URLsManager = () => {
             </div>
             <div className={styles['content']}>
                 {
-                    streamingServerUrls.map((url: StreamingServerUrl, index: number) => (
-                        <Item mode={'view'} key={index} {...url} {...actions} />
+                    streamingServerUrls.map((item: StreamingServerUrl) => (
+                        <Item mode={'view'} key={item.url} {...item} {...actions} />
                     ))
                 }
                 {
