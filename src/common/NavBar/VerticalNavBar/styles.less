@@ -36,9 +36,9 @@
         flex-direction: row;
         justify-content: space-between;
         gap: 0;
-        height: var(--vertical-nav-bar-size);
+        height: calc(var(--vertical-nav-bar-size) + env(safe-area-inset-bottom));
         width: 100%;
-        padding: 0 1rem;
+        padding: 0 1rem env(safe-area-inset-bottom) 1rem;
         overflow-y: hidden;
         overflow-x: auto;
 
