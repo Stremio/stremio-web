@@ -23,7 +23,7 @@ type MetaItemPreview = {
 
 type MetaItem = MetaItemPreview & {
     videos: Video[],
-}
+};
 
 type MetaItemDeepLinks = {
     metaDetailsVideos: string | null,

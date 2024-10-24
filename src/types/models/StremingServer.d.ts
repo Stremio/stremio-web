@@ -38,23 +38,23 @@ type Source = {
     numFoundUniq: number,
     numRequests: number,
     url: string,
-}
+};
 
 type Growler = {
     flood: number,
     pulse: number,
-}
+};
 
 type PeerSearch = {
     max: number,
     min: number,
     sources: string[],
-}
+};
 
 type SwarmCap = {
     maxSpeed: number,
     minPeers: number,
-}
+};
 
 type Options = {
     connections: number,
@@ -67,7 +67,7 @@ type Options = {
     timeout: number,
     tracker: boolean,
     virtual: boolean,
-}
+};
 
 type Statistics = {
     name: string,
