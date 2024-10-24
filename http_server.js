@@ -16,6 +16,9 @@ express().use(express.static(build_path, {
     setHeaders: (res, path) => {
         if (path === index_path) res.set('cache-control', `public, max-age: ${INDEX_CACHE}`);
         else res.set('cache-control', `public, max-age: ${ASSETS_CACHE}`);
+
+        // allow using a streaming server URL that uses http, like for when hosting a streaming server on a local network
+        res.set('Content-Security-Policy', 'upgrade-insecure-requests');
     }
 })).all('*', (_req, res) => {
     // TODO: better 404 page
