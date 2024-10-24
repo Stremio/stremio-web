@@ -69,7 +69,7 @@ type SearchHistory = SearchHistoryItem[];
 
 type StreamingServerUrl = {
     url: string,
-    _mtime: Date,
+    mtime: Date,
 };
 
 type StreamingServerUrls = StreamingServerUrl[];

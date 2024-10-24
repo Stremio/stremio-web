@@ -13,8 +13,8 @@ const useStreamingServerUrls = () => {
     const ctx = useModelState({ model: 'ctx' });
 
     const streamingServerUrls = ctx.streamingServerUrls.sort((a, b) => {
-        const dateA = new Date(a._mtime).getTime();
-        const dateB = new Date(b._mtime).getTime();
+        const dateA = new Date(a.mtime).getTime();
+        const dateB = new Date(b.mtime).getTime();
         return dateA - dateB;
     });
 
