@@ -31,7 +31,7 @@ const AddItem = ({ onCancel, handleAddUrl }: Props) => {
                 onSubmit={onSumbit}
             />
             <div className={styles['actions']}>
-                <Button className={styles['add']} onClick={handleAddUrl}>
+                <Button className={styles['add']} onClick={onSumbit}>
                     <Icon name={'checkmark'} className={styles['icon']} />
                 </Button>
                 <Button className={styles['cancel']} onClick={onCancel}>
