@@ -88,7 +88,7 @@ const useStreamingServerUrls = () => {
         deleteServerUrl,
         selectServerUrl,
         reloadServer
-    }
+    };
 };
 
 export default useStreamingServerUrls;
