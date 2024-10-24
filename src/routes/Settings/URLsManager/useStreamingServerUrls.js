@@ -10,12 +10,7 @@ const useStreamingServerUrls = () => {
     const profile = useProfile();
     const toast = useToast();
     const ctx = useModelState({ model: 'ctx' });
-
-    const streamingServerUrls = ctx.streamingServerUrls.sort((a, b) => {
-        const dateA = new Date(a.mtime).getTime();
-        const dateB = new Date(b.mtime).getTime();
-        return dateA - dateB;
-    });
+    const streamingServerUrls = ctx.streamingServerUrls;
 
     const addServerUrl = useCallback((url) => {
         const isValidUrl = (url) => {
