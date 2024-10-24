@@ -17,7 +17,7 @@ const useStreamingServerUrls = () => {
         return dateA - dateB;
     });
 
-    const onAdd = useCallback((url) => {
+    const addServerUrl = useCallback((url) => {
         const isValidUrl = (url) => {
             try {
                 new URL(url);
@@ -52,7 +52,7 @@ const useStreamingServerUrls = () => {
         }
     }, []);
 
-    const onDelete = useCallback((url) => {
+    const deleteServerUrl = useCallback((url) => {
         core.transport.dispatch({
             action: 'Ctx',
             args: {
@@ -61,7 +61,7 @@ const useStreamingServerUrls = () => {
             }
         });
     }, []);
-    const onSelect = useCallback((url) => {
+    const selectServerUrl = useCallback((url) => {
         core.transport.dispatch({
             action: 'Ctx',
             args: {
@@ -73,7 +73,7 @@ const useStreamingServerUrls = () => {
             }
         });
     }, []);
-    const onReload = useCallback(() => {
+    const reloadServer = useCallback(() => {
         core.transport.dispatch({
             action: 'StreamingServer',
             args: {
@@ -82,9 +82,13 @@ const useStreamingServerUrls = () => {
         });
     }, []);
 
-    const actions = { onAdd, onDelete, onSelect, onReload };
-
-    return { streamingServerUrls, actions };
+    return {
+        streamingServerUrls,
+        addServerUrl,
+        deleteServerUrl,
+        selectServerUrl,
+        reloadServer
+    }
 };
 
 export default useStreamingServerUrls;

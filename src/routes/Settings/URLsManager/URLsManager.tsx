@@ -11,7 +11,7 @@ import useStreamingServerUrls from './useStreamingServerUrls';
 const URLsManager = () => {
     const { t } = useTranslation();
     const [addMode, setAddMode] = useState(false);
-    const { streamingServerUrls, actions } = useStreamingServerUrls();
+    const { streamingServerUrls, addServerUrl, reloadServer } = useStreamingServerUrls();
 
     const onAdd = () => {
         setAddMode(true);
@@ -22,7 +22,7 @@ const URLsManager = () => {
     };
 
     const handleAddUrl = useCallback((url: string) => {
-        actions.onAdd(url);
+        addServerUrl(url);
         setAddMode(false);
     }, []);
 
@@ -35,7 +35,7 @@ const URLsManager = () => {
             <div className={styles['content']}>
                 {
                     streamingServerUrls.map((item: StreamingServerUrl) => (
-                        <Item mode={'view'} key={item.url} {...item} {...actions} />
+                        <Item mode={'view'} key={item.url} {...item} />
                     ))
                 }
                 {
@@ -49,7 +49,7 @@ const URLsManager = () => {
                     <Icon name={'add'} className={styles['icon']} />
                     {t('SETTINGS_SERVER_ADD_URL')}
                 </Button>
-                <Button className={styles['reload']} title={'Reload'} onClick={actions.onReload}>
+                <Button className={styles['reload']} title={'Reload'} onClick={reloadServer}>
                     <Icon name={'reset'} className={styles['icon']} />
                     <div className={styles['label']}>{t('RELOAD')}</div>
                 </Button>

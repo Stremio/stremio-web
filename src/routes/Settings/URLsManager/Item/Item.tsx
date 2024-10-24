@@ -11,27 +11,27 @@ import Icon from '@stremio/stremio-icons/react';
 import styles from './Item.less';
 import classNames from 'classnames';
 import Checkbox from 'stremio/common/Checkbox';
+import useStreamingServerUrls from '../useStreamingServerUrls';
 
 type ViewModeProps = {
     url: string;
-    onDelete?: (url: string) => void;
-    onSelect?: (url: string) => void;
-};
+}
 
-const ViewMode = ({ url, onDelete, onSelect }: ViewModeProps) => {
+const ViewMode = ({ url }: ViewModeProps) => {
     const { t } = useTranslation();
     const streamingServer = useStreamingServer();
+    const { deleteServerUrl, selectServerUrl } = useStreamingServerUrls();
     const profile = useProfile();
     const selected = useMemo(() => profile.settings.streamingServerUrl === url, [url, profile.settings]);
     const defaultUrl = useMemo(() => url === DEFAULT_STREAMING_SERVER_URL, [url]);
 
     const handleDelete = useCallback(() => {
-        onDelete?.(url);
-        onSelect?.(DEFAULT_STREAMING_SERVER_URL);
+        deleteServerUrl?.(url);
+        selectServerUrl?.(DEFAULT_STREAMING_SERVER_URL);
     }, [url]);
 
     const handleSelect = useCallback(() => {
-        onSelect?.(url);
+        selectServerUrl?.(url);
     }, [url]);
 
     return (
@@ -79,7 +79,7 @@ type AddModeProps = {
     handleValueChange: (event: ChangeEvent<HTMLInputElement>) => void;
     onAdd?: (url: string) => void;
     onCancel?: () => void;
-};
+}
 
 const AddMode = ({ inputValue, handleValueChange, onAdd, onCancel }: AddModeProps) => {
     const handleAdd = useCallback(() => {
@@ -115,8 +115,6 @@ type Props =
     | {
         mode: 'view';
         url: string;
-        onDelete?: (url: string) => void;
-        onSelect?: (url: string) => void;
     };
 
 const Item = (props: Props) => {
@@ -140,11 +138,11 @@ const Item = (props: Props) => {
             </div>
         );
     } else if (props.mode === 'view') {
-        const { url, onDelete, onSelect } = props;
+        const { url } = props;
 
         return (
             <div className={classNames(styles['item'])}>
-                <ViewMode url={url} onDelete={onDelete} onSelect={onSelect} />
+                <ViewMode url={url} />
             </div>
         );
     }
