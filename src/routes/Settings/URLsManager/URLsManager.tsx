@@ -1,6 +1,6 @@
 // Copyright (C) 2017-2024 Smart code 203358507
 
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styles from './URLsManager.less';
 import Button from 'stremio/common/Button';
@@ -15,7 +15,7 @@ const URLsManager = () => {
 
     const onAdd = () => {
         setAddMode(true);
-    }
+    };
 
     const onCancel = () => {
         setAddMode(false);
@@ -30,7 +30,7 @@ const URLsManager = () => {
         <div className={styles['wrapper']}>
             <div className={styles['header']}>
                 <div className={styles['label']}>URL</div>
-                <div className={styles['label']}>{ t('STATUS') }</div>
+                <div className={styles['label']}>{t('STATUS')}</div>
             </div>
             <div className={styles['content']}>
                 {
@@ -47,7 +47,7 @@ const URLsManager = () => {
             <div className={styles['footer']}>
                 <Button label={'Add URL'} className={styles['add-url']} onClick={onAdd}>
                     <Icon name={'add'} className={styles['icon']} />
-                    { t('SETTINGS_SERVER_ADD_URL') }
+                    {t('SETTINGS_SERVER_ADD_URL')}
                 </Button>
                 <Button className={styles['reload']} title={'Reload'} onClick={actions.onReload}>
                     <Icon name={'reset'} className={styles['icon']} />

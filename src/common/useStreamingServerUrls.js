@@ -16,7 +16,7 @@ const useStreamingServerUrls = () => {
         const dateA = new Date(a._mtime).getTime();
         const dateB = new Date(b._mtime).getTime();
         return dateA - dateB;
-    })
+    });
 
     const onAdd = useCallback((url) => {
         const isValidUrl = (url) => {
@@ -88,7 +88,7 @@ const useStreamingServerUrls = () => {
         onDelete,
         onSelect,
         onReload
-    }
+    };
 
     return { streamingServerUrls, actions };
 };

@@ -16,7 +16,7 @@ type ViewModeProps = {
     url: string;
     onDelete?: (url: string) => void;
     onSelect?: (url: string) => void;
-}
+};
 
 const ViewMode = ({ url, onDelete, onSelect }: ViewModeProps) => {
     const { t } = useTranslation();
@@ -79,7 +79,7 @@ type AddModeProps = {
     handleValueChange: (event: ChangeEvent<HTMLInputElement>) => void;
     onAdd?: (url: string) => void;
     onCancel?: () => void;
-}
+};
 
 const AddMode = ({ inputValue, handleValueChange, onAdd, onCancel }: AddModeProps) => {
     const handleAdd = useCallback(() => {
