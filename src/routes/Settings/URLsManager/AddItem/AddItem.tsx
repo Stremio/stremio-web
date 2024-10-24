@@ -29,6 +29,7 @@ const AddItem = ({ onCancel, handleAddUrl }: Props) => {
                 value={inputValue}
                 onChange={handleValueChange}
                 onSubmit={onSumbit}
+                placeholder={'Enter URL'}
             />
             <div className={styles['actions']}>
                 <Button className={styles['add']} onClick={onSumbit}>
