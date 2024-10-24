@@ -1,23 +1,22 @@
 // Copyright (C) 2017-2024 Smart code 203358507
 
-import React, { useState, useCallback, ChangeEvent, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { useProfile } from 'stremio/common';
 import { DEFAULT_STREAMING_SERVER_URL } from 'stremio/common/CONSTANTS';
 import { useTranslation } from 'react-i18next';
 import Button from 'stremio/common/Button';
 import useStreamingServer from 'stremio/common/useStreamingServer';
-import TextInput from 'stremio/common/TextInput';
 import Icon from '@stremio/stremio-icons/react';
 import styles from './Item.less';
 import classNames from 'classnames';
 import Checkbox from 'stremio/common/Checkbox';
 import useStreamingServerUrls from '../useStreamingServerUrls';
 
-type ViewModeProps = {
+type Props = {
     url: string;
 }
 
-const ViewMode = ({ url }: ViewModeProps) => {
+const Item = ({ url }: Props) => {
     const { t } = useTranslation();
     const streamingServer = useStreamingServer();
     const { deleteServerUrl, selectServerUrl } = useStreamingServerUrls();
@@ -35,7 +34,7 @@ const ViewMode = ({ url }: ViewModeProps) => {
     }, [url]);
 
     return (
-        <>
+        <div className={styles['item']}>
             <div className={styles['content']}>
                 <Checkbox className={styles['check']} value={selected} onChange={handleSelect} disabled={selected} />
                 <div className={styles['label']}>{url}</div>
@@ -70,83 +69,8 @@ const ViewMode = ({ url }: ViewModeProps) => {
                         : null
                 }
             </div>
-        </>
+        </div>
     );
-};
-
-type AddModeProps = {
-    inputValue: string;
-    handleValueChange: (event: ChangeEvent<HTMLInputElement>) => void;
-    onAdd?: (url: string) => void;
-    onCancel?: () => void;
-}
-
-const AddMode = ({ inputValue, handleValueChange, onAdd, onCancel }: AddModeProps) => {
-    const handleAdd = useCallback(() => {
-        onAdd?.(inputValue);
-    }, [inputValue]);
-
-    return (
-        <>
-            <TextInput
-                className={styles['input']}
-                value={inputValue}
-                onChange={handleValueChange}
-                onSubmit={handleAdd}
-            />
-            <div className={styles['actions']}>
-                <Button className={styles['add']} onClick={handleAdd}>
-                    <Icon name={'checkmark'} className={styles['icon']} />
-                </Button>
-                <Button className={styles['cancel']} onClick={onCancel}>
-                    <Icon name={'close'} className={styles['icon']} />
-                </Button>
-            </div>
-        </>
-    );
-};
-
-type Props =
-    | {
-        mode: 'add';
-        onAdd?: (url: string) => void;
-        onCancel?: () => void;
-    }
-    | {
-        mode: 'view';
-        url: string;
-    };
-
-const Item = (props: Props) => {
-    if (props.mode === 'add') {
-        const { onAdd, onCancel } = props;
-
-        const [inputValue, setInputValue] = useState('');
-
-        const handleValueChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-            setInputValue(event.target.value);
-        }, []);
-
-        return (
-            <div className={classNames(styles['item'], styles['add'])}>
-                <AddMode
-                    inputValue={inputValue}
-                    handleValueChange={handleValueChange}
-                    onAdd={onAdd}
-                    onCancel={onCancel}
-                />
-            </div>
-        );
-    } else if (props.mode === 'view') {
-        const { url } = props;
-
-        return (
-            <div className={classNames(styles['item'])}>
-                <ViewMode url={url} />
-            </div>
-        );
-    }
 };
 
 export default Item;
-

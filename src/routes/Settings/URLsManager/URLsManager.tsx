@@ -4,7 +4,7 @@ import React, { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styles from './URLsManager.less';
 import Button from 'stremio/common/Button';
-import Item from './Item';
+import { Item, AddItem } from './Item';
 import Icon from '@stremio/stremio-icons/react';
 import useStreamingServerUrls from './useStreamingServerUrls';
 
@@ -35,12 +35,12 @@ const URLsManager = () => {
             <div className={styles['content']}>
                 {
                     streamingServerUrls.map((item: StreamingServerUrl) => (
-                        <Item mode={'view'} key={item.url} {...item} />
+                        <Item key={item.url} {...item} />
                     ))
                 }
                 {
                     addMode ?
-                        <Item mode={'add'} onAdd={handleAddUrl} onCancel={onCancel} />
+                        <AddItem onCancel={onCancel} handleAddUrl={handleAddUrl} />
                         : null
                 }
             </div>
