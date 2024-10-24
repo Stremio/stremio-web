@@ -14,7 +14,7 @@ import useStreamingServerUrls from '../useStreamingServerUrls';
 
 type Props = {
     url: string;
-}
+};
 
 const Item = ({ url }: Props) => {
     const { t } = useTranslation();

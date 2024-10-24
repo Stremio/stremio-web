@@ -6,4 +6,4 @@ import AddItem from './AddItem';
 export {
     Item,
     AddItem,
-}
+};

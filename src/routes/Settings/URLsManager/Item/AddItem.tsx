@@ -1,9 +1,9 @@
-import React, { ChangeEvent, useCallback, useState } from 'react'
-import Button from 'stremio/common/Button'
-import Icon from '@stremio/stremio-icons/react'
-import TextInput from 'stremio/common/TextInput'
-import styles from './Item.less'
-import classNames from 'classnames'
+import React, { ChangeEvent, useCallback, useState } from 'react';
+import Button from 'stremio/common/Button';
+import Icon from '@stremio/stremio-icons/react';
+import TextInput from 'stremio/common/TextInput';
+import styles from './Item.less';
+import classNames from 'classnames';
 
 type Props = {
     onCancel: () => void
@@ -39,7 +39,7 @@ const AddItem = ({ onCancel, handleAddUrl }: Props) => {
                 </Button>
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default AddItem;
