@@ -99,79 +99,6 @@
         }
     }
 
-    &.add {
-        padding: 0.5rem 1.5rem;
-        gap: 1rem;
-
-        .input {
-            background-color: var(--overlay-color);
-            border-radius: var(--border-radius);
-            color: var(--primary-foreground-color);
-            padding: 0.5rem 0.75rem;
-            border: 1px solid transparent;
-            width: 70%;
-
-            &:focus {
-                border: 1px solid var(--primary-foreground-color);
-            }
-        }
-
-        .actions {
-            display: flex;
-            gap: 0.25rem;
-            margin-right: 0;
-
-            .add, .cancel {
-                display: flex;
-                gap: 0.5rem;
-                padding: 0.25rem;
-                align-items: center;
-                justify-content: center;
-                background-color: transparent;
-                transition: 0.3s all ease-in-out;
-                border-radius: var(--border-radius);
-                width: 3rem;
-                opacity: 0.6;
-
-                .icon {
-                    width: 2rem;
-                    height: 2rem;
-                    color: var(--primary-foreground-color);
-                }
-
-                &:hover {
-                    opacity: 1;
-                    background-color: var(--overlay-color);
-                }
-            }
-
-            .add {
-                .icon {
-                    width: 1.8rem;
-                    height: 1.8rem;
-                }
-                &:hover {
-                    .icon {
-                        color: var(--secondary-accent-color);
-                    }
-                }
-            }
-
-            .cancel {
-                &:hover {
-                    .icon {
-                        color: var(--color-trakt);
-                    }
-                }
-            }
-        }
-        &:hover {
-            border: 2px solid transparent;
-            background-color: var(--overlay-color);
-        }
-    }
-
-
     &:hover {
         background-color: var(--overlay-color);
     
@@ -195,10 +122,6 @@
             .delete {
                 right: 0.5rem;
             }
-        }
-
-        &.add {
-            padding: 0.5rem;
         }
     }
 }

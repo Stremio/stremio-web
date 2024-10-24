@@ -4,7 +4,8 @@ import React, { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styles from './URLsManager.less';
 import Button from 'stremio/common/Button';
-import { Item, AddItem } from './Item';
+import Item from './Item';
+import AddItem from './AddItem';
 import Icon from '@stremio/stremio-icons/react';
 import useStreamingServerUrls from './useStreamingServerUrls';
 

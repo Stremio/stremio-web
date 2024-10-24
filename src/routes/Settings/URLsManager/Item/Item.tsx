@@ -25,12 +25,12 @@ const Item = ({ url }: Props) => {
     const defaultUrl = useMemo(() => url === DEFAULT_STREAMING_SERVER_URL, [url]);
 
     const handleDelete = useCallback(() => {
-        deleteServerUrl?.(url);
-        selectServerUrl?.(DEFAULT_STREAMING_SERVER_URL);
+        deleteServerUrl(url);
+        selectServerUrl(DEFAULT_STREAMING_SERVER_URL);
     }, [url]);
 
     const handleSelect = useCallback(() => {
-        selectServerUrl?.(url);
+        selectServerUrl(url);
     }, [url]);
 
     return (

@@ -1,17 +1,17 @@
+// Copyright (C) 2017-2024 Smart code 203358507
+
 import React, { ChangeEvent, useCallback, useState } from 'react';
 import Button from 'stremio/common/Button';
 import Icon from '@stremio/stremio-icons/react';
 import TextInput from 'stremio/common/TextInput';
-import styles from './Item.less';
-import classNames from 'classnames';
+import styles from './AddItem.less';
 
 type Props = {
-    onCancel: () => void
-    handleAddUrl: (url: string) => void
+    onCancel: () => void;
+    handleAddUrl: (url: string) => void;
 };
 
 const AddItem = ({ onCancel, handleAddUrl }: Props) => {
-
     const [inputValue, setInputValue] = useState('');
 
     const handleValueChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
@@ -19,11 +19,11 @@ const AddItem = ({ onCancel, handleAddUrl }: Props) => {
     }, []);
 
     const onSumbit = useCallback(() => {
-        handleAddUrl?.(inputValue);
+        handleAddUrl(inputValue);
     }, [inputValue]);
 
     return (
-        <div className={classNames(styles['item'], styles['add'])}>
+        <div className={styles['add-item']}>
             <TextInput
                 className={styles['input']}
                 value={inputValue}
