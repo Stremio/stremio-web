@@ -6,7 +6,7 @@ import styles from './URLsManager.less';
 import Button from 'stremio/common/Button';
 import Item from './Item';
 import Icon from '@stremio/stremio-icons/react';
-import useStreamingServerUrls from 'stremio/common/useStreamingServerUrls';
+import useStreamingServerUrls from './useStreamingServerUrls';
 
 const URLsManager = () => {
     const { t } = useTranslation();

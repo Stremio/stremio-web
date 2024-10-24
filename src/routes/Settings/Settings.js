@@ -496,38 +496,6 @@ const Settings = () => {
                     <div ref={streamingServerSectionRef} className={styles['section-container']}>
                         <div className={styles['section-title']}>{ t('SETTINGS_NAV_STREAMING') }</div>
                         <URLsManager />
-                        {/* <div className={styles['option-container']}>
-                            <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>{ t('STATUS') }</div>
-                            </div>
-                            <div className={classnames(styles['option-input-container'], styles['info-container'])}>
-                                <div className={styles['label']}>
-                                    {
-                                        streamingServer.settings === null ?
-                                            'NotLoaded'
-                                            :
-                                            streamingServer.settings.type === 'Ready' ?
-                                                t('SETTINGS_SERVER_STATUS_ONLINE')
-                                                :
-                                                streamingServer.settings.type === 'Err' ?
-                                                    t('SETTINGS_SERVER_STATUS_ERROR')
-                                                    :
-                                                    streamingServer.settings.type
-                                    }
-                                </div>
-                            </div>
-                        </div> */}
-                        {/* <div className={styles['option-container']}>
-                            <div className={styles['option-name-container']}>
-                                <div className={styles['label']}>Url</div>
-                            </div>
-                            <div className={classnames(styles['option-input-container'], styles['configure-input-container'])}>
-                                <div className={styles['label']} title={streamingServerUrlInput.value}>{streamingServerUrlInput.value}</div>
-                                <Button className={styles['configure-button-container']} title={'Configure server url'} onClick={openConfigureServerUrlModal}>
-                                    <Icon className={styles['icon']} name={'settings'} />
-                                </Button>
-                            </div>
-                        </div> */}
                         {
                             streamingServerRemoteUrlInput.value !== null ?
                                 <div className={styles['option-container']}>
@@ -743,26 +711,6 @@ const Settings = () => {
                     </div>
                 </div>
             </div>
-            {/* {
-                configureServerUrlModalOpen ?
-                    <ModalDialog
-                        className={styles['configure-server-url-modal-container']}
-                        title={t('SETTINGS_SERVER_CONFIGURE_TITLE')}
-                        buttons={configureServerUrlModalButtons}
-                        onCloseRequest={closeConfigureServerUrlModal}>
-                        <TextInput
-                            ref={configureServerUrlInputRef}
-                            autoFocus={true}
-                            className={styles['server-url-input']}
-                            type={'text'}
-                            defaultValue={streamingServerUrlInput.value}
-                            placeholder={t('SETTINGS_SERVER_CONFIGURE_INPUT')}
-                            onSubmit={configureServerUrlOnSubmit}
-                        />
-                    </ModalDialog>
-                    :
-                    null
-            } */}
         </MainNavBars>
     );
 };

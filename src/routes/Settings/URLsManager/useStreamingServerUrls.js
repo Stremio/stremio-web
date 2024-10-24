@@ -83,12 +83,7 @@ const useStreamingServerUrls = () => {
         });
     }, []);
 
-    const actions = {
-        onAdd,
-        onDelete,
-        onSelect,
-        onReload
-    };
+    const actions = { onAdd, onDelete, onSelect, onReload };
 
     return { streamingServerUrls, actions };
 };
