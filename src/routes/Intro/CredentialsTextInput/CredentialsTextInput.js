@@ -2,7 +2,7 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const { TextInput } = require('stremio/common');
+const { default: TextInput } = require('stremio/common/TextInput');
 
 const CredentialsTextInput = React.forwardRef((props, ref) => {
     const onKeyDown = React.useCallback((event) => {

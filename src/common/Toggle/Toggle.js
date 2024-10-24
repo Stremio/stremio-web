@@ -6,21 +6,21 @@ const classnames = require('classnames');
 const Button = require('stremio/common/Button');
 const styles = require('./styles');
 
-const Checkbox = React.forwardRef(({ className, checked, children, ...props }, ref) => {
+const Toggle = React.forwardRef(({ className, checked, children, ...props }, ref) => {
     return (
-        <Button {...props} ref={ref} className={classnames(className, styles['checkbox-container'], { 'checked': checked })}>
+        <Button {...props} ref={ref} className={classnames(className, styles['toggle-container'], { 'checked': checked })}>
             <div className={styles['toggle']} />
             {children}
         </Button>
     );
 });
 
-Checkbox.displayName = 'Checkbox';
+Toggle.displayName = 'Toggle';
 
-Checkbox.propTypes = {
+Toggle.propTypes = {
     className: PropTypes.string,
     checked: PropTypes.bool,
     children: PropTypes.node
 };
 
-module.exports = Checkbox;
+module.exports = Toggle;

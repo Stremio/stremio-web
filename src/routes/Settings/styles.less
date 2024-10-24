@@ -3,18 +3,13 @@
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
 @import (reference) '~stremio/common/screen-sizes.less';
 
-:import('~stremio/common/Checkbox/styles.less') {
+:import('~stremio/common/Toggle/styles.less') {
     checkbox-icon: icon;
 }
 
 :import('~stremio/common/Multiselect/styles.less') {
     multiselect-menu-container: menu-container;
     multiselect-label: label;
-}
-
-:import('~stremio/common/ModalDialog/styles.less') {
-    configure-server-url-modal-content: modal-dialog-content;
-    cancel-button-label: label;
 }
 
 .settings-container {
@@ -407,48 +402,6 @@
     }
 }
 
-.configure-server-url-modal-container {
-    .configure-server-url-modal-content {
-        width: 30rem;
-
-        .server-url-input {
-            width: 100%;
-            padding: 1rem;
-            color: var(--primary-foreground-color);
-            border-radius: var(--border-radius);
-            background-color: var(--overlay-color);
-            outline: var(--focus-outline-size) solid var(--overlay-color);
-            outline-offset: calc(-1 * var(--focus-outline-size));
-
-            &:hover {
-                outline-color: var(--primary-foreground-color);
-            }
-
-            &:focus {
-                outline-color: var(--primary-foreground-color);
-            }
-        }
-    }
-
-    .cancel-button {
-        background-color: transparent;
-        opacity: 0.3;
-
-        &:hover {
-            outline: var(--focus-outline-size) solid var(--primary-foreground-color) inset;
-            opacity: 1;
-        }
-
-        &:focus {
-            outline-color: var(--primary-foreground-color);
-        }
-
-        .cancel-button-label {
-            color: var(--primary-foreground-color);
-        }
-    }
-}
-
 @media only screen and (max-width: @xsmall) {
     .settings-container {
         .settings-content {
@@ -492,12 +445,6 @@
                     display: flex;
                 }
             }
-        }
-    }
-
-    .configure-server-url-modal-container {
-        .configure-server-url-modal-content {
-            width: auto;
         }
     }
 }

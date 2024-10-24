@@ -136,7 +136,7 @@ const useProfileSettingsInputs = (profile) => {
             });
         }
     }), [profile.settings]);
-    const surroundSoundCheckbox = React.useMemo(() => ({
+    const surroundSoundToggle = React.useMemo(() => ({
         checked: profile.settings.surroundSound,
         onClick: () => {
             core.transport.dispatch({
@@ -151,7 +151,7 @@ const useProfileSettingsInputs = (profile) => {
             });
         }
     }), [profile.settings]);
-    const escExitFullscreenCheckbox = React.useMemo(() => ({
+    const escExitFullscreenToggle = React.useMemo(() => ({
         checked: profile.settings.escExitFullscreen,
         onClick: () => {
             core.transport.dispatch({
@@ -261,7 +261,7 @@ const useProfileSettingsInputs = (profile) => {
             });
         }
     }), [profile.settings]);
-    const bingeWatchingCheckbox = React.useMemo(() => ({
+    const bingeWatchingToggle = React.useMemo(() => ({
         checked: profile.settings.bingeWatching,
         onClick: () => {
             core.transport.dispatch({
@@ -276,7 +276,7 @@ const useProfileSettingsInputs = (profile) => {
             });
         }
     }), [profile.settings]);
-    const playInBackgroundCheckbox = React.useMemo(() => ({
+    const playInBackgroundToggle = React.useMemo(() => ({
         checked: profile.settings.playInBackground,
         onClick: () => {
             core.transport.dispatch({
@@ -291,7 +291,7 @@ const useProfileSettingsInputs = (profile) => {
             });
         }
     }), [profile.settings]);
-    const hardwareDecodingCheckbox = React.useMemo(() => ({
+    const hardwareDecodingToggle = React.useMemo(() => ({
         checked: profile.settings.hardwareDecoding,
         onClick: () => {
             core.transport.dispatch({
@@ -306,21 +306,6 @@ const useProfileSettingsInputs = (profile) => {
             });
         }
     }), [profile.settings]);
-    const streamingServerUrlInput = React.useMemo(() => ({
-        value: profile.settings.streamingServerUrl,
-        onChange: (value) => {
-            core.transport.dispatch({
-                action: 'Ctx',
-                args: {
-                    action: 'UpdateSettings',
-                    args: {
-                        ...profile.settings,
-                        streamingServerUrl: value
-                    }
-                }
-            });
-        }
-    }), [profile.settings]);
     return {
         interfaceLanguageSelect,
         subtitlesLanguageSelect,
@@ -329,16 +314,15 @@ const useProfileSettingsInputs = (profile) => {
         subtitlesBackgroundColorInput,
         subtitlesOutlineColorInput,
         audioLanguageSelect,
-        surroundSoundCheckbox,
-        escExitFullscreenCheckbox,
+        surroundSoundToggle,
+        escExitFullscreenToggle,
         seekTimeDurationSelect,
         seekShortTimeDurationSelect,
         playInExternalPlayerSelect,
         nextVideoPopupDurationSelect,
-        bingeWatchingCheckbox,
-        playInBackgroundCheckbox,
-        hardwareDecodingCheckbox,
-        streamingServerUrlInput
+        bingeWatchingToggle,
+        playInBackgroundToggle,
+        hardwareDecodingToggle,
     };
 };
 

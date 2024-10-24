@@ -17,7 +17,7 @@
         "@sentry/browser": "6.13.3",
         "@stremio/stremio-colors": "5.0.1",
         "@stremio/stremio-core-web": "0.47.8",
-        "@stremio/stremio-icons": "5.2.0",
+        "@stremio/stremio-icons": "5.4.0",
         "@stremio/stremio-video": "0.0.38",
         "a-color-picker": "1.2.1",
         "bowser": "2.11.0",

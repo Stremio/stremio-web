@@ -2,7 +2,7 @@
 
 const AddonDetailsModal = require('./AddonDetailsModal');
 const Button = require('./Button');
-const Checkbox = require('./Checkbox');
+const Toggle = require('./Toggle');
 const { default: Chips } = require('./Chips');
 const ColorInput = require('./ColorInput');
 const ContinueWatchingItem = require('./ContinueWatchingItem');
@@ -25,7 +25,7 @@ const SearchBar = require('./SearchBar');
 const StreamingServerWarning = require('./StreamingServerWarning');
 const SharePrompt = require('./SharePrompt');
 const Slider = require('./Slider');
-const TextInput = require('./TextInput');
+const { default: TextInput } = require('./TextInput');
 const { ToastProvider, useToast } = require('./Toast');
 const { TooltipProvider, Tooltip } = require('./Tooltips');
 const comparatorWithPriorities = require('./comparatorWithPriorities');
@@ -47,11 +47,12 @@ const useStreamingServer = require('./useStreamingServer');
 const useTorrent = require('./useTorrent');
 const useTranslate = require('./useTranslate');
 const EventModal = require('./EventModal');
+const { default: Checkbox } = require('./Checkbox');
 
 module.exports = {
     AddonDetailsModal,
     Button,
-    Checkbox,
+    Toggle,
     Chips,
     ColorInput,
     ContinueWatchingItem,
@@ -77,6 +78,7 @@ module.exports = {
     SharePrompt,
     Slider,
     TextInput,
+    Checkbox,
     ToastProvider,
     useToast,
     TooltipProvider,
