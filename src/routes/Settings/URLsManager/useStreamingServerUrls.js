@@ -1,10 +1,9 @@
 // Copyright (C) 2017-2024 Smart code 203358507
 
 import { useCallback } from 'react';
+import { useModelState, useToast } from 'stremio/common';
+import useProfile from 'stremio/common/useProfile';
 import { useServices } from 'stremio/services';
-import { useToast } from './Toast';
-import useModelState from './useModelState';
-import useProfile from './useProfile';
 
 const useStreamingServerUrls = () => {
     const { core } = useServices();
