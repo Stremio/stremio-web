@@ -67,7 +67,7 @@ const useStreamingServerUrls = () => {
                 }
             }
         });
-    }, []);
+    }, [profile.settings]);
     const reloadServer = useCallback(() => {
         core.transport.dispatch({
             action: 'StreamingServer',
