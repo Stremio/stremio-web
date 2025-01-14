@@ -1,10 +1,8 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 const path = require('path');
-const os = require('os');
 const { execSync } = require('child_process');
 const webpack = require('webpack');
-const threadLoader = require('thread-loader');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
@@ -15,25 +13,6 @@ const WebpackPwaManifest = require('webpack-pwa-manifest');
 const pachageJson = require('./package.json');
 
 const COMMIT_HASH = execSync('git rev-parse HEAD').toString().trim();
-
-const THREAD_LOADER = {
-    loader: 'thread-loader',
-    options: {
-        name: 'shared-pool',
-        workers: os.cpus().length,
-    },
-};
-
-threadLoader.warmup(
-    THREAD_LOADER.options,
-    [
-        'babel-loader',
-        'ts-loader',
-        'css-loader',
-        'postcss-loader',
-        'less-loader',
-    ],
-);
 
 module.exports = (env, argv) => ({
     mode: argv.mode,
@@ -51,31 +30,20 @@ module.exports = (env, argv) => ({
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
-                use: [
-                    THREAD_LOADER,
-                    {
-                        loader: 'babel-loader',
-                        options: {
-                            presets: [
-                                '@babel/preset-env',
-                                '@babel/preset-react'
-                            ],
-                        }
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: [
+                            '@babel/preset-env',
+                            '@babel/preset-react'
+                        ],
                     }
-                ]
+                }
             },
             {
                 test: /\.(ts|tsx)$/,
                 exclude: /node_modules/,
-                use: [
-                    THREAD_LOADER,
-                    {
-                        loader: 'ts-loader',
-                        options: {
-                            happyPackMode: true,
-                        }
-                    }
-                ]
+                use: 'ts-loader',
             },
             {
                 test: /\.less$/,
@@ -87,7 +55,6 @@ module.exports = (env, argv) => ({
                             esModule: false
                         }
                     },
-                    THREAD_LOADER,
                     {
                         loader: 'css-loader',
                         options: {
