@@ -43,7 +43,12 @@ module.exports = (env, argv) => ({
             {
                 test: /\.(ts|tsx)$/,
                 exclude: /node_modules/,
-                use: 'ts-loader',
+                use: {
+                    loader: 'ts-loader',
+                    options: {
+                        happyPackMode: true,
+                    }
+                }
             },
             {
                 test: /\.less$/,
