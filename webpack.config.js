@@ -44,7 +44,7 @@ module.exports = (env, argv) => ({
     },
     output: {
         path: path.join(__dirname, 'build'),
-        filename: `${COMMIT_HASH}/scripts/[name].js`
+        filename: 'scripts/[name].js'
     },
     module: {
         rules: [
@@ -155,7 +155,7 @@ module.exports = (env, argv) => ({
                 exclude: /node_modules/,
                 type: 'asset/resource',
                 generator: {
-                    filename: `${COMMIT_HASH}/fonts/[name][ext][query]`
+                    filename: 'fonts/[name][ext][query]'
                 }
             },
             {
@@ -163,14 +163,14 @@ module.exports = (env, argv) => ({
                 exclude: /node_modules/,
                 type: 'asset/resource',
                 generator: {
-                    filename: `${COMMIT_HASH}/images/[name][ext][query]`
+                    filename: 'images/[name][ext][query]'
                 }
             },
             {
                 test: /\.wasm$/,
                 type: 'asset/resource',
                 generator: {
-                    filename: `${COMMIT_HASH}/binaries/[name][ext][query]`
+                    filename: 'binaries/[name][ext][query]'
                 }
             }
         ]
@@ -231,20 +231,20 @@ module.exports = (env, argv) => ({
             }),
         new CopyWebpackPlugin({
             patterns: [
-                { from: 'favicons', to: `${COMMIT_HASH}/favicons` },
-                { from: 'images', to: `${COMMIT_HASH}/images` },
-                { from: 'screenshots/*.webp', to: `${COMMIT_HASH}` },
+                { from: 'favicons', to: 'favicons' },
+                { from: 'images', to: 'images' },
+                { from: 'screenshots/*.webp', to: './' },
             ]
         }),
         new MiniCssExtractPlugin({
-            filename: `${COMMIT_HASH}/styles/[name].css`
+            filename: 'styles/[name].css'
         }),
         new HtmlWebPackPlugin({
             template: './src/index.html',
             inject: false,
             scriptLoading: 'blocking',
-            faviconsPath: `${COMMIT_HASH}/favicons`,
-            imagesPath: `${COMMIT_HASH}/images`,
+            faviconsPath: 'favicons',
+            imagesPath: 'images',
         }),
         new WebpackPwaManifest({
             name: 'Stremio Web',
@@ -261,33 +261,33 @@ module.exports = (env, argv) => ({
             icons: [
                 {
                     src: 'images/icon.png',
-                    destination: `${COMMIT_HASH}/images`,
+                    destination: 'images',
                     sizes: [196, 512],
                     purpose: 'any',
                     ios: true,
                 },
                 {
                     src: 'images/maskable_icon.png',
-                    destination: `${COMMIT_HASH}/images`,
+                    destination: 'images',
                     sizes: [196, 512],
                     purpose: 'maskable',
                 },
                 {
                     src: 'favicons/favicon.ico',
-                    destination: `${COMMIT_HASH}/favicons`,
+                    destination: 'favicons',
                     sizes: [256],
                 }
             ],
             screenshots : [
                 {
-                    src: `${COMMIT_HASH}/screenshots/board_wide.webp`,
+                    src: 'screenshots/board_wide.webp',
                     sizes: '1440x900',
                     type: 'image/webp',
                     form_factor: 'wide',
                     label: 'Homescreen of Stremio'
                 },
                 {
-                    src: `${COMMIT_HASH}/screenshots/board_narrow.webp`,
+                    src: 'screenshots/board_narrow.webp',
                     sizes: '414x896',
                     type: 'image/webp',
                     form_factor: 'narrow',
