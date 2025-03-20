@@ -1,4 +1,4 @@
-import React, { RefObject, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { memo, RefObject, useCallback, useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import styles from './ContextMenu.less';
 
@@ -56,6 +56,10 @@ const ContextMenu = ({ children, on, autoClose, padding = 8 }: Props) => {
         }
     }, [close]);
 
+    const stopPropagation = (event: React.MouseEvent | React.TouchEvent) => {
+        event.stopPropagation();
+    };
+
     const onContextMenu = (event: MouseEvent) => {
         event.preventDefault();
 
@@ -63,46 +67,32 @@ const ContextMenu = ({ children, on, autoClose, padding = 8 }: Props) => {
         setActive(true);
     };
 
-    const onClickOutside = () => {
-        close();
-    };
-
     const onClick = useCallback(() => {
         autoClose && close();
     }, [autoClose]);
 
-    const onMouseDown = (event: React.MouseEvent) => {
-        event.stopPropagation();
-    };
-
-    const onTouchStart = (event: React.TouchEvent) => {
-        event.stopPropagation();
-    };
-
     useEffect(() => {
-        const containers = on.map((ref) => ref.current).filter((element) => !!element);
-        containers.forEach((container) => container.addEventListener('contextmenu', onContextMenu));
-
+        on.forEach((ref) => ref.current && ref.current.addEventListener('contextmenu', onContextMenu));
         document.addEventListener('keydown', handleKeyDown);
 
         return () => {
-            containers.forEach((container) => container.removeEventListener('contextmenu', onContextMenu));
+            on.forEach((ref) => ref.current && ref.current.removeEventListener('contextmenu', onContextMenu));
             document.removeEventListener('keydown', handleKeyDown);
-        };
+        }
     }, [on]);
 
     return active && createPortal((
         <div
             className={styles['context-menu-container']}
-            onMouseDown={onClickOutside}
-            onTouchStart={onClickOutside}
+            onMouseDown={close}
+            onTouchStart={close}
         >
             <div
                 ref={ref}
                 className={styles['context-menu']}
                 style={style}
-                onMouseDown={onMouseDown}
-                onTouchStart={onTouchStart}
+                onMouseDown={stopPropagation}
+                onTouchStart={stopPropagation}
                 onClick={onClick}
                 tabIndex={-1}
             >
@@ -112,4 +102,4 @@ const ContextMenu = ({ children, on, autoClose, padding = 8 }: Props) => {
     ), document.body);
 };
 
-export default ContextMenu;
+export default memo(ContextMenu);
