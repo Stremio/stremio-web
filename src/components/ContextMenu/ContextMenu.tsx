@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import styles from './ContextMenu.less';
 
 type Coordinates = [number, number];
+type Size = [number, number];
 
 type Props = {
     children: React.ReactNode,
@@ -14,7 +15,7 @@ type Props = {
 const ContextMenu = ({ children, on, autoClose, padding = 8 }: Props) => {
     const [active, setActive] = useState(false);
     const [position, setPosition] = useState<Coordinates>([0, 0]);
-    const [containerSize, setContainerSize] = useState<Coordinates>([0, 0]);
+    const [containerSize, setContainerSize] = useState<Size>([0, 0]);
 
     const ref = useCallback((element: HTMLDivElement) => {
         element && setContainerSize([element.offsetWidth, element.offsetHeight]);
