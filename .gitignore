@@ -4,3 +4,4 @@
 /npm-debug.log
 .DS_Store
 .prettierignore
+.well-known
