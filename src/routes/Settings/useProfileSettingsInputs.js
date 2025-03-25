@@ -32,6 +32,22 @@ const useProfileSettingsInputs = (profile) => {
         }
     }), [profile.settings]);
 
+    const hideSpoilersToggle = React.useMemo(() => ({
+        checked: profile.settings.hideSpoilers,
+        onClick: () => {
+            core.transport.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'UpdateSettings',
+                    args: {
+                        ...profile.settings,
+                        hideSpoilers: !profile.settings.hideSpoilers
+                    }
+                }
+            });
+        }
+    }), [profile.settings]);
+
     const quitOnCloseToggle = React.useMemo(() => ({
         checked: profile.settings.quitOnClose,
         onClick: () => {
@@ -325,6 +341,7 @@ const useProfileSettingsInputs = (profile) => {
     }), [profile.settings]);
     return {
         interfaceLanguageSelect,
+        hideSpoilersToggle,
         subtitlesLanguageSelect,
         subtitlesSizeSelect,
         subtitlesTextColorInput,

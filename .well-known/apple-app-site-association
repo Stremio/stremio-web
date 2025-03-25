@@ -1,0 +1,67 @@
+{
+    "applinks": {
+        "apps": [],
+        "details": [
+            {
+                "appID": "9EWRZ4QP3J.com.stremio.one",
+                "paths": [
+                    "/",
+                    "/#/player/*",
+                    "/#/discover/*",
+                    "/#/detail/*",
+                    "/#/library/*",
+                    "/#/addons/*",
+                    "/#/settings",
+                    "/#/search/*"
+                ],
+                "components": [
+                    {
+                        "/": "/",
+                        "#": "/player/*",
+                        "comment": "Matches deep link for player"
+                    },
+                    {
+                        "/": "/",
+                        "#": "/discover/*",
+                        "comment": "Matches deep link for discover"
+                    },
+                    {
+                        "/": "/",
+                        "#": "/detail/*",
+                        "comment": "Matches deep link for detail"
+                    },
+                    {
+                        "/": "/",
+                        "#": "/library/*",
+                        "comment": "Matches deep link for library"
+                    },
+                    {
+                        "/": "/",
+                        "#": "/addons/*",
+                        "comment": "Matches deep link for addons"
+                    },
+                    {
+                        "/": "/",
+                        "#": "/settings",
+                        "comment": "Matches deep link for settings"
+                    },
+                    {
+                        "/": "/",
+                        "#": "/search/*",
+                        "comment": "Matches deep link for search"
+                    }
+                ]
+            }
+        ]
+    },
+    "activitycontinuation": {
+        "apps": [
+            "9EWRZ4QP3J.com.stremio.one"
+        ]
+    },
+    "webcredentials": {
+        "apps": [
+            "9EWRZ4QP3J.com.stremio.one"
+        ]
+    }
+}

@@ -9,7 +9,7 @@ const { useServices } = require('stremio/services');
 const SeekBar = require('./SeekBar');
 const VolumeSlider = require('./VolumeSlider');
 const styles = require('./styles');
-const { useBinaryState } = require('stremio/common');
+const { useBinaryState, usePlatform } = require('stremio/common');
 const { t } = require('i18next');
 
 const ControlBar = ({
@@ -40,9 +40,11 @@ const ControlBar = ({
     onToggleSideDrawer,
     onToggleOptionsMenu,
     onToggleStatisticsMenu,
+    onTouchEnd,
     ...props
 }) => {
     const { chromecast } = useServices();
+    const platform = usePlatform();
     const [chromecastServiceActive, setChromecastServiceActive] = React.useState(() => chromecast.active);
     const [buttonsMenuOpen, , , toggleButtonsMenu] = useBinaryState(false);
     const onSubtitlesButtonMouseDown = React.useCallback((event) => {
@@ -103,7 +105,7 @@ const ControlBar = ({
         };
     }, []);
     return (
-        <div {...props} className={classnames(className, styles['control-bar-container'])}>
+        <div {...props} onTouchStart={props.onMouseOver} onTouchMove={props.onMouseMove} onTouchEnd={onTouchEnd} className={classnames(className, styles['control-bar-container'])}>
             <SeekBar
                 className={styles['seek-bar']}
                 time={time}
@@ -129,18 +131,23 @@ const ControlBar = ({
                         name={
                             (typeof muted === 'boolean' && muted) ? 'volume-mute' :
                                 (volume === null || isNaN(volume)) ? 'volume-off' :
-                                    volume < 30 ? 'volume-low' :
-                                        volume < 70 ? 'volume-medium' :
-                                            'volume-high'
+                                    volume === 0 ? 'volume-mute' :
+                                        volume < 30 ? 'volume-low' :
+                                            volume < 70 ? 'volume-medium' :
+                                                'volume-high'
                         }
                     />
                 </Button>
-                <VolumeSlider
-                    className={styles['volume-slider']}
-                    volume={volume}
-                    muted={muted}
-                    onVolumeChangeRequested={onVolumeChangeRequested}
-                />
+                {
+                    !platform.isMobile ?
+                        <VolumeSlider
+                            className={styles['volume-slider']}
+                            volume={volume}
+                            muted={muted}
+                            onVolumeChangeRequested={onVolumeChangeRequested}
+                        />
+                        : null
+                }
                 <div className={styles['spacing']} />
                 <Button className={styles['control-bar-buttons-menu-button']} onClick={toggleButtonsMenu}>
                     <Icon className={styles['icon']} name={'more-vertical'} />
@@ -206,6 +213,9 @@ ControlBar.propTypes = {
     onToggleSideDrawer: PropTypes.func,
     onToggleOptionsMenu: PropTypes.func,
     onToggleStatisticsMenu: PropTypes.func,
+    onMouseOver: PropTypes.func,
+    onMouseMove: PropTypes.func,
+    onTouchEnd: PropTypes.func,
 };
 
 module.exports = ControlBar;

@@ -100,14 +100,29 @@ const App = () => {
         };
     }, []);
 
-    // Handle shell window visibility changed event
+    // Handle shell events
     React.useEffect(() => {
         const onWindowVisibilityChanged = (state) => {
             setWindowHidden(state.visible === false && state.visibility === 0);
         };
 
+        const onOpenMedia = (data) => {
+            if (data.startsWith('stremio:///')) return;
+            if (data.startsWith('stremio://')) {
+                const transportUrl = data.replace('stremio://', 'https://');
+                if (URL.canParse(transportUrl)) {
+                    window.location.href = `#/addons?addon=${encodeURIComponent(transportUrl)}`;
+                }
+            }
+        };
+
         shell.on('win-visibility-changed', onWindowVisibilityChanged);
-        return () => shell.off('win-visibility-changed', onWindowVisibilityChanged);
+        shell.on('open-media', onOpenMedia);
+
+        return () => {
+            shell.off('win-visibility-changed', onWindowVisibilityChanged);
+            shell.off('open-media', onOpenMedia);
+        };
     }, []);
 
     React.useEffect(() => {

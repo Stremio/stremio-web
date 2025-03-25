@@ -46,7 +46,7 @@ const URLsManager = () => {
                 }
             </div>
             <div className={styles['footer']}>
-                <Button label={'Add URL'} className={styles['add-url']} onClick={onAdd}>
+                <Button title={'Add URL'} className={styles['add-url']} onClick={onAdd}>
                     <Icon name={'add'} className={styles['icon']} />
                     {t('SETTINGS_SERVER_ADD_URL')}
                 </Button>

@@ -8,11 +8,13 @@ const { useRouteFocused } = require('stremio-router');
 const { default: Icon } = require('@stremio/stremio-icons/react');
 const { Button, Image, Popup } = require('stremio/components');
 const useBinaryState = require('stremio/common/useBinaryState');
+const useProfile = require('stremio/common/useProfile');
 const VideoPlaceholder = require('./VideoPlaceholder');
 const styles = require('./styles');
 
 const Video = ({ className, id, title, thumbnail, season, episode, released, upcoming, watched, progress, scheduled, seasonWatched, deepLinks, onMarkVideoAsWatched, onMarkSeasonAsWatched, ...props }) => {
     const routeFocused = useRouteFocused();
+    const profile = useProfile();
     const [menuOpen, , closeMenu, toggleMenu] = useBinaryState(false);
     const popupLabelOnMouseUp = React.useCallback((event) => {
         if (!event.nativeEvent.togglePopupPrevented) {
@@ -66,13 +68,14 @@ const Video = ({ className, id, title, thumbnail, season, episode, released, upc
         }
     }, [deepLinks]);
     const renderLabel = React.useMemo(() => function renderLabel({ className, id, title, thumbnail, episode, released, upcoming, watched, progress, scheduled, children, ...props }) {
+        const blurThumbnail = profile.settings.hideSpoilers && season && episode && !watched;
         return (
             <Button {...props} className={classnames(className, styles['video-container'])} title={title}>
                 {
                     typeof thumbnail === 'string' && thumbnail.length > 0 ?
                         <div className={styles['thumbnail-container']}>
                             <Image
-                                className={styles['thumbnail']}
+                                className={classnames(styles['thumbnail'], { [styles['blurred']]: blurThumbnail })}
                                 src={thumbnail}
                                 alt={' '}
                                 renderFallback={() => (

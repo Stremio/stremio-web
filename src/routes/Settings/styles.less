@@ -64,8 +64,11 @@
             .version-info-label {
                 flex: 0 1 auto;
                 margin: 0.5rem 0;
+                white-space: nowrap;
+                text-overflow: ellipsis;
                 color: var(--primary-foreground-color);
                 opacity: 0.3;
+                overflow: hidden;
             }
         }
 
@@ -242,6 +245,8 @@
                             flex-shrink: 1;
                             flex-basis: auto;
                             line-height: 1.5rem;
+                            white-space: nowrap;
+                            text-overflow: ellipsis;
                             color: var(--primary-foreground-color);
                         }
 
