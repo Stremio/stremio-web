@@ -48,6 +48,7 @@ const Settings = () => {
         bingeWatchingToggle,
         playInBackgroundToggle,
         hardwareDecodingToggle,
+        pauseOnMinimizeToggle,
     } = useProfileSettingsInputs(profile);
     const {
         streamingServerRemoteUrlInput,
@@ -545,6 +546,18 @@ const Settings = () => {
                                         className={classnames(styles['option-input-container'], styles['toggle-container'])}
                                         tabIndex={-1}
                                         {...hardwareDecodingToggle}
+                                    />
+                                </div>
+                        }
+                        {
+                            shell.active &&
+                                <div className={styles['option-container']}>
+                                    <div className={styles['option-name-container']}>
+                                        <div className={styles['label']}>{ t('SETTINGS_PAUSE_MINIMIZED') }</div>
+                                    </div>
+                                    <Toggle
+                                        className={classnames(styles['option-input-container'], styles['toggle-container'])}
+                                        {...pauseOnMinimizeToggle}
                                     />
                                 </div>
                         }

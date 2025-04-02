@@ -1,7 +1,7 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 import { useCallback, useEffect, useState } from 'react';
-import useShell, { type WindowVisibilityState } from './useShell';
+import useShell, { type WindowVisibility } from './useShell';
 import useSettings from './useSettings';
 
 const useFullscreen = () => {
@@ -31,7 +31,7 @@ const useFullscreen = () => {
     }, [fullscreen]);
 
     useEffect(() => {
-        const onWindowVisibilityChanged = (state: WindowVisibilityState) => {
+        const onWindowVisibilityChanged = (state: WindowVisibility) => {
             setFullscreen(state.isFullscreen === true);
         };
 

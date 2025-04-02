@@ -21,7 +21,6 @@ const RouterWithProtectedRoutes = withCoreSuspender(withProtectedRoutes(Router))
 const App = () => {
     const { i18n } = useTranslation();
     const shell = useShell();
-    const [windowHidden, setWindowHidden] = React.useState(false);
     const onPathNotMatch = React.useCallback(() => {
         return NotFound;
     }, []);
@@ -102,10 +101,6 @@ const App = () => {
 
     // Handle shell events
     React.useEffect(() => {
-        const onWindowVisibilityChanged = (state) => {
-            setWindowHidden(state.visible === false && state.visibility === 0);
-        };
-
         const onOpenMedia = (data) => {
             if (data.startsWith('stremio:///')) return;
             if (data.startsWith('stremio://')) {
@@ -116,11 +111,9 @@ const App = () => {
             }
         };
 
-        shell.on('win-visibility-changed', onWindowVisibilityChanged);
         shell.on('open-media', onOpenMedia);
 
         return () => {
-            shell.off('win-visibility-changed', onWindowVisibilityChanged);
             shell.off('open-media', onOpenMedia);
         };
     }, []);
@@ -133,7 +126,7 @@ const App = () => {
                         i18n.changeLanguage(args.settings.interfaceLanguage);
                     }
 
-                    if (args?.settings?.quitOnClose && windowHidden) {
+                    if (args?.settings?.quitOnClose && shell.windowClosed) {
                         shell.send('quit');
                     }
 
@@ -146,7 +139,7 @@ const App = () => {
                 i18n.changeLanguage(state.profile.settings.interfaceLanguage);
             }
 
-            if (state?.profile?.settings?.quitOnClose && windowHidden) {
+            if (state?.profile?.settings?.quitOnClose && shell.windowClosed) {
                 shell.send('quit');
             }
         };
@@ -191,7 +184,7 @@ const App = () => {
                 services.core.transport.off('CoreEvent', onCoreEvent);
             }
         };
-    }, [initialized, windowHidden]);
+    }, [initialized, shell.windowClosed]);
     return (
         <React.StrictMode>
             <ServicesProvider services={services}>

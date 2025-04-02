@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import EventEmitter from 'eventemitter3';
 
 const SHELL_EVENT_OBJECT = 'transport';
@@ -17,13 +17,22 @@ type ShellEvent = {
     args: string[];
 };
 
-export type WindowVisibilityState = {
+export type WindowVisibility = {
+    visible: boolean;
+    visibility: number;
     isFullscreen: boolean;
+};
+
+export type WindowState = {
+    state: number;
 };
 
 const createId = () => Math.floor(Math.random() * 9999) + 1;
 
 const useShell = () => {
+    const [windowClosed, setWindowClosed] = useState(false);
+    const [windowHidden, setWindowHidden] = useState(false);
+
     const on = (name: string, listener: (arg: any) => void) => {
         events.on(name, listener);
     };
@@ -45,6 +54,24 @@ const useShell = () => {
             console.error('Shell', 'Failed to send event', e);
         }
     };
+
+    useEffect(() => {
+        const onWindowVisibilityChanged = (data: WindowVisibility) => {
+            setWindowClosed(data.visible === false && data.visibility === 0);
+        };
+
+        const onWindowStateChanged = (data: WindowState) => {
+            setWindowHidden(data.state === 9);
+        };
+
+        on('win-visibility-changed', onWindowVisibilityChanged);
+        on('win-state-changed', onWindowStateChanged);
+
+        return () => {
+            off('win-visibility-changed', onWindowVisibilityChanged);
+            off('win-state-changed', onWindowStateChanged);
+        };
+    }, []);
 
     useEffect(() => {
         if (!transport) return;
@@ -70,6 +97,8 @@ const useShell = () => {
         send,
         on,
         off,
+        windowClosed,
+        windowHidden,
     };
 };
 

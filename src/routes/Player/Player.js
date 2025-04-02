@@ -8,7 +8,7 @@ const langs = require('langs');
 const { useTranslation } = require('react-i18next');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
-const { onFileDrop, useSettings, useFullscreen, useBinaryState, useToast, useStreamingServer, withCoreSuspender, CONSTANTS } = require('stremio/common');
+const { onFileDrop, useSettings, useFullscreen, useBinaryState, useToast, useStreamingServer, withCoreSuspender, CONSTANTS, useShell } = require('stremio/common');
 const { HorizontalNavBar, Transition, ContextMenu } = require('stremio/components');
 const BufferingLoader = require('./BufferingLoader');
 const VolumeChangeIndicator = require('./VolumeChangeIndicator');
@@ -30,7 +30,8 @@ const Video = require('./Video');
 
 const Player = ({ urlParams, queryParams }) => {
     const { t } = useTranslation();
-    const { chromecast, shell, core } = useServices();
+    const services = useServices();
+    const shell = useShell();
     const forceTranscoding = React.useMemo(() => {
         return queryParams.has('forceTranscoding');
     }, [queryParams]);
@@ -46,7 +47,7 @@ const Player = ({ urlParams, queryParams }) => {
     const [seeking, setSeeking] = React.useState(false);
 
     const [casting, setCasting] = React.useState(() => {
-        return chromecast.active && chromecast.transport.getCastState() === cast.framework.CastState.CONNECTED;
+        return services.chromecast.active && services.chromecast.transport.getCastState() === cast.framework.CastState.CONNECTED;
     });
     const playbackDevices = React.useMemo(() => streamingServer.playbackDevices !== null && streamingServer.playbackDevices.type === 'Ready' ? streamingServer.playbackDevices.content : [], [streamingServer]);
 
@@ -320,8 +321,8 @@ const Player = ({ urlParams, queryParams }) => {
                     null,
                 seriesInfo: player.seriesInfo,
             }, {
-                chromecastTransport: chromecast.active ? chromecast.transport : null,
-                shellTransport: shell.active ? shell.transport : null,
+                chromecastTransport: services.chromecast.active ? services.chromecast.transport : null,
+                shellTransport: services.shell.active ? services.shell.transport : null,
             });
         }
     }, [streamingServer.baseUrl, player.selected, forceTranscoding, casting]);
@@ -442,12 +443,12 @@ const Player = ({ urlParams, queryParams }) => {
         const toastFilter = (item) => item?.dataset?.type === 'CoreEvent';
         toast.addFilter(toastFilter);
         const onCastStateChange = () => {
-            setCasting(chromecast.active && chromecast.transport.getCastState() === cast.framework.CastState.CONNECTED);
+            setCasting(services.chromecast.active && services.chromecast.transport.getCastState() === cast.framework.CastState.CONNECTED);
         };
         const onChromecastServiceStateChange = () => {
             onCastStateChange();
-            if (chromecast.active) {
-                chromecast.transport.on(
+            if (services.chromecast.active) {
+                services.chromecast.transport.on(
                     cast.framework.CastContextEventType.CAST_STATE_CHANGED,
                     onCastStateChange
                 );
@@ -458,21 +459,27 @@ const Player = ({ urlParams, queryParams }) => {
                 onPauseRequested();
             }
         };
-        chromecast.on('stateChanged', onChromecastServiceStateChange);
-        core.transport.on('CoreEvent', onCoreEvent);
+        services.chromecast.on('stateChanged', onChromecastServiceStateChange);
+        services.core.transport.on('CoreEvent', onCoreEvent);
         onChromecastServiceStateChange();
         return () => {
             toast.removeFilter(toastFilter);
-            chromecast.off('stateChanged', onChromecastServiceStateChange);
-            core.transport.off('CoreEvent', onCoreEvent);
-            if (chromecast.active) {
-                chromecast.transport.off(
+            services.chromecast.off('stateChanged', onChromecastServiceStateChange);
+            services.core.transport.off('CoreEvent', onCoreEvent);
+            if (services.chromecast.active) {
+                services.chromecast.transport.off(
                     cast.framework.CastContextEventType.CAST_STATE_CHANGED,
                     onCastStateChange
                 );
             }
         };
     }, []);
+
+    React.useEffect(() => {
+        if (settings.pauseOnMinimize && (shell.windowClosed || shell.windowHidden)) {
+            onPauseRequested();
+        }
+    }, [settings.pauseOnMinimize, shell.windowClosed, shell.windowHidden]);
 
     React.useLayoutEffect(() => {
         const onKeyDown = (event) => {

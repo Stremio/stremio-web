@@ -339,6 +339,21 @@ const useProfileSettingsInputs = (profile) => {
             });
         }
     }), [profile.settings]);
+    const pauseOnMinimizeToggle = React.useMemo(() => ({
+        checked: profile.settings.pauseOnMinimize,
+        onClick: () => {
+            core.transport.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'UpdateSettings',
+                    args: {
+                        ...profile.settings,
+                        pauseOnMinimize: !profile.settings.pauseOnMinimize,
+                    }
+                }
+            });
+        }
+    }), [profile.settings]);
     return {
         interfaceLanguageSelect,
         hideSpoilersToggle,
@@ -358,6 +373,7 @@ const useProfileSettingsInputs = (profile) => {
         bingeWatchingToggle,
         playInBackgroundToggle,
         hardwareDecodingToggle,
+        pauseOnMinimizeToggle,
     };
 };
 
