@@ -58,9 +58,11 @@ const Settings = () => {
     } = useStreamingServerSettingsInputs(streamingServer);
     const [traktAuthStarted, setTraktAuthStarted] = React.useState(false);
     const isTraktAuthenticated = React.useMemo(() => {
-        return profile.auth !== null && profile.auth.user !== null && profile.auth.user.trakt !== null &&
-            (Date.now() / 1000) < (profile.auth.user.trakt.created_at + profile.auth.user.trakt.expires_in);
+        return profile.auth !== null && profile.auth.user !== null && profile.auth.user.trakt !== null;
     }, [profile.auth]);
+    const isTraktTokenExpired = React.useMemo(() => {
+        return isTraktAuthenticated && (Date.now() / 1000) >= (profile.auth.user.trakt.created_at + profile.auth.user.trakt.expires_in);
+    }, [profile.auth, isTraktAuthenticated]);
     const logoutButtonOnClick = React.useCallback(() => {
         core.transport.dispatch({
             action: 'Ctx',
@@ -70,7 +72,12 @@ const Settings = () => {
         });
     }, []);
     const toggleTraktOnClick = React.useCallback(() => {
-        if (!isTraktAuthenticated && profile.auth !== null && profile.auth.user !== null && typeof profile.auth.user._id === 'string') {
+        if (
+            (!isTraktAuthenticated || (isTraktAuthenticated && isTraktTokenExpired))
+            && profile.auth !== null
+            && profile.auth.user !== null
+            && typeof profile.auth.user._id === 'string'
+        ) {
             platform.openExternal(`https://www.strem.io/trakt/auth/${profile.auth.user._id}`);
             setTraktAuthStarted(true);
         } else {
@@ -81,7 +88,7 @@ const Settings = () => {
                 }
             });
         }
-    }, [isTraktAuthenticated, profile.auth]);
+    }, [isTraktAuthenticated, isTraktTokenExpired, profile.auth]);
     const subscribeCalendarOnClick = React.useCallback(() => {
         if (!profile.auth) return;
 
@@ -145,7 +152,7 @@ const Settings = () => {
         updateSelectedSectionId();
     }, 50), []);
     React.useEffect(() => {
-        if (isTraktAuthenticated && traktAuthStarted) {
+        if (isTraktAuthenticated && !isTraktTokenExpired && traktAuthStarted) {
             core.transport.dispatch({
                 action: 'Ctx',
                 args: {
@@ -154,12 +161,22 @@ const Settings = () => {
             });
             setTraktAuthStarted(false);
         }
-    }, [isTraktAuthenticated, traktAuthStarted]);
+    }, [isTraktAuthenticated, isTraktTokenExpired, traktAuthStarted]);
     React.useEffect(() => {
         if (dataExport.exportUrl !== null && typeof dataExport.exportUrl === 'string') {
             platform.openExternal(dataExport.exportUrl);
         }
     }, [dataExport.exportUrl]);
+    React.useEffect(() => {
+        if (isTraktTokenExpired) {
+            toast.show({
+                type: 'error',
+                title: t('ERROR'),
+                message: t('TRAKT_EXPIRED'),
+                timeout: 4000,
+            });
+        }
+    }, [isTraktTokenExpired]);
     React.useLayoutEffect(() => {
         if (routeFocused) {
             updateSelectedSectionId();
@@ -313,7 +330,9 @@ const Settings = () => {
                             </div>
                             <Button className={classnames(styles['option-input-container'], styles['button-container'])} title={'Authenticate'} disabled={profile.auth === null} tabIndex={-1} onClick={toggleTraktOnClick}>
                                 <div className={styles['label']}>
-                                    { profile.auth !== null && profile.auth.user !== null && profile.auth.user.trakt !== null ? t('LOG_OUT') : t('SETTINGS_TRAKT_AUTHENTICATE') }
+                                    { profile.auth !== null && profile.auth.user !== null && profile.auth.user.trakt !== null
+                                        ? isTraktTokenExpired ? t('SETTINGS_TRAKT_RE_AUTH') : t('LOG_OUT')
+                                        : t('SETTINGS_TRAKT_AUTHENTICATE') }
                                 </div>
                             </Button>
                         </div>
