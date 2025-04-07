@@ -10,6 +10,7 @@ type Auth = {
             expires_in: number,
         },
         isNewUser: boolean,
+        hasTrakt: boolean,
     },
 };
 

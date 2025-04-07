@@ -62,7 +62,7 @@ const Settings = () => {
         return profile.auth !== null && profile.auth.user !== null && profile.auth.user.trakt !== null;
     }, [profile.auth]);
     const isTraktTokenExpired = React.useMemo(() => {
-        return isTraktAuthenticated && (Date.now() / 1000) >= (profile.auth.user.trakt.created_at + profile.auth.user.trakt.expires_in);
+        return isTraktAuthenticated && !profile.auth.user.hasTrakt;
     }, [profile.auth, isTraktAuthenticated]);
     const logoutButtonOnClick = React.useCallback(() => {
         core.transport.dispatch({
@@ -168,16 +168,6 @@ const Settings = () => {
             platform.openExternal(dataExport.exportUrl);
         }
     }, [dataExport.exportUrl]);
-    React.useEffect(() => {
-        if (isTraktTokenExpired) {
-            toast.show({
-                type: 'error',
-                title: t('ERROR'),
-                message: t('TRAKT_EXPIRED'),
-                timeout: 4000,
-            });
-        }
-    }, [isTraktTokenExpired]);
     React.useLayoutEffect(() => {
         if (routeFocused) {
             updateSelectedSectionId();
