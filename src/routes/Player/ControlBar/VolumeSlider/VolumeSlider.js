@@ -11,10 +11,9 @@ const styles = require('./styles');
 
 const VolumeSlider = ({ className, volume, onVolumeChangeRequested, muted }) => {
     const { shell } = useServices();
-    const disabled = volume === null || isNaN(volume);
     const routeFocused = useRouteFocused();
     const [slidingVolume, setSlidingVolume] = React.useState(null);
-    const maxVolume = shell.active ? 200: 100;
+    const maxVolume = shell.active ? 200 : 100;
     const resetVolumeDebounced = React.useCallback(debounce(() => {
         setSlidingVolume(null);
     }, 100), []);
@@ -33,11 +32,11 @@ const VolumeSlider = ({ className, volume, onVolumeChangeRequested, muted }) => 
         }
     }, [onVolumeChangeRequested]);
     React.useLayoutEffect(() => {
-        if (!routeFocused || disabled) {
+        if (!routeFocused) {
             resetVolumeDebounced.cancel();
             setSlidingVolume(null);
         }
-    }, [routeFocused, disabled]);
+    }, [routeFocused]);
     React.useEffect(() => {
         return () => {
             resetVolumeDebounced.cancel();
@@ -47,16 +46,12 @@ const VolumeSlider = ({ className, volume, onVolumeChangeRequested, muted }) => 
         <Slider
             className={classnames(className, styles['volume-slider'], { 'active': slidingVolume !== null })}
             value={
-                !disabled ?
-                    !muted ?
-                        slidingVolume !== null ? slidingVolume : volume
-                        : 0
-                    :
-                    100
+                !muted ?
+                    slidingVolume !== null ? slidingVolume : volume
+                    : 0
             }
             minimumValue={0}
             maximumValue={maxVolume}
-            disabled={disabled}
             onSlide={onSlide}
             onComplete={onComplete}
             audioBoost={!!shell.active}
