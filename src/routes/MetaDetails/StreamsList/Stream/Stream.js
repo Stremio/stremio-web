@@ -51,7 +51,7 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
     const popupMenuOnKeyDown = React.useCallback((event) => {
         event.nativeEvent.buttonClickPrevented = true;
     }, []);
-
+    
     const href = React.useMemo(() => {
         return deepLinks ?
             deepLinks.externalPlayer ?
@@ -101,6 +101,10 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
         }
     }, [videoId, videoReleased]);
 
+    const streamingUrl = React.useMemo(() => {
+        return deepLinks?.externalPlayer?.streaming;
+    }, [deepLinks]);
+
     const onClick = React.useCallback((event) => {
         if (profile.settings.playerType !== null) {
             markVideoAsWatched();
@@ -109,6 +113,19 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
                 title: 'Stream opened in external player',
                 timeout: 4000
             });
+            if (profile.settings.playerType === 'vlc' && streamingUrl) {
+                console.log('Opening stream in VLC', streamingUrl);
+                core.transport.dispatch({
+                    action: 'StreamingServer',
+                    args: {
+                        action: 'PlayOnDevice',
+                        args: {
+                            device: 'vlc',
+                            source: streamingUrl,
+                        }
+                    }
+                });
+            }
         }
 
         if (typeof props.onClick === 'function') {
