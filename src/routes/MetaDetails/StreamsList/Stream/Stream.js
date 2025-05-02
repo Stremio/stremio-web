@@ -51,7 +51,6 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
     const popupMenuOnKeyDown = React.useCallback((event) => {
         event.nativeEvent.buttonClickPrevented = true;
     }, []);
-    
     const href = React.useMemo(() => {
         return deepLinks ?
             deepLinks.externalPlayer ?
@@ -114,7 +113,6 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
                 timeout: 4000
             });
             if (profile.settings.playerType === 'vlc' && streamingUrl) {
-                console.log('Opening stream in VLC', streamingUrl);
                 core.transport.dispatch({
                     action: 'StreamingServer',
                     args: {
