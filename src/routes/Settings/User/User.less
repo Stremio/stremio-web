@@ -1,0 +1,87 @@
+@import (reference) '~stremio/common/screen-sizes.less';
+
+.user {
+    gap: 1rem;
+
+    .user-info-content {
+        flex: 1;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        .avatar-container {
+            flex: none;
+            align-self: stretch;
+            height: 5rem;
+            width: 5rem;
+            margin-right: 1rem;
+            border: 2px solid var(--primary-accent-color);
+            border-radius: 50%;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-origin: content-box;
+            background-clip: content-box;
+            opacity: 0.9;
+            background-color: var(--primary-foreground-color);
+        }
+
+        .email-logout-container {
+            flex: none;
+            display: flex;
+            flex-direction: column;
+            align-items: start;
+
+            .email-label-container {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+            }
+
+            .email-label-container {
+                .email-label {
+                    flex: 1;
+                    font-size: 1.1rem;
+                    color: var(--primary-foreground-color);
+                    opacity: 0.7;
+                }
+            }
+        }
+    }
+
+    .user-panel-container {
+        flex: none;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        width: 10rem;
+        height: 3.5rem;
+        border-radius: 3.5rem;
+        background-color: var(--overlay-color);
+
+        &:hover {
+            outline: var(--focus-outline-size) solid var(--primary-foreground-color);
+            background-color: transparent;
+        }
+
+        .user-panel-label {
+            flex: 1;
+            max-height: 2.4em;
+            padding: 0 0.5rem;
+            font-weight: 500;
+            text-align: center;
+            color: var(--primary-foreground-color);
+        }
+    }
+}
+
+@media only screen and (max-width: @minimum) {
+    .user {
+        flex-direction: column;
+        align-items: flex-start;
+
+        .user-panel-container {
+            width: 100% !important;
+        }
+    }
+}

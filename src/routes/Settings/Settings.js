@@ -20,6 +20,7 @@ const useProfileSettingsInputs = require('./useProfileSettingsInputs');
 const useStreamingServerSettingsInputs = require('./useStreamingServerSettingsInputs');
 const useDataExport = require('./useDataExport');
 const styles = require('./styles');
+const { default: User } = require('./User');
 
 const Settings = () => {
     const { t } = useTranslation();
@@ -179,43 +180,7 @@ const Settings = () => {
 
                 <div ref={sectionsContainerRef} className={styles['sections-container']} onScroll={sectionsContainerOnScroll}>
                     <Section ref={generalSectionRef}>
-                        <div className={classnames(styles['option-container'], styles['user-info-option-container'])}>
-                            <div className={styles['user-info-content']}>
-                                <div
-                                    className={styles['avatar-container']}
-                                    style={{
-                                        backgroundImage: profile.auth === null ?
-                                            `url('${require('/images/anonymous.png')}')`
-                                            :
-                                            profile.auth.user.avatar ?
-                                                `url('${profile.auth.user.avatar}')`
-                                                :
-                                                `url('${require('/images/default_avatar.png')}')`
-                                    }}
-                                />
-                                <div className={styles['email-logout-container']}>
-                                    <div className={styles['email-label-container']} title={profile.auth === null ? 'Anonymous user' : profile.auth.user.email}>
-                                        <div className={styles['email-label']}>
-                                            {profile.auth === null ? 'Anonymous user' : profile.auth.user.email}
-                                        </div>
-                                    </div>
-                                    {
-                                        profile.auth !== null &&
-                                            <Link
-                                                label={t('LOG_OUT')}
-                                                onClick={logoutButtonOnClick}
-                                            />
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                        {
-                            profile.auth === null &&
-                                <Link
-                                    label={`${t('LOG_IN')} / ${t('SIGN_UP')}`}
-                                    href={'#/intro'}
-                                />
-                        }
+                        <User profile={profile} onLogout={logoutButtonOnClick} />
                     </Section>
 
                     <Section>

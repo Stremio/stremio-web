@@ -5,7 +5,7 @@ import styles from './Link.less';
 type Props = {
     label: string,
     href?: string,
-    onClick: () => void,
+    onClick?: () => void,
 };
 
 const Link = ({ label, href, onClick }: Props) => {
