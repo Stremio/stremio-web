@@ -1,0 +1,42 @@
+.option {
+    position: relative;
+    width: 100%;
+    flex: none;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    overflow: visible;
+
+    .heading, .content {
+        flex: 1 1 50%;
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .heading {
+        display: flex;
+        gap: 0.75rem;
+
+        .icon {
+            width: 3rem;
+            height: 3rem;
+            color: var(--primary-foreground-color);
+        }
+
+        .label {
+            line-height: 1.5rem;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            color: var(--primary-foreground-color);
+        }
+    }
+
+    .content {
+        justify-content: center;
+        overflow: visible;
+    }
+}

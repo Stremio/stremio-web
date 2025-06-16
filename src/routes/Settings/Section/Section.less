@@ -1,0 +1,22 @@
+.section {
+    position: relative;
+    max-width: 35rem;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    padding: 3rem 0;
+    overflow: visible;
+
+    &:not(:last-child) {
+        border-bottom: thin solid var(--overlay-color);
+    }
+    
+    .label {
+        flex: none;
+        align-self: stretch;
+        font-size: 1.8rem;
+        line-height: 3.4rem;
+        margin-bottom: 2rem;
+        color: var(--primary-foreground-color);
+    }
+}

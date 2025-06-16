@@ -3,13 +3,14 @@
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
 @import (reference) '~stremio/common/screen-sizes.less';
 
-:import('~stremio/components/Toggle/styles.less') {
-    checkbox-icon: icon;
-}
-
 :import('~stremio/components/Multiselect/styles.less') {
     multiselect-menu-container: menu-container;
     multiselect-label: label;
+}
+
+:import('~stremio/routes/Settings/Option/Option.less') {
+    option-icon: icon;
+    option-content: content;
 }
 
 .settings-container {
@@ -78,335 +79,211 @@
             padding: 0 3rem;
             overflow-y: auto;
 
-            .section-container {
-                display: flex;
-                flex-direction: column;
-                padding: 3rem 0;
-                overflow: visible;
+            .user-info-option-container {
+                gap: 1rem;
 
-                &:not(:last-child) {
-                    border-bottom: thin solid var(--overlay-color);
-                }
-
-                .section-title {
-                    flex: none;
-                    align-self: stretch;
-                    font-size: 1.8rem;
-                    line-height: 3.4rem;
-                    margin-bottom: 3rem;
-                    color: var(--primary-foreground-color);
-                }
-
-                .section-category-container {
+                .user-info-content {
+                    flex: 1;
                     display: flex;
                     flex-direction: row;
                     align-items: center;
-                    gap: 0 1em;
-                    margin-bottom: 1.5rem;
-                    line-height: 2.4rem;
+
+                    .avatar-container {
+                        flex: none;
+                        align-self: stretch;
+                        height: 5rem;
+                        width: 5rem;
+                        margin-right: 1rem;
+                        border: 2px solid var(--primary-accent-color);
+                        border-radius: 50%;
+                        background-size: cover;
+                        background-repeat: no-repeat;
+                        background-position: center;
+                        background-origin: content-box;
+                        background-clip: content-box;
+                        opacity: 0.9;
+                        background-color: var(--primary-foreground-color);
+                    }
+
+                    .email-logout-container {
+                        flex: none;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: start;
+
+                        .email-label-container {
+                            display: flex;
+                            flex-direction: row;
+                            align-items: center;
+                        }
+
+                        .email-label-container {
+                            .email-label {
+                                flex: 1;
+                                font-size: 1.1rem;
+                                color: var(--primary-foreground-color);
+                                opacity: 0.7;
+                            }
+                        }
+                    }
+                }
+
+                .user-panel-container {
+                    flex: none;
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    width: 10rem;
+                    height: 3.5rem;
+                    border-radius: 3.5rem;
+                    background-color: var(--overlay-color);
+
+                    &:hover {
+                        outline: var(--focus-outline-size) solid var(--primary-foreground-color);
+                        background-color: transparent;
+                    }
+
+                    .user-panel-label {
+                        flex: 1;
+                        max-height: 2.4em;
+                        padding: 0 0.5rem;
+                        font-weight: 500;
+                        text-align: center;
+                        color: var(--primary-foreground-color);
+                    }
+                }
+            }
+
+            .trakt-container {
+                margin-top: 2rem;
+
+                .option-icon {
+                    color: var(--color-trakt);
+                }
+            }
+
+            .multiselect {
+                width: 100%;
+                padding: 0;
+                background: var(--overlay-color);
+        
+                >.multiselect-label {
+                    line-height: 1.5rem;
+                    max-height: 1.5rem;
+                }
+        
+                .multiselect-menu-container {
+                    overflow: auto;
+                }
+            }
+        
+            .color-input {
+                width: 100%;
+                padding: 1.3rem 1rem;
+                border-radius: 3rem;
+                border: 2px solid transparent;
+                transition: 0.3s all ease-in-out;
+        
+                &:hover {
+                    border-color: var(--overlay-color);
+                }
+            }
+
+            .button {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 3.5rem;
+                width: 100%;
+                padding: 0 2rem;
+                border-radius: 3.5rem;
+                font-weight: 500;
+                color: var(--primary-foreground-color);
+                background-color: var(--overlay-color);
+
+                &:hover {
+                    outline: var(--focus-outline-size) solid var(--primary-foreground-color);
+                    background-color: transparent;
+                }
+            }
+        
+            .configure-input-container {
+                .option-content {
+                    display: flex;
+                    align-items: center;
+                    gap: 1rem;
+                    overflow: hidden;
 
                     .label {
-                        flex: none;
-                        font-size: 1.1rem;
+                        flex: auto;
+                        white-space: pre;
+                        text-overflow: ellipsis;
                         color: var(--primary-foreground-color);
+                        padding: 0 1rem;
                     }
-
-                    .icon {
+            
+                    .configure-button-container {
                         flex: none;
-                        width: 2rem;
-                        height: 2rem;
-                        color: var(--primary-foreground-color);
-                    }
-                }
-
-                .option-container {
-                    flex: none;
-                    align-self: stretch;
-                    display: flex;
-                    flex-direction: row;
-                    align-items: center;
-                    max-width: 35rem;
-                    margin-bottom: 2rem;
-                    overflow: visible;
-
-                    &.link-container {
-                        margin-bottom: 0.5rem;
-                    }
-                    
-                    &:last-child {
-                        margin-bottom: 0;
-                    }
-
-                    &.user-info-option-container {
-                        gap: 1rem;
-
-                        .user-info-content {
-                            flex: 1;
-                            display: flex;
-                            flex-direction: row;
-                            align-items: center;
-
-                            .avatar-container {
-                                flex: none;
-                                align-self: stretch;
-                                height: 5rem;
-                                width: 5rem;
-                                margin-right: 1rem;
-                                border: 2px solid var(--primary-accent-color);
-                                border-radius: 50%;
-                                background-size: cover;
-                                background-repeat: no-repeat;
-                                background-position: center;
-                                background-origin: content-box;
-                                background-clip: content-box;
-                                opacity: 0.9;
-                                background-color: var(--primary-foreground-color);
-                            }
-
-                            .email-logout-container {
-                                flex: none;
-                                display: flex;
-                                flex-direction: column;
-
-                                .email-label-container, .logout-button-container {
-                                    display: flex;
-                                    flex-direction: row;
-                                    align-items: center;
-                                }
-
-                                .email-label-container {
-                                    .email-label {
-                                        flex: 1;
-                                        font-size: 1.1rem;
-                                        color: var(--primary-foreground-color);
-                                        opacity: 0.7;
-                                    }
-                                }
-
-                                .logout-button-container {
-                                    &:hover, &:focus {
-                                        outline: none;
-
-                                        .logout-label {
-                                            text-decoration: underline;
-                                        }
-                                    }
-
-                                    .logout-label {
-                                        flex: 1;
-                                        color: var(--primary-accent-color);
-                                    }
-                                }
-                            }
-                        }
-
-                        .user-panel-container {
-                            flex: none;
-                            display: flex;
-                            flex-direction: row;
-                            align-items: center;
-                            width: 10rem;
-                            height: 3.5rem;
-                            border-radius: 3.5rem;
-                            background-color: var(--overlay-color);
-
-                            &:hover {
-                                outline: var(--focus-outline-size) solid var(--primary-foreground-color);
-                                background-color: transparent;
-                            }
-
-                            .user-panel-label {
-                                flex: 1;
-                                max-height: 2.4em;
-                                padding: 0 0.5rem;
-                                font-weight: 500;
-                                text-align: center;
-                                color: var(--primary-foreground-color);
-                            }
-                        }
-                    }
-
-                    .option-name-container, .option-input-container {
-                        flex: 1 1 50%;
+                        width: 3rem;
+                        height: 3rem;
+                        border-radius: 100%;
                         display: flex;
-                        flex-direction: row;
                         align-items: center;
-
+                        justify-content: center;
+                        background-color: var(--overlay-color);
+            
+                        &:hover {
+                            outline: var(--focus-outline-size) solid var(--primary-foreground-color);
+                            background-color: transparent;
+                        }
+            
                         .icon {
                             flex: none;
-                            width: 1.5rem;
-                            height: 1.5rem;
-                            margin-right: 0.5rem;
+                            width: 1rem;
+                            height: 1rem;
+                            margin: 0;
                             color: var(--primary-foreground-color);
                         }
-
-                        .label {
-                            flex-grow: 0;
-                            flex-shrink: 1;
-                            flex-basis: auto;
-                            line-height: 1.5rem;
-                            white-space: nowrap;
-                            text-overflow: ellipsis;
-                            color: var(--primary-foreground-color);
-                        }
-
-                        &.trakt-icon {
-                            .icon {
-                                width: 3rem;
-                                height: 3rem;
-                                color: var(--color-trakt);
-                            }
-                        }
                     }
+                }
+            }
+        
+            .shortcut-container {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 0;
+                overflow: visible;
+        
+                kbd {
+                    flex: 0 1 auto;
+                    height: 2.5rem;
+                    min-width: 2.5rem;
+                    line-height: 2.5rem;
+                    padding: 0 1rem;
+                    font-weight: 500;
+                    color: var(--primary-foreground-color);
+                    border-radius: 0.25em;
+                    box-shadow: 0 4px 0 1px var(--modal-background-color);
+                    background-color: var(--overlay-color);
+                }
+        
+                .label {
+                    flex: none;
+                    margin: 0 1rem;
+                    white-space: nowrap;
+                    color: var(--primary-foreground-color);
+                }
+            }
 
-                    .option-name-container {
-                        justify-content: flex-start;
-                        padding: 1rem 1rem 1rem 0;
-                        margin-right: 2rem;
-                    }
+            .info-container {
+                .option-content {
+                    color: var(--primary-foreground-color);
+                    overflow: hidden;
 
-                    .option-input-container {
-                        padding: 1rem 1.5rem;
-                        
-                        &.multiselect-container {
-                            padding: 0;
-                            background: var(--overlay-color);
-                        }
-
-                        &.button-container {
-                            justify-content: center;
-                            height: 3.5rem;
-                            border-radius: 3.5rem;
-                            background-color: var(--overlay-color);
-
-                            &:hover {
-                                outline: var(--focus-outline-size) solid var(--primary-foreground-color);
-                                background-color: transparent;
-                            }
-
-                            .label {
-                                font-weight: 500;
-                            }
-                        }
-
-                        &.multiselect-container {
-                            >.multiselect-label {
-                                line-height: 1.5rem;
-                                max-height: 1.5rem;
-                            }
-
-                            .multiselect-menu-container {
-                                overflow: auto;
-                            }
-                        }
-
-                        &.link-input-container {
-                            flex: 0 1 auto;
-                            padding: 0;
-                            
-                            .label {
-                                color: var(--primary-accent-color);
-                            }
-
-                            &:hover {
-                                .label {
-                                    text-decoration: underline;
-                                }
-                            }
-                        }
-
-                        &.checkbox-container {
-                            justify-content: center;
-
-                            .checkbox-icon {
-                                width: 1.5rem;
-                                height: 1.5rem;
-                            }
-                        }
-
-                        &.color-input-container {
-                            padding: 1.3rem 1rem;
-                            border-radius: 3rem;
-                            border: 2px solid transparent;
-                            transition: 0.3s all ease-in-out;
-
-                            &:hover {
-                                border-color: var(--overlay-color);
-                            }
-                        }
-
-                        &.info-container {
-                            justify-content: center;
-
-                            &.selectable {
-                                user-select: text;
-
-                                .label {
-                                    user-select: text;
-                                }
-                            }
-                        }
-
-                        &.configure-input-container {
-                            padding: 0;
-
-                            .label {
-                                flex-grow: 1;
-                                white-space: pre;
-                                text-overflow: ellipsis;
-                                padding: 0 1rem;
-                            }
-
-                            .configure-button-container {
-                                flex: none;
-                                width: 3rem;
-                                height: 3rem;
-                                border-radius: 100%;
-                                display: flex;
-                                flex-direction: row;
-                                align-items: center;
-                                justify-content: center;
-                                background-color: var(--overlay-color);
-
-                                &:hover {
-                                    outline: var(--focus-outline-size) solid var(--primary-foreground-color);
-                                    background-color: transparent;
-                                }
-
-                                .icon {
-                                    flex: none;
-                                    width: 1rem;
-                                    height: 1rem;
-                                    margin: 0;
-                                    color: var(--primary-foreground-color);
-                                }
-                            }
-                        }
-
-                        &.shortcut-container {
-                            justify-content: center;
-                            padding: 0;
-                            overflow: visible;
-
-                            kbd {
-                                flex: 0 1 auto;
-                                height: 2.5rem;
-                                min-width: 2.5rem;
-                                line-height: 2.5rem;
-                                padding: 0 1rem;
-                                font-weight: 500;
-                                color: var(--primary-foreground-color);
-                                border-radius: 0.25em;
-                                box-shadow: 0 4px 0 1px var(--modal-background-color);
-                                background-color: var(--overlay-color);
-                            }
-
-                            .label {
-                                margin: 0 1rem;
-                                white-space: nowrap;
-                                color: var(--primary-foreground-color);
-                            }
-                        }
+                    .label {
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
                     }
                 }
             }
@@ -446,14 +323,12 @@
             .sections-container {
                 padding: 0 1.5rem;
 
-                .section-container {
-                    .user-info-option-container {
-                        flex-direction: column;
-                        align-items: flex-start;
+                .user-info-option-container {
+                    flex-direction: column;
+                    align-items: flex-start;
 
-                        .user-panel-container {
-                            width: 100% !important;
-                        }
+                    .user-panel-container {
+                        width: 100% !important;
                     }
                 }
 
