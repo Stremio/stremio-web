@@ -9,6 +9,8 @@ const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
 const { useProfile, usePlatform, useStreamingServer, withCoreSuspender, useToast } = require('stremio/common');
 const { Button, ColorInput, MainNavBars, MultiselectMenu, Toggle } = require('stremio/components');
+const { SECTIONS } = require('./constants');
+const { default: Menu } = require('./Menu');
 const { default: Link } = require('./Link');
 const { default: Option } = require('./Option');
 const { default: Section } = require('./Section');
@@ -18,11 +20,6 @@ const useProfileSettingsInputs = require('./useProfileSettingsInputs');
 const useStreamingServerSettingsInputs = require('./useStreamingServerSettingsInputs');
 const useDataExport = require('./useDataExport');
 const styles = require('./styles');
-
-const GENERAL_SECTION = 'general';
-const PLAYER_SECTION = 'player';
-const STREAMING_SECTION = 'streaming';
-const SHORTCUTS_SECTION = 'shortcuts';
 
 const Settings = () => {
     const { t } = useTranslation();
@@ -119,12 +116,12 @@ const Settings = () => {
     const streamingServerSectionRef = React.useRef(null);
     const shortcutsSectionRef = React.useRef(null);
     const sections = React.useMemo(() => ([
-        { ref: generalSectionRef, id: GENERAL_SECTION },
-        { ref: playerSectionRef, id: PLAYER_SECTION },
-        { ref: streamingServerSectionRef, id: STREAMING_SECTION },
-        { ref: shortcutsSectionRef, id: SHORTCUTS_SECTION },
+        { ref: generalSectionRef, id: SECTIONS.GENERAL },
+        { ref: playerSectionRef, id: SECTIONS.PLAYER },
+        { ref: streamingServerSectionRef, id: SECTIONS.STREAMING },
+        { ref: shortcutsSectionRef, id: SECTIONS.SHORTCUTS },
     ]), []);
-    const [selectedSectionId, setSelectedSectionId] = React.useState(GENERAL_SECTION);
+    const [selectedSectionId, setSelectedSectionId] = React.useState(SECTIONS.GENERAL);
     const updateSelectedSectionId = React.useCallback(() => {
         if (sectionsContainerRef.current.scrollTop + sectionsContainerRef.current.clientHeight >= sectionsContainerRef.current.scrollHeight - 50) {
             setSelectedSectionId(sections[sections.length - 1].id);
@@ -173,39 +170,12 @@ const Settings = () => {
     return (
         <MainNavBars className={styles['settings-container']} route={'settings'}>
             <div className={classnames(styles['settings-content'], 'animation-fade-in')}>
-                <div className={styles['side-menu-container']}>
-                    <Button className={classnames(styles['side-menu-button'], { [styles['selected']]: selectedSectionId === GENERAL_SECTION })} title={ t('SETTINGS_NAV_GENERAL') } data-section={GENERAL_SECTION} onClick={sideMenuButtonOnClick}>
-                        { t('SETTINGS_NAV_GENERAL') }
-                    </Button>
-                    <Button className={classnames(styles['side-menu-button'], { [styles['selected']]: selectedSectionId === PLAYER_SECTION })} title={ t('SETTINGS_NAV_PLAYER') }data-section={PLAYER_SECTION} onClick={sideMenuButtonOnClick}>
-                        { t('SETTINGS_NAV_PLAYER') }
-                    </Button>
-                    <Button className={classnames(styles['side-menu-button'], { [styles['selected']]: selectedSectionId === STREAMING_SECTION })} title={ t('SETTINGS_NAV_STREAMING') } data-section={STREAMING_SECTION} onClick={sideMenuButtonOnClick}>
-                        { t('SETTINGS_NAV_STREAMING') }
-                    </Button>
-                    <Button className={classnames(styles['side-menu-button'], { [styles['selected']]: selectedSectionId === SHORTCUTS_SECTION })} title={ t('SETTINGS_NAV_SHORTCUTS') } data-section={SHORTCUTS_SECTION} onClick={sideMenuButtonOnClick}>
-                        { t('SETTINGS_NAV_SHORTCUTS') }
-                    </Button>
-                    <div className={styles['spacing']} />
-                    <div className={styles['version-info-label']} title={process.env.VERSION}>
-                        App Version: {process.env.VERSION}
-                    </div>
-                    <div className={styles['version-info-label']} title={process.env.COMMIT_HASH}>
-                        Build Version: {process.env.COMMIT_HASH}
-                    </div>
-                    {
-                        streamingServer.settings !== null && streamingServer.settings.type === 'Ready' ?
-                            <div className={styles['version-info-label']} title={streamingServer.settings.content.serverVersion}>Server Version: {streamingServer.settings.content.serverVersion}</div>
-                            :
-                            null
-                    }
-                    {
-                        typeof shell?.transport?.props?.shellVersion === 'string' ?
-                            <div className={styles['version-info-label']} title={shell.transport.props.shellVersion}>Shell Version: {shell.transport.props.shellVersion}</div>
-                            :
-                            null
-                    }
-                </div>
+                <Menu
+                    selected={selectedSectionId}
+                    shell={shell}
+                    streamingServer={streamingServer}
+                    onSelect={sideMenuButtonOnClick}
+                />
 
                 <div ref={sectionsContainerRef} className={styles['sections-container']} onScroll={sectionsContainerOnScroll}>
                     <Section ref={generalSectionRef}>

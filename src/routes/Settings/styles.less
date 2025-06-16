@@ -24,55 +24,6 @@
         display: flex;
         flex-direction: row;
 
-        .side-menu-container {
-            flex: none;
-            align-self: stretch;
-            display: flex;
-            flex-direction: column;
-            width: 18rem;
-            padding: 3rem 1.5rem;
-
-            .side-menu-button {
-                flex: none;
-                align-self: stretch;
-                display: flex;
-                align-items: center;
-                height: 4rem;
-                border-radius: 4rem;
-                padding: 2rem;
-                margin-bottom: 0.5rem;
-                font-size: 1.1rem;
-                font-weight: 500;
-                color: var(--primary-foreground-color);
-                opacity: 0.4;
-
-                &.selected {
-                    font-weight: 600;
-                    color: var(--primary-foreground-color);
-                    background-color: var(--overlay-color);
-                    opacity: 1;
-                }
-
-                &:hover {
-                    background-color: var(--overlay-color);
-                }
-            }
-
-            .spacing {
-                flex: 1;
-            }
-
-            .version-info-label {
-                flex: 0 1 auto;
-                margin: 0.5rem 0;
-                white-space: nowrap;
-                text-overflow: ellipsis;
-                color: var(--primary-foreground-color);
-                opacity: 0.3;
-                overflow: hidden;
-            }
-        }
-
         .sections-container {
             flex: 1;
             align-self: stretch;
@@ -298,10 +249,6 @@
 @media only screen and (max-width: @xsmall) {
     .settings-container {
         .settings-content {
-            .side-menu-container {
-                display: none;
-            }
-
             .sections-container {
                 .versions-section-container {
                     display: flex;
@@ -315,10 +262,6 @@
     .settings-container {
         .settings-content {
             flex-direction: column-reverse;
-
-            .side-menu-container {
-                display: none;
-            }
 
             .sections-container {
                 padding: 0 1.5rem;
