@@ -56,13 +56,12 @@ const Dropdown = ({ level, setLevel, options, onSelect, value, menuOpen }: Props
             role={'listbox'}
             ref={containerRef}
         >
-            {
-                level > 0 ?
-                    <Button className={styles['back-button']} onClick={handleBackClick}>
-                        <Icon name={'caret-left'} className={styles['back-button-icon']} />
-                        {t('BACK')}
-                    </Button>
-                    : null
+            {level > 0 ?
+                <Button className={styles['back-button']} onClick={handleBackClick}>
+                    <Icon name={'caret-left'} className={styles['back-button-icon']} />
+                    {t('BACK')}
+                </Button>
+                : null
             }
             {(isLanguageDropdown ? sortedOptions : options)?.map((option: MultiselectMenuOption) => (
                 <Option
