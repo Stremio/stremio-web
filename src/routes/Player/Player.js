@@ -46,6 +46,13 @@ const Player = ({ urlParams, queryParams }) => {
     const toast = useToast();
 
     const [seeking, setSeeking] = React.useState(false);
+    const [playerVolume, setPlayerVolume] = React.useState(() => {
+        const storedVolume = localStorage.getItem('player_volume');
+        return storedVolume ? parseFloat(storedVolume) : 100;
+    });
+    const [playerMuted, setPlayerMuted] = React.useState(() => {
+        return localStorage.getItem('player_muted') === "true";
+    });
 
     const [casting, setCasting] = React.useState(() => {
         return services.chromecast.active && services.chromecast.transport.getCastState() === cast.framework.CastState.CONNECTED;
@@ -182,14 +189,17 @@ const Player = ({ urlParams, queryParams }) => {
     const onPauseRequestedDebounced = React.useCallback(debounce(onPauseRequested, 200), []);
     const onMuteRequested = React.useCallback(() => {
         video.setProp('muted', true);
+        setPlayerMuted(true);
     }, []);
 
     const onUnmuteRequested = React.useCallback(() => {
         video.setProp('muted', false);
+        setPlayerMuted(false);
     }, []);
 
     const onVolumeChangeRequested = React.useCallback((volume) => {
         video.setProp('volume', volume);
+        setPlayerVolume(volume);
     }, []);
 
     const onSeekRequested = React.useCallback((time) => {
@@ -347,6 +357,8 @@ const Player = ({ urlParams, queryParams }) => {
                 shellTransport: services.shell.active ? services.shell.transport : null,
             });
         }
+        video.setProp('volume', playerVolume);
+        video.setProp('muted', playerMuted);
     }, [streamingServer.baseUrl, player.selected, forceTranscoding, casting]);
     React.useEffect(() => {
         if (video.state.stream !== null) {
@@ -357,6 +369,14 @@ const Player = ({ urlParams, queryParams }) => {
             video.addExtraSubtitlesTracks(tracks);
         }
     }, [player.subtitles, video.state.stream]);
+
+    React.useEffect(() => {
+        localStorage.setItem('player_volume', playerVolume);
+    }, [playerVolume]);
+
+    React.useEffect(() => {
+        localStorage.setItem('player_muted', playerMuted);
+    }, [playerMuted]);
 
     React.useEffect(() => {
         video.setProp('subtitlesSize', settings.subtitlesSize);
