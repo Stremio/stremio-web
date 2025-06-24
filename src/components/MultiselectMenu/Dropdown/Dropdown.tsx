@@ -63,15 +63,17 @@ const Dropdown = ({ level, setLevel, options, onSelect, value, menuOpen }: Props
                 </Button>
                 : null
             }
-            {(isLanguageDropdown ? sortedOptions : options)?.map((option: MultiselectMenuOption) => (
-                <Option
-                    key={option.value}
-                    ref={handleSetOptionRef(option.value)}
-                    option={option}
-                    onSelect={onSelect}
-                    selectedValue={value}
-                />
-            ))}
+            {(isLanguageDropdown ? sortedOptions : options)
+                ?.filter((option: MultiselectMenuOption) => !option.hidden)
+                .map((option: MultiselectMenuOption) => (
+                    <Option
+                        key={option.value}
+                        ref={handleSetOptionRef(option.value)}
+                        option={option}
+                        onSelect={onSelect}
+                        selectedValue={value}
+                    />
+                ))}
         </div>
     );
 };
