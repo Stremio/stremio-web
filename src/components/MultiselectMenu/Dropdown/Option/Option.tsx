@@ -5,6 +5,8 @@ import classNames from 'classnames';
 import { Button } from 'stremio/components';
 import styles from './Option.less';
 import Icon from '@stremio/stremio-icons/react';
+import useLanguageSorting from '../useLanguageSorting';
+import interfaceLanguages from 'stremio/common/interfaceLanguages.json';
 
 type Props = {
     option: MultiselectMenuOption;
@@ -13,7 +15,14 @@ type Props = {
 };
 
 const Option = forwardRef<HTMLButtonElement, Props>(({ option, selectedValue, onSelect }, ref) => {
+    const { userLangCode } = useLanguageSorting();
+
     const selected = useMemo(() => option?.value === selectedValue, [option, selectedValue]);
+
+    const separator = useMemo(() => {
+        const lang = interfaceLanguages.find((l) => l.name === option?.label);
+        return lang ? userLangCode.some((code) => lang.codes.includes(code)) : false;
+    }, [option, userLangCode]);
 
     const handleClick = useCallback(() => {
         onSelect(option.value);
@@ -22,7 +31,7 @@ const Option = forwardRef<HTMLButtonElement, Props>(({ option, selectedValue, on
     return (
         <Button
             ref={ref}
-            className={classNames(styles['option'], { [styles['selected']]: selected })}
+            className={classNames(styles['option'], { [styles['selected']]: selected }, { [styles['separator']]: separator })}
             key={option.id}
             onClick={handleClick}
             aria-selected={selected}

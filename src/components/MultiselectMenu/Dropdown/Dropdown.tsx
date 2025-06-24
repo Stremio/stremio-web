@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import Option from './Option';
 import Icon from '@stremio/stremio-icons/react';
 import styles from './Dropdown.less';
-import interfaceLanguages from '../../../common/interfaceLanguages.json';
+import useLanguageSorting from './useLanguageSorting';
 
 type Props = {
     options: MultiselectMenuOption[];
@@ -18,20 +18,9 @@ type Props = {
     onSelect: (value: any) => void;
 };
 
-function getThreeLetterLangCode(localeCode: string): string {
-    if (!interfaceLanguages || interfaceLanguages.length === 0) {
-        console.warn('Interface languages are not defined or empty. Falling back to "eng".');
-        return 'eng';
-    }
-    const language = interfaceLanguages.find(lang => lang.codes.includes(localeCode));
-    if (!language) {
-        console.warn(`Unknown language code: ${localeCode}. Falling back to 'eng'.`);
-        return 'eng';
-    }
-    return language.codes[1];
-}
 const Dropdown = ({ level, setLevel, options, onSelect, value, menuOpen }: Props) => {
     const { t } = useTranslation();
+    const { isLanguageDropdown, sortedOptions } = useLanguageSorting(options);
     const optionsRef = useRef(new Map());
     const containerRef = useRef(null);
 
@@ -61,66 +50,27 @@ const Dropdown = ({ level, setLevel, options, onSelect, value, menuOpen }: Props
         }
     }, [menuOpen, selectedOption]);
 
-    const navigatorLanguageFourLetterCode = navigator.language || 'en-US';
-    const navigatorLanguageThreeLetterCode:string = getThreeLetterLangCode(navigatorLanguageFourLetterCode) || 'eng';
-
-    const getPriority = (option: MultiselectMenuOption) => {
-        if (!option || !option.value) {
-            console.warn('Invalid option or option value:', option);    
-            return 3;
-        }
-        const optionValue = String(option.value);
-        const LangThreeLetterCode = optionValue.length === 3 ? optionValue : getThreeLetterLangCode(optionValue) || 'eng';
-
-        if (LangThreeLetterCode === navigatorLanguageThreeLetterCode) return 1;
-        if (LangThreeLetterCode === 'eng') return 2;
-        if (LangThreeLetterCode === 'None') return 3;
-        return 4;
-    };
-
     return (
         <div
             className={classNames(styles['dropdown'], { [styles['open']]: menuOpen })}
             role={'listbox'}
             ref={containerRef}
         >
-            {level > 0 ?
+            {level > 0 && (
                 <Button className={styles['back-button']} onClick={handleBackClick}>
                     <Icon name={'caret-left'} className={styles['back-button-icon']} />
                     {t('BACK')}
                 </Button>
-                : null
-            }
-
-                {options
-                    .filter((option: MultiselectMenuOption) => !option.hidden)
-                    .sort((a, b) => {
-                        
-                        // Sort by priority first
-                        const aPriority = getPriority(a);
-                        const bPriority = getPriority(b);
-                        
-                        //Lowest number is ranked highest
-                        if (aPriority !== bPriority) {
-                            return aPriority - bPriority;
-                        }
-                       
-                        // Same priority = alphabetical by label eg "english", "french"
-                        return a.label.localeCompare(b.label);
-                    })
-                .map((option: MultiselectMenuOption) => (
-                    <div 
-                    key={`${String(option.label)}-${String(option.value)}`}>
-                    <Option
-                        key={option.value}
-                        ref={handleSetOptionRef(option.value)}
-                        option={option}
-                        onSelect={onSelect}
-                        selectedValue={value}
-                    />
-                    </div>
-                ))
-            }
+            )}
+            {(isLanguageDropdown ? sortedOptions : options)?.map((option: MultiselectMenuOption) => (
+                <Option
+                    key={option.value}
+                    ref={handleSetOptionRef(option.value)}
+                    option={option}
+                    onSelect={onSelect}
+                    selectedValue={value}
+                />
+            ))}
         </div>
     );
 };
