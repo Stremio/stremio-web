@@ -202,6 +202,16 @@ const Player = ({ urlParams, queryParams }) => {
         seek(time, video.state.duration, video.state.manifest?.name);
     }, [video.state.duration, video.state.manifest]);
 
+    const onForwardClick = React.useCallback(() => {
+        setSeeking(true);
+        onSeekRequested(video.state.time + settings.seekTimeDuration);
+    }, [video.state.time, settings.seekTimeDuration]);
+
+    const onBackwardClick = React.useCallback(() => {
+        setSeeking(true);
+        onSeekRequested(video.state.time - settings.seekTimeDuration);
+    }, [video.state.time, settings.seekTimeDuration]);
+
     const onPlaybackSpeedChanged = React.useCallback((rate) => {
         video.setProp('playbackSpeed', rate);
     }, []);
@@ -816,6 +826,8 @@ const Player = ({ urlParams, queryParams }) => {
                 onMouseMove={onBarMouseMove}
                 onMouseOver={onBarMouseMove}
                 onTouchEnd={onContainerMouseLeave}
+                onForwardClick={onForwardClick}
+                onBackwardClick={onBackwardClick}
             />
             <Indicator
                 className={classnames(styles['layer'], styles['indicator-layer'])}

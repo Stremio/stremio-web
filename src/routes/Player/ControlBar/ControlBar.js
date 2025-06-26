@@ -41,6 +41,8 @@ const ControlBar = ({
     onToggleOptionsMenu,
     onToggleStatisticsMenu,
     onTouchEnd,
+    onForwardClick,
+    onBackwardClick,
     ...props
 }) => {
     const { chromecast } = useServices();
@@ -76,6 +78,16 @@ const ControlBar = ({
             }
         }
     }, [paused, onPlayRequested, onPauseRequested]);
+    const onForwardButtonClick = React.useCallback(() => {
+        if (typeof onForwardClick === 'function') {
+            onForwardClick();
+        }
+    }, [onForwardClick]);
+    const onBackwardButtonClick = React.useCallback(() => {
+        if (typeof onBackwardClick === 'function') {
+            onBackwardClick();
+        }
+    }, [onBackwardClick]);
     const onNextVideoButtonClick = React.useCallback(() => {
         if (nextVideo !== null && typeof onNextVideoRequested === 'function') {
             onNextVideoRequested();
@@ -116,6 +128,12 @@ const ControlBar = ({
             <div className={styles['control-bar-buttons-container']}>
                 <Button className={classnames(styles['control-bar-button'], { 'disabled': typeof paused !== 'boolean' })} title={paused ? t('PLAYER_PLAY') : t('PLAYER_PAUSE')} tabIndex={-1} onClick={onPlayPauseButtonClick}>
                     <Icon className={styles['icon']} name={typeof paused !== 'boolean' || paused ? 'play' : 'pause'} />
+                </Button>
+                <Button className={classnames(styles['control-bar-button'], { 'disabled': typeof paused !== 'boolean' })} title={t('PLAYER_SKIP_BACK')} tabIndex={-1} onClick={onBackwardButtonClick}>
+                    <Icon className={styles['icon']} name={'skip-back'} />
+                </Button>
+                <Button className={classnames(styles['control-bar-button'], { 'disabled': typeof paused !== 'boolean' })} title={t('PLAYER_SKIP_FORWARD')} tabIndex={-1} onClick={onForwardButtonClick}>
+                    <Icon className={styles['icon']} name={'skip-forward'} />
                 </Button>
                 {
                     nextVideo !== null ?
@@ -213,6 +231,8 @@ ControlBar.propTypes = {
     onToggleSideDrawer: PropTypes.func,
     onToggleOptionsMenu: PropTypes.func,
     onToggleStatisticsMenu: PropTypes.func,
+    onBackwardClick: PropTypes.func,
+    onForwardClick: PropTypes.func,
     onMouseOver: PropTypes.func,
     onMouseMove: PropTypes.func,
     onTouchEnd: PropTypes.func,
