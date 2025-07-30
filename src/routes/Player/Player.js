@@ -357,7 +357,7 @@ const Player = ({ urlParams, queryParams }) => {
                         []
                 },
                 autoplay: true,
-                playbackSpeed: Math.floor(settings.playbackSpeed / 1000),
+                playbackSpeed: settings.playbackSpeed / 1000,
                 time: player.libraryItem !== null &&
                     player.selected.streamRequest !== null &&
                     player.selected.streamRequest.path !== null &&
