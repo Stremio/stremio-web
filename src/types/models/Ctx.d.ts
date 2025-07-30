@@ -43,6 +43,8 @@ type Settings = {
     subtitlesTextColor: string,
     surroundSound: boolean,
     pauseOnMinimize: boolean,
+    volume: number,
+    playbackSpeed: number
 };
 
 type Profile = {

@@ -102,7 +102,9 @@ const Player = ({ urlParams, queryParams }) => {
         video.setProp('extraSubtitlesTextColor', settings.subtitlesTextColor);
         video.setProp('extraSubtitlesBackgroundColor', settings.subtitlesBackgroundColor);
         video.setProp('extraSubtitlesOutlineColor', settings.subtitlesOutlineColor);
-    }, [settings.subtitlesSize, settings.subtitlesOffset, settings.subtitlesTextColor, settings.subtitlesBackgroundColor, settings.subtitlesOutlineColor]);
+        video.setProp('volume', settings.volume);
+        video.setProp('playbackSpeed', settings.playbackSpeed/1000);
+    }, [settings.subtitlesSize, settings.subtitlesOffset, settings.subtitlesTextColor, settings.subtitlesBackgroundColor, settings.subtitlesOutlineColor, settings.volume, settings.playbackSpeed]);
 
     const handleNextVideoNavigation = React.useCallback((deepLinks) => {
         if (deepLinks.player) {
@@ -195,6 +197,16 @@ const Player = ({ urlParams, queryParams }) => {
 
     const onVolumeChangeRequested = React.useCallback((volume) => {
         video.setProp('volume', volume);
+        services.core.transport.dispatch({
+            action: 'Ctx',
+            args: {
+                action: 'UpdateSettings',
+                args: {
+                    ...settings,
+                    volume: Math.floor(volume)
+                }
+            }
+        });
     }, []);
 
     const onSeekRequested = React.useCallback((time) => {
@@ -204,6 +216,16 @@ const Player = ({ urlParams, queryParams }) => {
 
     const onPlaybackSpeedChanged = React.useCallback((rate) => {
         video.setProp('playbackSpeed', rate);
+        services.core.transport.dispatch({
+            action: 'Ctx',
+            args: {
+                action: 'UpdateSettings',
+                args: {
+                    ...settings,
+                    playbackSpeed: Math.floor(rate * 1000)
+                }
+            }
+        });
     }, []);
 
     const onSubtitlesTrackSelected = React.useCallback((id) => {
@@ -335,6 +357,7 @@ const Player = ({ urlParams, queryParams }) => {
                         []
                 },
                 autoplay: true,
+                playbackSpeed: Math.floor(settings.playbackSpeed / 1000),
                 time: player.libraryItem !== null &&
                     player.selected.streamRequest !== null &&
                     player.selected.streamRequest.path !== null &&
