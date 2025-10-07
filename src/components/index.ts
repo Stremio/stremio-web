@@ -9,6 +9,7 @@ import ContinueWatchingItem from './ContinueWatchingItem';
 import DelayedRenderer from './DelayedRenderer';
 import EventModal from './EventModal';
 import HorizontalScroll from './HorizontalScroll';
+import HoverPreview from './HoverPreview';
 import Image from './Image';
 import LibItem from './LibItem';
 import MainNavBars from './MainNavBars';
@@ -42,6 +43,7 @@ export {
     DelayedRenderer,
     EventModal,
     HorizontalScroll,
+    HoverPreview,
     Image,
     LibItem,
     MainNavBars,

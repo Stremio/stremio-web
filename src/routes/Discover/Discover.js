@@ -157,21 +157,38 @@ const Discover = ({ urlParams, queryParams }) => {
                                     </div>
                                     :
                                     <div ref={metasContainerRef} className={classnames(styles['meta-items-container'], 'animation-fade-in')} onScroll={onScroll} onFocusCapture={metaItemsOnFocusCapture}>
-                                        {discover.catalog.content.content.map((metaItem, index) => (
-                                            <MetaItem
-                                                key={index}
-                                                className={classnames({ 'selected': selectedMetaItemIndex === index })}
-                                                type={metaItem.type}
-                                                name={metaItem.name}
-                                                poster={metaItem.poster}
-                                                posterShape={metaItem.posterShape}
-                                                playname={selectedMetaItemIndex === index}
-                                                deepLinks={metaItem.deepLinks}
-                                                watched={metaItem.watched}
-                                                data-index={index}
-                                                onClick={metaItemOnClick}
-                                            />
-                                        ))}
+                                        {discover.catalog.content.content.map((metaItem, index) => {
+                                            // Extract genres from links if available
+                                            const genres = metaItem.links ? metaItem.links
+                                                .filter(link => link && typeof link.category === 'string' && 
+                                                    (link.category.toLowerCase() === 'genre' || link.category.toLowerCase() === 'genres'))
+                                                .map(link => link.name) : null;
+                                                
+                                            // Extract IMDb rating if available
+                                            const imdbRating = metaItem.links ? metaItem.links
+                                                .find(link => link && link.category === CONSTANTS.IMDB_LINK_CATEGORY && typeof link.name === 'string')?.name : null;
+                                            
+                                            return (
+                                                <MetaItem
+                                                    key={index}
+                                                    className={classnames({ 'selected': selectedMetaItemIndex === index })}
+                                                    type={metaItem.type}
+                                                    name={metaItem.name}
+                                                    poster={metaItem.poster}
+                                                    posterShape={metaItem.posterShape}
+                                                    playname={selectedMetaItemIndex === index}
+                                                    deepLinks={metaItem.deepLinks}
+                                                    watched={metaItem.watched}
+                                                    releaseInfo={metaItem.releaseInfo}
+                                                    runtime={metaItem.runtime}
+                                                    description={metaItem.description}
+                                                    genres={genres}
+                                                    rating={imdbRating}
+                                                    data-index={index}
+                                                    onClick={metaItemOnClick}
+                                                />
+                                            );
+                                        })}
                                     </div>
                     }
                 </div>

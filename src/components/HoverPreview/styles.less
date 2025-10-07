@@ -1,0 +1,182 @@
+// Copyright (C) 2017-2025 Smart code 203358507
+
+@import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
+@import (reference) '~stremio/common/screen-sizes.less';
+
+.hover-preview-container {
+    position: absolute;
+    z-index: 100;
+    width: 22rem;
+    max-width: 90vw;
+    background-color: var(--primary-background-color);
+    border-radius: var(--border-radius);
+    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    pointer-events: none;
+    
+    // Default position (above the card)
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 1rem;
+    
+    // Make sure the preview stays within viewport
+    max-height: calc(80vh - 2rem);
+    overflow-y: auto;
+    
+    &.position-top {
+        bottom: 100%;
+        top: auto;
+        margin-bottom: 1rem;
+        margin-top: 0;
+        
+        &::after {
+            top: 100%;
+            bottom: auto;
+            border-color: var(--primary-background-color) transparent transparent transparent;
+        }
+    }
+    
+    &.position-bottom {
+        top: 100%;
+        bottom: auto;
+        margin-top: 1rem;
+        margin-bottom: 0;
+        
+        &::after {
+            bottom: 100%;
+            top: auto;
+            border-color: transparent transparent var(--primary-background-color) transparent;
+        }
+    }
+    
+    &.position-left {
+        left: 0;
+        transform: translateX(0);
+        
+        &::after {
+            left: 2rem;
+            transform: translateX(0);
+        }
+        
+        &.position-top::after,
+        &.position-bottom::after {
+            left: 2rem;
+        }
+    }
+    
+    &.position-right {
+        left: auto;
+        right: 0;
+        transform: translateX(0);
+        
+        &::after {
+            left: auto;
+            right: 2rem;
+            transform: translateX(0);
+        }
+        
+        &.position-top::after,
+        &.position-bottom::after {
+            right: 2rem;
+            left: auto;
+        }
+    }
+    
+    &.position-center {
+        left: 50%;
+        transform: translateX(-50%);
+        
+        &::after {
+            left: 50%;
+            transform: translateX(-50%);
+        }
+    }
+    
+    &::after {
+        content: '';
+        position: absolute;
+        border-width: 0.6rem;
+        border-style: solid;
+    }
+    
+    .content {
+        padding: 1.2rem;
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.6rem;
+            
+            .title {
+                font-size: 1.1rem;
+                font-weight: 600;
+                color: var(--primary-foreground-color);
+                margin-right: 1rem;
+                flex: 1;
+            }
+            
+            .rating {
+                display: flex;
+                align-items: center;
+                
+                .star-icon {
+                    color: var(--primary-accent-color);
+                    width: 1rem;
+                    height: 1rem;
+                    margin-right: 0.3rem;
+                }
+                
+                .rating-value {
+                    color: var(--primary-foreground-color);
+                    font-weight: 600;
+                    font-size: 0.9rem;
+                }
+            }
+        }
+        
+        .meta-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-bottom: 0.8rem;
+            
+            .type, .release-info, .runtime {
+                font-size: 0.85rem;
+                color: var(--primary-foreground-color);
+                opacity: 0.7;
+            }
+            
+            .type {
+                text-transform: capitalize;
+            }
+        }
+        
+        .genres {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 0.8rem;
+            
+            .genre {
+                font-size: 0.8rem;
+                background-color: var(--overlay-color);
+                color: var(--primary-foreground-color);
+                padding: 0.2rem 0.5rem;
+                border-radius: 1rem;
+            }
+        }
+        
+        .description {
+            font-size: 0.85rem;
+            line-height: 1.4;
+            color: var(--primary-foreground-color);
+            opacity: 0.8;
+            max-height: 7rem;
+            overflow: hidden;
+        }
+    }
+}

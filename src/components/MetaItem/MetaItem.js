@@ -9,13 +9,74 @@ const { default: Icon } = require('@stremio/stremio-icons/react');
 const { default: Button } = require('stremio/components/Button');
 const { default: Image } = require('stremio/components/Image');
 const Multiselect = require('stremio/components/Multiselect');
+const HoverPreview = require('stremio/components/HoverPreview');
 const useBinaryState = require('stremio/common/useBinaryState');
 const { ICON_FOR_TYPE } = require('stremio/common/CONSTANTS');
 const styles = require('./styles');
 
-const MetaItem = React.memo(({ className, type, name, poster, posterShape, posterChangeCursor, progress, newVideos, options, deepLinks, dataset, optionOnSelect, onDismissClick, onPlayClick, watched, ...props }) => {
+const MetaItem = React.memo(({ className, type, name, poster, posterShape, posterChangeCursor, progress, newVideos, options, deepLinks, dataset, optionOnSelect, onDismissClick, onPlayClick, watched, releaseInfo, runtime, description, genres, rating, ...props }) => {
     const { t } = useTranslation();
     const [menuOpen, onMenuOpen, onMenuClose] = useBinaryState(false);
+    const [isHovered, setIsHovered] = React.useState(false);
+    const [previewPosition, setPreviewPosition] = React.useState('top-center');
+    const itemRef = React.useRef(null);
+    
+    const calculatePosition = React.useCallback(() => {
+        if (!itemRef.current) return 'top-center';
+        
+        const rect = itemRef.current.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+        const viewportWidth = window.innerWidth;
+        
+        // Get the preview width (from CSS or use an approximation)
+        const previewWidth = 22 * 16; // 22rem in pixels (assuming 1rem = 16px)
+        const previewHeight = 200; // Approximate height in pixels
+        
+        // Calculate vertical position (top or bottom)
+        // For items near the top of the screen, show preview below
+        // For items near the bottom of the screen, show preview above
+        const verticalPos = rect.top < previewHeight + 50 || rect.top < viewportHeight * 0.3 ? 'bottom' : 'top';
+        
+        // Calculate horizontal position (left, center, or right)
+        let horizontalPos = 'center';
+        
+        // If item is near the left edge, align preview to the left
+        if (rect.left < previewWidth / 2 + 20) {
+            horizontalPos = 'left';
+        } 
+        // If item is near the right edge, align preview to the right
+        else if (viewportWidth - rect.right < previewWidth / 2 + 20) {
+            horizontalPos = 'right';
+        }
+        
+        return `${verticalPos}-${horizontalPos}`;
+    }, []);
+    
+    const handleMouseEnter = React.useCallback(() => {
+        const position = calculatePosition();
+        setPreviewPosition(position);
+        setIsHovered(true);
+    }, [calculatePosition]);
+    
+    const handleMouseLeave = React.useCallback(() => {
+        setIsHovered(false);
+    }, []);
+    
+    // Recalculate position on window resize
+    React.useEffect(() => {
+        if (!isHovered) return;
+        
+        const handleResize = () => {
+            const position = calculatePosition();
+            setPreviewPosition(position);
+        };
+        
+        window.addEventListener('resize', handleResize);
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, [isHovered, calculatePosition]);
+    
     const href = React.useMemo(() => {
         return deepLinks ?
             typeof deepLinks.player === 'string' ?
@@ -62,7 +123,36 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, poste
         <Icon className={styles['icon']} name={'more-vertical'} />
     ), []);
     return (
-        <Button title={name} href={href} {...filterInvalidDOMProps(props)} className={classnames(className, styles['meta-item-container'], styles['poster-shape-poster'], styles[`poster-shape-${posterShape}`], { 'active': menuOpen })} onClick={metaItemOnClick}>
+        <Button 
+            title={name} 
+            href={href} 
+            ref={itemRef}
+            {...filterInvalidDOMProps(props)} 
+            className={classnames(
+                className, 
+                styles['meta-item-container'], 
+                styles['poster-shape-poster'], 
+                styles[`poster-shape-${posterShape}`], 
+                { 'active': menuOpen },
+                { [styles['is-hovered']]: isHovered }
+            )} 
+            onClick={metaItemOnClick} 
+            onMouseEnter={handleMouseEnter} 
+            onMouseLeave={handleMouseLeave}
+        >
+            {isHovered && name && (
+                <HoverPreview
+                    className={styles['hover-preview']}
+                    name={name}
+                    type={type}
+                    releaseInfo={releaseInfo}
+                    runtime={runtime}
+                    description={description}
+                    genres={genres}
+                    rating={rating}
+                    position={previewPosition}
+                />
+            )}
             <div className={classnames(styles['poster-container'], { 'poster-change-cursor': posterChangeCursor })}>
                 {
                     onDismissClick ?
@@ -175,7 +265,13 @@ MetaItem.propTypes = {
     onDismissClick: PropTypes.func,
     onPlayClick: PropTypes.func,
     onClick: PropTypes.func,
-    watched: PropTypes.bool
+    watched: PropTypes.bool,
+    // New props for hover preview
+    releaseInfo: PropTypes.string,
+    runtime: PropTypes.string,
+    description: PropTypes.string,
+    genres: PropTypes.arrayOf(PropTypes.string),
+    rating: PropTypes.string
 };
 
 module.exports = MetaItem;

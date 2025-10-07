@@ -18,11 +18,25 @@
 .meta-item-container {
     padding: 1rem;
     overflow: visible;
+    position: relative;
+
+    .hover-preview {
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.2s ease, visibility 0.2s ease;
+    }
+
+    &.is-hovered {
+        .hover-preview {
+            opacity: 1;
+            visibility: visible;
+        }
+    }
 
     &:hover, &:focus, &:global(.active), &:global(.selected) {
         outline-style: none;
         transition: background-color 100ms ease-out;
-
+        
         .poster-container {
             box-shadow: 0 0 0 0.2rem var(--primary-foreground-color);
 
