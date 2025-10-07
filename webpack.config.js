@@ -223,7 +223,11 @@ module.exports = (env, argv) => ({
         new CleanWebpackPlugin({
             cleanOnceBeforeBuildPatterns: ['*']
         }),
-        argv.mode === 'production' &&
+        // Only generate a service worker in production builds when the
+        // DISABLE_SERVICE_WORKER env var is not set. This allows deploying
+        // Stremio behind authentication middlewares without the root page
+        // being cached by a SW.
+        argv.mode === 'production' && !env.DISABLE_SERVICE_WORKER &&
             new WorkboxPlugin.GenerateSW({
                 maximumFileSizeToCacheInBytes: 20000000,
                 clientsClaim: true,

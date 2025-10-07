@@ -36,11 +36,19 @@ i18n
 const root = ReactDOM.createRoot(document.getElementById('app'));
 root.render(<App />);
 
-if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
+// Register service worker in production unless explicitly disabled via
+// the DISABLE_SERVICE_WORKER environment variable. Use value '1' or 'true'
+// to disable at runtime (useful when behind auth middlewares that must run
+// on the network first).
+if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator && !(process.env.DISABLE_SERVICE_WORKER === '1' || process.env.DISABLE_SERVICE_WORKER === 'true')) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('service-worker.js')
             .catch((registrationError) => {
                 console.error('SW registration failed: ', registrationError);
             });
     });
+} else if (process.env.NODE_ENV === 'production' && (process.env.DISABLE_SERVICE_WORKER === '1' || process.env.DISABLE_SERVICE_WORKER === 'true')) {
+    // Helpful debug log when disabled in production
+    // eslint-disable-next-line no-console
+    console.info('Service worker registration skipped because DISABLE_SERVICE_WORKER is set.');
 }
