@@ -30,26 +30,11 @@ pnpm start
 pnpm run build
 ```
 
-### Disable service worker
-
-When deploying behind authentication middlewares (or for testing) you may want to
-disable the generated service worker so the root page isn't served from cache.
-
-Set the `DISABLE_SERVICE_WORKER` environment variable to `1` (or `true`) at
-build-time to prevent the service worker from being generated. Additionally,
-at runtime the same variable prevents the client from registering a service
-worker if present.
-
-Example (build without SW):
+### Run with Docker
 
 ```bash
-DISABLE_SERVICE_WORKER=1 pnpm run build
-```
-
-Example (start production server without registering SW):
-
-```bash
-DISABLE_SERVICE_WORKER=1 pnpm start-prod
+docker build -t stremio-web .
+docker run -p 8080:8080 stremio-web
 ```
 
 ## Screenshots

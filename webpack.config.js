@@ -213,6 +213,7 @@ module.exports = (env, argv) => ({
         new webpack.EnvironmentPlugin({
             SENTRY_DSN: null,
             ...env,
+            SERVICE_WORKER_DISABLED: false,
             DEBUG: argv.mode !== 'production',
             VERSION: pachageJson.version,
             COMMIT_HASH
