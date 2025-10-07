@@ -30,6 +30,22 @@ pnpm start
 pnpm run build
 ```
 
+### Run with Docker
+
+Build the image:
+
+```bash
+docker build -t stremio-web .
+```
+
+Run the container:
+
+```bash
+docker run --rm -p 8080:8080 stremio-web
+```
+
+Open `http://localhost:8080` in your browser.
+
 ## Screenshots
 
 ### Board
