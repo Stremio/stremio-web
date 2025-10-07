@@ -103,8 +103,7 @@ const Player = ({ urlParams, queryParams }) => {
         video.setProp('extraSubtitlesBackgroundColor', settings.subtitlesBackgroundColor);
         video.setProp('extraSubtitlesOutlineColor', settings.subtitlesOutlineColor);
         video.setProp('volume', settings.volume);
-        video.setProp('playbackSpeed', settings.playbackSpeed/1000);
-    }, [settings.subtitlesSize, settings.subtitlesOffset, settings.subtitlesTextColor, settings.subtitlesBackgroundColor, settings.subtitlesOutlineColor, settings.volume, settings.playbackSpeed]);
+    }, [settings.subtitlesSize, settings.subtitlesOffset, settings.subtitlesTextColor, settings.subtitlesBackgroundColor, settings.subtitlesOutlineColor, settings.volume]);
 
     const handleNextVideoNavigation = React.useCallback((deepLinks) => {
         if (deepLinks.player) {
@@ -222,7 +221,7 @@ const Player = ({ urlParams, queryParams }) => {
                 action: 'UpdateSettings',
                 args: {
                     ...settings,
-                    playbackSpeed: Math.floor(rate * 1000)
+                    playbackSpeed: rate
                 }
             }
         });
@@ -357,7 +356,6 @@ const Player = ({ urlParams, queryParams }) => {
                         []
                 },
                 autoplay: true,
-                playbackSpeed: settings.playbackSpeed / 1000,
                 time: player.libraryItem !== null &&
                     player.selected.streamRequest !== null &&
                     player.selected.streamRequest.path !== null &&
@@ -554,6 +552,12 @@ const Player = ({ urlParams, queryParams }) => {
             onPauseRequested();
         }
     }, [settings.pauseOnMinimize, shell.windowClosed, shell.windowHidden]);
+
+    React.useEffect(() => {
+        if (video.state.loaded) {
+            video.setProp('playbackSpeed', settings.playbackSpeed)
+        }
+    }, [video.state.loaded])
 
     React.useLayoutEffect(() => {
         const onKeyDown = (event) => {
