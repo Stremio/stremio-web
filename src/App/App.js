@@ -159,7 +159,8 @@ const App = () => {
             services.core.transport.dispatch({
                 action: 'Ctx',
                 args: {
-                    action: 'PullUserFromAPI'
+                    action: 'PullUserFromAPI',
+                    args: {}
                 }
             });
             services.core.transport.dispatch({
