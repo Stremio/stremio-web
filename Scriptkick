@@ -1,0 +1,58 @@
+-- Serviços
+local Players = game:GetService("Players")
+local StarterGui = game:GetService("StarterGui")
+
+-- GUI principal
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "KickGui"
+screenGui.ResetOnSpawn = false
+screenGui.Parent = Players.LocalPlayer:WaitForChild("PlayerGui")
+
+-- Fundo com imagem
+local background = Instance.new("ImageLabel")
+background.Size = UDim2.new(0, 400, 0, 200)
+background.Position = UDim2.new(0.5, -200, 0.5, -100)
+background.BackgroundTransparency = 1
+background.Image = "rbxassetid://1234567890" -- Substitua pelo ID da imagem do Pedro
+background.Visible = false
+background.Parent = screenGui
+
+-- Campo de texto para nome do jogador
+local nameBox = Instance.new("TextBox")
+nameBox.Size = UDim2.new(0, 200, 0, 30)
+nameBox.Position = UDim2.new(0.5, -100, 0.5, -60)
+nameBox.PlaceholderText = "Nome do jogador"
+nameBox.Parent = background
+
+-- Botão Kick
+local kickButton = Instance.new("TextButton")
+kickButton.Size = UDim2.new(0, 100, 0, 30)
+kickButton.Position = UDim2.new(0.5, -50, 0.5, 0)
+kickButton.Text = "Kick"
+kickButton.BackgroundColor3 = Color3.fromRGB(0, 102, 204) -- Azul
+kickButton.TextColor3 = Color3.new(1, 1, 1)
+kickButton.Parent = background
+
+-- Botão para abrir/fechar
+local toggleButton = Instance.new("TextButton")
+toggleButton.Size = UDim2.new(0, 100, 0, 30)
+toggleButton.Position = UDim2.new(0, 10, 0, 10)
+toggleButton.Text = "Abrir Kick"
+toggleButton.Parent = screenGui
+
+-- Função para abrir/fechar
+toggleButton.MouseButton1Click:Connect(function()
+	background.Visible = not background.Visible
+	toggleButton.Text = background.Visible and "Fechar Kick" or "Abrir Kick"
+end)
+
+-- Função de kick
+kickButton.MouseButton1Click:Connect(function()
+	local playerName = nameBox.Text
+	local targetPlayer = Players:FindFirstChild(playerName)
+	if targetPlayer then
+		targetPlayer:Kick("Você foi expulso pelo script.")
+	else
+		warn("Jogador não encontrado: " .. playerName)
+	end
+end)
