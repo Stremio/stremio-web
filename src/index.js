@@ -16,6 +16,7 @@ const ReactDOM = require('react-dom/client');
 const i18n = require('i18next');
 const { initReactI18next } = require('react-i18next');
 const stremioTranslations = require('stremio-translations');
+const { applyFirefoxOptimizations } = require('./common/firefoxOptimizations');
 const App = require('./App');
 
 const translations = Object.fromEntries(Object.entries(stremioTranslations()).map(([key, value]) => [key, {
@@ -32,6 +33,9 @@ i18n
             escapeValue: false
         }
     });
+
+// Apply Firefox optimizations before rendering
+applyFirefoxOptimizations();
 
 const root = ReactDOM.createRoot(document.getElementById('app'));
 root.render(<App />);
