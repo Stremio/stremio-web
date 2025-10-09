@@ -7,6 +7,7 @@ const classnames = require('classnames');
 const { default: Icon } = require('@stremio/stremio-icons/react');
 const { useServices } = require('stremio/services');
 const { CONSTANTS, useBinaryState, useOnScrollToBottom, withCoreSuspender } = require('stremio/common');
+const { isFirefox } = require('stremio/common/firefoxOptimizations');
 const { AddonDetailsModal, Button, DelayedRenderer, Image, MainNavBars, MetaItem, MetaPreview, ModalDialog, MultiselectMenu } = require('stremio/components');
 const useDiscover = require('./useDiscover');
 const useSelectableInputs = require('./useSelectableInputs');
@@ -91,7 +92,7 @@ const Discover = ({ urlParams, queryParams }) => {
             loadNextPage();
         }
     }, [hasNextPage, loadNextPage]);
-    const onScroll = useOnScrollToBottom(onScrollToBottom, SCROLL_TO_BOTTOM_THRESHOLD);
+    const onScroll = useOnScrollToBottom(onScrollToBottom, isFirefox() ? SCROLL_TO_BOTTOM_THRESHOLD * 2 : SCROLL_TO_BOTTOM_THRESHOLD);
     React.useEffect(() => {
         closeInputsModal();
         closeAddonModal();

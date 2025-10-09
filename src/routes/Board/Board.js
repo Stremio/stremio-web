@@ -5,6 +5,7 @@ const classnames = require('classnames');
 const debounce = require('lodash.debounce');
 const useTranslate = require('stremio/common/useTranslate');
 const { useStreamingServer, useNotifications, withCoreSuspender, getVisibleChildrenRange, useProfile } = require('stremio/common');
+const { isFirefox } = require('stremio/common/firefoxOptimizations');
 const { ContinueWatchingItem, EventModal, MainNavBars, MetaItem, MetaRow } = require('stremio/components');
 const useBoard = require('./useBoard');
 const useContinueWatchingPreview = require('./useContinueWatchingPreview');
@@ -42,7 +43,7 @@ const Board = () => {
 
         loadBoardRows({ start, end });
     }, [boardCatalogsOffset]);
-    const onScroll = React.useCallback(debounce(onVisibleRangeChange, 250), [onVisibleRangeChange]);
+    const onScroll = React.useCallback(debounce(onVisibleRangeChange, isFirefox() ? 500 : 250), [onVisibleRangeChange]);
     React.useLayoutEffect(() => {
         onVisibleRangeChange();
     }, [board.catalogs, onVisibleRangeChange]);
