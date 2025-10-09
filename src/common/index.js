@@ -29,6 +29,7 @@ const useTorrent = require('./useTorrent');
 const useTranslate = require('./useTranslate');
 const { default: useOrientation } = require('./useOrientation');
 const { default: useLanguageSorting } = require('./useLanguageSorting');
+const { isFirefox, isLinux, applyFirefoxOptimizations, optimizeVideoElement } = require('./firefoxOptimizations');
 
 module.exports = {
     FileDropProvider,
@@ -65,4 +66,8 @@ module.exports = {
     useTranslate,
     useOrientation,
     useLanguageSorting,
+    isFirefox,
+    isLinux,
+    applyFirefoxOptimizations,
+    optimizeVideoElement,
 };
