@@ -3,6 +3,7 @@
 const React = require('react');
 const Video = require('@stremio/stremio-video');
 const EventEmitter = require('eventemitter3');
+const { optimizeVideoElement } = require('stremio/common/firefoxOptimizations');
 
 const events = new EventEmitter();
 
@@ -48,6 +49,10 @@ const useVideo = () => {
                     ...options,
                     containerElement: containerRef.current,
                 });
+                
+                // Apply Firefox optimizations to video elements
+                const videoElements = containerRef.current.querySelectorAll('video');
+                videoElements.forEach(optimizeVideoElement);
             } catch (error) {
                 console.error('Video:', error);
             }
@@ -152,7 +157,22 @@ const useVideo = () => {
         video.current.on('extraSubtitlesTrackLoaded', onExtraSubtitlesTrackLoaded);
         video.current.on('extraSubtitlesTrackAdded', onExtraSubtitlesTrackAdded);
 
-        return () => video.current.destroy();
+        // Optimize video elements after initialization
+        const observer = new MutationObserver(() => {
+            if (containerRef.current) {
+                const videoElements = containerRef.current.querySelectorAll('video');
+                videoElements.forEach(optimizeVideoElement);
+            }
+        });
+        
+        if (containerRef.current) {
+            observer.observe(containerRef.current, { childList: true, subtree: true });
+        }
+
+        return () => {
+            observer.disconnect();
+            video.current.destroy();
+        };
     }, []);
 
     return {

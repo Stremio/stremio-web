@@ -9,6 +9,7 @@ const { useTranslation } = require('react-i18next');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
 const { onFileDrop, useSettings, useFullscreen, useBinaryState, useToast, useStreamingServer, withCoreSuspender, CONSTANTS, useShell } = require('stremio/common');
+const { isFirefox } = require('stremio/common/firefoxOptimizations');
 const { HorizontalNavBar, Transition, ContextMenu } = require('stremio/components');
 const BufferingLoader = require('./BufferingLoader');
 const VolumeChangeIndicator = require('./VolumeChangeIndicator');
@@ -323,6 +324,13 @@ const Player = ({ urlParams, queryParams }) => {
         video.unload();
 
         if (player.selected && streamingServer.settings?.type !== 'Loading') {
+            const firefoxOptimizations = isFirefox() ? {
+                // Force lower quality for better performance on Firefox
+                maxVideoHeight: 720,
+                // Disable hardware decoding on Firefox Linux for stability
+                hardwareDecoding: false
+            } : {};
+            
             video.load({
                 stream: {
                     ...player.selected.stream,
@@ -344,7 +352,7 @@ const Player = ({ urlParams, queryParams }) => {
                     0,
                 forceTranscoding: forceTranscoding || casting,
                 maxAudioChannels: settings.surroundSound ? 32 : 2,
-                hardwareDecoding: settings.hardwareDecoding,
+                hardwareDecoding: isFirefox() ? false : settings.hardwareDecoding,
                 streamingServerURL: streamingServer.baseUrl ?
                     casting ?
                         streamingServer.baseUrl
@@ -353,6 +361,7 @@ const Player = ({ urlParams, queryParams }) => {
                     :
                     null,
                 seriesInfo: player.seriesInfo,
+                ...firefoxOptimizations
             }, {
                 chromecastTransport: services.chromecast.active ? services.chromecast.transport : null,
                 shellTransport: services.shell.active ? services.shell.transport : null,
