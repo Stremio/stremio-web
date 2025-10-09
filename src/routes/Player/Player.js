@@ -330,7 +330,7 @@ const Player = ({ urlParams, queryParams }) => {
                 // Disable hardware decoding on Firefox Linux for stability
                 hardwareDecoding: false
             } : {};
-            
+
             video.load({
                 stream: {
                     ...player.selected.stream,

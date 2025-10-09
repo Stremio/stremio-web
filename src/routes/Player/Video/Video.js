@@ -9,7 +9,6 @@ require('./firefoxVideoOptimizations.less');
 
 const Video = React.forwardRef(({ className, onClick, onDoubleClick }, ref) => {
     const firefoxClass = isFirefox() ? 'firefox-optimized' : '';
-    
     return (
         <div className={classnames(className, styles['video-container'], firefoxClass)} onClick={onClick} onDoubleClick={onDoubleClick}>
             <div ref={ref} className={styles['video']} />

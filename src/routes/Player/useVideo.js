@@ -49,7 +49,7 @@ const useVideo = () => {
                     ...options,
                     containerElement: containerRef.current,
                 });
-                
+
                 // Apply Firefox optimizations to video elements
                 const videoElements = containerRef.current.querySelectorAll('video');
                 videoElements.forEach(optimizeVideoElement);
@@ -164,7 +164,7 @@ const useVideo = () => {
                 videoElements.forEach(optimizeVideoElement);
             }
         });
-        
+
         if (containerRef.current) {
             observer.observe(containerRef.current, { childList: true, subtree: true });
         }

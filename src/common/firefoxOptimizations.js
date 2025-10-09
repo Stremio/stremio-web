@@ -56,12 +56,12 @@ const optimizeVideoElement = (videoElement) => {
     videoElement.style.transform = 'translateZ(0)';
     videoElement.style.willChange = 'transform';
     videoElement.style.backfaceVisibility = 'hidden';
-    
+
     // Disable picture-in-picture for better performance
     if ('disablePictureInPicture' in videoElement) {
         videoElement.disablePictureInPicture = true;
     }
-    
+
     // Optimize buffering
     if (videoElement.buffered && videoElement.buffered.length > 0) {
         videoElement.preload = 'metadata';
