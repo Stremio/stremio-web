@@ -30,6 +30,15 @@ pnpm start
 pnpm run build
 ```
 
+## Deployment (GitHub Pages)
+
+- A workflow at `.github/workflows/pages.yml` deploys the production build on every push to `main` using GitHub Pages (Actions).
+- The site is uploaded from the `build` directory that `pnpm build` generates.
+- Ensure the repository’s Pages source is set to “GitHub Actions” (Settings → Pages).
+- Existing branch previews for `development` continue to be published under the `gh-pages` branch by the `Build` workflow.
+
+After the first successful run on `main`, GitHub will expose the public URL in the workflow summary and under Settings → Pages.
+
 ### Run with Docker
 
 ```bash
