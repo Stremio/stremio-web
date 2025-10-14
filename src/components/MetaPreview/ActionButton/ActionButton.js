@@ -9,8 +9,12 @@ const styles = require('./styles');
 const { Tooltip } = require('stremio/common/Tooltips');
 
 const ActionButton = ({ className, icon, label, tooltip, ...props }) => {
+    const labelText = typeof label === 'string' ? label : '';
+    const hasLabel = !tooltip && label != null;
+    const wide = !tooltip && (typeof label === 'string' || React.isValidElement(label));
+
     return (
-        <Button title={tooltip ? '' : label} {...props} className={classnames(className, styles['action-button-container'], { 'wide': typeof label === 'string' && !tooltip })}>
+        <Button title={tooltip ? '' : labelText} {...props} className={classnames(className, styles['action-button-container'], { 'wide': wide })}>
             {
                 tooltip === true ?
                     <Tooltip label={label} position={'top'} />
@@ -26,8 +30,9 @@ const ActionButton = ({ className, icon, label, tooltip, ...props }) => {
                     null
             }
             {
-                !tooltip && typeof label === 'string' && label.length > 0 ?
+                hasLabel ?
                     <div className={styles['label-container']}>
+                        {/* render label (string or node) directly */}
                         <div className={styles['label']}>{label}</div>
                     </div>
                     :
@@ -40,7 +45,7 @@ const ActionButton = ({ className, icon, label, tooltip, ...props }) => {
 ActionButton.propTypes = {
     className: PropTypes.string,
     icon: PropTypes.string,
-    label: PropTypes.string,
+    label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
     tooltip: PropTypes.bool
 };
 

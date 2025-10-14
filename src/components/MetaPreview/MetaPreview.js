@@ -25,7 +25,7 @@ const ALLOWED_LINK_REDIRECTS = [
     routesRegexp.metadetails.regexp
 ];
 
-const MetaPreview = React.forwardRef(({ className, compact, name, logo, background, runtime, releaseInfo, released, description, deepLinks, links, trailerStreams, inLibrary, toggleInLibrary, ratingInfo }, ref) => {
+const MetaPreview = React.forwardRef(({ className, compact, name, logo, background, runtime, releaseInfo, released, description, deepLinks, links, trailerStreams, inLibrary, toggleInLibrary, watched, markAsWatched, markAsUnwatched, ratingInfo }, ref) => {
     const { t } = useTranslation();
     const [shareModalOpen, openShareModal, closeShareModal] = useBinaryState(false);
     const linksGroups = React.useMemo(() => {
@@ -209,6 +209,29 @@ const MetaPreview = React.forwardRef(({ className, compact, name, logo, backgrou
                         null
                 }
                 {
+                    typeof (watched ? markAsUnwatched : markAsWatched) === 'function' ?
+                        <ActionButton 
+                            className={styles['action-button']}
+                            icon={watched ? '' : 'mark-watched'}
+                            label={
+                                <>
+                                    {watched ? 
+                                        <Icon className={styles['inline-icon']} name={'close'} /> : 
+                                        <Icon className={styles['inline-icon']} name={'checkmark'} />
+                                    }
+                                    <span style={{ marginLeft: '6px' }}>
+                                        {watched ? 'Mark as Unwatched' : 'Mark as Watched'}
+                                    </span>
+                                </>
+                            }
+                            tooltip={false}
+                            tabIndex={compact ? -1 : 0}
+                            onClick={watched ? markAsUnwatched : markAsWatched}
+                        />
+                        :
+                        null
+                }
+                {
                     typeof trailerHref === 'string' ?
                         <ActionButton
                             className={styles['action-button']}
@@ -298,6 +321,9 @@ MetaPreview.propTypes = {
     trailerStreams: PropTypes.array,
     inLibrary: PropTypes.bool,
     toggleInLibrary: PropTypes.func,
+    watched: PropTypes.bool,
+    markAsWatched: PropTypes.func,
+    markAsUnwatched: PropTypes.func,
     ratingInfo: PropTypes.object,
 };
 

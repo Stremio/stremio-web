@@ -64,6 +64,225 @@ const MetaDetails = ({ urlParams, queryParams }) => {
             }
         });
     }, [metaDetails]);
+    const markAsWatched = React.useCallback(async () => {
+        if (metaDetails.libraryItem && typeof metaDetails.libraryItem._id === 'string') {
+            await core.transport.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'LibraryItemMarkAsWatched',
+                    args: {
+                        id: metaDetails.libraryItem._id,
+                        is_watched: true
+                    }
+                }
+            });
+            // after core processes the change, reload the board model so board cards get updated
+            await core.transport.dispatch({
+                action: 'Load',
+                args: { model: 'CatalogsWithExtra', args: { extra: [] } }
+            }, 'board');
+        }
+    }, [metaDetails.libraryItem]);
+
+    const markAsUnwatched = React.useCallback(async () => {
+        if (metaDetails.libraryItem && typeof metaDetails.libraryItem._id === 'string') {
+            await core.transport.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'LibraryItemMarkAsWatched',
+                    args: {
+                        id: metaDetails.libraryItem._id,
+                        is_watched: false
+                    }
+                }
+            });
+            // after core processes the change, reload the board model so the card watched state updates
+            await core.transport.dispatch({
+                action: 'Load',
+                args: { model: 'CatalogsWithExtra', args: { extra: [] } }
+            }, 'board');
+        }
+    }, [metaDetails.libraryItem]);
+
+    // optimistic local watched state with persistence
+    const [localWatched, setLocalWatched] = React.useState(() => {
+        // Check localStorage for persisted state
+        if (metaDetails.metaItem?.content?.content?.id) {
+            const storedState = localStorage.getItem(`watched_${metaDetails.metaItem.content.content.id}`);
+            return storedState ? JSON.parse(storedState) : null;
+        }
+        return null;
+    });
+
+    // set optimistic state when user clicks
+    const watchedOverrides = require('stremio/common/watchedOverrides');
+
+    const markAsWatchedOptimistic = React.useCallback(async () => {
+        if (metaDetails.metaItem?.content?.content?.id) {
+            const newState = true;
+            setLocalWatched(newState);
+            // Persist to localStorage
+            localStorage.setItem(`watched_${metaDetails.metaItem.content.content.id}`, JSON.stringify(newState));
+        }
+
+        // if item not in library, add it first
+        if (!(metaDetails.libraryItem && typeof metaDetails.libraryItem._id === 'string')) {
+            if (metaDetails.metaItem && metaDetails.metaItem.content && metaDetails.metaItem.content.content) {
+                // set client-side override immediately so board shows tick
+                watchedOverrides.set(metaDetails.metaItem.content.content.id, true);
+                await core.transport.dispatch({
+                    action: 'Ctx',
+                    args: {
+                        action: 'AddToLibrary',
+                        args: metaDetails.metaItem.content.content
+                    }
+                });
+                // after adding, request board reload
+                await core.transport.dispatch({
+                    action: 'Load',
+                    args: { model: 'CatalogsWithExtra', args: { extra: [] } }
+                }, 'board');
+            }
+            return;
+        }
+
+        // otherwise dispatch mark now and reload board
+        if (metaDetails.libraryItem && typeof metaDetails.libraryItem._id === 'string') {
+            // set client-side override immediately so board shows tick
+            if (metaDetails.metaItem && metaDetails.metaItem.content && metaDetails.metaItem.content.content) {
+                watchedOverrides.set(metaDetails.metaItem.content.content.id, true);
+            }
+            await core.transport.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'LibraryItemMarkAsWatched',
+                    args: {
+                        id: metaDetails.libraryItem._id,
+                        is_watched: true
+                    }
+                }
+            });
+            await core.transport.dispatch({
+                action: 'Load',
+                args: { model: 'CatalogsWithExtra', args: { extra: [] } }
+            }, 'board');
+        }
+    }, [metaDetails.libraryItem]);
+
+    const markAsUnwatchedOptimistic = React.useCallback(async () => {
+        if (metaDetails.metaItem?.content?.content?.id) {
+            const newState = false;
+            setLocalWatched(newState);
+            // Persist to localStorage
+            localStorage.setItem(`watched_${metaDetails.metaItem.content.content.id}`, JSON.stringify(newState));
+        }
+
+        if (metaDetails.metaItem && metaDetails.metaItem.content && metaDetails.metaItem.content.content) {
+            watchedOverrides.set(metaDetails.metaItem.content.content.id, false);
+        }
+
+        if (metaDetails.libraryItem && typeof metaDetails.libraryItem._id === 'string') {
+            await core.transport.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'LibraryItemMarkAsWatched',
+                    args: {
+                        id: metaDetails.libraryItem._id,
+                        is_watched: false
+                    }
+                }
+            });
+            await core.transport.dispatch({
+                action: 'Load',
+                args: { model: 'CatalogsWithExtra', args: { extra: [] } }
+            }, 'board');
+        }
+    }, [metaDetails.libraryItem, metaDetails.metaItem]);
+
+    // dispatch mark/unmark when library item appears or when localWatched changes
+    const pendingMarkRef = React.useRef(false);
+    React.useEffect(() => {
+        const lib = metaDetails.libraryItem;
+        if (!lib || typeof lib._id !== 'string') {
+            return;
+        }
+
+        // if user requested watched and library item exists but core hasn't set it
+        if (localWatched === true && !lib.state?.is_watched && !pendingMarkRef.current) {
+            pendingMarkRef.current = true;
+            (async () => {
+                await core.transport.dispatch({
+                    action: 'Ctx',
+                    args: {
+                        action: 'LibraryItemMarkAsWatched',
+                        args: {
+                            id: lib._id,
+                            is_watched: true
+                        }
+                    }
+                });
+                // refresh board after core processes
+                await core.transport.dispatch({
+                    action: 'Load',
+                    args: { model: 'CatalogsWithExtra', args: { extra: [] } }
+                }, 'board');
+                // clear pending after a tick
+                setTimeout(() => { pendingMarkRef.current = false; }, 500);
+            })();
+        }
+
+        if (localWatched === false && lib.state?.is_watched && !pendingMarkRef.current) {
+            pendingMarkRef.current = true;
+            (async () => {
+                await core.transport.dispatch({
+                    action: 'Ctx',
+                    args: {
+                        action: 'LibraryItemMarkAsWatched',
+                        args: {
+                            id: lib._id,
+                            is_watched: false
+                        }
+                    }
+                });
+                await core.transport.dispatch({
+                    action: 'Load',
+                    args: { model: 'CatalogsWithExtra', args: { extra: [] } }
+                }, 'board');
+                setTimeout(() => { pendingMarkRef.current = false; }, 500);
+            })();
+        }
+    }, [localWatched, metaDetails.libraryItem, core.transport]);
+
+    // keep local override persisted and prefer localStorage overrides over server state
+    React.useEffect(() => {
+        const id = metaDetails.metaItem && metaDetails.metaItem.content && metaDetails.metaItem.content.content
+            ? metaDetails.metaItem.content.content.id
+            : null;
+
+        if (!id) {
+            // nothing to do if no meta id yet
+            return;
+        }
+
+        // if user has a persisted override for this meta id, restore it and keep it
+        const stored = localStorage.getItem(`watched_${id}`);
+        if (stored !== null) {
+            try {
+                const parsed = JSON.parse(stored);
+                setLocalWatched(parsed);
+            } catch (e) {
+                // malformed value -> remove it
+                localStorage.removeItem(`watched_${id}`);
+                setLocalWatched(null);
+            }
+            // don't clear watchedOverrides in this case — we intentionally persist the user's choice
+            return;
+        }
+
+        // no persisted override -> clear optimistic local state and any watchedOverrides
+        setLocalWatched(null);
+        watchedOverrides.clear(id);
+    }, [metaDetails.libraryItem?.state?.is_watched, metaDetails.libraryItem?._id, metaDetails.metaItem]);
     const toggleNotifications = React.useCallback(() => {
         if (metaDetails.libraryItem) {
             core.transport.dispatch({
@@ -168,6 +387,9 @@ const MetaDetails = ({ urlParams, queryParams }) => {
                                             trailerStreams={metaDetails.metaItem.content.content.trailerStreams}
                                             inLibrary={metaDetails.metaItem.content.content.inLibrary}
                                             toggleInLibrary={metaDetails.metaItem.content.content.inLibrary ? removeFromLibrary : addToLibrary}
+                                            watched={typeof localWatched === 'boolean' ? localWatched : metaDetails.libraryItem?.state?.is_watched}
+                                            markAsWatched={markAsWatchedOptimistic}
+                                            markAsUnwatched={markAsUnwatchedOptimistic}
                                             metaId={metaDetails.metaItem.content.content.id}
                                             ratingInfo={metaDetails.ratingInfo}
                                         />

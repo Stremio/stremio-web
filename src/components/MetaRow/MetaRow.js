@@ -11,6 +11,8 @@ const useTranslate = require('stremio/common/useTranslate');
 const MetaRowPlaceholder = require('./MetaRowPlaceholder');
 const styles = require('./styles');
 
+const watchedOverrides = require('stremio/common/watchedOverrides');
+
 const MetaRow = ({ className, title, catalog, message, itemComponent, notifications }) => {
     const t = useTranslate();
 
@@ -53,12 +55,18 @@ const MetaRow = ({ className, title, catalog, message, itemComponent, notificati
                         {
                             ReactIs.isValidElementType(itemComponent) ?
                                 items.slice(0, CONSTANTS.CATALOG_PREVIEW_SIZE).map((item, index) => {
-                                    return React.createElement(itemComponent, {
+                                    const override = watchedOverrides.get(item.id);
+                                    const props = {
                                         ...item,
                                         key: index,
                                         className: classnames(styles['meta-item'], styles['poster-shape-poster'], styles[`poster-shape-${item.posterShape}`]),
                                         notifications,
-                                    });
+                                    };
+                                    if (override !== null) {
+                                        props.watched = override;
+                                    }
+
+                                    return React.createElement(itemComponent, props);
                                 })
                                 :
                                 null
