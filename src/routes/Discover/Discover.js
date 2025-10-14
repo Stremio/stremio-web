@@ -157,21 +157,69 @@ const Discover = ({ urlParams, queryParams }) => {
                                     </div>
                                     :
                                     <div ref={metasContainerRef} className={classnames(styles['meta-items-container'], 'animation-fade-in')} onScroll={onScroll} onFocusCapture={metaItemsOnFocusCapture}>
-                                        {discover.catalog.content.content.map((metaItem, index) => (
-                                            <MetaItem
-                                                key={index}
-                                                className={classnames({ 'selected': selectedMetaItemIndex === index })}
-                                                type={metaItem.type}
-                                                name={metaItem.name}
-                                                poster={metaItem.poster}
-                                                posterShape={metaItem.posterShape}
-                                                playname={selectedMetaItemIndex === index}
-                                                deepLinks={metaItem.deepLinks}
-                                                watched={metaItem.watched}
-                                                data-index={index}
-                                                onClick={metaItemOnClick}
-                                            />
-                                        ))}
+                                        {discover.catalog.content.content.map((metaItem, index) => {
+                                            const options = [
+                                                { label: t('LIBRARY_DETAILS'), value: 'details' },
+                                                {
+                                                    label: metaItem.watched
+                                                        ? t('CTX_MARK_UNWATCHED')
+                                                        : t('CTX_MARK_WATCHED'),
+                                                    value: 'watched'
+                                                }
+                                            ];
+
+                                            const optionOnSelect = (event) => {
+                                                const itemId = metaItem.id;
+
+                                                if (!itemId || typeof itemId !== 'string') return;
+
+                                                if (event.value === 'watched') {
+                                                    const newWatchedStatus = !metaItem.watched;
+
+                                                    // update UI instantly
+                                                    metaItem.watched = newWatchedStatus;
+
+                                                    core.transport.dispatch({
+                                                        action: 'Ctx',
+                                                        args: {
+                                                            action: 'LibraryItemMarkAsWatched',
+                                                            args: {
+                                                                id: itemId,
+                                                                is_watched: newWatchedStatus
+                                                            }
+                                                        }
+                                                    });
+                                                } else if (event.value === 'details' && metaItem.deepLinks) {
+                                                    const { metaDetailsVideos, metaDetailsStreams } = metaItem.deepLinks;
+                                                    if (typeof metaDetailsVideos === 'string') {
+                                                        window.location = metaDetailsVideos;
+                                                    } else if (typeof metaDetailsStreams === 'string') {
+                                                        window.location = metaDetailsStreams;
+                                                    }
+                                                }
+                                            };
+
+                                            return (
+                                                <MetaItem
+                                                    key={index}
+                                                    className={classnames({
+                                                        selected: selectedMetaItemIndex === index
+                                                    })}
+                                                    type={metaItem.type}
+                                                    name={metaItem.name}
+                                                    poster={metaItem.poster}
+                                                    posterShape={metaItem.posterShape}
+                                                    playname={selectedMetaItemIndex === index}
+                                                    deepLinks={metaItem.deepLinks}
+                                                    watched={metaItem.watched}
+                                                    data-index={index}
+                                                    onClick={metaItemOnClick}
+                                                    options={options}
+                                                    optionOnSelect={optionOnSelect}
+                                                />
+                                            );
+                                        })}
+
                                     </div>
                     }
                 </div>
@@ -195,6 +243,27 @@ const Discover = ({ urlParams, queryParams }) => {
                             toggleInLibrary={selectedMetaItem.inLibrary ? removeFromLibrary : addToLibrary}
                             metaId={selectedMetaItem.id}
                             like={selectedMetaItem.like}
+                            watched={selectedMetaItem.watched}
+                            onToggleWatched={() => {
+                                const itemId = selectedMetaItem.id;
+                                if (!itemId || typeof itemId !== 'string') return;
+
+                                const newWatchedStatus = !selectedMetaItem.watched;
+
+                                selectedMetaItem.watched = newWatchedStatus;
+
+                                core.transport.dispatch({
+                                    action: 'Ctx',
+                                    args: {
+                                        action: 'LibraryItemMarkAsWatched',
+                                        args: {
+                                            id: itemId,
+                                            is_watched: newWatchedStatus
+                                        }
+                                    }
+                                });
+                            }}
+
                         />
                         :
                         discover.catalog !== null && discover.catalog.content.type === 'Loading' ?
