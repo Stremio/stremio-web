@@ -11,6 +11,7 @@ const { AddonDetailsModal, Button, DelayedRenderer, Image, MainNavBars, MetaItem
 const useDiscover = require('./useDiscover');
 const useSelectableInputs = require('./useSelectableInputs');
 const styles = require('./styles');
+const useMarkMetaItemAsWatched = require('./useMarkMetaItemAsWatched');
 
 const SCROLL_TO_BOTTOM_THRESHOLD = 400;
 
@@ -52,7 +53,6 @@ const Discover = ({ urlParams, queryParams }) => {
         if (selectedMetaItem === null) {
             return;
         }
-
         core.transport.dispatch({
             action: 'Ctx',
             args: {
@@ -60,12 +60,11 @@ const Discover = ({ urlParams, queryParams }) => {
                 args: selectedMetaItem
             }
         });
-    }, [selectedMetaItem]);
+    }, [selectedMetaItem, core]);
     const removeFromLibrary = React.useCallback(() => {
         if (selectedMetaItem === null) {
             return;
         }
-
         core.transport.dispatch({
             action: 'Ctx',
             args: {
@@ -73,7 +72,10 @@ const Discover = ({ urlParams, queryParams }) => {
                 args: selectedMetaItem.id
             }
         });
-    }, [selectedMetaItem]);
+    }, [selectedMetaItem, core]);
+
+    // Custom hook for marking meta item as watched/unwatched
+    const onMarkedAsWatched = useMarkMetaItemAsWatched(selectedMetaItem);
     const metaItemsOnFocusCapture = React.useCallback((event) => {
         if (event.target.dataset.index !== null && !isNaN(event.target.dataset.index)) {
             setSelectedMetaItemIndex(parseInt(event.target.dataset.index, 10));
@@ -169,26 +171,11 @@ const Discover = ({ urlParams, queryParams }) => {
                                             ];
 
                                             const optionOnSelect = (event) => {
-                                                const itemId = metaItem.id;
-
-                                                if (!itemId || typeof itemId !== 'string') return;
-
                                                 if (event.value === 'watched') {
+                                                    if (!metaItem || typeof metaItem.id !== 'string') return;
                                                     const newWatchedStatus = !metaItem.watched;
-
-                                                    // update UI instantly
-                                                    metaItem.watched = newWatchedStatus;
-
-                                                    core.transport.dispatch({
-                                                        action: 'Ctx',
-                                                        args: {
-                                                            action: 'LibraryItemMarkAsWatched',
-                                                            args: {
-                                                                id: itemId,
-                                                                is_watched: newWatchedStatus
-                                                            }
-                                                        }
-                                                    });
+                                                    // Call the custom hook handler for this metaItem
+                                                    useMarkMetaItemAsWatched(metaItem)(newWatchedStatus);
                                                 } else if (event.value === 'details' && metaItem.deepLinks) {
                                                     const { metaDetailsVideos, metaDetailsStreams } = metaItem.deepLinks;
                                                     if (typeof metaDetailsVideos === 'string') {
@@ -216,6 +203,7 @@ const Discover = ({ urlParams, queryParams }) => {
                                                     onClick={metaItemOnClick}
                                                     options={options}
                                                     optionOnSelect={optionOnSelect}
+                                                    onMarkedAsWatched={useMarkMetaItemAsWatched(metaItem)}
                                                 />
                                             );
                                         })}
@@ -244,25 +232,7 @@ const Discover = ({ urlParams, queryParams }) => {
                             metaId={selectedMetaItem.id}
                             like={selectedMetaItem.like}
                             watched={selectedMetaItem.watched}
-                            onToggleWatched={() => {
-                                const itemId = selectedMetaItem.id;
-                                if (!itemId || typeof itemId !== 'string') return;
-
-                                const newWatchedStatus = !selectedMetaItem.watched;
-
-                                selectedMetaItem.watched = newWatchedStatus;
-
-                                core.transport.dispatch({
-                                    action: 'Ctx',
-                                    args: {
-                                        action: 'LibraryItemMarkAsWatched',
-                                        args: {
-                                            id: itemId,
-                                            is_watched: newWatchedStatus
-                                        }
-                                    }
-                                });
-                            }}
+                            onMarkedAsWatched={onMarkedAsWatched}
 
                         />
                         :
