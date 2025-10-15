@@ -635,6 +635,28 @@ const Player = ({ urlParams, queryParams }) => {
 
                     break;
                 }
+                case 'KeyC': {
+                    if (!menusOpen && !nextVideoPopupOpen) {
+                        const internalTracks = video.state.subtitlesTracks;
+                        const externalTracks = video.state.extraSubtitlesTracks;
+                        const hasInternal = Array.isArray(internalTracks) && internalTracks.length > 0;
+                        const hasExternal = Array.isArray(externalTracks) && externalTracks.length > 0;
+                        const hasInternalActive = video.state.selectedSubtitlesTrackId !== null;
+                        const hasExternalActive = video.state.selectedExtraSubtitlesTrackId !== null;
+
+                        if (hasInternalActive || hasExternalActive) {
+                            onSubtitlesTrackSelected(null);
+                            onExtraSubtitlesTrackSelected(null);
+                        } else if (hasInternal || hasExternal) {
+                            if (hasInternal) {
+                                onSubtitlesTrackSelected(internalTracks[0].id);
+                            } else {
+                                onExtraSubtitlesTrackSelected(externalTracks[0].id);
+                            }
+                        }
+                    }
+                    break;
+                }
                 case 'KeyA': {
                     closeMenus();
                     if (Array.isArray(video.state.audioTracks) && video.state.audioTracks.length > 0) {
