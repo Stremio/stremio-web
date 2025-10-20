@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useServices } from 'stremio/services';
+import { getAvatarUrl } from 'stremio/common';
 import { Link } from '../../components';
 import styles from './User.less';
 
@@ -12,15 +13,9 @@ const User = ({ profile }: Props) => {
     const { t } = useTranslation();
     const { core } = useServices();
 
-    const avatar = useMemo(() => (
-        !profile.auth ?
-            `url('${require('/images/anonymous.png')}')`
-            :
-            profile.auth.user.avatar ?
-                `url('${profile.auth.user.avatar}')`
-                :
-                `url('${require('/images/default_avatar.png')}')`
-    ), [profile.auth]);
+    const avatar = useMemo(() => {
+        return `url('${getAvatarUrl(profile.auth)}')`;
+    }, [profile.auth]);
 
     const onLogout = useCallback(() => {
         core.transport.dispatch({

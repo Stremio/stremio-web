@@ -13,6 +13,7 @@ const usePWA = require('stremio/common/usePWA');
 const useTorrent = require('stremio/common/useTorrent');
 const { withCoreSuspender } = require('stremio/common/CoreSuspender');
 const useStreamingServer = require('stremio/common/useStreamingServer');
+const { getAvatarUrl } = require('stremio/common/avatarUtils');
 const styles = require('./styles');
 
 const NavMenuContent = ({ onClick }) => {
@@ -23,6 +24,7 @@ const NavMenuContent = ({ onClick }) => {
     const { createTorrentFromMagnet } = useTorrent();
     const [fullscreen, requestFullscreen, exitFullscreen] = useFullscreen();
     const [isIOSPWA, isAndroidPWA] = usePWA();
+    
     const streamingServerWarningDismissed = React.useMemo(() => {
         return streamingServer.settings !== null && streamingServer.settings.type === 'Ready' || (
             !isNaN(profile.settings.streamingServerWarningDismissed.getTime()) &&
@@ -51,13 +53,7 @@ const NavMenuContent = ({ onClick }) => {
                 <div
                     className={styles['avatar-container']}
                     style={{
-                        backgroundImage: profile.auth === null ?
-                            `url('${require('/images/anonymous.png')}')`
-                            :
-                            profile.auth.user.avatar ?
-                                `url('${profile.auth.user.avatar}')`
-                                :
-                                `url('${require('/images/default_avatar.png')}')`
+                        backgroundImage: `url('${getAvatarUrl(profile.auth)}')`
                     }}
                 />
                 <div className={styles['user-info-details']}>
