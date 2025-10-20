@@ -7,6 +7,7 @@
     "license": "gpl-2.0",
     "scripts": {
         "start": "webpack serve --mode development",
+        "dev": "webpack serve --mode development --hot --live-reload --port 3000",
         "start-prod": "webpack serve --mode production",
         "build": "webpack --mode production",
         "test": "jest",
@@ -24,6 +25,7 @@
         "bowser": "2.11.0",
         "buffer": "6.0.3",
         "classnames": "2.5.1",
+        "crypto-js": "^4.2.0",
         "eventemitter3": "5.0.1",
         "filter-invalid-dom-props": "3.0.1",
         "hat": "^0.0.3",
@@ -52,6 +54,7 @@
         "@eslint/js": "^9.16.0",
         "@stylistic/eslint-plugin": "^5.4.0",
         "@stylistic/eslint-plugin-jsx": "^4.4.1",
+        "@types/crypto-js": "^4.2.2",
         "@types/hat": "^0.0.4",
         "@types/lodash.isequal": "^4.5.8",
         "@types/lodash.throttle": "^4.1.9",
