@@ -16,6 +16,6 @@
         "strict": true,
     },
     "include": [
-        "src/",
+        "src/", "scripts",
     ]
 }
