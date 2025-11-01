@@ -228,7 +228,7 @@ const SubtitlesMenu = React.memo((props) => {
                     />
                     <Stepper
                         className={styles['stepper']}
-                        label={'PLAYER_SUBTITLES_VERTICAL_POSIITON'}
+                        label={'PLAYER_SUBTITLES_VERTICAL_POSITION'}
                         value={props.selectedSubtitlesTrackId ? props.subtitlesOffset : props.selectedExtraSubtitlesTrackId ? props.extraSubtitlesOffset : null}
                         unit={'%'}
                         step={1}

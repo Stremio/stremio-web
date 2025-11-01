@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "lib": [ "ES2016", "DOM", "DOM.Iterable"],
+        "lib": ["ESNext", "DOM", "DOM.Iterable"],
         "jsx": "react",
         "baseUrl": "./src",
         "outDir": "./dist",

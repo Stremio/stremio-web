@@ -27,7 +27,7 @@ jobs:
           version: 10
           run_install: false
       - name: Setup node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
           cache: "pnpm"

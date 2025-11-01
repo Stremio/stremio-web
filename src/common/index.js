@@ -4,6 +4,7 @@ const { FileDropProvider, onFileDrop } = require('./FileDrop');
 const { PlatformProvider, usePlatform } = require('./Platform');
 const { ToastProvider, useToast } = require('./Toast');
 const { TooltipProvider, Tooltip } = require('./Tooltips');
+const { ShortcutsProvider, useShortcuts } = require('./Shortcuts');
 const comparatorWithPriorities = require('./comparatorWithPriorities');
 const CONSTANTS = require('./CONSTANTS');
 const { withCoreSuspender, useCoreSuspender } = require('./CoreSuspender');
@@ -35,6 +36,8 @@ module.exports = {
     onFileDrop,
     PlatformProvider,
     usePlatform,
+    ShortcutsProvider,
+    useShortcuts,
     ToastProvider,
     useToast,
     TooltipProvider,
