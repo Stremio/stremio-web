@@ -13,6 +13,8 @@ const useMetaDetails = require('./useMetaDetails');
 const useSeason = require('./useSeason');
 const useMetaExtensionTabs = require('./useMetaExtensionTabs');
 const styles = require('./styles');
+const MetaLinks = require('../../components/MetaLinks').default;
+
 
 const MetaDetails = ({ urlParams, queryParams }) => {
     const { t } = useTranslation();
@@ -94,6 +96,8 @@ const MetaDetails = ({ urlParams, queryParams }) => {
         metaDetails.metaItem.content.content.background.length > 0
     ), [metaPath, metaDetails]);
 
+
+
     return (
         <div className={styles['metadetails-container']}>
             {
@@ -171,6 +175,11 @@ const MetaDetails = ({ urlParams, queryParams }) => {
                                             metaId={metaDetails.metaItem.content.content.id}
                                             ratingInfo={metaDetails.ratingInfo}
                                         />
+                                        {/* Render additional meta links if present */}
+                                            {metaDetails.metaItem?.content?.content?.links?.length > 0 && (
+                                                <MetaLinks links={metaDetails.metaItem.content.content.links} />
+                                            )}
+
                                     </React.Fragment>
                 }
                 <div className={styles['spacing']} />

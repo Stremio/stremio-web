@@ -1,0 +1,32 @@
+diff --git a/src/routes/MetaDetails/MetaDetails.js b/src/routes/MetaDetails/MetaDetails.js
+index 1234567..89abcde 100644
+--- a/src/routes/MetaDetails/MetaDetails.js
++++ b/src/routes/MetaDetails/MetaDetails.js
+@@ -11,6 +11,7 @@ const useMetaDetails = require('./useMetaDetails');
+ const withCoreSuspender = require('stremio/common/withCoreSuspender');
+ const MetaVideosList = require('./VideosList/VideosList');
+ const MetaStreamsList = require('./StreamsList/StreamsList');
++const MetaLinks = require('../../components/MetaLinks').default;
+ 
+ const MetaDetails = ({ urlParams, queryParams }) => {
+     const metaDetails = useMetaDetails(urlParams);
+@@ -100,6 +101,19 @@ const MetaDetails = ({ urlParams, queryParams }) => {
+                 </section>
+             ) : null}
+
++            {/* Additional links section */}
++            {metaDetails && metaDetails.links && metaDetails.links.length > 0 && (
++                <section
++                    className="meta-links-section"
++                    aria-label="Additional links"
++                    style={{ marginTop: 20 }}
++                >
++                    <h3 style={{ marginBottom: 8 }}>Additional links</h3>
++                    <MetaLinks links={metaDetails.links} meta={metaDetails} />
++                </section>
++            )}
++
++
+             {metaDetails && metaDetails.trailers && metaDetails.trailers.length ? (
+                 <section className="trailers">
+                     <h3>Trailers</h3>
