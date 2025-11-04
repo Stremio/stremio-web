@@ -138,11 +138,11 @@ const Intro = ({ queryParams }) => {
     }, []);
     const loginWithEmail = React.useCallback(() => {
         if (typeof state.email !== 'string' || state.email.length === 0 || !emailRef.current.validity.valid) {
-            dispatch({ type: 'error', error: 'Invalid email' });
+            dispatch({ type: 'error', error: t('INVALID_EMAIL') });
             return;
         }
         if (typeof state.password !== 'string' || state.password.length === 0) {
-            dispatch({ type: 'error', error: 'Invalid password' });
+            dispatch({ type: 'error', error: t('INVALID_PASSWORD') });
             return;
         }
         openLoaderModal();
@@ -160,26 +160,26 @@ const Intro = ({ queryParams }) => {
     }, [state.email, state.password]);
     const loginAsGuest = React.useCallback(() => {
         if (!state.termsAccepted) {
-            dispatch({ type: 'error', error: 'You must accept the Terms of Service' });
+            dispatch({ type: 'error', error: t('MUST_ACCEPT_TERMS') });
             return;
         }
         window.location = '#/';
     }, [state.termsAccepted]);
     const signup = React.useCallback(() => {
         if (typeof state.email !== 'string' || state.email.length === 0 || !emailRef.current.validity.valid) {
-            dispatch({ type: 'error', error: 'Invalid email' });
+            dispatch({ type: 'error', error: t('INVALID_EMAIL') });
             return;
         }
         if (typeof state.password !== 'string' || state.password.length === 0) {
-            dispatch({ type: 'error', error: 'Invalid password' });
+            dispatch({ type: 'error', error: t('INVALID_PASSWORD') });
             return;
         }
         if (state.password !== state.confirmPassword) {
-            dispatch({ type: 'error', error: 'Passwords do not match' });
+            dispatch({ type: 'error', error: t('PASSWORDS_NOMATCH') });
             return;
         }
         if (!state.termsAccepted) {
-            dispatch({ type: 'error', error: 'You must accept the Terms of Service' });
+            dispatch({ type: 'error', error: t('MUST_ACCEPT_TERMS') });
             return;
         }
         if (!state.privacyPolicyAccepted) {
@@ -387,7 +387,7 @@ const Intro = ({ queryParams }) => {
                     {
                         state.form === SIGNUP_FORM ?
                             <Button className={classnames(styles['form-button'], styles['login-form-button'])} onClick={switchFormOnClick}>
-                                <div className={classnames(styles['label'], styles['uppercase'])}>{t('LOG_IN')}</div>
+                                <div className={styles['label']}>{t('LOG_IN')}</div>
                             </Button>
                             :
                             null
@@ -395,7 +395,7 @@ const Intro = ({ queryParams }) => {
                     {
                         state.form === LOGIN_FORM ?
                             <Button className={classnames(styles['form-button'], styles['signup-form-button'])} onClick={switchFormOnClick}>
-                                <div className={classnames(styles['label'], styles['uppercase'])}>{t('SIGN_UP_EMAIL')}</div>
+                                <div className={styles['label']}>{t('SIGN_UP_EMAIL')}</div>
                             </Button>
                             :
                             null
@@ -403,7 +403,7 @@ const Intro = ({ queryParams }) => {
                     {
                         state.form === SIGNUP_FORM ?
                             <Button className={classnames(styles['form-button'], styles['guest-login-button'])} onClick={loginAsGuest}>
-                                <div className={classnames(styles['label'], styles['uppercase'])}>{t('GUEST_LOGIN')}</div>
+                                <div className={styles['label']}>{t('GUEST_LOGIN')}</div>
                             </Button>
                             :
                             null

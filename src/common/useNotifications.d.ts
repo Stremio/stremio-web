@@ -1,2 +1,2 @@
-declare const useNotifcations: () => Notifications;
-export = useNotifcations;
+declare const useNotifications: () => Notifications;
+export = useNotifications;

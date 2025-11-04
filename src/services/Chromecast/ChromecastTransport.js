@@ -21,7 +21,7 @@ const initialize = () => {
             if (castAPIAvailable) {
                 resolve();
             } else {
-                reject(new Error('window.cast api not available'));
+                reject(new Error('window.cast api not available', { cause: 'castAPIAvailable is null.' }));
             }
         }
         if (castAPIAvailable !== null) {
@@ -167,7 +167,7 @@ function ChromecastTransport() {
                 });
             }));
         } else {
-            return Promise.reject(new Error('Session not started'));
+            return Promise.reject(new Error('Session not started', { cause: 'castSession is null.' }));
         }
     };
 }

@@ -11,11 +11,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
       - name: Install NPM dependencies
-        run: npm install
+        run: pnpm install
       - name: Build
         env:
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
-        run: npm run build
+        run: pnpm build
       - name: Zip build artifact
         run: zip -r stremio-web.zip ./build
       - name: Upload build artifact to GitHub release assets

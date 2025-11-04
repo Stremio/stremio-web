@@ -21,7 +21,7 @@ const ColorPicker = ({ className, value, onInput }) => {
             showRGB: false,
             showAlpha: true
         });
-        const pickerClipboard = pickerElementRef.current.querySelector('.a-color-picker-clipbaord');
+        const pickerClipboard = pickerElementRef.current.querySelector('.a-color-picker-clipboard');
         if (pickerClipboard instanceof HTMLElement) {
             pickerClipboard.tabIndex = -1;
         }

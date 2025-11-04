@@ -6,11 +6,12 @@ const { useTranslation } = require('react-i18next');
 const { Router } = require('stremio-router');
 const { Core, Shell, Chromecast, DragAndDrop, KeyboardShortcuts, ServicesProvider } = require('stremio/services');
 const { NotFound } = require('stremio/routes');
-const { FileDropProvider, PlatformProvider, ToastProvider, TooltipProvider, CONSTANTS, withCoreSuspender, useShell } = require('stremio/common');
+const { FileDropProvider, PlatformProvider, ToastProvider, TooltipProvider, ShortcutsProvider, CONSTANTS, withCoreSuspender, useShell, useBinaryState } = require('stremio/common');
 const ServicesToaster = require('./ServicesToaster');
 const DeepLinkHandler = require('./DeepLinkHandler');
 const SearchParamsHandler = require('./SearchParamsHandler');
 const { default: UpdaterBanner } = require('./UpdaterBanner');
+const { default: ShortcutsModal } = require('./ShortcutsModal');
 const ErrorDialog = require('./ErrorDialog');
 const withProtectedRoutes = require('./withProtectedRoutes');
 const routerViewsConfig = require('./routerViewsConfig');
@@ -38,6 +39,14 @@ const App = () => {
         };
     }, []);
     const [initialized, setInitialized] = React.useState(false);
+    const [shortcutModalOpen,, closeShortcutsModal, toggleShortcutModal] = useBinaryState(false);
+
+    const onShortcut = React.useCallback((name) => {
+        if (name === 'shortcuts') {
+            toggleShortcutModal();
+        }
+    }, [toggleShortcutModal]);
+
     React.useEffect(() => {
         let prevPath = window.location.hash.slice(1);
         const onLocationHashChange = () => {
@@ -159,7 +168,8 @@ const App = () => {
             services.core.transport.dispatch({
                 action: 'Ctx',
                 args: {
-                    action: 'PullUserFromAPI'
+                    action: 'PullUserFromAPI',
+                    args: {}
                 }
             });
             services.core.transport.dispatch({
@@ -203,15 +213,20 @@ const App = () => {
                                 <ToastProvider className={styles['toasts-container']}>
                                     <TooltipProvider className={styles['tooltip-container']}>
                                         <FileDropProvider className={styles['file-drop-container']}>
-                                            <ServicesToaster />
-                                            <DeepLinkHandler />
-                                            <SearchParamsHandler />
-                                            <UpdaterBanner className={styles['updater-banner-container']} />
-                                            <RouterWithProtectedRoutes
-                                                className={styles['router']}
-                                                viewsConfig={routerViewsConfig}
-                                                onPathNotMatch={onPathNotMatch}
-                                            />
+                                            <ShortcutsProvider onShortcut={onShortcut}>
+                                                {
+                                                    shortcutModalOpen && <ShortcutsModal onClose={closeShortcutsModal}/>
+                                                }
+                                                <ServicesToaster />
+                                                <DeepLinkHandler />
+                                                <SearchParamsHandler />
+                                                <UpdaterBanner className={styles['updater-banner-container']} />
+                                                <RouterWithProtectedRoutes
+                                                    className={styles['router']}
+                                                    viewsConfig={routerViewsConfig}
+                                                    onPathNotMatch={onPathNotMatch}
+                                                />
+                                            </ShortcutsProvider>
                                         </FileDropProvider>
                                     </TooltipProvider>
                                 </ToastProvider>

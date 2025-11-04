@@ -17,7 +17,7 @@ const AddItem = ({ onCancel, handleAddUrl }: Props) => {
         setInputValue(target.value);
     }, []);
 
-    const onSumbit = useCallback(() => {
+    const onSubmit = useCallback(() => {
         handleAddUrl(inputValue);
     }, [inputValue]);
 
@@ -27,11 +27,11 @@ const AddItem = ({ onCancel, handleAddUrl }: Props) => {
                 className={styles['input']}
                 value={inputValue}
                 onChange={handleValueChange}
-                onSubmit={onSumbit}
+                onSubmit={onSubmit}
                 placeholder={'Enter URL'}
             />
             <div className={styles['actions']}>
-                <Button className={styles['add']} onClick={onSumbit}>
+                <Button className={styles['add']} onClick={onSubmit}>
                     <Icon name={'checkmark'} className={styles['icon']} />
                 </Button>
                 <Button className={styles['cancel']} onClick={onCancel}>

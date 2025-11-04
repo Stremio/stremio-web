@@ -5,7 +5,7 @@ on:
     branches:
       - development
     tags-ignore:
-      - '**'
+      - "**"
   pull_request:
     branches:
       - development
@@ -21,19 +21,25 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          run_install: false
       - name: Setup node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
+          cache: "pnpm"
       - name: Install NPM dependencies
-        run: npm ci
+        run: pnpm install
       - name: Build
-        run: npm run build
+        run: pnpm build
       - name: Test
-        run: npm test
+        run: pnpm test
       - name: Lint
-        run: npm run lint
-      # Create recursivelly the destiantion dir with
+        run: pnpm lint
+      # Create recursively the destination dir with
       # "--parrents where no error if existing, make parent directories as needed."
       - run: mkdir -p ./build/${{ github.head_ref || github.ref_name }}
       - name: Deploy to GitHub Pages

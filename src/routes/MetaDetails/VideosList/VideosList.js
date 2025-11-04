@@ -11,9 +11,10 @@ const SeasonsBar = require('./SeasonsBar');
 const { default: EpisodePicker } = require('../EpisodePicker');
 const styles = require('./styles');
 
-const VideosList = ({ className, metaItem, libraryItem, season, seasonOnSelect, toggleNotifications }) => {
+const VideosList = ({ className, metaItem, libraryItem, season, seasonOnSelect, selectedVideoId, toggleNotifications }) => {
     const { core } = useServices();
     const profile = useProfile();
+
     const showNotificationsToggle = React.useMemo(() => {
         return metaItem?.content?.content?.inLibrary && metaItem?.content?.content?.videos?.length;
     }, [metaItem]);
@@ -178,6 +179,7 @@ const VideosList = ({ className, metaItem, libraryItem, season, seasonOnSelect, 
                                                 deepLinks={video.deepLinks}
                                                 scheduled={video.scheduled}
                                                 seasonWatched={seasonWatched}
+                                                selected={video.id === selectedVideoId}
                                                 onMarkVideoAsWatched={onMarkVideoAsWatched}
                                                 onMarkSeasonAsWatched={onMarkSeasonAsWatched}
                                             />
@@ -195,6 +197,7 @@ VideosList.propTypes = {
     metaItem: PropTypes.object,
     libraryItem: PropTypes.object,
     season: PropTypes.number,
+    selectedVideoId: PropTypes.string,
     seasonOnSelect: PropTypes.func,
     toggleNotifications: PropTypes.func,
 };

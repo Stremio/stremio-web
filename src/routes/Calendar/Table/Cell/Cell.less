@@ -2,6 +2,25 @@
 
 @import (reference) '~stremio/common/screen-sizes.less';
 
+.disable-cell-items() {
+    .cell {
+        .items {
+            .item {
+                pointer-events: none;
+            }
+        }
+    }
+}
+
+.compact-items() {
+    .cell {
+        .items {
+            padding: 1px;
+            gap: 0.15rem;
+        }
+    }
+}
+
 .cell {
     position: relative;
     display: flex;
@@ -27,12 +46,9 @@
     }
 
     .heading {
-        flex: none;
         position: relative;
-        height: 3rem;
         display: flex;
-        align-items: center;
-        padding: 0 1rem;
+        align-items: flex-start;
 
         .day {
             flex: none;
@@ -50,12 +66,15 @@
     }
 
     .items {
-        flex: 0 1 10rem;
         position: relative;
         display: flex;
         flex-direction: row;
-        gap: 1rem;
-        padding: 0 0.5rem 0.5rem 0.5rem;
+        gap: 0.2rem;
+        padding: 0.1rem;
+        flex: 1 1 60%;
+        overflow-x: auto;
+        overflow-y: hidden; 
+        min-width: 0;
 
         .item {
             flex: none;
@@ -64,7 +83,9 @@
             justify-content: center;
             height: 100%;
             aspect-ratio: 2 / 3;
-            border-radius: var(--border-radius);
+            border-radius: calc(var(--border-radius) / 2);
+            max-height: 100%;
+            max-width: 100%;
 
             .icon {
                 flex: none;
@@ -80,13 +101,11 @@
             }
 
             .poster {
-                flex: auto;
-                z-index: 0;
-                position: relative;
-                height: 100%;
-                width: 100%;
+                height: auto;
+                max-height: 100%;
+                aspect-ratio: 2 / 3;
                 object-fit: cover;
-                opacity: 1;
+                border-radius: inherit
             }
 
             .icon, .poster {
@@ -117,8 +136,11 @@
 
     &.today {
         .heading {
+            padding: 0.3rem;
             .day {
                 background-color: var(--primary-accent-color);
+                height: 1.5rem;
+                width: 1.5rem;
             }
         }
     }
@@ -134,56 +156,55 @@
     }
 }
 
-@media only screen and (max-height: @minimum) and (orientation: portrait) {
-    .cell {
-        .heading {
-            justify-content: center;
-        }
-
-        .items {
-            display: none;
-        }
-
-        .more {
-            display: flex;
-        }
-    }
+@media only screen and (max-width: @minimum) {
+    .disable-cell-items();
 }
 
-@media only screen and (max-height: @xxsmall) and (orientation: landscape) {
+@media @phone-portrait {
+    .cell {
+        flex-direction: column;
+        display: grid;
+    }
+    .compact-items();
+    .disable-cell-items();
+}
+
+@media @phone-landscape {
     .cell {
         flex-direction: row;
-        align-items: center;
-
-        .items {
-            display: none;
-        }
-
-        .more {
-            display: flex;
-        }
     }
+    .compact-items();
+    .disable-cell-items();
 }
 
-@media only screen and (max-height: @xsmall) and (max-width: @xsmall) {
+@media only screen and (max-height: @medium) and (max-width: @medium) and (orientation: landscape) {
     .cell {
         gap: 0;
 
         .heading {
-            height: 2rem;
-
             .day {
+                padding: 0;
                 font-size: 0.875rem;
             }
         }
 
         .items {
-            padding: 0.25rem;
-
-            .item {
-                pointer-events: none;
-                border-radius: calc(var(--border-radius) / 2);
-            }
+            width: 100%;
+            padding-left: 0.5rem;
         }
     }
+}
+
+@media only screen and (max-width: @minimum) and (orientation: portrait) and (pointer: fine) {
+    .cell {
+        display: flex;
+
+        .heading {
+            flex: 1 1 33%;
+        }
+    }
+}
+
+@media screen and (max-width: @small) and (orientation: portrait) {
+    .disable-cell-items();
 }

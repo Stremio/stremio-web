@@ -3,7 +3,7 @@ type LibraryItemPlayer = Pick<LibraryItem, '_id'> & {
 };
 
 type VideoPlayer = Video & {
-    upcomming: boolean,
+    upcoming: boolean,
     watched: boolean,
     progress: boolean | null,
     scheduled: boolean,

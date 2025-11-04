@@ -39,7 +39,7 @@ const useFacebookLogin = () => {
                 timeout.current && clearTimeout(timeout.current);
                 timeout.current = setTimeout(() => {
                     if (tries >= MAX_TRIES)
-                        return reject(new Error('Failed to authenticate with facebook'));
+                        return reject(new Error('Failed to authenticate with facebook', { cause: 'Number of allowed tries exceeded!' }));
 
                     tries++;
 
