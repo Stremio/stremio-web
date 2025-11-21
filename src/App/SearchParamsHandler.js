@@ -36,7 +36,13 @@ const SearchParamsHandler = () => {
                     },
                 },
             });
-
+            core.transport.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'AddServerUrl',
+                    args: streamingServerUrl,
+                },
+            });
             toast.show({
                 type: 'success',
                 title: `Using streaming server at ${streamingServerUrl}`,

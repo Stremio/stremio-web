@@ -1,6 +1,6 @@
 // Copyright (C) 2017-2024 Smart code 203358507
 
-import React, { useMemo, useCallback, useState, forwardRef, memo, useRef } from 'react';
+import React, { useMemo, useCallback, useState, forwardRef, memo } from 'react';
 import classNames from 'classnames';
 import Icon from '@stremio/stremio-icons/react';
 import { useServices } from 'stremio/services';
@@ -21,7 +21,8 @@ type Props = {
 const SideDrawer = memo(forwardRef<HTMLDivElement, Props>(({ seriesInfo, className, closeSideDrawer, selected, ...props }: Props, ref) => {
     const { core } = useServices();
     const [season, setSeason] = useState<number>(seriesInfo?.season);
-    const selectedVideoRef = useRef<HTMLDivElement>(null);
+    const [selectedVideoId, setSelectedVideoId] = useState<string | null>(null);
+
     const metaItem = useMemo(() => {
         return seriesInfo ?
             {
@@ -78,11 +79,9 @@ const SideDrawer = memo(forwardRef<HTMLDivElement, Props>(({ seriesInfo, classNa
         event.stopPropagation();
     };
 
-    const onTransitionEnd = () => {
-        selectedVideoRef.current?.scrollIntoView({
-            behavior: 'smooth',
-        });
-    };
+    const onTransitionEnd = useCallback(() => {
+        setSelectedVideoId(selected);
+    }, [selected]);
 
     return (
         <div ref={ref} className={classNames(styles['side-drawer'], className)} onMouseDown={onMouseDown} onTransitionEnd={onTransitionEnd}>
@@ -114,7 +113,6 @@ const SideDrawer = memo(forwardRef<HTMLDivElement, Props>(({ seriesInfo, classNa
                             {videos.map((video, index) => (
                                 <Video
                                     key={index}
-                                    ref={video.id === selected ? selectedVideoRef : null}
                                     className={styles['video']}
                                     id={video.id}
                                     title={video.title}
@@ -128,6 +126,7 @@ const SideDrawer = memo(forwardRef<HTMLDivElement, Props>(({ seriesInfo, classNa
                                     progress={video.progress}
                                     deepLinks={video.deepLinks}
                                     scheduled={video.scheduled}
+                                    selected={video.id === selectedVideoId}
                                     onMarkVideoAsWatched={onMarkVideoAsWatched}
                                     onMarkSeasonAsWatched={onMarkSeasonAsWatched}
                                 />

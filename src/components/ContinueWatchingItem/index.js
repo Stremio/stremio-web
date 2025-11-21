@@ -1,5 +1,5 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
-const ContineWatchingItem = require('./ContinueWatchingItem');
+const ContinueWatchingItem = require('./ContinueWatchingItem');
 
-module.exports = ContineWatchingItem;
+module.exports = ContinueWatchingItem;

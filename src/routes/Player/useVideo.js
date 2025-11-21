@@ -152,7 +152,15 @@ const useVideo = () => {
         video.current.on('extraSubtitlesTrackLoaded', onExtraSubtitlesTrackLoaded);
         video.current.on('extraSubtitlesTrackAdded', onExtraSubtitlesTrackAdded);
 
-        return () => video.current.destroy();
+        return () => {
+            if (video.current) {
+                try {
+                    video.current.destroy();
+                } catch (err) {
+                    console.error('Error destroying video:', err);
+                }
+            }
+        };
     }, []);
 
     return {

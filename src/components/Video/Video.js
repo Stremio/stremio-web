@@ -12,11 +12,12 @@ const useProfile = require('stremio/common/useProfile');
 const VideoPlaceholder = require('./VideoPlaceholder');
 const styles = require('./styles');
 
-const Video = React.forwardRef(({ className, id, title, thumbnail, season, episode, released, upcoming, watched, progress, scheduled, seasonWatched, deepLinks, onMarkVideoAsWatched, onMarkSeasonAsWatched, ...props }, ref) => {
+const Video = ({ className, id, title, thumbnail, season, episode, released, upcoming, watched, progress, scheduled, seasonWatched, selected, deepLinks, onMarkVideoAsWatched, onMarkSeasonAsWatched, ...props }) => {
     const routeFocused = useRouteFocused();
     const profile = useProfile();
     const { t } = useTranslation();
     const [menuOpen, , closeMenu, toggleMenu] = useBinaryState(false);
+
     const popupLabelOnMouseUp = React.useCallback((event) => {
         if (!event.nativeEvent.togglePopupPrevented) {
             if (event.nativeEvent.ctrlKey || event.nativeEvent.button === 2) {
@@ -68,27 +69,19 @@ const Video = React.forwardRef(({ className, id, title, thumbnail, season, episo
             }
         }
     }, [deepLinks]);
-    const renderLabel = React.useMemo(() => function renderLabel({ className, id, title, thumbnail, episode, released, upcoming, watched, progress, scheduled, children, ref: popupRef, ...props }) {
+    const renderLabel = React.useMemo(() => function renderLabel({ className, id, title, thumbnail, episode, released, upcoming, watched, progress, scheduled, children, ref, ...props }) {
         const blurThumbnail = profile.settings.hideSpoilers && season && episode && !watched;
-        const handleRef = React.useCallback((node) => {
-            if (popupRef) {
-                if (typeof popupRef === 'function') {
-                    popupRef(node);
-                } else {
-                    popupRef.current = node;
-                }
-            }
-            if (ref) {
-                if (typeof ref === 'function') {
-                    ref(node);
-                } else {
-                    ref.current = node;
-                }
-            }
-        }, [popupRef]);
+
+        React.useEffect(() => {
+            selected && !watched && ref.current?.scrollIntoView({
+                behavior: 'smooth',
+                block: 'nearest',
+                inline: 'start'
+            });
+        }, [selected]);
 
         return (
-            <Button {...props} className={classnames(className, styles['video-container'])} title={title} ref={handleRef}>
+            <Button {...props} ref={ref} className={classnames(className, styles['video-container'])} title={title}>
                 {
                     typeof thumbnail === 'string' && thumbnail.length > 0 ?
                         <div className={styles['thumbnail-container']}>
@@ -159,7 +152,7 @@ const Video = React.forwardRef(({ className, id, title, thumbnail, season, episo
                 {children}
             </Button>
         );
-    }, []);
+    }, [selected]);
     const renderMenu = React.useMemo(() => function renderMenu() {
         return (
             <div className={styles['context-menu-content']} onPointerDown={popupMenuOnPointerDown} onContextMenu={popupMenuOnContextMenu} onClick={popupMenuOnClick} onKeyDown={popupMenuOnKeyDown}>
@@ -203,7 +196,7 @@ const Video = React.forwardRef(({ className, id, title, thumbnail, season, episo
             renderMenu={renderMenu}
         />
     );
-});
+};
 
 Video.Placeholder = VideoPlaceholder;
 
@@ -220,6 +213,7 @@ Video.propTypes = {
     progress: PropTypes.number,
     scheduled: PropTypes.bool,
     seasonWatched: PropTypes.bool,
+    selected: PropTypes.bool,
     deepLinks: PropTypes.shape({
         metaDetailsStreams: PropTypes.string,
         player: PropTypes.string

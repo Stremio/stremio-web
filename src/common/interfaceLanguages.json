@@ -52,6 +52,10 @@
         "codes": ["fa-IR", "fas"]
     },
     {
+        "name": "Suomi",
+        "codes": ["fi-FI", "fin"]
+    },
+    {
         "name": "Français",
         "codes": ["fr-FR", "fre"]
     },
@@ -120,12 +124,16 @@
         "codes": ["pt-PT", "por"]
     },
     {
+        "name": "Română",
+        "codes": ["ro-RO", "ron"]
+    },
+    {
         "name": "русский язык",
         "codes": ["ru-RU", "rus"]
     },
     {
-        "name": "Svenska",
-        "codes": ["sv-SE", "swe"]
+        "name": "Slovenčina",
+        "codes": ["sk-SK", "slk"]
     },
     {
         "name": "slovenski jezik",
@@ -134,6 +142,10 @@
     {
         "name": "српски језик",
         "codes": ["sr-RS", "srp"]
+    },
+    {
+        "name": "Svenska",
+        "codes": ["sv-SE", "swe"]
     },
     {
         "name": "తెలుగు",

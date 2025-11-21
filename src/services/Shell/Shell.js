@@ -63,7 +63,7 @@ function Shell() {
         } catch (e) {
             console.error(e);
             active = false;
-            error = new Error(e);
+            error = new Error('Failed to initialize shell transport', { cause: e });
             starting = false;
             onStateChanged();
             transport = null;

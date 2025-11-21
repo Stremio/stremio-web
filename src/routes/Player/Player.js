@@ -8,7 +8,7 @@ const langs = require('langs');
 const { useTranslation } = require('react-i18next');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
-const { onFileDrop, useSettings, useFullscreen, useBinaryState, useToast, useStreamingServer, withCoreSuspender, CONSTANTS, useShell } = require('stremio/common');
+const { onFileDrop, useSettings, useFullscreen, useBinaryState, useToast, useStreamingServer, withCoreSuspender, CONSTANTS, useShell, usePlatform } = require('stremio/common');
 const { HorizontalNavBar, Transition, ContextMenu } = require('stremio/components');
 const BufferingLoader = require('./BufferingLoader');
 const VolumeChangeIndicator = require('./VolumeChangeIndicator');
@@ -43,6 +43,7 @@ const Player = ({ urlParams, queryParams }) => {
     const statistics = useStatistics(player, streamingServer);
     const video = useVideo();
     const routeFocused = useRouteFocused();
+    const platform = usePlatform();
     const toast = useToast();
 
     const [seeking, setSeeking] = React.useState(false);
@@ -366,6 +367,8 @@ const Player = ({ urlParams, queryParams }) => {
                 forceTranscoding: forceTranscoding || casting,
                 maxAudioChannels: settings.surroundSound ? 32 : 2,
                 hardwareDecoding: settings.hardwareDecoding,
+                videoMode: settings.videoMode,
+                platform: platform.name,
                 streamingServerURL: streamingServer.baseUrl ?
                     casting ?
                         streamingServer.baseUrl
@@ -558,6 +561,52 @@ const Player = ({ urlParams, queryParams }) => {
             video.setProp('playbackSpeed', settings.playbackSpeed)
         }
     }, [video.state.loaded])
+    // Media Session PlaybackState
+    React.useEffect(() => {
+        if (!navigator.mediaSession) return;
+
+        const playbackState = !video.state.paused ? 'playing' : 'paused';
+        navigator.mediaSession.playbackState = playbackState;
+
+        return () => navigator.mediaSession.playbackState = 'none';
+    }, [video.state.paused]);
+
+    // Media Session Metadata
+    React.useEffect(() => {
+        if (!navigator.mediaSession) return;
+
+        const metaItem = player.metaItem && player.metaItem?.type === 'Ready' ? player.metaItem.content : null;
+        const videoId = player.selected ? player.selected?.streamRequest?.path?.id : null;
+        const video = metaItem ? metaItem.videos.find(({ id }) => id === videoId) : null;
+
+        const videoInfo = video && video.season && video.episode ? ` (${video.season}x${video.episode})`: null;
+        const videoTitle = video ? `${video.title}${videoInfo}` : null;
+        const metaTitle = metaItem ? metaItem.name : null;
+        const imageUrl = metaItem ? metaItem.logo : null;
+
+        const title = videoTitle ?? metaTitle;
+        const artist = videoTitle ? metaTitle : undefined;
+        const artwork = imageUrl ? [{ src: imageUrl }] : undefined;
+
+        if (title) {
+            navigator.mediaSession.metadata = new MediaMetadata({
+                title,
+                artist,
+                artwork,
+            });
+        }
+    }, [player.metaItem, player.selected]);
+
+    // Media Session Actions
+    React.useEffect(() => {
+        if (!navigator.mediaSession) return;
+
+        navigator.mediaSession.setActionHandler('play', onPlayRequested);
+        navigator.mediaSession.setActionHandler('pause', onPauseRequested);
+
+        const nexVideoCallback = player.nextVideo ? onNextVideoRequested : null;
+        navigator.mediaSession.setActionHandler('nexttrack', nexVideoCallback);
+    }, [player.nextVideo, onPlayRequested, onPauseRequested, onNextVideoRequested]);
 
     React.useLayoutEffect(() => {
         const onKeyDown = (event) => {

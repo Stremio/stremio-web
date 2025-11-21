@@ -3,18 +3,18 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const { useTranslation } = require('react-i18next');
 const { Button } = require('stremio/components');
+const { useTranslate } = require('stremio/common');
 const styles = require('./styles');
 
 const MetaLinks = ({ className, label, links }) => {
-    const { t } = useTranslation();
+    const { string, stringWithPrefix } = useTranslate();
     return (
         <div className={classnames(className, styles['meta-links-container'])}>
             {
                 typeof label === 'string' && label.length > 0 ?
                     <div className={styles['label-container']}>
-                        {t(`LINKS_${label.toUpperCase()}`)}
+                        { stringWithPrefix(label.toUpperCase(), 'LINKS') }
                     </div>
                     :
                     null
@@ -24,7 +24,7 @@ const MetaLinks = ({ className, label, links }) => {
                     <div className={styles['links-container']}>
                         {links.map(({ label, href }, index) => (
                             <Button key={index} className={styles['link-container']} title={label} href={href}>
-                                { t(label) }
+                                { string(label) }
                             </Button>
                         ))}
                     </div>

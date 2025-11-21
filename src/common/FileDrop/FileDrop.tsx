@@ -42,7 +42,7 @@ const FileDropProvider = ({ className, children }: Props) => {
                 .then((buffer) => {
                     listeners
                         .filter(([type]) => file.type ? type === file.type : isFileType(buffer, type))
-                        .forEach(([, listerner]) => listerner(file.name, buffer));
+                        .forEach(([, listener]) => listener(file.name, buffer));
                 });
         }
 

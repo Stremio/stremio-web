@@ -82,7 +82,7 @@ export default [
             '@stylistic/semi-spacing': 'error',
             '@stylistic/space-before-blocks': 'error',
             '@stylistic/no-trailing-spaces': 'error',
-            '@stylistic/func-call-spacing': 'error',
+            '@stylistic/function-call-spacing': 'error',
             '@stylistic/semi': 'error',
             '@stylistic/no-extra-semi': 'error',
             '@stylistic/eol-last': 'error',

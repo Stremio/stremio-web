@@ -12,7 +12,7 @@ const WorkboxPlugin = require('workbox-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const WebpackPwaManifest = require('webpack-pwa-manifest');
-const pachageJson = require('./package.json');
+const packageJson = require('./package.json');
 
 const COMMIT_HASH = execSync('git rev-parse HEAD').toString().trim();
 
@@ -213,8 +213,9 @@ module.exports = (env, argv) => ({
         new webpack.EnvironmentPlugin({
             SENTRY_DSN: null,
             ...env,
+            SERVICE_WORKER_DISABLED: false,
             DEBUG: argv.mode !== 'production',
-            VERSION: pachageJson.version,
+            VERSION: packageJson.version,
             COMMIT_HASH
         }),
         new webpack.ProvidePlugin({
