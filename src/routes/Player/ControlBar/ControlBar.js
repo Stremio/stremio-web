@@ -170,7 +170,7 @@ const ControlBar = ({
                 <div className={classnames(styles['control-bar-buttons-menu-container'], { 'open': buttonsMenuOpen })}>
                   {
                     document.pictureInPictureEnabled ?
-                    <Button className={classnames(styles['control-bar-button'], { 'disabled': stream === null })} tabIndex={-1} onClick={onPipButtonClick}>
+                    <Button className={classnames(styles['control-bar-button'], { 'disabled': duration == null })} tabIndex={-1} onClick={onPipButtonClick}>
                         <Icon className={styles['icon']} name={'open-in-browser'} />
                     </Button>
                     :
