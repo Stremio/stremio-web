@@ -279,17 +279,38 @@ const Player = ({ urlParams, queryParams }) => {
     const onPipEnableRequested = React.useCallback(() => {
       console.log("Entering picture in picture");
       const videoElement = video.containerRef.current?.querySelector('video');
-      videoElement.requestPictureInPicture().then(() => {
-        video.setPictureInPicture(true);
-      });
+      if (videoElement && videoElement !== document.pictureInPictureElement) {
+        videoElement.requestPictureInPicture();
+      }
     }, []);
 
     const onPipDisableRequested = React.useCallback(() => {
-        console.log("Exiting picture in picture");
-        document.exitPictureInPicture().then(() => {
-          video.setPictureInPicture(false);
-        });
+        if (document.pictureInPictureElement) {
+          document.exitPictureInPicture();
+        }
     }, []);
+
+    // Listen to PiP events to sync state
+    React.useEffect(() => {
+        const videoElement = video.containerRef.current?.querySelector('video');
+        if (!videoElement) return;
+
+        const onEnterPip = () => {
+            video.setPictureInPicture(true);
+        };
+
+        const onLeavePip = () => {
+            video.setPictureInPicture(false);
+        };
+
+        videoElement.addEventListener('enterpictureinpicture', onEnterPip);
+        videoElement.addEventListener('leavepictureinpicture', onLeavePip);
+
+        return () => {
+            videoElement.removeEventListener('enterpictureinpicture', onEnterPip);
+            videoElement.removeEventListener('leavepictureinpicture', onLeavePip);
+        };
+    }, [video.state.stream]);
 
     const onVideoClick = React.useCallback(() => {
         if (video.state.paused !== null) {

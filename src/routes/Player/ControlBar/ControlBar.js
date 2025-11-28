@@ -168,9 +168,14 @@ const ControlBar = ({
                     <Icon className={styles['icon']} name={'more-vertical'} />
                 </Button>
                 <div className={classnames(styles['control-bar-buttons-menu-container'], { 'open': buttonsMenuOpen })}>
-                  <Button className={classnames(styles['control-bar-button'], { 'disabled': stream === null })} tabIndex={-1} onClick={onPipButtonClick}>
-                      <Icon className={styles['icon']} name={'open-in-browser'} />
-                  </Button>
+                  {
+                    document.pictureInPictureEnabled ?
+                    <Button className={classnames(styles['control-bar-button'], { 'disabled': stream === null })} tabIndex={-1} onClick={onPipButtonClick}>
+                        <Icon className={styles['icon']} name={'open-in-browser'} />
+                    </Button>
+                    :
+                    null
+                  }
                   <Button className={classnames(styles['control-bar-button'], { 'disabled': statistics === null || statistics.type === 'Err' || stream === null || typeof stream.infoHash !== 'string' || typeof stream.fileIdx !== 'number' })} tabIndex={-1} onMouseDown={onStatisticsButtonMouseDown} onClick={onToggleStatisticsMenu}>
                         <Icon className={styles['icon']} name={'network'} />
                     </Button>
