@@ -94,6 +94,13 @@ const useVideo = () => {
         dispatch({ type: 'setProp', propName: name, propValue: value });
     };
 
+    const setPictureInPicture = (value) => {
+        setState((state) => ({
+            ...state,
+            pictureInPicture: value
+        }));
+    };
+
     const setSubtitlesTrack = (id) => {
         setProp('selectedSubtitlesTrackId', id);
         setProp('selectedExtraSubtitlesTrackId', null);
@@ -172,6 +179,7 @@ const useVideo = () => {
         addExtraSubtitlesTracks,
         addLocalSubtitles,
         setProp,
+        setPictureInPicture,
         setSubtitlesTrack,
         setExtraSubtitlesTrack,
     };

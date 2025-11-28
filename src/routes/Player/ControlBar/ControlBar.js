@@ -21,6 +21,7 @@ const ControlBar = ({
     volume,
     muted,
     playbackSpeed,
+    pictureInPicture,
     subtitlesTracks,
     audioTracks,
     metaItem,
@@ -33,6 +34,8 @@ const ControlBar = ({
     onMuteRequested,
     onUnmuteRequested,
     onVolumeChangeRequested,
+    onPipEnableRequested,
+    onPipDisableRequested,
     onSeekRequested,
     onToggleSubtitlesMenu,
     onToggleAudioMenu,
@@ -40,6 +43,7 @@ const ControlBar = ({
     onToggleSideDrawer,
     onToggleOptionsMenu,
     onToggleStatisticsMenu,
+    onTogglePip,
     onTouchEnd,
     ...props
 }) => {
@@ -95,6 +99,17 @@ const ControlBar = ({
     const onChromecastButtonClick = React.useCallback(() => {
         chromecast.transport.requestSession();
     }, []);
+    const onPipButtonClick = React.useCallback(() => {
+        if (pictureInPicture) {
+          if (typeof onPipDisableRequested === 'function') {
+            onPipDisableRequested();
+          }
+        } else {
+          if (typeof onPipEnableRequested === 'function') {
+            onPipEnableRequested();
+          }
+        }
+    }, [pictureInPicture, onPipEnableRequested, onPipDisableRequested])
     React.useEffect(() => {
         const onStateChanged = () => {
             setChromecastServiceActive(chromecast.active);
@@ -153,7 +168,10 @@ const ControlBar = ({
                     <Icon className={styles['icon']} name={'more-vertical'} />
                 </Button>
                 <div className={classnames(styles['control-bar-buttons-menu-container'], { 'open': buttonsMenuOpen })}>
-                    <Button className={classnames(styles['control-bar-button'], { 'disabled': statistics === null || statistics.type === 'Err' || stream === null || typeof stream.infoHash !== 'string' || typeof stream.fileIdx !== 'number' })} tabIndex={-1} onMouseDown={onStatisticsButtonMouseDown} onClick={onToggleStatisticsMenu}>
+                  <Button className={classnames(styles['control-bar-button'], { 'disabled': stream === null })} tabIndex={-1} onClick={onPipButtonClick}>
+                      <Icon className={styles['icon']} name={'open-in-browser'} />
+                  </Button>
+                  <Button className={classnames(styles['control-bar-button'], { 'disabled': statistics === null || statistics.type === 'Err' || stream === null || typeof stream.infoHash !== 'string' || typeof stream.fileIdx !== 'number' })} tabIndex={-1} onMouseDown={onStatisticsButtonMouseDown} onClick={onToggleStatisticsMenu}>
                         <Icon className={styles['icon']} name={'network'} />
                     </Button>
                     <Button className={classnames(styles['control-bar-button'], { 'disabled': playbackSpeed === null })} tabIndex={-1} onMouseDown={onSpeedButtonMouseDown} onClick={onToggleSpeedMenu}>
@@ -193,6 +211,7 @@ ControlBar.propTypes = {
     buffered: PropTypes.number,
     volume: PropTypes.number,
     muted: PropTypes.bool,
+    pictureInPicture: PropTypes.bool,
     playbackSpeed: PropTypes.number,
     subtitlesTracks: PropTypes.array,
     audioTracks: PropTypes.array,
@@ -207,6 +226,8 @@ ControlBar.propTypes = {
     onUnmuteRequested: PropTypes.func,
     onVolumeChangeRequested: PropTypes.func,
     onSeekRequested: PropTypes.func,
+    onPipEnableRequested: PropTypes.func,
+    onPipDisableRequested: PropTypes.func,
     onToggleSubtitlesMenu: PropTypes.func,
     onToggleAudioMenu: PropTypes.func,
     onToggleSpeedMenu: PropTypes.func,
@@ -216,6 +237,7 @@ ControlBar.propTypes = {
     onMouseOver: PropTypes.func,
     onMouseMove: PropTypes.func,
     onTouchEnd: PropTypes.func,
+    onPipButtonClick: PropTypes.func,
 };
 
 module.exports = ControlBar;

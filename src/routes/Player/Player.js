@@ -276,6 +276,21 @@ const Player = ({ urlParams, queryParams }) => {
         }
     }, [player.nextVideo, handleNextVideoNavigation, profile.settings]);
 
+    const onPipEnableRequested = React.useCallback(() => {
+      console.log("Entering picture in picture");
+      const videoElement = video.containerRef.current?.querySelector('video');
+      videoElement.requestPictureInPicture().then(() => {
+        video.setPictureInPicture(true);
+      });
+    }, []);
+
+    const onPipDisableRequested = React.useCallback(() => {
+        console.log("Exiting picture in picture");
+        document.exitPictureInPicture().then(() => {
+          video.setPictureInPicture(false);
+        });
+    }, []);
+
     const onVideoClick = React.useCallback(() => {
         if (video.state.paused !== null) {
             if (video.state.paused) {
@@ -876,6 +891,7 @@ const Player = ({ urlParams, queryParams }) => {
                 volume={video.state.volume}
                 muted={video.state.muted}
                 playbackSpeed={video.state.playbackSpeed}
+                pictureInPicture={video.state.pictureInPicture}
                 subtitlesTracks={video.state.subtitlesTracks.concat(video.state.extraSubtitlesTracks)}
                 audioTracks={video.state.audioTracks}
                 metaItem={player.metaItem}
@@ -887,6 +903,8 @@ const Player = ({ urlParams, queryParams }) => {
                 onNextVideoRequested={onNextVideoRequested}
                 onMuteRequested={onMuteRequested}
                 onUnmuteRequested={onUnmuteRequested}
+                onPipEnableRequested={onPipEnableRequested}
+                onPipDisableRequested={onPipDisableRequested}
                 onVolumeChangeRequested={onVolumeChangeRequested}
                 onSeekRequested={onSeekRequested}
                 onToggleOptionsMenu={toggleOptionsMenu}
@@ -895,6 +913,7 @@ const Player = ({ urlParams, queryParams }) => {
                 onToggleSpeedMenu={toggleSpeedMenu}
                 onToggleStatisticsMenu={toggleStatisticsMenu}
                 onToggleSideDrawer={toggleSideDrawer}
+
                 onMouseMove={onBarMouseMove}
                 onMouseOver={onBarMouseMove}
                 onTouchEnd={onContainerMouseLeave}
