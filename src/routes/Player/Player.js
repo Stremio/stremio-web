@@ -277,16 +277,15 @@ const Player = ({ urlParams, queryParams }) => {
     }, [player.nextVideo, handleNextVideoNavigation, profile.settings]);
 
     const onPipEnableRequested = React.useCallback(() => {
-      console.log("Entering picture in picture");
       const videoElement = video.containerRef.current?.querySelector('video');
       if (videoElement && videoElement !== document.pictureInPictureElement) {
-        videoElement.requestPictureInPicture();
+        videoElement.requestPictureInPicture().catch((error) => {});
       }
     }, []);
 
     const onPipDisableRequested = React.useCallback(() => {
         if (document.pictureInPictureElement) {
-          document.exitPictureInPicture();
+          document.exitPictureInPicture().catch((error) => {});
         }
     }, []);
 
