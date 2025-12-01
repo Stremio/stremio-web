@@ -17,7 +17,7 @@
         "@babel/runtime": "7.26.0",
         "@sentry/browser": "8.42.0",
         "@stremio/stremio-colors": "5.2.0",
-        "@stremio/stremio-core-web": "0.50.0",
+        "@stremio/stremio-core-web": "https://stremio.github.io/stremio-core/stremio-core-web/fix/magnet-url-parser/dev/stremio-stremio-core-web-0.51.1.tgz",
         "@stremio/stremio-icons": "5.8.0",
         "@stremio/stremio-video": "0.0.64",
         "a-color-picker": "1.2.1",
