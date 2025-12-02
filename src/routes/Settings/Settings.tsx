@@ -38,14 +38,10 @@ const Settings = () => {
 
     const updateSelectedSectionId = useCallback(() => {
         const container = sectionsContainerRef.current;
-        if (container!.scrollTop + container!.clientHeight >= container!.scrollHeight - 50) {
-            setSelectedSectionId(sections[sections.length - 1].id);
-        } else {
-            for (let i = sections.length - 1; i >= 0; i--) {
-                if (sections[i].ref.current && sections[i].ref.current!.offsetTop - container!.offsetTop <= container!.scrollTop) {
-                    setSelectedSectionId(sections[i].id);
-                    break;
-                }
+        for (const section of sections) {
+            const sectionContainer = section.ref.current;
+            if (sectionContainer && (sectionContainer.offsetTop + container!.offsetTop) < container!.scrollTop + 50) {
+                setSelectedSectionId(section.id);
             }
         }
     }, []);
