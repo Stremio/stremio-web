@@ -63,10 +63,7 @@ const SearchParamsHandler = () => {
             const isNewUserOrGuest = !profile?.auth || profile?.auth?.user?.isNewUser === true;
 
             if (isNewUserOrGuest) {
-                // Mark this collection as processed
                 processedAddonsCollectionRef.current = addonsCollection;
-
-                // Fetch the add-ons collection from the provided URL
                 fetch(addonsCollection)
                     .then((response) => {
                         if (!response.ok) {
@@ -77,9 +74,7 @@ const SearchParamsHandler = () => {
                     .then((collectionData) => {
                         // Install each add-on from the collection
                         if (Array.isArray(collectionData)) {
-                            // For each entry, ensure that the Core with a proper `manifest` object.
-                            // If the collection contains URLs (strings) or objects with string `manifest`/`transportUrl`,
-                            // fetch the manifest JSON first and pass the parsed object to Core.
+                            // For each entry, ensuring that the Core with a proper `manifest` object.
                             const installPromises = collectionData.map((addon) => {
                                 return new Promise((resolve) => {
                                     (async () => {
@@ -116,7 +111,7 @@ const SearchParamsHandler = () => {
                                                 // addon may contain manifest as object or URL
                                                 const name = typeof addon.name === 'string' ? addon.name : null;
                                                 if (addon.manifest && typeof addon.manifest === 'object') {
-                                                    // already an object
+
                                                     doDispatch(addon.manifest, addon.transportUrl || null, name);
                                                 } else {
                                                     // manifest field might be a URL, or fallback to transportUrl/url
@@ -146,7 +141,6 @@ const SearchParamsHandler = () => {
                                 });
                             });
 
-                            // Wait for all installs (or failures) to finish before notifying the user
                             Promise.all(installPromises).then(() => {
                                 toast.show({
                                     type: 'success',
