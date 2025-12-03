@@ -11,6 +11,7 @@ const SearchParamsHandler = () => {
     const toast = useToast();
 
     const [searchParams, setSearchParams] = React.useState({});
+    const processedAddonsCollectionRef = React.useRef(null);
 
     const onLocationChange = () => {
         const { origin, hash, search } = window.location;
@@ -23,7 +24,7 @@ const SearchParamsHandler = () => {
     };
 
     React.useEffect(() => {
-        const { streamingServerUrl } = searchParams;
+        const { streamingServerUrl, addonsCollection } = searchParams;
 
         if (streamingServerUrl) {
             core.transport.dispatch({
@@ -48,6 +49,122 @@ const SearchParamsHandler = () => {
                 title: `Using streaming server at ${streamingServerUrl}`,
                 timeout: 4000,
             });
+        }
+
+        // Handle custom add-ons collection for new users and guests
+        // This allows distributing pre-configured add-on bundles via URL parameter
+        // Example: ?addonsCollection=https://example.com/addons.json
+        if (addonsCollection && typeof addonsCollection === 'string' && addonsCollection.length > 0) {
+            // Processing this collection only once per session
+            if (processedAddonsCollectionRef.current === addonsCollection) {
+                return;
+            }
+
+            const isNewUserOrGuest = !profile?.auth || profile?.auth?.user?.isNewUser === true;
+
+            if (isNewUserOrGuest) {
+                // Mark this collection as processed
+                processedAddonsCollectionRef.current = addonsCollection;
+
+                // Fetch the add-ons collection from the provided URL
+                fetch(addonsCollection)
+                    .then((response) => {
+                        if (!response.ok) {
+                            throw new Error(`Failed to fetch add-ons collection: ${response.statusText}`);
+                        }
+                        return response.json();
+                    })
+                    .then((collectionData) => {
+                        // Install each add-on from the collection
+                        if (Array.isArray(collectionData)) {
+                            // For each entry, ensure that the Core with a proper `manifest` object.
+                            // If the collection contains URLs (strings) or objects with string `manifest`/`transportUrl`,
+                            // fetch the manifest JSON first and pass the parsed object to Core.
+                            const installPromises = collectionData.map((addon) => {
+                                return new Promise((resolve) => {
+                                    (async () => {
+                                        try {
+                                            // Helper to dispatch InstallAddon with manifest object
+                                            const doDispatch = (manifestObj, transportUrl, name) => {
+                                                const args = {};
+                                                if (manifestObj) args.manifest = manifestObj;
+                                                if (transportUrl) args.transportUrl = transportUrl;
+                                                if (name) args.name = name;
+                                                if (Object.keys(args).length > 0) {
+                                                    core.transport.dispatch({
+                                                        action: 'Ctx',
+                                                        args: {
+                                                            action: 'InstallAddon',
+                                                            args,
+                                                        },
+                                                    });
+                                                }
+                                            };
+
+                                            if (typeof addon === 'string') {
+                                                // treat as manifest URL: fetch and parse
+                                                const manifestUrl = addon;
+                                                try {
+                                                    const res = await fetch(manifestUrl);
+                                                    if (!res.ok) throw new Error(`Failed to fetch manifest: ${res.statusText}`);
+                                                    const manifestObj = await res.json();
+                                                    doDispatch(manifestObj, manifestUrl, null);
+                                                } catch (e) {
+                                                    console.error('Failed to fetch/parse manifest for', manifestUrl, e);
+                                                }
+                                            } else if (addon && typeof addon === 'object') {
+                                                // addon may contain manifest as object or URL
+                                                const name = typeof addon.name === 'string' ? addon.name : null;
+                                                if (addon.manifest && typeof addon.manifest === 'object') {
+                                                    // already an object
+                                                    doDispatch(addon.manifest, addon.transportUrl || null, name);
+                                                } else {
+                                                    // manifest field might be a URL, or fallback to transportUrl/url
+                                                    const manifestUrl = addon.manifest || addon.transportUrl || addon.url || null;
+                                                    if (manifestUrl && typeof manifestUrl === 'string') {
+                                                        try {
+                                                            const res = await fetch(manifestUrl);
+                                                            if (!res.ok) throw new Error(`Failed to fetch manifest: ${res.statusText}`);
+                                                            const manifestObj = await res.json();
+                                                            doDispatch(manifestObj, addon.transportUrl || manifestUrl, name);
+                                                        } catch (e) {
+                                                            console.error('Failed to fetch/parse manifest for', manifestUrl, e);
+                                                        }
+                                                    } else {
+                                                        console.warn('Skipping invalid add-on entry in collection:', addon);
+                                                    }
+                                                }
+                                            } else {
+                                                console.warn('Skipping invalid add-on entry in collection:', addon);
+                                            }
+                                        } catch (e) {
+                                            console.error('Error processing add-on entry:', addon, e);
+                                        } finally {
+                                            resolve();
+                                        }
+                                    })();
+                                });
+                            });
+
+                            // Wait for all installs (or failures) to finish before notifying the user
+                            Promise.all(installPromises).then(() => {
+                                toast.show({
+                                    type: 'success',
+                                    title: `Processed ${collectionData.length} add-on entries from collection`,
+                                    timeout: 4000,
+                                });
+                            });
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Failed to load add-ons collection:', error);
+                        toast.show({
+                            type: 'error',
+                            title: 'Failed to load add-ons collection',
+                            timeout: 4000,
+                        });
+                    });
+            }
         }
     }, [searchParams]);
 
