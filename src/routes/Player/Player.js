@@ -47,6 +47,10 @@ const Player = ({ urlParams, queryParams }) => {
     const toast = useToast();
 
     const [seeking, setSeeking] = React.useState(false);
+    
+    const isMlbHeld = React.useRef(false);
+    const MlbHoldTimerRef = React.useRef(null);
+    const currPlaybackSpeed = React.useRef(null)
 
     const [casting, setCasting] = React.useState(() => {
         return services.chromecast.active && services.chromecast.transport.getCastState() === cast.framework.CastState.CONNECTED;
@@ -311,6 +315,31 @@ const Player = ({ urlParams, queryParams }) => {
 
         closeSideDrawer();
     }, []);
+
+    const onVideoMouseDown = React.useCallback((event)=>{
+        if (event.button !== 0) return;
+        MlbHoldTimerRef.current = setTimeout(() => {
+            currPlaybackSpeed.current = video.state.playbackSpeed
+            isMlbHeld.current = true;
+            video.setProp('playbackSpeed',2.00) 
+        }, 500)            
+
+    },[video])
+    const onVideoMouseUp = React.useCallback((event)=>{
+        clearTimeout(MlbHoldTimerRef.current);
+        if (isMlbHeld.current){
+            video.setProp('playbackSpeed',currPlaybackSpeed.current)
+            isMlbHeld.current = false
+        }
+
+    },[video])
+    const onVideoMouseLeave = React.useCallback((event)=>{
+        clearTimeout(MlbHoldTimerRef.current);
+        if (isMlbHeld.current) {
+            video.setProp('playbackSpeed',currPlaybackSpeed.current)
+            isMlbHeld.current = false
+        }
+    },[video])
 
     const onContainerMouseMove = React.useCallback((event) => {
         setImmersed(false);
@@ -796,6 +825,9 @@ const Player = ({ urlParams, queryParams }) => {
                 className={styles['layer']}
                 onClick={onVideoClick}
                 onDoubleClick={onVideoDoubleClick}
+                onMouseDown={onVideoMouseDown}
+                onMouseUp={onVideoMouseUp}
+                onMouseLeave={onVideoMouseLeave}
             />
             {
                 !video.state.loaded ?
