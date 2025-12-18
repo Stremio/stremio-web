@@ -324,7 +324,7 @@ const Player = ({ urlParams, queryParams }) => {
             video.setProp('playbackSpeed',2.00);
         }, 500);
     }, [video]);
-    
+
     const onVideoMouseUp = React.useCallback((event) => {
         clearTimeout(MlbHoldTimerRef.current);
         if (isMlbHeld.current){
