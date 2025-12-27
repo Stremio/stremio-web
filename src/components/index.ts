@@ -10,6 +10,7 @@ import DelayedRenderer from './DelayedRenderer';
 import EventModal from './EventModal';
 import HorizontalScroll from './HorizontalScroll';
 import Image from './Image';
+import Input from './Input';
 import LibItem from './LibItem';
 import MainNavBars from './MainNavBars';
 import MetaItem from './MetaItem';
@@ -44,6 +45,7 @@ export {
     EventModal,
     HorizontalScroll,
     Image,
+    Input,
     LibItem,
     MainNavBars,
     MetaItem,

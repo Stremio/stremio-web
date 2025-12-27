@@ -27,6 +27,8 @@ const useStatistics = require('./useStatistics');
 const useVideo = require('./useVideo');
 const styles = require('./styles');
 const Video = require('./Video');
+const SubtitleOverlay = require('./InteractiveSubtitles/SubtitleOverlay');
+const { useInteractiveSettings } = require('../Settings/Player/useInteractiveSettings');
 const { default: Indicator } = require('./Indicator/Indicator');
 
 const Player = ({ urlParams, queryParams }) => {
@@ -45,6 +47,7 @@ const Player = ({ urlParams, queryParams }) => {
     const routeFocused = useRouteFocused();
     const platform = usePlatform();
     const toast = useToast();
+    const { settings: interactiveSettings, setSettings: setInteractiveSettings, getCachedTranslation, setCachedTranslation } = useInteractiveSettings();
 
     const [seeking, setSeeking] = React.useState(false);
 
@@ -797,6 +800,26 @@ const Player = ({ urlParams, queryParams }) => {
                 onClick={onVideoClick}
                 onDoubleClick={onVideoDoubleClick}
             />
+            {/* INJECTED: Interactive Subtitle Overlay */}
+            {video.containerRef.current && interactiveSettings.uiMode === 'OVERLAY' && (
+                <div className={styles['layer']} style={{ zIndex: 0, pointerEvents: 'none' }}>
+                    <SubtitleOverlay
+                        videoElement={video.containerRef.current.querySelector('video')}
+                        containerRef={video.containerRef}
+                        settings={{
+                            ...interactiveSettings,
+                            subtitleSize: settings.subtitlesSize,
+                            subtitleOffset: settings.subtitlesOffset,
+                            subtitleTextColor: settings.subtitlesTextColor,
+                            subtitleBackgroundColor: settings.subtitlesBackgroundColor,
+                            subtitleOutlineColor: settings.subtitlesOutlineColor
+                        }}
+                        onProviderChange={(provider) => setInteractiveSettings({ provider })}
+                        getCachedTranslation={getCachedTranslation}
+                        setCachedTranslation={setCachedTranslation}
+                    />
+                </div>
+            )}
             {
                 !video.state.loaded ?
                     <div className={classnames(styles['layer'], styles['background-layer'])}>
