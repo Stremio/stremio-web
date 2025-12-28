@@ -1,5 +1,6 @@
 import React, { forwardRef, useMemo } from 'react';
-import { ColorInput, MultiselectMenu, Toggle, Multiselect, Input } from 'stremio/components';
+import { ColorInput, MultiselectMenu, Toggle, Input } from 'stremio/components';
+import LanguageMultiselect from 'stremio/components/LanguageMultiselect';
 import { useServices } from 'stremio/services';
 import { Category, Option, Section } from '../components';
 import usePlayerOptions from './usePlayerOptions';
@@ -228,25 +229,33 @@ const Player = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) => {
     }), [interactiveSettings.targetLang, sortedTargetLanguages, setInteractiveSettings]);
 
     // Multi-select for LLM target languages - matches Multiselect component API
-    const multiTargetLangsSelect = useMemo(() => ({
-        mode: 'popup' as const,
-        direction: 'bottom-left' as const,
-        title: 'Target Languages',
-        options: sortedTargetLanguages,
-        selected: interactiveSettings.targetLangs,
-        onSelect: (event: { type: string; value: string; nativeEvent?: { closeMenuPrevented?: boolean } }) => {
-            // Prevent menu from closing on selection
-            if (event.nativeEvent) {
-                event.nativeEvent.closeMenuPrevented = true;
-            }
-            const value = event.value;
-            const current = interactiveSettings.targetLangs;
-            const updated = current.includes(value)
-                ? current.filter((l) => l !== value)
-                : [...current, value];
-            setInteractiveSettings({ targetLangs: updated.length > 0 ? updated : [] });
-        },
-    }), [interactiveSettings.targetLangs, sortedTargetLanguages, setInteractiveSettings]);
+    const multiTargetLangsSelect = useMemo(() => {
+        // Generate tooltip with selected languages line by line
+        const selectedLanguageNames = interactiveSettings.targetLangs
+            .map((code) => languageNames[code as keyof typeof languageNames] || code)
+            .join('\n');
+        const tooltipTitle = selectedLanguageNames || 'Target Languages';
+
+        return {
+            mode: 'popup' as const,
+            direction: 'bottom-left' as const,
+            title: tooltipTitle,
+            options: sortedTargetLanguages,
+            selected: interactiveSettings.targetLangs,
+            onSelect: (event: { type: string; value: string; nativeEvent?: { closeMenuPrevented?: boolean } }) => {
+                // Prevent menu from closing on selection
+                if (event.nativeEvent) {
+                    event.nativeEvent.closeMenuPrevented = true;
+                }
+                const value = event.value;
+                const current = interactiveSettings.targetLangs;
+                const updated = current.includes(value)
+                    ? current.filter((l) => l !== value)
+                    : [...current, value];
+                setInteractiveSettings({ targetLangs: updated.length > 0 ? updated : [] });
+            },
+        };
+    }, [interactiveSettings.targetLangs, sortedTargetLanguages, setInteractiveSettings]);
 
     const isLLMProvider = LLM_PROVIDERS.includes(interactiveSettings.provider);
     const showApiKeyInput = ['GEMINI', 'OPENAI', 'CLAUDE', 'OPENROUTER', 'CUSTOM'].includes(interactiveSettings.provider);
@@ -322,7 +331,7 @@ const Player = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) => {
                                 )}
                                 {isLLMProvider && (
                                     <Option label={'Target Languages (Multi)'}>
-                                        <Multiselect
+                                        <LanguageMultiselect
                                             className={'multiselect'}
                                             {...multiTargetLangsSelect}
                                         />

@@ -6,3 +6,4 @@ declare module '*.less' {
 declare module 'stremio-router';
 declare module 'stremio/components/NavBar';
 declare module 'stremio/components/ModalDialog';
+declare module 'stremio/components/LanguageMultiselect';
