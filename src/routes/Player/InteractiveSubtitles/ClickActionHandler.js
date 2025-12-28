@@ -40,9 +40,7 @@ const ClickActionHandler = {
     // Convert 3-letter language code to 2-letter code for Google Translate
     convertLangCode(code) {
         if (!code || code === 'auto') return code;
-        // If already 2-letter code, return as is
         if (code.length === 2) return code;
-        // Convert 3-letter to 2-letter, fallback to original if not found
         return LANG_CODE_MAP[code.toLowerCase()] || code;
     },
 
@@ -90,8 +88,6 @@ const ClickActionHandler = {
         const sourceLang = config.sourceLang || 'auto';
         const targetLang = config.targetLang || 'en';
 
-        // console.log(`[Translate] Provider: ${provider}, Word: "${word}"`);
-
         try {
             switch (provider) {
                 case 'GOOGLE':
@@ -125,12 +121,9 @@ const ClickActionHandler = {
     },
 
     async translateGoogle(word, sourceLang, targetLang) {
-        // Convert 3-letter codes to 2-letter codes for Google Translate API
         const sl = this.convertLangCode(sourceLang) || 'auto';
         const tl = this.convertLangCode(targetLang);
 
-        // Free Google Translate endpoint (unofficial, for demo purposes)
-        // For production, use the official API with a key
         const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sl}&tl=${tl}&dt=t&q=${encodeURIComponent(word)}`;
 
         try {
@@ -166,9 +159,9 @@ const ClickActionHandler = {
         const targetLangNames = targetLangs.map((code) => this.resolveTargetLangName(code));
         const targetLangName = this.resolveTargetLangName(config.targetLang);
 
-        // Get provider-specific prompt or fallback to general llmPrompt
+        // Get provider-specific prompt or fallback to general prompt
         const provider = config.provider || 'GOOGLE';
-        const prompt = config.providerPrompts?.[provider] || config.llmPrompt || 'Define "{word}" briefly in {targetLang}.';
+        const prompt = config.providerPrompts?.[provider] || 'Define "{word}" briefly in {targetLang}.';
 
         return prompt
             .replace('{word}', word)

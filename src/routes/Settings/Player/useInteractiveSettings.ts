@@ -40,13 +40,12 @@ export interface InteractiveSettings {
     provider: TranslationProvider;
     sourceLang: string;
     targetLang: string;
-    targetLangs: string[]; // Multiple target languages for LLMs
-    apiKey: string; // Deprecated: kept for backward compatibility
-    providerApiKeys: Record<string, string>; // API keys per provider
-    providerUrls: Record<string, string>; // Base URLs per provider
-    providerModels: Record<string, string>; // Model names per provider
-    providerPrompts: Record<string, string>; // Custom prompts per provider
-    llmPrompt: string; // Deprecated: kept for backward compatibility
+    targetLangs: string[];
+    apiKey: string;
+    providerApiKeys: Record<string, string>;
+    providerUrls: Record<string, string>;
+    providerModels: Record<string, string>;
+    providerPrompts: Record<string, string>;
     webhookUrl: string;
     pauseOnTranslate: boolean;
     pauseOnCopy: boolean;
@@ -59,7 +58,7 @@ const STORAGE_KEY = 'stremio_interactive_subtitles_settings';
 const CACHE_KEY = 'stremio_interactive_subtitles_cache';
 
 const DEFAULT_SETTINGS: InteractiveSettings = {
-    uiMode: 'OVERLAY',
+    uiMode: 'NATIVE',
     clickAction: 'TRANSLATE',
     provider: 'GOOGLE',
     sourceLang: 'auto',
@@ -70,7 +69,6 @@ const DEFAULT_SETTINGS: InteractiveSettings = {
     providerUrls: { ...DEFAULT_PROVIDER_URLS },
     providerModels: { ...DEFAULT_PROVIDER_MODELS },
     providerPrompts: { ...DEFAULT_PROVIDER_PROMPTS },
-    llmPrompt: '"{word}" - give one or more translations in {targetLangs}.\n-Use plain text. \n -No additional text except translations. Format: \n[lang]: translation 1, translation2 ...',
     webhookUrl: '',
     pauseOnTranslate: true,
     pauseOnCopy: false,
