@@ -72,6 +72,27 @@ const VideosList = ({ className, metaItem, libraryItem, season, seasonOnSelect, 
     }, [videosForSeason]);
 
     const [search, setSearch] = React.useState('');
+
+    const filteredVideos = React.useMemo(() => {
+        // When searching: use ALL videos across all seasons
+        // When browsing normally: use only videos from selected season
+        return (search.length > 0 ? videos : videosForSeason)
+            .filter((video) => {
+                return search.length === 0 ||
+                    (
+                        (typeof video.title === 'string' && video.title.toLowerCase().includes(search.toLowerCase())) ||
+                        (!isNaN(video.released.getTime()) && video.released.toLocaleString(profile.settings.interfaceLanguage, { year: '2-digit', month: 'short', day: 'numeric' }).toLowerCase().includes(search.toLowerCase()))
+                    );
+            })
+            .sort((a, b) => {
+                if (search.length > 0) {
+                    // Sort chronologically by season and episode
+                    return (a.season - b.season) || (a.episode - b.episode);
+                }
+                return 0;
+            });
+    }, [videos, videosForSeason, search, profile.settings.interfaceLanguage]);
+
     const searchInputOnChange = React.useCallback((event) => {
         setSearch(event.currentTarget.value);
     }, []);
@@ -156,34 +177,68 @@ const VideosList = ({ className, metaItem, libraryItem, season, seasonOnSelect, 
                             />
                             <div className={styles['videos-container']}>
                                 {
-                                    videosForSeason
-                                        .filter((video) => {
-                                            return search.length === 0 ||
-                                                (
-                                                    (typeof video.title === 'string' && video.title.toLowerCase().includes(search.toLowerCase())) ||
-                                                    (!isNaN(video.released.getTime()) && video.released.toLocaleString(profile.settings.interfaceLanguage, { year: '2-digit', month: 'short', day: 'numeric' }).toLowerCase().includes(search.toLowerCase()))
+                                    (() => {
+                                        const uniqueSeasons = search.length > 0
+                                            ? [...new Set(filteredVideos.map((v) => v.season))]
+                                            : [];
+
+                                        // Only show season separators when there are multiple seasons in the results or the selected season is different
+                                        const showSeasonSeparators = uniqueSeasons.length > 1 ||
+                                            (uniqueSeasons.length === 1 && uniqueSeasons[0] !== selectedSeason);
+
+                                        const elements = [];
+                                        let currentSeason = null;
+
+                                        filteredVideos.forEach((video, index) => {
+                                            // Add season header when entering a new season
+                                            if (showSeasonSeparators && video.season !== currentSeason) {
+                                                currentSeason = video.season;
+                                                const isSelectedSeason = currentSeason === selectedSeason;
+                                                elements.push(
+                                                    <div
+                                                        key={`season-${currentSeason}`}
+                                                        className={classnames(
+                                                            styles['season-separator'],
+                                                            { [styles['season-separator--selected']]: isSelectedSeason }
+                                                        )}
+                                                        ref={isSelectedSeason ? (el) => {
+                                                            // Auto-scroll to current season when results load
+                                                            if (el) {
+                                                                requestAnimationFrame(() => {
+                                                                    el.scrollIntoView({ behavior: 'instant', block: 'start' });
+                                                                });
+                                                            }
+                                                        } : null}
+                                                    >
+                                                        {t('SEASON')} {currentSeason}
+                                                    </div>
                                                 );
-                                        })
-                                        .map((video, index) => (
-                                            <Video
-                                                key={index}
-                                                id={video.id}
-                                                title={video.title}
-                                                thumbnail={video.thumbnail}
-                                                season={video.season}
-                                                episode={video.episode}
-                                                released={video.released}
-                                                upcoming={video.upcoming}
-                                                watched={video.watched}
-                                                progress={video.progress}
-                                                deepLinks={video.deepLinks}
-                                                scheduled={video.scheduled}
-                                                seasonWatched={seasonWatched}
-                                                selected={video.id === selectedVideoId}
-                                                onMarkVideoAsWatched={onMarkVideoAsWatched}
-                                                onMarkSeasonAsWatched={onMarkSeasonAsWatched}
-                                            />
-                                        ))
+                                            }
+
+                                            elements.push(
+                                                <Video
+                                                    key={index}
+                                                    id={video.id}
+                                                    title={video.title}
+                                                    thumbnail={video.thumbnail}
+                                                    season={video.season}
+                                                    episode={video.episode}
+                                                    released={video.released}
+                                                    upcoming={video.upcoming}
+                                                    watched={video.watched}
+                                                    progress={video.progress}
+                                                    deepLinks={video.deepLinks}
+                                                    scheduled={video.scheduled}
+                                                    seasonWatched={seasonWatched}
+                                                    selected={video.id === selectedVideoId}
+                                                    onMarkVideoAsWatched={onMarkVideoAsWatched}
+                                                    onMarkSeasonAsWatched={onMarkSeasonAsWatched}
+                                                />
+                                            );
+                                        });
+
+                                        return elements;
+                                    })()
                                 }
                             </div>
                         </React.Fragment>

@@ -71,6 +71,27 @@
         align-self: stretch;
         padding: 0 1rem;
         overflow-y: auto;
+
+        .season-separator {
+            flex: none;
+            align-self: stretch;
+            padding: 1rem 0.5rem 0.5rem;
+            margin-top: 0.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--primary-foreground-color);
+            opacity: 0.7;
+
+            &:first-child {
+                margin-top: 0;
+            }
+
+            &--selected {
+                opacity: 1;
+                font-weight: 700;
+            }
+        }
     }
 }
 
