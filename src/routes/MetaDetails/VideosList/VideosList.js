@@ -73,6 +73,11 @@ const VideosList = ({ className, metaItem, libraryItem, season, seasonOnSelect, 
 
     const [search, setSearch] = React.useState('');
 
+    // Clear search when user switches seasons
+    React.useEffect(() => {
+        setSearch('');
+    }, [selectedSeason]);
+
     const filteredVideos = React.useMemo(() => {
         // When searching: use ALL videos across all seasons
         // When browsing normally: use only videos from selected season
@@ -96,6 +101,42 @@ const VideosList = ({ className, metaItem, libraryItem, season, seasonOnSelect, 
     const searchInputOnChange = React.useCallback((event) => {
         setSearch(event.currentTarget.value);
     }, []);
+
+    const selectedSeasonRef = React.useRef(null);
+    const videosContainerRef = React.useRef(null);
+
+    // Auto-scroll to selected season when search results load
+    React.useEffect(() => {
+        if (search.length > 0 && filteredVideos.length > 0) {
+            requestAnimationFrame(() => {
+                // Scroll to selected season if it has results
+                if (selectedSeasonRef.current) {
+                    selectedSeasonRef.current.scrollIntoView({ behavior: 'instant', block: 'start' });
+                }
+                // Otherwise scroll to top
+                else if (videosContainerRef.current) {
+                    videosContainerRef.current.scrollTop = 0;
+                }
+            });
+        }
+    }, [filteredVideos, search]);
+
+    // Compute seasons for rendering - when not searching, use [null] for single pass
+    const seasonsToRender = React.useMemo(() => {
+        if (search.length === 0) {
+            return [null]; // Browsing - single "invisible" season
+        }
+
+        const seasons = [...new Set(filteredVideos.map((v) => v.season))].sort((a, b) => a - b);
+
+        // Always include current season even if no results
+        if (selectedSeason !== null && !seasons.includes(selectedSeason)) {
+            seasons.push(selectedSeason);
+            seasons.sort((a, b) => a - b);
+        }
+
+        return seasons;
+    }, [search, filteredVideos, selectedSeason]);
 
     const onMarkVideoAsWatched = (video, watched) => {
         core.transport.dispatch({
@@ -175,49 +216,47 @@ const VideosList = ({ className, metaItem, libraryItem, season, seasonOnSelect, 
                                 value={search}
                                 onChange={searchInputOnChange}
                             />
-                            <div className={styles['videos-container']}>
+                            <div className={styles['videos-container']} ref={videosContainerRef}>
                                 {
-                                    (() => {
-                                        const uniqueSeasons = search.length > 0
-                                            ? [...new Set(filteredVideos.map((v) => v.season))]
-                                            : [];
+                                    seasonsToRender.flatMap((season, index) => {
+                                        const isSearching = search.length > 0;
+                                        const videosInSeason = season === null
+                                            ? filteredVideos
+                                            : filteredVideos.filter((v) => v.season === season);
 
-                                        // Only show season separators when there are multiple seasons in the results or the selected season is different
-                                        const showSeasonSeparators = uniqueSeasons.length > 1 ||
-                                            (uniqueSeasons.length === 1 && uniqueSeasons[0] !== selectedSeason);
+                                        const isSelectedSeason = season === selectedSeason;
+                                        const hasResults = videosInSeason.length > 0;
 
-                                        const elements = [];
-                                        let currentSeason = null;
+                                        const isCompletelyEmpty = isSearching && filteredVideos.length === 0 && index === 0;
+                                        const shouldShowEmptyMessage = isSearching && (isCompletelyEmpty || (isSelectedSeason && !hasResults));
 
-                                        filteredVideos.forEach((video, index) => {
-                                            // Add season header when entering a new season
-                                            if (showSeasonSeparators && video.season !== currentSeason) {
-                                                currentSeason = video.season;
-                                                const isSelectedSeason = currentSeason === selectedSeason;
-                                                elements.push(
-                                                    <div
-                                                        key={`season-${currentSeason}`}
-                                                        className={classnames(
-                                                            styles['season-separator'],
-                                                            { [styles['season-separator--selected']]: isSelectedSeason }
-                                                        )}
-                                                        ref={isSelectedSeason ? (el) => {
-                                                            // Auto-scroll to current season when results load
-                                                            if (el) {
-                                                                requestAnimationFrame(() => {
-                                                                    el.scrollIntoView({ behavior: 'instant', block: 'start' });
-                                                                });
-                                                            }
-                                                        } : null}
-                                                    >
-                                                        {t('SEASON')} {currentSeason}
-                                                    </div>
-                                                );
-                                            }
-
-                                            elements.push(
+                                        return [
+                                            // Season separator (only when searching and not completely empty)
+                                            ...(isSearching && !isCompletelyEmpty ? [
+                                                <div
+                                                    key={`season-${season}`}
+                                                    className={classnames(
+                                                        styles['season-separator'],
+                                                        {
+                                                            [styles['season-separator--selected']]: isSelectedSeason,
+                                                            [styles['season-separator--empty']]: !hasResults
+                                                        }
+                                                    )}
+                                                    ref={isSelectedSeason && hasResults ? selectedSeasonRef : null}
+                                                >
+                                                    {t('SEASON')} {season}
+                                                </div>
+                                            ] : []),
+                                            // Empty message
+                                            ...(shouldShowEmptyMessage ? [
+                                                <div key={isCompletelyEmpty ? 'empty-all' : `empty-${season}`} className={styles['empty-message']}>
+                                                    {t('SEARCH_NO_RESULTS')}
+                                                </div>
+                                            ] : []),
+                                            // Videos
+                                            ...videosInSeason.map((video) => (
                                                 <Video
-                                                    key={index}
+                                                    key={video.id}
                                                     id={video.id}
                                                     title={video.title}
                                                     thumbnail={video.thumbnail}
@@ -234,11 +273,9 @@ const VideosList = ({ className, metaItem, libraryItem, season, seasonOnSelect, 
                                                     onMarkVideoAsWatched={onMarkVideoAsWatched}
                                                     onMarkSeasonAsWatched={onMarkSeasonAsWatched}
                                                 />
-                                            );
-                                        });
-
-                                        return elements;
-                                    })()
+                                            ))
+                                        ];
+                                    })
                                 }
                             </div>
                         </React.Fragment>

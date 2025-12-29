@@ -72,6 +72,16 @@
         padding: 0 1rem;
         overflow-y: auto;
 
+        .empty-message {
+            flex: none;
+            align-self: stretch;
+            padding: 2rem 1rem;
+            text-align: center;
+            font-size: 1.2rem;
+            color: var(--primary-foreground-color);
+            opacity: 0.6;
+        }
+
         .season-separator {
             flex: none;
             align-self: stretch;
@@ -90,6 +100,11 @@
             &--selected {
                 opacity: 1;
                 font-weight: 700;
+            }
+
+            &--empty {
+                opacity: 0.5;
+                font-style: italic;
             }
         }
     }
