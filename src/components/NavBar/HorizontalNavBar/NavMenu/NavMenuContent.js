@@ -8,6 +8,7 @@ const { default: Icon } = require('@stremio/stremio-icons/react');
 const { useServices } = require('stremio/services');
 const { Button } = require('stremio/components');
 const { default: useFullscreen } = require('stremio/common/useFullscreen');
+const AccountManager = require('stremio/common/AccountManager');
 const useProfile = require('stremio/common/useProfile');
 const usePWA = require('stremio/common/usePWA');
 const useTorrent = require('stremio/common/useTorrent');
@@ -29,14 +30,33 @@ const NavMenuContent = ({ onClick }) => {
             profile.settings.streamingServerWarningDismissed.getTime() > Date.now()
         );
     }, [profile.settings, streamingServer.settings]);
+    const onChangeProfile = React.useCallback((event) => {
+        event.stopPropagation();
+        if (profile.auth && profile.auth.user && profile.auth.key) {
+            AccountManager.addAccount(profile.auth.user, profile.auth.key, profile.settings);
+        }
+        window.location.hash = '#/intro?profiles=true';
+    }, [profile.auth, profile.settings]);
     const logoutButtonOnClick = React.useCallback(() => {
+        const currentEmail = profile.auth?.user?.email;
+        const accounts = AccountManager.getAccounts();
+        const remainingAccounts = accounts.filter((acc) => acc.email !== currentEmail);
+
+        if (currentEmail) {
+            AccountManager.removeAccount(currentEmail);
+        }
+
         core.transport.dispatch({
             action: 'Ctx',
             args: {
                 action: 'Logout'
             }
         });
-    }, []);
+
+        if (remainingAccounts.length > 0) {
+            window.location.hash = '#/intro?profiles=true';
+        }
+    }, [profile.auth, core]);
     const onPlayMagnetLinkClick = React.useCallback(async () => {
         try {
             const clipboardText = await navigator.clipboard.readText();
@@ -64,9 +84,25 @@ const NavMenuContent = ({ onClick }) => {
                     <div className={styles['email-container']}>
                         <div className={styles['email-label']}>{profile.auth === null ? t('ANONYMOUS_USER') : profile.auth.user.email}</div>
                     </div>
-                    <Button className={styles['logout-button-container']} title={profile.auth === null ? `${t('LOG_IN')} / ${t('SIGN_UP')}` : t('LOG_OUT')} href={profile.auth === null ? '#/intro' : null} onClick={profile.auth !== null ? logoutButtonOnClick : null}>
-                        <div className={styles['logout-label']}>{profile.auth === null ? `${t('LOG_IN')} / ${t('SIGN_UP')}` : t('LOG_OUT')}</div>
-                    </Button>
+                    <div className={styles['user-actions-container']}>
+                        {
+                            profile.auth !== null ?
+                                <Button className={styles['user-action-button']} title={t('CHANGE_PROFILE', { defaultValue: 'Change Profile' })} onClick={onChangeProfile}>
+                                    <div className={styles['user-action-label']}>{t('CHANGE_PROFILE', { defaultValue: 'Change Profile' })}</div>
+                                </Button>
+                                :
+                                null
+                        }
+                        {
+                            profile.auth !== null ?
+                                <div className={styles['user-actions-separator']}>/</div>
+                                :
+                                null
+                        }
+                        <Button className={styles['user-action-button']} title={profile.auth === null ? `${t('LOG_IN')} / ${t('SIGN_UP')}` : t('LOG_OUT')} href={profile.auth === null ? '#/intro' : null} onClick={profile.auth !== null ? logoutButtonOnClick : null}>
+                            <div className={styles['user-action-label']}>{profile.auth === null ? `${t('LOG_IN')} / ${t('SIGN_UP')}` : t('LOG_OUT')}</div>
+                        </Button>
+                    </div>
                 </div>
             </div>
             {

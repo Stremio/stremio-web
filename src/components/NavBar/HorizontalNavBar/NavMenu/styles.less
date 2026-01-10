@@ -61,22 +61,35 @@
                 }
             }
 
-            .logout-button-container {
+            .user-actions-container {
                 flex: none;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                gap: 0.5rem;
 
-                &:hover, &:focus {
-                    outline: none;
-
-                    .logout-label {
-                        text-decoration: underline;
-                    }
+                .user-actions-separator {
+                    color: var(--primary-foreground-color);
+                    opacity: 0.5;
+                    font-size: 0.9rem;
                 }
 
-                .logout-label {
-                    flex: 1;
-                    font-size: 0.9rem;
-                    font-weight: 500;
-                    color: var(--primary-foreground-color);
+                .user-action-button {
+                    flex: none;
+
+                    &:hover, &:focus {
+                        outline: none;
+
+                        .user-action-label {
+                            text-decoration: underline;
+                        }
+                    }
+
+                    .user-action-label {
+                        font-size: 0.9rem;
+                        font-weight: 500;
+                        color: var(--primary-foreground-color);
+                    }
                 }
             }
         }

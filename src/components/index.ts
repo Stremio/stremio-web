@@ -30,8 +30,10 @@ import TextInput from './TextInput';
 import Toggle from './Toggle';
 import Transition from './Transition';
 import Video from './Video';
+import ProfilePicker from './ProfilePicker/ProfilePicker';
 
 export {
+    ProfilePicker,
     AddonDetailsModal,
     BottomSheet,
     Button,

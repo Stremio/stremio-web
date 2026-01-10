@@ -15,7 +15,9 @@ const withProtectedRoutes = (Component) => {
             previousAuthRef.current = profile.auth;
         }, [profile]);
         const onRouteChange = React.useCallback((routeConfig) => {
-            if (profile.auth !== null && routeConfig.component === Intro) {
+            // Allow access to /intro when ?profiles=true (for profile switching)
+            const urlParams = new URLSearchParams(window.location.hash.split('?')[1]);
+            if (profile.auth !== null && routeConfig.component === Intro && urlParams.get('profiles') !== 'true') {
                 window.location.replace('#/');
                 return true;
             }

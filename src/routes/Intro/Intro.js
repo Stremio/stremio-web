@@ -8,11 +8,12 @@ const { default: Icon } = require('@stremio/stremio-icons/react');
 const { Modal, useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
 const { useBinaryState } = require('stremio/common');
-const { Button, Image, Checkbox } = require('stremio/components');
+const { Button, Image, Checkbox, ProfilePicker } = require('stremio/components');
 const CredentialsTextInput = require('./CredentialsTextInput');
 const PasswordResetModal = require('./PasswordResetModal');
 const useFacebookLogin = require('./useFacebookLogin');
 const { default: useAppleLogin } = require('./useAppleLogin');
+const AccountManager = require('stremio/common/AccountManager');
 
 const styles = require('./styles');
 
@@ -249,8 +250,10 @@ const Intro = ({ queryParams }) => {
         dispatch({ type: 'toggle-checkbox', name: 'marketingAccepted' });
     }, []);
     const switchFormOnClick = React.useCallback(() => {
-        const queryParams = new URLSearchParams([['form', state.form === SIGNUP_FORM ? LOGIN_FORM : SIGNUP_FORM]]);
-        window.location = `#/intro?${queryParams.toString()}`;
+        const newForm = state.form === SIGNUP_FORM ? LOGIN_FORM : SIGNUP_FORM;
+        const currentParams = new URLSearchParams(window.location.hash.split('?')[1]);
+        currentParams.set('form', newForm);
+        window.location = `#/intro?${currentParams.toString()}`;
     }, [state.form]);
     React.useEffect(() => {
         if ([LOGIN_FORM, SIGNUP_FORM].includes(queryParams.get('form'))) {
@@ -262,15 +265,32 @@ const Intro = ({ queryParams }) => {
             errorRef.current.scrollIntoView();
         }
     }, [state.error]);
+    const [savedAccounts, setSavedAccounts] = React.useState(() => AccountManager.getAccounts());
+    const [pendingProfile, setPendingProfile] = React.useState(null);
+    const showProfilesParam = queryParams.get('profiles') === 'true';
+    const [showProfiles, setShowProfiles] = React.useState(showProfilesParam || savedAccounts.length > 0);
     React.useEffect(() => {
-        if (routeFocused) {
+        if (routeFocused && !showProfiles && emailRef.current) {
             emailRef.current.focus();
         }
-    }, [state.form, routeFocused]);
+    }, [state.form, routeFocused, showProfiles]);
     React.useEffect(() => {
         const onCoreEvent = ({ event, args }) => {
             switch (event) {
                 case 'UserAuthenticated': {
+                    if (args.auth && args.auth.key) {
+                        AccountManager.addAccount(args.user, args.auth.key);
+                    }
+                    if (pendingProfile && pendingProfile.settings) {
+                        core.transport.dispatch({
+                            action: 'Ctx',
+                            args: {
+                                action: 'UpdateSettings',
+                                args: pendingProfile.settings
+                            }
+                        });
+                    }
+                    setPendingProfile(null);
                     closeLoaderModal();
                     if (routeFocused) {
                         window.location = '#/';
@@ -280,8 +300,23 @@ const Intro = ({ queryParams }) => {
                 case 'Error': {
                     if (args.source.event === 'UserAuthenticated') {
                         closeLoaderModal();
+                        if (pendingProfile) {
+                            AccountManager.removeAccount(pendingProfile.email);
+                            setSavedAccounts(AccountManager.getAccounts());
+                            dispatch({ type: 'set-form', form: LOGIN_FORM });
+                            dispatch({
+                                type: 'error',
+                                error: t('SESSION_EXPIRED', { defaultValue: 'Session expired. Please log in again.' })
+                            });
+                            dispatch({
+                                type: 'change-credentials',
+                                name: 'email',
+                                value: pendingProfile.email
+                            });
+                            setShowProfiles(false);
+                            setPendingProfile(null);
+                        }
                     }
-
                     break;
                 }
             }
@@ -290,7 +325,53 @@ const Intro = ({ queryParams }) => {
         return () => {
             core.transport.off('CoreEvent', onCoreEvent);
         };
-    }, [routeFocused]);
+    }, [routeFocused, pendingProfile, t, closeLoaderModal, dispatch, core]);
+    const onSelectProfile = React.useCallback((profile) => {
+        if (pendingProfile) return;
+        const account = AccountManager.switchTo(profile.email);
+        if (account && account.authKey) {
+            setPendingProfile({ ...profile, settings: account.settings });
+            openLoaderModal();
+            core.transport.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'Authenticate',
+                    args: {
+                        type: 'LoginWithToken',
+                        token: account.authKey
+                    }
+                }
+            });
+        } else {
+            dispatch({
+                type: 'change-credentials',
+                name: 'email',
+                value: profile.email
+            });
+            setShowProfiles(false);
+        }
+    }, [core, openLoaderModal, pendingProfile, dispatch]);
+    const onAddProfile = React.useCallback(() => {
+        setShowProfiles(false);
+    }, []);
+    const onDeleteProfile = React.useCallback((profile) => {
+        AccountManager.removeAccount(profile.email);
+        const updatedAccounts = AccountManager.getAccounts();
+        setSavedAccounts(updatedAccounts);
+        if (updatedAccounts.length === 0) {
+            setShowProfiles(false);
+        }
+    }, []);
+    if (showProfiles && savedAccounts.length > 0) {
+        return (
+            <ProfilePicker
+                profiles={savedAccounts}
+                onSelectProfile={onSelectProfile}
+                onAddProfile={onAddProfile}
+                onDeleteProfile={onDeleteProfile}
+            />
+        );
+    }
     return (
         <div className={styles['intro-container']}>
             <div className={styles['background-container']} />
