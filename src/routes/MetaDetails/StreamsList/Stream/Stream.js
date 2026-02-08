@@ -3,6 +3,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
+const magnet = require('magnet-uri');
 const { default: Icon } = require('@stremio/stremio-icons/react');
 const { t } = require('i18next');
 const { useProfile, usePlatform, useToast, useBinaryState } = require('stremio/common');
@@ -12,7 +13,7 @@ const { useRouteFocused } = require('stremio-router');
 const StreamPlaceholder = require('./StreamPlaceholder');
 const styles = require('./styles');
 
-const Stream = ({ className, videoId, videoReleased, addonName, name, description, thumbnail, progress, deepLinks, ...props }) => {
+const Stream = ({ className, videoId, videoReleased, addonName, name, description, thumbnail, progress, deepLinks, infoHash, sources, ...props }) => {
     const profile = useProfile();
     const toast = useToast();
     const platform = usePlatform();
@@ -164,6 +165,44 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
         }
     }, [streamLink]);
 
+    const magnetLink = React.useMemo(() => {
+        if (typeof infoHash !== 'string' || infoHash.length === 0) {
+            return null;
+        }
+        const params = { xt: `urn:btih:${infoHash}` };
+        if (typeof name === 'string' && name.length > 0) {
+            params.dn = name;
+        } else if (typeof addonName === 'string' && addonName.length > 0) {
+            params.dn = addonName;
+        }
+        if (Array.isArray(sources) && sources.length > 0) {
+            params.tr = sources.filter((s) => typeof s === 'string' && s.length > 0);
+        }
+        return magnet.encode(params);
+    }, [infoHash, sources, name, addonName]);
+
+    const copyMagnetLink = React.useCallback((event) => {
+        event.preventDefault();
+        closeMenu();
+        if (magnetLink) {
+            navigator.clipboard.writeText(magnetLink)
+                .then(() => {
+                    toast.show({
+                        type: 'success',
+                        title: t('PLAYER_COPY_MAGNET_LINK_SUCCESS', 'Magnet link was copied to your clipboard'),
+                        timeout: 4000
+                    });
+                })
+                .catch(() => {
+                    toast.show({
+                        type: 'error',
+                        title: t('PLAYER_COPY_MAGNET_LINK_ERROR', 'Failed to copy magnet link'),
+                        timeout: 4000,
+                    });
+                });
+        }
+    }, [magnetLink]);
+
     const renderThumbnailFallback = React.useCallback(() => (
         <Icon className={styles['placeholder-icon']} name={'ic_broken_link'} />
     ), []);
@@ -228,9 +267,16 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
                             <div className={styles['context-menu-option-label']}>{t('CTX_COPY_VIDEO_DOWNLOAD_LINK')}</div>
                         </Button>
                 }
+                {
+                    magnetLink &&
+                        <Button className={styles['context-menu-option-container']} title={t('CTX_COPY_MAGNET_LINK', 'Copy magnet link')} onClick={copyMagnetLink}>
+                            <Icon className={styles['menu-icon']} name={'magnet-link'} />
+                            <div className={styles['context-menu-option-label']}>{t('CTX_COPY_MAGNET_LINK', 'Copy magnet link')}</div>
+                        </Button>
+                }
             </div>
         );
-    }, [copyStreamLink, onClick]);
+    }, [copyStreamLink, copyMagnetLink, onClick]);
 
     React.useEffect(() => {
         if (!routeFocused) {
@@ -280,6 +326,8 @@ Stream.propTypes = {
             })
         })
     }),
+    infoHash: PropTypes.string,
+    sources: PropTypes.arrayOf(PropTypes.string),
     onClick: PropTypes.func
 };
 

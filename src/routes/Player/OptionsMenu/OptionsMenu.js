@@ -3,6 +3,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
+const magnet = require('magnet-uri');
 const { useTranslation } = require('react-i18next');
 const { usePlatform, useToast } = require('stremio/common');
 const { useServices } = require('stremio/services');
@@ -30,6 +31,43 @@ const OptionsMenu = ({ className, stream, playbackDevices, extraSubtitlesTracks,
         const track = extraSubtitlesTracks?.find(({ id }) => id === selectedExtraSubtitlesTrackId);
         return track?.fallbackUrl ?? track?.url ?? null;
     }, [extraSubtitlesTracks, selectedExtraSubtitlesTrackId]);
+
+    const magnetLink = React.useMemo(() => {
+        if (stream === null || typeof stream.infoHash !== 'string' || stream.infoHash.length === 0) {
+            return null;
+        }
+        const params = { xt: `urn:btih:${stream.infoHash}` };
+        if (typeof stream.name === 'string' && stream.name.length > 0) {
+            params.dn = stream.name;
+        }
+        if (Array.isArray(stream.sources) && stream.sources.length > 0) {
+            params.tr = stream.sources.filter((s) => typeof s === 'string' && s.length > 0);
+        }
+        return magnet.encode(params);
+    }, [stream]);
+
+    const onCopyMagnetLinkClick = React.useCallback(() => {
+        if (magnetLink) {
+            navigator.clipboard.writeText(magnetLink)
+                .then(() => {
+                    toast.show({
+                        type: 'success',
+                        title: 'Copied',
+                        message: t('PLAYER_COPY_MAGNET_LINK_SUCCESS', 'Magnet link was copied to your clipboard'),
+                        timeout: 3000
+                    });
+                })
+                .catch((e) => {
+                    console.error(e);
+                    toast.show({
+                        type: 'error',
+                        title: t('Error'),
+                        message: t('PLAYER_COPY_MAGNET_LINK_ERROR', 'Failed to copy magnet link'),
+                        timeout: 3000
+                    });
+                });
+        }
+    }, [magnetLink]);
 
     const onCopyStreamButtonClick = React.useCallback(() => {
         if (streamingUrl || downloadUrl) {
@@ -101,6 +139,17 @@ const OptionsMenu = ({ className, stream, playbackDevices, extraSubtitlesTracks,
                         label={t('CTX_DOWNLOAD_VIDEO')}
                         disabled={stream === null}
                         onClick={onDownloadVideoButtonClick}
+                    />
+                    :
+                    null
+            }
+            {
+                magnetLink ?
+                    <Option
+                        icon={'magnet-link'}
+                        label={t('CTX_COPY_MAGNET_LINK', 'Copy magnet link')}
+                        disabled={stream === null}
+                        onClick={onCopyMagnetLinkClick}
                     />
                     :
                     null
