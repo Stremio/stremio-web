@@ -19,6 +19,7 @@ type Discover = {
         extra: SelectableExtra<DiscoverDeepLinks>[],
         types: SelectableType<DiscoverDeepLinks>[],
         nextPage: boolean,
+        loadingNextPage: boolean,
     },
     selected: {
         request: ResourceRequest,

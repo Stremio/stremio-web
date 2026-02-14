@@ -172,6 +172,11 @@ const Discover = ({ urlParams, queryParams }) => {
                                                 onClick={metaItemOnClick}
                                             />
                                         ))}
+                                        {discover.selectable.loadingNextPage &&
+                                            <div className={styles['pagination-loading']}>
+                                                <div className={styles['pagination-loading-bar']} />
+                                            </div>
+                                        }
                                     </div>
                     }
                 </div>

@@ -206,6 +206,43 @@
                         }
                     }
                 }
+
+                .pagination-loading {
+                    grid-column: 1 / -1;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    padding: 3rem 0;
+
+                    .pagination-loading-bar {
+                        position: relative;
+                        width: 20rem;
+                        max-width: 60%;
+                        height: 0.25rem;
+                        border-radius: var(--border-radius);
+                        background-color: var(--color-placeholder-background);
+                        overflow: hidden;
+
+                        &::after {
+                            content: '';
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                            width: 40%;
+                            height: 100%;
+                            border-radius: var(--border-radius);
+                            background-color: var(--primary-accent-color);
+                            animation: pagination-loading-slide 1.5s ease-in-out infinite;
+                        }
+
+                        @media (prefers-reduced-motion) {
+                            &::after {
+                                width: 100%;
+                                animation: pagination-loading-pulse 2s ease-in-out infinite;
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -245,6 +282,26 @@
                 }
             }
         }
+    }
+}
+
+@keyframes pagination-loading-slide {
+    0% {
+        left: -40%;
+    }
+
+    100% {
+        left: 100%;
+    }
+}
+
+@keyframes pagination-loading-pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.3;
     }
 }
 
