@@ -14,6 +14,101 @@ const { default: SeasonEpisodePicker } = require('../EpisodePicker');
 
 const ALL_ADDONS_KEY = 'ALL';
 
+const parseSeedsFromDescription = (description) => {
+    if (typeof description !== 'string') {
+        return null;
+    }
+
+    const match = description.match(/👤\s*(\d+)/);
+
+    if (!match) {
+        return null;
+    }
+
+    const parsed = parseInt(match[1], 10);
+
+    return Number.isNaN(parsed) ? null : parsed;
+};
+
+const getSeedsValue = (stream) => {
+    if (!stream) {
+        return null;
+    }
+
+    if (typeof stream.behaviorHints === 'object' && stream.behaviorHints !== null) {
+        const seeds = stream.behaviorHints.seeds;
+
+        if (typeof seeds === 'number') {
+            return seeds;
+        }
+    }
+
+    return parseSeedsFromDescription(stream.description);
+};
+
+const compareBySeeds = (a, b) => {
+    const seedsA = getSeedsValue(a);
+    const seedsB = getSeedsValue(b);
+
+    const hasSeedsA = typeof seedsA === 'number';
+    const hasSeedsB = typeof seedsB === 'number';
+
+    if (hasSeedsA && hasSeedsB) {
+        if (seedsA !== seedsB) {
+            return seedsB - seedsA;
+        }
+
+        const nameA = typeof a.name === 'string' ? a.name : typeof a.addonName === 'string' ? a.addonName : '';
+        const nameB = typeof b.name === 'string' ? b.name : typeof b.addonName === 'string' ? b.addonName : '';
+
+        if (nameA < nameB) {
+            return -1;
+        }
+
+        if (nameA > nameB) {
+            return 1;
+        }
+
+        return 0;
+    }
+
+    if (hasSeedsA && !hasSeedsB) {
+        return -1;
+    }
+
+    if (!hasSeedsA && hasSeedsB) {
+        return 1;
+    }
+
+    const nameA = typeof a.name === 'string' ? a.name : typeof a.addonName === 'string' ? a.addonName : '';
+    const nameB = typeof b.name === 'string' ? b.name : typeof b.addonName === 'string' ? b.addonName : '';
+
+    if (nameA < nameB) {
+        return -1;
+    }
+
+    if (nameA > nameB) {
+        return 1;
+    }
+
+    return 0;
+};
+
+const stableSort = (array, comparator) => {
+    return array
+        .map((item, index) => ({ item, index }))
+        .sort((a, b) => {
+            const order = comparator(a.item, b.item);
+
+            if (order !== 0) {
+                return order;
+            }
+
+            return a.index - b.index;
+        })
+        .map(({ item }) => item);
+};
+
 const StreamsList = ({ className, video, type, onEpisodeSearch, ...props }) => {
     const { t } = useTranslation();
     const { core } = useServices();
@@ -21,6 +116,7 @@ const StreamsList = ({ className, video, type, onEpisodeSearch, ...props }) => {
     const profile = useProfile();
     const streamsContainerRef = React.useRef(null);
     const [selectedAddon, setSelectedAddon] = React.useState(ALL_ADDONS_KEY);
+    const [sortMode, setSortMode] = React.useState('default');
     const onAddonSelected = React.useCallback((value) => {
         streamsContainerRef.current.scrollTo({ top: 0, left: 0, behavior: platform.name === 'ios' ? 'smooth' : 'instant' });
         setSelectedAddon(value);
@@ -67,14 +163,29 @@ const StreamsList = ({ className, video, type, onEpisodeSearch, ...props }) => {
             }, {});
     }, [props.streams]);
     const filteredStreams = React.useMemo(() => {
-        return selectedAddon === ALL_ADDONS_KEY ?
-            Object.values(streamsByAddon).map(({ streams }) => streams).flat(1)
-            :
-            streamsByAddon[selectedAddon] ?
-                streamsByAddon[selectedAddon].streams
-                :
-                [];
+        if (selectedAddon === ALL_ADDONS_KEY) {
+            return Object.values(streamsByAddon).map(({ streams }) => streams).flat(1);
+        }
+
+        if (streamsByAddon[selectedAddon]) {
+            return streamsByAddon[selectedAddon].streams;
+        }
+
+        return [];
     }, [streamsByAddon, selectedAddon]);
+    const sortedStreams = React.useMemo(() => {
+        if (sortMode !== 'seeds') {
+            return filteredStreams;
+        }
+
+        return stableSort(filteredStreams, compareBySeeds);
+    }, [filteredStreams, sortMode]);
+    const hasSeeds = React.useMemo(() => {
+        return Object.values(streamsByAddon)
+            .map(({ streams }) => streams)
+            .flat(1)
+            .some((stream) => typeof getSeedsValue(stream) === 'number');
+    }, [streamsByAddon]);
     const selectableOptions = React.useMemo(() => {
         return {
             options: [
@@ -93,6 +204,9 @@ const StreamsList = ({ className, video, type, onEpisodeSearch, ...props }) => {
             onSelect: onAddonSelected
         };
     }, [streamsByAddon, selectedAddon]);
+    const sortButtonOnClick = React.useCallback(() => {
+        setSortMode((value) => value === 'seeds' ? 'default' : 'seeds');
+    }, []);
 
     const handleEpisodePicker = React.useCallback((season, episode) => {
         onEpisodeSearch(season, episode);
@@ -120,6 +234,22 @@ const StreamsList = ({ className, video, type, onEpisodeSearch, ...props }) => {
                             {...selectableOptions}
                             className={styles['select-input-container']}
                         />
+                        :
+                        null
+                }
+                {
+                    hasSeeds ?
+                        <Button
+                            className={classnames(styles['sort-button-container'], { 'active': sortMode === 'seeds' })}
+                            tabIndex={-1}
+                            title={t('SORT_BY_SEEDS', { defaultValue: 'Sort by seeds' })}
+                            onClick={sortButtonOnClick}
+                        >
+                            <Icon className={styles['icon']} name={'swap-vertical'} />
+                            <div className={styles['sort-label']}>
+                                {t('SORT_BY_SEEDS', { defaultValue: 'Sort by seeds' })}
+                            </div>
+                        </Button>
                         :
                         null
                 }
@@ -180,7 +310,7 @@ const StreamsList = ({ className, video, type, onEpisodeSearch, ...props }) => {
                                         null
                                 }
                                 <div className={styles['streams-container']} ref={streamsContainerRef}>
-                                    {filteredStreams.map((stream, index) => (
+                                    {sortedStreams.map((stream, index) => (
                                         <Stream
                                             key={index}
                                             videoId={video?.id}

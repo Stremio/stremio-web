@@ -76,6 +76,7 @@
         margin: 1em 1em 0 1em;
         gap: 0 0.5em;
         overflow: visible;
+        flex-wrap: wrap;
 
         .back-button-container {
             display: flex;
@@ -112,7 +113,7 @@
         }
 
         .select-input-container {
-            min-width: 40%;
+            min-width: 0;
             flex-grow: 1;
             background-color: none;
 
@@ -130,6 +131,52 @@
     
             .multiselect-menu-container {
                 overflow: auto;
+            }
+        }
+
+        .sort-button-container {
+            margin-left: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5em;
+            border-radius: 0.5em;
+            padding: 0.5em 0.9em;
+            max-height: 3em;
+            border: 1px solid var(--overlay-color);
+            background-color: rgba(0, 0, 0, 0.1);
+
+            .icon {
+                width: 1.5em;
+                height: 1.5em;
+                color: var(--primary-foreground-color);
+                opacity: 0.8;
+            }
+
+            .sort-label {
+                font-size: 0.9rem;
+                color: var(--primary-foreground-color);
+                opacity: 0.9;
+            }
+
+            &:hover {
+                background-color: var(--overlay-color);
+
+                .icon {
+                    opacity: 0.8;
+                }
+            }
+
+            &:global(.active) {
+                background-color: var(--primary-accent-color);
+
+                .icon {
+                    opacity: 1;
+                }
+
+                .sort-label {
+                    opacity: 1;
+                }
             }
         }
     }
@@ -184,6 +231,24 @@
 @media only screen and (max-width: @minimum) {
     .streams-list-container {
         overflow: visible;
+
+        .select-choices-wrapper {
+            align-items: flex-start;
+            gap: 0.5em;
+
+            .episode-title {
+                flex-basis: 100%;
+            }
+
+            .select-input-container {
+                flex-basis: 0;
+                flex-grow: 1;
+            }
+
+            .sort-button-container {
+                margin-left: 0;
+            }
+        }
 
         .streams-container {
             margin-top: 0;
