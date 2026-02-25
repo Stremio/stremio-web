@@ -10,13 +10,17 @@
     align-items: center;
     gap: 1rem;
     border-radius: 100%;
-    background-color: var(--overlay-color);
-    backdrop-filter: blur(5px);
-    transition: background-color 0.1s ease-out;
+    background-color: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(8px);
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease;
 
-    &:hover, &:focus {
-        outline: var(--focus-outline-size) solid var(--primary-foreground-color);
-        background-color: transparent;
+    &:hover,
+    &:focus {
+        outline: none;
+        background-color: rgba(255, 255, 255, 0.15);
+        border-color: rgba(255, 255, 255, 0.3);
+        transform: scale(1.08);
     }
 
     .icon-container {

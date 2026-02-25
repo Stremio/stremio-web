@@ -7,6 +7,7 @@
     outline-color: @color-surface-light5;
     outline-offset: calc(-1 * var(--focus-outline-size));
     cursor: pointer;
+    transition: transform 0.2s ease, opacity 0.2s ease, outline-color 0.2s ease;
 
     &:focus {
         outline-style: solid;
@@ -15,5 +16,11 @@
     &:global(.disabled) {
         pointer-events: none;
         opacity: 0.5;
+    }
+
+    @media (pointer: fine) {
+        &:hover:not(:global(.disabled)) {
+            transform: scale(1.05);
+        }
     }
 }

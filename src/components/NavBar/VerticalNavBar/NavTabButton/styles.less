@@ -9,11 +9,17 @@
     align-items: center;
     justify-content: center;
     background-color: transparent;
-    border-radius: 0.75rem;
+    border-radius: 1rem;
+    transition: background-color 0.2s ease, transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
     @media (pointer: fine) {
         &:hover {
-            background-color: var(--overlay-color);
+            background-color: rgba(255, 255, 255, 0.07);
+            transform: scale(1.06);
+
+            .icon {
+                opacity: 0.8;
+            }
 
             .label {
                 opacity: 0.6;
@@ -28,20 +34,25 @@
     }
 
     &:global(.selected) {
+        background-color: rgba(123, 91, 245, 0.12);
+
         .icon {
             opacity: 1;
         }
 
-        .icon, .label {
+        .icon,
+        .label {
             color: var(--primary-accent-color);
         }
     }
 
-    .icon, .logo {
+    .icon,
+    .logo {
         flex: none;
         width: 2.2rem;
         height: 2.2rem;
         margin-bottom: 0.5rem;
+        transition: color 0.2s ease, opacity 0.2s ease;
     }
 
     .icon {
@@ -64,6 +75,7 @@
         color: var(--primary-foreground-color);
         opacity: 0;
         overflow: hidden;
+        transition: opacity 0.2s ease;
     }
 }
 

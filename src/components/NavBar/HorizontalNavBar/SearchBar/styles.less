@@ -8,9 +8,18 @@
     flex-direction: row;
     height: var(--search-bar-size);
     border-radius: var(--search-bar-size);
-    background-color: var(--overlay-color);
+    background-color: rgba(255, 255, 255, 0.07);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: var(--glass-border);
     position: relative;
     overflow: visible;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+    &:focus-within {
+        border-color: rgba(123, 91, 245, 0.6);
+        box-shadow: 0 0 0 2px rgba(123, 91, 245, 0.2);
+    }
 
     .search-input {
         flex: 1;
@@ -23,7 +32,8 @@
         color: var(--primary-foreground-color);
         cursor: text;
 
-        &::placeholder, .placeholder-label {
+        &::placeholder,
+        .placeholder-label {
             max-height: 1.2em;
             opacity: 1;
             color: var(--primary-foreground-color);
@@ -63,9 +73,13 @@
         align-items: flex-start;
         flex-direction: column;
         gap: 1.5rem;
-        background-color: var(--modal-background-color);
+        background-color: var(--glass-bg);
+        backdrop-filter: var(--glass-blur);
+        -webkit-backdrop-filter: var(--glass-blur);
+        border: var(--glass-border);
+        box-shadow: var(--outer-glow);
         border-radius: var(--border-radius);
-        
+
         .label {
             font-size: 0.9rem;
             color: var(--primary-foreground-color);
