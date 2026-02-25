@@ -18,7 +18,7 @@
             flex: 1;
             max-height: 2.4em;
             font-size: 1.6rem;
-            font-weight: 500;
+            font-weight: 700;
             color: var(--primary-foreground-color);
         }
 
@@ -29,13 +29,17 @@
             align-items: center;
             max-width: 12rem;
             height: 2.5rem;
-            padding: 0 0.5rem 0 1rem;
+            padding: 0 0.75rem 0 1rem;
             border-radius: 2.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             opacity: 0.6;
+            transition: background-color 0.2s ease, opacity 0.2s ease, border-color 0.2s ease;
 
-            &:hover, &:focus {
+            &:hover,
+            &:focus {
                 outline: none;
-                background-color: var(--overlay-color);
+                background-color: rgba(255, 255, 255, 0.1);
+                border-color: rgba(255, 255, 255, 0.2);
                 opacity: 1;
             }
 

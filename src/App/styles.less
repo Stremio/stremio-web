@@ -61,11 +61,14 @@
     --tertiary-accent-color: rgba(246, 199, 0, 1);
     --quaternary-accent-color: rgba(18, 69, 166, 1);
     --overlay-color: rgba(255, 255, 255, 0.05);
-    --modal-background-color: rgba(15, 13, 32, 1);
-    --outer-glow: 0px 0px 15px rgba(123, 91, 245, 0.37);
+    --modal-background-color: rgba(15, 13, 32, 0.65);
+    --outer-glow: 0px 8px 32px 0 rgba(0, 0, 0, 0.37);
     --warning-accent-color: rgba(255, 165, 0, 1);
     --danger-accent-color: rgba(220, 38, 38, 1);  
-    --border-radius: 0.75rem;
+    --border-radius: 1.25rem;
+    --glass-bg: rgba(15, 13, 32, 0.45);
+    --glass-blur: blur(16px);
+    --glass-border: 1px solid rgba(255, 255, 255, 0.08);
     --top-overlay-size: @top-overlay-size;
     --bottom-overlay-size: @bottom-overlay-size;
     --overlap-size: @overlap-size;
@@ -133,7 +136,7 @@
 
 ::-webkit-scrollbar-thumb {
     border-radius: var(--scroll-bar-size);
-    background-color: var(--overlay-color);
+    background-color: rgba(255, 255, 255, 0.15);
 
     &:hover {
         background-color: var(--primary-accent-color);
@@ -202,9 +205,12 @@ html {
                 font-size: 1rem;
                 color: var(--primary-foreground-color);
                 border-radius: var(--border-radius);
-                background-color: var(--modal-background-color);
+                background-color: var(--glass-bg);
+                backdrop-filter: var(--glass-blur);
+                -webkit-backdrop-filter: var(--glass-blur);
+                border: var(--glass-border);
                 box-shadow: var(--outer-glow);
-                transition: opacity 0.1s ease-out;
+                transition: opacity 0.2s ease-out, transform 0.2s ease-out;
             }
 
             .file-drop-container {

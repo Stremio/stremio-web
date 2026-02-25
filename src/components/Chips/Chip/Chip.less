@@ -16,20 +16,24 @@
     text-transform: capitalize;
     padding: 0 1.75rem;
     border-radius: @height;
-    background-color: transparent;
+    background-color: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     user-select: none;
     overflow: hidden;
-    opacity: 0.6;
+    opacity: 0.7;
+    transition: background-color 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 
     &:hover {
-        background-color: var(--overlay-color);
-        transition: background-color 0.1s ease-out;
+        background-color: rgba(255, 255, 255, 0.13);
+        border-color: rgba(255, 255, 255, 0.2);
         opacity: 1;
     }
 
     &.active {
         opacity: 1;
-        background-color: var(--quaternary-accent-color);
-        transition: background-color 0.1s ease-in;
+        background-color: rgba(123, 91, 245, 0.25);
+        border-color: rgba(123, 91, 245, 0.5);
+        box-shadow: 0 0 12px rgba(123, 91, 245, 0.3);
+        color: #c8b8ff;
     }
 }

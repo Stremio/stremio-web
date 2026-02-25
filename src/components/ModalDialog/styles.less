@@ -18,7 +18,10 @@
         max-height: 80%;
         padding: 0 2rem;
         border-radius: var(--border-radius);
-        background-color: var(--modal-background-color);
+        background-color: var(--glass-bg);
+        backdrop-filter: var(--glass-blur);
+        -webkit-backdrop-filter: var(--glass-blur);
+        border: var(--glass-border);
         box-shadow: var(--outer-glow);
 
         .modal-dialog-background {
@@ -115,10 +118,12 @@
     border-radius: 3.5rem;
     padding: 1.2rem;
     background-color: var(--secondary-accent-color);
+    transition: background-color 0.2s ease, transform 0.2s ease, outline-color 0.2s ease;
 
     &:hover {
         background-color: transparent;
         outline: var(--focus-outline-size) solid var(--secondary-accent-color);
+        transform: scale(1.02);
     }
 
     &:focus {
