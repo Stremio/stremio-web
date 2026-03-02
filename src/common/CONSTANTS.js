@@ -100,7 +100,7 @@ const EXTERNAL_PLAYERS = [
     {
         label: 'M3U Playlist',
         value: 'm3u',
-        platforms: ['ios', 'visionos', 'android', 'windows', 'linux', 'macos'],
+        platforms: ['ios', 'visionos', 'android'],
     },
 ];
 

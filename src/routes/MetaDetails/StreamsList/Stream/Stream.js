@@ -51,6 +51,7 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
     const popupMenuOnKeyDown = React.useCallback((event) => {
         event.nativeEvent.buttonClickPrevented = true;
     }, []);
+
     const href = React.useMemo(() => {
         return deepLinks ?
             deepLinks.externalPlayer ?
