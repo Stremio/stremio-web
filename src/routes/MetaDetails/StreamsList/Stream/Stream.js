@@ -116,13 +116,13 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
                 title: 'Stream opened in external player',
                 timeout: 4000
             });
-            if (profile.settings.playerType === 'vlc' && streamingUrl) {
+            if (streamingUrl) {
                 core.transport.dispatch({
                     action: 'StreamingServer',
                     args: {
                         action: 'PlayOnDevice',
                         args: {
-                            device: 'vlc',
+                            device: profile.settings.playerType,
                             source: streamingUrl,
                         }
                     }
