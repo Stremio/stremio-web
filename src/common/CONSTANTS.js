@@ -65,7 +65,7 @@ const EXTERNAL_PLAYERS = [
     {
         label: 'VLC',
         value: 'vlc',
-        platforms: ['ios', 'visionos', 'android', 'windows', 'linux', 'macos'],
+        platforms: ['ios', 'visionos', 'android'],
     },
     {
         label: 'MPV',
@@ -100,7 +100,7 @@ const EXTERNAL_PLAYERS = [
     {
         label: 'M3U Playlist',
         value: 'm3u',
-        platforms: ['ios', 'visionos', 'android'],
+        platforms: ['ios', 'visionos', 'android', 'windows', 'linux', 'macos'],
     },
 ];
 
