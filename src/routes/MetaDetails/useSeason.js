@@ -12,7 +12,11 @@ const useSeason = (urlParams, queryParams) => {
     const setSeason = React.useCallback((season) => {
         const nextQueryParams = new URLSearchParams(queryParams);
         nextQueryParams.set('season', season);
-        window.location.replace(`#${urlParams.path}?${nextQueryParams}`);
+        const path = urlParams.path.endsWith('/') ?
+            urlParams.path.slice(0, -1):
+            urlParams.path;
+
+        window.location.replace(`#${path}?${nextQueryParams}`);
     }, [urlParams, queryParams]);
     return [season, setSeason];
 };

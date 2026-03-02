@@ -11,31 +11,41 @@ import useOutsideClick from 'stremio/common/useOutsideClick';
 
 type Props = {
     className?: string,
-    title?: string;
+    title?: string | (() => string | null);
     options: MultiselectMenuOption[];
-    selectedOption?: MultiselectMenuOption;
-    onSelect: (value: number) => void;
+    value?: any;
+    disabled?: boolean,
+    onSelect: (value: any) => void;
 };
 
-const MultiselectMenu = ({ className, title, options, selectedOption, onSelect }: Props) => {
+const MultiselectMenu = ({ className, title, options, value, disabled, onSelect }: Props) => {
     const [menuOpen, , closeMenu, toggleMenu] = useBinaryState(false);
     const multiselectMenuRef = useOutsideClick(() => closeMenu());
     const [level, setLevel] = React.useState<number>(0);
 
-    const onOptionSelect = (value: number) => {
-        level ? setLevel(level + 1) : onSelect(value), closeMenu();
+    const selectedOption = options.find((opt) => opt.value === value);
+
+    const onOptionSelect = (selectedValue: string | number) => {
+        level ? setLevel(level + 1) : onSelect(selectedValue), closeMenu();
     };
 
     return (
-        <div className={classNames(styles['multiselect-menu'], className)} ref={multiselectMenuRef}>
+        <div className={classNames(styles['multiselect-menu'], { [styles['active']]: menuOpen }, className)} ref={multiselectMenuRef}>
             <Button
                 className={classNames(styles['multiselect-button'], { [styles['open']]: menuOpen })}
+                disabled={disabled}
                 onClick={toggleMenu}
                 tabIndex={0}
                 aria-haspopup='listbox'
                 aria-expanded={menuOpen}
             >
-                {title}
+                <div className={styles['label']}>
+                    {
+                        typeof title === 'function'
+                            ? title()
+                            : title ?? selectedOption?.label
+                    }
+                </div>
                 <Icon name={'caret-down'} className={classNames(styles['icon'], { [styles['open']]: menuOpen })} />
             </Button>
             {
@@ -46,7 +56,7 @@ const MultiselectMenu = ({ className, title, options, selectedOption, onSelect }
                         options={options}
                         onSelect={onOptionSelect}
                         menuOpen={menuOpen}
-                        selectedOption={selectedOption}
+                        value={value}
                     />
                     : null
             }

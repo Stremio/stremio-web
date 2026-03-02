@@ -6,7 +6,7 @@ const routesRegexp = {
         urlParamsNames: []
     },
     board: {
-        regexp: /^\/?$/,
+        regexp: /^\/?(?:board)?$/,
         urlParamsNames: []
     },
     discover: {

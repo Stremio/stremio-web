@@ -70,7 +70,7 @@ const SharePrompt = ({ className, url }) => {
                     onClick={selectInputContent}
                     tabIndex={-1}
                 />
-                <Button className={styles['copy-button']} title={'Copy to clipboard'} onClick={copyToClipboard}>
+                <Button className={styles['copy-button']} title={t('CTX_COPY_TO_CLIPBOARD')} onClick={copyToClipboard}>
                     <Icon className={styles['icon']} name={'link'} />
                     <div className={styles['label']}>{ t('COPY') }</div>
                 </Button>

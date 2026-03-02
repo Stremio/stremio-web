@@ -9,7 +9,7 @@ const { useServices } = require('stremio/services');
 const Option = require('./Option');
 const styles = require('./styles');
 
-const OptionsMenu = ({ className, stream, playbackDevices }) => {
+const OptionsMenu = ({ className, stream, playbackDevices, extraSubtitlesTracks, selectedExtraSubtitlesTrackId }) => {
     const { t } = useTranslation();
     const { core } = useServices();
     const platform = usePlatform();
@@ -25,6 +25,12 @@ const OptionsMenu = ({ className, stream, playbackDevices }) => {
     const externalDevices = React.useMemo(() => {
         return playbackDevices.filter(({ type }) => type === 'external');
     }, [playbackDevices]);
+
+    const subtitlesTrackUrl = React.useMemo(() => {
+        const track = extraSubtitlesTracks?.find(({ id }) => id === selectedExtraSubtitlesTrackId);
+        return track?.fallbackUrl ?? track?.url ?? null;
+    }, [extraSubtitlesTracks, selectedExtraSubtitlesTrackId]);
+
     const onCopyStreamButtonClick = React.useCallback(() => {
         if (streamingUrl || downloadUrl) {
             navigator.clipboard.writeText(streamingUrl || downloadUrl)
@@ -48,10 +54,15 @@ const OptionsMenu = ({ className, stream, playbackDevices }) => {
         }
     }, [streamingUrl, downloadUrl]);
     const onDownloadVideoButtonClick = React.useCallback(() => {
-        if (streamingUrl || downloadUrl) {
-            platform.openExternal(streamingUrl || downloadUrl);
+        if (downloadUrl || streamingUrl ) {
+            platform.openExternal(downloadUrl || streamingUrl);
         }
     }, [streamingUrl, downloadUrl]);
+
+    const onDownloadSubtitlesClick = React.useCallback(() => {
+        subtitlesTrackUrl && platform.openExternal(subtitlesTrackUrl);
+    }, [subtitlesTrackUrl]);
+
     const onExternalDeviceRequested = React.useCallback((deviceId) => {
         if (streamingUrl) {
             core.transport.dispatch({
@@ -95,6 +106,17 @@ const OptionsMenu = ({ className, stream, playbackDevices }) => {
                     null
             }
             {
+                subtitlesTrackUrl ?
+                    <Option
+                        icon={'download'}
+                        label={t('CTX_DOWNLOAD_SUBS')}
+                        disabled={stream === null}
+                        onClick={onDownloadSubtitlesClick}
+                    />
+                    :
+                    null
+            }
+            {
                 streamingUrl && externalDevices.map(({ id, name }) => (
                     <Option
                         key={id}
@@ -114,6 +136,8 @@ OptionsMenu.propTypes = {
     className: PropTypes.string,
     stream: PropTypes.object,
     playbackDevices: PropTypes.array,
+    extraSubtitlesTracks: PropTypes.array,
+    selectedExtraSubtitlesTrackId: PropTypes.string,
 };
 
 module.exports = OptionsMenu;

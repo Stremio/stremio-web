@@ -80,7 +80,6 @@ const Checkbox = React.forwardRef<HTMLInputElement, Props>(({ name, disabled, cl
                 </div>
                 <div>
                     <span>{label}</span>
-                    {' '}
                     {
                         href && link ?
                             <Button className={styles['link']} href={href} target={'_blank'} tabIndex={-1}>

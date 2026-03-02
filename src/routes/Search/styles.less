@@ -12,17 +12,19 @@
 }
 
 .search-container {
-    height: 100%;
+    height: calc(100% - var(--safe-area-inset-bottom));
     width: 100%;
     background-color: transparent;
 
     .search-content {
         height: 100%;
         width: 100%;
+        padding: 0 1rem;
         overflow-y: auto;
 
         .search-row {
-            margin: 4rem 2rem;
+            margin-top: 1rem;
+            margin-bottom: 2rem;
         }
 
         .search-hints-wrapper {
@@ -272,7 +274,7 @@
     .search-container {
         .search-content {
             .search-row {
-                margin: 2rem 1rem;
+                margin-bottom: 1.5rem;
             }
 
             .search-row-poster, .search-row-square {
@@ -285,8 +287,10 @@
 
             .search-hints-wrapper {
                 margin-top: 4rem;
+
                 .search-hints-container {
                     padding: 4rem 2rem;
+
                     .search-hint-container {
                         padding: 0 1.5rem;
                     }

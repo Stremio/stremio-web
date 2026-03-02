@@ -5,7 +5,7 @@ const ReactIs = require('react-is');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const UrlUtils = require('url');
-const isEqual = require('lodash.isequal');
+const { deepEqual } = require('fast-equals');
 const { RouteFocusedProvider } = require('../RouteFocusedContext');
 const Route = require('../Route');
 const routeConfigForPath = require('./routeConfigForPath');
@@ -54,11 +54,11 @@ const Router = ({ className, onPathNotMatch, onRouteChange, ...props }) => {
                                 return {
                                     key: `${routeViewIndex}${routeIndex}`,
                                     component: routeConfig.component,
-                                    urlParams: view !== null && isEqual(view.urlParams, urlParams) ?
+                                    urlParams: view !== null && deepEqual(view.urlParams, urlParams) ?
                                         view.urlParams
                                         :
                                         urlParams,
-                                    queryParams: view !== null && isEqual(Array.from(view.queryParams.entries()), Array.from(queryParams.entries())) ?
+                                    queryParams: view !== null && deepEqual(Array.from(view.queryParams.entries()), Array.from(queryParams.entries())) ?
                                         view.queryParams
                                         :
                                         queryParams

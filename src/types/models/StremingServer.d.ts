@@ -23,6 +23,8 @@ type StreamingServerSettings = {
     cacheRoot: string,
     cacheSize: number,
     serverVersion: string,
+    remoteHttps: string | null,
+    transcodeProfile: string | null,
 };
 
 type SFile = {
@@ -93,6 +95,14 @@ type Statistics = {
     swarmSize: number,
 };
 
+type NetworkInfo = {
+    availableInterfaces: string[],
+};
+
+type DeviceInfo = {
+    availableHardwareAccelerations: string[],
+};
+
 type PlaybackDevice = {
     id: string,
     name: string,
@@ -115,4 +125,6 @@ type StreamingServer = {
     torrent: [string, Loadable<Torrent>] | null,
     statistics: Loadable<Statistics> | null,
     playbackDevices: Loadable<PlaybackDevice[]> | null,
+    networkInfo: Loadable<NetworkInfo> | null,
+    deviceInfo: Loadable<DeviceInfo> | null,
 };

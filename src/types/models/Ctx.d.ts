@@ -19,8 +19,10 @@ type Settings = {
     autoFrameRateMatching: boolean,
     bingeWatching: boolean,
     hardwareDecoding: boolean,
+    videoMode: string | null,
     escExitFullscreen: boolean,
     interfaceLanguage: string,
+    quitOnClose: boolean,
     hideSpoilers: boolean,
     nextVideoNotificationDuration: number,
     playInBackground: boolean,
@@ -35,12 +37,14 @@ type Settings = {
     subtitlesBackgroundColor: string,
     subtitlesBold: boolean,
     subtitlesFont: string,
-    subtitlesLanguage: string,
+    subtitlesLanguage: string | null,
     subtitlesOffset: number,
     subtitlesOutlineColor: string,
     subtitlesSize: number,
     subtitlesTextColor: string,
+    assSubtitlesStyling: boolean,
     surroundSound: boolean,
+    pauseOnMinimize: boolean,
 };
 
 type Profile = {

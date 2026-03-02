@@ -2,9 +2,6 @@
 
 const EventEmitter = require('eventemitter3');
 
-let shellAvailable = false;
-const shellEvents = new EventEmitter();
-
 const QtMsgTypes = {
     signal: 1,
     propertyUpdate: 2,
@@ -19,27 +16,6 @@ const QtMsgTypes = {
 };
 const QtObjId = 'transport'; // the ID of our transport object
 
-window.initShellComm = function () {
-    delete window.initShellComm;
-    shellEvents.emit('availabilityChanged');
-};
-
-const initialize = () => {
-    if(!window.qt) return Promise.reject('Qt API not found');
-    return new Promise((resolve) => {
-        function onShellAvailabilityChanged() {
-            shellEvents.off('availabilityChanged', onShellAvailabilityChanged);
-            shellAvailable = true;
-            resolve();
-        }
-        if (shellAvailable) {
-            onShellAvailabilityChanged();
-        } else {
-            shellEvents.on('availabilityChanged', onShellAvailabilityChanged);
-        }
-    });
-};
-
 function ShellTransport() {
     const events = new EventEmitter();
 
@@ -47,66 +23,60 @@ function ShellTransport() {
 
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const shell = this;
-    initialize()
-        .then(() => {
-            const transport = window.qt && window.qt.webChannelTransport;
-            if (!transport) throw 'no viable transport found (qt.webChannelTransport)';
+    const transport = window.qt && window.qt.webChannelTransport;
+    if (!transport) throw 'no viable transport found (qt.webChannelTransport)';
 
-            let id = 0;
-            function send(msg) {
-                msg.id = id++;
-                transport.send(JSON.stringify(msg));
+    let id = 0;
+    function send(msg) {
+        msg.id = id++;
+        transport.send(JSON.stringify(msg));
+    }
+
+    transport.onmessage = function (message) {
+        const msg = JSON.parse(message.data);
+        if (msg.id === 0) {
+            const obj = msg.data[QtObjId];
+
+            obj.properties.slice(1).forEach(function (prop) {
+                shell.props[prop[1]] = prop[3];
+            });
+            if (typeof shell.props.shellVersion === 'string') {
+                shell.shellVersionArr = (
+                    shell.props.shellVersion.match(/(\d+)\.(\d+)\.(\d+)/) || []
+                )
+                    .slice(1, 4)
+                    .map(Number);
             }
+            events.emit('received-props', shell.props);
 
-            transport.onmessage = function (message) {
-                const msg = JSON.parse(message.data);
-                if (msg.id === 0) {
-                    const obj = msg.data[QtObjId];
+            obj.signals.forEach(function (sig) {
+                send({
+                    type: QtMsgTypes.connectToSignal,
+                    object: QtObjId,
+                    signal: sig[1],
+                });
+            });
 
-                    obj.properties.slice(1).forEach(function (prop) {
-                        shell.props[prop[1]] = prop[3];
-                    });
-                    if (typeof shell.props.shellVersion === 'string') {
-                        shell.shellVersionArr = (
-                            shell.props.shellVersion.match(/(\d+)\.(\d+)\.(\d+)/) || []
-                        )
-                            .slice(1, 4)
-                            .map(Number);
-                    }
-                    events.emit('received-props', shell.props);
+            const onEvent = obj.methods.filter(function (x) {
+                return x[0] === 'onEvent';
+            })[0];
 
-                    obj.signals.forEach(function (sig) {
-                        send({
-                            type: QtMsgTypes.connectToSignal,
-                            object: QtObjId,
-                            signal: sig[1],
-                        });
-                    });
-
-                    const onEvent = obj.methods.filter(function (x) {
-                        return x[0] === 'onEvent';
-                    })[0];
-
-                    shell.send = function (ev, args) {
-                        send({
-                            type: QtMsgTypes.invokeMethod,
-                            object: QtObjId,
-                            method: onEvent[1],
-                            args: [ev, args || {}],
-                        });
-                    };
-
-                    shell.send('app-ready', {}); // signal that we're ready to take events
-                }
-
-                if (msg.object === QtObjId && msg.type === QtMsgTypes.signal)
-                    events.emit(msg.args[0], msg.args[1]);
-                events.emit('init');
+            shell.send = function (ev, args) {
+                send({
+                    type: QtMsgTypes.invokeMethod,
+                    object: QtObjId,
+                    method: onEvent[1],
+                    args: [ev, args || {}],
+                });
             };
-            send({ type: QtMsgTypes.init });
-        }) .catch((error) => {
-            events.emit('init-error', error);
-        });
+
+            shell.send('app-ready', {}); // signal that we're ready to take events
+        }
+
+        if (msg.object === QtObjId && msg.type === QtMsgTypes.signal)
+            events.emit(msg.args[0], msg.args[1]);
+    };
+    send({ type: QtMsgTypes.init });
 
     this.on = function(name, listener) {
         events.on(name, listener);

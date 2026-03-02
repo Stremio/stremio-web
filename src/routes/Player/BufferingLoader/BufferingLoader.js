@@ -13,7 +13,7 @@ const BufferingLoader = React.forwardRef(({ className, logo }, ref) => {
                 className={styles['buffering-loader']}
                 src={logo}
                 alt={' '}
-                fallbackSrc={require('/images/stremio_symbol.png')}
+                fallbackSrc={require('/assets/images/stremio_symbol.png')}
             />
         </div>
     );

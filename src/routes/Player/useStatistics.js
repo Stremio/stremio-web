@@ -7,11 +7,12 @@ const useStatistics = (player, streamingServer) => {
     const { core } = useServices();
 
     const stream = React.useMemo(() => {
-        return player.selected?.stream ?
-            player.selected.stream
-            :
-            null;
-    }, [player.selected]);
+        if (player.stream?.type === 'Ready') {
+            return player.stream.content;
+        } else {
+            return null;
+        }
+    }, [player.stream]);
 
     const infoHash = React.useMemo(() => {
         return stream?.infoHash ?

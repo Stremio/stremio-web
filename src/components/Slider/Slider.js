@@ -142,11 +142,11 @@ const Slider = ({ className, value, buffered, minimumValue, maximumValue, disabl
             <div className={styles['layer']}>
                 <div
                     className={classnames(styles['track-after'], { [styles['audio-boost']]: audioBoost })}
-                    style={{ '--mask-width': `calc(${thumbPosition} * 100%)` }}
+                    style={{ '--mask-width': `calc(${thumbPosition.toFixed(3)} * 100%)` }}
                 />
             </div>
             <div className={styles['layer']}>
-                <div className={styles['thumb']} style={{ marginLeft: `calc(100% * ${thumbPosition})` }} />
+                <div className={styles['thumb']} style={{ marginLeft: `calc(100% * ${thumbPosition.toFixed(3)})` }} />
             </div>
         </div>
     );

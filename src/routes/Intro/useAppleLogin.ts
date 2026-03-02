@@ -49,7 +49,7 @@ const useAppleLogin = (): [() => Promise<AppleLoginResponse>, () => void] => {
                 timeout.current && clearTimeout(timeout.current);
                 timeout.current = setTimeout(() => {
                     if (tries >= MAX_TRIES)
-                        return reject(new Error('Failed to authenticate with Apple'));
+                        return reject(new Error('Failed to authenticate with Apple', { cause: 'Number of allowed tries exceeded!' }));
 
                     tries++;
 

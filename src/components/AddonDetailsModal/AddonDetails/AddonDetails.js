@@ -1,6 +1,7 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 const React = require('react');
+const { useTranslation } = require('react-i18next');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { default: Icon } = require('@stremio/stremio-icons/react');
@@ -8,6 +9,7 @@ const { default: Image } = require('stremio/components/Image');
 const styles = require('./styles');
 
 const AddonDetails = ({ className, id, name, version, logo, description, types, transportUrl, official }) => {
+    const { t } = useTranslation();
     const renderLogoFallback = React.useCallback(() => (
         <Icon className={styles['icon']} name={'addons'} />
     ), []);
@@ -24,7 +26,7 @@ const AddonDetails = ({ className, id, name, version, logo, description, types, 
                     <span className={styles['name']}>{typeof name === 'string' && name.length > 0 ? name : id}</span>
                     {
                         typeof version === 'string' && version.length > 0 ?
-                            <span className={styles['version']}>v. {version}</span>
+                            <span className={styles['version']}>{t('ADDON_VERSION_SHORT', {version})}</span>
                             :
                             null
                     }
@@ -41,7 +43,7 @@ const AddonDetails = ({ className, id, name, version, logo, description, types, 
             {
                 typeof transportUrl === 'string' && transportUrl.length > 0 ?
                     <div className={styles['section-container']}>
-                        <span className={styles['section-header']}>URL: </span>
+                        <span className={styles['section-header']}>{`${t('URL')}:`}</span>
                         <span className={classnames(styles['section-label'], styles['transport-url-label'])}>{transportUrl}</span>
                     </div>
                     :
@@ -50,7 +52,7 @@ const AddonDetails = ({ className, id, name, version, logo, description, types, 
             {
                 Array.isArray(types) && types.length > 0 ?
                     <div className={styles['section-container']}>
-                        <span className={styles['section-header']}>Supported types: </span>
+                        <span className={styles['section-header']}>{`${t('ADDON_SUPPORTED_TYPES')}:`} </span>
                         <span className={styles['section-label']}>
                             {
                                 types.length === 1 ?
@@ -66,7 +68,7 @@ const AddonDetails = ({ className, id, name, version, logo, description, types, 
             {
                 !official ?
                     <div className={styles['section-container']}>
-                        <div className={classnames(styles['section-label'], styles['disclaimer-label'])}>Using third-party add-ons will always be subject to your responsibility and the governing law of the jurisdiction you are located.</div>
+                        <div className={classnames(styles['section-label'], styles['disclaimer-label'])}>{t('ADDON_DISCLAIMER')}</div>
                     </div>
                     :
                     null

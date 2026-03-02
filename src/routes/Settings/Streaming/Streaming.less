@@ -1,0 +1,44 @@
+:import('~stremio/routes/Settings/components/Option/Option.less') {
+    option-content: content;
+}
+
+.configure-input-container {
+    .option-content {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        overflow: hidden;
+
+        .label {
+            flex: auto;
+            white-space: pre;
+            text-overflow: ellipsis;
+            color: var(--primary-foreground-color);
+            padding: 0 1rem;
+        }
+
+        .configure-button-container {
+            flex: none;
+            width: 3rem;
+            height: 3rem;
+            border-radius: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--overlay-color);
+
+            &:hover {
+                outline: var(--focus-outline-size) solid var(--primary-foreground-color);
+                background-color: transparent;
+            }
+
+            .icon {
+                flex: none;
+                width: 1rem;
+                height: 1rem;
+                margin: 0;
+                color: var(--primary-foreground-color);
+            }
+        }
+    }
+}

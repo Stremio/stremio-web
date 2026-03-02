@@ -1,6 +1,7 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 const React = require('react');
+const { useTranslation } = require('react-i18next');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { default: Icon } = require('@stremio/stremio-icons/react');
@@ -8,6 +9,7 @@ const { Button } = require('stremio/components');
 const styles = require('./styles');
 
 const ToastItem = ({ title, message, dataset, onSelect, onClose, ...props }) => {
+    const { t } = useTranslation();
     const type = React.useMemo(() => {
         return ['success', 'alert', 'info', 'error'].includes(props.type) ?
             props.type
@@ -74,7 +76,7 @@ const ToastItem = ({ title, message, dataset, onSelect, onClose, ...props }) => 
                         null
                 }
             </div>
-            <Button className={styles['close-button-container']} title={'Close'} tabIndex={-1} onClick={closeButtonOnClick}>
+            <Button className={styles['close-button-container']} title={t('BUTTON_CLOSE')} tabIndex={-1} onClick={closeButtonOnClick}>
                 <Icon className={styles['icon']} name={'close'} />
             </Button>
         </Button>

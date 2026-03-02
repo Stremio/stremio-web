@@ -82,6 +82,19 @@
     transform: translateY(100%);
 }
 
+.fade-enter {
+    opacity: 0;
+}
+
+.fade-active {
+    opacity: 1;
+    transition: opacity 0.3s cubic-bezier(0.32, 0, 0.67, 0);
+}
+
+.fade-exit {
+    opacity: 0;
+}
+
 @keyframes fade-in-no-motion {
     0% {
         opacity: 0;

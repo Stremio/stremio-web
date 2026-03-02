@@ -1,0 +1,62 @@
+@import (reference) '~stremio/common/screen-sizes.less';
+
+.menu {
+    flex: none;
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    width: 18rem;
+    padding: 3rem 1.5rem;
+
+    .button {
+        flex: none;
+        align-self: stretch;
+        display: flex;
+        align-items: center;
+        height: 4rem;
+        border-radius: 4rem;
+        padding: 2rem;
+        margin-bottom: 0.5rem;
+        font-size: 1.1rem;
+        font-weight: 500;
+        color: var(--primary-foreground-color);
+        opacity: 0.4;
+
+        &.selected {
+            font-weight: 600;
+            color: var(--primary-foreground-color);
+            background-color: var(--overlay-color);
+            opacity: 1;
+        }
+
+        &:hover {
+            background-color: var(--overlay-color);
+        }
+    }
+
+    .spacing {
+        flex: 1;
+    }
+
+    .version-info-label {
+        flex: 0 1 auto;
+        margin: 0.5rem 0;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        color: var(--primary-foreground-color);
+        opacity: 0.3;
+        overflow: hidden;
+    }
+}
+
+@media only screen and (max-width: @xsmall) {
+    .menu {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: @minimum) {
+    .menu {
+        display: none;
+    }
+}

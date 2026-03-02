@@ -1,0 +1,44 @@
+.shortcuts-group {
+    flex: 1 1 0;
+    position: relative;
+    width: 30rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    overflow: visible;
+
+    .title {
+        flex: none;
+        display: flex;
+        font-size: 1rem;
+        font-weight: 400;
+        color: var(--primary-foreground-color);
+        opacity: 0.6;
+    }
+
+    .shortcuts {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        overflow: visible;
+
+        .shortcut {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+            overflow: visible;
+
+            .label {
+                position: relative;
+                font-size: 1rem;
+                color: var(--primary-foreground-color);
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+            }
+        }
+    }
+}

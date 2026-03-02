@@ -19,6 +19,11 @@
     padding: 0.5rem;
     margin-bottom: 0.5rem;
     border-radius: var(--border-radius);
+    border: 0.15rem solid transparent;
+
+    @supports (scroll-margin: 1.25rem) {
+        scroll-margin: 1.25rem;
+    }
 
     &:hover,
     &:focus,
@@ -171,6 +176,20 @@
             }
         }
     }
+
+    &.selected {
+        animation: border 3s ease-in-out forwards;
+    }
+
+    @keyframes border {
+        0% {
+            border: 0.15rem solid var(--primary-accent-color);
+        }
+        100% {
+            border: 0.15rem solid transparent;
+        }
+    }
+
 
     .context-menu-container {
         max-width: calc(90% - 1.5rem);

@@ -11,21 +11,6 @@ function Shell() {
 
     const events = new EventEmitter();
 
-    function onTransportInit() {
-        active = true;
-        error = null;
-        starting = false;
-        onStateChanged();
-    }
-    function onTransportInitError(err) {
-        console.error(err);
-        active = false;
-        error = new Error(err);
-        starting = false;
-        onStateChanged();
-        transport = null;
-    }
-
     function onStateChanged() {
         events.emit('stateChanged');
     }
@@ -68,9 +53,22 @@ function Shell() {
 
         active = false;
         starting = true;
-        transport = new ShellTransport();
-        transport.on('init', onTransportInit);
-        transport.on('init-error', onTransportInitError);
+
+        try {
+            transport = new ShellTransport();
+            active = true;
+            error = null;
+            starting = false;
+            onStateChanged();
+        } catch (e) {
+            console.error(e);
+            active = false;
+            error = new Error('Failed to initialize shell transport', { cause: e });
+            starting = false;
+            onStateChanged();
+            transport = null;
+        }
+
         onStateChanged();
     };
     this.stop = function() {

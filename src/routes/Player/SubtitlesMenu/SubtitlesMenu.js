@@ -3,11 +3,12 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const { CONSTANTS, comparatorWithPriorities, languages } = require('stremio/common');
+const { comparatorWithPriorities, languages } = require('stremio/common');
+const { SUBTITLES_SIZES } = require('stremio/common/CONSTANTS');
 const { Button } = require('stremio/components');
-const DiscreteSelectInput = require('./DiscreteSelectInput');
 const styles = require('./styles');
 const { t } = require('i18next');
+const { default: Stepper } = require('./Stepper');
 
 const ORIGIN_PRIORITIES = {
     'LOCAL': 3,
@@ -98,51 +99,41 @@ const SubtitlesMenu = React.memo((props) => {
             }
         }
     }, [props.onSubtitlesTrackSelected, props.onExtraSubtitlesTrackSelected]);
-    const onSubtitlesDelayChanged = React.useCallback((event) => {
-        const delta = event.value === 'increment' ? 250 : -250;
+    const onSubtitlesDelayChanged = React.useCallback((value) => {
         if (typeof props.selectedExtraSubtitlesTrackId === 'string') {
             if (props.extraSubtitlesDelay !== null && !isNaN(props.extraSubtitlesDelay)) {
-                const extraDelay = props.extraSubtitlesDelay + delta;
                 if (typeof props.onExtraSubtitlesDelayChanged === 'function') {
-                    props.onExtraSubtitlesDelayChanged(extraDelay);
+                    props.onExtraSubtitlesDelayChanged(value * 1000);
                 }
             }
         }
     }, [props.selectedExtraSubtitlesTrackId, props.extraSubtitlesDelay, props.onExtraSubtitlesDelayChanged]);
-    const onSubtitlesSizeChanged = React.useCallback((event) => {
-        const delta = event.value === 'increment' ? 1 : -1;
+    const onSubtitlesSizeChanged = React.useCallback((value) => {
         if (typeof props.selectedSubtitlesTrackId === 'string') {
             if (props.subtitlesSize !== null && !isNaN(props.subtitlesSize)) {
-                const sizeIndex = CONSTANTS.SUBTITLES_SIZES.indexOf(props.subtitlesSize);
-                const size = CONSTANTS.SUBTITLES_SIZES[Math.max(0, Math.min(CONSTANTS.SUBTITLES_SIZES.length - 1, sizeIndex + delta))];
                 if (typeof props.onSubtitlesSizeChanged === 'function') {
-                    props.onSubtitlesSizeChanged(size);
+                    props.onSubtitlesSizeChanged(value);
                 }
             }
         } else if (typeof props.selectedExtraSubtitlesTrackId === 'string') {
             if (props.extraSubtitlesSize !== null && !isNaN(props.extraSubtitlesSize)) {
-                const extraSizeIndex = CONSTANTS.SUBTITLES_SIZES.indexOf(props.extraSubtitlesSize);
-                const extraSize = CONSTANTS.SUBTITLES_SIZES[Math.max(0, Math.min(CONSTANTS.SUBTITLES_SIZES.length - 1, extraSizeIndex + delta))];
                 if (typeof props.onExtraSubtitlesSizeChanged === 'function') {
-                    props.onExtraSubtitlesSizeChanged(extraSize);
+                    props.onExtraSubtitlesSizeChanged(value);
                 }
             }
         }
     }, [props.selectedSubtitlesTrackId, props.selectedExtraSubtitlesTrackId, props.subtitlesSize, props.extraSubtitlesSize, props.onSubtitlesSizeChanged, props.onExtraSubtitlesSizeChanged]);
-    const onSubtitlesOffsetChanged = React.useCallback((event) => {
-        const delta = event.value === 'increment' ? 1 : -1;
+    const onSubtitlesOffsetChanged = React.useCallback((value) => {
         if (typeof props.selectedSubtitlesTrackId === 'string') {
             if (props.subtitlesOffset !== null && !isNaN(props.subtitlesOffset)) {
-                const offset = Math.max(0, Math.min(100, Math.floor(props.subtitlesOffset + delta)));
                 if (typeof props.onSubtitlesOffsetChanged === 'function') {
-                    props.onSubtitlesOffsetChanged(offset);
+                    props.onSubtitlesOffsetChanged(value);
                 }
             }
         } else if (typeof props.selectedExtraSubtitlesTrackId === 'string') {
             if (props.extraSubtitlesOffset !== null && !isNaN(props.extraSubtitlesOffset)) {
-                const offset = Math.max(0, Math.min(100, Math.floor(props.extraSubtitlesOffset + delta)));
                 if (typeof props.onExtraSubtitlesOffsetChanged === 'function') {
-                    props.onExtraSubtitlesOffsetChanged(offset);
+                    props.onExtraSubtitlesOffsetChanged(value);
                 }
             }
         }
@@ -215,57 +206,35 @@ const SubtitlesMenu = React.memo((props) => {
             <div className={styles['subtitles-settings-container']}>
                 <div className={styles['settings-header']}>{t('PLAYER_SUBTITLES_SETTINGS')}</div>
                 <div className={styles['settings-list']}>
-                    <DiscreteSelectInput
-                        className={styles['discrete-input']}
-                        label={t('DELAY')}
-                        value={typeof props.selectedExtraSubtitlesTrackId === 'string' && props.extraSubtitlesDelay !== null && !isNaN(props.extraSubtitlesDelay) ? `${(props.extraSubtitlesDelay / 1000).toFixed(2)}s` : '--'}
-                        disabled={typeof props.selectedExtraSubtitlesTrackId !== 'string' || props.extraSubtitlesDelay === null || isNaN(props.extraSubtitlesDelay)}
+                    <Stepper
+                        className={styles['stepper']}
+                        label={'DELAY'}
+                        value={props.extraSubtitlesDelay / 1000}
+                        unit={'s'}
+                        step={0.25}
+                        disabled={props.extraSubtitlesDelay === null}
                         onChange={onSubtitlesDelayChanged}
                     />
-                    <DiscreteSelectInput
-                        className={styles['discrete-input']}
-                        label={t('SIZE')}
-                        value={
-                            typeof props.selectedSubtitlesTrackId === 'string' ?
-                                props.subtitlesSize !== null && !isNaN(props.subtitlesSize) ? `${props.subtitlesSize}%` : '--'
-                                :
-                                typeof props.selectedExtraSubtitlesTrackId === 'string' ?
-                                    props.extraSubtitlesSize !== null && !isNaN(props.extraSubtitlesSize) ? `${props.extraSubtitlesSize}%` : '--'
-                                    :
-                                    '--'
-                        }
-                        disabled={
-                            typeof props.selectedSubtitlesTrackId === 'string' ?
-                                props.subtitlesSize === null || isNaN(props.subtitlesSize)
-                                :
-                                typeof props.selectedExtraSubtitlesTrackId === 'string' ?
-                                    props.extraSubtitlesSize === null || isNaN(props.extraSubtitlesSize)
-                                    :
-                                    true
-                        }
+                    <Stepper
+                        className={styles['stepper']}
+                        label={'SIZE'}
+                        value={props.selectedSubtitlesTrackId ? props.subtitlesSize : props.selectedExtraSubtitlesTrackId ? props.extraSubtitlesSize : null}
+                        unit={'%'}
+                        step={25}
+                        min={SUBTITLES_SIZES[0]}
+                        max={SUBTITLES_SIZES[SUBTITLES_SIZES.length - 1]}
+                        disabled={(props.selectedSubtitlesTrackId && props.subtitlesSize === null) || (props.selectedExtraSubtitlesTrackId && props.extraSubtitlesSize === null)}
                         onChange={onSubtitlesSizeChanged}
                     />
-                    <DiscreteSelectInput
-                        className={styles['discrete-input']}
-                        label={t('PLAYER_SUBTITLES_VERTICAL_POSIITON')}
-                        value={
-                            typeof props.selectedSubtitlesTrackId === 'string' ?
-                                props.subtitlesOffset !== null && !isNaN(props.subtitlesOffset) ? `${props.subtitlesOffset}%` : '--'
-                                :
-                                typeof props.selectedExtraSubtitlesTrackId === 'string' ?
-                                    props.extraSubtitlesOffset !== null && !isNaN(props.extraSubtitlesOffset) ? `${props.extraSubtitlesOffset}%` : '--'
-                                    :
-                                    '--'
-                        }
-                        disabled={
-                            typeof props.selectedSubtitlesTrackId === 'string' ?
-                                props.subtitlesOffset === null || isNaN(props.subtitlesOffset)
-                                :
-                                typeof props.selectedExtraSubtitlesTrackId === 'string' ?
-                                    props.extraSubtitlesOffset === null || isNaN(props.extraSubtitlesOffset)
-                                    :
-                                    true
-                        }
+                    <Stepper
+                        className={styles['stepper']}
+                        label={'PLAYER_SUBTITLES_VERTICAL_POSITION'}
+                        value={props.selectedSubtitlesTrackId ? props.subtitlesOffset : props.selectedExtraSubtitlesTrackId ? props.extraSubtitlesOffset : null}
+                        unit={'%'}
+                        step={1}
+                        min={0}
+                        max={100}
+                        disabled={(props.selectedSubtitlesTrackId && props.subtitlesOffset === null) || (props.selectedExtraSubtitlesTrackId && props.extraSubtitlesOffset === null)}
                         onChange={onSubtitlesOffsetChanged}
                     />
                 </div>

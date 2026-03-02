@@ -1,5 +1,3 @@
-/* eslint-disable no-var */
-
 type QtTransportMessage = {
     data: string;
 };
@@ -28,4 +26,4 @@ declare global {
     var chrome: Chrome | undefined;
 }
 
-export {};
+export { };

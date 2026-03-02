@@ -1,6 +1,7 @@
 // Copyright (C) 2017-2024 Smart code 203358507
 
 import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import Icon from '@stremio/stremio-icons/react';
 import { Button } from 'stremio/components';
 import styles from './Details.less';
@@ -11,6 +12,7 @@ type Props = {
 };
 
 const Details = ({ selected, items }: Props) => {
+    const { t } = useTranslation();
     const videos = useMemo(() => {
         return items.find(({ date }) => date.day === selected?.day)?.items ?? [];
     }, [selected, items]);
@@ -33,7 +35,7 @@ const Details = ({ selected, items }: Props) => {
             {
                 !videos.length ?
                     <div className={styles['placeholder']}>
-                        No new episodes for this day
+                        {t('CALENDAR_NO_NEW_EPISODES')}
                     </div>
                     :
                     null

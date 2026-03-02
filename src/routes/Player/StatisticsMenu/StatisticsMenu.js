@@ -1,20 +1,22 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 const React = require('react');
+const { useTranslation } = require('react-i18next');
 const classNames = require('classnames');
 const PropTypes = require('prop-types');
 const styles = require('./styles.less');
 
 const StatisticsMenu = ({ className, peers, speed, completed, infoHash }) => {
+    const { t } = useTranslation();
     return (
         <div className={classNames(className, styles['statistics-menu-container'])}>
             <div className={styles['title']}>
-                Statistics
+                {t('PLAYER_STATISTICS')}
             </div>
             <div className={styles['stats']}>
                 <div className={styles['stat']}>
                     <div className={styles['label']}>
-                        Peers
+                        {t('PLAYER_PEERS')}
                     </div>
                     <div className={styles['value']}>
                         { peers }
@@ -22,24 +24,24 @@ const StatisticsMenu = ({ className, peers, speed, completed, infoHash }) => {
                 </div>
                 <div className={styles['stat']}>
                     <div className={styles['label']}>
-                        Speed
+                        {t('PLAYER_SPEED')}
                     </div>
                     <div className={styles['value']}>
-                        { speed } MB/s
+                        {`${speed} ${t('MB_S')}`}
                     </div>
                 </div>
                 <div className={styles['stat']}>
                     <div className={styles['label']}>
-                        Completed
+                        {t('PLAYER_COMPLETED')}
                     </div>
                     <div className={styles['value']}>
-                        { completed } %
+                        { Math.min(completed, 100) } %
                     </div>
                 </div>
             </div>
             <div className={styles['info-hash']}>
                 <div className={styles['label']}>
-                    Info Hash
+                    {t('PLAYER_INFO_HASH')}
                 </div>
                 <div className={styles['value']}>
                     { infoHash }

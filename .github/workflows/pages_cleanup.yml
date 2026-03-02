@@ -1,0 +1,53 @@
+name: GitHub Pages Cleanup
+
+on:
+  schedule:
+    - cron: '0 0 * * 0'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: gh-pages
+          fetch-depth: 0
+
+      - name: Delete directories that don't have existing branch
+        run: |
+          branches=( $(git branch -r | grep origin | grep -v HEAD | sed 's|origin/||') )
+          declare -p branches
+
+          find . -mindepth 1 -maxdepth 2 -type d -not -path '*/\.*' | while read -r dir; do
+              path="${dir#./}"
+
+              if [[ " ${branches[*]} " =~ " $path " ]]; then
+                  continue
+              fi
+
+              keep_parent=false
+              for branch in "${branches[@]}"; do
+                  if [[ "$branch" == "$path/"* ]]; then
+                      keep_parent=true
+                      break
+                  fi
+              done
+
+              if ! $keep_parent; then
+                  echo "Deleting $dir"
+                  rm -rf "$dir"
+              fi
+          done
+
+      - name: Commit and push
+        run: |
+          git config --global user.name 'GitHub Pages Cleanup'
+          git config --global user.email 'actions@stremio.com'
+          git add -A
+          git diff --cached --quiet || git commit -m "cleanup"
+          git push origin gh-pages

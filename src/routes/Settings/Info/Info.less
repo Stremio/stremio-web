@@ -1,0 +1,31 @@
+@import (reference) '~stremio/common/screen-sizes.less';
+
+:import('~stremio/routes/Settings/components/Option/Option.less') {
+    option-content: content;
+}
+
+.info {
+    display: none;
+
+    .option-content {
+        color: var(--primary-foreground-color);
+        overflow: hidden;
+
+        .label {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    }
+}
+
+@media only screen and (max-width: @xsmall) {
+    .info {
+        display: flex;
+    }
+}
+
+@media only screen and (max-width: @minimum) {
+    .info {
+        display: flex;
+    }
+}

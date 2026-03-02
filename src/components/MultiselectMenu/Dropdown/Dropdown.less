@@ -2,7 +2,8 @@
 
 @import (reference) '~stremio/common/screen-sizes.less';
 
-@parent-height: 10rem;
+@parent-height: 12rem;
+@item-height: 3rem;
 
 .dropdown {
     background: var(--modal-background-color);
@@ -18,7 +19,7 @@
 
     &.open {
         display: block;
-        max-height: calc(3.3rem * 7);
+        max-height: calc(@item-height * 7);
         overflow: auto;
     }
 

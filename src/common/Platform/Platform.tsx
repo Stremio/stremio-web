@@ -1,6 +1,5 @@
 import React, { createContext, useContext } from 'react';
 import { WHITELISTED_HOSTS } from 'stremio/common/CONSTANTS';
-import useShell from 'stremio/common/useShell';
 import { name, isMobile } from './device';
 
 interface PlatformContext {
@@ -16,19 +15,15 @@ type Props = {
 };
 
 const PlatformProvider = ({ children }: Props) => {
-    const shell = useShell();
-
     const openExternal = (url: string) => {
         try {
             const { hostname } = new URL(url);
-            const isWhitelisted = WHITELISTED_HOSTS.some((host: string) => hostname.endsWith(host));
+            const isWhitelisted = WHITELISTED_HOSTS.some((host: string) =>
+                hostname === host || hostname.endsWith('.' + host)
+            );
             const finalUrl = !isWhitelisted ? `https://www.stremio.com/warning#${encodeURIComponent(url)}` : url;
 
-            if (shell.active) {
-                shell.send('open-external', finalUrl);
-            } else {
-                window.open(finalUrl, '_blank');
-            }
+            window.open(finalUrl, '_blank');
         } catch (e) {
             console.error('Failed to parse external url:', e);
         }

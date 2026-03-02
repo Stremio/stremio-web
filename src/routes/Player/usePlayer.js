@@ -86,6 +86,9 @@ const usePlayer = (urlParams) => {
             };
         }
     }, [urlParams]);
+
+    const player = useModelState({ model: 'player', action, map });
+
     const videoParamsChanged = React.useCallback((videoParams) => {
         core.transport.dispatch({
             action: 'Player',
@@ -102,8 +105,8 @@ const usePlayer = (urlParams) => {
                 args: {
                     action: 'TimeChanged',
                     args: {
-                        time: Math.round(time),
-                        duration,
+                        time: Math.max(0, Math.round(time)),
+                        duration: Math.max(0, Math.round(duration)),
                         device,
                     }
                 }
@@ -118,8 +121,8 @@ const usePlayer = (urlParams) => {
                 args: {
                     action: 'Seek',
                     args: {
-                        time: Math.round(time),
-                        duration,
+                        time: Math.max(0, Math.round(time)),
+                        duration: Math.max(0, Math.round(duration)),
                         device,
                     }
                 }
@@ -153,8 +156,22 @@ const usePlayer = (urlParams) => {
         }, 'player');
     }, []);
 
-    const player = useModelState({ model: 'player', action, map });
-    return [player, videoParamsChanged, timeChanged, seek, pausedChanged, ended, nextVideo];
+    const streamStateChanged = React.useCallback((partialStreamState) => {
+        return core.transport.dispatch({
+            action: 'Player',
+            args: {
+                action: 'StreamStateChanged',
+                args: {
+                    state: {
+                        ...player.streamState,
+                        ...partialStreamState,
+                    },
+                },
+            },
+        }, 'player');
+    }, [player.streamState]);
+
+    return [player, videoParamsChanged, streamStateChanged, timeChanged, seek, pausedChanged, ended, nextVideo];
 };
 
 module.exports = usePlayer;

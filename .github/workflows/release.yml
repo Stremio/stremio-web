@@ -9,26 +9,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
-      - name: Install NPM dependencies
-        run: npm install
+        uses: actions/checkout@v6
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          run_install: false
+      - name: Install dependencies
+        run: pnpm install
       - name: Build
         env:
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
-        run: npm run build
+        run: pnpm build
       - name: Zip build artifact
         run: zip -r stremio-web.zip ./build
       - name: Upload build artifact to GitHub release assets
-        uses: svenstaro/upload-release-action@2.9.0
+        uses: svenstaro/upload-release-action@2.11.3
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: stremio-web.zip
           asset_name: stremio-web.zip
           tag: ${{ github.ref }}
           overwrite: true
-      - name: Upload build artifact to Netlify
-        run: |
-          curl -H "Content-Type: application/zip" \
-               -H "Authorization: Bearer ${{ secrets.netlify_access_token }}" \
-               --data-binary "@stremio-web.zip" \
-               https://api.netlify.com/api/v1/sites/stremio-development.netlify.com/deploys

@@ -58,16 +58,6 @@ function KeyboardShortcuts() {
 
                 break;
             }
-            case 'KeyF': {
-                event.preventDefault();
-                if (document.fullscreenElement === document.documentElement) {
-                    document.exitFullscreen();
-                } else {
-                    document.documentElement.requestFullscreen();
-                }
-
-                break;
-            }
         }
     }
     function onStateChanged() {

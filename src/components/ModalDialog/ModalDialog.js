@@ -1,6 +1,7 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 const React = require('react');
+const { useTranslation } = require('react-i18next');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { useRouteFocused, useModalsContainer } = require('stremio-router');
@@ -10,6 +11,7 @@ const { Modal } = require('stremio-router');
 const styles = require('./styles');
 
 const ModalDialog = ({ className, title, buttons, children, dataset, onCloseRequest, background, ...props }) => {
+    const { t } = useTranslation();
     const routeFocused = useRouteFocused();
     const modalsContainer = useModalsContainer();
     const modalContainerRef = React.useRef(null);
@@ -60,7 +62,7 @@ const ModalDialog = ({ className, title, buttons, children, dataset, onCloseRequ
         <Modal ref={modalContainerRef} {...props} className={classnames(className, styles['modal-container'])} onMouseDown={onModalContainerMouseDown}>
             <div className={styles['modal-dialog-container']} onMouseDown={onModalDialogContainerMouseDown}>
                 <div className={styles['modal-dialog-background']} style={{backgroundImage: `url('${background}')`}} />
-                <Button className={styles['close-button-container']} title={'Close'} onClick={closeButtonOnClick}>
+                <Button className={styles['close-button-container']} title={t('BUTTON_CLOSE')} onClick={closeButtonOnClick}>
                     <Icon className={styles['icon']} name={'close'} />
                 </Button>
                 <div className={styles['modal-dialog-content']}>

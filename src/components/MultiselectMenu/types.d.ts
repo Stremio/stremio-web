@@ -1,7 +1,7 @@
 type MultiselectMenuOption = {
     id?: number;
     label: string;
-    value: number;
+    value: string | number | null;
     destination?: string;
     default?: boolean;
     hidden?: boolean;

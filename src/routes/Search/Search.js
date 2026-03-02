@@ -78,7 +78,7 @@ const Search = ({ queryParams }) => {
                             <div className={styles['message-container']}>
                                 <Image
                                     className={styles['image']}
-                                    src={require('/images/empty.png')}
+                                    src={require('/assets/images/empty.png')}
                                     alt={' '}
                                 />
                                 <div className={styles['message-label']}>{ t.string('STREMIO_TV_SEARCH_NO_ADDONS') }</div>

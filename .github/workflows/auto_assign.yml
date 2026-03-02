@@ -1,0 +1,66 @@
+name: PR and Issue Workflow
+on:
+  pull_request:
+    types: [opened, reopened]
+  issues:
+    types: [opened]
+jobs:
+  auto-assign-and-label:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+      # Auto assign PR to author
+      - name: Auto Assign PR to Author
+        if: github.event.pull_request.head.repo.fork == false && github.event_name == 'pull_request' && github.actor != 'dependabot[bot]'
+        uses: actions/github-script@v8
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const pr = context.payload.pull_request;
+            if (pr) {
+              await github.rest.issues.addAssignees({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: pr.number,
+                assignees: [pr.user.login]
+              });
+              console.log(`Assigned PR #${pr.number} to author @${pr.user.login}`);
+            }
+
+      # Dynamic labeling based on PR/Issue title
+      - name: Label PRs and Issues
+        if: github.event.pull_request.head.repo.fork == false && github.actor != 'dependabot[bot]'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: actions/github-script@v8
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const prTitle = context.payload.pull_request ? context.payload.pull_request.title : context.payload.issue.title;
+            const issueNumber = context.payload.pull_request ? context.payload.pull_request.number : context.payload.issue.number;
+            const isIssue = context.payload.issue !== undefined;
+            const labelMappings = [
+              { pattern: /^feat(ure)?/i, label: 'feature' },
+              { pattern: /^fix/i, label: 'bug' },
+              { pattern: /^refactor/i, label: 'refactor' },
+              { pattern: /^chore/i, label: 'chore' },
+              { pattern: /^docs?/i, label: 'documentation' },
+              { pattern: /^perf(ormance)?/i, label: 'performance' },
+              { pattern: /^test/i, label: 'testing' }
+            ];
+            let labelsToAdd = [];
+            for (const mapping of labelMappings) {
+              if (mapping.pattern.test(prTitle)) {
+                labelsToAdd.push(mapping.label);
+              }
+            }
+            if (labelsToAdd.length > 0) {
+              github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issueNumber,
+                labels: labelsToAdd
+              });
+            }
