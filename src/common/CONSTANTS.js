@@ -65,7 +65,7 @@ const EXTERNAL_PLAYERS = [
     {
         label: 'VLC',
         value: 'vlc',
-        platforms: ['ios', 'visionos', 'android'],
+        platforms: ['ios', 'visionos', 'android', 'macos', 'windows'],
     },
     {
         label: 'MPV',
