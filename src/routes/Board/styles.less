@@ -11,6 +11,10 @@
     meta-item-placeholder: meta-item;
 }
 
+:import('~stremio/routes/Board/HeroSection/styles.less') {
+    hero-section-container: hero-section-container;
+}
+
 .board-container {
     width: 100%;
     height: calc(100% - var(--safe-area-inset-bottom));
@@ -27,6 +31,10 @@
             width: 100%;
             padding: 0 1rem;
             overflow-y: auto;
+
+            .hero-section-container {
+                margin-bottom: 2rem;
+            }
 
             .board-row {
                 margin-top: 1rem;

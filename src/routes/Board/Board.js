@@ -6,17 +6,29 @@ const debounce = require('lodash.debounce');
 const useTranslate = require('stremio/common/useTranslate');
 const { useStreamingServer, useNotifications, withCoreSuspender, getVisibleChildrenRange, useProfile } = require('stremio/common');
 const { ContinueWatchingItem, EventModal, MainNavBars, MetaItem, MetaRow } = require('stremio/components');
+const HeroSection = require('./HeroSection/HeroSection');
 const useBoard = require('./useBoard');
 const useContinueWatchingPreview = require('./useContinueWatchingPreview');
 const styles = require('./styles');
-const { default: StreamingServerWarning } = require('./StreamingServerWarning');
+const StreamingServerWarning = require('./StreamingServerWarning').default;
 
 const THRESHOLD = 5;
+
+const useHeroItems = () => {
+    const [board] = useBoard();
+    return React.useMemo(() => {
+        // Get the first catalog's items as the hero items (trending shows)
+        const firstCatalog = board?.catalogs?.[0];
+        const items = firstCatalog?.content?.type === 'Ready' ? firstCatalog.content.content : firstCatalog?.items;
+        return items || [];
+    }, [board]);
+};
 
 const Board = () => {
     const t = useTranslate();
     const streamingServer = useStreamingServer();
     const continueWatchingPreview = useContinueWatchingPreview();
+    const heroItems = useHeroItems();
     const [board, loadBoardRows] = useBoard();
     const notifications = useNotifications();
     const profile = useProfile();
@@ -45,11 +57,35 @@ const Board = () => {
     React.useLayoutEffect(() => {
         onVisibleRangeChange();
     }, [board.catalogs, onVisibleRangeChange]);
+    // Carousel handlers receive (event, item, index)
+    const onHeroPlayClick = React.useCallback((event, item) => {
+        if (typeof item?.deepLinks?.player === 'string') {
+            event.preventDefault();
+            window.location = item.deepLinks.player;
+        }
+    }, []);
+
+    const onHeroDetailsClick = React.useCallback((event, item) => {
+        if (typeof item?.deepLinks?.metaDetailsVideos === 'string') {
+            event.preventDefault();
+            window.location = item.deepLinks.metaDetailsVideos;
+        } else if (typeof item?.deepLinks?.metaDetailsStreams === 'string') {
+            event.preventDefault();
+            window.location = item.deepLinks.metaDetailsStreams;
+        }
+    }, []);
+
     return (
         <div className={styles['board-container']}>
             <EventModal />
             <MainNavBars className={styles['board-content-container']} route={'board'}>
                 <div ref={scrollContainerRef} className={styles['board-content']} onScroll={onScroll}>
+                    <HeroSection
+                        className={classnames('animation-fade-in')}
+                        items={heroItems}
+                        onPlayClick={onHeroPlayClick}
+                        onDetailsClick={onHeroDetailsClick}
+                    />
                     {
                         continueWatchingPreview.items.length > 0 ?
                             <MetaRow
