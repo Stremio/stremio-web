@@ -4,6 +4,7 @@
 @import (reference) '~stremio/common/screen-sizes.less';
 
 .addon-container {
+    position: relative;
     display: flex;
     flex-direction: row;
     align-items: flex-start;
@@ -16,6 +17,41 @@
 
     &:hover {
         border-color: var(--overlay-color);
+    }
+
+    .reorder-buttons-container {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+
+        .reorder-button-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            background-color: var(--overlay-color);
+
+            &:hover:not(:disabled) {
+                outline: var(--focus-outline-size) solid var(--primary-foreground-color);
+            }
+
+            &:disabled {
+                opacity: 0.35;
+                cursor: default;
+            }
+
+            .icon {
+                width: 1rem;
+                height: 1rem;
+                color: var(--primary-foreground-color);
+            }
+        }
     }
 
     .logo-container {
@@ -203,6 +239,11 @@
 @media only screen and (max-width: @minimum) {
     .addon-container {
         flex-wrap: wrap;
+
+        .reorder-buttons-container {
+            top: 0.75rem;
+            left: 0.75rem;
+        }
 
         .info-container {
             margin-left: 0.5rem;

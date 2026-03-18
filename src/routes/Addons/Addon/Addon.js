@@ -8,7 +8,7 @@ const { default: Icon } = require('@stremio/stremio-icons/react');
 const { Button, Image } = require('stremio/components');
 const styles = require('./styles');
 
-const Addon = ({ className, id, name, version, logo, description, types, behaviorHints, installed, onInstall, onUninstall, onConfigure, onOpen, onShare, dataset }) => {
+const Addon = ({ className, id, name, version, logo, description, types, behaviorHints, installed, canMoveUp, canMoveDown, reorderDisabled, onInstall, onUninstall, onConfigure, onOpen, onShare, onMoveUp, onMoveDown, dataset }) => {
     const { t } = useTranslation();
     const onInstallClick = React.useCallback((event) => {
         event.stopPropagation();
@@ -65,6 +65,18 @@ const Addon = ({ className, id, name, version, logo, description, types, behavio
             });
         }
     }, [onShare, dataset]);
+    const moveUpButtonOnClick = React.useCallback((event) => {
+        event.stopPropagation();
+        if (typeof onMoveUp === 'function') {
+            onMoveUp(dataset.addon);
+        }
+    }, [onMoveUp, dataset]);
+    const moveDownButtonOnClick = React.useCallback((event) => {
+        event.stopPropagation();
+        if (typeof onMoveDown === 'function') {
+            onMoveDown(dataset.addon);
+        }
+    }, [onMoveDown, dataset]);
     const onKeyDown = React.useCallback((event) => {
         if (event.key === 'Enter') {
             onOpenClick(event);
@@ -75,6 +87,31 @@ const Addon = ({ className, id, name, version, logo, description, types, behavio
     ), []);
     return (
         <Button className={classnames(className, styles['addon-container'])} onKeyDown={onKeyDown} onClick={onOpenClick}>
+            {
+                installed && (typeof onMoveUp === 'function' || typeof onMoveDown === 'function') ?
+                    <div className={styles['reorder-buttons-container']}>
+                        <Button
+                            className={styles['reorder-button-container']}
+                            title={t('BUTTON_PREV')}
+                            tabIndex={-1}
+                            disabled={!canMoveUp || reorderDisabled}
+                            onClick={moveUpButtonOnClick}
+                        >
+                            <Icon className={styles['icon']} name={'chevron-up'} />
+                        </Button>
+                        <Button
+                            className={styles['reorder-button-container']}
+                            title={t('BUTTON_NEXT')}
+                            tabIndex={-1}
+                            disabled={!canMoveDown || reorderDisabled}
+                            onClick={moveDownButtonOnClick}
+                        >
+                            <Icon className={styles['icon']} name={'chevron-down'} />
+                        </Button>
+                    </div>
+                    :
+                    null
+            }
             <div className={styles['logo-container']}>
                 <Image
                     className={styles['logo']}
@@ -156,12 +193,17 @@ Addon.propTypes = {
         p2p: PropTypes.bool,
     }),
     installed: PropTypes.bool,
+    canMoveUp: PropTypes.bool,
+    canMoveDown: PropTypes.bool,
+    reorderDisabled: PropTypes.bool,
     onToggle: PropTypes.func,
     onInstall: PropTypes.func,
     onUninstall: PropTypes.func,
     onConfigure: PropTypes.func,
     onOpen: PropTypes.func,
     onShare: PropTypes.func,
+    onMoveUp: PropTypes.func,
+    onMoveDown: PropTypes.func,
     dataset: PropTypes.object
 };
 

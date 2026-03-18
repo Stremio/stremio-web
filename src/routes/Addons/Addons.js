@@ -5,7 +5,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { useTranslation } = require('react-i18next');
 const { default: Icon } = require('@stremio/stremio-icons/react');
-const { usePlatform, useBinaryState, withCoreSuspender } = require('stremio/common');
+const { usePlatform, useBinaryState, useProfile, withCoreSuspender } = require('stremio/common');
 const { AddonDetailsModal, Button, Image, MainNavBars, ModalDialog, SearchBar, SharePrompt, TextInput, MultiselectMenu } = require('stremio/components');
 const { useServices } = require('stremio/services');
 const useToast = require('stremio/common/Toast/useToast');
@@ -20,6 +20,7 @@ const { AddonPlaceholder } = require('./AddonPlaceholder');
 const Addons = ({ urlParams, queryParams }) => {
     const { t } = useTranslation();
     const platform = usePlatform();
+    const profile = useProfile();
     const { core } = useServices();
     const toast = useToast();
     const installedAddons = useInstalledAddons(urlParams);
@@ -62,6 +63,7 @@ const Addons = ({ urlParams, queryParams }) => {
         ];
     }, [addAddonOnSubmit]);
     const [search, setSearch] = React.useState('');
+    const [reorderSaving, setReorderSaving] = React.useState(false);
     const searchInputOnChange = React.useCallback((event) => {
         setSearch(event.currentTarget.value);
     }, []);
@@ -90,6 +92,19 @@ const Addons = ({ urlParams, queryParams }) => {
             }
         });
     }, []);
+    const onAddonOrderUpdated = React.useCallback((fromIndex, toIndex) => {
+        const addons = profile.addons.slice();
+        const [addon] = addons.splice(fromIndex, 1);
+        addons.splice(toIndex, 0, addon);
+
+        return core.transport.dispatch({
+            action: 'Ctx',
+            args: {
+                action: 'UpdateAddons',
+                args: addons,
+            }
+        });
+    }, [core.transport, profile.addons]);
     const onAddonConfigure = React.useCallback((event) => {
         platform.openExternal(event.dataset.addon.transportUrl.replace('manifest.json', 'configure'));
     }, []);
@@ -106,6 +121,56 @@ const Addons = ({ urlParams, queryParams }) => {
                 (typeof addon.manifest.description === 'string' && addon.manifest.description.toLowerCase().includes(search.toLowerCase()))
             );
     }, [search]);
+    const canReorderAddons = (
+        typeof profile.auth?.key === 'string' &&
+        profile.auth.key.length > 0 &&
+        profile.addonsLocked !== true &&
+        Array.isArray(profile.addons) &&
+        profile.addons.length > 0
+    );
+    const visibleInstalledAddonsWithIndexes = React.useMemo(() => (
+        installedAddons.catalog
+            .map((addon, index) => ({ addon, index }))
+            .filter(({ addon }) => searchFilterPredicate(addon))
+    ), [installedAddons.catalog, searchFilterPredicate]);
+    const visibleInstalledAddons = React.useMemo(() => (
+        visibleInstalledAddonsWithIndexes.map(({ addon }) => addon)
+    ), [visibleInstalledAddonsWithIndexes]);
+    const moveAddon = React.useCallback(async (addon, direction) => {
+        if (!canReorderAddons || reorderSaving) {
+            return;
+        }
+
+        const visibleIndex = visibleInstalledAddonsWithIndexes.findIndex(({ addon: visibleAddon }) => visibleAddon === addon);
+        const targetVisibleIndex = direction === 'up' ? visibleIndex - 1 : visibleIndex + 1;
+
+        if (
+            visibleIndex === -1 ||
+            targetVisibleIndex < 0 ||
+            targetVisibleIndex >= visibleInstalledAddonsWithIndexes.length
+        ) {
+            return;
+        }
+
+        const fromIndex = visibleInstalledAddonsWithIndexes[visibleIndex].index;
+        const toIndex = visibleInstalledAddonsWithIndexes[targetVisibleIndex].index;
+
+        setReorderSaving(true);
+
+        try {
+            await onAddonOrderUpdated(fromIndex, toIndex);
+        } catch (error) {
+            console.error('Failed to save addon order:', error);
+        } finally {
+            setReorderSaving(false);
+        }
+    }, [canReorderAddons, onAddonOrderUpdated, reorderSaving, visibleInstalledAddonsWithIndexes]);
+    const moveAddonUp = React.useCallback((addon) => {
+        return moveAddon(addon, 'up');
+    }, [moveAddon]);
+    const moveAddonDown = React.useCallback((addon) => {
+        return moveAddon(addon, 'down');
+    }, [moveAddon]);
     const renderLogoFallback = React.useCallback(() => (
         <Icon className={styles['icon']} name={'addons'} />
     ), []);
@@ -154,8 +219,7 @@ const Addons = ({ urlParams, queryParams }) => {
                                 :
                                 <div className={styles['addons-list-container']}>
                                     {
-                                        installedAddons.catalog
-                                            .filter(searchFilterPredicate)
+                                        visibleInstalledAddons
                                             .map((addon, index) => (
                                                 <Addon
                                                     key={index}
@@ -173,6 +237,11 @@ const Addons = ({ urlParams, queryParams }) => {
                                                     onConfigure={onAddonConfigure}
                                                     onOpen={onAddonOpen}
                                                     onShare={onAddonShare}
+                                                    canMoveUp={canReorderAddons && index > 0}
+                                                    canMoveDown={canReorderAddons && index < visibleInstalledAddons.length - 1}
+                                                    reorderDisabled={canReorderAddons ? reorderSaving : undefined}
+                                                    onMoveUp={canReorderAddons ? moveAddonUp : undefined}
+                                                    onMoveDown={canReorderAddons ? moveAddonDown : undefined}
                                                     dataset={{ addon }}
                                                 />
                                             ))
