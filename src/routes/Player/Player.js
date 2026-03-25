@@ -31,6 +31,7 @@ const { default: Indicator } = require('./Indicator/Indicator');
 
 const findTrackByLang = (tracks, lang) => tracks.find((track) => track.lang === lang || langs.where('1', track.lang)?.[2] === lang);
 const findTrackById = (tracks, id) => tracks.find((track) => track.id === id);
+const CONTROL_BAR_SUBTITLE_BUMP = 8;
 
 const Player = ({ urlParams, queryParams }) => {
     const { t } = useTranslation();
@@ -507,6 +508,11 @@ const Player = ({ urlParams, queryParams }) => {
             }
         }
     }, [video.state.stream, player.streamState]);
+
+    React.useEffect(() => {
+        const base = settings.subtitlesOffset ?? 0;
+        video.setSubtitlesOffset(overlayHidden ? base : Math.min(100, base + CONTROL_BAR_SUBTITLE_BUMP));
+    }, [overlayHidden, settings.subtitlesOffset]);
 
     React.useEffect(() => {
         defaultSubtitlesSelected.current = false;
