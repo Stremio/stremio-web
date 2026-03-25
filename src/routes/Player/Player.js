@@ -510,9 +510,13 @@ const Player = ({ urlParams, queryParams }) => {
     }, [video.state.stream, player.streamState]);
 
     React.useEffect(() => {
-        const base = settings.subtitlesOffset ?? 0;
-        video.setSubtitlesOffset(overlayHidden ? base : Math.min(100, base + CONTROL_BAR_SUBTITLE_BUMP));
-    }, [overlayHidden, settings.subtitlesOffset]);
+        if (video.state.stream === null || video.state.subtitlesOffset === null) return;
+        const base = player.streamState?.subtitleOffset ?? settings.subtitlesOffset ?? 0;
+        const desired = overlayHidden ? base : Math.min(100, base + CONTROL_BAR_SUBTITLE_BUMP);
+        if (video.state.subtitlesOffset !== desired) {
+            video.setSubtitlesOffset(desired);
+        }
+    }, [overlayHidden, settings.subtitlesOffset, player.streamState, video.state.subtitlesOffset, video.state.stream]);
 
     React.useEffect(() => {
         defaultSubtitlesSelected.current = false;
