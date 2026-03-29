@@ -31,6 +31,7 @@ const { default: Indicator } = require('./Indicator/Indicator');
 
 const findTrackByLang = (tracks, lang) => tracks.find((track) => track.lang === lang || langs.where('1', track.lang)?.[2] === lang);
 const findTrackById = (tracks, id) => tracks.find((track) => track.id === id);
+const getTrackLang = (tracks, id) => id !== null ? findTrackById(tracks, id)?.lang : null;
 
 const Player = ({ urlParams, queryParams }) => {
     const { t } = useTranslation();
@@ -41,7 +42,7 @@ const Player = ({ urlParams, queryParams }) => {
     }, [queryParams]);
     const profile = useProfile();
     const [player, videoParamsChanged, streamStateChanged, timeChanged, seek, pausedChanged, ended, nextVideo] = usePlayer(urlParams);
-    const [settings] = useSettings();
+    const [settings, updateSettings] = useSettings();
     const streamingServer = useStreamingServer();
     const statistics = useStatistics(player, streamingServer);
     const video = useVideo();
@@ -243,7 +244,11 @@ const Player = ({ urlParams, queryParams }) => {
                 embedded: true,
             },
         });
-    }, [streamStateChanged]);
+        const lang = getTrackLang(video.state.subtitlesTracks, id);
+        if (lang !== undefined) {
+            updateSettings({ subtitlesLanguage: lang });
+        }
+    }, [streamStateChanged, video.state.subtitlesTracks, updateSettings]);
 
     const onExtraSubtitlesTrackSelected = React.useCallback((id) => {
         video.setExtraSubtitlesTrack(id);
@@ -253,7 +258,11 @@ const Player = ({ urlParams, queryParams }) => {
                 embedded: false,
             },
         });
-    }, [streamStateChanged]);
+        const lang = getTrackLang(video.state.extraSubtitlesTracks, id);
+        if (lang !== undefined) {
+            updateSettings({ subtitlesLanguage: lang });
+        }
+    }, [streamStateChanged, video.state.extraSubtitlesTracks, updateSettings]);
 
     const onAudioTrackSelected = React.useCallback((id) => {
         video.setAudioTrack(id);
