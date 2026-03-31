@@ -1,0 +1,107 @@
+// Copyright (C) 2017-2023 Smart code 203358507
+
+/**
+ * @param {string} t
+ * @returns {number}
+ */
+function parseVttTimestamp(t) {
+    const parts = t.trim().split(':');
+    if (parts.length < 3) {
+        return 0;
+    }
+    const h = parseInt(parts[0], 10);
+    const m = parseInt(parts[1], 10);
+    const sec = parseFloat(parts[2]);
+    if (Number.isNaN(h) || Number.isNaN(m) || Number.isNaN(sec)) {
+        return 0;
+    }
+    return h * 3600 + m * 60 + sec;
+}
+
+/**
+ * @param {string} text
+ * @returns {Array<{ start: number, end: number, url: string, x: number, y: number, w: number, h: number }>}
+ */
+function parseThumbnailVtt(text) {
+    const cues = [];
+    const normalized = text.replace(/^\uFEFF/, '').replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+    const blocks = normalized.split(/\n\n+/);
+
+    for (const raw of blocks) {
+        const block = raw.trim();
+        if (block.length === 0 || block === 'WEBVTT' || block.startsWith('WEBVTT\n') || block.startsWith('NOTE')) {
+            continue;
+        }
+        const lines = block.split('\n').map((l) => l.trim()).filter((l) => l.length > 0);
+        if (lines.length < 2) {
+            continue;
+        }
+        let i = 0;
+        if (lines[0].includes('-->')) {
+            // ok
+        } else if (lines.length >= 2 && lines[1].includes('-->')) {
+            i = 1;
+        } else {
+            continue;
+        }
+        const timeLine = lines[i];
+        const arrow = timeLine.indexOf('-->');
+        if (arrow === -1) {
+            continue;
+        }
+        const startStr = timeLine.slice(0, arrow).trim();
+        const endStr = timeLine.slice(arrow + 3).trim().split(/\s/)[0];
+        const start = parseVttTimestamp(startStr);
+        const end = parseVttTimestamp(endStr);
+        const imageLine = lines.slice(i + 1).join('\n').trim();
+        if (!imageLine.length) {
+            continue;
+        }
+        const xywhMatch = imageLine.match(/#xywh=(\d+),(\d+),(\d+),(\d+)/);
+        let url = imageLine;
+        let x = 0;
+        let y = 0;
+        let w = 0;
+        let h = 0;
+        if (xywhMatch) {
+            url = imageLine.slice(0, imageLine.indexOf('#'));
+            x = parseInt(xywhMatch[1], 10);
+            y = parseInt(xywhMatch[2], 10);
+            w = parseInt(xywhMatch[3], 10);
+            h = parseInt(xywhMatch[4], 10);
+        }
+        cues.push({ start, end, url, x, y, w, h });
+    }
+
+    cues.sort((a, b) => a.start - b.start);
+    return cues;
+}
+
+/**
+ * @param {Array<{ start: number, end: number, url: string, x: number, y: number, w: number, h: number }>} cues
+ * @param {number} time
+ * @returns {{ start: number, end: number, url: string, x: number, y: number, w: number, h: number } | null}
+ */
+function findThumbnailCue(cues, time) {
+    if (cues.length === 0) {
+        return null;
+    }
+    for (const c of cues) {
+        if (time >= c.start && time < c.end) {
+            return c;
+        }
+    }
+    if (time < cues[0].start) {
+        return cues[0];
+    }
+    const last = cues[cues.length - 1];
+    if (time >= last.end) {
+        return last;
+    }
+    return null;
+}
+
+module.exports = {
+    parseThumbnailVtt,
+    findThumbnailCue,
+};

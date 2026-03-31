@@ -111,6 +111,7 @@ const ControlBar = React.forwardRef(({
                 time={time}
                 duration={duration}
                 buffered={buffered}
+                thumbnailsVttUrl={stream?.thumbnails}
                 onSeekRequested={onSeekRequested}
             />
             <div className={styles['control-bar-buttons-container']}>
