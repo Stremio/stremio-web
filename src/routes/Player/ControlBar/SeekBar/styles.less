@@ -7,6 +7,81 @@
     slider-thumb: thumb;
 }
 
+.seek-bar-track {
+    position: relative;
+    flex: 1;
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 0 var(--thumb-size);
+}
+
+// Conteúdo do tooltip (portal usa position/top no JS; não definir bottom/position aqui para não conflitar com fixed + top).
+.seek-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    pointer-events: none;
+    flex: none;
+    width: max-content;
+    max-width: min(90vw, 14rem);
+}
+
+.seek-preview-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: none;
+    will-change: opacity, transform;
+    opacity: 0;
+    transform: translate3d(0, 0.5rem, 0) scale(0.96);
+    transition:
+        opacity 0.22s cubic-bezier(0.32, 0, 0.67, 0),
+        transform 0.22s cubic-bezier(0.32, 0, 0.67, 0),
+        filter 0.22s ease;
+
+    &-visible {
+        opacity: 1;
+        transform: translate3d(0, 0, 0) scale(1);
+    }
+}
+
+.seek-preview-image-wrap {
+    overflow: hidden;
+    flex: none;
+    border-radius: 0.2rem;
+}
+
+.seek-preview-image {
+    display: block;
+    flex: none;
+}
+
+.seek-preview-time {
+    margin-top: 0.35rem;
+    padding: 0.2rem 0.45rem;
+    border-radius: 0.2rem;
+    font-size: 0.75em;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--primary-foreground-color);
+    background-color: rgba(0, 0, 0, 0.72);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .seek-preview-card {
+        transition: opacity 0.12s ease;
+        transform: none;
+
+        &.seek-preview-card-visible {
+            transform: none;
+        }
+    }
+}
+
 .seek-bar-container {
     display: flex;
     flex-direction: row;
@@ -25,7 +100,6 @@
     .slider {
         flex: 1;
         align-self: stretch;
-        margin: 0 var(--thumb-size);
 
         .slider-track-after {
             background-color: var(--primary-accent-color);
