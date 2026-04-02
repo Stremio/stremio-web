@@ -1,10 +1,10 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
-const formatUnit = (value) => {
+const formatUnit = (value: number): string => {
     return ('0' + value).slice(-1 * Math.max(value.toString().length, 2));
 };
 
-const formatTime = (time, prefix = '') => {
+const formatTime = (time: number | null, prefix = ''): string => {
     if (time === null || isNaN(time)) {
         return '--:--:--';
     }
@@ -15,4 +15,4 @@ const formatTime = (time, prefix = '') => {
     return `${formatUnit(hours)}:${formatUnit(minutes)}:${formatUnit(seconds)}${prefix}`;
 };
 
-module.exports = formatTime;
+export default formatTime;
