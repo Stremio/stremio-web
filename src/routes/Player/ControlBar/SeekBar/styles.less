@@ -17,7 +17,15 @@
     margin: 0 var(--thumb-size);
 }
 
-// Conteúdo do tooltip (portal usa position/top no JS; não definir bottom/position aqui para não conflitar com fixed + top).
+@seek-preview-frame-bg: var(--primary-foreground-color);
+@seek-preview-frame-padding: 3.5px;
+@seek-preview-radius-outer: 12px;
+@seek-preview-radius-inner: 8px;
+@seek-preview-arrow-size: 4px;
+@seek-preview-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.35),
+    0 1px 2px rgba(0, 0, 0, 0.12);
+
 .seek-preview {
     display: flex;
     flex-direction: column;
@@ -26,9 +34,12 @@
     flex: none;
     width: max-content;
     max-width: min(90vw, 14rem);
+    overflow: visible;
 }
 
 .seek-preview-card {
+    position: relative;
+    overflow: visible;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -36,10 +47,11 @@
     will-change: opacity, transform;
     opacity: 0;
     transform: translate3d(0, 0.5rem, 0) scale(0.96);
+    transform-origin: 50% 100%;
     transition:
-        opacity 0.22s cubic-bezier(0.32, 0, 0.67, 0),
-        transform 0.22s cubic-bezier(0.32, 0, 0.67, 0),
-        filter 0.22s ease;
+        opacity 0.2s 0.05s ease,
+        transform 0.2s 0.05s ease,
+        filter 0.2s ease;
 
     &-visible {
         opacity: 1;
@@ -47,28 +59,87 @@
     }
 }
 
+.seek-preview-frame {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: @seek-preview-frame-padding;
+    background: @seek-preview-frame-bg;
+    border-radius: @seek-preview-radius-outer;
+    box-shadow: @seek-preview-shadow;
+}
+
+.seek-preview-caret {
+    position: absolute;
+    bottom: calc(-1 * @seek-preview-arrow-size);
+    left: calc(50% + var(--seek-preview-arrow-offset, 0));
+    z-index: 5;
+    width: 0;
+    height: 0;
+    border-left: @seek-preview-arrow-size solid transparent;
+    border-right: @seek-preview-arrow-size solid transparent;
+    border-top: @seek-preview-arrow-size solid @seek-preview-frame-bg;
+    transform: translateX(-50%);
+    pointer-events: none;
+}
+
+.seek-preview-frame-time-only {
+    padding: 0.45rem 0.65rem;
+    min-width: 3.25rem;
+
+    .seek-preview-time {
+        position: static;
+        margin: 0;
+        padding: 0;
+        font-size: 0.8em;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        color: var(--primary-background-color);
+        background: transparent;
+        text-align: center;
+    }
+}
+
 .seek-preview-image-wrap {
+    position: relative;
     overflow: hidden;
     flex: none;
-    border-radius: 0.2rem;
+    border-radius: @seek-preview-radius-inner;
+    background: var(--primary-background-color);
+
+    &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        border-radius: inherit;
+        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.15);
+        pointer-events: none;
+    }
+
+    .seek-preview-time {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 2;
+        margin: 0;
+        padding: 1.15rem 0.45rem 0.35rem;
+        font-size: 0.8em;
+        font-weight: 700;
+        letter-spacing: 0.03em;
+        line-height: 1.1;
+        text-align: center;
+        color: var(--primary-foreground-color);
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.82) 0%, rgba(0, 0, 0, 0.35) 45%, transparent 100%);
+        border-radius: 0 0 @seek-preview-radius-inner @seek-preview-radius-inner;
+    }
 }
 
 .seek-preview-image {
     display: block;
     flex: none;
-}
-
-.seek-preview-time {
-    margin-top: 0.35rem;
-    padding: 0.2rem 0.45rem;
-    border-radius: 0.2rem;
-    font-size: 0.75em;
-    font-weight: 600;
-    letter-spacing: 0.02em;
-    color: var(--primary-foreground-color);
-    background-color: rgba(0, 0, 0, 0.72);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
 }
 
 @media (prefers-reduced-motion: reduce) {

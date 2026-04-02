@@ -192,7 +192,7 @@ const SeekBar = ({ className, time, duration, buffered, thumbnailsVttUrl, onSeek
             right: 'auto',
             bottom: 'auto',
             maxWidth: 'none',
-            transform: 'translate(-50%, calc(-100% - 0.5rem))',
+            transform: 'translate(-50%, calc(-100% - 0.75rem))',
             zIndex: 10000,
             pointerEvents: 'none',
         };
@@ -218,25 +218,28 @@ const SeekBar = ({ className, time, duration, buffered, thumbnailsVttUrl, onSeek
             (
                 <div className={styles['seek-preview']} style={portalStyle}>
                     <div className={previewCardClass}>
-                        <div
-                            className={styles['seek-preview-image-wrap']}
-                            style={{ width: `${w}px`, height: `${h}px` }}
-                        >
-                            <img
-                                alt=""
-                                className={styles['seek-preview-image']}
-                                src={resolvedImageUrl}
-                                style={{
-                                    width: `${spriteSize.width * previewScale}px`,
-                                    height: `${spriteSize.height * previewScale}px`,
-                                    marginLeft: `${-previewCue.x * previewScale}px`,
-                                    marginTop: `${-previewCue.y * previewScale}px`,
-                                }}
-                            />
+                        <div className={styles['seek-preview-frame']}>
+                            <div
+                                className={styles['seek-preview-image-wrap']}
+                                style={{ width: `${w}px`, height: `${h}px` }}
+                            >
+                                <img
+                                    alt=""
+                                    className={styles['seek-preview-image']}
+                                    src={resolvedImageUrl}
+                                    style={{
+                                        width: `${spriteSize.width * previewScale}px`,
+                                        height: `${spriteSize.height * previewScale}px`,
+                                        marginLeft: `${-previewCue.x * previewScale}px`,
+                                        marginTop: `${-previewCue.y * previewScale}px`,
+                                    }}
+                                />
+                                <div className={styles['seek-preview-time']}>
+                                    {formatTime(preview.timeMs)}
+                                </div>
+                            </div>
                         </div>
-                        <div className={styles['seek-preview-time']}>
-                            {formatTime(preview.timeMs)}
-                        </div>
+                        <span className={styles['seek-preview-caret']} aria-hidden={true} />
                     </div>
                 </div>
             ),
@@ -247,9 +250,12 @@ const SeekBar = ({ className, time, duration, buffered, thumbnailsVttUrl, onSeek
             (
                 <div className={styles['seek-preview']} style={portalStyle}>
                     <div className={previewCardClass}>
-                        <div className={styles['seek-preview-time']}>
-                            {formatTime(preview.timeMs)}
+                        <div className={classnames(styles['seek-preview-frame'], styles['seek-preview-frame-time-only'])}>
+                            <div className={styles['seek-preview-time']}>
+                                {formatTime(preview.timeMs)}
+                            </div>
                         </div>
+                        <span className={styles['seek-preview-caret']} aria-hidden={true} />
                     </div>
                 </div>
             ),
