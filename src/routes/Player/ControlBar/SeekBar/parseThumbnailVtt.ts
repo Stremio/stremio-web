@@ -11,17 +11,12 @@ export type ThumbnailCue = {
 };
 
 function parseVttTimestamp(t: string): number {
-    const parts = t.trim().split(':');
-    if (parts.length < 3) {
+    const segments = t.trim().split(':').map((s) => parseFloat(s.trim()));
+    if (segments.length < 2 || segments.some((n) => Number.isNaN(n))) {
         return 0;
     }
-    const h = parseInt(parts[0], 10);
-    const m = parseInt(parts[1], 10);
-    const sec = parseFloat(parts[2]);
-    if (Number.isNaN(h) || Number.isNaN(m) || Number.isNaN(sec)) {
-        return 0;
-    }
-    return h * 3600 + m * 60 + sec;
+    const [a, b, c = 0] = segments;
+    return segments.length === 2 ? a * 60 + b : a * 3600 + b * 60 + c;
 }
 
 function parseThumbnailVtt(text: string): ThumbnailCue[] {
