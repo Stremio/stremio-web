@@ -39,12 +39,12 @@ function parseThumbnailVtt(text: string): ThumbnailCue[] {
             continue;
         }
         let i = 0;
-        if (lines[0].includes('-->')) {
-            // ok
-        } else if (lines.length >= 2 && lines[1].includes('-->')) {
-            i = 1;
-        } else {
-            continue;
+        if (!lines[0].includes('-->')) {
+            if (lines[1].includes('-->')) {
+                i = 1;
+            } else {
+                continue;
+            }
         }
         const timeLine = lines[i];
         const arrow = timeLine.indexOf('-->');
