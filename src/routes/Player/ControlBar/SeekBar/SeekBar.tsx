@@ -208,7 +208,6 @@ const SeekBar = ({ className, time, duration, buffered, thumbnailsVttUrl, onSeek
         const rawW = previewCue.w > 0 ? previewCue.w : Math.min(160, spriteSize.width);
         const rawH = previewCue.h > 0 ? previewCue.h : Math.min(90, spriteSize.height);
         const previewScale = Math.min(
-            1,
             PREVIEW_MAX_WIDTH_PX / Math.max(rawW, 1),
             PREVIEW_MAX_HEIGHT_PX / Math.max(rawH, 1)
         );
