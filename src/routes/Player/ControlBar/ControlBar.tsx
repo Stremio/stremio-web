@@ -1,18 +1,64 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const classnames = require('classnames');
-const { default: Icon } = require('@stremio/stremio-icons/react');
-const { Button } = require('stremio/components');
-const { useServices } = require('stremio/services');
-const SeekBar = require('./SeekBar');
-const VolumeSlider = require('./VolumeSlider');
-const styles = require('./styles');
-const { useBinaryState, usePlatform } = require('stremio/common');
-const { t } = require('i18next');
+import React, { forwardRef, useCallback, useEffect, useState } from 'react';
+import classnames from 'classnames';
+import Icon from '@stremio/stremio-icons/react';
+import { Button } from 'stremio/components';
+import { useServices } from 'stremio/services';
+import SeekBar from './SeekBar';
+import VolumeSlider from './VolumeSlider';
+import styles from './styles.less';
+import { useBinaryState, usePlatform } from 'stremio/common';
+import { t } from 'i18next';
 
-const ControlBar = React.forwardRef(({
+type StreamForControlBar = {
+    thumbnails?: string,
+    infoHash?: string,
+    fileIdx?: string | number,
+} | null;
+
+type StatisticsForControlBar = {
+    type: string,
+} | null;
+
+type MetaItemForControlBar = {
+    content?: {
+        videos?: unknown[],
+    },
+} | null;
+
+export type ControlBarProps = {
+    className?: string,
+    paused?: boolean | null,
+    time?: number | null,
+    duration?: number | null,
+    buffered?: number | null,
+    volume?: number | null,
+    muted?: boolean | null,
+    playbackSpeed?: number | null,
+    subtitlesTracks?: unknown[] | null,
+    audioTracks?: unknown[] | null,
+    metaItem?: MetaItemForControlBar,
+    nextVideo?: object | null,
+    stream?: StreamForControlBar,
+    statistics?: StatisticsForControlBar,
+    onPlayRequested?: () => void,
+    onPauseRequested?: () => void,
+    onNextVideoRequested?: () => void,
+    onMuteRequested?: () => void,
+    onUnmuteRequested?: () => void,
+    onVolumeChangeRequested?: (volume: number) => void,
+    onSeekRequested?: (time: number) => void,
+    onToggleSubtitlesMenu?: () => void,
+    onToggleAudioMenu?: () => void,
+    onToggleSpeedMenu?: () => void,
+    onToggleSideDrawer?: () => void,
+    onToggleOptionsMenu?: () => void,
+    onToggleStatisticsMenu?: () => void,
+    onTouchEnd?: (event: React.TouchEvent) => void,
+} & Omit<React.HTMLAttributes<HTMLDivElement>, 'onTouchEnd'>;
+
+const ControlBar = forwardRef<HTMLDivElement, ControlBarProps>(({
     className,
     paused,
     time,
@@ -45,27 +91,27 @@ const ControlBar = React.forwardRef(({
 }, ref) => {
     const { chromecast } = useServices();
     const platform = usePlatform();
-    const [chromecastServiceActive, setChromecastServiceActive] = React.useState(() => chromecast.active);
+    const [chromecastServiceActive, setChromecastServiceActive] = useState(() => chromecast.active);
     const [buttonsMenuOpen, , , toggleButtonsMenu] = useBinaryState(false);
-    const onSubtitlesButtonMouseDown = React.useCallback((event) => {
-        event.nativeEvent.subtitlesMenuClosePrevented = true;
+    const onSubtitlesButtonMouseDown = useCallback((event: React.MouseEvent) => {
+        (event.nativeEvent as typeof event.nativeEvent & { subtitlesMenuClosePrevented?: boolean }).subtitlesMenuClosePrevented = true;
     }, []);
-    const onAudioButtonMouseDown = React.useCallback((event) => {
-        event.nativeEvent.audioMenuClosePrevented = true;
+    const onAudioButtonMouseDown = useCallback((event: React.MouseEvent) => {
+        (event.nativeEvent as typeof event.nativeEvent & { audioMenuClosePrevented?: boolean }).audioMenuClosePrevented = true;
     }, []);
-    const onSpeedButtonMouseDown = React.useCallback((event) => {
-        event.nativeEvent.speedMenuClosePrevented = true;
+    const onSpeedButtonMouseDown = useCallback((event: React.MouseEvent) => {
+        (event.nativeEvent as typeof event.nativeEvent & { speedMenuClosePrevented?: boolean }).speedMenuClosePrevented = true;
     }, []);
-    const onVideosButtonMouseDown = React.useCallback((event) => {
-        event.nativeEvent.videosMenuClosePrevented = true;
+    const onVideosButtonMouseDown = useCallback((event: React.MouseEvent) => {
+        (event.nativeEvent as typeof event.nativeEvent & { videosMenuClosePrevented?: boolean }).videosMenuClosePrevented = true;
     }, []);
-    const onOptionsButtonMouseDown = React.useCallback((event) => {
-        event.nativeEvent.optionsMenuClosePrevented = true;
+    const onOptionsButtonMouseDown = useCallback((event: React.MouseEvent) => {
+        (event.nativeEvent as typeof event.nativeEvent & { optionsMenuClosePrevented?: boolean }).optionsMenuClosePrevented = true;
     }, []);
-    const onStatisticsButtonMouseDown = React.useCallback((event) => {
-        event.nativeEvent.statisticsMenuClosePrevented = true;
+    const onStatisticsButtonMouseDown = useCallback((event: React.MouseEvent) => {
+        (event.nativeEvent as typeof event.nativeEvent & { statisticsMenuClosePrevented?: boolean }).statisticsMenuClosePrevented = true;
     }, []);
-    const onPlayPauseButtonClick = React.useCallback(() => {
+    const onPlayPauseButtonClick = useCallback(() => {
         if (paused) {
             if (typeof onPlayRequested === 'function') {
                 onPlayRequested();
@@ -76,12 +122,12 @@ const ControlBar = React.forwardRef(({
             }
         }
     }, [paused, onPlayRequested, onPauseRequested]);
-    const onNextVideoButtonClick = React.useCallback(() => {
+    const onNextVideoButtonClick = useCallback(() => {
         if (nextVideo !== null && typeof onNextVideoRequested === 'function') {
             onNextVideoRequested();
         }
     }, [nextVideo, onNextVideoRequested]);
-    const onMuteButtonClick = React.useCallback(() => {
+    const onMuteButtonClick = useCallback(() => {
         if (muted) {
             if (typeof onUnmuteRequested === 'function') {
                 onUnmuteRequested();
@@ -92,10 +138,10 @@ const ControlBar = React.forwardRef(({
             }
         }
     }, [muted, onMuteRequested, onUnmuteRequested]);
-    const onChromecastButtonClick = React.useCallback(() => {
+    const onChromecastButtonClick = useCallback(() => {
         chromecast.transport.requestSession();
-    }, []);
-    React.useEffect(() => {
+    }, [chromecast]);
+    useEffect(() => {
         const onStateChanged = () => {
             setChromecastServiceActive(chromecast.active);
         };
@@ -103,9 +149,16 @@ const ControlBar = React.forwardRef(({
         return () => {
             chromecast.off('stateChanged', onStateChanged);
         };
-    }, []);
+    }, [chromecast]);
     return (
-        <div ref={ref} {...props} onTouchStart={props.onMouseOver} onTouchMove={props.onMouseMove} onTouchEnd={onTouchEnd} className={classnames(className, styles['control-bar-container'])}>
+        <div
+            ref={ref}
+            {...props}
+            onTouchStart={props.onMouseOver as React.TouchEventHandler<HTMLDivElement> | undefined}
+            onTouchMove={props.onMouseMove as React.TouchEventHandler<HTMLDivElement> | undefined}
+            onTouchEnd={onTouchEnd}
+            className={classnames(className, styles['control-bar-container'])}
+        >
             <SeekBar
                 className={styles['seek-bar']}
                 time={time}
@@ -131,10 +184,10 @@ const ControlBar = React.forwardRef(({
                         className={styles['icon']}
                         name={
                             (typeof muted === 'boolean' && muted) ? 'volume-mute' :
-                                (volume === null || isNaN(volume)) ? 'volume-off' :
+                                (volume === null || isNaN(volume as number)) ? 'volume-off' :
                                     volume === 0 ? 'volume-mute' :
-                                        volume < 30 ? 'volume-low' :
-                                            volume < 70 ? 'volume-medium' :
+                                        (volume as number) < 30 ? 'volume-low' :
+                                            (volume as number) < 70 ? 'volume-medium' :
                                                 'volume-high'
                         }
                     />
@@ -154,7 +207,7 @@ const ControlBar = React.forwardRef(({
                     <Icon className={styles['icon']} name={'more-vertical'} />
                 </Button>
                 <div className={classnames(styles['control-bar-buttons-menu-container'], { 'open': buttonsMenuOpen })}>
-                    <Button className={classnames(styles['control-bar-button'], { 'disabled': statistics === null || statistics.type === 'Err' || stream === null || typeof stream.infoHash !== 'string' || typeof stream.fileIdx !== 'number' })} tabIndex={-1} onMouseDown={onStatisticsButtonMouseDown} onClick={onToggleStatisticsMenu}>
+                    <Button className={classnames(styles['control-bar-button'], { 'disabled': statistics === null || statistics === undefined || statistics.type === 'Err' || stream === null || stream === undefined || typeof stream.infoHash !== 'string' || typeof stream.fileIdx !== 'number' })} tabIndex={-1} onMouseDown={onStatisticsButtonMouseDown} onClick={onToggleStatisticsMenu}>
                         <Icon className={styles['icon']} name={'network'} />
                     </Button>
                     <Button className={classnames(styles['control-bar-button'], { 'disabled': playbackSpeed === null })} tabIndex={-1} onMouseDown={onSpeedButtonMouseDown} onClick={onToggleSpeedMenu}>
@@ -170,7 +223,7 @@ const ControlBar = React.forwardRef(({
                         <Icon className={styles['icon']} name={'audio-tracks'} />
                     </Button>
                     {
-                        metaItem?.content?.videos?.length > 0 ?
+                        (metaItem?.content?.videos?.length ?? 0) > 0 ?
                             <Button className={styles['control-bar-button']} tabIndex={-1} onMouseDown={onVideosButtonMouseDown} onClick={onToggleSideDrawer}>
                                 <Icon className={styles['icon']} name={'episodes'} />
                             </Button>
@@ -186,37 +239,6 @@ const ControlBar = React.forwardRef(({
     );
 });
 
-ControlBar.propTypes = {
-    className: PropTypes.string,
-    paused: PropTypes.bool,
-    time: PropTypes.number,
-    duration: PropTypes.number,
-    buffered: PropTypes.number,
-    volume: PropTypes.number,
-    muted: PropTypes.bool,
-    playbackSpeed: PropTypes.number,
-    subtitlesTracks: PropTypes.array,
-    audioTracks: PropTypes.array,
-    metaItem: PropTypes.object,
-    nextVideo: PropTypes.object,
-    stream: PropTypes.object,
-    statistics: PropTypes.object,
-    onPlayRequested: PropTypes.func,
-    onPauseRequested: PropTypes.func,
-    onNextVideoRequested: PropTypes.func,
-    onMuteRequested: PropTypes.func,
-    onUnmuteRequested: PropTypes.func,
-    onVolumeChangeRequested: PropTypes.func,
-    onSeekRequested: PropTypes.func,
-    onToggleSubtitlesMenu: PropTypes.func,
-    onToggleAudioMenu: PropTypes.func,
-    onToggleSpeedMenu: PropTypes.func,
-    onToggleSideDrawer: PropTypes.func,
-    onToggleOptionsMenu: PropTypes.func,
-    onToggleStatisticsMenu: PropTypes.func,
-    onMouseOver: PropTypes.func,
-    onMouseMove: PropTypes.func,
-    onTouchEnd: PropTypes.func,
-};
+ControlBar.displayName = 'ControlBar';
 
-module.exports = ControlBar;
+export default ControlBar;

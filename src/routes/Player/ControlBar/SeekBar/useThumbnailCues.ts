@@ -1,16 +1,13 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
-const React = require('react');
-const { parseThumbnailVtt } = require('./parseThumbnailVtt');
+import { useEffect, useState } from 'react';
+import { parseThumbnailVtt, type ThumbnailCue } from './parseThumbnailVtt';
 
-/**
- * @param {string | null | undefined} vttUrl
- */
-function useThumbnailCues(vttUrl) {
-    const [cues, setCues] = React.useState(() => []);
-    const [error, setError] = React.useState(() => /** @type {Error | null} */ (null));
+function useThumbnailCues(vttUrl: string | null | undefined): { cues: ThumbnailCue[], error: Error | null } {
+    const [cues, setCues] = useState<ThumbnailCue[]>([]);
+    const [error, setError] = useState<Error | null>(null);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (typeof vttUrl !== 'string' || vttUrl.length === 0) {
             setCues([]);
             setError(null);
@@ -33,7 +30,7 @@ function useThumbnailCues(vttUrl) {
                 }
                 setCues(parseThumbnailVtt(text));
             })
-            .catch((e) => {
+            .catch((e: unknown) => {
                 if (cancelled) {
                     return;
                 }
@@ -49,4 +46,4 @@ function useThumbnailCues(vttUrl) {
     return { cues, error };
 }
 
-module.exports = useThumbnailCues;
+export default useThumbnailCues;

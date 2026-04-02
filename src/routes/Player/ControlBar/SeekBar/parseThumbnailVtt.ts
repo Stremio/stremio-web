@@ -1,10 +1,16 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
-/**
- * @param {string} t
- * @returns {number}
- */
-function parseVttTimestamp(t) {
+export type ThumbnailCue = {
+    start: number,
+    end: number,
+    url: string,
+    x: number,
+    y: number,
+    w: number,
+    h: number,
+};
+
+function parseVttTimestamp(t: string): number {
     const parts = t.trim().split(':');
     if (parts.length < 3) {
         return 0;
@@ -18,12 +24,8 @@ function parseVttTimestamp(t) {
     return h * 3600 + m * 60 + sec;
 }
 
-/**
- * @param {string} text
- * @returns {Array<{ start: number, end: number, url: string, x: number, y: number, w: number, h: number }>}
- */
-function parseThumbnailVtt(text) {
-    const cues = [];
+function parseThumbnailVtt(text: string): ThumbnailCue[] {
+    const cues: ThumbnailCue[] = [];
     const normalized = text.replace(/^\uFEFF/, '').replace(/\r\n/g, '\n').replace(/\r/g, '\n');
     const blocks = normalized.split(/\n\n+/);
 
@@ -77,12 +79,7 @@ function parseThumbnailVtt(text) {
     return cues;
 }
 
-/**
- * @param {Array<{ start: number, end: number, url: string, x: number, y: number, w: number, h: number }>} cues
- * @param {number} time
- * @returns {{ start: number, end: number, url: string, x: number, y: number, w: number, h: number } | null}
- */
-function findThumbnailCue(cues, time) {
+function findThumbnailCue(cues: ThumbnailCue[], time: number): ThumbnailCue | null {
     if (cues.length === 0) {
         return null;
     }
@@ -101,7 +98,4 @@ function findThumbnailCue(cues, time) {
     return null;
 }
 
-module.exports = {
-    parseThumbnailVtt,
-    findThumbnailCue,
-};
+export { parseThumbnailVtt, findThumbnailCue };

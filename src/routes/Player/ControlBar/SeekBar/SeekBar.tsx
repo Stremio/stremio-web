@@ -1,54 +1,68 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
-const React = require('react');
-const { createPortal } = require('react-dom');
-const PropTypes = require('prop-types');
-const classnames = require('classnames');
-const debounce = require('lodash.debounce');
-const { useRouteFocused } = require('stremio-router');
-const { useBinaryState } = require('stremio/common');
-const { Button, Slider } = require('stremio/components');
-const formatTime = require('./formatTime');
-const { findThumbnailCue } = require('./parseThumbnailVtt');
-const useThumbnailCues = require('./useThumbnailCues');
-const styles = require('./styles');
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
+import classnames from 'classnames';
+import debounce from 'lodash.debounce';
+import { useRouteFocused } from 'stremio-router';
+import { useBinaryState } from 'stremio/common';
+import { Button, Slider } from 'stremio/components';
+import formatTime = require('./formatTime');
+import { findThumbnailCue, type ThumbnailCue } from './parseThumbnailVtt';
+import useThumbnailCues from './useThumbnailCues';
+import styles from './styles.less';
 
 const PREVIEW_EXIT_MS = 180;
 const PREVIEW_MAX_WIDTH_PX = 200;
 const PREVIEW_MAX_HEIGHT_PX = 135;
 
-const SeekBar = ({ className, time, duration, buffered, thumbnailsVttUrl, onSeekRequested }) => {
-    const disabled = time === null || isNaN(time) || duration === null || isNaN(duration);
+type PreviewState = {
+    timeMs: number,
+    clientX: number,
+    clientY: number,
+};
+
+type Props = {
+    className?: string,
+    time?: number | null,
+    duration?: number | null,
+    buffered?: number | null,
+    thumbnailsVttUrl?: string | null,
+    onSeekRequested?: (time: number) => void,
+};
+
+const SeekBar = ({ className, time, duration, buffered, thumbnailsVttUrl, onSeekRequested }: Props) => {
+    const disabled = time === null || isNaN(time as number) || duration === null || isNaN(duration as number);
     const routeFocused = useRouteFocused();
-    const [seekTime, setSeekTime] = React.useState(null);
-    const [preview, setPreview] = React.useState(null);
-    const [previewUiVisible, setPreviewUiVisible] = React.useState(false);
-    const previewDismissTimerRef = React.useRef(null);
-    const prevPreviewRef = React.useRef(null);
-    const seekTrackRef = React.useRef(null);
-    const [spriteSize, setSpriteSize] = React.useState({ width: 0, height: 0 });
+    const [seekTime, setSeekTime] = useState<number | null>(null);
+    const [preview, setPreview] = useState<PreviewState | null>(null);
+    const [previewUiVisible, setPreviewUiVisible] = useState(false);
+    const previewDismissTimerRef = useRef<number | null>(null);
+    const prevPreviewRef = useRef<PreviewState | null>(null);
+    const seekTrackRef = useRef<HTMLDivElement>(null);
+    const [spriteSize, setSpriteSize] = useState({ width: 0, height: 0 });
 
     const { cues } = useThumbnailCues(
         typeof thumbnailsVttUrl === 'string' && thumbnailsVttUrl.length > 0 ? thumbnailsVttUrl : null
     );
 
     const [remainingTimeMode,,, toggleRemainingTimeMode] = useBinaryState(false);
-    const resetTimeDebounced = React.useCallback(debounce(() => {
+    const resetTimeDebounced = useCallback(debounce(() => {
         setSeekTime(null);
     }, 1500), []);
-    const onSlide = React.useCallback((time) => {
+    const onSlide = useCallback((t: number) => {
         resetTimeDebounced.cancel();
-        setSeekTime(time);
-    }, []);
-    const onComplete = React.useCallback((time) => {
+        setSeekTime(t);
+    }, [resetTimeDebounced]);
+    const onComplete = useCallback((t: number) => {
         resetTimeDebounced();
-        setSeekTime(time);
+        setSeekTime(t);
         if (typeof onSeekRequested === 'function') {
-            onSeekRequested(time);
+            onSeekRequested(t);
         }
-    }, [onSeekRequested]);
+    }, [onSeekRequested, resetTimeDebounced]);
 
-    const onPreviewTimeChange = React.useCallback((timeMs, clientX, clientY) => {
+    const onPreviewTimeChange = useCallback((timeMs: number | null, clientX: number | null, clientY: number | null | undefined) => {
         if (timeMs === null || clientX === null) {
             if (previewDismissTimerRef.current !== null) {
                 clearTimeout(previewDismissTimerRef.current);
@@ -66,10 +80,10 @@ const SeekBar = ({ className, time, duration, buffered, thumbnailsVttUrl, onSeek
             clearTimeout(previewDismissTimerRef.current);
             previewDismissTimerRef.current = null;
         }
-        setPreview({ timeMs, clientX, clientY });
+        setPreview({ timeMs, clientX, clientY: clientY ?? 0 });
     }, []);
 
-    React.useLayoutEffect(() => {
+    useLayoutEffect(() => {
         if (preview === null) {
             setPreviewUiVisible(false);
             prevPreviewRef.current = null;
@@ -98,7 +112,7 @@ const SeekBar = ({ className, time, duration, buffered, thumbnailsVttUrl, onSeek
         setPreviewUiVisible(true);
     }, [preview]);
 
-    const previewCue = React.useMemo(() => {
+    const previewCue = useMemo((): ThumbnailCue | null => {
         if (preview === null || cues.length === 0) {
             return null;
         }
@@ -107,7 +121,7 @@ const SeekBar = ({ className, time, duration, buffered, thumbnailsVttUrl, onSeek
         return findThumbnailCue(cues, tSec);
     }, [preview, cues]);
 
-    const resolvedImageUrl = React.useMemo(() => {
+    const resolvedImageUrl = useMemo(() => {
         if (previewCue === null || typeof thumbnailsVttUrl !== 'string') {
             return null;
         }
@@ -119,7 +133,7 @@ const SeekBar = ({ className, time, duration, buffered, thumbnailsVttUrl, onSeek
         }
     }, [previewCue, thumbnailsVttUrl]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (resolvedImageUrl === null) {
             setSpriteSize({ width: 0, height: 0 });
             return;
@@ -135,7 +149,7 @@ const SeekBar = ({ className, time, duration, buffered, thumbnailsVttUrl, onSeek
         img.src = resolvedImageUrl;
     }, [resolvedImageUrl]);
 
-    React.useLayoutEffect(() => {
+    useLayoutEffect(() => {
         if (!routeFocused || disabled) {
             resetTimeDebounced.cancel();
             setSeekTime(null);
@@ -146,22 +160,22 @@ const SeekBar = ({ className, time, duration, buffered, thumbnailsVttUrl, onSeek
             }
             setPreview(null);
         }
-    }, [routeFocused, disabled]);
-    React.useEffect(() => {
+    }, [routeFocused, disabled, resetTimeDebounced]);
+    useEffect(() => {
         return () => {
             resetTimeDebounced.cancel();
             if (previewDismissTimerRef.current !== null) {
                 clearTimeout(previewDismissTimerRef.current);
             }
         };
-    }, []);
+    }, [resetTimeDebounced]);
 
     const hasThumbnailsVttUrl = typeof thumbnailsVttUrl === 'string' && thumbnailsVttUrl.length > 0;
     const showImagePreview = hasThumbnailsVttUrl && preview !== null && previewCue !== null && resolvedImageUrl !== null && spriteSize.width > 0;
     const showTimeOnlyPreview = preview !== null && !showImagePreview;
 
-    let previewBubble = null;
-    const buildPortalStyle = () => {
+    let previewBubble: React.ReactPortal | null = null;
+    const buildPortalStyle = (): React.CSSProperties | null => {
         if (preview === null || typeof document === 'undefined') {
             return null;
         }
@@ -190,7 +204,7 @@ const SeekBar = ({ className, time, duration, buffered, thumbnailsVttUrl, onSeek
         [styles['seek-preview-card-visible']]: previewUiVisible,
     });
 
-    if (showImagePreview && portalStyle !== null) {
+    if (showImagePreview && portalStyle !== null && previewCue !== null && resolvedImageUrl !== null) {
         const rawW = previewCue.w > 0 ? previewCue.w : Math.min(160, spriteSize.width);
         const rawH = previewCue.h > 0 ? previewCue.h : Math.min(90, spriteSize.height);
         const previewScale = Math.min(
@@ -258,7 +272,7 @@ const SeekBar = ({ className, time, duration, buffered, thumbnailsVttUrl, onSeek
                     }
                     buffered={buffered}
                     minimumValue={0}
-                    maximumValue={duration}
+                    maximumValue={duration ?? 0}
                     disabled={disabled}
                     onSlide={onSlide}
                     onComplete={onComplete}
@@ -267,22 +281,13 @@ const SeekBar = ({ className, time, duration, buffered, thumbnailsVttUrl, onSeek
             </div>
             <Button onClick={toggleRemainingTimeMode} tabIndex={-1}>
                 <div className={styles['label']}>
-                    {remainingTimeMode && duration !== null && !isNaN(duration)
+                    {remainingTimeMode && typeof duration === 'number' && !isNaN(duration) && typeof time === 'number'
                         ? formatTime(duration - time, '-')
-                        : formatTime(duration) }
+                        : formatTime(duration ?? null) }
                 </div>
             </Button>
         </div>
     );
 };
 
-SeekBar.propTypes = {
-    className: PropTypes.string,
-    time: PropTypes.number,
-    duration: PropTypes.number,
-    buffered: PropTypes.number,
-    thumbnailsVttUrl: PropTypes.string,
-    onSeekRequested: PropTypes.func
-};
-
-module.exports = SeekBar;
+export default SeekBar;
