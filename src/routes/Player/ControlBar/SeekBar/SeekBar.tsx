@@ -7,7 +7,7 @@ import debounce from 'lodash.debounce';
 import { useRouteFocused } from 'stremio-router';
 import { useBinaryState } from 'stremio/common';
 import { Button, Slider } from 'stremio/components';
-import formatTime = require('./formatTime');
+import formatTime from './formatTime';
 import { findThumbnailCue, type ThumbnailCue } from './parseThumbnailVtt';
 import useThumbnailCues from './useThumbnailCues';
 import styles from './styles.less';
@@ -265,7 +265,7 @@ const SeekBar = ({ className, time, duration, buffered, thumbnailsVttUrl, onSeek
 
     return (
         <div className={classnames(className, styles['seek-bar-container'], { 'active': seekTime !== null })}>
-            <div className={styles['label']}>{formatTime(seekTime !== null ? seekTime : time)}</div>
+            <div className={styles['label']}>{formatTime(seekTime !== null ? seekTime : (time ?? null))}</div>
             <div ref={seekTrackRef} className={styles['seek-bar-track']}>
                 {previewBubble}
                 <Slider
