@@ -109,7 +109,7 @@
             gap: 1rem;
         }
 
-        .install-button-container, .configure-button-container, .uninstall-button-container, .share-button-container {
+        .install-button-container, .configure-button-container, .update-button-container, .uninstall-button-container, .share-button-container {
             flex: auto;
             display: flex;
             flex-direction: row;
@@ -150,9 +150,13 @@
             }
         }
 
-        .configure-button-container {
+        .configure-button-container, .update-button-container {
             flex: none;
+            width: 3.5rem;
+            min-width: 3.5rem;
+            padding: 0;
             background-color: var(--secondary-accent-color);
+            border-radius: 50%;
 
             &:hover {
                 outline: var(--focus-outline-size) solid var(--secondary-accent-color);
