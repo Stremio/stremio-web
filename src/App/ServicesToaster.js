@@ -1,15 +1,28 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 const React = require('react');
+const { useTranslation } = require('react-i18next');
 const { useServices } = require('stremio/services');
 const { useToast } = require('stremio/common');
 
 const ServicesToaster = () => {
+    const { t } = useTranslation();
     const { core, dragAndDrop } = useServices();
     const toast = useToast();
     React.useEffect(() => {
         const onCoreEvent = ({ event, args }) => {
             switch (event) {
+                case 'AddonUpgraded': {
+                    toast.show({
+                        type: 'success',
+                        title: t('ADDON_UPDATE_SUCCESS', { defaultValue: 'Addon updated' }),
+                        timeout: 4000,
+                        dataset: {
+                            type: 'CoreEvent'
+                        }
+                    });
+                    break;
+                }
                 case 'Error': {
                     if (args.source.event === 'UserPulledFromAPI' && args.source.args.uid === null) {
                         break;
@@ -20,6 +33,18 @@ const ServicesToaster = () => {
                     }
 
                     if (args.error.type === 'Other' && args.error.code === 3 && args.source.event === 'AddonInstalled' && args.source.args.transport_url.startsWith('https://www.strem.io/trakt/addon')) {
+                        break;
+                    }
+
+                    if (args.error.type === 'Other' && args.error.code === 3 && args.source.event === 'AddonUpgraded') {
+                        toast.show({
+                            type: 'success',
+                            title: t('ADDON_UPDATE_UPTODATE', { defaultValue: 'Addon is already up to date' }),
+                            timeout: 4000,
+                            dataset: {
+                                type: 'CoreEvent'
+                            }
+                        });
                         break;
                     }
 
@@ -74,7 +99,7 @@ const ServicesToaster = () => {
             core.transport.off('CoreEvent', onCoreEvent);
             dragAndDrop.off('error', onDragAndDropError);
         };
-    }, []);
+    }, [t]);
     return null;
 };
 
