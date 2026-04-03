@@ -53,7 +53,6 @@
         "@stylistic/eslint-plugin": "^5.4.0",
         "@stylistic/eslint-plugin-jsx": "^4.4.1",
         "@types/hat": "^0.0.4",
-        "@types/lodash.debounce": "^4.0.9",
         "@types/lodash.throttle": "^4.1.9",
         "@types/react": "^18.3.13",
         "@types/react-dom": "^18.3.1",
