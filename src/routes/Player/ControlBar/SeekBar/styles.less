@@ -70,8 +70,6 @@
     box-shadow: @seek-preview-shadow;
 }
 
-// Triângulo em border tem largura visual 2×arrow-size; não usar translateX(-50%)
-// porque % refere-se à largura do próprio nó (0px) e a seta fica descentrada.
 .seek-preview-caret {
     position: absolute;
     bottom: calc(-1 * @seek-preview-arrow-size);
