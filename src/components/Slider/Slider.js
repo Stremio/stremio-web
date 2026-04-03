@@ -1,79 +1,36 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
-import React, { useCallback, useLayoutEffect, useRef } from 'react';
-import classnames from 'classnames';
-import { useRouteFocused } from 'stremio-router';
-import useAnimationFrame from 'stremio/common/useAnimationFrame';
-import useLiveRef from 'stremio/common/useLiveRef';
-import styles from './styles.less';
+const React = require('react');
+const PropTypes = require('prop-types');
+const classnames = require('classnames');
+const { useRouteFocused } = require('stremio-router');
+const useAnimationFrame = require('stremio/common/useAnimationFrame');
+const useLiveRef = require('stremio/common/useLiveRef');
+const styles = require('./styles');
 
-export type PreviewTimeChangeHandler = (
-    timeMs: number | null,
-    clientX: number | null,
-    clientY: number | null | undefined
-) => void;
-
-type Props = {
-    className?: string,
-    value?: number | null,
-    buffered?: number | null,
-    minimumValue?: number | null,
-    maximumValue?: number | null,
-    disabled?: boolean,
-    onSlide?: (value: number) => void,
-    onComplete?: (value: number) => void,
-    onPreviewTimeChange?: PreviewTimeChangeHandler,
-    audioBoost?: boolean,
-};
-
-const Slider = ({
-    className,
-    value,
-    buffered,
-    minimumValue,
-    maximumValue,
-    disabled,
-    onSlide,
-    onComplete,
-    onPreviewTimeChange,
-    audioBoost,
-}: Props) => {
-    const minimumValueRef = useLiveRef(
-        minimumValue !== null && minimumValue !== undefined && !isNaN(minimumValue) ? minimumValue : 0
-    );
-    const maximumValueRef = useLiveRef(
-        maximumValue !== null && maximumValue !== undefined && !isNaN(maximumValue) ? maximumValue : 100
-    );
-    const valueRef = useLiveRef(
-        value !== null && value !== undefined && !isNaN(value) ?
-            Math.min(maximumValueRef.current, Math.max(minimumValueRef.current, value))
-            :
-            0
-    );
-    const bufferedRef = useLiveRef(
-        buffered !== null && buffered !== undefined && !isNaN(buffered) ?
-            Math.min(maximumValueRef.current, Math.max(minimumValueRef.current, buffered))
-            :
-            0
-    );
+const Slider = ({ className, value, buffered, minimumValue, maximumValue, disabled, onSlide, onComplete, onPreviewTimeChange, audioBoost }) => {
+    const minimumValueRef = useLiveRef(minimumValue !== null && !isNaN(minimumValue) ? minimumValue : 0);
+    const maximumValueRef = useLiveRef(maximumValue !== null && !isNaN(maximumValue) ? maximumValue : 100);
+    const valueRef = useLiveRef(value !== null && !isNaN(value) ? Math.min(maximumValueRef.current, Math.max(minimumValueRef.current, value)) : 0);
+    const bufferedRef = useLiveRef(buffered !== null && !isNaN(buffered) ? Math.min(maximumValueRef.current, Math.max(minimumValueRef.current, buffered)) : 0);
     const onSlideRef = useLiveRef(onSlide);
     const onCompleteRef = useLiveRef(onComplete);
     const onPreviewTimeChangeRef = useLiveRef(onPreviewTimeChange);
-    const sliderContainerRef = useRef<HTMLDivElement>(null);
-    const isDraggingRef = useRef(false);
+    const sliderContainerRef = React.useRef(null);
+    const isDraggingRef = React.useRef(false);
     const routeFocused = useRouteFocused();
     const [requestThumbAnimation, cancelThumbAnimation] = useAnimationFrame();
-    const calculateValueForMouseX = useCallback((mouseX: number) => {
+    const calculateValueForMouseX = React.useCallback((mouseX) => {
         if (sliderContainerRef.current === null) {
             return 0;
         }
 
         const { x: sliderX, width: sliderWidth } = sliderContainerRef.current.getBoundingClientRect();
         const thumbStart = Math.min(Math.max(mouseX - sliderX, 0), sliderWidth);
-        const calculated = (thumbStart / sliderWidth) * (maximumValueRef.current - minimumValueRef.current) + minimumValueRef.current;
-        return calculated;
+        const value = (thumbStart / sliderWidth) * (maximumValueRef.current - minimumValueRef.current) + minimumValueRef.current;
+        return value;
     }, []);
-    const retainThumb = useCallback(() => {
+    const retainThumb = React.useCallback(() => {
         isDraggingRef.current = true;
         window.addEventListener('blur', onBlur);
         window.addEventListener('mouseup', onMouseUp);
@@ -82,7 +39,7 @@ const Slider = ({
         window.addEventListener('touchmove', onTouchMove);
         document.documentElement.className = classnames(document.documentElement.className, styles['active-slider-within']);
     }, []);
-    const releaseThumb = useCallback(() => {
+    const releaseThumb = React.useCallback(() => {
         cancelThumbAnimation();
         window.removeEventListener('blur', onBlur);
         window.removeEventListener('mouseup', onMouseUp);
@@ -97,7 +54,7 @@ const Slider = ({
             document.documentElement.className = classnames(classList);
         }
     }, []);
-    const onBlur = useCallback(() => {
+    const onBlur = React.useCallback(() => {
         if (typeof onSlideRef.current === 'function') {
             onSlideRef.current(valueRef.current);
         }
@@ -111,10 +68,10 @@ const Slider = ({
             onPreviewTimeChangeRef.current(null, null, null);
         }
     }, []);
-    const onMouseUp = useCallback((event: MouseEvent) => {
-        const newValue = calculateValueForMouseX(event.clientX);
+    const onMouseUp = React.useCallback((event) => {
+        const value = calculateValueForMouseX(event.clientX);
         if (typeof onCompleteRef.current === 'function') {
-            onCompleteRef.current(newValue);
+            onCompleteRef.current(value);
         }
 
         releaseThumb();
@@ -128,58 +85,58 @@ const Slider = ({
             }
         }
     }, []);
-    const onMouseMove = useCallback((event: MouseEvent) => {
+    const onMouseMove = React.useCallback((event) => {
         requestThumbAnimation(() => {
-            const newValue = calculateValueForMouseX(event.clientX);
+            const value = calculateValueForMouseX(event.clientX);
             if (typeof onSlideRef.current === 'function') {
-                onSlideRef.current(newValue);
+                onSlideRef.current(value);
             }
             if (typeof onPreviewTimeChangeRef.current === 'function') {
-                onPreviewTimeChangeRef.current(newValue, event.clientX, event.clientY);
+                onPreviewTimeChangeRef.current(value, event.clientX, event.clientY);
             }
         });
     }, []);
-    const onMouseDown = useCallback((event: React.MouseEvent) => {
+    const onMouseDown = React.useCallback((event) => {
         if (event.button !== 0) {
             return;
         }
 
-        const newValue = calculateValueForMouseX(event.clientX);
+        const value = calculateValueForMouseX(event.clientX);
         if (typeof onSlideRef.current === 'function') {
-            onSlideRef.current(newValue);
+            onSlideRef.current(value);
         }
 
         retainThumb();
     }, []);
-    const onTouchStart = useCallback((event: React.TouchEvent) => {
+    const onTouchStart = React.useCallback((event) => {
         const touch = event.touches[0];
-        const newValue = calculateValueForMouseX(touch.clientX);
+        const value = calculateValueForMouseX(touch.clientX);
         if (typeof onSlideRef.current === 'function') {
-            onSlideRef.current(newValue);
+            onSlideRef.current(value);
         }
 
         retainThumb();
         event.preventDefault();
     }, []);
-    const onTouchMove = useCallback((event: TouchEvent) => {
+    const onTouchMove = React.useCallback((event) => {
         requestThumbAnimation(() => {
             const touch = event.touches[0];
-            const newValue = calculateValueForMouseX(touch.clientX);
+            const value = calculateValueForMouseX(touch.clientX);
             if (typeof onSlideRef.current === 'function') {
-                onSlideRef.current(newValue);
+                onSlideRef.current(value);
             }
             if (typeof onPreviewTimeChangeRef.current === 'function') {
-                onPreviewTimeChangeRef.current(newValue, touch.clientX, touch.clientY);
+                onPreviewTimeChangeRef.current(value, touch.clientX, touch.clientY);
             }
         });
 
         event.preventDefault();
     }, []);
-    const onTouchEnd = useCallback((event: TouchEvent) => {
+    const onTouchEnd = React.useCallback((event) => {
         const touch = event.changedTouches[0];
-        const newValue = calculateValueForMouseX(touch.clientX);
+        const value = calculateValueForMouseX(touch.clientX);
         if (typeof onCompleteRef.current === 'function') {
-            onCompleteRef.current(newValue);
+            onCompleteRef.current(value);
         }
 
         releaseThumb();
@@ -194,20 +151,20 @@ const Slider = ({
             }
         }
     }, []);
-    const onContainerHoverMove = useCallback((clientX: number, clientY: number) => {
+    const onContainerHoverMove = React.useCallback((clientX, clientY) => {
         if (disabled || isDraggingRef.current) {
             return;
         }
 
-        const newValue = calculateValueForMouseX(clientX);
+        const value = calculateValueForMouseX(clientX);
         if (typeof onPreviewTimeChangeRef.current === 'function') {
-            onPreviewTimeChangeRef.current(newValue, clientX, clientY);
+            onPreviewTimeChangeRef.current(value, clientX, clientY);
         }
     }, [disabled, calculateValueForMouseX]);
-    const onContainerMouseMove = useCallback((event: React.MouseEvent) => {
+    const onContainerMouseMove = React.useCallback((event) => {
         onContainerHoverMove(event.clientX, event.clientY);
     }, [onContainerHoverMove]);
-    const onContainerPointerMove = useCallback((event: React.PointerEvent) => {
+    const onContainerPointerMove = React.useCallback((event) => {
         if (event.pointerType === 'touch') {
             return;
         }
@@ -215,7 +172,7 @@ const Slider = ({
         onContainerHoverMove(event.clientX, event.clientY);
     }, [onContainerHoverMove]);
     const pointerHoverForPreview = typeof window !== 'undefined' && typeof window.PointerEvent === 'function';
-    const onContainerMouseLeave = useCallback(() => {
+    const onContainerMouseLeave = React.useCallback(() => {
         if (isDraggingRef.current) {
             return;
         }
@@ -224,7 +181,7 @@ const Slider = ({
             onPreviewTimeChangeRef.current(null, null, null);
         }
     }, []);
-    useLayoutEffect(() => {
+    React.useLayoutEffect(() => {
         if (!routeFocused || disabled) {
             if (typeof onPreviewTimeChangeRef.current === 'function') {
                 onPreviewTimeChangeRef.current(null, null, null);
@@ -232,7 +189,7 @@ const Slider = ({
             releaseThumb();
         }
     }, [routeFocused, disabled]);
-    useLayoutEffect(() => {
+    React.useLayoutEffect(() => {
         return () => {
             releaseThumb();
         };
@@ -258,7 +215,7 @@ const Slider = ({
             <div className={styles['layer']}>
                 <div
                     className={classnames(styles['track-after'], { [styles['audio-boost']]: audioBoost })}
-                    style={{ '--mask-width': `calc(${thumbPosition.toFixed(3)} * 100%)` } as React.CSSProperties}
+                    style={{ '--mask-width': `calc(${thumbPosition.toFixed(3)} * 100%)` }}
                 />
             </div>
             <div className={styles['layer']}>
@@ -268,4 +225,17 @@ const Slider = ({
     );
 };
 
-export default Slider;
+Slider.propTypes = {
+    className: PropTypes.string,
+    value: PropTypes.number,
+    buffered: PropTypes.number,
+    minimumValue: PropTypes.number,
+    maximumValue: PropTypes.number,
+    disabled: PropTypes.bool,
+    onSlide: PropTypes.func,
+    onComplete: PropTypes.func,
+    onPreviewTimeChange: PropTypes.func,
+    audioBoost: PropTypes.bool
+};
+
+module.exports = Slider;
