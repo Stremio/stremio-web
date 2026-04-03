@@ -9,7 +9,8 @@ const { usePlatform, useBinaryState, withCoreSuspender } = require('stremio/comm
 const { AddonDetailsModal, Button, Image, MainNavBars, ModalDialog, SearchBar, SharePrompt, TextInput, MultiselectMenu } = require('stremio/components');
 const { useServices } = require('stremio/services');
 const useToast = require('stremio/common/Toast/useToast');
-const Addon = require('./Addon');
+const { default: Addon } = require('./Addon');
+const { updateAddonWithFreshManifest } = require('./updateAddon');
 const useInstalledAddons = require('./useInstalledAddons');
 const useRemoteAddons = require('./useRemoteAddons');
 const useAddonDetailsTransportUrl = require('./useAddonDetailsTransportUrl');
@@ -93,6 +94,18 @@ const Addons = ({ urlParams, queryParams }) => {
     const onAddonConfigure = React.useCallback((event) => {
         platform.openExternal(event.dataset.addon.transportUrl.replace('manifest.json', 'configure'));
     }, []);
+    const onAddonUpdate = React.useCallback(async (event) => {
+        try {
+            await updateAddonWithFreshManifest(core, event.dataset.addon);
+        } catch (error) {
+            toast.show({
+                type: 'error',
+                title: typeof error?.message === 'string' ? error.message : String(error),
+                timeout: 10000
+            });
+            console.error('Addon update failed:', error);
+        }
+    }, [core, toast]);
     const onAddonOpen = React.useCallback((event) => {
         setAddonDetailsTransportUrl(event.dataset.addon.transportUrl);
     }, [setAddonDetailsTransportUrl]);
@@ -171,6 +184,7 @@ const Addons = ({ urlParams, queryParams }) => {
                                                     onInstall={onAddonInstall}
                                                     onUninstall={onAddonUninstall}
                                                     onConfigure={onAddonConfigure}
+                                                    onUpdate={onAddonUpdate}
                                                     onOpen={onAddonOpen}
                                                     onShare={onAddonShare}
                                                     dataset={{ addon }}
