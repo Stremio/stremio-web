@@ -8,7 +8,7 @@ const { default: Icon } = require('@stremio/stremio-icons/react');
 const { Button, Image } = require('stremio/components');
 const styles = require('./styles');
 
-const Addon = ({ className, id, name, version, logo, description, types, behaviorHints, installed, onInstall, onUninstall, onConfigure, onUpdate, onOpen, onShare, dataset }) => {
+const Addon = ({ className, id, name, version, logo, description, types, behaviorHints, installed, onInstall, onUninstall, onConfigure, onOpen, onShare, dataset }) => {
     const { t } = useTranslation();
     const onInstallClick = React.useCallback((event) => {
         event.stopPropagation();
@@ -54,17 +54,6 @@ const Addon = ({ className, id, name, version, logo, description, types, behavio
             });
         }
     }, [onConfigure, dataset]);
-    const updateButtonOnClick = React.useCallback((event) => {
-        event.stopPropagation();
-        if (typeof onUpdate === 'function') {
-            onUpdate({
-                type: 'update',
-                nativeEvent: event.nativeEvent,
-                reactEvent: event,
-                dataset: dataset
-            });
-        }
-    }, [onUpdate, dataset]);
     const shareButtonOnClick = React.useCallback((event) => {
         event.stopPropagation();
         if (typeof onShare === 'function') {
@@ -84,11 +73,6 @@ const Addon = ({ className, id, name, version, logo, description, types, behavio
     const renderLogoFallback = React.useCallback(() => (
         <Icon className={styles['icon']} name={'addons'} />
     ), []);
-    const showConfigure =
-        !behaviorHints.configurationRequired && Boolean(behaviorHints.configurable);
-    const showUpdate =
-        installed && typeof onUpdate === 'function' && !behaviorHints.configurationRequired;
-
     return (
         <Button className={classnames(className, styles['addon-container'])} onKeyDown={onKeyDown} onClick={onOpenClick}>
             <div className={styles['logo-container']}>
@@ -131,26 +115,14 @@ const Addon = ({ className, id, name, version, logo, description, types, behavio
             </div>
             <div className={styles['buttons-container']}>
                 <div className={styles['action-buttons-container']}>
-                    {showConfigure ? (
-                        <Button
-                            className={styles['configure-button-container']}
-                            title={t('ADDON_CONFIGURE')}
-                            tabIndex={-1}
-                            onClick={configureButtonOnClick}
-                        >
-                            <Icon className={styles['icon']} name={'settings'} />
-                        </Button>
-                    ) : null}
-                    {showUpdate ? (
-                        <Button
-                            className={styles['update-button-container']}
-                            title={t('ADDON_UPDATE', { defaultValue: 'Update addon' })}
-                            tabIndex={-1}
-                            onClick={updateButtonOnClick}
-                        >
-                            <Icon className={styles['icon']} name={'reset'} />
-                        </Button>
-                    ) : null}
+                    {
+                        !behaviorHints.configurationRequired && behaviorHints.configurable ?
+                            <Button className={styles['configure-button-container']} title={t('ADDON_CONFIGURE')} tabIndex={-1} onClick={configureButtonOnClick}>
+                                <Icon className={styles['icon']} name={'settings'} />
+                            </Button>
+                            :
+                            null
+                    }
                     <Button
                         className={installed ? styles['uninstall-button-container'] : styles['install-button-container']}
                         title={installed ? t('ADDON_UNINSTALL') : behaviorHints.configurationRequired ? t('ADDON_CONFIGURE') : t('ADDON_INSTALL')}
@@ -188,7 +160,6 @@ Addon.propTypes = {
     onInstall: PropTypes.func,
     onUninstall: PropTypes.func,
     onConfigure: PropTypes.func,
-    onUpdate: PropTypes.func,
     onOpen: PropTypes.func,
     onShare: PropTypes.func,
     dataset: PropTypes.object
