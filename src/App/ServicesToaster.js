@@ -4,6 +4,7 @@ const React = require('react');
 const { useTranslation } = require('react-i18next');
 const { useServices } = require('stremio/services');
 const { useToast } = require('stremio/common');
+const { isBatchAddonUpdateEventsMuted } = require('stremio/common/batchAddonUpdateMute');
 
 const ServicesToaster = () => {
     const { t } = useTranslation();
@@ -13,6 +14,10 @@ const ServicesToaster = () => {
         const onCoreEvent = ({ event, args }) => {
             switch (event) {
                 case 'AddonUpgraded': {
+                    if (isBatchAddonUpdateEventsMuted()) {
+                        break;
+                    }
+
                     toast.show({
                         type: 'success',
                         title: t('ADDON_UPDATE_SUCCESS', { defaultValue: 'Addon updated' }),
@@ -37,6 +42,10 @@ const ServicesToaster = () => {
                     }
 
                     if (args.error.type === 'Other' && args.error.code === 3 && args.source.event === 'AddonUpgraded') {
+                        if (isBatchAddonUpdateEventsMuted()) {
+                            break;
+                        }
+
                         toast.show({
                             type: 'success',
                             title: t('ADDON_UPDATE_UPTODATE', { defaultValue: 'Addon is already up to date' }),
@@ -45,6 +54,10 @@ const ServicesToaster = () => {
                                 type: 'CoreEvent'
                             }
                         });
+                        break;
+                    }
+
+                    if (isBatchAddonUpdateEventsMuted() && args.source?.event === 'AddonUpgraded') {
                         break;
                     }
 

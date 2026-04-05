@@ -10,7 +10,7 @@ const { AddonDetailsModal, Button, Image, MainNavBars, ModalDialog, SearchBar, S
 const { useServices } = require('stremio/services');
 const useToast = require('stremio/common/Toast/useToast');
 const Addon = require('./Addon');
-const { updateAddonWithFreshManifest } = require('./updateAddon');
+const { runUpdateAllInstalledAddons } = require('./updateAllAddons');
 const useInstalledAddons = require('./useInstalledAddons');
 const useRemoteAddons = require('./useRemoteAddons');
 const useAddonDetailsTransportUrl = require('./useAddonDetailsTransportUrl');
@@ -94,18 +94,86 @@ const Addons = ({ urlParams, queryParams }) => {
     const onAddonConfigure = React.useCallback((event) => {
         platform.openExternal(event.dataset.addon.transportUrl.replace('manifest.json', 'configure'));
     }, []);
-    const onAddonUpdate = React.useCallback(async (event) => {
+    const [updateAllInProgress, setUpdateAllInProgress] = React.useState(false);
+    const updateAllRunningRef = React.useRef(false);
+    const isAddonBulkUpdatable = React.useCallback((addon) => {
+        if (addon.manifest?.behaviorHints?.configurationRequired) {
+            return false;
+        }
+        if (addon.flags?.protected) {
+            return false;
+        }
+        return true;
+    }, []);
+    const hasUpdatableInstalledAddons = React.useMemo(() => {
+        if (installedAddons.selected === null) {
+            return false;
+        }
+        return installedAddons.catalog.some(isAddonBulkUpdatable);
+    }, [installedAddons.selected, installedAddons.catalog, isAddonBulkUpdatable]);
+    const onUpdateAllAddons = React.useCallback(async () => {
+        if (installedAddons.selected === null || updateAllRunningRef.current || !hasUpdatableInstalledAddons) {
+            return;
+        }
+        const descriptors = installedAddons.catalog
+            .filter(isAddonBulkUpdatable)
+            .map((addon) => ({
+                transportUrl: addon.transportUrl,
+                manifest: addon.manifest,
+                flags: addon.flags ?? {}
+            }));
+        if (descriptors.length === 0) {
+            return;
+        }
+        updateAllRunningRef.current = true;
+        setUpdateAllInProgress(true);
         try {
-            await updateAddonWithFreshManifest(core, event.dataset.addon);
+            const { updated, upToDate, skippedProtected, failed, attempted } = await runUpdateAllInstalledAddons(core, descriptors);
+            const settledOk = upToDate + skippedProtected + updated;
+            if (updated > 0) {
+                toast.show({
+                    type: 'success',
+                    title: t('ADDONS_UPDATE_ALL_COUNT', {
+                        count: updated,
+                        defaultValue: '{{count}} addons updated'
+                    }),
+                    timeout: 5000,
+                    dataset: { type: 'CoreEvent' }
+                });
+            } else if (attempted > 0 && failed === 0 && settledOk === attempted) {
+                toast.show({
+                    type: 'success',
+                    title: t('ADDONS_UPDATE_ALL_UPTODATE', { defaultValue: 'All addons up to date' }),
+                    timeout: 5000,
+                    dataset: { type: 'CoreEvent' }
+                });
+            } else if (attempted > 0) {
+                toast.show({
+                    type: 'error',
+                    title: t('ADDONS_UPDATE_ALL_PARTIAL', { defaultValue: 'Some addons could not be updated' }),
+                    message: t('ADDONS_UPDATE_ALL_PARTIAL_DETAIL', {
+                        updated,
+                        upToDate,
+                        skippedProtected,
+                        failed,
+                        attempted,
+                        defaultValue: '{{attempted}} checked · updated: {{updated}} · up to date: {{upToDate}} · skipped (protected): {{skippedProtected}} · failed: {{failed}}'
+                    }),
+                    timeout: 8000,
+                    dataset: { type: 'CoreEvent' }
+                });
+            }
         } catch (error) {
             toast.show({
                 type: 'error',
                 title: typeof error?.message === 'string' ? error.message : String(error),
                 timeout: 10000
             });
-            console.error('Addon update failed:', error);
+        } finally {
+            updateAllRunningRef.current = false;
+            setUpdateAllInProgress(false);
         }
-    }, [core, toast]);
+    }, [core, toast, t, installedAddons.selected, installedAddons.catalog, hasUpdatableInstalledAddons, isAddonBulkUpdatable]);
     const onAddonOpen = React.useCallback((event) => {
         setAddonDetailsTransportUrl(event.dataset.addon.transportUrl);
     }, [setAddonDetailsTransportUrl]);
@@ -143,6 +211,20 @@ const Addons = ({ urlParams, queryParams }) => {
                         <Icon className={styles['icon']} name={'add'} />
                         <div className={styles['add-button-label']}>{t('ADD_ADDON')}</div>
                     </Button>
+                    {
+                        hasUpdatableInstalledAddons ?
+                            <Button
+                                className={styles['update-all-button-container']}
+                                title={t('ADDONS_UPDATE_ALL', { defaultValue: 'Update all' })}
+                                disabled={updateAllInProgress}
+                                onClick={onUpdateAllAddons}
+                            >
+                                <Icon className={styles['icon']} name={'reset'} />
+                                <div className={styles['update-all-button-label']}>{t('ADDONS_UPDATE_ALL', { defaultValue: 'Update all' })}</div>
+                            </Button>
+                            :
+                            null
+                    }
                     <SearchBar
                         className={styles['search-bar']}
                         title={t('ADDON_SEARCH')}
@@ -184,7 +266,6 @@ const Addons = ({ urlParams, queryParams }) => {
                                                     onInstall={onAddonInstall}
                                                     onUninstall={onAddonUninstall}
                                                     onConfigure={onAddonConfigure}
-                                                    onUpdate={onAddonUpdate}
                                                     onOpen={onAddonOpen}
                                                     onShare={onAddonShare}
                                                     dataset={{ addon }}
