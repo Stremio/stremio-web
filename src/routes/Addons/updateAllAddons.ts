@@ -17,13 +17,60 @@ type AddonUpgradedArgs = {
 type CoreEventPayload = {
     event: string;
     args: AddonUpgradedArgs & {
-        error?: { type?: string; code?: number };
+        error?: { type?: string; code?: number; message?: string };
         source?: {
             event?: string;
             args?: AddonUpgradedArgs;
         };
     };
 };
+
+export type UpdateAllFailureLine = {
+    name: string;
+    detail: string;
+};
+
+type SingleUpgradeOutcome =
+    | { kind: 'updated' }
+    | { kind: 'uptodate' }
+    | { kind: 'protected_skip' }
+    | { kind: 'failed'; detail: string };
+
+function addonDisplayName(manifest: unknown, transportUrl: string): string {
+    if (manifest !== null && typeof manifest === 'object' && 'name' in manifest) {
+        const n = (manifest as { name: unknown }).name;
+        if (typeof n === 'string' && n.trim().length > 0) {
+            return n.trim();
+        }
+    }
+    try {
+        const u = new URL(transportUrl);
+        return u.hostname || transportUrl;
+    } catch {
+        return transportUrl;
+    }
+}
+
+function detailFromFetchError(err: unknown): string {
+    if (err instanceof Error && err.message) {
+        const m = err.message.match(/HTTP (\d+)/);
+        return m ? m[1]! : err.message;
+    }
+    return String(err);
+}
+
+function detailFromCoreError(err: CoreEventPayload['args']['error'], errType: string | undefined, code: number): string {
+    if (err && typeof err === 'object' && typeof err.message === 'string' && err.message.trim().length > 0) {
+        return err.message.trim();
+    }
+    if (Number.isFinite(code) && code !== 0) {
+        return String(code);
+    }
+    if (typeof errType === 'string' && errType.length > 0) {
+        return errType;
+    }
+    return 'error';
+}
 
 function normalizeTransportUrl(url: string): string {
     return String(url || '').trim();
@@ -74,12 +121,12 @@ function waitForSingleAddonUpgradeOutcome(
     transportUrl: string,
     addonManifestId: string,
     timeoutMs: number
-): Promise<'updated' | 'uptodate' | 'protected_skip' | 'other_error'> {
+): Promise<SingleUpgradeOutcome> {
     const target = normalizeTransportUrl(transportUrl);
     const targetId = addonManifestId;
     return new Promise((resolve) => {
         let settled = false;
-        const finish = (outcome: 'updated' | 'uptodate' | 'protected_skip' | 'other_error') => {
+        const finish = (outcome: SingleUpgradeOutcome) => {
             if (settled) {
                 return;
             }
@@ -104,7 +151,7 @@ function waitForSingleAddonUpgradeOutcome(
                 const u = args.transport_url ?? args.transportUrl;
                 const mid = args.id;
                 if (eventMatchesAddon(u, mid, target, targetId)) {
-                    finish('updated');
+                    finish({ kind: 'updated' });
                 }
                 return;
             }
@@ -123,16 +170,19 @@ function waitForSingleAddonUpgradeOutcome(
                 const code = Number(args.error?.code);
                 const errType = args.error?.type;
                 if (errType === 'Other' && code === 3) {
-                    finish('uptodate');
+                    finish({ kind: 'uptodate' });
                 } else if (errType === 'Other' && code === 5) {
-                    finish('protected_skip');
+                    finish({ kind: 'protected_skip' });
                 } else {
-                    finish('other_error');
+                    finish({
+                        kind: 'failed',
+                        detail: detailFromCoreError(args.error, errType, code),
+                    });
                 }
             }
         };
 
-        const timer = setTimeout(() => finish('other_error'), timeoutMs);
+        const timer = setTimeout(() => finish({ kind: 'failed', detail: 'timeout' }), timeoutMs);
         core.transport.on('CoreEvent', handler);
     });
 }
@@ -143,6 +193,7 @@ export type UpdateAllAddonsResult = {
     skippedProtected: number;
     failed: number;
     attempted: number;
+    failures: UpdateAllFailureLine[];
 };
 
 const DEFAULT_TIMEOUT_MS = 25000;
@@ -161,6 +212,7 @@ export async function runUpdateAllInstalledAddons(
         skippedProtected: 0,
         failed: 0,
         attempted: 0,
+        failures: [],
     };
 
     setBatchAddonUpdateEventsMuted(true);
@@ -170,6 +222,7 @@ export async function runUpdateAllInstalledAddons(
                 continue;
             }
             result.attempted += 1;
+            const displayName = addonDisplayName(descriptor.manifest, descriptor.transportUrl);
             try {
                 const manifest = await fetchAddonManifest(descriptor.transportUrl);
                 const addonId = addonIdFromManifest(manifest);
@@ -181,17 +234,19 @@ export async function runUpdateAllInstalledAddons(
                 );
                 await dispatchAddonUpgrade(core, { ...descriptor, manifest });
                 const outcome = await outcomePromise;
-                if (outcome === 'updated') {
+                if (outcome.kind === 'updated') {
                     result.updated += 1;
-                } else if (outcome === 'uptodate') {
+                } else if (outcome.kind === 'uptodate') {
                     result.upToDate += 1;
-                } else if (outcome === 'protected_skip') {
+                } else if (outcome.kind === 'protected_skip') {
                     result.skippedProtected += 1;
-                } else {
+                } else if (outcome.kind === 'failed') {
                     result.failed += 1;
+                    result.failures.push({ name: addonDisplayName(manifest, descriptor.transportUrl), detail: outcome.detail });
                 }
-            } catch {
+            } catch (err: unknown) {
                 result.failed += 1;
+                result.failures.push({ name: displayName, detail: detailFromFetchError(err) });
             }
         }
     } finally {

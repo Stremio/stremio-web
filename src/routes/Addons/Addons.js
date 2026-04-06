@@ -128,7 +128,7 @@ const Addons = ({ urlParams, queryParams }) => {
         updateAllRunningRef.current = true;
         setUpdateAllInProgress(true);
         try {
-            const { updated, upToDate, skippedProtected, failed, attempted } = await runUpdateAllInstalledAddons(core, descriptors);
+            const { updated, upToDate, skippedProtected, failed, attempted, failures } = await runUpdateAllInstalledAddons(core, descriptors);
             const settledOk = upToDate + skippedProtected + updated;
             if (updated > 0) {
                 toast.show({
@@ -140,7 +140,8 @@ const Addons = ({ urlParams, queryParams }) => {
                     timeout: 5000,
                     dataset: { type: 'CoreEvent' }
                 });
-            } else if (attempted > 0 && failed === 0 && settledOk === attempted) {
+            }
+            if (attempted > 0 && failed === 0 && settledOk === attempted) {
                 toast.show({
                     type: 'success',
                     title: t('ADDONS_UPDATE_ALL_UPTODATE', { defaultValue: 'All addons up to date' }),
@@ -148,17 +149,30 @@ const Addons = ({ urlParams, queryParams }) => {
                     dataset: { type: 'CoreEvent' }
                 });
             } else if (attempted > 0) {
+                const formatFailureDetail = (detail) => {
+                    if (detail === 'timeout') {
+                        return t('ADDONS_UPDATE_ALL_ERROR_TIMEOUT', { defaultValue: 'timeout' });
+                    }
+                    return detail;
+                };
+                let failureMessage = t('ADDONS_UPDATE_ALL_PARTIAL_FALLBACK', {
+                    defaultValue: 'Some addons could not be updated'
+                });
+                if (failures.length > 0) {
+                    failureMessage = failures
+                        .map(({ name, detail }) =>
+                            t('ADDONS_UPDATE_ALL_FAIL_LINE', {
+                                name,
+                                error: formatFailureDetail(detail),
+                                defaultValue: '{{name}} error: {{error}}'
+                            })
+                        )
+                        .join('\n');
+                }
                 toast.show({
                     type: 'error',
                     title: t('ADDONS_UPDATE_ALL_PARTIAL', { defaultValue: 'Some addons could not be updated' }),
-                    message: t('ADDONS_UPDATE_ALL_PARTIAL_DETAIL', {
-                        updated,
-                        upToDate,
-                        skippedProtected,
-                        failed,
-                        attempted,
-                        defaultValue: '{{attempted}} checked · updated: {{updated}} · up to date: {{upToDate}} · skipped (protected): {{skippedProtected}} · failed: {{failed}}'
-                    }),
+                    message: failureMessage,
                     timeout: 8000,
                     dataset: { type: 'CoreEvent' }
                 });
