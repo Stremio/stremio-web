@@ -245,6 +245,19 @@ const Addons = ({ urlParams, queryParams }) => {
                         value={search}
                         onChange={searchInputOnChange}
                     />
+                    {
+                        hasUpdatableInstalledAddons ?
+                            <Button
+                                className={styles['mobile-update-all-button']}
+                                title={t('ADDONS_UPDATE_ALL', { defaultValue: 'Update all' })}
+                                disabled={updateAllInProgress}
+                                onClick={onUpdateAllAddons}
+                            >
+                                <Icon className={styles['mobile-update-all-icon']} name={'reset'} />
+                            </Button>
+                            :
+                            null
+                    }
                     <Button className={styles['filter-button']} title={t('ALL_FILTERS')} onClick={openFiltersModal}>
                         <Icon className={styles['filter-icon']} name={'filters'} />
                     </Button>
