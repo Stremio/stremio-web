@@ -92,7 +92,7 @@ const AddonDetailsModal = ({ transportUrl, onCloseRequest }) => {
             !addonDetails.remoteAddon.content.content.manifest.behaviorHints.configurationRequired ?
             {
                 className: styles['update-button'],
-                label: t('ADDON_UPDATE', { defaultValue: 'Update' }),
+                label: t('ADDON_UPDATE'),
                 props: {
                     onClick: () => {
                         core.transport.dispatch({

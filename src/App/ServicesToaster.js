@@ -19,9 +19,8 @@ const ServicesToaster = () => {
                         title: upgradedCount > 0
                             ? t('ADDONS_UPDATE_ALL_COUNT', {
                                 count: upgradedCount,
-                                defaultValue: '{{count}} addons updated'
                             })
-                            : t('ADDONS_UPDATE_ALL_UPTODATE', { defaultValue: 'All addons up to date' }),
+                            : t('ADDONS_UPDATE_ALL_UPTODATE'),
                         timeout: 5000,
                         dataset: { type: 'CoreEvent' }
                     });
@@ -30,7 +29,7 @@ const ServicesToaster = () => {
                 case 'AddonUpgraded': {
                     toast.show({
                         type: 'success',
-                        title: t('ADDON_UPDATE_SUCCESS', { defaultValue: 'Addon updated' }),
+                        title: t('ADDON_UPDATE_SUCCESS'),
                         timeout: 4000,
                         dataset: { type: 'CoreEvent' }
                     });
@@ -52,7 +51,7 @@ const ServicesToaster = () => {
                     if (args.error.type === 'Other' && args.error.code === 3 && args.source.event === 'AddonUpgraded') {
                         toast.show({
                             type: 'success',
-                            title: t('ADDON_UPDATE_UPTODATE', { defaultValue: 'Addon is already up to date' }),
+                            title: t('ADDON_UPDATE_UPTODATE'),
                             timeout: 4000,
                             dataset: { type: 'CoreEvent' }
                         });
