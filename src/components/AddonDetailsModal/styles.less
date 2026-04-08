@@ -29,9 +29,22 @@
 
     .uninstall-button {
         background-color: var(--overlay-color);
-    
+
         &:hover {
             outline: var(--focus-outline-size) solid var(--overlay-color);
+            background-color: transparent;
+        }
+
+        &:focus {
+            outline-color: var(--primary-foreground-color);
+        }
+    }
+
+    .update-button {
+        background-color: var(--secondary-accent-color);
+
+        &:hover {
+            outline: var(--focus-outline-size) solid var(--secondary-accent-color);
             background-color: transparent;
         }
 

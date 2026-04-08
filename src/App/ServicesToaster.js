@@ -4,7 +4,6 @@ const React = require('react');
 const { useTranslation } = require('react-i18next');
 const { useServices } = require('stremio/services');
 const { useToast } = require('stremio/common');
-const { isBatchAddonUpdateEventsMuted } = require('stremio/common/batchAddonUpdateMute');
 
 const ServicesToaster = () => {
     const { t } = useTranslation();
@@ -13,18 +12,27 @@ const ServicesToaster = () => {
     React.useEffect(() => {
         const onCoreEvent = ({ event, args }) => {
             switch (event) {
+                case 'UserAddonsUpgraded': {
+                    const upgradedCount = args?.upgraded?.length ?? 0;
+                    toast.show({
+                        type: 'success',
+                        title: upgradedCount > 0
+                            ? t('ADDONS_UPDATE_ALL_COUNT', {
+                                count: upgradedCount,
+                                defaultValue: '{{count}} addons updated'
+                            })
+                            : t('ADDONS_UPDATE_ALL_UPTODATE', { defaultValue: 'All addons up to date' }),
+                        timeout: 5000,
+                        dataset: { type: 'CoreEvent' }
+                    });
+                    break;
+                }
                 case 'AddonUpgraded': {
-                    if (isBatchAddonUpdateEventsMuted()) {
-                        break;
-                    }
-
                     toast.show({
                         type: 'success',
                         title: t('ADDON_UPDATE_SUCCESS', { defaultValue: 'Addon updated' }),
                         timeout: 4000,
-                        dataset: {
-                            type: 'CoreEvent'
-                        }
+                        dataset: { type: 'CoreEvent' }
                     });
                     break;
                 }
@@ -42,22 +50,12 @@ const ServicesToaster = () => {
                     }
 
                     if (args.error.type === 'Other' && args.error.code === 3 && args.source.event === 'AddonUpgraded') {
-                        if (isBatchAddonUpdateEventsMuted()) {
-                            break;
-                        }
-
                         toast.show({
                             type: 'success',
                             title: t('ADDON_UPDATE_UPTODATE', { defaultValue: 'Addon is already up to date' }),
                             timeout: 4000,
-                            dataset: {
-                                type: 'CoreEvent'
-                            }
+                            dataset: { type: 'CoreEvent' }
                         });
-                        break;
-                    }
-
-                    if (isBatchAddonUpdateEventsMuted() && args.source?.event === 'AddonUpgraded') {
                         break;
                     }
 

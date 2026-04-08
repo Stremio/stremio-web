@@ -10,7 +10,6 @@ const { AddonDetailsModal, Button, Image, MainNavBars, ModalDialog, SearchBar, S
 const { useServices } = require('stremio/services');
 const useToast = require('stremio/common/Toast/useToast');
 const Addon = require('./Addon');
-const { runUpdateAllInstalledAddons } = require('./updateAllAddons');
 const useInstalledAddons = require('./useInstalledAddons');
 const useRemoteAddons = require('./useRemoteAddons');
 const useAddonDetailsTransportUrl = require('./useAddonDetailsTransportUrl');
@@ -95,99 +94,39 @@ const Addons = ({ urlParams, queryParams }) => {
         platform.openExternal(event.dataset.addon.transportUrl.replace('manifest.json', 'configure'));
     }, []);
     const [updateAllInProgress, setUpdateAllInProgress] = React.useState(false);
-    const updateAllRunningRef = React.useRef(false);
-    const isAddonBulkUpdatable = React.useCallback((addon) => {
-        if (addon.manifest?.behaviorHints?.configurationRequired) {
-            return false;
-        }
-        if (addon.flags?.protected) {
-            return false;
-        }
-        return true;
-    }, []);
     const hasUpdatableInstalledAddons = React.useMemo(() => {
         if (installedAddons.selected === null) {
             return false;
         }
-        return installedAddons.catalog.some(isAddonBulkUpdatable);
-    }, [installedAddons.selected, installedAddons.catalog, isAddonBulkUpdatable]);
-    const onUpdateAllAddons = React.useCallback(async () => {
-        if (installedAddons.selected === null || updateAllRunningRef.current || !hasUpdatableInstalledAddons) {
+        return installedAddons.catalog.some((addon) =>
+            !addon.manifest?.behaviorHints?.configurationRequired && !addon.flags?.protected
+        );
+    }, [installedAddons.selected, installedAddons.catalog]);
+    const onUpdateAllAddons = React.useCallback(() => {
+        if (updateAllInProgress || !hasUpdatableInstalledAddons) {
             return;
         }
-        const descriptors = installedAddons.catalog
-            .filter(isAddonBulkUpdatable)
-            .map((addon) => ({
-                transportUrl: addon.transportUrl,
-                manifest: addon.manifest,
-                flags: addon.flags ?? {}
-            }));
-        if (descriptors.length === 0) {
-            return;
-        }
-        updateAllRunningRef.current = true;
         setUpdateAllInProgress(true);
-        try {
-            const { updated, upToDate, skippedProtected, failed, attempted, failures } = await runUpdateAllInstalledAddons(core, descriptors);
-            const settledOk = upToDate + skippedProtected + updated;
-            if (updated > 0) {
-                toast.show({
-                    type: 'success',
-                    title: t('ADDONS_UPDATE_ALL_COUNT', {
-                        count: updated,
-                        defaultValue: '{{count}} addons updated'
-                    }),
-                    timeout: 5000,
-                    dataset: { type: 'CoreEvent' }
-                });
+        core.transport.dispatch({
+            action: 'Ctx',
+            args: { action: 'UpgradeUserAddons' }
+        });
+    }, [core, updateAllInProgress, hasUpdatableInstalledAddons]);
+    React.useEffect(() => {
+        const onCoreEvent = ({ event, args }) => {
+            if (event === 'UserAddonsUpgraded') {
+                setUpdateAllInProgress(false);
+                return;
             }
-            if (attempted > 0 && failed === 0 && settledOk === attempted) {
-                toast.show({
-                    type: 'success',
-                    title: t('ADDONS_UPDATE_ALL_UPTODATE', { defaultValue: 'All addons up to date' }),
-                    timeout: 5000,
-                    dataset: { type: 'CoreEvent' }
-                });
-            } else if (attempted > 0) {
-                const formatFailureDetail = (detail) => {
-                    if (detail === 'timeout') {
-                        return t('ADDONS_UPDATE_ALL_ERROR_TIMEOUT', { defaultValue: 'timeout' });
-                    }
-                    return detail;
-                };
-                let failureMessage = t('ADDONS_UPDATE_ALL_PARTIAL_FALLBACK', {
-                    defaultValue: 'Some addons could not be updated'
-                });
-                if (failures.length > 0) {
-                    failureMessage = failures
-                        .map(({ name, detail }) =>
-                            t('ADDONS_UPDATE_ALL_FAIL_LINE', {
-                                name,
-                                error: formatFailureDetail(detail),
-                                defaultValue: '{{name}} error: {{error}}'
-                            })
-                        )
-                        .join('\n');
-                }
-                toast.show({
-                    type: 'error',
-                    title: t('ADDONS_UPDATE_ALL_PARTIAL', { defaultValue: 'Some addons could not be updated' }),
-                    message: failureMessage,
-                    timeout: 8000,
-                    dataset: { type: 'CoreEvent' }
-                });
+            if (event === 'Error' && args?.source?.event === 'UserAddonsUpgraded') {
+                setUpdateAllInProgress(false);
             }
-        } catch (error) {
-            toast.show({
-                type: 'error',
-                title: typeof error?.message === 'string' ? error.message : String(error),
-                timeout: 10000
-            });
-        } finally {
-            updateAllRunningRef.current = false;
-            setUpdateAllInProgress(false);
-        }
-    }, [core, toast, t, installedAddons.selected, installedAddons.catalog, hasUpdatableInstalledAddons, isAddonBulkUpdatable]);
+        };
+        core.transport.on('CoreEvent', onCoreEvent);
+        return () => {
+            core.transport.off('CoreEvent', onCoreEvent);
+        };
+    }, [core]);
     const onAddonOpen = React.useCallback((event) => {
         setAddonDetailsTransportUrl(event.dataset.addon.transportUrl);
     }, [setAddonDetailsTransportUrl]);
