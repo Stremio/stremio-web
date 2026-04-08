@@ -18,8 +18,8 @@ importers:
         specifier: 5.2.0
         version: 5.2.0
       '@stremio/stremio-core-web':
-        specifier: 0.55.0
-        version: 0.55.0
+        specifier: https://stremio.github.io/stremio-core/stremio-core-web/feat/upgrade-user-addons/stremio-stremio-core-web-0.55.0.tgz
+        version: https://stremio.github.io/stremio-core/stremio-core-web/feat/upgrade-user-addons/stremio-stremio-core-web-0.55.0.tgz
       '@stremio/stremio-icons':
         specifier: 5.8.0
         version: 5.8.0
@@ -1120,8 +1120,9 @@ packages:
   '@stremio/stremio-colors@5.2.0':
     resolution: {integrity: sha512-dYlPgu9W/H7c9s1zmW5tiDnRenaUa4Hg1QCyOg1lhOcgSfM/bVTi5nnqX+IfvGTTUNA0zgzh8hI3o3miwnZxTg==}
 
-  '@stremio/stremio-core-web@0.55.0':
-    resolution: {integrity: sha512-MdalnThEwnA8osQh+3/5OMzVIYZOoYmd94dN3nmCeT4rfV7IZXRFUg/uyCY+5bqigStlE3SfKEaGiSc6UnNtlQ==}
+  '@stremio/stremio-core-web@https://stremio.github.io/stremio-core/stremio-core-web/feat/upgrade-user-addons/stremio-stremio-core-web-0.55.0.tgz':
+    resolution: {tarball: https://stremio.github.io/stremio-core/stremio-core-web/feat/upgrade-user-addons/stremio-stremio-core-web-0.55.0.tgz}
+    version: 0.55.0
 
   '@stremio/stremio-icons@5.8.0':
     resolution: {integrity: sha512-IVUvQbIWfA4YEHCTed7v/sdQJCJ+OOCf84LTWpkE2W6GLQ+15WHcMEJrVkE1X3ekYJnGg3GjT0KLO6tKSU0P4w==}
@@ -5870,7 +5871,7 @@ snapshots:
 
   '@stremio/stremio-colors@5.2.0': {}
 
-  '@stremio/stremio-core-web@0.55.0':
+  '@stremio/stremio-core-web@https://stremio.github.io/stremio-core/stremio-core-web/feat/upgrade-user-addons/stremio-stremio-core-web-0.55.0.tgz':
     dependencies:
       '@babel/runtime': 7.24.1
 

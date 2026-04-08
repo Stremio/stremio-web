@@ -93,6 +93,23 @@ const Addons = ({ urlParams, queryParams }) => {
     const onAddonConfigure = React.useCallback((event) => {
         platform.openExternal(event.dataset.addon.transportUrl.replace('manifest.json', 'configure'));
     }, []);
+    const hasUpdatableInstalledAddons = React.useMemo(() => {
+        if (installedAddons.selected === null) {
+            return false;
+        }
+        return installedAddons.catalog.some((addon) =>
+            !addon.manifest?.behaviorHints?.configurationRequired && !addon.flags?.protected
+        );
+    }, [installedAddons.selected, installedAddons.catalog]);
+    const onUpdateAllAddons = React.useCallback(() => {
+        if (!hasUpdatableInstalledAddons) {
+            return;
+        }
+        core.transport.dispatch({
+            action: 'Ctx',
+            args: { action: 'UpgradeUserAddons' }
+        });
+    }, [hasUpdatableInstalledAddons]);
     const onAddonOpen = React.useCallback((event) => {
         setAddonDetailsTransportUrl(event.dataset.addon.transportUrl);
     }, [setAddonDetailsTransportUrl]);
@@ -130,12 +147,37 @@ const Addons = ({ urlParams, queryParams }) => {
                         <Icon className={styles['icon']} name={'add'} />
                         <div className={styles['add-button-label']}>{t('ADD_ADDON')}</div>
                     </Button>
+                    {
+                        hasUpdatableInstalledAddons ?
+                            <Button
+                                className={styles['update-all-button-container']}
+                                title={t('ADDONS_UPDATE_ALL')}
+                                onClick={onUpdateAllAddons}
+                            >
+                                <Icon className={styles['icon']} name={'reset'} />
+                                <div className={styles['update-all-button-label']}>{t('ADDONS_UPDATE_ALL')}</div>
+                            </Button>
+                            :
+                            null
+                    }
                     <SearchBar
                         className={styles['search-bar']}
                         title={t('ADDON_SEARCH')}
                         value={search}
                         onChange={searchInputOnChange}
                     />
+                    {
+                        hasUpdatableInstalledAddons ?
+                            <Button
+                                className={styles['mobile-update-all-button']}
+                                title={t('ADDONS_UPDATE_ALL')}
+                                onClick={onUpdateAllAddons}
+                            >
+                                <Icon className={styles['mobile-update-all-icon']} name={'reset'} />
+                            </Button>
+                            :
+                            null
+                    }
                     <Button className={styles['filter-button']} title={t('ALL_FILTERS')} onClick={openFiltersModal}>
                         <Icon className={styles['filter-icon']} name={'filters'} />
                     </Button>

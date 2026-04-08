@@ -85,6 +85,28 @@ const AddonDetailsModal = ({ transportUrl, onCloseRequest }) => {
             }
             :
             null;
+        const updateButton = addonDetails.localAddon !== null &&
+            addonDetails.remoteAddon !== null &&
+            addonDetails.remoteAddon.content.type === 'Ready' &&
+            !addonDetails.remoteAddon.content.content.flags.protected &&
+            !addonDetails.remoteAddon.content.content.manifest.behaviorHints.configurationRequired ?
+            {
+                className: styles['update-button'],
+                label: t('ADDON_UPDATE'),
+                props: {
+                    onClick: () => {
+                        core.transport.dispatch({
+                            action: 'Ctx',
+                            args: {
+                                action: 'UpgradeAddon',
+                                args: addonDetails.remoteAddon.content.content
+                            }
+                        });
+                    }
+                }
+            }
+            :
+            null;
         const toggleButton = addonDetails.localAddon !== null ?
             {
                 className: styles['uninstall-button'],
@@ -137,7 +159,7 @@ const AddonDetailsModal = ({ transportUrl, onCloseRequest }) => {
                 }
                 :
                 null;
-        return configureButton && toggleButton ? [cancelButton, configureButton, toggleButton] : configureButton ? [cancelButton, configureButton] : toggleButton ? [cancelButton, toggleButton] : [cancelButton];
+        return [cancelButton, configureButton, updateButton, toggleButton].filter(Boolean);
     }, [addonDetails, onCloseRequest]);
     const modalBackground = React.useMemo(() => {
         return addonDetails.remoteAddon?.content.type === 'Ready' ? addonDetails.remoteAddon.content.content.manifest.background : null;
