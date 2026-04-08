@@ -93,7 +93,6 @@ const Addons = ({ urlParams, queryParams }) => {
     const onAddonConfigure = React.useCallback((event) => {
         platform.openExternal(event.dataset.addon.transportUrl.replace('manifest.json', 'configure'));
     }, []);
-    const [updateAllInProgress, setUpdateAllInProgress] = React.useState(false);
     const hasUpdatableInstalledAddons = React.useMemo(() => {
         if (installedAddons.selected === null) {
             return false;
@@ -103,30 +102,14 @@ const Addons = ({ urlParams, queryParams }) => {
         );
     }, [installedAddons.selected, installedAddons.catalog]);
     const onUpdateAllAddons = React.useCallback(() => {
-        if (updateAllInProgress || !hasUpdatableInstalledAddons) {
+        if (!hasUpdatableInstalledAddons) {
             return;
         }
-        setUpdateAllInProgress(true);
         core.transport.dispatch({
             action: 'Ctx',
             args: { action: 'UpgradeUserAddons' }
         });
-    }, [core, updateAllInProgress, hasUpdatableInstalledAddons]);
-    React.useEffect(() => {
-        const onCoreEvent = ({ event, args }) => {
-            if (event === 'UserAddonsUpgraded') {
-                setUpdateAllInProgress(false);
-                return;
-            }
-            if (event === 'Error' && args?.source?.event === 'UserAddonsUpgraded') {
-                setUpdateAllInProgress(false);
-            }
-        };
-        core.transport.on('CoreEvent', onCoreEvent);
-        return () => {
-            core.transport.off('CoreEvent', onCoreEvent);
-        };
-    }, [core]);
+    }, [hasUpdatableInstalledAddons]);
     const onAddonOpen = React.useCallback((event) => {
         setAddonDetailsTransportUrl(event.dataset.addon.transportUrl);
     }, [setAddonDetailsTransportUrl]);
@@ -169,7 +152,6 @@ const Addons = ({ urlParams, queryParams }) => {
                             <Button
                                 className={styles['update-all-button-container']}
                                 title={t('ADDONS_UPDATE_ALL', { defaultValue: 'Update all' })}
-                                disabled={updateAllInProgress}
                                 onClick={onUpdateAllAddons}
                             >
                                 <Icon className={styles['icon']} name={'reset'} />
@@ -189,7 +171,6 @@ const Addons = ({ urlParams, queryParams }) => {
                             <Button
                                 className={styles['mobile-update-all-button']}
                                 title={t('ADDONS_UPDATE_ALL', { defaultValue: 'Update all' })}
-                                disabled={updateAllInProgress}
                                 onClick={onUpdateAllAddons}
                             >
                                 <Icon className={styles['mobile-update-all-icon']} name={'reset'} />
