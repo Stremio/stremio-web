@@ -105,11 +105,10 @@
 }
 
 .epg-header-row {
-    flex: none;
     display: flex;
-    flex-direction: row;
-    border-bottom: 1px solid var(--overlay-color);
+    flex-shrink: 0;
     margin-left: 1.5rem;
+    border-bottom: 2px solid var(--color-surface);
 }
 
 .epg-channel-column-header {
@@ -117,9 +116,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding-bottom: 0.4rem;
-    border-right: 1px solid rgba(255, 255, 255, 0.07);
-    background-color: rgba(0, 0, 0, 0.25);
+    padding: 0 0.5rem;
+    margin: 0 4px 4px 0;
     position: relative;
     z-index: 20;
 }
@@ -233,8 +231,8 @@
 .epg-channel-column {
     flex-shrink: 0;
     overflow: hidden;
-    background-color: rgba(0, 0, 0, 0.25);
-    border-right: 1px solid rgba(255, 255, 255, 0.07);
+    // background-color: rgba(0, 0, 0, 0.25);
+    // border-right: 1px solid rgba(255, 255, 255, 0.07);
 }
 
 .epg-channel-column-inner {
@@ -242,12 +240,13 @@
 }
 
 .epg-channel-cell {
+    background: var(--overlay-color);
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 0.5rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    box-sizing: border-box;
+    border-radius: 0.5rem;
+    margin: 0 4px 4px 0;
 }
 
 .epg-channel-logo {
