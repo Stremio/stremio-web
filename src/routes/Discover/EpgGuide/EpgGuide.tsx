@@ -7,10 +7,10 @@ import { programStartMs, programEndMs } from './epgUtils';
 import styles from './EpgGuide.less';
 
 const BASE_PIXELS_PER_HOUR = 120; // minimum scale
-const MAX_PIXELS_PER_HOUR = 720; // cap — at 720 a 10-min show is 120 px (~17 000 px total grid)
+const MAX_PIXELS_PER_HOUR = 360; // cap — at 720 a 10-min show is 120 px (~17 000 px total grid)
 const MIN_PROGRAM_WIDTH = 120; // px — wide enough to show a thumbnail + label
 const CHANNEL_COLUMN_WIDTH = 130;
-const ROW_HEIGHT = 68;
+const ROW_HEIGHT = 56;
 const HOUR_IN_MS = 60 * 60 * 1000;
 const DAY_IN_MS = 24 * HOUR_IN_MS;
 const MIN_PROGRAM_DURATION_MS = 10 * 60 * 1000; // ignore sub-10-min filler when choosing scale
