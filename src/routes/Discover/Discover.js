@@ -11,7 +11,8 @@ const { AddonDetailsModal, Button, DelayedRenderer, Image, MainNavBars, MetaItem
 const useDiscover = require('./useDiscover');
 const useSelectableInputs = require('./useSelectableInputs');
 const useInstalledAddons = require('../Addons/useInstalledAddons');
-const {default: EpgGuide} = require('./EpgGuide');
+const { default: EpgGuide } = require('./EpgGuide');
+const { default: EpgProgramModal } = require('./EpgGuide/EpgProgramModal/EpgProgramModal');
 const styles = require('./styles');
 
 const SCROLL_TO_BOTTOM_THRESHOLD = 400;
@@ -28,7 +29,7 @@ const Discover = ({ urlParams, queryParams }) => {
     const metasContainerRef = React.useRef();
     const metaPreviewRef = React.useRef();
 
-    const [selectedProgram, setSelectedProgram] = React.useState(null);
+    const [epgProgramModal, setEpgProgramModal] = React.useState(null);
     const installedAddons = useInstalledAddons({ transportUrl: null, catalogId: null });
     const selectedAddon = React.useMemo(() => {
         const selected = discover.selectable.catalogs.find(({ selected }) => selected)?.addon ?? null;
@@ -36,9 +37,9 @@ const Discover = ({ urlParams, queryParams }) => {
         return addon;
     }, [discover.selectable.catalogs, installedAddons]);
     const isEpgLayout = React.useMemo(() => !!selectedAddon?.manifest?.behaviorHints?.epgEndpoint, [selectedAddon]);
-    const onProgramSelect = React.useCallback((program) => {
-        setSelectedProgram(program);
-    }, [setSelectedProgram]);
+    const onProgramSelect = React.useCallback((program, channel) => {
+        setEpgProgramModal({ program, channel });
+    }, []);
 
     React.useEffect(() => {
         if (!isEpgLayout && discover.catalog?.content.type === 'Loading' && metasContainerRef.current) {
@@ -110,7 +111,7 @@ const Discover = ({ urlParams, queryParams }) => {
         closeInputsModal();
         closeAddonModal();
         setSelectedMetaItemIndex(0);
-        setSelectedProgram(null);
+        setEpgProgramModal(null);
     }, [discover.selected]);
 
     const renderEmptyState = () => (
@@ -180,17 +181,7 @@ const Discover = ({ urlParams, queryParams }) => {
 
     const renderMetaPreview = () => {
         if (isEpgLayout) {
-            if (selectedProgram === null) return null;
-            return (
-                <MetaPreview
-                    className={styles['meta-preview-container']}
-                    compact={true}
-                    name={selectedProgram.title}
-                    background={selectedProgram.thumbnail}
-                    released={selectedProgram.start ? new Date(selectedProgram.start) : null}
-                    description={selectedProgram.description}
-                />
-            );
+            return null;
         }
 
         if (selectedMetaItem !== null) {
@@ -260,6 +251,16 @@ const Discover = ({ urlParams, queryParams }) => {
                 </div>
                 {renderMetaPreview()}
             </div>
+            {
+                isEpgLayout && epgProgramModal !== null ?
+                    <EpgProgramModal
+                        program={epgProgramModal.program}
+                        channel={epgProgramModal.channel}
+                        onCloseRequest={() => setEpgProgramModal(null)}
+                    />
+                    :
+                    null
+            }
             {
                 inputsModalOpen ?
                     <ModalDialog title={t('CATALOG_FILTERS')} className={styles['selectable-inputs-modal']} onCloseRequest={closeInputsModal}>

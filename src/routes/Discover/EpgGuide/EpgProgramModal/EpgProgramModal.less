@@ -1,0 +1,229 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
+
+.addon-details-modal-container {
+
+}
+
+:global(.modal-container.epg-program-modal) {
+    .epg-program-modal-body {
+        width: 40rem;
+        max-width: 100%;
+        color: var(--primary-foreground-color);
+    }
+    
+    .epg-program-logo-wrap {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 5rem;
+    }
+    
+    .epg-program-logo {
+        display: block;
+        max-width: 100%;
+        max-height: 6rem;
+        object-fit: contain;
+        object-position: center;
+    }
+    
+    .epg-program-logo-placeholder {
+        font-size: 1.35rem;
+        font-weight: 600;
+        text-align: center;
+        color: var(--primary-foreground-color);
+        opacity: 0.85;
+    }
+    
+    .epg-program-title {
+        margin: -0.25rem 0 0;
+        font-size: 1.05rem;
+        font-weight: 600;
+        text-align: center;
+        line-height: 1.35;
+        color: var(--primary-foreground-color);
+    }
+    
+    .epg-program-meta-row {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem 1.5rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--primary-foreground-color);
+    }
+    
+    .epg-program-description {
+        margin: 0;
+        font-size: 0.95rem;
+        font-weight: 400;
+        line-height: 1.65;
+        color: fade(@color-surface-light5, 88%);
+        text-align: left;
+    }
+    
+    .epg-program-streams {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        max-height: 14rem;
+        overflow-y: auto;
+        margin: 0.25rem 0;
+    }
+    
+    .epg-program-stream-empty {
+        padding: 1rem 0.5rem;
+        font-size: 0.95rem;
+        text-align: center;
+        color: fade(@color-surface-light5, 65%);
+    }
+    
+    .epg-program-stream-row {
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 0.75rem;
+        width: 100%;
+        padding: 0.65rem 0.65rem 0.65rem 0.85rem;
+        border: none;
+        border-radius: var(--border-radius);
+        background: fade(@color-surface-light5, 6%);
+        color: inherit;
+        text-align: left;
+        cursor: pointer;
+        transition: background 0.15s ease;
+    
+        &::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.35rem;
+            bottom: 0.35rem;
+            width: 3px;
+            border-radius: 2px;
+            background: transparent;
+            transition: background 0.15s ease;
+        }
+    
+        &:hover,
+        &:focus-visible {
+            background: fade(@color-surface-light5, 10%);
+            outline: none;
+        }
+    
+        &.epg-program-stream-row-active {
+            background: fade(#8b5cf6, 14%);
+    
+            &::before {
+                background: var(--primary-accent-color);
+            }
+        }
+    }
+    
+    .epg-program-stream-main {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.2rem;
+    }
+    
+    .epg-program-stream-addon {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: fade(@color-surface-light5, 75%);
+    }
+    
+    .epg-program-stream-name {
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: var(--primary-foreground-color);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    
+    .epg-program-stream-meta {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.35rem 0.65rem;
+        margin-top: 0.15rem;
+        font-size: 0.8rem;
+        color: fade(@color-surface-light5, 55%);
+    }
+    
+    .epg-program-stream-play {
+        flex: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.75rem;
+        height: 2.75rem;
+        padding: 0;
+        border-radius: 50%;
+        border: none;
+        background-color: #00c853;
+        color: #fff;
+        cursor: pointer;
+        transition: transform 0.12s ease, filter 0.12s ease;
+    
+        .icon {
+            width: 1.35rem;
+            height: 1.35rem;
+            margin-left: 2px;
+        }
+    
+        &:hover,
+        &:focus-visible {
+            filter: brightness(1.08);
+            outline: none;
+        }
+    
+        &:active {
+            transform: scale(0.96);
+        }
+    }
+    
+    .epg-program-install {
+        align-self: stretch;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-top: 0.25rem;
+        height: 3.25rem;
+        border-radius: 2rem;
+        padding: 0 1.25rem;
+        background-color: #00c853 !important;
+        border: none !important;
+    
+        &:hover,
+        &:focus-visible {
+            filter: brightness(1.06);
+            outline: var(--focus-outline-size) solid fade(#fff, 35%);
+        }
+    }
+    
+    .epg-program-install-icon {
+        flex: none;
+        width: 1.25rem;
+        height: 1.25rem;
+        color: #fff;
+    }
+    
+    .epg-program-install-label {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #fff;
+    }
+}
+
+
