@@ -70,12 +70,11 @@ export const useEPG = (addon: Addon | null, date?: string | Date): EPGData => {
     });
 
     const dateStr = useMemo(() => {
-        const d = date ? new Date(date) : new Date();
-
+        if (typeof date === 'string') return date;
+        const d = date instanceof Date ? date : new Date();
         const year = d.getFullYear();
         const month = String(d.getMonth() + 1).padStart(2, '0');
         const day = String(d.getDate()).padStart(2, '0');
-
         return `${year}-${month}-${day}`;
     }, [date]);
 
