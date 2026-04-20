@@ -43,7 +43,7 @@
         "spatial-navigation-polyfill": "github:Stremio/spatial-navigation#64871b1422466f5f45d24ebc8bbd315b2ebab6a6",
         "stremio-translations": "github:Stremio/stremio-translations#90ea718c18750a0e9cd6824b0ef7c512a41cb90b",
         "url": "0.11.4",
-        "use-long-press": "^3.2.0"
+        "use-long-press": "^3.3.0"
     },
     "devDependencies": {
         "@babel/core": "7.26.0",
