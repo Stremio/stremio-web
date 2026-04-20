@@ -11,6 +11,7 @@
         "build": "webpack --mode production",
         "test": "jest",
         "lint": "eslint src",
+        "lint:styles": "stylelint \"src/**/*.less\"",
         "scan-translations": "pnpx jest ./tests/i18nScan.test.js"
     },
     "dependencies": {
@@ -69,9 +70,12 @@
         "less": "4.2.1",
         "less-loader": "12.2.0",
         "mini-css-extract-plugin": "2.9.2",
+        "postcss-less": "^6.0.0",
         "postcss-loader": "8.1.1",
         "readdirp": "4.0.2",
         "recast": "0.23.11",
+        "stylelint": "^17.8.0",
+        "stylelint-config-recommended": "^18.0.0",
         "terser-webpack-plugin": "5.3.10",
         "thread-loader": "^4.0.4",
         "ts-loader": "^9.5.1",

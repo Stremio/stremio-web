@@ -39,6 +39,8 @@ jobs:
         run: pnpm test
       - name: Lint
         run: pnpm lint
+      - name: Lint styles
+        run: pnpm lint:styles
       # Create recursively the destination dir with
       # "--parrents where no error if existing, make parent directories as needed."
       - run: mkdir -p ./build/${{ github.head_ref || github.ref_name }}
