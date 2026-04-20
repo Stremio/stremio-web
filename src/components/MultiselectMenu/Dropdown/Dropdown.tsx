@@ -3,7 +3,7 @@
 import React, { useRef, useEffect, useCallback } from 'react';
 import { Button } from 'stremio/components';
 import { useTranslation } from 'react-i18next';
-import classNames from 'classnames';
+import classNames from 'clsx';
 import Option from './Option';
 import Icon from '@stremio/stremio-icons/react';
 import styles from './Dropdown.less';

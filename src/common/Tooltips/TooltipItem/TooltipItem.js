@@ -2,7 +2,7 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const classNames = require('classnames');
+const classNames = require('clsx');
 const styles = require('./styles');
 
 const TooltipItem = React.memo(({ className, active, label, position, margin, parent }) => {

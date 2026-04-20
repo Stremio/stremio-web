@@ -1,7 +1,7 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 import React, { memo } from 'react';
-import classnames from 'classnames';
+import classnames from 'clsx';
 import { VerticalNavBar, HorizontalNavBar } from 'stremio/components/NavBar';
 import styles from './MainNavBars.less';
 

@@ -2,7 +2,7 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const classnames = require('classnames');
+const classnames = require('clsx');
 const { useTranslation } = require('react-i18next');
 const { usePlatform, useToast } = require('stremio/common');
 const { useServices } = require('stremio/services');

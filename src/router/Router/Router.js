@@ -3,7 +3,7 @@
 const React = require('react');
 const ReactIs = require('react-is');
 const PropTypes = require('prop-types');
-const classnames = require('classnames');
+const classnames = require('clsx');
 const UrlUtils = require('url');
 const { deepEqual } = require('fast-equals');
 const { RouteFocusedProvider } = require('../RouteFocusedContext');

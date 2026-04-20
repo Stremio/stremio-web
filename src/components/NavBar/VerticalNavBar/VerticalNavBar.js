@@ -2,7 +2,7 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const classnames = require('classnames');
+const classnames = require('clsx');
 const { useTranslation } = require('react-i18next');
 const NavTabButton = require('./NavTabButton');
 const styles = require('./styles');

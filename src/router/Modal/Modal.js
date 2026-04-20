@@ -3,7 +3,7 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
 const PropTypes = require('prop-types');
-const classnames = require('classnames');
+const classnames = require('clsx');
 const FocusLock = require('react-focus-lock').default;
 const { useModalsContainer } = require('../ModalsContainerContext');
 

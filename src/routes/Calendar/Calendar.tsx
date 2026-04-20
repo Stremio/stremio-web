@@ -11,7 +11,7 @@ import Placeholder from './Placeholder';
 import useCalendar from './useCalendar';
 import useCalendarDate from './useCalendarDate';
 import styles from './Calendar.less';
-import classNames from 'classnames';
+import classNames from 'clsx';
 
 type Props = {
     urlParams: UrlParams,

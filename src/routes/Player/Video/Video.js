@@ -2,7 +2,7 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const classnames = require('classnames');
+const classnames = require('clsx');
 const styles = require('./styles');
 
 const Video = React.forwardRef(({ className, onClick, onDoubleClick }, ref) => {

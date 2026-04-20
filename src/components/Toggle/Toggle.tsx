@@ -1,7 +1,7 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 import React, { forwardRef } from 'react';
-import classnames from 'classnames';
+import classnames from 'clsx';
 import { Button } from 'stremio/components';
 import styles from './Toggle.less';
 

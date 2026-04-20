@@ -2,7 +2,7 @@
 
 import React, { forwardRef, useCallback } from 'react';
 import { type KeyboardEvent, type InputHTMLAttributes } from 'react';
-import classnames from 'classnames';
+import classnames from 'clsx';
 import styles from './styles.less';
 
 type Props = InputHTMLAttributes<HTMLInputElement> & {

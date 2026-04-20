@@ -1,6 +1,6 @@
 // Copyright (C) 2017-2025 Smart code 203358507
 
-import classNames from 'classnames';
+import classNames from 'clsx';
 import React from 'react';
 import Icon from '@stremio/stremio-icons/react';
 import { Tooltip } from 'stremio/common/Tooltips';

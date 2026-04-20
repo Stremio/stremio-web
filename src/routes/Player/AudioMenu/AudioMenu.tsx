@@ -1,6 +1,6 @@
 import React, { forwardRef, memo, MouseEvent, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import classNames from 'classnames';
+import classNames from 'clsx';
 import { languages } from 'stremio/common';
 import { Button } from 'stremio/components';
 import styles from './AudioMenu.less';

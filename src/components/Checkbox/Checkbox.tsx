@@ -1,7 +1,7 @@
 // Copyright (C) 2017-2025 Smart code 203358507
 
 import React, { useCallback, ChangeEvent, KeyboardEvent, RefCallback } from 'react';
-import classNames from 'classnames';
+import classNames from 'clsx';
 import styles from './Checkbox.less';
 import Button from '../Button';
 import Icon from '@stremio/stremio-icons/react';

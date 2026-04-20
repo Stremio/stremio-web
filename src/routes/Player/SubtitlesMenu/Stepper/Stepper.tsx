@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import classNames from 'classnames';
+import classNames from 'clsx';
 import Icon from '@stremio/stremio-icons/react';
 import { Button } from 'stremio/components';
 import { useInterval, useTimeout } from 'stremio/common';

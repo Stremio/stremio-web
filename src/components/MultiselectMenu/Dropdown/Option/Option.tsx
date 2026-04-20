@@ -1,7 +1,7 @@
 // Copyright (C) 2017-2024 Smart code 203358507
 
 import React, { useCallback, useMemo, forwardRef } from 'react';
-import classNames from 'classnames';
+import classNames from 'clsx';
 import { Button } from 'stremio/components';
 import styles from './Option.less';
 import Icon from '@stremio/stremio-icons/react';

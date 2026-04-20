@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import classNames from 'classnames';
+import classNames from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { useServices } from 'stremio/services';
 import { Button } from 'stremio/components';

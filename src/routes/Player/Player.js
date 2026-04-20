@@ -2,7 +2,7 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const classnames = require('classnames');
+const classnames = require('clsx');
 const debounce = require('lodash.debounce');
 const langs = require('langs');
 const { useTranslation } = require('react-i18next');

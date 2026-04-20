@@ -3,7 +3,7 @@
 const React = require('react');
 const VolumeSlider = require('../ControlBar/VolumeSlider');
 const { default: Icon } = require('@stremio/stremio-icons/react');
-const { default: classNames } = require('classnames');
+const { default: classNames } = require('clsx');
 const PropTypes = require('prop-types');
 const styles = require('./styles');
 const { useBinaryState } = require('stremio/common');

@@ -2,7 +2,7 @@
 
 const React = require('react');
 const { useTranslation } = require('react-i18next');
-const classNames = require('classnames');
+const classNames = require('clsx');
 const PropTypes = require('prop-types');
 const styles = require('./styles.less');
 

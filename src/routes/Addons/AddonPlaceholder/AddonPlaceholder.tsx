@@ -1,7 +1,7 @@
 // Copyright (C) 2017-2024 Smart code 203358507
 
 import React from 'react';
-import classnames from 'classnames';
+import classnames from 'clsx';
 import styles from './AddonPlaceholder.less';
 
 type Props = {

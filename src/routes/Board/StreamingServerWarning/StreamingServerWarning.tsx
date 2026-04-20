@@ -2,7 +2,7 @@
 
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import classnames from 'classnames';
+import classnames from 'clsx';
 import { useServices } from 'stremio/services';
 import { Button } from 'stremio/components';
 import useProfile from 'stremio/common/useProfile';

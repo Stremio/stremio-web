@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import classNames from 'classnames';
+import classNames from 'clsx';
 import useBinaryState from 'stremio/common/useBinaryState';
 import useOrientation from 'stremio/common/useOrientation';
 import styles from './BottomSheet.less';

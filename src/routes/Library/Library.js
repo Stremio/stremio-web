@@ -3,7 +3,7 @@
 const React = require('react');
 const { useTranslation } = require('react-i18next');
 const PropTypes = require('prop-types');
-const classnames = require('classnames');
+const classnames = require('clsx');
 const NotFound = require('stremio/routes/NotFound');
 const { useProfile, useNotifications, routesRegexp, useOnScrollToBottom, withCoreSuspender } = require('stremio/common');
 const { DelayedRenderer, Chips, Image, MainNavBars, LibItem, MultiselectMenu } = require('stremio/components');

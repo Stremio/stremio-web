@@ -8,7 +8,7 @@ import { Button, RadioButton } from 'stremio/components';
 import useStreamingServer from 'stremio/common/useStreamingServer';
 import Icon from '@stremio/stremio-icons/react';
 import styles from './Item.less';
-import classNames from 'classnames';
+import classNames from 'clsx';
 import useStreamingServerUrls from '../useStreamingServerUrls';
 
 type Props = {

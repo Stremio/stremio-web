@@ -1,7 +1,7 @@
 // Copyright (C) 2017-2024 Smart code 203358507
 
 import React from 'react';
-import classNames from 'classnames';
+import classNames from 'clsx';
 import Icon from '@stremio/stremio-icons/react';
 import styles from './SideDrawerButton.less';
 

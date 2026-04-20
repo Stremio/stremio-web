@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react';
-import classNames from 'classnames';
+import classNames from 'clsx';
 import { t } from 'i18next';
 import styles from './Section.less';
 

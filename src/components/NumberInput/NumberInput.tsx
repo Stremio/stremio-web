@@ -3,7 +3,7 @@
 import Icon from '@stremio/stremio-icons/react';
 import React, { ChangeEvent, forwardRef, memo, useCallback, useState } from 'react';
 import { type KeyboardEvent, type InputHTMLAttributes } from 'react';
-import classnames from 'classnames';
+import classnames from 'clsx';
 import styles from './NumberInput.less';
 import Button from '../Button';
 

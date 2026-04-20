@@ -1,5 +1,5 @@
 import { cloneElement, useCallback, useEffect, useMemo, useState } from 'react';
-import classNames from 'classnames';
+import classNames from 'clsx';
 
 type Props = {
     children: JSX.Element,

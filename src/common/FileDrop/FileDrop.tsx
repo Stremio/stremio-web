@@ -1,5 +1,5 @@
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
-import classNames from 'classnames';
+import classNames from 'clsx';
 import { isFileType } from './utils';
 
 export type FileType = string;

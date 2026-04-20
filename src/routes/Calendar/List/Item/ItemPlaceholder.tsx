@@ -1,7 +1,7 @@
 // Copyright (C) 2017-2025 Smart code 203358507
 
 import React from 'react';
-import classNames from 'classnames';
+import classNames from 'clsx';
 import styles from './Item.less';
 
 const ItemPlaceholder = () => {

@@ -1,7 +1,7 @@
 // Copyright (C) 2017-2024 Smart code 203358507
 
 import React, { useRef, useEffect, useState } from 'react';
-import classNames from 'classnames';
+import classNames from 'clsx';
 import styles from './HorizontalScroll.less';
 
 const SCROLL_THRESHOLD = 1;

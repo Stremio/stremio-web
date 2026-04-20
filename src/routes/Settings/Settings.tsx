@@ -1,7 +1,7 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 import React, { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import classnames from 'classnames';
+import classnames from 'clsx';
 import throttle from 'lodash.throttle';
 import { useRouteFocused } from 'stremio-router';
 import { usePlatform, useProfile, useStreamingServer, withCoreSuspender } from 'stremio/common';

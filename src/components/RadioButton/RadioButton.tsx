@@ -1,7 +1,7 @@
 // Copyright (C) 2017-2024 Smart code 203358507
 
 import React, { useCallback, ChangeEvent, KeyboardEvent } from 'react';
-import classNames from 'classnames';
+import classNames from 'clsx';
 import styles from './RadioButton.less';
 
 type Props = {

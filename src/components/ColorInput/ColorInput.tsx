@@ -1,7 +1,7 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 import React, { useCallback, useLayoutEffect, useMemo, useState } from 'react';
-import classnames from 'classnames';
+import classnames from 'clsx';
 import * as AColorPicker from 'a-color-picker';
 import { useTranslation } from 'react-i18next';
 import { Button } from 'stremio/components';

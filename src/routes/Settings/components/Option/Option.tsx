@@ -1,5 +1,5 @@
 import React from 'react';
-import classNames from 'classnames';
+import classNames from 'clsx';
 import { t } from 'i18next';
 import styles from './Option.less';
 import Icon from '@stremio/stremio-icons/react';

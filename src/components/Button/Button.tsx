@@ -1,7 +1,7 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 import { createElement, forwardRef, useCallback } from 'react';
-import classNames from 'classnames';
+import classNames from 'clsx';
 import { LongPressEventType, useLongPress } from 'use-long-press';
 import styles from './Button.less';
 

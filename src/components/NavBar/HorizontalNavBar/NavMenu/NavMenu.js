@@ -2,7 +2,7 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const classnames = require('classnames');
+const classnames = require('clsx');
 const { useRouteFocused } = require('stremio-router');
 const Popup = require('stremio/components/Popup');
 const useBinaryState = require('stremio/common/useBinaryState');

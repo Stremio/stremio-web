@@ -1,7 +1,7 @@
 // Copyright (C) 2017-2024 Smart code 203358507
 
 import React, { MouseEvent, memo, useCallback, useEffect, useRef } from 'react';
-import classNames from 'classnames';
+import classNames from 'clsx';
 import { Button } from 'stremio/components';
 import styles from './Chip.less';
 
