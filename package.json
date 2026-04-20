@@ -14,7 +14,7 @@
         "scan-translations": "pnpx jest ./tests/i18nScan.test.js"
     },
     "dependencies": {
-        "@babel/runtime": "7.26.0",
+        "@babel/runtime": "7.29.2",
         "@sentry/browser": "8.42.0",
         "@stremio/stremio-colors": "5.2.0",
         "@stremio/stremio-core-web": "0.56.3",
@@ -46,9 +46,9 @@
         "use-long-press": "^3.2.0"
     },
     "devDependencies": {
-        "@babel/core": "7.26.0",
-        "@babel/preset-env": "7.26.0",
-        "@babel/preset-react": "7.26.3",
+        "@babel/core": "7.29.0",
+        "@babel/preset-env": "7.29.2",
+        "@babel/preset-react": "7.28.5",
         "@eslint/js": "^9.16.0",
         "@stylistic/eslint-plugin": "^5.4.0",
         "@stylistic/eslint-plugin-jsx": "^4.4.1",
