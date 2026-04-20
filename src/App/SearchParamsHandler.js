@@ -1,7 +1,7 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 const React = require('react');
-const { deepEqual } = require('fast-equals');
+const { isEqual: deepEqual } = require('es-toolkit');
 const { withCoreSuspender, useProfile, useToast } = require('stremio/common');
 const { useServices } = require('stremio/services');
 

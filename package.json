@@ -26,7 +26,6 @@
         "clsx": "2.1.1",
         "es-toolkit": "1.45.1",
         "eventemitter3": "5.0.1",
-        "fast-equals": "^6.0.0",
         "filter-invalid-dom-props": "3.0.1",
         "hat": "^0.0.3",
         "i18next": "^24.0.5",

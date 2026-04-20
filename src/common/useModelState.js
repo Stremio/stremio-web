@@ -1,8 +1,7 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 const React = require('react');
-const { throttle, intersection } = require('es-toolkit');
-const { deepEqual } = require('fast-equals');
+const { throttle, intersection, isEqual: deepEqual } = require('es-toolkit');
 const { useCoreSuspender } = require('stremio/common/CoreSuspender');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
