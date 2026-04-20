@@ -5,6 +5,9 @@
     "author": "Smart Code OOD",
     "private": true,
     "license": "gpl-2.0",
+    "engines": {
+        "node": ">=24"
+    },
     "scripts": {
         "start": "webpack serve --mode development",
         "start-prod": "webpack serve --mode production",
