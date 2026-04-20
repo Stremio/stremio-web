@@ -17,8 +17,8 @@ function mockServices(overrides = {}) {
         error: null,
         starting: false,
         transport,
-        start: jest.fn(),
-        stop: jest.fn(),
+        start: vi.fn(),
+        stop: vi.fn(),
         on: (name, listener) => coreEvents.on(name, listener),
         off: (name, listener) => coreEvents.off(name, listener),
         __emit: (name, ...args) => coreEvents.emit(name, ...args),
@@ -27,10 +27,10 @@ function mockServices(overrides = {}) {
 
     return {
         core,
-        shell: overrides.shell ?? { active: false, on: jest.fn(), off: jest.fn(), send: jest.fn() },
-        chromecast: overrides.chromecast ?? { active: false, on: jest.fn(), off: jest.fn() },
-        keyboardShortcuts: overrides.keyboardShortcuts ?? { register: jest.fn(), unregister: jest.fn() },
-        dragAndDrop: overrides.dragAndDrop ?? { on: jest.fn(), off: jest.fn() },
+        shell: overrides.shell ?? { active: false, on: vi.fn(), off: vi.fn(), send: vi.fn() },
+        chromecast: overrides.chromecast ?? { active: false, on: vi.fn(), off: vi.fn() },
+        keyboardShortcuts: overrides.keyboardShortcuts ?? { register: vi.fn(), unregister: vi.fn() },
+        dragAndDrop: overrides.dragAndDrop ?? { on: vi.fn(), off: vi.fn() },
     };
 }
 

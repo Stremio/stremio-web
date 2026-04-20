@@ -8,21 +8,21 @@ const EventEmitter = require('eventemitter3');
  * tests can emit('StateChanged', ...) and the React side will receive it.
  *
  * Override any method by passing `overrides`:
- *   mockCoreTransport({ getState: jest.fn().mockResolvedValue({ settings: {} }) })
+ *   mockCoreTransport({ getState: vi.fn().mockResolvedValue({ settings: {} }) })
  */
 function mockCoreTransport(overrides = {}) {
     const events = new EventEmitter();
 
     const transport = {
-        on: jest.fn((name, listener) => events.on(name, listener)),
-        off: jest.fn((name, listener) => events.off(name, listener)),
-        removeAllListeners: jest.fn(() => events.removeAllListeners()),
-        getState: jest.fn().mockResolvedValue({}),
-        getDebugState: jest.fn().mockResolvedValue({}),
-        dispatch: jest.fn().mockResolvedValue(undefined),
-        analytics: jest.fn().mockResolvedValue(undefined),
-        decodeStream: jest.fn().mockResolvedValue({}),
-        encodeStream: jest.fn().mockResolvedValue(''),
+        on: vi.fn((name, listener) => events.on(name, listener)),
+        off: vi.fn((name, listener) => events.off(name, listener)),
+        removeAllListeners: vi.fn(() => events.removeAllListeners()),
+        getState: vi.fn().mockResolvedValue({}),
+        getDebugState: vi.fn().mockResolvedValue({}),
+        dispatch: vi.fn().mockResolvedValue(undefined),
+        analytics: vi.fn().mockResolvedValue(undefined),
+        decodeStream: vi.fn().mockResolvedValue({}),
+        encodeStream: vi.fn().mockResolvedValue(''),
         ...overrides,
     };
 

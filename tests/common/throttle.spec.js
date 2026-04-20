@@ -15,39 +15,39 @@ const { throttle } = require('es-toolkit');
 
 describe('throttle semantics (pinned by useModelState.js)', () => {
     beforeEach(() => {
-        jest.useFakeTimers();
+        vi.useFakeTimers();
     });
     afterEach(() => {
-        jest.useRealTimers();
+        vi.useRealTimers();
     });
 
     it('fires leading call immediately', () => {
-        const fn = jest.fn();
+        const fn = vi.fn();
         const t = throttle(fn, 100);
         t('a');
         expect(fn).toHaveBeenCalledWith('a');
     });
 
     it('coalesces multiple within-window calls into one trailing call', () => {
-        const fn = jest.fn();
+        const fn = vi.fn();
         const t = throttle(fn, 100);
         t('a');
         t('b');
         t('c');
         expect(fn).toHaveBeenCalledTimes(1);
 
-        jest.advanceTimersByTime(100);
+        vi.advanceTimersByTime(100);
         expect(fn).toHaveBeenCalledTimes(2);
         expect(fn).toHaveBeenLastCalledWith('c');
     });
 
     it('.cancel() suppresses the pending trailing call', () => {
-        const fn = jest.fn();
+        const fn = vi.fn();
         const t = throttle(fn, 100);
         t('a');
         t('b');
         t.cancel();
-        jest.advanceTimersByTime(500);
+        vi.advanceTimersByTime(500);
         expect(fn).toHaveBeenCalledTimes(1);
     });
 });

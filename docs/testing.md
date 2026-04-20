@@ -1,15 +1,18 @@
 # Testing
 
-Phase 1 of the modernization plan added the test infrastructure described below. Jest 29 + jsdom for now; Phase 4 flips the runner to Vitest without rewriting tests.
+Runner: **Vitest 4** + jsdom + `@testing-library/react`. Phase 1 set up the infrastructure on Jest; Phase 4 migrated the runner to Vitest without rewriting tests.
 
 ## Running tests
 
 ```bash
-pnpm test          # one-shot
-pnpm test --watch  # watch mode
+pnpm test            # one-shot (vitest run)
+pnpm test:watch      # watch mode
+pnpm test:coverage   # with v8 coverage report
 ```
 
-Jest config lives in [jest.config.js](../jest.config.js). Test setup (loads `@testing-library/jest-dom` matchers) in [tests/setup.js](../tests/setup.js).
+Vitest config lives in [vitest.config.ts](../vitest.config.ts). Test setup (loads `@testing-library/jest-dom` matchers) in [tests/setup.js](../tests/setup.js).
+
+`globals: true` is enabled so `describe` / `it` / `expect` / `beforeEach` / `afterEach` / `vi` are available without imports — same ergonomics as Jest.
 
 ## Where tests go
 
@@ -20,7 +23,7 @@ Jest config lives in [jest.config.js](../jest.config.js). Test setup (loads `@te
 | `tests/components/<Name>.spec.tsx` | Component tests (forthcoming) |
 | `tests/helpers/*.js` | Shared test utilities (mocks, render helpers) |
 
-Tests are discovered by Jest's default `.spec.*` / `.test.*` match.
+Tests are discovered by Vitest's default `.spec.*` / `.test.*` match, scoped to `tests/**` via the config's `include` pattern.
 
 ## Helpers
 
@@ -51,15 +54,15 @@ renderWithServices(<X />, {
 
 ### `mockServices(overrides?)`
 
-Returns a plain object shaped like `ServicesContext` (see [src/services/ServicesContext/types.d.ts](../src/services/ServicesContext/types.d.ts)) with every sub-service stubbed via `jest.fn()`. Pass per-service overrides.
+Returns a plain object shaped like `ServicesContext` (see [src/services/ServicesContext/types.d.ts](../src/services/ServicesContext/types.d.ts)) with every sub-service stubbed via `vi.fn()`. Pass per-service overrides.
 
 ### `mockCoreTransport(overrides?)`
 
-Returns an object implementing the [CoreTransport](../src/services/Core/types.d.ts) interface — `on`/`off`/`getState`/`dispatch`/`analytics` etc. are all `jest.fn()` so tests can assert invocations or resolve custom values. An extra `__emit(name, ...args)` method pumps events to registered listeners so you can drive the React side of a hook that subscribes to transport events:
+Returns an object implementing the [CoreTransport](../src/services/Core/types.d.ts) interface — `on`/`off`/`getState`/`dispatch`/`analytics` etc. are all `vi.fn()` so tests can assert invocations or resolve custom values. An extra `__emit(name, ...args)` method pumps events to registered listeners so you can drive the React side of a hook that subscribes to transport events:
 
 ```js
 const transport = mockCoreTransport({
-    getState: jest.fn().mockResolvedValue({ settings: { streamingServerUrl: 'x' } })
+    getState: vi.fn().mockResolvedValue({ settings: { streamingServerUrl: 'x' } })
 });
 // later, in the test body:
 act(() => transport.__emit('NewState', 'ctx'));
@@ -78,19 +81,18 @@ act(() => result.current[1]()); // on()
 expect(result.current[0]).toBe(true);
 ```
 
-See the seed specs under [tests/common/](../tests/common/) for working examples: `useBinaryState`, `useLiveRef`, `useInterval`, `useTimeout`.
+See the seed specs under [tests/common/](../tests/common/) for working examples: `useBinaryState`, `useLiveRef`, `useInterval`, `useTimeout`, `throttle`, `isEqual`.
 
 ## Mocking timers
 
-The seed tests for `useInterval` / `useTimeout` use Jest's `useFakeTimers` / `advanceTimersByTime`. Always wrap timer advances in `act()` so React state updates flush.
+The seed tests for `useInterval` / `useTimeout` / `throttle` use `vi.useFakeTimers()` / `vi.advanceTimersByTime()`. Always wrap timer advances in `act()` so React state updates flush.
 
 ## Styles and assets
 
 CSS Modules and Less imports are mocked via [tests/helpers/styleMock.js](../tests/helpers/styleMock.js) — a Proxy that returns the string `"<className>"` for any accessed key. Components can be rendered without Less loaders in play.
 
-## Future (Phase 4)
+## History
 
-Jest → Vitest. The same test files run unchanged because:
-- `jest.fn()` / `jest.mock()` → map to `vi.fn()` / `vi.mock()` via codemod.
-- `jest.useFakeTimers()` → `vi.useFakeTimers()`.
-- `@testing-library/jest-dom` matchers — same package, same imports.
+- **Phase 1** — added Jest + jsdom + `@testing-library/*`, helpers, seed hook tests (`useBinaryState`, `useLiveRef`, `useInterval`, `useTimeout`).
+- **Phase 2** — added pin tests for third-party semantics (`throttle.spec.js`, `isEqual.spec.js`) before swapping the underlying implementations.
+- **Phase 4** — swapped the runner from Jest to Vitest; same test files ran unchanged after a mechanical `jest.* → vi.*` codemod.
