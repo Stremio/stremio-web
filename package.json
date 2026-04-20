@@ -15,7 +15,7 @@
     },
     "dependencies": {
         "@babel/runtime": "7.26.0",
-        "@sentry/browser": "8.42.0",
+        "@sentry/browser": "9.47.1",
         "@stremio/stremio-colors": "5.2.0",
         "@stremio/stremio-core-web": "0.56.3",
         "@stremio/stremio-icons": "5.8.0",
