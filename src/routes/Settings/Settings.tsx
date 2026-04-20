@@ -2,7 +2,7 @@
 
 import React, { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import classnames from 'clsx';
-import throttle from 'lodash.throttle';
+import { throttle } from 'es-toolkit';
 import { useRouteFocused } from 'stremio-router';
 import { usePlatform, useProfile, useStreamingServer, withCoreSuspender } from 'stremio/common';
 import { MainNavBars } from 'stremio/components';

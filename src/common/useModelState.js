@@ -1,9 +1,8 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 const React = require('react');
-const throttle = require('lodash.throttle');
+const { throttle, intersection } = require('es-toolkit');
 const { deepEqual } = require('fast-equals');
-const intersection = require('lodash.intersection');
 const { useCoreSuspender } = require('stremio/common/CoreSuspender');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');

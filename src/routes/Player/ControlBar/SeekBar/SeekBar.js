@@ -3,7 +3,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('clsx');
-const debounce = require('lodash.debounce');
+const { debounce } = require('es-toolkit');
 const { useRouteFocused } = require('stremio-router');
 const { useBinaryState } = require('stremio/common');
 const { Button, Slider } = require('stremio/components');

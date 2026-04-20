@@ -3,7 +3,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('clsx');
-const debounce = require('lodash.debounce');
+const { debounce } = require('es-toolkit');
 const useTranslate = require('stremio/common/useTranslate');
 const { default: Icon } = require('@stremio/stremio-icons/react');
 const { withCoreSuspender, getVisibleChildrenRange } = require('stremio/common');
