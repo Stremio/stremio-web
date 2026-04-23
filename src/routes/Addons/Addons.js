@@ -151,11 +151,11 @@ const Addons = ({ urlParams, queryParams }) => {
                         hasUpdatableInstalledAddons ?
                             <Button
                                 className={styles['update-all-button-container']}
-                                title={t('ADDONS_UPDATE_ALL')}
+                                title={t('ADDONS_CHECK_FOR_UPDATES')}
                                 onClick={onUpdateAllAddons}
                             >
                                 <Icon className={styles['icon']} name={'reset'} />
-                                <div className={styles['update-all-button-label']}>{t('ADDONS_UPDATE_ALL')}</div>
+                                <div className={styles['update-all-button-label']}>{t('ADDONS_CHECK_FOR_UPDATES')}</div>
                             </Button>
                             :
                             null
@@ -170,7 +170,7 @@ const Addons = ({ urlParams, queryParams }) => {
                         hasUpdatableInstalledAddons ?
                             <Button
                                 className={styles['mobile-update-all-button']}
-                                title={t('ADDONS_UPDATE_ALL')}
+                                title={t('ADDONS_CHECK_FOR_UPDATES')}
                                 onClick={onUpdateAllAddons}
                             >
                                 <Icon className={styles['mobile-update-all-icon']} name={'reset'} />

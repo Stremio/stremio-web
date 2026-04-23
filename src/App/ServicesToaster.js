@@ -17,10 +17,10 @@ const ServicesToaster = () => {
                     toast.show({
                         type: 'success',
                         title: upgradedCount > 0
-                            ? t('ADDONS_UPDATE_ALL_COUNT', {
+                            ? t('ADDONS_CHECK_FOR_UPDATES_COUNT', {
                                 count: upgradedCount,
                             })
-                            : t('ADDONS_UPDATE_ALL_UPTODATE'),
+                            : t('ADDONS_CHECK_FOR_UPDATES_UP_TO_DATE'),
                         timeout: 5000,
                         dataset: { type: 'CoreEvent' }
                     });
@@ -29,7 +29,7 @@ const ServicesToaster = () => {
                 case 'AddonUpgraded': {
                     toast.show({
                         type: 'success',
-                        title: t('ADDON_UPDATE_SUCCESS'),
+                        title: t('ADDON_UPDATED'),
                         timeout: 4000,
                         dataset: { type: 'CoreEvent' }
                     });
@@ -51,7 +51,7 @@ const ServicesToaster = () => {
                     if (args.error.type === 'Other' && args.error.code === 3 && args.source.event === 'AddonUpgraded') {
                         toast.show({
                             type: 'success',
-                            title: t('ADDON_UPDATE_UPTODATE'),
+                            title: t('ADDON_UP_TO_DATE'),
                             timeout: 4000,
                             dataset: { type: 'CoreEvent' }
                         });
