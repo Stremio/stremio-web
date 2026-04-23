@@ -650,8 +650,10 @@ const Player = ({ urlParams, queryParams }) => {
                     video.state.paused ? onPlayRequested() : onPauseRequested();
                     break;
                 case 'next-track':
-                    video.setTime(0);
-                    onNextVideoRequested();
+                    if (player.nextVideo !== null) {
+                        video.setTime(0);
+                        onNextVideoRequested();
+                    }
                     break;
                 case 'previous-track':
                     if (video.state.time !== null && video.state.time > 5000) {
@@ -662,7 +664,7 @@ const Player = ({ urlParams, queryParams }) => {
         };
         shell.on('media-key', onMediaKey);
         return () => shell.off('media-key', onMediaKey);
-    }, [video.state.paused, video.state.time, onPlayRequested, onPauseRequested, onNextVideoRequested, onSeekRequested]);
+    }, [video.state.paused, video.state.time, player.nextVideo, onPlayRequested, onPauseRequested, onNextVideoRequested, onSeekRequested]);
 
     onShortcut('seekForward', (combo) => {
         if (video.state.time !== null) {
