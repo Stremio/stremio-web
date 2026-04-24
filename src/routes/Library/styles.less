@@ -200,3 +200,23 @@
         }
     }
 }
+
+@media @phone-portrait {
+    .library-container {
+        .library-content {
+            .meta-items-container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    }
+}
+
+@media @phone-landscape {
+    .library-container {
+        .library-content {
+            .meta-items-container {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+    }
+}
