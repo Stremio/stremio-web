@@ -35,6 +35,7 @@ const Slider = ({ className, value, buffered, minimumValue, maximumValue, disabl
         window.addEventListener('blur', onBlur);
         window.addEventListener('mouseup', onMouseUp);
         window.addEventListener('touchend', onTouchEnd);
+        window.addEventListener('touchcancel', onTouchEnd);
         window.addEventListener('mousemove', onMouseMove);
         window.addEventListener('touchmove', onTouchMove);
         document.documentElement.className = classnames(document.documentElement.className, styles['active-slider-within']);
@@ -44,6 +45,7 @@ const Slider = ({ className, value, buffered, minimumValue, maximumValue, disabl
         window.removeEventListener('blur', onBlur);
         window.removeEventListener('mouseup', onMouseUp);
         window.removeEventListener('touchend', onTouchEnd);
+        window.removeEventListener('touchcancel', onTouchEnd);
         window.removeEventListener('mousemove', onMouseMove);
         window.removeEventListener('touchmove', onTouchMove);
         isDraggingRef.current = false;
@@ -134,6 +136,14 @@ const Slider = ({ className, value, buffered, minimumValue, maximumValue, disabl
     }, []);
     const onTouchEnd = React.useCallback((event) => {
         const touch = event.changedTouches[0];
+        if (!touch) {
+            releaseThumb();
+            if (typeof onPreviewTimeChangeRef.current === 'function') {
+                onPreviewTimeChangeRef.current(null, null, null);
+            }
+            return;
+        }
+
         const value = calculateValueForMouseX(touch.clientX);
         if (typeof onCompleteRef.current === 'function') {
             onCompleteRef.current(value);
@@ -141,14 +151,7 @@ const Slider = ({ className, value, buffered, minimumValue, maximumValue, disabl
 
         releaseThumb();
         if (typeof onPreviewTimeChangeRef.current === 'function') {
-            const rect = sliderContainerRef.current?.getBoundingClientRect();
-            const clientX = touch.clientX;
-            const clientY = touch.clientY;
-            if (rect && clientX >= rect.left && clientX <= rect.right && clientY >= rect.top && clientY <= rect.bottom) {
-                onPreviewTimeChangeRef.current(calculateValueForMouseX(clientX), clientX, clientY);
-            } else {
-                onPreviewTimeChangeRef.current(null, null, null);
-            }
+            onPreviewTimeChangeRef.current(null, null, null);
         }
     }, []);
     const onContainerHoverMove = React.useCallback((clientX, clientY) => {
