@@ -28,6 +28,8 @@ const Stepper = ({ className, label, value, unit, step, min, max, disabled, onCh
     const { t } = useTranslation();
 
     const localValue = useRef(value);
+    const activeDelta = useRef<number | null>(null);
+    const repeated = useRef(false);
 
     const interval = useInterval(100);
     const timeout = useTimeout(250);
@@ -35,6 +37,8 @@ const Stepper = ({ className, label, value, unit, step, min, max, disabled, onCh
     const cancel = () => {
         interval.cancel();
         timeout.cancel();
+        activeDelta.current = null;
+        repeated.current = false;
     };
 
     const decreaseDisabled = useMemo(() => {
@@ -50,28 +54,89 @@ const Stepper = ({ className, label, value, unit, step, min, max, disabled, onCh
     }, [disabled, value, unit]);
 
     const updateValue = useCallback((delta: number) => {
-        onChange(clamp(localValue.current + delta, min, max));
-    }, [onChange]);
+        const newValue = clamp(localValue.current + delta, min, max);
+
+        if (newValue !== localValue.current) {
+            localValue.current = newValue;
+            onChange(newValue);
+        }
+    }, [max, min, onChange]);
+
+    const startRepeat = useCallback((delta: number) => {
+        if (activeDelta.current === delta) {
+            return;
+        }
+
+        cancel();
+        activeDelta.current = delta;
+        timeout.start(() => {
+            repeated.current = true;
+            updateValue(delta);
+            interval.start(() => updateValue(delta));
+        });
+    }, [updateValue]);
+
+    const stopRepeat = useCallback((delta: number) => {
+        const hasRepeated = repeated.current;
+
+        cancel();
+
+        if (!hasRepeated) {
+            updateValue(delta);
+        }
+    }, [updateValue]);
 
     const onDecrementMouseDown = useCallback(() => {
-        cancel();
-        timeout.start(() => interval.start(() => updateValue(-step)));
-    }, [updateValue]);
+        if (!decreaseDisabled) {
+            startRepeat(-step);
+        }
+    }, [decreaseDisabled, startRepeat, step]);
 
     const onDecrementMouseUp = useCallback(() => {
-        cancel();
-        updateValue(-step);
-    }, [updateValue]);
+        if (!decreaseDisabled) {
+            stopRepeat(-step);
+        }
+    }, [decreaseDisabled, stopRepeat, step]);
+
+    const onDecrementKeyDown = useCallback((event: React.KeyboardEvent) => {
+        if (!decreaseDisabled && (event.key === 'Enter' || event.key === ' ')) {
+            event.preventDefault();
+            startRepeat(-step);
+        }
+    }, [decreaseDisabled, startRepeat, step]);
+
+    const onDecrementKeyUp = useCallback((event: React.KeyboardEvent) => {
+        if (!decreaseDisabled && (event.key === 'Enter' || event.key === ' ')) {
+            event.preventDefault();
+            stopRepeat(-step);
+        }
+    }, [decreaseDisabled, stopRepeat, step]);
 
     const onIncrementMouseDown = useCallback(() => {
-        cancel();
-        timeout.start(() => interval.start(() => updateValue(step)));
-    }, [updateValue]);
+        if (!increaseDisabled) {
+            startRepeat(step);
+        }
+    }, [increaseDisabled, startRepeat, step]);
 
     const onIncrementMouseUp = useCallback(() => {
-        cancel();
-        updateValue(step);
-    }, [updateValue]);
+        if (!increaseDisabled) {
+            stopRepeat(step);
+        }
+    }, [increaseDisabled, stopRepeat, step]);
+
+    const onIncrementKeyDown = useCallback((event: React.KeyboardEvent) => {
+        if (!increaseDisabled && (event.key === 'Enter' || event.key === ' ')) {
+            event.preventDefault();
+            startRepeat(step);
+        }
+    }, [increaseDisabled, startRepeat, step]);
+
+    const onIncrementKeyUp = useCallback((event: React.KeyboardEvent) => {
+        if (!increaseDisabled && (event.key === 'Enter' || event.key === ' ')) {
+            event.preventDefault();
+            stopRepeat(step);
+        }
+    }, [increaseDisabled, stopRepeat, step]);
 
     useEffect(() => {
         localValue.current = value;
@@ -88,6 +153,8 @@ const Stepper = ({ className, label, value, unit, step, min, max, disabled, onCh
                     onMouseDown={onDecrementMouseDown}
                     onMouseUp={onDecrementMouseUp}
                     onMouseLeave={cancel}
+                    onKeyDown={onDecrementKeyDown}
+                    onKeyUp={onDecrementKeyUp}
                 >
                     <Icon className={styles['icon']} name={'remove'} />
                 </Button>
@@ -99,6 +166,8 @@ const Stepper = ({ className, label, value, unit, step, min, max, disabled, onCh
                     onMouseDown={onIncrementMouseDown}
                     onMouseUp={onIncrementMouseUp}
                     onMouseLeave={cancel}
+                    onKeyDown={onIncrementKeyDown}
+                    onKeyUp={onIncrementKeyUp}
                 >
                     <Icon className={styles['icon']} name={'add'} />
                 </Button>
