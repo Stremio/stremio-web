@@ -12,6 +12,10 @@ const clamp = (value: number, min?: number, max?: number) => {
     return maxClamped;
 };
 
+const isConfirmKey = (event: React.KeyboardEvent) => {
+    return event.key === 'Enter' || event.key === ' ' || event.key === 'Space' || event.code === 'Space';
+};
+
 type Props = {
     className: string,
     label: string,
@@ -98,16 +102,14 @@ const Stepper = ({ className, label, value, unit, step, min, max, disabled, onCh
     }, [decreaseDisabled, stopRepeat, step]);
 
     const onDecrementKeyDown = useCallback((event: React.KeyboardEvent) => {
-        if (!decreaseDisabled && (event.key === 'Enter' || event.key === ' ')) {
+        if (!decreaseDisabled && isConfirmKey(event)) {
             event.preventDefault();
-            if (!event.repeat) {
-                startRepeat(-step);
-            }
+            startRepeat(-step);
         }
     }, [decreaseDisabled, startRepeat, step]);
 
     const onDecrementKeyUp = useCallback((event: React.KeyboardEvent) => {
-        if (!decreaseDisabled && (event.key === 'Enter' || event.key === ' ')) {
+        if (!decreaseDisabled && isConfirmKey(event)) {
             event.preventDefault();
             stopRepeat(-step);
         }
@@ -126,16 +128,14 @@ const Stepper = ({ className, label, value, unit, step, min, max, disabled, onCh
     }, [increaseDisabled, stopRepeat, step]);
 
     const onIncrementKeyDown = useCallback((event: React.KeyboardEvent) => {
-        if (!increaseDisabled && (event.key === 'Enter' || event.key === ' ')) {
+        if (!increaseDisabled && isConfirmKey(event)) {
             event.preventDefault();
-            if (!event.repeat) {
-                startRepeat(step);
-            }
+            startRepeat(step);
         }
     }, [increaseDisabled, startRepeat, step]);
 
     const onIncrementKeyUp = useCallback((event: React.KeyboardEvent) => {
-        if (!increaseDisabled && (event.key === 'Enter' || event.key === ' ')) {
+        if (!increaseDisabled && isConfirmKey(event)) {
             event.preventDefault();
             stopRepeat(step);
         }
