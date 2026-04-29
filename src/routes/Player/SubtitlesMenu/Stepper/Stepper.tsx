@@ -28,7 +28,7 @@ const Stepper = ({ className, label, value, unit, step, min, max, disabled, onCh
     const { t } = useTranslation();
 
     const localValue = useRef(value);
-    const activeDelta = useRef<number | null>(null);
+    const repeatActive = useRef(false);
     const repeated = useRef(false);
 
     const interval = useInterval(100);
@@ -37,7 +37,7 @@ const Stepper = ({ className, label, value, unit, step, min, max, disabled, onCh
     const cancel = useCallback(() => {
         interval.cancel();
         timeout.cancel();
-        activeDelta.current = null;
+        repeatActive.current = false;
         repeated.current = false;
     }, [interval, timeout]);
 
@@ -63,12 +63,12 @@ const Stepper = ({ className, label, value, unit, step, min, max, disabled, onCh
     }, [max, min, onChange]);
 
     const startRepeat = useCallback((delta: number) => {
-        if (activeDelta.current === delta) {
+        if (repeatActive.current) {
             return;
         }
 
         cancel();
-        activeDelta.current = delta;
+        repeatActive.current = true;
         timeout.start(() => {
             repeated.current = true;
             updateValue(delta);
