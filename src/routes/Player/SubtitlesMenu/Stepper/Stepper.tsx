@@ -57,7 +57,6 @@ const Stepper = ({ className, label, value, unit, step, min, max, disabled, onCh
         const newValue = clamp(localValue.current + delta, min, max);
 
         if (newValue !== localValue.current) {
-            localValue.current = newValue;
             onChange(newValue);
         }
     }, [max, min, onChange]);
@@ -101,7 +100,9 @@ const Stepper = ({ className, label, value, unit, step, min, max, disabled, onCh
     const onDecrementKeyDown = useCallback((event: React.KeyboardEvent) => {
         if (!decreaseDisabled && (event.key === 'Enter' || event.key === ' ')) {
             event.preventDefault();
-            startRepeat(-step);
+            if (!event.repeat) {
+                startRepeat(-step);
+            }
         }
     }, [decreaseDisabled, startRepeat, step]);
 
@@ -127,7 +128,9 @@ const Stepper = ({ className, label, value, unit, step, min, max, disabled, onCh
     const onIncrementKeyDown = useCallback((event: React.KeyboardEvent) => {
         if (!increaseDisabled && (event.key === 'Enter' || event.key === ' ')) {
             event.preventDefault();
-            startRepeat(step);
+            if (!event.repeat) {
+                startRepeat(step);
+            }
         }
     }, [increaseDisabled, startRepeat, step]);
 
