@@ -34,12 +34,12 @@ const Stepper = ({ className, label, value, unit, step, min, max, disabled, onCh
     const interval = useInterval(100);
     const timeout = useTimeout(250);
 
-    const cancel = () => {
+    const cancel = useCallback(() => {
         interval.cancel();
         timeout.cancel();
         activeDelta.current = null;
         repeated.current = false;
-    };
+    }, [interval, timeout]);
 
     const decreaseDisabled = useMemo(() => {
         return disabled || typeof value !== 'number' || (typeof min === 'number' && value <= min);
@@ -74,7 +74,7 @@ const Stepper = ({ className, label, value, unit, step, min, max, disabled, onCh
             updateValue(delta);
             interval.start(() => updateValue(delta));
         });
-    }, [updateValue]);
+    }, [cancel, interval, timeout, updateValue]);
 
     const stopRepeat = useCallback((delta: number) => {
         const hasRepeated = repeated.current;
@@ -84,7 +84,7 @@ const Stepper = ({ className, label, value, unit, step, min, max, disabled, onCh
         if (!hasRepeated) {
             updateValue(delta);
         }
-    }, [updateValue]);
+    }, [cancel, updateValue]);
 
     const onDecrementMouseDown = useCallback(() => {
         if (!decreaseDisabled) {
