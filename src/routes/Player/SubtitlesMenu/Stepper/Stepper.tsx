@@ -12,10 +12,6 @@ const clamp = (value: number, min?: number, max?: number) => {
     return maxClamped;
 };
 
-const isConfirmKey = (event: React.KeyboardEvent) => {
-    return event.key === 'Enter' || event.key === ' ' || event.key === 'Space' || event.code === 'Space';
-};
-
 type Props = {
     className: string,
     label: string,
@@ -32,18 +28,14 @@ const Stepper = ({ className, label, value, unit, step, min, max, disabled, onCh
     const { t } = useTranslation();
 
     const localValue = useRef(value);
-    const repeatActive = useRef(false);
-    const repeated = useRef(false);
 
     const interval = useInterval(100);
     const timeout = useTimeout(250);
 
-    const cancel = useCallback(() => {
+    const cancel = () => {
         interval.cancel();
         timeout.cancel();
-        repeatActive.current = false;
-        repeated.current = false;
-    }, [interval, timeout]);
+    };
 
     const decreaseDisabled = useMemo(() => {
         return disabled || typeof value !== 'number' || (typeof min === 'number' && value <= min);
@@ -58,88 +50,54 @@ const Stepper = ({ className, label, value, unit, step, min, max, disabled, onCh
     }, [disabled, value, unit]);
 
     const updateValue = useCallback((delta: number) => {
-        const newValue = clamp(localValue.current + delta, min, max);
-
-        if (newValue !== localValue.current) {
-            onChange(newValue);
-        }
-    }, [max, min, onChange]);
-
-    const startRepeat = useCallback((delta: number) => {
-        if (repeatActive.current) {
-            return;
-        }
-
-        cancel();
-        repeatActive.current = true;
-        timeout.start(() => {
-            repeated.current = true;
-            updateValue(delta);
-            interval.start(() => updateValue(delta));
-        });
-    }, [cancel, interval, timeout, updateValue]);
-
-    const stopRepeat = useCallback((delta: number) => {
-        const hasRepeated = repeated.current;
-
-        cancel();
-
-        if (!hasRepeated) {
-            updateValue(delta);
-        }
-    }, [cancel, updateValue]);
+        onChange(clamp(localValue.current + delta, min, max));
+    }, [onChange]);
 
     const onDecrementMouseDown = useCallback(() => {
-        if (!decreaseDisabled) {
-            startRepeat(-step);
-        }
-    }, [decreaseDisabled, startRepeat, step]);
+        cancel();
+        timeout.start(() => interval.start(() => updateValue(-step)));
+    }, [updateValue]);
 
     const onDecrementMouseUp = useCallback(() => {
-        if (!decreaseDisabled) {
-            stopRepeat(-step);
-        }
-    }, [decreaseDisabled, stopRepeat, step]);
+        cancel();
+        updateValue(-step);
+    }, [updateValue]);
 
     const onDecrementKeyDown = useCallback((event: React.KeyboardEvent) => {
-        if (!decreaseDisabled && isConfirmKey(event)) {
-            event.preventDefault();
-            startRepeat(-step);
-        }
-    }, [decreaseDisabled, startRepeat, step]);
+        if (event.key !== 'Enter') return;
+        // @ts-expect-error: Property 'buttonClickPrevented' does not exist on type 'KeyboardEvent'.
+        event.nativeEvent.buttonClickPrevented = true;
+        if (event.repeat) return;
+        onDecrementMouseDown();
+    }, [onDecrementMouseDown]);
 
     const onDecrementKeyUp = useCallback((event: React.KeyboardEvent) => {
-        if (!decreaseDisabled && isConfirmKey(event)) {
-            event.preventDefault();
-            stopRepeat(-step);
-        }
-    }, [decreaseDisabled, stopRepeat, step]);
+        if (event.key !== 'Enter') return;
+        onDecrementMouseUp();
+    }, [onDecrementMouseUp]);
 
     const onIncrementMouseDown = useCallback(() => {
-        if (!increaseDisabled) {
-            startRepeat(step);
-        }
-    }, [increaseDisabled, startRepeat, step]);
+        cancel();
+        timeout.start(() => interval.start(() => updateValue(step)));
+    }, [updateValue]);
 
     const onIncrementMouseUp = useCallback(() => {
-        if (!increaseDisabled) {
-            stopRepeat(step);
-        }
-    }, [increaseDisabled, stopRepeat, step]);
+        cancel();
+        updateValue(step);
+    }, [updateValue]);
 
     const onIncrementKeyDown = useCallback((event: React.KeyboardEvent) => {
-        if (!increaseDisabled && isConfirmKey(event)) {
-            event.preventDefault();
-            startRepeat(step);
-        }
-    }, [increaseDisabled, startRepeat, step]);
+        if (event.key !== 'Enter') return;
+        // @ts-expect-error: Property 'buttonClickPrevented' does not exist on type 'KeyboardEvent'.
+        event.nativeEvent.buttonClickPrevented = true;
+        if (event.repeat) return;
+        onIncrementMouseDown();
+    }, [onIncrementMouseDown]);
 
     const onIncrementKeyUp = useCallback((event: React.KeyboardEvent) => {
-        if (!increaseDisabled && isConfirmKey(event)) {
-            event.preventDefault();
-            stopRepeat(step);
-        }
-    }, [increaseDisabled, stopRepeat, step]);
+        if (event.key !== 'Enter') return;
+        onIncrementMouseUp();
+    }, [onIncrementMouseUp]);
 
     useEffect(() => {
         localValue.current = value;
