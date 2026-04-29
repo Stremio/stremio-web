@@ -165,6 +165,13 @@ html {
     background-color: var(--primary-background-color);
     -webkit-tap-highlight-color: transparent;
 
+    &[data-pure-dark="true"] {
+        background-color: #000000;
+        body {
+            background: #000000;
+        }
+    }
+
     @media (display-mode: standalone) {
         width: @html-standalone-width;
         height: @html-standalone-height;

@@ -4,6 +4,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { default: Icon } = require('@stremio/stremio-icons/react');
+const { FaMoon, FaSun } = require('react-icons/fa');
 const { Button, Image } = require('stremio/components');
 const { default: useFullscreen } = require('stremio/common/useFullscreen');
 const usePWA = require('stremio/common/usePWA');
@@ -18,6 +19,19 @@ const HorizontalNavBar = React.memo(({ className, route, query, title, backButto
     }, []);
     const [fullscreen, requestFullscreen, exitFullscreen] = useFullscreen();
     const [isIOSPWA] = usePWA();
+    const [isPureDark, setIsPureDark] = React.useState(() => {
+        return localStorage.getItem('pure-dark-mode') === 'true';
+    });
+    const togglePureDark = React.useCallback(() => {
+        setIsPureDark((prev) => {
+            const newValue = !prev;
+            localStorage.setItem('pure-dark-mode', newValue);
+            return newValue;
+        });
+    }, []);
+    React.useEffect(() => {
+        document.documentElement.setAttribute('data-pure-dark', isPureDark);
+    }, [isPureDark]);
     const renderNavMenuLabel = React.useCallback(({ ref, className, onClick, children, }) => (
         <Button ref={ref} className={classnames(className, styles['button-container'], styles['menu-button-container'])} tabIndex={-1} onClick={onClick}>
             <Icon className={styles['icon']} name={'person-outline'} />
@@ -58,6 +72,19 @@ const HorizontalNavBar = React.memo(({ className, route, query, title, backButto
                         <div className={styles['hdr-indicator']} title={hdrInfo.gamma === 'pq' ? 'HDR10' : 'HLG'}>
                             <Icon className={styles['icon']} name={'hdr'} />
                         </div>
+                        :
+                        null
+                }
+                {
+                    !isIOSPWA && fullscreenButton ?
+                        <Button className={styles['button-container']} tabIndex={-1} onClick={togglePureDark}>
+                            {
+                                isPureDark ?
+                                    <FaSun className={styles['moon-icon']} />
+                                    :
+                                    <FaMoon className={styles['moon-icon']} />
+                            }
+                        </Button>
                         :
                         null
                 }
