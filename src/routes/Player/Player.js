@@ -16,6 +16,11 @@ const VolumeChangeIndicator = require('./VolumeChangeIndicator');
 const Error = require('./Error');
 const ControlBar = require('./ControlBar');
 const NextVideoPopup = require('./NextVideoPopup');
+const SegmentActionOverlay = require('./SegmentActionOverlay');
+const {
+    normalizePlaybackSegments,
+    findActivePlaybackSegment,
+} = require('./playbackSegments');
 const StatisticsMenu = require('./StatisticsMenu');
 const OptionsMenu = require('./OptionsMenu');
 const SubtitlesMenu = require('./SubtitlesMenu');
@@ -77,9 +82,28 @@ const Player = ({ urlParams, queryParams }) => {
     const [nextVideoPopupOpen, openNextVideoPopup, closeNextVideoPopup] = useBinaryState(false);
     const [sideDrawerOpen, , closeSideDrawer, toggleSideDrawer] = useBinaryState(false);
 
+    const normalizedPlaybackSegments = React.useMemo(() => {
+        return normalizePlaybackSegments(
+            player.selected !== null ? player.selected.stream : null,
+        );
+    }, [player.selected]);
+
+    const activePlaybackSegment = React.useMemo(() => {
+        if (video.state.time === null) {
+            return null;
+        }
+        return findActivePlaybackSegment(
+            video.state.time,
+            normalizedPlaybackSegments,
+        );
+    }, [video.state.time, normalizedPlaybackSegments]);
+
+    const skipIntroOverlayOpen =
+        activePlaybackSegment !== null && activePlaybackSegment.type === 'intro';
+
     const menusOpen = React.useMemo(() => {
-        return optionsMenuOpen || subtitlesMenuOpen || audioMenuOpen || speedMenuOpen || statisticsMenuOpen || sideDrawerOpen || nextVideoPopupOpen;
-    }, [optionsMenuOpen, subtitlesMenuOpen, audioMenuOpen, speedMenuOpen, statisticsMenuOpen, sideDrawerOpen, nextVideoPopupOpen]);
+        return optionsMenuOpen || subtitlesMenuOpen || audioMenuOpen || speedMenuOpen || statisticsMenuOpen || sideDrawerOpen || nextVideoPopupOpen || skipIntroOverlayOpen;
+    }, [optionsMenuOpen, subtitlesMenuOpen, audioMenuOpen, speedMenuOpen, statisticsMenuOpen, sideDrawerOpen, nextVideoPopupOpen, skipIntroOverlayOpen]);
 
     const closeMenus = React.useCallback(() => {
         closeOptionsMenu();
@@ -95,6 +119,8 @@ const Player = ({ urlParams, queryParams }) => {
     }, [immersed, casting, video.state.paused, menusOpen]);
 
     const nextVideoPopupDismissed = React.useRef(false);
+    const creditsEarlyPopupTimerRef = React.useRef(null);
+    const wasInCreditsSegmentRef = React.useRef(false);
     const defaultSubtitlesSelected = React.useRef(false);
     const lastSubtitleTrack = React.useRef(null);
     const defaultAudioTrackSelected = React.useRef(false);
@@ -234,6 +260,12 @@ const Player = ({ urlParams, queryParams }) => {
         video.setTime(time);
         seek(time, video.state.duration, video.state.manifest?.name);
     }, [video.state.duration, video.state.manifest]);
+
+    const onSkipIntroRequested = React.useCallback(() => {
+        if (activePlaybackSegment !== null && activePlaybackSegment.type === 'intro') {
+            onSeekRequested(activePlaybackSegment.end);
+        }
+    }, [activePlaybackSegment, onSeekRequested]);
 
     const onPlaybackSpeedChanged = React.useCallback((rate, skipUpdate) => {
         video.setPlaybackSpeed(rate);
@@ -529,13 +561,6 @@ const Player = ({ urlParams, queryParams }) => {
     }, [video.state.videoParams]);
 
     React.useEffect(() => {
-        if (player.nextVideo !== null && !nextVideoPopupDismissed.current) {
-            if (video.state.time !== null && video.state.duration !== null && video.state.time < video.state.duration && (video.state.duration - video.state.time) <= settings.nextVideoNotificationDuration) {
-                openNextVideoPopup();
-            } else {
-                closeNextVideoPopup();
-            }
-        }
         if (player.nextVideo) {
             // This is a workaround for the fact that when we call onEnded nextVideo from the player is already set to null since core unloads the stream
             // we explicitly set it to a global variable so we can access it in the onEnded function
@@ -544,7 +569,94 @@ const Player = ({ urlParams, queryParams }) => {
         } else {
             window.playerNextVideo = null;
         }
-    }, [player.nextVideo, video.state.time, video.state.duration]);
+
+        if (player.nextVideo === null || nextVideoPopupDismissed.current) {
+            if (creditsEarlyPopupTimerRef.current !== null) {
+                clearTimeout(creditsEarlyPopupTimerRef.current);
+                creditsEarlyPopupTimerRef.current = null;
+            }
+            closeNextVideoPopup();
+            return;
+        }
+
+        const time = video.state.time;
+        const duration = video.state.duration;
+        if (time === null || duration === null || time >= duration) {
+            if (creditsEarlyPopupTimerRef.current !== null) {
+                clearTimeout(creditsEarlyPopupTimerRef.current);
+                creditsEarlyPopupTimerRef.current = null;
+            }
+            closeNextVideoPopup();
+            return;
+        }
+
+        const inCreditsSegment =
+            activePlaybackSegment !== null && activePlaybackSegment.type === 'credits';
+        const inIntroSegment =
+            activePlaybackSegment !== null && activePlaybackSegment.type === 'intro';
+        const nearEndOfVideo =
+            duration - time <= settings.nextVideoNotificationDuration;
+        const shouldShowNextVideoPopup =
+            !inIntroSegment && (inCreditsSegment || nearEndOfVideo);
+
+        if (!shouldShowNextVideoPopup) {
+            if (creditsEarlyPopupTimerRef.current !== null) {
+                clearTimeout(creditsEarlyPopupTimerRef.current);
+                creditsEarlyPopupTimerRef.current = null;
+            }
+            closeNextVideoPopup();
+            return;
+        }
+
+        if (inCreditsSegment) {
+            if (nextVideoPopupOpen) {
+                if (creditsEarlyPopupTimerRef.current !== null) {
+                    clearTimeout(creditsEarlyPopupTimerRef.current);
+                    creditsEarlyPopupTimerRef.current = null;
+                }
+                return;
+            }
+            if (creditsEarlyPopupTimerRef.current === null) {
+                creditsEarlyPopupTimerRef.current = setTimeout(() => {
+                    creditsEarlyPopupTimerRef.current = null;
+                    openNextVideoPopup();
+                }, 120);
+            }
+        } else {
+            if (creditsEarlyPopupTimerRef.current !== null) {
+                clearTimeout(creditsEarlyPopupTimerRef.current);
+                creditsEarlyPopupTimerRef.current = null;
+            }
+            openNextVideoPopup();
+        }
+    }, [
+        player.nextVideo,
+        video.state.time,
+        video.state.duration,
+        activePlaybackSegment,
+        settings.nextVideoNotificationDuration,
+        nextVideoPopupOpen,
+        openNextVideoPopup,
+        closeNextVideoPopup,
+    ]);
+
+    React.useEffect(() => {
+        const inCreditsNow =
+            activePlaybackSegment !== null && activePlaybackSegment.type === 'credits';
+        if (inCreditsNow && !wasInCreditsSegmentRef.current) {
+            nextVideoPopupDismissed.current = false;
+        }
+        wasInCreditsSegmentRef.current = inCreditsNow;
+    }, [activePlaybackSegment]);
+
+    React.useEffect(() => {
+        return () => {
+            if (creditsEarlyPopupTimerRef.current !== null) {
+                clearTimeout(creditsEarlyPopupTimerRef.current);
+                creditsEarlyPopupTimerRef.current = null;
+            }
+        };
+    }, []);
 
     // Auto subtitles track selection
     React.useEffect(() => {
@@ -628,6 +740,11 @@ const Player = ({ urlParams, queryParams }) => {
         defaultAudioTrackSelected.current = false;
         lastSubtitleTrack.current = null;
         nextVideoPopupDismissed.current = false;
+        wasInCreditsSegmentRef.current = false;
+        if (creditsEarlyPopupTimerRef.current !== null) {
+            clearTimeout(creditsEarlyPopupTimerRef.current);
+            creditsEarlyPopupTimerRef.current = null;
+        }
         playingOnExternalDevice.current = false;
         // we need a timeout here to make sure that previous page unloads and the new one loads
         // avoiding race conditions and flickering
@@ -1098,6 +1215,16 @@ const Player = ({ urlParams, queryParams }) => {
                 videoState={video.state}
                 disabled={subtitlesMenuOpen}
             />
+            {
+                skipIntroOverlayOpen ?
+                    <SegmentActionOverlay
+                        className={classnames(styles['layer'], styles['skip-segment-layer'])}
+                        label={t('PLAYER_SKIP_INTRO')}
+                        onAction={onSkipIntroRequested}
+                    />
+                    :
+                    null
+            }
             {
                 nextVideoPopupOpen ?
                     <NextVideoPopup

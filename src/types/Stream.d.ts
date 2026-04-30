@@ -3,6 +3,11 @@ type StreamDeepLinks = {
     player: string | null,
     externalPlayer: ExternalPlayerLinks,
 };
+type PlaybackSegment = {
+    type: 'intro' | 'credits',
+    start: number,
+    end: number,
+};
 
 type Stream = {
     ytId?: string,
@@ -14,5 +19,8 @@ type Stream = {
     deepLinks: {
         player: string,
         externalPlayer: ExternalPlayerLinks,
+    },
+    behaviorHints?: BehaviorHints & {
+        segments?: PlaybackSegment[],
     },
 };
