@@ -8252,7 +8252,7 @@ html:not(.active-slider-within-NcgYf) .player-container-wIELK.overlayHidden-gyjI
   border-radius: var(--border-radius);
   background-color: var(--modal-background-color);
   box-shadow: var(--outer-glow);
-  overflow-y: auto;
+  overflow: hidden;
 }
 .gamepad-modal-Qawlq .container-RTZor .header-dZZ7W {
   flex: none;
@@ -8300,6 +8300,8 @@ html:not(.active-slider-within-NcgYf) .player-container-wIELK.overlayHidden-gyjI
   gap: 3rem;
   padding: 0 3rem;
   padding-bottom: 3rem;
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
 }
 @keyframes draw-stroke-CwxEV {
@@ -8327,6 +8329,7 @@ html:not(.active-slider-within-NcgYf) .player-container-wIELK.overlayHidden-gyjI
   }
 }
 .gamepad-modal-Qawlq .diagram-Jlr11 {
+  flex: none;
   width: 100%;
   max-width: 48rem;
   height: auto;
@@ -8351,17 +8354,20 @@ html:not(.active-slider-within-NcgYf) .player-container-wIELK.overlayHidden-gyjI
   animation: fade-in-AjdhF 0.5s ease-out 2.2s both;
 }
 .gamepad-modal-Qawlq .sections-oDwuV {
+  flex: none;
   display: flex;
   flex-direction: row;
   gap: 5rem;
   width: 100%;
   max-width: 56rem;
+  overflow: visible;
 }
 .gamepad-modal-Qawlq .section-EYjRH {
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
+  overflow: visible;
 }
 .gamepad-modal-Qawlq .section-title-svA6u {
   font-size: 1rem;
