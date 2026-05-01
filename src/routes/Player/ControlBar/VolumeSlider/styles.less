@@ -5,20 +5,42 @@
 :import('~stremio/components/Slider/styles.less') {
     slider-track: track;
     slider-track-after: track-after;
+    slider-thumb: thumb;
 }
 
 .volume-slider:not(:global(.disabled)) {
     .slider-track {
         background-color: var(--overlay-color);
+        opacity: 1;
     }
 
     .slider-track-after {
         background-color: var(--primary-foreground-color);
     }
 
+    .slider-thumb {
+        background-color: @color-secondaryvariant1-light4;
+        transition: transform 150ms ease;
+
+        &:after {
+            content: "";
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            border-radius: 100%;
+            box-shadow: 0 0 0 0.25rem white inset;
+        }
+    }
+
     &:hover, &:global(.active) {
         .slider-track-after {
             background-color: var(--primary-foreground-color);
+        }
+
+        .slider-thumb {
+            transform: translateX(-50%) scale(1.2);
         }
     }
 }

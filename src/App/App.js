@@ -4,14 +4,15 @@ require('spatial-navigation-polyfill');
 const React = require('react');
 const { useTranslation } = require('react-i18next');
 const { Router } = require('stremio-router');
-const { Core, Shell, Chromecast, DragAndDrop, KeyboardShortcuts, ServicesProvider } = require('stremio/services');
+const { Core, Shell, Chromecast, DragAndDrop, KeyboardShortcuts, ServicesProvider, GamepadProvider } = require('stremio/services');
 const { NotFound } = require('stremio/routes');
-const { FileDropProvider, PlatformProvider, ToastProvider, TooltipProvider, ShortcutsProvider, CONSTANTS, withCoreSuspender, useShell, useBinaryState } = require('stremio/common');
+const { FileDropProvider, FullscreenProvider, PlatformProvider, ToastProvider, TooltipProvider, ShortcutsProvider, CONSTANTS, withCoreSuspender, useShell, useBinaryState } = require('stremio/common');
 const ServicesToaster = require('./ServicesToaster');
 const DeepLinkHandler = require('./DeepLinkHandler');
 const SearchParamsHandler = require('./SearchParamsHandler');
 const { default: UpdaterBanner } = require('./UpdaterBanner');
 const { default: ShortcutsModal } = require('./ShortcutsModal');
+const { default: GamepadModal } = require('./GamepadModal');
 const ErrorDialog = require('./ErrorDialog');
 const withProtectedRoutes = require('./withProtectedRoutes');
 const routerViewsConfig = require('./routerViewsConfig');
@@ -22,6 +23,7 @@ const RouterWithProtectedRoutes = withCoreSuspender(withProtectedRoutes(Router))
 const App = () => {
     const { i18n } = useTranslation();
     const shell = useShell();
+    const [gamepadSupportEnabled, setGamepadSupportEnabled] = React.useState(false);
     const onPathNotMatch = React.useCallback(() => {
         return NotFound;
     }, []);
@@ -40,12 +42,18 @@ const App = () => {
     }, []);
     const [initialized, setInitialized] = React.useState(false);
     const [shortcutModalOpen,, closeShortcutsModal, toggleShortcutModal] = useBinaryState(false);
+    const [gamepadModalOpen,, closeGamepadModal, toggleGamepadModal] = useBinaryState(false);
 
     const onShortcut = React.useCallback((name) => {
-        if (name === 'shortcuts') {
-            toggleShortcutModal();
+        switch (name) {
+            case 'shortcuts':
+                toggleShortcutModal();
+                break;
+            case 'gamepadGuide':
+                toggleGamepadModal();
+                break;
         }
-    }, [toggleShortcutModal]);
+    }, [toggleShortcutModal, toggleGamepadModal]);
 
     React.useEffect(() => {
         let prevPath = window.location.hash.slice(1);
@@ -144,6 +152,9 @@ const App = () => {
                     if (args && args.settings && typeof args.settings.interfaceScale === 'number') {
                         shell.scaleInterface(args.settings.interfaceScale);
                     }
+                    if (args?.settings?.gamepadSupport !== undefined) {
+                        setGamepadSupportEnabled(args.settings.gamepadSupport);
+                    }
 
                     if (args?.settings?.quitOnClose && shell.windowClosed) {
                         shell.send('quit');
@@ -160,6 +171,9 @@ const App = () => {
 
             if (state && state.profile && state.profile.settings && typeof state.profile.settings.interfaceScale === 'number') {
                 shell.scaleInterface(state.profile.settings.interfaceScale);
+            }
+            if (typeof state.profile.settings.gamepadSupport === 'boolean') {
+                setGamepadSupportEnabled(state.profile.settings.gamepadSupport);
             }
 
             if (state?.profile?.settings?.quitOnClose && shell.windowClosed) {
@@ -221,20 +235,27 @@ const App = () => {
                                 <ToastProvider className={styles['toasts-container']}>
                                     <TooltipProvider className={styles['tooltip-container']}>
                                         <FileDropProvider className={styles['file-drop-container']}>
-                                            <ShortcutsProvider onShortcut={onShortcut}>
-                                                {
-                                                    shortcutModalOpen && <ShortcutsModal onClose={closeShortcutsModal}/>
-                                                }
-                                                <ServicesToaster />
-                                                <DeepLinkHandler />
-                                                <SearchParamsHandler />
-                                                <UpdaterBanner className={styles['updater-banner-container']} />
-                                                <RouterWithProtectedRoutes
-                                                    className={styles['router']}
-                                                    viewsConfig={routerViewsConfig}
-                                                    onPathNotMatch={onPathNotMatch}
-                                                />
-                                            </ShortcutsProvider>
+                                            <GamepadProvider enabled={gamepadSupportEnabled} onGuide={toggleGamepadModal}>
+                                                <ShortcutsProvider onShortcut={onShortcut}>
+                                                    <FullscreenProvider>
+                                                        {
+                                                            shortcutModalOpen && <ShortcutsModal onClose={closeShortcutsModal}/>
+                                                        }
+                                                        {
+                                                            gamepadModalOpen && <GamepadModal onClose={closeGamepadModal}/>
+                                                        }
+                                                        <ServicesToaster />
+                                                        <DeepLinkHandler />
+                                                        <SearchParamsHandler />
+                                                        <UpdaterBanner className={styles['updater-banner-container']} />
+                                                        <RouterWithProtectedRoutes
+                                                            className={styles['router']}
+                                                            viewsConfig={routerViewsConfig}
+                                                            onPathNotMatch={onPathNotMatch}
+                                                        />
+                                                    </FullscreenProvider>
+                                                </ShortcutsProvider>
+                                            </GamepadProvider>
                                         </FileDropProvider>
                                     </TooltipProvider>
                                 </ToastProvider>

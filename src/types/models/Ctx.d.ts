@@ -25,6 +25,7 @@ type Settings = {
     interfaceScale: number,
     quitOnClose: boolean,
     hideSpoilers: boolean,
+    gamepadSupport: boolean,
     nextVideoNotificationDuration: number,
     playInBackground: boolean,
     playerType: string | null,

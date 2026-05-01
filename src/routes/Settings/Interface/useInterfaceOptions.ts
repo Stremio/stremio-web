@@ -102,12 +102,29 @@ const useInterfaceOptions = (profile: Profile) => {
         }
     }), [profile.settings]);
 
+    const gamepadSupportToggle = useMemo(() => ({
+        checked: profile.settings.gamepadSupport,
+        onClick: () => {
+            core.transport.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'UpdateSettings',
+                    args: {
+                        ...profile.settings,
+                        gamepadSupport: !profile.settings.gamepadSupport
+                    }
+                }
+            });
+        }
+    }), [profile.settings]);
+
     return {
         interfaceLanguageSelect,
         interfaceSize,
         escExitFullscreenToggle,
         quitOnCloseToggle,
         hideSpoilersToggle,
+        gamepadSupportToggle,
     };
 };
 

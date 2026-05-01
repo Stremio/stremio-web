@@ -27,6 +27,11 @@
                 "name": "shortcuts",
                 "label": "SETTINGS_SHORTCUT_SHORTCUTS",
                 "combos": [["Ctrl", "/"]]
+            },
+            {
+                "name": "gamepadGuide",
+                "label": "GAMEPAD_ACTION_GUIDE",
+                "combos": [["Ctrl", "G"]]
             }
         ]
     },

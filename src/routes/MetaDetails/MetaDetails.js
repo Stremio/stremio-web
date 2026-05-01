@@ -5,6 +5,7 @@ const { useTranslation } = require('react-i18next');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { useServices } = require('stremio/services');
+const { useContentGamepadNavigation } = require('stremio/services/GamepadNavigation');
 const { withCoreSuspender } = require('stremio/common');
 const { VerticalNavBar, HorizontalNavBar, DelayedRenderer, Image, MetaPreview, ModalDialog } = require('stremio/components');
 const StreamsList = require('./StreamsList');
@@ -15,6 +16,7 @@ const useMetaExtensionTabs = require('./useMetaExtensionTabs');
 const styles = require('./styles');
 
 const MetaDetails = ({ urlParams, queryParams }) => {
+    const contentRef = React.useRef(null);
     const { t } = useTranslation();
     const { core } = useServices();
     const metaDetails = useMetaDetails(urlParams);
@@ -111,6 +113,7 @@ const MetaDetails = ({ urlParams, queryParams }) => {
         metaDetails.metaItem.content.content.background.length > 0
     ), [metaPath, metaDetails]);
 
+    useContentGamepadNavigation(contentRef, urlParams.path);
     return (
         <div className={styles['metadetails-container']}>
             {
@@ -132,7 +135,7 @@ const MetaDetails = ({ urlParams, queryParams }) => {
                 fullscreenButton={true}
                 navMenu={true}
             />
-            <div className={styles['metadetails-content']}>
+            <div ref={contentRef} className={styles['metadetails-content']}>
                 {
                     tabs.length > 0 ?
                         <VerticalNavBar
@@ -238,6 +241,7 @@ const MetaDetails = ({ urlParams, queryParams }) => {
 
 MetaDetails.propTypes = {
     urlParams: PropTypes.shape({
+        path: PropTypes.string,
         type: PropTypes.string,
         id: PropTypes.string,
         videoId: PropTypes.string

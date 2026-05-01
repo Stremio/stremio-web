@@ -104,7 +104,7 @@ const StreamsList = ({ className, video, type, onEpisodeSearch, ...props }) => {
                 {
                     video ?
                         <React.Fragment>
-                            <Button className={classnames(styles['button-container'], styles['back-button-container'])} tabIndex={-1} onClick={backButtonOnClick}>
+                            <Button className={classnames(styles['button-container'], styles['back-button-container'])} tabIndex={0} onClick={backButtonOnClick}>
                                 <Icon className={styles['icon']} name={'chevron-back'} />
                             </Button>
                             <div className={styles['episode-title']}>

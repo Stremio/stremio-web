@@ -19,10 +19,20 @@ type Props = {
     onShortcut: (name: ShortcutName) => void,
 };
 
+const REPEAT_THROTTLE_MS = 130;
+
 const ShortcutsProvider = ({ children, onShortcut }: Props) => {
     const listeners = useRef<Map<ShortcutName, Set<ShortcutListener>>>(new Map());
+    const lastRepeatTime = useRef<Map<string, number>>(new Map());
 
-    const onKeyDown = useCallback(({ ctrlKey, shiftKey, code, key }: KeyboardEvent) => {
+    const onKeyDown = useCallback(({ ctrlKey, shiftKey, code, key, repeat }: KeyboardEvent) => {
+        if (repeat) {
+            const now = Date.now();
+            const last = lastRepeatTime.current.get(code) ?? 0;
+            if (now - last < REPEAT_THROTTLE_MS) return;
+            lastRepeatTime.current.set(code, now);
+        }
+
         SHORTCUTS.forEach(({ name, combos }) => combos.forEach((keys) => {
             const modifers = (keys.includes('Ctrl') ? ctrlKey : true)
                 && (keys.includes('Shift') ? shiftKey : true);

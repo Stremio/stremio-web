@@ -28,6 +28,7 @@ const ActionsGroup = ({ items, className }: Props) => {
                     <div
                         key={index}
                         className={classNames(styles['icon-container'], item.className, { [styles['disabled']]: item.disabled })}
+                        tabIndex={0}
                         onClick={item.onClick}
                     >
                         {

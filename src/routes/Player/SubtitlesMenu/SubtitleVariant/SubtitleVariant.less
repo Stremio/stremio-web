@@ -1,0 +1,82 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
+
+.variant-option {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 4rem;
+    padding: 0 1.5rem;
+    margin-bottom: 0.5rem;
+    border-radius: var(--border-radius);
+
+    &:global(.selected), &:hover {
+        background-color: var(--overlay-color);
+    }
+
+    .info {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+
+        .variant-label {
+            flex: 1;
+            font-size: 1.1rem;
+            line-height: 1.5rem;
+            color: var(--primary-foreground-color);
+            text-wrap: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+
+        .variant-origin {
+            font-size: 0.9rem;
+            color: var(--color-placeholder-text);
+            text-wrap: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+    }
+
+    .icon {
+        flex: none;
+        width: 0.5rem;
+        height: 0.5rem;
+        border-radius: 100%;
+        margin-left: 1rem;
+        background-color: var(--secondary-accent-color);
+    }
+}
+
+.context-menu-option {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+    min-width: 16rem;
+    padding: 1.25rem 1.5rem;
+
+    &:hover, &:focus {
+        background-color: var(--overlay-color);
+    }
+
+    .menu-icon {
+        flex: none;
+        width: 1.4rem;
+        height: 1.4rem;
+        color: var(--color-placeholder);
+    }
+
+    .context-menu-option-label {
+        flex: 1;
+        min-width: 0;
+        font-size: 1rem;
+        font-weight: 400;
+        color: var(--primary-foreground-color);
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+}

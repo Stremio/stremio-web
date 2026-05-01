@@ -5,7 +5,6 @@ type LibraryItemPlayer = Pick<LibraryItem, '_id'> & {
 type VideoPlayer = Video & {
     upcoming: boolean,
     watched: boolean,
-    progress: boolean | null,
     scheduled: boolean,
     deepLinks: VideoDeepLinks,
 };
@@ -16,13 +15,16 @@ type MetaItemPlayer = MetaItemPreview & {
 
 type SelectedStream = Stream & {
     deepLinks: StreamDeepLinks,
+    subtitles?: Subtitle[],
 };
 
 type Subtitle = {
     id: string,
     lang: string,
-    origin: string,
-    url: string,
+    origin?: string,
+    url?: string | null,
+    fallbackUrl?: string | null,
+    label?: string | null,
 };
 
 type SeriesInfo = {
@@ -33,6 +35,7 @@ type SeriesInfo = {
 type SubtitlesTrackState = {
     id: string,
     embedded: boolean,
+    lang?: string,
 };
 
 type AudioTrackState = {
@@ -40,7 +43,7 @@ type AudioTrackState = {
 };
 
 type StreamState = {
-    subtitleTrack?: SubtitlesTrackState,
+    subtitleTrack?: SubtitlesTrackState | null,
     subtitleDelay?: number,
     subtitleSize?: number,
     subtitleOffset?: number,

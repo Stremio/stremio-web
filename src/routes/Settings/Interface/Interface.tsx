@@ -17,6 +17,7 @@ const Interface = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) =>
         quitOnCloseToggle,
         escExitFullscreenToggle,
         hideSpoilersToggle,
+        gamepadSupportToggle,
     } = useInterfaceOptions(profile);
 
     return (
@@ -55,6 +56,12 @@ const Interface = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) =>
                 <Toggle
                     tabIndex={-1}
                     {...hideSpoilersToggle}
+                />
+            </Option>
+            <Option label={'SETTINGS_GAMEPAD'}>
+                <Toggle
+                    tabIndex={-1}
+                    {...gamepadSupportToggle}
                 />
             </Option>
         </Section>

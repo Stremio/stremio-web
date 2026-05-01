@@ -39,6 +39,9 @@ const ControlBar = React.forwardRef(({
     onToggleSpeedMenu,
     onToggleSideDrawer,
     onToggleOptionsMenu,
+    videoScale,
+    videoScaleLabel,
+    onVideoScaleChanged,
     onToggleStatisticsMenu,
     onTouchEnd,
     ...props
@@ -176,6 +179,9 @@ const ControlBar = React.forwardRef(({
                             :
                             null
                     }
+                    <Button className={classnames(styles['control-bar-button'], { 'disabled': videoScale === null })} title={videoScaleLabel} tabIndex={-1} onClick={onVideoScaleChanged}>
+                        <Icon className={styles['icon']} name={'scale'} />
+                    </Button>
                     <Button className={classnames(styles['control-bar-button'], { 'disabled': !stream })} tabIndex={-1} onMouseDown={onOptionsButtonMouseDown} onClick={onToggleOptionsMenu}>
                         <Icon className={styles['icon']} name={'more-horizontal'} />
                     </Button>
@@ -194,6 +200,9 @@ ControlBar.propTypes = {
     volume: PropTypes.number,
     muted: PropTypes.bool,
     playbackSpeed: PropTypes.number,
+    videoScale: PropTypes.string,
+    videoScaleLabel: PropTypes.string,
+    onVideoScaleChanged: PropTypes.func,
     subtitlesTracks: PropTypes.array,
     audioTracks: PropTypes.array,
     metaItem: PropTypes.object,

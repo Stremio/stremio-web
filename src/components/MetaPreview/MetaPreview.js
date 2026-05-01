@@ -159,7 +159,7 @@ const MetaPreview = React.forwardRef(({ className, compact, name, logo, backgrou
                                         title={linksGroups.get(CONSTANTS.IMDB_LINK_CATEGORY).label}
                                         href={linksGroups.get(CONSTANTS.IMDB_LINK_CATEGORY).href}
                                         target={'_blank'}
-                                        {...(compact ? { tabIndex: -1 } : null)}
+                                        tabIndex={0}
                                     >
                                         <div className={styles['label']}>{linksGroups.get(CONSTANTS.IMDB_LINK_CATEGORY).label}</div>
                                         <Icon className={styles['icon']} name={'imdb'} />
@@ -214,7 +214,7 @@ const MetaPreview = React.forwardRef(({ className, compact, name, logo, backgrou
                             className={styles['action-button']}
                             icon={'trailer'}
                             label={t('TRAILER')}
-                            tabIndex={compact ? -1 : 0}
+                            tabIndex={0}
                             href={trailerHref}
                             tooltip={compact}
                         />
@@ -232,7 +232,7 @@ const MetaPreview = React.forwardRef(({ className, compact, name, logo, backgrou
                             className={classnames(styles['action-button'], styles['show-button'])}
                             icon={'play'}
                             label={t('SHOW')}
-                            tabIndex={compact ? -1 : 0}
+                            tabIndex={0}
                             href={showHref}
                         />
                         :
@@ -255,7 +255,7 @@ const MetaPreview = React.forwardRef(({ className, compact, name, logo, backgrou
                                 icon={'share'}
                                 label={t('CTX_SHARE')}
                                 tooltip={true}
-                                tabIndex={compact ? -1 : 0}
+                                tabIndex={0}
                                 onClick={openShareModal}
                             />
                             {

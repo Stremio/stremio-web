@@ -33,7 +33,7 @@ const Chip = memo(({ label, value, active, onSelect }: Props) => {
             ref={ref}
             key={value}
             className={classNames(styles['chip'], { [styles['active']]: active })}
-            tabIndex={-1}
+            tabIndex={0}
             data-value={value}
             onClick={onClick}
         >

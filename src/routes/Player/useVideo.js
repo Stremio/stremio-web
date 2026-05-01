@@ -22,6 +22,7 @@ const useVideo = () => {
         muted: null,
         playbackSpeed: null,
         videoParams: null,
+        hdrInfo: null,
         audioTracks: [],
         selectedAudioTrackId: null,
         subtitlesTracks: [],
@@ -142,6 +143,10 @@ const useVideo = () => {
         setProp('extraSubtitlesOffset', offset);
     };
 
+    const setVideoScale = (scale) => {
+        setProp('videoScale', scale);
+    };
+
     const setSubtitlesTextColor = (color) => {
         setProp('subtitlesTextColor', color);
         setProp('extraSubtitlesTextColor', color);
@@ -238,6 +243,7 @@ const useVideo = () => {
         setSubtitlesBackgroundColor,
         setSubtitlesOutlineColor,
         setExtraSubtitlesTrack,
+        setVideoScale,
     };
 };
 

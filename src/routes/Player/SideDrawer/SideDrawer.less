@@ -26,6 +26,17 @@
     transition: transform 0.3s ease-in-out;
     z-index: 1;
 
+    // Safari has a compositing bug where transform animations on a parent with
+    // scrollable children causes the video player element to shift left during the animation.
+    // Disable the slide animation on Safari until WebKit resolves this.
+    @supports (hanging-punctuation: first) and (-webkit-appearance: none) {
+        &:global(.slide-left-enter),
+        &:global(.slide-left-active),
+        &:global(.slide-left-exit) {
+            transition: none;
+        }
+    }
+
     .close-button {
         display: none;
         position: absolute;
