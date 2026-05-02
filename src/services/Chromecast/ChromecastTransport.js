@@ -2,6 +2,58 @@
 
 const EventEmitter = require('eventemitter3');
 const hat = require('hat');
+const ShellChromecastTransport = require('./ShellChromecastTransport');
+
+// When running inside the desktop shell (WebView2), Google CAF never works
+// because Microsoft does not ship Chromium's Cast Sender Media Router with
+// WebView2. Detect the shell environment and swap the transport for one that
+// bridges directly to the streaming server's /casting/ HTTP API. Browser
+// users are unaffected and continue to use the CAF transport below.
+const inShell = (typeof window !== 'undefined') &&
+    !!window.qt && !!window.qt.webChannelTransport;
+
+if (inShell) {
+    // Stub the cast.framework / chrome.cast constants the rest of the
+    // codebase reads (Player.js compares getCastState() against
+    // cast.framework.CastState.CONNECTED). Values match the real Google CAF
+    // wire values, so subscriptions still line up if the actual cast_sender.js
+    // happens to load and overwrite these stubs.
+    window.cast = window.cast || {};
+    window.cast.framework = window.cast.framework || {};
+    window.cast.framework.CastState = window.cast.framework.CastState || {
+        NO_DEVICES_AVAILABLE: 'NO_DEVICES_AVAILABLE',
+        NOT_CONNECTED: 'NOT_CONNECTED',
+        CONNECTING: 'CONNECTING',
+        CONNECTED: 'CONNECTED',
+    };
+    window.cast.framework.SessionState = window.cast.framework.SessionState || {
+        NO_SESSION: 'NO_SESSION',
+        SESSION_STARTED: 'SESSION_STARTED',
+        SESSION_STARTING: 'SESSION_STARTING',
+        SESSION_START_FAILED: 'SESSION_START_FAILED',
+        SESSION_ENDED: 'SESSION_ENDED',
+        SESSION_ENDING: 'SESSION_ENDING',
+        SESSION_RESUMED: 'SESSION_RESUMED',
+    };
+    window.cast.framework.CastContextEventType = window.cast.framework.CastContextEventType || {
+        CAST_STATE_CHANGED: 'caststatechanged',
+        SESSION_STATE_CHANGED: 'sessionstatechanged',
+    };
+    window.cast.framework.CastSession = window.cast.framework.CastSession || {
+        APPLICATION_STATUS_CHANGED: 'applicationstatuschanged',
+        APPLICATION_METADATA_CHANGED: 'applicationmetadatachanged',
+        ACTIVE_INPUT_STATE_CHANGED: 'activeinputstatechanged',
+        VOLUME_CHANGED: 'volumechanged',
+        MEDIA_SESSION: 'mediasession',
+    };
+    window.chrome = window.chrome || {};
+    window.chrome.cast = window.chrome.cast || {};
+    window.chrome.cast.AutoJoinPolicy = window.chrome.cast.AutoJoinPolicy || {
+        TAB_AND_ORIGIN_SCOPED: 'tab_and_origin_scoped',
+        ORIGIN_SCOPED: 'origin_scoped',
+        PAGE_SCOPED: 'page_scoped',
+    };
+}
 
 const MESSAGE_NAMESPACE = 'urn:x-cast:com.stremio';
 const CHUNK_SIZE = 20000;
@@ -172,4 +224,4 @@ function ChromecastTransport() {
     };
 }
 
-module.exports = ChromecastTransport;
+module.exports = inShell ? ShellChromecastTransport : ChromecastTransport;
