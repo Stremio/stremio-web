@@ -68,4 +68,4 @@ const useFacebookLogin = () => {
     ];
 };
 
-module.exports = useFacebookLogin;
+export default useFacebookLogin;

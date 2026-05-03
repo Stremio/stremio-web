@@ -12,7 +12,7 @@ const { default: useRouteFocused } = require('stremio/common/useRouteFocused');
 const { Button, Image, Checkbox } = require('stremio/components');
 const CredentialsTextInput = require('./CredentialsTextInput');
 const PasswordResetModal = require('./PasswordResetModal');
-const useFacebookLogin = require('./useFacebookLogin');
+const { default: useFacebookLogin } = require('./useFacebookLogin');
 const { default: useAppleLogin } = require('./useAppleLogin');
 
 const styles = require('./styles');
