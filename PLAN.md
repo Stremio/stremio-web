@@ -7,14 +7,14 @@ this is a migration, not a rewrite of the app.
 
 # What maps cleanly
 
-- React + TS: Rsbuild’s defaults (usually SWC) can replace babel-loader, ts-loader, and thread-loader.
-- Less + PostCSS: Supported via Rsbuild plugins / tools.postcss (you can keep your cssnano setup).
-- Aliases (stremio, stremio-router): resolve.alias in Rsbuild.
-- Static copies (CopyWebpackPlugin patterns): output.copy or rspack CopyRspackPlugin.
-- Env + ProvidePlugin (Buffer): source.define / tools.rspack.plugins.
-- Multi-entry (main + worker from @stremio/stremio-core-web): source.entry with two entries.
-- Asset rules (fonts, images, wasm): Rsbuild/Rspack asset handling + output.filename patterns.
-- Dev server (0.0.0.0, HTTPS, no HMR): Rsbuild server options can mirror that.
+- ✅ React + TS: Rsbuild’s defaults (usually SWC) can replace babel-loader, ts-loader, and thread-loader.
+- ✅ Less + PostCSS: Supported via Rsbuild plugins / tools.postcss (you can keep your cssnano setup).
+- ✅ Aliases (stremio, stremio-router): resolve.alias in Rsbuild.
+- ✅ Static copies (CopyWebpackPlugin patterns): output.copy or rspack CopyRspackPlugin.
+- ✅ Env + ProvidePlugin (Buffer): source.define / tools.rspack.plugins.
+- ✅ Multi-entry (main + worker from @stremio/stremio-core-web): source.entry with two entries.
+- ✅ Asset rules (fonts, images, wasm): Rsbuild/Rspack asset handling + output.filename patterns.
+- ✅ Dev server (0.0.0.0, HTTPS, no HMR): Rsbuild server options can mirror that.
 
 # Things to plan for explicitly
 

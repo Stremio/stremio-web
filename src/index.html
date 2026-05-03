@@ -7,15 +7,15 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Stremio">
-    <link rel="icon" type="image/x-icon" href="<%= htmlWebpackPlugin.options.faviconsPath %>/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="<%= faviconsPath %>/favicon.ico">
     <link rel="manifest" href="manifest.json" />
     <title>Stremio - Freedom to Stream</title>
-    <%= htmlWebpackPlugin.tags.headTags %>
+    <%- htmlPlugin.tags.headTags %>
 </head>
 
 <body>
     <div id="app"></div>
-    <%= htmlWebpackPlugin.tags.bodyTags %>
+    <%- htmlPlugin.tags.bodyTags %>
     <script src="//www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1"></script>
     <script async src="https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js"></script>
 </body>
