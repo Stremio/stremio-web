@@ -6,6 +6,7 @@ import { defineConfig } from '@rsbuild/core';
 import { pluginBasicSsl } from '@rsbuild/plugin-basic-ssl';
 import { type LessLoaderOptions, pluginLess } from '@rsbuild/plugin-less';
 import { pluginReact } from '@rsbuild/plugin-react';
+import { GenerateSW } from '@aaroon/workbox-rspack-plugin';
 import { ProvidePlugin } from '@rspack/core';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -15,7 +16,7 @@ const packageJson = JSON.parse(fs.readFileSync(path.join(__dirname, 'package.jso
   version: string;
 };
 
-export default defineConfig({
+export default defineConfig(({ command }) => ({
   dev: {
     hmr: false,
     liveReload: false,
@@ -121,6 +122,15 @@ export default defineConfig({
         new ProvidePlugin({
           Buffer: ['buffer', 'Buffer'],
         }),
+        ...(command === 'build'
+          ? [
+              new GenerateSW({
+                maximumFileSizeToCacheInBytes: 20_000_000,
+                clientsClaim: true,
+                skipWaiting: true,
+              }),
+            ]
+          : []),
       ]);
     },
     postcss: {
@@ -169,4 +179,4 @@ export default defineConfig({
       '/assets': path.resolve(__dirname, 'assets'),
     },
   },
-});
+}));

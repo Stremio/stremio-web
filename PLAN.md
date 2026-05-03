@@ -22,7 +22,7 @@ this is a migration, not a rewrite of the app.
 
 You use COMMIT_HASH in paths for scripts, styles, wasm, and SW caching. Rsbuild can do custom output.filename / output.distPath, but you’ll reimplement the same idea in rsbuild.config (still git rev-parse or CI env).
 
-2. Workbox
+2. ✅ Workbox
 
 workbox-webpack-plugin has had compatibility issues with Rspack; many teams use a Rspack-oriented Workbox plugin (for example community options like @aaroon/workbox-rspack-plugin) or generate the service worker outside the bundler. Treat SW generation as the highest-risk part of the migration and validate the built build/ folder and offline behavior.
 

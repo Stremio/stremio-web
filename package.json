@@ -54,6 +54,7 @@
         "use-long-press": "^3.3.0"
     },
     "devDependencies": {
+        "@aaroon/workbox-rspack-plugin": "^0.3.3",
         "@babel/core": "7.26.0",
         "@babel/preset-env": "7.26.0",
         "@babel/preset-react": "7.26.3",
