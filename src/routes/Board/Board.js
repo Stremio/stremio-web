@@ -8,20 +8,35 @@ const { useStreamingServer, useNotifications, withCoreSuspender, getVisibleChild
 const { ContinueWatchingItem, EventModal, MainNavBars, MetaItem, MetaRow } = require('stremio/components');
 const useBoard = require('./useBoard');
 const useContinueWatchingPreview = require('./useContinueWatchingPreview');
+const useMetaDetailsForMetaItem = require('./useMetaDetailsForMetaItem'); // Import the new hook
 const styles = require('./styles');
 const { default: StreamingServerWarning } = require('./StreamingServerWarning');
 
 const THRESHOLD = 5;
+
+// Helper component to fetch and pass nextEpisodeReleaseDate for a single item
+// eslint-disable-next-line react/prop-types
+const ContinueWatchingItemWithDetails = ({ item, notifications }) => {
+    const nextEpisodeReleaseDate = useMetaDetailsForMetaItem(item);
+    return (
+        <ContinueWatchingItem
+            {...item}
+            notifications={notifications}
+            nextEpisodeReleaseDate={nextEpisodeReleaseDate}
+        />
+    );
+};
 
 const Board = () => {
     const t = useTranslate();
     const streamingServer = useStreamingServer();
     const continueWatchingPreview = useContinueWatchingPreview();
     const [board, loadBoardRows] = useBoard();
-    const notifications = useNotifications();
+    const notifications = useNotifications(); // useNotifications returns an object, no need to convert to Map
     const profile = useProfile();
     const boardCatalogsOffset = continueWatchingPreview.items.length > 0 ? 1 : 0;
     const scrollContainerRef = React.useRef();
+
     const showStreamingServerWarning = React.useMemo(() => {
         return streamingServer.settings !== null && streamingServer.settings.type === 'Err' && (
             isNaN(profile.settings.streamingServerWarningDismissed.getTime()) ||
@@ -45,6 +60,7 @@ const Board = () => {
     React.useLayoutEffect(() => {
         onVisibleRangeChange();
     }, [board.catalogs, onVisibleRangeChange]);
+
     return (
         <div className={styles['board-container']}>
             <EventModal />
@@ -55,9 +71,19 @@ const Board = () => {
                             <MetaRow
                                 className={classnames(styles['board-row'], styles['continue-watching-row'], 'animation-fade-in')}
                                 title={t.string('BOARD_CONTINUE_WATCHING')}
-                                catalog={continueWatchingPreview}
-                                itemComponent={ContinueWatchingItem}
-                                notifications={notifications}
+                                catalog={{
+                                    ...continueWatchingPreview,
+                                    items: continueWatchingPreview.items.map((item, index) => (
+                                        <ContinueWatchingItemWithDetails
+                                            key={item.id || index} // Use item.id for key if available, otherwise index
+                                            item={item}
+                                            notifications={notifications}
+                                        />
+                                    )),
+                                }}
+                                // We are passing a React element as itemComponent, so we don't need itemComponent prop here
+                                // The items array now contains the rendered components
+                                itemComponent={({ item }) => item} // This is a workaround to render the React elements directly
                             />
                             :
                             null

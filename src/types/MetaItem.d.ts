@@ -14,6 +14,7 @@ type MetaItemPreview = {
     poster: string | null,
     posterShape: PosterShape,
     releaseInfo: string | null,
+    nextEpisodeReleaseDate: string | null,
     runtime: string | null,
     released: Date | null | undefined,
     trailerStreams: TrailerStream[],

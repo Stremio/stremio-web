@@ -13,7 +13,7 @@ const useBinaryState = require('stremio/common/useBinaryState');
 const { ICON_FOR_TYPE } = require('stremio/common/CONSTANTS');
 const styles = require('./styles');
 
-const MetaItem = React.memo(({ className, type, name, poster, posterShape, posterChangeCursor, progress, newVideos, options, deepLinks, dataset, optionOnSelect, onDismissClick, onPlayClick, watched, ...props }) => {
+const MetaItem = React.memo(({ className, type, name, poster, posterShape, posterChangeCursor, progress, newVideos, options, deepLinks, dataset, optionOnSelect, onDismissClick, onPlayClick, watched, nextEpisodeReleaseDate, ...props }) => {
     const { t } = useTranslation();
     const [menuOpen, onMenuOpen, onMenuClose] = useBinaryState(false);
     const href = React.useMemo(() => {
@@ -61,8 +61,14 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, poste
     const renderMenuLabelContent = React.useCallback(() => (
         <Icon className={styles['icon']} name={'more-vertical'} />
     ), []);
+    const title = React.useMemo(() => {
+        if (typeof nextEpisodeReleaseDate === 'string' && nextEpisodeReleaseDate.length > 0) {
+            return `${name} (${nextEpisodeReleaseDate})`;
+        }
+        return name;
+    }, [name, nextEpisodeReleaseDate]);
     return (
-        <Button title={name} href={href} {...filterInvalidDOMProps(props)} className={classnames(className, styles['meta-item-container'], styles['poster-shape-poster'], styles[`poster-shape-${posterShape}`], { 'active': menuOpen })} onClick={metaItemOnClick}>
+        <Button title={title} href={href} {...filterInvalidDOMProps(props)} className={classnames(className, styles['meta-item-container'], styles['poster-shape-poster'], styles[`poster-shape-${posterShape}`], { 'active': menuOpen })} onClick={metaItemOnClick}>
             <div className={classnames(styles['poster-container'], { 'poster-change-cursor': posterChangeCursor })}>
                 {
                     onDismissClick ?
@@ -175,7 +181,8 @@ MetaItem.propTypes = {
     onDismissClick: PropTypes.func,
     onPlayClick: PropTypes.func,
     onClick: PropTypes.func,
-    watched: PropTypes.bool
+    watched: PropTypes.bool,
+    nextEpisodeReleaseDate: PropTypes.string
 };
 
 module.exports = MetaItem;
