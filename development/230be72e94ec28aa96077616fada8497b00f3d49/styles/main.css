@@ -12,6 +12,79 @@
   opacity: 0.5;
 }
 
+.error-container-EbAve {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+.error-container-EbAve .error-image-RT6Ay {
+  flex: none;
+  width: 12rem;
+  height: 12rem;
+  object-fit: contain;
+  object-position: center;
+  opacity: 0.9;
+}
+.error-container-EbAve .error-message-nKSwk {
+  flex: none;
+  padding: 0 3rem;
+  font-size: 2rem;
+  max-height: 3.6em;
+  text-align: center;
+  color: var(--primary-foreground-color);
+}
+.error-container-EbAve .buttons-container-FbMbf {
+  flex: none;
+  align-self: stretch;
+  margin: 0 2rem;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+.error-container-EbAve .buttons-container-FbMbf .button-container-MrlQO {
+  flex-grow: 0;
+  flex-shrink: 1;
+  flex-basis: auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 0 2.5rem;
+  min-width: 8rem;
+  height: 3.5rem;
+  border-radius: 3.5rem;
+  background-color: var(--overlay-color);
+}
+.error-container-EbAve .buttons-container-FbMbf .button-container-MrlQO:hover {
+  outline: var(--focus-outline-size) solid var(--primary-foreground-color);
+  background-color: transparent;
+}
+.error-container-EbAve .buttons-container-FbMbf .button-container-MrlQO:active {
+  outline: none;
+}
+.error-container-EbAve .buttons-container-FbMbf .button-container-MrlQO.disabled {
+  opacity: 0.3;
+}
+.error-container-EbAve .buttons-container-FbMbf .button-container-MrlQO .label-y8clC {
+  flex-grow: 0;
+  flex-shrink: 1;
+  flex-basis: auto;
+  max-height: 2.4em;
+  font-size: 1.1rem;
+  font-weight: 500;
+  text-align: center;
+  color: var(--primary-foreground-color);
+}
+
 .modal-container-OuxEF {
   display: flex;
   justify-content: center;
@@ -8421,76 +8494,6 @@ html:not(.active-slider-within-NcgYf) .player-container-wIELK.overlayHidden-gyjI
   }
 }
 
-.error-container-OJnoc {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-}
-.error-container-OJnoc .error-image-qU9Qo {
-  flex: none;
-  width: 12rem;
-  height: 12rem;
-  object-fit: contain;
-  object-position: center;
-  opacity: 0.9;
-}
-.error-container-OJnoc .error-message-kW59Z {
-  flex: none;
-  padding: 0 3rem;
-  font-size: 2rem;
-  max-height: 3.6em;
-  text-align: center;
-  color: var(--primary-foreground-color);
-}
-.error-container-OJnoc .buttons-container-tQonN {
-  flex: none;
-  align-self: stretch;
-  margin: 0 2rem;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 1.5rem;
-  margin-top: 1rem;
-}
-.error-container-OJnoc .buttons-container-tQonN .button-container-vLSQK {
-  flex-grow: 0;
-  flex-shrink: 1;
-  flex-basis: auto;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  padding: 0 2.5rem;
-  min-width: 8rem;
-  height: 3.5rem;
-  border-radius: 3.5rem;
-  background-color: var(--overlay-color);
-}
-.error-container-OJnoc .buttons-container-tQonN .button-container-vLSQK:hover {
-  outline: var(--focus-outline-size) solid var(--primary-foreground-color);
-  background-color: transparent;
-}
-.error-container-OJnoc .buttons-container-tQonN .button-container-vLSQK:active {
-  outline: none;
-}
-.error-container-OJnoc .buttons-container-tQonN .button-container-vLSQK.disabled {
-  opacity: 0.3;
-}
-.error-container-OJnoc .buttons-container-tQonN .button-container-vLSQK .label-Up_te {
-  flex-grow: 0;
-  flex-shrink: 1;
-  flex-basis: auto;
-  max-height: 2.4em;
-  font-size: 1.1rem;
-  font-weight: 500;
-  text-align: center;
-  color: var(--primary-foreground-color);
-}
-
 @font-face {
   font-family: 'PlusJakartaSans';
   src: url(../../fonts/PlusJakartaSans.ttf) format('truetype');
@@ -8817,11 +8820,6 @@ html body #app .updater-banner-container-Bk1mq {
   bottom: 0;
 }
 html body #app .router-_65XU {
-  width: 100%;
-  height: 100%;
-}
-html body #app .loader-container-vwvnb,
-html body #app .error-container-VZXwH {
   width: 100%;
   height: 100%;
 }
