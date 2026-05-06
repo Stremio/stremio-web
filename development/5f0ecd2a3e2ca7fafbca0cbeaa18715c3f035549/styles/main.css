@@ -85,6 +85,21 @@
   color: var(--primary-foreground-color);
 }
 
+.file-drop-container-hPBXO {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-radius: 1rem;
+  border: 0.5rem dashed transparent;
+  pointer-events: none;
+  transition: border-color 0.25s ease-out;
+}
+.file-drop-container-hPBXO.active {
+  border-color: var(--primary-accent-color);
+}
+
 .modal-container-OuxEF {
   display: flex;
   justify-content: center;
@@ -8797,20 +8812,6 @@ html body #app .tooltip-container-Qpse8 {
   background-color: var(--modal-background-color);
   box-shadow: var(--outer-glow);
   transition: opacity 0.1s ease-out;
-}
-html body #app .file-drop-container-gHJoy {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  border-radius: 1rem;
-  border: 0.5rem dashed transparent;
-  pointer-events: none;
-  transition: border-color 0.25s ease-out;
-}
-html body #app .file-drop-container-gHJoy.active {
-  border-color: var(--primary-accent-color);
 }
 html body #app .updater-banner-container-Bk1mq {
   z-index: 1;
