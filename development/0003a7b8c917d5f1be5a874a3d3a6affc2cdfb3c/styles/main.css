@@ -7741,6 +7741,8 @@ html:not(.active-slider-within-NcgYf) .player-container-wIELK.overlayHidden-gyjI
   opacity: 0.6;
 }
 .player-container-wIELK .layer-qalDW.nav-bar-layer-r9HT5 {
+  left: var(--safe-area-inset-left);
+  right: var(--safe-area-inset-right);
   bottom: initial;
   background: transparent;
   overflow: visible;
@@ -7773,9 +7775,11 @@ html:not(.active-slider-within-NcgYf) .player-container-wIELK.overlayHidden-gyjI
   transform: translateY(-50%);
 }
 .player-container-wIELK .layer-qalDW.control-bar-layer-m2jto {
+  left: var(--safe-area-inset-left);
+  right: var(--safe-area-inset-right);
   top: initial;
   overflow: visible;
-  padding-bottom: 0.5rem;
+  padding-bottom: calc(0.5rem + var(--safe-area-inset-bottom));
 }
 .player-container-wIELK .layer-qalDW.control-bar-layer-m2jto::before {
   position: absolute;
