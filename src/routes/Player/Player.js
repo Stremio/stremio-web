@@ -133,6 +133,8 @@ const Player = ({ urlParams, queryParams }) => {
     const pressTimer = React.useRef(null);
     const longPress = React.useRef(false);
     const controlBarRef = React.useRef(null);
+    const skipSegmentButtonRef = React.useRef(null);
+    const skipSegmentVisibleRef = React.useRef(false);
 
     const HOLD_DELAY = 400;
 
@@ -261,6 +263,7 @@ const Player = ({ urlParams, queryParams }) => {
             onSeekRequested(activeSkippableSegment.to);
         }
     }, [activeSkippableSegment, onSeekRequested]);
+    const skipSegmentVisible = activeSkippableSegment !== null && !menusOpen && skipSegmentButtonLabel !== null;
 
     const onPlaybackSpeedChanged = React.useCallback((rate, skipUpdate) => {
         video.setPlaybackSpeed(rate);
@@ -587,6 +590,14 @@ const Player = ({ urlParams, queryParams }) => {
             onPauseRequested();
         }
     }, [settings.pauseOnMinimize, shell.windowClosed, shell.windowHidden]);
+
+    React.useEffect(() => {
+        if (skipSegmentVisible && !skipSegmentVisibleRef.current) {
+            skipSegmentButtonRef.current?.focus();
+        }
+
+        skipSegmentVisibleRef.current = skipSegmentVisible;
+    }, [skipSegmentVisible]);
 
     useMediaSession(video.state, player, onPlayRequested, onPauseRequested, onNextVideoRequested);
 
@@ -948,9 +959,13 @@ const Player = ({ urlParams, queryParams }) => {
                 onTouchEnd={onContainerMouseLeave}
             />
             {
-                activeSkippableSegment !== null && !menusOpen && skipSegmentButtonLabel !== null ?
+                skipSegmentVisible ?
                     <div className={classnames(styles['layer'], styles['skip-segment-layer'])}>
-                        <Button className={styles['skip-segment-button']} onClick={onSkipSegmentRequested}>
+                        <Button
+                            ref={skipSegmentButtonRef}
+                            className={styles['skip-segment-button']}
+                            onClick={onSkipSegmentRequested}
+                        >
                             {skipSegmentButtonLabel}
                         </Button>
                     </div>
