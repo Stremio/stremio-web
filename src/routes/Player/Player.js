@@ -11,7 +11,7 @@ const { useCore } = require('stremio/core');
 const { useServices, useGamepad } = require('stremio/services');
 const { useContentGamepadNavigation } = require('stremio/services/GamepadNavigation');
 const { useSettings, useProfile, useFullscreen, useBinaryState, useToast, useStreamingServer, withCoreSuspender, useShell, usePlatform, onShortcut } = require('stremio/common');
-const { HorizontalNavBar, Transition, ContextMenu } = require('stremio/components');
+const { HorizontalNavBar, Transition, ContextMenu, Button } = require('stremio/components');
 const BufferingLoader = require('./BufferingLoader');
 const VolumeChangeIndicator = require('./VolumeChangeIndicator');
 const Error = require('./Error');
@@ -35,6 +35,11 @@ const { default: useMediaSession } = require('./useMediaSession');
 
 const findTrackByLang = (tracks, lang) => tracks.find((track) => track.lang === lang || langs.where('1', track.lang)?.[2] === lang);
 const findTrackById = (tracks, id) => tracks.find((track) => track.id === id);
+const formatSegmentName = (segment) => String(segment || '')
+    .split(/[_-]/)
+    .filter(Boolean)
+    .map((word) => word[0] ? `${word[0].toUpperCase()}${word.slice(1)}` : word)
+    .join(' ');
 
 const GAMEPAD_HANDLER_ID = 'player';
 
@@ -217,6 +222,45 @@ const Player = ({ urlParams, queryParams }) => {
         video.setTime(time);
         seek(time, video.state.duration, video.state.manifest?.name);
     }, [video.state.duration, video.state.manifest]);
+    const activeSkippableSegment = React.useMemo(() => {
+        if (typeof video.state.time !== 'number') {
+            return null;
+        }
+
+        const segments = player.introOutro?.segments;
+        if (!Array.isArray(segments)) {
+            return null;
+        }
+
+        return segments.find((segment) =>
+            typeof segment?.from === 'number' &&
+            typeof segment?.to === 'number' &&
+            typeof segment?.segment === 'string' &&
+            video.state.time >= segment.from &&
+            video.state.time <= segment.to
+        ) || null;
+    }, [player.introOutro, video.state.time]);
+    const activeSkippableSegmentLabel = React.useMemo(() => {
+        return activeSkippableSegment ? formatSegmentName(activeSkippableSegment.segment) : null;
+    }, [activeSkippableSegment]);
+    const skipSegmentButtonLabel = React.useMemo(() => {
+        if (!activeSkippableSegmentLabel) {
+            return null;
+        }
+
+        const translated = t('STREMIO_TV_PLAYER_BUTTON_SKIP_CHAPTER');
+        if (typeof translated === 'string' && translated !== 'STREMIO_TV_PLAYER_BUTTON_SKIP_CHAPTER') {
+            return translated.replace('${1}', activeSkippableSegmentLabel);
+        }
+
+        return `Skip ${activeSkippableSegmentLabel}`;
+    }, [activeSkippableSegmentLabel]);
+    const onSkipSegmentRequested = React.useCallback(() => {
+        if (activeSkippableSegment !== null) {
+            setSeeking(true);
+            onSeekRequested(activeSkippableSegment.to);
+        }
+    }, [activeSkippableSegment, onSeekRequested]);
 
     const onPlaybackSpeedChanged = React.useCallback((rate, skipUpdate) => {
         video.setPlaybackSpeed(rate);
@@ -441,7 +485,15 @@ const Player = ({ urlParams, queryParams }) => {
 
     React.useEffect(() => {
         if (player.nextVideo !== null && !nextVideoPopupDismissed.current) {
-            if (video.state.time !== null && video.state.duration !== null && video.state.time < video.state.duration && (video.state.duration - video.state.time) <= settings.nextVideoNotificationDuration) {
+            const enteredOutro = typeof player.introOutro?.outro === 'number' &&
+                typeof video.state.time === 'number' &&
+                video.state.time >= player.introOutro.outro;
+            const withinDefaultWindow = video.state.time !== null &&
+                video.state.duration !== null &&
+                video.state.time < video.state.duration &&
+                (video.state.duration - video.state.time) <= settings.nextVideoNotificationDuration;
+
+            if (enteredOutro || withinDefaultWindow) {
                 openNextVideoPopup();
             } else {
                 closeNextVideoPopup();
@@ -455,7 +507,7 @@ const Player = ({ urlParams, queryParams }) => {
         } else {
             window.playerNextVideo = null;
         }
-    }, [player.nextVideo, video.state.time, video.state.duration]);
+    }, [player.nextVideo, player.introOutro, video.state.time, video.state.duration]);
 
     // Auto audio track selection
     React.useEffect(() => {
@@ -895,6 +947,16 @@ const Player = ({ urlParams, queryParams }) => {
                 onMouseOver={onBarMouseMove}
                 onTouchEnd={onContainerMouseLeave}
             />
+            {
+                activeSkippableSegment !== null && !menusOpen && skipSegmentButtonLabel !== null ?
+                    <div className={classnames(styles['layer'], styles['skip-segment-layer'])}>
+                        <Button className={styles['skip-segment-button']} onClick={onSkipSegmentRequested}>
+                            {skipSegmentButtonLabel}
+                        </Button>
+                    </div>
+                    :
+                    null
+            }
             <Indicator
                 className={classnames(styles['layer'], styles['indicator-layer'])}
                 videoState={video.state}

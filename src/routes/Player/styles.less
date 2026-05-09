@@ -119,6 +119,28 @@ html:not(.active-slider-within) {
             bottom: 10rem;
         }
 
+        &.skip-segment-layer {
+            top: initial;
+            left: initial;
+            right: 4rem;
+            bottom: 11rem;
+            pointer-events: none;
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-end;
+
+            .skip-segment-button {
+                pointer-events: auto;
+                border-radius: 4rem;
+                padding: 1rem 1.6rem;
+                font-weight: 700;
+                color: var(--primary-foreground-color);
+                background-color: var(--modal-background-color);
+                box-shadow: 0 1.35rem 2.7rem @color-background-dark5-40,
+                    0 1.1rem 0.85rem @color-background-dark5-20;
+            }
+        }
+
         &.menu-layer {
             top: initial;
             left: initial;
@@ -148,6 +170,10 @@ html:not(.active-slider-within) {
         .layer {
             &.side-drawer-button-layer {
                 right: -2rem;
+            }
+
+            &.skip-segment-layer {
+                right: 2rem;
             }
         }
     }
