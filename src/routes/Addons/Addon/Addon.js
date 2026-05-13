@@ -8,7 +8,7 @@ const { default: Icon } = require('@stremio/stremio-icons/react');
 const { Button, Image } = require('stremio/components');
 const styles = require('./styles');
 
-const Addon = ({ className, id, name, version, logo, description, types, behaviorHints, installed, onInstall, onUninstall, onConfigure, onOpen, onShare, dataset }) => {
+const Addon = ({ className, id, name, version, logo, description, types, behaviorHints, installed, onInstall, onUninstall, onConfigure, onOpen, onShare, dataset, reorderable, canMoveUp, canMoveDown, onMoveUp, onMoveDown }) => {
     const { t } = useTranslation();
     const onInstallClick = React.useCallback((event) => {
         event.stopPropagation();
@@ -73,8 +73,39 @@ const Addon = ({ className, id, name, version, logo, description, types, behavio
     const renderLogoFallback = React.useCallback(() => (
         <Icon className={styles['icon']} name={'addons'} />
     ), []);
+    const moveUpClick = React.useCallback((event) => {
+        event.stopPropagation();
+        if (typeof onMoveUp === 'function') onMoveUp({ dataset });
+    }, [onMoveUp, dataset]);
+    const moveDownClick = React.useCallback((event) => {
+        event.stopPropagation();
+        if (typeof onMoveDown === 'function') onMoveDown({ dataset });
+    }, [onMoveDown, dataset]);
     return (
         <Button className={classnames(className, styles['addon-container'])} onKeyDown={onKeyDown} onClick={onOpenClick}>
+            {
+                reorderable ?
+                    <div className={styles['reorder-container']} onClick={(e) => e.stopPropagation()}>
+                        <Button
+                            className={classnames(styles['reorder-button'], { [styles['disabled']]: !canMoveUp })}
+                            title={t('ADDON_MOVE_UP')}
+                            tabIndex={-1}
+                            disabled={!canMoveUp}
+                            onClick={moveUpClick}>
+                            <Icon className={styles['reorder-icon']} name={'chevron-up'} />
+                        </Button>
+                        <Button
+                            className={classnames(styles['reorder-button'], { [styles['disabled']]: !canMoveDown })}
+                            title={t('ADDON_MOVE_DOWN')}
+                            tabIndex={-1}
+                            disabled={!canMoveDown}
+                            onClick={moveDownClick}>
+                            <Icon className={styles['reorder-icon']} name={'chevron-down'} />
+                        </Button>
+                    </div>
+                    :
+                    null
+            }
             <div className={styles['logo-container']}>
                 <Image
                     className={styles['logo']}
@@ -162,7 +193,12 @@ Addon.propTypes = {
     onConfigure: PropTypes.func,
     onOpen: PropTypes.func,
     onShare: PropTypes.func,
-    dataset: PropTypes.object
+    dataset: PropTypes.object,
+    reorderable: PropTypes.bool,
+    canMoveUp: PropTypes.bool,
+    canMoveDown: PropTypes.bool,
+    onMoveUp: PropTypes.func,
+    onMoveDown: PropTypes.func,
 };
 
 module.exports = Addon;

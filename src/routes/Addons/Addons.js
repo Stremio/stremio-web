@@ -6,7 +6,7 @@ const classnames = require('classnames');
 const { useTranslation } = require('react-i18next');
 const { default: Icon } = require('@stremio/stremio-icons/react');
 const { useCore } = require('stremio/core');
-const { usePlatform, useBinaryState, withCoreSuspender } = require('stremio/common');
+const { usePlatform, useBinaryState, useProfile, withCoreSuspender } = require('stremio/common');
 const { AddonDetailsModal, Button, Image, MainNavBars, ModalDialog, SearchBar, SharePrompt, TextInput, MultiselectMenu } = require('stremio/components');
 const useToast = require('stremio/common/Toast/useToast');
 const Addon = require('./Addon');
@@ -17,11 +17,14 @@ const useSelectableInputs = require('./useSelectableInputs');
 const styles = require('./styles');
 const { AddonPlaceholder } = require('./AddonPlaceholder');
 
+const STREMIO_API_URL = 'https://api.strem.io';
+
 const Addons = ({ urlParams, queryParams }) => {
     const { t } = useTranslation();
     const platform = usePlatform();
     const core = useCore();
     const toast = useToast();
+    const profile = useProfile();
     const installedAddons = useInstalledAddons(urlParams);
     const remoteAddons = useRemoteAddons(urlParams);
     const [addonDetailsTransportUrl, setAddonDetailsTransportUrl] = useAddonDetailsTransportUrl(urlParams, queryParams);
@@ -99,6 +102,89 @@ const Addons = ({ urlParams, queryParams }) => {
     const closeAddonDetails = React.useCallback(() => {
         setAddonDetailsTransportUrl(null);
     }, [setAddonDetailsTransportUrl]);
+    const [reorderedCatalog, setReorderedCatalog] = React.useState(null);
+    const pendingOrderRef = React.useRef(null);
+    const pushTimerRef = React.useRef(null);
+    const latestOrderRef = React.useRef(null);
+    React.useEffect(() => {
+        if (pendingOrderRef.current === null) {
+            setReorderedCatalog(null);
+            return;
+        }
+        const current = installedAddons.catalog.map((a) => a.transportUrl);
+        const pending = pendingOrderRef.current;
+        if (current.length === pending.length && current.every((u, i) => u === pending[i])) {
+            pendingOrderRef.current = null;
+            setReorderedCatalog(null);
+        }
+    }, [installedAddons.catalog]);
+    React.useEffect(() => () => {
+        if (pushTimerRef.current) clearTimeout(pushTimerRef.current);
+    }, []);
+    const isInstalledView = installedAddons.selected !== null;
+    const canReorder = isInstalledView
+        && profile?.auth?.key
+        && (!installedAddons.selected.request || installedAddons.selected.request.type === null)
+        && search.length === 0;
+    const displayedCatalog = (canReorder && reorderedCatalog) ? reorderedCatalog : installedAddons.catalog;
+    const doPush = React.useCallback(async (addons) => {
+        const authKey = profile?.auth?.key;
+        if (!authKey) {
+            pendingOrderRef.current = null;
+            setReorderedCatalog(null);
+            return;
+        }
+        const payload = addons.map((a) => ({
+            manifest: a.manifest,
+            transportUrl: a.transportUrl,
+            flags: a.flags || { official: false, protected: false },
+        }));
+        try {
+            const res = await fetch(`${STREMIO_API_URL}/api/addonCollectionSet`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type: 'AddonCollectionSet', authKey, addons: payload }),
+            }).then((r) => r.json());
+            if (res?.error) {
+                toast.show({ type: 'error', title: `Failed to save addon order: ${res.error.message || res.error}`, timeout: 8000 });
+                pendingOrderRef.current = null;
+                setReorderedCatalog(null);
+                return;
+            }
+        } catch (err) {
+            toast.show({ type: 'error', title: `Failed to save addon order: ${err?.message || err}`, timeout: 8000 });
+            pendingOrderRef.current = null;
+            setReorderedCatalog(null);
+            return;
+        }
+        core.transport.dispatch({ action: 'Ctx', args: { action: 'PullAddonsFromAPI' } });
+    }, [profile, core, toast]);
+    const schedulePush = React.useCallback((addons) => {
+        latestOrderRef.current = addons;
+        pendingOrderRef.current = addons.map((a) => a.transportUrl);
+        if (pushTimerRef.current) clearTimeout(pushTimerRef.current);
+        pushTimerRef.current = setTimeout(() => {
+            pushTimerRef.current = null;
+            doPush(latestOrderRef.current);
+        }, 300);
+    }, [doPush]);
+    const swapAt = React.useCallback((url, direction) => {
+        const base = (reorderedCatalog || installedAddons.catalog).slice();
+        const idx = base.findIndex((a) => a.transportUrl === url);
+        if (idx < 0) return;
+        const swapIdx = direction === 'up' ? idx - 1 : idx + 1;
+        if (swapIdx < 0 || swapIdx >= base.length) return;
+        if (base[idx].flags?.protected || base[swapIdx].flags?.protected) return;
+        [base[idx], base[swapIdx]] = [base[swapIdx], base[idx]];
+        setReorderedCatalog(base);
+        schedulePush(base);
+    }, [reorderedCatalog, installedAddons.catalog, schedulePush]);
+    const onAddonMoveUp = React.useCallback(({ dataset }) => {
+        swapAt(dataset.addon.transportUrl, 'up');
+    }, [swapAt]);
+    const onAddonMoveDown = React.useCallback(({ dataset }) => {
+        swapAt(dataset.addon.transportUrl, 'down');
+    }, [swapAt]);
     const searchFilterPredicate = React.useCallback((addon) => {
         return search.length === 0 ||
             (
@@ -113,6 +199,8 @@ const Addons = ({ urlParams, queryParams }) => {
         closeAddAddonModal();
         setSearch('');
         clearSharedAddon();
+        pendingOrderRef.current = null;
+        setReorderedCatalog(null);
     }, [urlParams, queryParams]);
     return (
         <MainNavBars className={styles['addons-container']} route={'addons'}>
@@ -154,28 +242,40 @@ const Addons = ({ urlParams, queryParams }) => {
                                 :
                                 <div className={styles['addons-list-container']}>
                                     {
-                                        installedAddons.catalog
+                                        displayedCatalog
                                             .filter(searchFilterPredicate)
-                                            .map((addon, index) => (
-                                                <Addon
-                                                    key={index}
-                                                    className={classnames(styles['addon'], 'animation-fade-in')}
-                                                    id={addon.manifest.id}
-                                                    name={addon.manifest.name}
-                                                    version={addon.manifest.version}
-                                                    logo={addon.manifest.logo}
-                                                    description={addon.manifest.description}
-                                                    types={addon.manifest.types}
-                                                    behaviorHints={addon.manifest.behaviorHints}
-                                                    installed={addon.installed}
-                                                    onInstall={onAddonInstall}
-                                                    onUninstall={onAddonUninstall}
-                                                    onConfigure={onAddonConfigure}
-                                                    onOpen={onAddonOpen}
-                                                    onShare={onAddonShare}
-                                                    dataset={{ addon }}
-                                                />
-                                            ))
+                                            .map((addon, index, arr) => {
+                                                const isProtected = !!addon.flags?.protected;
+                                                const prev = arr[index - 1];
+                                                const next = arr[index + 1];
+                                                const canMoveUp = canReorder && !isProtected && prev && !prev.flags?.protected;
+                                                const canMoveDown = canReorder && !isProtected && !!next && !next.flags?.protected;
+                                                return (
+                                                    <Addon
+                                                        key={addon.transportUrl || index}
+                                                        className={classnames(styles['addon'], 'animation-fade-in')}
+                                                        id={addon.manifest.id}
+                                                        name={addon.manifest.name}
+                                                        version={addon.manifest.version}
+                                                        logo={addon.manifest.logo}
+                                                        description={addon.manifest.description}
+                                                        types={addon.manifest.types}
+                                                        behaviorHints={addon.manifest.behaviorHints}
+                                                        installed={addon.installed}
+                                                        onInstall={onAddonInstall}
+                                                        onUninstall={onAddonUninstall}
+                                                        onConfigure={onAddonConfigure}
+                                                        onOpen={onAddonOpen}
+                                                        onShare={onAddonShare}
+                                                        dataset={{ addon }}
+                                                        reorderable={canReorder}
+                                                        canMoveUp={canMoveUp}
+                                                        canMoveDown={canMoveDown}
+                                                        onMoveUp={onAddonMoveUp}
+                                                        onMoveDown={onAddonMoveDown}
+                                                    />
+                                                );
+                                            })
                                     }
                                 </div>
                         :

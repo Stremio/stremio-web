@@ -18,6 +18,43 @@
         border-color: var(--overlay-color);
     }
 
+    .reorder-container {
+        flex: none;
+        align-self: stretch;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 0.3rem;
+        margin-right: 0.5rem;
+
+        .reorder-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.4rem;
+            height: 2.4rem;
+            border-radius: 0.4rem;
+            opacity: 0.6;
+
+            &:hover {
+                opacity: 1;
+                background-color: var(--overlay-color);
+            }
+
+            &.disabled {
+                opacity: 0.2;
+                pointer-events: none;
+            }
+
+            .reorder-icon {
+                display: block;
+                width: 1.4rem;
+                height: 1.4rem;
+                color: var(--primary-foreground-color);
+            }
+        }
+    }
+
     .logo-container {
         flex: none;
         width: 8rem;
