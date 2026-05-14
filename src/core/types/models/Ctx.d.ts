@@ -19,6 +19,7 @@ type Settings = {
     autoFrameRateMatching: boolean,
     bingeWatching: boolean,
     hardwareDecoding: boolean,
+    nvidiaVideoProcessing: boolean,
     videoMode: string | null,
     escExitFullscreen: boolean,
     interfaceLanguage: string,

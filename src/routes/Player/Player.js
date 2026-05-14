@@ -411,6 +411,7 @@ const Player = ({ urlParams, queryParams }) => {
                 maxAudioChannels: settings.surroundSound ? 32 : 2,
                 hardwareDecoding: settings.hardwareDecoding,
                 assSubtitlesStyling: settings.assSubtitlesStyling,
+                nvidiaVideoProcessing: settings.nvidiaVideoProcessing,
                 videoMode: settings.videoMode,
                 platform: platform.name,
                 streamingServerURL: streamingServer.baseUrl ?
