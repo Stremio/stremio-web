@@ -133,7 +133,7 @@ const Player = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) => {
                         </Option>
                 }
                 {
-                    !shell.active &&
+                    shell.active &&
                         <Option label={'SUPPORTS_NVIDIA_VIDEO_PROCESSING'}>
                             <Toggle
                                 tabIndex={-1}
