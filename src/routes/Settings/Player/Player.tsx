@@ -28,7 +28,7 @@ const Player = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) => {
         bingeWatchingToggle,
         playInBackgroundToggle,
         hardwareDecodingToggle,
-        nvidiaVideoProcessingToggle,
+        gpuVideoProcessingToggle,
         videoModeSelect,
         pauseOnMinimizeToggle,
     } = usePlayerOptions(profile);
@@ -137,7 +137,7 @@ const Player = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) => {
                         <Option label={'SUPPORTS_NVIDIA_VIDEO_PROCESSING'}>
                             <Toggle
                                 tabIndex={-1}
-                                {...nvidiaVideoProcessingToggle}
+                                {...gpuVideoProcessingToggle}
                             />
                         </Option>
                 }

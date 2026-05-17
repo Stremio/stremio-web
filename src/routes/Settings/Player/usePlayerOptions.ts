@@ -303,8 +303,8 @@ const usePlayerOptions = (profile: Profile) => {
         }
     }), [profile.settings]);
 
-    const nvidiaVideoProcessingToggle = useMemo(() => ({
-        checked: profile.settings.nvidiaVideoProcessing,
+    const gpuVideoProcessingToggle = useMemo(() => ({
+        checked: profile.settings.gpuVideoProcessing,
         onClick: () => {
             core.transport.dispatch({
                 action: 'Ctx',
@@ -312,7 +312,7 @@ const usePlayerOptions = (profile: Profile) => {
                     action: 'UpdateSettings',
                     args: {
                         ...profile.settings,
-                        nvidiaVideoProcessing: !profile.settings.nvidiaVideoProcessing
+                        gpuVideoProcessing: !profile.settings.gpuVideoProcessing
                     }
                 }
             });
@@ -383,7 +383,7 @@ const usePlayerOptions = (profile: Profile) => {
         bingeWatchingToggle,
         playInBackgroundToggle,
         hardwareDecodingToggle,
-        nvidiaVideoProcessingToggle,
+        gpuVideoProcessingToggle,
         videoModeSelect,
         pauseOnMinimizeToggle,
     };
