@@ -6692,29 +6692,36 @@ kbd {
   }
 }
 
-.buffering-loader-container-P7S0m {
+.buffering-IgMNi {
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.buffering-loader-container-P7S0m .buffering-loader-fMSpb {
-  flex: none;
+.buffering-IgMNi .logo-GBPtk {
+  position: absolute;
+  display: block;
   max-width: 15rem;
   max-height: 15rem;
-  animation: fadeInOut-WS5RD 2s infinite;
-  display: block;
   width: auto;
   height: auto;
+  animation: pulse-Aqwp7 2s infinite;
+  transition: clip-path 0.1s ease-in-out;
 }
-@keyframes fadeInOut-WS5RD {
+.buffering-IgMNi .logo-GBPtk.background-G3FHq {
+  opacity: 0.2 !important;
+}
+@keyframes pulse-Aqwp7 {
   0% {
-    opacity: 0.2;
+    opacity: 0.4;
+    transform: scale(1);
   }
   50% {
     opacity: 1;
+    transform: scale(1.05);
   }
   100% {
-    opacity: 0.2;
+    opacity: 0.4;
+    transform: scale(1);
   }
 }
 
