@@ -463,18 +463,39 @@ const Player = ({ urlParams, queryParams }) => {
     }, [player.nextVideo, video.state.time, video.state.duration]);
 
     // Auto audio track selection
+    // Bug: on stream re-open, calling video.setAudioTrack() once during audioTracks
+    // initialization is not always honored by the underlying player — the UI state
+    // reflects the desired track (selectedAudioTrackId in core) but the actual
+    // playback uses the player's default track (the first / index 0). This is
+    // observable on LG webOS Smart TV (see issue #2564). Symptom: user re-selects
+    // the already-highlighted option and only then does the audio actually switch.
+    //
+    // Fix: don't mark the selection as "done" until the player's
+    // selectedAudioTrackId actually matches the desired id. Until they match,
+    // keep retrying on each render of audioTracks / selectedAudioTrackId / streamState.
     React.useEffect(() => {
-        if (!defaultAudioTrackSelected.current) {
-            const savedTrackId = player.streamState?.audioTrack?.id;
-            const savedTrack = savedTrackId ? findTrackById(video.state.audioTracks, savedTrackId) : null;
-            const audioTrack = savedTrack ?? findTrackByLang(video.state.audioTracks, settings.audioLanguage);
-
-            if (audioTrack && audioTrack.id) {
-                video.setAudioTrack(audioTrack.id);
-                defaultAudioTrackSelected.current = true;
-            }
+        if (defaultAudioTrackSelected.current) {
+            return;
         }
-    }, [video.state.audioTracks, player.streamState]);
+        const savedTrackId = player.streamState?.audioTrack?.id;
+        const savedTrack = savedTrackId ? findTrackById(video.state.audioTracks, savedTrackId) : null;
+        const audioTrack = savedTrack ?? findTrackByLang(video.state.audioTracks, settings.audioLanguage);
+
+        if (!audioTrack || !audioTrack.id) {
+            return;
+        }
+
+        if (video.state.selectedAudioTrackId === audioTrack.id) {
+            // Player has acknowledged the selection — we're done.
+            defaultAudioTrackSelected.current = true;
+            return;
+        }
+
+        // Either we haven't requested the change yet, or the player hasn't picked
+        // it up. Request again. This is safe to call repeatedly with the same id
+        // because setAudioTrack is idempotent on the core side.
+        video.setAudioTrack(audioTrack.id);
+    }, [video.state.audioTracks, video.state.selectedAudioTrackId, player.streamState]);
 
     React.useEffect(() => {
         defaultAudioTrackSelected.current = false;
