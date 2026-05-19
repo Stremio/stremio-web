@@ -27,6 +27,15 @@ type StreamingServerSettings = {
     transcodeProfile: string | null,
 };
 
+type StreamingServerSettingsOption = {
+    id: string,
+    label: string,
+    selections?: {
+        name: string,
+        val: string | number | null,
+    }[],
+};
+
 type SFile = {
     name: string,
     path: string,
@@ -122,6 +131,7 @@ type StreamingServer = {
     remoteUrl: string | null,
     selected: Selected | null,
     settings: Loadable<StreamingServerSettings> | null,
+    settingsOptions: StreamingServerSettingsOption[],
     torrent: [string, Loadable<Torrent>] | null,
     statistics: Loadable<Statistics> | null,
     playbackDevices: Loadable<PlaybackDevice[]> | null,

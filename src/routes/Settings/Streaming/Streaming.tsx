@@ -21,6 +21,7 @@ const Streaming = forwardRef<HTMLDivElement, Props>(({ profile, streamingServer 
         streamingServerRemoteUrlInput,
         remoteEndpointSelect,
         cacheSizeSelect,
+        cacheLocationSelect,
         torrentProfileSelect,
         transcodingProfileSelect,
     } = useStreamingOptions(streamingServer);
@@ -64,6 +65,15 @@ const Streaming = forwardRef<HTMLDivElement, Props>(({ profile, streamingServer 
                         <MultiselectMenu
                             className={'multiselect'}
                             {...cacheSizeSelect}
+                        />
+                    </Option>
+            }
+            {
+                cacheLocationSelect !== null &&
+                    <Option label={'SETTINGS_CACHING_DRIVE'}>
+                        <MultiselectMenu
+                            className={'multiselect'}
+                            {...cacheLocationSelect}
                         />
                     </Option>
             }

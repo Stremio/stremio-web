@@ -81,6 +81,10 @@ const useStreamingOptions = (streamingServer: StreamingServer) => {
             streamingServer.deviceInfo.content as DeviceInfo : null
     ), [streamingServer.deviceInfo]);
 
+    const cacheRootOption = useMemo(() => {
+        return streamingServer.settingsOptions?.find(({ id }) => id === 'cacheRoot') ?? null;
+    }, [streamingServer.settingsOptions]);
+
     const streamingServerRemoteUrlInput = useMemo(() => ({
         value: streamingServer.remoteUrl,
     }), [streamingServer.remoteUrl]);
@@ -145,6 +149,43 @@ const useStreamingOptions = (streamingServer: StreamingServer) => {
             }
         };
     }, [settings]);
+
+    const cacheLocationSelect = useMemo(() => {
+        if (!settings || !cacheRootOption?.selections?.length) {
+            return null;
+        }
+
+        const options = cacheRootOption.selections
+            .filter(({ val }) => typeof val === 'string')
+            .map(({ name, val }) => ({
+                label: name,
+                value: val as string,
+            }));
+
+        if (!options.length) {
+            return null;
+        }
+
+        return {
+            options,
+            value: settings.cacheRoot,
+            title: () => {
+                return settings.cacheRoot;
+            },
+            onSelect: (value: string) => {
+                core.transport.dispatch({
+                    action: 'StreamingServer',
+                    args: {
+                        action: 'UpdateSettings',
+                        args: {
+                            ...settings,
+                            cacheRoot: value,
+                        }
+                    }
+                });
+            }
+        };
+    }, [settings, cacheRootOption]);
 
     const torrentProfileSelect = useMemo(() => {
         if (!settings) {
@@ -229,6 +270,7 @@ const useStreamingOptions = (streamingServer: StreamingServer) => {
         streamingServerRemoteUrlInput,
         remoteEndpointSelect,
         cacheSizeSelect,
+        cacheLocationSelect,
         torrentProfileSelect,
         transcodingProfileSelect,
     };
