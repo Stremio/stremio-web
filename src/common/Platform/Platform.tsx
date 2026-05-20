@@ -1,5 +1,6 @@
 import React, { createContext, useContext } from 'react';
 import { WHITELISTED_HOSTS } from 'stremio/common/CONSTANTS';
+import openAppDeepLink, { isAppDeepLink } from 'stremio/common/openAppDeepLink';
 import { name, isMobile } from './device';
 import useShell from './shell/useShell';
 
@@ -21,9 +22,14 @@ const PlatformProvider = ({ children }: Props) => {
 
     const openExternal = (url: string) => {
         try {
-            const { hostname } = new URL(url);
+            if (isAppDeepLink(url)) {
+                openAppDeepLink(url);
+                return;
+            }
+
+            const parsed = new URL(url);
             const isWhitelisted = WHITELISTED_HOSTS.some((host: string) =>
-                hostname === host || hostname.endsWith('.' + host)
+                parsed.hostname === host || parsed.hostname.endsWith('.' + host)
             );
             const finalUrl = !isWhitelisted ? `https://www.stremio.com/warning#${encodeURIComponent(url)}` : url;
 

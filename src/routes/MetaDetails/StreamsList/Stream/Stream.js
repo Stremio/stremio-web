@@ -6,10 +6,12 @@ const classnames = require('classnames');
 const { default: Icon } = require('@stremio/stremio-icons/react');
 const { t } = require('i18next');
 const { useCore } = require('stremio/core');
-const { useProfile, usePlatform, useToast, useBinaryState } = require('stremio/common');
+const { useProfile, usePlatform, useToast, useBinaryState, buildIosPlayerUrl, openAppDeepLink } = require('stremio/common');
+const { isAppDeepLink } = require('stremio/common/openAppDeepLink');
 const { Button, Image, Popup } = require('stremio/components');
 const { useRouteFocused } = require('stremio-router');
 const StreamPlaceholder = require('./StreamPlaceholder');
+const MobilePlayerPicker = require('./MobilePlayerPicker');
 const styles = require('./styles');
 
 const Stream = ({ className, videoId, videoReleased, addonName, name, description, thumbnail, progress, deepLinks, ...props }) => {
@@ -19,7 +21,10 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
     const core = useCore();
     const routeFocused = useRouteFocused();
 
+    const useMobilePlayerPicker = platform.name === 'ios' && platform.isMobile;
+
     const [menuOpen, , closeMenu, toggleMenu] = useBinaryState(false);
+    const [playerPickerOpen, openPlayerPicker, closePlayerPicker] = useBinaryState(false);
 
     const popupLabelOnMouseUp = React.useCallback((event) => {
         if (!event.nativeEvent.togglePopupPrevented) {
@@ -97,6 +102,12 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
         return deepLinks?.externalPlayer?.magnet;
     }, [deepLinks]);
 
+    const appDeepLinkHref = React.useMemo(() => {
+        return platform.name === 'ios' && isAppDeepLink(href) ? href : null;
+    }, [platform.name, href]);
+
+    const streamButtonHref = useMobilePlayerPicker || appDeepLinkHref ? null : href;
+
     const markVideoAsWatched = React.useCallback(() => {
         if (typeof videoId === 'string') {
             core.transport.dispatch({
@@ -109,8 +120,90 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
         }
     }, [videoId, videoReleased]);
 
+    const onStreamAnalytics = React.useCallback(() => {
+        if (typeof props.onClick === 'function') {
+            props.onClick({ nativeEvent: {} });
+        }
+    }, [props.onClick]);
+
+    const openNativePlayer = React.useCallback(() => {
+        if (typeof deepLinks?.player === 'string') {
+            window.location = deepLinks.player;
+        }
+    }, [deepLinks]);
+
+    const onMobilePlayerSelect = React.useCallback((playerId) => {
+        if (playerId === 'stremio') {
+            openNativePlayer();
+        } else {
+            const url = buildIosPlayerUrl(streamLink, playerId, {
+                playlist: deepLinks?.externalPlayer?.playlist,
+            });
+
+            if (url) {
+                openAppDeepLink(url);
+                toast.show({
+                    type: 'success',
+                    title: t('MOBILE_PLAYER_OPENED_EXTERNAL', { defaultValue: 'Stream opened in external player' }),
+                    timeout: 4000,
+                });
+            } else {
+                toast.show({
+                    type: 'error',
+                    title: t('MOBILE_PLAYER_NO_HTTP_STREAM', { defaultValue: 'This stream has no HTTP URL for external players.' }),
+                    timeout: 5000,
+                });
+            }
+        }
+
+        closePlayerPicker();
+        closeMenu();
+        markVideoAsWatched();
+        onStreamAnalytics();
+    }, [streamLink, deepLinks, markVideoAsWatched, onStreamAnalytics, openNativePlayer, closePlayerPicker, closeMenu]);
+
+    const onPlayButtonClick = React.useCallback((event) => {
+        event.preventDefault();
+        closeMenu();
+        openPlayerPicker();
+    }, [closeMenu, openPlayerPicker]);
+
+    const onAppDeepLinkPlayClick = React.useCallback((event) => {
+        event.preventDefault();
+        closeMenu();
+        if (appDeepLinkHref) {
+            openAppDeepLink(appDeepLinkHref);
+            markVideoAsWatched();
+            toast.show({
+                type: 'success',
+                title: 'Stream opened in external player',
+                timeout: 4000
+            });
+            onStreamAnalytics();
+        }
+    }, [appDeepLinkHref, closeMenu, markVideoAsWatched, onStreamAnalytics]);
+
     const onClick = React.useCallback((event) => {
         if (event.nativeEvent.togglePopupPrevented) {
+            return;
+        }
+
+        if (useMobilePlayerPicker) {
+            event.preventDefault();
+            openPlayerPicker();
+            return;
+        }
+
+        if (appDeepLinkHref) {
+            event.preventDefault();
+            openAppDeepLink(appDeepLinkHref);
+            markVideoAsWatched();
+            toast.show({
+                type: 'success',
+                title: 'Stream opened in external player',
+                timeout: 4000
+            });
+            onStreamAnalytics();
             return;
         }
 
@@ -123,10 +216,8 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
             });
         }
 
-        if (typeof props.onClick === 'function') {
-            props.onClick(event);
-        }
-    }, [props.onClick, profile.settings, markVideoAsWatched]);
+        onStreamAnalytics();
+    }, [useMobilePlayerPicker, appDeepLinkHref, openPlayerPicker, profile.settings, markVideoAsWatched, onStreamAnalytics]);
 
     const copyMagnetLink = React.useCallback((event) => {
         event.preventDefault();
@@ -200,7 +291,7 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
 
     const renderLabel = React.useMemo(() => function renderLabel({ className, children, ...props }) {
         return (
-            <Button className={classnames(className, styles['stream-container'])} title={addonName} href={href} target={target} download={download} onClick={onClick} {...props}>
+            <Button className={classnames(className, styles['stream-container'])} title={addonName} href={streamButtonHref} target={target} download={download} onClick={onClick} {...props}>
                 <div className={styles['info-container']}>
                     {
                         typeof thumbnail === 'string' && thumbnail.length > 0 ?
@@ -232,7 +323,7 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
                 {children}
             </Button>
         );
-    }, [thumbnail, progress, addonName, name, description, href, target, download, onClick]);
+    }, [thumbnail, progress, addonName, name, description, streamButtonHref, target, download, onClick]);
 
     const renderMenu = React.useMemo(() => function renderMenu() {
         return (
@@ -240,7 +331,12 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
                 <div className={styles['context-menu-title']}>
                     {description}
                 </div>
-                <Button className={styles['context-menu-option-container']} title={t('CTX_PLAY')}>
+                <Button
+                    className={styles['context-menu-option-container']}
+                    title={t('CTX_PLAY')}
+                    onClick={useMobilePlayerPicker ? onPlayButtonClick : appDeepLinkHref ? onAppDeepLinkPlayClick : undefined}
+                    href={useMobilePlayerPicker || appDeepLinkHref ? null : href}
+                >
                     <Icon className={styles['menu-icon']} name={'play'} />
                     <div className={styles['context-menu-option-label']}>{t('CTX_PLAY')}</div>
                 </Button>
@@ -267,25 +363,39 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
                 }
             </div>
         );
-    }, [copyStreamLink, onClick]);
+    }, [copyStreamLink, copyMagnetLink, copyDownloadLink, description, streamLink, magnetLink, downloadLink, useMobilePlayerPicker, onPlayButtonClick, onAppDeepLinkPlayClick, appDeepLinkHref, href]);
 
     React.useEffect(() => {
         if (!routeFocused) {
             closeMenu();
+            closePlayerPicker();
         }
     }, [routeFocused]);
 
     return (
-        <Popup
-            className={className}
-            onMouseUp={popupLabelOnMouseUp}
-            onLongPress={popupLabelOnLongPress}
-            onContextMenu={popupLabelOnContextMenu}
-            open={menuOpen}
-            onCloseRequest={closeMenu}
-            renderLabel={renderLabel}
-            renderMenu={renderMenu}
-        />
+        <React.Fragment>
+            <Popup
+                className={className}
+                onMouseUp={popupLabelOnMouseUp}
+                onLongPress={popupLabelOnLongPress}
+                onContextMenu={popupLabelOnContextMenu}
+                open={menuOpen}
+                onCloseRequest={closeMenu}
+                renderLabel={renderLabel}
+                renderMenu={renderMenu}
+            />
+            {
+                useMobilePlayerPicker ?
+                    <MobilePlayerPicker
+                        show={playerPickerOpen}
+                        streamingUrl={streamLink}
+                        onClose={closePlayerPicker}
+                        onSelectPlayer={onMobilePlayerSelect}
+                    />
+                    :
+                    null
+            }
+        </React.Fragment>
     );
 };
 

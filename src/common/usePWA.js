@@ -2,9 +2,18 @@
 
 const React = require('react');
 
+const isDisplayModeInstalled = () => (
+    window.matchMedia('(display-mode: standalone)').matches ||
+    window.matchMedia('(display-mode: fullscreen)').matches ||
+    window.matchMedia('(display-mode: minimal-ui)').matches
+);
+
 const usePWA = () => {
     const isPWA = React.useMemo(() => {
-        const isIOSPWA = window.navigator.standalone;
+        const isIOSPWA = Boolean(
+            window.navigator.standalone === true ||
+            isDisplayModeInstalled()
+        );
         const isAndroidPWA = window.matchMedia('(display-mode: standalone)').matches;
         return [isIOSPWA, isAndroidPWA];
     }, []);
@@ -12,3 +21,4 @@ const usePWA = () => {
 };
 
 module.exports = usePWA;
+module.exports.isDisplayModeInstalled = isDisplayModeInstalled;

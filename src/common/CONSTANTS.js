@@ -54,6 +54,14 @@ const SUPPORTED_LOCAL_SUBTITLES = [
     'text/vtt',
 ];
 
+/** Per-tap player picker on iOS */
+const IOS_MOBILE_PICKER_PLAYERS = [
+    { id: 'stremio', label: 'Stremio', icon: 'play', requiresStreaming: false },
+    { id: 'vlc', label: 'VLC', icon: 'vlc', requiresStreaming: true },
+    { id: 'infuse', label: 'Infuse', icon: 'play', requiresStreaming: true },
+    { id: 'outplayer', label: 'Outplayer', icon: 'play', requiresStreaming: true },
+];
+
 const EXTERNAL_PLAYERS = [
     {
         label: 'EXTERNAL_PLAYER_DISABLED',
@@ -143,6 +151,7 @@ module.exports = {
     MIME_SIGNATURES,
     SUPPORTED_LOCAL_SUBTITLES,
     EXTERNAL_PLAYERS,
+    IOS_MOBILE_PICKER_PLAYERS,
     WHITELISTED_HOSTS,
     PROTOCOL,
 };

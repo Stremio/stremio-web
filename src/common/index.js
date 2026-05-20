@@ -7,6 +7,9 @@ const { ToastProvider, useToast } = require('./Toast');
 const { TooltipProvider, Tooltip } = require('./Tooltips');
 const { ShortcutsProvider, useShortcuts, onShortcut } = require('./Shortcuts');
 const CONSTANTS = require('./CONSTANTS');
+const buildIosPlayerUrl = require('./buildIosPlayerUrl');
+const openAppDeepLink = require('./openAppDeepLink');
+const usePWA = require('./usePWA');
 const { withCoreSuspender, useCoreSuspender } = require('./CoreSuspender');
 const getVisibleChildrenRange = require('./getVisibleChildrenRange');
 const interfaceLanguages = require('./interfaceLanguages.json');
@@ -45,6 +48,9 @@ module.exports = {
     TooltipProvider,
     Tooltip,
     CONSTANTS,
+    buildIosPlayerUrl,
+    openAppDeepLink,
+    usePWA,
     withCoreSuspender,
     useCoreSuspender,
     getVisibleChildrenRange,

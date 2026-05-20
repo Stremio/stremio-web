@@ -1,0 +1,60 @@
+@import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
+
+.picker-content {
+    padding: 0 1rem 1.5rem;
+
+    .hint {
+        font-size: 0.85rem;
+        color: var(--color-placeholder);
+        margin-bottom: 1rem;
+    }
+
+    .players-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+
+    .player-option {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 1rem 0.5rem;
+        border-radius: var(--border-radius);
+        min-height: 5.5rem;
+
+        &:hover,
+        &:focus {
+            background-color: var(--overlay-color);
+        }
+
+        &:disabled {
+            opacity: 0.35;
+        }
+
+        .player-icon-wrap {
+            width: 3rem;
+            height: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background-color: var(--secondary-accent-color);
+
+            .player-icon {
+                width: 1.75rem;
+                height: 1.75rem;
+                color: var(--primary-foreground-color);
+            }
+        }
+
+        .player-label {
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-align: center;
+            color: var(--primary-foreground-color);
+        }
+    }
+}
