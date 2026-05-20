@@ -134,7 +134,7 @@ const Player = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) => {
                 }
                 {
                     shell.active &&
-                        <Option label={'SUPPORTS_NVIDIA_VIDEO_PROCESSING'}>
+                        <Option label={'SUPPORTS_GPU_VIDEO_PROCESSING'}>
                             <Toggle
                                 tabIndex={-1}
                                 {...gpuVideoProcessingToggle}
