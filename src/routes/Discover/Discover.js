@@ -173,6 +173,7 @@ const Discover = ({ urlParams, queryParams }) => {
                                         {discover.catalog.content.content.map((metaItem, index) => (
                                             <MetaItem
                                                 key={index}
+                                                id={metaItem.id}
                                                 className={classnames({ 'selected': selectedMetaItemIndex === index })}
                                                 type={metaItem.type}
                                                 name={metaItem.name}
