@@ -36,8 +36,13 @@
                 margin-bottom: 0.5rem;
                 border-radius: var(--border-radius);
 
-                &:global(.selected), &:hover {
+                &:global(.selected), &:global(.secondary-selected), &:hover {
                     background-color: var(--overlay-color);
+                }
+
+                &:global(.secondary-selected) {
+                    background-color: var(--overlay-color);
+                    opacity: 0.8;
                 }
 
                 .language-label {
@@ -56,12 +61,36 @@
                     margin-left: 1rem;
                     background-color: var(--secondary-accent-color);
                 }
+
+                .secondary-icon {
+                    flex: none;
+                    width: 0.5rem;
+                    height: 0.5rem;
+                    border-radius: 100%;
+                    margin-left: 1rem;
+                    border: 2px solid var(--secondary-accent-color);
+                    background-color: transparent;
+                }
             }
         }
     }
 
     .languages-container {
         width: 16rem;
+
+        .secondary-header {
+            flex: none;
+            align-self: stretch;
+            padding: 0.75rem 2rem 0.25rem;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--color-placeholder-text);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-top: 1px solid var(--overlay-color);
+            margin-top: 0.5rem;
+            padding-top: 1rem;
+        }
     }
 
     .variants-container {

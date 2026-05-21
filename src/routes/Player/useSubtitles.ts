@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { CONSTANTS, languages, onFileDrop, onShortcut, useToast } from 'stremio/common';
+import { CONSTANTS, languages, onFileDrop, onShortcut, usePlatform, useToast } from 'stremio/common';
 
 const withFallbackLabels = (tracks?: SubtitleTrack[] | null): SubtitleTrack[] => {
     if (!Array.isArray(tracks)) {
@@ -47,6 +47,7 @@ const useSubtitles = ({
 }: UseSubtitlesArgs): UseSubtitlesResult => {
     const { t } = useTranslation();
     const toast = useToast();
+    const platform = usePlatform();
     const videoRef = useRef(video);
     const settingsRef = useRef(settings);
     const defaultTrackSelected = useRef(false);
@@ -95,6 +96,7 @@ const useSubtitles = ({
         defaultTrackSelected.current = true;
         video.setSubtitlesTrack(null);
         video.setExtraSubtitlesTrack(null);
+        video.setSecondarySubtitlesTrack(null);
         streamStateChanged({ subtitleTrack: null });
     }, [streamStateChanged, video]);
 
@@ -119,6 +121,16 @@ const useSubtitles = ({
         video.setExtraSubtitlesTrack(track.id);
         rememberTrack(track, false);
     }, [disableSubtitles, rememberTrack, video]);
+
+    const selectSecondaryTrack = useCallback((track: SubtitleTrack | null) => {
+        if (!track) {
+            video.setSecondarySubtitlesTrack(null);
+            return;
+        }
+
+        defaultTrackSelected.current = true;
+        video.setSecondarySubtitlesTrack(track.id);
+    }, [video]);
 
     const changeDelay = useCallback((delay: number) => {
         video.setSubtitlesDelay(delay);
@@ -301,7 +313,8 @@ const useSubtitles = ({
 
     onShortcut('toggleSubtitles', () => {
         const subtitlesEnabled = video.state.selectedSubtitlesTrackId !== null ||
-            video.state.selectedExtraSubtitlesTrackId !== null;
+            video.state.selectedExtraSubtitlesTrackId !== null ||
+            video.state.selectedSecondarySubtitlesTrackId !== null;
 
         if (subtitlesEnabled) {
             if (video.state.selectedSubtitlesTrackId) {
@@ -318,6 +331,7 @@ const useSubtitles = ({
 
             video.setSubtitlesTrack(null);
             video.setExtraSubtitlesTrack(null);
+            video.setSecondarySubtitlesTrack(null);
             return;
         }
 
@@ -332,6 +346,7 @@ const useSubtitles = ({
         player.streamState,
         video.state.selectedExtraSubtitlesTrackId,
         video.state.selectedSubtitlesTrackId,
+        video.state.selectedSecondarySubtitlesTrackId,
     ], !menusOpen);
 
     onShortcut('subtitlesMenu', () => {
@@ -342,10 +357,12 @@ const useSubtitles = ({
     }, [closeMenus, hasTracks, toggleSubtitlesMenu]);
 
     const menuProps = useMemo(() => ({
+        isShellActive: platform.shell.active,
         subtitlesLanguage: settings.subtitlesLanguage,
         interfaceLanguage: settings.interfaceLanguage,
         subtitlesTracks: video.state.subtitlesTracks,
         selectedSubtitlesTrackId: video.state.selectedSubtitlesTrackId,
+        selectedSecondarySubtitlesTrackId: video.state.selectedSecondarySubtitlesTrackId,
         subtitlesOffset: video.state.subtitlesOffset,
         subtitlesSize: video.state.subtitlesSize,
         extraSubtitlesTracks: video.state.extraSubtitlesTracks,
@@ -355,6 +372,7 @@ const useSubtitles = ({
         extraSubtitlesSize: video.state.extraSubtitlesSize,
         onSubtitlesTrackSelected: selectEmbeddedTrack,
         onExtraSubtitlesTrackSelected: selectExtraTrack,
+        onSecondarySubtitlesTrackSelected: selectSecondaryTrack,
         onSubtitlesOffsetChanged: changeOffset,
         onSubtitlesSizeChanged: changeSize,
         onExtraSubtitlesOffsetChanged: changeOffset,
@@ -364,8 +382,10 @@ const useSubtitles = ({
         changeDelay,
         changeOffset,
         changeSize,
+        platform.shell.active,
         selectEmbeddedTrack,
         selectExtraTrack,
+        selectSecondaryTrack,
         settings.interfaceLanguage,
         settings.subtitlesLanguage,
         video.state.extraSubtitlesDelay,
@@ -374,6 +394,7 @@ const useSubtitles = ({
         video.state.extraSubtitlesTracks,
         video.state.selectedExtraSubtitlesTrackId,
         video.state.selectedSubtitlesTrackId,
+        video.state.selectedSecondarySubtitlesTrackId,
         video.state.subtitlesOffset,
         video.state.subtitlesSize,
         video.state.subtitlesTracks,

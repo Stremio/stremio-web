@@ -75,6 +75,18 @@ const SubtitlesMenu = React.memo(React.forwardRef((props, ref) => {
                 :
                 null;
     }, [subtitlesTracks, extraSubtitlesTracks, props.selectedSubtitlesTrackId, props.selectedExtraSubtitlesTrackId]);
+    const selectedSecondarySubtitlesLanguage = React.useMemo(() => {
+        return typeof props.selectedSecondarySubtitlesTrackId === 'string' ?
+            allSubtitles
+                .reduce((selected, { id, lang }) => {
+                    if (id === props.selectedSecondarySubtitlesTrackId) {
+                        return lang;
+                    }
+                    return selected;
+                }, null)
+            :
+            null;
+    }, [allSubtitles, props.selectedSecondarySubtitlesTrackId]);
     const subtitlesTracksForLanguage = React.useMemo(() => {
         const tracks = allSubtitles.filter(({ lang }) => lang === selectedSubtitlesLanguage);
         return sortByValues(tracks, ORIGIN_PRIORITIES);
@@ -153,6 +165,41 @@ const SubtitlesMenu = React.memo(React.forwardRef((props, ref) => {
             }
         }
     }, [props.selectedSubtitlesTrackId, props.selectedExtraSubtitlesTrackId, props.subtitlesOffset, props.extraSubtitlesOffset, props.onSubtitlesOffsetChanged, props.onExtraSubtitlesOffsetChanged]);
+
+    // Secondary subtitle support (desktop-only via ShellVideo/mpv)
+    const hasPrimary = typeof props.selectedSubtitlesTrackId === 'string' ||
+        typeof props.selectedExtraSubtitlesTrackId === 'string';
+    const showSecondarySection = hasPrimary && props.isShellActive &&
+        typeof props.onSecondarySubtitlesTrackSelected === 'function';
+
+    const secondaryLanguages = React.useMemo(() => {
+        return subtitlesLanguages.filter((lang) => lang !== selectedSubtitlesLanguage);
+    }, [subtitlesLanguages, selectedSubtitlesLanguage]);
+
+    const secondaryLanguageOnClick = React.useCallback((event) => {
+        const lang = event.currentTarget.dataset.lang;
+        // OFF button has no data-lang
+        if (!lang) {
+            if (typeof props.onSecondarySubtitlesTrackSelected === 'function') {
+                props.onSecondarySubtitlesTrackSelected(null);
+            }
+            return;
+        }
+
+        if (lang === selectedSecondarySubtitlesLanguage) {
+            // Deselect secondary if clicking the already-selected one
+            if (typeof props.onSecondarySubtitlesTrackSelected === 'function') {
+                props.onSecondarySubtitlesTrackSelected(null);
+            }
+            return;
+        }
+
+        const tracks = allSubtitles.filter(({ lang: tLang }) => tLang === lang);
+        const track = sortByValues(tracks, ORIGIN_PRIORITIES).shift();
+        if (track && typeof props.onSecondarySubtitlesTrackSelected === 'function') {
+            props.onSecondarySubtitlesTrackSelected(track);
+        }
+    }, [allSubtitles, selectedSecondarySubtitlesLanguage, props.onSecondarySubtitlesTrackSelected]);
     return (
         <div ref={ref} className={classnames(props.className, styles['subtitles-menu-container'])} onMouseDown={onMouseDown}>
             <div className={styles['languages-container']}>
@@ -183,6 +230,40 @@ const SubtitlesMenu = React.memo(React.forwardRef((props, ref) => {
                         </Button>
                     ))}
                 </div>
+                {
+                    showSecondarySection && secondaryLanguages.length > 0 ?
+                        <React.Fragment>
+                            <div className={styles['secondary-header']}>{ t('PLAYER_SUBTITLES_SECONDARY', { defaultValue: 'Secondary Subtitle' }) }</div>
+                            <div className={styles['languages-list']}>
+                                <Button title={t('OFF')} className={classnames(styles['language-option'], { 'secondary-selected': selectedSecondarySubtitlesLanguage === null })} onClick={secondaryLanguageOnClick}>
+                                    <div className={styles['language-label']}>{ t('OFF') }</div>
+                                    {
+                                        selectedSecondarySubtitlesLanguage === null ?
+                                            <div className={styles['secondary-icon']} />
+                                            :
+                                            null
+                                    }
+                                </Button>
+                                {secondaryLanguages.map((lang, index) => (
+                                    <Button key={index} title={languages.label(lang)} className={classnames(styles['language-option'], { 'secondary-selected': selectedSecondarySubtitlesLanguage === lang })} data-lang={lang} onClick={secondaryLanguageOnClick}>
+                                        <div className={styles['language-label']}>
+                                            {
+                                                lang === 'local' ? t('LOCAL') : languages.label(lang)
+                                            }
+                                        </div>
+                                        {
+                                            selectedSecondarySubtitlesLanguage === lang ?
+                                                <div className={styles['secondary-icon']} />
+                                                :
+                                                null
+                                        }
+                                    </Button>
+                                ))}
+                            </div>
+                        </React.Fragment>
+                        :
+                        null
+                }
             </div>
             <div className={styles['variants-container']}>
                 <div className={styles['variants-header']}>{ t('PLAYER_SUBTITLES_VARIANTS') }</div>
@@ -250,6 +331,7 @@ SubtitlesMenu.displayName = 'MainNavBars';
 
 SubtitlesMenu.propTypes = {
     className: PropTypes.string,
+    isShellActive: PropTypes.bool,
     subtitlesLanguage: PropTypes.string,
     interfaceLanguage: PropTypes.string,
     subtitlesTracks: PropTypes.arrayOf(PropTypes.shape({
@@ -258,6 +340,7 @@ SubtitlesMenu.propTypes = {
         origin: PropTypes.string.isRequired
     })),
     selectedSubtitlesTrackId: PropTypes.string,
+    selectedSecondarySubtitlesTrackId: PropTypes.string,
     subtitlesOffset: PropTypes.number,
     subtitlesSize: PropTypes.number,
     extraSubtitlesTracks: PropTypes.arrayOf(PropTypes.shape({
@@ -276,6 +359,7 @@ SubtitlesMenu.propTypes = {
     extraSubtitlesSize: PropTypes.number,
     onSubtitlesTrackSelected: PropTypes.func,
     onExtraSubtitlesTrackSelected: PropTypes.func,
+    onSecondarySubtitlesTrackSelected: PropTypes.func,
     onSubtitlesOffsetChanged: PropTypes.func,
     onSubtitlesSizeChanged: PropTypes.func,
     onExtraSubtitlesOffsetChanged: PropTypes.func,

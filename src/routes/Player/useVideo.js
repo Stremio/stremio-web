@@ -34,6 +34,7 @@ const useVideo = () => {
         subtitlesOutlineColor: null,
         extraSubtitlesTracks: [],
         selectedExtraSubtitlesTrackId: null,
+        selectedSecondarySubtitlesTrackId: null,
         extraSubtitlesSize: null,
         extraSubtitlesDelay: null,
         extraSubtitlesOffset: null,
@@ -128,6 +129,10 @@ const useVideo = () => {
     const setExtraSubtitlesTrack = (id) => {
         setProp('selectedSubtitlesTrackId', null);
         setProp('selectedExtraSubtitlesTrackId', id);
+    };
+
+    const setSecondarySubtitlesTrack = (id) => {
+        setProp('selectedSecondarySubtitlesTrackId', id);
     };
 
     const setSubtitlesDelay = (delay) => {
@@ -248,6 +253,7 @@ const useVideo = () => {
         setSubtitlesBackgroundColor,
         setSubtitlesOutlineColor,
         setExtraSubtitlesTrack,
+        setSecondarySubtitlesTrack,
         setVideoScale,
         setFullscreen,
     };

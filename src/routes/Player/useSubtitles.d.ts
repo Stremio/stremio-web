@@ -22,6 +22,7 @@ type VideoSubtitleState = {
     stream: unknown | null,
     subtitlesTracks: SubtitleTrack[],
     selectedSubtitlesTrackId: string | null,
+    selectedSecondarySubtitlesTrackId: string | null,
     subtitlesOffset: number | null,
     subtitlesSize: number | null,
     extraSubtitlesTracks: SubtitleTrack[],
@@ -43,6 +44,7 @@ type VideoController = {
     addLocalSubtitles: (filename: string, buffer: ArrayBuffer) => void,
     setSubtitlesTrack: (id: string | null) => void,
     setExtraSubtitlesTrack: (id: string | null) => void,
+    setSecondarySubtitlesTrack: (id: string | null) => void,
     setSubtitlesDelay: (delay: number) => void,
     setSubtitlesSize: (size: number) => void,
     setSubtitlesOffset: (offset: number) => void,
@@ -63,10 +65,12 @@ type UseSubtitlesArgs = {
 };
 
 type SubtitlesMenuProps = {
+    isShellActive: boolean,
     subtitlesLanguage: string | null,
     interfaceLanguage: string,
     subtitlesTracks: SubtitleTrack[],
     selectedSubtitlesTrackId: string | null,
+    selectedSecondarySubtitlesTrackId: string | null,
     subtitlesOffset: number | null,
     subtitlesSize: number | null,
     extraSubtitlesTracks: SubtitleTrack[],
@@ -76,6 +80,7 @@ type SubtitlesMenuProps = {
     extraSubtitlesSize: number | null,
     onSubtitlesTrackSelected: (track: SubtitleTrack | null) => void,
     onExtraSubtitlesTrackSelected: (track: SubtitleTrack | null) => void,
+    onSecondarySubtitlesTrackSelected: (track: SubtitleTrack | null) => void,
     onSubtitlesOffsetChanged: (offset: number) => void,
     onSubtitlesSizeChanged: (size: number) => void,
     onExtraSubtitlesOffsetChanged: (offset: number) => void,
