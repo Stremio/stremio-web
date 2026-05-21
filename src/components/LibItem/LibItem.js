@@ -132,6 +132,7 @@ const LibItem = ({ _id, removable, notifications, watched, ...props }) => {
     return (
         <MetaItem
             {...props}
+            _id={_id}
             watched={watched}
             newVideos={newVideos}
             options={options}

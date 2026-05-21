@@ -12,12 +12,17 @@ const useModelState = ({ action, ...args }) => {
     const { core } = useServices();
     const routeFocused = useRouteFocused();
     const mountedRef = React.useRef(false);
-    const [model, timeout, map, deps] = React.useMemo(() => {
-        return [args.model, args.timeout, args.map, args.deps];
-    }, []);
+    const model = args.model;
+    const timeout = args.timeout;
+    const map = args.map;
+    const deps = args.deps;
+    const skipUnload = args.skipUnload;
     const { getState } = useCoreSuspender();
     const [state, setState] = React.useReducer(
         (prevState, nextState) => {
+            if (!prevState || !nextState) {
+                return nextState;
+            }
             return Object.keys(prevState).reduce((result, key) => {
                 result[key] = deepEqual(prevState[key], nextState[key]) ? prevState[key] : nextState[key];
                 return result;
@@ -25,26 +30,39 @@ const useModelState = ({ action, ...args }) => {
         },
         undefined,
         () => {
-            if (typeof map === 'function') {
-                return map(getState(model));
-            } else {
-                return getState(model);
+            if (!model) {
+                return null;
+            }
+            try {
+                if (typeof map === 'function') {
+                    return map(getState(model));
+                } else {
+                    return getState(model);
+                }
+            } catch (error) {
+                if (error instanceof Promise) {
+                    throw error;
+                }
+                console.error(`[useModelState] Error in model ${model}:`, error);
+                return null;
             }
         }
     );
     React.useInsertionEffect(() => {
-        if (action) {
+        if (action && model) {
             core.transport.dispatch(action, model);
         }
-    }, [action]);
+    }, [action, model]);
     React.useInsertionEffect(() => {
         return () => {
-            core.transport.dispatch({ action: 'Unload' }, model);
+            if (model && !skipUnload) {
+                core.transport.dispatch({ action: 'Unload' }, model);
+            }
         };
-    }, []);
+    }, [model, skipUnload]);
     React.useInsertionEffect(() => {
         const onNewState = async (models) => {
-            if (models.indexOf(model) === -1 && (!Array.isArray(deps) || intersection(deps, models).length === 0)) {
+            if (!model || (models.indexOf(model) === -1 && (!Array.isArray(deps) || intersection(deps, models).length === 0))) {
                 return;
             }
 
@@ -58,7 +76,7 @@ const useModelState = ({ action, ...args }) => {
         const onNewStateThrottled = throttle(onNewState, timeout);
         if (routeFocused) {
             core.transport.on('NewState', onNewStateThrottled);
-            if (mountedRef.current) {
+            if (mountedRef.current && model) {
                 onNewState([model]);
             }
         }
@@ -66,7 +84,7 @@ const useModelState = ({ action, ...args }) => {
             onNewStateThrottled.cancel();
             core.transport.off('NewState', onNewStateThrottled);
         };
-    }, [routeFocused]);
+    }, [routeFocused, model]);
     React.useInsertionEffect(() => {
         mountedRef.current = true;
     }, []);

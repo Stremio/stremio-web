@@ -18,6 +18,7 @@ function wrapPromise(promise) {
         (error) => {
             status = 'error';
             result = error;
+            console.error('[CoreSuspender] Rejected promise error:', error);
         }
     );
     return {

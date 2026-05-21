@@ -4,7 +4,11 @@ const React = require('react');
 const classnames = require('classnames');
 const debounce = require('lodash.debounce');
 const useTranslate = require('stremio/common/useTranslate');
-const { useStreamingServer, useNotifications, withCoreSuspender, getVisibleChildrenRange, useProfile } = require('stremio/common');
+const useStreamingServer = require('stremio/common/useStreamingServer');
+const useNotifications = require('stremio/common/useNotifications');
+const { withCoreSuspender } = require('stremio/common/CoreSuspender');
+const getVisibleChildrenRange = require('stremio/common/getVisibleChildrenRange');
+const useProfile = require('stremio/common/useProfile');
 const { ContinueWatchingItem, EventModal, MainNavBars, MetaItem, MetaRow } = require('stremio/components');
 const useBoard = require('./useBoard');
 const useContinueWatchingPreview = require('./useContinueWatchingPreview');
@@ -16,12 +20,12 @@ const THRESHOLD = 5;
 
 // Helper component to fetch and pass nextEpisodeReleaseDate for a single item
 // eslint-disable-next-line react/prop-types
-const ContinueWatchingItemWithDetails = ({ item, notifications }) => {
-    const nextEpisodeReleaseDate = useMetaDetailsForMetaItem(item);
+const ContinueWatchingItemWithDetails = (props) => {
+    // Disable immediate fetch by passing enabled: false
+    const nextEpisodeReleaseDate = useMetaDetailsForMetaItem(props, false);
     return (
         <ContinueWatchingItem
-            {...item}
-            notifications={notifications}
+            {...props}
             nextEpisodeReleaseDate={nextEpisodeReleaseDate}
         />
     );
@@ -71,19 +75,9 @@ const Board = () => {
                             <MetaRow
                                 className={classnames(styles['board-row'], styles['continue-watching-row'], 'animation-fade-in')}
                                 title={t.string('BOARD_CONTINUE_WATCHING')}
-                                catalog={{
-                                    ...continueWatchingPreview,
-                                    items: continueWatchingPreview.items.map((item, index) => (
-                                        <ContinueWatchingItemWithDetails
-                                            key={item.id || index} // Use item.id for key if available, otherwise index
-                                            item={item}
-                                            notifications={notifications}
-                                        />
-                                    )),
-                                }}
-                                // We are passing a React element as itemComponent, so we don't need itemComponent prop here
-                                // The items array now contains the rendered components
-                                itemComponent={({ item }) => item} // This is a workaround to render the React elements directly
+                                catalog={continueWatchingPreview}
+                                notifications={notifications}
+                                itemComponent={ContinueWatchingItemWithDetails}
                             />
                             :
                             null

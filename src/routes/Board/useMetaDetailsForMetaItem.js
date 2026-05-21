@@ -1,17 +1,18 @@
 const React = require('react');
-const { useModelState, useProfile } = require('stremio/common');
+const useModelState = require('stremio/common/useModelState');
+const useProfile = require('stremio/common/useProfile');
 
-const useMetaDetailsForMetaItem = (metaItemPreview) => {
+const useMetaDetailsForMetaItem = (metaItemPreview, enabled = true) => {
     const profile = useProfile();
-    // Create a unique model name for each meta item to avoid state conflicts
-    const modelName = React.useMemo(() => {
-        return metaItemPreview && metaItemPreview.id ? `metaDetails_${metaItemPreview.id}` : null;
-    }, [metaItemPreview?.id]);
+    // Use the singleton model name 'meta_details' which is guaranteed to exist in the core
+    const modelName = enabled ? 'meta_details' : null;
 
     const metaDetails = useModelState({
         model: modelName,
+        skipUnload: true,
         action: React.useMemo(() => {
-            if (!metaItemPreview || !metaItemPreview.id || !metaItemPreview.type) {
+            const id = metaItemPreview?.id || metaItemPreview?._id;
+            if (!enabled || !id || !metaItemPreview?.type) {
                 return null;
             }
             return {
@@ -19,43 +20,53 @@ const useMetaDetailsForMetaItem = (metaItemPreview) => {
                 args: {
                     model: 'MetaDetails',
                     args: {
-                        type: metaItemPreview.type,
-                        id: metaItemPreview.id
+                        metaPath: {
+                            resource: 'meta',
+                            type: metaItemPreview.type,
+                            id: id,
+                            extra: []
+                        }
                     }
                 }
             };
-        }, [metaItemPreview?.id, metaItemPreview?.type])
+        }, [enabled, metaItemPreview?.id, metaItemPreview?._id, metaItemPreview?.type])
     });
 
     const nextEpisodeReleaseDate = React.useMemo(() => {
-        if (metaDetails && metaDetails.content?.type === 'Ready' && Array.isArray(metaDetails.content.content.videos)) {
+        // Ensure we are looking at the CORRECT item in the singleton model
+        const id = metaItemPreview?.id || metaItemPreview?._id;
+        const metaItem = metaDetails?.metaItem;
+        if (enabled && metaItem?.content?.type === 'Ready' && metaItem.content.content?.id === id && Array.isArray(metaItem.content.content.videos)) {
+            const metaItemContent = metaItem.content;
             const now = new Date();
-            now.setHours(0, 0, 0, 0); // Normalize 'now' to start of day
+            const nowTime = now.getTime();
+            const next7Days = new Date(now);
+            next7Days.setDate(now.getDate() + 7);
+            const next7DaysTime = next7Days.getTime();
 
-            const upcomingVideos = metaDetails.content.content.videos.filter((video) => {
-                // Check if the video is scheduled and has a release date
-                if (video.scheduled && video.released) {
-                    // Parse the release date string (e.g., 'YYYY-MM-DD')
-                    const [year, month, day] = video.released.split('-').map(Number);
-                    const releaseDate = new Date(year, month - 1, day); // month - 1 because Date months are 0-indexed
-
-                    // Only consider episodes that are in the future or today
-                    return releaseDate >= now;
-                }
-                return false;
-            }).sort((a, b) => {
-                // Sort by release date to find the soonest upcoming episode
-                const dateA = new Date(a.released);
-                const dateB = new Date(b.released);
-                return dateA.getTime() - dateB.getTime();
-            });
+            const upcomingVideos = metaItemContent.content.videos
+                .filter((video) => {
+                    if (video.released) {
+                        const releaseDate = new Date(video.released);
+                        const releaseTime = releaseDate.getTime();
+                        return !isNaN(releaseTime) && releaseTime >= nowTime && releaseTime <= next7DaysTime;
+                    }
+                    return false;
+                })
+                .sort((a, b) => {
+                    const timeA = new Date(a.released).getTime();
+                    const timeB = new Date(b.released).getTime();
+                    const validA = !isNaN(timeA);
+                    const validB = !isNaN(timeB);
+                    if (!validA && !validB) return 0;
+                    if (!validA) return 1;
+                    if (!validB) return -1;
+                    return timeA - timeB;
+                });
 
             if (upcomingVideos.length > 0) {
-                const nextVideo = upcomingVideos[0];
-                const [year, month, day] = nextVideo.released.split('-').map(Number);
-                const releaseDate = new Date(year, month - 1, day);
-                // Format the date string using the user's interface language
-                return releaseDate.toLocaleDateString(profile.settings.interfaceLanguage, {
+                const releaseDate = new Date(upcomingVideos[0].released);
+                return releaseDate.toLocaleDateString(profile?.settings?.interfaceLanguage || 'en-US', {
                     day: 'numeric',
                     month: 'long',
                     year: 'numeric',
@@ -63,7 +74,7 @@ const useMetaDetailsForMetaItem = (metaItemPreview) => {
             }
         }
         return null;
-    }, [metaDetails, profile.settings.interfaceLanguage]);
+    }, [enabled, metaDetails, profile?.settings?.interfaceLanguage, metaItemPreview?.id, metaItemPreview?._id]);
 
     return nextEpisodeReleaseDate;
 };

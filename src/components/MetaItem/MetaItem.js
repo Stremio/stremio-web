@@ -3,7 +3,6 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const { useTranslation } = require('react-i18next');
 const filterInvalidDOMProps = require('filter-invalid-dom-props').default;
 const { default: Icon } = require('@stremio/stremio-icons/react');
 const { default: Button } = require('stremio/components/Button');
@@ -12,10 +11,34 @@ const Multiselect = require('stremio/components/Multiselect');
 const useBinaryState = require('stremio/common/useBinaryState');
 const { ICON_FOR_TYPE } = require('stremio/common/CONSTANTS');
 const styles = require('./styles');
+const useMetaDetailsForMetaItem = require('stremio/routes/Board/useMetaDetailsForMetaItem');
+const useTranslate = require('stremio/common/useTranslate');
 
 const MetaItem = React.memo(({ className, type, name, poster, posterShape, posterChangeCursor, progress, newVideos, options, deepLinks, dataset, optionOnSelect, onDismissClick, onPlayClick, watched, nextEpisodeReleaseDate, ...props }) => {
-    const { t } = useTranslation();
+    const t = useTranslate();
     const [menuOpen, onMenuOpen, onMenuClose] = useBinaryState(false);
+    const [isHovered, setIsHovered] = React.useState(false);
+    const [mousePos, setMousePos] = React.useState({ x: 0, y: 0 });
+    const hoverTimeoutRef = React.useRef();
+
+    const onMouseEnter = React.useCallback(() => {
+        hoverTimeoutRef.current = setTimeout(() => setIsHovered(true), 150);
+    }, []);
+    const onMouseLeave = React.useCallback(() => {
+        clearTimeout(hoverTimeoutRef.current);
+        setIsHovered(false);
+    }, []);
+    const onMouseMove = React.useCallback((event) => {
+        setMousePos({ x: event.clientX, y: event.clientY });
+    }, []);
+
+    const upcomingDate = useMetaDetailsForMetaItem(
+        { id: props.id || props._id || dataset?.id || dataset?._id, type },
+        isHovered && (type === 'series' || type === 'tv') && !nextEpisodeReleaseDate
+    );
+
+    const displayDate = nextEpisodeReleaseDate || upcomingDate;
+
     const href = React.useMemo(() => {
         return deepLinks ?
             typeof deepLinks.metaDetailsStreams === 'string' ?
@@ -62,17 +85,31 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, poste
         <Icon className={styles['icon']} name={'more-vertical'} />
     ), []);
     const title = React.useMemo(() => {
+        // Suppress native tooltip for series/tv immediately on hover
+        // to prevent the browser's native box from appearing during the fetch delay.
+        if (isHovered && (type === 'series' || type === 'tv')) {
+            return null;
+        }
         if (typeof nextEpisodeReleaseDate === 'string' && nextEpisodeReleaseDate.length > 0) {
             return `${name} (${nextEpisodeReleaseDate})`;
         }
         return name;
-    }, [name, nextEpisodeReleaseDate]);
+    }, [name, nextEpisodeReleaseDate, isHovered, type]);
     return (
-        <Button title={title} href={href} {...filterInvalidDOMProps(props)} className={classnames(className, styles['meta-item-container'], styles['poster-shape-poster'], styles[`poster-shape-${posterShape}`], { 'active': menuOpen })} onClick={metaItemOnClick}>
+        <Button
+            title={title}
+            href={href}
+            {...filterInvalidDOMProps(props)}
+            className={classnames(className, styles['meta-item-container'], styles['poster-shape-poster'], styles[`poster-shape-${posterShape}`], { 'active': menuOpen })}
+            onClick={metaItemOnClick}
+            onMouseEnter={onMouseEnter}
+            onMouseLeave={onMouseLeave}
+            onMouseMove={onMouseMove}
+        >
             <div className={classnames(styles['poster-container'], { 'poster-change-cursor': posterChangeCursor })}>
                 {
                     onDismissClick ?
-                        <div title={t('LIBRARY_RESUME_DISMISS')} className={styles['dismiss-icon-layer']} onClick={onDismissClick}>
+                        <div title={t.string('LIBRARY_RESUME_DISMISS')} className={styles['dismiss-icon-layer']} onClick={onDismissClick}>
                             <Icon className={styles['dismiss-icon']} name={'close'} />
                             <div className={styles['dismiss-icon-backdrop']} />
                         </div>
@@ -97,7 +134,7 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, poste
                 </div>
                 {
                     onPlayClick ?
-                        <div title={t('CONTINUE_WATCHING')} className={styles['play-icon-layer']} onClick={onPlayClick}>
+                        <div title={t.string('CONTINUE_WATCHING')} className={styles['play-icon-layer']} onClick={onPlayClick}>
                             <Icon className={styles['play-icon']} name={'play'} />
                             <div className={styles['play-icon-outer']} />
                             <div className={styles['play-icon-background']} />
@@ -154,6 +191,16 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, poste
                     </div>
                     :
                     null
+            }
+            {
+                isHovered && (type === 'series' || type === 'tv') ? (
+                    <div
+                        className={styles['upcoming-tooltip']}
+                        style={{ top: mousePos.y + 15, left: mousePos.x + 15 }}
+                    >
+                        {name}{displayDate ? ` (${t.string('UPCOMING')}: ${displayDate})` : ''}
+                    </div>
+                ) : null
             }
         </Button>
     );
