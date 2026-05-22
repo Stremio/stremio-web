@@ -55,7 +55,7 @@ export const routerPaths = [
         element: <routes.Settings />,
     },
     {
-        path: '/player/:stream?/:streamTransportUrl?/:metaTransportUrl?/:type?/:id?/:videoId?',
+        path: '/player/:stream/:streamTransportUrl?/:metaTransportUrl?/:type?/:id?/:videoId?',
         view: 4,
         element: <routes.Player />,
     },
