@@ -16,6 +16,8 @@ const useSeason = require('./useSeason');
 const useMetaExtensionTabs = require('./useMetaExtensionTabs');
 const styles = require('./styles');
 
+const GAMEPAD_HANDLER_ID = 'metadetails';
+
 const MetaDetails = () => {
     const { type, id, videoId } = useParams();
     const location = useLocation();
@@ -122,7 +124,7 @@ const MetaDetails = () => {
     ), [metaPath, metaDetails]);
     const originPath = React.useMemo(() => getStoredOrigin(), [getStoredOrigin]);
 
-    useContentGamepadNavigation(contentRef, urlParams.path);
+    useContentGamepadNavigation(contentRef, GAMEPAD_HANDLER_ID);
     return (
         <div className={styles['metadetails-container']}>
             {
