@@ -2,7 +2,7 @@ import React, { forwardRef, useCallback, useEffect, useMemo, useState } from 're
 import { useTranslation } from 'react-i18next';
 import { useCore } from 'stremio/core';
 import { Button } from 'stremio/components';
-import { usePlatform, useToast } from 'stremio/common';
+import { usePlatform, useToast, useDiscord } from 'stremio/common';
 import { Section, Option, Link } from '../components';
 import User from './User';
 import useDataExport from './useDataExport';
@@ -17,6 +17,7 @@ const General = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) => {
     const core = useCore();
     const platform = usePlatform();
     const toast = useToast();
+    const discord = useDiscord();
     const [dataExport, loadDataExport] = useDataExport();
 
     const [traktAuthStarted, setTraktAuthStarted] = useState(false);
@@ -60,6 +61,19 @@ const General = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) => {
             });
         }
     }, [isTraktAuthenticated, profile.auth]);
+
+    const onToggleDiscord = useCallback(() => {
+        core.transport.dispatch({
+            action: 'Ctx',
+            args: {
+                action: 'UpdateSettings',
+                args: {
+                    ...profile.settings,
+                    discordRpcEnabled: !profile.settings.discordRpcEnabled
+                }
+            }
+        });
+    }, [profile.settings]);
 
     useEffect(() => {
         if (dataExport.exportUrl) {
@@ -134,6 +148,14 @@ const General = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) => {
                     {isTraktAuthenticated ? t('LOG_OUT') : t('SETTINGS_TRAKT_AUTHENTICATE')}
                 </Button>
             </Option>
+            {
+                discord.available &&
+                    <Option className={styles['discord-container']} icon={'discord'} label={t('SETTINGS_DISCORD', { defaultValue: 'Discord Rich Presence' })}>
+                        <Button className={'button'} title={profile.settings.discordRpcEnabled ? t('MOBILE_DISCONNECT') : t('SETTINGS_DISCORD_CONNECT', { defaultValue: 'Connect' })} tabIndex={-1} onClick={onToggleDiscord}>
+                            {profile.settings.discordRpcEnabled ? t('MOBILE_DISCONNECT') : t('SETTINGS_DISCORD_CONNECT', { defaultValue: 'Connect' })}
+                        </Button>
+                    </Option>
+            }
         </Section>
     </>;
 });

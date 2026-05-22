@@ -5,9 +5,9 @@ const React = require('react');
 const { useTranslation } = require('react-i18next');
 const { useCore } = require('stremio/core');
 const { Router } = require('stremio-router');
-const { Chromecast, ServicesProvider, GamepadProvider } = require('stremio/services');
+const { Chromecast, Discord, ServicesProvider, GamepadProvider } = require('stremio/services');
 const { NotFound } = require('stremio/routes');
-const { FullscreenProvider, ToastProvider, TooltipProvider, ShortcutsProvider, CONSTANTS, useBinaryState, useProfile, withCoreSuspender, onFileDrop, usePlatform } = require('stremio/common');
+const { FullscreenProvider, ToastProvider, TooltipProvider, ShortcutsProvider, DiscordProvider, CONSTANTS, useBinaryState, useProfile, withCoreSuspender, onFileDrop, usePlatform } = require('stremio/common');
 const ServicesToaster = require('./ServicesToaster');
 const DeepLinkHandler = require('./DeepLinkHandler');
 const SearchParamsHandler = require('./SearchParamsHandler');
@@ -31,6 +31,7 @@ const App = () => {
     }, []);
     const services = React.useMemo(() => {
         return {
+            discord: new Discord(),
             chromecast: new Chromecast(),
         };
     }, []);
@@ -99,6 +100,8 @@ const App = () => {
         };
         services.chromecast.on('stateChanged', onChromecastStateChange);
         services.chromecast.start();
+        services.discord.init(shell);
+
         window.services = services;
         return () => {
             services.chromecast.stop();
@@ -189,21 +192,23 @@ const App = () => {
                     <GamepadProvider enabled={gamepadSupportEnabled} onGuide={toggleGamepadModal}>
                         <ShortcutsProvider onShortcut={onShortcut}>
                             <FullscreenProvider>
-                                {
-                                    shortcutModalOpen && <ShortcutsModal onClose={closeShortcutsModal}/>
-                                }
-                                {
-                                    gamepadModalOpen && <GamepadModal onClose={closeGamepadModal}/>
-                                }
-                                <ServicesToaster />
-                                <DeepLinkHandler />
-                                <SearchParamsHandler />
-                                <UpdaterBanner className={styles['updater-banner-container']} />
-                                <RouterWithProtectedRoutes
-                                    className={styles['router']}
-                                    viewsConfig={routerViewsConfig}
-                                    onPathNotMatch={onPathNotMatch}
-                                />
+                                <DiscordProvider>
+                                    {
+                                        shortcutModalOpen && <ShortcutsModal onClose={closeShortcutsModal}/>
+                                    }
+                                    {
+                                        gamepadModalOpen && <GamepadModal onClose={closeGamepadModal}/>
+                                    }
+                                    <ServicesToaster />
+                                    <DeepLinkHandler />
+                                    <SearchParamsHandler />
+                                    <UpdaterBanner className={styles['updater-banner-container']} />
+                                    <RouterWithProtectedRoutes
+                                        className={styles['router']}
+                                        viewsConfig={routerViewsConfig}
+                                        onPathNotMatch={onPathNotMatch}
+                                    />
+                                </DiscordProvider>
                             </FullscreenProvider>
                         </ShortcutsProvider>
                     </GamepadProvider>
