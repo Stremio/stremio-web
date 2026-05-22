@@ -2,12 +2,13 @@
 
 const React = require('react');
 const { useTranslation } = require('react-i18next');
-const PropTypes = require('prop-types');
+const { useSearchParams, useNavigate } = require('react-router-dom');
 const classnames = require('classnames');
 const { default: Icon } = require('@stremio/stremio-icons/react');
-const { Modal, useRouteFocused } = require('stremio-router');
+const Modal = require('stremio/router/Modal');
 const { useCore } = require('stremio/core');
 const { useBinaryState } = require('stremio/common');
+const { default: useRouteFocused } = require('stremio/common/useRouteFocused');
 const { Button, Image, Checkbox } = require('stremio/components');
 const CredentialsTextInput = require('./CredentialsTextInput');
 const PasswordResetModal = require('./PasswordResetModal');
@@ -19,7 +20,9 @@ const styles = require('./styles');
 const SIGNUP_FORM = 'signup';
 const LOGIN_FORM = 'login';
 
-const Intro = ({ queryParams }) => {
+const Intro = () => {
+    const [queryParams, setQueryParams] = useSearchParams();
+    const navigate = useNavigate();
     const core = useCore();
     const { t } = useTranslation();
     const routeFocused = useRouteFocused();
@@ -163,7 +166,7 @@ const Intro = ({ queryParams }) => {
             dispatch({ type: 'error', error: t('MUST_ACCEPT_TERMS') });
             return;
         }
-        window.location = '#/';
+        navigate('/');
     }, [state.termsAccepted]);
     const signup = React.useCallback(() => {
         if (typeof state.email !== 'string' || state.email.length === 0 || !emailRef.current.validity.valid) {
@@ -250,7 +253,7 @@ const Intro = ({ queryParams }) => {
     }, []);
     const switchFormOnClick = React.useCallback(() => {
         const queryParams = new URLSearchParams([['form', state.form === SIGNUP_FORM ? LOGIN_FORM : SIGNUP_FORM]]);
-        window.location = `#/intro?${queryParams.toString()}`;
+        setQueryParams(queryParams);
     }, [state.form]);
     React.useEffect(() => {
         if ([LOGIN_FORM, SIGNUP_FORM].includes(queryParams.get('form'))) {
@@ -272,7 +275,7 @@ const Intro = ({ queryParams }) => {
             if (name === 'UserAuthenticated') {
                 closeLoaderModal();
                 if (routeFocused) {
-                    window.location = '#/';
+                    navigate('/');
                 }
             }
         };
@@ -429,10 +432,6 @@ const Intro = ({ queryParams }) => {
             }
         </div>
     );
-};
-
-Intro.propTypes = {
-    queryParams: PropTypes.instanceOf(URLSearchParams)
 };
 
 module.exports = Intro;

@@ -6,6 +6,7 @@ const classnames = require('classnames');
 const { useTranslation } = require('react-i18next');
 const filterInvalidDOMProps = require('filter-invalid-dom-props').default;
 const { default: Icon } = require('@stremio/stremio-icons/react');
+const { useNavigateWithOrigin } = require('stremio/common/useNavigateWithOrigin');
 const { default: Button } = require('stremio/components/Button');
 const { default: Image } = require('stremio/components/Image');
 const Multiselect = require('stremio/components/Multiselect');
@@ -15,6 +16,7 @@ const styles = require('./styles');
 
 const MetaItem = React.memo(({ className, type, name, poster, posterShape, posterChangeCursor, progress, newVideos, options, deepLinks, dataset, optionOnSelect, onDismissClick, onPlayClick, watched, ...props }) => {
     const { t } = useTranslation();
+    const { setOriginPath } = useNavigateWithOrigin();
     const [menuOpen, onMenuOpen, onMenuClose] = useBinaryState(false);
     const href = React.useMemo(() => {
         return deepLinks ?
@@ -32,6 +34,7 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, poste
             null;
     }, [deepLinks]);
     const metaItemOnClick = React.useCallback((event) => {
+        setOriginPath();
         if (event.nativeEvent.selectPrevented) {
             event.preventDefault();
         } else if (typeof props.onClick === 'function') {

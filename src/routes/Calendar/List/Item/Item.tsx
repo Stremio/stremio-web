@@ -3,6 +3,7 @@
 import React, { useEffect, useMemo, useRef } from 'react';
 import Icon from '@stremio/stremio-icons/react';
 import classNames from 'classnames';
+import { useNavigateWithOrigin } from 'stremio/common/useNavigateWithOrigin';
 import { Button } from 'stremio/components';
 import useCalendarDate from '../../useCalendarDate';
 import styles from './Item.less';
@@ -18,6 +19,7 @@ type Props = {
 
 const Item = ({ selected, monthInfo, date, items, profile, onClick }: Props) => {
     const ref = useRef<HTMLDivElement>(null);
+    const { setOriginPath } = useNavigateWithOrigin();
     const { toDayMonth } = useCalendarDate(profile);
 
     const [active, today] = useMemo(() => [
@@ -26,6 +28,7 @@ const Item = ({ selected, monthInfo, date, items, profile, onClick }: Props) => 
     ], [selected, monthInfo, date]);
 
     const onItemClick = () => {
+        setOriginPath();
         onClick && onClick(date);
     };
 

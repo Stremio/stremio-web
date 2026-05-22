@@ -3,6 +3,7 @@
 import React, { useCallback, useMemo, MouseEvent } from 'react';
 import Icon from '@stremio/stremio-icons/react';
 import classNames from 'classnames';
+import { useNavigateWithOrigin } from 'stremio/common/useNavigateWithOrigin';
 import { Button, HorizontalScroll, Image } from 'stremio/components';
 import styles from './Cell.less';
 
@@ -15,6 +16,7 @@ type Props = {
 };
 
 const Cell = ({ selected, monthInfo, date, items, onClick }: Props) => {
+    const { setOriginPath } = useNavigateWithOrigin();
     const [active, today] = useMemo(() => [
         date.day === selected?.day,
         date.day === monthInfo.today,
@@ -25,6 +27,7 @@ const Cell = ({ selected, monthInfo, date, items, onClick }: Props) => {
     };
 
     const onPosterClick = useCallback((event: MouseEvent<HTMLDivElement>) => {
+        setOriginPath();
         event.stopPropagation();
     }, []);
 

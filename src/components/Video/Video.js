@@ -2,20 +2,26 @@
 
 const React = require('react');
 const { useTranslation } = require('react-i18next');
+const { useNavigate } = require('react-router');
+const { default: toPath } = require('stremio/common/toPath');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const { useRouteFocused } = require('stremio-router');
+const { default: useRouteFocused } = require('stremio/common/useRouteFocused');
 const { default: Icon } = require('@stremio/stremio-icons/react');
 const { Button, Image, Popup } = require('stremio/components');
 const useBinaryState = require('stremio/common/useBinaryState');
 const useProfile = require('stremio/common/useProfile');
+const { usePlatform } = require('stremio/common/Platform');
 const VideoPlaceholder = require('./VideoPlaceholder');
 const styles = require('./styles');
 
 const Video = ({ className, id, title, thumbnail, season, episode, released, upcoming, watched, progress, scheduled, seasonWatched, selected, deepLinks, onMarkVideoAsWatched, onMarkSeasonAsWatched, ...props }) => {
     const routeFocused = useRouteFocused();
     const profile = useProfile();
+    const navigate = useNavigate();
+    const platform = usePlatform();
     const { t } = useTranslation();
+
     const [menuOpen, , closeMenu, toggleMenu] = useBinaryState(false);
 
     const popupLabelOnMouseUp = React.useCallback((event) => {
@@ -63,9 +69,9 @@ const Video = ({ className, id, title, thumbnail, season, episode, released, upc
     const videoButtonOnClick = React.useCallback(() => {
         if (deepLinks) {
             if (typeof deepLinks.player === 'string') {
-                window.location = deepLinks.player;
+                navigate(toPath(deepLinks.player));
             } else if (typeof deepLinks.metaDetailsStreams === 'string') {
-                window.location.replace(deepLinks.metaDetailsStreams);
+                navigate(toPath(deepLinks.metaDetailsStreams), { replace: !platform.isMobile });
             }
         }
     }, [deepLinks]);
