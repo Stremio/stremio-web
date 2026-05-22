@@ -17,7 +17,7 @@ const HorizontalNavBar = React.memo(({ className, route, query, title, backButto
     const navigate = useNavigate();
     const backButtonOnClick = React.useCallback(() => {
         if (originPath) {
-            navigate(originPath);
+            navigate(originPath, { replace: true });
         } else {
             navigate(-1);
         }

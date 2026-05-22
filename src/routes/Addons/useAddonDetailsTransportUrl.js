@@ -16,7 +16,7 @@ const useAddonDetailsTransportUrl = (urlParams) => {
             nextQueryParams.delete('addon');
         }
 
-        setQueryParams(nextQueryParams);
+        setQueryParams(nextQueryParams, { replace: true });
     }, [urlParams, queryParams]);
     return [transportUrl, setTransportUrl];
 };
