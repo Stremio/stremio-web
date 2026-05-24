@@ -16,7 +16,7 @@ const styles = require('./styles');
 
 const MetaItem = React.memo(({ className, type, name, poster, posterShape, posterChangeCursor, progress, newVideos, options, deepLinks, dataset, optionOnSelect, onDismissClick, onPlayClick, watched, ...props }) => {
     const { t } = useTranslation();
-    const { setOriginPath } = useNavigateWithOrigin();
+    const { navigateWithOrigin } = useNavigateWithOrigin();
     const [menuOpen, onMenuOpen, onMenuClose] = useBinaryState(false);
     const href = React.useMemo(() => {
         return deepLinks ?
@@ -34,13 +34,15 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, poste
             null;
     }, [deepLinks]);
     const metaItemOnClick = React.useCallback((event) => {
-        setOriginPath();
         if (event.nativeEvent.selectPrevented) {
             event.preventDefault();
+        } else if (typeof href === 'string') {
+            event.preventDefault();
+            navigateWithOrigin(href);
         } else if (typeof props.onClick === 'function') {
             props.onClick(event);
         }
-    }, [props.onClick]);
+    }, [href, navigateWithOrigin, props.onClick]);
     const menuOnClick = React.useCallback((event) => {
         event.nativeEvent.selectPrevented = true;
     }, []);

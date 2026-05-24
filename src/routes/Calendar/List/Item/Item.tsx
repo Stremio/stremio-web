@@ -19,7 +19,7 @@ type Props = {
 
 const Item = ({ selected, monthInfo, date, items, profile, onClick }: Props) => {
     const ref = useRef<HTMLDivElement>(null);
-    const { setOriginPath } = useNavigateWithOrigin();
+    const { navigateWithOrigin } = useNavigateWithOrigin();
     const { toDayMonth } = useCalendarDate(profile);
 
     const [active, today] = useMemo(() => [
@@ -28,8 +28,13 @@ const Item = ({ selected, monthInfo, date, items, profile, onClick }: Props) => 
     ], [selected, monthInfo, date]);
 
     const onItemClick = () => {
-        setOriginPath();
         onClick && onClick(date);
+    };
+
+    const onVideoClick = (event: React.MouseEvent<HTMLDivElement>, target: string) => {
+        event.preventDefault();
+        event.stopPropagation();
+        navigateWithOrigin(target);
     };
 
     useEffect(() => {
@@ -52,7 +57,7 @@ const Item = ({ selected, monthInfo, date, items, profile, onClick }: Props) => 
             <div className={styles['body']}>
                 {
                     items.map(({ id, name, season, episode, deepLinks }) => (
-                        <Button className={styles['video']} key={id} href={deepLinks.metaDetailsStreams}>
+                        <Button className={styles['video']} key={id} href={deepLinks.metaDetailsStreams} onClick={(event) => onVideoClick(event, deepLinks.metaDetailsStreams)}>
                             <div className={styles['name']}>
                                 {name}
                             </div>

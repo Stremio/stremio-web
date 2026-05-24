@@ -16,7 +16,7 @@ type Props = {
 };
 
 const Cell = ({ selected, monthInfo, date, items, onClick }: Props) => {
-    const { setOriginPath } = useNavigateWithOrigin();
+    const { navigateWithOrigin } = useNavigateWithOrigin();
     const [active, today] = useMemo(() => [
         date.day === selected?.day,
         date.day === monthInfo.today,
@@ -26,10 +26,11 @@ const Cell = ({ selected, monthInfo, date, items, onClick }: Props) => {
         onClick && onClick(date);
     };
 
-    const onPosterClick = useCallback((event: MouseEvent<HTMLDivElement>) => {
-        setOriginPath();
+    const onPosterClick = useCallback((event: MouseEvent<HTMLDivElement>, target: string) => {
+        event.preventDefault();
         event.stopPropagation();
-    }, []);
+        navigateWithOrigin(target);
+    }, [navigateWithOrigin]);
 
     return (
         <Button
@@ -44,7 +45,7 @@ const Cell = ({ selected, monthInfo, date, items, onClick }: Props) => {
             <HorizontalScroll className={styles['items']}>
                 {
                     items.map(({ id, name, poster, deepLinks }) => (
-                        <Button key={id} className={styles['item']} href={deepLinks.metaDetailsStreams} tabIndex={-1} onClick={onPosterClick}>
+                        <Button key={id} className={styles['item']} href={deepLinks.metaDetailsStreams} tabIndex={-1} onClick={(event) => onPosterClick(event, deepLinks.metaDetailsStreams)}>
                             <Icon className={styles['icon']} name={'play'} />
                             <Image
                                 className={styles['poster']}
