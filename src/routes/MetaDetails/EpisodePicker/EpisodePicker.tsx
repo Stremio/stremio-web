@@ -3,6 +3,7 @@
 import React, { useCallback, useMemo, useState, ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, NumberInput } from 'stremio/components';
+import safeDecodeURIComponent from 'stremio/common/safeDecodeURIComponent';
 import styles from './EpisodePicker.less';
 
 type Props = {
@@ -19,7 +20,7 @@ const EpisodePicker = ({ className, onSubmit }: Props) => {
         if (splitPath[splitPath.length - 1] === '') {
             splitPath.pop();
         }
-        const videoId = decodeURIComponent(splitPath[splitPath.length - 1]);
+        const videoId = safeDecodeURIComponent(splitPath[splitPath.length - 1]);
         const [, pathSeason, pathEpisode] = videoId ? videoId.split(':') : [];
         return {
             initialSeason: parseInt(pathSeason) || 0,
