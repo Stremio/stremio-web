@@ -10,7 +10,7 @@ const { Button, Slider } = require('stremio/components');
 const formatTime = require('./formatTime');
 const styles = require('./styles');
 
-const SeekBar = ({ className, time, duration, buffered, onSeekRequested }) => {
+const SeekBar = ({ className, time, duration, buffered, onSeekRequested, playbackSpeed }) => {
     const disabled = time === null || isNaN(time) || duration === null || isNaN(duration);
     const routeFocused = useRouteFocused();
     const [seekTime, setSeekTime] = React.useState(null);
@@ -62,7 +62,7 @@ const SeekBar = ({ className, time, duration, buffered, onSeekRequested }) => {
             <Button onClick={toggleRemainingTimeMode} tabIndex={-1}>
                 <div className={styles['label']}>
                     {remainingTimeMode && duration !== null && !isNaN(duration)
-                        ? formatTime(duration - time, '-')
+                        ? formatTime((duration - time)/playbackSpeed, '-')
                         : formatTime(duration) }
                 </div>
             </Button>
