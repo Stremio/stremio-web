@@ -75,7 +75,8 @@ SeekBar.propTypes = {
     time: PropTypes.number,
     duration: PropTypes.number,
     buffered: PropTypes.number,
-    onSeekRequested: PropTypes.func
+    onSeekRequested: PropTypes.func,
+    playbackSpeed: PropTypes.number
 };
 
 module.exports = SeekBar;
