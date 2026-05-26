@@ -10,6 +10,16 @@
     transition: border-color 0.25s ease-out;
 
     &:global(.active) {
+        pointer-events: auto;
         border-color: var(--primary-accent-color);
+    }
+
+    .file-input {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        opacity: 0;
     }
 }
