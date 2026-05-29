@@ -1,4 +1,5 @@
 import React, { createContext, useCallback, useContext, useEffect, useRef } from 'react';
+import { isApple } from 'stremio/common/Platform/device';
 import shortcuts from './shortcuts.json';
 
 const SHORTCUTS = shortcuts.map(({ shortcuts }) => shortcuts).flat();
@@ -44,10 +45,14 @@ const ShortcutsProvider = ({ children, onShortcut }: Props) => {
         }
 
         SHORTCUTS.forEach(({ name, combos }) => combos.forEach((keys) => {
-            const modifers = (keys.includes('Ctrl') === ctrlKey)
+            const expectsCtrl = keys.includes('Ctrl');
+            const acceptsMetaModifier = isApple && expectsCtrl && keys.includes('/');
+            const ctrlModifier = expectsCtrl ? (ctrlKey || (acceptsMetaModifier && metaKey)) : (!ctrlKey && !metaKey);
+
+            const modifers = ctrlModifier
                 && (keys.includes('Shift') === shiftKey)
                 && !altKey
-                && !metaKey;
+                && (acceptsMetaModifier || !metaKey);
 
             if (modifers && (keys.includes(code) || keys.includes(key.toUpperCase()))) {
                 const combo = combos.indexOf(keys);

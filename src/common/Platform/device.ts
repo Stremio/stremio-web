@@ -32,8 +32,10 @@ const os = bowser.getOSName().toLowerCase();
 
 const name = isVisionOS ? 'visionos' : isIOS ? 'ios' : os || 'unknown';
 const isMobile = ['ios', 'android'].includes(name);
+const isApple = ['macos', 'ios', 'visionos'].includes(name);
 
 export {
     name,
     isMobile,
+    isApple,
 };

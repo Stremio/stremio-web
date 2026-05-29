@@ -1,5 +1,6 @@
 import React, { Fragment, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { isApple } from 'stremio/common/Platform/device';
 import styles from './Keys.less';
 
 type Props = {
@@ -12,14 +13,14 @@ const Keys = ({ keys }: Props) => {
     const keyLabelMap: Record<string, string> = useMemo(() => ({
         'Shift': `⇧ ${t('SETTINGS_SHORTCUT_SHIFT')}`,
         'Space': t('SETTINGS_SHORTCUT_SPACE'),
-        'Ctrl': t('SETTINGS_SHORTCUT_CTRL'),
+        'Ctrl': isApple && keys.includes('/') ? '⌘' : t('SETTINGS_SHORTCUT_CTRL'),
         'Escape': t('SETTINGS_SHORTCUT_ESC'),
         'Backspace': t('SETTINGS_SHORTCUT_BACKSPACE'),
         'ArrowUp': '↑',
         'ArrowDown': '↓',
         'ArrowLeft': '←',
         'ArrowRight': '→',
-    }), [t]);
+    }), [keys, t]);
 
     const isRange = useMemo(() => {
         return keys.length > 1 && keys.every((key) => !Number.isNaN(parseInt(key)));
