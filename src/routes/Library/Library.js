@@ -54,14 +54,33 @@ const Library = ({ model, urlParams, queryParams }) => {
     const [library, loadNextPage] = useLibrary(model, urlParams, queryParams);
     const [typeSelect, sortChips, hasNextPage] = useSelectableInputs(library);
     const scrollContainerRef = React.useRef(null);
+    const watchedFilter = React.useMemo(() => {
+        switch (library.selected?.request.sort) {
+            case 'watched':
+            case 'timeswatched':
+                return true;
+            case 'notwatched':
+                return false;
+            default:
+                return null;
+        }
+    }, [library.selected]);
+    const catalog = React.useMemo(() => {
+        return watchedFilter === null ?
+            library.catalog
+            :
+            library.catalog.filter(({ watched }) => watched === watchedFilter);
+    }, [library.catalog, watchedFilter]);
+    const hasHiddenWatchedFilterItems = watchedFilter !== null && library.catalog.some(({ watched }) => watched !== watchedFilter);
+    const hasFilteredNextPage = hasNextPage && !hasHiddenWatchedFilterItems;
     const onScrollToBottom = React.useCallback(() => {
-        if (hasNextPage) {
+        if (hasFilteredNextPage) {
             loadNextPage();
         }
-    }, [hasNextPage, loadNextPage]);
+    }, [hasFilteredNextPage, loadNextPage]);
     const onScroll = useOnScrollToBottom(onScrollToBottom, SCROLL_TO_BOTTOM_TRESHOLD);
     React.useLayoutEffect(() => {
-        if (scrollContainerRef.current !== null && library.selected && library.selected.request.page === 1 && library.catalog.length !== 0) {
+        if (scrollContainerRef.current !== null && library.selected && library.selected.request.page === 1 && catalog.length !== 0) {
             scrollContainerRef.current.scrollTop = 0;
         }
     }, [profile.auth, library.selected]);
@@ -92,7 +111,7 @@ const Library = ({ model, urlParams, queryParams }) => {
                                     </div>
                                 </DelayedRenderer>
                                 :
-                                library.catalog.length === 0 ?
+                                catalog.length === 0 ?
                                     <div className={styles['message-container']}>
                                         <Image
                                             className={styles['image']}
@@ -104,7 +123,7 @@ const Library = ({ model, urlParams, queryParams }) => {
                                     :
                                     <div ref={scrollContainerRef} className={classnames(styles['meta-items-container'], 'animation-fade-in')} onScroll={onScroll}>
                                         {
-                                            library.catalog.map((libItem, index) => (
+                                            catalog.map((libItem, index) => (
                                                 <LibItem {...libItem} notifications={notifications} removable={model === 'library'} key={index} />
                                             ))
                                         }
