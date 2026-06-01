@@ -38,11 +38,44 @@
             }
         }
 
-        .value {
+        .value, .editable-value {
             flex: 1;
             font-weight: 500;
             text-align: center;
             color: var(--primary-foreground-color);
+        }
+
+        .editable-value {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            min-width: 0;
+            user-select: text;
+
+            .input {
+                flex: 0 1 5rem;
+                min-width: 0;
+                padding: 0;
+                border: none;
+                outline: none;
+                appearance: textfield;
+                font: inherit;
+                color: var(--primary-foreground-color);
+                text-align: right;
+                background: transparent;
+
+                &::-webkit-outer-spin-button,
+                &::-webkit-inner-spin-button {
+                    -webkit-appearance: none;
+                    margin: 0;
+                }
+            }
+
+            .unit {
+                flex: none;
+                margin-left: 0.2rem;
+            }
         }
     }
 }

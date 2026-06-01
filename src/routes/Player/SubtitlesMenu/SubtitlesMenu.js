@@ -215,6 +215,7 @@ const SubtitlesMenu = React.memo(React.forwardRef((props, ref) => {
                         value={props.extraSubtitlesDelay / 1000}
                         unit={'s'}
                         step={0.25}
+                        editable={true}
                         disabled={props.extraSubtitlesDelay === null}
                         onChange={onSubtitlesDelayChanged}
                     />
