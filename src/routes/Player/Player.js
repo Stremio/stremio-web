@@ -552,7 +552,7 @@ const Player = ({ urlParams, queryParams }) => {
         if (video.state.paused) {
             discordStartTimestamp.current = null;
         } else if (typeof video.state.time === 'number') {
-            const startTimestamp = Math.floor((Date.now() / 1000) - video.state.time);
+            const startTimestamp = Math.floor((Date.now() - video.state.time) / 1000);
             if (
                 discordStartTimestamp.current === null ||
                 Math.abs(discordStartTimestamp.current - startTimestamp) > 5
