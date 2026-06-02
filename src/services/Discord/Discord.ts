@@ -9,6 +9,7 @@ type DiscordStatusData = {
 class Discord {
     private events: EventEmitter;
     private shell: any;
+    private onDiscordStatus: ((data: DiscordStatusData) => void) | null = null;
 
     constructor() {
         this.events = new EventEmitter();
@@ -19,16 +20,20 @@ class Discord {
         this.shell = shellService;
 
         if (this.shell) {
-            this.shell.on('stateChanged', () => {
+            this.onDiscordStatus = (data: DiscordStatusData) => {
                 this.events.emit('availabilityChanged', this.available);
-            });
-        }
-
-        if (this.shell) {
-            this.shell.on('discord-status', (data: DiscordStatusData) => {
                 this.events.emit('statusChanged', data.connected);
-            });
+            };
+            this.shell.on('discord-status', this.onDiscordStatus);
         }
+    }
+
+    destroy(): void {
+        if (this.shell && this.onDiscordStatus) {
+            this.shell.off('discord-status', this.onDiscordStatus);
+            this.onDiscordStatus = null;
+        }
+        this.shell = null;
     }
 
     connect(): void {

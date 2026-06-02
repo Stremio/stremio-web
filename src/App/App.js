@@ -106,6 +106,7 @@ const App = () => {
         return () => {
             services.chromecast.stop();
             services.chromecast.off('stateChanged', onChromecastStateChange);
+            services.discord.destroy();
         };
     }, []);
 
