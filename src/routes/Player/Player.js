@@ -9,7 +9,6 @@ const { useTranslation } = require('react-i18next');
 const { useRouteFocused } = require('stremio-router');
 const { useCore } = require('stremio/core');
 const { useServices, useGamepad } = require('stremio/services');
-const { useContentGamepadNavigation } = require('stremio/services/GamepadNavigation');
 const { useSettings, useProfile, useFullscreen, useBinaryState, useToast, useStreamingServer, withCoreSuspender, usePlatform, onShortcut } = require('stremio/common');
 const { HorizontalNavBar, Transition, ContextMenu } = require('stremio/components');
 const { default: Buffering } = require('./Buffering');
@@ -376,18 +375,356 @@ const Player = ({ urlParams, queryParams }) => {
             }
         }
     }, [onSeekPrev, onSeekNext, onVolumeUp, onVolumeDown]);
+    // GAMEPAD_COUCH_PLAYER_CONTROLS
+    const GAMEPAD_PLAYER_INTERACTIVE = 'button,a[href],[role="button"],[role="menuitem"],[role="option"],[role="radio"],[role="checkbox"],[tabindex][class*="button-container"]';
+    const GAMEPAD_PLAYER_VOLUME_TARGET = '[class*="volume-slider"]';
+    const GAMEPAD_PLAYER_INDICATOR_ID = 'stremio-gamepad-player-focus-indicator';
+    const gamepadPlayerFocusedRef = React.useRef(null);
+    const gamepadPlayerIndicatorRef = React.useRef(null);
+    const gamepadPlayerCursorIndexRef = React.useRef(-1);
+    const gamepadPlayerBarCursorIndexRef = React.useRef(-1);
+    const gamepadPlayerScopeRef = React.useRef('bar');
+    const getGamepadControlBar = React.useCallback(() => {
+        if (controlBarRef.current instanceof HTMLElement) return controlBarRef.current;
+        const root = playerRef.current;
+        if (!(root instanceof HTMLElement)) return null;
+        return root.querySelector('[class*="control-bar"],[class*="controlBar"]');
+    }, []);
+    const isGamepadPlayerContainerVisible = React.useCallback((element) => {
+        if (!(element instanceof HTMLElement)) return false;
+        const rect = element.getBoundingClientRect();
+        const style = window.getComputedStyle(element);
+        return rect.width > 0 && rect.height > 0 && style.visibility !== 'hidden' && style.display !== 'none';
+    }, []);
+    const isGamepadPlayerVolumeTarget = React.useCallback((element) => {
+        return element instanceof HTMLElement && element.matches(GAMEPAD_PLAYER_VOLUME_TARGET);
+    }, []);
+    const isGamepadPlayerElementVisible = React.useCallback((element) => {
+        if (!(element instanceof HTMLElement)) return false;
+        if (!element.matches(GAMEPAD_PLAYER_INTERACTIVE) && !isGamepadPlayerVolumeTarget(element)) return false;
+        if (element instanceof HTMLButtonElement && element.disabled) return false;
+        if (element.getAttribute('aria-disabled') === 'true') return false;
+        if (element.closest('[aria-hidden="true"]')) return false;
+        if (element.classList.contains('disabled') || element.closest('.disabled')) return false;
+        const rect = element.getBoundingClientRect();
+        const style = window.getComputedStyle(element);
+        return rect.width >= 12 && rect.height >= 12
+            && rect.right > 0 && rect.bottom > 0
+            && rect.left < window.innerWidth && rect.top < window.innerHeight
+            && style.visibility !== 'hidden' && style.display !== 'none'
+            && style.pointerEvents !== 'none' && Number.parseFloat(style.opacity || '1') > 0.01;
+    }, [isGamepadPlayerVolumeTarget]);
+    const sortGamepadPlayerElements = React.useCallback((elements) => elements.sort((left, right) => {
+        const leftRect = left.getBoundingClientRect();
+        const rightRect = right.getBoundingClientRect();
+        return leftRect.top - rightRect.top || leftRect.left - rightRect.left;
+    }), []);
+    const getGamepadFocusableDescendants = React.useCallback((root) => {
+        if (!(root instanceof HTMLElement)) return [];
+        return sortGamepadPlayerElements(Array.from(root.querySelectorAll(GAMEPAD_PLAYER_INTERACTIVE))
+            .filter(isGamepadPlayerElementVisible));
+    }, [isGamepadPlayerElementVisible, sortGamepadPlayerElements]);
+    const getGamepadControlBarElements = React.useCallback((controlBar) => {
+        const elements = getGamepadFocusableDescendants(controlBar);
+        const volumeTarget = controlBar.querySelector(GAMEPAD_PLAYER_VOLUME_TARGET);
+        if (isGamepadPlayerElementVisible(volumeTarget) && !elements.includes(volumeTarget)) {
+            elements.push(volumeTarget);
+        }
+        return sortGamepadPlayerElements(elements);
+    }, [getGamepadFocusableDescendants, isGamepadPlayerElementVisible, sortGamepadPlayerElements]);
+    const getGamepadOpenMenuElements = React.useCallback(() => {
+        const root = playerRef.current;
+        const controlBar = getGamepadControlBar();
+        if (!(root instanceof HTMLElement) || !(controlBar instanceof HTMLElement)) return [];
+        const menuRoots = Array.from(root.querySelectorAll('[role="dialog"],[role="menu"],[role="listbox"],[class*="menu"],[class*="drawer"],[class*="popup"]'))
+            .filter((element) => element instanceof HTMLElement && !controlBar.contains(element) && isGamepadPlayerContainerVisible(element));
+        return sortGamepadPlayerElements(Array.from(new Set(menuRoots.flatMap(getGamepadFocusableDescendants))));
+    }, [getGamepadControlBar, getGamepadFocusableDescendants, isGamepadPlayerContainerVisible, sortGamepadPlayerElements]);
+    const getGamepadPlayerElements = React.useCallback(() => {
+        const controlBar = getGamepadControlBar();
+        if (!(controlBar instanceof HTMLElement)) return [];
+        const menuElements = getGamepadOpenMenuElements();
+        return menuElements.length > 0 ? menuElements : getGamepadControlBarElements(controlBar);
+    }, [getGamepadControlBar, getGamepadControlBarElements, getGamepadOpenMenuElements]);
+    const ensureGamepadPlayerIndicator = React.useCallback(() => {
+        let indicator = gamepadPlayerIndicatorRef.current;
+        if (!(indicator instanceof HTMLElement)) {
+            indicator = document.getElementById(GAMEPAD_PLAYER_INDICATOR_ID);
+        }
+        if (!(indicator instanceof HTMLElement)) {
+            indicator = document.createElement('div');
+            indicator.id = GAMEPAD_PLAYER_INDICATOR_ID;
+            indicator.setAttribute('aria-hidden', 'true');
+            Object.assign(indicator.style, {
+                position: 'fixed',
+                pointerEvents: 'none',
+                zIndex: '2147483646',
+                boxSizing: 'border-box',
+                border: '2px solid rgba(255,255,255,.98)',
+                borderRadius: '8px',
+                boxShadow: 'none',
+                opacity: '0',
+                transition: 'opacity 80ms ease-out',
+            });
+            document.body.appendChild(indicator);
+        }
+        gamepadPlayerIndicatorRef.current = indicator;
+        return indicator;
+    }, []);
+    const updateGamepadPlayerIndicator = React.useCallback((element) => {
+        if (!(element instanceof HTMLElement) || !isGamepadPlayerElementVisible(element)) return;
+        const indicator = ensureGamepadPlayerIndicator();
+        const rect = element.getBoundingClientRect();
+        const padding = 4;
+        Object.assign(indicator.style, {
+            left: `${Math.max(0, Math.round(rect.left - padding))}px`,
+            top: `${Math.max(0, Math.round(rect.top - padding))}px`,
+            width: `${Math.round(rect.width + padding * 2)}px`,
+            height: `${Math.round(rect.height + padding * 2)}px`,
+            opacity: '1',
+        });
+    }, [ensureGamepadPlayerIndicator, isGamepadPlayerElementVisible]);
+    const hideGamepadPlayerIndicator = React.useCallback(() => {
+        const indicator = gamepadPlayerIndicatorRef.current ?? document.getElementById(GAMEPAD_PLAYER_INDICATOR_ID);
+        if (indicator instanceof HTMLElement) indicator.style.opacity = '0';
+    }, []);
+    const clearGamepadPlayerFocus = React.useCallback(() => {
+        gamepadPlayerFocusedRef.current = null;
+        gamepadPlayerCursorIndexRef.current = -1;
+        gamepadPlayerBarCursorIndexRef.current = -1;
+        gamepadPlayerScopeRef.current = 'bar';
+        const indicator = gamepadPlayerIndicatorRef.current ?? document.getElementById(GAMEPAD_PLAYER_INDICATOR_ID);
+        indicator?.remove();
+        gamepadPlayerIndicatorRef.current = null;
+    }, []);
+    const blurNativeGamepadPlayerFocus = React.useCallback(() => {
+        if (document.activeElement instanceof HTMLElement && document.activeElement !== document.body) {
+            document.activeElement.blur();
+        }
+    }, []);
+    const focusGamepadPlayerElement = React.useCallback((element, elements, index, scope = gamepadPlayerScopeRef.current) => {
+        if (!(element instanceof HTMLElement) || !isGamepadPlayerElementVisible(element)) return;
+        const resolvedIndex = Number.isInteger(index) ? index : elements.indexOf(element);
+        blurNativeGamepadPlayerFocus();
+        gamepadPlayerScopeRef.current = scope;
+        gamepadPlayerFocusedRef.current = element;
+        gamepadPlayerCursorIndexRef.current = resolvedIndex >= 0 ? resolvedIndex : 0;
+        if (scope === 'bar') gamepadPlayerBarCursorIndexRef.current = gamepadPlayerCursorIndexRef.current;
+        element.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+        updateGamepadPlayerIndicator(element);
+    }, [blurNativeGamepadPlayerFocus, isGamepadPlayerElementVisible, updateGamepadPlayerIndicator]);
+    const restoreGamepadPlayerBarFocus = React.useCallback(() => {
+        const controlBar = getGamepadControlBar();
+        if (!(controlBar instanceof HTMLElement)) return;
+        const elements = getGamepadControlBarElements(controlBar);
+        if (elements.length === 0) return;
+        const index = Math.max(0, Math.min(gamepadPlayerBarCursorIndexRef.current, elements.length - 1));
+        focusGamepadPlayerElement(elements[index], elements, index, 'bar');
+    }, [focusGamepadPlayerElement, getGamepadControlBar, getGamepadControlBarElements]);
+    const settleGamepadPlayerSelectionAfterClick = React.useCallback((clickedElement, clickedIndex, clickedScope) => {
+        const inspect = (attempt) => window.requestAnimationFrame(() => {
+            const menuElements = getGamepadOpenMenuElements();
+            if (menuElements.length > 0) {
+                focusGamepadPlayerElement(menuElements[0], menuElements, 0, 'menu');
+                return;
+            }
 
-    useContentGamepadNavigation(playerRef, GAMEPAD_HANDLER_ID);
+            const controlBar = getGamepadControlBar();
+            if (controlBar instanceof HTMLElement) {
+                const barElements = getGamepadControlBarElements(controlBar);
+                if (barElements.length > 0) {
+                    const connectedIndex = clickedScope === 'bar' && clickedElement instanceof HTMLElement && barElements.includes(clickedElement)
+                        ? barElements.indexOf(clickedElement)
+                        : -1;
+                    const preferredIndex = connectedIndex >= 0 ? connectedIndex : (clickedScope === 'bar' ? clickedIndex : gamepadPlayerBarCursorIndexRef.current);
+                    const index = Math.max(0, Math.min(preferredIndex, barElements.length - 1));
+                    focusGamepadPlayerElement(barElements[index], barElements, index, 'bar');
+                }
+            }
+
+            if (attempt < 8) window.setTimeout(() => inspect(attempt + 1), 45);
+        });
+        inspect(0);
+    }, [focusGamepadPlayerElement, getGamepadControlBar, getGamepadControlBarElements, getGamepadOpenMenuElements]);
+    const onGamepadNativeNavigate = React.useCallback((direction) => {
+        setImmersed(false);
+        setImmersedDebounced.cancel();
+        setImmersedDebounced(true);
+        window.requestAnimationFrame(() => window.requestAnimationFrame(() => {
+            const elements = getGamepadPlayerElements();
+            if (elements.length === 0) return;
+            const scope = getGamepadOpenMenuElements().length > 0 ? 'menu' : 'bar';
+            const scopeChanged = gamepadPlayerScopeRef.current !== scope;
+            if (scopeChanged) {
+                gamepadPlayerScopeRef.current = scope;
+                gamepadPlayerCursorIndexRef.current = -1;
+                gamepadPlayerFocusedRef.current = null;
+            }
+            const active = gamepadPlayerFocusedRef.current;
+            const activeIndex = active instanceof HTMLElement && elements.includes(active)
+                ? elements.indexOf(active)
+                : -1;
+            const storedIndex = scope === 'bar' && gamepadPlayerBarCursorIndexRef.current >= 0
+                ? gamepadPlayerBarCursorIndexRef.current
+                : gamepadPlayerCursorIndexRef.current;
+            let currentIndex = activeIndex;
+            if (currentIndex < 0 && storedIndex >= 0 && storedIndex < elements.length) {
+                currentIndex = storedIndex;
+            }
+            if (currentIndex < 0) {
+                const firstIndex = direction === 'left' || direction === 'up' ? elements.length - 1 : 0;
+                focusGamepadPlayerElement(elements[firstIndex], elements, firstIndex);
+                return;
+            }
+            const currentElement = elements[currentIndex];
+            if (isGamepadPlayerVolumeTarget(currentElement)) {
+                if (direction === 'up') {
+                    onVolumeUp();
+                    updateGamepadPlayerIndicator(currentElement);
+                    return;
+                }
+                if (direction === 'down') {
+                    onVolumeDown();
+                    updateGamepadPlayerIndicator(currentElement);
+                    return;
+                }
+            }
+            const delta = direction === 'left' || direction === 'up' ? -1 : 1;
+            const nextIndex = (currentIndex + delta + elements.length) % elements.length;
+            focusGamepadPlayerElement(elements[nextIndex], elements, nextIndex);
+        }));
+    }, [focusGamepadPlayerElement, getGamepadOpenMenuElements, getGamepadPlayerElements, isGamepadPlayerVolumeTarget, onVolumeDown, onVolumeUp, setImmersedDebounced, updateGamepadPlayerIndicator]);
+    const onGamepadNativeSelect = React.useCallback(() => {
+        const focused = gamepadPlayerFocusedRef.current;
+        if (focused instanceof HTMLElement && focused.isConnected && isGamepadPlayerElementVisible(focused)) {
+            if (isGamepadPlayerVolumeTarget(focused)) {
+                video.state.muted === true ? onUnmuteRequested() : onMuteRequested();
+                return;
+            }
+            const elements = getGamepadPlayerElements();
+            const clickedIndex = Math.max(0, elements.indexOf(focused));
+            const clickedScope = gamepadPlayerScopeRef.current;
+            focused.click();
+            settleGamepadPlayerSelectionAfterClick(focused, clickedIndex, clickedScope);
+            return;
+        }
+        if (menusOpen || nextVideoPopupOpen) return;
+        onPlayPause();
+    }, [getGamepadPlayerElements, isGamepadPlayerElementVisible, isGamepadPlayerVolumeTarget, menusOpen, nextVideoPopupOpen, onMuteRequested, onPlayPause, onUnmuteRequested, settleGamepadPlayerSelectionAfterClick, video.state.muted]);
+    const onGamepadEpisodes = React.useCallback(() => {
+        const focused = gamepadPlayerFocusedRef.current;
+        const index = gamepadPlayerBarCursorIndexRef.current;
+        closeMenus();
+        toggleSideDrawer();
+        settleGamepadPlayerSelectionAfterClick(focused, index, 'bar');
+    }, [closeMenus, settleGamepadPlayerSelectionAfterClick, toggleSideDrawer]);
+    const onGamepadExit = React.useCallback(() => {
+        if (menusOpen || nextVideoPopupOpen) {
+            closeMenus();
+            closeNextVideoPopup();
+            window.setTimeout(() => window.requestAnimationFrame(restoreGamepadPlayerBarFocus), 0);
+            return;
+        }
+        clearGamepadPlayerFocus();
+        window.history.back();
+    }, [clearGamepadPlayerFocus, closeMenus, closeNextVideoPopup, menusOpen, nextVideoPopupOpen, restoreGamepadPlayerBarFocus]);
+    const onGamepadSeekBackward15 = React.useCallback(() => {
+        if (!menusOpen && !nextVideoPopupOpen && video.state.time !== null) {
+            setSeeking(true);
+            onSeekRequested(Math.max(video.state.time - 15, 0));
+        }
+    }, [menusOpen, nextVideoPopupOpen, onSeekRequested, video.state.time]);
+    const onGamepadSeekForward15 = React.useCallback(() => {
+        if (!menusOpen && !nextVideoPopupOpen && video.state.time !== null) {
+            setSeeking(true);
+            onSeekRequested(video.state.time + 15);
+        }
+    }, [menusOpen, nextVideoPopupOpen, onSeekRequested, video.state.time]);
+    const onGamepadSeekEnded = React.useCallback(() => setSeeking(false), []);
 
     React.useEffect(() => {
-        gamepad?.on('buttonX', GAMEPAD_HANDLER_ID, onPlayPause);
-        gamepad?.on('analogRight', GAMEPAD_HANDLER_ID, onGamepadSeekAndVol);
+        const onGamepadActivity = () => {
+            setImmersed(false);
+            setImmersedDebounced.cancel();
+            setImmersedDebounced(true);
+        };
+        window.addEventListener('stremio-gamepad-activity', onGamepadActivity);
+        return () => window.removeEventListener('stremio-gamepad-activity', onGamepadActivity);
+    }, [setImmersedDebounced]);
 
+    React.useEffect(() => {
+        const updateIndicator = () => {
+            const focused = gamepadPlayerFocusedRef.current;
+            if (focused instanceof HTMLElement) updateGamepadPlayerIndicator(focused);
+        };
+        window.addEventListener('resize', updateIndicator);
+        window.addEventListener('scroll', updateIndicator, true);
         return () => {
+            window.removeEventListener('resize', updateIndicator);
+            window.removeEventListener('scroll', updateIndicator, true);
+        };
+    }, [updateGamepadPlayerIndicator]);
+
+    React.useEffect(() => {
+        const focused = gamepadPlayerFocusedRef.current;
+        if (!(focused instanceof HTMLElement)) return;
+        window.requestAnimationFrame(() => {
+            const elements = getGamepadPlayerElements();
+            if (elements.length === 0) {
+                clearGamepadPlayerFocus();
+                return;
+            }
+            if (!elements.includes(focused) || !isGamepadPlayerElementVisible(focused)) {
+                const scope = getGamepadOpenMenuElements().length > 0 ? 'menu' : 'bar';
+                const storedIndex = scope === 'bar' && gamepadPlayerBarCursorIndexRef.current >= 0
+                    ? gamepadPlayerBarCursorIndexRef.current
+                    : gamepadPlayerCursorIndexRef.current;
+                const index = Math.max(0, Math.min(storedIndex, elements.length - 1));
+                focusGamepadPlayerElement(elements[index], elements, index, scope);
+                return;
+            }
+            updateGamepadPlayerIndicator(focused);
+        });
+    }, [clearGamepadPlayerFocus, focusGamepadPlayerElement, getGamepadOpenMenuElements, getGamepadPlayerElements, isGamepadPlayerElementVisible, menusOpen, nextVideoPopupOpen, updateGamepadPlayerIndicator]);
+
+    React.useEffect(() => {
+        if (overlayHidden && !menusOpen) hideGamepadPlayerIndicator();
+    }, [hideGamepadPlayerIndicator, menusOpen, overlayHidden]);
+
+    React.useEffect(() => {
+        gamepad?.lock(GAMEPAD_HANDLER_ID);
+        return () => {
+            gamepad?.unlock();
+            clearGamepadPlayerFocus();
+        };
+    }, [clearGamepadPlayerFocus, gamepad]);
+
+    React.useEffect(() => {
+        gamepad?.on('analog', GAMEPAD_HANDLER_ID, onGamepadNativeNavigate);
+        gamepad?.on('buttonA', GAMEPAD_HANDLER_ID, onGamepadNativeSelect);
+        gamepad?.on('buttonX', GAMEPAD_HANDLER_ID, onGamepadEpisodes);
+        gamepad?.on('buttonB', GAMEPAD_HANDLER_ID, onGamepadExit);
+        gamepad?.on('buttonLB', GAMEPAD_HANDLER_ID, onGamepadSeekBackward15);
+        gamepad?.on('buttonRB', GAMEPAD_HANDLER_ID, onGamepadSeekForward15);
+        gamepad?.on('buttonLBRepeat', GAMEPAD_HANDLER_ID, onGamepadSeekBackward15);
+        gamepad?.on('buttonRBRepeat', GAMEPAD_HANDLER_ID, onGamepadSeekForward15);
+        gamepad?.on('buttonLBUp', GAMEPAD_HANDLER_ID, onGamepadSeekEnded);
+        gamepad?.on('buttonRBUp', GAMEPAD_HANDLER_ID, onGamepadSeekEnded);
+        gamepad?.on('analogRight', GAMEPAD_HANDLER_ID, onGamepadSeekAndVol);
+        return () => {
+            gamepad?.off('analog', GAMEPAD_HANDLER_ID);
+            gamepad?.off('buttonA', GAMEPAD_HANDLER_ID);
             gamepad?.off('buttonX', GAMEPAD_HANDLER_ID);
+            gamepad?.off('buttonB', GAMEPAD_HANDLER_ID);
+            gamepad?.off('buttonLB', GAMEPAD_HANDLER_ID);
+            gamepad?.off('buttonRB', GAMEPAD_HANDLER_ID);
+            gamepad?.off('buttonLBRepeat', GAMEPAD_HANDLER_ID);
+            gamepad?.off('buttonRBRepeat', GAMEPAD_HANDLER_ID);
+            gamepad?.off('buttonLBUp', GAMEPAD_HANDLER_ID);
+            gamepad?.off('buttonRBUp', GAMEPAD_HANDLER_ID);
             gamepad?.off('analogRight', GAMEPAD_HANDLER_ID);
         };
-    }, [onPlayPause, onGamepadSeekAndVol]);
+    }, [gamepad, onGamepadEpisodes, onGamepadExit, onGamepadNativeNavigate, onGamepadNativeSelect, onGamepadSeekAndVol, onGamepadSeekBackward15, onGamepadSeekEnded, onGamepadSeekForward15]);
 
     React.useEffect(() => {
         setError(null);

@@ -7,6 +7,7 @@ const { useCore } = require('stremio/core');
 const { Router } = require('stremio-router');
 const { Chromecast, ServicesProvider, GamepadProvider } = require('stremio/services');
 const { NotFound } = require('stremio/routes');
+const { default: GamepadUXBridge } = require('../services/GamepadUX');
 const { FullscreenProvider, ToastProvider, TooltipProvider, ShortcutsProvider, CONSTANTS, useBinaryState, useProfile, withCoreSuspender, onFileDrop, usePlatform } = require('stremio/common');
 const ServicesToaster = require('./ServicesToaster');
 const DeepLinkHandler = require('./DeepLinkHandler');
@@ -25,7 +26,7 @@ const App = () => {
     const profile = useProfile();
     const { i18n } = useTranslation();
     const { shell } = usePlatform();
-    const [gamepadSupportEnabled, setGamepadSupportEnabled] = React.useState(false);
+    const [gamepadSupportEnabled, setGamepadSupportEnabled] = React.useState(true);
     const onPathNotMatch = React.useCallback(() => {
         return NotFound;
     }, []);
@@ -137,7 +138,7 @@ const App = () => {
         }
 
         if (typeof profile.settings?.gamepadSupport === 'boolean') {
-            setGamepadSupportEnabled(profile.settings.gamepadSupport);
+            setGamepadSupportEnabled(true);
         }
 
         if (profile.settings?.quitOnClose && shell.state.windowClosed) {
@@ -187,6 +188,7 @@ const App = () => {
             <ToastProvider className={styles['toasts-container']}>
                 <TooltipProvider className={styles['tooltip-container']}>
                     <GamepadProvider enabled={gamepadSupportEnabled} onGuide={toggleGamepadModal}>
+                        <GamepadUXBridge />
                         <ShortcutsProvider onShortcut={onShortcut}>
                             <FullscreenProvider>
                                 {
