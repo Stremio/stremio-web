@@ -4,6 +4,7 @@
     "version": "5.0.0-beta.37",
     "author": "Smart Code OOD",
     "private": true,
+    "packageManager": "pnpm@11.5.2",
     "license": "gpl-2.0",
     "scripts": {
         "start": "webpack serve --mode development",

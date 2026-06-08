@@ -23,7 +23,7 @@ const SearchParamsHandler = () => {
     };
 
     React.useEffect(() => {
-        const { streamingServerUrl } = searchParams;
+        const { addon, streamingServerUrl } = searchParams;
 
         if (streamingServerUrl) {
             core.transport.dispatch({
@@ -48,6 +48,15 @@ const SearchParamsHandler = () => {
                 title: `Using streaming server at ${streamingServerUrl}`,
                 timeout: 4000,
             });
+        }
+
+        if (addon && !window.location.hash.replace('#', '').startsWith('/addons')) {
+            const addonParams = new URLSearchParams();
+            addonParams.set('addon', addon);
+            if (streamingServerUrl) {
+                addonParams.set('streamingServerUrl', streamingServerUrl);
+            }
+            window.location.replace(`${window.location.origin}/#/addons?${addonParams.toString()}`);
         }
     }, [searchParams]);
 

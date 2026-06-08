@@ -8,6 +8,7 @@ ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 
 RUN corepack enable
+RUN corepack prepare pnpm@11.5.2 --activate
 RUN apk add --no-cache git
 
 # Meta

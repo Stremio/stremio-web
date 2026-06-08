@@ -12,7 +12,9 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const packageJson = require('./package.json');
 
-const COMMIT_HASH = execSync('git rev-parse HEAD').toString().trim();
+const SOURCE_COMMIT_HASH = execSync('git rev-parse HEAD').toString().trim();
+const BUILD_TIMESTAMP = new Date().toISOString().replace(/[-:.TZ]/g, '').slice(0, 14);
+const COMMIT_HASH = process.env.WALLIS_BUILD_HASH || `${SOURCE_COMMIT_HASH}-${BUILD_TIMESTAMP}`;
 
 const THREAD_LOADER = {
     loader: 'thread-loader',
@@ -38,7 +40,7 @@ module.exports = (env, argv) => ({
     devtool: argv.mode === 'production' ? 'source-map' : 'eval-source-map',
     entry: {
         main: './src/index.js',
-        worker: './node_modules/@stremio/stremio-core-web/worker.js'
+        worker: './src/wallis-worker.js'
     },
     output: {
         path: path.join(__dirname, 'build'),
