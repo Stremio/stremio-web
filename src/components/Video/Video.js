@@ -12,7 +12,7 @@ const useProfile = require('stremio/common/useProfile');
 const VideoPlaceholder = require('./VideoPlaceholder');
 const styles = require('./styles');
 
-const Video = ({ className, id, title, thumbnail, season, episode, released, upcoming, watched, progress, scheduled, seasonWatched, selected, deepLinks, onMarkVideoAsWatched, onMarkSeasonAsWatched, ...props }) => {
+const Video = ({ className, id, title, thumbnail, season, episode, released, upcoming, watched, progress, scheduled, seasonWatched, selected, deepLinks, onSelect, onMarkVideoAsWatched, onMarkSeasonAsWatched, ...props }) => {
     const routeFocused = useRouteFocused();
     const profile = useProfile();
     const { t } = useTranslation();
@@ -61,6 +61,10 @@ const Video = ({ className, id, title, thumbnail, season, episode, released, upc
         onMarkSeasonAsWatched(season, seasonWatched);
     }, [season, seasonWatched, onMarkSeasonAsWatched]);
     const videoButtonOnClick = React.useCallback(() => {
+        if (typeof onSelect === 'function') {
+            onSelect();
+        }
+
         if (deepLinks) {
             if (typeof deepLinks.player === 'string') {
                 window.location = deepLinks.player;
@@ -68,7 +72,7 @@ const Video = ({ className, id, title, thumbnail, season, episode, released, upc
                 window.location.replace(deepLinks.metaDetailsStreams);
             }
         }
-    }, [deepLinks]);
+    }, [deepLinks, onSelect]);
     const renderLabel = React.useMemo(() => function renderLabel({ className, id, title, thumbnail, episode, released, upcoming, watched, progress, scheduled, children, ref, ...props }) {
         const blurThumbnail = profile.settings.hideSpoilers && season && episode && !watched;
 
@@ -222,6 +226,7 @@ Video.propTypes = {
         metaDetailsStreams: PropTypes.string,
         player: PropTypes.string
     }),
+    onSelect: PropTypes.func,
     onMarkVideoAsWatched: PropTypes.func,
     onMarkSeasonAsWatched: PropTypes.func,
 };
