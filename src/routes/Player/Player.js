@@ -124,8 +124,6 @@ const Player = ({ urlParams, queryParams }) => {
     const playingOnExternalDevice = React.useRef(false);
     const [error, setError] = React.useState(null);
 
-    const isNavigating = React.useRef(false);
-
     const VIDEO_SCALES = ['contain', 'cover', 'fill'];
     const VIDEO_SCALE_LABELS = { contain: t('PLAYER_SCALE_FIT'), cover: t('PLAYER_SCALE_CROP'), fill: t('PLAYER_SCALE_STRETCH') };
 
@@ -140,10 +138,8 @@ const Player = ({ urlParams, queryParams }) => {
         if (ended) {
             if (bingeWatching) {
                 if (deepLinks.player) {
-                    isNavigating.current = true;
                     window.location.replace(deepLinks.player);
                 } else if (deepLinks.metaDetailsStreams) {
-                    isNavigating.current = true;
                     window.location.replace(deepLinks.metaDetailsStreams);
                 }
             } else {
@@ -151,33 +147,24 @@ const Player = ({ urlParams, queryParams }) => {
             }
         } else {
             if (deepLinks.player) {
-                isNavigating.current = true;
                 window.location.replace(deepLinks.player);
             } else if (deepLinks.metaDetailsStreams) {
-                isNavigating.current = true;
                 window.location.replace(deepLinks.metaDetailsStreams);
             }
         }
     }, []);
 
     const onEnded = React.useCallback(() => {
-        // here we need to explicitly check for isNavigating.current
-        // the ended event can be called multiple times by MPV inside Shell
-        if (isNavigating.current) {
-            return;
-        }
-
         ended();
-        if (window.playerNextVideo !== null) {
+        if (player.nextVideo !== null) {
             nextVideo();
 
-            const deepLinks = window.playerNextVideo.deepLinks;
+            const deepLinks = player.nextVideo.deepLinks;
             handleNextVideoNavigation(deepLinks, profile.settings.bingeWatching, true);
-
         } else {
             window.history.back();
         }
-    }, []);
+    }, [player.nextVideo, profile.settings.bingeWatching, handleNextVideoNavigation]);
 
     const onError = React.useCallback((error) => {
         console.error('Player', error);
@@ -452,14 +439,6 @@ const Player = ({ urlParams, queryParams }) => {
                 closeNextVideoPopup();
             }
         }
-        if (player.nextVideo) {
-            // This is a workaround for the fact that when we call onEnded nextVideo from the player is already set to null since core unloads the stream
-            // we explicitly set it to a global variable so we can access it in the onEnded function
-            // this is not a good solution but it works for now
-            window.playerNextVideo = player.nextVideo;
-        } else {
-            window.playerNextVideo = null;
-        }
     }, [player.nextVideo, video.state.time, video.state.duration]);
 
     // Auto audio track selection
@@ -480,9 +459,6 @@ const Player = ({ urlParams, queryParams }) => {
         defaultAudioTrackSelected.current = false;
         nextVideoPopupDismissed.current = false;
         playingOnExternalDevice.current = false;
-        // we need a timeout here to make sure that previous page unloads and the new one loads
-        // avoiding race conditions and flickering
-        setTimeout(() => isNavigating.current = false, 1000);
     }, [video.state.stream]);
 
     React.useEffect(() => {
@@ -633,12 +609,12 @@ const Player = ({ urlParams, queryParams }) => {
 
     onShortcut('playNext', () => {
         closeMenus();
-        if (window.playerNextVideo !== null) {
+        if (player.nextVideo !== null) {
             nextVideo();
-            const deepLinks = window.playerNextVideo.deepLinks;
+            const deepLinks = player.nextVideo.deepLinks;
             handleNextVideoNavigation(deepLinks, false, false);
         }
-    }, []);
+    }, [player.nextVideo, handleNextVideoNavigation]);
 
     onShortcut('exit', () => {
         closeMenus();
@@ -760,7 +736,7 @@ const Player = ({ urlParams, queryParams }) => {
             video.events.off('error', onError);
             video.events.off('ended', onEnded);
         };
-    }, []);
+    }, [onEnded]);
 
     React.useLayoutEffect(() => {
         return () => {
