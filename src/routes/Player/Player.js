@@ -35,6 +35,30 @@ const { default: useMediaSession } = require('./useMediaSession');
 
 const findTrackByLang = (tracks, lang) => tracks.find((track) => track.lang === lang || langs.where('1', track.lang)?.[2] === lang);
 const findTrackById = (tracks, id) => tracks.find((track) => track.id === id);
+const DEFAULT_BRIGHTNESS = 100;
+const BRIGHTNESS_STORAGE_KEY = 'stremio.player.brightness';
+const MIN_BRIGHTNESS = 0;
+const MAX_BRIGHTNESS = 200;
+const BRIGHTNESS_STEP = 5;
+
+const clampBrightness = (value) => Math.max(MIN_BRIGHTNESS, Math.min(MAX_BRIGHTNESS, Math.round(value)));
+const getStoredBrightness = () => {
+    if (typeof window === 'undefined') {
+        return DEFAULT_BRIGHTNESS;
+    }
+
+    try {
+        const storedBrightness = window.localStorage.getItem(BRIGHTNESS_STORAGE_KEY);
+        if (storedBrightness === null) {
+            return DEFAULT_BRIGHTNESS;
+        }
+
+        const parsedBrightness = Number(storedBrightness);
+        return Number.isFinite(parsedBrightness) ? clampBrightness(parsedBrightness) : DEFAULT_BRIGHTNESS;
+    } catch {
+        return DEFAULT_BRIGHTNESS;
+    }
+};
 
 const GAMEPAD_HANDLER_ID = 'player';
 
@@ -70,12 +94,24 @@ const Player = ({ urlParams, queryParams }) => {
     const [immersed, setImmersed] = React.useState(true);
     const setImmersedDebounced = React.useCallback(debounce(setImmersed, 3000), []);
     const [fullscreen, , , toggleFullscreen, , setVideoElement] = useFullscreen();
+    const [brightness, setBrightness] = React.useState(getStoredBrightness);
 
     React.useEffect(() => {
         const el = video.containerRef.current?.querySelector('video');
         setVideoElement(el || null);
         return () => setVideoElement(null);
     }, [video.state.manifest]);
+    React.useEffect(() => {
+        if (typeof window === 'undefined') {
+            return;
+        }
+
+        try {
+            window.localStorage.setItem(BRIGHTNESS_STORAGE_KEY, String(brightness));
+        } catch {
+            // ignore persistence failures
+        }
+    }, [brightness]);
 
     const [optionsMenuOpen, , closeOptionsMenu, toggleOptionsMenu] = useBinaryState(false);
     const [subtitlesMenuOpen, , closeSubtitlesMenu, toggleSubtitlesMenu] = useBinaryState(false);
@@ -216,6 +252,11 @@ const Player = ({ urlParams, queryParams }) => {
 
     const onVolumeChangeRequested = React.useCallback((volume) => {
         video.setVolume(volume);
+    }, []);
+    const onBrightnessChangeRequested = React.useCallback((nextBrightness) => {
+        if (typeof nextBrightness === 'number' && !isNaN(nextBrightness)) {
+            setBrightness(clampBrightness(nextBrightness));
+        }
     }, []);
 
     const onSeekRequested = React.useCallback((time) => {
@@ -595,6 +636,11 @@ const Player = ({ urlParams, queryParams }) => {
         }
     }, [video.state.volume], !menusOpen);
 
+    onShortcut('brightness', (combo) => {
+        const nextBrightness = combo === 0 ? brightness + BRIGHTNESS_STEP : brightness - BRIGHTNESS_STEP;
+        onBrightnessChangeRequested(nextBrightness);
+    }, [brightness, onBrightnessChangeRequested], !menusOpen);
+
     onShortcut('audioMenu', () => {
         closeMenus();
         if (video.state?.audioTracks?.length > 0) {
@@ -779,6 +825,7 @@ const Player = ({ urlParams, queryParams }) => {
             <Video
                 ref={video.containerRef}
                 className={styles['layer']}
+                brightness={brightness}
                 onClick={onVideoClick}
                 onDoubleClick={onVideoDoubleClick}
             />
@@ -862,6 +909,7 @@ const Player = ({ urlParams, queryParams }) => {
                 duration={video.state.duration}
                 buffered={video.state.buffered}
                 volume={video.state.volume}
+                brightness={brightness}
                 muted={video.state.muted}
                 playbackSpeed={video.state.playbackSpeed}
                 subtitlesTracks={allSubtitleTracks}
@@ -876,6 +924,7 @@ const Player = ({ urlParams, queryParams }) => {
                 onMuteRequested={onMuteRequested}
                 onUnmuteRequested={onUnmuteRequested}
                 onVolumeChangeRequested={onVolumeChangeRequested}
+                onBrightnessChangeRequested={onBrightnessChangeRequested}
                 onSeekRequested={onSeekRequested}
                 onToggleOptionsMenu={toggleOptionsMenu}
                 onToggleSubtitlesMenu={toggleSubtitlesMenu}

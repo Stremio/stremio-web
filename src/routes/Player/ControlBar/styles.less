@@ -48,7 +48,8 @@
             }
         }
 
-        .volume-slider {
+        .volume-slider,
+        .brightness-slider {
             --track-size: 0.35rem;
             --thumb-size: 1rem;
 
@@ -87,7 +88,12 @@
             flex: none;
             display: flex;
             flex-direction: row;
+            align-items: center;
             gap: 0.25rem;
+
+            .control-bar-slider-menu-item {
+                display: none;
+            }
         }
     }
 }
@@ -106,7 +112,8 @@
             overflow: visible;
             gap: 0.15rem;
 
-            .volume-slider {
+            .volume-slider,
+            .brightness-slider {
                 display: none;
             }
 
@@ -116,6 +123,8 @@
 
             .control-bar-buttons-menu-container {
                 position: absolute;
+                display: flex;
+                align-items: center;
                 right: 0rem;
                 bottom: 4.5rem;
                 padding: 0.5rem;
@@ -127,6 +136,25 @@
                 box-shadow: 0 1.35rem 2.7rem @color-background-dark5-40,
                     0 1.1rem 0.85rem @color-background-dark5-20;
                 overflow-x: auto;
+
+                .control-bar-slider-menu-item {
+                    flex: 0 0 auto;
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    gap: 0.15rem;
+                    min-width: 14rem;
+                }
+
+                .brightness-menu-slider {
+                    --track-size: 0.35rem;
+                    --thumb-size: 1rem;
+
+                    flex: 1 1 auto;
+                    min-width: 9rem;
+                    height: 4rem;
+                    margin-right: 0.35rem;
+                }
 
                 &:not(:global(.open)) {
                     display: none;

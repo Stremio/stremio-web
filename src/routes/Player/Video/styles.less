@@ -4,6 +4,12 @@
     .video {
         width: 100%;
         height: 100%;
+        :global(video),
+        :global(canvas),
+        :global(iframe) {
+            filter: brightness(var(--video-brightness, 1));
+            transition: filter 150ms ease;
+        }
 
         * {
             font-size: inherit;

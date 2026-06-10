@@ -4,11 +4,14 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const styles = require('./styles');
-
-const Video = React.forwardRef(({ className, onClick, onDoubleClick }, ref) => {
+const Video = React.forwardRef(({ brightness, className, onClick, onDoubleClick }, ref) => {
+    const brightnessStyle = typeof brightness === 'number' && !isNaN(brightness) ?
+        { '--video-brightness': `${Math.max(0, brightness) / 100}` }
+        :
+        undefined;
     return (
         <div className={classnames(className, styles['video-container'])} onClick={onClick} onDoubleClick={onDoubleClick}>
-            <div ref={ref} className={styles['video']} />
+            <div ref={ref} className={styles['video']} style={brightnessStyle} />
         </div>
     );
 });
@@ -16,6 +19,7 @@ const Video = React.forwardRef(({ className, onClick, onDoubleClick }, ref) => {
 Video.displayName = 'Video';
 
 Video.propTypes = {
+    brightness: PropTypes.number,
     className: PropTypes.string,
     onClick: PropTypes.func,
     onDoubleClick: PropTypes.func,

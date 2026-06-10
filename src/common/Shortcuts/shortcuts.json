@@ -60,6 +60,11 @@
                 "combos": [["ArrowUp"], ["ArrowDown"]]
             },
             {
+                "name": "brightness",
+                "label": "Brightness",
+                "combos": [["Shift", "ArrowUp"], ["Shift", "ArrowDown"]]
+            },
+            {
                 "name": "mute",
                 "label": "SETTINGS_SHORTCUT_MUTE",
                 "combos": [["M"]]

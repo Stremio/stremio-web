@@ -8,9 +8,11 @@ const { Button } = require('stremio/components');
 const { useServices } = require('stremio/services');
 const SeekBar = require('./SeekBar');
 const VolumeSlider = require('./VolumeSlider');
+const BrightnessSlider = require('./BrightnessSlider');
 const styles = require('./styles');
 const { useBinaryState, usePlatform } = require('stremio/common');
 const { t } = require('i18next');
+const DEFAULT_BRIGHTNESS = 100;
 
 const ControlBar = React.forwardRef(({
     className,
@@ -19,6 +21,7 @@ const ControlBar = React.forwardRef(({
     duration,
     buffered,
     volume,
+    brightness,
     muted,
     playbackSpeed,
     subtitlesTracks,
@@ -33,6 +36,7 @@ const ControlBar = React.forwardRef(({
     onMuteRequested,
     onUnmuteRequested,
     onVolumeChangeRequested,
+    onBrightnessChangeRequested,
     onSeekRequested,
     onToggleSubtitlesMenu,
     onToggleAudioMenu,
@@ -98,6 +102,11 @@ const ControlBar = React.forwardRef(({
     const onChromecastButtonClick = React.useCallback(() => {
         chromecast.transport.requestSession();
     }, []);
+    const onBrightnessButtonClick = React.useCallback(() => {
+        if (typeof onBrightnessChangeRequested === 'function') {
+            onBrightnessChangeRequested(DEFAULT_BRIGHTNESS);
+        }
+    }, [onBrightnessChangeRequested]);
     React.useEffect(() => {
         const onStateChanged = () => {
             setChromecastServiceActive(chromecast.active);
@@ -107,6 +116,7 @@ const ControlBar = React.forwardRef(({
             chromecast.off('stateChanged', onStateChanged);
         };
     }, []);
+    const brightnessTitle = typeof brightness === 'number' && !isNaN(brightness) ? `Brightness ${Math.round(brightness)}%` : 'Brightness';
     return (
         <div ref={ref} {...props} onTouchStart={props.onMouseOver} onTouchMove={props.onMouseMove} onTouchEnd={onTouchEnd} className={classnames(className, styles['control-bar-container'])}>
             <SeekBar
@@ -151,11 +161,41 @@ const ControlBar = React.forwardRef(({
                         />
                         : null
                 }
+                {
+                    !platform.isMobile ?
+                        <Button className={styles['control-bar-button']} title={brightnessTitle} tabIndex={-1} onClick={onBrightnessButtonClick}>
+                            <Icon className={styles['icon']} name={'filters'} />
+                        </Button>
+                        : null
+                }
+                {
+                    !platform.isMobile ?
+                        <BrightnessSlider
+                            className={styles['brightness-slider']}
+                            brightness={brightness}
+                            onBrightnessChangeRequested={onBrightnessChangeRequested}
+                        />
+                        : null
+                }
                 <div className={styles['spacing']} />
                 <Button className={styles['control-bar-buttons-menu-button']} onClick={toggleButtonsMenu}>
                     <Icon className={styles['icon']} name={'more-vertical'} />
                 </Button>
                 <div className={classnames(styles['control-bar-buttons-menu-container'], { 'open': buttonsMenuOpen })}>
+                    {
+                        platform.isMobile ?
+                            <div className={styles['control-bar-slider-menu-item']}>
+                                <Button className={styles['control-bar-button']} title={brightnessTitle} tabIndex={-1} onClick={onBrightnessButtonClick}>
+                                    <Icon className={styles['icon']} name={'filters'} />
+                                </Button>
+                                <BrightnessSlider
+                                    className={styles['brightness-menu-slider']}
+                                    brightness={brightness}
+                                    onBrightnessChangeRequested={onBrightnessChangeRequested}
+                                />
+                            </div>
+                            : null
+                    }
                     <Button className={classnames(styles['control-bar-button'], { 'disabled': statistics === null || statistics.type === 'Err' || stream === null || typeof stream.infoHash !== 'string' || typeof stream.fileIdx !== 'number' })} tabIndex={-1} onMouseDown={onStatisticsButtonMouseDown} onClick={onToggleStatisticsMenu}>
                         <Icon className={styles['icon']} name={'network'} />
                     </Button>
@@ -198,6 +238,7 @@ ControlBar.propTypes = {
     duration: PropTypes.number,
     buffered: PropTypes.number,
     volume: PropTypes.number,
+    brightness: PropTypes.number,
     muted: PropTypes.bool,
     playbackSpeed: PropTypes.number,
     videoScale: PropTypes.string,
@@ -215,6 +256,7 @@ ControlBar.propTypes = {
     onMuteRequested: PropTypes.func,
     onUnmuteRequested: PropTypes.func,
     onVolumeChangeRequested: PropTypes.func,
+    onBrightnessChangeRequested: PropTypes.func,
     onSeekRequested: PropTypes.func,
     onToggleSubtitlesMenu: PropTypes.func,
     onToggleAudioMenu: PropTypes.func,
