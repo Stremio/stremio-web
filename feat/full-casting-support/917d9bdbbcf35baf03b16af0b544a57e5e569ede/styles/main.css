@@ -8806,6 +8806,7 @@ html {
   html {
     width: calc(max(100%, var(--large-viewport-width)));
     height: calc(max(100%, var(--large-viewport-height)));
+    -webkit-touch-callout: none;
   }
 }
 html body {
