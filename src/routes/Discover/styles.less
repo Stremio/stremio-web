@@ -14,6 +14,20 @@
 :import('~stremio/components/ModalDialog/styles.less') {
     selectable-inputs-modal-container: modal-dialog-container;
     selectable-inputs-modal-content: modal-dialog-content;
+    epg-preview-modal-container: modal-dialog-container;
+    epg-preview-modal-background: modal-dialog-background;
+    epg-preview-modal-close-button: close-button-container;
+    epg-preview-modal-content: modal-dialog-content;
+    epg-preview-modal-body: body-container;
+}
+
+:import('~stremio/components/MetaPreview/styles.less') {
+    epg-preview-background-layer: background-image-layer;
+    epg-preview-meta-info: meta-info-container;
+    epg-preview-logo: logo;
+    epg-preview-logo-placeholder: logo-placeholder;
+    epg-preview-action-buttons: action-buttons-container;
+    epg-preview-show-button: show-button;
 }
 
 .discover-container {
@@ -248,6 +262,89 @@
     }
 }
 
+.epg-preview-modal {
+    .epg-preview-modal-container {
+        position: relative;
+        display: block;
+        width: 34rem;
+        max-width: calc(100vw - 3rem);
+        padding: 0;
+        overflow: hidden;
+        background-color: transparent;
+        box-shadow: none;
+
+        .epg-preview-modal-close-button {
+            top: 2.5rem;
+            right: 0.5rem;
+            z-index: 3;
+            background-color: transparent;
+        }
+    }
+
+    .epg-preview-modal-background {
+        display: none;
+    }
+
+    .epg-preview-modal-content {
+        overflow: visible;
+        line-height: 0;
+    }
+
+    .epg-preview-modal-body {
+        display: block;
+        padding: 0;
+        margin-bottom: 0 !important;
+        line-height: normal;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    .epg-preview {
+        box-sizing: border-box;
+        width: 100%;
+        max-width: none;
+        min-height: 26rem;
+        max-height: calc(100vh - 3rem);
+        padding: 2rem 2.5rem;
+        border-radius: var(--border-radius);
+        overflow: hidden;
+        background-color: var(--modal-background-color);
+
+        .epg-preview-background-layer {
+            top: 0;
+            bottom: 0;
+        }
+
+        .epg-preview-logo,
+        .epg-preview-logo-placeholder {
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
+
+        .epg-preview-meta-info {
+            scrollbar-color: var(--overlay-color) transparent;
+
+            &::-webkit-scrollbar-thumb {
+                background-color: var(--overlay-color);
+            }
+        }
+
+        .epg-preview-action-buttons {
+            padding-top: 2rem;
+            justify-content: flex-start;
+        }
+
+        .epg-preview-show-button {
+            width: auto;
+            padding: 0 2rem;
+            border-radius: 4rem;
+        }
+    }
+}
+
 @media only screen and (min-width: @xxlarge) {
     .discover-container {
         .discover-content {
@@ -333,6 +430,18 @@
 }
 
 @media only screen and (max-width: @xsmall) {
+    .epg-preview-modal {
+        .epg-preview-modal-container {
+            width: calc(100vw - 2rem);
+            max-width: calc(100vw - 2rem);
+        }
+
+        .epg-preview {
+            max-height: calc(100vh - 2rem);
+            padding: 2rem;
+        }
+    }
+
     .discover-container {
         .discover-content {
             .catalog-container {

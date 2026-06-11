@@ -12,7 +12,6 @@ const useDiscover = require('./useDiscover');
 const useSelectableInputs = require('./useSelectableInputs');
 const useInstalledAddons = require('../Addons/useInstalledAddons');
 const { default: EpgGuide } = require('./EpgGuide');
-const { default: EpgProgramModal } = require('./EpgGuide/EpgProgramModal/EpgProgramModal');
 const styles = require('./styles');
 
 const SCROLL_TO_BOTTOM_THRESHOLD = 400;
@@ -29,16 +28,31 @@ const Discover = ({ urlParams, queryParams }) => {
     const metasContainerRef = React.useRef();
     const metaPreviewRef = React.useRef();
 
-    const [epgProgramModal, setEpgProgramModal] = React.useState(null);
+    const [selectedEpgProgram, setSelectedEpgProgram] = React.useState(null);
     const installedAddons = useInstalledAddons({ transportUrl: null, catalogId: null });
     const selectedAddon = React.useMemo(() => {
         const selected = discover.selectable.catalogs.find(({ selected }) => selected)?.addon ?? null;
         const addon = installedAddons.catalog.find(({ manifest }) => manifest.id === selected?.manifest.id);
         return addon;
     }, [discover.selectable.catalogs, installedAddons]);
-    const isEpgLayout = React.useMemo(() => !!selectedAddon?.manifest?.behaviorHints?.epgEndpoint, [selectedAddon]);
+    const isEpgLayout = React.useMemo(() => selectedAddon?.manifest?.behaviorHints?.epgProvider === true, [selectedAddon]);
+    const epgChannels = React.useMemo(() => {
+        return discover.catalog !== null && discover.catalog.content.type === 'Ready' ?
+            discover.catalog.content.content.map((metaItem) => ({
+                id: metaItem.id,
+                type: metaItem.type,
+                name: metaItem.name,
+                logo: metaItem.logo ?? metaItem.poster ?? null,
+                deepLinks: metaItem.deepLinks,
+            }))
+            :
+            [];
+    }, [discover.catalog]);
     const onProgramSelect = React.useCallback((program, channel) => {
-        setEpgProgramModal({ program, channel });
+        setSelectedEpgProgram({ program, channel });
+    }, []);
+    const closeEpgPreviewModal = React.useCallback(() => {
+        setSelectedEpgProgram(null);
     }, []);
 
     React.useEffect(() => {
@@ -111,7 +125,7 @@ const Discover = ({ urlParams, queryParams }) => {
         closeInputsModal();
         closeAddonModal();
         setSelectedMetaItemIndex(0);
-        setEpgProgramModal(null);
+        setSelectedEpgProgram(null);
     }, [discover.selected]);
 
     const renderEmptyState = () => (
@@ -137,7 +151,11 @@ const Discover = ({ urlParams, queryParams }) => {
         if (isEpgLayout) {
             return (
                 <EpgGuide
-                    addon={selectedAddon}
+                    requestBase={discover.selected?.request?.base ?? null}
+                    channels={epgChannels}
+                    catalogLoading={discover.catalog.content.type === 'Loading'}
+                    hasNextPage={hasNextPage}
+                    loadNextPage={loadNextPage}
                     onProgramSelect={onProgramSelect}
                 />
             );
@@ -214,6 +232,35 @@ const Discover = ({ urlParams, queryParams }) => {
 
         return null;
     };
+    const renderEpgPreviewModal = () => {
+        if (!isEpgLayout || selectedEpgProgram === null) {
+            return null;
+        }
+
+        const { program } = selectedEpgProgram;
+
+        return (
+            <ModalDialog
+                className={styles['epg-preview-modal']}
+                background={program.thumbnail ?? undefined}
+                onCloseRequest={closeEpgPreviewModal}
+            >
+                <MetaPreview
+                    className={styles['epg-preview']}
+                    compact={true}
+                    name={program.title}
+                    logo={program.channelLogo}
+                    background={program.thumbnail}
+                    runtime={program.runtime}
+                    releaseInfo={program.releaseInfo}
+                    released={program.released}
+                    description={program.overview}
+                    links={program.links}
+                    deepLinks={program.deepLinks}
+                />
+            </ModalDialog>
+        );
+    };
 
     return (
         <MainNavBars className={styles['discover-container']} route={'discover'}>
@@ -251,16 +298,7 @@ const Discover = ({ urlParams, queryParams }) => {
                 </div>
                 {renderMetaPreview()}
             </div>
-            {
-                isEpgLayout && epgProgramModal !== null ?
-                    <EpgProgramModal
-                        program={epgProgramModal.program}
-                        channel={epgProgramModal.channel}
-                        onCloseRequest={() => setEpgProgramModal(null)}
-                    />
-                    :
-                    null
-            }
+            {renderEpgPreviewModal()}
             {
                 inputsModalOpen ?
                     <ModalDialog title={t('CATALOG_FILTERS')} className={styles['selectable-inputs-modal']} onCloseRequest={closeInputsModal}>
