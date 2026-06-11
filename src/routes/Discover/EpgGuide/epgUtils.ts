@@ -3,11 +3,11 @@
 import type { EPGProgram } from './useEPG';
 
 const programStartMs = (program: EPGProgram): number => {
-    return new Date(program.start).getTime();
+    return program.startTime.getTime();
 };
 
 const programEndMs = (program: EPGProgram): number => {
-    return new Date(program.stop).getTime();
+    return program.endTime.getTime();
 };
 
 const programTitle = (program: EPGProgram): string => {
