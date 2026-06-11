@@ -1,28 +1,24 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
 import React, { useMemo } from 'react';
-import { type EPGProgram } from '../useEPG';
+import { useTranslation } from 'react-i18next';
+import { type EPGChannel, type EPGProgram } from '../useEPG';
 import { programStartMs, programEndMs, programTitle } from '../epgUtils';
 import styles from './EpgGuideRow.less';
 
 const DAY_IN_MS = 24 * 60 * 60 * 1000;
 const DEFAULT_PIXELS_PER_HOUR = 120;
 
-export type EpgChannel = {
-    id: string;
-    name: string;
-    logo: string | null;
-};
-
 type Props = {
-    channel: EpgChannel;
+    channel: EPGChannel;
     programs: EPGProgram[];
     selectedDay: Date;
-    onProgramClick: (program: EPGProgram, channel: EpgChannel) => void;
+    onProgramClick: (program: EPGProgram, channel: EPGChannel) => void;
     pixelsPerHour?: number;
 };
 
 const EpgGuideRow = ({ channel, programs: allPrograms, selectedDay, onProgramClick, pixelsPerHour = DEFAULT_PIXELS_PER_HOUR }: Props) => {
+    const { t } = useTranslation();
     const timeRange = useMemo(() => {
         const start = new Date(selectedDay);
         start.setHours(0, 0, 0, 0);
@@ -70,7 +66,7 @@ const EpgGuideRow = ({ channel, programs: allPrograms, selectedDay, onProgramCli
                                     <div className={styles['epg-program-title']}>{label}</div>
                                     <div className={styles['epg-program-time']}>
                                         {new Date(startMs).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                        {' – '}
+                                        <span>-</span>
                                         {new Date(endMs).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                     </div>
                                 </div>
@@ -79,7 +75,7 @@ const EpgGuideRow = ({ channel, programs: allPrograms, selectedDay, onProgramCli
                     );
                 })}
                 {programs.length === 0 && (
-                    <div className={styles['epg-no-programs']}>No programs available</div>
+                    <div className={styles['epg-no-programs']}>{t('NO_STREAM')}</div>
                 )}
                 {timeRange.start <= now && now < timeRange.end && (
                     <div

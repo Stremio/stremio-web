@@ -1,6 +1,5 @@
-import EpgGuideRow, { EpgChannel } from './EpgGuideRow';
+import EpgGuideRow from './EpgGuideRow';
 
 export {
-    EpgGuideRow,
-    EpgChannel
+    EpgGuideRow
 };
