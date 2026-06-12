@@ -17,8 +17,8 @@ const HOUR_IN_MS = 60 * 60 * 1000;
 const DAY_IN_MS = 24 * HOUR_IN_MS;
 const MIN_PROGRAM_DURATION_MS = 10 * 60 * 1000; // ignore sub-10-min filler when choosing scale
 
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 const TIME_SLOTS = Array.from({ length: 48 }, (_, i) => ({
     index: i,
@@ -44,6 +44,10 @@ function generateDayRange(before: number, after: number): Date[] {
         d.setDate(today.getDate() + i - before);
         return d;
     });
+}
+
+function abbreviate(value: string): string {
+    return Array.from(value).slice(0, 3).join('');
 }
 
 type Props = {
@@ -215,8 +219,8 @@ const EpgGuide = ({ requestBase, channels, catalogLoading, hasNextPage, loadNext
                             className={`${styles['epg-day-btn']}${active ? ` ${styles['epg-day-btn-active']}` : ''}`}
                             onClick={() => setSelectedDay(day)}
                         >
-                            <span className={styles['epg-day-weekday']}>{WEEKDAYS[day.getDay()]}</span>
-                            <span className={styles['epg-day-date']}>{today ? `${MONTHS[day.getMonth()]} ${day.getDate()}` : day.getDate()}</span>
+                            <span className={styles['epg-day-weekday']}>{abbreviate(t(WEEKDAYS[day.getDay()]))}</span>
+                            <span className={styles['epg-day-date']}>{today ? `${abbreviate(t(MONTHS[day.getMonth()]))} ${day.getDate()}` : day.getDate()}</span>
                         </button>
                     );
                 })}
