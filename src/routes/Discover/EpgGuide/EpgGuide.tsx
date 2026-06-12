@@ -17,6 +17,8 @@ const ROW_HEIGHT = 56;
 const HOUR_IN_MS = 60 * 60 * 1000;
 const DAY_IN_MS = 24 * HOUR_IN_MS;
 const MIN_PROGRAM_DURATION_MS = 10 * 60 * 1000; // ignore sub-10-min filler when choosing scale
+const COMPACT_DAY_COUNT = 3;
+const COMPACT_DAY_SELECTOR_QUERY = '(max-width: 800px)';
 
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -69,6 +71,9 @@ const EpgGuide = ({ requestBase, channels, catalogLoading, hasNextPage, loadNext
 
     const [selectedDay, setSelectedDay] = useState<Date | null>(null);
     const [selectedSlot, setSelectedSlot] = useState(getCurrentHalfHourIndex);
+    const [compactDaySelector, setCompactDaySelector] = useState(() =>
+        typeof window !== 'undefined' && window.matchMedia(COMPACT_DAY_SELECTOR_QUERY).matches,
+    );
 
     const { programs, loading: programsLoading } = useEPG(requestBase, channels);
     const loading = catalogLoading || (programsLoading && channels.length === 0);
@@ -200,6 +205,28 @@ const EpgGuide = ({ requestBase, channels, catalogLoading, hasNextPage, loadNext
         [days, effectiveDay],
     );
 
+    const visibleDays = useMemo(() => {
+        if (!compactDaySelector || days.length <= COMPACT_DAY_COUNT) return days;
+
+        const selectedIndex = Math.max(0, selectedDayIndex);
+        const start = Math.min(
+            Math.max(0, selectedIndex - Math.floor(COMPACT_DAY_COUNT / 2)),
+            Math.max(0, days.length - COMPACT_DAY_COUNT),
+        );
+
+        return days.slice(start, start + COMPACT_DAY_COUNT);
+    }, [compactDaySelector, days, selectedDayIndex]);
+
+    useEffect(() => {
+        const mediaQuery = window.matchMedia(COMPACT_DAY_SELECTOR_QUERY);
+        const onChange = () => setCompactDaySelector(mediaQuery.matches);
+
+        onChange();
+        mediaQuery.addEventListener('change', onChange);
+
+        return () => mediaQuery.removeEventListener('change', onChange);
+    }, []);
+
     return (
         <div className={styles['epg-guide']} onWheel={handleWheel}>
             {/* Day selector */}
@@ -211,7 +238,7 @@ const EpgGuide = ({ requestBase, channels, catalogLoading, hasNextPage, loadNext
                 >
                     <Icon className={styles['epg-day-arrow-icon']} name={'chevron-back'} />
                 </button>
-                {days.map((day) => {
+                {visibleDays.map((day) => {
                     const active = effectiveDay.getTime() === day.getTime();
                     const today = isSameDay(day, new Date());
                     return (
