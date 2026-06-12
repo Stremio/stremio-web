@@ -105,10 +105,13 @@
 }
 
 .epg-header-row {
+    position: relative;
+    z-index: 30;
     display: flex;
     flex-shrink: 0;
     margin-left: 1.5rem;
     border-bottom: 2px solid var(--color-surface);
+    overflow: visible;
 }
 
 .epg-channel-column-header {
@@ -117,77 +120,30 @@
     align-items: center;
     justify-content: center;
     padding: 0 0.5rem;
-    margin: 0 4px 4px 0;
+    margin-bottom: 8px;
     position: relative;
     z-index: 20;
+    overflow: visible;
 }
 
-.epg-time-picker {
-    position: relative;
-}
+.epg-time-menu {
+    min-width: 8rem;
+    z-index: 40;
 
-.epg-now-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    padding: 0.35rem 0.9rem;
-    border-radius: 2rem;
-    background-color: #5e4fa2;
-    font-size: 1.3rem;
-    font-weight: 600;
-    color: #fff;
-    cursor: pointer;
-    transition: background-color 0.15s;
+    [class^='multiselect-button-'] {
+        background-color: #5e4fa2;
+        color: #fff;
+        height: 2.2rem;
 
-    &:hover {
-        background-color: var(--primary-accent-color);
+        &:hover {
+            background-color: var(--primary-accent-color);
+        }
     }
-}
 
-.epg-now-badge-arrow {
-    font-size: 1rem;
-    opacity: 0.8;
-}
-
-.epg-time-dropdown {
-    position: absolute;
-    top: calc(100% + 0.4rem);
-    left: 50%;
-    transform: translateX(-50%);
-    width: 10rem;
-    max-height: 24rem;
-    overflow-y: auto;
-    background-color: rgb(28, 26, 44);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 0.8rem;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-    z-index: 100;
-    scrollbar-width: thin;
-
-    &::-webkit-scrollbar { width: 4px; }
-    &::-webkit-scrollbar-thumb { background-color: rgba(255, 255, 255, 0.2); border-radius: 2px; }
-}
-
-.epg-time-dropdown-item {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    padding: 0.6rem 1rem;
-    font-size: 1.2rem;
-    color: var(--primary-foreground-color);
-    opacity: 0.65;
-    cursor: pointer;
-    transition: background-color 0.1s, opacity 0.1s;
-
-    &:hover { background-color: rgba(255, 255, 255, 0.07); opacity: 1; }
-}
-
-.epg-time-dropdown-item-active {
-    opacity: 1;
-    font-weight: 600;
-    color: rgb(170, 154, 230);
-    background-color: rgba(94, 79, 162, 0.25);
+    [class^='label-'],
+    [class^='icon-'] {
+        color: #fff;
+    }
 }
 
 .epg-header-viewport {

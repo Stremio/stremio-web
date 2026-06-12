@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { MultiselectMenu } from 'stremio/components';
 import { EpgGuideRow } from './EpgGuideRow';
 import { useEPG, EPGChannel, EPGProgram } from './useEPG';
 import { programStartMs, programEndMs } from './epgUtils';
@@ -60,32 +61,31 @@ const EpgGuide = ({ requestBase, channels, catalogLoading, hasNextPage, loadNext
     const headerRef = useRef<HTMLDivElement>(null);
     // The inner wrapper of the channel column is what we translate — the outer clips it
     const channelColumnInnerRef = useRef<HTMLDivElement>(null);
-    const dropdownRef = useRef<HTMLDivElement>(null);
-    const dropdownListRef = useRef<HTMLDivElement>(null);
 
     const [selectedDay, setSelectedDay] = useState<Date | null>(null);
-    const [dropdownOpen, setDropdownOpen] = useState(false);
     const [selectedSlot, setSelectedSlot] = useState(getCurrentHalfHourIndex);
-    const nowLabel = useMemo(() => {
-        const d = new Date();
-        return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
-    }, []);
 
     const { programs, loading: programsLoading } = useEPG(requestBase, channels);
     const loading = catalogLoading || (programsLoading && channels.length === 0);
 
     const days = useMemo(() => {
+        const baseDays = generateDayRange(3, 3);
         const programDays = Array.from(
             new Set(Object.values(programs).flat().map((program) => {
                 const day = new Date(program.startTime);
                 day.setHours(0, 0, 0, 0);
                 return day.getTime();
             })),
+        );
+
+        return Array.from(
+            new Set([
+                ...baseDays.map((day) => day.getTime()),
+                ...programDays,
+            ]),
         )
             .sort((a, b) => a - b)
             .map((time) => new Date(time));
-
-        return programDays.length > 0 ? programDays : generateDayRange(3, 3);
     }, [programs]);
 
     const effectiveDay = useMemo(() => {
@@ -168,9 +168,11 @@ const EpgGuide = ({ requestBase, channels, catalogLoading, hasNextPage, loadNext
         }
     }, [effectiveDay, pixelsPerHour]);
 
-    const handleSlotSelect = useCallback((index: number) => {
+    const handleSlotSelect = useCallback((value: string | number | null) => {
+        const index = Number(value);
+        if (!Number.isInteger(index)) return;
+
         setSelectedSlot(index);
-        setDropdownOpen(false);
         if (viewportRef.current) {
             viewportRef.current.scrollLeft = index * halfHourPx;
         }
@@ -229,33 +231,16 @@ const EpgGuide = ({ requestBase, channels, catalogLoading, hasNextPage, loadNext
 
             {/* Time header */}
             <div className={styles['epg-header-row']}>
-                <div
-                    className={styles['epg-channel-column-header']}
-                    style={{ width: `${CHANNEL_COLUMN_WIDTH}px` }}
-                >
-                    <div ref={dropdownRef} className={styles['epg-time-picker']}>
-                        <button
-                            className={styles['epg-now-badge']}
-                            onClick={() => setDropdownOpen((o) => !o)}
-                        >
-                            {nowLabel}
-                            <span className={styles['epg-now-badge-arrow']}>▾</span>
-                        </button>
-                        {dropdownOpen && (
-                            <div ref={dropdownListRef} className={styles['epg-time-dropdown']}>
-                                {TIME_SLOTS.map((slot) => (
-                                    <button
-                                        key={slot.index}
-                                        data-active={slot.index === selectedSlot ? 'true' : undefined}
-                                        className={`${styles['epg-time-dropdown-item']}${slot.index === selectedSlot ? ` ${styles['epg-time-dropdown-item-active']}` : ''}`}
-                                        onClick={() => handleSlotSelect(slot.index)}
-                                    >
-                                        {slot.label}
-                                    </button>
-                                ))}
-                            </div>
-                        )}
-                    </div>
+                <div className={styles['epg-channel-column-header']}>
+                    <MultiselectMenu
+                        className={styles['epg-time-menu']}
+                        options={TIME_SLOTS.map((slot) => ({
+                            label: slot.label,
+                            value: slot.index,
+                        }))}
+                        value={selectedSlot}
+                        onSelect={handleSlotSelect}
+                    />
                 </div>
                 <div ref={headerRef} className={styles['epg-header-viewport']}>
                     <div className={styles['epg-header-time-slots']} style={{ width: `${totalGridWidth}px` }}>
