@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import Icon from '@stremio/stremio-icons/react';
 import { MultiselectMenu } from 'stremio/components';
 import { EpgGuideRow } from './EpgGuideRow';
 import { useEPG, EPGChannel, EPGProgram } from './useEPG';
@@ -208,7 +209,7 @@ const EpgGuide = ({ requestBase, channels, catalogLoading, hasNextPage, loadNext
                     disabled={selectedDayIndex <= 0}
                     onClick={() => selectedDayIndex > 0 && setSelectedDay(days[selectedDayIndex - 1])}
                 >
-                    ‹
+                    <Icon className={styles['epg-day-arrow-icon']} name={'chevron-back'} />
                 </button>
                 {days.map((day) => {
                     const active = effectiveDay.getTime() === day.getTime();
@@ -229,7 +230,7 @@ const EpgGuide = ({ requestBase, channels, catalogLoading, hasNextPage, loadNext
                     disabled={selectedDayIndex >= days.length - 1}
                     onClick={() => selectedDayIndex < days.length - 1 && setSelectedDay(days[selectedDayIndex + 1])}
                 >
-                    ›
+                    <Icon className={styles['epg-day-arrow-icon']} name={'chevron-forward'} />
                 </button>
             </div>
 
