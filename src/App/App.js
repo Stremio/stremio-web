@@ -26,6 +26,7 @@ const App = () => {
     const { i18n } = useTranslation();
     const { shell } = usePlatform();
     const [gamepadSupportEnabled, setGamepadSupportEnabled] = React.useState(false);
+    const appReadySent = React.useRef(false);
     const onPathNotMatch = React.useCallback(() => {
         return NotFound;
     }, []);
@@ -126,10 +127,15 @@ const App = () => {
 
         shell.on('open-media', onOpenMedia);
 
+        if (shell.state.initialized && !appReadySent.current) {
+            appReadySent.current = true;
+            shell.send('app-ready');
+        }
+
         return () => {
             shell.off('open-media', onOpenMedia);
         };
-    }, []);
+    }, [shell.state.initialized]);
 
     React.useEffect(() => {
         if (typeof profile.settings?.interfaceLanguage === 'string') {
