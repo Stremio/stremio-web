@@ -1,7 +1,7 @@
 import React, { forwardRef, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useCore } from 'stremio/core';
-import { Button } from 'stremio/components';
+import { Button, Toggle } from 'stremio/components';
 import { usePlatform, useToast, useDiscord } from 'stremio/common';
 import { Section, Option, Link } from '../components';
 import User from './User';
@@ -151,9 +151,11 @@ const General = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) => {
             {
                 discord.available &&
                     <Option className={styles['discord-container']} icon={'discord'} label={t('SETTINGS_DISCORD', { defaultValue: 'Discord Rich Presence' })}>
-                        <Button className={'button'} title={profile.settings.discordRpcEnabled ? t('MOBILE_DISCONNECT') : t('SETTINGS_DISCORD_CONNECT', { defaultValue: 'Connect' })} tabIndex={-1} onClick={onToggleDiscord}>
-                            {profile.settings.discordRpcEnabled ? t('MOBILE_DISCONNECT') : t('SETTINGS_DISCORD_CONNECT', { defaultValue: 'Connect' })}
-                        </Button>
+                        <Toggle
+                            checked={profile.settings.discordRpcEnabled === true}
+                            tabIndex={-1}
+                            onClick={onToggleDiscord}
+                        />
                     </Option>
             }
         </Section>

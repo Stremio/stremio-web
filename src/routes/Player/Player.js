@@ -10,7 +10,7 @@ const { useRouteFocused } = require('stremio-router');
 const { useCore } = require('stremio/core');
 const { useServices, useGamepad } = require('stremio/services');
 const { useContentGamepadNavigation } = require('stremio/services/GamepadNavigation');
-const { useSettings, useProfile, useFullscreen, useBinaryState, useToast, useStreamingServer, withCoreSuspender, usePlatform, onShortcut, useDiscord } = require('stremio/common');
+const { useSettings, useProfile, useFullscreen, useBinaryState, useToast, useStreamingServer, withCoreSuspender, usePlatform, onShortcut, useDiscord, EMPTY_DISCORD_TIMESTAMPS, getPlaybackDiscordActivity } = require('stremio/common');
 const { HorizontalNavBar, Transition, ContextMenu } = require('stremio/components');
 const { default: Buffering } = require('./Buffering');
 const VolumeChangeIndicator = require('./VolumeChangeIndicator');
@@ -56,7 +56,7 @@ const Player = ({ urlParams, queryParams }) => {
     const platform = usePlatform();
     const toast = useToast();
     const discord = useDiscord();
-    const discordStartTimestamp = React.useRef(null);
+    const discordTimestamps = React.useRef(EMPTY_DISCORD_TIMESTAMPS);
 
     const [seeking, setSeeking] = React.useState(false);
 
@@ -544,30 +544,24 @@ const Player = ({ urlParams, queryParams }) => {
 
     React.useEffect(() => {
         if (video.state.stream === null || typeof player?.title !== 'string') {
-            discordStartTimestamp.current = null;
+            discordTimestamps.current = EMPTY_DISCORD_TIMESTAMPS;
             discord.setActivity(null);
             return;
         }
 
-        if (video.state.paused) {
-            discordStartTimestamp.current = null;
-        } else if (typeof video.state.time === 'number') {
-            const startTimestamp = Math.floor((Date.now() - video.state.time) / 1000);
-            if (
-                discordStartTimestamp.current === null ||
-                Math.abs(discordStartTimestamp.current - startTimestamp) > 5
-            ) {
-                discordStartTimestamp.current = startTimestamp;
-            }
-        }
-
-        discord.setActivity({
-            state: video.state.paused ? 'Paused' : 'Watching',
-            details: player.title,
-            image: player.metaItem?.poster || null,
-            startTimestamp: video.state.paused ? null : discordStartTimestamp.current,
+        const metaItem = player.metaItem?.type === 'Ready' ? player.metaItem.content : null;
+        const { activity, timestamps } = getPlaybackDiscordActivity({
+            title: player.title,
+            image: metaItem?.poster || metaItem?.background || null,
+            paused: video.state.paused,
+            time: video.state.time,
+            duration: video.state.duration,
+            timestamps: discordTimestamps.current,
         });
-    }, [discord.setActivity, player?.title, player.metaItem?.poster, video.state.paused, video.state.stream, video.state.time]);
+
+        discordTimestamps.current = timestamps;
+        discord.setActivity(activity);
+    }, [discord.setActivity, player?.title, player.metaItem, video.state.duration, video.state.paused, video.state.stream, video.state.time]);
 
     React.useEffect(() => {
         return () => {

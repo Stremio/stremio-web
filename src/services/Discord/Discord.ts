@@ -48,13 +48,14 @@ class Discord {
         }
     }
 
-    setActivity(state: string, details: string, image?: string | null, startTimestamp?: number | null): void {
+    setActivity(state: string, details: string, image?: string | null, startTimestamp?: number | null, endTimestamp?: number | null): void {
         if (this.shell && this.shell.active) {
             this.shell.send('discord-set-activity', {
                 state,
                 details,
                 image: image || null,
-                startTimestamp: startTimestamp || null
+                startTimestamp: startTimestamp || null,
+                endTimestamp: endTimestamp || null
             });
         }
     }

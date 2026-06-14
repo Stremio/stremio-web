@@ -6,7 +6,7 @@ const { PlatformProvider, usePlatform } = require('./Platform');
 const { ToastProvider, useToast } = require('./Toast');
 const { TooltipProvider, Tooltip } = require('./Tooltips');
 const { ShortcutsProvider, useShortcuts, onShortcut } = require('./Shortcuts');
-const { DiscordProvider, useDiscord } = require('./Discord');
+const { DiscordProvider, useDiscord, EMPTY_DISCORD_TIMESTAMPS, getPlaybackDiscordActivity } = require('./Discord');
 const CONSTANTS = require('./CONSTANTS');
 const { withCoreSuspender, useCoreSuspender } = require('./CoreSuspender');
 const getVisibleChildrenRange = require('./getVisibleChildrenRange');
@@ -47,6 +47,8 @@ module.exports = {
     Tooltip,
     DiscordProvider,
     useDiscord,
+    EMPTY_DISCORD_TIMESTAMPS,
+    getPlaybackDiscordActivity,
     CONSTANTS,
     withCoreSuspender,
     useCoreSuspender,

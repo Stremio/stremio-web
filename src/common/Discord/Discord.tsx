@@ -1,13 +1,9 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useServices } from 'stremio/services';
 import useProfile from '../useProfile';
+import type { DiscordActivity as Activity } from './activity';
 
-type Activity = {
-    state: string,
-    details?: string | null,
-    image?: string | null,
-    startTimestamp?: number | null,
-};
+const CONNECT_RETRY_INTERVAL = 15000;
 
 type DiscordContextValue = {
     available: boolean,
@@ -22,7 +18,8 @@ const sameActivity = (first: Activity | null, second: Activity | null) => {
     return first?.state === second?.state &&
         first?.details === second?.details &&
         first?.image === second?.image &&
-        first?.startTimestamp === second?.startTimestamp;
+        first?.startTimestamp === second?.startTimestamp &&
+        first?.endTimestamp === second?.endTimestamp;
 };
 
 type Props = {
@@ -68,18 +65,30 @@ const DiscordProvider = ({ children }: Props) => {
             return;
         }
 
-        if (enabled) {
-            if (!connected && !connectRequested.current) {
-                connectRequested.current = true;
-                discord.connect();
-            }
-        } else {
+        if (!enabled) {
             connectRequested.current = false;
             if (connected) {
                 discord.disconnect();
             }
             sentActivity.current = null;
+            return;
         }
+
+        if (connected) return;
+
+        const requestConnect = () => {
+            if (!connectRequested.current) {
+                connectRequested.current = true;
+                discord.connect();
+            }
+        };
+
+        requestConnect();
+        const interval = window.setInterval(requestConnect, CONNECT_RETRY_INTERVAL);
+
+        return () => {
+            window.clearInterval(interval);
+        };
     }, [available, connected, discord, enabled]);
 
     useEffect(() => {
@@ -99,7 +108,8 @@ const DiscordProvider = ({ children }: Props) => {
             activity.state,
             activity.details || '',
             activity.image || null,
-            activity.startTimestamp || null
+            activity.startTimestamp || null,
+            activity.endTimestamp || null
         );
         sentActivity.current = activity;
     }, [activity, available, connected, discord, enabled]);
