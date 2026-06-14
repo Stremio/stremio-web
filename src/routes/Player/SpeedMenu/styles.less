@@ -12,7 +12,7 @@
 .speed-menu-container {
     display: flex;
     flex-direction: column;
-    width: 22rem;
+    width: min(22rem, calc(100vw - 5rem));
     max-width: 100%;
     padding: 1.5rem 1.5rem 1.75rem;
     gap: 1.25rem;
@@ -118,19 +118,17 @@
 
     .presets {
         flex: none;
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
         gap: 0.5rem;
 
         .preset {
-            flex: 1 1 auto;
             display: flex;
             align-items: center;
             justify-content: center;
-            min-width: 3rem;
+            min-width: 0;
             height: 2.4rem;
-            padding: 0 0.75rem;
+            padding: 0 0.5rem;
             border-radius: 1.2rem;
             font-weight: 600;
             color: var(--primary-foreground-color);
@@ -156,8 +154,91 @@
     }
 }
 
-@media (orientation: portrait) and (max-width: @minimum) {
+@media (pointer: coarse) {
     .speed-menu-container {
-        width: 18rem;
+        .stepper {
+            .step-button {
+                width: 2.9rem;
+                height: 2.9rem;
+            }
+
+            .slider {
+                height: 2.75rem;
+            }
+        }
+
+        .presets .preset {
+            height: 2.9rem;
+        }
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .speed-menu-container {
+        .stepper .step-button,
+        .stepper .slider .slider-thumb,
+        .presets .preset {
+            transition: none;
+        }
+
+        .stepper .step-button:active {
+            transform: none;
+        }
+
+        .stepper .slider:hover .slider-thumb {
+            transform: translateX(-50%);
+        }
+    }
+}
+
+@media (orientation: landscape) and (max-height: 600px) {
+    .speed-menu-container {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        grid-template-areas:
+            "title   readout"
+            "stepper stepper"
+            "presets presets";
+        align-items: center;
+        column-gap: 1rem;
+        row-gap: 0.6rem;
+        padding: 0.85rem 1.1rem 1rem;
+
+        .title {
+            grid-area: title;
+        }
+
+        .readout {
+            grid-area: readout;
+            flex-direction: row;
+            align-items: baseline;
+            justify-content: flex-end;
+            gap: 0.4rem;
+
+            .value {
+                font-size: 1.5rem;
+            }
+
+            .descriptor {
+                min-height: 0;
+            }
+        }
+
+        .stepper {
+            grid-area: stepper;
+
+            .step-button {
+                width: 2.75rem;
+                height: 2.75rem;
+            }
+        }
+
+        .presets {
+            grid-area: presets;
+
+            .preset {
+                height: 2.75rem;
+            }
+        }
     }
 }
