@@ -4,7 +4,7 @@ import shortcuts from './shortcuts.json';
 const SHORTCUTS = shortcuts.map(({ shortcuts }) => shortcuts).flat();
 
 export type ShortcutName = string;
-export type ShortcutListener = (combo: number) => void;
+export type ShortcutListener = (combo: number, key: string) => void;
 
 interface ShortcutsContext {
     grouped: ShortcutGroup[],
@@ -51,7 +51,7 @@ const ShortcutsProvider = ({ children, onShortcut }: Props) => {
 
             if (modifers && (keys.includes(code) || keys.includes(key.toUpperCase()))) {
                 const combo = combos.indexOf(keys);
-                listeners.current.get(name)?.forEach((listener) => listener(combo));
+                listeners.current.get(name)?.forEach((listener) => listener(combo, key));
 
                 onShortcut(name as ShortcutName, combo, key);
             }
