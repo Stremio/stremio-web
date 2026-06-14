@@ -62,18 +62,21 @@ const General = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) => {
         }
     }, [isTraktAuthenticated, profile.auth]);
 
-    const onToggleDiscord = useCallback(() => {
-        core.transport.dispatch({
-            action: 'Ctx',
-            args: {
-                action: 'UpdateSettings',
+    const discordToggle = useMemo(() => ({
+        checked: profile.settings.discordRpcEnabled === true,
+        onClick: () => {
+            core.transport.dispatch({
+                action: 'Ctx',
                 args: {
-                    ...profile.settings,
-                    discordRpcEnabled: !profile.settings.discordRpcEnabled
+                    action: 'UpdateSettings',
+                    args: {
+                        ...profile.settings,
+                        discordRpcEnabled: !profile.settings.discordRpcEnabled
+                    }
                 }
-            }
-        });
-    }, [profile.settings]);
+            });
+        }
+    }), [profile.settings]);
 
     useEffect(() => {
         if (dataExport.exportUrl) {
@@ -150,11 +153,10 @@ const General = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) => {
             </Option>
             {
                 discord.available &&
-                    <Option className={styles['discord-container']} icon={'discord'} label={t('SETTINGS_DISCORD', { defaultValue: 'Discord Rich Presence' })}>
+                    <Option className={styles['discord-container']} icon={'discord'} label={'SETTINGS_DISCORD'}>
                         <Toggle
-                            checked={profile.settings.discordRpcEnabled === true}
                             tabIndex={-1}
-                            onClick={onToggleDiscord}
+                            {...discordToggle}
                         />
                     </Option>
             }
