@@ -1,25 +1,163 @@
 // Copyright (C) 2017-2024 Smart code 203358507
 
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
+@import (reference) '~stremio/common/screen-sizes.less';
+
+:import('~stremio/components/Slider/styles.less') {
+    slider-track: track;
+    slider-track-after: track-after;
+    slider-thumb: thumb;
+}
 
 .speed-menu-container {
-    width: 14rem;
+    display: flex;
+    flex-direction: column;
+    width: 22rem;
+    max-width: 100%;
+    padding: 1.5rem 1.5rem 1.75rem;
+    gap: 1.25rem;
 
     .title {
         flex: none;
-        align-self: stretch;
         font-weight: 700;
         color: var(--primary-foreground-color);
-        padding: 1.5rem 2rem;
     }
 
-    .options-container {
-        flex: 0 1 auto;
-        max-height: calc(3.2rem * 10);
-        padding: 0 1rem 0.5rem;
-        
-        .option {
-            height: 3.2rem;
+    .readout {
+        flex: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.1rem;
+
+        .value {
+            font-weight: 700;
+            font-size: 2rem;
+            line-height: 1.1;
+            color: var(--primary-foreground-color);
+            font-variant-numeric: tabular-nums;
         }
+
+        .descriptor {
+            min-height: 1.2rem;
+            font-size: 0.9rem;
+            color: var(--primary-foreground-color);
+            opacity: 0.65;
+        }
+    }
+
+    .stepper {
+        flex: none;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 1rem;
+
+        --track-size: 0.4rem;
+        --thumb-size: 1.2rem;
+
+        .step-button {
+            flex: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.6rem;
+            height: 2.6rem;
+            border-radius: 100%;
+            background-color: var(--overlay-color);
+            transition: filter 150ms ease, transform 150ms ease;
+
+            .icon {
+                width: 1.1rem;
+                height: 1.1rem;
+                color: var(--primary-foreground-color);
+            }
+
+            &:hover, &:focus {
+                filter: brightness(1.4);
+                outline: none;
+            }
+
+            &:focus {
+                box-shadow: 0 0 0 0.2rem var(--primary-foreground-color);
+            }
+
+            &:active {
+                transform: scale(0.92);
+            }
+
+            &:global(.disabled) {
+                pointer-events: none;
+                opacity: 0.35;
+            }
+        }
+
+        .slider {
+            flex: 1;
+            height: var(--thumb-size);
+
+            .slider-track {
+                background-color: var(--overlay-color);
+                opacity: 1;
+            }
+
+            .slider-track-after {
+                background-color: var(--primary-foreground-color);
+            }
+
+            .slider-thumb {
+                background-color: var(--primary-foreground-color);
+                transition: transform 150ms ease;
+            }
+
+            &:hover .slider-thumb {
+                transform: translateX(-50%) scale(1.2);
+            }
+        }
+    }
+
+    .presets {
+        flex: none;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+
+        .preset {
+            flex: 1 1 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 3rem;
+            height: 2.4rem;
+            padding: 0 0.75rem;
+            border-radius: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-foreground-color);
+            background-color: var(--overlay-color);
+            font-variant-numeric: tabular-nums;
+            transition: filter 150ms ease, background-color 150ms ease, color 150ms ease;
+
+            &:hover, &:focus {
+                filter: brightness(1.4);
+                outline: none;
+            }
+
+            &:focus {
+                box-shadow: 0 0 0 0.2rem var(--primary-foreground-color);
+            }
+
+            &:global(.selected) {
+                color: var(--modal-background-color);
+                background-color: var(--primary-foreground-color);
+                filter: none;
+            }
+        }
+    }
+}
+
+@media (orientation: portrait) and (max-width: @minimum) {
+    .speed-menu-container {
+        width: 18rem;
     }
 }
