@@ -1,12 +1,13 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router';
 import { usePlatform, CONSTANTS } from 'stremio/common';
 
 const OpenMediaHandler = () => {
     const navigate = useNavigate();
     const { shell } = usePlatform();
+    const appReadySent = useRef(false);
 
     useEffect(() => {
         const onOpenMedia = (data: string) => {
@@ -26,8 +27,13 @@ const OpenMediaHandler = () => {
         };
 
         shell.on('open-media', onOpenMedia);
+        if (shell.state.initialized && !appReadySent.current) {
+            appReadySent.current = true;
+            shell.send('app-ready');
+        }
+
         return () => shell.off('open-media', onOpenMedia);
-    }, [navigate, shell]);
+    }, [navigate, shell, shell.state.initialized]);
 
     return null;
 };
