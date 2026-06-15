@@ -2787,7 +2787,7 @@ packages:
     hasBin: true
 
   hls.js@https://github.com/Stremio/hls.js/releases/download/v1.5.4-patch2/hls.js-1.5.4-patch2.tgz:
-    resolution: {tarball: https://github.com/Stremio/hls.js/releases/download/v1.5.4-patch2/hls.js-1.5.4-patch2.tgz}
+    resolution: {integrity: sha512-PvVzZI5Nd2X5ol4R+DVwfpjJtAJ4xKaEzDfIZObfzmWPOop94javQltDt9H92uQUiLIKjFm06Ngpjz0NEudL2Q==, tarball: https://github.com/Stremio/hls.js/releases/download/v1.5.4-patch2/hls.js-1.5.4-patch2.tgz}
     version: 1.5.5-0.canary.9893
 
   hpack.js@2.1.6:
