@@ -193,25 +193,25 @@ const VideosList = ({ className, metaItem, libraryItem, season, seasonOnSelect, 
                                                 );
                                         })
                                         .map((video, index) => (
-                                            <div key={index} onClick={saveScrollPosition}>
-                                                <Video
-                                                    id={video.id}
-                                                    title={video.title}
-                                                    thumbnail={video.thumbnail}
-                                                    season={video.season}
-                                                    episode={video.episode}
-                                                    released={video.released}
-                                                    upcoming={video.upcoming}
-                                                    watched={video.watched}
-                                                    progress={video.progress}
-                                                    deepLinks={video.deepLinks}
-                                                    scheduled={video.scheduled}
-                                                    seasonWatched={seasonWatched}
-                                                    selected={video.id === selectedVideoId}
-                                                    onMarkVideoAsWatched={onMarkVideoAsWatched}
-                                                    onMarkSeasonAsWatched={onMarkSeasonAsWatched}
-                                                />
-                                            </div>
+                                            <Video
+                                                key={index}
+                                                id={video.id}
+                                                title={video.title}
+                                                thumbnail={video.thumbnail}
+                                                season={video.season}
+                                                episode={video.episode}
+                                                released={video.released}
+                                                upcoming={video.upcoming}
+                                                watched={video.watched}
+                                                progress={video.progress}
+                                                deepLinks={video.deepLinks}
+                                                scheduled={video.scheduled}
+                                                seasonWatched={seasonWatched}
+                                                selected={video.id === selectedVideoId}
+                                                onSelect={saveScrollPosition}
+                                                onMarkVideoAsWatched={onMarkVideoAsWatched}
+                                                onMarkSeasonAsWatched={onMarkSeasonAsWatched}
+                                            />
                                         ))
                                 }
                             </div>

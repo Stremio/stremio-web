@@ -24,8 +24,8 @@ importers:
         specifier: 5.10.0
         version: 5.10.0
       '@stremio/stremio-video':
-        specifier: 0.0.79
-        version: 0.0.79
+        specifier: 0.0.80
+        version: 0.0.80
       a-color-picker:
         specifier: 1.2.1
         version: 1.2.1
@@ -86,6 +86,12 @@ importers:
       react-is:
         specifier: 18.3.1
         version: 18.3.1
+      react-router:
+        specifier: 6.30.0
+        version: 6.30.0(react@18.3.1)
+      react-router-dom:
+        specifier: 6.30.0
+        version: 6.30.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       spatial-navigation-polyfill:
         specifier: github:Stremio/spatial-navigation#64871b1422466f5f45d24ebc8bbd315b2ebab6a6
         version: https://codeload.github.com/Stremio/spatial-navigation/tar.gz/64871b1422466f5f45d24ebc8bbd315b2ebab6a6
@@ -1180,6 +1186,10 @@ packages:
     resolution: {integrity: sha512-C2Xj8FZ0uHWeCXXqX5B4/gVFQmtSkiuOolzAgutjTfseNOHT3pUjljDZsTSxXFGgio54bCzVFqmEOUrIVk8RDA==}
     engines: {node: '>=20.0.0'}
 
+  '@remix-run/router@1.23.0':
+    resolution: {integrity: sha512-O3rHJzAQKamUz1fvE0Qaw0xSFqsA/yafi2iqeE0pvdFtCO1viYx8QL6f3Ln/aCCTLxs68SLf0KPM9eSeM8yBnA==}
+    engines: {node: '>=14.0.0'}
+
   '@rollup/plugin-babel@6.1.0':
     resolution: {integrity: sha512-dFZNuFD2YRcoomP4oYf+DvQNSUA9ih+A3vUqopQx5EdtPGo3WBnQcI/S8pwpz91UsGfL0HsMSOlaMld8HrbubA==}
     engines: {node: '>=14.0.0'}
@@ -1401,8 +1411,8 @@ packages:
   '@stremio/stremio-icons@5.10.0':
     resolution: {integrity: sha512-Zw/vGC3D2yeQfk8xv/tfMJTDvbCPOI91tBg4XpR2+EgbZSX8Xvm7Vz457PIhFPhTAwdOPHp0VX0M3gzjbt0zOg==}
 
-  '@stremio/stremio-video@0.0.79':
-    resolution: {integrity: sha512-RfxmeG+rQdoflfqBybRB9vSqb3cjc3Fd5T9uNNUbwC287apQsNyjYOlvk7sfRlQ1Za/UdFsyoqR5vGBSBDzlhQ==}
+  '@stremio/stremio-video@0.0.80':
+    resolution: {integrity: sha512-9mIDeKUUEt6h7h685Bl9HUTOLT0VtaQWrC7uBlL5uoo2CWohIZBr3KEHYlaTnM2ve6CIQJ/nB+hfTyymgGDiGg==}
 
   '@stylistic/eslint-plugin-jsx@4.4.1':
     resolution: {integrity: sha512-83SInq4u7z71vWwGG+6ViOtlOmZ6tSrDkMPhrvdBBTGMLA0gs22WSdhQ4vZP3oJ5Xg4ythvqeUiFSedvVxzhyA==}
@@ -2778,7 +2788,7 @@ packages:
     hasBin: true
 
   hls.js@https://github.com/Stremio/hls.js/releases/download/v1.5.4-patch2/hls.js-1.5.4-patch2.tgz:
-    resolution: {tarball: https://github.com/Stremio/hls.js/releases/download/v1.5.4-patch2/hls.js-1.5.4-patch2.tgz}
+    resolution: {integrity: sha512-PvVzZI5Nd2X5ol4R+DVwfpjJtAJ4xKaEzDfIZObfzmWPOop94javQltDt9H92uQUiLIKjFm06Ngpjz0NEudL2Q==, tarball: https://github.com/Stremio/hls.js/releases/download/v1.5.4-patch2/hls.js-1.5.4-patch2.tgz}
     version: 1.5.5-0.canary.9893
 
   hpack.js@2.1.6:
@@ -4096,6 +4106,19 @@ packages:
 
   react-is@18.3.1:
     resolution: {integrity: sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==}
+
+  react-router-dom@6.30.0:
+    resolution: {integrity: sha512-x30B78HV5tFk8ex0ITwzC9TTZMua4jGyA9IUlH1JLQYQTFyxr/ZxwOJq7evg1JX1qGVUcvhsmQSKdPncQrjTgA==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      react: '>=16.8'
+      react-dom: '>=16.8'
+
+  react-router@6.30.0:
+    resolution: {integrity: sha512-D3X8FyH9nBcTSHGdEKurK7r8OYE1kKFn3d/CF+CoxbSHkxU7o37+Uh7eAHRXr6k2tSExXYO++07PeXJtA/dEhQ==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      react: '>=16.8'
 
   react@18.3.1:
     resolution: {integrity: sha512-wS+hAgJShR0KhEvPJArfuPVN1+Hz1t0Y6n5jLrGQbkb4urgPE/0Rve+1kMB1v/oWgHgm4WIcV+i7F2pTVj+2iQ==}
@@ -6284,6 +6307,8 @@ snapshots:
       tslib: 2.8.1
       tsyringe: 4.10.0
 
+  '@remix-run/router@1.23.0': {}
+
   '@rollup/plugin-babel@6.1.0(@babel/core@7.29.0)(@types/babel__core@7.20.5)(rollup@4.60.3)':
     dependencies:
       '@babel/core': 7.29.0
@@ -6451,7 +6476,7 @@ snapshots:
 
   '@stremio/stremio-icons@5.10.0': {}
 
-  '@stremio/stremio-video@0.0.79':
+  '@stremio/stremio-video@0.0.80':
     dependencies:
       buffer: 6.0.3
       color: 4.2.3
@@ -9591,6 +9616,18 @@ snapshots:
   react-is@16.13.1: {}
 
   react-is@18.3.1: {}
+
+  react-router-dom@6.30.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+    dependencies:
+      '@remix-run/router': 1.23.0
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+      react-router: 6.30.0(react@18.3.1)
+
+  react-router@6.30.0(react@18.3.1):
+    dependencies:
+      '@remix-run/router': 1.23.0
+      react: 18.3.1
 
   react@18.3.1:
     dependencies:

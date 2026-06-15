@@ -3,21 +3,25 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const { ModalsContainerProvider } = require('../ModalsContainerContext');
+const { RouteFocusedProvider } = require('stremio/common/useRouteFocused');
 
-const Route = ({ children }) => {
+const Route = ({ component, focused }) => {
     return (
         <div className={'route-container'}>
-            <ModalsContainerProvider>
-                <div className={'route-content'}>
-                    {children}
-                </div>
-            </ModalsContainerProvider>
+            <RouteFocusedProvider value={focused}>
+                <ModalsContainerProvider>
+                    <div className={'route-content'}>
+                        {component}
+                    </div>
+                </ModalsContainerProvider>
+            </RouteFocusedProvider>
         </div>
     );
 };
 
 Route.propTypes = {
-    children: PropTypes.node
+    component: PropTypes.node,
+    focused: PropTypes.bool,
 };
 
 module.exports = Route;
