@@ -133,7 +133,7 @@ const Player = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) => {
                         </Option>
                 }
                 {
-                    shell.active &&
+                    shell.active && platform.name === 'windows' && platform.supportsGpuVideoProcessing &&
                         <Option label={'SETTINGS_GPU_VIDEO_PROCESSING'}>
                             <Toggle
                                 tabIndex={-1}
