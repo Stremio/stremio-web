@@ -97,7 +97,16 @@
   transition: border-color 0.25s ease-out;
 }
 .file-drop-container-hPBXO.active {
+  pointer-events: auto;
   border-color: var(--primary-accent-color);
+}
+.file-drop-container-hPBXO .file-input-ZVnG0 {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  opacity: 0;
 }
 
 .modal-container-OuxEF {
