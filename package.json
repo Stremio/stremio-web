@@ -17,7 +17,7 @@
         "@babel/runtime": "7.29.2",
         "@sentry/browser": "8.42.0",
         "@stremio/stremio-colors": "5.2.0",
-        "@stremio/stremio-core-web": "https://stremio.github.io/stremio-core/stremio-core-web/feat/add-cache-drive-option/dev/stremio-stremio-core-web-0.58.0.tgz",
+        "@stremio/stremio-core-web": "0.59.0",
         "@stremio/stremio-icons": "5.10.0",
         "@stremio/stremio-video": "0.0.80",
         "a-color-picker": "1.2.1",
