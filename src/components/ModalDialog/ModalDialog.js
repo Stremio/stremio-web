@@ -4,10 +4,11 @@ const React = require('react');
 const { useTranslation } = require('react-i18next');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const { useRouteFocused, useModalsContainer } = require('stremio-router');
+const { useModalsContainer } = require('stremio/router/ModalsContainerContext');
+const Modal = require('stremio/router/Modal');
+const { default: useRouteFocused } = require('stremio/common/useRouteFocused');
 const { default: Button } = require('stremio/components/Button');
 const { default: Icon } = require('@stremio/stremio-icons/react');
-const { Modal } = require('stremio-router');
 const styles = require('./styles');
 
 const ModalDialog = ({ className, title, buttons, children, dataset, onCloseRequest, background, ...props }) => {

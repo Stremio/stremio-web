@@ -3,6 +3,7 @@
 import React, { useEffect, useMemo, useRef } from 'react';
 import Icon from '@stremio/stremio-icons/react';
 import classNames from 'classnames';
+import { useNavigateWithOrigin } from 'stremio/common/useNavigateWithOrigin';
 import { Button } from 'stremio/components';
 import useCalendarDate from '../../useCalendarDate';
 import styles from './Item.less';
@@ -18,6 +19,7 @@ type Props = {
 
 const Item = ({ selected, monthInfo, date, items, profile, onClick }: Props) => {
     const ref = useRef<HTMLDivElement>(null);
+    const { navigateWithOrigin } = useNavigateWithOrigin();
     const { toDayMonth } = useCalendarDate(profile);
 
     const [active, today] = useMemo(() => [
@@ -27,6 +29,12 @@ const Item = ({ selected, monthInfo, date, items, profile, onClick }: Props) => 
 
     const onItemClick = () => {
         onClick && onClick(date);
+    };
+
+    const onVideoClick = (event: React.MouseEvent<HTMLDivElement>, target: string) => {
+        event.preventDefault();
+        event.stopPropagation();
+        navigateWithOrigin(target);
     };
 
     useEffect(() => {
@@ -49,7 +57,7 @@ const Item = ({ selected, monthInfo, date, items, profile, onClick }: Props) => 
             <div className={styles['body']}>
                 {
                     items.map(({ id, name, season, episode, deepLinks }) => (
-                        <Button className={styles['video']} key={id} href={deepLinks.metaDetailsStreams}>
+                        <Button className={styles['video']} key={id} href={deepLinks.metaDetailsStreams} onClick={(event) => onVideoClick(event, deepLinks.metaDetailsStreams)}>
                             <div className={styles['name']}>
                                 {name}
                             </div>

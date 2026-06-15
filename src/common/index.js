@@ -6,6 +6,7 @@ const { PlatformProvider, usePlatform } = require('./Platform');
 const { ToastProvider, useToast } = require('./Toast');
 const { TooltipProvider, Tooltip } = require('./Tooltips');
 const { ShortcutsProvider, useShortcuts, onShortcut } = require('./Shortcuts');
+const { DiscordProvider, useDiscord, EMPTY_DISCORD_TIMESTAMPS, getPlaybackDiscordActivity } = require('./Discord');
 const CONSTANTS = require('./CONSTANTS');
 const { withCoreSuspender, useCoreSuspender } = require('./CoreSuspender');
 const getVisibleChildrenRange = require('./getVisibleChildrenRange');
@@ -21,6 +22,7 @@ const useModelState = require('./useModelState');
 const useNotifications = require('./useNotifications');
 const useOnScrollToBottom = require('./useOnScrollToBottom');
 const useProfile = require('./useProfile');
+const { default: useRouteFocused } = require('./useRouteFocused');
 const { default: useSettings } = require('./useSettings');
 const useStreamingServer = require('./useStreamingServer');
 const { default: useTimeout } = require('./useTimeout');
@@ -44,6 +46,10 @@ module.exports = {
     useToast,
     TooltipProvider,
     Tooltip,
+    DiscordProvider,
+    useDiscord,
+    EMPTY_DISCORD_TIMESTAMPS,
+    getPlaybackDiscordActivity,
     CONSTANTS,
     withCoreSuspender,
     useCoreSuspender,
@@ -61,6 +67,7 @@ module.exports = {
     useNotifications,
     useOnScrollToBottom,
     useProfile,
+    useRouteFocused,
     useSettings,
     useStreamingServer,
     useTimeout,
