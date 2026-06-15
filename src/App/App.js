@@ -5,7 +5,7 @@ const React = require('react');
 const { useTranslation } = require('react-i18next');
 const { useCore } = require('stremio/core');
 const { Router } = require('stremio-router');
-const { Chromecast, Discord, ServicesProvider, GamepadProvider } = require('stremio/services');
+const { Chromecast, ServicesProvider, GamepadProvider } = require('stremio/services');
 const { FullscreenProvider, ToastProvider, TooltipProvider, ShortcutsProvider, DiscordProvider, CONSTANTS, useBinaryState, useProfile, withCoreSuspender, onFileDrop, usePlatform } = require('stremio/common');
 const ServicesToaster = require('./ServicesToaster');
 const SearchParamsHandler = require('./SearchParamsHandler');
@@ -24,7 +24,6 @@ const App = () => {
     const [gamepadSupportEnabled, setGamepadSupportEnabled] = React.useState(false);
     const services = React.useMemo(() => {
         return {
-            discord: new Discord(),
             chromecast: new Chromecast(),
         };
     }, []);
@@ -81,13 +80,11 @@ const App = () => {
         };
         services.chromecast.on('stateChanged', onChromecastStateChange);
         services.chromecast.start();
-        services.discord.init(shell);
 
         window.services = services;
         return () => {
             services.chromecast.stop();
             services.chromecast.off('stateChanged', onChromecastStateChange);
-            services.discord.destroy();
         };
     }, []);
 

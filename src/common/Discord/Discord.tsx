@@ -1,5 +1,5 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { useServices } from 'stremio/services';
+import { usePlatform } from '../Platform';
 import useProfile from '../useProfile';
 import type { DiscordActivity as Activity } from './activity';
 
@@ -27,38 +27,34 @@ type Props = {
 };
 
 const DiscordProvider = ({ children }: Props) => {
-    const { discord } = useServices();
+    const { shell } = usePlatform();
     const profile = useProfile();
     const enabled = profile.settings?.discordRpcEnabled === true;
-    const [available, setAvailable] = useState(discord?.available === true);
+    const available = shell.active === true;
     const [connected, setConnected] = useState(false);
     const [activity, setActivityState] = useState<Activity | null>(null);
     const sentActivity = useRef<Activity | null>(null);
     const connectRequested = useRef(false);
+    const shellRef = useRef(shell);
+    shellRef.current = shell;
 
     useEffect(() => {
-        if (!discord) return;
+        if (!available) return;
 
-        const onStatusChanged = (isConnected: boolean) => {
+        const onStatus = (data: { connected: boolean }) => {
             connectRequested.current = false;
-            setConnected(isConnected);
-        };
-        const onAvailabilityChanged = (isAvailable: boolean) => {
-            setAvailable(isAvailable);
+            setConnected(data.connected === true);
         };
 
-        discord.on('statusChanged', onStatusChanged);
-        discord.on('availabilityChanged', onAvailabilityChanged);
-        setAvailable(discord.available === true);
+        shellRef.current.on('discord-status', onStatus);
 
         return () => {
-            discord.off('statusChanged', onStatusChanged);
-            discord.off('availabilityChanged', onAvailabilityChanged);
+            shellRef.current.off('discord-status', onStatus);
         };
-    }, [discord]);
+    }, [available]);
 
     useEffect(() => {
-        if (!discord || !available) {
+        if (!available) {
             connectRequested.current = false;
             setConnected(false);
             sentActivity.current = null;
@@ -68,7 +64,7 @@ const DiscordProvider = ({ children }: Props) => {
         if (!enabled) {
             connectRequested.current = false;
             if (connected) {
-                discord.disconnect();
+                shellRef.current.send('discord-disconnect', {});
             }
             sentActivity.current = null;
             return;
@@ -79,7 +75,7 @@ const DiscordProvider = ({ children }: Props) => {
         const requestConnect = () => {
             if (!connectRequested.current) {
                 connectRequested.current = true;
-                discord.connect();
+                shellRef.current.send('discord-connect', {});
             }
         };
 
@@ -89,14 +85,14 @@ const DiscordProvider = ({ children }: Props) => {
         return () => {
             window.clearInterval(interval);
         };
-    }, [available, connected, discord, enabled]);
+    }, [available, connected, enabled]);
 
     useEffect(() => {
-        if (!discord || !available || !enabled || !connected) return;
+        if (!available || !enabled || !connected) return;
 
         if (activity === null) {
             if (sentActivity.current !== null) {
-                discord.clearActivity();
+                shellRef.current.send('discord-clear-activity', {});
                 sentActivity.current = null;
             }
             return;
@@ -104,15 +100,15 @@ const DiscordProvider = ({ children }: Props) => {
 
         if (sameActivity(sentActivity.current, activity)) return;
 
-        discord.setActivity(
-            activity.state,
-            activity.details || '',
-            activity.image || null,
-            activity.startTimestamp || null,
-            activity.endTimestamp || null
-        );
+        shellRef.current.send('discord-set-activity', {
+            state: activity.state,
+            details: activity.details || '',
+            image: activity.image || null,
+            startTimestamp: activity.startTimestamp || null,
+            endTimestamp: activity.endTimestamp || null,
+        });
         sentActivity.current = activity;
-    }, [activity, available, connected, discord, enabled]);
+    }, [activity, available, connected, enabled]);
 
     const setActivity = useCallback((nextActivity: Activity | null) => {
         setActivityState((currentActivity) => sameActivity(currentActivity, nextActivity) ? currentActivity : nextActivity);
