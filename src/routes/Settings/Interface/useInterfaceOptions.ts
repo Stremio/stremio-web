@@ -12,7 +12,14 @@ const useInterfaceOptions = (profile: Profile) => {
         })),
     []);
 
-    const { sortedOptions } = useLanguageSorting(interfaceLanguageOptions);
+    const { sortedOptions } = useLanguageSorting(languageOptions);
+
+    const sortedLanguageOptions = useMemo(() => {
+        return sortedOptions.map(opt => ({
+            ...opt,
+            label: opt.label ? opt.label.charAt(0).toUpperCase() + opt.label.slice(1) : opt.label
+        }));
+    }, [sortedOptions]);
 
     const interfaceLanguageSelect = useMemo(() => ({
         options: sortedOptions,
