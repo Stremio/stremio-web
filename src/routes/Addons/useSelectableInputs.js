@@ -3,7 +3,7 @@
 const React = require('react');
 const { useNavigate } = require('react-router');
 const { useTranslate } = require('stremio/common');
-const { default: toPath } = require('stremio/common/toPath');
+const { default: toPath } = require('stremio-router/toPath');
 
 const mapSelectableInputs = (installedAddons, remoteAddons, t, navigate) => {
     const selectedCatalog = remoteAddons.selectable.catalogs.concat(installedAddons.selectable.catalogs).find(({ selected }) => selected);

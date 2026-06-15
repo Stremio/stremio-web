@@ -13,6 +13,7 @@ if (browser?.platform?.type === 'desktop') {
 
 const React = require('react');
 const ReactDOM = require('react-dom/client');
+const { HashRouter } = require('react-router-dom');
 const i18n = require('i18next');
 const { initReactI18next } = require('react-i18next');
 const stremioTranslations = require('stremio-translations');
@@ -46,7 +47,9 @@ root.render(
         <PlatformProvider>
             <CoreProvider appInfo={appInfo}>
                 <FileDropProvider>
-                    <App />
+                    <HashRouter>
+                        <App />
+                    </HashRouter>
                 </FileDropProvider>
             </CoreProvider>
         </PlatformProvider>

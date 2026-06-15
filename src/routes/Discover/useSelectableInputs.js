@@ -3,7 +3,7 @@
 const React = require('react');
 const { useNavigate } = require('react-router');
 const { useTranslate } = require('stremio/common');
-const { default: toPath } = require('stremio/common/toPath');
+const { default: toPath } = require('stremio-router/toPath');
 
 const mapSelectableInputs = (discover, t, navigate) => {
     const selectedType = discover.selectable.types.find(({ selected }) => selected);

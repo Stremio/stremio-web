@@ -3,7 +3,7 @@
 const React = require('react');
 const { useTranslation } = require('react-i18next');
 const { useNavigate } = require('react-router');
-const { default: toPath } = require('stremio/common/toPath');
+const { default: toPath } = require('stremio-router/toPath');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { default: useRouteFocused } = require('stremio/common/useRouteFocused');
