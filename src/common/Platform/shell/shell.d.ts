@@ -21,6 +21,7 @@ interface Shell {
 }
 
 type ShellState = {
+    initialized: boolean;
     version: string | null;
     windowClosed: boolean;
     windowHidden: boolean;

@@ -4,7 +4,6 @@ import createTransport from './createTransport';
 import Error from './Error';
 
 const transport = createTransport();
-window.core = transport;
 
 type Props = {
     appInfo: object,
@@ -12,7 +11,8 @@ type Props = {
 };
 
 const Core = (props: Props) => {
-    const [initialized, setInitialized] = useState(false);
+    const initialized = useRef(false);
+    const [ready, setReady] = useState(false);
     const [error, setError] = useState<Error | null>();
 
     const stateListeners = useRef<CoreStateListener[]>([]);
@@ -32,6 +32,9 @@ const Core = (props: Props) => {
     };
 
     useEffect(() => {
+        if (initialized.current) return;
+        initialized.current = true;
+
         const onCoreEvent = ({ name, args }: NewStateEvent | CoreEventEvent) => {
             switch (name) {
                 case 'NewState':
@@ -63,37 +66,31 @@ const Core = (props: Props) => {
             }
         };
 
-        if (!window.core) {
-            transport
-                .init(props.appInfo)
-                .then(() => {
-                    window.core = transport;
-                    window.onCoreEvent = onCoreEvent;
-                    setInitialized(true);
-                    setError(null);
-                })
-                .catch((e: Error) => {
-                    console.error('Failed to initialize core:', e);
-                    setInitialized(false);
-                    setError(e);
-                });
-        }
+        transport
+            .init(props.appInfo)
+            .then(() => {
+                window.core = transport;
+                window.onCoreEvent = onCoreEvent;
+                setReady(true);
+                setError(null);
+            })
+            .catch((e: Error) => {
+                console.error('Failed to initialize core:', e);
+                setReady(false);
+                setError(e);
+            });
 
         return () => {
             stateListeners.current = [];
             eventListeners.current = [];
             errorListeners.current = [];
-            setInitialized(false);
-            setError(null);
-            window.onCoreEvent = null;
-            window.core = null;
         };
     }, []);
 
     return (
         <CoreContext.Provider value={{ transport, on, off }}>
-            { error && !initialized && <Error /> }
-            { initialized && !error && props.children }
+            { error && !ready && <Error /> }
+            { ready && !error && props.children }
         </CoreContext.Provider>
     );
 };
