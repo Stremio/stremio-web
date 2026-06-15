@@ -1,6 +1,8 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 const React = require('react');
+const { useNavigate } = require('react-router');
+const { default: toPath } = require('stremio/common/toPath');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { useTranslation } = require('react-i18next');
@@ -19,6 +21,7 @@ const StreamsList = ({ className, video, type, onEpisodeSearch, ...props }) => {
     const core = useCore();
     const platform = usePlatform();
     const profile = useProfile();
+    const navigate = useNavigate();
     const streamsContainerRef = React.useRef(null);
     const [selectedAddon, setSelectedAddon] = React.useState(ALL_ADDONS_KEY);
     const onAddonSelected = React.useCallback((value) => {
@@ -30,14 +33,13 @@ const StreamsList = ({ className, video, type, onEpisodeSearch, ...props }) => {
     }, [profile, video]);
     const backButtonOnClick = React.useCallback(() => {
         if (video.deepLinks && typeof video.deepLinks.metaDetailsVideos === 'string') {
-            window.location.replace(video.deepLinks.metaDetailsVideos + (
-                typeof video.season === 'number' ?
-                    `?${new URLSearchParams({ 'season': video.season })}`
-                    :
-                    null
-            ));
+            const navigateTo = `${video.deepLinks.metaDetailsVideos}${
+                typeof video.season === 'number'
+                    ? `?${new URLSearchParams({ 'season': video.season })}`
+                    : ''}`;
+            navigate(toPath(navigateTo), { replace: true });
         } else {
-            window.history.back();
+            navigate(-1);
         }
     }, [video]);
     const countLoadingAddons = React.useMemo(() => {

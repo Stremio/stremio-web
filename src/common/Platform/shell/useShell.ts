@@ -36,6 +36,7 @@ type ShellMessage = {
 
 const useShell = (): Shell => {
     const [state, setState] = useState<ShellState>({
+        initialized: false,
         version: null,
         windowClosed: false,
         windowHidden: false,
@@ -81,11 +82,6 @@ const useShell = (): Shell => {
     }, []);
 
     useEffect(() => {
-        IPC?.postMessage(JSON.stringify({
-            id: 0,
-            type: ShellEventType.INIT,
-        }));
-
         const onMessage = (message: ShellMessage) => {
             try {
                 const event = JSON.parse(message.data) as ShellEvent;
@@ -94,8 +90,7 @@ const useShell = (): Shell => {
                     const { data } = event as ShellEventInit;
                     const [, [,,, version]] = data.transport.properties;
 
-                    setState((state) => ({ ...state, version }));
-                    send('app-ready');
+                    setState((state) => ({ ...state, initialized: true, version }));
                 }
 
                 if (event.type === ShellEventType.SIGNAL) {
@@ -109,6 +104,11 @@ const useShell = (): Shell => {
         };
 
         IPC?.addEventListener('message', onMessage);
+        IPC?.postMessage(JSON.stringify({
+            id: 0,
+            type: ShellEventType.INIT,
+        }));
+
         return () => IPC?.removeEventListener('message', onMessage);
     }, []);
 
