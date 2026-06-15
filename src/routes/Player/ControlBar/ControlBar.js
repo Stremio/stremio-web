@@ -115,6 +115,7 @@ const ControlBar = React.forwardRef(({
                 duration={duration}
                 buffered={buffered}
                 onSeekRequested={onSeekRequested}
+                playbackSpeed={playbackSpeed}
             />
             <div className={styles['control-bar-buttons-container']}>
                 <Button className={classnames(styles['control-bar-button'], { 'disabled': typeof paused !== 'boolean' })} title={paused ? t('PLAYER_PLAY') : t('PLAYER_PAUSE')} tabIndex={-1} onClick={onPlayPauseButtonClick}>
