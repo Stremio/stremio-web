@@ -3,7 +3,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const { useRouteFocused } = require('stremio-router');
+const { default: useRouteFocused } = require('stremio/common/useRouteFocused');
 const useAnimationFrame = require('stremio/common/useAnimationFrame');
 const useLiveRef = require('stremio/common/useLiveRef');
 const styles = require('./styles');

@@ -1,12 +1,14 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 const React = require('react');
+const { useNavigate } = require('react-router');
+const { useSearchParams } = require('react-router-dom');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const debounce = require('lodash.debounce');
 const { useTranslation } = require('react-i18next');
 const { default: Icon } = require('@stremio/stremio-icons/react');
-const { useRouteFocused } = require('stremio-router');
+const { default: useRouteFocused } = require('stremio/common/useRouteFocused');
 const Button = require('stremio/components/Button').default;
 const TextInput = require('stremio/components/TextInput').default;
 const { default: usePlayUrl } = require('stremio/common/usePlayUrl');
@@ -21,17 +23,18 @@ const SearchBar = React.memo(({ className, query, active }) => {
     const routeFocused = useRouteFocused();
     const searchHistory = useSearchHistory();
     const localSearch = useLocalSearch();
+    const navigate = useNavigate();
     const { handlePlayUrl } = usePlayUrl();
 
     const [historyOpen, openHistory, closeHistory, ] = useBinaryState(query === null ? true : false);
     const [currentQuery, setCurrentQuery] = React.useState(query || '');
-
+    const [, setSearchParams] = useSearchParams();
     const searchInputRef = React.useRef(null);
     const containerRef = React.useRef(null);
 
     const searchBarOnClick = React.useCallback(() => {
         if (!active) {
-            window.location = '#/search';
+            navigate('/search');
         }
     }, [active]);
 
@@ -66,7 +69,7 @@ const SearchBar = React.memo(({ className, query, active }) => {
         const searchValue = `/search?search=${encodeURIComponent(event.target.value)}`;
         setCurrentQuery(searchValue);
         if (searchInputRef.current && searchValue) {
-            window.location.hash = searchValue;
+            setSearchParams({ search: event.target.value });
             closeHistory();
         }
     }, []);
@@ -74,7 +77,8 @@ const SearchBar = React.memo(({ className, query, active }) => {
     const queryInputClear = React.useCallback(() => {
         searchInputRef.current.value = '';
         setCurrentQuery('');
-        window.location.hash = '/search';
+        setSearchParams({});
+        navigate('/search');
     }, []);
 
     const updateLocalSearchDebounced = React.useCallback(debounce((query) => {

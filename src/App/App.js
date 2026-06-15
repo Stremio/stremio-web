@@ -6,19 +6,15 @@ const { useTranslation } = require('react-i18next');
 const { useCore } = require('stremio/core');
 const { Router } = require('stremio-router');
 const { Chromecast, Discord, ServicesProvider, GamepadProvider } = require('stremio/services');
-const { NotFound } = require('stremio/routes');
 const { FullscreenProvider, ToastProvider, TooltipProvider, ShortcutsProvider, DiscordProvider, CONSTANTS, useBinaryState, useProfile, withCoreSuspender, onFileDrop, usePlatform } = require('stremio/common');
 const ServicesToaster = require('./ServicesToaster');
-const DeepLinkHandler = require('./DeepLinkHandler');
 const SearchParamsHandler = require('./SearchParamsHandler');
 const { default: UpdaterBanner } = require('./UpdaterBanner');
 const { default: ShortcutsModal } = require('./ShortcutsModal');
 const { default: GamepadModal } = require('./GamepadModal');
-const withProtectedRoutes = require('./withProtectedRoutes');
-const routerViewsConfig = require('./routerViewsConfig');
 const styles = require('./styles');
 
-const RouterWithProtectedRoutes = withProtectedRoutes(Router);
+const RouterWithProtectedRoutes = withCoreSuspender(Router);
 
 const App = () => {
     const core = useCore();
@@ -26,9 +22,6 @@ const App = () => {
     const { i18n } = useTranslation();
     const { shell } = usePlatform();
     const [gamepadSupportEnabled, setGamepadSupportEnabled] = React.useState(false);
-    const onPathNotMatch = React.useCallback(() => {
-        return NotFound;
-    }, []);
     const services = React.useMemo(() => {
         return {
             discord: new Discord(),
@@ -38,25 +31,13 @@ const App = () => {
     const [shortcutModalOpen,, closeShortcutsModal, toggleShortcutModal] = useBinaryState(false);
     const [gamepadModalOpen,, closeGamepadModal, toggleGamepadModal] = useBinaryState(false);
 
-    const onShortcut = React.useCallback((name, combo, key) => {
+    const onShortcut = React.useCallback((name) => {
         switch (name) {
             case 'shortcuts':
                 toggleShortcutModal();
                 break;
             case 'gamepadGuide':
                 toggleGamepadModal();
-                break;
-            case 'navigateSearch':
-                window.location = '#/search';
-                break;
-            case 'navigateTabs': {
-                const routes = ['', 'discover', 'library', 'calendar', 'addons', 'settings'];
-                const index = key - 1;
-                if (index in routes) window.location = `#/${routes[index]}`;
-                break;
-            }
-            case 'navigateHistory':
-                combo === 0 ? window.history.back() : window.history.forward();
                 break;
         }
     }, [toggleShortcutModal, toggleGamepadModal]);
@@ -107,31 +88,6 @@ const App = () => {
             services.chromecast.stop();
             services.chromecast.off('stateChanged', onChromecastStateChange);
             services.discord.destroy();
-        };
-    }, []);
-
-    // Handle shell events
-    React.useEffect(() => {
-        const onOpenMedia = (data) => {
-            try {
-                const { protocol, hostname, pathname, searchParams } = new URL(data);
-                if (protocol === CONSTANTS.PROTOCOL) {
-                    if (hostname.length) {
-                        const transportUrl = `https://${hostname}${pathname}`;
-                        window.location.href = `#/addons?addon=${encodeURIComponent(transportUrl)}`;
-                    } else {
-                        window.location.href = `#${pathname}?${searchParams.toString()}`;
-                    }
-                }
-            } catch (e) {
-                console.error('Failed to open media:', e);
-            }
-        };
-
-        shell.on('open-media', onOpenMedia);
-
-        return () => {
-            shell.off('open-media', onOpenMedia);
         };
     }, []);
 
@@ -201,13 +157,10 @@ const App = () => {
                                         gamepadModalOpen && <GamepadModal onClose={closeGamepadModal}/>
                                     }
                                     <ServicesToaster />
-                                    <DeepLinkHandler />
                                     <SearchParamsHandler />
                                     <UpdaterBanner className={styles['updater-banner-container']} />
                                     <RouterWithProtectedRoutes
                                         className={styles['router']}
-                                        viewsConfig={routerViewsConfig}
-                                        onPathNotMatch={onPathNotMatch}
                                     />
                                 </DiscordProvider>
                             </FullscreenProvider>
