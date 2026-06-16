@@ -8664,6 +8664,8 @@ html:not(.active-slider-within-NcgYf) .player-container-wIELK.overlayHidden-gyjI
 .routes-container {
   position: relative;
   z-index: 0;
+  height: 100%;
+  width: 100%;
 }
 .routes-container .route-container {
   position: absolute;
@@ -8871,10 +8873,6 @@ html body #app .updater-banner-container-Bk1mq {
   left: 0;
   right: 0;
   bottom: 0;
-}
-html body #app .router-_65XU {
-  width: 100%;
-  height: 100%;
 }
 @media only screen and (min-width: 2800px) {
   html {
