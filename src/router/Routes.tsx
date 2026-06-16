@@ -3,9 +3,9 @@
 import React from 'react';
 import { Routes as RRoutes, Route as RRoute, useLocation, useNavigate, matchPath } from 'react-router';
 import type { Location } from 'react-router';
-import { routerPaths } from 'stremio/common/routerPaths';
-import Route from '../Route/Route';
 import { useProfile } from 'stremio/common';
+import routerPaths from './routerPaths';
+import Route from './Route';
 
 type RouterPath = typeof routerPaths[number];
 type CachedView = {
@@ -73,18 +73,20 @@ const Routes = () => {
 
     const visibleViews = views.filter((view): view is CachedView => view !== null);
 
-    return <>
-        {
-            visibleViews.map((view, index) => (
-                <RRoutes key={view.key} location={view.location}>
-                    <RRoute
-                        path={view.route.path}
-                        element={<Route component={view.route.element} focused={index === visibleViews.length - 1} />}
-                    />
-                </RRoutes>
-            ))
-        }
-    </>;
+    return (
+        <div className={'routes-container'}>
+            {
+                visibleViews.map((view, index) => (
+                    <RRoutes key={view.key} location={view.location}>
+                        <RRoute
+                            path={view.route.path}
+                            element={<Route component={view.route.element} focused={index === visibleViews.length - 1} />}
+                        />
+                    </RRoutes>
+                ))
+            }
+        </div>
+    );
 };
 
 export default Routes;
