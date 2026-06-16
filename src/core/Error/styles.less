@@ -21,13 +21,30 @@
         opacity: 0.9;
     }
 
-    .error-message {
-        flex: none;
-        padding: 0 3rem;
-        font-size: 2rem;
-        max-height: 3.6em;
-        text-align: center;
-        color: var(--primary-foreground-color);
+    .info {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+
+        .title {
+            font-size: 2rem;
+            color: var(--primary-foreground-color);
+        }
+
+        .message {
+            position: relative;
+            max-width: 40rem;
+            display: -webkit-box;
+            font-size: 1.5rem;
+            color: var(--primary-foreground-color);
+            opacity: 0.6;
+            text-align: center;
+            text-overflow: ellipsis;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 5;
+        }
     }
 
     .buttons-container {

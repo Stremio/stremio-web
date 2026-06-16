@@ -2,7 +2,7 @@
 
 import React, { useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router';
-import toPath from 'stremio/common/toPath';
+import { toPath } from 'stremio-router';
 import Icon from '@stremio/stremio-icons/react';
 import { Button } from 'stremio/components';
 import useCalendarDate from '../useCalendarDate';

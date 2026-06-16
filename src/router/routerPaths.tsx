@@ -3,7 +3,7 @@
 import React from 'react';
 import routes from 'stremio/routes';
 
-export const routerPaths = [
+export default [
     {
         path: '/intro',
         view: 1,

@@ -5,7 +5,7 @@ const getLocationPath = (location: Location): string => location.pathname + (loc
 const getOriginPath = (origin: Location | string): string => typeof origin === 'string' ? origin : getLocationPath(origin);
 const normalizeTarget = (target: To): To => typeof target === 'string' ? toPath(target) : target;
 
-export function useNavigateWithOrigin() {
+const useNavigateWithOrigin = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -27,4 +27,6 @@ export function useNavigateWithOrigin() {
         navigateWithOrigin,
         getStoredOrigin,
     };
-}
+};
+
+export default useNavigateWithOrigin;

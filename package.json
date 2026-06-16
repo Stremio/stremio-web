@@ -13,6 +13,10 @@
         "lint": "eslint src",
         "scan-translations": "pnpx jest ./tests/i18nScan.test.js"
     },
+    "engines": {
+        "node": ">=22",
+        "pnpm": ">=11"
+    },
     "dependencies": {
         "@babel/runtime": "7.29.2",
         "@sentry/browser": "8.42.0",
