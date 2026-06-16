@@ -18,6 +18,7 @@ type Settings = {
     audioPassthrough: boolean,
     autoFrameRateMatching: boolean,
     bingeWatching: boolean,
+    discordRpcEnabled: boolean,
     hardwareDecoding: boolean,
     gpuVideoProcessing: boolean,
     videoMode: string | null,
