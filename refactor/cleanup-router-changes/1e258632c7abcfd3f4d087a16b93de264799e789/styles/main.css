@@ -30,13 +30,28 @@
   object-position: center;
   opacity: 0.9;
 }
-.error-container-EbAve .error-message-nKSwk {
-  flex: none;
-  padding: 0 3rem;
+.error-container-EbAve .info-u9EcS {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+.error-container-EbAve .info-u9EcS .title-wBlEH {
   font-size: 2rem;
-  max-height: 3.6em;
-  text-align: center;
   color: var(--primary-foreground-color);
+}
+.error-container-EbAve .info-u9EcS .message-k1ogE {
+  position: relative;
+  max-width: 40rem;
+  display: -webkit-box;
+  font-size: 1.5rem;
+  color: var(--primary-foreground-color);
+  opacity: 0.6;
+  text-align: center;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
 }
 .error-container-EbAve .buttons-container-FbMbf {
   flex: none;
