@@ -6,7 +6,11 @@ import Image from 'stremio/components/Image';
 import Button from 'stremio/components/Button';
 import styles from './styles.less';
 
-const Error = () => {
+type Props = {
+    message: string,
+};
+
+const Error = ({ message }: Props) => {
     const { t } = useTranslation();
 
     const clearData = React.useCallback(() => {
@@ -21,8 +25,13 @@ const Error = () => {
                 src={require('/assets/images/empty.png')}
                 alt={' '}
             />
-            <div className={styles['error-message']}>
-                { t('GENERIC_ERROR_MESSAGE') }
+            <div className={styles['info']}>
+                <div className={styles['title']}>
+                    {t('GENERIC_ERROR_MESSAGE')}
+                </div>
+                <div className={styles['message']}>
+                    {message}
+                </div>
             </div>
             <div className={styles['buttons-container']}>
                 <Button className={styles['button-container']} title={t('CLEAR_DATA')} onClick={clearData}>
