@@ -1,7 +1,7 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 const React = require('react');
-const { useServices } = require('stremio/services');
+const { useCore } = require('stremio/core');
 const { useModelState, useCoreSuspender } = require('stremio/common');
 
 const map = (player) => ({
@@ -33,7 +33,7 @@ const map = (player) => ({
 });
 
 const usePlayer = (urlParams) => {
-    const { core } = useServices();
+    const core = useCore();
     const { decodeStream } = useCoreSuspender();
     const stream = decodeStream(urlParams.stream);
     const action = React.useMemo(() => {

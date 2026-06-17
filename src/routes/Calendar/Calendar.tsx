@@ -1,6 +1,7 @@
 // Copyright (C) 2017-2024 Smart code 203358507
 
 import React, { useMemo, useState } from 'react';
+import { useParams } from 'react-router';
 import { useProfile, withCoreSuspender } from 'stremio/common';
 import { MainNavBars, BottomSheet } from 'stremio/components';
 import Selector from './Selector';
@@ -13,11 +14,12 @@ import useCalendarDate from './useCalendarDate';
 import styles from './Calendar.less';
 import classNames from 'classnames';
 
-type Props = {
-    urlParams: UrlParams,
-};
-
-const Calendar = ({ urlParams }: Props) => {
+const Calendar = () => {
+    const { year, month } = useParams();
+    const urlParams = React.useMemo(() => ({
+        year,
+        month
+    }), [year, month]);
     const calendar = useCalendar(urlParams);
     const profile = useProfile();
 

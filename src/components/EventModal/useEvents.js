@@ -1,14 +1,14 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
+const { useCore } = require('stremio/core');
 const useModelState = require('stremio/common/useModelState');
-const { useServices } = require('stremio/services');
 
 const map = (ctx) => ({
     ...ctx.events,
 });
 
 const useEvents = () => {
-    const { core } = useServices();
+    const core = useCore();
 
     const pullEvents = () => {
         core.transport.dispatch({

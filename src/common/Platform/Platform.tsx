@@ -1,10 +1,12 @@
 import React, { createContext, useContext } from 'react';
 import { WHITELISTED_HOSTS } from 'stremio/common/CONSTANTS';
 import { name, isMobile } from './device';
+import useShell from './shell/useShell';
 
 interface PlatformContext {
     name: string;
     isMobile: boolean;
+    shell: Shell;
     openExternal: (url: string) => void;
 }
 
@@ -15,6 +17,8 @@ type Props = {
 };
 
 const PlatformProvider = ({ children }: Props) => {
+    const shell = useShell();
+
     const openExternal = (url: string) => {
         try {
             const { hostname } = new URL(url);
@@ -30,7 +34,7 @@ const PlatformProvider = ({ children }: Props) => {
     };
 
     return (
-        <PlatformContext.Provider value={{ openExternal, name, isMobile }}>
+        <PlatformContext.Provider value={{ openExternal, shell, name, isMobile }}>
             {children}
         </PlatformContext.Provider>
     );

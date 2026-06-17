@@ -3,8 +3,8 @@
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import classnames from 'classnames';
-import { useServices } from 'stremio/services';
 import { Button } from 'stremio/components';
+import { useCore } from 'stremio/core';
 import useProfile from 'stremio/common/useProfile';
 import { withCoreSuspender } from 'stremio/common/CoreSuspender';
 import styles from './StreamingServerWarning.less';
@@ -15,7 +15,7 @@ type Props = {
 
 const StreamingServerWarning = ({ className }: Props) => {
     const { t } = useTranslation();
-    const { core } = useServices();
+    const core = useCore();
     const profile = useProfile();
 
     const createDismissalDate = (months: number, years = 0): Date => {

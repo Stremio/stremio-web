@@ -22,6 +22,7 @@ const useVideo = () => {
         muted: null,
         playbackSpeed: null,
         videoParams: null,
+        hdrInfo: null,
         audioTracks: [],
         selectedAudioTrackId: null,
         subtitlesTracks: [],
@@ -39,6 +40,7 @@ const useVideo = () => {
         extraSubtitlesTextColor: null,
         extraSubtitlesBackgroundColor: null,
         extraSubtitlesOutlineColor: null,
+        fullscreen: null,
     });
 
     const dispatch = (action, options) => {
@@ -142,6 +144,14 @@ const useVideo = () => {
         setProp('extraSubtitlesOffset', offset);
     };
 
+    const setVideoScale = (scale) => {
+        setProp('videoScale', scale);
+    };
+
+    const setFullscreen = (state) => {
+        setProp('fullscreen', state);
+    };
+
     const setSubtitlesTextColor = (color) => {
         setProp('subtitlesTextColor', color);
         setProp('extraSubtitlesTextColor', color);
@@ -238,6 +248,8 @@ const useVideo = () => {
         setSubtitlesBackgroundColor,
         setSubtitlesOutlineColor,
         setExtraSubtitlesTrack,
+        setVideoScale,
+        setFullscreen,
     };
 };
 

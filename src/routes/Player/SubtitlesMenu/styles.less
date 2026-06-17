@@ -27,7 +27,7 @@
             overflow-y: auto;
             padding: 0 1rem;
 
-            .language-option, .variant-option {
+            .language-option {
                 display: flex;
                 flex-direction: row;
                 align-items: center;
@@ -40,13 +40,10 @@
                     background-color: var(--overlay-color);
                 }
 
-                .language-label, .variant-label {
+                .language-label {
                     flex: 1;
                     font-size: 1.1rem;
                     color: var(--primary-foreground-color);
-                }
-
-                .language-label, .variant-label, .variant-origin {
                     text-wrap: nowrap;
                     text-overflow: ellipsis;
                 }
@@ -58,26 +55,6 @@
                     border-radius: 100%;
                     margin-left: 1rem;
                     background-color: var(--secondary-accent-color);
-                }
-            }
-
-            .variant-option {
-                height: 4rem;
-
-                .info {
-                    flex: 1;
-                    display: flex;
-                    flex-direction: column;
-                    gap: 0.25rem;
-
-                    .variant-label {
-                        line-height: 1.5rem;
-                    }
-
-                    .variant-origin {
-                        font-size: 0.9rem;
-                        color: var(--color-placeholder-text);
-                    }
                 }
             }
         }

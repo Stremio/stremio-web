@@ -14,12 +14,15 @@
 
     .label {
         flex: none;
-        width: 6rem;
+        width: 5.5rem;
         white-space: nowrap;
         text-overflow: ellipsis;
         direction: rtl;
         text-align: center;
+        font-size: 1.1rem;
+        font-variant-numeric: tabular-nums;
         color: var(--primary-foreground-color);
+        opacity: 0.9;
     }
 
     .slider {
@@ -33,7 +36,8 @@
 
         .slider-thumb {
             background-color: var(--primary-accent-color);
-            
+            transition: transform 150ms ease;
+
             &:after {
                 content: "";
                 position: absolute;
@@ -45,6 +49,10 @@
                 box-shadow: 0 0 0 0.25rem var(--primary-accent-color) inset;
                 filter: brightness(130%);
             }
+        }
+
+        &:hover .slider-thumb {
+            transform: translateX(-50%) scale(1.2);
         }
     }
 }

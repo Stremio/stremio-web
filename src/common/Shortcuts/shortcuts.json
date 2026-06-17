@@ -14,19 +14,24 @@
                 "combos": [["0"]]
             },
             {
+                "name": "navigateHistory",
+                "label": "SETTINGS_SHORTCUT_NAVIGATE_HISTORY",
+                "combos": [["Backspace"], ["Ctrl", "Backspace"]]
+            },
+            {
                 "name": "fullscreen",
                 "label": "SETTINGS_SHORTCUT_FULLSCREEN",
                 "combos": [["F"]]
             },
             {
-                "name": "exit",
-                "label": "SETTINGS_SHORTCUT_EXIT_BACK",
-                "combos": [["Escape"]]
-            },
-            {
                 "name": "shortcuts",
                 "label": "SETTINGS_SHORTCUT_SHORTCUTS",
                 "combos": [["Ctrl", "/"]]
+            },
+            {
+                "name": "gamepadGuide",
+                "label": "GAMEPAD_ACTION_GUIDE",
+                "combos": [["Ctrl", "G"]]
             }
         ]
     },
@@ -50,14 +55,9 @@
                 "combos": [["ArrowLeft"], ["Shift", "ArrowLeft"]]
             },
             {
-                "name": "volumeUp",
-                "label": "SETTINGS_SHORTCUT_VOLUME_UP",
-                "combos": [["ArrowUp"]]
-            },
-            {
-                "name": "volumeDown",
-                "label": "SETTINGS_SHORTCUT_VOLUME_DOWN",
-                "combos": [["ArrowDown"]]
+                "name": "volume",
+                "label": "SETTINGS_SHORTCUT_VOLUME",
+                "combos": [["ArrowUp"], ["ArrowDown"]]
             },
             {
                 "name": "mute",
@@ -73,6 +73,11 @@
                 "name": "subtitlesDelay",
                 "label": "SETTINGS_SHORTCUT_SUBTITLES_DELAY",
                 "combos": [["G"], ["H"]]
+            },
+            {
+                "name": "speed",
+                "label": "SETTINGS_SHORTCUT_PLAYBACK_SPEED",
+                "combos": [["["], ["]"]]
             },
             {
                 "name": "toggleSubtitles",
@@ -108,6 +113,11 @@
                 "name": "playNext",
                 "label": "SETTINGS_SHORTCUT_PLAY_NEXT",
                 "combos": [["Shift", "N"]]
+            },
+            {
+                "name": "exit",
+                "label": "SETTINGS_SHORTCUT_EXIT_BACK",
+                "combos": [["Escape"]]
             }
         ]
     }

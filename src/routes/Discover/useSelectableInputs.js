@@ -1,9 +1,11 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 const React = require('react');
+const { useNavigate } = require('react-router');
 const { useTranslate } = require('stremio/common');
+const { default: toPath } = require('stremio-router/toPath');
 
-const mapSelectableInputs = (discover, t) => {
+const mapSelectableInputs = (discover, t, navigate) => {
     const selectedType = discover.selectable.types.find(({ selected }) => selected);
     const typeSelect = {
         options: discover.selectable.types
@@ -18,7 +20,7 @@ const mapSelectableInputs = (discover, t) => {
             ? () => t.stringWithPrefix(discover.selected.request.path.type, 'TYPE_')
             : t.string('SELECT_TYPE'),
         onSelect: (value) => {
-            window.location = value;
+            navigate(toPath(value));
         }
     };
     const catalogSelect = {
@@ -40,7 +42,7 @@ const mapSelectableInputs = (discover, t) => {
             :
             t.string('SELECT_CATALOG'),
         onSelect: (value) => {
-            window.location =value;
+            navigate(toPath(value));
         }
     };
     const extraSelects = discover.selectable.extra.map(({ name, isRequired, options }) => {
@@ -54,16 +56,16 @@ const mapSelectableInputs = (discover, t) => {
                     value
                 })
             })),
-            value: JSON.stringify({
+            value: selectedExtra ? JSON.stringify({
                 href: selectedExtra.deepLinks.discover,
                 value: selectedExtra.value,
-            }),
+            }) : undefined,
             title: options.some(({ selected, value }) => selected && value === null) ?
                 () => t.string(name.toUpperCase())
-                : t.string(selectedExtra.value),
+                : selectedExtra ? t.string(selectedExtra.value) : () => t.string(name.toUpperCase()),
             onSelect: (value) => {
                 const { href } = JSON.parse(value);
-                window.location = href;
+                navigate(toPath(href));
             }
         };
     });
@@ -72,8 +74,9 @@ const mapSelectableInputs = (discover, t) => {
 
 const useSelectableInputs = (discover) => {
     const t = useTranslate();
+    const navigate = useNavigate();
     const selectableInputs = React.useMemo(() => {
-        return mapSelectableInputs(discover, t);
+        return mapSelectableInputs(discover, t, navigate);
     }, [discover.selected, discover.selectable]);
     return selectableInputs;
 };

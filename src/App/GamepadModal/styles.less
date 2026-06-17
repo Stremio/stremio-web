@@ -1,0 +1,220 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
+
+.gamepad-modal {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+
+    .backdrop {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: @color-background-dark5-40;
+        cursor: pointer;
+    }
+
+    .container {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        max-height: 90%;
+        max-width: 72rem;
+        width: 92%;
+        border-radius: var(--border-radius);
+        background-color: var(--modal-background-color);
+        box-shadow: var(--outer-glow);
+        overflow: hidden;
+
+        .header {
+            flex: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 5rem;
+            padding-left: 2.5rem;
+            padding-right: 1rem;
+
+            .title {
+                position: relative;
+                font-size: 1.5rem;
+                font-weight: 500;
+                color: var(--primary-foreground-color);
+            }
+
+            .close-button {
+                position: relative;
+                width: 3rem;
+                height: 3rem;
+                padding: 0.5rem;
+                border-radius: var(--border-radius);
+                z-index: 2;
+
+                .icon {
+                    display: block;
+                    width: 100%;
+                    height: 100%;
+                    color: var(--primary-foreground-color);
+                    opacity: 0.4;
+                }
+
+                &:hover, &:focus {
+                    .icon {
+                        opacity: 1;
+                        color: var(--primary-foreground-color);
+                    }
+                }
+
+                &:focus {
+                    outline-color: var(--primary-foreground-color);
+                }
+            }
+        }
+
+        .content {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3rem;
+            padding: 0 3rem;
+            padding-bottom: 3rem;
+            flex: 1;
+            min-height: 0;
+            overflow-y: auto;
+        }
+    }
+
+    @keyframes draw-stroke {
+        from { stroke-dashoffset: 2000; }
+        to { stroke-dashoffset: 0; }
+    }
+
+    @keyframes draw-line {
+        from { stroke-dashoffset: 800; }
+        to { stroke-dashoffset: 0; }
+    }
+
+    @keyframes fade-in {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .diagram {
+        flex: none;
+        width: 100%;
+        max-width: 48rem;
+        height: auto;
+
+        .anim-body {
+            stroke-dasharray: 2000;
+            stroke-dashoffset: 0;
+            animation: draw-stroke 1.4s ease-in-out;
+        }
+
+        .anim-controls {
+            animation: fade-in 0.6s ease-out 1s both;
+        }
+
+        .anim-lines {
+            line {
+                stroke-dasharray: 800;
+                stroke-dashoffset: 0;
+                animation: draw-line 0.8s ease-out 1.6s both;
+            }
+            circle {
+                animation: fade-in 0.3s ease-out 2s both;
+            }
+        }
+
+        .anim-labels {
+            animation: fade-in 0.5s ease-out 2.2s both;
+        }
+    }
+
+    .sections {
+        flex: none;
+        display: flex;
+        flex-direction: row;
+        gap: 5rem;
+        width: 100%;
+        max-width: 56rem;
+        overflow: visible;
+    }
+
+    .section {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 1.2rem;
+        overflow: visible;
+    }
+
+    .section-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--primary-foreground-color);
+        margin-bottom: 0.4rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        opacity: 0.7;
+    }
+
+    .mapping {
+        display: grid;
+        grid-template-columns: auto 1.2rem 1fr;
+        align-items: center;
+        column-gap: 0.5rem;
+    }
+
+    .kbd {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 2rem;
+        height: 1.8rem;
+        padding: 0 0.5rem;
+        border-radius: 0.35rem;
+        background-color: rgba(123, 91, 245, 0.15);
+        border: 1px solid rgba(123, 91, 245, 0.3);
+        box-shadow: none;
+        color: #c4b5fd;
+        font-size: 0.8rem;
+        font-weight: 600;
+        font-family: inherit;
+    }
+
+    .dir {
+        color: #8b7faa;
+        font-size: 1rem;
+    }
+
+    .action {
+        color: var(--primary-foreground-color);
+        font-size: 0.9rem;
+        opacity: 0.8;
+    }
+}
+
+@media only screen and (max-width: 640px) {
+    .gamepad-modal {
+        .container {
+            max-width: 95%;
+        }
+
+        .sections {
+            flex-direction: column;
+            gap: 2rem;
+        }
+    }
+}

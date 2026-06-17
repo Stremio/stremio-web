@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react';
-import { useServices } from 'stremio/services';
+import { usePlatform } from 'stremio/common';
 import { MultiselectMenu, Toggle } from 'stremio/components';
 import { Section, Option } from '../components';
 import useInterfaceOptions from './useInterfaceOptions';
@@ -9,13 +9,14 @@ type Props = {
 };
 
 const Interface = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) => {
-    const { shell } = useServices();
+    const { shell } = usePlatform();
 
     const {
         interfaceLanguageSelect,
         quitOnCloseToggle,
         escExitFullscreenToggle,
         hideSpoilersToggle,
+        gamepadSupportToggle,
     } = useInterfaceOptions(profile);
 
     return (
@@ -48,6 +49,12 @@ const Interface = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) =>
                 <Toggle
                     tabIndex={-1}
                     {...hideSpoilersToggle}
+                />
+            </Option>
+            <Option label={'SETTINGS_GAMEPAD'}>
+                <Toggle
+                    tabIndex={-1}
+                    {...gamepadSupportToggle}
                 />
             </Option>
         </Section>

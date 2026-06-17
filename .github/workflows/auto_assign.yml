@@ -14,7 +14,7 @@ jobs:
       # Auto assign PR to author
       - name: Auto Assign PR to Author
         if: github.event.pull_request.head.repo.fork == false && github.event_name == 'pull_request' && github.actor != 'dependabot[bot]'
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -34,7 +34,7 @@ jobs:
         if: github.event.pull_request.head.repo.fork == false && github.actor != 'dependabot[bot]'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |

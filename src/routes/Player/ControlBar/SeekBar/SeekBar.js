@@ -4,13 +4,13 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const debounce = require('lodash.debounce');
-const { useRouteFocused } = require('stremio-router');
+const { default: useRouteFocused } = require('stremio/common/useRouteFocused');
 const { useBinaryState } = require('stremio/common');
 const { Button, Slider } = require('stremio/components');
 const formatTime = require('./formatTime');
 const styles = require('./styles');
 
-const SeekBar = ({ className, time, duration, buffered, onSeekRequested }) => {
+const SeekBar = ({ className, time, duration, buffered, onSeekRequested, playbackSpeed }) => {
     const disabled = time === null || isNaN(time) || duration === null || isNaN(duration);
     const routeFocused = useRouteFocused();
     const [seekTime, setSeekTime] = React.useState(null);
@@ -62,7 +62,7 @@ const SeekBar = ({ className, time, duration, buffered, onSeekRequested }) => {
             <Button onClick={toggleRemainingTimeMode} tabIndex={-1}>
                 <div className={styles['label']}>
                     {remainingTimeMode && duration !== null && !isNaN(duration)
-                        ? formatTime(duration - time, '-')
+                        ? formatTime((duration - time)/playbackSpeed, '-')
                         : formatTime(duration) }
                 </div>
             </Button>
@@ -75,7 +75,8 @@ SeekBar.propTypes = {
     time: PropTypes.number,
     duration: PropTypes.number,
     buffered: PropTypes.number,
-    onSeekRequested: PropTypes.func
+    onSeekRequested: PropTypes.func,
+    playbackSpeed: PropTypes.number
 };
 
 module.exports = SeekBar;

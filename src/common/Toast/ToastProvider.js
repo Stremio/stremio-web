@@ -42,7 +42,7 @@ const ToastProvider = ({ className, children }) => {
             },
             show: (item) => {
                 if (filters.some((filter) => filter(item))) {
-                    return;
+                    return null;
                 }
 
                 const timeout = typeof item.timeout === 'number' && !isNaN(item.timeout) ?
@@ -64,6 +64,11 @@ const ToastProvider = ({ className, children }) => {
                         onClose: itemOnClose
                     }
                 });
+                return id;
+            },
+            remove: (id) => {
+                clearTimeout(id);
+                dispatch({ type: 'remove', id });
             },
             clear: () => {
                 dispatch({ type: 'clear' });

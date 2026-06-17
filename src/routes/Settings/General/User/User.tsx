@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useServices } from 'stremio/services';
+import { useCore } from 'stremio/core';
 import { Link } from '../../components';
 import styles from './User.less';
 
@@ -10,7 +10,7 @@ type Props = {
 
 const User = ({ profile }: Props) => {
     const { t } = useTranslation();
-    const { core } = useServices();
+    const core = useCore();
 
     const avatar = useMemo(() => (
         !profile.auth ?

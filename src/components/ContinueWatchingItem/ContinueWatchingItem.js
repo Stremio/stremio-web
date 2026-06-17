@@ -2,11 +2,11 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const { useServices } = require('stremio/services');
+const { useCore } = require('stremio/core');
 const LibItem = require('stremio/components/LibItem');
 
 const ContinueWatchingItem = ({ _id, notifications, ...props }) => {
-    const { core } = useServices();
+    const core = useCore();
 
     const onDismissClick = React.useCallback((event) => {
         event.preventDefault();

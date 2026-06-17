@@ -13,6 +13,11 @@ const find = (code: string) => {
     return all.find(({ alpha2, alpha3, ietf }) => [alpha2, ...alpha3, ietf].includes(code));
 };
 
+const toCode = (code: string) => {
+    const language = find(code);
+    return language?.[2] ?? code;
+};
+
 const label = (code: string) => {
     const language = find(code);
     return language?.label ?? code;
@@ -21,5 +26,6 @@ const label = (code: string) => {
 export {
     all,
     find,
+    toCode,
     label,
 };

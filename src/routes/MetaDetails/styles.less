@@ -32,7 +32,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            object-position: top left;
+            object-position: right;
             opacity: 0.3;
         }
     }
@@ -137,9 +137,16 @@
 
 @media only screen and (max-width: @minimum) {
     .metadetails-container {
+        .background-image-layer {
+            .background-image {
+                object-position: center;
+            }
+        }
+
         .metadetails-content {
             display: block;
             overflow-y: auto;
+            padding-top: calc(var(--top-overlay-size) + var(--safe-area-inset-top));
 
             .spacing {
                 display: none;

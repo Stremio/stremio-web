@@ -1,14 +1,16 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 const React = require('react');
-const { useServices } = require('stremio/services');
+const { useNavigate } = require('react-router');
+const { default: toPath } = require('stremio-router/toPath');
 const PropTypes = require('prop-types');
+const { useCore } = require('stremio/core');
 const MetaItem = require('stremio/components/MetaItem');
 const { t } = require('i18next');
 
 const LibItem = ({ _id, removable, notifications, watched, ...props }) => {
-
-    const { core } = useServices();
+    const navigate = useNavigate();
+    const core = useCore();
 
     const newVideos = React.useMemo(() => {
         const count = notifications.items?.[_id]?.length ?? 0;
@@ -50,7 +52,7 @@ const LibItem = ({ _id, removable, notifications, watched, ...props }) => {
             switch (event.value) {
                 case 'play': {
                     if (props.deepLinks && typeof props.deepLinks.player === 'string') {
-                        window.location = props.deepLinks.player;
+                        navigate(toPath(props.deepLinks.player));
                     }
 
                     break;
@@ -58,9 +60,9 @@ const LibItem = ({ _id, removable, notifications, watched, ...props }) => {
                 case 'details': {
                     if (props.deepLinks) {
                         if (typeof props.deepLinks.metaDetailsVideos === 'string') {
-                            window.location = props.deepLinks.metaDetailsVideos;
+                            navigate(toPath(props.deepLinks.metaDetailsVideos));
                         } else if (typeof props.deepLinks.metaDetailsStreams === 'string') {
-                            window.location = props.deepLinks.metaDetailsStreams;
+                            navigate(toPath(props.deepLinks.metaDetailsStreams));
                         }
                     }
 
@@ -123,7 +125,7 @@ const LibItem = ({ _id, removable, notifications, watched, ...props }) => {
         if (props.deepLinks && typeof props.deepLinks.player === 'string') {
             return (event) => {
                 event.preventDefault();
-                window.location = props.deepLinks.player;
+                navigate(toPath(props.deepLinks.player));
             };
         }
         return null;

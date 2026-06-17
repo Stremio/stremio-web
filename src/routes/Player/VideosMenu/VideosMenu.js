@@ -3,12 +3,12 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const { useServices } = require('stremio/services');
+const { useCore } = require('stremio/core');
 const { Video } = require('stremio/components');
 const styles = require('./styles');
 
 const VideosMenu = ({ className, metaItem, seriesInfo }) => {
-    const { core } = useServices();
+    const core = useCore();
 
     const onMouseDown = React.useCallback((event) => {
         event.nativeEvent.videosMenuClosePrevented = true;

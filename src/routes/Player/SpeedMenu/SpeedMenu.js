@@ -9,7 +9,7 @@ const styles = require('./styles');
 
 const RATES = Array.from(Array(8).keys(), (n) => n * 0.25 + 0.25).reverse();
 
-const SpeedMenu = ({ className, playbackSpeed, onPlaybackSpeedChanged }) => {
+const SpeedMenu = React.memo(React.forwardRef(({ className, playbackSpeed, onPlaybackSpeedChanged }, ref) => {
     const { t } = useTranslation();
     const onMouseDown = React.useCallback((event) => {
         event.nativeEvent.speedMenuClosePrevented = true;
@@ -20,7 +20,7 @@ const SpeedMenu = ({ className, playbackSpeed, onPlaybackSpeedChanged }) => {
         }
     }, [onPlaybackSpeedChanged]);
     return (
-        <div className={classnames(className, styles['speed-menu-container'])} onMouseDown={onMouseDown}>
+        <div ref={ref} className={classnames(className, styles['speed-menu-container'])} onMouseDown={onMouseDown}>
             <div className={styles['title']}>
                 { t('PLAYBACK_SPEED') }
             </div>
@@ -39,7 +39,7 @@ const SpeedMenu = ({ className, playbackSpeed, onPlaybackSpeedChanged }) => {
             </div>
         </div>
     );
-};
+}));
 
 SpeedMenu.propTypes = {
     className: PropTypes.string,

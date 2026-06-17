@@ -1,0 +1,3 @@
+type VideoState = {
+    paused?: boolean;
+};
