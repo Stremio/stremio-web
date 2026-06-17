@@ -19,6 +19,7 @@ const DAY_IN_MS = 24 * HOUR_IN_MS;
 const MIN_PROGRAM_DURATION_MS = 10 * 60 * 1000; // ignore sub-10-min filler when choosing scale
 const COMPACT_DAY_COUNT = 3;
 const COMPACT_DAY_SELECTOR_QUERY = '(max-width: 800px)';
+const NOW_REFRESH_INTERVAL_MS = 60 * 1000;
 
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -71,6 +72,7 @@ const EpgGuide = ({ requestBase, channels, catalogLoading, hasNextPage, loadNext
 
     const [selectedDay, setSelectedDay] = useState<Date | null>(null);
     const [selectedSlot, setSelectedSlot] = useState(getCurrentHalfHourIndex);
+    const [now, setNow] = useState(Date.now);
     const [compactDaySelector, setCompactDaySelector] = useState(() =>
         typeof window !== 'undefined' && window.matchMedia(COMPACT_DAY_SELECTOR_QUERY).matches,
     );
@@ -227,6 +229,12 @@ const EpgGuide = ({ requestBase, channels, catalogLoading, hasNextPage, loadNext
         return () => mediaQuery.removeEventListener('change', onChange);
     }, []);
 
+    useEffect(() => {
+        const interval = window.setInterval(() => setNow(Date.now()), NOW_REFRESH_INTERVAL_MS);
+
+        return () => window.clearInterval(interval);
+    }, []);
+
     return (
         <div className={styles['epg-guide']} onWheel={handleWheel}>
             {/* Day selector */}
@@ -340,6 +348,7 @@ const EpgGuide = ({ requestBase, channels, catalogLoading, hasNextPage, loadNext
                                         channel={channel}
                                         programs={programs[channel.id] ?? []}
                                         selectedDay={effectiveDay}
+                                        now={now}
                                         onProgramClick={onProgramSelect}
                                         pixelsPerHour={pixelsPerHour}
                                     />

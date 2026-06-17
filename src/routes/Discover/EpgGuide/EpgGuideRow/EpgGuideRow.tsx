@@ -13,11 +13,12 @@ type Props = {
     channel: EPGChannel;
     programs: EPGProgram[];
     selectedDay: Date;
+    now: number;
     onProgramClick: (program: EPGProgram, channel: EPGChannel) => void;
     pixelsPerHour?: number;
 };
 
-const EpgGuideRow = ({ channel, programs: allPrograms, selectedDay, onProgramClick, pixelsPerHour = DEFAULT_PIXELS_PER_HOUR }: Props) => {
+const EpgGuideRow = ({ channel, programs: allPrograms, selectedDay, now, onProgramClick, pixelsPerHour = DEFAULT_PIXELS_PER_HOUR }: Props) => {
     const { t } = useTranslation();
     const timeRange = useMemo(() => {
         const start = new Date(selectedDay);
@@ -34,7 +35,6 @@ const EpgGuideRow = ({ channel, programs: allPrograms, selectedDay, onProgramCli
     [allPrograms, timeRange],
     );
 
-    const now = Date.now();
     const totalPx = 24 * pixelsPerHour;
 
     return (
