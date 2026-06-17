@@ -181,6 +181,8 @@ const EpgGuide = ({ requestBase, channels, catalogLoading, hasNextPage, loadNext
     }, [effectiveDay, pixelsPerHour]);
 
     const handleSlotSelect = useCallback((value: string | number | null) => {
+        if (value === null) return;
+
         const index = Number(value);
         if (!Number.isInteger(index)) return;
 
