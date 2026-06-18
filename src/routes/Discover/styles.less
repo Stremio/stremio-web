@@ -22,10 +22,13 @@
 }
 
 :import('~stremio/components/MetaPreview/styles.less') {
+    epg-preview-container: meta-preview-container;
+    epg-preview-compact: compact;
     epg-preview-background-layer: background-image-layer;
     epg-preview-meta-info: meta-info-container;
     epg-preview-logo: logo;
     epg-preview-logo-placeholder: logo-placeholder;
+    epg-preview-runtime-release-info: runtime-release-info-container;
     epg-preview-action-buttons: action-buttons-container;
     epg-preview-show-button: show-button;
 }
@@ -265,10 +268,10 @@
 
 .epg-preview-modal {
     .epg-preview-modal-container {
-        position: relative;
-        display: block;
         width: 34rem;
         max-width: calc(100vw - 3rem);
+        height: calc(100vh - 3rem);
+        max-height: calc(100vh - 3rem);
         padding: 0;
         overflow: hidden;
         background-color: transparent;
@@ -287,27 +290,24 @@
     }
 
     .epg-preview-modal-content {
+        height: 100%;
+        min-height: 0;
         overflow: visible;
-        line-height: 0;
     }
 
     .epg-preview-modal-body {
-        display: block;
+        display: flex;
+        height: 100%;
+        min-height: 0;
         padding: 0;
         margin-bottom: 0 !important;
-        line-height: normal;
-
-        &:last-child {
-            margin-bottom: 0;
-        }
     }
 
     .epg-preview {
         box-sizing: border-box;
         width: 100%;
-        max-width: none;
-        min-height: 26rem;
-        max-height: calc(100vh - 3rem);
+        height: 100%;
+        min-height: 0;
         padding: 2rem 2.5rem;
         border-radius: var(--border-radius);
         overflow: hidden;
@@ -326,6 +326,9 @@
         }
 
         .epg-preview-meta-info {
+            flex: 1 1 0;
+            min-height: 0;
+            overflow-y: auto;
             scrollbar-color: var(--overlay-color) transparent;
 
             &::-webkit-scrollbar-thumb {
@@ -333,7 +336,16 @@
             }
         }
 
+        &.epg-preview-container.epg-preview-compact {
+            .epg-preview-meta-info {
+                .epg-preview-runtime-release-info {
+                    justify-content: space-around;
+                }
+            }
+        }
+
         .epg-preview-action-buttons {
+            flex: none;
             padding-top: 2rem;
             justify-content: flex-start;
         }
@@ -435,10 +447,11 @@
         .epg-preview-modal-container {
             width: calc(100vw - 2rem);
             max-width: calc(100vw - 2rem);
+            height: calc(100vh - 2rem);
+            max-height: calc(100vh - 2rem);
         }
 
         .epg-preview {
-            max-height: calc(100vh - 2rem);
             padding: 2rem;
         }
     }
