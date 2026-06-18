@@ -91,7 +91,7 @@ const useShell = (): Shell => {
 
                 if (event.type === ShellEventType.INIT) {
                     const { data } = event as ShellEventInit;
-                    const [, [,,, version], [,,, gpuVideoProcessingSupported] = []] = data.transport.properties;
+                    const [, [,,, version], [,,, gpuVideoProcessing] = []] = data.transport.properties;
 
                     setState((state) => ({
                         ...state,
@@ -99,7 +99,7 @@ const useShell = (): Shell => {
                         version,
                     }));
                     setCapabilities({
-                        gpuVideoProcessing: gpuVideoProcessingSupported === 'true',
+                        gpuVideoProcessing: gpuVideoProcessing === 'true',
                     });
                 }
 
