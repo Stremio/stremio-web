@@ -1,0 +1,71 @@
+// Copyright (C) 2017-2025 Smart code 203358507
+
+@import (reference) '~stremio/common/screen-sizes.less';
+
+@height: 4rem;
+@width: 4rem;
+@height-mobile: 3rem;
+@width-mobile: 3rem;
+
+
+.group-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: var(--overlay-color);
+    border-radius: 2rem;
+    height: @height;
+    width: fit-content;
+    backdrop-filter: blur(5px);
+
+    .icon-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: @height;
+        width: @width;
+        padding: 0 1rem;
+        cursor: pointer;
+        border-radius: 2rem;
+        outline: none;
+
+        .icon {
+            width: calc(@width / 2);
+            height: calc(@height / 2);
+            color: var(--primary-foreground-color);
+            opacity: 0.7;
+        }
+
+        &:hover, &:focus {
+            .icon {
+                opacity: 1;
+            }
+        }
+
+        &:focus-visible {
+            outline: 2px solid var(--primary-foreground-color);
+            outline-offset: -2px;
+        }
+
+        &.disabled {
+            pointer-events: none;
+        }
+    }
+}
+
+@media @phone-landscape {
+    .group-container {
+        height: @height-mobile;
+
+        .icon-container {
+            height: @height-mobile;
+            width: @width-mobile;
+
+            .icon {
+                width: 1.75rem;
+                height: 1.75rem;
+            }
+        }
+    }
+}

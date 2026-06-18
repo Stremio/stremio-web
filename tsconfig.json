@@ -2,11 +2,13 @@
     "compilerOptions": {
         "lib": ["ESNext", "DOM", "DOM.Iterable"],
         "jsx": "react",
-        "baseUrl": "./src",
+        "rootDir": "./src",
         "outDir": "./dist",
-        "moduleResolution": "node",
+        "module": "nodenext",
+        "moduleResolution": "nodenext",
+        "types": ["node"],
         "paths": {
-            "stremio/*": ["*"],
+            "stremio/*": ["./src/*"],
         },
         "resolveJsonModule": true,
         "esModuleInterop": true,

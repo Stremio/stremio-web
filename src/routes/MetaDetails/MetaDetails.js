@@ -1,11 +1,13 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 const React = require('react');
+const { useParams, useLocation, useNavigate } = require('react-router');
 const { useTranslation } = require('react-i18next');
-const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const { useServices } = require('stremio/services');
+const { useCore } = require('stremio/core');
+const { useContentGamepadNavigation } = require('stremio/services/GamepadNavigation');
 const { withCoreSuspender } = require('stremio/common');
+const { useNavigateWithOrigin } = require('stremio-router');
 const { VerticalNavBar, HorizontalNavBar, DelayedRenderer, Image, MetaPreview, ModalDialog } = require('stremio/components');
 const StreamsList = require('./StreamsList');
 const VideosList = require('./VideosList');
@@ -14,11 +16,23 @@ const useSeason = require('./useSeason');
 const useMetaExtensionTabs = require('./useMetaExtensionTabs');
 const styles = require('./styles');
 
-const MetaDetails = ({ urlParams, queryParams }) => {
+const GAMEPAD_HANDLER_ID = 'metadetails';
+
+const MetaDetails = () => {
+    const { type, id, videoId } = useParams();
+    const location = useLocation();
+    const navigate = useNavigate();
+    const { getStoredOrigin } = useNavigateWithOrigin();
+    const contentRef = React.useRef(null);
     const { t } = useTranslation();
-    const { core } = useServices();
+    const core = useCore();
+    const urlParams = React.useMemo(() => ({
+        type,
+        id,
+        videoId
+    }), [type, id, videoId]);
     const metaDetails = useMetaDetails(urlParams);
-    const [season, setSeason] = useSeason(urlParams, queryParams);
+    const [season, setSeason] = useSeason(urlParams);
     const [tabs, metaExtension, clearMetaExtension] = useMetaExtensionTabs(metaDetails.metaExtensions);
     const [metaPath, streamPath] = React.useMemo(() => {
         return metaDetails.selected !== null ?
@@ -64,6 +78,19 @@ const MetaDetails = ({ urlParams, queryParams }) => {
             }
         });
     }, [metaDetails]);
+    const toggleWatched = React.useCallback(() => {
+        if (metaDetails.metaItem === null || metaDetails.metaItem.content.type !== 'Ready') {
+            return;
+        }
+
+        core.transport.dispatch({
+            action: 'MetaDetails',
+            args: {
+                action: 'MarkAsWatched',
+                args: !metaDetails.metaItem.content.content.watched
+            }
+        });
+    }, [metaDetails]);
     const toggleNotifications = React.useCallback(() => {
         if (metaDetails.libraryItem) {
             core.transport.dispatch({
@@ -80,14 +107,12 @@ const MetaDetails = ({ urlParams, queryParams }) => {
     }, [setSeason]);
     const handleEpisodeSearch = React.useCallback((season, episode) => {
         const searchVideoHash = encodeURIComponent(`${urlParams.id}:${season}:${episode}`);
-        const url = window.location.hash;
-
+        const url = location.pathname;
         const searchVideoPath = (urlParams.videoId === undefined || urlParams.videoId === null || urlParams.videoId === '') ?
             url + (!url.endsWith('/') ? '/' : '') + searchVideoHash
             : url.replace(encodeURIComponent(urlParams.videoId), searchVideoHash);
-
-        window.location = searchVideoPath;
-    }, [urlParams, window.location]);
+        navigate(searchVideoPath, { replace: true });
+    }, [urlParams, location]);
 
     const renderBackgroundImageFallback = React.useCallback(() => null, []);
     const renderBackground = React.useMemo(() => !!(
@@ -97,7 +122,9 @@ const MetaDetails = ({ urlParams, queryParams }) => {
         typeof metaDetails.metaItem.content.content?.background === 'string' &&
         metaDetails.metaItem.content.content.background.length > 0
     ), [metaPath, metaDetails]);
+    const originPath = React.useMemo(() => getStoredOrigin(), [getStoredOrigin]);
 
+    useContentGamepadNavigation(contentRef, GAMEPAD_HANDLER_ID);
     return (
         <div className={styles['metadetails-container']}>
             {
@@ -118,8 +145,9 @@ const MetaDetails = ({ urlParams, queryParams }) => {
                 backButton={true}
                 fullscreenButton={true}
                 navMenu={true}
+                originPath={originPath}
             />
-            <div className={styles['metadetails-content']}>
+            <div ref={contentRef} className={styles['metadetails-content']}>
                 {
                     tabs.length > 0 ?
                         <VerticalNavBar
@@ -172,6 +200,8 @@ const MetaDetails = ({ urlParams, queryParams }) => {
                                             trailerStreams={metaDetails.metaItem.content.content.trailerStreams}
                                             inLibrary={metaDetails.metaItem.content.content.inLibrary}
                                             toggleInLibrary={metaDetails.metaItem.content.content.inLibrary ? removeFromLibrary : addToLibrary}
+                                            watched={metaDetails.metaItem.content.content.watched}
+                                            toggleWatched={toggleWatched}
                                             metaId={metaDetails.metaItem.content.content.id}
                                             ratingInfo={metaDetails.ratingInfo}
                                         />
@@ -219,15 +249,6 @@ const MetaDetails = ({ urlParams, queryParams }) => {
             }
         </div>
     );
-};
-
-MetaDetails.propTypes = {
-    urlParams: PropTypes.shape({
-        type: PropTypes.string,
-        id: PropTypes.string,
-        videoId: PropTypes.string
-    }),
-    queryParams: PropTypes.instanceOf(URLSearchParams)
 };
 
 const MetaDetailsFallback = () => (

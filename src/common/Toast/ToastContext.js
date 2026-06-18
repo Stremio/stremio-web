@@ -6,6 +6,7 @@ const React = require('react');
 
 const ToastContext = React.createContext({
     show: () => { },
+    remove: () => { },
     clear: () => { }
 });
 

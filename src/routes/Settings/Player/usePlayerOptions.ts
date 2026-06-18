@@ -1,13 +1,13 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useCore } from 'stremio/core';
 import { CONSTANTS, languageNames, useLanguageSorting, usePlatform } from 'stremio/common';
-import { useServices } from 'stremio/services';
 
 const LANGUAGES_NAMES: Record<string, string> = languageNames;
 
 const usePlayerOptions = (profile: Profile) => {
     const { t } = useTranslation();
-    const { core } = useServices();
+    const core = useCore();
     const platform = usePlatform();
 
     const languageOptions = useMemo(() => Object.keys(LANGUAGES_NAMES).map((code) => ({

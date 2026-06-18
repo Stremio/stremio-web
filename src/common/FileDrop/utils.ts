@@ -14,6 +14,11 @@ const isFileType = (buffer: ArrayBuffer, type: string) => {
     });
 };
 
+const isFileTypeSupported = (buffer: ArrayBuffer) => {
+    return Object.keys(SIGNATURES).some((type) => isFileType(buffer, type));
+};
+
 export {
     isFileType,
+    isFileTypeSupported,
 };

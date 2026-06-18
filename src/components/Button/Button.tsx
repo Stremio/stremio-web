@@ -10,6 +10,7 @@ type Props = {
     style?: object,
     href?: string,
     target?: string
+    download?: string,
     title?: string,
     disabled?: boolean,
     tabIndex?: number,

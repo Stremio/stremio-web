@@ -1,10 +1,12 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 const React = require('react');
-const { useServices } = require('stremio/services');
+const { useCore } = require('stremio/core');
 
 const useStatistics = (player, streamingServer) => {
-    const { core } = useServices();
+    const core = useCore();
+
+    const [progress, setProgress] = React.useState(0);
 
     const stream = React.useMemo(() => {
         if (player.stream?.type === 'Ready') {
@@ -49,6 +51,20 @@ const useStatistics = (player, streamingServer) => {
             0;
     }, [statistics]);
 
+    React.useEffect(() => {
+        statistics && setProgress(() => {
+            const MB = 1024 * 1024;
+            const peerScore = Math.min(1, statistics.peers / 8) * 20;
+
+            const minDownload = Math.min(8 * MB, Math.max(2 * MB, statistics.streamLen * 0.008));
+            const downloadedScore = Math.min(1, statistics.downloaded / minDownload) * 70;
+
+            const speedScore = Math.min(1, statistics.downloadSpeed / (1 * MB)) * 10;
+
+            return Math.min(99, peerScore + downloadedScore + speedScore);
+        });
+    }, [statistics]);
+
     const getStatistics = React.useCallback(() => {
         if (stream) {
             const { infoHash, fileIdx } = stream;
@@ -73,11 +89,16 @@ const useStatistics = (player, streamingServer) => {
         return () => clearInterval(interval);
     }, [getStatistics]);
 
+    React.useEffect(() => {
+        setProgress(infoHash ? 0 : 100);
+    }, [infoHash]);
+
     return {
         infoHash,
         peers,
         speed,
         completed,
+        progress,
     };
 };
 

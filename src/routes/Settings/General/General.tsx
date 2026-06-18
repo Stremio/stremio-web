@@ -1,8 +1,8 @@
 import React, { forwardRef, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button } from 'stremio/components';
-import { useServices } from 'stremio/services';
-import { usePlatform, useToast } from 'stremio/common';
+import { useCore } from 'stremio/core';
+import { Button, Toggle } from 'stremio/components';
+import { usePlatform, useToast, useDiscord } from 'stremio/common';
 import { Section, Option, Link } from '../components';
 import User from './User';
 import useDataExport from './useDataExport';
@@ -14,9 +14,10 @@ type Props = {
 
 const General = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) => {
     const { t } = useTranslation();
-    const { core } = useServices();
+    const core = useCore();
     const platform = usePlatform();
     const toast = useToast();
+    const discord = useDiscord();
     const [dataExport, loadDataExport] = useDataExport();
 
     const [traktAuthStarted, setTraktAuthStarted] = useState(false);
@@ -60,6 +61,22 @@ const General = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) => {
             });
         }
     }, [isTraktAuthenticated, profile.auth]);
+
+    const discordToggle = useMemo(() => ({
+        checked: profile.settings.discordRpcEnabled === true,
+        onClick: () => {
+            core.transport.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'UpdateSettings',
+                    args: {
+                        ...profile.settings,
+                        discordRpcEnabled: !profile.settings.discordRpcEnabled
+                    }
+                }
+            });
+        }
+    }), [profile.settings]);
 
     useEffect(() => {
         if (dataExport.exportUrl) {
@@ -134,6 +151,15 @@ const General = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) => {
                     {isTraktAuthenticated ? t('LOG_OUT') : t('SETTINGS_TRAKT_AUTHENTICATE')}
                 </Button>
             </Option>
+            {
+                discord.available &&
+                    <Option className={styles['discord-container']} icon={'discord'} label={'SETTINGS_DISCORD'}>
+                        <Toggle
+                            tabIndex={-1}
+                            {...discordToggle}
+                        />
+                    </Option>
+            }
         </Section>
     </>;
 });

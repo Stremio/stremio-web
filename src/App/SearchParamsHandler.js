@@ -2,11 +2,11 @@
 
 const React = require('react');
 const { deepEqual } = require('fast-equals');
+const { useCore } = require('stremio/core');
 const { withCoreSuspender, useProfile, useToast } = require('stremio/common');
-const { useServices } = require('stremio/services');
 
 const SearchParamsHandler = () => {
-    const { core } = useServices();
+    const core = useCore();
     const profile = useProfile();
     const toast = useToast();
 

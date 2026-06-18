@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useServices } from 'stremio/services';
+import { usePlatform } from 'stremio/common';
 import { Option, Section } from '../components';
 import styles from './Info.less';
 
@@ -9,7 +9,7 @@ type Props = {
 };
 
 const Info = ({ streamingServer }: Props) => {
-    const { shell } = useServices();
+    const { shell } = usePlatform();
     const { t } = useTranslation();
 
     const settings = useMemo(() => (
@@ -38,10 +38,10 @@ const Info = ({ streamingServer }: Props) => {
                     </Option>
             }
             {
-                typeof shell?.transport?.props?.shellVersion === 'string' &&
+                typeof shell.state.version === 'string' &&
                     <Option label={t('SETTINGS_SHELL_VERSION')}>
                         <div className={styles['label']}>
-                            {shell.transport.props.shellVersion}
+                            {shell.state.version}
                         </div>
                     </Option>
             }

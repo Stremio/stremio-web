@@ -4,12 +4,12 @@ const React = require('react');
 const throttle = require('lodash.throttle');
 const { deepEqual } = require('fast-equals');
 const intersection = require('lodash.intersection');
+const { useCore } = require('stremio/core');
 const { useCoreSuspender } = require('stremio/common/CoreSuspender');
-const { useRouteFocused } = require('stremio-router');
-const { useServices } = require('stremio/services');
+const { default: useRouteFocused } = require('stremio/common/useRouteFocused');
 
 const useModelState = ({ action, ...args }) => {
-    const { core } = useServices();
+    const core = useCore();
     const routeFocused = useRouteFocused();
     const mountedRef = React.useRef(false);
     const [model, timeout, map, deps] = React.useMemo(() => {
@@ -25,24 +25,21 @@ const useModelState = ({ action, ...args }) => {
         },
         undefined,
         () => {
-            if (typeof map === 'function') {
-                return map(getState(model));
-            } else {
-                return getState(model);
-            }
+            const state = getState(model);
+            return typeof map === 'function' ? map(state) : state;
         }
     );
-    React.useInsertionEffect(() => {
+    React.useEffect(() => {
         if (action) {
             core.transport.dispatch(action, model);
         }
     }, [action]);
-    React.useInsertionEffect(() => {
+    React.useEffect(() => {
         return () => {
             core.transport.dispatch({ action: 'Unload' }, model);
         };
     }, []);
-    React.useInsertionEffect(() => {
+    React.useEffect(() => {
         const onNewState = async (models) => {
             if (models.indexOf(model) === -1 && (!Array.isArray(deps) || intersection(deps, models).length === 0)) {
                 return;
@@ -57,17 +54,17 @@ const useModelState = ({ action, ...args }) => {
         };
         const onNewStateThrottled = throttle(onNewState, timeout);
         if (routeFocused) {
-            core.transport.on('NewState', onNewStateThrottled);
+            core.on('state', onNewStateThrottled);
             if (mountedRef.current) {
                 onNewState([model]);
             }
         }
         return () => {
             onNewStateThrottled.cancel();
-            core.transport.off('NewState', onNewStateThrottled);
+            core.off('state', onNewStateThrottled);
         };
     }, [routeFocused]);
-    React.useInsertionEffect(() => {
+    React.useEffect(() => {
         mountedRef.current = true;
     }, []);
     return state;

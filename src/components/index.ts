@@ -30,6 +30,7 @@ import TextInput from './TextInput';
 import Toggle from './Toggle';
 import Transition from './Transition';
 import Video from './Video';
+import ActionsGroup from './ActionsGroup';
 
 export {
     AddonDetailsModal,
@@ -65,4 +66,5 @@ export {
     Toggle,
     Transition,
     Video,
+    ActionsGroup
 };

@@ -14,6 +14,7 @@ const Keys = ({ keys }: Props) => {
         'Space': t('SETTINGS_SHORTCUT_SPACE'),
         'Ctrl': t('SETTINGS_SHORTCUT_CTRL'),
         'Escape': t('SETTINGS_SHORTCUT_ESC'),
+        'Backspace': t('SETTINGS_SHORTCUT_BACKSPACE'),
         'ArrowUp': '↑',
         'ArrowDown': '↓',
         'ArrowLeft': '←',

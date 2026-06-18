@@ -2,6 +2,8 @@
 
 const CHROMECAST_RECEIVER_APP_ID = '1634F54B';
 const DEFAULT_STREAMING_SERVER_URL = 'http://127.0.0.1:11470/';
+const DEFAULT_SUBTITLES_LANGUAGE = 'eng';
+const LOCAL_SUBTITLES_LANGUAGE = 'local';
 const SUBTITLES_SIZES = [75, 100, 125, 150, 175, 200, 250];
 const SUBTITLES_FONTS = ['PlusJakartaSans', 'Arial', 'Halvetica', 'Times New Roman', 'Verdana', 'Courier', 'Lucida Console', 'sans-serif', 'serif', 'monospace'];
 const SEEK_TIME_DURATIONS = [3000, 5000, 10000, 15000, 20000, 30000];
@@ -44,6 +46,7 @@ const ICON_FOR_TYPE = new Map([
 const MIME_SIGNATURES = {
     'application/x-subrip': ['310D0A', '310A'],
     'text/vtt': ['574542565454'],
+    'application/x-bittorrent': ['64'],
 };
 
 const SUPPORTED_LOCAL_SUBTITLES = [
@@ -121,6 +124,8 @@ const PROTOCOL = 'stremio:';
 module.exports = {
     CHROMECAST_RECEIVER_APP_ID,
     DEFAULT_STREAMING_SERVER_URL,
+    DEFAULT_SUBTITLES_LANGUAGE,
+    LOCAL_SUBTITLES_LANGUAGE,
     SUBTITLES_SIZES,
     SUBTITLES_FONTS,
     SEEK_TIME_DURATIONS,

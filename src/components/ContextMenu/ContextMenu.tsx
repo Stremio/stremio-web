@@ -1,22 +1,26 @@
 import React, { memo, RefObject, useCallback, useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
+import Transition from '../Transition';
 import styles from './ContextMenu.less';
 
 const PADDING = 8;
 
 type Coordinates = [number, number];
 type Size = [number, number];
+type Lock = 'top' | 'right' | 'bottom' | 'left';
 
 type Props = {
     children: React.ReactNode,
     on: RefObject<HTMLElement>[],
     autoClose: boolean,
+    lock?: Lock,
 };
 
-const ContextMenu = ({ children, on, autoClose }: Props) => {
+const ContextMenu = ({ children, on, autoClose, lock }: Props) => {
     const [active, setActive] = useState(false);
     const [position, setPosition] = useState<Coordinates>([0, 0]);
     const [containerSize, setContainerSize] = useState<Size>([0, 0]);
+    const [triggerRect, setTriggerRect] = useState<DOMRect | null>(null);
 
     const ref = useCallback((element: HTMLDivElement) => {
         element && setContainerSize([element.offsetWidth, element.offsetHeight]);
@@ -25,7 +29,32 @@ const ContextMenu = ({ children, on, autoClose }: Props) => {
     const style = useMemo(() => {
         const [viewportWidth, viewportHeight] = [window.innerWidth, window.innerHeight];
         const [containerWidth, containerHeight] = containerSize;
-        const [x, y] = position;
+
+        let x: number;
+        let y: number;
+
+        if (lock && triggerRect) {
+            switch (lock) {
+                case 'top':
+                    x = triggerRect.left;
+                    y = triggerRect.top - containerHeight;
+                    break;
+                case 'bottom':
+                    x = triggerRect.left;
+                    y = triggerRect.bottom;
+                    break;
+                case 'left':
+                    x = triggerRect.left - containerWidth;
+                    y = triggerRect.top;
+                    break;
+                case 'right':
+                    x = triggerRect.right;
+                    y = triggerRect.top;
+                    break;
+            }
+        } else {
+            [x, y] = position;
+        }
 
         const left = Math.max(
             PADDING,
@@ -44,10 +73,9 @@ const ContextMenu = ({ children, on, autoClose }: Props) => {
         );
 
         return { top, left };
-    }, [position, containerSize]);
+    }, [position, containerSize, lock, triggerRect]);
 
     const close = () => {
-        setPosition([0, 0]);
         setActive(false);
     };
 
@@ -55,12 +83,17 @@ const ContextMenu = ({ children, on, autoClose }: Props) => {
         event.stopPropagation();
     };
 
-    const onContextMenu = (event: MouseEvent) => {
+    const onContextMenu = useCallback((event: MouseEvent) => {
         event.preventDefault();
 
-        setPosition([event.clientX, event.clientY]);
+        if (lock) {
+            const target = event.currentTarget as HTMLElement;
+            setTriggerRect(target.getBoundingClientRect());
+        } else {
+            setPosition([event.clientX, event.clientY]);
+        }
         setActive(true);
-    };
+    }, [lock]);
 
     const handleKeyDown = useCallback((event: KeyboardEvent) => event.key === 'Escape' && close(), []);
 
@@ -76,25 +109,27 @@ const ContextMenu = ({ children, on, autoClose }: Props) => {
             on.forEach((ref) => ref.current && ref.current.removeEventListener('contextmenu', onContextMenu));
             document.removeEventListener('keydown', handleKeyDown);
         };
-    }, [on]);
+    }, [on, onContextMenu, handleKeyDown]);
 
-    return active && createPortal((
-        <div
-            className={styles['context-menu-container']}
-            onMouseDown={close}
-            onTouchStart={close}
-        >
+    return createPortal((
+        <Transition when={active} name={'fade'}>
             <div
-                ref={ref}
-                className={styles['context-menu']}
-                style={style}
-                onMouseDown={stopPropagation}
-                onTouchStart={stopPropagation}
-                onClick={onClick}
+                className={styles['context-menu-container']}
+                onMouseDown={close}
+                onTouchStart={close}
             >
-                {children}
+                <div
+                    ref={ref}
+                    className={styles['context-menu']}
+                    style={style}
+                    onMouseDown={stopPropagation}
+                    onTouchStart={stopPropagation}
+                    onClick={onClick}
+                >
+                    {children}
+                </div>
             </div>
-        </div>
+        </Transition>
     ), document.body);
 };
 
