@@ -17,7 +17,7 @@ export type EPGProgram = {
     thumbnail?: string | null;
     links?: Link[];
     runtime: string | null;
-    releaseInfo: string | null;
+    releaseInfo: Date | null;
     released?: Date | null;
     startTime: Date;
     endTime: Date;
@@ -129,7 +129,7 @@ const normalizeProgram = (video: VideoLike, channel: EPGChannel): EPGProgram | n
         thumbnail: video.thumbnail ?? null,
         links: video.links,
         runtime: durationMinutes > 0 ? `${durationMinutes} min` : null,
-        releaseInfo: channel.name,
+        releaseInfo: released !== null && !Number.isNaN(released.getTime()) ? released : null,
         released: released !== null && !Number.isNaN(released.getTime()) ? released : null,
         startTime,
         endTime,
