@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react';
 
+const DAY_IN_MS = 24 * 60 * 60 * 1000;
+
 export type EPGChannel = {
     id: string;
     type: string;
@@ -108,6 +110,21 @@ const programDeepLinks = (video: VideoLike, channel: EPGChannel): MetaItemDeepLi
     };
 };
 
+const normalizeReleased = (released?: string): Date | null => {
+    if (typeof released !== 'string' || released.trim().length === 0) {
+        return null;
+    }
+
+    const date = new Date(released);
+    if (Number.isNaN(date.getTime())) {
+        return null;
+    }
+
+    // Some feeds use the Unix epoch as "unknown release date"; in local
+    // timezones it can render as 1969, which looks like a real release year.
+    return Math.abs(date.getTime()) <= DAY_IN_MS ? null : date;
+};
+
 const normalizeProgram = (video: VideoLike, channel: EPGChannel): EPGProgram | null => {
     if (typeof video.startTime !== 'string' || typeof video.endTime !== 'string') {
         return null;
@@ -119,7 +136,7 @@ const normalizeProgram = (video: VideoLike, channel: EPGChannel): EPGProgram | n
         return null;
     }
 
-    const released = typeof video.released === 'string' ? new Date(video.released) : null;
+    const released = normalizeReleased(video.released);
     const durationMinutes = Math.round((endTime.getTime() - startTime.getTime()) / (60 * 1000));
 
     return {
@@ -129,8 +146,8 @@ const normalizeProgram = (video: VideoLike, channel: EPGChannel): EPGProgram | n
         thumbnail: video.thumbnail ?? null,
         links: video.links,
         runtime: durationMinutes > 0 ? `${durationMinutes} min` : null,
-        releaseInfo: released !== null && !Number.isNaN(released.getTime()) ? released : null,
-        released: released !== null && !Number.isNaN(released.getTime()) ? released : null,
+        releaseInfo: released,
+        released,
         startTime,
         endTime,
         channelId: channel.id,
