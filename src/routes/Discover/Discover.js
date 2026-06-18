@@ -15,6 +15,7 @@ const { default: EpgGuide } = require('./EpgGuide');
 const styles = require('./styles');
 
 const SCROLL_TO_BOTTOM_THRESHOLD = 400;
+const EPG_NOW_REFRESH_INTERVAL = 60 * 1000;
 
 const Discover = ({ urlParams, queryParams }) => {
     const { t } = useTranslation();
@@ -29,6 +30,7 @@ const Discover = ({ urlParams, queryParams }) => {
     const metaPreviewRef = React.useRef();
 
     const [selectedEpgProgram, setSelectedEpgProgram] = React.useState(null);
+    const [epgNow, setEpgNow] = React.useState(Date.now);
     const installedAddons = useInstalledAddons({ transportUrl: null, catalogId: null });
     const selectedAddon = React.useMemo(() => {
         const selected = discover.selectable.catalogs.find(({ selected }) => selected)?.addon ?? null;
@@ -127,6 +129,16 @@ const Discover = ({ urlParams, queryParams }) => {
         setSelectedMetaItemIndex(0);
         setSelectedEpgProgram(null);
     }, [discover.selected]);
+    React.useEffect(() => {
+        if (!isEpgLayout) {
+            return undefined;
+        }
+
+        setEpgNow(Date.now());
+        const interval = window.setInterval(() => setEpgNow(Date.now()), EPG_NOW_REFRESH_INTERVAL);
+
+        return () => window.clearInterval(interval);
+    }, [isEpgLayout]);
 
     const renderEmptyState = () => (
         <DelayedRenderer delay={500}>
@@ -156,6 +168,7 @@ const Discover = ({ urlParams, queryParams }) => {
                     catalogLoading={discover.catalog.content.type === 'Loading'}
                     hasNextPage={hasNextPage}
                     loadNextPage={loadNextPage}
+                    now={epgNow}
                     onProgramSelect={onProgramSelect}
                 />
             );
@@ -238,6 +251,7 @@ const Discover = ({ urlParams, queryParams }) => {
         }
 
         const { program } = selectedEpgProgram;
+        const isCurrentProgram = program.startTime.getTime() <= epgNow && epgNow < program.endTime.getTime();
 
         return (
             <ModalDialog
@@ -256,7 +270,7 @@ const Discover = ({ urlParams, queryParams }) => {
                     released={program.released}
                     description={program.overview}
                     links={program.links}
-                    deepLinks={program.deepLinks}
+                    deepLinks={isCurrentProgram ? program.deepLinks : undefined}
                 />
             </ModalDialog>
         );
