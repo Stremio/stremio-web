@@ -1,13 +1,11 @@
 import React, { createContext, useContext } from 'react';
 import { WHITELISTED_HOSTS } from 'stremio/common/CONSTANTS';
 import { name, isMobile } from './device';
-import { supportsGpuVideoProcessing } from './gpu';
 import useShell from './shell/useShell';
 
 interface PlatformContext {
     name: string;
     isMobile: boolean;
-    supportsGpuVideoProcessing: boolean;
     shell: Shell;
     openExternal: (url: string) => void;
 }
@@ -36,7 +34,7 @@ const PlatformProvider = ({ children }: Props) => {
     };
 
     return (
-        <PlatformContext.Provider value={{ openExternal, shell, name, isMobile, supportsGpuVideoProcessing }}>
+        <PlatformContext.Provider value={{ openExternal, shell, name, isMobile }}>
             {children}
         </PlatformContext.Provider>
     );

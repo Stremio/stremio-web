@@ -41,6 +41,9 @@ const useShell = (): Shell => {
         windowClosed: false,
         windowHidden: false,
     });
+    const [capabilities, setCapabilities] = useState<ShellCapabilities>({
+        gpuVideoProcessing: false,
+    });
 
     const on = (name: string, listener: (arg: any) => void) => events.on(name, listener);
     const off = (name: string, listener: (arg: any) => void) => events.off(name, listener);
@@ -88,9 +91,16 @@ const useShell = (): Shell => {
 
                 if (event.type === ShellEventType.INIT) {
                     const { data } = event as ShellEventInit;
-                    const [, [,,, version]] = data.transport.properties;
+                    const [, [,,, version], [,,, gpuVideoProcessingSupported] = []] = data.transport.properties;
 
-                    setState((state) => ({ ...state, initialized: true, version }));
+                    setState((state) => ({
+                        ...state,
+                        initialized: true,
+                        version,
+                    }));
+                    setCapabilities({
+                        gpuVideoProcessing: gpuVideoProcessingSupported === 'true',
+                    });
                 }
 
                 if (event.type === ShellEventType.SIGNAL) {
@@ -118,6 +128,7 @@ const useShell = (): Shell => {
         on,
         off,
         state,
+        capabilities,
     };
 };
 
