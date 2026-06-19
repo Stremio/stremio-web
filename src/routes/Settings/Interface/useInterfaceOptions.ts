@@ -12,10 +12,8 @@ const useInterfaceOptions = (profile: Profile) => {
         })),
     []);
 
-    // 1. Περνάμε τη σωστή μεταβλητή στο hook ταξινόμησης
     const { sortedOptions } = useLanguageSorting(interfaceLanguageOptions);
 
-    // 2. Κάνουμε capitalize το πρώτο γράμμα
     const sortedLanguageOptions = useMemo(() => {
         return sortedOptions.map((opt) => ({
             ...opt,
@@ -24,7 +22,7 @@ const useInterfaceOptions = (profile: Profile) => {
     }, [sortedOptions]);
 
     const interfaceLanguageSelect = useMemo(() => ({
-        // 3. Χρησιμοποιούμε το διορθωμένο array με τα κεφαλαία γράμματα
+        
         options: sortedLanguageOptions,
         value:
             interfaceLanguages.find(({ codes }) => codes[1] === profile.settings.interfaceLanguage)?.codes?.[0] ||
@@ -41,7 +39,7 @@ const useInterfaceOptions = (profile: Profile) => {
                 }
             });
         }
-    // 4. Προσθέτουμε το σωστό dependency στο useMemo
+    
     }), [profile.settings, sortedLanguageOptions]);
 
     const escExitFullscreenToggle = useMemo(() => ({
