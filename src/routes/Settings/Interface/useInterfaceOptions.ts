@@ -39,7 +39,7 @@ const useInterfaceOptions = (profile: Profile) => {
                 }
             });
         }
-    
+
     }), [profile.settings, sortedLanguageOptions]);
 
     const escExitFullscreenToggle = useMemo(() => ({
