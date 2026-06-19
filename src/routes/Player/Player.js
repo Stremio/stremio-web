@@ -21,12 +21,14 @@ const ControlBar = require('./ControlBar');
 const NextVideoPopup = require('./NextVideoPopup');
 const StatisticsMenu = require('./StatisticsMenu');
 const OptionsMenu = require('./OptionsMenu');
+const { default: CastDevicesMenu } = require('./CastDevicesMenu');
 const SubtitlesMenu = require('./SubtitlesMenu');
 const { default: AudioMenu } = require('./AudioMenu');
 const SpeedMenu = require('./SpeedMenu');
 const { default: SideDrawerButton } = require('./SideDrawerButton');
 const { default: SideDrawer } = require('./SideDrawer');
 const usePlayer = require('./usePlayer');
+const { default: usePlayOnDevice } = require('./usePlayOnDevice');
 const useStatistics = require('./useStatistics');
 const useVideo = require('./useVideo');
 const { default: useSubtitles } = require('./useSubtitles');
@@ -39,6 +41,8 @@ const findTrackByLang = (tracks, lang) => tracks.find((track) => track.lang === 
 const findTrackById = (tracks, id) => tracks.find((track) => track.id === id);
 
 const GAMEPAD_HANDLER_ID = 'player';
+
+const CAST_DEVICES_REFRESH_INTERVAL = 5000;
 
 const Player = () => {
     const { stream, streamTransportUrl, metaTransportUrl, type, id, videoId } = useParams();
@@ -97,12 +101,13 @@ const Player = () => {
     const [audioMenuOpen, , closeAudioMenu, toggleAudioMenu] = useBinaryState(false);
     const [speedMenuOpen, , closeSpeedMenu, toggleSpeedMenu] = useBinaryState(false);
     const [statisticsMenuOpen, openStatisticsMenu, closeStatisticsMenu, toggleStatisticsMenu] = useBinaryState(false);
+    const [castDevicesMenuOpen, , closeCastDevicesMenu, toggleCastDevicesMenu] = useBinaryState(false);
     const [nextVideoPopupOpen, openNextVideoPopup, closeNextVideoPopup] = useBinaryState(false);
     const [sideDrawerOpen, , closeSideDrawer, toggleSideDrawer] = useBinaryState(false);
 
     const menusOpen = React.useMemo(() => {
-        return optionsMenuOpen || subtitlesMenuOpen || audioMenuOpen || speedMenuOpen || statisticsMenuOpen || sideDrawerOpen || nextVideoPopupOpen;
-    }, [optionsMenuOpen, subtitlesMenuOpen, audioMenuOpen, speedMenuOpen, statisticsMenuOpen, sideDrawerOpen, nextVideoPopupOpen]);
+        return optionsMenuOpen || subtitlesMenuOpen || audioMenuOpen || speedMenuOpen || statisticsMenuOpen || castDevicesMenuOpen || sideDrawerOpen || nextVideoPopupOpen;
+    }, [optionsMenuOpen, subtitlesMenuOpen, audioMenuOpen, speedMenuOpen, statisticsMenuOpen, castDevicesMenuOpen, sideDrawerOpen, nextVideoPopupOpen]);
 
     const closeMenus = React.useCallback(() => {
         closeOptionsMenu();
@@ -110,8 +115,46 @@ const Player = () => {
         closeAudioMenu();
         closeSpeedMenu();
         closeStatisticsMenu();
+        closeCastDevicesMenu();
         closeSideDrawer();
     }, []);
+
+    const castDevices = React.useMemo(() => {
+        return playbackDevices
+            .filter(({ type }) => type === 'chromecast' || type === 'tv')
+            .sort((a, b) => a.type === b.type ? 0 : a.type === 'chromecast' ? -1 : 1);
+    }, [playbackDevices]);
+    const [castDevicesSearching, setCastDevicesSearching] = React.useState(false);
+    const castDevicesLoading = platform.shell.active && (castDevicesSearching || (streamingServer.playbackDevices !== null && streamingServer.playbackDevices.type === 'Loading'));
+    const { streamingUrl: castStreamingUrl, playOnDevice } = usePlayOnDevice(player.selected?.stream ?? null);
+    const shellCastSupported = platform.shell.active && castStreamingUrl !== null;
+    const refreshCastDevices = React.useCallback(() => {
+        if (platform.shell.active) {
+            core.transport.dispatch({
+                action: 'StreamingServer',
+                args: {
+                    action: 'RefreshPlaybackDevices',
+                }
+            });
+        }
+    }, [platform.shell.active]);
+    const onCastDeviceSelected = React.useCallback((deviceId) => {
+        playOnDevice(deviceId, video.state.time);
+        closeCastDevicesMenu();
+    }, [playOnDevice, video.state.time]);
+    React.useEffect(() => {
+        if (castDevicesMenuOpen && platform.shell.active) {
+            setCastDevicesSearching(true);
+            refreshCastDevices();
+            const interval = setInterval(refreshCastDevices, CAST_DEVICES_REFRESH_INTERVAL);
+            const timeout = setTimeout(() => setCastDevicesSearching(false), CAST_DEVICES_REFRESH_INTERVAL);
+            return () => {
+                clearInterval(interval);
+                clearTimeout(timeout);
+                setCastDevicesSearching(false);
+            };
+        }
+    }, [castDevicesMenuOpen, refreshCastDevices]);
 
     const {
         streamSubtitles,
@@ -297,6 +340,9 @@ const Player = () => {
         }
         if (!event.nativeEvent.statisticsMenuClosePrevented) {
             closeStatisticsMenu();
+        }
+        if (!event.nativeEvent.castDevicesMenuClosePrevented) {
+            closeCastDevicesMenu();
         }
 
         closeSideDrawer();
@@ -948,6 +994,8 @@ const Player = () => {
                 onVolumeChangeRequested={onVolumeChangeRequested}
                 onSeekRequested={onSeekRequested}
                 onToggleOptionsMenu={toggleOptionsMenu}
+                shellCastSupported={shellCastSupported}
+                onToggleCastDevicesMenu={toggleCastDevicesMenu}
                 onToggleSubtitlesMenu={toggleSubtitlesMenu}
                 onToggleAudioMenu={toggleAudioMenu}
                 onToggleSpeedMenu={toggleSpeedMenu}
@@ -981,6 +1029,14 @@ const Player = () => {
                 <StatisticsMenu
                     className={classnames(styles['layer'], styles['menu-layer'])}
                     {...statistics}
+                />
+            </Transition>
+            <Transition when={castDevicesMenuOpen} name={'fade'}>
+                <CastDevicesMenu
+                    className={classnames(styles['layer'], styles['menu-layer'])}
+                    devices={castDevices}
+                    loading={castDevicesLoading}
+                    onDeviceSelected={onCastDeviceSelected}
                 />
             </Transition>
             <Transition when={sideDrawerOpen} name={'slide-left'}>
