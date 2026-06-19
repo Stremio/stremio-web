@@ -22,7 +22,7 @@ const useInterfaceOptions = (profile: Profile) => {
     }, [sortedOptions]);
 
     const interfaceLanguageSelect = useMemo(() => ({
-        
+
         options: sortedLanguageOptions,
         value:
             interfaceLanguages.find(({ codes }) => codes[1] === profile.settings.interfaceLanguage)?.codes?.[0] ||
