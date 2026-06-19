@@ -20,6 +20,7 @@ type Settings = {
     bingeWatching: boolean,
     discordRpcEnabled: boolean,
     hardwareDecoding: boolean,
+    gpuVideoProcessing: boolean,
     videoMode: string | null,
     escExitFullscreen: boolean,
     interfaceLanguage: string,

@@ -414,6 +414,7 @@ const Player = () => {
                 maxAudioChannels: settings.surroundSound ? 32 : 2,
                 hardwareDecoding: settings.hardwareDecoding,
                 assSubtitlesStyling: settings.assSubtitlesStyling,
+                gpuVideoProcessing: settings.gpuVideoProcessing && platform.shell.capabilities.gpuVideoProcessing,
                 videoMode: settings.videoMode,
                 platform: platform.name,
                 streamingServerURL: streamingServer.baseUrl ?
