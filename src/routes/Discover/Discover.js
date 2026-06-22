@@ -27,9 +27,13 @@ const Discover = ({ urlParams, queryParams }) => {
         return discover.catalog?.content.type === 'Ready' &&
             discover.catalog.content.content[selectedMetaItemIndex] || null;
     }, [discover.catalog, selectedMetaItemIndex]);
+    const readyCatalogItemsCount = discover.catalog?.content.type === 'Ready' ? discover.catalog.content.content.length : null;
 
     const metasContainerRef = React.useRef();
     const metaPreviewRef = React.useRef();
+    const autoLoadInFlightRef = React.useRef(false);
+    const autoLoadSuppressedRef = React.useRef(false);
+    const previousReadyItemsCountRef = React.useRef(null);
 
     React.useEffect(() => {
         if (discover.catalog?.content.type === 'Loading') {
@@ -37,14 +41,35 @@ const Discover = ({ urlParams, queryParams }) => {
         }
     }, [discover.catalog]);
     React.useEffect(() => {
-        if (hasNextPage && metasContainerRef.current) {
+        if (
+            discover.catalog?.content.type === 'Ready' &&
+            hasNextPage &&
+            metasContainerRef.current &&
+            !autoLoadInFlightRef.current &&
+            !autoLoadSuppressedRef.current
+        ) {
             const containerHeight = metasContainerRef.current.scrollHeight;
             const viewportHeight = metasContainerRef.current.clientHeight;
             if (containerHeight <= viewportHeight + SCROLL_TO_BOTTOM_THRESHOLD) {
+                autoLoadInFlightRef.current = true;
                 loadNextPage();
             }
         }
-    }, [hasNextPage, loadNextPage]);
+    }, [discover.catalog, hasNextPage, loadNextPage]);
+    React.useEffect(() => {
+        if (readyCatalogItemsCount === null) {
+            return;
+        }
+
+        const previousReadyItemsCount = previousReadyItemsCountRef.current;
+        if (autoLoadInFlightRef.current && previousReadyItemsCount !== null) {
+            const itemsGrowth = readyCatalogItemsCount - previousReadyItemsCount;
+            autoLoadInFlightRef.current = false;
+            autoLoadSuppressedRef.current = itemsGrowth <= 0 || itemsGrowth < CONSTANTS.CATALOG_PAGE_SIZE;
+        }
+
+        previousReadyItemsCountRef.current = readyCatalogItemsCount;
+    }, [readyCatalogItemsCount]);
     const addToLibrary = React.useCallback(() => {
         if (selectedMetaItem === null) {
             return;
@@ -109,6 +134,9 @@ const Discover = ({ urlParams, queryParams }) => {
         closeInputsModal();
         closeAddonModal();
         setSelectedMetaItemIndex(0);
+        autoLoadInFlightRef.current = false;
+        autoLoadSuppressedRef.current = false;
+        previousReadyItemsCountRef.current = null;
     }, [discover.selected]);
     return (
         <MainNavBars className={styles['discover-container']} route={'discover'}>
