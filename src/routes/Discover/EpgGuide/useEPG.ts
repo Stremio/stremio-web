@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from 'react';
 
-const DAY_IN_MS = 24 * 60 * 60 * 1000;
-
 export type EPGChannel = {
     id: string;
     type: string;
@@ -18,9 +16,12 @@ export type EPGProgram = {
     overview: string | null;
     thumbnail?: string | null;
     links?: Link[];
-    runtime: string | null;
-    releaseInfo: Date | null;
-    released?: Date | null;
+    runtime?: string | null;
+    releaseInfo?: string | null;
+    released?: string | null;
+    genres?: string[];
+    cast?: string[];
+    directors?: string[];
     startTime: Date;
     endTime: Date;
     channelId: string;
@@ -34,11 +35,15 @@ type VideoLike = {
     id?: string;
     title?: string;
     name?: string;
-    overview?: string;
-    description?: string;
-    thumbnail: string | null;
+    overview?: string | null;
+    thumbnail?: string | null;
     links?: Link[];
-    released?: string;
+    runtime?: string | null;
+    released?: string | null;
+    releaseInfo?: string | null;
+    genres?: string[];
+    cast?: string[];
+    directors?: string[];
     startTime?: string;
     endTime?: string;
     deepLinks?: VideoDeepLinks;
@@ -110,21 +115,6 @@ const programDeepLinks = (video: VideoLike, channel: EPGChannel): MetaItemDeepLi
     };
 };
 
-const normalizeReleased = (released?: string): Date | null => {
-    if (typeof released !== 'string' || released.trim().length === 0) {
-        return null;
-    }
-
-    const date = new Date(released);
-    if (Number.isNaN(date.getTime())) {
-        return null;
-    }
-
-    // Some feeds use the Unix epoch as "unknown release date"; in local
-    // timezones it can render as 1969, which looks like a real release year.
-    return Math.abs(date.getTime()) <= DAY_IN_MS ? null : date;
-};
-
 const normalizeProgram = (video: VideoLike, channel: EPGChannel): EPGProgram | null => {
     if (typeof video.startTime !== 'string' || typeof video.endTime !== 'string') {
         return null;
@@ -132,22 +122,23 @@ const normalizeProgram = (video: VideoLike, channel: EPGChannel): EPGProgram | n
 
     const startTime = new Date(video.startTime);
     const endTime = new Date(video.endTime);
+
     if (Number.isNaN(startTime.getTime()) || Number.isNaN(endTime.getTime()) || endTime <= startTime) {
         return null;
     }
 
-    const released = normalizeReleased(video.released);
-    const durationMinutes = Math.round((endTime.getTime() - startTime.getTime()) / (60 * 1000));
-
     return {
         id: video.id,
         title: video.title ?? video.name ?? channel.name,
-        overview: video.overview ?? video.description ?? null,
+        overview: video.overview ?? null,
         thumbnail: video.thumbnail ?? null,
         links: video.links,
-        runtime: durationMinutes > 0 ? `${durationMinutes} min` : null,
-        releaseInfo: released,
-        released,
+        runtime: video.runtime ?? null,
+        releaseInfo: video.releaseInfo ?? null,
+        released: video.released ?? null,
+        genres: video.genres,
+        cast: video.cast,
+        directors: video.directors,
         startTime,
         endTime,
         channelId: channel.id,
