@@ -18,6 +18,36 @@ const styles = require('./styles');
 
 const GAMEPAD_HANDLER_ID = 'metadetails';
 
+const hasEpgProgramTimes = (video) => {
+    if (
+        typeof video?.startTime !== 'string' ||
+        typeof video?.endTime !== 'string'
+    ) {
+        return false;
+    }
+
+    const startTime = Date.parse(video.startTime);
+    const endTime = Date.parse(video.endTime);
+
+    return (
+        Number.isFinite(startTime) &&
+        Number.isFinite(endTime) &&
+        endTime > startTime
+    );
+};
+const getEpgValue = (isEpgVideo, video, meta, key) => {
+    const value = video?.[key];
+    if (!isEpgVideo) {
+        return meta[key];
+    }
+    if (typeof value === 'string' && value.length > 0) {
+        return value;
+    }
+    if (Array.isArray(value) && value.length > 0) {
+        return value;
+    }
+    return meta[key];
+};
 const MetaDetails = () => {
     const { type, id, videoId } = useParams();
     const location = useLocation();
@@ -52,6 +82,9 @@ const MetaDetails = () => {
             :
             null;
     }, [metaDetails.metaItem, streamPath]);
+    const isEpgVideo = React.useMemo(() => {
+        return video !== null && hasEpgProgramTimes(video);
+    }, [video]);
     const addToLibrary = React.useCallback(() => {
         if (metaDetails.metaItem === null || metaDetails.metaItem.content.type !== 'Ready') {
             return;
@@ -113,17 +146,26 @@ const MetaDetails = () => {
             : url.replace(encodeURIComponent(urlParams.videoId), searchVideoHash);
         navigate(searchVideoPath, { replace: true });
     }, [urlParams, location]);
-
     const renderBackgroundImageFallback = React.useCallback(() => null, []);
+    const background = React.useMemo(() => {
+        if (isEpgVideo && typeof video.thumbnail === 'string' && video.thumbnail.length > 0) {
+            return video.thumbnail;
+        }
+        if (
+            metaDetails.metaItem !== null &&
+            metaDetails.metaItem.content.type === 'Ready' &&
+            typeof metaDetails.metaItem.content.content?.background === 'string' &&
+            metaDetails.metaItem.content.content.background.length > 0
+        ) {
+            return metaDetails.metaItem.content.content.background;
+        }
+        return null;
+    }, [isEpgVideo, video, metaDetails.metaItem]);
     const renderBackground = React.useMemo(() => !!(
         metaPath &&
-        metaDetails?.metaItem &&
-        metaDetails.metaItem.content.type !== 'Loading' &&
-        typeof metaDetails.metaItem.content.content?.background === 'string' &&
-        metaDetails.metaItem.content.content.background.length > 0
-    ), [metaPath, metaDetails]);
+        background !== null
+    ), [metaPath, background]);
     const originPath = React.useMemo(() => getStoredOrigin(), [getStoredOrigin]);
-
     useContentGamepadNavigation(contentRef, GAMEPAD_HANDLER_ID);
     return (
         <div className={styles['metadetails-container']}>
@@ -132,7 +174,7 @@ const MetaDetails = () => {
                     <div className={styles['background-image-layer']}>
                         <Image
                             className={styles['background-image']}
-                            src={metaDetails.metaItem.content.content.background}
+                            src={background}
                             renderFallback={renderBackgroundImageFallback}
                             alt={' '}
                         />
@@ -187,16 +229,16 @@ const MetaDetails = () => {
                                             className={classnames(styles['meta-preview'], 'animation-fade-in')}
                                             name={metaDetails.metaItem.content.content.name}
                                             logo={metaDetails.metaItem.content.content.logo}
-                                            runtime={metaDetails.metaItem.content.content.runtime}
-                                            releaseInfo={metaDetails.metaItem.content.content.releaseInfo}
-                                            released={metaDetails.metaItem.content.content.released}
+                                            runtime={getEpgValue(isEpgVideo, video, metaDetails.metaItem.content.content, 'runtime')}
+                                            releaseInfo={getEpgValue(isEpgVideo, video, metaDetails.metaItem.content.content, 'releaseInfo')}
+                                            released={getEpgValue(isEpgVideo, video, metaDetails.metaItem.content.content, 'released')}
                                             description={
                                                 video !== null && typeof video.overview === 'string' && video.overview.length > 0 ?
                                                     video.overview
                                                     :
                                                     metaDetails.metaItem.content.content.description
                                             }
-                                            links={metaDetails.metaItem.content.content.links}
+                                            links={getEpgValue(isEpgVideo, video, metaDetails.metaItem.content.content, 'links')}
                                             trailerStreams={metaDetails.metaItem.content.content.trailerStreams}
                                             inLibrary={metaDetails.metaItem.content.content.inLibrary}
                                             toggleInLibrary={metaDetails.metaItem.content.content.inLibrary ? removeFromLibrary : addToLibrary}
