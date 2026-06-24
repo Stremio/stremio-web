@@ -40,16 +40,28 @@ const EpgGuideRow = ({ channel, programs: allPrograms, selectedDay, now, onProgr
     return (
         <div className={styles['epg-row']}>
             <div className={styles['epg-program-list']} style={{ width: `${totalPx}px` }}>
-                {programs.map((program) => {
+                {programs.map((program, index) => {
                     const startMs = programStartMs(program);
                     const endMs = programEndMs(program);
                     const left = Math.max(0, ((startMs - timeRange.start) / DAY_IN_MS) * totalPx);
                     const width = Math.max(4, ((endMs - startMs) / DAY_IN_MS) * totalPx);
                     const isCurrent = startMs <= now && now < endMs;
                     const label = programTitle(program);
+
+                    const key = [
+                        channel.id,
+                        program.id,
+                        startMs,
+                        endMs,
+                        label,
+                        index,
+                    ]
+                        .filter((value) => value !== undefined && value !== null && value !== '')
+                        .join('-');
+
                     return (
                         <button
-                            key={`${startMs}-${label}`}
+                            key={key}
                             className={`${styles['epg-program-block']}${isCurrent ? ` ${styles['epg-program-block-current']}` : ''}`}
                             style={{ left: `${left}px`, width: `${width}px` }}
                             onClick={() => onProgramClick(program, channel)}
