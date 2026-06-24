@@ -2,8 +2,7 @@
 
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { type EPGChannel, type EPGProgram } from '../useEPG';
-import { programStartMs, programEndMs, programTitle } from '../epgUtils';
+import { type EPGChannel, type EPGProgram, programStartMs, programEndMs, programTitle } from 'stremio/common/EPG';
 import styles from './EpgGuideRow.less';
 
 const DAY_IN_MS = 24 * 60 * 60 * 1000;

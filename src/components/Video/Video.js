@@ -12,38 +12,9 @@ const { Button, Image, Popup } = require('stremio/components');
 const useBinaryState = require('stremio/common/useBinaryState');
 const useProfile = require('stremio/common/useProfile');
 const { usePlatform } = require('stremio/common/Platform');
+const { formatEpgTimeRange } = require('stremio/common/EPG');
 const VideoPlaceholder = require('./VideoPlaceholder');
 const styles = require('./styles');
-
-const dateFromValue = (value) => {
-    if (value instanceof Date && !isNaN(value.getTime())) {
-        return value;
-    }
-
-    if (typeof value === 'string' && value.length > 0) {
-        const date = new Date(value);
-
-        return !isNaN(date.getTime()) ? date : null;
-    }
-
-    return null;
-};
-
-const formatEpgTimeRange = (startTime, endTime, language) => {
-    const start = dateFromValue(startTime);
-    const end = dateFromValue(endTime);
-
-    if (start === null || end === null) {
-        return null;
-    }
-
-    const options = {
-        hour: '2-digit',
-        minute: '2-digit'
-    };
-
-    return `${start.toLocaleTimeString(language, options)} - ${end.toLocaleTimeString(language, options)}`;
-};
 
 const Video = ({
     className,
@@ -133,7 +104,7 @@ const Video = ({
                 navigate(toPath(deepLinks.metaDetailsStreams), { replace: !platform.isMobile });
             }
         }
-    }, [deepLinks, isEpg, onSelect]);
+    }, [deepLinks, isEpg, onSelect, navigate, platform]);
     const renderLabel = React.useMemo(() => function renderLabel({
         className,
         id,

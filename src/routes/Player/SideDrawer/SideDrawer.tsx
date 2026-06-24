@@ -5,12 +5,10 @@ import classNames from 'classnames';
 import Icon from '@stremio/stremio-icons/react';
 import { useCore } from 'stremio/core';
 import { CONSTANTS } from 'stremio/common';
+import { filterVisibleEpgPrograms, getEpgDescription, getEpgProgress, getEpgTitle, getEpgValue, getEpgTimeRange, hasEpgProgramTimes } from 'stremio/common/EPG';
 import { MetaPreview, Video } from 'stremio/components';
 import SeasonsBar from 'stremio/routes/MetaDetails/VideosList/SeasonsBar';
 import styles from './SideDrawer.less';
-
-const HOUR_IN_MS = 60 * 60 * 1000;
-const EPG_PROGRAMS_LIMIT_IN_HOURS = 12;
 
 type Props = {
     className?: string;
@@ -19,74 +17,6 @@ type Props = {
     closeSideDrawer: () => void;
     selected: string;
     transitionEnded: boolean;
-};
-
-const getEpgTime = (value: unknown): number | null => {
-    if (typeof value !== 'string' || value.length === 0) {
-        return null;
-    }
-
-    const time = Date.parse(value);
-
-    return Number.isFinite(time) ? time : null;
-};
-
-const getEpgTimeRange = (video: { startTime?: unknown; endTime?: unknown } | null | undefined) => {
-    const startTime = getEpgTime(video?.startTime);
-    const endTime = getEpgTime(video?.endTime);
-
-    return startTime !== null && endTime !== null && endTime > startTime ?
-        { startTime, endTime }
-        :
-        null;
-};
-
-const hasEpgProgramTimes = (video: { startTime?: unknown; endTime?: unknown } | null | undefined) => {
-    return getEpgTimeRange(video) !== null;
-};
-
-const getEpgProgress = (video: { startTime?: unknown; endTime?: unknown } | null | undefined, now: number) => {
-    const range = getEpgTimeRange(video);
-
-    if (range === null || now < range.startTime || now >= range.endTime) {
-        return null;
-    }
-
-    return Math.min(100, Math.max(0, ((now - range.startTime) / (range.endTime - range.startTime)) * 100));
-};
-
-const getEpgValue = (isEpgVideo: boolean, video: any, meta: any, key: string) => {
-    const value = video?.[key];
-
-    if (!isEpgVideo) {
-        return meta[key];
-    }
-
-    if (typeof value === 'string' && value.length > 0) {
-        return value;
-    }
-
-    if (Array.isArray(value) && value.length > 0) {
-        return value;
-    }
-
-    return meta[key];
-};
-
-const getEpgDescription = (isEpgVideo: boolean, video: any, meta: any) => {
-    const value = video?.overview ?? video?.description;
-
-    return isEpgVideo && typeof value === 'string' && value.length > 0 ?
-        value
-        :
-        meta.description;
-};
-
-const getEpgTitle = (isEpgVideo: boolean, video: any, meta: any) => {
-    return isEpgVideo && typeof video?.title === 'string' && video.title.length > 0 ?
-        video.title
-        :
-        meta.name;
 };
 
 const SideDrawer = memo(forwardRef<HTMLDivElement, Props>(({ seriesInfo, className, closeSideDrawer, selected, ...props }: Props, ref) => {
@@ -132,30 +62,7 @@ const SideDrawer = memo(forwardRef<HTMLDivElement, Props>(({ seriesInfo, classNa
 
     const videos = useMemo(() => {
         if (isEpg) {
-            const maxTime = now + EPG_PROGRAMS_LIMIT_IN_HOURS * HOUR_IN_MS;
-            return allVideos
-                .filter((video) => {
-                    const range = getEpgTimeRange(video);
-                    return (
-                        range !== null &&
-                        range.endTime > now &&
-                        range.startTime < maxTime
-                    );
-                })
-                .sort((a, b) => {
-                    const aRange = getEpgTimeRange(a);
-                    const bRange = getEpgTimeRange(b);
-                    return (aRange?.startTime ?? 0) - (bRange?.startTime ?? 0);
-                })
-                .map((video) => {
-                    const range = getEpgTimeRange(video);
-                    const progress = getEpgProgress(video, now);
-                    return {
-                        ...video,
-                        progress: progress ?? video.progress,
-                        upcoming: range !== null && range.startTime > now ? true : video.upcoming,
-                    };
-                });
+            return filterVisibleEpgPrograms(allVideos, now);
         }
         return allVideos.filter((video) => video.season === season);
     }, [allVideos, season, isEpg, now]);

@@ -7,6 +7,7 @@ const classnames = require('classnames');
 const { useCore } = require('stremio/core');
 const { useContentGamepadNavigation } = require('stremio/services/GamepadNavigation');
 const { withCoreSuspender } = require('stremio/common');
+const { getEpgValue, getNonEmptyString, hasEpgProgramTimes } = require('stremio/common/EPG');
 const { useNavigateWithOrigin } = require('stremio-router');
 const { VerticalNavBar, HorizontalNavBar, DelayedRenderer, Image, MetaPreview, ModalDialog } = require('stremio/components');
 const StreamsList = require('./StreamsList');
@@ -18,36 +19,6 @@ const styles = require('./styles');
 
 const GAMEPAD_HANDLER_ID = 'metadetails';
 
-const hasEpgProgramTimes = (video) => {
-    if (
-        typeof video?.startTime !== 'string' ||
-        typeof video?.endTime !== 'string'
-    ) {
-        return false;
-    }
-
-    const startTime = Date.parse(video.startTime);
-    const endTime = Date.parse(video.endTime);
-
-    return (
-        Number.isFinite(startTime) &&
-        Number.isFinite(endTime) &&
-        endTime > startTime
-    );
-};
-const getEpgValue = (isEpgVideo, video, meta, key) => {
-    const value = video?.[key];
-    if (!isEpgVideo) {
-        return meta[key];
-    }
-    if (typeof value === 'string' && value.length > 0) {
-        return value;
-    }
-    if (Array.isArray(value) && value.length > 0) {
-        return value;
-    }
-    return meta[key];
-};
 const MetaDetails = () => {
     const { type, id, videoId } = useParams();
     const location = useLocation();
@@ -148,23 +119,15 @@ const MetaDetails = () => {
     }, [urlParams, location]);
     const renderBackgroundImageFallback = React.useCallback(() => null, []);
     const background = React.useMemo(() => {
-        if (isEpgVideo && typeof video.thumbnail === 'string' && video.thumbnail.length > 0) {
-            return video.thumbnail;
-        }
-        if (
-            metaDetails.metaItem !== null &&
-            metaDetails.metaItem.content.type === 'Ready' &&
-            typeof metaDetails.metaItem.content.content?.background === 'string' &&
-            metaDetails.metaItem.content.content.background.length > 0
-        ) {
-            return metaDetails.metaItem.content.content.background;
-        }
-        return null;
+        const epgThumbnail = isEpgVideo ? getNonEmptyString(video?.thumbnail) : null;
+        const metaBackground = metaDetails.metaItem?.content.type === 'Ready' ?
+            getNonEmptyString(metaDetails.metaItem.content.content?.background)
+            :
+            null;
+
+        return epgThumbnail ?? metaBackground;
     }, [isEpgVideo, video, metaDetails.metaItem]);
-    const renderBackground = React.useMemo(() => !!(
-        metaPath &&
-        background !== null
-    ), [metaPath, background]);
+    const renderBackground = !!(metaPath && background);
     const originPath = React.useMemo(() => getStoredOrigin(), [getStoredOrigin]);
     useContentGamepadNavigation(contentRef, GAMEPAD_HANDLER_ID);
     return (

@@ -5,8 +5,7 @@ import { useTranslation } from 'react-i18next';
 import Icon from '@stremio/stremio-icons/react';
 import { MultiselectMenu } from 'stremio/components';
 import { EpgGuideRow } from './EpgGuideRow';
-import { useEPG, EPGChannel, EPGProgram } from './useEPG';
-import { programStartMs, programEndMs } from './epgUtils';
+import { useEPG, EPGChannel, EPGProgram, programEndMs, programStartMs } from 'stremio/common/EPG';
 import styles from './EpgGuide.less';
 
 const BASE_PIXELS_PER_HOUR = 120; // minimum scale
