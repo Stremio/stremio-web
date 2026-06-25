@@ -3,10 +3,37 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const { useCore } = require('stremio/core');
+const { getEpgProgress, hasEpgProgramTimes, useEpgNow } = require('stremio/common/EPG');
 const LibItem = require('stremio/components/LibItem');
+
+const getEpgVideo = (props, now) => {
+    const videos = [
+        props.currentVideo,
+        props.video,
+        ...(Array.isArray(props.videos) ? props.videos : []),
+        ...(Array.isArray(props.epgVideos) ? props.epgVideos : []),
+    ].filter(hasEpgProgramTimes);
+
+    return videos.find((video) => getEpgProgress(video, now) !== null) ??
+        videos.find((video) => video.id === props.state?.video_id) ??
+        videos[0] ??
+        null;
+};
 
 const ContinueWatchingItem = ({ _id, notifications, ...props }) => {
     const core = useCore();
+    const hasEpgVideos = Array.isArray(props.epgVideos) && props.epgVideos.length > 0;
+    const now = useEpgNow(hasEpgVideos || props.behaviorHints?.epgProvider === true);
+    const epgVideo = getEpgVideo(props, now);
+    const isEpg = epgVideo !== null || props.behaviorHints?.epgProvider === true;
+    const epgProgress = epgVideo !== null ? getEpgProgress(epgVideo, now) : null;
+    const itemProps = isEpg ? {
+        ...props,
+        poster: typeof epgVideo?.thumbnail === 'string' && epgVideo.thumbnail.length > 0 ? epgVideo.thumbnail : props.poster,
+        posterShape: 'landscape',
+        progress: epgProgress ?? props.progress,
+        live: true,
+    } : props;
 
     const onDismissClick = React.useCallback((event) => {
         event.preventDefault();
@@ -30,7 +57,7 @@ const ContinueWatchingItem = ({ _id, notifications, ...props }) => {
 
     return (
         <LibItem
-            {...props}
+            {...itemProps}
             _id={_id}
             posterChangeCursor={true}
             notifications={notifications}
@@ -42,6 +69,18 @@ const ContinueWatchingItem = ({ _id, notifications, ...props }) => {
 ContinueWatchingItem.propTypes = {
     _id: PropTypes.string,
     notifications: PropTypes.object,
+    poster: PropTypes.string,
+    progress: PropTypes.number,
+    currentVideo: PropTypes.object,
+    video: PropTypes.object,
+    videos: PropTypes.arrayOf(PropTypes.object),
+    epgVideos: PropTypes.arrayOf(PropTypes.object),
+    state: PropTypes.shape({
+        video_id: PropTypes.string,
+    }),
+    behaviorHints: PropTypes.shape({
+        epgProvider: PropTypes.bool,
+    }),
     deepLinks: PropTypes.shape({
         metaDetailsVideos: PropTypes.string,
         metaDetailsStreams: PropTypes.string,

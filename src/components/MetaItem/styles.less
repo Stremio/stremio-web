@@ -170,6 +170,28 @@
                 color: var(--primary-foreground-color);
                 opacity: 0.2;
             }
+
+            .live-badge-layer {
+                position: absolute;
+                top: 1rem;
+                right: 1rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-width: 3.25rem;
+                height: 1.5rem;
+                padding: 0 0.5rem;
+                border-radius: 0.25rem;
+                background-color: #e50914;
+
+                .live-badge-label {
+                    font-size: 0.75rem;
+                    font-weight: 700;
+                    line-height: 1;
+                    text-transform: uppercase;
+                    color: #fff;
+                }
+            }
         }
 
         .play-icon-layer {

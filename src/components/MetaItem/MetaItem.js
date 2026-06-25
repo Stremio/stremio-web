@@ -14,7 +14,7 @@ const useBinaryState = require('stremio/common/useBinaryState');
 const { ICON_FOR_TYPE } = require('stremio/common/CONSTANTS');
 const styles = require('./styles');
 
-const MetaItem = React.memo(({ className, type, name, poster, posterShape, posterChangeCursor, progress, newVideos, options, deepLinks, dataset, optionOnSelect, onDismissClick, onPlayClick, watched, ...props }) => {
+const MetaItem = React.memo(({ className, type, name, poster, posterShape, posterChangeCursor, progress, newVideos, options, deepLinks, dataset, optionOnSelect, onDismissClick, onPlayClick, watched, live, ...props }) => {
     const { t } = useTranslation();
     const { navigateWithOrigin } = useNavigateWithOrigin();
     const [menuOpen, onMenuOpen, onMenuClose] = useBinaryState(false);
@@ -93,6 +93,14 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, poste
                         alt={' '}
                         renderFallback={renderPosterFallback}
                     />
+                    {
+                        live ?
+                            <div className={styles['live-badge-layer']}>
+                                <div className={styles['live-badge-label']}>{t('PLAYER_LIVE')}</div>
+                            </div>
+                            :
+                            null
+                    }
                 </div>
                 {
                     onPlayClick ?
@@ -180,7 +188,8 @@ MetaItem.propTypes = {
     onDismissClick: PropTypes.func,
     onPlayClick: PropTypes.func,
     onClick: PropTypes.func,
-    watched: PropTypes.bool
+    watched: PropTypes.bool,
+    live: PropTypes.bool
 };
 
 module.exports = MetaItem;
