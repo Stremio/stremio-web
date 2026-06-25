@@ -1,6 +1,7 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
 import { useEffect, useState } from 'react';
+import { addonResourceUrl, EPG_NOW_REFRESH_INTERVAL } from './utils';
 
 export type EPGChannel = {
     id: string;
@@ -55,6 +56,26 @@ export type EPGData = {
     error: string | null;
 };
 
+export const useEpgNow = (
+    enabled: boolean,
+    intervalMs = EPG_NOW_REFRESH_INTERVAL
+): number => {
+    const [now, setNow] = useState(() => Date.now());
+
+    useEffect(() => {
+        if (!enabled) {
+            return undefined;
+        }
+
+        setNow(Date.now());
+        const interval = window.setInterval(() => setNow(Date.now()), intervalMs);
+
+        return () => window.clearInterval(interval);
+    }, [enabled, intervalMs]);
+
+    return now;
+};
+
 type MetaResponse = {
     meta?: {
         videos?: VideoLike[];
@@ -62,31 +83,6 @@ type MetaResponse = {
 };
 
 const metaCache = new Map<string, Promise<EPGProgram[]>>();
-
-const addonResourceUrl = (base: string, resource: string, type: string, id: string): string | null => {
-    try {
-        const url = new URL(base);
-        if (url.protocol !== 'http:' && url.protocol !== 'https:') return null;
-
-        const parts = url.pathname.split('/').filter(Boolean);
-        if (parts[parts.length - 1] === 'manifest.json') {
-            parts.pop();
-        }
-
-        url.pathname = `/${[
-            ...parts,
-            resource,
-            encodeURIComponent(type),
-            `${encodeURIComponent(id)}.json`,
-        ].join('/')}`;
-        url.search = '';
-        url.hash = '';
-
-        return url.toString();
-    } catch {
-        return null;
-    }
-};
 
 const programDeepLinks = (video: VideoLike, channel: EPGChannel): MetaItemDeepLinks | VideoDeepLinks | undefined => {
     if (video.deepLinks) {

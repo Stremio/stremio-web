@@ -34,7 +34,7 @@ const styles = require('./styles');
 const Video = require('./Video');
 const { default: Indicator } = require('./Indicator/Indicator');
 const { default: useMediaSession } = require('./useMediaSession');
-const { getEpgProgress, getEpgTimeRange, getNextEpgVideo, hasEpgProgramTimes } = require('stremio/common/EPG');
+const { EPG_PLAYER_NOW_REFRESH_INTERVAL, getEpgProgress, getEpgTimeRange, getNextEpgVideo, hasEpgProgramTimes, useEpgNow } = require('stremio/common/EPG');
 
 const findTrackByLang = (tracks, lang) => tracks.find((track) => track.lang === lang || langs.where('1', track.lang)?.[2] === lang);
 const findTrackById = (tracks, id) => tracks.find((track) => track.id === id);
@@ -73,7 +73,6 @@ const Player = () => {
     const discordTimestamps = React.useRef(EMPTY_DISCORD_TIMESTAMPS);
 
     const [seeking, setSeeking] = React.useState(false);
-    const [epgNow, setEpgNow] = React.useState(() => Date.now());
 
     const [casting, setCasting] = React.useState(() => {
         return services.chromecast.active && services.chromecast.transport.getCastState() === cast.framework.CastState.CONNECTED;
@@ -168,22 +167,7 @@ const Player = () => {
     const isEpg = React.useMemo(() => {
         return metaVideos.some(hasEpgProgramTimes);
     }, [metaVideos]);
-
-    React.useEffect(() => {
-        if (!isEpg) {
-            return;
-        }
-
-        setEpgNow(Date.now());
-
-        const interval = window.setInterval(() => {
-            setEpgNow(Date.now());
-        }, 1000);
-
-        return () => {
-            window.clearInterval(interval);
-        };
-    }, [isEpg]);
+    const epgNow = useEpgNow(isEpg, EPG_PLAYER_NOW_REFRESH_INTERVAL);
 
     const currentEpgVideo = React.useMemo(() => {
         if (!isEpg) {

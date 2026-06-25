@@ -13,10 +13,10 @@ const useDiscover = require('./useDiscover');
 const useSelectableInputs = require('./useSelectableInputs');
 const useInstalledAddons = require('../Addons/useInstalledAddons');
 const { default: EpgGuide } = require('./EpgGuide');
+const { useEpgNow } = require('stremio/common/EPG');
 const styles = require('./styles');
 
 const SCROLL_TO_BOTTOM_THRESHOLD = 400;
-const EPG_NOW_REFRESH_INTERVAL = 60 * 1000;
 
 const Discover = () => {
     const { type, transportUrl, catalogId } = useParams();
@@ -43,7 +43,6 @@ const Discover = () => {
     const metaPreviewRef = React.useRef();
 
     const [selectedEpgProgram, setSelectedEpgProgram] = React.useState(null);
-    const [epgNow, setEpgNow] = React.useState(Date.now);
     const installedAddons = useInstalledAddons({ transportUrl: null, catalogId: null });
     const selectedAddon = React.useMemo(() => {
         const selected = discover.selectable.catalogs.find(({ selected }) => selected)?.addon ?? null;
@@ -51,6 +50,7 @@ const Discover = () => {
         return addon;
     }, [discover.selectable.catalogs, installedAddons]);
     const isEpgLayout = React.useMemo(() => selectedAddon?.manifest?.behaviorHints?.epgProvider === true, [selectedAddon]);
+    const epgNow = useEpgNow(isEpgLayout);
     const epgChannels = React.useMemo(() => {
         return discover.catalog !== null && discover.catalog.content.type === 'Ready' ?
             discover.catalog.content.content.map((metaItem) => ({
@@ -151,17 +151,6 @@ const Discover = () => {
         setSelectedMetaItemIndex(0);
         setSelectedEpgProgram(null);
     }, [discover.selected]);
-    React.useEffect(() => {
-        if (!isEpgLayout) {
-            return undefined;
-        }
-
-        setEpgNow(Date.now());
-        const interval = window.setInterval(() => setEpgNow(Date.now()), EPG_NOW_REFRESH_INTERVAL);
-
-        return () => window.clearInterval(interval);
-    }, [isEpgLayout]);
-
     const renderEmptyState = () => (
         <DelayedRenderer delay={500}>
             <div className={styles['message-container']}>

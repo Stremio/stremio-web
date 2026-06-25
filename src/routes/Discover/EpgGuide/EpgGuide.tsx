@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import Icon from '@stremio/stremio-icons/react';
 import { MultiselectMenu } from 'stremio/components';
 import { EpgGuideRow } from './EpgGuideRow';
-import { useEPG, EPGChannel, EPGProgram, programEndMs, programStartMs } from 'stremio/common/EPG';
+import { useEPG, EPGChannel, EPGProgram, HOUR_IN_MS, programEndMs, programStartMs } from 'stremio/common/EPG';
 import styles from './EpgGuide.less';
 
 const BASE_PIXELS_PER_HOUR = 120; // minimum scale
@@ -13,7 +13,6 @@ const MAX_PIXELS_PER_HOUR = 360; // cap — at 720 a 10-min show is 120 px (~17 
 const MIN_PROGRAM_WIDTH = 120; // px — wide enough to show a thumbnail + label
 const CHANNEL_COLUMN_WIDTH = 130;
 const ROW_HEIGHT = 56;
-const HOUR_IN_MS = 60 * 60 * 1000;
 const DAY_IN_MS = 24 * HOUR_IN_MS;
 const MIN_PROGRAM_DURATION_MS = 10 * 60 * 1000; // ignore sub-10-min filler when choosing scale
 const COMPACT_DAY_COUNT = 3;

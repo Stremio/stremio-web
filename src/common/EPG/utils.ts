@@ -3,7 +3,34 @@
 import type { EPGProgram } from './useEPG';
 
 export const HOUR_IN_MS = 60 * 60 * 1000;
+export const EPG_NOW_REFRESH_INTERVAL = 60 * 1000;
+export const EPG_PLAYER_NOW_REFRESH_INTERVAL = 1000;
 export const EPG_PROGRAMS_LIMIT_IN_HOURS = 12;
+
+export const addonResourceUrl = (base: string, resource: string, type: string, id: string): string | null => {
+    try {
+        const url = new URL(base);
+        if (url.protocol !== 'http:' && url.protocol !== 'https:') return null;
+
+        const parts = url.pathname.split('/').filter(Boolean);
+        if (parts[parts.length - 1] === 'manifest.json') {
+            parts.pop();
+        }
+
+        url.pathname = `/${[
+            ...parts,
+            resource,
+            encodeURIComponent(type),
+            `${encodeURIComponent(id)}.json`,
+        ].join('/')}`;
+        url.search = '';
+        url.hash = '';
+
+        return url.toString();
+    } catch {
+        return null;
+    }
+};
 
 export const getEpgTime = (value: unknown): number | null => {
     if (value instanceof Date && !Number.isNaN(value.getTime())) {

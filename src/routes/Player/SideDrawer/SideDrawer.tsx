@@ -1,11 +1,11 @@
 // Copyright (C) 2017-2024 Smart code 203358507
 
-import React, { useMemo, useCallback, useState, useRef, useEffect, forwardRef, memo } from 'react';
+import React, { useMemo, useCallback, useState, useRef, forwardRef, memo } from 'react';
 import classNames from 'classnames';
 import Icon from '@stremio/stremio-icons/react';
 import { useCore } from 'stremio/core';
 import { CONSTANTS } from 'stremio/common';
-import { filterVisibleEpgPrograms, getEpgDescription, getEpgProgress, getEpgTitle, getEpgValue, getEpgTimeRange, hasEpgProgramTimes } from 'stremio/common/EPG';
+import { filterVisibleEpgPrograms, getEpgDescription, getEpgProgress, getEpgTitle, getEpgValue, getEpgTimeRange, hasEpgProgramTimes, useEpgNow } from 'stremio/common/EPG';
 import { MetaPreview, Video } from 'stremio/components';
 import SeasonsBar from 'stremio/routes/MetaDetails/VideosList/SeasonsBar';
 import styles from './SideDrawer.less';
@@ -23,7 +23,6 @@ const SideDrawer = memo(forwardRef<HTMLDivElement, Props>(({ seriesInfo, classNa
     const core = useCore();
     const [season, setSeason] = useState<number>(seriesInfo?.season);
     const [selectedVideoId, setSelectedVideoId] = useState<string | null>(null);
-    const [now, setNow] = useState(() => Date.now());
     const videosRef = useRef<HTMLDivElement>(null);
 
     const metaItem = useMemo(() => {
@@ -43,22 +42,7 @@ const SideDrawer = memo(forwardRef<HTMLDivElement, Props>(({ seriesInfo, classNa
     const isEpg = useMemo(() => {
         return allVideos.some(hasEpgProgramTimes);
     }, [allVideos]);
-
-    useEffect(() => {
-        if (!isEpg) {
-            return;
-        }
-
-        setNow(Date.now());
-
-        const interval = window.setInterval(() => {
-            setNow(Date.now());
-        }, 60 * 1000);
-
-        return () => {
-            window.clearInterval(interval);
-        };
-    }, [isEpg]);
+    const now = useEpgNow(isEpg);
 
     const videos = useMemo(() => {
         if (isEpg) {

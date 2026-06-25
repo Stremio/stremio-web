@@ -2,10 +2,10 @@
 
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { type EPGChannel, type EPGProgram, programStartMs, programEndMs, programTitle } from 'stremio/common/EPG';
+import { type EPGChannel, type EPGProgram, HOUR_IN_MS, programStartMs, programEndMs, programTitle } from 'stremio/common/EPG';
 import styles from './EpgGuideRow.less';
 
-const DAY_IN_MS = 24 * 60 * 60 * 1000;
+const DAY_IN_MS = 24 * HOUR_IN_MS;
 const DEFAULT_PIXELS_PER_HOUR = 120;
 
 type Props = {
