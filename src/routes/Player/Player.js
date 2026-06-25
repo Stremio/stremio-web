@@ -34,6 +34,7 @@ const styles = require('./styles');
 const Video = require('./Video');
 const { default: Indicator } = require('./Indicator/Indicator');
 const { default: useMediaSession } = require('./useMediaSession');
+const { getEpgProgress, getEpgTimeRange, getNextEpgVideo, hasEpgProgramTimes } = require('stremio/common/EPG');
 
 const findTrackByLang = (tracks, lang) => tracks.find((track) => track.lang === lang || langs.where('1', track.lang)?.[2] === lang);
 const findTrackById = (tracks, id) => tracks.find((track) => track.id === id);
@@ -72,6 +73,7 @@ const Player = () => {
     const discordTimestamps = React.useRef(EMPTY_DISCORD_TIMESTAMPS);
 
     const [seeking, setSeeking] = React.useState(false);
+    const [epgNow, setEpgNow] = React.useState(() => Date.now());
 
     const [casting, setCasting] = React.useState(() => {
         return services.chromecast.active && services.chromecast.transport.getCastState() === cast.framework.CastState.CONNECTED;
@@ -149,6 +151,66 @@ const Player = () => {
 
     const HOLD_DELAY = 400;
 
+    const metaItemContent = React.useMemo(() => {
+        return player.metaItem !== null && player.metaItem.type === 'Ready' ?
+            player.metaItem.content
+            :
+            null;
+    }, [player.metaItem]);
+
+    const metaVideos = React.useMemo(() => {
+        return Array.isArray(metaItemContent?.videos) ?
+            metaItemContent.videos
+            :
+            [];
+    }, [metaItemContent]);
+
+    const isEpg = React.useMemo(() => {
+        return metaVideos.some(hasEpgProgramTimes);
+    }, [metaVideos]);
+
+    React.useEffect(() => {
+        if (!isEpg) {
+            return;
+        }
+
+        setEpgNow(Date.now());
+
+        const interval = window.setInterval(() => {
+            setEpgNow(Date.now());
+        }, 1000);
+
+        return () => {
+            window.clearInterval(interval);
+        };
+    }, [isEpg]);
+
+    const currentEpgVideo = React.useMemo(() => {
+        if (!isEpg) {
+            return null;
+        }
+
+        const selectedVideoId = player.selected?.streamRequest?.path?.id ?? videoId;
+
+        const liveVideo = metaVideos.find((video) => getEpgProgress(video, epgNow) !== null) ?? null;
+        const selectedVideo = metaVideos.find((video) => video.id === selectedVideoId) ?? null;
+
+        return liveVideo ?? selectedVideo;
+    }, [isEpg, metaVideos, player.selected, videoId, epgNow]);
+
+    const nextEpgVideo = React.useMemo(() => {
+        return isEpg ?
+            getNextEpgVideo(metaVideos, currentEpgVideo)
+            :
+            null;
+    }, [isEpg, metaVideos, currentEpgVideo]);
+
+    React.useEffect(() => {
+        if (isEpg) {
+            nextVideoPopupDismissed.current = false;
+        }
+    }, [isEpg, currentEpgVideo?.id]);
+
     const handleNextVideoNavigation = React.useCallback((deepLinks, bingeWatching, ended) => {
         if (ended) {
             if (bingeWatching) {
@@ -172,6 +234,11 @@ const Player = () => {
 
     const onEnded = React.useCallback(() => {
         ended();
+
+        if (isEpg) {
+            return;
+        }
+
         if (player.nextVideo !== null) {
             nextVideo();
 
@@ -180,7 +247,7 @@ const Player = () => {
         } else {
             navigate(-1);
         }
-    }, [player.nextVideo, profile.settings.bingeWatching, handleNextVideoNavigation]);
+    }, [isEpg, player.nextVideo, profile.settings.bingeWatching, handleNextVideoNavigation]);
 
     const onError = React.useCallback((error) => {
         console.error('Player', error);
@@ -257,13 +324,17 @@ const Player = () => {
     }, []);
 
     const onNextVideoRequested = React.useCallback(() => {
+        if (isEpg) {
+            return;
+        }
+
         if (player.nextVideo !== null) {
             nextVideo();
 
             const deepLinks = player.nextVideo.deepLinks;
             handleNextVideoNavigation(deepLinks, profile.settings.bingeWatching, false);
         }
-    }, [player.nextVideo, handleNextVideoNavigation, profile.settings]);
+    }, [isEpg, player.nextVideo, handleNextVideoNavigation, profile.settings]);
 
     const onVideoClick = React.useCallback(() => {
         if (video.state.paused !== null && !longPress.current) {
@@ -448,14 +519,51 @@ const Player = () => {
     }, [video.state.videoParams]);
 
     React.useEffect(() => {
-        if (player.nextVideo !== null && !nextVideoPopupDismissed.current) {
-            if (video.state.time !== null && video.state.duration !== null && video.state.time < video.state.duration && (video.state.duration - video.state.time) <= settings.nextVideoNotificationDuration) {
+        if (nextVideoPopupDismissed.current) {
+            closeNextVideoPopup();
+            return;
+        }
+
+        if (isEpg) {
+            if (currentEpgVideo === null || nextEpgVideo === null) {
+                closeNextVideoPopup();
+                return;
+            }
+
+            const range = getEpgTimeRange(currentEpgVideo);
+
+            if (range === null) {
+                closeNextVideoPopup();
+                return;
+            }
+
+            const remainingTime = range.endTime - epgNow;
+            const notificationDuration = settings.nextVideoNotificationDuration * 1000;
+
+            if (remainingTime > 0 && remainingTime <= notificationDuration) {
                 openNextVideoPopup();
             } else {
                 closeNextVideoPopup();
             }
+
+            return;
         }
-    }, [player.nextVideo, video.state.time, video.state.duration]);
+
+        if (player.nextVideo !== null) {
+            if (
+                video.state.time !== null &&
+                video.state.duration !== null &&
+                video.state.time < video.state.duration &&
+                (video.state.duration - video.state.time) <= settings.nextVideoNotificationDuration
+            ) {
+                openNextVideoPopup();
+            } else {
+                closeNextVideoPopup();
+            }
+        } else {
+            closeNextVideoPopup();
+        }
+    }, [ isEpg, currentEpgVideo, nextEpgVideo, epgNow, player.nextVideo, video.state.time, video.state.duration, settings.nextVideoNotificationDuration ]);
 
     // Auto audio track selection
     React.useEffect(() => {
@@ -539,10 +647,9 @@ const Player = () => {
             return;
         }
 
-        const metaItem = player.metaItem?.type === 'Ready' ? player.metaItem.content : null;
         const { activity, timestamps } = getPlaybackDiscordActivity({
             title: player.title,
-            image: metaItem?.poster || metaItem?.background || null,
+            image: metaItemContent?.poster || metaItemContent?.background || null,
             paused: video.state.paused,
             time: video.state.time,
             duration: video.state.duration,
@@ -551,7 +658,7 @@ const Player = () => {
 
         discordTimestamps.current = timestamps;
         discord.setActivity(activity);
-    }, [discord.setActivity, player?.title, player.metaItem, video.state.duration, video.state.paused, video.state.stream, video.state.time]);
+    }, [discord.setActivity, player?.title, metaItemContent, video.state.duration, video.state.paused, video.state.stream, video.state.time]);
 
     React.useEffect(() => {
         return () => {
@@ -576,7 +683,7 @@ const Player = () => {
                     onPauseRequested();
                     break;
                 case 'next-track':
-                    if (player.nextVideo !== null) {
+                    if (!isEpg && player.nextVideo !== null) {
                         video.setTime(0);
                         onNextVideoRequested();
                     }
@@ -585,7 +692,7 @@ const Player = () => {
         };
         platform.shell.on('media-key', onMediaKey);
         return () => platform.shell.off('media-key', onMediaKey);
-    }, [video.state.paused, player.nextVideo, onPlayRequested, onPauseRequested, onNextVideoRequested]);
+    }, [isEpg, video.state.paused, player.nextVideo, onPlayRequested, onPauseRequested, onNextVideoRequested]);
 
     onShortcut('seekForward', (combo) => {
         if (video.state.time !== null) {
@@ -652,12 +759,12 @@ const Player = () => {
 
     onShortcut('playNext', () => {
         closeMenus();
-        if (player.nextVideo !== null) {
+        if (!isEpg && player.nextVideo !== null) {
             nextVideo();
             const deepLinks = player.nextVideo.deepLinks;
             handleNextVideoNavigation(deepLinks, false, false);
         }
-    }, [player.nextVideo, handleNextVideoNavigation]);
+    }, [isEpg, player.nextVideo, handleNextVideoNavigation]);
 
     onShortcut('exit', () => {
         closeMenus();
@@ -804,7 +911,7 @@ const Player = () => {
             {
                 !video.state.loaded ?
                     <div className={classnames(styles['layer'], styles['background-layer'])}>
-                        <img className={styles['image']} src={player?.metaItem?.content?.background} />
+                        <img className={styles['image']} src={metaItemContent?.background} />
                     </div>
                     :
                     null
@@ -814,7 +921,7 @@ const Player = () => {
                     <Buffering
                         ref={bufferingRef}
                         className={classnames(styles['layer'], styles['buffering-layer'])}
-                        logo={player?.metaItem?.content?.logo}
+                        logo={metaItemContent?.logo}
                         progress={statistics.progress}
                     />
                     :
@@ -886,7 +993,7 @@ const Player = () => {
                 subtitlesTracks={allSubtitleTracks}
                 audioTracks={video.state.audioTracks}
                 metaItem={player.metaItem}
-                nextVideo={player.nextVideo}
+                nextVideo={isEpg ? null : player.nextVideo}
                 stream={player.selected !== null ? player.selected.stream : null}
                 statistics={statistics}
                 onPlayRequested={onPlayRequested}
@@ -915,13 +1022,14 @@ const Player = () => {
                 disabled={subtitlesMenuOpen}
             />
             {
-                nextVideoPopupOpen ?
+                nextVideoPopupOpen && (isEpg ? nextEpgVideo !== null : player.nextVideo !== null) ?
                     <NextVideoPopup
                         className={classnames(styles['layer'], styles['menu-layer'])}
-                        metaItem={player.metaItem !== null && player.metaItem.type === 'Ready' ? player.metaItem.content : null}
-                        nextVideo={player.nextVideo}
+                        metaItem={metaItemContent}
+                        nextVideo={isEpg ? nextEpgVideo : player.nextVideo}
+                        isEpg={isEpg}
                         onDismiss={onDismissNextVideoPopup}
-                        onNextVideoRequested={onNextVideoRequested}
+                        onNextVideoRequested={isEpg ? undefined : onNextVideoRequested}
                     />
                     :
                     null
@@ -935,7 +1043,7 @@ const Player = () => {
             <Transition when={sideDrawerOpen} name={'slide-left'}>
                 <SideDrawer
                     className={classnames(styles['layer'], styles['side-drawer-layer'])}
-                    metaItem={player.metaItem?.content}
+                    metaItem={metaItemContent}
                     seriesInfo={player.seriesInfo}
                     closeSideDrawer={closeSideDrawer}
                     selected={player.selected?.streamRequest?.path?.id}

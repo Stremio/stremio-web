@@ -9,24 +9,30 @@ const { Button, Image } = require('stremio/components');
 const styles = require('./styles');
 const { useTranslation } = require('react-i18next');
 
-const NextVideoPopup = ({ className, metaItem, nextVideo, onDismiss, onNextVideoRequested }) => {
+const NextVideoPopup = ({ className, metaItem, nextVideo, isEpg, onDismiss, onNextVideoRequested }) => {
     const { t } = useTranslation();
     const profile = useProfile();
     const blurPosterImage = profile.settings.hideSpoilers && metaItem.type === 'series';
+    const dismissButtonRef = React.useRef(null);
     const watchNowButtonRef = React.useRef(null);
     const [animationEnded, setAnimationEnded] = React.useState(false);
+
     const videoName = React.useMemo(() => {
         const title = nextVideo && nextVideo.title || metaItem && metaItem.title;
-        return nextVideo !== null &&
+
+        return !isEpg &&
+            nextVideo !== null &&
             typeof nextVideo.season === 'number' &&
             typeof nextVideo.episode === 'number' ?
             `${title} (S${nextVideo.season}E${nextVideo.episode})`
             :
             title;
-    }, [metaItem, nextVideo]);
+    }, [isEpg, metaItem, nextVideo]);
+
     const onAnimationEnd = React.useCallback(() => {
         setAnimationEnded(true);
     }, []);
+
     const renderPosterFallback = React.useCallback(() => {
         return metaItem !== null && typeof metaItem.type === 'string' ?
             <Icon
@@ -36,21 +42,38 @@ const NextVideoPopup = ({ className, metaItem, nextVideo, onDismiss, onNextVideo
             :
             null;
     }, [metaItem]);
+
     const onDismissButtonClick = React.useCallback(() => {
         if (typeof onDismiss === 'function') {
             onDismiss();
         }
     }, [onDismiss]);
+
     const onWatchNowButtonClick = React.useCallback(() => {
+        if (isEpg) {
+            return;
+        }
+
         if (typeof onNextVideoRequested === 'function') {
             onNextVideoRequested();
         }
-    }, [onNextVideoRequested]);
+    }, [isEpg, onNextVideoRequested]);
+
     React.useLayoutEffect(() => {
-        if (animationEnded === true && watchNowButtonRef.current !== null) {
+        if (animationEnded !== true) {
+            return;
+        }
+
+        if (isEpg && dismissButtonRef.current !== null) {
+            dismissButtonRef.current.focus();
+            return;
+        }
+
+        if (watchNowButtonRef.current !== null) {
             watchNowButtonRef.current.focus();
         }
-    }, [animationEnded]);
+    }, [animationEnded, isEpg]);
+
     return (
         <div className={classnames(className, styles['next-video-popup-container'])} onAnimationEnd={onAnimationEnd}>
             <div className={styles['poster-container']}>
@@ -82,14 +105,19 @@ const NextVideoPopup = ({ className, metaItem, nextVideo, onDismiss, onNextVideo
                     }
                 </div>
                 <div className={styles['buttons-container']}>
-                    <Button className={classnames(styles['button-container'], styles['dismiss'])} onClick={onDismissButtonClick}>
+                    <Button ref={dismissButtonRef} className={classnames(styles['button-container'], styles['dismiss'])} onClick={onDismissButtonClick}>
                         <Icon className={styles['icon']} name={'close'} />
                         <div className={styles['label']}>{t('PLAYER_NEXT_VIDEO_BUTTON_DISMISS')}</div>
                     </Button>
-                    <Button ref={watchNowButtonRef} className={classnames(styles['button-container'], styles['play-button'])} onClick={onWatchNowButtonClick}>
-                        <Icon className={styles['icon']} name={'play'} />
-                        <div className={styles['label']}>{t('PLAYER_NEXT_VIDEO_BUTTON_WATCH')}</div>
-                    </Button>
+                    {
+                        !isEpg ?
+                            <Button ref={watchNowButtonRef} className={classnames(styles['button-container'], styles['play-button'])} onClick={onWatchNowButtonClick}>
+                                <Icon className={styles['icon']} name={'play'} />
+                                <div className={styles['label']}>{t('PLAYER_NEXT_VIDEO_BUTTON_WATCH')}</div>
+                            </Button>
+                            :
+                            null
+                    }
                 </div>
             </div>
         </div>
@@ -100,6 +128,7 @@ NextVideoPopup.propTypes = {
     className: PropTypes.string,
     metaItem: PropTypes.object,
     nextVideo: PropTypes.object,
+    isEpg: PropTypes.bool,
     onDismiss: PropTypes.func,
     onNextVideoRequested: PropTypes.func
 };
