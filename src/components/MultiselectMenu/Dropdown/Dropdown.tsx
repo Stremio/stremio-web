@@ -22,8 +22,6 @@ const Dropdown = ({ level, setLevel, options, onSelect, value, menuOpen }: Props
     const optionsRef = useRef(new Map());
     const containerRef = useRef(null);
 
-    const selectedOption = options.find((opt) => opt.value === value);
-
     const handleSetOptionRef = useCallback((optionValue: any) => (node: HTMLButtonElement | null) => {
         if (node) {
             optionsRef.current.set(optionValue, node);
@@ -37,8 +35,8 @@ const Dropdown = ({ level, setLevel, options, onSelect, value, menuOpen }: Props
     }, [setLevel, level]);
 
     useEffect(() => {
-        if (menuOpen && selectedOption && containerRef.current) {
-            const selectedNode = optionsRef.current.get(selectedOption.value);
+        if (menuOpen && containerRef.current) {
+            const selectedNode = optionsRef.current.get(value);
             if (selectedNode) {
                 selectedNode.scrollIntoView({
                     behavior: 'smooth',
@@ -46,7 +44,7 @@ const Dropdown = ({ level, setLevel, options, onSelect, value, menuOpen }: Props
                 });
             }
         }
-    }, [menuOpen, selectedOption]);
+    }, [menuOpen, value]);
 
     return (
         <div

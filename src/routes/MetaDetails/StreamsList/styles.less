@@ -72,10 +72,11 @@
 
     .select-choices-wrapper {
         display: flex;
+        flex-wrap: wrap;
         align-items: center;
         z-index: 2;
         margin: 1em 1em 0 1em;
-        gap: 0 0.5em;
+        gap: 0.75em 0.5em;
         overflow: visible;
 
         .back-button-container {
@@ -105,7 +106,8 @@
         }
 
         .episode-title {
-            min-width: 45%;
+            flex: 1 1 auto;
+            min-width: 0;
             color: var(--primary-foreground-color);
             white-space: nowrap;
             overflow: hidden;
@@ -113,9 +115,13 @@
         }
 
         .select-input-container {
-            min-width: 40%;
-            flex-grow: 1;
+            flex: 1 1 100%;
+            min-width: 0;
             background-color: none;
+
+            [role='listbox'] {
+                max-height: 60vh;
+            }
 
             &:hover, &:focus, &:global(.active) {
                 background-color: var(--overlay-color);
