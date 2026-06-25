@@ -189,6 +189,10 @@ const Player = () => {
             null;
     }, [isEpg, metaVideos, currentEpgVideo]);
 
+    const epgProgress = React.useMemo(() => {
+        return isEpg ? getEpgProgress(currentEpgVideo, epgNow) : null;
+    }, [isEpg, currentEpgVideo, epgNow]);
+
     React.useEffect(() => {
         if (isEpg) {
             nextVideoPopupDismissed.current = false;
@@ -273,9 +277,13 @@ const Player = () => {
     }, []);
 
     const onSeekRequested = React.useCallback((time) => {
+        if (isEpg) {
+            return;
+        }
+
         video.setTime(time);
         seek(time, video.state.duration, video.state.manifest?.name);
-    }, [video.state.duration, video.state.manifest]);
+    }, [isEpg, video.state.duration, video.state.manifest]);
 
     const onPlaybackSpeedChanged = React.useCallback((rate, skipUpdate) => {
         video.setPlaybackSpeed(rate);
@@ -386,21 +394,21 @@ const Player = () => {
     }, [menusOpen, nextVideoPopupOpen, video.state.paused]);
 
     const onSeekPrev = React.useCallback((event) => {
-        if (!menusOpen && !nextVideoPopupOpen && video.state.time !== null) {
+        if (!isEpg && !menusOpen && !nextVideoPopupOpen && video.state.time !== null) {
             const seekDuration = event?.shiftKey ? settings.seekShortTimeDuration : settings.seekTimeDuration;
             const seekTime = video.state.time - seekDuration;
             setSeeking(true);
             onSeekRequested(Math.max(seekTime, 0));
         }
-    }, [menusOpen, nextVideoPopupOpen, video.state.time]);
+    }, [isEpg, menusOpen, nextVideoPopupOpen, video.state.time]);
 
     const onSeekNext = React.useCallback((event) => {
-        if (!menusOpen && !nextVideoPopupOpen && video.state.time !== null) {
+        if (!isEpg && !menusOpen && !nextVideoPopupOpen && video.state.time !== null) {
             const seekDuration = event?.shiftKey ? settings.seekShortTimeDuration : settings.seekTimeDuration;
             setSeeking(true);
             onSeekRequested(video.state.time + seekDuration);
         }
-    }, [menusOpen, nextVideoPopupOpen, video.state.time]);
+    }, [isEpg, menusOpen, nextVideoPopupOpen, video.state.time]);
 
     const onVolumeUp = React.useCallback(() => {
         if (!menusOpen && !nextVideoPopupOpen && video.state.volume !== null) {
@@ -684,7 +692,7 @@ const Player = () => {
             setSeeking(true);
             onSeekRequested(video.state.time + seekDuration);
         }
-    }, [video.state.time, onSeekRequested], !menusOpen);
+    }, [video.state.time, onSeekRequested], !menusOpen && !isEpg);
 
     onShortcut('seekBackward', (combo) => {
         if (video.state.time !== null) {
@@ -692,7 +700,7 @@ const Player = () => {
             setSeeking(true);
             onSeekRequested(video.state.time - seekDuration);
         }
-    }, [video.state.time, onSeekRequested], !menusOpen);
+    }, [video.state.time, onSeekRequested], !menusOpen && !isEpg);
 
     onShortcut('mute', () => {
         video.state.muted === true ? onUnmuteRequested() : onMuteRequested();
@@ -993,6 +1001,8 @@ const Player = () => {
                 onToggleSpeedMenu={toggleSpeedMenu}
                 videoScale={video.state.videoScale}
                 videoScaleLabel={VIDEO_SCALE_LABELS[video.state.videoScale || 'contain']}
+                live={isEpg}
+                liveProgress={epgProgress}
                 onVideoScaleChanged={onVideoScaleChanged}
                 onToggleStatisticsMenu={toggleStatisticsMenu}
                 onToggleSideDrawer={toggleSideDrawer}
