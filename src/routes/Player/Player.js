@@ -169,18 +169,20 @@ const Player = () => {
     }, [metaVideos]);
     const epgNow = useEpgNow(isEpg, EPG_PLAYER_NOW_REFRESH_INTERVAL);
 
+    const liveEpgVideo = React.useMemo(() => {
+        return isEpg ? metaVideos.find((video) => getEpgProgress(video, epgNow) !== null) ?? null : null;
+    }, [isEpg, metaVideos, epgNow]);
+
     const currentEpgVideo = React.useMemo(() => {
         if (!isEpg) {
             return null;
         }
 
         const selectedVideoId = player.selected?.streamRequest?.path?.id ?? videoId;
-
-        const liveVideo = metaVideos.find((video) => getEpgProgress(video, epgNow) !== null) ?? null;
         const selectedVideo = metaVideos.find((video) => video.id === selectedVideoId) ?? null;
 
-        return liveVideo ?? selectedVideo;
-    }, [isEpg, metaVideos, player.selected, videoId, epgNow]);
+        return liveEpgVideo ?? selectedVideo;
+    }, [isEpg, liveEpgVideo, metaVideos, player.selected, videoId]);
 
     const nextEpgVideo = React.useMemo(() => {
         return isEpg ?
@@ -517,20 +519,20 @@ const Player = () => {
         }
 
         if (isEpg) {
-            if (currentEpgVideo === null || nextEpgVideo === null) {
+            if (liveEpgVideo === null || nextEpgVideo === null) {
                 closeNextVideoPopup();
                 return;
             }
 
-            const range = getEpgTimeRange(currentEpgVideo);
+            const range = getEpgTimeRange(liveEpgVideo);
 
-            if (range === null) {
+            if (range === null || video.state.time === null) {
                 closeNextVideoPopup();
                 return;
             }
 
-            const remainingTime = range.endTime - epgNow;
-            const notificationDuration = settings.nextVideoNotificationDuration * 1000;
+            const remainingTime = (range.endTime - range.startTime) - video.state.time;
+            const notificationDuration = settings.nextVideoNotificationDuration;
 
             if (remainingTime > 0 && remainingTime <= notificationDuration) {
                 openNextVideoPopup();
@@ -555,7 +557,7 @@ const Player = () => {
         } else {
             closeNextVideoPopup();
         }
-    }, [ isEpg, currentEpgVideo, nextEpgVideo, epgNow, player.nextVideo, video.state.time, video.state.duration, settings.nextVideoNotificationDuration ]);
+    }, [ isEpg, liveEpgVideo, nextEpgVideo, epgNow, player.nextVideo, video.state.time, video.state.duration, settings.nextVideoNotificationDuration ]);
 
     // Auto audio track selection
     React.useEffect(() => {
