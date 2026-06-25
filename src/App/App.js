@@ -3,9 +3,9 @@
 require('spatial-navigation-polyfill');
 const React = require('react');
 const { useTranslation } = require('react-i18next');
-const { useNavigate } = require('react-router');
+const { useLocation, useNavigate } = require('react-router');
 const { useCore } = require('stremio/core');
-const { Routes } = require('stremio-router');
+const { Routes, navigateToRoute } = require('stremio-router');
 const { Chromecast, ServicesProvider, GamepadProvider } = require('stremio/services');
 const { FullscreenProvider, ToastProvider, TooltipProvider, ShortcutsProvider, DiscordProvider, CONSTANTS, useBinaryState, useProfile, withCoreSuspender, onFileDrop, usePlatform } = require('stremio/common');
 const ServicesToaster = require('./ServicesToaster');
@@ -24,7 +24,10 @@ const App = () => {
     const profile = useProfile();
     const { i18n } = useTranslation();
     const { shell } = usePlatform();
+    const location = useLocation();
     const navigate = useNavigate();
+    const locationRef = React.useRef(location);
+    locationRef.current = location;
     const [gamepadSupportEnabled, setGamepadSupportEnabled] = React.useState(false);
     const services = React.useMemo(() => {
         return {
@@ -113,7 +116,9 @@ const App = () => {
                         const transportUrl = `https://${hostname}${pathname}`;
                         navigate(`/addons?addon=${encodeURIComponent(transportUrl)}`);
                     } else {
-                        navigate(`${pathname}?${searchParams.toString()}`);
+                        const search = searchParams.toString();
+                        const path = search ? `${pathname}?${search}` : pathname;
+                        navigateToRoute(navigate, locationRef.current, path);
                     }
                 }
             } catch (e) {
@@ -127,7 +132,7 @@ const App = () => {
         }
 
         return () => shell.off('open-media', onOpenMedia);
-    }, [shell.state.initialized]);
+    }, [shell.state.initialized, navigate]);
 
     React.useEffect(() => {
         if (typeof profile.settings?.interfaceLanguage === 'string') {
