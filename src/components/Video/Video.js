@@ -197,7 +197,7 @@ const Video = ({
                         }
                         <div className={styles['upcoming-watched-container']}>
                             {
-                                upcoming && !watched ?
+                                upcoming && !watched && !isNow ?
                                     <div className={styles['upcoming-container']}>
                                         <div className={styles['flag-label']}>{t('UPCOMING')}</div>
                                     </div>
@@ -205,7 +205,17 @@ const Video = ({
                                     null
                             }
                             {
-                                watched || isNow ?
+                                isNow ?
+                                    <div className={styles['live-container']}>
+                                        <div className={styles['flag-label']}>
+                                            {t('PLAYER_LIVE', { defaultValue: 'Live' })}
+                                        </div>
+                                    </div>
+                                    :
+                                    null
+                            }
+                            {
+                                watched && !isNow ?
                                     <div className={styles['watched-container']}>
                                         <Icon className={styles['flag-icon']} name={'eye'} />
                                         <div className={styles['flag-label']}>{t('CTX_WATCHED')}</div>
