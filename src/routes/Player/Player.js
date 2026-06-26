@@ -526,12 +526,12 @@ const Player = () => {
 
             const range = getEpgTimeRange(liveEpgVideo);
 
-            if (range === null || video.state.time === null) {
+            if (range === null) {
                 closeNextVideoPopup();
                 return;
             }
 
-            const remainingTime = (range.endTime - range.startTime) - video.state.time;
+            const remainingTime = range.endTime - epgNow;
             const notificationDuration = settings.nextVideoNotificationDuration;
 
             if (remainingTime > 0 && remainingTime <= notificationDuration) {
