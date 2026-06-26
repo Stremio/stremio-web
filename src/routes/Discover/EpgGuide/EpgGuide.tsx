@@ -142,6 +142,8 @@ const EpgGuide = ({ requestBase, channels, catalogLoading, hasNextPage, loadNext
                 if (headerRef.current) {
                     headerRef.current.scrollLeft = viewport.scrollLeft;
                 }
+                const slot = Math.max(0, Math.min(TIME_SLOTS.length - 1, Math.round(viewport.scrollLeft / halfHourPx)));
+                setSelectedSlot((selectedSlot) => selectedSlot === slot ? selectedSlot : slot);
             });
         };
 
@@ -150,7 +152,7 @@ const EpgGuide = ({ requestBase, channels, catalogLoading, hasNextPage, loadNext
             viewport.removeEventListener('scroll', onScroll);
             if (rafId !== null) cancelAnimationFrame(rafId);
         };
-    }, []);
+    }, [halfHourPx]);
 
     // Reset channel column translation when the day changes (viewport scroll resets)
     useEffect(() => {
