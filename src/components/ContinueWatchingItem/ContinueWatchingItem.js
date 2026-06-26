@@ -6,6 +6,39 @@ const { useCore } = require('stremio/core');
 const { getEpgProgress, hasEpgProgramTimes, useEpgNow } = require('stremio/common/EPG');
 const LibItem = require('stremio/components/LibItem');
 
+const getEpgChannelId = (videoId) => {
+    const index = typeof videoId === 'string' ? videoId.lastIndexOf(':') : -1;
+    return index > 0 ? videoId.slice(0, index) : null;
+};
+
+const replaceDetailVideo = (link, videoId) => {
+    const channelId = getEpgChannelId(videoId);
+    if (typeof link !== 'string' || channelId === null) return link;
+
+    const prefix = link.startsWith('#') ? '#' : '';
+    const parts = (prefix ? link.slice(1) : link).split('/');
+    const index = parts.indexOf('detail');
+
+    if (index === -1 || parts.length <= index + 3) return link;
+
+    parts[index + 2] = encodeURIComponent(channelId);
+    parts[index + 3] = encodeURIComponent(videoId);
+
+    return `${prefix}${parts.join('/')}`;
+};
+
+const getEpgDeepLinks = (deepLinks, epgVideo) => {
+    const videoDeepLinks = epgVideo?.deepLinks ?? {};
+    const videoId = epgVideo?.id;
+
+    return {
+        ...deepLinks,
+        ...videoDeepLinks,
+        metaDetailsVideos: videoDeepLinks.metaDetailsVideos ?? replaceDetailVideo(deepLinks?.metaDetailsVideos, videoId),
+        metaDetailsStreams: videoDeepLinks.metaDetailsStreams ?? replaceDetailVideo(deepLinks?.metaDetailsStreams, videoId),
+    };
+};
+
 const getEpgVideo = (props, now) => {
     const videos = [
         props.currentVideo,
@@ -33,6 +66,7 @@ const ContinueWatchingItem = ({ _id, notifications, ...props }) => {
         posterShape: 'landscape',
         progress: epgProgress ?? props.progress,
         live: true,
+        deepLinks: getEpgDeepLinks(props.deepLinks, epgVideo),
     } : props;
 
     const onDismissClick = React.useCallback((event) => {
