@@ -56,6 +56,10 @@ const MetaDetails = () => {
     const isEpgVideo = React.useMemo(() => {
         return video !== null && hasEpgProgramTimes(video);
     }, [video]);
+    const isEpgMeta = React.useMemo(() => {
+        return metaDetails.metaItem?.content.type === 'Ready' &&
+            metaDetails.metaItem.content.content.videos.some(hasEpgProgramTimes);
+    }, [metaDetails.metaItem]);
     const addToLibrary = React.useCallback(() => {
         if (metaDetails.metaItem === null || metaDetails.metaItem.content.type !== 'Ready') {
             return;
@@ -219,6 +223,7 @@ const MetaDetails = () => {
                             className={styles['streams-list']}
                             streams={metaDetails.streams}
                             video={video}
+                            isEpg={isEpgVideo || isEpgMeta}
                             type={streamPath.type}
                             onEpisodeSearch={handleEpisodeSearch}
                         />
