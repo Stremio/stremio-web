@@ -166,16 +166,11 @@ const EpgGuide = ({ requestBase, channels, catalogLoading, hasNextPage, loadNext
         }
     }, []);
 
-    // Scroll to current time when the effective day is today
+    // Keep the horizontal scroll pinned to the selected time slot as pages load.
     useEffect(() => {
         if (!viewportRef.current) return;
-        const now = new Date();
-        const start = new Date(effectiveDay);
-        start.setHours(0, 0, 0, 0);
-        if (now >= start && now.getTime() < start.getTime() + DAY_IN_MS) {
-            viewportRef.current.scrollLeft = Math.max(0, ((now.getTime() - start.getTime()) / HOUR_IN_MS) * pixelsPerHour - 200);
-        }
-    }, [effectiveDay, pixelsPerHour]);
+        viewportRef.current.scrollLeft = selectedSlot * halfHourPx;
+    }, [effectiveDay, halfHourPx, selectedSlot]);
 
     const handleSlotSelect = useCallback((value: string | number | null) => {
         if (value === null) return;
