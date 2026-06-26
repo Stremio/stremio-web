@@ -4,7 +4,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const debounce = require('lodash.debounce');
-const { t } = require('i18next');
+const { useTranslation } = require('react-i18next');
 const { default: useRouteFocused } = require('stremio/common/useRouteFocused');
 const { useBinaryState } = require('stremio/common');
 const { Button, Slider } = require('stremio/components');
@@ -12,6 +12,7 @@ const formatTime = require('./formatTime');
 const styles = require('./styles');
 
 const SeekBar = ({ className, time, duration, buffered, onSeekRequested, playbackSpeed, live, liveProgress }) => {
+    const { t } = useTranslation();
     const progressTime = typeof liveProgress === 'number' && !isNaN(liveProgress) ? liveProgress : 0;
     const progressDuration = live ? 100 : duration;
     const currentTime = live ? progressTime : time;

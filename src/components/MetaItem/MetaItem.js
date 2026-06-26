@@ -96,7 +96,7 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, poste
                     {
                         live ?
                             <div className={styles['live-badge-layer']}>
-                                <div className={styles['live-badge-label']}>{t('PLAYER_LIVE')}</div>
+                                <div className={styles['live-badge-label']}>{t('PLAYER_LIVE', { defaultValue: 'Live' })}</div>
                             </div>
                             :
                             null
